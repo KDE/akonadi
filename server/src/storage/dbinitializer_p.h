@@ -23,49 +23,49 @@
 
 #include "storage/dbinitializer.h"
 
-class DbInitializerMySql : public DbInitializer
+class DbInitializerMySql: public DbInitializer
 {
   public:
-    DbInitializerMySql(const QSqlDatabase& database);
+    DbInitializerMySql( const QSqlDatabase &database );
   protected:
-    QString sqlType(const QString& type, int size) const;
+    QString sqlType( const QString &type, int size ) const;
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
-    virtual QString buildAddForeignKeyConstraintStatement(const TableDescription& table, const ColumnDescription& column) const;
-    virtual QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const TableDescription& table) const;
+    virtual QString buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const;
+    virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
 };
 
-class DbInitializerSqlite : public DbInitializer
+class DbInitializerSqlite: public DbInitializer
 {
   public:
-    DbInitializerSqlite( const QSqlDatabase& database);
+    DbInitializerSqlite( const QSqlDatabase &database );
   protected:
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
-    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
-};
-
-class DbInitializerPostgreSql : public DbInitializer
-{
-  public:
-    DbInitializerPostgreSql(const QSqlDatabase& database);
-  protected:
-    QString sqlType(const QString& type, int size) const;
-
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
-class DbInitializerVirtuoso : public DbInitializer
+class DbInitializerPostgreSql: public DbInitializer
 {
   public:
-    DbInitializerVirtuoso(const QSqlDatabase& database);
+    DbInitializerPostgreSql( const QSqlDatabase &database );
   protected:
-    QString sqlType(const QString& type, int size) const;
-    QString sqlValue(const QString& type, const QString& value) const;
+    QString sqlType( const QString &type, int size ) const;
+
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
+    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
+};
+
+class DbInitializerVirtuoso: public DbInitializer
+{
+  public:
+    DbInitializerVirtuoso( const QSqlDatabase &database );
+  protected:
+    QString sqlType( const QString &type, int size ) const;
+    QString sqlValue( const QString &type, const QString &value ) const;
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;

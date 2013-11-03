@@ -29,14 +29,29 @@ namespace Akonadi {
 /**
   Base class for exception used internally by the Akonadi server.
 */
-class Exception : public std::exception
+class Exception: public std::exception
 {
   public:
-    Exception( const char *what ) throw() : mWhat( what ) {}
-    Exception( const QByteArray &what ) throw() : mWhat( what ) {}
-    Exception( const QString &what ) throw() : mWhat( what.toUtf8() ) {}
-    Exception( const Exception &other ) throw() : std::exception( other ), mWhat( other.what() ) {}
-    virtual ~Exception() throw() {}
+    Exception( const char *what ) throw()
+      : mWhat( what )
+    {
+    }
+    Exception( const QByteArray &what ) throw()
+      : mWhat( what )
+    {
+    }
+    Exception( const QString &what ) throw()
+      : mWhat( what.toUtf8() )
+    {
+    }
+    Exception( const Exception &other ) throw()
+      : std::exception( other )
+      , mWhat( other.what() )
+    {
+    }
+    virtual ~Exception() throw()
+    {
+    }
     const char *what() const throw() { return mWhat.constData(); }
     virtual const char *type() const throw() { return "General Exception"; }
   protected:
@@ -47,10 +62,22 @@ class Exception : public std::exception
 class classname : public Akonadi::Exception \
 { \
   public: \
-    classname ( const char *what ) throw() : Akonadi::Exception( what ) {} \
-    classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) {} \
-    classname ( const QString &what ) throw() : Akonadi::Exception( what ) {} \
-    const char *type() const throw() { return "" #classname; } \
+    classname ( const char *what ) throw() \
+      : Akonadi::Exception( what ) \
+    { \
+    } \
+    classname ( const QByteArray &what ) throw() \
+      : Akonadi::Exception( what ) \
+    { \
+    } \
+    classname ( const QString &what ) throw() \
+      : Akonadi::Exception( what ) \
+    { \
+    } \
+    const char *type() const throw() \
+    { \
+      return "" #classname; \
+    } \
 }
 
 }

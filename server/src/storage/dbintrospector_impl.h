@@ -26,31 +26,31 @@
 class DbIntrospectorMySql : public DbIntrospector
 {
   public:
-    DbIntrospectorMySql( const QSqlDatabase& database );
-    virtual QVector<ForeignKey> foreignKeyConstraints(const QString& tableName);
-    virtual QString hasIndexQuery(const QString& tableName, const QString& indexName);
+    DbIntrospectorMySql( const QSqlDatabase &database );
+    virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
+    virtual QString hasIndexQuery( const QString &tableName, const QString &indexName );
 };
 
 class DbIntrospectorSqlite : public DbIntrospector
 {
   public:
-    DbIntrospectorSqlite( const QSqlDatabase& database );
-    QString hasIndexQuery(const QString& tableName, const QString& indexName);
+    DbIntrospectorSqlite( const QSqlDatabase &database );
+    QString hasIndexQuery( const QString &tableName, const QString &indexName );
 };
 
 class DbIntrospectorPostgreSql : public DbIntrospector
 {
   public:
-    DbIntrospectorPostgreSql( const QSqlDatabase& database );
+    DbIntrospectorPostgreSql( const QSqlDatabase &database );
     virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
-    QString hasIndexQuery(const QString& tableName, const QString& indexName);
+    QString hasIndexQuery( const QString &tableName, const QString &indexName );
 };
 
 class DbIntrospectorVirtuoso : public DbIntrospector
 {
   public:
-    DbIntrospectorVirtuoso( const QSqlDatabase& database );
-    bool hasIndex(const QString& tableName, const QString& indexName);
+    DbIntrospectorVirtuoso( const QSqlDatabase &database );
+    bool hasIndex( const QString &tableName, const QString &indexName );
 };
 
 #endif // DBINTROSPECTOR_IMPL_H

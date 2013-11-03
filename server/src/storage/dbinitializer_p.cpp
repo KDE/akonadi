@@ -22,15 +22,15 @@
 
 //BEGIN MySQL
 
-DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database):
-  DbInitializer(database)
+DbInitializerMySql::DbInitializerMySql( const QSqlDatabase &database )
+  : DbInitializer( database )
 {
 }
 
-QString DbInitializerMySql::sqlType(const QString & type, int size) const
+QString DbInitializerMySql::sqlType( const QString &type, int size ) const
 {
   if ( type == QLatin1String( "QString" ) ) {
-    return QLatin1Literal("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
+    return QLatin1Literal( "VARBINARY(" ) + QString::number( size <= 0 ? 255 : size ) + QLatin1Literal( ")" );
   } else {
     return DbInitializer::sqlType( type, size );
   }
@@ -102,7 +102,7 @@ QString DbInitializerMySql::buildInsertValuesStatement( const TableDescription &
   QMutableHashIterator<QString, QString> it( data );
   while ( it.hasNext() ) {
     it.next();
-    it.value().replace( QLatin1String("\\"), QLatin1String("\\\\") );
+    it.value().replace( QLatin1String( "\\" ), QLatin1String( "\\\\" ) );
   }
 
   return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
@@ -111,14 +111,14 @@ QString DbInitializerMySql::buildInsertValuesStatement( const TableDescription &
                             .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
 }
 
-QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const TableDescription& table, const ColumnDescription& column) const
+QString DbInitializerMySql::buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const
 {
   return QLatin1Literal( "ALTER TABLE " ) + table.name + QLatin1Literal( " ADD FOREIGN KEY (" ) + column.name
        + QLatin1Literal( ") REFERENCES " ) + column.refTable + QLatin1Literal( "Table(" ) + column.refColumn
        + QLatin1Literal( ") " ) + buildReferentialAction( column.onUpdate, column.onDelete );
 }
 
-QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const TableDescription& table) const
+QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const
 {
   return QLatin1Literal( "ALTER TABLE " ) + table.name + QLatin1Literal( " DROP FOREIGN KEY " ) + fk.name;
 }
@@ -127,8 +127,8 @@ QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement(const DbInt
 
 //BEGIN Sqlite
 
-DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase& database):
-  DbInitializer(database)
+DbInitializerSqlite::DbInitializerSqlite( const QSqlDatabase &database )
+  : DbInitializer( database )
 {
 }
 
@@ -202,18 +202,18 @@ QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription 
 
 //BEGIN PostgreSQL
 
-DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase& database):
-  DbInitializer(database)
+DbInitializerPostgreSql::DbInitializerPostgreSql( const QSqlDatabase &database )
+  : DbInitializer( database )
 {
 }
 
-QString DbInitializerPostgreSql::sqlType(const QString& type, int size) const
+QString DbInitializerPostgreSql::sqlType( const QString &type, int size ) const
 {
-  if ( type == QLatin1String("qint64") ) {
+  if ( type == QLatin1String( "qint64" ) ) {
     return QLatin1String( "int8" );
   }
-  if ( type == QLatin1String("QByteArray") ) {
-    return QLatin1String("BYTEA");
+  if ( type == QLatin1String( "QByteArray" ) ) {
+    return QLatin1String( "BYTEA" );
   }
 
   return DbInitializer::sqlType( type, size );
@@ -286,26 +286,26 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescript
 
 //BEGIN Virtuoso
 
-DbInitializerVirtuoso::DbInitializerVirtuoso(const QSqlDatabase& database):
-  DbInitializer(database)
+DbInitializerVirtuoso::DbInitializerVirtuoso( const QSqlDatabase &database )
+  : DbInitializer( database )
 {
 }
 
-QString DbInitializerVirtuoso::sqlType(const QString& type, int size) const
+QString DbInitializerVirtuoso::sqlType( const QString &type, int size ) const
 {
-  if ( type == QLatin1String("QString") ) {
-    return QLatin1Literal("VARCHAR(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
+  if ( type == QLatin1String( "QString" ) ) {
+    return QLatin1Literal( "VARCHAR(" ) + QString::number( size <= 0 ? 255 : size ) + QLatin1Literal( ")" );
   }
-  if (type == QLatin1String("QByteArray") ) {
-    return QLatin1String("LONG VARCHAR");
+  if ( type == QLatin1String( "QByteArray" )  ) {
+    return QLatin1String( "LONG VARCHAR" );
   }
   if ( type == QLatin1String( "bool" ) ) {
-    return QLatin1String("CHAR");
+    return QLatin1String( "CHAR" );
   }
   return DbInitializer::sqlType( type, size );
 }
 
-QString DbInitializerVirtuoso::sqlValue(const QString& type, const QString& value) const
+QString DbInitializerVirtuoso::sqlValue( const QString &type, const QString &value ) const
 {
   if ( type == QLatin1String( "bool" ) ) {
     if ( value == QLatin1String( "false" ) ) {
@@ -363,7 +363,7 @@ QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &co
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
 
-    if ( !defaultValue.isEmpty() && (defaultValue != QLatin1String( "CURRENT_TIMESTAMP" )) ) {
+    if ( !defaultValue.isEmpty() && ( defaultValue != QLatin1String( "CURRENT_TIMESTAMP" ) ) ) {
       column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
     }
   }

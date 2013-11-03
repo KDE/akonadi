@@ -19,12 +19,12 @@
 
 #include "dbtype.h"
 
-DbType::Type DbType::type(const QSqlDatabase& db)
+DbType::Type DbType::type( const QSqlDatabase &db )
 {
   return typeForDriverName( db.driverName() );
 }
 
-DbType::Type DbType::typeForDriverName(const QString& driverName)
+DbType::Type DbType::typeForDriverName( const QString &driverName )
 {
   if ( driverName.startsWith( QLatin1String( "QMYSQL" ) ) ) {
     return MySQL;

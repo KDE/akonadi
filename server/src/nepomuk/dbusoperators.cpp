@@ -33,7 +33,7 @@ void Nepomuk::Query::registerDBusTypes()
     qDBusRegisterMetaType<RequestPropertyMapDBus>();
 }
 
-QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& result )
+QDBusArgument &operator<<( QDBusArgument &arg, const Nepomuk::Query::Result &result )
 {
     //
     // Signature: (sda{s(isss)}a{s(isss)}s)
@@ -57,7 +57,7 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& res
     // additional bindings
     arg.beginMap( QVariant::String, qMetaTypeId<Soprano::Node>() );
     const Soprano::BindingSet additionalBindings; // = result.additionalBindings();
-    Q_FOREACH( const QString& binding, additionalBindings.bindingNames() ) {
+    Q_FOREACH ( const QString &binding, additionalBindings.bindingNames() ) {
         arg.beginMapEntry();
         arg << binding << additionalBindings[binding];
         arg.endMapEntry();
@@ -72,7 +72,7 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& res
     return arg;
 }
 
-const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Result& result )
+const QDBusArgument &operator>>( const QDBusArgument &arg, Nepomuk::Query::Result &result )
 {
     //
     // Signature: (sda{s(isss)}s)
@@ -119,7 +119,7 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Resul
     return arg;
 }
 
-QDBusArgument& operator<<( QDBusArgument& arg, const Soprano::Node& node )
+QDBusArgument &operator<<( QDBusArgument &arg, const Soprano::Node &node )
 {
     arg.beginStructure();
     arg << ( int )node.type();
@@ -133,7 +133,7 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Soprano::Node& node )
     return arg;
 }
 
-const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& node )
+const QDBusArgument &operator>>( const QDBusArgument &arg, Soprano::Node &node )
 {
     //
     // Signature: (isss)

@@ -107,7 +107,7 @@ class NotificationManager : public QObject, protected QDBusContext
     QTimer mTimer;
 
     //! One message source for each subscribed process
-    QHash<QString, NotificationSource*> mNotificationSources;
+    QHash<QString, NotificationSource *> mNotificationSources;
 
     friend class NotificationSource;
     friend class ::NotificationManagerTest;

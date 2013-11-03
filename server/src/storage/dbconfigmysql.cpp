@@ -198,8 +198,8 @@ void DbConfigMysql::startInternalServer()
   bool confUpdate = false;
   QFile actualFile ( actualConfig );
   // update conf only if either global (or local) is newer than actual
-  if ( (QFileInfo( globalConfig ).lastModified() > QFileInfo( actualFile ).lastModified()) ||
-       (QFileInfo( localConfig ).lastModified()  > QFileInfo( actualFile ).lastModified()) ) {
+  if ( ( QFileInfo( globalConfig ).lastModified() > QFileInfo( actualFile ).lastModified() ) ||
+       ( QFileInfo( localConfig ).lastModified()  > QFileInfo( actualFile ).lastModified() ) ) {
     QFile globalFile( globalConfig );
     QFile localFile ( localConfig );
     if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
@@ -224,7 +224,7 @@ void DbConfigMysql::startInternalServer()
   // our config file somehow ends up being world-writable on some systems for no
   // apparent reason nevertheless, so fix that
   const QFile::Permissions allowedPerms = actualFile.permissions()
-      & ( QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther );
+      &( QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther );
   if ( allowedPerms != actualFile.permissions() ) {
     actualFile.setPermissions( allowedPerms );
   }
@@ -264,7 +264,7 @@ void DbConfigMysql::startInternalServer()
   }
 
   // first run, some MySQL versions need a mysql_install_db run for that
-  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
+  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf"  ) );
   if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
     const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1" ).arg( confFile ) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
     QProcess::execute( mMysqlInstallDbPath, arguments );

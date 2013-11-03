@@ -33,7 +33,7 @@
 
 using namespace Akonadi;
 
-DbIntrospector::Ptr DbIntrospector::createInstance(const QSqlDatabase& database)
+DbIntrospector::Ptr DbIntrospector::createInstance( const QSqlDatabase &database )
 {
   switch ( DbType::type( database ) ) {
   case DbType::MySQL:
@@ -51,7 +51,8 @@ DbIntrospector::Ptr DbIntrospector::createInstance(const QSqlDatabase& database)
   return Ptr();
 }
 
-DbIntrospector::DbIntrospector(const QSqlDatabase& database) : m_database( database )
+DbIntrospector::DbIntrospector( const QSqlDatabase &database )
+  : m_database( database )
 {
 }
 
@@ -59,12 +60,12 @@ DbIntrospector::~DbIntrospector()
 {
 }
 
-bool DbIntrospector::hasTable(const QString& tableName)
+bool DbIntrospector::hasTable( const QString &tableName )
 {
   return m_database.tables().contains( tableName, Qt::CaseInsensitive );
 }
 
-bool DbIntrospector::hasIndex(const QString& tableName, const QString& indexName)
+bool DbIntrospector::hasIndex( const QString &tableName, const QString &indexName )
 {
   QSqlQuery query( m_database );
   if ( !query.exec( hasIndexQuery( tableName, indexName ) ) ) {
@@ -73,7 +74,7 @@ bool DbIntrospector::hasIndex(const QString& tableName, const QString& indexName
   return query.next();
 }
 
-bool DbIntrospector::hasColumn(const QString& tableName, const QString& columnName)
+bool DbIntrospector::hasColumn( const QString &tableName, const QString &columnName )
 {
   QStringList columns = m_columnCache.value( tableName );
 
@@ -90,7 +91,7 @@ bool DbIntrospector::hasColumn(const QString& tableName, const QString& columnNa
   return columns.contains( columnName.toLower() );
 }
 
-bool DbIntrospector::isTableEmpty(const QString& tableName)
+bool DbIntrospector::isTableEmpty( const QString &tableName )
 {
   QueryBuilder queryBuilder( tableName, QueryBuilder::Select );
   queryBuilder.addColumn( QLatin1String( "*" ) );
@@ -106,13 +107,13 @@ bool DbIntrospector::isTableEmpty(const QString& tableName)
   return false;
 }
 
-QVector<DbIntrospector::ForeignKey> DbIntrospector::foreignKeyConstraints( const QString& tableName )
+QVector<DbIntrospector::ForeignKey> DbIntrospector::foreignKeyConstraints( const QString &tableName )
 {
   Q_UNUSED( tableName );
   return QVector<ForeignKey>();
 }
 
-QString DbIntrospector::hasIndexQuery(const QString& tableName, const QString& indexName)
+QString DbIntrospector::hasIndexQuery( const QString &tableName, const QString &indexName )
 {
   Q_UNUSED( tableName );
   Q_UNUSED( indexName );

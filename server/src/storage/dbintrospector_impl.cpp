@@ -29,17 +29,18 @@ using namespace Akonadi;
 
 //BEGIN MySql
 
-DbIntrospectorMySql::DbIntrospectorMySql(const QSqlDatabase& database): DbIntrospector(database)
+DbIntrospectorMySql::DbIntrospectorMySql( const QSqlDatabase &database )
+  : DbIntrospector( database )
 {
 }
 
-QString DbIntrospectorMySql::hasIndexQuery(const QString& tableName, const QString& indexName)
+QString DbIntrospectorMySql::hasIndexQuery( const QString &tableName, const QString &indexName )
 {
   return QString::fromLatin1( "SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'" )
       .arg( tableName ).arg( indexName );
 }
 
-QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints(const QString& tableName)
+QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints( const QString &tableName )
 {
   QueryBuilder qb( QLatin1String( "information_schema.REFERENTIAL_CONSTRAINTS" ), QueryBuilder::Select );
   qb.addJoin( QueryBuilder::InnerJoin, QLatin1String( "information_schema.KEY_COLUMN_USAGE" ),
@@ -78,11 +79,12 @@ QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints
 
 //BEGIN Sqlite
 
-DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase& database): DbIntrospector(database)
+DbIntrospectorSqlite::DbIntrospectorSqlite( const QSqlDatabase &database )
+  : DbIntrospector( database )
 {
 }
 
-QString DbIntrospectorSqlite::hasIndexQuery(const QString& tableName, const QString& indexName)
+QString DbIntrospectorSqlite::hasIndexQuery( const QString &tableName, const QString &indexName )
 {
   return QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" )
       .arg( tableName ).arg( indexName );
@@ -92,7 +94,8 @@ QString DbIntrospectorSqlite::hasIndexQuery(const QString& tableName, const QStr
 
 //BEGIN PostgreSql
 
-DbIntrospectorPostgreSql::DbIntrospectorPostgreSql(const QSqlDatabase& database): DbIntrospector(database)
+DbIntrospectorPostgreSql::DbIntrospectorPostgreSql( const QSqlDatabase &database )
+  : DbIntrospector( database )
 {
 }
 
@@ -116,7 +119,7 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
                                                       QLatin1String( REFERENTIAL_CONSTRAINTS ".constraint_catalog" ) );
   referentialConstraintsCondition.addColumnCondition( QLatin1String( TABLE_CONSTRAINTS ".constraint_schema" ), Query::Equals,
                                                       QLatin1String( REFERENTIAL_CONSTRAINTS ".constraint_schema" ) );
-  referentialConstraintsCondition.addColumnCondition( QLatin1String (TABLE_CONSTRAINTS ".constraint_name" ), Query::Equals,
+  referentialConstraintsCondition.addColumnCondition( QLatin1String( TABLE_CONSTRAINTS ".constraint_name" ), Query::Equals,
                                                       QLatin1String( REFERENTIAL_CONSTRAINTS ".constraint_name" ) );
 
   Query::Condition constraintColumnUsageCondition( Query::And );
@@ -139,7 +142,7 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
   qb.addJoin( QueryBuilder::LeftJoin, QLatin1String( CONSTRAINT_COLUMN_USAGE ), constraintColumnUsageCondition );
   qb.addValueCondition( QLatin1String( TABLE_CONSTRAINTS ".constraint_type" ),
                         Query::Equals, QLatin1String( "FOREIGN KEY" ) );
-  qb.addValueCondition( QLatin1String( TABLE_CONSTRAINTS ".table_name"),
+  qb.addValueCondition( QLatin1String( TABLE_CONSTRAINTS ".table_name" ),
                         Query::Equals, tableName.toLower() );
 
   #undef TABLE_CONSTRAINTS
@@ -166,12 +169,12 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
   return result;
 }
 
-QString DbIntrospectorPostgreSql::hasIndexQuery(const QString& tableName, const QString& indexName)
+QString DbIntrospectorPostgreSql::hasIndexQuery( const QString &tableName, const QString &indexName )
 {
   QString query = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
   query += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
   query += QString::fromLatin1( " AND  indexname ilike '%1'" ).arg( indexName );
-  query += QString::fromLatin1( " UNION SELECT conname FROM pg_catalog.pg_constraint ");
+  query += QString::fromLatin1( " UNION SELECT conname FROM pg_catalog.pg_constraint " );
   query += QString::fromLatin1( " WHERE conname ilike '%1'" ).arg( indexName );
   return query;
 }
@@ -180,14 +183,15 @@ QString DbIntrospectorPostgreSql::hasIndexQuery(const QString& tableName, const 
 
 //BEGIN Virtuoso
 
-DbIntrospectorVirtuoso::DbIntrospectorVirtuoso(const QSqlDatabase& database): DbIntrospector(database)
+DbIntrospectorVirtuoso::DbIntrospectorVirtuoso( const QSqlDatabase &database )
+  : DbIntrospector( database )
 {
 }
 
-bool DbIntrospectorVirtuoso::hasIndex(const QString& tableName, const QString& indexName)
+bool DbIntrospectorVirtuoso::hasIndex( const QString &tableName, const QString &indexName )
 {
-  Q_UNUSED(tableName);
-  Q_UNUSED(indexName)
+  Q_UNUSED( tableName );
+  Q_UNUSED( indexName )
 
   // TODO: Implement index checking for Virtuoso!
   return true;
