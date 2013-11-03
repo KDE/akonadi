@@ -46,22 +46,22 @@ public:
     }
 
     void _k_finishedListing();
-    void _k_handleQueryReply(QDBusPendingCallWatcher*);
-    void _k_serviceRegistered( const QString& );
-    void _k_serviceUnregistered( const QString& );
+    void _k_handleQueryReply( QDBusPendingCallWatcher *watcher );
+    void _k_serviceRegistered( const QString &service );
+    void _k_serviceUnregistered( const QString &service );
 
-    org::kde::nepomuk::QueryService* queryServiceInterface;
-    org::kde::nepomuk::Query* queryInterface;
+    org::kde::nepomuk::QueryService *queryServiceInterface;
+    org::kde::nepomuk::Query *queryInterface;
     QDBusServiceWatcher *queryServiceWatcher;
 
-    QueryServiceClient* q;
+    QueryServiceClient *q;
 
     QPointer<QDBusPendingCallWatcher> m_pendingCallWatcher;
 
     QDBusConnection dbusConnection;
 
     bool m_queryActive;
-    QEventLoop* loop;
+    QEventLoop *loop;
     QString m_errorMessage;
 };
 
@@ -74,14 +74,14 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_finishedListing()
     }
 }
 
-void Nepomuk::Query::QueryServiceClient::Private::_k_handleQueryReply(QDBusPendingCallWatcher* watcher)
+void Nepomuk::Query::QueryServiceClient::Private::_k_handleQueryReply( QDBusPendingCallWatcher *watcher )
 {
     QDBusPendingReply<QDBusObjectPath> reply = *watcher;
-    if (reply.isError()) {
+    if ( reply.isError() ) {
         akDebug() << reply.error();
         m_errorMessage = reply.error().message();
         m_queryActive = false;
-        Q_EMIT q->error(m_errorMessage);
+        Q_EMIT q->error( m_errorMessage );
         if ( loop ) {
             loop->exit();
         }
@@ -103,45 +103,45 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_handleQueryReply(QDBusPendi
     delete watcher;
 }
 
-void Nepomuk::Query::QueryServiceClient::Private::_k_serviceRegistered(const QString &service)
+void Nepomuk::Query::QueryServiceClient::Private::_k_serviceRegistered( const QString &service )
 {
-    if (service == QLatin1String("org.kde.nepomuk.services.nepomukqueryservice")) {
+    if ( service == QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ) ) {
         akDebug() << "NEP: nepomukqueryservice has registered again";
         delete queryServiceInterface;
 
-        queryServiceInterface = new org::kde::nepomuk::QueryService( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice"),
-                                                                     QLatin1String("/nepomukqueryservice"),
+        queryServiceInterface = new org::kde::nepomuk::QueryService( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ),
+                                                                     QLatin1String( "/nepomukqueryservice" ),
                                                                      dbusConnection );
-        Q_EMIT q->serviceAvailabilityChanged(true);
+        Q_EMIT q->serviceAvailabilityChanged( true );
     }
 }
 
-void Nepomuk::Query::QueryServiceClient::Private::_k_serviceUnregistered(const QString &service)
+void Nepomuk::Query::QueryServiceClient::Private::_k_serviceUnregistered( const QString &service )
 {
-    if (service == QLatin1String("org.kde.nepomuk.services.nepomukqueryservice")) {
+    if ( service == QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ) ) {
         q->close();
-        Q_EMIT q->serviceAvailabilityChanged(false);
+        Q_EMIT q->serviceAvailabilityChanged( false );
     }
 }
 
-Nepomuk::Query::QueryServiceClient::QueryServiceClient( QObject* parent )
-    : QObject( parent ),
-      d( new Private() )
+Nepomuk::Query::QueryServiceClient::QueryServiceClient( QObject *parent )
+    : QObject( parent )
+    , d( new Private() )
 {
     d->q = this;
 
     Nepomuk::Query::registerDBusTypes();
 
     // we use our own connection to be thread-safe
-    d->queryServiceInterface = new org::kde::nepomuk::QueryService( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice"),
-                                                                    QLatin1String("/nepomukqueryservice"),
+    d->queryServiceInterface = new org::kde::nepomuk::QueryService( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ),
+                                                                    QLatin1String( "/nepomukqueryservice" ),
                                                                     d->dbusConnection );
-    d->queryServiceWatcher = new QDBusServiceWatcher(QLatin1String("org.kde.nepomuk.services.nepomukqueryservice"),
+    d->queryServiceWatcher = new QDBusServiceWatcher( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ),
                                                      QDBusConnection::sessionBus(),
                                                      QDBusServiceWatcher::WatchForOwnerChange,
-                                                     this);
-    connect(d->queryServiceWatcher, SIGNAL(serviceRegistered(QString)), this, SLOT(_k_serviceRegistered(QString)));
-    connect(d->queryServiceWatcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(_k_serviceUnregistered(QString)));
+                                                     this );
+    connect( d->queryServiceWatcher, SIGNAL(serviceRegistered(QString)), this, SLOT(_k_serviceRegistered(QString)) );
+    connect( d->queryServiceWatcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(_k_serviceUnregistered(QString)) );
 }
 
 Nepomuk::Query::QueryServiceClient::~QueryServiceClient()
@@ -151,18 +151,18 @@ Nepomuk::Query::QueryServiceClient::~QueryServiceClient()
     delete d;
 }
 
-bool Nepomuk::Query::QueryServiceClient::query( const QString& query, const QHash<QString, QString> &encodedRps )
+bool Nepomuk::Query::QueryServiceClient::query( const QString &query, const QHash<QString, QString> &encodedRps )
 {
     close();
 
     if ( d->queryServiceInterface->isValid() ) {
         d->m_queryActive = true;
-        d->m_pendingCallWatcher = new QDBusPendingCallWatcher(d->queryServiceInterface->asyncCall(QLatin1String("sparqlQuery"),
+        d->m_pendingCallWatcher = new QDBusPendingCallWatcher( d->queryServiceInterface->asyncCall( QLatin1String( "sparqlQuery" ),
                                                                                                   query,
-                                                                                                  QVariant::fromValue(encodedRps)),
-                                                              this);
-        connect(d->m_pendingCallWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
-                this, SLOT(_k_handleQueryReply(QDBusPendingCallWatcher*)));
+                                                                                                  QVariant::fromValue( encodedRps ) ),
+                                                              this );
+        connect( d->m_pendingCallWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+                 this, SLOT(_k_handleQueryReply(QDBusPendingCallWatcher*)) );
         return true;
     } else {
         akDebug() << "Could not contact nepomuk query service.";
@@ -170,7 +170,7 @@ bool Nepomuk::Query::QueryServiceClient::query( const QString& query, const QHas
     }
 }
 
-bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q, const QHash<QString, QString> &encodedRps )
+bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString &q, const QHash<QString, QString> &encodedRps )
 {
     if ( query( q, encodedRps ) ) {
         QEventLoop loop;
@@ -191,7 +191,7 @@ void Nepomuk::Query::QueryServiceClient::close()
     //       We could also use a stack of pending calls or something like that.
     delete d->m_pendingCallWatcher;
 
-    d->m_errorMessage.truncate(0);
+    d->m_errorMessage.truncate( 0 );
 
     if ( d->queryInterface ) {
         akDebug() << Q_FUNC_INFO;
@@ -212,7 +212,7 @@ bool Nepomuk::Query::QueryServiceClient::isListingFinished() const
 
 bool Nepomuk::Query::QueryServiceClient::serviceAvailable()
 {
-    return QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
+    return QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ) );
 }
 
 QString Nepomuk::Query::QueryServiceClient::errorMessage() const

@@ -138,7 +138,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &rid
 Collection Akonadi::CollectionQueryHelper::singleCollectionFromScope( const Akonadi::Scope &scope, AkonadiConnection *connection )
 {
   // root
-  if ( (scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1 ) {
+  if ( ( scope.scope() == Scope::Uid || scope.scope() == Scope::None ) && scope.uidSet().intervals().count() == 1 ) {
     const ImapInterval i = scope.uidSet().intervals().first();
     if ( !i.size() ) { // ### why do we need this hack for 0, shouldn't that be size() == 1?
       Collection root;

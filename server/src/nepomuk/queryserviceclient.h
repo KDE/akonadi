@@ -54,7 +54,7 @@ namespace Nepomuk {
             /**
              * Create a new QueryServiceClient instance.
              */
-            QueryServiceClient( QObject* parent = 0 );
+            QueryServiceClient( QObject *parent = 0 );
 
             /**
              * Desctructor. Closes the query.
@@ -82,7 +82,7 @@ namespace Nepomuk {
              *
              * \sa QueryParser
              */
-            bool query(const QString& query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() ) );
+            bool query( const QString &query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() )  );
 
             /**
              * Start a query using the Nepomuk query service.
@@ -102,7 +102,7 @@ namespace Nepomuk {
              *
              * \sa query(const QString&), close()
              */
-            bool blockingQuery( const QString& query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() ) );
+            bool blockingQuery( const QString &query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() ) );
 
             /**
              * Close the client, thus stop to monitor the query
@@ -134,14 +134,14 @@ namespace Nepomuk {
              * Emitted for new search results. This signal is emitted both
              * for the initial listing and for changes to the search.
              */
-            void newEntries( const QList<Nepomuk::Query::Result>& entries );
+            void newEntries( const QList<Nepomuk::Query::Result> &entries );
 
             /**
              * Emitted if the search results changed when monitoring a query.
              * \param entries A list of resource URIs identifying the resources
              * that dropped out of the query results.
              */
-            void entriesRemoved( const QList<Nepomuk::Query::Result>& entries );
+            void entriesRemoved( const QList<Nepomuk::Query::Result> &entries );
 
             /**
              * Emitted when the initial listing has been finished, ie. if all
@@ -161,7 +161,7 @@ namespace Nepomuk {
              *
              * \since 4.6
              */
-            void error( const QString& errorMessage );
+            void error( const QString &errorMessage );
 
             /**
              * Emitted when the availability of the query service changes
@@ -172,12 +172,12 @@ namespace Nepomuk {
 
         private:
             class Private;
-            Private* const d;
+            Private *const d;
 
             Q_PRIVATE_SLOT( d, void _k_finishedListing() )
-            Q_PRIVATE_SLOT( d, void _k_handleQueryReply(QDBusPendingCallWatcher*) )
-            Q_PRIVATE_SLOT( d, void _k_serviceRegistered( const QString& ) )
-            Q_PRIVATE_SLOT( d, void _k_serviceUnregistered( const QString& ) )
+            Q_PRIVATE_SLOT( d, void _k_handleQueryReply( QDBusPendingCallWatcher *) )
+            Q_PRIVATE_SLOT( d, void _k_serviceRegistered( const QString &service ) )
+            Q_PRIVATE_SLOT( d, void _k_serviceUnregistered( const QString &service ) )
         };
     }
 }
