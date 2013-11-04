@@ -22,7 +22,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Query;
 
-void Condition::addValueCondition(const QString & column, CompareOperator op, const QVariant & value)
+void Condition::addValueCondition( const QString &column, CompareOperator op, const QVariant &value )
 {
   Q_ASSERT( !column.isEmpty() );
   Condition c;
@@ -32,7 +32,7 @@ void Condition::addValueCondition(const QString & column, CompareOperator op, co
   mSubConditions << c;
 }
 
-void Condition::addColumnCondition(const QString & column, CompareOperator op, const QString & column2)
+void Condition::addColumnCondition( const QString &column, CompareOperator op, const QString &column2 )
 {
   Q_ASSERT( !column.isEmpty() );
   Q_ASSERT( !column2.isEmpty() );
@@ -43,8 +43,9 @@ void Condition::addColumnCondition(const QString & column, CompareOperator op, c
   mSubConditions << c;
 }
 
-Query::Condition::Condition(LogicOperator op) :
-  mCompareOp( Equals ), mCombineOp( op )
+Query::Condition::Condition( LogicOperator op )
+  : mCompareOp( Equals )
+  , mCombineOp( op )
 {
 }
 
@@ -58,12 +59,12 @@ Condition::List Query::Condition::subConditions() const
   return mSubConditions;
 }
 
-void Query::Condition::setSubQueryMode(LogicOperator op)
+void Query::Condition::setSubQueryMode( LogicOperator op )
 {
   mCombineOp = op;
 }
 
-void Query::Condition::addCondition(const Condition & condition)
+void Query::Condition::addCondition( const Condition &condition )
 {
   mSubConditions << condition;
 }

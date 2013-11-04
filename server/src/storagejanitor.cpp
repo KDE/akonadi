@@ -238,7 +238,7 @@ void StorageJanitor::checkPathToRoot( const Akonadi::Collection &col )
   }
   const Akonadi::Collection parent = col.parent();
   if ( !parent.isValid() ) {
-    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id() )
           + QLatin1Literal( ") has no valid parent." ) );
     // TODO fix that by attaching to a top-level lost+found folder
     return;
@@ -345,8 +345,9 @@ void StorageJanitor::findOverlappingParts()
     // TODO: uh oh, this is bad, how do we recover from that?
   }
 
-  if ( count > 0 )
+  if ( count > 0 ) {
     inform( QLatin1Literal( "Found " ) + QString::number( count ) + QLatin1Literal( " overlapping parts - bad." ) );
+  }
 }
 
 void StorageJanitor::verifyExternalParts()
@@ -415,9 +416,10 @@ void StorageJanitor::findDirtyObjects()
   cqb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString() );
   cqb.exec();
   const Collection::List ridLessCols = cqb.result();
-  Q_FOREACH ( const Collection &col, ridLessCols )
-    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
+  Q_FOREACH ( const Collection &col, ridLessCols ) {
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id() )
           + QLatin1Literal( ") has no RID." ) );
+  }
   inform( QLatin1Literal( "Found " ) + QString::number( ridLessCols.size() ) + QLatin1Literal( " collections without RID." ) );
 
   SelectQueryBuilder<PimItem> iqb1;
@@ -427,7 +429,7 @@ void StorageJanitor::findDirtyObjects()
   iqb1.exec();
   const PimItem::List ridLessItems = iqb1.result();
   Q_FOREACH ( const PimItem &item, ridLessItems )
-    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( "\" has no RID." ) );
+    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id() ) + QLatin1Literal( "\" has no RID." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( ridLessItems.size() ) + QLatin1Literal( " items without RID." ) );
 
   SelectQueryBuilder<PimItem> iqb2;
@@ -436,8 +438,9 @@ void StorageJanitor::findDirtyObjects()
   iqb2.addSortColumn( PimItem::idFullColumnName() );
   iqb2.exec();
   const PimItem::List dirtyItems = iqb2.result();
-  Q_FOREACH ( const PimItem &item, dirtyItems )
-    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( "\" has RID and is dirty." ) );
+  Q_FOREACH ( const PimItem &item, dirtyItems ) {
+    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id() ) + QLatin1Literal( "\" has RID and is dirty." ) );
+  }
   inform( QLatin1Literal( "Found " ) + QString::number( dirtyItems.size() ) + QLatin1Literal( " dirty items." ) );
 }
 

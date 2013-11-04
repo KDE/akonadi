@@ -38,7 +38,7 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
   Q_OBJECT
 
   public:
-    NepomukSearchEngine( QObject* parent = 0 );
+    NepomukSearchEngine( QObject *parent = 0 );
     ~NepomukSearchEngine();
 
     void addSearch( const Collection &collection );
@@ -49,16 +49,16 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
 
   private Q_SLOTS:
     void reloadSearches();
-    void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
-    void hitsRemoved( const QList<Nepomuk::Query::Result>& entries );
+    void hitsAdded( const QList<Nepomuk::Query::Result> &entries );
+    void hitsRemoved( const QList<Nepomuk::Query::Result> &entries );
     void finishedListing();
 
   private:
     QMutex mMutex;
-    NotificationCollector* mCollector;
+    NotificationCollector *mCollector;
 
-    QHash<Nepomuk::Query::QueryServiceClient*, qint64> mQueryMap;
-    QHash<qint64, Nepomuk::Query::QueryServiceClient*> mQueryInvMap;
+    QHash<Nepomuk::Query::QueryServiceClient *, qint64> mQueryMap;
+    QHash<qint64, Nepomuk::Query::QueryServiceClient *> mQueryInvMap;
 
     bool m_liveSearchEnabled;
 };

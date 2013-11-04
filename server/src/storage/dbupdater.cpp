@@ -32,9 +32,9 @@
 #include <QDomDocument>
 #include <QFile>
 
-DbUpdater::DbUpdater( const QSqlDatabase & database, const QString & filename )
-  : m_database( database ),
-    m_filename( filename )
+DbUpdater::DbUpdater( const QSqlDatabase &database, const QString &filename )
+  : m_database( database )
+  , m_filename( filename )
 {
 }
 
@@ -56,7 +56,7 @@ bool DbUpdater::run()
   }
   // indicate clients this might take a while
   // we can ignore unregistration in error cases, that'll kill the server anyway
-  QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::UpgradeIndicator) );
+  QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::UpgradeIndicator ) );
 
   // QMap is sorted, so we should be replaying the changes in correct order
   for ( QMap<int, UpdateSet>::ConstIterator it = updates.constBegin(); it != updates.constEnd(); ++it ) {
@@ -90,7 +90,7 @@ bool DbUpdater::run()
     }
   }
 
-  QDBusConnection::sessionBus().unregisterService( AkDBus::serviceName(AkDBus::UpgradeIndicator) );
+  QDBusConnection::sessionBus().unregisterService( AkDBus::serviceName( AkDBus::UpgradeIndicator ) );
   return true;
 }
 
@@ -138,7 +138,7 @@ bool DbUpdater::parseUpdateSets( int currentVersion, UpdateSet::Map &updates ) c
       } else {
         UpdateSet updateSet;
         updateSet.version = version;
-        updateSet.abortOnFailure = (updateElement.attribute( QLatin1String( "abortOnFailure" ) ) == QLatin1String( "true" ));
+        updateSet.abortOnFailure = ( updateElement.attribute( QLatin1String( "abortOnFailure" ) ) == QLatin1String( "true" ) );
 
         QDomElement childElement = updateElement.firstChildElement();
         while ( !childElement.isNull() ) {

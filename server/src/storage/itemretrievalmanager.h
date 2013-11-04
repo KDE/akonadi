@@ -45,7 +45,7 @@ class ItemRetrievalManager : public QObject
     ItemRetrievalManager( QObject *parent = 0 );
     ~ItemRetrievalManager();
 
-    void requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
+    void requestItemDelivery( qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
                               const QString &resource, const QStringList &parts );
 
     /**
@@ -76,12 +76,12 @@ class ItemRetrievalManager : public QObject
     /// Used to let requesting threads wait until the request has been processed
     QWaitCondition *mWaitCondition;
     /// Pending requests queues, one per resource
-    QHash<QString, QList<ItemRetrievalRequest*> > mPendingRequests;
+    QHash<QString, QList<ItemRetrievalRequest *> > mPendingRequests;
     /// Currently running jobs, one per resource
-    QHash<QString, ItemRetrievalJob*> mCurrentJobs;
+    QHash<QString, ItemRetrievalJob *> mCurrentJobs;
 
     // resource dbus interface cache
-    QHash<QString, OrgFreedesktopAkonadiResourceInterface*> mResourceInterfaces;
+    QHash<QString, OrgFreedesktopAkonadiResourceInterface *> mResourceInterfaces;
     QDBusConnection mDBusConnection;
 };
 

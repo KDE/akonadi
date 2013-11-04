@@ -40,8 +40,8 @@ using namespace Akonadi;
 
 static qint64 resultToId( const Nepomuk::Query::Result &result )
 {
-  const Soprano::Node &property = result.requestProperty(QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ));
-  if (!(property.isValid() && property.isLiteral() && property.literal().isString())) {
+  const Soprano::Node &property = result.requestProperty( QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ) );
+  if ( !( property.isValid() && property.isLiteral() && property.literal().isString() ) ) {
     qWarning() << "Failed to get requested akonadiItemId property";
     qDebug() << "AkonadiItemId missing in query results!" << result.resourceUri() << property.isValid() << property.isLiteral() << property.literal().isString() << property.literal().type() << result.requestProperties().size();
 //    qDebug() << result.requestProperties().values().first().toString();
@@ -50,15 +50,15 @@ static qint64 resultToId( const Nepomuk::Query::Result &result )
   return property.literal().toString().toLongLong();
 }
 
-NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
-  : QObject( parent ),
-    mCollector( new NotificationCollector( this ) ),
-    m_liveSearchEnabled( true )
+NepomukSearchEngine::NepomukSearchEngine( QObject *parent )
+  : QObject( parent )
+  , mCollector( new NotificationCollector( this ) )
+  , m_liveSearchEnabled( true )
 {
   NotificationManager::self()->connectNotificationCollector( mCollector );
 
   QDBusServiceWatcher *watcher =
-    new QDBusServiceWatcher( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice"),
+    new QDBusServiceWatcher( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ),
                              QDBusConnection::sessionBus(),
                              QDBusServiceWatcher::WatchForRegistration, this );
   connect( watcher, SIGNAL(serviceRegistered(QString)), SLOT(reloadSearches()) );
@@ -70,8 +70,8 @@ NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
     akError() << "Nepomuk Query Server not available";
   }
 
-  const QSettings settings(XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat);
-  m_liveSearchEnabled = settings.value(QLatin1String("Nepomuk/LiveSearchEnabled"), false).toBool();
+  const QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
+  m_liveSearchEnabled = settings.value( QLatin1String( "Nepomuk/LiveSearchEnabled" ), false ).toBool();
 }
 
 NepomukSearchEngine::~NepomukSearchEngine()
@@ -93,7 +93,7 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
 
   //FIXME the requested property must be passed to here from the calling code
   //Ideally the Query is passed as object so we can check here for the akonadiItemId property, and add it if missing
-  if (!q.contains(QString::fromLatin1("reqProp1")) || !q.contains(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId"))) {
+  if ( !q.contains( QString::fromLatin1( "reqProp1" ) ) || !q.contains( QString::fromLatin1( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ) ) {
     qWarning() << "The query MUST contain exactly one required property (http://akonadi-project.org/ontologies/aneo#akonadiItemId), if another property is additionally requested or the akonadiItemId is missing the search will fail (due to this hack)";
     qWarning() << q;
     return;
@@ -114,7 +114,7 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
   mMutex.unlock();
 
   QHash<QString, QString> encodedRps;
-  encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() ); //FIXME hack because the reqProp is not passed to here by the caller
+  encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl( QString::fromLatin1( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ).toString() ); //FIXME hack because the reqProp is not passed to here by the caller
   query->query( collection.queryString(), encodedRps );
 }
 
@@ -176,9 +176,9 @@ void NepomukSearchEngine::stopSearches()
   }
 }
 
-void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
+void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result> &entries )
 {
-  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
+  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient *>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
@@ -190,7 +190,7 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
   const Collection collection = Collection::retrieveById( collectionId );
 
   PimItem::List items;
-  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
+  Q_FOREACH ( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = resultToId( result );
 
     if ( itemId == -1 ) {
@@ -204,9 +204,9 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
   mCollector->dispatchNotifications();
 }
 
-void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entries )
+void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result> &entries )
 {
-  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
+  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient *>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
@@ -217,7 +217,7 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
   mMutex.unlock();
   const Collection collection = Collection::retrieveById( collectionId );
   PimItem::List items;
-  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
+  Q_FOREACH ( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = resultToId( result );
 
     if ( itemId == -1 ) {
@@ -234,11 +234,11 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
 
 void NepomukSearchEngine::finishedListing()
 {
-  if (m_liveSearchEnabled) {
+  if ( m_liveSearchEnabled ) {
     return;
   }
 
-  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
+  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient *>( sender() );
   if ( !query ) {
     qWarning() << Q_FUNC_INFO << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
@@ -248,5 +248,5 @@ void NepomukSearchEngine::finishedListing()
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
 
-  removeSearch(collectionId);
+  removeSearch( collectionId );
 }

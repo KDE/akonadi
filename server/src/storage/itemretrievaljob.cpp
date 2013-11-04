@@ -29,7 +29,7 @@ ItemRetrievalJob::~ItemRetrievalJob()
   Q_ASSERT( !m_active );
 }
 
-void ItemRetrievalJob::start(QDBusAbstractInterface *interface)
+void ItemRetrievalJob::start( QDBusAbstractInterface *interface )
 {
   Q_ASSERT( m_request );
   akDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
@@ -57,7 +57,7 @@ void ItemRetrievalJob::kill()
   Q_EMIT requestCompleted( m_request, QLatin1String( "Request cancelled" ) );
 }
 
-void ItemRetrievalJob::callFinished(bool returnValue)
+void ItemRetrievalJob::callFinished( bool returnValue )
 {
   if ( m_active ) {
     m_active = false;
@@ -70,7 +70,7 @@ void ItemRetrievalJob::callFinished(bool returnValue)
   deleteLater();
 }
 
-void ItemRetrievalJob::callFinished(const QString& errorMsg)
+void ItemRetrievalJob::callFinished( const QString &errorMsg )
 {
   if ( m_active ) {
     m_active = false;
@@ -83,11 +83,11 @@ void ItemRetrievalJob::callFinished(const QString& errorMsg)
   deleteLater();
 }
 
-void ItemRetrievalJob::callFailed(const QDBusError& error)
+void ItemRetrievalJob::callFailed( const QDBusError &error )
 {
   if ( error.type() == QDBusError::UnknownMethod && !m_oldMethodCalled ) {
     akDebug() << "processing retrieval request (old method) for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
-    Q_ASSERT(m_interface);
+    Q_ASSERT( m_interface );
     //try the old version
     QList<QVariant> arguments;
     arguments << m_request->id

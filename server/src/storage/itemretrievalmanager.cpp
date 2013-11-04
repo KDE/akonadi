@@ -43,7 +43,7 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent )
     mDBusConnection(
       QDBusConnection::connectToBus(
           QDBusConnection::SessionBus,
-          QString::fromLatin1("AkonadiServerItemRetrievalManager") ) )
+          QString::fromLatin1( "AkonadiServerItemRetrievalManager" ) ) )
 {
   // make sure we are created from the retrieval thread and only once
   Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
@@ -71,7 +71,7 @@ ItemRetrievalManager *ItemRetrievalManager::instance()
 }
 
 // called within the retrieval thread
-void ItemRetrievalManager::serviceOwnerChanged(const QString& serviceName, const QString& oldOwner, const QString& newOwner)
+void ItemRetrievalManager::serviceOwnerChanged( const QString &serviceName, const QString &oldOwner, const QString &newOwner )
 {
   Q_UNUSED( newOwner );
   if ( oldOwner.isEmpty() ) {
@@ -87,7 +87,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString& serviceName, const
 }
 
 // called within the retrieval thread
-OrgFreedesktopAkonadiResourceInterface *ItemRetrievalManager::resourceInterface(const QString& id)
+OrgFreedesktopAkonadiResourceInterface *ItemRetrievalManager::resourceInterface( const QString &id )
 {
   if ( id.isEmpty() ) {
     return 0;
@@ -100,24 +100,24 @@ OrgFreedesktopAkonadiResourceInterface *ItemRetrievalManager::resourceInterface(
 
   delete iface;
   iface = new OrgFreedesktopAkonadiResourceInterface( AkDBus::agentServiceName( id, AkDBus::Resource ),
-                                                      QLatin1String("/"), mDBusConnection, this );
+                                                      QLatin1String( "/" ), mDBusConnection, this );
   if ( !iface || !iface->isValid() ) {
     akError() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                    .arg( id, iface ? iface->lastError().message() : QString() );
+                                      .arg( id, iface ? iface->lastError().message() : QString() );
     delete iface;
     return 0;
   }
 #if QT_VERSION >= 0x040800
   // DBus calls can take some time to reply -- e.g. if a huge local mbox has to be parsed first.
-  iface->setTimeout(5 * 60 * 1000); // 5 minutes, rather than 25 seconds
+  iface->setTimeout( 5 * 60 * 1000 ); // 5 minutes, rather than 25 seconds
 #endif
   mResourceInterfaces.insert( id, iface );
   return iface;
 }
 
 // called from any thread
-void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
-                                               const QString& resource, const QStringList& parts )
+void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
+                                                const QString &resource, const QStringList &parts )
 {
   ItemRetrievalRequest *req = new ItemRetrievalRequest();
   req->id = uid;
@@ -132,8 +132,10 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
 void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
 {
   mLock->lockForWrite();
-  akDebug() << "posting retrieval request for item" << req->id << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ req->resourceId ].size() << " items in mine";
-  mPendingRequests[ req->resourceId ].append( req );
+  akDebug() << "posting retrieval request for item" << req->id << " there are "
+            << mPendingRequests.size() << " queues and "
+            << mPendingRequests[req->resourceId].size() << " items in mine";
+  mPendingRequests[req->resourceId].append( req );
   mLock->unlock();
 
   Q_EMIT requestAdded();
@@ -143,7 +145,7 @@ void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
     //akDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
       boost::scoped_ptr<ItemRetrievalRequest> reqDeleter( req );
-      Q_ASSERT( !mPendingRequests[ req->resourceId ].contains( req ) );
+      Q_ASSERT( !mPendingRequests[req->resourceId].contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
       if ( errorMsg.isEmpty() ) {
@@ -196,12 +198,12 @@ void ItemRetrievalManager::processRequest()
     return;
   }
 
-  for ( QVector< QPair< ItemRetrievalJob*, QString > >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it ) {
-    (*it).first->start( resourceInterface( (*it).second ) );
+  for ( QVector<QPair<ItemRetrievalJob *, QString> >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it ) {
+    ( *it ).first->start( resourceInterface( ( *it ).second ) );
   }
 }
 
-void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, const QString& errorMsg)
+void ItemRetrievalManager::retrievalJobFinished( ItemRetrievalRequest *request, const QString &errorMsg )
 {
   mLock->lockForWrite();
   request->errorMsg = errorMsg;
@@ -209,12 +211,12 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
   Q_ASSERT( mCurrentJobs.contains( request->resourceId ) );
   mCurrentJobs.remove( request->resourceId );
   // TODO check if (*it)->parts is a subset of currentRequest->parts
-  for ( QList<ItemRetrievalRequest*>::Iterator it = mPendingRequests[ request->resourceId ].begin(); it != mPendingRequests[ request->resourceId ].end(); ) {
-    if ( (*it)->id == request->id ) {
+  for ( QList<ItemRetrievalRequest *>::Iterator it = mPendingRequests[request->resourceId].begin(); it != mPendingRequests[request->resourceId].end(); ) {
+    if ( ( *it )->id == request->id ) {
       akDebug() << "someone else requested item" << request->id << "as well, marking as processed";
-      (*it)->errorMsg = errorMsg;
-      (*it)->processed = true;
-      it = mPendingRequests[ request->resourceId ].erase( it );
+      ( *it )->errorMsg = errorMsg;
+      ( *it )->processed = true;
+      it = mPendingRequests[request->resourceId].erase( it );
     } else {
       ++it;
     }
@@ -224,7 +226,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
   Q_EMIT requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
-void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64 colId)
+void ItemRetrievalManager::triggerCollectionSync( const QString &resource, qint64 colId )
 {
   OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
   if ( interface ) {
@@ -232,7 +234,7 @@ void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64
   }
 }
 
-void ItemRetrievalManager::triggerCollectionTreeSync( const QString& resource )
+void ItemRetrievalManager::triggerCollectionTreeSync( const QString &resource )
 {
   OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
   if ( interface ) {

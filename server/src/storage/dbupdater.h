@@ -35,7 +35,8 @@ class UpdateSet
     typedef QMap<int, UpdateSet> Map;
 
     UpdateSet()
-      : version( -1 ), abortOnFailure( false )
+      : version( -1 )
+      , abortOnFailure( false )
     {
     }
 
@@ -67,10 +68,10 @@ class DbUpdater
   private:
     friend class DbUpdaterTest;
 
-    bool updateApplicable( const QString& ) const;
-    QString buildRawSqlStatement( const QDomElement& ) const;
+    bool updateApplicable( const QString &backends ) const;
+    QString buildRawSqlStatement( const QDomElement &element ) const;
 
-    bool parseUpdateSets( int, UpdateSet::Map& ) const;
+    bool parseUpdateSets( int, UpdateSet::Map &updates ) const;
 
     QSqlDatabase m_database;
     QString m_filename;

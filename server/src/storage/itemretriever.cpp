@@ -37,22 +37,24 @@
 
 using namespace Akonadi;
 
-ItemRetriever::ItemRetriever( AkonadiConnection *connection ) :
-  mScope( Scope::Invalid ),
-  mConnection( connection ),
-  mFullPayload( false ),
-  mRecursive( false )
-{ }
+ItemRetriever::ItemRetriever( AkonadiConnection *connection )
+  : mScope( Scope::Invalid )
+  , mConnection( connection )
+  , mFullPayload( false )
+  , mRecursive( false )
+{
+}
 
 ItemRetriever::~ItemRetriever()
-{ }
+{
+}
 
 AkonadiConnection *ItemRetriever::connection() const
 {
   return mConnection;
 }
 
-void ItemRetriever::setRetrieveParts(const QStringList& parts)
+void ItemRetriever::setRetrieveParts( const QStringList &parts )
 {
   mParts = parts;
   // HACK, we need a full payload available flag in PimItem
@@ -61,13 +63,13 @@ void ItemRetriever::setRetrieveParts(const QStringList& parts)
   }
 }
 
-void ItemRetriever::setItemSet(const ImapSet& set, const Collection &collection )
+void ItemRetriever::setItemSet( const ImapSet &set, const Collection &collection )
 {
   mItemSet = set;
   mCollection = collection;
 }
 
-void ItemRetriever::setItemSet(const ImapSet& set, bool isUid)
+void ItemRetriever::setItemSet( const ImapSet &set, bool isUid )
 {
   Q_ASSERT( mConnection );
   if ( !isUid && mConnection->selectedCollectionId() >= 0 ) {
@@ -77,7 +79,7 @@ void ItemRetriever::setItemSet(const ImapSet& set, bool isUid)
   }
 }
 
-void ItemRetriever::setItem( const Akonadi::Entity::Id& id )
+void ItemRetriever::setItem( const Akonadi::Entity::Id &id )
 {
   ImapSet set;
   set.add( ImapInterval( id, id ) );
@@ -85,7 +87,7 @@ void ItemRetriever::setItem( const Akonadi::Entity::Id& id )
   mCollection = Collection();
 }
 
-void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
+void ItemRetriever::setRetrieveFullPayload( bool fullPayload )
 {
   mFullPayload = fullPayload;
   // HACK, we need a full payload available flag in PimItem
@@ -94,14 +96,14 @@ void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
   }
 }
 
-void ItemRetriever::setCollection(const Collection& collection, bool recursive)
+void ItemRetriever::setCollection( const Collection &collection, bool recursive )
 {
   mCollection = collection;
   mItemSet = ImapSet();
   mRecursive = recursive;
 }
 
-void ItemRetriever::setScope(const Scope& scope)
+void ItemRetriever::setScope( const Scope &scope )
 {
   mScope = scope;
 }
@@ -139,7 +141,7 @@ QSqlQuery ItemRetriever::buildQuery() const
   qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
   Query::Condition partJoinCondition;
-  partJoinCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
+  partJoinCondition.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
   if ( !mFullPayload && !mParts.isEmpty() ) {
     partJoinCondition.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
   }
@@ -187,12 +189,12 @@ bool ItemRetriever::exec()
 
   QSqlQuery query = buildQuery();
   ItemRetrievalRequest *lastRequest = 0;
-  QList<ItemRetrievalRequest*> requests;
+  QList<ItemRetrievalRequest *> requests;
 
   QStringList parts;
   Q_FOREACH ( const QString &part, mParts ) {
     if ( part.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) ) {
-      parts << part.mid(4);
+      parts << part.mid( 4 );
     }
   }
 
@@ -259,7 +261,7 @@ bool ItemRetriever::exec()
       retriever.setRetrieveParts( mParts );
       retriever.setRetrieveFullPayload( mFullPayload );
       result = retriever.exec();
-      if (!result) {
+      if ( !result ) {
         break;
       }
     }
@@ -270,7 +272,7 @@ bool ItemRetriever::exec()
 
 void ItemRetriever::verifyCache()
 {
-  if (!connection()->verifyCacheOnRetrieval()) {
+  if ( !connection()->verifyCacheOnRetrieval() ) {
     return;
   }
 
@@ -284,7 +286,7 @@ void ItemRetriever::verifyCache()
     ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
   }
 
-  if (!qb.exec()) {
+  if ( !qb.exec() ) {
     mLastError = "Unable to query parts.";
     throw ItemRetrieverException( mLastError );
   }

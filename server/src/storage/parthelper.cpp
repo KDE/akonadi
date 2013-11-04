@@ -43,7 +43,7 @@ QString PartHelper::fileNameForPart( Part *part )
 
 void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 {
-  if (!part) {
+  if ( !part ) {
     throw PartHelperException( "Invalid part" );
   }
 
@@ -69,15 +69,15 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     if ( fileName.isEmpty() ) {
       fileName = fileNameForPart( part );
     }
-    QString rev = QString::fromAscii("_r0");
-    if ( fileName.contains( QString::fromAscii("_r") ) ) {
-      int revIndex = fileName.indexOf(QString::fromAscii("_r"));
-      rev = fileName.mid( revIndex + 2  );
+    QString rev = QString::fromAscii( "_r0" );
+    if ( fileName.contains( QString::fromAscii( "_r" ) ) ) {
+      int revIndex = fileName.indexOf( QString::fromAscii( "_r" ) );
+      rev = fileName.mid( revIndex + 2 );
       int r = rev.toInt();
       r++;
       rev = QString::number( r );
       fileName = fileName.left( revIndex );
-      rev.prepend( QString::fromAscii("_r") );
+      rev.prepend( QString::fromAscii( "_r" ) );
     }
     fileName += rev;
 
@@ -113,7 +113,7 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 
 bool PartHelper::insert( Part *part, qint64 *insertId )
 {
-  if (!part) {
+  if ( !part ) {
     return false;
   }
 
@@ -134,7 +134,7 @@ bool PartHelper::insert( Part *part, qint64 *insertId )
 
   if ( storeInFile && result ) {
     QString fileName = fileNameForPart( part );
-    fileName +=  QString::fromUtf8("_r0");
+    fileName +=  QString::fromUtf8( "_r0" );
     const QString filePath = storagePath() + QDir::separator() + fileName;
 
     QFile file( filePath );
@@ -159,7 +159,7 @@ bool PartHelper::insert( Part *part, qint64 *insertId )
 
 bool PartHelper::remove( Akonadi::Part *part )
 {
-  if (!part) {
+  if ( !part ) {
     return false;
   }
 
@@ -186,14 +186,14 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   Part::List::ConstIterator it = parts.constBegin();
   Part::List::ConstIterator end = parts.constEnd();
   for ( ; it != end; ++it ) {
-    const QString fileName = resolveAbsolutePath( (*it).data() );
+    const QString fileName = resolveAbsolutePath( ( *it ).data() );
     // akDebug() << "remove part file " << fileName;
     removeFile( fileName );
   }
   return Part::remove( column, value );
 }
 
-void PartHelper::removeFile(const QString& fileName)
+void PartHelper::removeFile( const QString &fileName )
 {
   if ( !fileName.startsWith( storagePath() ) ) {
     throw PartHelperException( "Attempting to delete a file not in our prefix." );
@@ -222,12 +222,12 @@ QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
   }
 }
 
-QByteArray PartHelper::translateData( const Part& part )
+QByteArray PartHelper::translateData( const Part &part )
 {
   return translateData( part.data(), part.external() );
 }
 
-bool Akonadi::PartHelper::truncate(Part& part)
+bool Akonadi::PartHelper::truncate( Part &part )
 {
   if ( part.external() ) {
     const QString fileName = resolveAbsolutePath( part.data() );
@@ -247,11 +247,11 @@ QString PartHelper::storagePath()
   return dataDir;
 }
 
-bool PartHelper::verify(Part& part)
+bool PartHelper::verify( Part &part )
 {
   const QString fileName = resolveAbsolutePath( part.data() );
 
-  if ( !QFile::exists(fileName) ) {
+  if ( !QFile::exists( fileName ) ) {
     akError() << "Payload file" << fileName << "is missing, trying to recover.";
     part.setData( QByteArray() );
     part.setDatasize( 0 );

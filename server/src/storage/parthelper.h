@@ -68,16 +68,16 @@ namespace PartHelper
   void removeFile( const QString &fileName );
 
   /** Returns the payload data. */
-  QByteArray translateData( const QByteArray &data, bool isExternal  );
+  QByteArray translateData( const QByteArray &data, bool isExternal );
   /** Convenience overload of the above. */
-  QByteArray translateData( const Part& part );
+  QByteArray translateData( const Part &part );
   /** Truncate the payload of @p part and update filesystem/database accordingly.
    *  This is more efficient than using update since it does not require the data to be loaded.
    */
   bool truncate( Part &part );
 
   /** Verifies and if necessary fixes the external reference of this part. */
-  bool verify( Akonadi::Part& part );
+  bool verify( Akonadi::Part &part );
 
 // private: for unit testing only
   /**
