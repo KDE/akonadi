@@ -1,3 +1,14 @@
+1.10.80                       05-November-2013
+----------------------------------------------
+- Servser-side notification filtering
+- GID support
+- Export custom agent properties to clients
+- Faster Akonadi shutdown
+- Improved and faster database schema check on start
+- Enabled C++11 support
+- Optimize some SQL queries
+- Store only relative paths to external payload files in database
+
 1.10.3                         04-October-2013
 ----------------------------------------------
 - Fix support for latest PostgreSQL
