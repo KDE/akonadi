@@ -43,7 +43,7 @@ class IdleClient : public QObject
     explicit IdleClient( AkonadiConnection *connection, const QByteArray &clientId );
     virtual ~IdleClient();
 
-    bool acceptsNotification( const NotificationMessageV2 &msg );
+    bool acceptsNotification( const NotificationMessageV2 &msg ) const;
     void dispatchNotification( const Akonadi::Response &response );
     void dispatchNotification( const NotificationMessageV2 &msg,
                                const Collection &collection );
@@ -111,6 +111,7 @@ class IdleClient : public QObject
     // Workaround for const getters
     void updateMonitorAll() const;
 
+    bool isOperationMonitored( Idle::Operation operation ) const;
     bool isCollectionMonitored( Entity::Id id ) const;
     bool isMimeTypeMonitored( const QString &mimeType ) const;
     bool isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const;

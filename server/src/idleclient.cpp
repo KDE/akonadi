@@ -68,6 +68,7 @@ bool IdleClient::isFrozen() const
 
 void IdleClient::done()
 {
+  akDebug() << "IdleClient::done" << mClientId;
   mConnection->setIdleClient( 0 );
   IdleManager::self()->unregisterClient( this );
   deleteLater();
@@ -318,7 +319,16 @@ bool IdleClient::isMoveDestinationResourceMonitored( const NotificationMessageV2
   return mMonitoredResources.contains( msg.destinationResource() );
 }
 
-bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
+bool IdleClient::isOperationMonitored( Idle::Operation operation ) const
+{
+  if ( mMonitoredOperations.isEmpty() ) {
+    return true;
+  }
+
+  return mMonitoredOperations.contains( operation );
+}
+
+bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg ) const
 {
   // session is ignored
   if ( mIgnoredSessions.contains( msg.sessionId() ) ) {
@@ -334,15 +344,15 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
     return true;
   }
 
-  if ( ( msg.operation() == NotificationMessageV2::Add && !mMonitoredOperations.contains( Idle::Add ) )
-      || ( msg.operation() == NotificationMessageV2::Modify && !mMonitoredOperations.contains( Idle::Modify ) )
-      || ( msg.operation() == NotificationMessageV2::ModifyFlags && !mMonitoredOperations.contains( Idle::ModifyFlags ) )
-      || ( msg.operation() == NotificationMessageV2::Remove && !mMonitoredOperations.contains( Idle::Remove ) )
-      || ( msg.operation() == NotificationMessageV2::Move && !mMonitoredOperations.contains( Idle::Move ) )
-      || ( msg.operation() == NotificationMessageV2::Link && !mMonitoredOperations.contains( Idle::Link ) )
-      || ( msg.operation() == NotificationMessageV2::Unlink && !mMonitoredOperations.contains( Idle::Unlink ) )
-      || ( msg.operation() == NotificationMessageV2::Subscribe && !mMonitoredOperations.contains( Idle::Subscribe ) )
-      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !mMonitoredOperations.contains( Idle::Unsubscribe ) ) ) {
+  if ( ( msg.operation() == NotificationMessageV2::Add && !isOperationMonitored( Idle::Add ) )
+      || ( msg.operation() == NotificationMessageV2::Modify && !isOperationMonitored( Idle::Modify ) )
+      || ( msg.operation() == NotificationMessageV2::ModifyFlags && !isOperationMonitored( Idle::ModifyFlags ) )
+      || ( msg.operation() == NotificationMessageV2::Remove && !isOperationMonitored( Idle::Remove ) )
+      || ( msg.operation() == NotificationMessageV2::Move && !isOperationMonitored( Idle::Move ) )
+      || ( msg.operation() == NotificationMessageV2::Link && !isOperationMonitored( Idle::Link ) )
+      || ( msg.operation() == NotificationMessageV2::Unlink && !isOperationMonitored( Idle::Unlink ) )
+      || ( msg.operation() == NotificationMessageV2::Subscribe && !isOperationMonitored( Idle::Subscribe ) )
+      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !isOperationMonitored( Idle::Unsubscribe ) ) ) {
         return false;
   }
 
@@ -411,6 +421,7 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
 
 void IdleClient::dispatchNotification( const Response &response )
 {
+  akDebug() << "Dispatching" << response.asString() << "to" << mClientId;
   // Assert? Manager should make sure it ignores offline clients
   if ( mConnection == 0 ) {
     return;
