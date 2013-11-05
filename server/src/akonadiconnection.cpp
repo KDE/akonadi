@@ -131,6 +131,9 @@ void AkonadiConnection::run()
 
 void AkonadiConnection::slotDisconnected()
 {
+    if ( m_idleClient ) {
+      m_idleClient->done();
+    }
     quit();
 }
 
