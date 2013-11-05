@@ -61,8 +61,7 @@ bool DbConfigMysql::init( QSettings &settings )
   QString defaultCleanShutdownCommand;
 
 #ifndef Q_OS_WIN
-  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) )
-  );
+  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
 #endif
 
   const bool defaultInternalServer = true;
@@ -264,7 +263,7 @@ void DbConfigMysql::startInternalServer()
   }
 
   // first run, some MySQL versions need a mysql_install_db run for that
-  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf"  ) );
+  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
   if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
     const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1" ).arg( confFile ) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
     QProcess::execute( mMysqlInstallDbPath, arguments );

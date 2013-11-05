@@ -32,7 +32,7 @@ QMutex Akonadi::StorageDebugger::mMutex;
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE(QList< QList<QVariant> >)
+Q_DECLARE_METATYPE( QList< QList<QVariant> > )
 
 StorageDebugger *StorageDebugger::instance()
 {
@@ -51,7 +51,7 @@ StorageDebugger::StorageDebugger()
 {
   qDBusRegisterMetaType<QList< QList<QVariant> > >();
   new StorageDebuggerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/storageDebug"),
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/storageDebug" ),
                                                 this, QDBusConnection::ExportAdaptors );
 }
 

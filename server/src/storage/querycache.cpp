@@ -39,10 +39,10 @@ public:
   Cache()
   {
     connect( &m_cleanupTimer, SIGNAL(timeout()), SLOT(cleanup()));
-    m_cleanupTimer.setSingleShot(true);
+    m_cleanupTimer.setSingleShot( true );
   }
 
-  QSqlQuery query( const QString &queryStatement)
+  QSqlQuery query( const QString &queryStatement )
   {
     m_cleanupTimer.start( CLEANUP_TIMEOUT * 1000 );
     return m_cache.value( queryStatement );
@@ -59,7 +59,7 @@ public: // public, this is just a helper class
   QTimer m_cleanupTimer;
 };
 
-static QThreadStorage<Cache*> g_queryCache;
+static QThreadStorage<Cache *> g_queryCache;
 
 static Cache *perThreadCache()
 {
@@ -70,7 +70,7 @@ static Cache *perThreadCache()
   return g_queryCache.localData();
 }
 
-bool QueryCache::contains(const QString &queryStatement)
+bool QueryCache::contains( const QString &queryStatement )
 {
   if ( DbType::type( DataStore::self()->database() ) == DbType::Sqlite ) {
     return false;
@@ -79,12 +79,12 @@ bool QueryCache::contains(const QString &queryStatement)
   }
 }
 
-QSqlQuery QueryCache::query(const QString &queryStatement)
+QSqlQuery QueryCache::query( const QString &queryStatement )
 {
   return perThreadCache()->query( queryStatement );
 }
 
-void QueryCache::insert(const QString &queryStatement, const QSqlQuery &query)
+void QueryCache::insert( const QString &queryStatement, const QSqlQuery &query )
 {
   if ( DbType::type( DataStore::self()->database() ) != DbType::Sqlite ) {
     perThreadCache()->m_cache.insert( queryStatement, query );

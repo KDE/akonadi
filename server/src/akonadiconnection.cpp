@@ -168,7 +168,7 @@ void AkonadiConnection::slotNewData()
       } catch ( ... ) {}
     } catch ( const Akonadi::Exception &e ) {
       if ( m_currentHandler ) {
-        m_currentHandler->failureResponse( QByteArray( e.type() ) + QByteArray( ": " ) + QByteArray( e.what()  ) );
+        m_currentHandler->failureResponse( QByteArray( e.type() ) + QByteArray( ": " ) + QByteArray( e.what() ) );
       }
       try {
         m_streamParser->skipCurrentCommand();

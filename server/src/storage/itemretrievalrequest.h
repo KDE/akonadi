@@ -27,7 +27,10 @@
 class ItemRetrievalRequest
 {
   public:
-    ItemRetrievalRequest() : processed( false ) {}
+    ItemRetrievalRequest()
+      : processed( false )
+    {
+    }
     qint64 id;
     QByteArray remoteId;
     QByteArray mimeType;

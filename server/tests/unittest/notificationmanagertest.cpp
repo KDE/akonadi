@@ -37,7 +37,7 @@ class NotificationManagerTest : public QObject
 {
   Q_OBJECT
 
-  typedef QList<NotificationSource*> NSList;
+  typedef QList<NotificationSource *> NSList;
 
   private Q_SLOTS:
     void testSourceFilter_data()
@@ -141,7 +141,7 @@ class NotificationManagerTest : public QObject
       msg.addEntity( 10, QLatin1String( "123" ), QLatin1String( "1" ), QLatin1String( "message/rfc822" ) );
       QTest::newRow( "inter-resource move, source source" )
         << false
-        << EmptyList( Entity::Id  )
+        << EmptyList( Entity::Id )
         << EmptyList( Entity::Id )
         << List( QByteArray, "akonadi_resource_1" )
         << List( QString, QLatin1String( "message/rfc822" ) )

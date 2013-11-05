@@ -112,8 +112,8 @@ class ScopeTest : public QObject
 
       QTest::newRow( "null" ) << QByteArray() << QStringList() << false;
       QTest::newRow( "empty" ) << QByteArray( "()" ) << QStringList() << true;
-      QTest::newRow( "root" ) << QByteArray( "((0 \"\"))" ) << (QStringList() << QLatin1String("")) << true;
-      QTest::newRow( "chain") << QByteArray( "((1 \"r1\") (2 \"r2\"))" ) << (QStringList() << QLatin1String("r1") << QLatin1String("r2")) << true;
+      QTest::newRow( "root" ) << QByteArray( "((0 \"\"))" ) << ( QStringList() << QLatin1String( "" ) ) << true;
+      QTest::newRow( "chain" ) << QByteArray( "((1 \"r1\") (2 \"r2\"))" ) << ( QStringList() << QLatin1String( "r1" ) << QLatin1String( "r2" ) ) << true;
       QTest::newRow( "invalid 1" ) << QByteArray( "(foo)" ) << QStringList() << false;
       QTest::newRow( "invalid 2" ) << QByteArray( "foo" ) << QStringList() << false;
       QTest::newRow( "invalid 3" ) << QByteArray( "((foo)" ) << QStringList() << false;

@@ -194,7 +194,7 @@ void ProcessControl::start()
 {
 #ifdef Q_OS_UNIX
   QString agentValgrind = getEnv( "AKONADI_VALGRIND" );
-  if ( !agentValgrind.isEmpty() && (mApplication.contains( agentValgrind ) || listContains( mArguments, agentValgrind )) ) {
+  if ( !agentValgrind.isEmpty() && ( mApplication.contains( agentValgrind ) || listContains( mArguments, agentValgrind ) ) ) {
 
     mArguments.prepend( mApplication );
     const QString originalArguments = mArguments.join( QString::fromLocal8Bit( " " ) );

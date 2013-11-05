@@ -82,7 +82,7 @@ namespace Nepomuk {
              *
              * \sa QueryParser
              */
-            bool query( const QString &query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() )  );
+            bool query( const QString &query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() ) );
 
             /**
              * Start a query using the Nepomuk query service.

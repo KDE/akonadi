@@ -24,7 +24,7 @@
 
 using namespace Akonadi;
 
-void QueryHelper::setToQuery(const ImapSet& set, const QString &column, QueryBuilder& qb )
+void QueryHelper::setToQuery( const ImapSet &set, const QString &column, QueryBuilder &qb )
 {
   Query::Condition cond( Query::Or );
   Q_FOREACH ( const ImapInterval &i, set.intervals() ) {

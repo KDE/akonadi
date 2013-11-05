@@ -636,7 +636,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
   //akDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
-  if ( (name == AkDBus::serviceName( AkDBus::Server ) || name == AkDBus::serviceName( AkDBus::AgentServer )) && !newOwner.isEmpty() ) {
+  if ( ( name == AkDBus::serviceName( AkDBus::Server ) || name == AkDBus::serviceName( AkDBus::AgentServer ) ) && !newOwner.isEmpty() ) {
     if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Server ) )
       && ( !mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::AgentServer ) ) ) ) {
       // server is operational, start agents
@@ -763,7 +763,7 @@ bool AgentManager::checkResourceInterface( const QString &identifier, const QStr
     return false;
   }
 
-  if ( !mAgents[ mAgentInstances[identifier]->agentType() ].capabilities.contains( QLatin1String( "Resource" ) ) ) {
+  if ( !mAgents[mAgentInstances[identifier]->agentType()].capabilities.contains( QLatin1String( "Resource" ) ) ) {
     return false;
   }
 
@@ -810,7 +810,7 @@ void AgentManager::ensureAutoStart( const AgentType &info )
                                                       QLatin1String( "/AgentServer" ), QDBusConnection::sessionBus(), this );
 
   if ( mAgentInstances.contains( info.identifier ) ||
-       (agentServer.isValid() && agentServer.started( info.identifier )) ) {
+       ( agentServer.isValid() && agentServer.started( info.identifier ) ) ) {
     return; // already running
   }
 

@@ -296,7 +296,7 @@ QString DbInitializerVirtuoso::sqlType( const QString &type, int size ) const
   if ( type == QLatin1String( "QString" ) ) {
     return QLatin1Literal( "VARCHAR(" ) + QString::number( size <= 0 ? 255 : size ) + QLatin1Literal( ")" );
   }
-  if ( type == QLatin1String( "QByteArray" )  ) {
+  if ( type == QLatin1String( "QByteArray" ) ) {
     return QLatin1String( "LONG VARCHAR" );
   }
   if ( type == QLatin1String( "bool" ) ) {

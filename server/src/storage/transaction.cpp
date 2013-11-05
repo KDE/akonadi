@@ -20,7 +20,7 @@
 #include "transaction.h"
 #include "storage/datastore.h"
 
-Akonadi::Transaction::Transaction(DataStore * db, bool beginTransaction )
+Akonadi::Transaction::Transaction( DataStore *db, bool beginTransaction )
   : mDb( db )
   , mCommitted( false )
 {

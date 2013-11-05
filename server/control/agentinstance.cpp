@@ -222,7 +222,7 @@ T *AgentInstance::findInterface( AkDBus::AgentType agentType, const char *path )
 
   if ( !iface || !iface->isValid() ) {
     akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (iface ? iface->lastError().message() : QString());
+              << ", error message:" << ( iface ? iface->lastError().message() : QString() );
     delete iface;
     return 0;
   }

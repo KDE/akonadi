@@ -32,7 +32,7 @@ SearchManager *SearchManager::m_instance = 0;
 
 Q_DECLARE_METATYPE( Collection )
 
-SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent  )
+SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
   : QObject( parent )
 {
   Q_ASSERT( m_instance == 0 );

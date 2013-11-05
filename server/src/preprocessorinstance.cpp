@@ -63,8 +63,7 @@ bool PreprocessorInstance::init()
       AkDBus::agentServiceName( mId, AkDBus::Preprocessor ),
       QLatin1String( "/" ),
       QDBusConnection::sessionBus(),
-      this
-    );
+      this );
 
   if ( !mInterface || !mInterface->isValid() ) {
     Tracer::self()->warning(
