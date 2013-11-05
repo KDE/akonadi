@@ -104,7 +104,7 @@ void FbCheckerJob::checkNextUrl()
 
   mData.clear();
   KIO::TransferJob *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(dataReceived(KIO::Job*, QByteArray)) );
+  connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(dataReceived(KIO::Job*,QByteArray)) );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(onGetJobFinished(KJob*)) );
 }
 
