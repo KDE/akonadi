@@ -33,7 +33,8 @@ template <typename T> class SelectQueryBuilder : public QueryBuilder
     /**
       Creates a new query builder.
     */
-    inline SelectQueryBuilder() : QueryBuilder( T::tableName(), Select )
+    inline SelectQueryBuilder()
+      : QueryBuilder( T::tableName(), Select )
     {
       addColumns( T::fullColumnNames() );
     }

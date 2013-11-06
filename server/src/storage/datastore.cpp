@@ -65,12 +65,12 @@ bool DataStore::s_hasForeignKeyConstraints = false;
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
-DataStore::DataStore() :
-  QObject(),
-  m_dbOpened( false ),
-  m_transactionLevel( 0 ),
-  mNotificationCollector( new NotificationCollector( this ) ),
-  m_keepAliveTimer( 0 )
+DataStore::DataStore()
+  : QObject()
+  , m_dbOpened( false )
+  , m_transactionLevel( 0 )
+  , mNotificationCollector( new NotificationCollector( this ) )
+  , m_keepAliveTimer( 0 )
 {
   open();
 
@@ -148,7 +148,7 @@ bool Akonadi::DataStore::init()
 
   AkonadiSchema schema;
   DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, &schema );
-  if (! initializer->run() ) {
+  if ( !initializer->run() ) {
     akError() << initializer->errorMsg();
     return false;
   }
@@ -168,9 +168,9 @@ bool Akonadi::DataStore::init()
   return true;
 }
 
-QThreadStorage<DataStore*> instances;
+QThreadStorage<DataStore *> instances;
 
-DataStore * Akonadi::DataStore::self()
+DataStore *Akonadi::DataStore::self()
 {
   if ( !instances.hasLocalData() ) {
     instances.setLocalData( new DataStore() );
@@ -237,7 +237,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
 }
 
 bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
-                                   const QSet<Entity::Id> &existing, const Collection &col)
+                                   const QSet<Entity::Id> &existing, const Collection &col )
 {
   QVariantList flagIds;
   QVariantList appendIds;
@@ -272,7 +272,7 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
 }
 
 bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
-                                  bool& flagsChanged, bool checkIfExists,
+                                  bool &flagsChanged, bool checkIfExists,
                                   const Collection &col )
 {
   QSet<QByteArray> added;
@@ -326,9 +326,9 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
   Q_FOREACH ( const PimItem &item, items ) {
     itemsIds << item.id();
     for ( int i = 0; i < flags.count(); ++i ) {
-      const QByteArray flagName = flags[ i ].name().toLatin1();
+      const QByteArray flagName = flags[i].name().toLatin1();
       if ( !flagsIds.contains( flagName ) ) {
-        flagsIds << flags[ i ].id();
+        flagsIds << flags[i].id();
         removedFlags << flagName;
       }
     }
@@ -355,7 +355,7 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
   Part::List existingParts = item.parts();
   Q_FOREACH ( Part part, existingParts ) {
     if ( parts.contains( part.name().toLatin1() ) ) {
-      if ( !PartHelper::remove(&part) ) {
+      if ( !PartHelper::remove( &part ) ) {
         return false;
       }
     }
@@ -403,7 +403,7 @@ bool DataStore::appendCollection( Collection &collection )
   return true;
 }
 
-bool Akonadi::DataStore::cleanupCollection(Collection &collection)
+bool Akonadi::DataStore::cleanupCollection( Collection &collection )
 {
   if ( !s_hasForeignKeyConstraints ) {
     return cleanupCollection_slow( collection );
@@ -433,8 +433,9 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   }
 
   try {
-    while ( qb.query().next() )
+    while ( qb.query().next() ) {
       PartHelper::removeFile( PartHelper::resolveAbsolutePath( qb.query().value( 0 ).value<QByteArray>() ) );
+    }
   } catch ( const PartHelperException &e ) {
     akDebug() << e.what();
     return false;
@@ -445,7 +446,7 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   return collection.remove();
 }
 
-bool DataStore::cleanupCollection_slow(Collection& collection)
+bool DataStore::cleanupCollection_slow( Collection &collection )
 {
   Q_ASSERT( !s_hasForeignKeyConstraints );
 
@@ -487,7 +488,7 @@ bool DataStore::cleanupCollection_slow(Collection& collection)
   return collection.remove();
 }
 
-static bool recursiveSetResourceId( const Collection & collection, qint64 resourceId )
+static bool recursiveSetResourceId( const Collection &collection, qint64 resourceId )
 {
   Transaction transaction( DataStore::self() );
 
@@ -524,7 +525,7 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   return true;
 }
 
-bool Akonadi::DataStore::moveCollection( Collection & collection, const Collection &newParent )
+bool Akonadi::DataStore::moveCollection( Collection &collection, const Collection &newParent )
 {
   if ( collection.parentId() == newParent.id() ) {
     return true;
@@ -541,7 +542,7 @@ bool Akonadi::DataStore::moveCollection( Collection & collection, const Collecti
   if ( newParent.id() > 0 ) { // not root
     resourceId = newParent.resourceId();
   }
-  if ( !CollectionQueryHelper::canBeMovedTo ( collection, newParent ) ) {
+  if ( !CollectionQueryHelper::canBeMovedTo( collection, newParent ) ) {
     return false;
   }
 
@@ -563,7 +564,7 @@ bool Akonadi::DataStore::moveCollection( Collection & collection, const Collecti
   return true;
 }
 
-bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes )
+bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes )
 {
   if ( mimeTypes.isEmpty() ) {
     return true;
@@ -598,7 +599,7 @@ bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringL
   return true;
 }
 
-void DataStore::activeCachePolicy(Collection & col)
+void DataStore::activeCachePolicy( Collection &col )
 {
   if ( !col.cachePolicyInherit() ) {
     return;
@@ -620,16 +621,16 @@ void DataStore::activeCachePolicy(Collection & col)
   col.setCachePolicyCheckInterval( -1 );
   col.setCachePolicyCacheTimeout( -1 );
   col.setCachePolicySyncOnDemand( false );
-  col.setCachePolicyLocalParts( QLatin1String("ALL") );
+  col.setCachePolicyLocalParts( QLatin1String( "ALL" ) );
 }
 
-QVector<Collection> DataStore::virtualCollections( const PimItem& item )
+QVector<Collection> DataStore::virtualCollections( const PimItem &item )
 {
   QueryBuilder qb( CollectionPimItemRelation::tableName(), QueryBuilder::Select );
   qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
               Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName() );
   Q_FOREACH ( const QString &columnName, Collection::fullColumnNames() ) {
-    qb.addColumn( columnName  );
+    qb.addColumn( columnName );
   }
   qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals, item.id() );
 
@@ -681,7 +682,7 @@ QMap<Entity::Id,PimItem> DataStore::virtualCollections( const PimItem::List &ite
 }
 
 /* --- MimeType ------------------------------------------------------ */
-bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
+bool DataStore::appendMimeType( const QString &mimetype, qint64 *insertId )
 {
   if ( MimeType::exists( mimetype ) ) {
     akDebug() << "Cannot insert mimetype " << mimetype
@@ -694,13 +695,13 @@ bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 }
 
 /* --- PimItem ------------------------------------------------------- */
-bool DataStore::appendPimItem( QVector<Part> & parts,
-                               const MimeType & mimetype,
-                               const Collection & collection,
-                               const QDateTime & dateTime,
-                               const QString & remote_id,
-                               const QString & remoteRevision,
-                               const QString & gid,
+bool DataStore::appendPimItem( QVector<Part> &parts,
+                               const MimeType &mimetype,
+                               const Collection &collection,
+                               const QDateTime &dateTime,
+                               const QString &remote_id,
+                               const QString &remoteRevision,
+                               const QString &gid,
                                PimItem &pimItem )
 {
   pimItem.setMimeTypeId( mimetype.id() );
@@ -727,15 +728,15 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
   // insert every part
   if ( !parts.isEmpty() ) {
     //don't use foreach, the caller depends on knowing the part has changed, see the Append handler
-    for (QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
+    for ( QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
 
-      (*it).setPimItemId( pimItem.id() );
-      if ( (*it).datasize() < (*it).data().size() ) {
-        (*it).setDatasize( (*it).data().size() );
+      ( *it ).setPimItemId( pimItem.id() );
+      if ( ( *it ).datasize() < ( *it ).data().size() ) {
+        ( *it ).setDatasize( ( *it ).data().size() );
       }
 
 //      akDebug() << "Insert from DataStore::appendPimItem";
-      if ( !PartHelper::insert(&(*it)) ) {
+      if ( !PartHelper::insert( &( *it ) ) ) {
         return false;
       }
     }
@@ -798,7 +799,7 @@ bool DataStore::cleanupPimItems( const PimItem::List &items )
   return true;
 }
 
-bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray & key, const QByteArray & value)
+bool DataStore::addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value )
 {
   SelectQueryBuilder<CollectionAttribute> qb;
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
@@ -825,7 +826,7 @@ bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray 
   return true;
 }
 
-bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const QByteArray & key)
+bool Akonadi::DataStore::removeCollectionAttribute( const Collection &col, const QByteArray &key )
 {
   SelectQueryBuilder<CollectionAttribute> qb;
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
@@ -841,7 +842,7 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
     }
   }
 
-  if (!result.isEmpty()) {
+  if ( !result.isEmpty() ) {
     mNotificationCollector->collectionChanged( col, QList<QByteArray>() << key );
     return true;
   }
@@ -858,8 +859,7 @@ void DataStore::debugLastDbError( const char *actionDescription ) const
                          QString::fromLatin1( "%1\nDriver said: %2\nDatabase said:%3" )
                             .arg( QString::fromLatin1( actionDescription ) )
                             .arg( m_database.lastError().driverText() )
-                            .arg( m_database.lastError().databaseText() )
-                       );
+                            .arg( m_database.lastError().databaseText() ) );
 }
 
 void DataStore::debugLastQueryError( const QSqlQuery &query, const char *actionDescription ) const
@@ -872,24 +872,23 @@ void DataStore::debugLastQueryError( const QSqlQuery &query, const char *actionD
   Tracer::self()->error( "DataStore (Database Query Error)",
                          QString::fromLatin1( "%1: %2" )
                             .arg( QString::fromLatin1( actionDescription ) )
-                            .arg( query.lastError().text() )
-                       );
+                            .arg( query.lastError().text() ) );
 }
 
 // static
-QString DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )
+QString DataStore::dateTimeFromQDateTime( const QDateTime &dateTime )
 {
     QDateTime utcDateTime = dateTime;
     if ( utcDateTime.timeSpec() != Qt::UTC ) {
         utcDateTime.toUTC();
     }
-    return utcDateTime.toString( QLatin1String("yyyy-MM-dd hh:mm:ss") );
+    return utcDateTime.toString( QLatin1String( "yyyy-MM-dd hh:mm:ss" ) );
 }
 
 // static
-QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
+QDateTime DataStore::dateTimeToQDateTime( const QByteArray &dateTime )
 {
-    return QDateTime::fromString( QString::fromLatin1(dateTime), QLatin1String("yyyy-MM-dd hh:mm:ss") );
+    return QDateTime::fromString( QString::fromLatin1( dateTime ), QLatin1String( "yyyy-MM-dd hh:mm:ss" ) );
 }
 
 bool Akonadi::DataStore::beginTransaction()

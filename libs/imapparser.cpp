@@ -306,17 +306,17 @@ QByteArray ImapParser::join( const QList<QByteArray> &list, const QByteArray &se
   const QList<QByteArray>::const_iterator endIt = list.constEnd();
   int resultSize = ( list.size() - 1 ) * separator.size();
   for ( ; it != endIt; ++it ) {
-    resultSize += (*it).size();
+    resultSize += ( *it ).size();
   }
 
   QByteArray result;
   result.reserve( resultSize );
   it = list.constBegin();
-  result += (*it);
+  result += ( *it );
   ++it;
   for ( ; it != endIt; ++it ) {
     result += separator;
-    result += (*it);
+    result += ( *it );
   }
 
   return result;

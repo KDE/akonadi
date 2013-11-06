@@ -72,8 +72,10 @@ bool AkonadiStarter::start()
   return true;
 }
 
-void AkonadiStarter::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
+void AkonadiStarter::serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
 {
+  Q_UNUSED( name );
+  Q_UNUSED( oldOwner );
   if ( newOwner.isEmpty() ) {
     return;
   }

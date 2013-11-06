@@ -325,10 +325,10 @@ void NotificationMessage::appendAndCompress( NotificationMessage::List &list, co
   if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
     NotificationMessage::List::Iterator end = list.end();
     for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
-      if ( msg.d.constData()->compareWithoutOpAndParts( *( (*it).d.constData() ) ) ) {
+      if ( msg.d.constData()->compareWithoutOpAndParts( *( ( *it ).d.constData() ) ) ) {
         // same operation: merge changed parts and drop the new one
-        if ( msg.operation() == (*it).operation() ) {
-          (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+        if ( msg.operation() == ( *it ).operation() ) {
+          ( *it ).setItemParts( ( *it ).itemParts() + msg.itemParts() );
           *appended = false;
           return;
         }
@@ -338,7 +338,7 @@ void NotificationMessage::appendAndCompress( NotificationMessage::List &list, co
           return;
         }
         // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
-        else if ( msg.operation() == Remove && (*it).operation() == Modify ) {
+        else if ( msg.operation() == Remove && ( *it ).operation() == Modify ) {
           it = list.erase( it );
           end = list.end();
         }

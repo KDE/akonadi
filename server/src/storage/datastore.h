@@ -114,12 +114,12 @@ class DataStore : public QObject
     /**
       Per thread singleton.
     */
-    static DataStore* self();
+    static DataStore *self();
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
-    bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool& flagsChanged,
-                          bool checkIfExists = true, const Collection &col = Collection() );
+    bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged,
+                           bool checkIfExists = true, const Collection &col = Collection() );
     bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
 
     /* --- ItemParts ----------------------------------------------------- */
@@ -137,11 +137,11 @@ class DataStore : public QObject
     bool cleanupCollection_slow( Collection &collection );
 
     /// moves the collection @p collection to @p newParent.
-    bool moveCollection( Akonadi::Collection& collection, const Akonadi::Collection& newParent );
+    bool moveCollection( Akonadi::Collection &collection, const Akonadi::Collection &newParent );
 
-    bool appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes );
+    bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
 
-    static QString collectionDelimiter() { return QLatin1String("/"); }
+    static QString collectionDelimiter() { return QLatin1String( "/" ); }
 
     /**
       Determines the active cache policy for this Collection.
@@ -155,16 +155,16 @@ class DataStore : public QObject
     QMap<Entity::Id /* collection */, PimItem> virtualCollections( const PimItem::List &items );
 
     /* --- MimeType ------------------------------------------------------ */
-    bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );
+    bool appendMimeType( const QString &mimetype, qint64 *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
-    bool appendPimItem( QVector<Part> & parts,
-                        const MimeType & mimetype,
-                        const Collection & collection,
-                        const QDateTime & dateTime,
-                        const QString & remote_id,
-                        const QString & remoteRevision,
-                        const QString & gid,
+    bool appendPimItem( QVector<Part> &parts,
+                        const MimeType &mimetype,
+                        const Collection &collection,
+                        const QDateTime &dateTime,
+                        const QString &remote_id,
+                        const QString &remoteRevision,
+                        const QString &gid,
                         PimItem &pimItem );
 
     /**
@@ -232,7 +232,7 @@ class DataStore : public QObject
       Returns the notification collector of this DataStore object.
       Use this to listen to change notification signals.
     */
-    NotificationCollector* notificationCollector() const { return mNotificationCollector; }
+    NotificationCollector *notificationCollector() const { return mNotificationCollector; }
 
     /**
       Returns the QSqlDatabase object. Use this for generating queries yourself.
@@ -273,14 +273,14 @@ protected:
         @return the date/time in database format
         @see dateTimeToQDateTime
      */
-    static QString dateTimeFromQDateTime( const QDateTime & dateTime );
+    static QString dateTimeFromQDateTime( const QDateTime &dateTime );
 
     /** Converts the given date/time from database format to QDateTime.
         @param dateTime the date/time in database format
         @return the date/time as QDateTime
         @see dateTimeFromQDateTime
      */
-    static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
+    static QDateTime dateTimeToQDateTime( const QByteArray &dateTime );
 
   private Q_SLOTS:
     void sendKeepAliveQuery();
@@ -291,7 +291,7 @@ private:
     bool m_dbOpened;
     uint m_transactionLevel;
     QByteArray mSessionId;
-    NotificationCollector* mNotificationCollector;
+    NotificationCollector *mNotificationCollector;
     QTimer *m_keepAliveTimer;
     static bool s_hasForeignKeyConstraints;
 };
