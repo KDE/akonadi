@@ -442,7 +442,7 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   label->setBuddy( mBirthdateWidget );
   datesLayout->addWidget( mBirthdateWidget, 0, 1 );
 
-  label = new QLabel( i18nc( "@label The anniversary of a contact", "Anniversary:" ) );
+  label = new QLabel( i18nc( "@label The wedding anniversary of a contact", "Anniversary:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   datesLayout->addWidget( label, 1, 0 );
 
