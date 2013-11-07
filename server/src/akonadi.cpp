@@ -82,7 +82,7 @@ AkonadiServer::AkonadiServer( QObject *parent )
 {
     // Make sure we do initialization from eventloop, otherwise
     // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
-    QTimer::singleShot(0, this, SLOT(init()));
+    QTimer::singleShot( 0, this, SLOT(init()) );
 }
 
 void AkonadiServer::init()
@@ -93,9 +93,9 @@ void AkonadiServer::init()
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
     if ( DbConfig::configuredDatabase()->useInternalServer() ) {
-      startDatabaseProcess();
+        startDatabaseProcess();
     } else {
-      createDatabase();
+        createDatabase();
     }
 
     DbConfig::configuredDatabase()->setup();
@@ -145,7 +145,7 @@ void AkonadiServer::init()
 #else
     if ( !listen( namedPipe ) ) {
 #endif
-      akFatal() << "Unable to listen on Named Pipe" << namedPipe;
+        akFatal() << "Unable to listen on Named Pipe" << namedPipe;
     }
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "NamedPipe" ) );
@@ -155,7 +155,7 @@ void AkonadiServer::init()
     const QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
     unlink( socketFile.toUtf8().constData() );
     if ( !listen( socketFile ) ) {
-      akFatal() << "Unable to listen on Unix socket" << socketFile;
+        akFatal() << "Unable to listen on Unix socket" << socketFile;
     }
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "UnixPath" ) );
@@ -165,10 +165,10 @@ void AkonadiServer::init()
     // initialize the database
     DataStore *db = DataStore::self();
     if ( !db->database().isOpen() ) {
-      akFatal() << "Unable to open database" << db->database().lastError().text();
+        akFatal() << "Unable to open database" << db->database().lastError().text();
     }
     if ( !db->init() ) {
-      akFatal() << "Unable to initialize database.";
+        akFatal() << "Unable to initialize database.";
     }
 
     NotificationManager::self();
@@ -181,12 +181,12 @@ void AkonadiServer::init()
 
     // Forcibly disable it if configuration says so
     if ( settings.value( QLatin1String( "General/DisablePreprocessing" ), false ).toBool() ) {
-      PreprocessorManager::instance()->setEnabled( false );
+        PreprocessorManager::instance()->setEnabled( false );
     }
 
     if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
-      mCacheCleaner = new CacheCleaner( this );
-      mCacheCleaner->start( QThread::IdlePriority );
+        mCacheCleaner = new CacheCleaner( this );
+        mCacheCleaner->start( QThread::IdlePriority );
     }
 
     mIntervalChecker = new IntervalCheck( this );
@@ -213,7 +213,7 @@ void AkonadiServer::init()
 
     const QByteArray dbusAddress = qgetenv( "DBUS_SESSION_BUS_ADDRESS" );
     if ( !dbusAddress.isEmpty() ) {
-      connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
+        connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName( AkDBus::Control ),
@@ -234,8 +234,8 @@ void AkonadiServer::init()
 
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin
-    if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::Server) ) ) {
-      akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+    if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::Server ) ) ) {
+        akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
     }
 }
 
@@ -245,19 +245,19 @@ AkonadiServer::~AkonadiServer()
 
 template <typename T> static void quitThread( T & thread )
 {
-  if ( !thread ) {
-    return;
-  }
-  thread->quit();
-  thread->wait();
-  delete thread;
-  thread = 0;
+    if ( !thread ) {
+        return;
+    }
+    thread->quit();
+    thread->wait();
+    delete thread;
+    thread = 0;
 }
 
 void AkonadiServer::quit()
 {
     if ( mAlreadyShutdown ) {
-      return;
+        return;
     }
     mAlreadyShutdown = true;
 
@@ -272,7 +272,7 @@ void AkonadiServer::quit()
 
     akDebug() << "terminating connection threads";
     for ( int i = 0; i < mConnections.count(); ++i ) {
-      quitThread( mConnections[ i ] );
+        quitThread( mConnections[ i ] );
     }
     mConnections.clear();
 
@@ -314,7 +314,7 @@ void AkonadiServer::incomingConnection( quintptr socketDescriptor )
 #endif
 {
     if ( mAlreadyShutdown ) {
-      return;
+        return;
     }
     QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
     connect( thread, SIGNAL(finished()), thread, SLOT(deleteLater()) );
@@ -332,63 +332,64 @@ AkonadiServer * AkonadiServer::instance()
 
 void AkonadiServer::startDatabaseProcess()
 {
-  if ( !DbConfig::configuredDatabase()->useInternalServer() )
-    return;
+    if ( !DbConfig::configuredDatabase()->useInternalServer() ) {
+        return;
+    }
 
-  // create the database directories if they don't exists
-  AkStandardDirs::saveDir( "data" );
-  AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) );
+    // create the database directories if they don't exists
+    AkStandardDirs::saveDir( "data" );
+    AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) );
 
-  DbConfig::configuredDatabase()->startInternalServer();
+    DbConfig::configuredDatabase()->startInternalServer();
 }
 
 void AkonadiServer::createDatabase()
 {
-  const QLatin1String initCon( "initConnection" );
-  QSqlDatabase db = QSqlDatabase::addDatabase( DbConfig::configuredDatabase()->driverName(), initCon );
-  DbConfig::configuredDatabase()->apply( db );
-  db.setDatabaseName( DbConfig::configuredDatabase()->databaseName() );
-  if ( !db.isValid() ) {
-    akFatal() << "Invalid database object during initial database connection";
-  }
-
-  if ( db.open() ) {
-    db.close();
-  } else {
-    akDebug() << "Failed to use database" << DbConfig::configuredDatabase()->databaseName();
-    akDebug() << "Database error:" << db.lastError().text();
-    akDebug() << "Trying to create database now...";
-
-    db.close();
-    db.setDatabaseName( QString() );
-    if ( db.open() ) {
-      {
-        QSqlQuery query( db );
-        if ( !query.exec( QString::fromLatin1( "CREATE DATABASE %1" ).arg( DbConfig::configuredDatabase()->databaseName() ) ) ) {
-          akError() << "Failed to create database";
-          akError() << "Query error:" << query.lastError().text();
-          akFatal() << "Database error:" << db.lastError().text();
-        }
-      } // make sure query is destroyed before we close the db
-      db.close();
+    const QLatin1String initCon( "initConnection" );
+    QSqlDatabase db = QSqlDatabase::addDatabase( DbConfig::configuredDatabase()->driverName(), initCon );
+    DbConfig::configuredDatabase()->apply( db );
+    db.setDatabaseName( DbConfig::configuredDatabase()->databaseName() );
+    if ( !db.isValid() ) {
+        akFatal() << "Invalid database object during initial database connection";
     }
-  }
-  QSqlDatabase::removeDatabase( initCon );
+
+    if ( db.open() ) {
+        db.close();
+    } else {
+        akDebug() << "Failed to use database" << DbConfig::configuredDatabase()->databaseName();
+        akDebug() << "Database error:" << db.lastError().text();
+        akDebug() << "Trying to create database now...";
+
+        db.close();
+        db.setDatabaseName( QString() );
+        if ( db.open() ) {
+            {
+                QSqlQuery query( db );
+                if ( !query.exec( QString::fromLatin1( "CREATE DATABASE %1" ).arg( DbConfig::configuredDatabase()->databaseName() ) ) ) {
+                    akError() << "Failed to create database";
+                    akError() << "Query error:" << query.lastError().text();
+                    akFatal() << "Database error:" << db.lastError().text();
+                }
+            } // make sure query is destroyed before we close the db
+            db.close();
+        }
+    }
+    QSqlDatabase::removeDatabase( initCon );
 }
 
 void AkonadiServer::stopDatabaseProcess()
 {
-  if ( !DbConfig::configuredDatabase()->useInternalServer() ) {
-    return;
-  }
+    if ( !DbConfig::configuredDatabase()->useInternalServer() ) {
+        return;
+    }
 
-  DbConfig::configuredDatabase()->stopInternalServer();
+    DbConfig::configuredDatabase()->stopInternalServer();
 }
 
 void AkonadiServer::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
-  if ( newOwner.isEmpty() ) {
-    akError() << "Control process died, committing suicide!";
-    quit();
-  }
+    if ( newOwner.isEmpty() ) {
+        akError() << "Control process died, committing suicide!";
+        quit();
+    }
 }

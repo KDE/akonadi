@@ -118,8 +118,7 @@ int main( int argc, char **argv )
       "  restart    : Restart Akonadi server with all its processes\n"
       "  status     : Shows a status overview of the Akonadi server\n"
       "  vacuum     : Vacuum internal storage (WARNING: needs a lot of time and disk space!)\n"
-      "  fsck       : Check (and attempt to fix) consistency of the internal storage (can take some time)"
-  ) );
+      "  fsck       : Check (and attempt to fix) consistency of the internal storage (can take some time)" ) );
 
   app.parseCommandLine();
 

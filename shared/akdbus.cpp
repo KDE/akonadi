@@ -57,7 +57,7 @@ QString AkDBus::serviceName( AkDBus::ServiceType serviceType )
 QString AkDBus::parseAgentServiceName( const QString &serviceName, AkDBus::AgentType &agentType )
 {
   agentType = Unknown;
-  if ( !serviceName.startsWith( QLatin1String( "org.freedesktop.Akonadi."  ) ) ) {
+  if ( !serviceName.startsWith( QLatin1String( "org.freedesktop.Akonadi." ) ) ) {
     return QString();
   }
   const QStringList parts = serviceName.mid( 24 ).split( QLatin1Char( '.' ) );
@@ -99,7 +99,7 @@ QString AkDBus::agentServiceName( const QString &agentIdentifier, AkDBus::AgentT
   }
   serviceName += agentIdentifier;
   if ( AkApplication::hasInstanceIdentifier() ) {
-    serviceName += QLatin1Char( '.'  ) % AkApplication::instanceIdentifier();
+    serviceName += QLatin1Char( '.' ) % AkApplication::instanceIdentifier();
   }
   return serviceName;
 }
