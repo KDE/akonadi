@@ -89,8 +89,13 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
   const QModelIndex index = sourceModel()->index( row, 0 );
 
   // First see if the name matches a set regexp filter.
-  if ( !filterRegExp().isEmpty() && !index.data().toString().contains( filterRegExp() ) ) {
-    return false;
+  if ( !filterRegExp().isEmpty() ) {
+      if ( index.data( AgentTypeModel::IdentifierRole ).toString().contains( filterRegExp() ))
+           return true;
+      else if ( index.data().toString().contains( filterRegExp() ) )
+          return true;
+      else
+          return false;
   }
 
   if ( !d->mimeTypes.isEmpty() ) {
