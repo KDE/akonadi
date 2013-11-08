@@ -243,7 +243,7 @@ AkonadiServer::~AkonadiServer()
 {
 }
 
-template <typename T> static void quitThread( T & thread )
+template <typename T> static void quitThread( T &thread )
 {
     if ( !thread ) {
         return;
@@ -272,7 +272,7 @@ void AkonadiServer::quit()
 
     akDebug() << "terminating connection threads";
     for ( int i = 0; i < mConnections.count(); ++i ) {
-        quitThread( mConnections[ i ] );
+        quitThread( mConnections[i] );
     }
     mConnections.clear();
 
@@ -322,7 +322,7 @@ void AkonadiServer::incomingConnection( quintptr socketDescriptor )
     thread->start();
 }
 
-AkonadiServer * AkonadiServer::instance()
+AkonadiServer *AkonadiServer::instance()
 {
     if ( !s_instance ) {
         s_instance = new AkonadiServer();
@@ -386,7 +386,7 @@ void AkonadiServer::stopDatabaseProcess()
     DbConfig::configuredDatabase()->stopInternalServer();
 }
 
-void AkonadiServer::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
+void AkonadiServer::serviceOwnerChanged( const QString &, const QString &, const QString &newOwner )
 {
     if ( newOwner.isEmpty() ) {
         akError() << "Control process died, committing suicide!";

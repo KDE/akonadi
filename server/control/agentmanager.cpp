@@ -452,7 +452,7 @@ void AgentManager::agentInstanceSynchronizeCollectionTree( const QString &identi
     return;
   }
 
-  mAgentInstances.value( identifier  )->resourceInterface()->synchronizeCollectionTree();
+  mAgentInstances.value( identifier )->resourceInterface()->synchronizeCollectionTree();
 }
 
 void AgentManager::agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection )
@@ -629,7 +629,7 @@ void AgentManager::save()
   file.sync();
 }
 
-void AgentManager::serviceOwnerChanged( const QString &name, const QString&, const QString &newOwner )
+void AgentManager::serviceOwnerChanged( const QString &name, const QString &, const QString &newOwner )
 {
   // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
   // and this is where we "hook up" our different Agent interfaces.
