@@ -41,9 +41,9 @@ class SearchManager;
 class ItemRetrievalThread;
 
 #ifdef Q_OS_WINCE
-class AkonadiServer: public QTcpServer
+class AkonadiServer : public QTcpServer
 #else
-class AkonadiServer: public QLocalServer
+class AkonadiServer : public QLocalServer
 #endif
 {
     Q_OBJECT

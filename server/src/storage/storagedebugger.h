@@ -29,7 +29,7 @@ class QSqlQuery;
 
 namespace Akonadi {
 
-class StorageDebugger: public QObject
+class StorageDebugger : public QObject
 {
     Q_OBJECT
 

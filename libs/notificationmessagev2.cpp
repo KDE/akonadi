@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-class NotificationMessageV2::Private: public QSharedData
+class NotificationMessageV2::Private : public QSharedData
 {
   public:
     Private()

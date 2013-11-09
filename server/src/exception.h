@@ -29,7 +29,7 @@ namespace Akonadi {
 /**
   Base class for exception used internally by the Akonadi server.
 */
-class Exception: public std::exception
+class Exception : public std::exception
 {
   public:
     Exception( const char *what ) throw()

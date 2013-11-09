@@ -23,7 +23,7 @@
 
 #include "storage/dbinitializer.h"
 
-class DbInitializerMySql: public DbInitializer
+class DbInitializerMySql : public DbInitializer
 {
   public:
     DbInitializerMySql( const QSqlDatabase &database );
@@ -37,7 +37,7 @@ class DbInitializerMySql: public DbInitializer
     virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
 };
 
-class DbInitializerSqlite: public DbInitializer
+class DbInitializerSqlite : public DbInitializer
 {
   public:
     DbInitializerSqlite( const QSqlDatabase &database );
@@ -47,7 +47,7 @@ class DbInitializerSqlite: public DbInitializer
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
-class DbInitializerPostgreSql: public DbInitializer
+class DbInitializerPostgreSql : public DbInitializer
 {
   public:
     DbInitializerPostgreSql( const QSqlDatabase &database );
@@ -59,7 +59,7 @@ class DbInitializerPostgreSql: public DbInitializer
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
-class DbInitializerVirtuoso: public DbInitializer
+class DbInitializerVirtuoso : public DbInitializer
 {
   public:
     DbInitializerVirtuoso( const QSqlDatabase &database );
