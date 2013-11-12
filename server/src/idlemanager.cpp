@@ -199,7 +199,7 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
 
       Response response;
       response.setTag( "+" );
-      response.setString( "IDLE (" + QByteArray::number( count ) + ')' );
+      response.setString( "IDLE" );
       fetchHelperResponseAvailable( response );
     }
   }

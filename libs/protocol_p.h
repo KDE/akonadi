@@ -131,6 +131,7 @@
 #define AKONADI_PARAM_RESOURCES                    "RESOURCES"
 #define AKONADI_PARAM_REPLAYED                     "REPLAYED"
 #define AKONADI_PARAM_REVISION                     "REV"
+#define AKONADI_PARAM_SCOPE                        "SCOPE"
 #define AKONADI_PARAM_SILENT                       "SILENT"
 #define AKONADI_PARAM_DOT_SILENT                   ".SILENT"
 #define AKONADI_PARAM_SIZE                         "SIZE"

@@ -39,6 +39,7 @@ class IdleHandler : public Handler
   private:
     void startIdle();
     void updateFilter();
+    void updateScope();
 
     void parseFilter( IdleClient *client );
     void parseFetchScope( IdleClient *client );
