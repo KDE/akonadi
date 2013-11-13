@@ -386,8 +386,9 @@ void AkonadiServer::stopDatabaseProcess()
     DbConfig::configuredDatabase()->stopInternalServer();
 }
 
-void AkonadiServer::serviceOwnerChanged( const QString &, const QString &, const QString &newOwner )
+void AkonadiServer::serviceOwnerChanged( const QString &, const QString &oldOwner, const QString &newOwner )
 {
+    Q_UNUSED( oldOwner );
     if ( newOwner.isEmpty() ) {
         akError() << "Control process died, committing suicide!";
         quit();
