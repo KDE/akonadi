@@ -441,7 +441,7 @@ private:
       // make sure we find this node again if something went wrong here,
       // most likely the object got deleted from the server in the meantime
       if ( !result.isValid() ) {
-        node->entity = Item( id );
+        node->entity = T( id );
         node->invalid = true;
       } else {
         node->entity = result;
