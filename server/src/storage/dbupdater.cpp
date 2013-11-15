@@ -228,6 +228,8 @@ bool DbUpdater::complexUpdate_25()
   // Remove index from PartTable, it will speed up adding new column
   {
     QSqlQuery query( Akonadi::DataStore::self()->database() );
+    // TODO: Check whether the column already exists, skip this step in such case
+
     // Set default value, otherwise PGSQL won't be able to add the column to a populate database
     // (because of NOT NULL). We will drop the default value later
     if ( !query.exec( QLatin1String( "ALTER TABLE PartTable ADD COLUMN partTypeId BIGINT NOT NULL DEFAULT 0" ) ) ) {
