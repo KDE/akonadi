@@ -196,6 +196,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
         return m_buffer.contains( id );
       }
 
+      static int buffersize();
+
     private:
       QQueue<Collection::Id> m_buffer;
     } m_buffer;
@@ -204,6 +206,17 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool useRefCounting;
     void ref( Collection::Id id );
     Collection::Id deref( Collection::Id id );
+
+    /**
+     * Returns true if the collection is monitored by monitor.
+     *
+     * A collection is always monitored if useRefCounting is false.
+     * If ref counting is used, the collection is only monitored,
+     * if the collection is either in refCountMap or m_buffer.
+     * If ref counting is used and the collection is not in refCountMap or m_buffer,
+     * no updates for the contained items are emitted, because they are lazily ignored.
+     */
+    bool isMonitored( Collection::Id colId ) const;
 
   private:
     // collections that need a statistics update
