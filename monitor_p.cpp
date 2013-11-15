@@ -169,15 +169,16 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
     || ( op == NotificationMessageV2::Link )
     || ( op == NotificationMessageV2::Unlink ) )
   {
-    if ( refCountMap.contains( parentCollectionId ) || m_buffer.isBuffered( parentCollectionId ) )
+    if ( isMonitored( parentCollectionId ) ) {
       return false;
+    }
   }
 
   if ( op == NotificationMessageV2::Move )
   {
-    if ( !refCountMap.contains( parentCollectionId ) && !m_buffer.isBuffered( parentCollectionId ) )
-      if ( !refCountMap.contains( msg.parentDestCollection() ) && !m_buffer.isBuffered( msg.parentDestCollection() ) )
-        return true;
+    if ( !isMonitored( parentCollectionId ) && !isMonitored( msg.parentDestCollection() ) ) {
+      return true;
+    }
     // We can't ignore the move. It must be transformed later into a removal or insertion.
     return false;
   }
@@ -489,8 +490,8 @@ int MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notific
   bool destWatched = false;
 
   if ( useRefCounting && msg.type() == NotificationMessageV2::Items ) {
-    sourceWatched = refCountMap.contains( msg.parentCollection() ) || m_buffer.isBuffered( msg.parentCollection() );
-    destWatched = refCountMap.contains( msg.parentDestCollection() ) || m_buffer.isBuffered( msg.parentDestCollection() );
+    sourceWatched = isMonitored( msg.parentCollection() );
+    destWatched = isMonitored( msg.parentDestCollection() );
   } else {
     if ( !resources.isEmpty() ) {
       sourceWatched = resources.contains( msg.resource() );
@@ -906,8 +907,9 @@ Akonadi::Collection::Id MonitorPrivate::deref( Collection::Id id )
   if ( --refCountMap[ id ] == 0 )
   {
     refCountMap.remove( id );
+    return m_buffer.buffer( id );
   }
-  return m_buffer.buffer( id );
+  return -1;
 }
 
 void MonitorPrivate::PurgeBuffer::purge( Collection::Id id )
@@ -930,6 +932,19 @@ Akonadi::Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
   m_buffer.enqueue( id );
 
   return bumpedId;
+}
+
+int MonitorPrivate::PurgeBuffer::buffersize()
+{
+  return MAXBUFFERSIZE;
+}
+
+bool MonitorPrivate::isMonitored( Entity::Id colId ) const
+{
+  if ( !useRefCounting ) {
+    return true;
+  }
+  return refCountMap.contains( colId ) || m_buffer.isBuffered( colId );
 }
 
 void MonitorPrivate::notifyCollectionStatisticsWatchers(Entity::Id collection, const QByteArray& resource) {
