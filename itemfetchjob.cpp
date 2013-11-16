@@ -230,6 +230,13 @@ Item::List ItemFetchJob::items() const
   return d->mResultItems;
 }
 
+void ItemFetchJob::clearItems()
+{
+  Q_D( ItemFetchJob );
+
+  d->mResultItems.clear();
+}
+
 void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )
 {
   Q_D( ItemFetchJob );

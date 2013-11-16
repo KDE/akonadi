@@ -130,12 +130,18 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     virtual ~ItemFetchJob();
 
     /**
-     * Returns the fetched item.
+     * Returns the fetched items.
      *
      * @note The items are invalid before the result( KJob* )
      *       signal has been emitted or if an error occurred.
      */
     Item::List items() const;
+
+    /**
+     * Save memory by clearing the fetched items.
+     * @since 4.12
+     */
+    void clearItems();
 
     /**
      * Sets the item fetch scope.
