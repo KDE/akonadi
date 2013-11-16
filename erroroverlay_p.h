@@ -58,7 +58,7 @@ class ErrorOverlay : public QWidget
   private:
     void reposition();
 
-  private slots:
+  private Q_SLOTS:
     void startClicked();
     void quitClicked();
     void selfTestClicked();

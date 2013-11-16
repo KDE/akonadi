@@ -25,7 +25,7 @@
 class CollectionAttributeTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void initTestCase();
     void testAttributes_data();
     void testAttributes();

@@ -48,7 +48,7 @@ private:
   MailClient::Result mLastResult;
   QString mLastErrorMessage;
 
-private slots:
+private Q_SLOTS:
 
   void initTestCase()
   {

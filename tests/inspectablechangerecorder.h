@@ -55,10 +55,10 @@ public:
   QQueue<Akonadi::NotificationMessageV2> pendingNotifications() const { return d_ptr->pendingNotifications; }
   QQueue<Akonadi::NotificationMessageV2> pipeline() const { return d_ptr->pipeline; }
 
-signals:
+Q_SIGNALS:
   void dummySignal();
 
-private slots:
+private Q_SLOTS:
   void dispatchNotifications()
   {
     d_ptr->dispatchNotifications();

@@ -30,7 +30,7 @@ using namespace Akonadi;
 class SharedValuePoolTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testQVector_data()
     {
       QTest::addColumn<int>( "size" );

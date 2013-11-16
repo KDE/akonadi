@@ -41,7 +41,7 @@ public:
    */
   void setAsDefaultSession();
 
-signals:
+Q_SIGNALS:
   void jobAdded( Akonadi::Job* );
 
   friend class FakeSessionPrivate;

@@ -43,7 +43,7 @@ class IncidenceFetchJob : public Akonadi::Job
   protected:
     void doStart();
 
-  private slots:
+  private Q_SLOTS:
     void collectionFetchResult( KJob *job );
     void itemFetchResult( KJob * job );
 

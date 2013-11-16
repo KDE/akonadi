@@ -120,7 +120,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /// Virtual so that ChangeRecorder can set it to 0 and handle the pipeline itself
     virtual int pipelineSize() const;
 
-    // private slots
+    // private Q_SLOTS
     void dataAvailable();
     void slotSessionDestroyed( QObject* );
     void slotStatisticsChangedFinished( KJob* );

@@ -114,7 +114,7 @@ public: /// Functions
   void queryFreeBusyProviders( const QStringList &providers, const QString &email,
                                 const KDateTime &start, const KDateTime &end );
 
-public slots:
+public Q_SLOTS:
   void processRetrieveQueue();
   void contactSearchJobFinished( KJob *_job );
   void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
@@ -124,7 +124,7 @@ public slots:
   void processMailSchedulerResult( Akonadi::Scheduler::Result result, const QString &errorMsg );
   void fbCheckerJobFinished( KJob* );
 
-signals:
+Q_SIGNALS:
   void freeBusyUrlRetrieved( const QString &email, const KUrl &url );
 };
 
@@ -137,7 +137,7 @@ public:
 
   KUrl validUrl() const;
 
-private slots:
+private Q_SLOTS:
   void onGetJobFinished( KJob *job );
   void dataReceived( KIO::Job *, const QByteArray &data );
 

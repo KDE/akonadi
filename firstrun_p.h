@@ -79,7 +79,7 @@ class Firstrun : public QObject
 #endif
     static QVariant::Type argumentType( const QMetaObject *mo, const QString &method );
 
-  private slots:
+  private Q_SLOTS:
     void instanceCreated( KJob* job );
 #ifndef KDEPIM_NO_KRESOURCES
     void migrationFinished( int exitCode );

@@ -61,7 +61,7 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
   private:
     QDomElement findElementByRid( const QString &rid ) const;
 
-  private slots:
+  private Q_SLOTS:
     void load();
     void save();
 

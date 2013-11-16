@@ -25,7 +25,7 @@
 class ItemSerializerTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testEmptyPayload();
     void testDefaultSerializer_data();
     void testDefaultSerializer();

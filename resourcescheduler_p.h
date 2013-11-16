@@ -231,7 +231,7 @@ class ResourceScheduler : public QObject
     void fullSyncComplete();
     void status( int status, const QString &message = QString() );
 
-  private slots:
+  private Q_SLOTS:
     void scheduleNext();
     void executeNext();
 

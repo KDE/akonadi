@@ -42,7 +42,7 @@ public:
   KUrl url() const;
   QByteArray rawFreeBusyData() const;
 
-private slots:
+private Q_SLOTS:
   void slotData( KIO::Job *, const QByteArray &data );
   void slotResult( KJob * );
 

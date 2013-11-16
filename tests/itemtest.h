@@ -25,7 +25,7 @@
 class ItemTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testMultipart();
     void testInheritance();
     void testParentCollection();

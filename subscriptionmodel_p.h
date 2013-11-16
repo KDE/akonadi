@@ -64,7 +64,7 @@ class SubscriptionModel : public CollectionModel
      */
     void showHiddenCollection(bool showHidden);
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted when the collection model is fully loaded.
     */

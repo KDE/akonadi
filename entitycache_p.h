@@ -58,10 +58,10 @@ class AKONADI_TESTS_EXPORT EntityCacheBase : public QObject
   protected:
     Session *session;
 
-  signals:
+  Q_SIGNALS:
     void dataAvailable();
 
-  private slots:
+  private Q_SLOTS:
     virtual void processResult( KJob* job ) = 0;
 };
 

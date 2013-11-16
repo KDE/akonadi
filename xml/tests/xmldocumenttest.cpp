@@ -28,7 +28,7 @@ using namespace Akonadi;
 class XmlDocumentTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testDocumentLoad()
     {
       XmlDocument doc( QLatin1String( KDESRCDIR "/knutdemo.xml" ) );

@@ -57,7 +57,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
      */
     void hideIntroduction();
 
-  private slots:
+  private Q_SLOTS:
     void selectionChanged( const QModelIndex &index );
     void saveReport();
     void copyReport();

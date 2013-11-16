@@ -84,7 +84,7 @@ class IncidenceChangerTest : public QObject
   bool mDiscardedEqualsSuccess;
   Akonadi::Item mLastItemCreated;
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

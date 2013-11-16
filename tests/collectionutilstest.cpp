@@ -26,7 +26,7 @@ using namespace Akonadi;
 class CollectionUtilsTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testHasValidHierarchicalRID_data()
     {
       QTest::addColumn<Collection>( "collection" );

@@ -105,7 +105,7 @@ class EntityCacheTest : public QObject
       QVERIFY( cache.retrieve( 3 ).isValid() );
     }
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

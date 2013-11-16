@@ -44,7 +44,7 @@ class CacheTest : public QObject
           agent.setIsOnline( enable );
     }
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

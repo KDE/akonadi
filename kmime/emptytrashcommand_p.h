@@ -37,7 +37,7 @@ public:
     EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent);
     /*reimp*/ void execute();
 
-private slots:
+private Q_SLOTS:
   void slotExpungeJob( KJob *job );
   void slotDeleteJob( KJob *job );
 

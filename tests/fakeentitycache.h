@@ -113,7 +113,7 @@ public Q_SLOTS:
     Q_UNUSED( ignored )
   }
 
-signals:
+Q_SIGNALS:
   void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
 };
 

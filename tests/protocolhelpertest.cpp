@@ -25,7 +25,7 @@ using namespace Akonadi;
 class ProtocolHelperTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testItemSetToByteArray_data()
     {
       QTest::addColumn<Item::List>( "items" );

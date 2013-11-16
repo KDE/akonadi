@@ -39,7 +39,7 @@ class MimeTypeCheckerTest : public QObject
     Akonadi::MimeTypeChecker mSubTypeChecker;
     Akonadi::MimeTypeChecker mAliasChecker;
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase();
     void testCollectionCheck();
     void testItemCheck();
