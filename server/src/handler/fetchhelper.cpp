@@ -339,7 +339,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
      } else {
         if ( mIgnoreErrors && data.isEmpty() ) {
           //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
-          akDebug() << "item" << id << "has an empty payload part in parttable for part" << partName;
+          //This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts)
+          //akDebug() << "item" << id << "has an empty payload part in parttable for part" << partName;
           skipItem = true;
           break;
         }
