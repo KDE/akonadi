@@ -203,10 +203,12 @@ QSqlQuery FetchHelper::buildFlagQuery()
 bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 {
   parseCommandStream();
-  triggerOnDemandFetch();
 
   // retrieve missing parts
   if ( !mCacheOnly ) {
+    // trigger a collection sync if configured to do so
+    triggerOnDemandFetch();
+
     // Prepare for a call to ItemRetriever::exec();
     // From a resource perspective the only parts that can be fetched are payloads.
     ItemRetriever retriever( mConnection );
