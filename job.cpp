@@ -129,6 +129,7 @@ void JobPrivate::signalCreationToJobTracker()
       // We do these dbus calls manually, so as to avoid having to install (or copy) the console's
       // xml interface document. Since this is purely a debugging aid, that seems preferable to
       // publishing something not intended for public consumption.
+      // WARNING: for any signature change here, apply it to resourcescheduler.cpp too
       QList<QVariant> argumentList;
       argumentList << QLatin1String( mSession->sessionId() )
                    << QString::number(reinterpret_cast<quintptr>( q ), 16)

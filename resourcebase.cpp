@@ -60,10 +60,6 @@
 #include <QApplication>
 #include <QtDBus/QtDBus>
 
-#if defined __GLIBC__
-# include <malloc.h> // for dumping memory information
-#endif
-
 using namespace Akonadi;
 
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
@@ -182,12 +178,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     }
 
   public Q_SLOTS:
-    // Dump the contents of the current ChangeReplay
-    Q_SCRIPTABLE QString dumpNotificationListToString() const
-    {
-      return mChangeRecorder->dumpNotificationListToString();
-    }
-
     // Dump the state of the scheduler
     Q_SCRIPTABLE QString dumpToString() const
     {
@@ -207,38 +197,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       scheduler->clear();
     }
 
-    Q_SCRIPTABLE void dumpMemoryInfo() const
-    {
-      // Send it to stdout, so we can debug user problems.
-      // since you have to explicitely call this
-      // it won't flood users with release builds.
-      QTextStream stream( stdout );
-      stream << dumpMemoryInfoToString();
-    }
-
-    Q_SCRIPTABLE QString dumpMemoryInfoToString() const
-    {
-      // man mallinfo for more info
-      QString str;
-#if defined __GLIBC__
-      struct mallinfo mi;
-      mi = mallinfo();
-      QTextStream stream( &str );
-      stream << "Total non-mmapped bytes (arena):      " << mi.arena     << '\n'
-             << "# of free chunks (ordblks):           " << mi.ordblks   << '\n'
-             << "# of free fastbin blocks (smblks>:    " << mi.smblks    << '\n'
-             << "# of mapped regions (hblks):          " << mi.hblks     << '\n'
-             << "Bytes in mapped regions (hblkhd):     " << mi.hblkhd    << '\n'
-             << "Max. total allocated space (usmblks): " << mi.usmblks   << '\n'
-             << "Free bytes held in fastbins (fsmblks):" << mi.fsmblks   << '\n'
-             << "Total allocated space (uordblks):     " << mi.uordblks  << '\n'
-             << "Total free space (fordblks):          " << mi.fordblks  << '\n'
-             << "Topmost releasable block (keepcost):  " << mi.keepcost  << '\n';
-#else
-      str = QLatin1String( "mallinfo() not supported" );
-#endif
-      return str;
-    }
 
   protected Q_SLOTS:
     // reimplementations from AgentbBasePrivate, containing sanity checks that only apply to resources
@@ -480,8 +438,6 @@ ResourceBase::ResourceBase( const QString & id )
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mChangeRecorder->isEmpty() )
     d->scheduler->scheduleChangeReplay();
-
-  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
 
   new ResourceSelectJob( identifier() );
 
