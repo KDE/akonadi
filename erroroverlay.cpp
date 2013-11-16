@@ -234,8 +234,8 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
         break;
       case ServerManager::Upgrading:
         ui->progressPage->setToolTip( i18n( "Personal information management service is performing a database upgrade." ) );
-        ui->progressDescription->setText( i18n( "Personal information management service is performing a database upgrade. "
-                                                "This happens after a software update and is necessary to optimize performance. "
+        ui->progressDescription->setText( i18n( "Personal information management service is performing a database upgrade.\n"
+                                                "This happens after a software update and is necessary to optimize performance.\n"
                                                 "Depending on the amount of personal information, this might take a few minutes.") );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
