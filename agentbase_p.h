@@ -38,6 +38,8 @@ namespace Akonadi {
 class AgentBasePrivate : public QObject
 {
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.dfaure" )
+
   public:
     explicit AgentBasePrivate( AgentBase *parent );
     virtual ~AgentBasePrivate();
@@ -107,6 +109,11 @@ class AgentBasePrivate : public QObject
     AgentBase::Observer *mObserver;
 
   public Q_SLOTS:
+    // Dump the contents of the current ChangeReplay
+    Q_SCRIPTABLE QString dumpNotificationListToString() const;
+    Q_SCRIPTABLE void dumpMemoryInfo() const;
+    Q_SCRIPTABLE QString dumpMemoryInfoToString() const;
+
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
     virtual void itemMoved( const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination );

@@ -52,6 +52,9 @@
 
 #include <signal.h>
 #include <stdlib.h>
+#if defined __GLIBC__
+# include <malloc.h> // for dumping memory information
+#endif
 
 //#define EXPERIMENTAL_INPROCESS_AGENTS 1
 
@@ -361,6 +364,8 @@ void AgentBasePrivate::delayedInit()
     kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   }
   q->setOnlineInternal( mDesiredOnlineState );
+
+  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Debug" ), this, QDBusConnection::ExportScriptableSlots );
 }
 
 void AgentBasePrivate::setProgramName()
@@ -641,6 +646,46 @@ void AgentBasePrivate::slotResumedFromSuspend()
     slotNetworkStatusChange( Solid::Networking::status() );
   }
 }
+
+QString AgentBasePrivate::dumpNotificationListToString() const
+{
+  return mChangeRecorder->dumpNotificationListToString();
+}
+
+void AgentBasePrivate::dumpMemoryInfo() const
+{
+  // Send it to stdout, so we can debug user problems.
+  // since you have to explicitely call this
+  // it won't flood users with release builds.
+  QTextStream stream( stdout );
+  stream << dumpMemoryInfoToString();
+}
+
+QString AgentBasePrivate::dumpMemoryInfoToString() const
+{
+  // man mallinfo for more info
+  QString str;
+#if defined __GLIBC__
+  struct mallinfo mi;
+  mi = mallinfo();
+  QTextStream stream( &str );
+  stream
+    << "Total non-mmapped bytes (arena):      " << mi.arena     << '\n'
+    << "# of free chunks (ordblks):           " << mi.ordblks   << '\n'
+    << "# of free fastbin blocks (smblks>:    " << mi.smblks    << '\n'
+    << "# of mapped regions (hblks):          " << mi.hblks     << '\n'
+    << "Bytes in mapped regions (hblkhd):     " << mi.hblkhd    << '\n'
+    << "Max. total allocated space (usmblks): " << mi.usmblks   << '\n'
+    << "Free bytes held in fastbins (fsmblks):" << mi.fsmblks   << '\n'
+    << "Total allocated space (uordblks):     " << mi.uordblks  << '\n'
+    << "Total free space (fordblks):          " << mi.fordblks  << '\n'
+    << "Topmost releasable block (keepcost):  " << mi.keepcost  << '\n';
+#else
+  str = QLatin1String( "mallinfo() not supported" );
+#endif
+  return str;
+}
+
 
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
