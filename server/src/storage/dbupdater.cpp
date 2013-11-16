@@ -331,7 +331,6 @@ bool DbUpdater::complexUpdate_25()
   }
 
   akDebug() << "Removing PartTable_old";
-  t.restart();
   {
     QSqlQuery query( Akonadi::DataStore::self()->database() );
     if ( !query.exec( QLatin1String( "DROP TABLE PartTable_old;" ) ) ) {
