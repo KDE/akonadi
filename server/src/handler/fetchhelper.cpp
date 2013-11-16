@@ -327,8 +327,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       } else if ( id < pimItemId ) {
         break;
       }
-      QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
-      QByteArray part = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
+      const QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
+      QByteArray part = partName;
       QByteArray data = Utils::variantToByteArray( partQuery.value( PartQueryDataColumn ) );
 
       if ( mCheckCachedPayloadPartsOnly ) {
@@ -339,7 +339,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
      } else {
         if ( mIgnoreErrors && data.isEmpty() ) {
           //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
-          akDebug() << id << " no payload";
+          akDebug() << "item" << id << "has an empty payload part in parttable for part" << partName;
           skipItem = true;
           break;
         }
