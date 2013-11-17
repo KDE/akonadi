@@ -514,6 +514,8 @@ void FetchHelper::parsePartList()
       mRemoteRevisionRequested = true;
     } else if ( b == AKONADI_PARAM_GID ) {
       mGidRequested = true;
+    } else if ( b == AKONADI_PARAM_COLLECTIONID ) {
+      // we always return collection IDs anyway
     } else {
       mRequestedParts.push_back( b );
       if ( b.startsWith( AKONADI_PARAM_PLD ) ) {
