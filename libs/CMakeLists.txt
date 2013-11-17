@@ -24,7 +24,6 @@ install(TARGETS akonadiprotocolinternals EXPORT akonadiLibraryTargets ${INSTALL_
 
 install(FILES
   ${Akonadi_BINARY_DIR}/akonadiprotocolinternals_export.h
-  abstractsearchplugin.h
   imapparser_p.h
   imapset_p.h
   notificationmessage_p.h

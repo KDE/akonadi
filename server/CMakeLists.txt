@@ -270,6 +270,10 @@ install(FILES
   src/storage/mysql-global-mobile.conf
   DESTINATION ${CONFIG_INSTALL_DIR}/akonadi)
 
+install(FILES
+  src/search/abstractsearchplugin.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi)
+
 ## DBus XML files
 install(FILES
    ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
