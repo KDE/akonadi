@@ -40,14 +40,9 @@ class AbstractSearchPlugin
 
   public:
     /**
-     * Constructor.
-     */
-    explicit AbstractSearchPlugin();
-
-    /**
      * Destructor.
      */
-    virtual ~AbstractSearchPlugin();
+    virtual ~AbstractSearchPlugin() { };
 
     /**
      * Reimplement this method to provide the actual search capability.
@@ -63,5 +58,7 @@ class AbstractSearchPlugin
 };
 
 }
+
+Q_DECLARE_INTERFACE( Akonadi::AbstractSearchPlugin, "org.freedesktop.Akonadi.AbstractSearchPlugin" )
 
 #endif
