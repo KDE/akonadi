@@ -73,7 +73,7 @@ class SearchManager : public QObject
      *
      * This method is reentrant and blocks.
      */
-    QVector<qint64> search( const QString &query );
+    QSet<qint64> search( const QString &query );
 
   private Q_SLOTS:
     void addSearchInternal( const Collection &collection );

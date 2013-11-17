@@ -82,8 +82,7 @@ void SearchManager::loadSearchPlugins()
         continue;
       }
 
-      //akDebug() << "Loaded" <<
-      AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin*>( loader.instance() );
+      AbstractSearchPlugin *plugin = reinterpret_cast<AbstractSearchPlugin*>( loader.instance() );
       if ( !plugin ) {
         loader.unload();
         qWarning() << "Failed to obtain instance of" << files[i] << "search plugin:" << loader.errorString();
