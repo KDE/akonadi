@@ -23,7 +23,7 @@
 
 #include <KDebug>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 
 #include <qdom.h>

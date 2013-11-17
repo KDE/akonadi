@@ -27,6 +27,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <KDebug>
+#include <KUrl>
 #include <KIcon>
 #include <KFileDialog>
 #include <KLocalizedString>

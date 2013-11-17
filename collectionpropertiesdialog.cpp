@@ -27,6 +27,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <ksharedconfig.h>
 #include <ktabwidget.h>
 
 #include <QBoxLayout>

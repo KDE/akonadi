@@ -25,6 +25,8 @@
 #include "subscriptionmodel_p.h"
 
 #include <kdebug.h>
+#include <kglobal.h>
+#include <ksharedconfig.h>
 
 #include <QBoxLayout>
 

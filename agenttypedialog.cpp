@@ -21,6 +21,8 @@
 
 #include <QObject>
 #include <QVBoxLayout>
+#include <KGlobal>
+#include <KConfig>
 
 #include <kdeversion.h>
 
