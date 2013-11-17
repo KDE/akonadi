@@ -29,6 +29,7 @@ namespace Akonadi {
 class NotificationCollector;
 
 class AbstractSearchEngine;
+class AbstractSearchPlugin;
 class Collection;
 
 /**
@@ -72,8 +73,12 @@ class SearchManager : public QObject
     void removeSearchInternal( qint64 id );
 
   private:
+    void loadSearchPlugins();
+
     static SearchManager *m_instance;
     QVector<AbstractSearchEngine *> m_engines;
+    QVector<AbstractSearchPlugin *> m_plugins;
+
 };
 
 }

@@ -18,12 +18,17 @@
 */
 
 #include "config-akonadi.h"
+#include "abstractsearchplugin.h"
 #include "searchmanager.h"
 #include <akdebug.h>
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
 #include "entities.h"
 #include <storage/notificationcollector.h>
+#include <libs/xdgbasedirs_p.h>
+
+#include <QDir>
+#include <QPluginLoader>
 
 using namespace Akonadi;
 
@@ -51,6 +56,41 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
       m_engines.append( new AgentSearchEngine );
     } else {
       akError() << "Unknown search engine type: " << engineName;
+    }
+  }
+
+  loadSearchPlugins();
+}
+
+void SearchManager::loadSearchPlugins()
+{
+  const QStringList dirs = Akonadi::XdgBaseDirs::systemPathList( "LD_LIBRARY_PATH" );
+  #if defined(Q_OS_WIN) //krazy:exclude=cpp
+    const QString filter = QLatin1String( "*.dll" );
+  #else
+    const QString filter = QLatin1String( "*.so" );
+  #endif
+  Q_FOREACH ( const QString &dir, dirs ) {
+    const QDir directory( dir + QDir::separator() + QLatin1String( "akonadi/plugins" ), filter );
+    const QStringList files = directory.entryList();
+    for ( int i = 0; i < files.count(); ++i ) {
+      const QString filePath = directory.absoluteFilePath( files[i] );
+
+      QPluginLoader loader( filePath );
+      if ( !loader.load() ) {
+        qWarning() << "Failed to load search plugin " << files[i] << ":" << loader.errorString();
+        continue;
+      }
+
+      //akDebug() << "Loaded" <<
+      AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin*>( loader.instance() );
+      if ( !plugin ) {
+        loader.unload();
+        qWarning() << "Failed to obtain instance of" << files[i] << "search plugin:" << loader.errorString();
+      }
+
+      m_plugins << plugin;
+      akDebug() << "SEARCH PLUGIN:" << files[i];
     }
   }
 }
