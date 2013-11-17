@@ -58,6 +58,7 @@ class SearchLineEdit : public KLineEdit
     SearchLineEdit( QWidget *receiver, QWidget *parent = 0 )
       : KLineEdit( parent ), mReceiver( receiver )
     {
+        setClearButtonShown( true );
     }
 
   protected:
