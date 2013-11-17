@@ -149,3 +149,15 @@ void SearchManager::updateSearch( const Akonadi::Collection &collection, Notific
   collection.clearPimItems();
   addSearch( collection );
 }
+
+QSet<qint64> SearchManager::search( const QString &query )
+{
+  QSet<qint64> results;
+
+  // TODO: Eventually run all searches in parallel in threads
+  Q_FOREACH ( AbstractSearchPlugin *plugin, m_plugins ) {
+    results.unite( plugin->search( query ) );
+  }
+
+  return results;
+}

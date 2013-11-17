@@ -20,7 +20,7 @@
 #ifndef AKONADI_ABSTRACTSEARCHPLUGIN
 #define AKONADI_ABSTRACTSEARCHPLUGIN
 
-#include <QtCore/QList>
+#include <QtCore/QSet>
 
 namespace Akonadi {
 
@@ -58,7 +58,7 @@ class AbstractSearchPlugin
      * @return List of Akonadi Item IDs referring to items that are matching
      *         the query.
      */
-    virtual QList<qint64> search( const QString &query ) = 0;
+    virtual QSet<qint64> search( const QString &query ) = 0;
 
 };
 

@@ -68,6 +68,13 @@ class SearchManager : public QObject
      */
     void updateSearch( const Collection &collection, NotificationCollector *collector );
 
+    /**
+     * Queries all available backends and plugins and returns list of Item IDs that match.
+     *
+     * This method is reentrant and blocks.
+     */
+    QVector<qint64> search( const QString &query );
+
   private Q_SLOTS:
     void addSearchInternal( const Collection &collection );
     void removeSearchInternal( qint64 id );
