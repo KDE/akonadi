@@ -31,7 +31,6 @@ The following options are available when running CMake:
 
 * AKONADI_BUILD_TESTS (Default: TRUE): Build the Akonadi unit tests
 * AKONADI_BUILD_QSQLITE (Default: TRUE): Build the SQLite backend
-* AKONADI_USE_STRIGI_SEARCH (Default: FALSE): Only useful for certain cases (eg: WINCE builds), don't use it
 * INSTALL_QSQLITE_IN_QT_PREFIX (Default: FALSE): Useful for distributions.
   Once enabled, the qsqlite3 backend will be installed in ${QT_PLUGINS_DIR}/sqldrivers
 * STATIC_LIBRARY (Default: FALSE): Build the Akonadi server libraries statically. Only useful for certain cases (eg: WINCE builds).

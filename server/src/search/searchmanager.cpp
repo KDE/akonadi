@@ -23,7 +23,6 @@
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
 #include "entities.h"
-#include "xesamsearchengine.h"
 #include <storage/notificationcollector.h>
 
 using namespace Akonadi;
@@ -50,8 +49,6 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
 #endif
     } else if ( engineName == QLatin1String( "Agent" ) ) {
       m_engines.append( new AgentSearchEngine );
-    } else if ( engineName == QLatin1String( "Xesam" ) ) {
-      m_engines.append( new XesamSearchEngine );
     } else {
       akError() << "Unknown search engine type: " << engineName;
     }

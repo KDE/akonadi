@@ -37,7 +37,6 @@
 #include "storage/itemretrievalthread.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
-#include "xesamtypes.h"
 #include "response.h"
 
 #include "libs/xdgbasedirs_p.h"
@@ -199,12 +198,7 @@ void AkonadiServer::init()
     mItemRetrievalThread->start( QThread::HighPriority );
 
     const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
-                                                       QStringList()
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                                                     << QLatin1String( "Xesam" )
-#else
-                                                                     << QLatin1String( "Nepomuk" )
-#endif
+                                                       QStringList() << QLatin1String( "Nepomuk" )
                                                                      << QLatin1String( "Agent" ) ).toStringList();
     mSearchManager = new SearchManager( searchManagers, this );
 
@@ -229,8 +223,6 @@ void AkonadiServer::init()
     // for the items as we don't actually know at which stage the
     // operation was interrupted...
     db->unhideAllPimItems();
-
-    qDBusRegisterMetaType<XesamVariantListVector>();
 
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin

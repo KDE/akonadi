@@ -139,7 +139,6 @@ set(libakonadiprivate_SRCS
   src/handler/transaction.cpp
   src/search/agentsearchengine.cpp
   src/search/searchmanager.cpp
-  src/search/xesamsearchengine.cpp
 
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
@@ -181,7 +180,6 @@ set(libakonadiprivate_SRCS
   src/notificationsource.cpp
   src/resourcemanager.cpp
   src/cachecleaner.cpp
-  src/xesamsearch.cpp
   src/debuginterface.cpp
   src/imapstreamparser.cpp
   src/preprocessorinstance.cpp
@@ -221,12 +219,6 @@ qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org
 qt4_add_dbus_interfaces(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface)
-
-set(xesam_xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.xesam.Search.xml)
-
-set_source_files_properties(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
-
-qt4_add_dbus_interface(libakonadiprivate_SRCS ${xesam_xml} xesaminterface)
 
 qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb.qrc)
 

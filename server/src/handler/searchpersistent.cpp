@@ -62,11 +62,7 @@ bool SearchPersistent::parseStream()
   }
 
   // for legacy clients we have to guess the language
-#ifdef AKONADI_USE_STRIGI_SEARCH
-  QString lang = QLatin1String( "XESAM" );
-#else
   QString lang = QLatin1String( "SPARQL" );
-#endif
 
   if ( m_streamParser->hasList() ) {
     m_streamParser->beginList();

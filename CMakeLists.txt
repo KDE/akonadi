@@ -18,7 +18,6 @@ include(CTest)
 include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
-option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
 option(QT5_BUILD "Build Akonadi using the Qt5 framework" FALSE)
@@ -29,14 +28,6 @@ endif()
 
 if(AKONADI_BUILD_TESTS)
   enable_testing()
-endif()
-
-if(AKONADI_USE_STRIGI_SEARCH)
-  set(AKONADI_DEFINITIONS "-DAKONADI_USE_STRIGI_SEARCH")
-  add_definitions(${AKONADI_DEFINITIONS})
-  set(SOPRANO_TYPE "OPTIONAL")
-else()
-  set(SOPRANO_TYPE "REQUIRED")
 endif()
 
 ############### CMake Macros ###############
@@ -168,7 +159,7 @@ endif()
 set_package_properties(Soprano PROPERTIES
                        URL "http://soprano.sourceforge.net"
                        DESCRIPTION "Storage of semantic data"
-                       TYPE ${SOPRANO_TYPE}
+                       TYPE REQUIRED
                        PURPOSE "Soprano is needed for the Nepomuk search backend"
 )
 
