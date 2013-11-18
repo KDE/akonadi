@@ -33,6 +33,14 @@
 
 using namespace Akonadi;
 
+class InspectableETM: public EntityTreeModel
+{
+public:
+  explicit InspectableETM(ChangeRecorder* monitor, QObject* parent = 0)
+  :EntityTreeModel(monitor, parent) {}
+  EntityTreeModelPrivate *etmPrivate() { return d_ptr; };
+};
+
 /**
  * This is a test for the LazyPopulation of the ETM and the associated refcounting in the Monitor.
  */
@@ -86,6 +94,21 @@ bool waitForPopulation(const QModelIndex &idx, EntityTreeModel *model, int count
   return false;
 }
 
+void referenceCollection(EntityTreeModel *model, int index)
+{
+    QModelIndex idx = getIndex(QString("col%1").arg(index), model);
+    QVERIFY(idx.isValid());
+    model->setData(idx, QVariant(), EntityTreeModel::CollectionRefRole);
+    model->setData(idx, QVariant(), EntityTreeModel::CollectionDerefRole);
+}
+
+void referenceCollections(EntityTreeModel *model, int count)
+{
+  for (int i = 0; i < count; i++) {
+    referenceCollection(model, i);
+  }
+}
+
 void LazyPopulationTest::testItemAdded()
 {
   Collection res3 = Collection( collectionIdFromPath( "res3" ) );
@@ -120,7 +143,7 @@ void LazyPopulationTest::testItemAdded()
 
   ChangeRecorder *changeRecorder = new ChangeRecorder(this);
   changeRecorder->setCollectionMonitored(Collection::root());
-  EntityTreeModel *model = new EntityTreeModel( changeRecorder, this );
+  InspectableETM *model = new InspectableETM( changeRecorder, this );
   model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
   const int numberOfRootCollections = 4;
@@ -139,6 +162,9 @@ void LazyPopulationTest::testItemAdded()
   //Wait for collection to be fetched
   QVERIFY(waitForPopulation(monitorIndex, model, 1));
 
+  //---ensure we cannot fetchMore again
+  QVERIFY(!model->etmPrivate()->canFetchMore(monitorIndex));
+
   //The item should now be present
   QCOMPARE(model->index(0, 0, monitorIndex).data(Akonadi::EntityTreeModel::ItemIdRole).value<Akonadi::Item::Id>(), item1.id());
 
@@ -148,22 +174,13 @@ void LazyPopulationTest::testItemAdded()
 
   //---ensure item1 gets purged after the collection is no longer buffered
   //Get the monitorCol out of the buffer
-  for (int i = 0; i < bufferSize-1; i++) {
-    QModelIndex idx = getIndex(QString("col%1").arg(i), model);
-    QVERIFY(idx.isValid());
-    model->setData(idx, QVariant(), EntityTreeModel::CollectionRefRole);
-    model->setData(idx, QVariant(), EntityTreeModel::CollectionDerefRole);
-  }
+  referenceCollections(model, bufferSize-1);
   //The collection is still in the buffer...
   QCOMPARE(model->rowCount(monitorIndex), 1);
-  {
-    QModelIndex idx = getIndex(QString("col%1").arg(bufferSize-1), model);
-    QVERIFY(idx.isValid());
-    model->setData(idx, QVariant(), EntityTreeModel::CollectionRefRole);
-    model->setData(idx, QVariant(), EntityTreeModel::CollectionDerefRole);
-  }
+  referenceCollection(model, bufferSize-1);
   //...and now purged
   QCOMPARE(model->rowCount(monitorIndex), 0);
+  QVERIFY(model->etmPrivate()->canFetchMore(monitorIndex));
 
   //---ensure item2 added to unbuffered and unreferenced collection is not added to the model
   Item item2;
@@ -181,6 +198,20 @@ void LazyPopulationTest::testItemAdded()
   //Wait for collection to be fetched
   QVERIFY(waitForPopulation(monitorIndex, model, 2));
   QCOMPARE(model->rowCount(monitorIndex), 2);
+
+  QVERIFY(!model->etmPrivate()->canFetchMore(monitorIndex));
+
+
+  //purge collection again
+  model->setData(monitorIndex, QVariant(), EntityTreeModel::CollectionDerefRole);
+  referenceCollections(model, bufferSize);
+  QCOMPARE(model->rowCount(monitorIndex), 0);
+  //fetch when not monitored
+  QVERIFY(model->etmPrivate()->canFetchMore(monitorIndex));
+  model->fetchMore(monitorIndex);
+  QVERIFY(waitForPopulation(monitorIndex, model, 2));
+  //ensure we cannot refetch
+  QVERIFY(!model->etmPrivate()->canFetchMore(monitorIndex));
 }
 
 #include "lazypopulationtest.moc"

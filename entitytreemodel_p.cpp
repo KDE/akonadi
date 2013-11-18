@@ -1899,11 +1899,6 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
       return false;
     }
 
-    // If the collection is no longer monitored by the monitor we have to refetch
-    if ( !m_monitor->d_ptr->isMonitored( colId ) ) {
-      return true;
-    }
-
     // Collections which contain no items at all can't contain more
     if ( m_collectionsWithoutItems.contains( colId ) ) {
       return false;
