@@ -38,20 +38,7 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
   d->mLimit = -1;
 
   // by default search for all contact groups
-  ItemSearchJob::setQuery( QLatin1String( ""
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                          "<request>"
-                                          "  <query>"
-                                          "    <equals>"
-                                          "      <field name=\"type\"/>"
-                                          "      <string>ContactGroup</string>"
-                                          "    </equals>"
-                                          "  </query>"
-                                          "</request>"
-#else
-                                          "SELECT ?r WHERE { ?r a nco:ContactGroup }"
-#endif
-                                        ) );
+  ItemSearchJob::setQuery( QLatin1String( "SELECT ?r WHERE { ?r a nco:ContactGroup }" ) );
 }
 
 ContactGroupSearchJob::~ContactGroupSearchJob()
@@ -73,22 +60,6 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value,
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-        "<request>"
-        "  <query>"
-        "    <and>"
-        "      <equals>"
-        "        <field name=\"type\"/>"
-        "        <string>ContactGroup</string>"
-        "      </equals>"
-        "      <equals>"
-        "        <field name=\"contactGroupName\"/>"
-        "        <string>%1</string>"
-        "      </equals>"
-        "    </and>"
-        "  </query>"
-        "</request>"
-#else
         "SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
@@ -96,28 +67,11 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value,
         "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
         "  } "
         "}"
-#endif
       );
     }
   } else if ( match == ContainsMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-        "<request>"
-        "  <query>"
-        "    <and>"
-        "      <equals>"
-        "        <field name=\"type\"/>"
-        "        <string>ContactGroup</string>"
-        "      </equals>"
-        "      <contains>"
-        "        <field name=\"contactGroupName\"/>"
-        "        <string>%1</string>"
-        "      </contains>"
-        "    </and>"
-        "  </query>"
-        "</request>"
-#else
         "SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
@@ -126,28 +80,11 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value,
         "    ?v bif:contains \"'%1'\""
         "  } "
         "}"
-#endif
       );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-        "<request>"
-        "  <query>"
-        "    <and>"
-        "      <equals>"
-        "        <field name=\"type\"/>"
-        "        <string>ContactGroup</string>"
-        "      </equals>"
-        "      <startsWith>"
-        "        <field name=\"contactGroupName\"/>"
-        "        <string>%1</string>"
-        "      </startsWith>"
-        "    </and>"
-        "  </query>"
-        "</request>"
-#else
         "SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
@@ -156,15 +93,12 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value,
         "    ?v bif:contains \"'%1*'\""
         "  } "
         "}"
-#endif
       );
     }
   }
 
   if ( d->mLimit != -1 ) {
-#ifndef AKONADI_USE_STRIGI_SEARCH
     query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
-#endif
   }
 
   query = query.arg( value );
