@@ -170,7 +170,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
       Check whether a Collection is buffered using the isBuffered method.
     */
-    class PurgeBuffer
+    class AKONADI_TESTS_EXPORT PurgeBuffer
     {
       // Buffer the most recent 10 unreferenced Collections
       static const int MAXBUFFERSIZE = 10;
