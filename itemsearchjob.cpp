@@ -25,6 +25,7 @@
 #include "protocolhelper_p.h"
 
 #include <QtCore/QTimer>
+#include <QThreadStorage>
 
 using namespace Akonadi;
 
@@ -57,8 +58,26 @@ class Akonadi::ItemSearchJobPrivate : public JobPrivate
     QTimer* mEmitTimer;
 };
 
+QThreadStorage<Session *> instances;
+
+static Session *defaultSearchSession()
+{
+  if ( !instances.hasLocalData() ) {
+    const QByteArray sessionName = Session::defaultSession()->sessionId() + "-SearchSession";
+    instances.setLocalData( new Session( sessionName ) );
+  }
+  return instances.localData();
+}
+
+static QObject *sessionForJob( QObject *parent )
+{
+  if ( qobject_cast<Job *>(parent) || qobject_cast<Session *>(parent) )
+    return parent;
+  return defaultSearchSession();
+}
+
 ItemSearchJob::ItemSearchJob( const QString & query, QObject * parent )
-  : Job( new ItemSearchJobPrivate( this, query ), parent )
+  : Job( new ItemSearchJobPrivate( this, query ), sessionForJob( parent ) )
 {
   Q_D( ItemSearchJob );
 

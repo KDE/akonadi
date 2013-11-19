@@ -297,7 +297,13 @@ void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
 
   // Get the real pointer
   oldIncidence = q->MemoryCalendar::incidence( oldIncidence->uid() );
-  Q_ASSERT( oldIncidence );
+
+  if ( !oldIncidence ) {
+    // How can this happen ?
+    kWarning() << "Couldn't find old incidence";
+    Q_ASSERT( false );
+    return;
+  }
 
   if ( newIncidence->instanceIdentifier() == oldIncidence->instanceIdentifier() ) {
     kWarning() << "New uid=" << newIncidence->uid() << "; old uid=" << oldIncidence->uid()
