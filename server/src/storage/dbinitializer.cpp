@@ -315,6 +315,8 @@ QString DbInitializer::sqlType(const QString & type, int size) const
   if ( type == QLatin1String( "bool" ) ) {
     return QLatin1String("BOOL");
   }
+
+  akDebug() << "Invalid type" << type;
   Q_ASSERT( false );
   return QString();
 }

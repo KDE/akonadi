@@ -261,42 +261,57 @@ bool DbUpdater::complexUpdate_25()
     }
   }
 
-  // TODO Use builder from DbInitializer
   akDebug() << "Creating a PartTable_new";
   {
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
-    QString queryString;
-    if ( dbType == DbType::PostgreSQL ) {
-        queryString =
-          QLatin1String( "CREATE TABLE PartTable_new (id SERIAL NOT NULL PRIMARY KEY,"
-                         "                            pimItemId int8 NOT NULL,"
-                         "                            partTypeId int8 NOT NULL,"
-                         "                            data BYTEA,"
-                         "                            datasize int8 NOT NULL,"
-                         "                            version INTEGER DEFAULT 0,"
-                         "                            external BOOL DEFAULT false)" );
-    } else if ( dbType == DbType::MySQL ) {
-      queryString =
-        QLatin1String( "CREATE TABLE PartTable_new (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                       "                            pimItemId BIGINT NOT NULL,"
-                       "                            partTypeId BIGINT NOT NULL,"
-                       "                            data LONGBLOB,"
-                       "                            datasize BIGINT NOT NULL,"
-                       "                            version INTEGER DEFAULT 0,"
-                       "                            external BOOL DEFAULT false)" );
-    } else if ( dbType == DbType::Sqlite ) {
-      queryString =
-        QLatin1String( "CREATE TABLE PartTable_new (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "                            pimItemId BIGINT NOT NULL,"
-                       "                            partTypeId BIGINT NOT NULL,"
-                       "                            data LONGBLOB,"
-                       "                            datasize BIGINT NOT NULL,"
-                       "                            version INTEGER DEFAULT 0,"
-                       "                            external BOOL DEFAULT false)" );
-    } else {
-      akFatal() << "Invalid database";
-    }
+    TableDescription description;
+    description.name = QLatin1String( "PartTable_new" );
 
+    ColumnDescription idColumn;
+    idColumn.name = QLatin1String( "id" );
+    idColumn.type = QLatin1String( "qint64" );
+    idColumn.isAutoIncrement = true;
+    idColumn.isPrimaryKey = true;
+    description.columns << idColumn;
+
+    ColumnDescription pimItemIdColumn;
+    pimItemIdColumn.name = QLatin1String( "pimItemId" );
+    pimItemIdColumn.type = QLatin1String( "qint64" );
+    pimItemIdColumn.allowNull = false;
+    description.columns << pimItemIdColumn;
+
+    ColumnDescription partTypeIdColumn;
+    partTypeIdColumn.name = QLatin1String( "partTypeId" );
+    partTypeIdColumn.type = QLatin1String( "qint64" );
+    partTypeIdColumn.allowNull = false;
+    description.columns << partTypeIdColumn;
+
+    ColumnDescription dataColumn;
+    dataColumn.name = QLatin1String( "data" );
+    dataColumn.type = QLatin1String( "QByteArray" );
+    description.columns << dataColumn;
+
+    ColumnDescription dataSizeColumn;
+    dataSizeColumn.name = QLatin1String( "datasize" );
+    dataSizeColumn.type = QLatin1String( "qint64" );
+    dataSizeColumn.allowNull = false;
+    description.columns << dataSizeColumn;
+
+    ColumnDescription versionColumn;
+    versionColumn.name = QLatin1String( "version" );
+    versionColumn.type = QLatin1String( "int" );
+    versionColumn.defaultValue = QLatin1String( "0" );
+    description.columns << versionColumn;
+
+    ColumnDescription externalColumn;
+    externalColumn.name = QLatin1String( "external" );
+    externalColumn.type = QLatin1String( "bool" );
+    externalColumn.defaultValue = QLatin1String( "false" );
+    description.columns << externalColumn;
+
+    DbInitializer::Ptr initializer = DbInitializer::createInstance( Akonadi::DataStore::self()->database() );
+    const QString queryString = initializer->buildCreateTableStatement( description );
+
+    QSqlQuery query( Akonadi::DataStore::self()->database() );
     if ( !query.exec( queryString ) ) {
       akError() << query.lastError().text();
       return false;

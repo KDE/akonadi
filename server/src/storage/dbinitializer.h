@@ -44,6 +44,8 @@ class Schema;
  * A helper class which takes a reference to a database object and
  * the file name of a template file and initializes the database
  * according to the rules in the template file.
+ *
+ * TODO: Refactor this to be easily reusable for updater too
  */
 class DbInitializer
 {
@@ -53,7 +55,7 @@ class DbInitializer
     /**
       Returns an initializer instance for a given backend.
     */
-    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, Schema *schema );
+    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, Schema *schema = 0 );
 
     /**
      * Destroys the database initializer.
@@ -89,6 +91,11 @@ class DbInitializer
      */
     bool updateIndexesAndConstraints();
 
+    /**
+     * Returns a backend-specific CREATE TABLE SQL query describing given table
+     */
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
+
   protected:
     /**
      * Creates a new database initializer.
@@ -106,7 +113,6 @@ class DbInitializer
     /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
     virtual QString sqlValue( const QString &type, const QString &value ) const;
 
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const = 0;
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
