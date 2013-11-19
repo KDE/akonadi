@@ -234,6 +234,8 @@ bool DbUpdater::complexUpdate_25()
 {
   akDebug() << "Starting database update to version 25";
 
+  DbType::Type dbType = DbType::type( Akonadi::DataStore::self()->database() );
+
   QTime ttotal;
   ttotal.start();
 
@@ -241,7 +243,7 @@ bool DbUpdater::complexUpdate_25()
   {
     // We don't care if this fails, it just means that there was no failed update
     QSqlQuery query( Akonadi::DataStore::self()->database() );
-    query.exec( QLatin1String( "RENAME TABLE PartTable_old TO PartTable" ) );
+    query.exec( QLatin1String( "ALTER TABLE PartTable_old RENAME TO PartTable" ) );
   }
 
   {
@@ -252,21 +254,50 @@ bool DbUpdater::complexUpdate_25()
   {
     // Make sure the table is empty, otherwise we get duplicate key error
     QSqlQuery query( Akonadi::DataStore::self()->database() );
-    query.exec( QLatin1String( "TRUNCATE TABLE PartTypeTable" ) );
+    if ( dbType == DbType::Sqlite ) {
+        query.exec( QLatin1String( "DELETE FROM PartTypeTable" ) );
+    } else { // MySQL, PostgreSQL
+      query.exec( QLatin1String( "TRUNCATE TABLE PartTypeTable" ) );
+    }
   }
 
+  // TODO Use builder from DbInitializer
   akDebug() << "Creating a PartTable_new";
   {
     QSqlQuery query( Akonadi::DataStore::self()->database() );
-    if ( !query.exec(
-      QLatin1String("CREATE TABLE PartTable_new (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                    "                            pimItemId BIGINT NOT NULL,"
-                    "                            partTypeId BIGINT NOT NULL,"
-                    "                            data LONGBLOB,"
-                    "                            datasize BIGINT NOT NULL,"
-                    "                            version INTEGER DEFAULT 0,"
-                    "                            external BOOL DEFAULT false)"
-                    "COLLATE=utf8_general_ci DEFAULT CHARSET=utf8") ) ) {
+    QString queryString;
+    if ( dbType == DbType::PostgreSQL ) {
+        queryString =
+          QLatin1String( "CREATE TABLE PartTable_new (id SERIAL NOT NULL PRIMARY KEY,"
+                         "                            pimItemId int8 NOT NULL,"
+                         "                            partTypeId int8 NOT NULL,"
+                         "                            data BYTEA,"
+                         "                            datasize int8 NOT NULL,"
+                         "                            version INTEGER DEFAULT 0,"
+                         "                            external BOOL DEFAULT false)" );
+    } else if ( dbType == DbType::MySQL ) {
+      queryString =
+        QLatin1String( "CREATE TABLE PartTable_new (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                       "                            pimItemId BIGINT NOT NULL,"
+                       "                            partTypeId BIGINT NOT NULL,"
+                       "                            data LONGBLOB,"
+                       "                            datasize BIGINT NOT NULL,"
+                       "                            version INTEGER DEFAULT 0,"
+                       "                            external BOOL DEFAULT false)" );
+    } else if ( dbType == DbType::Sqlite ) {
+      queryString =
+        QLatin1String( "CREATE TABLE PartTable_new (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                       "                            pimItemId BIGINT NOT NULL,"
+                       "                            partTypeId BIGINT NOT NULL,"
+                       "                            data LONGBLOB,"
+                       "                            datasize BIGINT NOT NULL,"
+                       "                            version INTEGER DEFAULT 0,"
+                       "                            external BOOL DEFAULT false)" );
+    } else {
+      akFatal() << "Invalid database";
+    }
+
+    if ( !query.exec( queryString ) ) {
       akError() << query.lastError().text();
       return false;
     }
@@ -308,12 +339,29 @@ bool DbUpdater::complexUpdate_25()
   akDebug() << "Migrating data from PartTable to PartTable_new";
   {
     QSqlQuery query( Akonadi::DataStore::self()->database() );
-    if ( !query.exec( QLatin1String(
-      "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-      "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, PartTable.datasize, PartTable.version, PartTable.external "
-      "FROM PartTable "
-      "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)" ) ) )
-    {
+    QString queryString;
+    if ( dbType == DbType::PostgreSQL ) {
+      queryString = QLatin1String( "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+                                   "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                                   "       PartTable.datasize, PartTable.version, PartTable.external "
+                                   "FROM PartTable "
+                                   "LEFT JOIN PartTypeTable ON "
+                                   "       PartTable.name = CONCAT(encode(PartTypeTable.ns, 'escape'), ':', encode(PartTypeTable.name, 'escape'))"  );
+    } else if ( dbType == DbType::MySQL ) {
+      queryString = QLatin1String( "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+                                   "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                                   "PartTable.datasize, PartTable.version, PartTable.external "
+                                   "FROM PartTable "
+                                   "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)" );
+    } else if ( dbType == DbType::Sqlite ) {
+      queryString = QLatin1String( "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+                                   "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                                   "PartTable.datasize, PartTable.version, PartTable.external "
+                                   "FROM PartTable "
+                                   "LEFT JOIN PartTypeTable ON PartTable.name = PartTypeTable.ns || ':' || PartTypeTable.name" );
+    }
+
+    if ( !query.exec( queryString ) ) {
       akError() << query.lastError().text();
       return false;
     }
@@ -321,12 +369,37 @@ bool DbUpdater::complexUpdate_25()
 
   akDebug() << "Swapping PartTable_new for PartTable";
   {
+    // Does an atomic swap
+
     QSqlQuery query( Akonadi::DataStore::self()->database() );
-    // Do an atomic swap
-    if ( !query.exec( QLatin1String( "RENAME TABLE PartTable     TO PartTable_old,"
-                                     "             PartTable_new TO PartTable" ) ) ) {
-      akError() << query.lastError().text();
-      return false;
+
+    if ( dbType == DbType::PostgreSQL  || dbType == DbType::Sqlite ) {
+      if ( dbType == DbType::PostgreSQL ) {
+        Akonadi::DataStore::self()->database().transaction();
+      }
+
+      if ( !query.exec( QLatin1String( "ALTER TABLE PartTable RENAME TO PartTable_old" ) ) ) {
+        akError() << query.lastError().text();
+        Akonadi::DataStore::self()->database().rollback();
+        return false;
+      }
+
+      // If this fails in SQLite (i.e. without transaction), we can still recover on next start)
+      if ( !query.exec( QLatin1String( "ALTER TABLE PartTable_new RENAME TO PartTable" ) ) ) {
+        akError() << query.lastError().text();
+        Akonadi::DataStore::self()->database().rollback();
+        return false;
+      }
+
+      if ( dbType == DbType::PostgreSQL ) {
+        Akonadi::DataStore::self()->database().commit();
+      }
+    } else { // MySQL cannot do rename in transaction, but supports atomic renames
+      if ( !query.exec( QLatin1String( "RENAME TABLE PartTable     TO PartTable_old,"
+                                            "             PartTable_new TO PartTable" ) ) ) {
+        akError() << query.lastError().text();
+        return false;
+      }
     }
   }
 
@@ -334,8 +407,9 @@ bool DbUpdater::complexUpdate_25()
   {
     QSqlQuery query( Akonadi::DataStore::self()->database() );
     if ( !query.exec( QLatin1String( "DROP TABLE PartTable_old;" ) ) ) {
-      akError() << query.lastError().text();
-      return false;
+      // It does not matter when this fails, we are successfully migrated
+      akDebug() << query.lastError().text();
+      akDebug() << "Not a fatal problem, continuing...";
     }
   }
 
