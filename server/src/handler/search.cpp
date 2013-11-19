@@ -26,6 +26,8 @@
 #include "imapstreamparser.h"
 #include "nepomuksearch.h"
 #include "response.h"
+#include "search/searchmanager.h"
+#include "storage/selectquerybuilder.h"
 
 #include <libs/protocol_p.h>
 
@@ -44,28 +46,54 @@ Search::~Search()
 
 bool Search::parseStream()
 {
-  const QByteArray queryString = m_streamParser->readString();
+  QList<QByteArray> mimeTypes;
+  QVector<qint64> collectionIds;
+  bool recursive = false;
+  QByteArray queryString;
+
+  // Backward compatibility
+  if ( !connection()->capabilities().serverSideSearch() ) {
+    queryString = m_streamParser->readString();
+  } else {
+    while (m_streamParser->hasString()) {
+      const QByteArray param = m_streamParser->readString();
+      if ( param == AKONADI_PARAM_MIMETYPE ) {
+        mimeTypes = m_streamParser->readParenthesizedList();
+      } else if ( param == AKONADI_PARAM_COLLECTIONS ) {
+        QList<QByteArray> list = m_streamParser->readParenthesizedList();
+        Q_FOREACH ( const QByteArray &col, list ) {
+          collectionIds << col.toLongLong();
+        }
+      } else if ( param == AKONADI_PARAM_RECURSIVE ) {
+        recursive = true;
+      } else if ( param == AKONADI_PARAM_QUERY ) {
+        queryString = m_streamParser->readString();
+      } else {
+        return failureResponse( "Invalid parameter" );
+      }
+    }
+  }
+
   if ( queryString.isEmpty() ) {
     return failureResponse( "No query specified" );
   }
 
-  NepomukSearch *service = new NepomukSearch;
-  const QStringList uids = service->search( QString::fromUtf8( queryString ) );
-  delete service;
+  Collection::List collections;
+  if ( recursive ) {
+    Q_FOREACH ( qint64 collId, collections ) {
+      collections << listCollectionsRecursive( collections );
+    }
+  }
 
+  QSet<qint64> uids = SearchManager::search( QString::fromUtf8( queryString ), collections );
   if ( uids.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope
     return successResponse( "SEARCH completed" );
   }
 
   // create imap query
-  QVector<ImapSet::Id> imapIds;
-  Q_FOREACH ( const QString &uid, uids ) {
-    imapIds.append( uid.toULongLong() );
-  }
-
   ImapSet itemSet;
-  itemSet.add( imapIds );
+  itemSet.add( uids.toList() );
   Scope scope( Scope::Uid );
   scope.setUidSet( itemSet );
 
@@ -80,4 +108,22 @@ bool Search::parseStream()
 
   successResponse( "SEARCH completed" );
   return true;
+}
+
+QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancestors )
+{
+  QVector<qint64> recursiveChildren;
+  Q_FOREACH ( qint64 ancestor, ancestors ) {
+    SelectQueryBuilder<Collection> qb;
+    qb.addColumn( Collection::idFullColumnName() );
+    qb.addValueCondition( Collection::parentIdFullColumnName() );
+    qb.exec();
+    const QVector<qint64> children = qb.result();
+    if ( !children.isEmpty() ) {
+      recursiveChildren << children;
+      recursiveChildren << listCollectionsRecursive( children );
+    }
+  }
+
+  return recursiveChildren;
 }

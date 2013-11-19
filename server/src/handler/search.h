@@ -22,6 +22,8 @@
 
 #include <handler.h>
 
+#include <QtCore/QVector>
+
 namespace Akonadi {
 
 /**
@@ -31,7 +33,7 @@ namespace Akonadi {
 
   A search has the following forms:
   @verbatim
-  <tag> SEARCH <SPARQL-query>
+  <tag> SEARCH [MIMETYPE (mimetype-list)] [COLLECTIONS (collections-list) [RECURSIVE]] QUERY <SPARQL-query> <fetch scope>
   @endverbatim
 */
 class Search : public Handler
@@ -44,6 +46,9 @@ class Search : public Handler
     ~Search();
 
     bool parseStream();
+
+  private:
+    QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors );
 };
 
 }
