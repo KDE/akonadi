@@ -170,6 +170,7 @@
     <raw-sql backends="mysql,psql,odbc">UPDATE CollectionTable SET isVirtual = true WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = true)</raw-sql>
     <raw-sql backends="sqlite">UPDATE CollectionTable SET isVirtual = 1 WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = 1)</raw-sql>
   </update>
+
   <update version="24" abortOnFailure="false">
     <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER remoteId TYPE text USING convert_from(remoteId,'utf8');</raw-sql>
     <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER remoteRevision TYPE text USING convert_from(remoteRevision,'utf8');</raw-sql>
@@ -184,4 +185,13 @@
     <raw-sql backends="psql">ALTER TABLE PimItemTable ALTER remoteRevision TYPE text USING convert_from(remoteRevision,'utf8');</raw-sql>
     <raw-sql backends="psql">ALTER TABLE ResourceTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
   </update>
+
+    <!-- adapt to new part type table layout
+    (1) perform complex update by populating PartTypeTable and updating partTypeId column in PartTable
+    (2) drop the old part name column in the part table
+  -->
+  <update version="25" abortOnFailure="true">
+    <complex-update backends="mysql,psql,sqlite,odbc" />
+  </update>
+
 </updates>

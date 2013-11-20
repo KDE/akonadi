@@ -36,6 +36,7 @@
 #include "handler.h"
 #include "collectionqueryhelper.h"
 #include "akonadischema.h"
+#include "parttypehelper.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -156,6 +157,11 @@ bool Akonadi::DataStore::init()
 
   DbUpdater updater( m_database, QLatin1String( ":dbupdate.xml" ) );
   if ( !updater.run() ) {
+    return false;
+  }
+
+  if ( !initializer->updateIndexesAndConstraints() ) {
+    akError() << initializer->errorMsg();
     return false;
   }
 
@@ -352,12 +358,16 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
 
 bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )
 {
-  Part::List existingParts = item.parts();
+  SelectQueryBuilder<Part> qb;
+  qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
+  qb.addValueCondition( Part::pimItemIdFullColumnName(), Query::Equals, item.id() );
+  qb.addCondition( PartTypeHelper::conditionFromFqNames( parts ) );
+
+  qb.exec();
+  Part::List existingParts = qb.result();
   Q_FOREACH ( Part part, existingParts ) {
-    if ( parts.contains( part.name().toLatin1() ) ) {
-      if ( !PartHelper::remove( &part ) ) {
-        return false;
-      }
+    if ( !PartHelper::remove( &part ) ) {
+      return false;
     }
   }
 
@@ -367,12 +377,13 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
 
 bool DataStore::invalidateItemCache( const PimItem &item )
 {
-  // find all expired item parts
+  // find all payload item parts
   SelectQueryBuilder<Part> qb;
   qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
   qb.addValueCondition( Part::pimItemIdFullColumnName(), Query::Equals, item.id() );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-  qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  qb.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
   qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
 
   if ( !qb.exec() ) {
@@ -771,7 +782,11 @@ bool DataStore::unhideAllPimItems()
 
   akDebug() << "DataStore::unhideAllPimItems()";
 
-  return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( AKONADI_ATTRIBUTE_HIDDEN ) );
+  try {
+    return PartHelper::remove( Part::partTypeIdFullColumnName(), PartTypeHelper::fromName( "ATR", "HIDDEN" ).id() );
+  } catch ( ... ) {} // we can live with this failing
+
+  return false;
 }
 
 bool DataStore::cleanupPimItems( const PimItem::List &items )

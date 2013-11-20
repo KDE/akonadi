@@ -31,6 +31,7 @@
 #include "storage/parthelper.h"
 #include "storage/dbconfig.h"
 #include "storage/itemretriever.h"
+#include <storage/parttypehelper.h>
 
 #include "libs/imapparser_p.h"
 #include "imapstreamparser.h"
@@ -259,9 +260,11 @@ bool Store::parseStream()
       QByteArray partName;
       ImapParser::splitVersionedKey( command, partName, partVersion );
 
+      const PartType partType = PartTypeHelper::fromFqName( partName );
+
       SelectQueryBuilder<Part> qb;
       qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, item.id() );
-      qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( partName ) );
+      qb.addValueCondition( Part::partTypeIdColumn(), Query::Equals, partType.id() );
       if ( !qb.exec() ) {
         return failureResponse( "Unable to check item part existence" );
       }
@@ -270,7 +273,7 @@ bool Store::parseStream()
       if ( !result.isEmpty() ) {
         part = result.first();
       }
-      part.setName( QString::fromUtf8( partName ) );
+      part.setPartType( partType );
       part.setVersion( partVersion );
       part.setPimItemId( item.id() );
 

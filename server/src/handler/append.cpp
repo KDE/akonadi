@@ -32,6 +32,7 @@
 #include "storage/transaction.h"
 #include "storage/parthelper.h"
 #include "storage/dbconfig.h"
+#include "storage/parttypehelper.h"
 
 #include <QtCore/QDebug>
 #include <QLocale>
@@ -138,7 +139,7 @@ bool Append::commit()
 
     // wrap data into a part
     Part part;
-    part.setName( QLatin1String( "PLD:RFC822" ) );
+    part.setPartType( PartTypeHelper::fromName( "PLD", "RFC822" ) );
     part.setData( m_data );
     part.setPimItemId( item.id() );
     part.setDatasize( dataSize );
@@ -152,7 +153,7 @@ bool Append::commit()
     //akDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
     if ( doPreprocessing ) {
       Part hiddenAttribute;
-      hiddenAttribute.setName( QLatin1String( "ATR:HIDDEN" ) );
+      hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
       hiddenAttribute.setData( QByteArray() );
       hiddenAttribute.setPimItemId( item.id() );
       hiddenAttribute.setDatasize( 0 );

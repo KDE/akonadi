@@ -27,6 +27,7 @@
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
+#include "storage/parttypehelper.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
@@ -126,7 +127,7 @@ enum QueryColumns {
 
   ResourceColumn,
 
-  PartNameColumn,
+  PartTypeNameColumn,
   PartDatasizeColumn
 };
 
@@ -140,19 +141,15 @@ QSqlQuery ItemRetriever::buildQuery() const
 
   qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
-  Query::Condition partJoinCondition;
-  partJoinCondition.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
-  if ( !mFullPayload && !mParts.isEmpty() ) {
-    partJoinCondition.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
-  }
-  partJoinCondition.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( AKONADI_PARAM_PLD ) );
-  qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), partJoinCondition );
+  qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
+
+  qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
 
   qb.addColumn( PimItem::idFullColumnName() );
   qb.addColumn( PimItem::remoteIdFullColumnName() );
   qb.addColumn( MimeType::nameFullColumnName() );
   qb.addColumn( Resource::nameFullColumnName() );
-  qb.addColumn( Part::nameFullColumnName() );
+  qb.addColumn( PartType::nameFullColumnName() );
   qb.addColumn( Part::datasizeFullColumnName() );
 
   if ( mScope.scope() != Scope::Invalid ) {
@@ -166,6 +163,14 @@ QSqlQuery ItemRetriever::buildQuery() const
     qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals,
                           QString::fromLatin1( mConnection->sessionId() ) );
   }
+
+  Query::Condition partTypeCondition;
+  partTypeCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
+  if ( !mFullPayload && !mParts.isEmpty() ) {
+    partTypeCondition.addCondition( PartTypeHelper::conditionFromFqNames( mParts ) );
+  }
+  partTypeCondition.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
+  qb.addCondition( partTypeCondition );
 
   qb.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
@@ -210,16 +215,16 @@ bool ItemRetriever::exec()
       requests << lastRequest;
     }
 
-    if ( query.value( PartNameColumn ).isNull() ) {
+    if ( query.value( PartTypeNameColumn ).isNull() ) {
       // LEFT JOIN did not find anything, retrieve all parts
       query.next();
       continue;
     }
 
     qint64 datasize = query.value( PartDatasizeColumn ).toLongLong();
-    QString partName = Utils::variantToString( query.value( PartNameColumn ) );
-    Q_ASSERT( partName.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) );
-    partName = partName.mid( 4 );
+    const QString partName = Utils::variantToString( query.value( PartTypeNameColumn ) );
+    Q_ASSERT( !partName.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) );
+
     if ( datasize <= 0 ) {
       // request update for this part
       if ( mFullPayload && !lastRequest->parts.contains( partName ) ) {

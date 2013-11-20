@@ -32,6 +32,7 @@
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
+#include "storage/parttypehelper.h"
 
 #include <libs/protocol_p.h>
 
@@ -109,7 +110,7 @@ bool Akonadi::AkAppend::commit()
 
     if ( doPreprocessing ) {
       Part hiddenAttribute;
-      hiddenAttribute.setName( QLatin1String( AKONADI_ATTRIBUTE_HIDDEN ) );
+      hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
       hiddenAttribute.setData( QByteArray() );
       hiddenAttribute.setPimItemId( item.id() );
 
@@ -230,7 +231,7 @@ bool AkAppend::parseStream()
   Q_FOREACH ( partSpec, partSpecs ) {
     // wrap data into a part
     Part part;
-    part.setName( QLatin1String( partSpec.first ) );
+    part.setPartType( PartTypeHelper::fromFqName( partSpec.first ) );
     part.setData( allParts.mid( pos, partSpec.second.first ) );
     if ( partSpec.second.second != 0 ) {
       part.setVersion( partSpec.second.second );

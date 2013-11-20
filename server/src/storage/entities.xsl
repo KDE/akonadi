@@ -130,6 +130,12 @@ QVector&lt;QString&gt; Akonadi::allDatabaseTables()
 
 <!-- Helper templates -->
 
+<!-- uppercase first letter -->
+<xsl:template name="uppercase-first">
+<xsl:param name="argument"/>
+<xsl:value-of select="concat(translate(substring($argument,1,1),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring($argument,2))"/>
+</xsl:template>
+
 <!-- generates function argument code for the current column -->
 <xsl:template name="argument">
   <xsl:if test="starts-with(@type,'Q')">const </xsl:if><xsl:value-of select="@type"/><xsl:text> </xsl:text>

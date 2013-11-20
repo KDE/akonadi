@@ -31,6 +31,7 @@ ColumnDescription::ColumnDescription()
   , isUnique( false )
   , onUpdate( Cascade )
   , onDelete( Cascade )
+  , noUpdate( false )
 {
 }
 

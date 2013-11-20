@@ -145,11 +145,19 @@ class <xsl:value-of select="$className"/> : private Entity
 
     <!-- data retrieval for referenced tables (n:1) -->
     <xsl:for-each select="column[@refTable != '']">
+    <xsl:variable name="method-name"><xsl:call-template name="method-name-n1"/></xsl:variable>
     /**
       Retrieve the <xsl:value-of select="@refTable"/> record referred to by the
       <xsl:value-of select="@name"/> column of this record.
     */
-    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:call-template name="method-name-n1"/>() const;
+    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$method-name"/>() const;
+
+    /**
+      Set the  <xsl:value-of select="@refTable"/> record referred to by the
+      <xsl:value-of select="@name"/> column of this record.
+    */
+    void set<xsl:call-template name="uppercase-first"><xsl:with-param name="argument"><xsl:value-of select="$method-name"/></xsl:with-param></xsl:call-template>
+      ( const <xsl:value-of select="@refTable"/> &amp;value );
     </xsl:for-each>
 
     <!-- data retrieval for inverse referenced tables (1:n) -->

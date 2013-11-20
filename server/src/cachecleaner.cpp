@@ -68,21 +68,19 @@ void CacheCleaner::cleanCache()
     // find all expired item parts
     SelectQueryBuilder<Part> qb;
     qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdColumn(), PimItem::idFullColumnName() );
+    qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-    qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( AKONADI_PARAM_PLD ) );
+    qb.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
+
     QStringList localParts;
-    Q_FOREACH ( const QString &partName, collection.cachePolicyLocalParts().split( QLatin1String( " " ) ) ) {
+    Q_FOREACH ( QString partName, collection.cachePolicyLocalParts().split( QLatin1String( " " ) ) ) {
       if ( partName.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) ) {
-        localParts.append( partName );
-      } else {
-        localParts.append( QLatin1String( AKONADI_PARAM_PLD ) + partName );
+        partName = partName.mid( 4 );
       }
-    }
-    if ( !collection.cachePolicyLocalParts().isEmpty() ) {
-      qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, localParts );
+      qb.addValueCondition( PartType::nameFullColumnName(), Query::NotEquals, partName );
     }
     if ( !qb.exec() ) {
       continue;

@@ -44,6 +44,8 @@ class Schema;
  * A helper class which takes a reference to a database object and
  * the file name of a template file and initializes the database
  * according to the rules in the template file.
+ *
+ * TODO: Refactor this to be easily reusable for updater too
  */
 class DbInitializer
 {
@@ -53,7 +55,7 @@ class DbInitializer
     /**
       Returns an initializer instance for a given backend.
     */
-    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, Schema *schema );
+    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, Schema *schema = 0 );
 
     /**
      * Destroys the database initializer.
@@ -81,6 +83,19 @@ class DbInitializer
      */
     bool hasForeignKeyConstraints() const;
 
+    /**
+     * Checks and creates missing indexes.
+     *
+     * This method is run after DbUpdater to ensure that data in new columns
+     * are populated and creation of indexes and foreign keys does not fail.
+     */
+    bool updateIndexesAndConstraints();
+
+    /**
+     * Returns a backend-specific CREATE TABLE SQL query describing given table
+     */
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
+
   protected:
     /**
      * Creates a new database initializer.
@@ -98,7 +113,6 @@ class DbInitializer
     /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
     virtual QString sqlValue( const QString &type, const QString &value ) const;
 
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const = 0;
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
@@ -147,9 +161,12 @@ class DbInitializer
      * Checks foreign key constraints on table @p tableDescription and fixes them if necessary.
      */
     void checkForeignKeys( const TableDescription &tableDescription );
+    void checkIndexes( const TableDescription &tableDescription );
     bool checkRelation( const RelationDescription &relationDescription );
 
     static QString referentialActionToString( ColumnDescription::ReferentialAction action );
+
+    void execPendingQueries( const QStringList &queries );
 
     QSqlDatabase mDatabase;
     Schema *mSchema;
@@ -157,6 +174,9 @@ class DbInitializer
     TestInterface *mTestInterface;
     DbIntrospector::Ptr m_introspector;
     bool m_noForeignKeyContraints;
+    QStringList m_pendingIndexes;
+    QStringList m_pendingForeignKeys;
+    QStringList m_removedForeignKeys;
 };
 
 #endif

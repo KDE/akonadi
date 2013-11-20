@@ -164,6 +164,8 @@ set(libakonadiprivate_SRCS
   src/storage/itemretrievalthread.cpp
   src/storage/itemretrievaljob.cpp
   src/storage/notificationcollector.cpp
+  src/storage/parthelper.cpp
+  src/storage/parttypehelper.cpp
   src/storage/query.cpp
   src/storage/querybuilder.cpp
   src/storage/querycache.cpp

@@ -112,6 +112,10 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
     // Check for every column whether it exists, and add the missing ones
     Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
       if ( !m_introspector->hasColumn( tableDescription.name, columnDescription.name ) ) {
+        // Don't add the column on update, DbUpdater will add it
+        if ( columnDescription.noUpdate ) {
+          continue;
+        }
         // Get the ADD COLUMN statement for the specific SQL dialect
         const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
         akDebug() << statement;
@@ -121,21 +125,6 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
 
     // NOTE: we do intentionally not delete any columns here, we defer that to the updater,
     // very likely previous columns contain data that needs to be moved to a new column first.
-  }
-
-  // Make sure the foreign key constraints are all there
-  checkForeignKeys( tableDescription );
-
-  // Add indices
-  Q_FOREACH ( const IndexDescription &indexDescription, tableDescription.indexes ) {
-    // sqlite3 needs unique index identifiers per db
-    const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableDescription.name ).arg( indexDescription.name );
-    if ( !m_introspector->hasIndex( tableDescription.name, indexName ) ) {
-      // Get the CREATE INDEX statement for the specific SQL dialect
-      const QString statement = buildCreateIndexStatement( tableDescription, indexDescription );
-      akDebug() << "adding index" << statement;
-      execQuery( statement );
-    }
   }
 
   // Add initial data if table is empty
@@ -181,8 +170,7 @@ void DbInitializer::checkForeignKeys( const TableDescription &tableDescription )
           if ( !statement.isEmpty() ) {
             akDebug() << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
                       << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
-            akDebug() << statement;
-            execQuery( statement );
+            m_removedForeignKeys << statement;
           }
         }
 
@@ -191,8 +179,8 @@ void DbInitializer::checkForeignKeys( const TableDescription &tableDescription )
           m_noForeignKeyContraints = true;
           return;
         }
-        akDebug() << "Adding missing foreign key constraint:" << statement;
-        execQuery( statement );
+
+        m_pendingForeignKeys << statement;
 
       } else if ( !existingForeignKey.column.isEmpty() ) {
         // constraint exists but we don't want one here
@@ -200,8 +188,7 @@ void DbInitializer::checkForeignKeys( const TableDescription &tableDescription )
         if ( !statement.isEmpty() ) {
           akDebug() << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
                     << existingForeignKey.refTable << existingForeignKey.refColumn;
-          akDebug() << statement;
-          execQuery( statement );
+          m_removedForeignKeys << statement;
         }
       }
     }
@@ -209,6 +196,19 @@ void DbInitializer::checkForeignKeys( const TableDescription &tableDescription )
     akDebug() << "Fixing foreign key constraints failed:" << e.what();
     // we ignore this since foreign keys are only used for optimizations (not all backends support them anyway)
     m_noForeignKeyContraints = true;
+  }
+}
+
+void DbInitializer::checkIndexes( const TableDescription &tableDescription )
+{
+  // Add indices
+  Q_FOREACH ( const IndexDescription &indexDescription, tableDescription.indexes ) {
+    // sqlite3 needs unique index identifiers per db
+    const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableDescription.name ).arg( indexDescription.name );
+    if ( !m_introspector->hasIndex( tableDescription.name, indexName ) ) {
+      // Get the CREATE INDEX statement for the specific SQL dialect
+      m_pendingIndexes << buildCreateIndexStatement( tableDescription, indexDescription );
+    }
   }
 }
 
@@ -251,6 +251,49 @@ bool DbInitializer::hasForeignKeyConstraints() const
   return !m_noForeignKeyContraints;
 }
 
+bool DbInitializer::updateIndexesAndConstraints()
+{
+  Q_FOREACH ( const TableDescription &table, mSchema->tables() ) {
+    // Make sure the foreign key constraints are all there
+    checkForeignKeys( table );
+    checkIndexes( table );
+  }
+
+  try {
+    if ( !m_pendingIndexes.isEmpty() ) {
+      akDebug() << "Updating indexes";
+      execPendingQueries( m_pendingIndexes );
+      m_pendingIndexes.clear();
+    }
+
+    if ( !m_removedForeignKeys.isEmpty() ) {
+      akDebug() << "Removing invalid foreign key constraints";
+      execPendingQueries( m_removedForeignKeys );
+      m_removedForeignKeys.clear();
+    }
+
+    if ( !m_pendingForeignKeys.isEmpty() ) {
+      akDebug() << "Adding new foreign key constraints";
+      execPendingQueries( m_pendingForeignKeys );
+      m_pendingForeignKeys.clear();
+    }
+  } catch ( const DbException &e ) {
+    akDebug() << "Updating index failed: " << e.what();
+    return false;
+  }
+
+  akDebug() << "Indexes successfully created";
+  return true;
+}
+
+void DbInitializer::execPendingQueries( const QStringList &queries )
+{
+  Q_FOREACH( const QString &statement, queries ) {
+    akDebug() << statement;
+    execQuery( statement );
+  }
+}
+
 QString DbInitializer::sqlType( const QString &type, int size ) const
 {
   Q_UNUSED( size );
@@ -272,6 +315,8 @@ QString DbInitializer::sqlType( const QString &type, int size ) const
   if ( type == QLatin1String( "bool" ) ) {
     return QLatin1String( "BOOL" );
   }
+
+  akDebug() << "Invalid type" << type;
   Q_ASSERT( false );
   return QString();
 }
