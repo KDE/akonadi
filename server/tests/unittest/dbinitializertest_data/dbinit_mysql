@@ -28,12 +28,6 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                               COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-ALTER TABLE CollectionTable ADD FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-ALTER TABLE CollectionTable ADD FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
-
 INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
 
 CREATE TABLE MimeTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -63,12 +57,6 @@ CREATE TABLE PimItemTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                            FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                            FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT)
                            COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
-
-ALTER TABLE PimItemTable ADD FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-ALTER TABLE PimItemTable ADD FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
-
-CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
 CREATE TABLE FlagTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         name VARBINARY(255) NOT NULL UNIQUE)
@@ -100,12 +88,6 @@ CREATE TABLE PartTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                         COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-ALTER TABLE PartTable ADD FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
-
-CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
-
 CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                        collectionId BIGINT NOT NULL,
                                        type LONGBLOB NOT NULL,
@@ -113,19 +95,11 @@ CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY
                                        FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                                        COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-ALTER TABLE CollectionAttributeTable ADD FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
-
 CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
                                   Flag_id BIGINT NOT NULL,
                                   PRIMARY KEY (PimItem_id, Flag_id),
                                   FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                   FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
-
-ALTER TABLE PimItemFlagRelation ADD FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-ALTER TABLE PimItemFlagRelation ADD FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
 CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
                                          MimeType_id BIGINT NOT NULL,
@@ -133,16 +107,42 @@ CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
                                          FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                          FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-ALTER TABLE CollectionMimeTypeRelation ADD FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
-ALTER TABLE CollectionMimeTypeRelation ADD FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-
 CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
                                         PimItem_id BIGINT NOT NULL,
                                         PRIMARY KEY (Collection_id, PimItem_id),
                                         FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                         FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-ALTER TABLE CollectionPimItemRelation ADD FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
+
+CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
+
+CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
+
+CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
+
+CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
+
+ALTER TABLE CollectionTable ADD FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionTable ADD FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemTable ADD FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemTable ADD FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
+
+ALTER TABLE PartTable ADD FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionAttributeTable ADD FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE CollectionPimItemRelation ADD FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionPimItemRelation ADD FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemFlagRelation ADD FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemFlagRelation ADD FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionMimeTypeRelation ADD FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionMimeTypeRelation ADD FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE

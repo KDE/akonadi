@@ -14,9 +14,9 @@ ALTER TABLE CollectionTable ADD COLUMN remoteRevision TEXT
 
 ALTER TABLE CollectionTable ADD COLUMN name TEXT NOT NULL
 
-ALTER TABLE CollectionTable ADD COLUMN parentId int8 REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionTable ADD COLUMN parentId int8
 
-ALTER TABLE CollectionTable ADD COLUMN resourceId int8 NOT NULL REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionTable ADD COLUMN resourceId int8 NOT NULL
 
 ALTER TABLE CollectionTable ADD COLUMN subscribed BOOL NOT NULL DEFAULT true
 
@@ -46,9 +46,9 @@ ALTER TABLE PimItemTable ADD COLUMN remoteId TEXT
 
 ALTER TABLE PimItemTable ADD COLUMN remoteRevision TEXT
 
-ALTER TABLE PimItemTable ADD COLUMN collectionId int8 REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PimItemTable ADD COLUMN collectionId int8
 
-ALTER TABLE PimItemTable ADD COLUMN mimeTypeId int8 REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ALTER TABLE PimItemTable ADD COLUMN mimeTypeId int8
 
 ALTER TABLE PimItemTable ADD COLUMN datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
@@ -64,7 +64,7 @@ ALTER TABLE FlagTable ADD COLUMN name TEXT UNIQUE NOT NULL
 
 ALTER TABLE PartTable ADD COLUMN id SERIAL PRIMARY KEY
 
-ALTER TABLE PartTable ADD COLUMN pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PartTable ADD COLUMN pimItemId int8 NOT NULL
 
 ALTER TABLE PartTable ADD COLUMN name TEXT NOT NULL
 
@@ -78,20 +78,36 @@ ALTER TABLE PartTable ADD COLUMN external BOOL DEFAULT false
 
 ALTER TABLE CollectionAttributeTable ADD COLUMN id SERIAL PRIMARY KEY
 
-ALTER TABLE CollectionAttributeTable ADD COLUMN collectionId int8 NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionAttributeTable ADD COLUMN collectionId int8 NOT NULL
 
 ALTER TABLE CollectionAttributeTable ADD COLUMN type BYTEA NOT NULL
 
 ALTER TABLE CollectionAttributeTable ADD COLUMN value BYTEA
 
-ALTER TABLE PimItemFlagRelation ADD COLUMN PimItem_id int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PimItemFlagRelation ADD COLUMN PimItem_id int8 NOT NULL
 
-ALTER TABLE PimItemFlagRelation ADD COLUMN Flag_id int8 NOT NULL REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PimItemFlagRelation ADD COLUMN Flag_id int8 NOT NULL
 
-ALTER TABLE CollectionMimeTypeRelation ADD COLUMN Collection_id int8 NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionMimeTypeRelation ADD COLUMN Collection_id int8 NOT NULL
 
-ALTER TABLE CollectionMimeTypeRelation ADD COLUMN MimeType_id int8 NOT NULL REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionMimeTypeRelation ADD COLUMN MimeType_id int8 NOT NULL
 
-ALTER TABLE CollectionPimItemRelation ADD COLUMN Collection_id int8 NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionPimItemRelation ADD COLUMN Collection_id int8 NOT NULL
 
-ALTER TABLE CollectionPimItemRelation ADD COLUMN PimItem_id int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionPimItemRelation ADD COLUMN PimItem_id int8 NOT NULL
+
+ALTER TABLE PimItemTable DROP CONSTRAINT myForeignKeyIdentifier
+
+ALTER TABLE CollectionAttributeTable DROP CONSTRAINT myForeignKeyIdentifier
+
+ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
+
+ALTER TABLE PartTable ADD CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE CollectionAttributeTable ADD CONSTRAINT CollectionAttributeTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE

@@ -23,8 +23,6 @@ CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                               queryString TEXT,
                               queryLanguage TEXT)
 
-CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
-
 INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
 
 CREATE TABLE MimeTypeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -50,8 +48,6 @@ CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                            atime TIMESTAMP,
                            dirty BOOL,
                            size BIGINT NOT NULL DEFAULT 0)
-
-CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
 CREATE TABLE FlagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         name TEXT UNIQUE NOT NULL)
@@ -80,16 +76,10 @@ CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         version INTEGER DEFAULT 0,
                         external BOOL DEFAULT false)
 
-CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
-
-CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
-
 CREATE TABLE CollectionAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                                        collectionId BIGINT NOT NULL,
                                        type LONGBLOB NOT NULL,
                                        value LONGBLOB)
-
-CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
 
 CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
                                   Flag_id BIGINT NOT NULL,
@@ -102,3 +92,13 @@ CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
 CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
                                         PimItem_id BIGINT NOT NULL,
                                         PRIMARY KEY (Collection_id, PimItem_id))
+
+CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
+
+CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
+
+CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
+
+CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
+
+CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)

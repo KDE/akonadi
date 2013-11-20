@@ -23,8 +23,6 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                               queryString VARCHAR(32768),
                               queryLanguage VARCHAR(255))
 
-CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
-
 INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
 
 CREATE TABLE MimeTypeTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
@@ -50,8 +48,6 @@ CREATE TABLE PimItemTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                            atime TIMESTAMP,
                            dirty CHAR,
                            size BIGINT NOT NULL DEFAULT 0)
-
-CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
 CREATE TABLE FlagTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                         name VARCHAR(255) NOT NULL UNIQUE)
@@ -80,16 +76,10 @@ CREATE TABLE PartTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                         version INTEGER DEFAULT 0,
                         external CHAR DEFAULT 0)
 
-CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
-
-CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
-
 CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                                        collectionId BIGINT NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                        type LONG VARCHAR NOT NULL,
                                        value LONG VARCHAR)
-
-CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
 
 CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                   Flag_id BIGINT NOT NULL REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -102,3 +92,13 @@ CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL REFERENCE
 CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                         PimItem_id BIGINT NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                         PRIMARY KEY (Collection_id, PimItem_id))
+
+CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
+
+CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
+
+CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
+
+CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
+
+CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)

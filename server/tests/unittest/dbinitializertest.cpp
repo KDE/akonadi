@@ -106,7 +106,7 @@ void DbInitializerTest::testRun_data()
 
   QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false << fks << true;
   QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false << fks << false;
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false << fks << false;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false << fks << true;
   QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false << fks << false;
 
   DbIntrospector::ForeignKey fk;
@@ -120,7 +120,7 @@ void DbInitializerTest::testRun_data()
 
   QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks << true;
   QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks << false;
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true << fks << false;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true << fks << true;
   QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true << fks << false;
 }
 
@@ -151,6 +151,7 @@ void DbInitializerTest::testRun()
     initializer->setIntrospector( DbIntrospector::Ptr( introspector ) );
 
     QVERIFY( initializer->run() );
+    QVERIFY( initializer->updateIndexesAndConstraints() );
     QVERIFY( !collector.statements.isEmpty() );
 
     Q_FOREACH ( const QString &statement, collector.statements ) {
