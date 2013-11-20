@@ -181,20 +181,3 @@ QString DbIntrospectorPostgreSql::hasIndexQuery( const QString &tableName, const
 
 //END PostgreSql
 
-//BEGIN Virtuoso
-
-DbIntrospectorVirtuoso::DbIntrospectorVirtuoso( const QSqlDatabase &database )
-  : DbIntrospector( database )
-{
-}
-
-bool DbIntrospectorVirtuoso::hasIndex( const QString &tableName, const QString &indexName )
-{
-  Q_UNUSED( tableName );
-  Q_UNUSED( indexName )
-
-  // TODO: Implement index checking for Virtuoso!
-  return true;
-}
-
-//END Virtuoso

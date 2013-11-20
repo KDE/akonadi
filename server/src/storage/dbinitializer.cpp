@@ -53,9 +53,6 @@ DbInitializer::Ptr DbInitializer::createInstance( const QSqlDatabase &database, 
   case DbType::PostgreSQL:
     i.reset( new DbInitializerPostgreSql( database ) );
     break;
-  case DbType::Virtuoso:
-    i.reset( new DbInitializerVirtuoso( database ) );
-    break;
   case DbType::Unknown:
     akFatal() << database.driverName() << "backend not supported";
     break;

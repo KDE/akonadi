@@ -156,9 +156,6 @@ bool QueryBuilder::exec()
     if ( mDistinct ) {
       statement += QLatin1String( "DISTINCT " );
     }
-    if ( mDatabaseType == DbType::Virtuoso && mLimit > 0 ) {
-      statement += QLatin1Literal( "TOP " ) + QString::number( mLimit ) + QLatin1Char( ' ' );
-    }
     Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
     statement += mColumns.join( QLatin1String( ", " ) );
     statement += QLatin1String( " FROM " );
@@ -275,7 +272,7 @@ bool QueryBuilder::exec()
     statement += orderStmts.join( QLatin1String( ", " ) );
   }
 
-  if ( mLimit > 0 && mDatabaseType != DbType::Virtuoso ) {
+  if ( mLimit > 0 ) {
     statement += QLatin1Literal( " LIMIT " ) + QString::number( mLimit );
   }
 

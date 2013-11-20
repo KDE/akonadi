@@ -216,9 +216,6 @@ bool DbUpdater::updateApplicable( const QString &backends ) const
   case DbType::Sqlite:
     currentBackend = QLatin1String( "sqlite" );
     break;
-  case DbType::Virtuoso:
-    currentBackend = QLatin1String( "odbc" );
-    break;
   case DbType::Unknown:
     return false;
   }

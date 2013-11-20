@@ -35,8 +35,5 @@ DbType::Type DbType::typeForDriverName( const QString &driverName )
   if ( driverName.startsWith( QLatin1String( "QSQLITE" ) ) ) {
     return Sqlite;
   }
-  if ( driverName.startsWith( QLatin1String( "QODBC" ) ) ) {
-    return Virtuoso;
-  }
   return Unknown;
 }

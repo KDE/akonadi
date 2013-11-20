@@ -30,8 +30,7 @@ namespace DbType
     Unknown,
     Sqlite,
     MySQL,
-    PostgreSQL,
-    Virtuoso
+    PostgreSQL
   };
 
   /** Returns the type of the given databse object. */

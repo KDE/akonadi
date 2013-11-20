@@ -35,78 +35,78 @@
 <updates>
 
   <update version="2" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationTable DROP COLUMN existCount;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationTable DROP COLUMN recentCount;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationTable DROP COLUMN unseenCount;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationTable DROP COLUMN firstUnseen;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN existCount;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN recentCount;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN unseenCount;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN firstUnseen;</raw-sql>
   </update>
 
   <update version="3" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE LocationTable SET subscribed = true;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE LocationTable SET subscribed = true;</raw-sql>
   </update>
 
   <update version="4" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationTable DROP COLUMN cachePolicyId;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE ResourceTable DROP COLUMN cachePolicyId;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">DROP TABLE CachePolicyTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN cachePolicyId;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE ResourceTable DROP COLUMN cachePolicyId;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CachePolicyTable;</raw-sql>
   </update>
 
   <update version="8" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PartTable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PartTable SET name = 'PLD:RFC822' WHERE name = 'RFC822';</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PartTable SET name = 'PLD:HEAD' WHERE name = 'HEAD';</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PartTable SET name = concat( 'ATR:', name ) WHERE substr( name, 1, 4 ) != 'PLD:';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = 'PLD:RFC822' WHERE name = 'RFC822';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = 'PLD:HEAD' WHERE name = 'HEAD';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = concat( 'ATR:', name ) WHERE substr( name, 1, 4 ) != 'PLD:';</raw-sql>
   </update>
 
   <!-- the initializer runs first, so we will have all the new tables and columns already
        therefore we have to clean that up first -->
   <update version="10" abortOnFailure="true">
-    <raw-sql backends="mysql,psql,sqlite,odbc">DROP TABLE CollectionTable;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationTable RENAME TO CollectionTable;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PimItemTable DROP COLUMN collectionId;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PimItemTable CHANGE locationId collectionId BIGINT;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">DROP TABLE CollectionAttributeTable;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationAttributeTable CHANGE locationId collectionId BIGINT;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationAttributeTable RENAME TO CollectionAttributeTable;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">DROP TABLE CollectionMimeTypeRelation;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationMimeTypeRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationMimeTypeRelation RENAME TO CollectionMimeTypeRelation;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">DROP TABLE CollectionPimItemRelation;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationPimItemRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE LocationPimItemRelation RENAME TO CollectionPimItemRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable RENAME TO CollectionTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimItemTable DROP COLUMN collectionId;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimItemTable CHANGE locationId collectionId BIGINT;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionAttributeTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationAttributeTable CHANGE locationId collectionId BIGINT;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationAttributeTable RENAME TO CollectionAttributeTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionMimeTypeRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationMimeTypeRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationMimeTypeRelation RENAME TO CollectionMimeTypeRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionPimItemRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationPimItemRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationPimItemRelation RENAME TO CollectionPimItemRelation;</raw-sql>
   </update>
 
   <update version="12" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PartTable CHANGE datasize datasize BIGINT;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PartTable CHANGE datasize datasize BIGINT;</raw-sql>
   </update>
 
   <update version="13" abortOnFailure="true">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE CollectionTable SET parentId = NULL WHERE parentId = 0;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE CollectionTable CHANGE parentId parentId BIGINT DEFAULT NULL;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET parentId = NULL WHERE parentId = 0;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionTable CHANGE parentId parentId BIGINT DEFAULT NULL;</raw-sql>
   </update>
 
   <update version="14" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_search_resource';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_search_resource';</raw-sql>
   </update>
 
   <update version="15" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE CollectionTable SET queryString = remoteId WHERE resourceId = 1 AND parentId IS NOT NULL;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE CollectionTable SET queryLanguage = 'SPARQL' WHERE resourceId = 1 AND parentId IS NOT NULL;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET queryString = remoteId WHERE resourceId = 1 AND parentId IS NOT NULL;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET queryLanguage = 'SPARQL' WHERE resourceId = 1 AND parentId IS NOT NULL;</raw-sql>
   </update>
 
   <update version="16" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE CollectionAttributeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE CollectionMimeTypeRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE CollectionPimItemRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE CollectionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE FlagTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE MimeTypeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PartTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PimItemFlagRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PimitemTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE ResourceTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE SchemaVersionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionAttributeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionMimeTypeRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionPimItemRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE FlagTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE MimeTypeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PartTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimItemFlagRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimitemTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE ResourceTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE SchemaVersionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
   </update>
 
   <!-- change all string based columns to use BINARY flag, this makes the comparison operator
@@ -142,8 +142,8 @@
     <raw-sql backends="mysql">ALTER TABLE PartTable CHANGE name name VARBINARY(255);</raw-sql>
   </update>
   <update version="19" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PimItemFlagRelation SET Flag_id=(SELECT id FROM FlagTable WHERE name='\\SEEN') WHERE Flag_id=(SELECT id FROM FlagTable WHERE name='\\Seen');</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite,odbc">DELETE FROM FlagTable WHERE name='\\Seen';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PimItemFlagRelation SET Flag_id=(SELECT id FROM FlagTable WHERE name='\\SEEN') WHERE Flag_id=(SELECT id FROM FlagTable WHERE name='\\Seen');</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DELETE FROM FlagTable WHERE name='\\Seen';</raw-sql>
   </update>
 
   <!-- wider query column (only affects MySQL) -->

@@ -100,13 +100,6 @@ void QueryBuilderTest::testQueryBuilder_data()
   mBuilders << qb;
   QTest::newRow( "SELECT with LIMIT" ) << mBuilders.count() << QString( "SELECT col1 FROM table LIMIT 1" ) << QList<QVariant>();
 
-  qb = QueryBuilder( "table", QueryBuilder::Select );
-  qb.setDatabaseType( DbType::Virtuoso );
-  qb.addColumn( "col1" );
-  qb.setLimit( 1 );
-  mBuilders << qb;
-  QTest::newRow( "SELECT with TOP" ) << mBuilders.count() << QString( "SELECT TOP 1 col1 FROM table" ) << QList<QVariant>();
-
   qb = QueryBuilder( "table", QueryBuilder::Update );
   qb.setColumnValue( "col1", QString( "bla" ) );
   bindVals.clear();
