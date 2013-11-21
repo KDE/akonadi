@@ -433,5 +433,3 @@ bool DbUpdater::complexUpdate_25()
 
   return true;
 }
-
-#include "dbupdater.moc"
