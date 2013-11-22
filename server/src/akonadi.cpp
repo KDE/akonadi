@@ -67,11 +67,7 @@ using namespace Akonadi;
 static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject *parent )
-#ifdef Q_OS_WINCE
-    : QTcpServer( parent )
-#else
     : QLocalServer( parent )
-#endif
     , mCacheCleaner( 0 )
     , mIntervalChecker( 0 )
     , mStorageJanitor( 0 )
@@ -139,11 +135,7 @@ void AkonadiServer::init()
     QString defaultPipe = QLatin1String( "Akonadi-" ) + userID;
 
     QString namedPipe = settings.value( QLatin1String( "Connection/NamedPipe" ), defaultPipe ).toString();
-#ifdef Q_OS_WINCE
-    if ( !listen( QHostAddress::LocalHost, 31414 ) ) {
-#else
     if ( !listen( namedPipe ) ) {
-#endif
         akFatal() << "Unable to listen on Named Pipe" << namedPipe;
     }
 
@@ -299,11 +291,7 @@ void AkonadiServer::doQuit()
     QCoreApplication::exit();
 }
 
-#ifdef Q_OS_WINCE
-void AkonadiServer::incomingConnection( int socketDescriptor )
-#else
 void AkonadiServer::incomingConnection( quintptr socketDescriptor )
-#endif
 {
     if ( mAlreadyShutdown ) {
         return;

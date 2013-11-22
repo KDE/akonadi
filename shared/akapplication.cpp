@@ -27,9 +27,7 @@
 
 #include <iostream>
 
-#ifndef _WIN32_WCE
 namespace po = boost::program_options;
-#endif
 
 AkApplication *AkApplication::sInstance = 0;
 
@@ -62,7 +60,6 @@ void AkApplication::init()
 
 void AkApplication::parseCommandLine()
 {
-#ifndef _WIN32_WCE
   try {
     po::options_description generalOptions( "General options" );
     generalOptions.add_options()
@@ -101,7 +98,6 @@ void AkApplication::parseCommandLine()
     std::cerr << "Run '" << mArgv[0] << " --help' to obtain a list of valid command line arguments." << std::endl;
     ::exit( 1 );
   }
-#endif
 }
 
 void AkApplication::pollSessionBus() const
@@ -112,7 +108,6 @@ void AkApplication::pollSessionBus() const
   }
 }
 
-#ifndef _WIN32_WCE
 void AkApplication::addCommandLineOptions( const boost::program_options::options_description &desc )
 {
   mCmdLineOptions.add( desc );
@@ -122,16 +117,13 @@ void AkApplication::addPositionalCommandLineOption( const char *option, int coun
 {
   mCmdPositionalOptions.add( option, count );
 }
-#endif
 
 void AkApplication::printUsage() const
 {
   if ( !mDescription.isEmpty() ) {
     std::cout << qPrintable( mDescription ) << std::endl;
   }
-#ifndef _WIN32_WCE
   std::cout << mCmdLineOptions << std::endl;
-#endif
 }
 
 QString AkApplication::instanceIdentifier()

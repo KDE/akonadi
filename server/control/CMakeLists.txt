@@ -46,11 +46,14 @@ if (WIN32)
   target_link_libraries(akonadi_control ${QT_QTMAIN_LIBRARY})
 endif()
 
-target_link_libraries(akonadi_control akonadi_shared ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${AKONADI_SYSTEM_LIBS})
-
-if(NOT WINCE)
-  target_link_libraries(akonadi_control ${Boost_PROGRAM_OPTIONS_LIBRARY})
-endif()
+target_link_libraries(akonadi_control
+  akonadi_shared
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTDBUS_LIBRARY}
+  ${AKONADI_PROTOCOLINTERNALS_LIBS}
+  ${AKONADI_SYSTEM_LIBS}
+  ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
 
 install(TARGETS akonadi_control DESTINATION ${BIN_INSTALL_DIR})
 

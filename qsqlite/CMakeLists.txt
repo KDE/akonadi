@@ -39,10 +39,6 @@ else()
   target_link_libraries(qsqlite3 ${SQLITE_LIBRARIES})
 endif()
 
-if(WINCE)
-    target_link_libraries(qsqlite3 ${WCECOMPAT_LIBRARIES})
-endif()
-
 INSTALL(TARGETS qsqlite3
   RUNTIME DESTINATION ${QSQLITE_INSTALL_PREFIX}
   LIBRARY DESTINATION ${QSQLITE_INSTALL_PREFIX}

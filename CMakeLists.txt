@@ -132,16 +132,6 @@ if(NOT CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
    add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
-# FIXME
-if(NOT QT5_BUILD)
-    if(WINCE)
-        find_package(Wcecompat REQUIRED)
-        set(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
-        set(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
-        set(STATIC_LIBRARY ON)
-    endif()
-endif()
-
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   set(AKONADI_STATIC_LIBS ON)
@@ -152,9 +142,7 @@ endif()
 
 #### Soprano ####
 set(SOPRANO_MIN_VERSION 2.7.56)
-if(NOT WINCE)
-  find_package(Soprano)
-endif()
+find_package(Soprano)
 
 set_package_properties(Soprano PROPERTIES
                        URL "http://soprano.sourceforge.net"
@@ -178,24 +166,18 @@ if(NOT XSLTPROC_EXECUTABLE)
   message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif()
 
-if(WINCE)
-  set(XSLTPROC_EXECUTABLE "${HOST_BINDIR}/xsltproc.exe")
-endif()
-
 #### Boost ####
 # In CMake >= 2.8.6, FindBoost.cmake tries to find BoostConfig.cmake which is
 # not compatible with CMake's FindBoost. Disable this function.
 set(Boost_NO_BOOST_CMAKE TRUE)
 
-if(NOT WINCE)
-    find_package(Boost COMPONENTS program_options)
-    set_package_properties(Boost PROPERTIES
-                           URL "http://www.boost.org"
-                           DESCRIPTION "The Boost C++ Libraries"
-                           TYPE REQUIRED
-                           PURPOSE "Akonadi requires the Boost C++ libraries (program_options)"
-    )
-endif()
+find_package(Boost COMPONENTS program_options)
+set_package_properties(Boost PROPERTIES
+                       URL "http://www.boost.org"
+                       DESCRIPTION "The Boost C++ Libraries"
+                       TYPE REQUIRED
+                       PURPOSE "Akonadi requires the Boost C++ libraries (program_options)"
+)
 
 # should be handled by FindBoost.cmake ->  cmake bug #8335
 if(WIN32 AND NOT Boost_USE_STATIC_LIBS)

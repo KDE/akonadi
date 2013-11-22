@@ -28,19 +28,12 @@
 #include <QtDBus/QDBusError>
 #include <QApplication>
 
-#ifndef _WIN32_WCE
 int main( int argc, char **argv )
-#else
-int cemain( int argc, char **argv )
-#endif
 {
   AkGuiApplication app( argc, argv );
   app.setDescription( QLatin1String( "Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
   app.parseCommandLine();
   qApp->setQuitOnLastWindowClosed( false );
-
-  //Needed for wince build
-  #undef interface
 
   if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::ControlLock ) ) ) {
     akError() << "Akonadi control process not found - aborting.";

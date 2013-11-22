@@ -180,8 +180,6 @@ void DbConfigSqlite::setup()
   const int sqliteVersionMajor = list[0].toInt();
   const int sqliteVersionMinor = list[1].toInt();
 
-#ifndef Q_OS_WINCE
-
   // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
   if ( !query.exec( QLatin1String( "PRAGMA synchronous = 1" ) ) ) {
     akDebug() << "Could not set sqlite synchronous mode to NORMAL";
@@ -219,8 +217,6 @@ void DbConfigSqlite::setup()
 
   const QString journalMode = query.value( 0 ).toString();
   akDebug() << "sqlite journal mode is " << journalMode;
-
-#endif // Q_OS_WINCE
 
   db.close();
 

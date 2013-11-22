@@ -61,23 +61,15 @@ void BridgeConnection::slotDataAvailable()
 AkonadiBridgeConnection::AkonadiBridgeConnection( QTcpSocket *remoteSocket, QObject *parent )
   : BridgeConnection( remoteSocket, parent )
 {
-#ifdef Q_OS_WINCE
-  m_localSocket = new QTcpSocket( this );
-#else
   m_localSocket = new QLocalSocket( this );
-#endif
 }
 
 void AkonadiBridgeConnection::connectLocal()
 {
   const QSettings connectionSettings( AkStandardDirs::connectionConfigFile(), QSettings::IniFormat );
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
-#ifdef Q_OS_WINCE
-  ( static_cast<QTcpSocket *>( m_localSocket ) )->connectToHost( "127.0.0.1", 31414 );
-#else
   const QString namedPipe = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
   ( static_cast<QLocalSocket *>( m_localSocket ) )->connectToServer( namedPipe );
-#endif
 #else
   const QString defaultSocketDir = AkStandardDirs::saveDir( "data" );
   const QString path = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString( defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ) ).toString();
@@ -88,11 +80,7 @@ void AkonadiBridgeConnection::connectLocal()
 DBusBridgeConnection::DBusBridgeConnection( QTcpSocket *remoteSocket, QObject *parent )
   : BridgeConnection( remoteSocket, parent )
 {
-#ifdef _WIN32_WCE
-  m_localSocket = new QTcpSocket( this );
-#else
   m_localSocket = new QLocalSocket( this );
-#endif
 }
 
 void DBusBridgeConnection::connectLocal()
@@ -120,8 +108,6 @@ void DBusBridgeConnection::connectLocal()
       ( static_cast<QLocalSocket *>( m_localSocket ) )->connectToServer( dbusPath );
     }
   }
-#elif defined(_WIN32_WCE)
-  ( static_cast<QTcpSocket *>( m_localSocket ) )->connectToHost( "127.0.0.1", 12434 );
 #endif
 }
 

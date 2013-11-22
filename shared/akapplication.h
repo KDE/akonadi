@@ -22,10 +22,8 @@
 
 #include <QtCore/QObject>
 
-#ifndef _WIN32_WCE
-# ifndef Q_MOC_RUN
-#  include <boost/program_options.hpp>
-# endif
+#ifndef Q_MOC_RUN
+#include <boost/program_options.hpp>
 #endif
 
 class QCoreApplication;
@@ -42,11 +40,9 @@ class AkApplication : public QObject
     void parseCommandLine();
     void setDescription( const QString &desc ) { mDescription = desc; }
 
- #ifndef _WIN32_WCE
     void addCommandLineOptions( const boost::program_options::options_description &desc );
     void addPositionalCommandLineOption( const char *option, int count );
     const boost::program_options::variables_map &commandLineArguments() const { return mCmdLineArguments; }
-#endif
 
     void printUsage() const;
 
@@ -79,11 +75,9 @@ class AkApplication : public QObject
     QString mInstanceId;
     static AkApplication *sInstance;
 
-#ifndef _WIN32_WCE
     boost::program_options::options_description mCmdLineOptions;
     boost::program_options::variables_map mCmdLineArguments;
     boost::program_options::positional_options_description mCmdPositionalOptions;
-#endif
 };
 
 template <typename T>

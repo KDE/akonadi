@@ -29,7 +29,7 @@
 #include <QtCore/QSettings>
 #include <QtNetwork/QHostInfo>
 
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_WIN)
+#if !defined(Q_OS_WIN)
 #include <cstdlib>
 #include <sys/types.h>
 #include <cerrno>
@@ -48,7 +48,7 @@ QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
   const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
   const QSettings serverSettings( serverConfigFile, QSettings::IniFormat );
 
-#if defined(Q_OS_WINCE) || defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   const QString socketDir = serverSettings.value( QLatin1String( "Connection/SocketDirectory" ), defaultDirectory ).toString();
 #else
   QString socketDir = defaultDirectory;
@@ -81,7 +81,7 @@ QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
   return socketDir;
 }
 
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_WIN)
+#if !defined(Q_OS_WIN)
 QString akonadiSocketDirectory()
 {
   const QString hostname = QHostInfo::localHostName();

@@ -42,11 +42,7 @@
 
 using namespace Akonadi;
 
-#ifdef Q_OS_WINCE
-AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
-#else
 AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent )
-#endif
     : QThread( parent )
     , m_socketDescriptor( socketDescriptor )
     , m_socket( 0 )
@@ -80,11 +76,7 @@ AkonadiConnection::~AkonadiConnection()
 
 void AkonadiConnection::run()
 {
-#ifdef Q_OS_WINCE
-    m_socket = new QTcpSocket();
-#else
     m_socket = new QLocalSocket();
-#endif
 
     if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
         qWarning() << "AkonadiConnection(" << m_identifier
@@ -252,11 +244,7 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     case Selected:
         break;
     case LoggingOut:
-#ifdef Q_OS_WINCE
-        m_socket->disconnectFromHost();
-#else
         m_socket->disconnectFromServer();
-#endif
         break;
     }
 }

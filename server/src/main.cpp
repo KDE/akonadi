@@ -38,9 +38,7 @@
 Q_IMPORT_PLUGIN( qsqlite3 )
 #endif
 
-#ifndef _WIN32_WCE
 namespace po = boost::program_options;
-#endif
 
 void shutdownHandler( int )
 {
@@ -57,7 +55,7 @@ int main( int argc, char ** argv )
     AkCoreApplication app( argc, argv );
     app.setDescription( QLatin1String( "Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
 
-#if !defined(NDEBUG) && !defined(_WIN32_WCE)
+#if !defined(NDEBUG)
     po::options_description debugOptions( "Debug options (use with care)" );
     debugOptions.add_options()
         ( "start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available" );
@@ -66,14 +64,7 @@ int main( int argc, char ** argv )
 
     app.parseCommandLine();
 
-    //Needed for wince build
-    #undef interface
-
-#ifndef _WIN32_WCE
    if ( !app.commandLineArguments().count( "start-without-control" ) &&
-#else
-   if (
-#endif
         !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::ControlLock ) ) ) {
      akError() << "Akonadi control process not found - aborting.";
      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
