@@ -9,13 +9,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../.
 
 akonadi_generate_schema(${CMAKE_CURRENT_SOURCE_DIR}/dbinitializertest_data/unittest_schema.xml UnitTestSchema unittestschema)
 
+add_library(akonadi_unittest_common STATIC unittestschema.cpp)
+target_link_libraries(akonadi_unittest_common akonadiprivate)
+
 macro(add_server_test _source _libs)
-  set(_test ${_source} unittestschema.cpp)
+  set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   qt4_add_resources(_test dbinitializertest_data/dbinitializertestdata.qrc)
   add_executable(${_name} ${_test})
   add_test(akonadi-${_name} ${_name})
-  target_link_libraries(${_name} akonadi_shared ${_libs} ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARIES} ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY})
+  target_link_libraries(${_name} akonadi_shared akonadi_unittest_common ${_libs} ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARIES} ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY})
   if(AKONADI_STATIC_SQLITE)
     target_link_libraries(${_name} qsqlite3)
   endif()
