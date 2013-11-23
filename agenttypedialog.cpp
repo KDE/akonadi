@@ -24,8 +24,6 @@
 #include <KGlobal>
 #include <KConfig>
 
-#include <kdeversion.h>
-
 #include <kfilterproxysearchline.h>
 #include <klineedit.h>
 
