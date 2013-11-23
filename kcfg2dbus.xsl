@@ -40,7 +40,7 @@
       <xsl:attribute name="type"><xsl:call-template name="convertType"/></xsl:attribute>
       </arg>
       <xsl:if test="$annotation != ''">
-        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0">
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out0">
         <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
         </annotation>
       </xsl:if>
@@ -53,7 +53,7 @@
       <xsl:attribute name="type"><xsl:call-template name="convertType"/></xsl:attribute>
       </arg>
       <xsl:if test="$annotation != ''">
-        <annotation name="com.trolltech.QtDBus.QtTypeName.In0">
+        <annotation name="org.qtproject.QtDBus.QtTypeName.In0">
         <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
         </annotation>
       </xsl:if>
