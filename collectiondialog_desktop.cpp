@@ -35,6 +35,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QCheckBox>
 
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -69,6 +70,10 @@ class CollectionDialog::Private
       mView->setDragDropMode( QAbstractItemView::NoDragDrop );
       mView->header()->hide();
       layout->addWidget( mView );
+
+      mUseByDefault = new QCheckBox(i18n("Use folder by default"));
+      mUseByDefault->hide();
+      layout->addWidget(mUseByDefault);
 
       mParent->enableButton( KDialog::Ok, false );
 
@@ -142,6 +147,7 @@ class CollectionDialog::Private
     bool mAllowToCreateNewChildCollection;
     bool mKeepTreeExpanded;
     KRecursiveFilterProxyModel *mFilterCollection;
+    QCheckBox *mUseByDefault;
 
     void slotSelectionChanged();
     void slotAddChildCollection();
@@ -338,6 +344,17 @@ QAbstractItemView::SelectionMode CollectionDialog::selectionMode() const
 void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions options )
 {
   d->changeCollectionDialogOptions( options );
+}
+
+void CollectionDialog::setUseFolderByDefault( bool b )
+{
+  d->mUseByDefault->setChecked(b);
+  d->mUseByDefault->show();
+}
+
+bool CollectionDialog::useFolderByDefault() const
+{
+  return d->mUseByDefault->isChecked();
 }
 
 #include "moc_collectiondialog.cpp"

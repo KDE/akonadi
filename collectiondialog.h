@@ -193,6 +193,15 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      */
     void changeCollectionDialogOptions( CollectionDialogOptions options );
 
+    /**
+      * @since 4.13
+      */
+    void setUseFolderByDefault( bool b );
+    /**
+      * @since 4.13
+      */
+    bool useFolderByDefault() const;
+
   private:
     //@cond PRIVATE
     class Private;
