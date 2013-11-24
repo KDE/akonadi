@@ -132,6 +132,10 @@ void CollectionDialog::Private::slotCollectionAvailable( const QModelIndex &inde
   mSelectionModel->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect );
 }
 
+void CollectionDialog::Private::slotFilterFixedString( const QString &filter)
+{
+}
+
 void CollectionDialog::Private::slotSelectionChanged()
 {
   mOkButtonEnabled = mSelectionModel->hasSelection();
