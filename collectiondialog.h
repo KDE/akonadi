@@ -202,6 +202,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
     Q_PRIVATE_SLOT( d, void slotAddChildCollection() )
     Q_PRIVATE_SLOT( d, void slotCollectionCreationResult(KJob* job) )
+    Q_PRIVATE_SLOT( d, void slotFilterFixedString( const QString & ) )
     //@endcond
 };
 
