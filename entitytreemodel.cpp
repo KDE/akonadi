@@ -358,7 +358,6 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 {
   Q_D( const EntityTreeModel );
   // Pass modeltest.
-  // http://labs.trolltech.com/forums/topic/79
   if ( !index.isValid() ) {
     return 0;
   }
