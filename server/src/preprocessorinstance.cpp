@@ -61,7 +61,7 @@ bool PreprocessorInstance::init()
 
   mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
       AkDBus::agentServiceName( mId, AkDBus::Preprocessor ),
-      QLatin1String( "/" ),
+      QLatin1String( "/Preprocessor" ),
       QDBusConnection::sessionBus(),
       this );
 
