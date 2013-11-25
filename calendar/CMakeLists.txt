@@ -14,6 +14,7 @@ endif()
 add_subdirectory( tests )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -UQT_NO_CAST_FROM_ASCII -UQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 
 set(akonadicalendar_LIB_SRC
   blockalarmsattribute.cpp
