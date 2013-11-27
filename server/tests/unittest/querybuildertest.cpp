@@ -245,7 +245,24 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb.setDatabaseType( DbType::Sqlite );
     mBuilders << qb;
     QTest::newRow( "update inner join SQLite" ) << mBuilders.count()
-        << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( ( SELECT table2.answer WHERE table2.t1_id = table1.id ) <> ( :2 ) )" ) << bindVals;
+        << QString( "UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) <> ( :1 ) )" ) << bindVals;
+
+
+    qb = qbTpl;
+    qb.setDatabaseType( DbType::Sqlite );
+    Query::Condition condition;
+    condition.addValueCondition( "table2.col2", Query::Equals, 666 );
+    condition.addValueCondition( "table1.col3", Query::Equals, "text" );
+    qb.addCondition( condition );
+    qb.addValueCondition( "table1.id", Query::Equals, 10 );
+    mBuilders << qb;
+    bindVals << 666 << "text" << 10;
+    QTest::newRow( "update inner join SQLite with subcondition" ) << mBuilders.count()
+        << QString( "UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE "
+                    "( ( table2.t1_id = table1.id ) ) ) <> ( :1 ) AND "
+                    "( ( SELECT table2.col2 FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) = :2 AND table1.col3 = ( :3 ) ) AND "
+                    "table1.id = :4 )" ) << bindVals;
+
   }
 }
 
@@ -258,7 +275,6 @@ void QueryBuilderTest::testQueryBuilder()
   --qbId;
 
   QVERIFY( mBuilders[qbId].exec() );
-  QEXPECT_FAIL( "update inner join SQLite", "SubQuery not yet implemented as Join-alternative in SQLite", Abort );
   QCOMPARE( mBuilders[qbId].mStatement, sql );
   QCOMPARE( mBuilders[qbId].mBindValues, bindValues );
 }
