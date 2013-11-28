@@ -1,3 +1,7 @@
+1.11.0			      28-November-2013
+----------------------------------------------
+- fix joined UPDATE queries failing with SQLite
+
 1.10.80                       05-November-2013
 ----------------------------------------------
 - Servser-side notification filtering
