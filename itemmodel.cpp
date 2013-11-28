@@ -26,8 +26,6 @@
 #include "pastehelper_p.h"
 #include "session.h"
 
-#include <kmime/kmime_message.h>
-
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <kurl.h>
