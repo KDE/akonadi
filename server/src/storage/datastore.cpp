@@ -182,57 +182,57 @@ DataStore * Akonadi::DataStore::self()
 
 bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
 {
-  // first delete all old flags of this pim item
   QSet<QByteArray> removedFlags;
   QSet<QByteArray> addedFlags;
-  QVariantList ids;
   QVariantList insIds;
   QVariantList insFlags;
+  Query::Condition delConds( Query::Or );
 
   Q_FOREACH ( const PimItem &item, items ) {
     Q_FOREACH ( const Flag &flag, item.flags() ) {
-      if ( !removedFlags.contains( flag.name().toLatin1() ) ) {
+      if ( !flags.contains( flag ) ) {
         removedFlags << flag.name().toLatin1();
+        Query::Condition cond;
+        cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::Equals, item.id() );
+        cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
+        delConds.addCondition(cond);
       }
     }
 
-    // create a bind values for the insert query - every item repeats exactly
-    // flags.count()-times
-    for ( int i = 0; i < flags.count(); ++i ) {
-      insIds << item.id();
+    Q_FOREACH ( const Flag &flag, flags ) {
+      if ( !item.flags().contains( flag ) ) {
+        addedFlags << flag.name().toLatin1();
+        insIds << item.id();
+        insFlags << flag.id();
+      }
     }
-
-    ids << item.id();
   }
 
-  // Clear all flags of all given items at once
-  QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
-  Query::Condition cond;
-  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, ids );
-  qb.addCondition( cond );
-  if ( !qb.exec() ) {
-    return false;
-  }
-
-  // create bind values for the insert quest - every flags repeats exactly
-  // items.count()-times
-  Q_FOREACH ( const Flag &flag, flags ) {
-    for ( int i = 0; i < items.count(); ++i ) {
-      insFlags << flag.id();
+  if ( !removedFlags.empty() ) {
+    QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
+    qb.addCondition( delConds );
+    if ( !qb.exec() ) {
+      return false;
     }
-
-    addedFlags << flag.name().toLatin1();
   }
 
-  QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
-  qb2.setColumnValue( PimItemFlagRelation::leftColumn(), insIds );
-  qb2.setColumnValue( PimItemFlagRelation::rightColumn(), insFlags );
-  qb2.setIdentificationColumn( QString() );
-  if ( !qb2.exec() ) {
-    return false;
+  if ( !addedFlags.empty() ) {
+    QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
+    qb2.setColumnValue( PimItemFlagRelation::leftColumn(), insIds );
+    qb2.setColumnValue( PimItemFlagRelation::rightColumn(), insFlags );
+    qb2.setIdentificationColumn( QString() );
+    if ( !qb2.exec() ) {
+      return false;
+    }
+  }
+
+  if ( addedFlags.empty() && removedFlags.empty() ) {
+    // no changes done, notification not needed
+    return true;
   }
 
   mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
+
   return true;
 }
 
