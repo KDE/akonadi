@@ -1302,6 +1302,18 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
     m_populatedCols.insert( collectionId );
     emit q_ptr->collectionPopulated( collectionId );
+  } else {
+    if ( !m_showRootCollection &&
+        collectionId == m_rootCollection.id() ) {
+      return;
+    }
+    // If collections are not in the model, there will be no valid index for them.
+    if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) &&
+        ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
+      const QModelIndex index = indexForCollection( Collection( collectionId ) );
+      Q_ASSERT( index.isValid() );
+      emit dataChanged( index, index );
+    }
   }
 
   if ( !m_showRootCollection &&
@@ -1311,13 +1323,6 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
   m_pendingCollectionRetrieveJobs.remove( collectionId );
 
-  // If collections are not in the model, there will be no valid index for them.
-  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) &&
-       ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
-    const QModelIndex index = indexForCollection( Collection( collectionId ) );
-    Q_ASSERT( index.isValid() );
-    emit dataChanged( index, index );
-  }
 }
 
 void EntityTreeModelPrivate::pasteJobDone( KJob *job )
@@ -1889,11 +1894,6 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
     // But the root collection can't...
     if ( Collection::root().id() == colId ) {
       return false;
-    }
-
-    // If the collection is no longer monitored by the monitor we have to refetch
-    if ( !m_monitor->d_ptr->isMonitored( colId ) ) {
-      return true;
     }
 
     // Collections which contain no items at all can't contain more
