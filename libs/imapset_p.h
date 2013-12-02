@@ -175,6 +175,11 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
     void add( const QList<Id> &values );
 
     /**
+     * @overload
+     */
+    void add( const QSet<Id> &values );
+
+    /**
       Adds the given ImapInterval to this set.
       No interval merging is performed.
     */
