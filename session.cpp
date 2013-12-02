@@ -128,9 +128,6 @@ void SessionPrivate::reconnect()
     serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString(defaultSocketDir + QLatin1String( "/akonadiserver.socket" )) ).toString();
 #endif
   }
-#ifdef Q_OS_WINCE
-  useTcp = true;
-#endif
 
   // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
   // but that's probably not something we need to support anyway
@@ -148,15 +145,11 @@ void SessionPrivate::reconnect()
 
   // actually do connect
   kDebug() << "connectToServer" << serverAddress;
-#ifdef Q_OS_WINCE
-    tcpSocket->connectToHost( QHostAddress::LocalHost, 31414 );
-#else
   if ( !useTcp ) {
     localSocket->connectToServer( serverAddress );
   } else {
     tcpSocket->connectToHost( serverAddress, port );
   }
-#endif
 
   emit mParent->reconnected();
 }

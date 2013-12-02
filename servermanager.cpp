@@ -24,9 +24,7 @@
 #include "agentbase.h"
 #include "agentmanager.h"
 #include "dbusconnectionpool.h"
-#ifndef Q_OS_WINCE
 #include "selftestdialog_p.h"
-#endif
 #include "session_p.h"
 #include "firstrun_p.h"
 
@@ -202,12 +200,10 @@ bool ServerManager::stop()
 
 void ServerManager::showSelfTestDialog( QWidget *parent )
 {
-#ifndef Q_OS_WINCE
   QPointer<Akonadi::SelfTestDialog> dlg( new Akonadi::SelfTestDialog( parent ) );
   dlg->hideIntroduction();
   dlg->exec();
   delete dlg;
-#endif
 }
 
 bool ServerManager::isRunning()

@@ -60,18 +60,12 @@ KCMAkonadiContactActions::KCMAkonadiContactActions( QWidget *parent, const QVari
   ui.DialPhoneNumberAction->addItem(i18n("Skype"), ContactActionsSettings::UseSkype);
   ui.DialPhoneNumberAction->addItem(i18n("Ekiga"), ContactActionsSettings::UseEkiga);
   ui.DialPhoneNumberAction->addItem(i18n("SflPhone"), ContactActionsSettings::UseSflPhone);
-#ifdef Q_OS_WINCE
-  ui.DialPhoneNumberAction->addItem(i18n("WinCE"), ContactActionsSettings::UseWinCE);
-#endif
   ui.DialPhoneNumberAction->addItem(i18n("External Application"), ContactActionsSettings::UseExternalPhoneApplication);
 
   connect(ui.DialPhoneNumberAction, SIGNAL(currentIndexChanged(int)), SLOT(slotDialPhoneNumberActionChanged(int)));
 
   ui.SendSmsAction->addItem(i18n("Skype"), ContactActionsSettings::UseSkypeSms);
   ui.SendSmsAction->addItem(i18n("SflPhone"), ContactActionsSettings::UseSflPhoneSms);
-#ifdef Q_OS_WINCE
-  ui.SendSmsAction->addItem(i18n("WinCE"), ContactActionsSettings::UseWinCESms);
-#endif
   ui.SendSmsAction->addItem(i18n("External Application"), ContactActionsSettings::UseExternalSmsApplication);
   connect(ui.SendSmsAction, SIGNAL(currentIndexChanged(int)), SLOT(slotSmsPhoneNumberActionChanged(int)));
   load();

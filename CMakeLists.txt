@@ -189,6 +189,11 @@ set( akonadikde_LIB_SRC
   resourcesettings.cpp
   renamefavoritedialog.cpp
   recentcollectionaction.cpp
+  dragdropmanager.cpp
+  collectionview.cpp
+  entitylistview.cpp
+  entitytreeviewstatesaver.cpp
+  itemview.cpp
 )
 
 if (KDEPIM_MOBILE_UI)
@@ -198,18 +203,6 @@ if (KDEPIM_MOBILE_UI)
 else()
   set( akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
        collectiondialog_desktop.cpp
-  )
-endif()
-
-if (NOT WINCE)
-  set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
-  # pending: fix KIconButton (remove icon selection stuff) and then should be ok
-  dragdropmanager.cpp
-  # pending: remove xmlguiclient stuff (for context menu) and then should be ok
-  collectionview.cpp
-  entitylistview.cpp
-  entitytreeviewstatesaver.cpp
-  itemview.cpp
   )
 endif()
 

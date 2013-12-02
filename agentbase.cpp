@@ -252,9 +252,6 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
     mTracer( 0 ),
     mObserver( 0 )
 {
-#ifdef Q_OS_WINCE
-  QThread::currentThread()->setPriority( QThread::LowPriority );
-#endif
   Internal::setClientType( Internal::Agent );
 }
 
@@ -342,12 +339,10 @@ void AgentBasePrivate::init()
     KGlobal::setAllowQuit( true );
   }
 
-#ifndef Q_OS_WINCE
   // disable session management
   if ( KApplication::kApplication() ) {
     KApplication::kApplication()->disableSessionManagement();
   }
-#endif
 
   mResourceTypeName = AgentManager::self()->instance( mId ).type().name();
   setProgramName();
