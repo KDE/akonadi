@@ -4,6 +4,7 @@ SET(DBUS_INTERFACE_XMLS
   org.freedesktop.Akonadi.Preprocessor.xml
   org.freedesktop.Akonadi.Tracer.xml
   org.freedesktop.Akonadi.Agent.Control.xml
+  org.freedesktop.Akonadi.Agent.Search.xml
   org.freedesktop.Akonadi.Agent.Status.xml
   org.freedesktop.Akonadi.Resource.xml
   org.freedesktop.Akonadi.ControlManager.xml

@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,34 +18,54 @@
     02110-1301, USA.
 */
 
-#include "config-akonadi.h"
-#include "abstractsearchplugin.h"
 #include "searchmanager.h"
+#include "abstractsearchplugin.h"
+#include "searchmanageradaptor.h"
+#include "searchinstance.h"
+#include "searchresultsretriever.h"
+#include "searchresultsretrievaljob.h"
+
 #include <akdebug.h>
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
 #include "entities.h"
 #include <storage/notificationcollector.h>
+#include <akonadiconnection.h>
 #include <libs/xdgbasedirs_p.h>
 
 #include <QDir>
 #include <QPluginLoader>
+#include <QReadWriteLock>
+#include <QDBusConnection>
+
+#include <boost/scoped_ptr.hpp>
 
 using namespace Akonadi;
 
-SearchManager *SearchManager::m_instance = 0;
+SearchManager *SearchManager::sInstance = 0;
 
 Q_DECLARE_METATYPE( Collection )
 
 SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
   : QObject( parent )
+  , mDBusConnection( QDBusConnection::connectToBus(
+          QDBusConnection::SessionBus,
+          QString::fromLatin1( "AkonadiServerSearchManager" ) ) )
 {
-  Q_ASSERT( m_instance == 0 );
-  m_instance = this;
+  // make sure we are created from the retrieval thread and only once
+  Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
+  Q_ASSERT( sInstance == 0 );
+  sInstance = this;
+
+  mLock = new QReadWriteLock();
+  mInstancesLock = new QMutex();
+  mWaitCondition = new QWaitCondition();
+
+  connect( this, SIGNAL(requestAdded()), SLOT(processRequest()), Qt::QueuedConnection );
 
   qRegisterMetaType<Collection>();
 
-  m_engines.reserve( searchEngines.size() );
+  mEngines.reserve( searchEngines.size() );
   Q_FOREACH ( const QString &engineName, searchEngines ) {
     if ( engineName == QLatin1String( "Nepomuk" ) ) {
 #ifdef HAVE_SOPRANO
@@ -53,13 +74,20 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
       akError() << "Akonadi has been built without Nepomuk support!";
 #endif
     } else if ( engineName == QLatin1String( "Agent" ) ) {
-      m_engines.append( new AgentSearchEngine );
+      mEngines.append( new AgentSearchEngine );
     } else {
       akError() << "Unknown search engine type: " << engineName;
     }
   }
 
   loadSearchPlugins();
+
+  new SearchManagerAdaptor( this );
+
+  QDBusConnection::sessionBus().registerObject(
+      QLatin1String( "/SearchManager" ),
+      this,
+      QDBusConnection::ExportAdaptors );
 }
 
 void SearchManager::loadSearchPlugins()
@@ -88,7 +116,7 @@ void SearchManager::loadSearchPlugins()
         qWarning() << "Failed to obtain instance of" << files[i] << "search plugin:" << loader.errorString();
       }
 
-      m_plugins << plugin;
+      mPlugins << plugin;
       akDebug() << "SEARCH PLUGIN:" << files[i];
     }
   }
@@ -96,14 +124,54 @@ void SearchManager::loadSearchPlugins()
 
 SearchManager::~SearchManager()
 {
-  qDeleteAll( m_engines );
-  m_instance = 0;
+  qDeleteAll( mEngines );
+  qDeleteAll( mPlugins );
+  qDeleteAll( mSearchInstances );
+  sInstance = 0;
+  delete mWaitCondition;
+  delete mLock;
+  delete mInstancesLock;
 }
 
 SearchManager *SearchManager::instance()
 {
-  return m_instance;
+  Q_ASSERT( sInstance );
+  return sInstance;
 }
+
+void SearchManager::registerInstance( const QByteArray &id )
+{
+  QMutexLocker locker( mInstancesLock );
+
+  akDebug() << "SearchManager::registerInstance(" << id << ")";
+
+  SearchInstance *instance = mSearchInstances.value( id );
+  if ( instance ) {
+    return; // already registered
+  }
+
+  instance = new SearchInstance( id );
+  if ( !instance->init() ) {
+    delete instance;
+    return;
+  }
+
+  akDebug() << "Registering search instance " << id;
+
+  mSearchInstances.insert( id, instance );
+}
+
+void SearchManager::unregisterInstance( const QByteArray &id )
+{
+  QMutexLocker locker( mInstancesLock );
+
+  SearchInstance *instance = mSearchInstances.value( id );
+  if ( instance ) {
+    akDebug() << "Unregistering search instance" << id;
+    delete mSearchInstances.take( id );
+  }
+}
+
 
 bool SearchManager::addSearch( const Collection &collection )
 {
@@ -122,7 +190,7 @@ bool SearchManager::addSearch( const Collection &collection )
 
 void SearchManager::addSearchInternal( const Collection &collection )
 {
-  Q_FOREACH ( AbstractSearchEngine *engine, m_engines ) {
+  Q_FOREACH ( AbstractSearchEngine *engine, mEngines ) {
     engine->addSearch( collection );
   }
 }
@@ -136,7 +204,7 @@ bool SearchManager::removeSearch( qint64 id )
 
 void SearchManager::removeSearchInternal( qint64 id )
 {
-  Q_FOREACH ( AbstractSearchEngine *engine, m_engines ) {
+  Q_FOREACH ( AbstractSearchEngine *engine, mEngines ) {
     engine->removeSearch( id );
   }
 }
@@ -149,14 +217,100 @@ void SearchManager::updateSearch( const Akonadi::Collection &collection, Notific
   addSearch( collection );
 }
 
-QSet<qint64> SearchManager::search( const QString &query )
+void SearchManager::processRequest()
 {
-  QSet<qint64> results;
+  QVector<QPair<SearchResultsRetrievalJob *, QByteArray> > newJobs;
 
-  // TODO: Eventually run all searches in parallel in threads
-  Q_FOREACH ( AbstractSearchPlugin *plugin, m_plugins ) {
-    results.unite( plugin->search( query ) );
+  mLock->lockForWrite();
+  // look for idle resources
+  for ( QHash<QByteArray, QList<SearchRequest *> >::Iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
+    if ( it.value().isEmpty() ) {
+      it = mPendingRequests.erase( it );
+      continue;
+    }
+
+    if ( !mCurrentJobs.contains( it.key() ) || mCurrentJobs.value( it.key() ) == 0 ) {
+      SearchRequest *req = it.value().takeFirst();
+      Q_ASSERT( req->resourceId == it.key() );
+      SearchResultsRetrievalJob *job = new SearchResultsRetrievalJob( req, this );
+      connect( job, SIGNAL(requestCompleted(SearchRequest*,QSet<qint64>)),
+               this, SLOT(requestCompleted(SearchRequest*,QSet<qint64>)) );
+      mCurrentJobs.insert( req->resourceId, job );
+      newJobs.append( qMakePair( job, req->resourceId ) );
+    }
+    ++it;
   }
 
-  return results;
+  bool nothingGoingOn = mPendingRequests.isEmpty() && mCurrentJobs.isEmpty() && newJobs.isEmpty();
+  mLock->unlock();
+
+  if ( nothingGoingOn ) {
+    mWaitCondition->wakeAll();
+    return;
+  }
+
+  for ( QVector<QPair<SearchResultsRetrievalJob *, QByteArray> >::Iterator it = newJobs.begin(); it != newJobs.end(); ++it ) {
+    ( *it ).first->start( mSearchInstances.value( ( *it ).second ) );
+  }
+}
+
+void SearchManager::searchResultsAvailable( const QByteArray &searchId,
+                                            const QSet<qint64> ids,
+                                            AkonadiConnection* connection )
+{
+  mLock->lockForWrite();
+  Q_ASSERT( mCurrentJobs.contains( connection->resourceContext().name().toLatin1() ) );
+  SearchResultsRetrievalJob *job = mCurrentJobs[connection->resourceContext().name().toLatin1()];
+  job->setResult( ids );
+  mLock->unlock();
+}
+
+void SearchManager::requestCompleted( SearchRequest *request, const QSet<qint64> &result )
+{
+  mLock->lockForWrite();
+  request->processed = true;
+  request->result = result;
+
+  Q_ASSERT( mCurrentJobs.contains( request->resourceId ) );
+  mCurrentJobs.remove( request->resourceId );
+
+  mWaitCondition->wakeAll();
+  mLock->unlock();
+  Q_EMIT requestAdded(); // trigger processRequest() again
+}
+
+QSet<qint64> SearchManager::search( SearchRequest *req )
+{
+  // Don't bother processing the request if the owning resource does not
+  // support search
+  if ( !mSearchInstances.contains( req->resourceId ) ) {
+    akDebug() << "Resource" << req->resourceId << "does not implement Search interface, skipping request";
+    return QSet<qint64>();
+  }
+
+  mLock->lockForWrite();
+  mPendingRequests[req->resourceId].append( req );
+  mLock->unlock();
+
+  Q_EMIT requestAdded();
+
+  mLock->lockForRead();
+  Q_FOREVER {
+    if ( req->processed ) {
+      boost::scoped_ptr<SearchRequest> reqDeleter( req );
+      Q_ASSERT( !mPendingRequests[req->resourceId].contains( req ) );
+      const QString errorMsg = req->errorMsg;
+      mLock->unlock();
+      if ( errorMsg.isEmpty() ) {
+        return req->result;
+      } else {
+        throw SearchResultsRetrieverException( errorMsg );
+      }
+    } else {
+      mWaitCondition->wait( mLock );
+    }
+  }
+
+  throw SearchResultsRetrieverException( "WTF?" );
+  return QSet<qint64>();
 }

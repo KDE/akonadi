@@ -132,13 +132,17 @@ set(libakonadiprivate_SRCS
   src/handler/search.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
+  src/handler/searchresult.cpp
   src/handler/select.cpp
   src/handler/subscribe.cpp
   src/handler/status.cpp
   src/handler/store.cpp
   src/handler/transaction.cpp
   src/search/agentsearchengine.cpp
+  src/search/searchinstance.cpp
   src/search/searchmanager.cpp
+  src/search/searchresultsretrievaljob.cpp
+  src/search/searchresultsretriever.cpp
 
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
@@ -218,9 +222,11 @@ qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::ResourceManager)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessormanager.h Akonadi::PreprocessorManager)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.SearchManager.xml search/searchmanager.h Akonadi::SearchManager)
 qt4_add_dbus_interfaces(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface)
+qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Search.xml agentsearchinterface)
 
 qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb.qrc)
 

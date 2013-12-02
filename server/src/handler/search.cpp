@@ -26,8 +26,9 @@
 #include "imapstreamparser.h"
 #include "nepomuksearch.h"
 #include "response.h"
-#include "search/searchmanager.h"
 #include "storage/selectquerybuilder.h"
+
+#include "search/searchresultsretriever.h"
 
 #include <libs/protocol_p.h>
 
@@ -46,19 +47,23 @@ Search::~Search()
 
 bool Search::parseStream()
 {
-  QList<QByteArray> mimeTypes;
+  QStringList mimeTypes;
   QVector<qint64> collectionIds;
   bool recursive = false;
-  QByteArray queryString;
+  QString queryString;
 
   // Backward compatibility
   if ( !connection()->capabilities().serverSideSearch() ) {
-    queryString = m_streamParser->readString();
+    queryString = m_streamParser->readUtf8String();
   } else {
     while (m_streamParser->hasString()) {
       const QByteArray param = m_streamParser->readString();
       if ( param == AKONADI_PARAM_MIMETYPE ) {
-        mimeTypes = m_streamParser->readParenthesizedList();
+        const QList<QByteArray> mt = m_streamParser->readParenthesizedList();
+        mimeTypes.reserve( mt.size() );
+        Q_FOREACH ( const QByteArray &ba, mt ) {
+          mimeTypes.append( QString::fromLatin1( ba ) );
+        }
       } else if ( param == AKONADI_PARAM_COLLECTIONS ) {
         QList<QByteArray> list = m_streamParser->readParenthesizedList();
         Q_FOREACH ( const QByteArray &col, list ) {
@@ -67,7 +72,7 @@ bool Search::parseStream()
       } else if ( param == AKONADI_PARAM_RECURSIVE ) {
         recursive = true;
       } else if ( param == AKONADI_PARAM_QUERY ) {
-        queryString = m_streamParser->readString();
+        queryString = m_streamParser->readUtf8String();
       } else {
         return failureResponse( "Invalid parameter" );
       }
@@ -78,14 +83,23 @@ bool Search::parseStream()
     return failureResponse( "No query specified" );
   }
 
-  Collection::List collections;
+  QVector<qint64> collections;
   if ( recursive ) {
-    Q_FOREACH ( qint64 collId, collections ) {
-      collections << listCollectionsRecursive( collections );
+    Q_FOREACH ( qint64 collection, collectionIds ) {
+      collections << listCollectionsRecursive( QVector<qint64>() <<  collection );
     }
   }
 
-  QSet<qint64> uids = SearchManager::search( QString::fromUtf8( queryString ), collections );
+  SearchResultsRetriever retriever( connection() );
+  retriever.setCollections( collections );
+  retriever.setMimeTypes( mimeTypes );
+  retriever.setQuery( queryString );
+  bool ok = false;
+  const QSet<qint64> uids = retriever.exec( &ok );
+  if ( !ok ) {
+    throw HandlerException( "Error occured during search" );
+  }
+
   if ( uids.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope
     return successResponse( "SEARCH completed" );
@@ -93,7 +107,7 @@ bool Search::parseStream()
 
   // create imap query
   ImapSet itemSet;
-  itemSet.add( uids.toList() );
+  itemSet.add( uids );
   Scope scope( Scope::Uid );
   scope.setUidSet( itemSet );
 
@@ -116,9 +130,12 @@ QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancesto
   Q_FOREACH ( qint64 ancestor, ancestors ) {
     SelectQueryBuilder<Collection> qb;
     qb.addColumn( Collection::idFullColumnName() );
-    qb.addValueCondition( Collection::parentIdFullColumnName() );
+    qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
     qb.exec();
-    const QVector<qint64> children = qb.result();
+    QVector<qint64> children;
+    Q_FOREACH( const Collection &collection, qb.result() ) {
+      children << collection.id();
+    }
     if ( !children.isEmpty() ) {
       recursiveChildren << children;
       recursiveChildren << listCollectionsRecursive( children );
