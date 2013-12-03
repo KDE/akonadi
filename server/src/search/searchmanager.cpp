@@ -302,7 +302,7 @@ QSet<qint64> SearchManager::search( SearchRequest *req )
   mLock->lockForRead();
   Q_FOREVER {
     if ( req->processed ) {
-      akDebug() << "Request processed";
+      akDebug() << "Search request processed";
       boost::scoped_ptr<SearchRequest> reqDeleter( req );
       Q_ASSERT( !mPendingRequests[req->resourceId].contains( req ) );
       const QString errorMsg = req->errorMsg;
@@ -313,7 +313,7 @@ QSet<qint64> SearchManager::search( SearchRequest *req )
         throw SearchResultsRetrieverException( errorMsg );
       }
     } else {
-      akDebug() << "Waiting for response from resource";
+      akDebug() << "Waiting for search results from resource";
       mWaitCondition->wait( mLock );
     }
   }

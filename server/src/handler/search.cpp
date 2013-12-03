@@ -108,7 +108,8 @@ bool Search::parseStream()
     throw HandlerException( "Error occured during search" );
   }
 
-  akDebug() << "\tResult:" << uids;
+  //akDebug() << "\tResult:" << uids;
+  akDebug() << "\tResult:" << uids.count() << "matches";
 
   if ( uids.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope

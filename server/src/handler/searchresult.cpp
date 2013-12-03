@@ -66,7 +66,7 @@ bool SearchResult::parseStream()
 
   QSet<qint64> ids;
   if ( mScope.scope() == Scope::Rid ) {
-    SelectQueryBuilder<PimItem> qb;
+    QueryBuilder qb( PimItem::tableName() );
     qb.addColumn( PimItem::idFullColumnName() );
     ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
 
@@ -76,11 +76,9 @@ bool SearchResult::parseStream()
     }
 
     QSqlQuery query = qb.query();
-    while ( query.isValid() ) {
+    while ( query.next() ) {
       ids << query.value( 0 ).toLongLong();
-      query.next();
     }
-    query.finish();
   } else if ( mScope.scope() == Scope::Uid ) {
     Q_FOREACH ( const ImapInterval &interval, mScope.uidSet().intervals() ) {
       if ( !interval.hasDefinedBegin() && !interval.hasDefinedEnd() ) {
@@ -93,7 +91,6 @@ bool SearchResult::parseStream()
       }
     }
   }
-
   SearchManager::instance()->searchResultsAvailable( searchId, ids, connection() );
 
   successResponse( "Done" );

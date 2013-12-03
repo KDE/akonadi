@@ -49,10 +49,8 @@ void SearchResultsRetrievalJob::start( SearchInstance* instance )
 
   if ( mInstance ) {
     mActive = true;
-    akDebug() << "Calling search()";
     mInstance->search( mRequest->id, mRequest->query, mRequest->collectionId );
   } else {
-    akDebug() << "Invalid instance - huh?";
     Q_EMIT requestCompleted( mRequest, QSet<qint64>() );
     deleteLater();
   }
