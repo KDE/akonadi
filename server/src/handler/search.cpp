@@ -55,6 +55,7 @@ bool Search::parseStream()
   // Backward compatibility
   if ( !connection()->capabilities().serverSideSearch() ) {
     queryString = m_streamParser->readUtf8String();
+    collectionIds << connection()->selectedCollectionId();
   } else {
     while (m_streamParser->hasString()) {
       const QByteArray param = m_streamParser->readString();
@@ -88,7 +89,14 @@ bool Search::parseStream()
     Q_FOREACH ( qint64 collection, collectionIds ) {
       collections << listCollectionsRecursive( QVector<qint64>() <<  collection );
     }
+  } else {
+    collections = collectionIds;
   }
+
+  akDebug() << "SEARCH:";
+  akDebug() << "\tQuery:" << queryString;
+  akDebug() << "\tMimeTypes:" << mimeTypes;
+  akDebug() << "\tCollections:" << collections;
 
   SearchResultsRetriever retriever( connection() );
   retriever.setCollections( collections );
@@ -99,6 +107,8 @@ bool Search::parseStream()
   if ( !ok ) {
     throw HandlerException( "Error occured during search" );
   }
+
+  akDebug() << "\tResult:" << uids;
 
   if ( uids.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope
