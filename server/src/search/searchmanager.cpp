@@ -45,6 +45,7 @@ using namespace Akonadi;
 SearchManager *SearchManager::sInstance = 0;
 
 Q_DECLARE_METATYPE( Collection )
+Q_DECLARE_METATYPE( QSet<qint64> )
 
 SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
   : QObject( parent )
@@ -52,8 +53,9 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
           QDBusConnection::SessionBus,
           QString::fromLatin1( "AkonadiServerSearchManager" ) ) )
 {
-  // make sure we are created from the retrieval thread and only once
-  Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
+  qRegisterMetaType< QSet<qint64> >();
+
+  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
   Q_ASSERT( sInstance == 0 );
   sInstance = this;
 
@@ -152,6 +154,7 @@ void SearchManager::registerInstance( const QByteArray &id )
 
   instance = new SearchInstance( id );
   if ( !instance->init() ) {
+    akDebug() << "Failed to initialize Search agent";
     delete instance;
     return;
   }
@@ -250,6 +253,7 @@ void SearchManager::processRequest()
   }
 
   for ( QVector<QPair<SearchResultsRetrievalJob *, QByteArray> >::Iterator it = newJobs.begin(); it != newJobs.end(); ++it ) {
+    akDebug() << "Starting SearchResultsRetrievalJob:" << ( *it ).second << mSearchInstances.value( ( *it ).second );
     ( *it ).first->start( mSearchInstances.value( ( *it ).second ) );
   }
 }
@@ -258,6 +262,7 @@ void SearchManager::searchResultsAvailable( const QByteArray &searchId,
                                             const QSet<qint64> ids,
                                             AkonadiConnection* connection )
 {
+  akDebug() << "Result available for search" << searchId;
   mLock->lockForWrite();
   Q_ASSERT( mCurrentJobs.contains( connection->resourceContext().name().toLatin1() ) );
   SearchResultsRetrievalJob *job = mCurrentJobs[connection->resourceContext().name().toLatin1()];
@@ -297,6 +302,7 @@ QSet<qint64> SearchManager::search( SearchRequest *req )
   mLock->lockForRead();
   Q_FOREVER {
     if ( req->processed ) {
+      akDebug() << "Request processed";
       boost::scoped_ptr<SearchRequest> reqDeleter( req );
       Q_ASSERT( !mPendingRequests[req->resourceId].contains( req ) );
       const QString errorMsg = req->errorMsg;
@@ -307,6 +313,7 @@ QSet<qint64> SearchManager::search( SearchRequest *req )
         throw SearchResultsRetrieverException( errorMsg );
       }
     } else {
+      akDebug() << "Waiting for response from resource";
       mWaitCondition->wait( mLock );
     }
   }
