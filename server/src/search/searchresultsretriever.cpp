@@ -22,6 +22,7 @@
 #include "searchmanager.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
+#include "akdebug.h"
 
 #include <QSqlError>
 
@@ -51,7 +52,11 @@ void Akonadi::SearchResultsRetriever::setMimeTypes( const QStringList &mimeTypes
 
 QSet<qint64> Akonadi::SearchResultsRetriever::exec( bool *ok )
 {
-  SelectQueryBuilder<Collection> qb;
+  if ( ok ) {
+    *ok = false;
+  }
+
+  QueryBuilder qb( Collection::tableName() );
   qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
               Collection::resourceIdFullColumnName(),
               Resource::idFullColumnName());
@@ -79,8 +84,8 @@ QSet<qint64> Akonadi::SearchResultsRetriever::exec( bool *ok )
     request->id = mConnection->sessionId();
     request->query = mQuery;
     request->mimeTypes = mMimeTypes;
-    request->resourceId = query.value( 0 ).toByteArray();
-    request->collectionId = query.value( 1 ).toLongLong();
+    request->collectionId = query.value( 0 ).toLongLong();
+    request->resourceId = query.value( 1 ).toByteArray();
     requests << request;
 
     query.next();
@@ -91,6 +96,7 @@ QSet<qint64> Akonadi::SearchResultsRetriever::exec( bool *ok )
   QSet<qint64> result;
   Q_FOREACH ( SearchRequest *request, requests ) {
     try {
+      akDebug() << "Searching in" << request->resourceId << "...";
       result.unite( SearchManager::instance()->search( request ) );
     } catch ( const SearchResultsRetrieverException &e ) {
       akError() << e.type() << ":" << e.what();
@@ -98,5 +104,8 @@ QSet<qint64> Akonadi::SearchResultsRetriever::exec( bool *ok )
     }
   }
 
+  if ( ok ) {
+    *ok = true;
+  }
   return result;
 }
