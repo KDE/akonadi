@@ -23,7 +23,7 @@
 
 using namespace Akonadi;
 
-SearchInstance::SearchInstance( const QByteArray &id )
+SearchInstance::SearchInstance( const QString &id )
  : QObject()
  , mId( id )
  , mInterface( 0 )
@@ -39,7 +39,7 @@ bool SearchInstance::init()
   Q_ASSERT( !mInterface );
 
   mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
-      AkDBus::agentServiceName( QString::fromLatin1( mId ), AkDBus::Agent ),
+      AkDBus::agentServiceName( mId, AkDBus::Agent ),
       QLatin1String( "/Search" ),
       QDBusConnection::sessionBus(),
       this );

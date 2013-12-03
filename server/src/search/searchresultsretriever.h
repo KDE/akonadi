@@ -42,7 +42,7 @@ class SearchRequest
 
     QByteArray id;
     QString query;
-    QByteArray resourceId;
+    QString resourceId;
     qint64 collectionId;
     QStringList mimeTypes;
     QString errorMsg;

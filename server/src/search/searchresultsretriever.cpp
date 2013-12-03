@@ -85,7 +85,7 @@ QSet<qint64> Akonadi::SearchResultsRetriever::exec( bool *ok )
     request->query = mQuery;
     request->mimeTypes = mMimeTypes;
     request->collectionId = query.value( 0 ).toLongLong();
-    request->resourceId = query.value( 1 ).toByteArray();
+    request->resourceId = query.value( 1 ).toString();
     requests << request;
 
     query.next();

@@ -31,7 +31,7 @@ class SearchInstance : public QObject
     Q_OBJECT
 
   public:
-    SearchInstance( const QByteArray &id );
+    SearchInstance( const QString &id );
     virtual ~SearchInstance();
 
     bool init();
@@ -42,7 +42,7 @@ class SearchInstance : public QObject
     OrgFreedesktopAkonadiAgentSearchInterface *interface() const;
 
   private:
-    QByteArray mId;
+    QString mId;
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
 };
 }

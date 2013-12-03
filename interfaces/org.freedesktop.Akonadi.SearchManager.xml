@@ -2,11 +2,11 @@
 <node>
   <interface name="org.freedesktop.Akonadi.SearchManager">
     <method name="registerInstance">
-      <arg name="id" type="ay" direction="in"/>
+      <arg name="id" type="s" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="unregisterInstance">
-      <arg name="id" type="ay" direction="in"/>
+      <arg name="id" type="s" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
   </interface>

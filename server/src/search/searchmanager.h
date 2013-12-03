@@ -68,13 +68,13 @@ class SearchManager : public QObject
      * This is called via D-Bus from AgentManager to register an agent with
      * search interface.
      */
-    void registerInstance( const QByteArray &id );
+    void registerInstance( const QString &id );
 
     /**
      * This is called via D-Bus from AgentManager to unregister an agent with
      * search interface.
      */
-    void unregisterInstance( const QByteArray &id );
+    void unregisterInstance( const QString &id );
 
     /**
      * Adds the given @p collection to the search.
@@ -128,12 +128,12 @@ class SearchManager : public QObject
     /// Used to let requesting threads wait until the request has been processed
     QWaitCondition *mWaitCondition;
     /// Pending requests queues, one per resource
-    QHash<QByteArray, QList<SearchRequest *> > mPendingRequests;
+    QHash<QString, QList<SearchRequest *> > mPendingRequests;
     /// Currently running jobs, one per resource
-    QHash<QByteArray, SearchResultsRetrievalJob *> mCurrentJobs;
+    QHash<QString, SearchResultsRetrievalJob *> mCurrentJobs;
 
     // agents dbus interface cache
-    QHash<QByteArray, SearchInstance *> mSearchInstances;
+    QHash<QString, SearchInstance *> mSearchInstances;
     QDBusConnection mDBusConnection;
     QMutex *mInstancesLock;
 

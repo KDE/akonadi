@@ -141,7 +141,7 @@ SearchManager *SearchManager::instance()
   return sInstance;
 }
 
-void SearchManager::registerInstance( const QByteArray &id )
+void SearchManager::registerInstance( const QString &id )
 {
   QMutexLocker locker( mInstancesLock );
 
@@ -164,7 +164,7 @@ void SearchManager::registerInstance( const QByteArray &id )
   mSearchInstances.insert( id, instance );
 }
 
-void SearchManager::unregisterInstance( const QByteArray &id )
+void SearchManager::unregisterInstance( const QString &id )
 {
   QMutexLocker locker( mInstancesLock );
 
@@ -222,11 +222,11 @@ void SearchManager::updateSearch( const Akonadi::Collection &collection, Notific
 
 void SearchManager::processRequest()
 {
-  QVector<QPair<SearchResultsRetrievalJob *, QByteArray> > newJobs;
+  QVector<QPair<SearchResultsRetrievalJob *, QString> > newJobs;
 
   mLock->lockForWrite();
   // look for idle resources
-  for ( QHash<QByteArray, QList<SearchRequest *> >::Iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
+  for ( QHash<QString, QList<SearchRequest *> >::Iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
     if ( it.value().isEmpty() ) {
       it = mPendingRequests.erase( it );
       continue;
@@ -252,7 +252,7 @@ void SearchManager::processRequest()
     return;
   }
 
-  for ( QVector<QPair<SearchResultsRetrievalJob *, QByteArray> >::Iterator it = newJobs.begin(); it != newJobs.end(); ++it ) {
+  for ( QVector<QPair<SearchResultsRetrievalJob *, QString> >::Iterator it = newJobs.begin(); it != newJobs.end(); ++it ) {
     akDebug() << "Starting SearchResultsRetrievalJob:" << ( *it ).second << mSearchInstances.value( ( *it ).second );
     ( *it ).first->start( mSearchInstances.value( ( *it ).second ) );
   }
@@ -264,8 +264,8 @@ void SearchManager::searchResultsAvailable( const QByteArray &searchId,
 {
   akDebug() << "Result available for search" << searchId;
   mLock->lockForWrite();
-  Q_ASSERT( mCurrentJobs.contains( connection->resourceContext().name().toLatin1() ) );
-  SearchResultsRetrievalJob *job = mCurrentJobs[connection->resourceContext().name().toLatin1()];
+  Q_ASSERT( mCurrentJobs.contains( connection->resourceContext().name() ) );
+  SearchResultsRetrievalJob *job = mCurrentJobs[connection->resourceContext().name()];
   job->setResult( ids );
   mLock->unlock();
 }
