@@ -22,6 +22,7 @@
 #include "searchresultsretrievaljob.h"
 #include "searchinstance.h"
 #include "searchresultsretriever.h"
+#include "akdebug.h"
 
 #include <agentsearchinterface.h>
 
@@ -44,10 +45,14 @@ void SearchResultsRetrievalJob::start( SearchInstance* instance )
 {
   Q_ASSERT( mRequest );
 
+  mInstance = instance;
+
   if ( mInstance ) {
     mActive = true;
+    akDebug() << "Calling search()";
     mInstance->search( mRequest->id, mRequest->query, mRequest->collectionId );
   } else {
+    akDebug() << "Invalid instance - huh?";
     Q_EMIT requestCompleted( mRequest, QSet<qint64>() );
     deleteLater();
   }
