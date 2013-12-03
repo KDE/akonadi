@@ -39,8 +39,8 @@ bool SearchInstance::init()
   Q_ASSERT( !mInterface );
 
   mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
-      AkDBus::agentServiceName( QString::fromLatin1( mId ), AkDBus::Preprocessor ),
-      QLatin1String( "/" ),
+      AkDBus::agentServiceName( QString::fromLatin1( mId ), AkDBus::Agent ),
+      QLatin1String( "/Search" ),
       QDBusConnection::sessionBus(),
       this );
 
