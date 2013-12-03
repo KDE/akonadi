@@ -25,10 +25,11 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/itemqueryhelper.h"
 #include "search/searchmanager.h"
+#include "akdebug.h"
 
 using namespace Akonadi;
 
-SearchResult::SearchResult( const Scope &scope )
+SearchResult::SearchResult( Scope::SelectionScope scope )
   : Handler()
   , mScope( scope )
 {
@@ -41,11 +42,24 @@ SearchResult::~SearchResult()
 
 bool SearchResult::parseStream()
 {
+  const QByteArray searchId = m_streamParser->readString();
+
   if ( mScope.scope() != Scope::Uid && mScope.scope() != Scope::Rid ) {
-    throw HandlerException( "Only UID or RID scopes are allowed in SEARECH_RESULT" );
+    fail( searchId, "Only UID or RID scopes are allowed in SEARECH_RESULT" );
+    return false;
   }
 
-  const QByteArray searchId = m_streamParser->readString();
+  if ( m_streamParser->hasString() ) {
+    const QByteArray str = m_streamParser->readString();
+    if ( str == AKONADI_PARAM_DONE ) {
+      // Success, no results
+      SearchManager::instance()->searchResultsAvailable( searchId, QSet<qint64>(), connection() );
+      successResponse( "Done" );
+      return true;
+    }
+
+    fail( searchId, "Invalid argument: expected DONE or UID set" );
+  }
 
   // sequence set
   mScope.parseScope( m_streamParser );
@@ -57,7 +71,8 @@ bool SearchResult::parseStream()
     ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
 
     if ( !qb.exec() ) {
-      throw HandlerException( "Failed to convert RIDs to UIDs" );
+      fail( searchId, "Failed to convert RID to UID" );
+      return false;
     }
 
     QSqlQuery query = qb.query();
@@ -65,10 +80,12 @@ bool SearchResult::parseStream()
       ids << query.value( 0 ).toLongLong();
       query.next();
     }
+    query.finish();
   } else if ( mScope.scope() == Scope::Uid ) {
     Q_FOREACH ( const ImapInterval &interval, mScope.uidSet().intervals() ) {
       if ( !interval.hasDefinedBegin() && !interval.hasDefinedEnd() ) {
-        throw HandlerException( "Open UID intervals not allowed in SEARCH_RESULT" );
+        fail( searchId, "Open UID intervals not allowed in SEARCH_RESULT" );
+        return false;
       }
 
       for ( int i = interval.begin(); i <= interval.end(); ++i ) {
@@ -79,5 +96,12 @@ bool SearchResult::parseStream()
 
   SearchManager::instance()->searchResultsAvailable( searchId, ids, connection() );
 
+  successResponse( "Done" );
   return true;
+}
+
+void SearchResult::fail( const QByteArray &searchId, const char* error )
+{
+  SearchManager::instance()->searchResultsAvailable( searchId, QSet<qint64>(), connection() );
+  failureResponse( error );
 }

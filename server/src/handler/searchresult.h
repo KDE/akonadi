@@ -34,20 +34,23 @@ namespace Akonadi {
   Handler for the search_result command
 
   @verbatim
-  tag " " scope-selector " SEARCH_RESULT " searchId " " scope
+  tag " " scope-selector " SEARCH_RESULT " searchId " " result
   scope-selector = [ "UID" / "RID" ]
+  result = [ scope / "DONE" ]
   @endverbatim
 */
 class SearchResult : public Handler
 {
     Q_OBJECT
   public:
-    SearchResult( const Scope &scope );
+    SearchResult( Scope::SelectionScope scope );
     ~SearchResult();
 
     bool parseStream();
 
   private:
+    void fail( const QByteArray &searchId, const char *error );
+
     Scope mScope;
 };
 
