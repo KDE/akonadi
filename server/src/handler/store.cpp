@@ -31,12 +31,11 @@
 #include "storage/parthelper.h"
 #include "storage/dbconfig.h"
 #include "storage/itemretriever.h"
-#include <storage/parttypehelper.h>
+#include "storage/parttypehelper.h"
 
 #include "libs/imapparser_p.h"
+#include "libs/protocol_p.h"
 #include "imapstreamparser.h"
-
-#include <libs/protocol_p.h>
 
 #include <QtCore/QStringList>
 #include <QLocale>

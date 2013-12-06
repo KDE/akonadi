@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "parthelper.h"
-#include <akdebug.h>
+#include "akdebug.h"
 #include "entities.h"
 #include "selectquerybuilder.h"
 #include "dbconfig.h"

@@ -33,13 +33,11 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "storage/parttypehelper.h"
-#include <storage/dbconfig.h>
-#include <storage/parthelper.h>
-
-#include <libs/protocol_p.h>
+#include "storage/dbconfig.h"
+#include "storage/parthelper.h"
+#include "libs/protocol_p.h"
 
 #include <QtCore/QDebug>
-#include <QTemporaryFile>
 
 using namespace Akonadi;
 
@@ -132,7 +130,7 @@ bool AkAppend::readParts( const PimItem &pimItem )
   qint64 partSizes = 0;
   bool ok = false;
 
-  QList<QByteArray> list = m_streamParser->readParenthesizedList();
+  const QList<QByteArray> list = m_streamParser->readParenthesizedList();
   Q_FOREACH ( const QByteArray &item, list ) {
     if ( partName.isEmpty() && partSize == -1 ) {
       partName = item;
@@ -159,7 +157,7 @@ bool AkAppend::readParts( const PimItem &pimItem )
   // FIXME: Why would we do this? We don't trust clients sending correct size?
   //m_size = qMax( partSizes, m_size );
 
-  QByteArray allParts = m_streamParser->readString();
+  const QByteArray allParts = m_streamParser->readString();
 
   // chop up literal data in parts
   int pos = 0; // traverse through part data now
