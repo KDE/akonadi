@@ -244,7 +244,7 @@ bool Store::parseStream()
     } else if ( command == AKONADI_PARAM_SIZE ) {
       mSize = m_streamParser->readNumber();
       changes << AKONADI_PARAM_SIZE;
-    } else if ( command == "PARTS" ) {
+    } else if ( command == AKONADI_PARAM_PARTS ) {
       const QList<QByteArray> parts = m_streamParser->readParenthesizedList();
       if ( op == Delete ) {
         if ( !store->removeItemParts( item, parts ) ) {
@@ -359,7 +359,7 @@ void Store::parseCommand()
 void Store::sendPimItemResponse( const PimItem &pimItem )
 {
   QList<QByteArray> attrs;
-  attrs.push_back( "REV" );
+  attrs.push_back( AKONADI_PARAM_REVISION );
   attrs.push_back( QByteArray::number( pimItem.rev() ) );
 
   QByteArray result;

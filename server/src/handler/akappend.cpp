@@ -185,6 +185,7 @@ bool AkAppend::readParts( const PimItem &pimItem )
     pos += partSpec.second.first;
   }
 
+  return true;
 }
 
 bool AkAppend::parseStream()
@@ -273,7 +274,7 @@ bool AkAppend::parseStream()
   if ( doPreprocessing ) {
     Part hiddenAttribute;
     hiddenAttribute.setPimItemId( item.id() );
-    hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
+    hiddenAttribute.setPartType( PartTypeHelper::fromFqName( QString::fromLatin1( AKONADI_ATTRIBUTE_HIDDEN ) ) );
     hiddenAttribute.setData( QByteArray() );
     // TODO: Handle errors? Technically, this is not a critical issue as no data are lost
     PartHelper::insert( &hiddenAttribute );

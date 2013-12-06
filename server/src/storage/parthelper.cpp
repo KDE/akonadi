@@ -308,7 +308,6 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
                                      QByteArray &partName, qint64 &partSize,
                                      QByteArray &error )
 {
- // obtain and configure the part object
   int partVersion = 0;
   partSize = 0;
   ImapParser::splitVersionedKey( command, partName, partVersion );
