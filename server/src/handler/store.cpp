@@ -302,17 +302,11 @@ bool Store::parseStream()
 
           //the actual streaming code for the remaining parts:
           // reads from the parser, writes immediately to the file
-          // ### move this entire block to part helper? should be useful for append as well
-          const QString fileName = PartHelper::resolveAbsolutePath( part.data() );
-          QFile file( fileName );
-          if ( file.open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-            while ( !m_streamParser->atLiteralEnd() ) {
-              value = m_streamParser->readLiteralPart();
-              file.write( value ); // ### error handling?
-            }
-            file.close();
-          } else {
-            return failureResponse( "Unable to update item part" );
+          QFile partFile( PartHelper::resolveAbsolutePath( part.data() ) );
+          try {
+            PartHelper::streamToFile( m_streamParser, partFile, QIODevice::WriteOnly | QIODevice::Append );
+          } catch ( const PartHelperException &e ) {
+            return failureResponse( e.what() );
           }
 
           changes << partName;
