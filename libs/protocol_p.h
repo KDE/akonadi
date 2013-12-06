@@ -80,6 +80,7 @@
 #define AKONADI_CMD_X_AKLSUB         "X-AKLSUB"
 
 // Command parameters
+#define AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING "AKAPPENDSTREAMING"
 #define AKONADI_PARAM_ALLATTRIBUTES                "ALLATTR"
 #define AKONADI_PARAM_ANCESTORS                    "ANCESTORS"
 #define AKONADI_PARAM_ATR                          "ATR:"

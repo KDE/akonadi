@@ -41,9 +41,13 @@ public:
   bool noPayloadPath() const;
   void setNoPayloadPath( bool noPayloadPath );
 
+  bool akAppendStreaming() const;
+  void setAkAppendStreaming( bool akAppendStreaming );
+
 private:
   int m_notificationMessageVersion;
   int m_noPayloadPath : 1;
+  int m_akAppendStreaming : 1;
 };
 
 #endif // CLIENTCAPABILITIES_H

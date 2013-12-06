@@ -33,10 +33,13 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "storage/parttypehelper.h"
+#include <storage/dbconfig.h>
+#include <storage/parthelper.h>
 
 #include <libs/protocol_p.h>
 
 #include <QtCore/QDebug>
+#include <QTemporaryFile>
 
 using namespace Akonadi;
 
@@ -49,24 +52,23 @@ AkAppend::~AkAppend()
 {
 }
 
-bool Akonadi::AkAppend::commit()
+bool AkAppend::buildPimItem( PimItem &item, const QByteArray &mailbox, qint64 size, const QList<QByteArray> &flags, const QDateTime &dateTime, QList<QByteArray> &itemFlags )
 {
     Response response;
 
     DataStore *db = connection()->storageBackend();
     Transaction transaction( db );
 
-    Collection col = HandlerHelper::collectionFromIdOrName( m_mailbox );
+    Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
     if ( !col.isValid() ) {
-      return failureResponse( QByteArray( "Unknown collection for '" ) + m_mailbox + QByteArray( "'." ) );
+      throw HandlerException( QByteArray( "Unknown collection for '" ) + mailbox + QByteArray( "'." ) );
     }
 
     QByteArray mt;
     QString remote_id;
     QString remote_revision;
     QString gid;
-    QList<QByteArray> flags;
-    Q_FOREACH ( const QByteArray &flag, m_flags ) {
+    Q_FOREACH ( const QByteArray &flag, flags ) {
       if ( flag.startsWith( AKONADI_FLAG_MIMETYPE ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
@@ -84,7 +86,7 @@ bool Akonadi::AkAppend::commit()
         int pos2 = flag.lastIndexOf( ']' );
         gid = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
       } else {
-        flags << flag;
+        itemFlags << flag;
       }
     }
     // standard imap does not know this attribute, so that's mail
@@ -100,94 +102,31 @@ bool Akonadi::AkAppend::commit()
       mimeType = m;
     }
 
-    PimItem item;
     item.setRev( 0 );
-    item.setSize( m_size );
-
-    // If we have active preprocessors then we also set the hidden attribute
-    // for the UI and we enqueue the item for preprocessing.
-    bool doPreprocessing = PreprocessorManager::instance()->isActive();
-
-    if ( doPreprocessing ) {
-      Part hiddenAttribute;
-      hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
-      hiddenAttribute.setData( QByteArray() );
-      hiddenAttribute.setPimItemId( item.id() );
-
-      m_parts.append( hiddenAttribute );
+    item.setSize( size );
+    item.setMimeTypeId( mimeType.id() );
+    item.setCollectionId( col.id() );
+    if ( dateTime.isValid() ) {
+      item.setDatetime( dateTime );
     }
-
-    bool ok = db->appendPimItem( m_parts, mimeType, col, m_dateTime, remote_id, remote_revision, gid, item );
-
-    response.setTag( tag() );
-    if ( !ok ) {
-      return failureResponse( "Append failed" );
+    if ( remote_id.isEmpty() ) {
+      // from application
+      item.setDirty( true );
+    } else {
+      // from resource
+      item.setRemoteId( remote_id );
+      item.setDirty( false );
     }
+    item.setRemoteRevision( remote_revision );
+    item.setGid( gid );
+    item.setAtime( QDateTime::currentDateTime() );
 
-    // set message flags
-    const Flag::List flagList = HandlerHelper::resolveFlags( flags );
-    bool flagsChanged = false;
-    if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) ) {
-      return failureResponse( "Unable to append item flags." );
-    }
-
-    // TODO if the mailbox is currently selected, the normal new message
-    //      actions SHOULD occur.  Specifically, the server SHOULD notify the
-    //      client immediately via an untagged EXISTS response.
-
-    if ( !transaction.commit() ) {
-      return failureResponse( "Unable to commit transaction." );
-    }
-
-    if ( doPreprocessing ) {
-      // enqueue the item for preprocessing
-      PreprocessorManager::instance()->beginHandleItem( item, db );
-    }
-
-    response.setTag( tag() );
-    response.setUserDefined();
-    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
-    Q_EMIT responseAvailable( response );
-
-    response.setSuccess();
-    response.setString( "Append completed" );
-    Q_EMIT responseAvailable( response );
     return true;
 }
 
-bool AkAppend::parseStream()
+// This is used for clients that don't support item streaming
+bool AkAppend::readParts( const PimItem &pimItem )
 {
-    // Arguments:  mailbox name
-    //        OPTIONAL flag parenthesized list
-    //        OPTIONAL date/time string
-    //        (partname literal)+
-    //
-    // Syntax:
-    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
-
-  m_mailbox = m_streamParser->readString();
-
-  m_size = m_streamParser->readNumber();
-
-  // parse optional flag parenthesized list
-  // Syntax:
-  // flag-list      = "(" [flag *(SP flag)] ")"
-  // flag           = "\ANSWERED" / "\FLAGGED" / "\DELETED" / "\SEEN" /
-  //                  "\DRAFT" / flag-keyword / flag-extension
-  //                    ; Does not include "\Recent"
-  // flag-extension = "\" atom
-  // flag-keyword   = atom
-  if ( m_streamParser->hasList() ) {
-    m_flags = m_streamParser->readParenthesizedList();
-  }
-
-  // parse optional date/time string
-  if ( m_streamParser->hasDateTime() ) {
-    m_dateTime = m_streamParser->readDateTime();
-    // FIXME Should we return an error if m_dateTime is invalid?
-  }
-  // if date/time is not given then it will be set to the current date/time
-  // by the database
 
   // parse part specification
   QVector<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
@@ -220,9 +159,9 @@ bool AkAppend::parseStream()
     }
   }
 
-  m_size = qMax( partSizes, m_size );
+  // FIXME: Why would we do this? We don't trust clients sending correct size?
+  //m_size = qMax( partSizes, m_size );
 
-  // TODO streaming support!
   QByteArray allParts = m_streamParser->readString();
 
   // chop up literal data in parts
@@ -231,15 +170,182 @@ bool AkAppend::parseStream()
   Q_FOREACH ( partSpec, partSpecs ) {
     // wrap data into a part
     Part part;
+    part.setPimItemId( pimItem.id() );
     part.setPartType( PartTypeHelper::fromFqName( partSpec.first ) );
     part.setData( allParts.mid( pos, partSpec.second.first ) );
     if ( partSpec.second.second != 0 ) {
       part.setVersion( partSpec.second.second );
     }
     part.setDatasize( partSpec.second.first );
-    m_parts.append( part );
+
+    if ( !PartHelper::insert( &part ) ) {
+      return failureResponse( "Unable to append item part" );
+    }
+
     pos += partSpec.second.first;
   }
 
-  return commit();
+}
+
+bool AkAppend::streamParts( const PimItem &pimItem )
+{
+  QList<QByteArray> list = m_streamParser->readParenthesizedList();
+  while ( !list.isEmpty() ) {
+    const QByteArray partName = list.takeFirst();
+    const PartType type = PartTypeHelper::fromFqName( partName );
+    QByteArray value;
+
+    Part part;
+    part.setPimItemId( pimItem.id() );
+    part.setPartType( type );
+    part.setVersion( 0 );
+    part.setExternal( false );
+
+    if ( m_streamParser->hasLiteral() ) {
+      const qint64 dataSize = m_streamParser->remainingLiteralSize();
+      part.setDatasize( dataSize );
+
+      if ( dataSize > DbConfig::configuredDatabase()->sizeThreshold() ) {
+        // Read first part of the data, so that we can send it in with the INSERT
+        // query. Since dataSize is already set to be more than treshold, PartHelper
+        // will automatically create the file for us and set it in part.data
+        value = m_streamParser->readLiteralPart();
+        part.setData( value );
+        if ( !PartHelper::insert( &part ) ) {
+          return failureResponse( "Unable to append item part" );
+        }
+
+        QFile partFile( PartHelper::fileNameForPart( &part ) );
+        try {
+          PartHelper::streamToFile( m_streamParser, partFile, QIODevice::WriteOnly | QIODevice::Append );
+        } catch ( const PartHelperException &e ) {
+          return failureResponse( e.what() );
+        }
+        continue;
+      } else {
+        while ( !m_streamParser->atLiteralEnd() ) {
+          value += m_streamParser->readLiteralPart();
+        }
+        part.setData( value );
+      }
+    } else {
+        // Not literal. Can this happen?
+        value = m_streamParser->readString();
+    }
+
+    // Only relevant for non-literal and non-external parts
+    part.setData( value );
+    part.setDatasize( value.size() );
+    if ( !PartHelper::insert( &part ) ) {
+      return failureResponse( "Unable to add item part" );
+    }
+  }
+}
+
+bool AkAppend::parseStream()
+{
+    // Arguments:  mailbox name
+    //        OPTIONAL flag parenthesized list
+    //        OPTIONAL date/time string
+    //        (partname literal)+
+    //
+    // Syntax:
+    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
+
+  const QByteArray mailbox = m_streamParser->readString();
+
+  const qint64 size = m_streamParser->readNumber();
+
+  // parse optional flag parenthesized list
+  // Syntax:
+  // flag-list      = "(" [flag *(SP flag)] ")"
+  // flag           = "\ANSWERED" / "\FLAGGED" / "\DELETED" / "\SEEN" /
+  //                  "\DRAFT" / flag-keyword / flag-extension
+  //                    ; Does not include "\Recent"
+  // flag-extension = "\" atom
+  // flag-keyword   = atom
+  QList<QByteArray> flags;
+  if ( m_streamParser->hasList() ) {
+    flags = m_streamParser->readParenthesizedList();
+  }
+
+  // parse optional date/time string
+  QDateTime dateTime;
+  if ( m_streamParser->hasDateTime() ) {
+    dateTime = m_streamParser->readDateTime();
+    // FIXME Should we return an error if m_dateTime is invalid?
+  }
+  // if date/time is not given then it will be set to the current date/time
+  // by the database
+
+  // FIXME: The streaming/reading of all item parts can hold the transaction for
+  // unnecessary long time -> should we wrap the PimItem into one transaction
+  // and try to insert Parts independently? In case we fail to insert a part,
+  // it's not a problem as it can be re-fetched at any time, except for attributes.
+  DataStore *db = DataStore::self();
+  Transaction transaction( db );
+
+  QList<QByteArray> itemFlags;
+  PimItem item;
+  if ( !buildPimItem( item, mailbox, size, flags, dateTime, itemFlags ) ) {
+    return false;
+  }
+  if ( !item.insert() ) {
+    return failureResponse( "Failed to append item" );
+  }
+
+  // set message flags
+  // This will hit an entry in cache inserted there in buildPimItem()
+  const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
+  const Flag::List flagList = HandlerHelper::resolveFlags( itemFlags );
+  bool flagsChanged = false;
+  if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) ) {
+    return failureResponse( "Unable to append item flags." );
+  }
+
+  // Handle individual parts
+  bool ok = false;
+  if ( connection()->capabilities().akAppendStreaming() ) {
+    ok = streamParts( item );
+  } else {
+    ok = readParts( item );
+  }
+  if ( !ok ) {
+    return false;
+  }
+
+  // Preprocessing
+  const bool doPreprocessing = PreprocessorManager::instance()->isActive();
+  if ( doPreprocessing ) {
+    Part hiddenAttribute;
+    hiddenAttribute.setPimItemId( item.id() );
+    hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
+    hiddenAttribute.setData( QByteArray() );
+    // TODO: Handle errors? Technically, this is not a critical issue as no data are lost
+    PartHelper::insert( &hiddenAttribute );
+  }
+
+  // All SQL is done, let's commit!
+  if ( !transaction.commit() ) {
+    return failureResponse( "Failed to commit transaction" );
+  }
+
+  DataStore::self()->notificationCollector()->itemAdded( item, col );
+
+  if ( doPreprocessing ) {
+    // enqueue the item for preprocessing
+    PreprocessorManager::instance()->beginHandleItem( item, db );
+  }
+
+  // ...aaaaaand done.
+  Response response;
+  response.setTag( tag() );
+  response.setUserDefined();
+  response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
+  Q_EMIT responseAvailable( response );
+
+  response.setSuccess();
+  response.setString( "Append completed" );
+  Q_EMIT responseAvailable( response );
+  return true;
 }

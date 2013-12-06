@@ -22,7 +22,7 @@
 ClientCapabilities::ClientCapabilities()
   : m_notificationMessageVersion( 0 )
   , m_noPayloadPath( false )
-
+  , m_akAppendStreaming( false )
 {
 }
 
@@ -52,4 +52,14 @@ bool ClientCapabilities::noPayloadPath() const
 void ClientCapabilities::setNoPayloadPath( bool noPayloadPath )
 {
   m_noPayloadPath = noPayloadPath;
+}
+
+bool ClientCapabilities::akAppendStreaming() const
+{
+  return m_akAppendStreaming;
+}
+
+void ClientCapabilities::setAkAppendStreaming(bool akAppendStreaming)
+{
+  m_akAppendStreaming = akAppendStreaming;
 }

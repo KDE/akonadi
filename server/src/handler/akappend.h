@@ -24,6 +24,7 @@
 
 #include <QtCore/QDateTime>
 
+class QTemporaryFile;
 namespace Akonadi {
 
 /**
@@ -45,14 +46,15 @@ public:
     bool parseStream();
 
 protected:
-    bool commit();
+    bool buildPimItem( PimItem &item,
+                       const QByteArray &mailbox, qint64 size,
+                       const QList<QByteArray> &flags,
+                       const QDateTime &dateTime,
+                       QList<QByteArray> &itemFlags );
 
-private:
-    qint64 m_size;
-    QVector<Part> m_parts;
-    QByteArray m_mailbox;
-    QDateTime m_dateTime;
-    QList<QByteArray> m_flags;
+    bool readParts( const PimItem &item );
+    bool streamParts( const PimItem &item );
+
 };
 
 }
