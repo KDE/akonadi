@@ -56,10 +56,7 @@ bool AkAppend::buildPimItem( PimItem &item, const QByteArray &mailbox, qint64 si
 {
     Response response;
 
-    DataStore *db = connection()->storageBackend();
-    Transaction transaction( db );
-
-    Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
+    const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
     if ( !col.isValid() ) {
       throw HandlerException( QByteArray( "Unknown collection for '" ) + mailbox + QByteArray( "'." ) );
     }
