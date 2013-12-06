@@ -45,7 +45,6 @@
 
 #include <algorithm>
 #include <functional>
-#include <boost/graph/graph_concepts.hpp>
 
 using namespace Akonadi;
 
