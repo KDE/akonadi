@@ -53,7 +53,6 @@ protected:
                        QList<QByteArray> &itemFlags );
 
     bool readParts( const PimItem &item );
-    bool streamParts( const PimItem &item );
 
 };
 

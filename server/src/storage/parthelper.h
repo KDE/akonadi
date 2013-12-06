@@ -107,7 +107,23 @@ namespace PartHelper
    * Read filename from @p data and returns absolute filepath
    */
   QString resolveAbsolutePath( const QByteArray &data );
-}
+
+  /**
+   * Reads parts data from @p streamParser and stores them directly into Akonadi
+   * and external files if necessary
+   *
+   * @param command Name of the part + version (NS:NAME[version])
+   * @param streamParser
+   * @param item Parent item
+   * @param checkExists Check whether the part already exists in Akonadi
+   * @param partName Returns name of the processed part
+   * @param partSizes Returns size of the part
+   * @param error Returns error string, if any error occurs
+   */
+  bool storeStreamedParts( const QByteArray &command, ImapStreamParser* streamParser,
+                           const PimItem &item, bool checkExists,
+                           QByteArray &partName, qint64 &partSize, QByteArray &error );
+};
 
 }
 

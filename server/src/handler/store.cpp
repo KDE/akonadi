@@ -45,6 +45,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <boost/graph/graph_concepts.hpp>
 
 using namespace Akonadi;
 
@@ -255,94 +256,14 @@ bool Store::parseStream()
     } else if ( command == AKONADI_CMD_COLLECTION ) {
       throw HandlerException( "Item moving via STORE is deprecated, update your Akonadi client" );
     } else { // parts/attributes
-      // obtain and configure the part object
-      int partVersion = 0;
-      QByteArray partName;
-      ImapParser::splitVersionedKey( command, partName, partVersion );
+     QByteArray partName, error;
+     qint64 partSize;
+     if ( !PartHelper::storeStreamedParts( command, m_streamParser, item, true, partName, partSize, error ) ) {
+       return failureResponse( error );
+     }
 
-      const PartType partType = PartTypeHelper::fromFqName( partName );
-
-      SelectQueryBuilder<Part> qb;
-      qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, item.id() );
-      qb.addValueCondition( Part::partTypeIdColumn(), Query::Equals, partType.id() );
-      if ( !qb.exec() ) {
-        return failureResponse( "Unable to check item part existence" );
-      }
-      Part::List result = qb.result();
-      Part part;
-      if ( !result.isEmpty() ) {
-        part = result.first();
-      }
-      part.setPartType( partType );
-      part.setVersion( partVersion );
-      part.setPimItemId( item.id() );
-
-      QByteArray value;
-      if ( m_streamParser->hasLiteral() ) {
-        const qint64 dataSize = m_streamParser->remainingLiteralSize();
-        if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
-          partSizes += dataSize;
-        }
-        const bool storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
-        //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
-        if ( storeInFile ) {
-          // use first part as value for the initial insert into / update to the database.
-          // this will give us a proper filename to stream the rest of the parts contents into
-          // NOTE: we have to set the correct size (== dataSize) directly
-          value = m_streamParser->readLiteralPart();
-         // akDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
-
-          if ( part.isValid() ) {
-            PartHelper::update( &part, value, dataSize );
-          } else {
-//             akDebug() << "insert from Store::handleLine";
-            part.setData( value );
-            part.setDatasize( dataSize );
-            if ( !PartHelper::insert( &part ) ) {
-              return failureResponse( "Unable to add item part" );
-            }
-          }
-
-          //the actual streaming code for the remaining parts:
-          // reads from the parser, writes immediately to the file
-          QFile partFile( PartHelper::resolveAbsolutePath( part.data() ) );
-          try {
-            PartHelper::streamToFile( m_streamParser, partFile, QIODevice::WriteOnly | QIODevice::Append );
-          } catch ( const PartHelperException &e ) {
-            return failureResponse( e.what() );
-          }
-
-          changes << partName;
-          continue;
-        } else { // not store in file
-          //don't write in streaming way as the data goes to the database
-          while ( !m_streamParser->atLiteralEnd() ) {
-            value += m_streamParser->readLiteralPart();
-          }
-        }
-      } else { //not a literal
-        value = m_streamParser->readString();
-        if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
-          partSizes += value.size();
-        }
-      }
-
-      // only relevant for non-literals or non-external literals
-      const QByteArray origData = PartHelper::translateData( part );
-      if ( origData != value ) {
-        if ( part.isValid() ) {
-          PartHelper::update( &part, value, value.size() );
-        } else {
-//           akDebug() << "insert from Store::handleLine: " << value.left(100);
-          part.setData( value );
-          part.setDatasize( value.size() );
-          if ( !PartHelper::insert( &part ) ) {
-            return failureResponse( "Unable to add item part" );
-          }
-        }
-        changes << partName;
-      }
-
+     changes << partName;
+     partSizes += partSize;
     } // parts/attribute modification
   }
 

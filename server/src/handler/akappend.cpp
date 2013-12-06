@@ -187,61 +187,6 @@ bool AkAppend::readParts( const PimItem &pimItem )
 
 }
 
-bool AkAppend::streamParts( const PimItem &pimItem )
-{
-  QList<QByteArray> list = m_streamParser->readParenthesizedList();
-  while ( !list.isEmpty() ) {
-    const QByteArray partName = list.takeFirst();
-    const PartType type = PartTypeHelper::fromFqName( partName );
-    QByteArray value;
-
-    Part part;
-    part.setPimItemId( pimItem.id() );
-    part.setPartType( type );
-    part.setVersion( 0 );
-    part.setExternal( false );
-
-    if ( m_streamParser->hasLiteral() ) {
-      const qint64 dataSize = m_streamParser->remainingLiteralSize();
-      part.setDatasize( dataSize );
-
-      if ( dataSize > DbConfig::configuredDatabase()->sizeThreshold() ) {
-        // Read first part of the data, so that we can send it in with the INSERT
-        // query. Since dataSize is already set to be more than treshold, PartHelper
-        // will automatically create the file for us and set it in part.data
-        value = m_streamParser->readLiteralPart();
-        part.setData( value );
-        if ( !PartHelper::insert( &part ) ) {
-          return failureResponse( "Unable to append item part" );
-        }
-
-        QFile partFile( PartHelper::fileNameForPart( &part ) );
-        try {
-          PartHelper::streamToFile( m_streamParser, partFile, QIODevice::WriteOnly | QIODevice::Append );
-        } catch ( const PartHelperException &e ) {
-          return failureResponse( e.what() );
-        }
-        continue;
-      } else {
-        while ( !m_streamParser->atLiteralEnd() ) {
-          value += m_streamParser->readLiteralPart();
-        }
-        part.setData( value );
-      }
-    } else {
-        // Not literal. Can this happen?
-        value = m_streamParser->readString();
-    }
-
-    // Only relevant for non-literal and non-external parts
-    part.setData( value );
-    part.setDatasize( value.size() );
-    if ( !PartHelper::insert( &part ) ) {
-      return failureResponse( "Unable to add item part" );
-    }
-  }
-}
-
 bool AkAppend::parseStream()
 {
     // Arguments:  mailbox name
@@ -304,14 +249,23 @@ bool AkAppend::parseStream()
   }
 
   // Handle individual parts
-  bool ok = false;
   if ( connection()->capabilities().akAppendStreaming() ) {
-    ok = streamParts( item );
+    QByteArray error, partName /* unused */;
+    qint64 partSize; /* unused */
+    m_streamParser->beginList();
+    while ( !m_streamParser->atListEnd() ) {
+      QByteArray command = m_streamParser->readString();
+      if ( command.isEmpty() ) {
+        throw HandlerException( "Syntax error" );
+      }
+      if ( !PartHelper::storeStreamedParts( command, m_streamParser, item, false, partName, partSize, error ) ) {
+        return failureResponse( error );
+      }
+    }
   } else {
-    ok = readParts( item );
-  }
-  if ( !ok ) {
-    return false;
+    if ( !readParts( item ) ) {
+      return false;
+    }
   }
 
   // Preprocessing
