@@ -52,7 +52,7 @@ protected:
                        const QDateTime &dateTime,
                        QList<QByteArray> &itemFlags );
 
-    bool readParts( const PimItem &item );
+    bool readParts( PimItem &item );
 
 };
 

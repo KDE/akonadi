@@ -120,7 +120,7 @@ bool AkAppend::buildPimItem( PimItem &item, const QByteArray &mailbox, qint64 si
 }
 
 // This is used for clients that don't support item streaming
-bool AkAppend::readParts( const PimItem &pimItem )
+bool AkAppend::readParts( PimItem &pimItem )
 {
 
   // parse part specification
@@ -129,6 +129,8 @@ bool AkAppend::readParts( const PimItem &pimItem )
   qint64 partSize = -1;
   qint64 partSizes = 0;
   bool ok = false;
+
+  qint64 realSize = pimItem.size();
 
   const QList<QByteArray> list = m_streamParser->readParenthesizedList();
   Q_FOREACH ( const QByteArray &item, list ) {
@@ -154,8 +156,7 @@ bool AkAppend::readParts( const PimItem &pimItem )
     }
   }
 
-  // FIXME: Why would we do this? We don't trust clients sending correct size?
-  //m_size = qMax( partSizes, m_size );
+  realSize = qMax( partSizes, realSize );
 
   const QByteArray allParts = m_streamParser->readString();
 
@@ -178,6 +179,11 @@ bool AkAppend::readParts( const PimItem &pimItem )
     }
 
     pos += partSpec.second.first;
+  }
+
+  if ( realSize != pimItem.size() ) {
+    pimItem.setSize( realSize );
+    pimItem.update();
   }
 
   return true;
@@ -245,9 +251,10 @@ bool AkAppend::parseStream()
   }
 
   // Handle individual parts
+  qint64 partSizes = 0;
   if ( connection()->capabilities().akAppendStreaming() ) {
     QByteArray error, partName /* unused */;
-    qint64 partSize; /* unused */
+    qint64 partSize;
     m_streamParser->beginList();
     while ( !m_streamParser->atListEnd() ) {
       QByteArray command = m_streamParser->readString();
@@ -257,7 +264,15 @@ bool AkAppend::parseStream()
       if ( !PartHelper::storeStreamedParts( command, m_streamParser, item, false, partName, partSize, error ) ) {
         return failureResponse( error );
       }
+      partSizes += partSize;
     }
+
+    // TODO: Try to avoid this addition query
+    if ( partSizes > item.size() ) {
+      item.setSize( size );
+      item.update();
+    }
+
   } else {
     if ( !readParts( item ) ) {
       return false;
