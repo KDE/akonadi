@@ -25,6 +25,7 @@
 #include "job_p.h"
 #include "servermanager.h"
 #include "servermanager_p.h"
+#include "protocolhelper_p.h"
 #include "xdgbasedirs_p.h"
 
 #include <kdebug.h>
@@ -51,6 +52,11 @@
 using namespace Akonadi;
 
 //@cond PRIVATE
+
+static const QList<QByteArray> sCapabilities = QList<QByteArray>()
+        << "NOTIFY 2"
+        << "NOPAYLOADPATH"
+        << "AKAPPENDSTREAMING";
 
 void SessionPrivate::startNext()
 {
@@ -194,7 +200,7 @@ void SessionPrivate::dataReceived()
       // handle login response
       if ( parser->tag() == QByteArray( "0" ) ) {
         if ( parser->data().startsWith( "OK" ) ) { //krazy:exclude=strings
-          writeData("1 CAPABILITY (NOTIFY 2 NOPAYLOADPATH)");
+          writeData("1 CAPABILITY (" + ImapParser::join( sCapabilities, " " ) + ")");
         } else {
           kWarning() << "Unable to login to Akonadi server:" << parser->data();
           socket->close();
