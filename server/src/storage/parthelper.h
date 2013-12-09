@@ -123,7 +123,7 @@ namespace PartHelper
   bool storeStreamedParts( const QByteArray &command, ImapStreamParser* streamParser,
                            const PimItem &item, bool checkExists,
                            QByteArray &partName, qint64 &partSize, QByteArray &error );
-};
+}
 
 }
 
