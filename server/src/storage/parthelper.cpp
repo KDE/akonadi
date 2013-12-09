@@ -19,13 +19,16 @@
  ***************************************************************************/
 
 #include "parthelper.h"
-#include <akdebug.h>
+#include "akdebug.h"
 #include "entities.h"
 #include "selectquerybuilder.h"
 #include "dbconfig.h"
+#include "parttypehelper.h"
 #include "imapstreamparser.h"
 #include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
+#include <libs/imapparser_p.h>
+#include <libs/protocol_p.h>
 
 #include <QDir>
 #include <QFile>
@@ -297,4 +300,106 @@ QString PartHelper::resolveAbsolutePath( const QByteArray &data )
     }
 
     return fileName;
+}
+
+bool PartHelper::storeStreamedParts( const QByteArray &command,
+                                     ImapStreamParser* streamParser,
+                                     const PimItem &item, bool checkExists,
+                                     QByteArray &partName, qint64 &partSize,
+                                     QByteArray &error )
+{
+  int partVersion = 0;
+  partSize = 0;
+  ImapParser::splitVersionedKey( command, partName, partVersion );
+
+  const PartType partType = PartTypeHelper::fromFqName( partName );
+
+  Part part;
+
+  if ( checkExists ) {
+    SelectQueryBuilder<Part> qb;
+    qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, item.id() );
+    qb.addValueCondition( Part::partTypeIdColumn(), Query::Equals, partType.id() );
+    if ( !qb.exec() ) {
+      error = "Unable to check item part existence";
+      return false;
+    }
+
+    Part::List result = qb.result();
+    if ( !result.isEmpty() ) {
+      part = result.first();
+    }
+  }
+
+  part.setPartType( partType );
+  part.setVersion( partVersion );
+  part.setPimItemId( item.id() );
+
+  QByteArray value;
+  if ( streamParser->hasLiteral() ) {
+    const qint64 dataSize = streamParser->remainingLiteralSize();
+    if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
+      partSize = dataSize;
+    }
+    const bool storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
+    //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
+    if ( storeInFile ) {
+      // use first part as value for the initial insert into / update to the database.
+      // this will give us a proper filename to stream the rest of the parts contents into
+      // NOTE: we have to set the correct size (== dataSize) directly
+      value = streamParser->readLiteralPart();
+      // akDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
+
+      if ( part.isValid() ) {
+        PartHelper::update( &part, value, dataSize );
+      } else {
+//             akDebug() << "insert from Store::handleLine";
+        part.setData( value );
+        part.setDatasize( dataSize );
+        if ( !PartHelper::insert( &part ) ) {
+          error = "Unable to add item part";
+          return false;
+        }
+      }
+
+      //the actual streaming code for the remaining parts:
+      // reads from the parser, writes immediately to the file
+      QFile partFile( PartHelper::resolveAbsolutePath( part.data() ) );
+      try {
+        PartHelper::streamToFile( streamParser, partFile, QIODevice::WriteOnly | QIODevice::Append );
+      } catch ( const PartHelperException &e ) {
+        error = e.what();
+        return false;
+      }
+      return true;
+    } else { // not store in file
+      //don't write in streaming way as the data goes to the database
+      while ( !streamParser->atLiteralEnd() ) {
+        value += streamParser->readLiteralPart();
+      }
+    }
+  } else { //not a literal
+    value = streamParser->readString();
+    if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
+      partSize = value.size();
+    }
+  }
+
+  // only relevant for non-literals or non-external literals
+  const QByteArray origData = PartHelper::translateData( part );
+  if ( origData != value ) {
+    if ( part.isValid() ) {
+      PartHelper::update( &part, value, value.size() );
+    } else {
+//           akDebug() << "insert from Store::handleLine: " << value.left(100);
+      part.setData( value );
+      part.setDatasize( value.size() );
+      if ( !PartHelper::insert( &part ) ) {
+        error = "Unable to add item part";
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
