@@ -17,61 +17,48 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SEARCHRESULTSRETRIEVER_H
-#define AKONADI_SEARCHRESULTSRETRIEVER_H
+#ifndef AKONADI_AGENTSEARCHREQUEST_H
+#define AKONADI_AGENTSEARCHREQUEST_H
 
+#include <QObject>
 #include <QVector>
 #include <QStringList>
-#include <QMultiMap>
-
-#include "exception.h"
-#include "scope.h"
 
 namespace Akonadi
 {
 
 class AkonadiConnection;
 
-class SearchRequest
+class AgentSearchRequest: public QObject
 {
+    Q_OBJECT
+
   public:
-    SearchRequest()
-    : processed( false )
-    {
-    }
-
-    QByteArray id;
-    QString query;
-    QString resourceId;
-    qint64 collectionId;
-    QStringList mimeTypes;
-    QString errorMsg;
-    uint processed : 1;
-
-    QSet<qint64> result;
-};
-
-class SearchResultsRetriever
-{
-  public:
-    SearchResultsRetriever( AkonadiConnection *connection );
-    ~SearchResultsRetriever();
+    AgentSearchRequest( AkonadiConnection *connection );
+    ~AgentSearchRequest();
 
     void setQuery( const QString &query );
+    QString query() const;
     void setCollections( const QVector<qint64> &collections );
+    QVector<qint64> collections() const;
     void setMimeTypes( const QStringList &mimeTypes );
+    QStringList mimeTypes() const;
 
-    QSet<qint64> exec( bool *ok = 0 );
+    AkonadiConnection *connection() const;
+
+    void exec();
+
+  Q_SIGNALS:
+    void resultsAvailable( const QSet<qint64> &results );
 
   private:
     AkonadiConnection *mConnection;
     QString mQuery;
     QVector<qint64> mCollections;
     QStringList mMimeTypes;
-};
 
-AKONADI_EXCEPTION_MAKE_INSTANCE( SearchResultsRetrieverException );
+};
 
 }
 
-#endif // AKONADI_SEARCHRESULTSRETRIEVER_H
+#endif // AKONADI_AGENTSEARCHREQUEST_H

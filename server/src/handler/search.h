@@ -23,6 +23,7 @@
 #include <handler.h>
 
 #include <QtCore/QVector>
+#include <QtCore/QSet>
 
 namespace Akonadi {
 
@@ -47,8 +48,13 @@ class Search : public Handler
 
     bool parseStream();
 
+  private Q_SLOTS:
+    void slotResultsAvailable( const QSet<qint64> &results );
+
   private:
     QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors );
+
+    QSet<qint64> mAllResults;
 };
 
 }

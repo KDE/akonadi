@@ -139,10 +139,11 @@ set(libakonadiprivate_SRCS
   src/handler/store.cpp
   src/handler/transaction.cpp
   src/search/agentsearchengine.cpp
-  src/search/searchinstance.cpp
+  src/search/agentsearchinstance.cpp
+  src/search/agentsearchmanager.cpp
+  src/search/agentsearchmanagerthread.cpp
+  src/search/agentsearchrequest.cpp
   src/search/searchmanager.cpp
-  src/search/searchresultsretrievaljob.cpp
-  src/search/searchresultsretriever.cpp
 
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp

@@ -17,32 +17,31 @@
     02110-1301, USA.
 */
 
-#include "searchinstance.h"
+#include "agentsearchinstance.h"
 #include "agentsearchinterface.h"
 #include "akdbus.h"
 
 using namespace Akonadi;
 
-SearchInstance::SearchInstance( const QString &id )
- : QObject()
- , mId( id )
+AgentSearchInstance::AgentSearchInstance( const QString &id )
+ : mId( id )
  , mInterface( 0 )
 {
 }
 
-SearchInstance::~SearchInstance()
+AgentSearchInstance::~AgentSearchInstance()
 {
+  delete mInterface;
 }
 
-bool SearchInstance::init()
+bool AgentSearchInstance::init()
 {
   Q_ASSERT( !mInterface );
 
   mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
       AkDBus::agentServiceName( mId, AkDBus::Agent ),
       QLatin1String( "/Search" ),
-      QDBusConnection::sessionBus(),
-      this );
+      QDBusConnection::sessionBus() );
 
   if ( !mInterface || !mInterface->isValid() ) {
     delete mInterface;
@@ -53,12 +52,13 @@ bool SearchInstance::init()
   return true;
 }
 
-void SearchInstance::search( const QByteArray &searchId, const QString &query, qlonglong collectionId )
+void AgentSearchInstance::search( const QByteArray &searchId, const QString &query,
+                                  qlonglong collectionId )
 {
   mInterface->search( searchId, query, collectionId );
 }
 
-OrgFreedesktopAkonadiAgentSearchInterface* SearchInstance::interface() const
+OrgFreedesktopAkonadiAgentSearchInterface* AgentSearchInstance::interface() const
 {
   return mInterface;
 }

@@ -21,29 +21,16 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <QStringList>
-#include <QVector>
 #include <QObject>
-#include <QMutex>
-#include <QReadWriteLock>
-#include <QWaitCondition>
-#include <QMap>
+#include <QVector>
 #include <QDBusConnection>
-
-class OrgFreedesktopAkonadiAgentSearchInterface;
 
 namespace Akonadi {
 
-class AkonadiConnection;
-
 class NotificationCollector;
-
 class AbstractSearchEngine;
 class AbstractSearchPlugin;
 class Collection;
-class SearchInstance;
-class SearchRequest;
-class SearchResultsRetrievalJob;
 
 /**
  * SearchManager creates and deletes persistent searches for all currently
@@ -95,48 +82,17 @@ class SearchManager : public QObject
      */
     void updateSearch( const Collection &collection, NotificationCollector *collector );
 
-    /**
-     * Queries all available backends and plugins and returns list of Item IDs that match.
-     *
-     * This method is reentrant and blocks.
-     */
-    QSet<qint64> search( SearchRequest *task );
-
-    void searchResultsAvailable( const QByteArray &searchId, const QSet<qint64> ids,
-                                 AkonadiConnection *connection );
-
   private Q_SLOTS:
     void addSearchInternal( const Collection &collection );
     void removeSearchInternal( qint64 id );
 
-    void processRequest();
-    void requestCompleted( SearchRequest *request, const QSet<qint64> &result );
-
-  Q_SIGNALS:
-    void requestAdded();
-
   private:
-    void loadSearchPlugins();
-
     static SearchManager *sInstance;
 
     QVector<AbstractSearchEngine *> mEngines;
-    QVector<AbstractSearchPlugin *> mPlugins;
-
-    /// Protects mPendingRequests and every Request object posted to it
-    QReadWriteLock *mLock;
-    /// Used to let requesting threads wait until the request has been processed
-    QWaitCondition *mWaitCondition;
-    /// Pending requests queues, one per resource
-    QHash<QString, QList<SearchRequest *> > mPendingRequests;
-    /// Currently running jobs, one per resource
-    QHash<QString, SearchResultsRetrievalJob *> mCurrentJobs;
 
     // agents dbus interface cache
-    QHash<QString, SearchInstance *> mSearchInstances;
     QDBusConnection mDBusConnection;
-    QMutex *mInstancesLock;
-
 };
 
 }

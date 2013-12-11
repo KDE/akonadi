@@ -17,34 +17,22 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SEARCHINSTANCE_H
-#define AKONADI_SEARCHINSTANCE_H
+#include "agentsearchmanagerthread.h"
+#include "agentsearchmanager.h"
 
-#include <QObject>
+#include <QCoreApplication>
 
-class OrgFreedesktopAkonadiAgentSearchInterface;
+using namespace Akonadi;
 
-namespace Akonadi {
-
-class SearchInstance : public QObject
+AgentSearchManagerThread::AgentSearchManagerThread( QObject *parent )
+  : QThread(parent)
 {
-    Q_OBJECT
-
-  public:
-    SearchInstance( const QString &id );
-    virtual ~SearchInstance();
-
-    bool init();
-
-    void search( const QByteArray &searchId, const QString &query,
-                 qlonglong collectionId );
-
-    OrgFreedesktopAkonadiAgentSearchInterface *interface() const;
-
-  private:
-    QString mId;
-    OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
-};
+  // make sure we are created from the main thread, ie. before all other threads start to potentially use us
+  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 }
 
-#endif // AKONADI_SEARCHINSTANCE_H
+void AgentSearchManagerThread::run()
+{
+  AgentSearchManager mgr;
+  exec();
+}

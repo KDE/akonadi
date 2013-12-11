@@ -27,10 +27,9 @@
 #include "nepomuksearch.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
+#include "search/agentsearchrequest.h"
 
-#include "search/searchresultsretriever.h"
-
-#include <libs/protocol_p.h>
+#include "libs/protocol_p.h"
 
 #include <QtCore/QStringList>
 
@@ -98,27 +97,25 @@ bool Search::parseStream()
   akDebug() << "\tMimeTypes:" << mimeTypes;
   akDebug() << "\tCollections:" << collections;
 
-  SearchResultsRetriever retriever( connection() );
-  retriever.setCollections( collections );
-  retriever.setMimeTypes( mimeTypes );
-  retriever.setQuery( queryString );
-  bool ok = false;
-  const QSet<qint64> uids = retriever.exec( &ok );
-  if ( !ok ) {
-    throw HandlerException( "Error occured during search" );
-  }
+  AgentSearchRequest request( connection() );
+  request.setCollections( collections );
+  request.setMimeTypes( mimeTypes );
+  request.setQuery( queryString );
+  connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
+           this, SLOT(slotResultsAvailable(QSet<qint64>)) );
+  request.exec();
 
   //akDebug() << "\tResult:" << uids;
-  akDebug() << "\tResult:" << uids.count() << "matches";
+  akDebug() << "\tResult:" << mAllResults.count() << "matches";
 
-  if ( uids.isEmpty() ) {
+  if ( mAllResults.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope
     return successResponse( "SEARCH completed" );
   }
 
   // create imap query
   ImapSet itemSet;
-  itemSet.add( uids );
+  itemSet.add( mAllResults );
   Scope scope( Scope::Uid );
   scope.setUidSet( itemSet );
 
@@ -154,4 +151,13 @@ QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancesto
   }
 
   return recursiveChildren;
+}
+
+void Search::slotResultsAvailable( const QSet<qint64> &results )
+{
+  mAllResults.unite( results );
+
+  // TODO: Fetch and send available results to clients incrementally, so
+  // that they get at least first results from fast resources. while waiting
+  // for the slower ones
 }
