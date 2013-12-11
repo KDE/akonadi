@@ -37,10 +37,6 @@
     pkg_check_modules(Soprano_PKGCONF soprano)
   endif()
 
-  if(WINCE)
-    add_definitions(-DSOPRANO_STATIC_LIBS)
-  endif(WINCE)
-
   find_path(SOPRANO_INCLUDE_DIR 
     NAMES
     soprano/soprano.h

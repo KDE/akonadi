@@ -81,6 +81,7 @@
 #define AKONADI_CMD_X_AKLSUB         "X-AKLSUB"
 
 // Command parameters
+#define AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING "AKAPPENDSTREAMING"
 #define AKONADI_PARAM_ALLATTRIBUTES                "ALLATTR"
 #define AKONADI_PARAM_ANCESTORS                    "ANCESTORS"
 #define AKONADI_PARAM_ATR                          "ATR:"
@@ -111,6 +112,7 @@
 #define AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH     "NOPAYLOADPATH"
 #define AKONADI_PARAM_PARENT                       "PARENT "
 #define AKONADI_PARAM_PERSISTENTSEARCH             "PERSISTENTSEARCH"
+#define AKONADI_PARAM_PARTS                        "PARTS"
 #define AKONADI_PARAM_PLD                          "PLD:"
 #define AKONADI_PARAM_PLD_RFC822                   "PLD:RFC822"
 #define AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG   "QUERYLANGUAGE"

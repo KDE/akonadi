@@ -233,8 +233,15 @@ class QueryBuilder
     qint64 insertId();
 
   private:
+    QString buildQuery();
     QString bindValue( const QVariant &value );
     QString buildWhereCondition( const Query::Condition &cond );
+
+    /**
+     * SQLite does not support JOINs with UPDATE, so we have to convert it into
+     * subqueries
+     */
+    void sqliteAdaptUpdateJoin( Query::Condition &cond );
 
   private:
     QString mTable;

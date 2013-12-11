@@ -46,11 +46,4 @@ class DbIntrospectorPostgreSql : public DbIntrospector
     QString hasIndexQuery( const QString &tableName, const QString &indexName );
 };
 
-class DbIntrospectorVirtuoso : public DbIntrospector
-{
-  public:
-    DbIntrospectorVirtuoso( const QSqlDatabase &database );
-    bool hasIndex( const QString &tableName, const QString &indexName );
-};
-
 #endif // DBINTROSPECTOR_IMPL_H

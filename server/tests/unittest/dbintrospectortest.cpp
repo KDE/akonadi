@@ -39,7 +39,6 @@ class DbIntrospectorTest : public QObject
       QTest::newRow( "mysql" ) << "QMYSQL" << "SHOW INDEXES FROM myTable WHERE `Key_name` = 'myIndex'";
       QTest::newRow( "sqlite" ) << "QSQLITE" << "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='myTable' AND name='myIndex';";
       QTest::newRow( "psql" ) << "QPSQL" << "SELECT indexname FROM pg_catalog.pg_indexes WHERE tablename ilike 'myTable' AND  indexname ilike 'myIndex' UNION SELECT conname FROM pg_catalog.pg_constraint  WHERE conname ilike 'myIndex'";
-      //QTest::newRow( "virtuoso" ) << "QODBC" << ""; not implemented, will assert
     }
 
     void testHasIndexQuery()
@@ -63,7 +62,6 @@ class DbIntrospectorTest : public QObject
       QTest::newRow( "mysql" ) << "QMYSQL" << true;
       QTest::newRow( "sqlite" ) << "QSQLITE" << true;
       QTest::newRow( "psql" ) << "QPSQL" << true;
-      QTest::newRow( "virtuoso" ) << "QODBC" << false;
     }
 
     void testHasIndex()

@@ -36,11 +36,6 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
       , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
     <xsl:if test="column[@type = 'QDateTime']">
-#ifdef Q_OS_WINCE // on wince, QDateTime is two int's
-    <xsl:for-each select="column[@type = 'QDateTime']">
-      , <xsl:value-of select="@name"/>()
-    </xsl:for-each>
-#endif
     </xsl:if>
     <xsl:for-each select="column[@type = 'QString']">
       , <xsl:value-of select="@name"/>()
@@ -49,11 +44,10 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
       , <xsl:value-of select="@name"/>()
     </xsl:for-each>
     <xsl:if test="column[@type = 'QDateTime']">
-#ifndef Q_OS_WINCE // on non-wince, QDateTime is one int
+    // on non-wince, QDateTime is one int
     <xsl:for-each select="column[@type = 'QDateTime']">
       , <xsl:value-of select="@name"/>()
     </xsl:for-each>
-#endif
     </xsl:if>
     <xsl:for-each select="column[@type = 'int']">
       , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose> )
@@ -72,11 +66,6 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     qint64 <xsl:value-of select="@name"/>;
     </xsl:for-each>
     <xsl:if test="column[@type = 'QDateTime']">
-#ifdef Q_OS_WINCE // on wince, QDateTime is two int's
-    <xsl:for-each select="column[@type = 'QDateTime']">
-    QDateTime <xsl:value-of select="@name"/>;
-    </xsl:for-each>
-#endif
     </xsl:if>
     <xsl:for-each select="column[@type = 'QString']">
     QString <xsl:value-of select="@name"/>;
@@ -85,11 +74,10 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     QByteArray <xsl:value-of select="@name"/>;
     </xsl:for-each>
     <xsl:if test="column[@type = 'QDateTime']">
-#ifndef Q_OS_WINCE // on non-wince, QDateTime is one int
+    // on non-wince, QDateTime is one int
     <xsl:for-each select="column[@type = 'QDateTime']">
     QDateTime <xsl:value-of select="@name"/>;
     </xsl:for-each>
-#endif
     </xsl:if>
     <xsl:for-each select="column[@type = 'int']">
     int <xsl:value-of select="@name"/>;

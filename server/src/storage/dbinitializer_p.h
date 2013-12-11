@@ -61,17 +61,4 @@ class DbInitializerPostgreSql : public DbInitializer
     virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
 };
 
-class DbInitializerVirtuoso : public DbInitializer
-{
-  public:
-    DbInitializerVirtuoso( const QSqlDatabase &database );
-  protected:
-    QString sqlType( const QString &type, int size ) const;
-    QString sqlValue( const QString &type, const QString &value ) const;
-
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
-    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
-};
-
 #endif

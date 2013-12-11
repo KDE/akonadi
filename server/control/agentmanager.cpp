@@ -51,7 +51,7 @@
 
 using Akonadi::ProcessControl;
 
-#if defined(Q_WS_MAEMO_5) || defined(_WIN32_WCE)
+#if defined(Q_WS_MAEMO_5)
 static bool enableAgentServerDefault = true;
 #else
 static bool enableAgentServerDefault = false;

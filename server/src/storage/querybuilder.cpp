@@ -142,7 +142,42 @@ QSqlQuery &QueryBuilder::query()
   return mQuery;
 }
 
-bool QueryBuilder::exec()
+void QueryBuilder::sqliteAdaptUpdateJoin( Query::Condition &condition )
+{
+  // FIXME: This does not cover all cases by far. It however can handle most
+  // (probably all) of the update-join queries we do in Akonadi and convert them
+  // properly into a SQLite-compatible query. Better than nothing ;-)
+
+  if ( !condition.mSubConditions.isEmpty() ) {
+    for ( int i = condition.mSubConditions.count() - 1; i >= 0; --i ) {
+      sqliteAdaptUpdateJoin( condition.mSubConditions[i] );
+    }
+    return;
+  }
+
+  QString table;
+  if ( condition.mColumn.contains( QLatin1Char( '.' ) ) ) {
+    table = condition.mColumn.left( condition.mColumn.indexOf( QLatin1Char( '.' ) ) );
+  } else {
+    return;
+  }
+
+  if ( !mJoinedTables.contains( table ) ) {
+    return;
+  }
+
+  const QPair<JoinType, Query::Condition> joinCondition = mJoins.value( table );
+
+  QueryBuilder qb( table, Select );
+  qb.addColumn( condition.mColumn );
+  qb.addCondition( joinCondition.second );
+
+  // Convert the subquery to string
+  condition.mColumn = QLatin1String( "( " ) + qb.buildQuery() + QLatin1String( " )" );
+}
+
+
+QString QueryBuilder::buildQuery()
 {
   QString statement;
 
@@ -155,9 +190,6 @@ bool QueryBuilder::exec()
     statement += QLatin1String( "SELECT " );
     if ( mDistinct ) {
       statement += QLatin1String( "DISTINCT " );
-    }
-    if ( mDatabaseType == DbType::Virtuoso && mLimit > 0 ) {
-      statement += QLatin1Literal( "TOP " ) + QString::number( mLimit ) + QLatin1Char( ' ' );
     }
     Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
     statement += mColumns.join( QLatin1String( ", " ) );
@@ -200,12 +232,16 @@ bool QueryBuilder::exec()
   }
   case Update:
   {
-    ///TODO: fix joined Update tables for SQLite by using subqueries
     // put the ON condition into the WHERE part of the UPDATE query
-    Q_FOREACH ( const QString &table, mJoinedTables ) {
-      QPair< JoinType, Query::Condition > join = mJoins.value( table );
-      Q_ASSERT( join.first == InnerJoin );
-      whereCondition.addCondition( join.second );
+    if ( mDatabaseType != DbType::Sqlite ) {
+      Q_FOREACH ( const QString &table, mJoinedTables ) {
+        const QPair< JoinType, Query::Condition > &join = mJoins.value( table );
+        Q_ASSERT( join.first == InnerJoin );
+        whereCondition.addCondition( join.second );
+      }
+    } else {
+      // Note: this will modify the whereCondition
+      sqliteAdaptUpdateJoin( whereCondition );
     }
 
     statement += QLatin1String( "UPDATE " );
@@ -275,9 +311,16 @@ bool QueryBuilder::exec()
     statement += orderStmts.join( QLatin1String( ", " ) );
   }
 
-  if ( mLimit > 0 && mDatabaseType != DbType::Virtuoso ) {
+  if ( mLimit > 0 ) {
     statement += QLatin1Literal( " LIMIT " ) + QString::number( mLimit );
   }
+
+  return statement;
+}
+
+bool QueryBuilder::exec()
+{
+  const QString statement = buildQuery();
 
 #ifndef QUERYBUILDER_UNITTEST
   if ( QueryCache::contains( statement ) ) {

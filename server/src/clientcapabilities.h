@@ -44,10 +44,14 @@ public:
   void setServerSideSearch( bool serverSideSearch );
   bool serverSideSearch() const;
 
+  bool akAppendStreaming() const;
+  void setAkAppendStreaming( bool akAppendStreaming );
+
 private:
   int m_notificationMessageVersion;
   int m_noPayloadPath : 1;
   int m_serverSideSearch : 1;
+  int m_akAppendStreaming : 1;
 };
 
 #endif // CLIENTCAPABILITIES_H

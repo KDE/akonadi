@@ -46,8 +46,6 @@
 
 static bool startServer()
 {
-  //Needed for wince build
-  #undef interface
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Control ) )
        || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Server ) ) ) {
     qWarning() << "Akonadi is already running.";
@@ -131,7 +129,6 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "fsck" ) );
 
   QStringList arguments = QCoreApplication::instance()->arguments();
-#ifndef _WIN32_WCE
   if ( AkApplication::hasInstanceIdentifier() ) { // HACK: we should port all of this to boost::program_options...
     arguments.removeFirst();
     arguments.removeFirst();
@@ -143,21 +140,6 @@ int main( int argc, char **argv )
     app.printUsage();
     return 2;
   }
-#else
-    if ( argc > 1 ) {
-      if ( strcmp( argv[1],"start" ) == 0 ) {
-        arguments.append( QLatin1String( "start" ) );
-      } else if ( strcmp( argv[1],"stop" ) == 0 ) {
-        arguments.append( QLatin1String( "stop" ) );
-      } else if ( strcmp( argv[1],"restart" ) == 0 ) {
-        arguments.append( QLatin1String( "restart" ) );
-      } else if ( strcmp( argv[1],"status" ) == 0 ) {
-        arguments.append( QLatin1String( "status" ) );
-      }
-    } else {
-      arguments.append( QLatin1String( "start" ) );
-    }
-#endif
 
   if ( arguments[1] == QLatin1String( "start" ) ) {
     if ( !startServer() ) {
@@ -166,13 +148,6 @@ int main( int argc, char **argv )
   } else if ( arguments[1] == QLatin1String( "stop" ) ) {
     if ( !stopServer() ) {
       return 4;
-    } else {
-    //Block until akonadi is shut down
-#ifdef _WIN32_WCE
-        do {
-          Sleep( 100000 );
-        } while ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
-#endif
     }
   } else if ( arguments[1] == QLatin1String( "status" ) ) {
     if ( !statusServer() ) {

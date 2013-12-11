@@ -42,8 +42,6 @@ DbIntrospector::Ptr DbIntrospector::createInstance( const QSqlDatabase &database
     return Ptr( new DbIntrospectorSqlite( database ) );
   case DbType::PostgreSQL:
     return Ptr( new DbIntrospectorPostgreSql( database ) );
-  case DbType::Virtuoso:
-    return Ptr( new DbIntrospectorVirtuoso( database ) );
   case DbType::Unknown:
     break;
   }

@@ -31,10 +31,6 @@
 #include <signal.h>
 #endif
 
-#ifdef Q_OS_WINCE
-#include <windows.h>
-#endif
-
 using namespace Akonadi;
 
 static const int s_maxCrashCount = 2;
@@ -135,25 +131,6 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
     if ( exitCode != 0 ) {
       qWarning( "ProcessControl: Application '%s' returned with exit code %d (%s)",
               qPrintable( mApplication ), exitCode, qPrintable( mProcess.errorString() ) );
-#ifdef Q_OS_WINCE
-        // If Akonadi server crashed clean the registry key for the local socket.
-        // Qt insertes a regitsry key for each local socket opened and checks if a new
-        // socket is opened if some other socket is already bind, if an application
-        // crashes the registry key is not deleted and no local socket can be opened
-        // so try to delete the key if it fails once
-        if ( mApplication == QLatin1String( "akonadiserver" ) && exitCode == 1 ) {
-          HKEY hKey;
-          long rc = RegOpenKeyEx( HKEY_CURRENT_USER, TEXT( "Software\\Trolltech\\Qt\\QLocalServer" ), 0, KEY_ALL_ACCESS, &hKey );
-          if ( rc != ERROR_SUCCESS ) {
-            qWarning() << mApplication << "Tried to open HKCU\\Software\\Trolltech\\Qt\\QLocalServer to delete Key Akonadi";
-          } else {
-            rc =  RegDeleteValue( hKey, TEXT( "Akonadi" ) );
-            if ( rc != ERROR_SUCCESS ) {
-              qWarning() << mApplication << "Could not delete HKCU\\Software\\Trolltech\\Qt\\QLocalServer\\Akonadi";
-            }
-          }
-        }
-#endif
       if ( mPolicy == RestartOnCrash ) {
         if ( mCrashCount > s_maxCrashCount ) {
           qWarning() << mApplication << "crashed too often and will not be restarted!";

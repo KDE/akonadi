@@ -107,7 +107,6 @@ void DbInitializerTest::testRun_data()
   QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false << fks << true;
   QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false << fks << false;
   QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false << fks << true;
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false << fks << false;
 
   DbIntrospector::ForeignKey fk;
   fk.name = QL1S( "myForeignKeyIdentifier" );
@@ -121,7 +120,6 @@ void DbInitializerTest::testRun_data()
   QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks << true;
   QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks << false;
   QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true << fks << true;
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true << fks << false;
 }
 
 void DbInitializerTest::testRun()

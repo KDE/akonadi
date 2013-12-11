@@ -63,21 +63,15 @@ bool Append::commit()
       m_size = qMax( m_size, dataSize );
       storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
       if ( storeInFile ) {
-        if ( !tmpFile.open() ) {
-          storeInFile =  false;
+        try {
+          PartHelper::streamToFile( m_streamParser, tmpFile );
+        } catch ( const PartHelperException &e ) {
+          return failureResponse( e.what() );
         }
-      }
-      while ( !m_streamParser->atLiteralEnd() ) {
-        if ( !storeInFile ) {
+      } else {
+        while ( !m_streamParser->atLiteralEnd() ) {
           m_data += m_streamParser->readLiteralPart();
-        } else {
-          m_data = m_streamParser->readLiteralPart();
-          tmpFile.write( m_data );
         }
-      }
-      if ( storeInFile ) {
-        tmpFile.close();
-        m_data = "";
       }
     } else {
       m_data = m_streamParser->readString();

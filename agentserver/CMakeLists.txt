@@ -8,11 +8,7 @@ set(akonadi_agent_server_srcs
   main.cpp
 )
 
-if(NOT WINCE)
-  add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
-else()
-  add_library(akonadi_agent_server ${akonadi_agent_server_srcs})
-endif()
+add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
 
 target_link_libraries(akonadi_agent_server
   akonadi_shared
@@ -22,45 +18,38 @@ target_link_libraries(akonadi_agent_server
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
 )
 
-if(NOT WINCE)
-  target_link_libraries(akonadi_agent_server ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(akonadi_agent_server ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
-  # Agent plugin launcher
-  set(akonadi_agent_launcher_SRCS
-    agentpluginloader.cpp
-    agentlauncher.cpp
-  )
+# Agent plugin launcher
+set(akonadi_agent_launcher_SRCS
+  agentpluginloader.cpp
+  agentlauncher.cpp
+)
 
-  add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
-  target_link_libraries(akonadi_agent_launcher
-    akonadi_shared
-    ${QT_QTGUI_LIBRARIES}
-    ${AKONADI_SYSTEM_LIBS}
-    ${AKONADI_PROTOCOLINTERNALS_LIBS}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  )
+add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
+target_link_libraries(akonadi_agent_launcher
+  akonadi_shared
+  ${QT_QTGUI_LIBRARIES}
+  ${AKONADI_SYSTEM_LIBS}
+  ${AKONADI_PROTOCOLINTERNALS_LIBS}
+  ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
 
-  if(Q_WS_MAC)
-    set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
-    set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.agentlauncher")
-    set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Akonadi Agent Launcher")
-  endif()
+if(Q_WS_MAC)
+  set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
+  set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.agentlauncher")
+  set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Akonadi Agent Launcher")
 endif()
 
 # Install both helper apps.
-if(NOT WINCE)
-    if(Q_WS_MAC)
-        install(TARGETS akonadi_agent_launcher
-                DESTINATION ${AKONADI_BUNDLE_PATH})
-    else()
-        install(TARGETS akonadi_agent_launcher
-                DESTINATION ${BIN_INSTALL_DIR})
-    endif()
-
-    install(TARGETS akonadi_agent_server
-            DESTINATION ${BIN_INSTALL_DIR})
+if(Q_WS_MAC)
+  install(TARGETS akonadi_agent_launcher
+          DESTINATION ${AKONADI_BUNDLE_PATH})
 else()
-    install(TARGETS akonadi_agent_server
-            DESTINATION ${LIB_INSTALL_DIR})
+  install(TARGETS akonadi_agent_launcher
+          DESTINATION ${BIN_INSTALL_DIR})
 endif()
+
+install(TARGETS akonadi_agent_server
+        DESTINATION ${BIN_INSTALL_DIR})
 

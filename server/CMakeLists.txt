@@ -155,7 +155,6 @@ set(libakonadiprivate_SRCS
   src/storage/dbconfigmysqlembedded.cpp
   src/storage/dbconfigpostgresql.cpp
   src/storage/dbconfigsqlite.cpp
-  src/storage/dbconfigvirtuoso.cpp
   src/storage/dbexception.cpp
   src/storage/dbinitializer.cpp
   src/storage/dbinitializer_p.cpp
@@ -248,14 +247,11 @@ target_link_libraries(akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${AKONADI_SYSTEM_LIBS}
+  ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 if(Soprano_FOUND)
   target_link_libraries(akonadiprivate ${SOPRANO_LIBRARIES})
-endif()
-
-if(NOT WINCE)
-  target_link_libraries(akonadiprivate ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif()
 
 set(akonadiserver_bin_SRCS src/main.cpp)
