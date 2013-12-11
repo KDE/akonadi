@@ -53,7 +53,7 @@ class Search : public Handler
 
   private:
     void searchNepomuk();
-    QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors );
+    QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes );
 
     QSet<qint64> mAllResults;
 };

@@ -85,7 +85,7 @@ bool Search::parseStream()
     QVector<qint64> collections;
     if ( recursive ) {
       Q_FOREACH ( qint64 collection, collectionIds ) {
-        collections << listCollectionsRecursive( QVector<qint64>() <<  collection );
+        collections << listCollectionsRecursive( QVector<qint64>() <<  collection, mimeTypes );
       }
     } else {
       collections = collectionIds;
@@ -123,7 +123,7 @@ bool Search::parseStream()
   FetchHelper fetchHelper( connection(), scope );
   fetchHelper.setStreamParser( m_streamParser );
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Response)) );
+          this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
   if ( !fetchHelper.parseStream( AKONADI_CMD_SEARCH ) ) {
     return false;
@@ -149,21 +149,43 @@ void Search::searchNepomuk()
   }
 }
 
-QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancestors )
+QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes )
 {
   QVector<qint64> recursiveChildren;
   Q_FOREACH ( qint64 ancestor, ancestors ) {
-    SelectQueryBuilder<Collection> qb;
-    qb.addColumn( Collection::idFullColumnName() );
-    qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
-    qb.exec();
-    QVector<qint64> children;
-    Q_FOREACH( const Collection &collection, qb.result() ) {
-      children << collection.id();
+    Query::Condition mimeTypeCondition;
+    mimeTypeCondition.addColumnCondition( CollectionMimeTypeRelation::rightFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
+    // Exclude top-level collections and collections that cannot have items!
+    mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::NotEquals, QLatin1String( "inode/directory" ) );
+    if ( !mimeTypes.isEmpty() ) {
+      mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::In, mimeTypes );
     }
-    if ( !children.isEmpty() ) {
-      recursiveChildren << children;
-      recursiveChildren << listCollectionsRecursive( children );
+
+    QueryBuilder qb( Collection::tableName() );
+    qb.addColumn( Collection::idFullColumnName() );
+    qb.addColumn( MimeType::nameFullColumnName() );
+    qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(), Resource::idFullColumnName(), Collection::resourceIdFullColumnName() );
+    qb.addJoin( QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName() );
+    qb.addJoin( QueryBuilder::LeftJoin, MimeType::tableName(), mimeTypeCondition );
+    if ( ancestor == 0 ) {
+      qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
+    } else {
+      qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
+    }
+    qb.addGroupColumn( Collection::idFullColumnName() );
+    qb.exec();
+
+    QSqlQuery query = qb.query();
+    QVector<qint64> searchChildren;
+    while ( query.next() ) {
+      const qint64 id = query.value( 0 ).toLongLong();
+      searchChildren << id;
+      if ( !query.value( 1 ).isNull() ) {
+        recursiveChildren << id;
+      }
+    }
+    if ( !searchChildren.isEmpty() ) {
+      recursiveChildren << listCollectionsRecursive( searchChildren, mimeTypes );
     }
   }
 
