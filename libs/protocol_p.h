@@ -96,7 +96,6 @@
 #define AKONADI_PARAM_COLLECTIONS                  "COLLECTIONS"
 #define AKONADI_PARAM_MTIME                        "DATETIME"
 #define AKONADI_PARAM_UNDIRTY                      "DIRTY"
-#define AKONADI_PARAM_DONE                         "DONE"
 #define AKONADI_PARAM_EXTERNALPAYLOAD              "EXTERNALPAYLOAD"
 #define AKONADI_PARAM_FLAGS                        "FLAGS"
 #define AKONADI_PARAM_FULLPAYLOAD                  "FULLPAYLOAD"

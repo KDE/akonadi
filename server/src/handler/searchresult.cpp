@@ -43,29 +43,23 @@ SearchResult::~SearchResult()
 bool SearchResult::parseStream()
 {
   const QByteArray searchId = m_streamParser->readString();
-
   if ( mScope.scope() != Scope::Uid && mScope.scope() != Scope::Rid ) {
     fail( searchId, "Only UID or RID scopes are allowed in SEARECH_RESULT" );
     return false;
   }
 
-  if ( m_streamParser->hasString() ) {
-    const QByteArray str = m_streamParser->readString();
-    if ( str == AKONADI_PARAM_DONE ) {
-      // Success, no results
-      AgentSearchManager::instance()->pushResults( searchId, QSet<qint64>(), connection() );
-      successResponse( "Done" );
-      return true;
+  if ( mScope.scope() == Scope::Uid ) {
+    // Handle empty UID set
+    m_streamParser->beginList();
+    if (!m_streamParser->atListEnd()) {
+      mScope.parseScope( m_streamParser );
     }
-
-    fail( searchId, "Invalid argument: expected DONE or UID set" );
+  } else {
+    mScope.parseScope( m_streamParser );
   }
 
-  // sequence set
-  mScope.parseScope( m_streamParser );
-
   QSet<qint64> ids;
-  if ( mScope.scope() == Scope::Rid ) {
+  if ( mScope.scope() == Scope::Rid && !mScope.ridSet().isEmpty() ) {
     QueryBuilder qb( PimItem::tableName() );
     qb.addColumn( PimItem::idFullColumnName() );
     ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
@@ -79,7 +73,7 @@ bool SearchResult::parseStream()
     while ( query.next() ) {
       ids << query.value( 0 ).toLongLong();
     }
-  } else if ( mScope.scope() == Scope::Uid ) {
+  } else if ( mScope.scope() == Scope::Uid && !mScope.uidSet().isEmpty() ) {
     Q_FOREACH ( const ImapInterval &interval, mScope.uidSet().intervals() ) {
       if ( !interval.hasDefinedBegin() && !interval.hasDefinedEnd() ) {
         fail( searchId, "Open UID intervals not allowed in SEARCH_RESULT" );
