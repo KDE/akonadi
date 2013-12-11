@@ -28,6 +28,7 @@
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "search/agentsearchrequest.h"
+#include "search/searchmanager.h"
 
 #include "libs/protocol_p.h"
 
@@ -53,8 +54,7 @@ bool Search::parseStream()
 
   // Backward compatibility
   if ( !connection()->capabilities().serverSideSearch() ) {
-    queryString = m_streamParser->readUtf8String();
-    collectionIds << connection()->selectedCollectionId();
+    searchNepomuk();
   } else {
     while (m_streamParser->hasString()) {
       const QByteArray param = m_streamParser->readString();
@@ -77,33 +77,34 @@ bool Search::parseStream()
         return failureResponse( "Invalid parameter" );
       }
     }
-  }
 
-  if ( queryString.isEmpty() ) {
-    return failureResponse( "No query specified" );
-  }
-
-  QVector<qint64> collections;
-  if ( recursive ) {
-    Q_FOREACH ( qint64 collection, collectionIds ) {
-      collections << listCollectionsRecursive( QVector<qint64>() <<  collection );
+    if ( queryString.isEmpty() ) {
+      return failureResponse( "No query specified" );
     }
-  } else {
-    collections = collectionIds;
+
+    QVector<qint64> collections;
+    if ( recursive ) {
+      Q_FOREACH ( qint64 collection, collectionIds ) {
+        collections << listCollectionsRecursive( QVector<qint64>() <<  collection );
+      }
+    } else {
+      collections = collectionIds;
+    }
+
+    akDebug() << "SEARCH:";
+    akDebug() << "\tQuery:" << queryString;
+    akDebug() << "\tMimeTypes:" << mimeTypes;
+    akDebug() << "\tCollections:" << collections;
+
+    AgentSearchRequest request( connection() );
+    request.setCollections( collections );
+    request.setMimeTypes( mimeTypes );
+    request.setQuery( queryString );
+    connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
+            this, SLOT(slotResultsAvailable(QSet<qint64>)) );
+    request.exec();
+
   }
-
-  akDebug() << "SEARCH:";
-  akDebug() << "\tQuery:" << queryString;
-  akDebug() << "\tMimeTypes:" << mimeTypes;
-  akDebug() << "\tCollections:" << collections;
-
-  AgentSearchRequest request( connection() );
-  request.setCollections( collections );
-  request.setMimeTypes( mimeTypes );
-  request.setQuery( queryString );
-  connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
-           this, SLOT(slotResultsAvailable(QSet<qint64>)) );
-  request.exec();
 
   //akDebug() << "\tResult:" << uids;
   akDebug() << "\tResult:" << mAllResults.count() << "matches";
@@ -130,6 +131,22 @@ bool Search::parseStream()
 
   successResponse( "SEARCH completed" );
   return true;
+}
+
+void Search::searchNepomuk()
+{
+  const QString queryString = m_streamParser->readUtf8String();
+
+  NepomukSearch *service = new NepomukSearch;
+  const QStringList uids = service->search( queryString );
+  delete service;
+  if ( uids.isEmpty() ) {
+    return;
+  }
+
+  Q_FOREACH ( const QString &uid, uids ) {
+    mAllResults.insert( uid.toLongLong() );
+  }
 }
 
 QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancestors )

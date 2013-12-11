@@ -52,6 +52,7 @@ class Search : public Handler
     void slotResultsAvailable( const QSet<qint64> &results );
 
   private:
+    void searchNepomuk();
     QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors );
 
     QSet<qint64> mAllResults;
