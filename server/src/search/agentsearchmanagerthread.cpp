@@ -36,3 +36,8 @@ void AgentSearchManagerThread::run()
   AgentSearchManager mgr;
   exec();
 }
+
+void AgentSearchManagerThread::stop()
+{
+  AgentSearchManager::instance()->stop();
+}

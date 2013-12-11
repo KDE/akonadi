@@ -71,6 +71,8 @@ QStringList AgentSearchRequest::mimeTypes() const
 
 void AgentSearchRequest::exec()
 {
+  akDebug() << "Executing search" << mConnection->sessionId();
+
   AgentSearchTask task;
   task.id = mConnection->sessionId();
   task.query = mQuery;
@@ -82,13 +84,12 @@ void AgentSearchRequest::exec()
   task.sharedLock.lock();
   Q_FOREVER {
     if ( task.queries.isEmpty() ) {
+      akDebug() << "All queries processed!";
       break;
     } else {
-      task.sharedLock.unlock();
-
       task.notifier.wait( &task.sharedLock );
 
-      task.sharedLock.lock();
+      akDebug() << task.pendingResults.count() << "search results available in search" << task.id;
       if ( !task.pendingResults.isEmpty() ) {
         Q_EMIT resultsAvailable( task.pendingResults );
       }
@@ -100,4 +101,6 @@ void AgentSearchRequest::exec()
     Q_EMIT resultsAvailable( task.pendingResults );
   }
   task.sharedLock.unlock();
+
+  akDebug() << "Search done" << mConnection->sessionId();
 }

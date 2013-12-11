@@ -26,6 +26,7 @@
 
 #include <QSqlError>
 #include <QTimer>
+#include <QTime>
 
 using namespace Akonadi;
 
@@ -33,6 +34,7 @@ AgentSearchManager *AgentSearchManager::sInstance = 0;
 
 AgentSearchManager::AgentSearchManager()
   : QObject()
+  , mShouldStop( false )
 {
   sInstance = this;
 
@@ -52,6 +54,13 @@ AgentSearchManager* AgentSearchManager::instance()
   return sInstance;
 }
 
+void AgentSearchManager::stop()
+{
+  mLock.lock();
+  mShouldStop = true;
+  mWait.wakeAll();
+  mLock.unlock();
+}
 
 void AgentSearchManager::registerInstance( const QString &id )
 {
@@ -117,7 +126,9 @@ void AgentSearchManager::addTask( AgentSearchTask *task )
     if ( !mInstances.contains( resourceId ) ) {
       akDebug() << "Resource" << resourceId << "does not implement Search interface, skipping";
     } else {
-      task->queries << qMakePair( resourceId, query.value( 0 ).toLongLong() );
+      const qint64 collectionId = query.value( 0 ).toLongLong();
+      akDebug() << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
+      task->queries << qMakePair( resourceId,  collectionId );
     }
   } while ( query.next() );
   mInstancesLock.unlock();
@@ -135,10 +146,18 @@ void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qin
 {
   Q_UNUSED( searchId );
 
+  akDebug() << ids.count() << "results for search" << searchId << "pushed from" << connection->resourceContext().name();
   mLock.lock();
   ResourceTask *task = mRunningTasks.take( connection->resourceContext().name() );
-  Q_ASSERT( task );
-  Q_ASSERT( task->parentTask->id == searchId );
+  if ( !task ) {
+    akDebug() << "No running task for" << connection->resourceContext().name() << " - maybe it has timed out?";
+    return;
+  }
+
+  if ( task->parentTask->id != searchId ) {
+    akDebug() << "Received results for different search - maybe the original task has timed out?";
+    return;
+  }
 
   task->results = ids;
   mPendingResults.append( task );
@@ -147,15 +166,53 @@ void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qin
   mWait.wakeAll();
 }
 
+AgentSearchManager::TasksMap::Iterator AgentSearchManager::cancelRunningTask( TasksMap::Iterator &iter )
+{
+  ResourceTask *task = iter.value();
+  AgentSearchTask *parentTask = task->parentTask;
+  parentTask->sharedLock.lock();
+  parentTask->pendingResults.clear();
+  parentTask->sharedLock.unlock();
+  parentTask->notifier.wakeAll();
+  delete task;
+
+  return mRunningTasks.erase( iter );
+}
+
 void AgentSearchManager::searchLoop()
 {
-  Q_FOREVER {
-    mWait.wait( &mLock );
+  qint64 timeout = ULONG_MAX;
 
-    mLock.lock();
+  mLock.lock();
+  Q_FOREVER {
+    akDebug() << "Search loop waiting..,will wake again in" << timeout;
+    mWait.wait( &mLock, timeout ); // wait for a minute
+
+    if ( mShouldStop ) {
+      Q_FOREACH (AgentSearchTask *task, mTasklist ) {
+        task->sharedLock.lock();
+        task->queries.clear();
+        task->sharedLock.unlock();
+        task->notifier.wakeAll();
+      }
+
+      QMap<QString,ResourceTask*>::Iterator it = mRunningTasks.begin();
+      for ( ; it != mRunningTasks.end(); ) {
+        if ( mTasklist.contains( it.value()->parentTask ) ) {
+          delete it.value();
+          it = mRunningTasks.erase( it );
+          continue;
+        }
+        it = cancelRunningTask( it );
+      }
+
+      break;
+    }
+
     // First notify about available results
     while( !mPendingResults.isEmpty() ) {
       ResourceTask *finishedTask = mPendingResults.first();
+      akDebug() << "Pending results for search" << finishedTask->parentTask->id << "available!";
       AgentSearchTask *parentTask = finishedTask->parentTask;
       parentTask->sharedLock.lock();
       parentTask->pendingResults = finishedTask->results;
@@ -166,15 +223,32 @@ void AgentSearchManager::searchLoop()
       delete finishedTask;
     }
 
+    // No check whether there are any tasks running longer than 1 minute and kill them
+    QMap<QString,ResourceTask*>::Iterator it = mRunningTasks.begin();
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    for ( ; it != mRunningTasks.end(); ) {
+      ResourceTask *task = it.value();
+      if ( now - task->timestamp > 60 * 1000 ) {
+        // Remove the task - and signal to parent task that it has "finished" without results
+        akDebug() << "Resource task" << task->resourceId << "for search" << task->parentTask->id << "timed out!";
+        it = cancelRunningTask( it );
+      } else {
+        ++it;
+      }
+    }
+
     if ( !mTasklist.isEmpty() ) {
       AgentSearchTask *task = mTasklist.first();
+      akDebug() << "Search task" << task->id << "available!";
       QVector<QPair<QString,qint64> >::iterator it = task->queries.begin();
       for ( ; it != task->queries.end(); ) {
         if ( !mRunningTasks.contains( it->first ) ) {
+          akDebug() << "\t Sending query to resource" << it->first;
           ResourceTask *rTask = new ResourceTask;
           rTask->resourceId = it->first;
           rTask->collectionId = it->second;
           rTask->parentTask = task;
+          rTask->timestamp = QDateTime::currentMSecsSinceEpoch();
           mRunningTasks.insert( it->first, rTask );
 
           mInstancesLock.lock();
@@ -193,9 +267,14 @@ void AgentSearchManager::searchLoop()
       }
       // Yay! We managed to dispatch all requests!
       if ( task->queries.isEmpty() ) {
+        akDebug() << "All queries from task" << task->id << "dispatched!";
         mTasklist.remove( 0 );
       }
+
+      timeout = 60 * 1000; // check whether all tasks have finished within a minute
+    } else {
+      timeout = ULONG_MAX;
     }
-    mLock.unlock();
   }
+  mLock.unlock();
 }

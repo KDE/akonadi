@@ -30,6 +30,8 @@ class AgentSearchManagerThread : public QThread
   public:
     AgentSearchManagerThread( QObject *parent = 0 );
 
+    void stop();
+
   protected:
     /* reimpl */ void run();
 };

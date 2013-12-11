@@ -80,10 +80,18 @@ class AgentSearchManager : public QObject
         qint64 collectionId;
         AgentSearchTask *parentTask;
         QSet<qint64> results;
+
+        qint64 timestamp;
     };
 
-    AgentSearchManager();
+    typedef QMap<QString /* resource */, ResourceTask *>  TasksMap;
+
     static AgentSearchManager *sInstance;
+    AgentSearchManager();
+    void stop();
+    bool mShouldStop;
+
+    TasksMap::Iterator cancelRunningTask( TasksMap::Iterator &iter );
 
     QMap<QString, AgentSearchInstance* > mInstances;
     QMutex mInstancesLock;
@@ -92,6 +100,7 @@ class AgentSearchManager : public QObject
     QMutex mLock;
 
     QVector<AgentSearchTask*> mTasklist;
+
     QMap<QString /* resource */, ResourceTask *> mRunningTasks;
     QVector<ResourceTask *> mPendingResults;
 
