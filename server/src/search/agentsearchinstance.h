@@ -20,14 +20,17 @@
 #ifndef AKONADI_AGENTSEARCHINSTANCE_H
 #define AKONADI_AGENTSEARCHINSTANCE_H
 
+#include <QObject>
 #include <QString>
 
+class QDBusServiceWatcher;
 class OrgFreedesktopAkonadiAgentSearchInterface;
 
 namespace Akonadi {
 
-class AgentSearchInstance
+class AgentSearchInstance: public QObject
 {
+    Q_OBJECT
   public:
     AgentSearchInstance( const QString &id );
     virtual ~AgentSearchInstance();
@@ -39,9 +42,13 @@ class AgentSearchInstance
 
     OrgFreedesktopAkonadiAgentSearchInterface *interface() const;
 
+  private Q_SLOTS:
+    void serviceOwnerChanged( const QString &service, const QString &oldName, const QString &newName );
+
   private:
     QString mId;
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
+    QDBusServiceWatcher *mServiceWatcher;
 };
 }
 

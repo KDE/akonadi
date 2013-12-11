@@ -91,7 +91,7 @@ void AgentSearchManager::unregisterInstance( const QString &id )
   QMap<QString, AgentSearchInstance*>::Iterator it = mInstances.find( id );
   if ( it != mInstances.end() ) {
     akDebug() << "Unregistering search instance" << id;
-    delete it.value();
+    it.value()->deleteLater();
     mInstances.erase( it );
   }
 }
@@ -254,7 +254,10 @@ void AgentSearchManager::searchLoop()
           mInstancesLock.lock();
           AgentSearchInstance *instance = mInstances.value( it->first );
           mInstancesLock.unlock();
-          Q_ASSERT ( instance );
+          if ( !instance ) {
+            // Resource disappeared in the meanwhile
+            continue;
+          }
 
           instance->search( task->id, task->query, it->second );
 

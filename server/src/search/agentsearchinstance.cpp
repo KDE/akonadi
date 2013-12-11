@@ -18,6 +18,7 @@
 */
 
 #include "agentsearchinstance.h"
+#include "agentsearchmanager.h"
 #include "agentsearchinterface.h"
 #include "akdbus.h"
 
@@ -26,6 +27,7 @@ using namespace Akonadi;
 AgentSearchInstance::AgentSearchInstance( const QString &id )
  : mId( id )
  , mInterface( 0 )
+ , mServiceWatcher( 0 )
 {
 }
 
@@ -49,8 +51,23 @@ bool AgentSearchInstance::init()
     return false;
   }
 
+  mServiceWatcher = new QDBusServiceWatcher( AkDBus::agentServiceName( mId, AkDBus::Agent ),
+                                             QDBusConnection::sessionBus(),
+                                             QDBusServiceWatcher::WatchForOwnerChange,
+                                             this );
+  connect( mServiceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
+
   return true;
 }
+
+void AgentSearchInstance::serviceOwnerChanged( const QString &service, const QString &oldName, const QString &newName )
+{
+  if ( newName.isEmpty() ) {
+    AgentSearchManager::instance()->unregisterInstance( mId );
+  }
+}
+
 
 void AgentSearchInstance::search( const QByteArray &searchId, const QString &query,
                                   qlonglong collectionId )
