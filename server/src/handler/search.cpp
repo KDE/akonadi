@@ -96,6 +96,11 @@ bool Search::parseStream()
     akDebug() << "\tMimeTypes:" << mimeTypes;
     akDebug() << "\tCollections:" << collections;
 
+    if ( collections.isEmpty() ) {
+      m_streamParser->readUntilCommandEnd();
+      return successResponse( "Search done" );
+    }
+
     // Read the fetch scope
     mFetchScope = FetchScope( m_streamParser );
 
