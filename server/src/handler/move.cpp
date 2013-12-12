@@ -106,7 +106,7 @@ bool Move::parseStream()
       Q_FOREACH ( PimItem moved, toMove.values( sourceId ) ) {
         // reset RID on inter-resource moves, but only after generating the change notification
         // so that this still contains the old one for the source resource
-        const bool isInterResourceMove = moved.collection().resource().id() != destResource.id();
+        const bool isInterResourceMove = moved.collection().resource().id() != source.resource().id();
         if ( isInterResourceMove ) {
           moved.setRemoteId( QString() );
         }
