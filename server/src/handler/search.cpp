@@ -96,6 +96,9 @@ bool Search::parseStream()
     akDebug() << "\tMimeTypes:" << mimeTypes;
     akDebug() << "\tCollections:" << collections;
 
+    // Read the fetch scope
+    mFetchScope = FetchScope( m_streamParser );
+
     AgentSearchRequest request( connection() );
     request.setCollections( collections );
     request.setMimeTypes( mimeTypes );
@@ -109,28 +112,7 @@ bool Search::parseStream()
   //akDebug() << "\tResult:" << uids;
   akDebug() << "\tResult:" << mAllResults.count() << "matches";
 
-  if ( mAllResults.isEmpty() ) {
-    m_streamParser->readUntilCommandEnd(); // skip the fetch scope
-    return successResponse( "SEARCH completed" );
-  }
-
-  // create imap query
-  ImapSet itemSet;
-  itemSet.add( mAllResults );
-  Scope scope( Scope::Uid );
-  scope.setUidSet( itemSet );
-
-  FetchHelper fetchHelper( connection(), scope );
-  fetchHelper.setStreamParser( m_streamParser );
-  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
-          this, SIGNAL(responseAvailable(Akonadi::Response)) );
-
-  if ( !fetchHelper.parseStream( AKONADI_CMD_SEARCH ) ) {
-    return false;
-  }
-
-  successResponse( "SEARCH completed" );
-  return true;
+  return successResponse( "Search done" );
 }
 
 void Search::searchNepomuk()
@@ -144,9 +126,12 @@ void Search::searchNepomuk()
     return;
   }
 
+  QSet<qint64> results;
   Q_FOREACH ( const QString &uid, uids ) {
-    mAllResults.insert( uid.toLongLong() );
+    results.insert( uid.toLongLong() );
   }
+
+  slotResultsAvailable( results );
 }
 
 QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes )
@@ -194,9 +179,23 @@ QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancesto
 
 void Search::slotResultsAvailable( const QSet<qint64> &results )
 {
-  mAllResults.unite( results );
+  QSet<qint64> newResults = results;
+  newResults.subtract( mAllResults );
+  mAllResults.unite( newResults );
 
-  // TODO: Fetch and send available results to clients incrementally, so
-  // that they get at least first results from fast resources. while waiting
-  // for the slower ones
+  if ( newResults.isEmpty() ) {
+    return;
+  }
+
+  // create imap query
+  ImapSet itemSet;
+  itemSet.add( newResults );
+  Scope scope( Scope::Uid );
+  scope.setUidSet( itemSet );
+
+  FetchHelper fetchHelper( connection(), scope, mFetchScope );
+  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
+          this, SIGNAL(responseAvailable(Akonadi::Response)) );
+
+  fetchHelper.fetchItems( AKONADI_CMD_SEARCH );
 }

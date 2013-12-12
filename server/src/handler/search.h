@@ -21,6 +21,7 @@
 #define AKONADISEARCH_H
 
 #include <handler.h>
+#include "fetchscope.h"
 
 #include <QtCore/QVector>
 #include <QtCore/QSet>
@@ -55,6 +56,7 @@ class Search : public Handler
     void searchNepomuk();
     QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes );
 
+    FetchScope mFetchScope;
     QSet<qint64> mAllResults;
 };
 

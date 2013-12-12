@@ -22,7 +22,7 @@
 
 #include <QtCore/QStack>
 
-#include "scope.h"
+#include "fetchscope.h"
 #include "libs/imapset_p.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
@@ -41,11 +41,9 @@ class FetchHelper : public QObject
   Q_OBJECT
 
   public:
-    FetchHelper( AkonadiConnection *connection, const Scope &scope );
+    FetchHelper( AkonadiConnection *connection, const Scope &scope, const FetchScope &fetchScope );
 
-    void setStreamParser( ImapStreamParser *parser );
-
-    bool parseStream( const QByteArray &responseIdentifier );
+    bool fetchItems( const QByteArray &responseIdentifier );
 
   Q_SIGNALS:
     void responseAvailable( const Akonadi::Response &response );
@@ -69,8 +67,6 @@ class FetchHelper : public QObject
     QSqlQuery buildItemQuery();
     QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
     QSqlQuery buildFlagQuery();
-    void parseCommandStream();
-    void parsePartList();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
     QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
@@ -79,24 +75,9 @@ class FetchHelper : public QObject
     ImapStreamParser *mStreamParser;
 
     AkonadiConnection *mConnection;
-    Scope mScope;
-    QVector<QByteArray> mRequestedParts;
-    QStringList mRequestedPayloads;
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
-    int mAncestorDepth;
-    bool mCacheOnly;
-    bool mCheckCachedPayloadPartsOnly;
-    bool mFullPayload;
-    bool mAllAttrs;
-    bool mSizeRequested;
-    bool mMTimeRequested;
-    bool mExternalPayloadSupported;
-    bool mRemoteRevisionRequested;
-    bool mIgnoreErrors;
-    bool mFlagsRequested;
-    bool mRemoteIdRequested;
-    bool mGidRequested;
-    QDateTime mChangedSince;
+    Scope mScope;
+    FetchScope mFetchScope;
     int mItemQueryColumnMap[ItemQueryColumnCount];
 
     friend class ::FetchHelperTest;
