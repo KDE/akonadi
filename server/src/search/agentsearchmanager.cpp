@@ -147,7 +147,8 @@ void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qin
   Q_UNUSED( searchId );
 
   akDebug() << ids.count() << "results for search" << searchId << "pushed from" << connection->resourceContext().name();
-  mLock.lock();
+
+  QMutexLocker locker( &mLock );
   ResourceTask *task = mRunningTasks.take( connection->resourceContext().name() );
   if ( !task ) {
     akDebug() << "No running task for" << connection->resourceContext().name() << " - maybe it has timed out?";
@@ -156,12 +157,12 @@ void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qin
 
   if ( task->parentTask->id != searchId ) {
     akDebug() << "Received results for different search - maybe the original task has timed out?";
+    akDebug() << "Search is" << searchId << ", but task is" << task->parentTask->id;
     return;
   }
 
   task->results = ids;
   mPendingResults.append( task );
-  mLock.unlock();
 
   mWait.wakeAll();
 }
@@ -185,7 +186,7 @@ void AgentSearchManager::searchLoop()
 
   mLock.lock();
   Q_FOREVER {
-    akDebug() << "Search loop waiting..,will wake again in" << timeout;
+    akDebug() << "Search loop is waiting, will wake again in" << timeout << "ms";
     mWait.wait( &mLock, timeout ); // wait for a minute
 
     if ( mShouldStop ) {
