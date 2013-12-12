@@ -118,6 +118,7 @@ bool Search::parseStream()
 void Search::searchNepomuk()
 {
   const QString queryString = m_streamParser->readUtf8String();
+  mFetchScope = FetchScope( m_streamParser );
 
   NepomukSearch *service = new NepomukSearch;
   const QStringList uids = service->search( queryString );
