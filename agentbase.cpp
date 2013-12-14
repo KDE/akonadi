@@ -41,6 +41,7 @@
 #include <kglobal.h>
 #include <klocalizedstring.h>
 #include <kstandarddirs.h>
+#include <k4aboutdata.h>
 
 #include <Solid/PowerManagement>
 
@@ -371,7 +372,7 @@ void AgentBasePrivate::setProgramName()
   if ( !mName.isEmpty() ) {
     programName = i18nc( "Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName ) ;
   }
-  const_cast<KAboutData*>( KGlobal::mainComponent().aboutData() )->setProgramName( ki18n( programName.toUtf8() ) );
+  const_cast<K4AboutData*>( KGlobal::mainComponent().aboutData() )->setProgramName( ki18n( programName.toUtf8() ) );
 }
 
 void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
