@@ -1,5 +1,8 @@
 project(akonadi-kde)
 
+find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Core Sql DBus)
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews KIO )
+
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5250 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -254,14 +257,14 @@ endif()
 
 kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
-target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} KF5::Solid ${KDE4_KDE4SUPPORT_LIBS} ${AKONADI_COMMON_LIBRARIES} )
-set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
+target_link_libraries( akonadi-kde PRIVATE Qt5::Network Qt5::Sql KF5::KIOCore KF5::Solid KF5::KDE4Support )
+set( AKONADI_KDE_DEPS Qt5::Core KF5::ItemViews Qt5::DBus )
 
 if (KDEPIM_MOBILE_UI)
-target_link_libraries( akonadi-kde ${QT_QTDECLARATIVE_LIBRARY} )
+target_link_libraries( akonadi-kde Qt5::Widgets)
 endif()
 
-target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${AKONADI_KDE_DEPS})
+target_link_libraries( akonadi-kde ${AKONADI_KDE_DEPS})
 
 set_target_properties( akonadi-kde PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadi-kde EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_DEFAULT_ARGS} )
