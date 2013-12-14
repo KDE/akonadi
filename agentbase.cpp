@@ -703,7 +703,8 @@ QString AgentBase::parseArguments( int argc, char **argv )
 int AgentBase::init( AgentBase *r )
 {
   QApplication::setQuitOnLastWindowClosed( false );
-  KLocalizedString::insertCatalog( QLatin1String( "libakonadi" ) );
+#warning Port this to the new way of doing this
+//   KLocalizedString::insertCatalog( QLatin1String( "libakonadi" ) );
   int rv = kapp->exec();
   delete r;
   return rv;
