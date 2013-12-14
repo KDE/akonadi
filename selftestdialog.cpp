@@ -34,6 +34,7 @@
 #include <KRun>
 #include <KStandardDirs>
 #include <KUser>
+#include <KUrl>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
