@@ -50,7 +50,7 @@ namespace Akonadi {
     to chose mostly depends on what the backend provides in this regard.
 
 */
-class CollectionSync : public TransactionSequence
+class CollectionSync : public Job
 {
   Q_OBJECT
 
@@ -105,6 +105,11 @@ class CollectionSync : public TransactionSequence
     */
     void setHierarchicalRemoteIds( bool hierarchical );
 
+    /**
+      Do a rollback operation if needed. In read only cases this is a noop.
+    */
+    void rollback();
+
   protected:
     void doStart();
 
@@ -117,6 +122,7 @@ class CollectionSync : public TransactionSequence
     Q_PRIVATE_SLOT( d, void updateLocalCollectionResult(KJob* job) )
     Q_PRIVATE_SLOT( d, void createLocalCollectionResult(KJob* job) )
     Q_PRIVATE_SLOT( d, void deleteLocalCollectionsResult(KJob* job) )
+    Q_PRIVATE_SLOT( d, void transactionSequenceResult(KJob* job) )
 };
 
 }

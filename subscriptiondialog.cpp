@@ -25,6 +25,8 @@
 #include "subscriptionmodel_p.h"
 
 #include <kdebug.h>
+#include <kglobal.h>
+#include <ksharedconfig.h>
 
 #include <QBoxLayout>
 
@@ -103,6 +105,21 @@ class SubscriptionDialog::Private
       filterRecursiveCollectionFilter->setIncludeCheckedOnly( checked );
     }
 
+    void writeConfig()
+    {
+      KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
+      group.writeEntry( "Size", q->size() );
+    }
+
+    void readConfig()
+    {
+      KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
+      const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
+      if ( sizeDialog.isValid() ) {
+         q->resize( sizeDialog );
+      }
+    }
+
     void slotUnSubscribe();
     void slotSubscribe();
 
@@ -118,7 +135,6 @@ class SubscriptionDialog::Private
     RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
 
 };
-
 
 void SubscriptionDialog::Private::slotSubscribe()
 {
@@ -141,7 +157,6 @@ void SubscriptionDialog::Private::slotUnSubscribe()
     collectionView->setFocus();
 #endif
 }
-
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
     KDialog( parent ),
@@ -183,7 +198,6 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
     d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
   }
 
-
   d->collectionView = new QTreeView( mainWidget );
   d->collectionView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->collectionView->header()->hide();
@@ -205,10 +219,8 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
            this, SLOT(slotSetIncludeCheckedOnly(bool)) );
   filterBarLayout->addWidget( checkBox );
 
-
   QHBoxLayout *hboxLayout = new QHBoxLayout;
   hboxLayout->addWidget( d->collectionView );
-
 
   QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
   d->subscribe = new KPushButton(i18n("Subscribe"));
@@ -220,12 +232,10 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   connect(d->unSubscribe,SIGNAL(clicked()),this,SLOT(slotUnSubscribe()));
   subscribeButtonLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding ) );
 
-
   hboxLayout->addLayout(subscribeButtonLayout);
 
   mainLayout->addLayout(filterBarLayout);
   mainLayout->addLayout(hboxLayout);
-
 
 #else
 
@@ -254,12 +264,13 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   connect( this, SIGNAL(okClicked()), SLOT(done()) );
   connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
   Control::widgetNeedsAkonadi( mainWidget );
+  d->readConfig();
 }
 
-SubscriptionDialog::~ SubscriptionDialog()
+SubscriptionDialog::~SubscriptionDialog()
 {
+  d->writeConfig();
   delete d;
 }
-
 
 #include "moc_subscriptiondialog_p.cpp"

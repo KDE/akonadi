@@ -58,8 +58,6 @@ CustomFieldsEditWidget::CustomFieldsEditWidget( QWidget *parent )
   QGridLayout *layout = new QGridLayout( this );
   layout->setMargin( 0 );
 
-
-
   mView = new QTreeView;
   mView->setSortingEnabled(true);
   mView->setRootIsDecorated( false );

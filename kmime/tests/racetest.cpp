@@ -39,7 +39,6 @@ Q_DECLARE_METATYPE(QProcess::ExitStatus)
 
 using namespace Akonadi;
 
-
 void RaceTest::initTestCase()
 {
   QVERIFY( Control::start() );
@@ -80,7 +79,7 @@ void RaceTest::testMultipleProcesses()
   types.append( AgentManager::self()->type( QLatin1String( "akonadi_maildispatcher_agent" ) ) );
   AgentInstance::List instances = AgentManager::self()->instances();
   foreach( const AgentInstance &instance, instances ) {
-    if( types.contains( instance.type() ) ) {
+    if ( types.contains( instance.type() ) ) {
       kDebug() << "Removing instance of type" << instance.type().identifier();
       AgentManager::self()->removeInstance( instance );
       QTest::kWaitForSignal( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)) );
@@ -93,7 +92,7 @@ void RaceTest::testMultipleProcesses()
 
   QSignalSpy *errorSpy[ MAXCOUNT ];
   QSignalSpy *finishedSpy[ MAXCOUNT ];
-  for( int i = 0; i < count; i++ ) {
+  for ( int i = 0; i < count; i++ ) {
     kDebug() << "Starting process" << i + 1 << "of" << count;
     KProcess *proc = new KProcess;
     procs.append( proc );
@@ -113,20 +112,20 @@ void RaceTest::testMultipleProcesses()
 
     error = 0;
     finished = 0;
-    for( int i = 0; i < count; i++ ) {
-      if( errorSpy[i]->count() > 0 )
+    for ( int i = 0; i < count; i++ ) {
+      if ( errorSpy[i]->count() > 0 )
         error++;
-      if( finishedSpy[i]->count() > 0 )
+      if ( finishedSpy[i]->count() > 0 )
         finished++;
     }
     kDebug() << seconds << "seconds elapsed." << error << "processes error'd,"
       << finished << "processes finished.";
 
-    if( error + finished >= count )
+    if ( error + finished >= count )
       break;
 
 #if 0
-    if( seconds >= TIMEOUT_SECONDS ) {
+    if ( seconds >= TIMEOUT_SECONDS ) {
       kDebug() << "Timeout, gdb master!";
       QTest::qWait( 1000*1000 );
     }
@@ -136,11 +135,11 @@ void RaceTest::testMultipleProcesses()
 
   QCOMPARE( error, 0 );
   QCOMPARE( finished, count );
-  for( int i = 0; i < count; i++ ) {
+  for ( int i = 0; i < count; i++ ) {
     kDebug() << "Checking exit status of process" << i + 1 << "of" << count;
     QCOMPARE( finishedSpy[i]->count(), 1 );
     QList<QVariant> args = finishedSpy[i]->takeFirst();
-    if( args[0].toInt() != 2 ) {
+    if ( args[0].toInt() != 2 ) {
       kDebug() << "Exit status" << args[0].toInt() << ", expected 2. Timeout, gdb master!";
       QTest::qWait( 1000*1000 );
     }

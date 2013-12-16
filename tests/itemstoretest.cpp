@@ -251,6 +251,7 @@ void ItemStoreTest::testPartRemove()
   ItemFetchJob *fjob = new ItemFetchJob( Item( 2 ) );
   fjob->fetchScope().fetchFullPayload();
   fjob->fetchScope().fetchAllAttributes();
+  fjob->fetchScope().setCacheOnly( true );
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -266,6 +267,7 @@ void ItemStoreTest::testPartRemove()
   ItemFetchJob *fjob2 = new ItemFetchJob( Item( 2 ) );
   fjob2->fetchScope().fetchFullPayload();
   fjob2->fetchScope().fetchAllAttributes();
+  fjob2->fetchScope().setCacheOnly( true );
   AKVERIFYEXEC( fjob2 );
   QCOMPARE( fjob2->items().count(), 1 );
   item = fjob2->items()[0];
@@ -385,5 +387,4 @@ void ItemStoreTest::testRemoteIdRace()
   QCOMPARE( fetchJob->items().size(), 1 );
   QVERIFY( fetchJob->items().first().remoteId().isNull() );
 }
-
 

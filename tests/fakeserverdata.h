@@ -46,7 +46,7 @@ public:
 
   void processNotifications();
 
-private slots:
+private Q_SLOTS:
   void jobAdded( Akonadi::Job *job );
 
 private:

@@ -62,7 +62,8 @@ class AKONADI_CALENDAR_EXPORT ITIPHandler : public QObject
 public:
   enum Result {
     ResultError,      /**< An unexpected error occurred */
-    ResultSuccess     /**< The invitation was successfuly handled. */
+    ResultSuccess,    /**< The invitation was successfuly handled. */
+    ResultCancelled   /**< User cancelled the operation. @since 4.12 */
   };
 
   /**
@@ -123,6 +124,15 @@ public:
    * If none is set, a FetchJobCalendar will be created internally.
    */
   void setCalendar(const Akonadi::CalendarBase::Ptr &);
+
+  /**
+   * Sets if the ITIP handler should show dialogs on error.
+   * Default is true, for compatibility reasons, but this will change in KDE5.
+   * TODO_KDE5: use message delegates
+   *
+   * @since 4.12
+   */
+  void setShowDialogsOnError(bool enable);
 
   /**
    * Returns the calendar used by this itip handler.

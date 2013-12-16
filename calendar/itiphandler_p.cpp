@@ -29,6 +29,8 @@ ITIPHandler::Private::Private( ITIPHandler *qq ) : m_calendarLoadError( false )
                                                  , m_method( KCalCore::iTIPNoMethod )
                                                  , m_helper( new ITIPHandlerHelper() ) //TODO parent
                                                  , m_currentOperation( OperationNone )
+                                                 , m_uiDelegate( 0 )
+                                                 , m_showDialogsOnError( true )
                                                  , q( qq )
 {
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),
@@ -65,8 +67,21 @@ void ITIPHandler::Private::onHelperFinished( Akonadi::ITIPHandlerHelper::SendRes
                                              const QString &errorMessage )
 {
   const bool success = result == ITIPHandlerHelper::ResultSuccess;
-  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
-                           success ? QString() : i18n( "Error: %1", errorMessage ) );
+
+  if ( m_currentOperation == OperationProcessiTIPMessage ) {
+    MailScheduler::Result result2 = success ? MailScheduler::ResultSuccess : MailScheduler::ResultGenericError;
+    finishProcessiTIPMessage( result2, i18n( "Error: %1", errorMessage ) );
+  } else {
+    emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
+                             success ? QString() : i18n( "Error: %1", errorMessage ) );
+  }
+}
+
+void ITIPHandler::Private::onCounterProposalDelegateFinished( bool success, const QString &errorMessage )
+{
+  Q_UNUSED(success);
+  Q_UNUSED(errorMessage);
+  // This will be used when we make editing counter proposals async.
 }
 
 void ITIPHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
@@ -95,9 +110,17 @@ void ITIPHandler::Private::onLoadFinished( bool success, const QString &errorMes
 void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Result result,
                                                      const QString &errorMessage )
 {
+  // Handle when user cancels on the collection selection dialog
+  if ( result == MailScheduler::ResultUserCancelled ) {
+    emit q->iTipMessageProcessed( ResultCancelled, QString() );
+    return;
+  }
+
   const bool success = result == MailScheduler::ResultSuccess;
 
-  if ( m_method != KCalCore::iTIPCounter) {
+  if ( m_method == KCalCore::iTIPCounter) {
+    // Here we're processing a counter-proposal that someone sent us and we're the organizer.
+    // TODO: Shouldn't there be a test to see if we're the organizer?
     if ( success ) {
       // send update to all attendees
       Q_ASSERT( m_incidence );
@@ -118,8 +141,8 @@ void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Res
     }
   }
 
-  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
-                           success ? QString() : i18n( "Error: %1", errorMessage ) );
+  emit q->iTipMessageProcessed( success ? ResultSuccess : ResultError,
+                                success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
 
 void ITIPHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::Result result,
@@ -221,4 +244,3 @@ bool ITIPHandler::Private::isLoaded()
   return true;
 }
 
-#include "itiphandler_p.moc"

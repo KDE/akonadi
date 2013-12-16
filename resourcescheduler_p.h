@@ -231,12 +231,12 @@ class ResourceScheduler : public QObject
     void fullSyncComplete();
     void status( int status, const QString &message = QString() );
 
-  private slots:
+  private Q_SLOTS:
     void scheduleNext();
     void executeNext();
 
   private:
-    void signalTaskToTracker( const Task &task, const QByteArray &taskType );
+    void signalTaskToTracker( const Task &task, const QByteArray &taskType, const QString &debugString = QString() );
 
     // We have a number of task queues, by order of priority.
     // * ChangeReplay must be first:

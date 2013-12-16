@@ -48,7 +48,7 @@ namespace Akonadi {
  * @since 4.4
  * @deprecated use the one in kdepim, which is much faster
  */
-class AKONADI_EXPORT_DEPRECATED StatisticsProxyModel : public QSortFilterProxyModel
+class AKONADI_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
@@ -84,7 +84,6 @@ class AKONADI_EXPORT_DEPRECATED StatisticsProxyModel : public QSortFilterProxyMo
      * Return true if we display extra statistics columns, otherwise false
      */
     bool isExtraColumnsEnabled() const;
-
 
     virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;

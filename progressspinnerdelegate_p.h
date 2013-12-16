@@ -50,7 +50,6 @@ public:
       bool operator==(const Animation &other) const
       { return index == other.index; }
 
-
       inline void nextFrame() const { frame = ( frame + 1 ) % sCount; }
       mutable int frame;
       QPersistentModelIndex index;

@@ -75,20 +75,34 @@ void ItemFetchTest::testFetch()
   }
   QCOMPARE( count, items.count() );
 
-  // check if the fetch response is parsed correctly
-  Item item = items[0];
-  QCOMPARE( item.remoteId(), QString( "A" ) );
+  // check if the fetch response is parsed correctly (note: order is undefined)
+  Item item;
+  foreach ( const Item &it, items ) {
+    if ( it.remoteId() == "A" )
+      item = it;
+  }
+  QVERIFY( item.isValid() );
 
   QCOMPARE( item.flags().count(), 3 );
   QVERIFY( item.hasFlag( "\\SEEN" ) );
   QVERIFY( item.hasFlag( "\\FLAGGED" ) );
   QVERIFY( item.hasFlag( "\\DRAFT" ) );
 
-  item = items[1];
+  item = Item();
+  foreach ( const Item &it, items ) {
+    if ( it.remoteId() == "B" )
+      item = it;
+  }
+  QVERIFY( item.isValid() );
   QCOMPARE( item.flags().count(), 1 );
   QVERIFY( item.hasFlag( "\\FLAGGED" ) );
 
-  item = items[2];
+  item = Item();
+  foreach ( const Item &it, items ) {
+    if ( it.remoteId() == "C" )
+      item = it;
+  }
+  QVERIFY( item.isValid() );
   QVERIFY( item.flags().isEmpty() );
 }
 

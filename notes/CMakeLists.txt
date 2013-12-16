@@ -4,12 +4,25 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -UQT_NO_CAST_FROM_ASCII -UQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 
 set(akonadinotes_LIB_SRC
   noteutils.cpp
 )
-kde4_add_library(akonadi-notes ${LIBRARY_TYPE} ${akonadinotes_LIB_SRC})
+add_library(akonadi-notes ${LIBRARY_TYPE} ${akonadinotes_LIB_SRC})
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-notes PROPERTY DEFINE_SYMBOL akonadi_notes)
+endif()
+generate_export_header(akonadi-notes
+  BASE_NAME akonadi_notes
+  EXPORT_FILE_NAME akonadi-notes_export.h
+)
+
+include_directories(
+  ${CMAKE_BINARY_DIR}/kmime
+)
+
 
 target_link_libraries(akonadi-notes
                       akonadi-kde
@@ -21,7 +34,7 @@ install(TARGETS akonadi-notes EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_
 
 install( FILES
   noteutils.h
-  akonadi-notes_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/notes COMPONENT Devel
 )
 

@@ -96,6 +96,20 @@ class AKONADI_EXPORT SpecialCollections : public QObject
     bool registerCollection( const QByteArray &type, const Akonadi::Collection &collection );
 
     /**
+     * Unregisters the given @p collection as a spec ial collection.
+     * @param type the special type of @c collection
+     * @since 4.12
+     */
+    bool unregisterCollection( const Collection &collection );
+
+    /**
+     * unsets the special collection attribute which marks @p collection as being a special
+     * collection.
+     * @since 4.12
+     */
+    static void unsetSpecialCollection(const Akonadi::Collection &collection);
+
+    /**
      * Sets the special collection attribute which marks @p collection as being a special
      * collection of type @p type.
      * This is typically used by configuration dialog for resources, when the user can choose

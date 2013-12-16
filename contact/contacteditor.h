@@ -122,7 +122,6 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      */
     ContactEditor( Mode mode, DisplayMode displayMode, QWidget *parent = 0 );
 
-
     /**
      * Destroys the contact editor.
      */
@@ -158,7 +157,7 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      * @deprecated use saveContactInAddressBook. We can't get contactStored and error infos.
      * Remove it for KDE SC5
      */
-    KDE_DEPRECATED bool saveContact();
+    AKONADI_CONTACT_DEPRECATED bool saveContact();
 
     /**
      * Save the contact from the editor back to the storage. And return error.

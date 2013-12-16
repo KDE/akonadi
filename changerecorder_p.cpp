@@ -19,6 +19,11 @@
 
 #include "changerecorder_p.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QSettings>
+#include <QtCore/QFileInfo>
+
 using namespace Akonadi;
 
 ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
@@ -189,7 +194,6 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
     } else if ( version == 2 ) {
 
       NotificationMessageV2 msg;
-
 
       stream >> sessionId;
       stream >> type;

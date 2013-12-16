@@ -49,7 +49,6 @@ namespace TrashSettings
     AKONADI_EXPORT Collection getTrashCollection( const QString &resource );
 }
 
-
 }
 
 #endif

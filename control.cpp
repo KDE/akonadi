@@ -20,10 +20,8 @@
 #include "control.h"
 #include "servermanager.h"
 #include "ui_controlprogressindicator.h"
-#ifndef Q_OS_WINCE
 #include "selftestdialog_p.h"
 #include "erroroverlay_p.h"
-#endif
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -103,13 +101,11 @@ class Control::Private
 
     void createErrorOverlays()
     {
-#ifndef Q_OS_WINCE
       foreach ( QWidget *widget, mPendingOverlays ) {
         if ( widget ) {
           new ErrorOverlay( widget );
         }
       }
-#endif
       mPendingOverlays.clear();
     }
 
@@ -145,7 +141,6 @@ bool Control::Private::exec()
 
   if ( !mSuccess ) {
     kWarning() << "Could not start/stop Akonadi!";
-#ifndef Q_OS_WINCE
     if ( mProgressIndicator && mStarting ) {
       QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
       dlg->exec();
@@ -154,7 +149,6 @@ bool Control::Private::exec()
         return false;
       }
     }
-#endif
   }
 
   delete mProgressIndicator;
@@ -171,6 +165,10 @@ void Control::Private::serverStateChanged(ServerManager::State state)
 {
   kDebug() << state;
   if ( mEventLoop && mEventLoop->isRunning() ) {
+    // ignore transient states going into the right direction
+    if ( mStarting && ( state == ServerManager::Starting || state == ServerManager::Upgrading ) ||
+         mStopping && state == ServerManager::Stopping )
+      return;
     mEventLoop->quit();
     mSuccess = ( mStarting && state == ServerManager::Running ) || ( mStopping && state == ServerManager::NotRunning );
   }

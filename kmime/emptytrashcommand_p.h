@@ -17,7 +17,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef EMPTYTRASHCOMMAND_P_H
 #define EMPTYTRASHCOMMAND_P_H
 
@@ -38,7 +37,7 @@ public:
     EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent);
     /*reimp*/ void execute();
 
-private slots:
+private Q_SLOTS:
   void slotExpungeJob( KJob *job );
   void slotDeleteJob( KJob *job );
 

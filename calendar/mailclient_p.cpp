@@ -45,6 +45,9 @@
 
 using namespace Akonadi;
 
+bool Akonadi::MailClient::sRunningUnitTests = false;
+UnitTestResult::List MailClient::sUnitTestResults;
+
 MailClient::MailClient( QObject *parent ) : QObject( parent )
 {
 }
@@ -103,7 +106,7 @@ void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
       toList << tname;
     }
   }
-  if( toList.isEmpty() && ccList.isEmpty() ) {
+  if ( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
     kWarning() << "There are really no attendees to e-mail";
     emit finished( ResultReallyNoAttendees, i18n( "There are no attendees to e-mail" ) );
@@ -198,14 +201,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   Q_UNUSED( identity );
   Q_UNUSED( hidden );
 
-#ifdef MAILCLIENTTEST_UNITTEST
-  mUnitTestResult.message = KMime::Message::Ptr();
-  mUnitTestResult.from.clear();
-  mUnitTestResult.to.clear();
-  mUnitTestResult.cc.clear();
-  mUnitTestResult.bcc.clear();
-  mUnitTestResult.transportId = -1;
-#endif
+  UnitTestResult unitTestResult;
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
         0, MailTransport::TransportManager::IfNoTransportExists ) ) {
@@ -276,7 +272,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   message->from()->fromUnicodeString( from, "utf-8" );
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
-  if( bccMe ) {
+  if ( bccMe ) {
     message->bcc()->fromUnicodeString( from, "utf-8" ); //from==me, right?
   }
   message->date()->setDateTime( KDateTime::currentLocalDateTime() );
@@ -347,7 +343,6 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   const QString unormalizedFrom = ( transport && transport->specifySenderOverwriteAddress() ) ?
                                                          transport->senderOverwriteAddress() : from;
 
-
   const QString normalizedFrom = KPIMUtils::extractEmailAddress(
                                      KPIMUtils::normalizeAddressesAndEncodeIdn( unormalizedFrom ) );
 
@@ -355,13 +350,13 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->addressAttribute().setFrom( finalFrom );
 
   QStringList toStringList;
-  if( !to.isEmpty() ) {
+  if ( !to.isEmpty() ) {
     toStringList = extractEmailAndNormalize( to );
     qjob->addressAttribute().setTo( toStringList );
   }
 
   QStringList ccStringList;
-  if( !cc.isEmpty() ) {
+  if ( !cc.isEmpty() ) {
     ccStringList = extractEmailAndNormalize( cc );
     qjob->addressAttribute().setCc( ccStringList );
   }
@@ -371,18 +366,26 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
     bccStringList = extractEmailAndNormalize( from );
     qjob->addressAttribute().setBcc( bccStringList );
   }
-  qjob->setMessage( message );
-  connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
-  qjob->start();
 
-#ifdef MAILCLIENTTEST_UNITTEST
-  mUnitTestResult.message            = message;
-  mUnitTestResult.from               = finalFrom;
-  mUnitTestResult.to                 = toStringList;
-  mUnitTestResult.cc                 = ccStringList;
-  mUnitTestResult.bcc                = bccStringList;
-  mUnitTestResult.transportId        = transportId;
-#endif
+  if ( sRunningUnitTests ) {
+    unitTestResult.message     = message;
+    unitTestResult.from        = finalFrom;
+    unitTestResult.to          = toStringList;
+    unitTestResult.cc          = ccStringList;
+    unitTestResult.bcc         = bccStringList;
+    unitTestResult.transportId = transportId;
+    sUnitTestResults << unitTestResult;
+    qjob->deleteLater();
+
+    QMetaObject::invokeMethod( this, "finished", Qt::QueuedConnection,
+                               Q_ARG( Akonadi::MailClient::Result, ResultSuccess ),
+                               Q_ARG( QString, QString() ) );
+
+  } else {
+    qjob->setMessage( message );
+    connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
+    qjob->start();
+  }
 }
 
 void MailClient::handleQueueJobFinished( KJob *job )

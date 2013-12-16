@@ -67,7 +67,7 @@ class CollectionSyncTest : public QObject
       QTest::newRow( "akonadi_knut_resource_2 hierarchical RID" ) << true << "akonadi_knut_resource_2";
     }
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

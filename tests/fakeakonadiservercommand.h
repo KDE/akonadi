@@ -49,7 +49,7 @@ public:
 
   virtual void doCommand() = 0;
 
-signals:
+Q_SIGNALS:
   void emit_itemsFetched( const Akonadi::Item::List &list );
   void emit_collectionsFetched( const Akonadi::Collection::List &list );
 

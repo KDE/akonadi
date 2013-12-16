@@ -1,48 +1,33 @@
-macro(add_akonadi_isolated_test _source)
-  set(_test ${_source})
-  get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_executable(${_name} TEST ${_test})
-  target_link_libraries(${_name}
-    akonadi-kde
-    akonadi-kmime
-    kmime
-    mailtransport
-    kpimidentities
-    kpimutils
-    kcalutils
-    kcalcore
-    akonadi-calendar
-    ${QT_QTTEST_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-  )
 
-  # based on kde4_add_unit_test
-  if (WIN32)
-    get_target_property( _loc ${_name} LOCATION )
-    set(_executable ${_loc}.bat)
-  else ()
-    set(_executable ./${_name})
-  endif ()
-  if (UNIX)
-    set(_executable ${_executable}.shell)
-  endif ()
+set( KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE )
 
-  find_program(_testrunner akonaditest)
+set( PREVIOUS_EXEC_OUTPUT_PATH ../../tests )
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-  if (KDEPIMLIBS_RUN_ISOLATED_TESTS)
-    add_test( libakonadi-${_name}
-      ${_testrunner} -c
-      ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml
-      ${_executable}
-    )
-  endif ()
-endmacro(add_akonadi_isolated_test)
+include(../../AkonadiMacros.cmake)
 
-#add_akonadi_isolated_test( historytest.cpp )
+# These are for finding the *_export.h files,
+# can be removed when we require CMake 2.8.11
+include_directories( ${CMAKE_BINARY_DIR}/kcalcore
+                     ${CMAKE_BINARY_DIR}/kmime
+                     ${CMAKE_BINARY_DIR}/kcalutils
+                     ${CMAKE_BINARY_DIR}/kpimidentities
+                     ${CMAKE_BINARY_DIR}/kpimutils
+                     ${CMAKE_BINARY_DIR}/akonadi/kmime
+                     ${CMAKE_BINARY_DIR}/mailtransport )
+
+add_definitions(-DITIP_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/itip_data\\"" )
+
+set(common_sources unittestbase.cpp helper.cpp ../utils_p.cpp)
+
+#add_akonadi_isolated_test_advanced( historytest.cpp "${common_sources}" "")
 #add_akonadi_isolated_test( incidencechangertest.cpp )
-add_akonadi_isolated_test( mailclienttest.cpp )
 #add_akonadi_isolated_test( calendarbasetest.cpp )
 #add_akonadi_isolated_test( fetchjobcalendartest.cpp )
 #add_akonadi_isolated_test( etmcalendartest.cpp )
+
+
+if ( PLEASE_TEST_INVITATIONS )
+  add_akonadi_isolated_test_advanced( itiphandlertest.cpp "${common_sources}" "")
+  add_akonadi_isolated_test( mailclienttest.cpp )
+endif()

@@ -100,7 +100,6 @@ class ContactEditorWidget::Private
     KComboBox* mMailPreferFormatting;
     QCheckBox *mAllowRemoteContent;
 
-
     // widgets from addresses group
     AddressEditWidget *mAddressesWidget;
 
@@ -150,7 +149,7 @@ void ContactEditorWidget::Private::initGui()
   initGuiBusinessTab();
   initGuiPersonalTab();
   initGuiNotesTab();
-  if(mDisplayMode == FullMode) {
+  if (mDisplayMode == FullMode) {
     initGuiCustomFieldsTab();
     loadCustomPages();
   }
@@ -167,6 +166,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   QGroupBox *internetGroupBox = new QGroupBox( i18nc( "@title:group", "Internet" ) );
   QGroupBox *phonesGroupBox = new QGroupBox( i18nc( "@title:group", "Phones" ) );
 
+  nameGroupBox->setMinimumSize(320,200);
   layout->addWidget( nameGroupBox, 0, 0 );
   layout->addWidget( internetGroupBox, 0, 1 );
   layout->addWidget( phonesGroupBox, 1, 0, 4, 1 );
@@ -273,19 +273,27 @@ void ContactEditorWidget::Private::initGuiContactTab()
 
   layout->addLayout( categoriesLayout, 1, 1 );
 
+  QGroupBox *receivedMessageGroupBox = new QGroupBox( i18n("Messages") );
+  layout->addWidget( receivedMessageGroupBox, 2, 1 );
+
+  QVBoxLayout *vbox = new QVBoxLayout(receivedMessageGroupBox);
+
   QHBoxLayout *mailPreferFormattingLayout = new QHBoxLayout;
-  label = new QLabel( i18n( "Prefers to receive messages formatted as:" ) );
+  label = new QLabel( i18n( "Show messages received from this contact as:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   mMailPreferFormatting = new KComboBox;
+  label->setBuddy( mMailPreferFormatting );
   QStringList listFormat;
-  listFormat << i18n( "Unknown" ) << i18n( "Plain Text" ) << i18n( "HTML" );
+  listFormat << i18n( "Default" ) << i18n( "Plain Text" ) << i18n( "HTML" );
   mMailPreferFormatting->addItems( listFormat );
   mailPreferFormattingLayout->addWidget( label );
   mailPreferFormattingLayout->addWidget( mMailPreferFormatting );
-  layout->addLayout( mailPreferFormattingLayout, 2, 1 );
 
-  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content." ) );
-  layout->addWidget( mAllowRemoteContent, 3,1 );
+
+  vbox->addLayout( mailPreferFormattingLayout );
+
+  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content in received HTML messages" ) );
+  vbox->addWidget( mAllowRemoteContent );
 
   layout->setRowStretch( 4,1 );
 }
@@ -434,7 +442,7 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   label->setBuddy( mBirthdateWidget );
   datesLayout->addWidget( mBirthdateWidget, 0, 1 );
 
-  label = new QLabel( i18nc( "@label The anniversary of a contact", "Anniversary:" ) );
+  label = new QLabel( i18nc( "@label The wedding anniversary of a contact", "Anniversary:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   datesLayout->addWidget( label, 1, 0 );
 
@@ -568,7 +576,6 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   // categories section
   d->mCategoriesWidget->loadContact( contact );
 
-
   const QString mailPreferedFormatting = d->loadCustom( contact, QLatin1String( "MailPreferedFormatting" ) );
   if ( mailPreferedFormatting.isEmpty() ) {
     d->mMailPreferFormatting->setCurrentIndex( 0 );
@@ -615,7 +622,7 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
 
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
 
-  if(d->mDisplayMode == FullMode) {
+  if (d->mDisplayMode == FullMode) {
     // custom fields group
     d->mCustomFieldsWidget->setLocalCustomFieldDescriptions( metaData.customFieldDescriptions() );
     d->mCustomFieldsWidget->loadContact( contact );
@@ -647,8 +654,6 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
 
   // categories section
   d->mCategoriesWidget->storeContact( contact );
-
-
 
   QString mailPreferedFormatting;
   const int index = d->mMailPreferFormatting->currentIndex();
@@ -701,7 +706,7 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   // family group
   d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
 
-  if(d->mDisplayMode == FullMode) {
+  if (d->mDisplayMode == FullMode) {
     // custom fields group
     d->mCustomFieldsWidget->storeContact( contact );
     metaData.setCustomFieldDescriptions( d->mCustomFieldsWidget->localCustomFieldDescriptions() );
@@ -769,7 +774,7 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   // widgets from family group
   d->mPartnerWidget->setReadOnly( readOnly );
 
-  if(d->mDisplayMode == FullMode) {
+  if (d->mDisplayMode == FullMode) {
     // widgets from custom fields group
     d->mCustomFieldsWidget->setReadOnly( readOnly );
 

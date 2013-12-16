@@ -41,7 +41,6 @@
 #include <kmessagebox.h>
 #include <KColorScheme>
 
-
 #include <QtCore/QTimer>
 #include <QGridLayout>
 #include <QMessageBox>
@@ -205,7 +204,6 @@ void ContactGroupEditor::Private::setReadOnly( bool readOnly )
   mGui.groupName->setReadOnly( readOnly );
   mGui.membersView->setEnabled( !readOnly );
 }
-
 
 ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )

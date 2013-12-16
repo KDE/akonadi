@@ -26,6 +26,8 @@
 
 namespace Akonadi {
 
+class NotificationSource;
+
 /**
  * This class exists so that we can create a fake notification source in
  * unit tests.
@@ -34,7 +36,7 @@ class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
 {
 public:
   virtual ~ChangeNotificationDependenciesFactory() {}
-  virtual QObject* createNotificationSource(QObject *parent);
+  virtual NotificationSource* createNotificationSource(QObject *parent);
   virtual QObject* createChangeMediator(QObject *parent);
 
   virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);

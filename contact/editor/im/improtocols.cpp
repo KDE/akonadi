@@ -51,7 +51,6 @@ IMProtocols::~IMProtocols()
 {
 }
 
-
 IMProtocols* IMProtocols::self()
 {
   if ( !mSelf ) {

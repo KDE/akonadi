@@ -299,7 +299,6 @@ bool Akonadi::MessageStatus::hasError() const
   return ( mStatus & StatusHasError );
 }
 
-
 void Akonadi::MessageStatus::setRead( bool read )
 {
   if ( read ) {
@@ -464,7 +463,6 @@ qint32 Akonadi::MessageStatus::toQInt32() const
 {
   return mStatus;
 }
-
 
 void Akonadi::MessageStatus::fromQInt32( qint32 status )
 {

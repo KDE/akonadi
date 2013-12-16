@@ -95,4 +95,3 @@ void AttributeFactoryTest::testRegisteredAttribute()
   QCOMPARE( ta->data, QByteArray( "lalala" ) );
 }
 
-

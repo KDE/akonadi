@@ -27,6 +27,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <ksharedconfig.h>
 #include <ktabwidget.h>
 
 #include <QBoxLayout>
@@ -165,7 +166,6 @@ void CollectionPropertiesDialog::Private::init()
   }
 
 }
-
 
 CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collection, QWidget *parent )
   : KDialog( parent ),

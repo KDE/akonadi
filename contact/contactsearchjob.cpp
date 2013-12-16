@@ -38,20 +38,7 @@ ContactSearchJob::ContactSearchJob( QObject * parent )
   d->mLimit = -1;
 
   // by default search for all contacts
-  ItemSearchJob::setQuery( QLatin1String( ""
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                          "<request>"
-                                          "  <query>"
-                                          "    <equals>"
-                                          "      <field name=\"type\"/>"
-                                          "      <string>PersonContact</string>"
-                                          "    </equals>"
-                                          "  </query>"
-                                          "</request>"
-#else
-                                          "SELECT ?r WHERE { ?r a nco:Contact }"
-#endif
-                                        ) );
+  ItemSearchJob::setQuery( QLatin1String( "SELECT ?r WHERE { ?r a nco:Contact }" ) );
 }
 
 ContactSearchJob::~ContactSearchJob()
@@ -93,22 +80,6 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <equals>"
-          "        <field name=\"fullname\"/>"
-          "        <string>%1</string>"
-          "      </equals>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -116,26 +87,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
           "  "
           "} "
-#endif
       );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <equals>"
-          "        <field name=\"emailAddress\"/>"
-          "        <string>%1</string>"
-          "      </equals>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "   "
@@ -144,26 +98,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
           "   "
           "}"
-#endif
       );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <equals>"
-          "        <field name=\"nickname\"/>"
-          "        <string>%1</string>"
-          "      </equals>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -171,40 +108,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "  "
           "}"
-#endif
       );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <or>"
-          "        <equals>"
-          "          <field name=\"fullname\"/>"
-          "          <string>%1</string>"
-          "        </equals>"
-          "        <equals>"
-          "          <field name=\"nameGiven\"/>"
-          "          <string>%1</string>"
-          "        </equals>"
-          "        <equals>"
-          "          <field name=\"nameFamily\"/>"
-          "          <string>%1</string>"
-          "        </equals>"
-          "        <equals>"
-          "          <field name=\"emailAddress\"/>"
-          "          <string>%1</string>"
-          "        </equals>"
-          "      </or>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -216,26 +122,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . } "
           "  "
           "}"
-#endif
       );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <equals>"
-          "        <field name=\"contactUID\"/>"
-          "        <string>%1</string>"
-          "      </equals>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -243,28 +132,11 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:contactUID \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "   "
           "}"
-#endif
       );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <startsWith>"
-          "        <field name=\"fullname\"/>"
-          "        <string>%1</string>"
-          "      </startsWith>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -273,26 +145,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?v bif:contains \"'%1*'\" . "
           "  "
           "} "
-#endif
       );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <startsWith>"
-          "        <field name=\"emailAddress\"/>"
-          "        <string>%1</string>"
-          "      </startsWith>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "   "
@@ -302,26 +157,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?v bif:contains \"'%1\'\" . "
           "  "
           "}"
-#endif
       );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <startsWith>"
-          "        <field name=\"nickname\"/>"
-          "        <string>%1</string>"
-          "      </startsWith>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -330,40 +168,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?v bif:contains \"'%1\'\" . "
           "  "
           "}"
-#endif
       );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <or>"
-          "        <startsWith>"
-          "          <field name=\"fullname\"/>"
-          "          <string>%1</string>"
-          "        </startsWith>"
-          "        <startsWith>"
-          "          <field name=\"nameGiven\"/>"
-          "          <string>%1</string>"
-          "        </startsWith>"
-          "        <startsWith>"
-          "          <field name=\"nameFamily\"/>"
-          "          <string>%1</string>"
-          "        </startsWith>"
-          "        <startsWith>"
-          "          <field name=\"emailAddress\"/>"
-          "          <string>%1</string>"
-          "        </startsWith>"
-          "      </or>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
@@ -377,26 +184,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?v bif:contains \"'%1'\" . }"
           "  "
           "}"
-#endif
       );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <startsWith>"
-          "        <field name=\"contactUID\"/>"
-          "        <string>%1</string>"
-          "      </startsWith>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
@@ -405,28 +195,11 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?v bif:contains \"'%1*'\" . "
           " "
           "}"
-#endif
       );
     }
   } else if ( match == ContainsMatch || match == ContainsWordBoundaryMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <contains>"
-          "        <field name=\"fullname\"/>"
-          "        <string>%1</string>"
-          "      </contains>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
@@ -435,27 +208,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "%1"
           "  "
           "} "
-#endif
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <contains>"
-          "        <field name=\"emailAddress\"/>"
-          "        <string>%1</string>"
-          "      </contains>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "  "
@@ -465,27 +221,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "%1"
           "  "
           "}"
-#endif
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <contains>"
-          "        <field name=\"nickname\"/>"
-          "        <string>%1</string>"
-          "      </contains>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
@@ -494,41 +233,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "%1"
           "  "
           "}"
-#endif
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
-          "      </equals>"
-          "      <or>"
-          "        <contains>"
-          "          <field name=\"fullname\"/>"
-          "          <string>%1</string>"
-          "        </contains>"
-          "        <contains>"
-          "          <field name=\"nameGiven\"/>"
-          "          <string>%1</string>"
-          "        </contains>"
-          "        <contains>"
-          "          <field name=\"nameFamily\"/>"
-          "          <string>%1</string>"
-          "        </contains>"
-          "        <contains>"
-          "          <field name=\"emailAddress\"/>"
-          "          <string>%1</string>"
-          "        </contains>"
-          "      </or>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
@@ -541,27 +249,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "%1 }"
           " "
           "}"
-#endif
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-          "<request>"
-          "  <query>"
-          "    <and>"
-          "      <equals>"
-          "        <field name=\"type\"/>"
-          "        <string>Contact</string>"
-          "      </equals>"
-          "      <contains>"
-          "        <field name=\"contactUID\"/>"
-          "        <string>%1</string>"
-          "      </contains>"
-          "    </and>"
-          "  </query>"
-          "</request>"
-#else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
@@ -570,15 +261,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?v bif:contains \"'%1'\" . "
           " "
           "}"
-#endif
       );
     }
   }
 
   if ( d->mLimit != -1 ) {
-#ifndef AKONADI_USE_STRIGI_SEARCH
     query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
-#endif
   }
   query = query.arg( value );
 

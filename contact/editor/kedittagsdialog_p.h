@@ -51,10 +51,10 @@ public:
 
     virtual bool eventFilter(QObject* watched, QEvent* event);
 
-protected slots:
+protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
 
-private slots:
+private Q_SLOTS:
     void slotTextEdited(const QString& text);
     void slotItemEntered(QListWidgetItem* item);
     void showDeleteButton();
@@ -65,6 +65,12 @@ private:
     void removeNewTagItem();
 
 private:
+    void writeConfig();
+    void readConfig();
+    enum ItemType {
+        UrlTag = Qt::UserRole + 1
+    };
+
     QVector<Nepomuk2::Tag> m_tags;
     QListWidget* m_tagsList;
     QListWidgetItem* m_newTagItem;

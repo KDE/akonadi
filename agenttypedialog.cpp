@@ -21,24 +21,46 @@
 
 #include <QObject>
 #include <QVBoxLayout>
-
-#include <kdeversion.h>
+#include <KGlobal>
+#include <KConfig>
 
 #include <kfilterproxysearchline.h>
 #include <klineedit.h>
 
 using namespace Akonadi;
 
-
 class AgentTypeDialog::Private
 {
   public:
+    Private(AgentTypeDialog *qq)
+        : q(qq)
+    {
+
+    }
+    void readConfig();
+    void writeConfig();
     AgentTypeWidget *Widget;
     AgentType agentType;
+    AgentTypeDialog *q;
 };
 
+void AgentTypeDialog::Private::writeConfig()
+{
+  KConfigGroup group( KGlobal::config(), "AgentTypeDialog" );
+  group.writeEntry( "Size", q->size() );
+}
+
+void AgentTypeDialog::Private::readConfig()
+{
+  KConfigGroup group( KGlobal::config(), "AgentTypeDialog" );
+  const QSize sizeDialog = group.readEntry( "Size", QSize(460, 320) );
+  if ( sizeDialog.isValid() ) {
+     q->resize( sizeDialog );
+  }
+}
+
 AgentTypeDialog::AgentTypeDialog( QWidget *parent )
-      : KDialog( parent ), d( new Private )
+    : KDialog( parent ), d( new Private(this) )
 {
   setButtons( Ok | Cancel );
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
@@ -55,13 +77,14 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
 
   connect( this, SIGNAL(okClicked()), this, SLOT(accept()) );
 
-  resize( 460, 320 );
+  d->readConfig();
 
   searchLine->lineEdit()->setFocus();
 }
 
 AgentTypeDialog::~AgentTypeDialog()
 {
+  d->writeConfig();
   delete d;
 }
 
@@ -85,4 +108,3 @@ AgentFilterProxyModel* AgentTypeDialog::agentFilterProxyModel() const
 {
   return d->Widget->agentFilterProxyModel();
 }
-

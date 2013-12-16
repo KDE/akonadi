@@ -40,7 +40,6 @@
 
 #include <QHash>
 
-
 using namespace Akonadi;
 
 class TrashRestoreJob::TrashRestoreJobPrivate : public JobPrivate
@@ -195,7 +194,6 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived( const Akonadi::Item
   }
 }
 
-
 void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived( const Akonadi::Collection::List &collections )
 {
   Q_Q( TrashRestoreJob );
@@ -237,7 +235,6 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived( const Akonadi
   q->connect( fetchJob, SIGNAL(result(KJob*)), SLOT(targetCollectionFetched(KJob*)) );
 }
 
-
 void TrashRestoreJob::TrashRestoreJobPrivate::removeAttribute( const Akonadi::Collection::List &list )
 {
   Q_Q( TrashRestoreJob );
@@ -273,7 +270,6 @@ void TrashRestoreJob::TrashRestoreJobPrivate::removeAttribute( const Akonadi::It
   //q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
 }
 
-
 TrashRestoreJob::TrashRestoreJob( const Item & item, QObject * parent )
     : Job( new TrashRestoreJobPrivate( this ), parent )
 {
@@ -304,7 +300,6 @@ void TrashRestoreJob::setTargetCollection( const Akonadi::Collection collection 
   Q_D( TrashRestoreJob );
   d->mTargetCollection = collection;
 }
-
 
 Item::List TrashRestoreJob::items() const
 {

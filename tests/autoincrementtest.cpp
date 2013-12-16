@@ -75,7 +75,7 @@ void AutoIncrementTest::testItemAutoIncrement()
   Item::Id lastId = -1;
 
   // Create 20 test items
-  for( int i = 0; i < 20; i++ ) {
+  for ( int i = 0; i < 20; i++ ) {
     ItemCreateJob *job = createItemCreateJob();
     AKVERIFYEXEC( job );
     Item newItem = job->item();
@@ -110,7 +110,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   Collection::Id lastId = -1;
 
   // Create 20 test collections
-  for( int i = 0; i < 20; i++ ) {
+  for ( int i = 0; i < 20; i++ ) {
     CollectionCreateJob *job = createCollectionCreateJob( i );
     AKVERIFYEXEC( job );
     Collection newCollection = job->collection();
@@ -139,5 +139,4 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   QVERIFY( newCollection.id() > lastId );
   lastId = newCollection.id();
 }
-
 

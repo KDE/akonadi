@@ -22,21 +22,21 @@
 #ifndef AKONADI_MAILCLIENT_P_H
 #define AKONADI_MAILCLIENT_P_H
 
+#include "akonadi-calendar_export.h"
 #include <kcalcore/incidencebase.h>
-
+#include <kmime/kmime_message.h>
 #include <QObject>
 
-#ifdef MAILCLIENTTEST_UNITTEST
-#include <kmime/kmime_message.h>
-  struct UnitTestResult {
-    QString from;
-    QStringList to;
-    QStringList cc;
-    QStringList bcc;
-    int transportId;
-    KMime::Message::Ptr message;
-  };
-#endif
+struct UnitTestResult {
+  typedef QList<UnitTestResult> List;
+  QString from;
+  QStringList to;
+  QStringList cc;
+  QStringList bcc;
+  int transportId;
+  KMime::Message::Ptr message;
+  UnitTestResult() : transportId( -1 ) {}
+};
 
 namespace KPIMIdentities {
   class Identity;
@@ -46,7 +46,14 @@ class KJob;
 
 namespace Akonadi {
 
-class MailClient : public QObject
+#ifdef PLEASE_TEST_INVITATIONS
+#define EXPORT_MAILCLIENT AKONADI_CALENDAR_EXPORT
+#else
+#define EXPORT_MAILCLIENT
+#endif
+
+class EXPORT_MAILCLIENT MailClient : public QObject
+
 {
   Q_OBJECT
   public:
@@ -107,10 +114,10 @@ class MailClient : public QObject
   Q_SIGNALS:
     void finished( Akonadi::MailClient::Result result, const QString &errorString );
 
-  #ifdef MAILCLIENTTEST_UNITTEST
-    public:
-      UnitTestResult mUnitTestResult; // So unit-tests can check the result without having to check the mail the transport sent
-  #endif
+  public:
+    // For unit-test usage, since we can't depend on kdepim-runtime on jenkins
+    static UnitTestResult::List sUnitTestResults;
+    static bool sRunningUnitTests;
 };
 
 }

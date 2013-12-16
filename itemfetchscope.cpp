@@ -120,7 +120,6 @@ bool ItemFetchScope::checkForCachedPayloadPartsOnly() const
   return d->mCheckCachedPayloadPartsOnly;
 }
 
-
 ItemFetchScope::AncestorRetrieval ItemFetchScope::ancestorRetrieval() const
 {
   return d->mAncestorDepth;
@@ -141,6 +140,16 @@ bool ItemFetchScope::fetchModificationTime() const
   return d->mFetchMtime;
 }
 
+void ItemFetchScope::setFetchGid( bool retrieveGid )
+{
+  d->mFetchGid = retrieveGid;
+}
+
+bool ItemFetchScope::fetchGid() const
+{
+  return d->mFetchGid;
+}
+
 void ItemFetchScope::setIgnoreRetrievalErrors( bool ignore )
 {
   d->mIgnoreRetrievalErrors = ignore;
@@ -151,3 +160,22 @@ bool ItemFetchScope::ignoreRetrievalErrors() const
   return d->mIgnoreRetrievalErrors;
 }
 
+void ItemFetchScope::setFetchChangedSince( const KDateTime &changedSince )
+{
+  d->mChangedSince = changedSince;
+}
+
+KDateTime ItemFetchScope::fetchChangedSince() const
+{
+  return d->mChangedSince;
+}
+
+void ItemFetchScope::setFetchRemoteIdentification(bool retrieveRid)
+{
+  d->mFetchRid = retrieveRid;
+}
+
+bool ItemFetchScope::fetchRemoteIdentification() const
+{
+  return d->mFetchRid;
+}

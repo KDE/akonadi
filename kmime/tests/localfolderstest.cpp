@@ -598,7 +598,7 @@ void LocalFoldersTest::testRecoverDefaultResource()
     QCOMPARE( folders.count(), 2 );
 
     // Reorder the folders.
-    if( folders.first().parentCollection() != Collection::root() ) {
+    if ( folders.first().parentCollection() != Collection::root() ) {
       folders.swap( 0, 1 );
     }
 

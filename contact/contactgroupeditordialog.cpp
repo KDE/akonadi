@@ -53,6 +53,22 @@ class ContactGroupEditorDialog::Private
       mEditor->groupNameIsValid( isValid );
     }
 
+    void readConfig()
+    {
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, QLatin1String( "ContactGroupEditorDialog" ) );
+      const QSize size = group.readEntry( "Size", QSize(470, 400) );
+      if ( size.isValid() ) {
+        q->resize( size );
+      }
+    }
+    void writeConfig()
+    {
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, QLatin1String( "ContactGroupEditorDialog" ) );
+      group.writeEntry( "Size", q->size() );
+      group.sync();
+    }
     ContactGroupEditorDialog *q;
     CollectionComboBox *mAddressBookBox;
     ContactGroupEditor *mEditor;
@@ -101,11 +117,12 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
 
   button( Ok )->setEnabled( !d->mEditor->d->mGui.groupName->text().isEmpty() );
 
-  setInitialSize( QSize( 470, 400 ) );
+  d->readConfig();
 }
 
 ContactGroupEditorDialog::~ContactGroupEditorDialog()
 {
+  d->writeConfig();
   delete d;
 }
 

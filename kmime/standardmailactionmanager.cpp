@@ -68,7 +68,6 @@ class StandardMailActionManager::Private
       mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
                         mParent, SIGNAL(actionStateUpdated()) );
 
-
       mGenericManager->setMimeTypeFilter( QStringList() << KMime::Message::mimeType() );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
     }
@@ -370,22 +369,28 @@ class StandardMailActionManager::Private
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
         if ( action ) {
+          action->setCheckable(true);
           updateMarkAction( action, allMarkedAsImportant );
           if ( allMarkedAsImportant ) {
             action->setText( i18n( "Remove Important Mark" ) );
+            action->setChecked(true);
           } else {
             action->setText( i18n( "&Mark Mail as Important" ) );
+            action->setChecked(false);
           }
           action->setEnabled( true );
         }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
         if ( action ) {
+          action->setCheckable(true);
           updateMarkAction( action, allMarkedAsActionItem );
           if ( allMarkedAsActionItem ) {
             action->setText( i18n( "Remove Action Item Mark" ) );
+            action->setChecked(true);
           } else {
             action->setText( i18n( "&Mark Mail as Action Item" ) );
+            action->setChecked(false);
           }
           action->setEnabled( true );
         }
@@ -660,7 +665,6 @@ class StandardMailActionManager::Private
     StandardMailActionManager *mParent;
 };
 
-
 StandardMailActionManager::StandardMailActionManager( KActionCollection *actionCollection, QWidget *parent )
   : QObject( parent ), d( new Private( actionCollection, parent, this ) )
 {
@@ -868,7 +872,7 @@ KAction* StandardMailActionManager::createAction( Type type )
 KAction* StandardMailActionManager::createAction( StandardActionManager::Type type )
 {
   KAction *act = d->mGenericManager->action(type);
-  if(!act )
+  if (!act )
     act = d->mGenericManager->createAction( type );
   d->updateGenericAction(type);
   return act;

@@ -42,7 +42,4 @@ class ItemDumper : public QObject
 
 };
 
-
-
-
 #endif

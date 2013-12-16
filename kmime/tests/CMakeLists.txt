@@ -1,7 +1,6 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-# We need localfolderssettings.h which is a generated header.
-# include_directories( ${CMAKE_CURRENT_BINARY_DIR}/.. )
+include_directories(${CMAKE_BINARY_DIR}/akonadi/kmime)
 
 # TODO apparently QTEST_AKONADIMAIN doesn't like NO_CASTs...
 remove_definitions( -DQT_NO_CAST_FROM_ASCII )

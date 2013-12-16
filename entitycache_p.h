@@ -39,7 +39,7 @@
 class KJob;
 
 typedef QList<Akonadi::Entity::Id> EntityIdList;
-Q_DECLARE_METATYPE( EntityIdList )
+Q_DECLARE_METATYPE(QList<Akonadi::Entity::Id>)
 
 namespace Akonadi {
 
@@ -58,10 +58,10 @@ class AKONADI_TESTS_EXPORT EntityCacheBase : public QObject
   protected:
     Session *session;
 
-  signals:
+  Q_SIGNALS:
     void dataAvailable();
 
-  private slots:
+  private Q_SLOTS:
     virtual void processResult( KJob* job ) = 0;
 };
 
@@ -311,7 +311,7 @@ public:
     }
 
     if ( !toRequest.isEmpty() ) {
-      request( toRequest, scope );
+      request( toRequest, scope, ids );
       return false;
     }
 
@@ -355,10 +355,10 @@ public:
     a token to indicate which request has been finished in the
     dataAvailable() signal.
   */
-  void request( const QList<Entity::Id> &ids, const FetchScope &scope )
+  void request( const QList<Entity::Id> &ids, const FetchScope &scope, const QList<Entity::Id> &preserveIds = QList<Entity::Id>() )
   {
     Q_ASSERT( isNotRequested( ids ) );
-    shrinkCache();
+    shrinkCache( preserveIds );
     foreach( Entity::Id id, ids ) {
       EntityListCacheNode<T> *node = new EntityListCacheNode<T>( id );
       mCache.insert( id, node );
@@ -393,12 +393,12 @@ public:
 
 private:
   /** Tries to reduce the cache size until at least one more object fits in. */
-  void shrinkCache()
+  void shrinkCache( const QList<Entity::Id> &preserveIds )
   {
     typename
     QHash< Entity::Id, EntityListCacheNode<T>* >::Iterator iter = mCache.begin();
     while ( iter != mCache.end() && mCache.size() >= mCapacity ) {
-      if ( iter.value()->pending ) {
+      if ( iter.value()->pending || preserveIds.contains( iter.key() ) ) {
         ++iter;
         continue;
       }
@@ -441,7 +441,7 @@ private:
       // make sure we find this node again if something went wrong here,
       // most likely the object got deleted from the server in the meantime
       if ( !result.isValid() ) {
-        node->entity = Item( id );
+        node->entity = T( id );
         node->invalid = true;
       } else {
         node->entity = result;
@@ -452,7 +452,6 @@ private:
   }
 
   void extractResults( KJob* job, typename T::List &entities ) const;
-
 
 private:
   QHash< Entity::Id, EntityListCacheNode<T>* > mCache;

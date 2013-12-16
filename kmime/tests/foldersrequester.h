@@ -39,9 +39,8 @@ class Requester : public QObject
   public:
     Requester();
 
-  private slots:
+  private Q_SLOTS:
     void requestResult( KJob *job );
 };
-
 
 #endif

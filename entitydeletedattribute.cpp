@@ -35,9 +35,6 @@ class EntityDeletedAttribute::EntityDeletedAttributePrivate
     QString restoreResource;
 };
 
-
-
-
 EntityDeletedAttribute::EntityDeletedAttribute()
     :   d_ptr( new EntityDeletedAttributePrivate() )
 {

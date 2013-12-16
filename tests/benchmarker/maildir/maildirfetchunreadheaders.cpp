@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #include "maildirfetchunreadheaders.h"
 #include "maildir.h"
 
@@ -55,7 +54,7 @@ void MailDirFetchUnreadHeaders::runTest() {
     QString a;
     foreach ( const Item &item, ifj->items() ) {
       // filter read messages
-      if( !item.hasFlag( "\\SEEN" ) ) {
+      if ( !item.hasFlag( "\\SEEN" ) ) {
         a = item.payload<MessagePtr>()->subject()->asUnicodeString();
       }
     }

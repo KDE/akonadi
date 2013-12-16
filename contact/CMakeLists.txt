@@ -22,19 +22,11 @@ if (PRISON_FOUND)
     include_directories(${PRISON_INCLUDE_DIR})
 endif()
 
-if (WINCE)
-  set( AKONADI_PHONE_DIAL_DEFAULT "UseWinCE" )
-  set( AKONADI_SEND_SMS_DEFAULT "UseWinCESms" )
-else()
-  set( AKONADI_PHONE_DIAL_DEFAULT "UseSkype" )
-  set( AKONADI_SEND_SMS_DEFAULT  "UseSkypeSms" )
-endif()
+set( AKONADI_PHONE_DIAL_DEFAULT "UseSkype" )
+set( AKONADI_SEND_SMS_DEFAULT  "UseSkypeSms" )
 
 add_subdirectory(tests)
-#We don't have kcms under wince so don't build them
-if(NOT WINCE)
-  add_subdirectory(kcm)
-endif()
+add_subdirectory(kcm)
 add_subdirectory(editor/im)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
@@ -51,12 +43,6 @@ set(akonadicontact_actions_SRCS
   actions/qsflphonedialer.cpp
   actions/qekigadialer.cpp
 )
-
-if (WINCE)
-  set( akonadicontact_actions_SRCS ${akonadicontact_actions_SRCS}
-    actions/qwincedialer.cpp
-  )
-endif()
 
 configure_file( actions/contactactionssettings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/contactactionssettings.kcfg @ONLY)
 kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
@@ -145,7 +131,36 @@ endif()
 qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
 kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
 
-kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
+include_directories(
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kmime
+  ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/kcalcore
+  ${CMAKE_BINARY_DIR}/akonadi
+)
+
+add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-contact PROPERTY DEFINE_SYMBOL akonadi_contact)
+endif()
+generate_export_header(akonadi-contact
+  BASE_NAME akonadi_contact
+  EXPORT_FILE_NAME akonadi-contact_export.h
+)
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_CONTACT_TESTS_EXPORT AKONADI_CONTACT_EXPORT)
+endif()
+configure_file(akonadi-contactprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h")
+
+
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_CONTACT_TESTS_EXPORT AKONADI_CONTACT_EXPORT)
+endif()
+configure_file(akonadi-contactprivate_export.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h"
+)
 
 target_link_libraries(akonadi-contact akonadi-kde
                                       kabc
@@ -154,7 +169,8 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
 				      ${KDE4_KIO_LIBS} 
-                                      ${NEPOMUK_CORE_LIBRARY})
+                                      ${NEPOMUK_CORE_LIBRARY}
+                                      ${KDE4_PHONON_LIBS})
 
 if(PRISON_FOUND) 
 target_link_libraries(akonadi-contact ${PRISON_LIBRARIES})
@@ -168,12 +184,8 @@ target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-				      ${NEPOMUK_CORE_LIBRARY})
-
-if (NOT WINCE)
-target_link_libraries(akonadi-contact ${KDE4_PHONON_LIBS})
-target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES ${KDE4_PHONON_LIBS})
-endif()
+				      ${NEPOMUK_CORE_LIBRARY}
+                                      ${KDE4_PHONON_LIBS})
 
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
@@ -185,7 +197,7 @@ install(FILES recentcontactscollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 install( FILES
   abstractcontactformatter.h
   abstractcontactgroupformatter.h
-  akonadi-contact_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-contact_export.h
   contactdefaultactions.h
   contacteditor.h
   contacteditordialog.h
@@ -208,5 +220,6 @@ install( FILES
   standardcontactactionmanager.h
   standardcontactformatter.h
   standardcontactgroupformatter.h
+  editor/im/improtocols.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
 )

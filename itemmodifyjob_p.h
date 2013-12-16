@@ -34,6 +34,7 @@ class ItemModifyJobPrivate : public JobPrivate
     {
       RemoteId,
       RemoteRevision,
+      Gid,
       Dirty
     };
 
@@ -46,6 +47,9 @@ class ItemModifyJobPrivate : public JobPrivate
     void conflictResolveError( const QString& );
 
     void doUpdateItemRevision( Entity::Id, int oldRevision, int newRevision );
+
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
+    QByteArray fullCommand() const;
 
     Q_DECLARE_PUBLIC( ItemModifyJob )
 

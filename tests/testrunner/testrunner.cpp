@@ -81,4 +81,3 @@ void TestRunner::terminate()
     mProcess->terminate();
 }
 
-

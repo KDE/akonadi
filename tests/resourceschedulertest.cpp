@@ -26,6 +26,14 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( ResourceSchedulerTest, NoGUI )
 
+Q_DECLARE_METATYPE(QSet<QByteArray>)
+
+ResourceSchedulerTest::ResourceSchedulerTest( QObject *parent ):
+  QObject( parent )
+{
+  qRegisterMetaType<QSet<QByteArray> >();
+}
+
 void ResourceSchedulerTest::testTaskComparision()
 {
   ResourceScheduler::Task t1;
@@ -144,7 +152,6 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   QCOMPARE( syncSpy.count(), 1 );
 }
 
-
 void ResourceSchedulerTest::customTaskNoArg()
 {
   ++mCustomCallCount;
@@ -155,7 +162,6 @@ void ResourceSchedulerTest::customTask(const QVariant& argument)
   ++mCustomCallCount;
   mLastArgument = argument;
 }
-
 
 void ResourceSchedulerTest::testCustomTask()
 {

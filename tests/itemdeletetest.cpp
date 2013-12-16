@@ -36,7 +36,7 @@ using namespace Akonadi;
 class ItemDeleteTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();
@@ -55,12 +55,15 @@ class ItemDeleteTest : public QObject
 
     void testDelete()
     {
+      ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ), this );
+      AKVERIFYEXEC( fjob );
+      QCOMPARE( fjob->items().count(), 1 );
+
       ItemDeleteJob *djob = new ItemDeleteJob( Item( 1 ), this );
       AKVERIFYEXEC( djob );
 
-      ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ), this );
-      AKVERIFYEXEC( fjob );
-      QCOMPARE( fjob->items().count(), 0 );
+      fjob = new ItemFetchJob( Item( 1 ), this );
+      QVERIFY( !fjob->exec() );
     }
 
     void testDeleteFromUnselectedCollection()
@@ -80,12 +83,15 @@ class ItemDeleteTest : public QObject
       CollectionSelectJob *sjob = new CollectionSelectJob( Collection( 2 ), this );
       AKVERIFYEXEC( sjob );
 
+      fjob = new ItemFetchJob( items[ 0 ], this );
+      AKVERIFYEXEC( fjob );
+      QCOMPARE( fjob->items().count(), 1 );
+
       ItemDeleteJob *djob = new ItemDeleteJob( items[ 0 ], this );
       AKVERIFYEXEC( djob );
 
       fjob = new ItemFetchJob( items[ 0 ], this );
-      AKVERIFYEXEC( fjob );
-      QCOMPARE( fjob->items().count(), 0 );
+      QVERIFY( !fjob->exec() );
     }
 
     void testRidDelete()
@@ -98,13 +104,18 @@ class ItemDeleteTest : public QObject
 
       Item i;
       i.setRemoteId( "C" );
-      ItemDeleteJob *djob = new ItemDeleteJob( i, this );
-      AKVERIFYEXEC( djob );
 
       ItemFetchJob *fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
       AKVERIFYEXEC( fjob );
-      QCOMPARE( fjob->items().count(), 0 );
+      QCOMPARE( fjob->items().count(), 1 );
+
+      ItemDeleteJob *djob = new ItemDeleteJob( i, this );
+      AKVERIFYEXEC( djob );
+
+      fjob = new ItemFetchJob( i, this );
+      fjob->setCollection( col );
+      QVERIFY( !fjob->exec() );
     }
 
     void testCollectionDelete()

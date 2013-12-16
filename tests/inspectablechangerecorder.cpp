@@ -30,12 +30,11 @@ InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDe
 InspectableChangeRecorder::InspectableChangeRecorder(FakeMonitorDependeciesFactory* dependenciesFactory, QObject* parent)
   : ChangeRecorder(new Akonadi::ChangeRecorderPrivate(dependenciesFactory, this), parent)
 {
-
+  QTimer::singleShot( 0, this, SLOT(doConnectToNotificationManager()) );
 }
 
 void InspectableChangeRecorder::doConnectToNotificationManager()
 {
   d_ptr->connectToNotificationManager();
 }
-
 

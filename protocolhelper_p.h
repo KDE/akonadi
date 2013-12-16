@@ -184,6 +184,8 @@ class ProtocolHelper
       return rv;
     }
 
+    static QByteArray entitySetToByteArray( const QList<Akonadi::Item> &_objects, const QByteArray &command );
+
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.

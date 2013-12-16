@@ -1,7 +1,6 @@
 /*
     Copyright (c) 2009 Kevin Ottens <ervin@kde.org>
 
-
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -71,7 +70,6 @@ class StatisticsProxyModel::Private
       }
     }
 
-
     QString toolTipForCollection( const QModelIndex &index, const Collection &collection )
     {
       QString bckColor = QApplication::palette().color( QPalette::ToolTipBase ).name();
@@ -90,7 +88,6 @@ class StatisticsProxyModel::Private
         "    </td>\n"
         "  </tr>\n"
         ).arg( txtColor ).arg( bckColor ).arg( index.data( Qt::DisplayRole ).toString() ).arg( textDirection );
-
 
       tip += QString::fromLatin1(
         "  <tr>\n"
@@ -123,7 +120,6 @@ class StatisticsProxyModel::Private
         "      <strong>%1</strong>: %2<br>\n"
         ).arg( i18n( "Storage Size" ) ).arg( KIO::convertSize( (KIO::filesize_t)( currentFolderSize ) ) );
 
-
       qint64 totalSize = 0;
       getCountRecursive( index, totalSize );
       totalSize -= currentFolderSize;
@@ -132,7 +128,6 @@ class StatisticsProxyModel::Private
           "<strong>%1</strong>: %2<br>"
           ).arg( i18n("Subfolder Storage Size") ).arg( KIO::convertSize( (KIO::filesize_t)( totalSize ) ) );
       }
-
 
      QString iconName = CollectionUtils::defaultIconName( collection );
       if ( collection.hasAttribute<EntityDisplayAttribute>() &&
@@ -143,7 +138,6 @@ class StatisticsProxyModel::Private
          else
            iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
       }
-
 
       int iconSizes[] = { 32, 22 };
       int icon_size_found = 32;
@@ -177,7 +171,6 @@ class StatisticsProxyModel::Private
       {
         tip += tipIcon + QString::fromLatin1( "</td><td align=\"%3\" valign=\"top\">" ).arg( textDirection ) + tipInfo;
       }
-
 
       tip += QString::fromLatin1(
         "  </tr>" \
@@ -254,7 +247,7 @@ void StatisticsProxyModel::Private::sourceLayoutChanged()
 
   const int columnCount = mParent->sourceModel()->columnCount();
 
-  for( int i = 0; i < m_persistent.size(); ++i ) {
+  for ( int i = 0; i < m_persistent.size(); ++i ) {
     const QModelIndex persistentIdx = m_persistent.at( i );
     const QModelIndex nonPersistentIdx = m_nonPersistent.at( i );
     if ( m_persistentFirstColumn.at( i ) != m_nonPersistentFirstColumn.at( i ) && persistentIdx.column() >= columnCount ) {
@@ -290,7 +283,6 @@ void StatisticsProxyModel::connectNotify(const char *signal)
   ignore = false;
 //   QSortFilterProxyModel::connectNotify(signal);
 }
-
 
 StatisticsProxyModel::StatisticsProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
@@ -329,7 +321,6 @@ QModelIndex Akonadi::StatisticsProxyModel::index( int row, int column, const QMo
 {
     if (!hasIndex(row, column, parent))
       return QModelIndex();
-
 
     int sourceColumn = column;
 
@@ -444,7 +435,6 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
 
   return list;
 }
-
 
 #include "moc_statisticsproxymodel.cpp"
 

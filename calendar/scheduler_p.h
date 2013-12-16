@@ -55,7 +55,9 @@ public:
     ResultErrorSavingFreeBusy,
     ResultCreatingError,
     ResultModifyingError,
-    ResultDeletingError
+    ResultDeletingError,
+    ResultUnsupported,
+    ResultUserCancelled
   };
 
   /**
@@ -63,6 +65,8 @@ public:
   */
   explicit Scheduler( QObject *parent = 0 );
   ~Scheduler();
+
+  void setShowDialogs( bool enable );
 
   /**
     * Notify @p recipients about @p incidence

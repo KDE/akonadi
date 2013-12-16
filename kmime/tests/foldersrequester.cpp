@@ -32,7 +32,6 @@
 
 using namespace Akonadi;
 
-
 Requester::Requester()
 {
   Control::start();
@@ -45,7 +44,7 @@ Requester::Requester()
 
 void Requester::requestResult( KJob *job )
 {
-  if( job->error() ) {
+  if ( job->error() ) {
     kError() << "LocalFoldersRequestJob failed:" << job->errorString();
     KApplication::exit( 1 );
   } else {
@@ -63,5 +62,4 @@ int main( int argc, char **argv )
   new Requester();
   return app.exec();
 }
-
 

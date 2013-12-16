@@ -41,6 +41,8 @@ NameEditWidget::NameEditWidget( QWidget *parent )
 
   mNameEdit = new KLineEdit;
   layout->addWidget( mNameEdit );
+  setFocusProxy( mNameEdit );
+  setFocusPolicy( Qt::StrongFocus );
 
   QToolButton *button = new QToolButton;
   button->setText( i18n( "..." ) );

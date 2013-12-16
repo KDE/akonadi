@@ -75,7 +75,6 @@ namespace KPIMUtils
   template <> struct SuperClass<Gerd> : public SuperClassTrait<Volker>{};
 }
 
-
 QTEST_KDEMAIN( ItemHydra, NoGUI )
 
 ItemHydra::ItemHydra()
@@ -85,7 +84,6 @@ ItemHydra::ItemHydra()
 void ItemHydra::initTestCase()
 {
 }
-
 
 void ItemHydra::testItemValuePayload()
 {
@@ -210,7 +208,6 @@ void ItemHydra::testPointerPayload()
     QCOMPARE( w.use_count(), (long)0 );
 }
 
-
 void ItemHydra::testPolymorphicPayload()
 {
   VolkerPtr p( new Rudi );
@@ -290,7 +287,6 @@ void ItemHydra::testQSharedPointerPayload()
   }
   QVERIFY( caughtException );
 }
-
 
 void ItemHydra::testHasPayload()
 {

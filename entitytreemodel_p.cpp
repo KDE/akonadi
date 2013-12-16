@@ -175,7 +175,6 @@ void EntityTreeModelPrivate::serverStarted()
   endResetModel();
 }
 
-
 ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const
 {
   Q_ASSERT( parent.isValid() );
@@ -888,7 +887,6 @@ void EntityTreeModelPrivate::monitoredCollectionUnsubscribed( const Akonadi::Col
   monitoredCollectionRemoved( col );
 }
 
-
 void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
 {
   QList<Node*> childList = m_childEntities.value( collectionId );
@@ -1304,6 +1302,18 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
     m_populatedCols.insert( collectionId );
     emit q_ptr->collectionPopulated( collectionId );
+  } else {
+    if ( !m_showRootCollection &&
+        collectionId == m_rootCollection.id() ) {
+      return;
+    }
+    // If collections are not in the model, there will be no valid index for them.
+    if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) &&
+        ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
+      const QModelIndex index = indexForCollection( Collection( collectionId ) );
+      Q_ASSERT( index.isValid() );
+      emit dataChanged( index, index );
+    }
   }
 
   if ( !m_showRootCollection &&
@@ -1313,13 +1323,6 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
   m_pendingCollectionRetrieveJobs.remove( collectionId );
 
-  // If collections are not in the model, there will be no valid index for them.
-  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) &&
-       ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
-    const QModelIndex index = indexForCollection( Collection( collectionId ) );
-    Q_ASSERT( index.isValid() );
-    emit dataChanged( index, index );
-  }
 }
 
 void EntityTreeModelPrivate::pasteJobDone( KJob *job )
@@ -1418,7 +1421,6 @@ void EntityTreeModelPrivate::startFirstListJob()
     m_rootNode->type = Node::Collection;
     m_collections.insert( m_rootCollection.id(), m_rootCollection );
   }
-
 
   const bool noMimetypes = m_mimeChecker.wantedMimeTypes().isEmpty();
   const bool noResources = m_monitor->resourcesMonitored().isEmpty();
@@ -1572,20 +1574,9 @@ void EntityTreeModelPrivate::ref( Collection::Id id )
 bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
 {
   // reference counted collections should never be purged
-  // they first have to be deref'ed until they reach 0
-  if ( m_monitor->d_ptr->refCountMap.contains( id ) ) {
-    return false;
-  }
-
-  // if the collection is buffered, keep it
-  if ( m_monitor->d_ptr->m_buffer.isBuffered( id ) ) {
-    return false;
-  }
-
-  static const int MAXITEMS = 10000;
-
-  // if we do not exceed the maximum items limit, keep it
-  if ( m_items.size() < MAXITEMS ) {
+  // they first have to be deref'ed until they reach 0.
+  // if the collection is buffered, keep it.
+  if ( m_monitor->d_ptr->isMonitored( id ) ) {
     return false;
   }
 
@@ -1644,7 +1635,7 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
   QList<Node *> &es = m_childEntities[ collection.id() ];
   //NOTE: .erase will invalidate all iterators besides "it"!
-  for(int i = 0; i < toDelete; ++i) {
+  for (int i = 0; i < toDelete; ++i) {
     Q_ASSERT(es.count(*it) == 1);
     // don't keep implicitly shared data alive
     Q_ASSERT(m_items.contains((*it)->id));

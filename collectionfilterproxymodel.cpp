@@ -112,7 +112,6 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
   return false;
 }
 
-
 CollectionFilterProxyModel::CollectionFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
@@ -159,6 +158,11 @@ void CollectionFilterProxyModel::setExcludeVirtualCollections( bool exclude )
     d->mExcludeVirtualCollections = exclude;
     invalidateFilter();
   }
+}
+
+bool CollectionFilterProxyModel::excludeVirtualCollections() const
+{
+    return d->mExcludeVirtualCollections;
 }
 
 Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const

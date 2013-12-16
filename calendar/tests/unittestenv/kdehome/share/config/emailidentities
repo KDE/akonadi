@@ -7,7 +7,7 @@ Default Identity=1319040445
 [Identity #0]
 Dictionary=English (United States of America)
 Email Address=unittests@dev.nul
-Email Aliases=
+Email Aliases= alias1@kde.org,alias2@kde.org
 Identity=UnitTestUser
 Image Location=
 Inline Signature=
@@ -17,3 +17,18 @@ Preferred Crypto Message Format=auto
 Signature Type=disabled
 X-FaceEnabled=false
 uoid=1319040445
+
+[Identity #1]
+Dictionary=English (United States of America)
+Email Address=identity2@kde.org
+Email Aliases=alias1@kde.org,alias2@kde.org
+Identity=UnitTestUser
+Image Location=
+Inline Signature=
+Name=Unit Test User ID2
+Organization=KDE
+Preferred Crypto Message Format=auto
+Signature Type=disabled
+X-FaceEnabled=false
+uoid=1319040446
+

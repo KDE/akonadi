@@ -51,7 +51,7 @@ class CollectionModelPrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @deprecated Use Akonadi::EntityTreeModel instead
  */
-class AKONADI_EXPORT_DEPRECATED CollectionModel : public QAbstractItemModel
+class AKONADI_DEPRECATED_EXPORT CollectionModel : public QAbstractItemModel
 {
   Q_OBJECT
 

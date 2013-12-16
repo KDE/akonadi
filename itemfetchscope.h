@@ -23,6 +23,7 @@
 #include "akonadi_export.h"
 
 #include <QtCore/QSharedDataPointer>
+#include <KDE/KDateTime>
 
 class QStringList;
 template <typename T> class QSet;
@@ -244,6 +245,23 @@ class AKONADI_EXPORT ItemFetchScope
     bool fetchModificationTime() const;
 
     /**
+     * Enables retrieval of the item GID.
+     * This is disabled by default.
+     *
+     * @param retrieveGID @c true to retrieve the GID, @c false otherwise
+     * @since 4.12
+     */
+    void setFetchGid( bool retrieveGID );
+
+    /**
+     * Returns whether item GID should be retrieved.
+     *
+     * @see setFetchGid()
+     * @since 4.12
+     */
+    bool fetchGid() const;
+
+    /**
      * Ignore retrieval errors while fetching items, and always deliver what is available.
      * If items have missing parts and the part can't be retrieved from the resource (i.e. because the system is offline),
      * the fetch job would normally just fail. By setting this flag, the errors are ignored,
@@ -269,6 +287,44 @@ class AKONADI_EXPORT ItemFetchScope
      */
     bool isEmpty() const;
 
+    /**
+     * Only fetch items that were added or modified after given timestamp
+     *
+     * When this property is set, all results are filtered, i.e. even when you
+     * request an item with a specific ID, it will not be fetched unless it was
+     * modified after @p changedSince timestamp.
+     *
+     * @param changedSince The timestamp of oldest modified item to fetch
+     * @since 4.11
+     */
+    void setFetchChangedSince( const KDateTime &changedSince );
+
+    /**
+     * Returns timestamp of the oldest item to fetch.
+     */
+    KDateTime fetchChangedSince() const;
+
+    /**
+     * Fetch remote identification for items.
+     *
+     * These include Akonadi::Item::remoteId() and Akonadi::Item::remoteRevision(). This should
+     * be off for normal clients usually, to save memory (not to mention normal clients should
+     * not be concerned with these information anyway). It is however crucial for resource agents.
+     * For backward compatibility the default is @c true.
+     *
+     * @param retrieveRid whether or not to load remote identification.
+     * @since 4.12
+     */
+    void setFetchRemoteIdentification( bool retrieveRid );
+
+    /**
+     * Returns whether item remote identification should be retrieved.
+     *
+     * @see setFetchRemoteIdentification()
+     * @since 4.12
+     */
+    bool fetchRemoteIdentification() const;
+
   private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;
@@ -276,5 +332,7 @@ class AKONADI_EXPORT ItemFetchScope
 };
 
 }
+
+Q_DECLARE_METATYPE(Akonadi::ItemFetchScope)
 
 #endif

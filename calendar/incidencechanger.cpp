@@ -26,7 +26,6 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/transactionsequence.h>
-#include <akonadi/collectiondialog.h>
 
 #include <KJob>
 #include <KLocalizedString>
@@ -34,8 +33,16 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 
+#include <QBitArray>
+
 using namespace Akonadi;
 using namespace KCalCore;
+
+#ifdef PLEASE_TEST_INVITATIONS
+# define RUNNING_UNIT_TESTS true
+#else
+# define RUNNING_UNIT_TESTS false
+#endif
 
 ITIPHandlerHelper::Action actionFromStatus( ITIPHandlerHelper::SendResult result )
 {
@@ -58,37 +65,6 @@ ITIPHandlerHelper::Action actionFromStatus( ITIPHandlerHelper::SendResult result
 }
 
 namespace Akonadi {
-  static Akonadi::Collection selectCollection( QWidget *parent,
-                                               int &dialogCode,
-                                               const QStringList &mimeTypes,
-                                               const Akonadi::Collection &defCollection )
-  {
-    QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
-
-    kDebug() << "selecting collections with mimeType in " << mimeTypes;
-
-    dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
-    dlg->setMimeTypeFilter( mimeTypes );
-    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    if ( defCollection.isValid() ) {
-      dlg->setDefaultCollection( defCollection );
-    }
-    Akonadi::Collection collection;
-
-    // FIXME: don't use exec.
-    dialogCode = dlg->exec();
-    if ( dialogCode == QDialog::Accepted ) {
-      collection = dlg->selectedCollection();
-
-      if ( !collection.isValid() ) {
-        kWarning() <<"An invalid collection was selected!";
-      }
-    }
-    delete dlg;
-
-    return collection;
-  }
-
   // Does a queued emit, with QMetaObject::invokeMethod
   static void emitCreateFinished( IncidenceChanger *changer,
                                   int changeId,
@@ -168,6 +144,9 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
   mGroupwareCommunication = false;
   mLatestAtomicOperationId = 0;
   mBatchOperationInProgress = false;
+  mAutoAdjustRecurrence = true;
+  m_collectionFetchJob = 0;
+  m_invitationPolicy = InvitationPolicyAsk;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
@@ -190,7 +169,7 @@ bool IncidenceChanger::Private::atomicOperationIsValid( uint atomicOperationId )
 {
   // Changes must be done between startAtomicOperation() and endAtomicOperation()
   return mAtomicOperations.contains( atomicOperationId ) &&
-         !mAtomicOperations[atomicOperationId]->endCalled;
+         !mAtomicOperations[atomicOperationId]->m_endCalled;
 }
 
 bool IncidenceChanger::Private::hasRights( const Collection &collection,
@@ -217,7 +196,7 @@ bool IncidenceChanger::Private::hasRights( const Collection &collection,
 Akonadi::Job* IncidenceChanger::Private::parentJob( const Change::Ptr &change ) const
 {
   return (mBatchOperationInProgress && !change->queuedModification) ?
-                                       mAtomicOperations[mLatestAtomicOperationId]->transaction : 0;
+              mAtomicOperations[mLatestAtomicOperationId]->transaction() : 0;
 }
 
 void IncidenceChanger::Private::queueModification( Change::Ptr change )
@@ -259,22 +238,22 @@ void IncidenceChanger::Private::handleTransactionJobResult( KJob *job )
   Q_ASSERT( mAtomicOperations.contains(atomicOperationId) );
   AtomicOperation *operation = mAtomicOperations[atomicOperationId];
   Q_ASSERT( operation );
-  Q_ASSERT( operation->id == atomicOperationId );
+  Q_ASSERT( operation->m_id == atomicOperationId );
   if ( job->error() ) {
     if ( !operation->rolledback() )
       operation->setRolledback();
     kError() << "Transaction failed, everything was rolledback. "
              << job->errorString();
   } else {
-    Q_ASSERT( operation->endCalled );
+    Q_ASSERT( operation->m_endCalled );
     Q_ASSERT( !operation->pendingJobs() );
   }
 
-  if ( !operation->pendingJobs() && operation->endCalled ) {
+  if ( !operation->pendingJobs() && operation->m_endCalled ) {
     delete mAtomicOperations.take( atomicOperationId );
     mBatchOperationInProgress = false;
   } else {
-    operation->transactionCompleted = true;
+    operation->m_transactionCompleted = true;
   }
 }
 
@@ -294,9 +273,9 @@ void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
   QString description;
   if ( change->atomicOperationId != 0 ) {
     AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
+    a->m_numCompletedChanges++;
     change->completed = true;
-    description = a->description;
+    description = a->m_description;
   }
 
   if ( j->error() ) {
@@ -345,9 +324,9 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
   QString description;
   if ( change->atomicOperationId != 0 ) {
     AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
+    a->m_numCompletedChanges++;
     change->completed = true;
-    description = a->description;
+    description = a->m_description;
   }
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
@@ -393,9 +372,9 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   QString description;
   if ( change->atomicOperationId != 0 ) {
     AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
+    a->m_numCompletedChanges++;
     change->completed = true;
-    description = a->description;
+    description = a->m_description;
   }
   if ( j->error() ) {
     if ( deleteAlreadyCalled( item.id() ) ) {
@@ -446,7 +425,12 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
   bool result = true;
   if ( mGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget );  // TODO make async
-    if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+
+    if ( m_invitationPolicy == InvitationPolicySend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    } else if ( m_invitationPolicy == InvitationPolicyDontSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionDontSendMessage );
+    } else if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
 
@@ -460,37 +444,60 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
         Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-          if ( !incidence->supportsGroupwareCommunication() )
+          Incidence::Ptr incidence = CalendarUtils::incidence( item );
+          if ( !incidence->supportsGroupwareCommunication() ) {
             continue;
-          status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
-          if ( change->atomicOperationId ) {
-            mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
           }
-          result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
-          //TODO: with some status we want to break immediately
+          // We only send CANCEL if we're the organizer.
+          // If we're not, then we send REPLY with PartStat=Declined in handleInvitationsAfterChange()
+          if ( Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
+            status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
+            if ( change->atomicOperationId ) {
+              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+            }
+            result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
+            //TODO: with some status we want to break immediately
+          }
         }
       }
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
-          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+        if ( change->originalItems.isEmpty() ) {
+          break;
+        }
 
-          if ( oldIncidence->supportsGroupwareCommunication() ) {
-            const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
-            if ( !modify ) {
-              if ( newIncidence->type() == oldIncidence->type() ) {
-                IncidenceBase *i1 = newIncidence.data();
-                IncidenceBase *i2 = oldIncidence.data();
-                *i1 = *i2;
-              }
-              result = false;
-            }
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+        Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+
+        if ( !oldIncidence->supportsGroupwareCommunication() ) {
+          break;
+        }
+
+        const bool weAreOrganizer = Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() );
+        if (RUNNING_UNIT_TESTS && !weAreOrganizer ) {
+          // This is a bit of a workaround when running tests. I don't want to show the
+          // "You're not organizer, do you want to modify event?" dialog in unit-tests, but want
+          // to emulate a "yes" and a "no" press.
+          if ( m_invitationPolicy == InvitationPolicySend ) {
+            return true;
+          } else if (m_invitationPolicy == InvitationPolicyDontSend) {
+            return false;
           }
         }
+
+        const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+        if ( modify ) {
+          break;
+        }
+
+        if ( newIncidence->type() == oldIncidence->type() ) {
+          IncidenceBase *i1 = newIncidence.data();
+          IncidenceBase *i2 = oldIncidence.data();
+          *i1 = *i2;
+        }
+        result = false;
       }
       break;
       default:
@@ -505,10 +512,21 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
 {
   if ( change->useGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget ); // TODO make async
+
+    const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
+    const bool neverSend = m_invitationPolicy == InvitationPolicyDontSend;
+    if ( alwaysSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    }
+
+    if ( neverSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionDontSendMessage );
+    }
+
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
-        Incidence::Ptr incidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+        Incidence::Ptr incidence = CalendarUtils::incidence( change->newItem );
         if ( incidence->supportsGroupwareCommunication() ) {
           const ITIPHandlerHelper::SendResult status =
             handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
@@ -529,7 +547,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
         Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload() );
-          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr incidence = CalendarUtils::incidence( item );
           Q_ASSERT( incidence );
           if ( !incidence->supportsGroupwareCommunication() )
             continue;
@@ -563,25 +581,34 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
-          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-          if ( newIncidence->supportsGroupwareCommunication() ) {
-            if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
-              handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
-            }
-            const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
-                                                                        oldIncidence,
-                                                                        Akonadi::CalendarUtils::allEmails() );
-            ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                              newIncidence,
-                                                                                              attendeeStatusChanged );
+        if ( change->originalItems.isEmpty() ) {
+          break;
+        }
 
-            if ( change->atomicOperationId != 0 ) {
-              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
-            }
-          }
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+        Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+
+        if ( !newIncidence->supportsGroupwareCommunication() ||
+             !Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() ) ) {
+          // If we're not the organizer, the user already saw the "Do you really want to do this, incidence will become out of sync"
+          break;
+        }
+
+        if ( !neverSend && !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+          handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+        }
+
+        const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
+                                                                    oldIncidence,
+                                                                    Akonadi::CalendarUtils::allEmails() );
+
+        ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                     newIncidence,
+                                                                                     attendeeStatusChanged );
+
+        if ( change->atomicOperationId != 0 ) {
+          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
         }
       }
       break;
@@ -636,8 +663,6 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
 
   const Change::Ptr change( new CreationChange( this, ++d->mLatestChangeId,
                                                 atomicOperationId, parent ) );
-  Collection collectionToUse;
-
   const int changeId = change->id;
   Q_ASSERT( !( d->mBatchOperationInProgress && !d->mAtomicOperations.contains( atomicOperationId ) ) );
   if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
@@ -650,102 +675,14 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
     return changeId;
   }
 
-  d->handleInvitationsBeforeChange( change );
-
-  if ( collection.isValid() && d->hasRights( collection, ChangeTypeCreate ) ) {
-    // The collection passed always has priority
-    collectionToUse = collection;
-  } else {
-    switch( d->mDestinationPolicy ) {
-      case DestinationPolicyDefault:
-        if ( d->mDefaultCollection.isValid() &&
-             d->hasRights( d->mDefaultCollection, ChangeTypeCreate ) ) {
-          collectionToUse = d->mDefaultCollection;
-          break;
-        }
-        kWarning() << "Destination policy is to use the default collection."
-                   << "But it's invalid or doesn't have proper ACLs."
-                   << "isValid = "  << d->mDefaultCollection.isValid()
-                   << "has ACLs = " << d->hasRights( d->mDefaultCollection,
-                                                     ChangeTypeCreate );
-        // else fallthrough, and ask the user.
-      case DestinationPolicyAsk:
-      {
-        int dialogCode;
-        const QStringList mimeTypes( incidence->mimeType() );
-        collectionToUse = selectCollection( parent, dialogCode /*by-ref*/, mimeTypes,
-                                            d->mDefaultCollection );
-        if ( dialogCode != QDialog::Accepted ) {
-          kDebug() << "User canceled collection choosing";
-          change->resultCode = ResultCodeUserCanceled;
-          d->cancelTransaction();
-          return changeId;
-        }
-
-        if ( collectionToUse.isValid() && !d->hasRights( collectionToUse, ChangeTypeCreate ) ) {
-          kWarning() << "No ACLs for incidence creation";
-          const QString errorMessage = d->showErrorDialog( ResultCodePermissions, parent );
-          change->resultCode = ResultCodePermissions;
-          change->errorString = errorMessage;
-          d->cancelTransaction();
-          return changeId;
-        }
-
-        // TODO: add unit test for these two situations after reviewing API
-        if ( !collectionToUse.isValid() ) {
-          kError() << "Invalid collection selected. Can't create incidence.";
-          change->resultCode = ResultCodeInvalidUserCollection;
-          const QString errorString = d->showErrorDialog( ResultCodeInvalidUserCollection, parent );
-          change->errorString = errorString;
-          d->cancelTransaction();
-          return changeId;
-        }
-      }
-      break;
-      case DestinationPolicyNeverAsk:
-      {
-        const bool hasRights = d->hasRights( d->mDefaultCollection, ChangeTypeCreate );
-        if ( d->mDefaultCollection.isValid() && hasRights ) {
-          collectionToUse = d->mDefaultCollection;
-        } else {
-          const QString errorString = d->showErrorDialog( ResultCodeInvalidDefaultCollection, parent );
-          kError() << errorString << "; rights are " << hasRights;
-          change->resultCode = hasRights ? ResultCodeInvalidDefaultCollection :
-                                           ResultCodePermissions;
-          change->errorString = errorString;
-          d->cancelTransaction();
-          return changeId;
-        }
-      }
-      break;
-    default:
-      // Never happens
-      Q_ASSERT_X( false, "createIncidence()", "unknown destination policy" );
-      d->cancelTransaction();
-      return -1;
-    }
-  }
-
-  d->mLastCollectionUsed = collectionToUse;
-
   Item item;
-  item.setPayload<Incidence::Ptr>( incidence );
+  item.setPayload<KCalCore::Incidence::Ptr>( incidence );
   item.setMimeType( incidence->mimeType() );
 
-  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse, d->parentJob( change ) );
-  d->mChangeForJob.insert( createJob, change );
+  change->newItem = item;
 
-  if ( d->mBatchOperationInProgress ) {
-    AtomicOperation *atomic = d->mAtomicOperations[d->mLatestAtomicOperationId];
-    Q_ASSERT( atomic );
-    atomic->addChange( change );
-  }
+  d->step1DetermineDestinationCollection( change, collection );
 
-  // QueuedConnection because of possible sync exec calls.
-  connect( createJob, SIGNAL(result(KJob*)),
-           d, SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection );
-
-  d->mChangeById.insert( changeId, change );
   return change->id;
 }
 
@@ -910,6 +847,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     d->cleanupTransaction();
     emitModifyFinished( this, changeId, changedItem, ResultCodeRolledback, errorMessage );
   } else {
+    d->adjustRecurrence( originalPayload, CalendarUtils::incidence( modificationChange->newItem ) );
     d->performModification( change );
   }
 
@@ -945,7 +883,13 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     return;
   }
 
-  handleInvitationsBeforeChange( change );
+  const bool userCancelled = !handleInvitationsBeforeChange( change );
+  if ( userCancelled ) {
+    // User got a "You're not the organizer, do you really want to send" dialog, and said "no"
+    kDebug() << "User cancelled, giving up";
+    emitModifyFinished( q, changeId, newItem, ResultCodeUserCanceled, QString() );
+    return;
+  }
 
   QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
                                                  ConflictPreventer::self()->mLatestRevisionByItemId;
@@ -961,7 +905,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     newItem.setRevision( latestRevisionByItemId[id] );
   }
 
-  Incidence::Ptr incidence = newItem.payload<Incidence::Ptr>();
+  Incidence::Ptr incidence = CalendarUtils::incidence( newItem );
   { // increment revision ( KCalCore revision, not akonadi )
     const int revision = incidence->revision();
     incidence->setRevision( revision + 1 );
@@ -1003,13 +947,9 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
   ++d->mLatestAtomicOperationId;
   d->mBatchOperationInProgress = true;
 
-  AtomicOperation *atomicOperation = new AtomicOperation( d->mLatestAtomicOperationId );
-  atomicOperation->description = operationDescription;
+  AtomicOperation *atomicOperation = new AtomicOperation( d, d->mLatestAtomicOperationId );
+  atomicOperation->m_description = operationDescription;
   d->mAtomicOperations.insert( d->mLatestAtomicOperationId, atomicOperation );
-  d->mAtomicOperationByTransaction.insert( atomicOperation->transaction, d->mLatestAtomicOperationId );
-
-  d->connect( atomicOperation->transaction, SIGNAL(result(KJob*)),
-              d, SLOT(handleTransactionJobResult(KJob*)) );
 }
 
 void IncidenceChanger::endAtomicOperation()
@@ -1026,12 +966,12 @@ void IncidenceChanger::endAtomicOperation()
   Q_ASSERT( d->mAtomicOperations.contains(d->mLatestAtomicOperationId) );
   AtomicOperation *atomicOperation = d->mAtomicOperations[d->mLatestAtomicOperationId];
   Q_ASSERT( atomicOperation );
-  atomicOperation->endCalled = true;
+  atomicOperation->m_endCalled = true;
 
   const bool allJobsCompleted = !atomicOperation->pendingJobs();
 
   if ( allJobsCompleted && atomicOperation->rolledback() &&
-       atomicOperation->transactionCompleted ) {
+       atomicOperation->m_transactionCompleted ) {
     // The transaction job already completed, we can cleanup:
     delete d->mAtomicOperations.take( d->mLatestAtomicOperationId );
     d->mBatchOperationInProgress = false;
@@ -1115,6 +1055,26 @@ bool IncidenceChanger::groupwareCommunication() const
   return d->mGroupwareCommunication;
 }
 
+void IncidenceChanger::setAutoAdjustRecurrence( bool enable )
+{
+  d->mAutoAdjustRecurrence = enable;
+}
+
+bool IncidenceChanger::autoAdjustRecurrence() const
+{
+    return d->mAutoAdjustRecurrence;
+}
+
+void IncidenceChanger::setInvitationPolicy( IncidenceChanger::InvitationPolicy policy )
+{
+  d->m_invitationPolicy = policy;
+}
+
+IncidenceChanger::InvitationPolicy IncidenceChanger::invitationPolicy() const
+{
+  return d->m_invitationPolicy;
+}
+
 Akonadi::Collection IncidenceChanger::lastCollectionUsed() const
 {
   return d->mLastCollectionUsed;
@@ -1154,6 +1114,46 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
   return errorString;
 }
 
+void IncidenceChanger::Private::adjustRecurrence( const KCalCore::Incidence::Ptr &originalIncidence,
+                                                  const KCalCore::Incidence::Ptr &incidence )
+{
+  if ( !originalIncidence || !incidence->recurs() || incidence->hasRecurrenceId() || !mAutoAdjustRecurrence
+       || !incidence->dirtyFields().contains( KCalCore::Incidence::FieldDtStart ) ) {
+    return;
+  }
+
+  const QDate originalDate = originalIncidence->dtStart().date();
+  const QDate newStartDate = incidence->dtStart().date();
+
+  if ( !originalDate.isValid() || !newStartDate.isValid() || originalDate == newStartDate )
+    return;
+
+  KCalCore::Recurrence *recurrence = incidence->recurrence();
+  switch( recurrence->recurrenceType() ) {
+  case KCalCore::Recurrence::rWeekly: {
+    QBitArray days = recurrence->days();
+    const int oldIndex = originalDate.dayOfWeek()-1; // QDate returns [1-7];
+    const int newIndex = newStartDate.dayOfWeek()-1;
+    if ( oldIndex != newIndex ) {
+      days.clearBit( oldIndex );
+      days.setBit( newIndex );
+      recurrence->setWeekly( recurrence->frequency(), days );
+    }
+  }
+  default:
+    break;   // Other types not implemented
+  }
+
+  // Now fix cases where dtstart would be bigger than the recurrence end rendering it impossible for a view to show it:
+  // To retrieve the recurrence end don't trust Recurrence::endDt() since it returns dtStart if the rrule's end is < than dtstart,
+  // it seems someone made Recurrence::endDt() more robust, but getNextOccurrences() still craps out. So lets fix it here
+  // there's no reason to write bogus ical to disk.
+  const QDate recurrenceEndDate = recurrence->defaultRRule() ? recurrence->defaultRRule()->endDt().date() : QDate();
+  if ( recurrenceEndDate.isValid() && recurrenceEndDate < newStartDate ) {
+    recurrence->setEndDate( newStartDate );
+  }
+}
+
 void IncidenceChanger::Private::cancelTransaction()
 {
   if ( mBatchOperationInProgress ) {
@@ -1167,7 +1167,7 @@ void IncidenceChanger::Private::cleanupTransaction()
   AtomicOperation *operation = mAtomicOperations[mLatestAtomicOperationId];
   Q_ASSERT( operation );
   Q_ASSERT( operation->rolledback() );
-  if ( !operation->pendingJobs() && operation->endCalled && operation->transactionCompleted ) {
+  if ( !operation->pendingJobs() && operation->m_endCalled && operation->m_transactionCompleted ) {
     delete mAtomicOperations.take(mLatestAtomicOperationId);
     mBatchOperationInProgress = false;
   }
@@ -1184,11 +1184,11 @@ bool IncidenceChanger::Private::allowAtomicOperation( int atomicOperationId,
     if ( change->type == ChangeTypeCreate ) {
       allow = true;
     } else if ( change->type == ChangeTypeModify ) {
-      allow = !operation->mItemIdsInOperation.contains( change->newItem.id() );
+      allow = !operation->m_itemIdsInOperation.contains( change->newItem.id() );
     } else if ( change->type == ChangeTypeDelete ) {
       DeletionChange::Ptr deletion = change.staticCast<DeletionChange>();
       foreach( Akonadi::Item::Id id, deletion->mItemIds ) {
-        if ( operation->mItemIdsInOperation.contains( id ) ) {
+        if ( operation->m_itemIdsInOperation.contains( id ) ) {
           allow = false;
           break;
         }
@@ -1254,3 +1254,31 @@ void IncidenceChanger::cancelAttendees( const Akonadi::Item &aitem )
 }
 
 */
+
+AtomicOperation::AtomicOperation( IncidenceChanger::Private *icp,
+                                  uint ident ) : m_id ( ident )
+                                               , m_endCalled( false )
+                                               , m_numCompletedChanges( 0 )
+                                               , m_transactionCompleted( false )
+                                               , m_wasRolledback( false )
+                                               , m_transaction( 0 )
+                                               , m_incidenceChangerPrivate( icp )
+
+{
+  Q_ASSERT( m_id != 0 );
+}
+
+Akonadi::TransactionSequence *AtomicOperation::transaction()
+{
+  if ( !m_transaction ) {
+    m_transaction = new Akonadi::TransactionSequence;
+    m_transaction->setAutomaticCommittingEnabled( true );
+
+    m_incidenceChangerPrivate->mAtomicOperationByTransaction.insert( m_transaction, m_id );
+
+    QObject::connect( m_transaction, SIGNAL(result(KJob*)),
+                      m_incidenceChangerPrivate, SLOT(handleTransactionJobResult(KJob*)) );
+  }
+
+  return m_transaction;
+}

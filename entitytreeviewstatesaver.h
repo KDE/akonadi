@@ -86,7 +86,7 @@ class EntityTreeViewStateSaverPrivate;
  *
  * @deprecated This class is deprecated. Use ETMViewStateSaver instead.
  */
-class AKONADI_EXPORT_DEPRECATED EntityTreeViewStateSaver : public QObject
+class AKONADI_DEPRECATED_EXPORT EntityTreeViewStateSaver : public QObject
 {
   Q_OBJECT
 

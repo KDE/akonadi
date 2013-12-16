@@ -121,7 +121,8 @@ DisplayNameEditWidget::DisplayNameEditWidget( QWidget *parent )
                                  << QString() << QString() << QString() );
 
   layout->addWidget( mView );
-
+  setFocusProxy( mView );
+  setFocusPolicy( Qt::StrongFocus );
   connect( mView, SIGNAL(activated(int)), SLOT(displayTypeChanged(int)) );
 
   DisplayNameDelegate *delegate = new DisplayNameDelegate( mView->view() );

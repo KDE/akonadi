@@ -23,7 +23,6 @@
 #include "akonadi_export.h"
 #include <QtCore/QObject>
 
-
 namespace Akonadi {
 
 /**

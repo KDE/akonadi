@@ -111,6 +111,19 @@ public:
   };
 
   /**
+   * Enum for controlling "Do you want to e-mail attendees" type of dialogs.
+   * This is only honoured if groupware communication is active.
+   *
+   * @see groupwareCommunication()
+   * @since 4.12
+   */
+  enum InvitationPolicy {
+      InvitationPolicySend = 0, ///< Invitation e-mails are sent without asking the user if he wants to.
+      InvitationPolicyAsk,      ///< The user is asked if an e-mail should be sent. This is the default.
+      InvitationPolicyDontSend  ///< E-mails aren't sent
+  };
+
+  /**
     * This enum describes change types.
     */
   enum ChangeType {
@@ -332,9 +345,36 @@ public:
 
   /**
     * Returns if we're using groupware communication.
+    * Default is false.
     * @see setGroupwareCommuniation()
     */
   bool groupwareCommunication() const;
+
+  /**
+   * Makes modifyIncidence() adjust recurrence parameters when modifying DTSTART.
+   */
+  void setAutoAdjustRecurrence( bool enable );
+
+  /**
+   * True if recurrence parameters are adjusted when modifying DTSTART.
+   * Default is true.
+   */
+  bool autoAdjustRecurrence() const;
+
+  /**
+   * Sets the invitation policy.
+   *
+   * @since 4.12
+   */
+  void setInvitationPolicy(InvitationPolicy policy);
+
+  /**
+   * Returns the invitation policy.
+   * The default is InvitationPolicyAsk.
+   *
+   * @since 4.12
+   */
+  InvitationPolicy invitationPolicy() const;
 
   /**
     * Returns the collection that the last createIncidence() used.
@@ -389,6 +429,7 @@ Q_SIGNALS:
 private:
   //@cond PRIVATE
   friend class History;
+  friend class AtomicOperation;
   // used internally by the History class
   explicit IncidenceChanger( bool enableHistory, QObject *parent = 0 );
   class Private;

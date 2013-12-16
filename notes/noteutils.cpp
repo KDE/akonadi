@@ -72,7 +72,6 @@ class Attachment::AttachmentPrivate
     QString mLabel;
 };
 
-
 Attachment::Attachment( const QUrl& url, const QString& mimetype )
 : d_ptr( new Attachment::AttachmentPrivate( url, mimetype ) )
 {
@@ -93,7 +92,6 @@ Attachment::~Attachment()
 {
   delete d_ptr;
 }
-
 
 bool Attachment::operator==( const Attachment &a ) const
 {
@@ -142,8 +140,6 @@ QString Attachment::label() const
   const Q_D( Attachment );
   return d->mLabel;
 }
-
-
 
 class NoteMessageWrapper::NoteMessageWrapperPrivate
 {
@@ -530,8 +526,6 @@ QMap< QString, QString > &NoteMessageWrapper::custom()
   Q_D( NoteMessageWrapper );
   return d->custom;
 }
-
-
 
 QString noteIconName()
 {

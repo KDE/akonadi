@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include <qtest_kde.h>
 
 #include <QTimer>
@@ -42,8 +41,7 @@ class ProxyModelsTest : public QObject
 {
   Q_OBJECT
 
-
-private slots:
+private Q_SLOTS:
   void initTestCase();
 
   void init();
@@ -55,7 +53,6 @@ private:
   KRecursiveFilterProxyModel*m_krfp;
   KRFPTestModel *m_krfptest;
 };
-
 
 void ProxyModelsTest::initTestCase()
 {

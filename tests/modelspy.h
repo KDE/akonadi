@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef MODELSPY_H
 #define MODELSPY_H
 
@@ -71,7 +70,7 @@ public:
   void stopSpying();
   bool isSpying() { return m_isSpying; }
 
-protected slots:
+protected Q_SLOTS:
   void rowsAboutToBeInserted(const QModelIndex &parent, int start, int end);
   void rowsInserted(const QModelIndex &parent, int start, int end);
   void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);

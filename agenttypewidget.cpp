@@ -52,7 +52,6 @@ class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 
 using Akonadi::Internal::AgentTypeWidgetDelegate;
 
-
 /**
  * @internal
  */

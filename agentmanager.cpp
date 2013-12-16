@@ -225,6 +225,7 @@ AgentType AgentManagerPrivate::fillAgentType( const QString &identifier ) const
   type.d->mIconName = mManager->agentIcon( identifier );
   type.d->mMimeTypes = mManager->agentMimeTypes( identifier );
   type.d->mCapabilities = mManager->agentCapabilities( identifier );
+  type.d->mCustomProperties = mManager->agentCustomProperties( identifier );
 
   return type;
 }

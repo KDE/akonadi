@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "renamefavoritedialog.h"
 #include <QLabel>
 #include <KLineEdit>
@@ -56,7 +55,6 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString& caption, const QString
           SLOT(slotEditTextChanged(QString)));
   connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDefaultName()));
 
-
   setMainWidget(frame);
   slotEditTextChanged(value);
   setMinimumWidth(350);
@@ -76,7 +74,6 @@ void RenameFavoriteDialog::slotEditTextChanged(const QString& text)
 {
   enableButton( Ok, !text.trimmed().isEmpty() );
 }
-
 
 QString RenameFavoriteDialog::newName() const
 {

@@ -51,7 +51,6 @@ class ImageLoader
     QWidget *mParent;
 };
 
-
 ImageLoader::ImageLoader( QWidget *parent )
   : mParent( parent )
 {
@@ -104,9 +103,6 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
 
   return image;
 }
-
-
-
 
 ImageWidget::ImageWidget( Type type, QWidget *parent )
   : QPushButton( parent ),

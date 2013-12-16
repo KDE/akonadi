@@ -141,7 +141,6 @@ void BlockAlarmsAttribute::deserialize( const QByteArray &data )
   }
 }
 
-
 #ifndef KDELIBS_STATIC_LIBS
 namespace {
 

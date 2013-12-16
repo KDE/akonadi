@@ -50,6 +50,16 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
 {
   const QString number = phoneNumber.number().trimmed();
 
+  // synchronize
+  ContactActionsSettings::self()->readConfig();
+
+  QString command = ContactActionsSettings::self()->smsCommand();
+
+  if ( command.isEmpty() ) {
+    KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
+    return;
+  }
+
   QPointer<SmsDialog> dlg( new SmsDialog( number ) );
   if ( dlg->exec() != QDialog::Accepted ) { // the cancel button has been clicked
     delete dlg;
@@ -58,8 +68,6 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
   const QString message = ( dlg != 0 ? dlg->message() : QString() );
   delete dlg;
 
-  // synchronize
-  ContactActionsSettings::self()->readConfig();
 
   //   we handle skype separated
   if ( ContactActionsSettings::self()->sendSmsAction() == ContactActionsSettings::UseSkypeSms ) {
@@ -71,13 +79,6 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
       KMessageBox::sorry( 0, dialer.errorMessage() );
     }
 
-    return;
-  }
-
-  QString command = ContactActionsSettings::self()->smsCommand();
-
-  if ( command.isEmpty() ) {
-    KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
     return;
   }
 

@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "fakemonitor.h"
 #include "changerecorder_p.h"
 

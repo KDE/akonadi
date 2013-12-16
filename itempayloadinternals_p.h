@@ -129,7 +129,6 @@ struct get_hierarchy_root< QSharedPointer<T> > {
     typedef QSharedPointer< typename get_hierarchy_root<T>::type > type;
 };
 
-
 /**
   @internal
   Payload type traits. Implements specialized handling for polymorphic types and smart pointers.
@@ -260,7 +259,6 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> >
   }
   static const unsigned int sharedPointerId = 2;
 };
-
 
 }
 

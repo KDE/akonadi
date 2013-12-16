@@ -110,7 +110,6 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( attr != 0 );
   QCOMPARE( attr->serialized(), QByteArray( attr1 ) );
 
-
   TestAttribute *attrB = new TestAttribute();
   attrB->deserialize( attr2 );
   col.addAttribute(attrB);
@@ -123,7 +122,6 @@ void CollectionAttributeTest::testAttributes()
   attrB = col.attribute<TestAttribute>();
   QVERIFY( attrB != 0 );
   QCOMPARE( attrB->serialized(), QByteArray( attr1 ) );
-
 
   // modify a custom attribute
   col.attribute<TestAttribute>( Collection::AddIfMissing )->deserialize( attr2 );
@@ -140,7 +138,6 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( attr != 0 );
   QCOMPARE( attr->serialized(), QByteArray( attr2 ) );
 
-
   // delete a custom attribute
   col.removeAttribute<TestAttribute>();
   modify = new CollectionModifyJob( col, this );
@@ -154,7 +151,6 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( col.isValid() );
   attr = col.attribute<TestAttribute>();
   QVERIFY( attr == 0 );
-
 
   // cleanup
   CollectionDeleteJob *del = new CollectionDeleteJob( col, this );

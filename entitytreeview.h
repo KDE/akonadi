@@ -105,6 +105,12 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
     /**
+     * Return the XML GUI client which the view is used in.
+     * @since 4.12
+     */
+    KXMLGUIClient *xmlGuiClient() const;
+
+    /**
      * @reimp
      * @param model the model to set
      */
@@ -221,7 +227,6 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
 #ifndef QT_NO_CONTEXTMENU
     virtual void contextMenuEvent( QContextMenuEvent *event );
 #endif
-
 
   private:
     //@cond PRIVATE

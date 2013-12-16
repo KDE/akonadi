@@ -242,6 +242,11 @@ void EntityListView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
   d->mXmlGuiClient = xmlGuiClient;
 }
 
+KXMLGUIClient *EntityListView::xmlGuiClient() const
+{
+  return d->mXmlGuiClient;
+}
+
 #ifndef QT_NO_DRAGANDDROP
 void EntityListView::startDrag( Qt::DropActions supportedActions )
 {

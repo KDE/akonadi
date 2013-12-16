@@ -30,7 +30,7 @@ using namespace Akonadi::NoteUtils;
 class NotesTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
 
     void testSerializeAndParse()
     {

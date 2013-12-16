@@ -29,10 +29,6 @@
 
 #include <QtCore/QDebug>
 
-#ifdef Q_OS_WINCE
-#include <KMessageBox>
-#endif
-
 using namespace Akonadi;
 
 PluginMetaData::PluginMetaData()
@@ -45,7 +41,6 @@ PluginMetaData::PluginMetaData( const QString & lib, const QString & name, const
     className(cname), loaded( false )
 {
 }
-
 
 PluginLoader* PluginLoader::mSelf = 0;
 
@@ -84,7 +79,7 @@ QObject* PluginLoader::createForName( const QString & name )
 
   //First try to load it staticly
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
-    if(QLatin1String(plugin->metaObject()->className()) == info.className) {
+    if (QLatin1String(plugin->metaObject()->className()) == info.className) {
       info.loaded = true;
       return plugin;
       break;
@@ -108,15 +103,6 @@ QObject* PluginLoader::createForName( const QString & name )
 
   QObject *object = loader->instance();
   if ( !object ) {
-#ifdef Q_OS_WINCE
-    //Maybe filter out the default plugins, they should be found but...
-    //if ( !name.endsWith( QLatin1String( "@default" ) ) ) {
-      QString errMessage =
-        i18n( "Plugin \"%1\" is not builtin static, "
-              "please specify this information in the bug report.", info.className );
-      KMessageBox::critical( 0, i18n( "Plugin Not Built Statically" ), errMessage );
-    //}
-#endif
     kWarning( 5300 ) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
     kWarning( 5300 ) << "Error was:\"" << loader->errorString() << "\"." << endl;
     return 0;

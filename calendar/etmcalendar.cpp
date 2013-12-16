@@ -39,6 +39,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
+#include <QTreeView>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -55,6 +56,7 @@ ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate(
                                                           , mCollectionFilteringEnabled( true )
                                                           , q( qq )
 {
+  mListensForNewItems = true;
 }
 
 void ETMCalendarPrivate::init()
@@ -173,6 +175,12 @@ void ETMCalendarPrivate::setupFilteredETM()
   mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
+
+#ifdef AKONADI_CALENDAR_DEBUG_MODEL
+  QTreeView *view = new QTreeView;
+  view->setModel( mFilteredETM );
+  view->show();
+#endif
 }
 
 ETMCalendarPrivate::~ETMCalendarPrivate()
@@ -187,6 +195,7 @@ void ETMCalendarPrivate::loadFromETM()
 void ETMCalendarPrivate::clear()
 {
   mCollectionMap.clear();
+  mItemsByCollection.clear();
 
   itemsRemoved( mItemById.values() );
 
@@ -278,7 +287,7 @@ void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 
     Akonadi::Collection::Id id = items.first().storageCollectionId();
     if ( mPopulatedCollectionIds.contains( id ) ) {
-      // If the collection isn't populated yet, it will be send later
+      // If the collection isn't populated yet, it will be sent later
       // Saves some cpu cycles
       emit q->calendarChanged();
     }
@@ -382,33 +391,46 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
   int row = i.row();
   while ( row <= endRow ) {
     const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
-      Q_ASSERT( newIncidence );
-      Q_ASSERT( !newIncidence->uid().isEmpty() );
-      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-      if ( !existingIncidence ) {
-        if ( !mItemById.contains( item.id() ) ) {
-          // We don't know about this one because it was discarded. For example, not having DTSTART.
-          return;
-        }
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() )
+      updateItem( item );
 
-        // The item changed it's UID, update our maps.
-        // The Google resource, for example, changes the UID when we create incidences.
-        handleUidChange( item, newIncidence->instanceIdentifier() );
-        existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-        Q_ASSERT( existingIncidence );
-      }
-
-      // The item needs updating too, revision changed.
-      mItemById.insert( item.id(), item );
-
-      *(existingIncidence.data()) = *( newIncidence.data() );
-    }
     ++row;
     i = i.sibling( row, topLeft.column() );
   }
+
   emit q->calendarChanged();
+}
+
+void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
+{
+  Incidence::Ptr newIncidence = CalendarUtils::incidence( item );
+  Q_ASSERT( newIncidence );
+  Q_ASSERT( !newIncidence->uid().isEmpty() );
+  newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
+  IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+
+  if ( !existingIncidence && !mItemById.contains( item.id() ) ) {
+    // We don't know about this one because it was discarded, for example because of not having DTSTART
+    return;
+  }
+
+  mItemsByCollection.insert( item.storageCollectionId(), item );
+  Akonadi::Item oldItem = mItemById.value( item.id() );
+
+  if ( existingIncidence ) {
+    // We set the payload so that the internal incidence pointer and the one in mItemById stay the same
+    Akonadi::Item updatedItem = item;
+    updatedItem.setPayload<KCalCore::Incidence::Ptr>( existingIncidence.staticCast<KCalCore::Incidence>() );
+    mItemById.insert( item.id(), updatedItem ); // The item needs updating too, revision changed.
+
+    // Check if RELATED-TO changed, updating parenting information
+    handleParentChanged( newIncidence );
+    *(existingIncidence.data()) = *( newIncidence.data() );
+  } else {
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+    // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
+    handleUidChange( oldItem, item, newIncidence->instanceIdentifier() );
+  }
 }
 
 void ETMCalendarPrivate::onRowsInsertedInFilteredModel( const QModelIndex &index,
@@ -576,5 +598,5 @@ bool ETMCalendar::collectionFilteringEnabled() const
   return d->mCollectionFilteringEnabled;
 }
 
-#include "etmcalendar.moc"
-#include "etmcalendar_p.moc"
+#include "moc_etmcalendar.cpp"
+#include "moc_etmcalendar_p.cpp"

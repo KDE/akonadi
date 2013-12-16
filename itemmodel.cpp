@@ -26,8 +26,6 @@
 #include "pastehelper_p.h"
 #include "session.h"
 
-#include <kmime/kmime_message.h>
-
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <kurl.h>
@@ -203,7 +201,6 @@ void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Co
     itemRemoved( item );
     return;
   }
-
 
   if ( colDst == collection && colSrc != collection )
   {
@@ -452,6 +449,5 @@ Qt::DropActions ItemModel::supportedDropActions() const
 {
   return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
-
 
 #include "moc_itemmodel.cpp"

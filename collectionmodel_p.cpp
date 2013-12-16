@@ -39,7 +39,6 @@
 
 using namespace Akonadi;
 
-
 void CollectionModelPrivate::collectionRemoved( const Akonadi::Collection &collection )
 {
   Q_Q( CollectionModel );
@@ -189,7 +188,6 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
 //         break;
 //       }
 
-
       if ( collections.contains( colId ) || colId == Collection::root().id() ) {
         QModelIndex parentIndex = indexForId( colId );
         int currentChildCount = childCollections.value( colId ).size();
@@ -221,7 +219,6 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
     }
   }
 }
-
 
 QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column ) const
 {

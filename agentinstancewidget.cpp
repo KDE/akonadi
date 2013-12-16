@@ -208,7 +208,6 @@ QAbstractItemView* AgentInstanceWidget::view() const
   return d->mView;
 }
 
-
 AgentFilterProxyModel* AgentInstanceWidget::agentFilterProxyModel() const
 {
   return d->proxy;

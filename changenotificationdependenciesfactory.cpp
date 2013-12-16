@@ -19,6 +19,7 @@
 
 #include "changenotificationdependenciesfactory_p.h"
 #include "dbusconnectionpool.h"
+#include "notificationsource_p.h"
 #include "notificationsourceinterface.h"
 #include "notificationmanagerinterface.h"
 #include "changemediator_p.h"
@@ -26,12 +27,17 @@
 
 #include <KComponentData>
 #include <KGlobal>
+#include <KRandom>
 #include <qdbusextratypes.h>
 
 using namespace Akonadi;
 
-QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
+NotificationSource* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
 {
+  if ( !Akonadi::ServerManager::self()->isRunning() ) {
+    return 0;
+  }
+
   org::freedesktop::Akonadi::NotificationManager *manager =
     new org::freedesktop::Akonadi::NotificationManager(
       ServerManager::serviceName( Akonadi::ServerManager::Server ),
@@ -43,10 +49,15 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     return 0;
   }
 
-  QDBusObjectPath p = manager->subscribe( KGlobal::mainComponent().componentName() );
+  const QString name = QString::fromLatin1( "%1_%2_%3" ).arg(
+      KGlobal::mainComponent().componentName(),
+      QString::number( QCoreApplication::applicationPid() ),
+      KRandom::randomString( 6 ) );
+  QDBusObjectPath p = manager->subscribeV2( name, true );
   const bool validError = manager->lastError().isValid();
   delete manager;
   if ( validError ) {
+    kWarning() << manager->lastError().name() << manager->lastError().message();
     // :TODO: What to do?
     return 0;
   }
@@ -61,7 +72,7 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     // :TODO: error handling
     return 0;
   }
-  return notificationSource;
+  return new NotificationSource( notificationSource );
 }
 
 QObject* ChangeNotificationDependenciesFactory::createChangeMediator(QObject* parent)

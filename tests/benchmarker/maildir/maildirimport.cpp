@@ -37,4 +37,3 @@ void MailDirImport::runTest() {
   outputStats( "import" );
 }
 
-

@@ -5,9 +5,17 @@ include_directories(
     ${kcalcore_BINARY_DIR}
 )
 
+
+# TODO: Add a cmake option for this and enable it on jenkins
+set( PLEASE_TEST_INVITATIONS FALSE)
+if ( PLEASE_TEST_INVITATIONS )
+  add_definitions( -DPLEASE_TEST_INVITATIONS )
+endif()
+
 add_subdirectory( tests )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -UQT_NO_CAST_FROM_ASCII -UQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 
 set(akonadicalendar_LIB_SRC
   blockalarmsattribute.cpp
@@ -18,8 +26,10 @@ set(akonadicalendar_LIB_SRC
   etmcalendar.cpp
   history.cpp
   history_p.cpp
+  icalimporter.cpp
   incidencefetchjob_p.cpp
   incidencechanger.cpp
+  incidencechanger_p.cpp
   itiphandler.cpp
   itiphandler_p.cpp
   itiphandlerhelper_p.cpp
@@ -34,14 +44,35 @@ set(akonadicalendar_LIB_SRC
   publishdialog_p.cpp
   scheduler_p.cpp
   standardcalendaractionmanager.cpp
+  todopurger.cpp
   utils_p.cpp
+)
+
+include_directories(
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kmime
+  ${CMAKE_BINARY_DIR}/kcalcore
+  ${CMAKE_BINARY_DIR}/kcalutils
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/mailtransport
+  ${CMAKE_BINARY_DIR}/kpimidentities
+  ${CMAKE_BINARY_DIR}/akonadi/contact
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/kabc
 )
 
 kde4_add_kcfg_files(akonadicalendar_LIB_SRC calendarsettings.kcfgc)
 kde4_add_ui_files(akonadicalendar_LIB_SRC publishdialog_base.ui)
 
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
-kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
+add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-calendar PROPERTY DEFINE_SYMBOL akonadi_calendar)
+endif()
+generate_export_header(akonadi-calendar
+  BASE_NAME akonadi_calendar
+  EXPORT_FILE_NAME akonadi-calendar_export.h
+)
 
 target_link_libraries(akonadi-calendar
                       akonadi-contact
@@ -62,12 +93,13 @@ set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
-  akonadi-calendar_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-calendar_export.h
   blockalarmsattribute.h
   calendarbase.h
   calendarclipboard.h
   etmcalendar.h
   history.h
+  icalimporter.h
   incidencechanger.h
   itiphandler.h
   fetchjobcalendar.h
@@ -75,6 +107,7 @@ install( FILES
   freebusyproviderbase.h
   publishdialog.h
   standardcalendaractionmanager.h
+  todopurger.h
   ${CMAKE_CURRENT_BINARY_DIR}/calendarsettings.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/calendar COMPONENT Devel
 )

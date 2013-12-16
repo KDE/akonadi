@@ -105,7 +105,7 @@ class AKONADI_EXPORT CollectionFetchScope
      *
      * @deprecated Use includeUnsubscribed()
      */
-    KDE_DEPRECATED bool includeUnubscribed() const;
+    AKONADI_DEPRECATED bool includeUnubscribed() const;
 
     /**
      * Returns whether unsubscribed collection should be included.

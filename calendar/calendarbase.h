@@ -24,6 +24,7 @@
 #include "akonadi-calendar_export.h"
 
 #include <akonadi/item.h>
+#include <akonadi/collection.h>
 #include <kcalcore/memorycalendar.h>
 #include <kcalcore/incidence.h>
 #include <KDE/KDateTime>
@@ -73,7 +74,7 @@ public:
     * Returns the Item containing the incidence with uid @p uid or an invalid Item
     * if the incidence isn't found.
     */
-  Akonadi::Item item( const KCalCore::Incidence::Ptr &inc ) const;
+  Akonadi::Item item( const KCalCore::Incidence::Ptr &incidence ) const;
 
   /**
     * Returns the Item with @p id or an invalid Item if not found.
@@ -85,6 +86,14 @@ public:
    *  @see incidences()
    */
   Akonadi::Item::List items() const;
+
+  /**
+   * Returns the list of items contained in this calendar that belong to the specified collection.
+   * @see incidences()
+   * // TODO_KDE5: merge with items() overload
+   * @since 4.12
+   */
+  Akonadi::Item::List items( Akonadi::Collection::Id ) const;
 
   /**
     * Returns the item list that corresponds to the @p incidenceList.
@@ -284,6 +293,8 @@ protected:
   Q_DECLARE_PRIVATE( CalendarBase )
   QScopedPointer<CalendarBasePrivate> d_ptr;
   CalendarBase( CalendarBasePrivate *const d, QObject *parent );
+
+  friend class Scheduler;
 };
 }
 

@@ -33,7 +33,6 @@ class KJob;
 
 namespace Akonadi {
 
-
 class CollectionModel;
 class CollectionStatistics;
 class Monitor;

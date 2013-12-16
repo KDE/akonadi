@@ -125,7 +125,6 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged( Akonadi::Collection
   q->connect( fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchJobFinished(KJob*)) );
 }
 
-
 void SpecialCollectionsPrivate::collectionFetchJobFinished( KJob* job )
 {
   if ( job->error() ) {
@@ -181,7 +180,6 @@ AgentInstance SpecialCollectionsPrivate::defaultResource() const
   return AgentManager::self()->instance( identifier );
 }
 
-
 SpecialCollections::SpecialCollections( KCoreConfigSkeleton *settings, QObject *parent )
   : QObject( parent ),
     d( new SpecialCollectionsPrivate( settings, this ) )
@@ -211,6 +209,36 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
     attribute->setCollectionType(type);
     new CollectionModifyJob(attributeCollection);
   }
+}
+
+void SpecialCollections::unsetSpecialCollection(const Akonadi::Collection &collection)
+{
+  if (collection.hasAttribute<SpecialCollectionAttribute>()) {
+    Collection attributeCollection(collection);
+    attributeCollection.removeAttribute<SpecialCollectionAttribute>();
+    new CollectionModifyJob(attributeCollection);
+  }
+}
+
+bool SpecialCollections::unregisterCollection( const Collection &collection )
+{
+  if ( !collection.isValid() ) {
+    kWarning() << "Invalid collection.";
+    return false;
+  }
+
+  const QString &resourceId = collection.resource();
+  if ( resourceId.isEmpty() ) {
+    kWarning() << "Collection has empty resourceId.";
+    return false;
+  }
+
+  unsetSpecialCollection(collection);
+
+  d->mMonitor->setCollectionMonitored(collection, false);
+  //Remove from list of collection
+  d->collectionRemoved(collection);
+  return true;
 }
 
 bool SpecialCollections::registerCollection( const QByteArray &type, const Collection &collection )

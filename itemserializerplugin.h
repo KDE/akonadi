@@ -31,7 +31,6 @@ class QIODevice;
 
 namespace Akonadi {
 
-
 /**
  * @short The base class for item type serializer plugins.
  *
@@ -172,6 +171,17 @@ class AKONADI_EXPORT ItemSerializerPlugin
      * @param item The item.
      */
     virtual QSet<QByteArray> parts( const Item &item ) const;
+
+    /**
+    * Override the plugin-lookup with @p plugin.
+    *
+    * After calling this each lookup will always return @p plugin.
+    * This is useful to inject a special plugin for testing purposes.
+    * To reset the plugin, set to 0.
+    *
+    * @since 4.12
+    */
+    static void overridePluginLookup( QObject *plugin );
 
 };
 

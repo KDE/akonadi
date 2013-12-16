@@ -68,7 +68,6 @@ public:
     */
   explicit ETMCalendar( QObject *parent = 0 );
 
-
   /**
    * Constructs a new ETMCalendar that will only load the specified mime types.
    * Use this ctor to ignore journals or to-dos for example.

@@ -17,12 +17,10 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef COMMANDBASE_H
 #define COMMANDBASE_H
 
 #include <QtCore/QObject>
-
 
 class CommandBase : public QObject
 {

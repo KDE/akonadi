@@ -22,6 +22,7 @@
 
 #include <QtCore/QSharedData>
 #include <QtCore/QStringList>
+#include <QtCore/QVariantMap>
 
 namespace Akonadi
 {
@@ -45,6 +46,7 @@ class AgentType::Private : public QSharedData
       mIconName = other.mIconName;
       mMimeTypes = other.mMimeTypes;
       mCapabilities = other.mCapabilities;
+      mCustomProperties = other.mCustomProperties;
     }
 
     QString mIdentifier;
@@ -53,6 +55,7 @@ class AgentType::Private : public QSharedData
     QString mIconName;
     QStringList mMimeTypes;
     QStringList mCapabilities;
+    QVariantMap mCustomProperties;
 };
 
 }

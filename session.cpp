@@ -25,6 +25,7 @@
 #include "job_p.h"
 #include "servermanager.h"
 #include "servermanager_p.h"
+#include "protocolhelper_p.h"
 #include "xdgbasedirs_p.h"
 
 #include <kdebug.h>
@@ -50,8 +51,12 @@
 
 using namespace Akonadi;
 
-
 //@cond PRIVATE
+
+static const QList<QByteArray> sCapabilities = QList<QByteArray>()
+        << "NOTIFY 2"
+        << "NOPAYLOADPATH"
+        << "AKAPPENDSTREAMING";
 
 void SessionPrivate::startNext()
 {
@@ -123,9 +128,6 @@ void SessionPrivate::reconnect()
     serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString(defaultSocketDir + QLatin1String( "/akonadiserver.socket" )) ).toString();
 #endif
   }
-#ifdef Q_OS_WINCE
-  useTcp = true;
-#endif
 
   // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
   // but that's probably not something we need to support anyway
@@ -143,15 +145,11 @@ void SessionPrivate::reconnect()
 
   // actually do connect
   kDebug() << "connectToServer" << serverAddress;
-#ifdef Q_OS_WINCE
-    tcpSocket->connectToHost( QHostAddress::LocalHost, 31414 );
-#else
   if ( !useTcp ) {
     localSocket->connectToServer( serverAddress );
   } else {
     tcpSocket->connectToHost( serverAddress, port );
   }
-#endif
 
   emit mParent->reconnected();
 }
@@ -195,7 +193,7 @@ void SessionPrivate::dataReceived()
       // handle login response
       if ( parser->tag() == QByteArray( "0" ) ) {
         if ( parser->data().startsWith( "OK" ) ) { //krazy:exclude=strings
-          writeData("1 CAPABILITY (NOTIFY 2)");
+          writeData("1 CAPABILITY (" + ImapParser::join( sCapabilities, " " ) + ")");
         } else {
           kWarning() << "Unable to login to Akonadi server:" << parser->data();
           socket->close();
@@ -359,7 +357,6 @@ void SessionPrivate::itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevis
 
 //@endcond
 
-
 SessionPrivate::SessionPrivate( Session *parent )
     : mParent( parent ), socket( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 )
 {
@@ -400,7 +397,6 @@ void SessionPrivate::forceReconnect()
   socket = 0;
   QMetaObject::invokeMethod( mParent, "reconnect", Qt::QueuedConnection ); // avoids reconnecting in the dtor
 }
-
 
 Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),

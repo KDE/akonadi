@@ -36,7 +36,7 @@ using namespace Akonadi;
 class ItemBenchmark : public QObject
 {
   Q_OBJECT
-  public slots:
+  public Q_SLOTS:
     void createResult( KJob * job )
     {
       Q_ASSERT( job->error() == KJob::NoError );
@@ -57,7 +57,7 @@ class ItemBenchmark : public QObject
   private:
     QMap<int, Item::List> mCreatedItems;
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

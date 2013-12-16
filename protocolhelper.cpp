@@ -243,6 +243,42 @@ QByteArray ProtocolHelper::decodePartIdentifier( const QByteArray &data, PartNam
   }
 }
 
+QByteArray ProtocolHelper::entitySetToByteArray( const QList<Item> &_objects, const QByteArray &command )
+{
+  if ( _objects.isEmpty() )
+    throw Exception( "No objects specified" );
+
+  Item::List objects( _objects );
+  std::sort( objects.begin(), objects.end(), boost::bind( &Item::id, _1 ) < boost::bind( &Item::id, _2 ) );
+  if ( objects.first().isValid() ) {
+    // all items have a uid set
+    return entitySetToByteArray<Item>(objects, command);
+  }
+  // check if all items have a gid
+  if ( std::find_if( objects.constBegin(), objects.constEnd(),
+    boost::bind( &QString::isEmpty, boost::bind( &Item::gid, _1 ) ) )
+    == objects.constEnd() )
+  {
+    QList<QByteArray> gids;
+    foreach ( const Item &object, objects ) {
+        gids << ImapParser::quote( object.gid().toUtf8() );
+    }
+
+    QByteArray rv;
+    //rv += " " AKONADI_CMD_GID " ";
+    rv += " " "GID" " ";
+    if ( !command.isEmpty() ) {
+        rv += command;
+        rv += ' ';
+    }
+    rv += '(';
+    rv += ImapParser::join( gids, " " );
+    rv += ')';
+    return rv;
+  }
+  return entitySetToByteArray<Item>(objects, command);
+}
+
 QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
 {
   if ( col == Collection::root() )
@@ -285,11 +321,18 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
         Q_ASSERT( false );
     }
   }
+  if ( fetchScope.fetchChangedSince().isValid() ) {
+    command += " " AKONADI_PARAM_CHANGEDSINCE " " + QByteArray::number( fetchScope.fetchChangedSince().toTime_t() );
+  }
 
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
 
-  command += " (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE";
+  command += " (UID COLLECTIONID FLAGS SIZE";
+  if ( fetchScope.fetchRemoteIdentification() )
+    command += " " AKONADI_PARAM_REMOTEID " " AKONADI_PARAM_REMOTEREVISION;
+  if ( fetchScope.fetchGid() )
+    command += " GID";
   if ( fetchScope.fetchModificationTime() )
     command += " DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
@@ -308,6 +351,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   int rev = -1;
   QString rid;
   QString remoteRevision;
+  QString gid;
   QString mimeType;
   Entity::Id cid = -1;
 
@@ -326,6 +370,8 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         rid.clear();
     } else if ( key == "REMOTEREVISION" ) {
       remoteRevision = QString::fromUtf8( value );
+    } else if ( key == "GID" ) {
+      gid = QString::fromUtf8( value );
     } else if ( key == "COLLECTIONID" ) {
       cid = value.toInt();
     } else if ( key == "MIMETYPE" ) {
@@ -337,7 +383,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   }
 
   if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-    kWarning() << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+    kWarning() << "Broken fetch response: UID, REV or MIMETYPE missing!";
     return;
   }
 
@@ -345,6 +391,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   item.setRemoteId( rid );
   item.setRevision( rev );
   item.setRemoteRevision( remoteRevision );
+  item.setGid( gid );
   item.setMimeType( mimeType );
   item.setStorageCollectionId( cid );
   if ( !item.isValid() )
@@ -355,7 +402,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
     const QByteArray key = lineTokens.value( i );
     // skip stuff we dealt with already
     if ( key == "UID" || key == "REV" || key == "REMOTEID" ||
-         key == "MIMETYPE"  || key == "COLLECTIONID" || key == "REMOTEREVISION" )
+         key == "MIMETYPE"  || key == "COLLECTIONID" || key == "REMOTEREVISION" || key == "GID" )
       continue;
     // flags
     if ( key == "FLAGS" ) {

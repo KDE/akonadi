@@ -114,6 +114,15 @@ bool SpecialMailCollections::registerCollection( Type type, const Collection &co
   return SpecialCollections::registerCollection( enumToType( type ), collection );
 }
 
+bool SpecialMailCollections::unregisterCollection( const Collection &collection )
+{
+  if (collection != Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash )) {
+    return SpecialCollections::unregisterCollection( collection );
+  } else {
+    return false;
+  }
+}
+
 bool SpecialMailCollections::hasDefaultCollection( Type type ) const
 {
   return SpecialCollections::hasDefaultCollection( enumToType( type ) );
@@ -151,9 +160,9 @@ void SpecialMailCollections::verifyI18nDefaultCollection( Type type )
   default:
      break;
   }
-  if(!defaultI18n.isEmpty()) {
-    if(collection.hasAttribute<Akonadi::EntityDisplayAttribute>()) {
-      if( collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName() != defaultI18n) {
+  if (!defaultI18n.isEmpty()) {
+    if (collection.hasAttribute<Akonadi::EntityDisplayAttribute>()) {
+      if ( collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName() != defaultI18n) {
           collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName( defaultI18n );
           Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
           connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );

@@ -90,7 +90,6 @@ class GeoMapWidget : public QWidget
     KABC::Geo mCoordinates;
 };
 
-
 GeoEditWidget::GeoEditWidget( QWidget *parent )
   : QWidget( parent )
 {
@@ -411,7 +410,6 @@ void GeoDialog::updateInputs( ExceptType type )
     mLatitude->setValue( mCoordinates.latitude() );
     mLongitude->setValue( mCoordinates.longitude() );
   }
-
 
   if ( !(type & ExceptSexagesimal) ) {
     int degrees, minutes, seconds;

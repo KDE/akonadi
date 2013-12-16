@@ -54,7 +54,6 @@ enum Option {
 };
 Q_DECLARE_FLAGS( Options, Option )
 
-
 #if 0
 /**
  * Returns the legacy (pre-KDE-4.6) item serializer plugin that matches the given @p mimetype.
@@ -90,6 +89,17 @@ QObject* defaultObjectForMimeType( const QString &mimetype );
  * and any of the classes described by @p metaTypeIds.
  */
 QObject* objectForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options options=NoOptions );
+
+/**
+ * Override the plugin-lookup with @p plugin.
+ *
+ * After calling this each lookup will always return @p plugin.
+ * This is useful to inject a special plugin for testing purposes.
+ * To reset the plugin, set to 0.
+ *
+ * @since 4.12
+ */
+void overridePluginLookup( QObject *plugin );
 
 }
 

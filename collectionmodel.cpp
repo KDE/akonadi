@@ -143,13 +143,12 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
     return QModelIndex();
   }
 
-  Collection col = d->collections.value( index.internalId() );
+  const Collection col = d->collections.value( index.internalId() );
   if ( !col.isValid() ) {
     return QModelIndex();
   }
 
-
-  Collection parentCol = d->collections.value( col.parentCollection().id() );
+  const Collection parentCol = d->collections.value( col.parentCollection().id() );
   if ( !parentCol.isValid() ) {
     return QModelIndex();
   }
@@ -221,7 +220,6 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
   Q_D( const CollectionModel );
 
   // Pass modeltest.
-  // http://labs.trolltech.com/forums/topic/79
   if ( !index.isValid() ) {
     return 0;
   }
@@ -326,7 +324,5 @@ void CollectionModel::includeUnsubscribed(bool include)
   Q_D( CollectionModel );
   d->unsubscribed = include;
 }
-
-
 
 #include "moc_collectionmodel.cpp"

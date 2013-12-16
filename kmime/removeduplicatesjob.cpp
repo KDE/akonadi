@@ -29,7 +29,6 @@
 
 #include <KLocalizedString>
 
-
 class Akonadi::RemoveDuplicatesJob::Private {
 
   public:
@@ -110,7 +109,7 @@ class Akonadi::RemoveDuplicatesJob::Private {
       }
 
       QMap<uint, QList<uint> >::ConstIterator end( duplicates.constEnd() );
-      for( QMap<uint, QList<uint> >::ConstIterator it = duplicates.constBegin(); it != end; ++it ) {
+      for ( QMap<uint, QList<uint> >::ConstIterator it = duplicates.constBegin(); it != end; ++it ) {
         QList<uint>::ConstIterator dupEnd( it.value().constEnd() );
         for ( QList<uint>::ConstIterator dupIt = it.value().constBegin(); dupIt != dupEnd; ++dupIt ) {
           mDuplicateItems.append( items.value( *dupIt ) );
@@ -204,4 +203,4 @@ bool RemoveDuplicatesJob::doKill()
     return true;
 }
 
-#include "removeduplicatesjob.moc"
+#include "moc_removeduplicatesjob.cpp"

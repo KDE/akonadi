@@ -27,6 +27,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <KDebug>
+#include <KUrl>
 #include <KIcon>
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -557,7 +558,6 @@ void SelfTestDialog::testControlLog()
     item->setData( controlLog, FileIncludeRole );
   }
 }
-
 
 void SelfTestDialog::testRootUser()
 {

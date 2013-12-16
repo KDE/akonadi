@@ -29,7 +29,6 @@ public:
     explicit QSflPhoneDialer( const QString &applicationName );
     ~QSflPhoneDialer();
 
-
     bool dialNumber( const QString &number );
     bool sendSms( const QString &number, const QString &text );
 

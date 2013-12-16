@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef RESOURCESETTINGS_H
 #define RESOURCESETTINGS_H
 
@@ -39,7 +38,6 @@ class AKONADI_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //k
 };
 
 }
-
 
 #endif /* RESOURCESETTINGS_H */
 

@@ -47,7 +47,6 @@ bool AgentInstance::isValid() const
   return !d->mIdentifier.isEmpty();
 }
 
-
 AgentType AgentInstance::type() const
 {
   return d->mType;

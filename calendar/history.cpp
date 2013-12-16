@@ -96,6 +96,7 @@ void History::recordDeletions( const Akonadi::Item::List &items,
   Entry::Ptr entry( new DeletionEntry( items, description, this ) );
 
   foreach( const Akonadi::Item &item, items ) {
+    Q_UNUSED(item);
     Q_ASSERT_X( item.isValid(),
                 "History::recordDeletion()", "Item must be valid." );
     Q_ASSERT_X( item.hasPayload<Incidence::Ptr>(),
@@ -306,6 +307,16 @@ void History::Private::setEnabled( bool enabled )
   }
 }
 
+int History::Private::redoCount() const
+{
+    return mRedoStack.count();
+}
+
+int History::Private::undoCount() const
+{
+    return mUndoStack.count();
+}
+
 QStack<Entry::Ptr>& History::Private::stack()
 {
   return stack( mOperationTypeInProgress );
@@ -328,5 +339,5 @@ void History::Private::emitDone( OperationType type, History::ResultCode resultC
   }
 }
 
-#include "history.moc"
-#include "history_p.moc"
+#include "moc_history.cpp"
+#include "moc_history_p.cpp"

@@ -28,9 +28,7 @@
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
 
-#ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>
-#endif
 
 #include <QtCore/QBuffer>
 #include <QContextMenuEvent>
@@ -50,7 +48,6 @@ class SoundLoader
     QByteArray mSound;
     QWidget *mParent;
 };
-
 
 SoundLoader::SoundLoader( QWidget *parent )
   : mParent( parent )
@@ -94,9 +91,6 @@ QByteArray SoundLoader::loadSound( const KUrl &url, bool *ok )
 
   return sound;
 }
-
-
-
 
 SoundEditWidget::SoundEditWidget( QWidget *parent )
   : QToolButton( parent ),
@@ -177,7 +171,6 @@ void SoundEditWidget::playSound()
     return;
   }
 
-#ifndef Q_OS_WINCE
   Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
   QBuffer* soundData = new QBuffer( player );
   soundData->setData( mSound );
@@ -185,7 +178,6 @@ void SoundEditWidget::playSound()
   player->setParent( this );
   connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
   player->play();
-#endif
 }
 
 void SoundEditWidget::changeSound()

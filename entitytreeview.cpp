@@ -223,7 +223,6 @@ void EntityTreeView::setModel( QAbstractItemModel * model )
            SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
 }
 
-
 void EntityTreeView::timerEvent( QTimerEvent *event )
 {
   if ( event->timerId() == d->mDragExpandTimer.timerId() ) {
@@ -287,13 +286,17 @@ void EntityTreeView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )
   d->mXmlGuiClient = xmlGuiClient;
 }
 
+KXMLGUIClient *EntityTreeView::xmlGuiClient() const
+{
+  return d->mXmlGuiClient;
+}
+
 #ifndef QT_NO_DRAGANDDROP
 void EntityTreeView::startDrag( Qt::DropActions supportedActions )
 {
   d->mDragDropManager->startDrag( supportedActions );
 }
 #endif
-
 
 void EntityTreeView::setDropActionMenuEnabled( bool enabled )
 {
@@ -331,6 +334,5 @@ void EntityTreeView::setDefaultPopupMenu( const QString &name )
 {
   d->mDefaultPopupMenu = name;
 }
-
 
 #include "moc_entitytreeview.cpp"

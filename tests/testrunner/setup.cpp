@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008  Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
+ * Copyright (c) 2013  Volker Krause <vkrause@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,189 +18,36 @@
 
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
-#include "dbusconnectionpool.h"
-#include "symbols.h"
 
-#include <kapplication.h>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/resourcesynchronizationjob.h>
+
+#include <KConfig>
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <KProcess>
 #include <KStandardDirs>
-#include <KToolInvocation>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
-#include <QSignalMapper>
-#include <QtDBus/QDBusConnectionInterface>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
-#include <QtNetwork/QHostInfo>
 
-#include <signal.h>
 #include <unistd.h>
-
-#ifdef __APPLE__
-#include <AvailabilityMacros.h>
-#endif
-
-QMap<QString, QString> SetupTest::environment() const
-{
-  QMap<QString, QString> env;
-
-  foreach ( const QString& val, QProcess::systemEnvironment() ) {
-    const int p = val.indexOf( QLatin1Char( '=' ) );
-    if ( p > 0 ) {
-      env[ val.left( p ).toUpper() ] = val.mid( p + 1 );
-    }
-  }
-
-  return env;
-}
-
-
-bool SetupTest::clearEnvironment()
-{
-  const QStringList keys = environment().keys();
-
-  foreach ( const QString& key, keys ) {
-    if ( key != QLatin1String( "HOME" ) ) {
-// work around a bug in the Mac OS X 10.4.0 SDK
-#if defined(MAC_OS_X_VERSION_MAX_ALLOWED) && (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4)
-      /* on OSX 10.4, unsetenv is a void, not a boolean */
-      unsetenv( key.toLatin1() );
-#else
-      if ( !unsetenv( key.toLatin1() ) ) {
-        return false;
-      }
-#endif
-    }
-  }
-
-  return true;
-}
-
-int SetupTest::addDBusToEnvironment( QIODevice& io )
-{
-  QByteArray data = io.readLine();
-  int pid = -1;
-  Symbols *symbol = Symbols::instance();
-
-  while ( data.size() ) {
-    if ( data[ data.size() - 1 ] == '\n' ) {
-      data.resize( data.size() - 1 );
-    }
-
-    QString val( data );
-    const int p = val.indexOf( '=' );
-    if ( p > 0 ) {
-      const QString name = val.left( p ).toUpper();
-      val = val.mid( p + 1 );
-      if ( name == QLatin1String( "DBUS_SESSION_BUS_PID" ) ) {
-        pid = val.toInt();
-        setenv( name.toLatin1(), val.toAscii(), 1 );
-        symbol->insertSymbol( name, val );
-      } else if ( name == QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ) {
-        setenv( name.toLatin1(), val.toAscii(), 1 );
-        symbol->insertSymbol( name, val );
-      }
-    }
-    data = io.readLine();
-  }
-
-  return pid;
-}
-
-void SetupTest::generateDBusConfigFile( const QString& path )
-{
-    static const char* configFileContents =
-        "<!DOCTYPE busconfig PUBLIC \"-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN\"\n"
-        "\"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd\">\n"
-        "<busconfig>\n"
-        "<type>session</type>"
-        "<keep_umask/>\n"
-        "<listen>unix:path=%1</listen>\n"
-        "<standard_session_servicedirs />\n"
-        "<policy context=\"default\">\n"
-        "<allow send_destination=\"*\" eavesdrop=\"true\"/>\n"
-        "<allow eavesdrop=\"true\"/>\n"
-        "<allow own=\"*\"/>\n"
-        "</policy>\n"
-        "</busconfig>\n";
-
-    QFile confFile(path);
-    if ( confFile.open( QIODevice::WriteOnly ) ) {
-        const QString socketPath = basePath() + QDir::separator() + QLatin1String("dbus.socket");
-        const QString data = QString::fromLatin1( configFileContents ).arg( socketPath );
-        const qint64 bytes = confFile.write( data.toUtf8() );
-        Q_ASSERT( bytes > 0 );
-    }
-}
-
-int SetupTest::startDBusDaemon()
-{
-  QStringList dbusargs;
-#ifdef Q_OS_MAC
-  const QString dbusConfigFilePath = basePath() + QDir::separator() + QLatin1String("dbus-session.conf");
-  generateDBusConfigFile( dbusConfigFilePath );
-  Q_ASSERT( QFile::exists( dbusConfigFilePath ) );
-
-  dbusargs << QString::fromLatin1("--config-file=%1").arg( dbusConfigFilePath );
-#endif
-
-  QProcess dbusprocess;
-  dbusprocess.start( QLatin1String("dbus-launch"), dbusargs );
-  bool ok = dbusprocess.waitForStarted() && dbusprocess.waitForFinished();
-  if ( !ok ) {
-    kWarning() << "error starting dbus-launch";
-    dbusprocess.kill();
-    exit(1); // failure to start an internal dbus must be considered a fatal unit test error
-  }
-
-  int dbuspid = addDBusToEnvironment( dbusprocess );
-  return dbuspid;
-}
-
-void SetupTest::stopDBusDaemon( int dbuspid )
-{
-  kDebug() << dbuspid;
-  if ( dbuspid )
-    kill( dbuspid, 15 );
-  sleep( 1 );
-
-  if ( dbuspid )
-    kill( dbuspid, 9 );
-}
-
-void SetupTest::registerWithInternalDBus( const QString &address )
-{
-  // FIXME: make this work on Windows, address is always empty there as dbus-launch does not return any environment variables like on Unix there
-#ifndef Q_OS_WIN
-  mInternalBus = QDBusConnection::connectToBus( address, QLatin1String( "InternalBus" ) );
-#endif
-  mInternalBus.registerService( QLatin1String( "org.kde.Akonadi.Testrunner" ) );
-  mInternalBus.registerObject( QLatin1String( "/MainApplication" ),
-                                KApplication::kApplication(),
-                                QDBusConnection::ExportScriptableSlots |
-                                QDBusConnection::ExportScriptableProperties |
-                                QDBusConnection::ExportAdaptors );
-  mInternalBus.registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
-
-  connect( mInternalBus.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           this, SLOT(dbusNameOwnerChanged(QString,QString,QString)) );
-}
 
 bool SetupTest::startAkonadiDaemon()
 {
+  Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());
+
   if ( !mAkonadiDaemonProcess ) {
     mAkonadiDaemonProcess = new KProcess( this );
     connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
             this, SLOT(slotAkonadiDaemonProcessFinished(int)) );
   }
 
-  mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ) );
+  mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ), QStringList() << QLatin1String("--instance") << instanceId() );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
   kDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
@@ -225,134 +73,140 @@ void SetupTest::setupAgents()
 {
   if ( mAgentsCreated )
     return;
-
-  // Start KLauncher now, so that kdeinit4 and kded4 are started. Otherwise, those might get started
-  // on demand, for example in the Knut resource.
-  // This on-demand starting can cause crashes due to timing issues.
-  KToolInvocation::klauncher();
-
   mAgentsCreated = true;
   Config *config = Config::instance();
-  QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
-                            QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), mInternalBus );
-
   const QList<QPair<QString,bool> > agents = config->agents();
   typedef QPair<QString,bool> StringBoolPair;
   foreach ( const StringBoolPair &agent, agents ) {
     kDebug() << "Creating agent" << agent.first << "...";
-    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent.first );
-    if ( reply.isValid() && !reply.value().isEmpty() ) {
-      mPendingAgents << reply.value();
-      mPendingResources << reply.value();
-      if ( agent.second ) {
-        mPendingSyncs << reply.value();
-      }
-    } else {
-      kError() << "createAgentInstance call failed:" << reply.error();
-    }
+    ++mSetupJobCount;
+    Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( agent.first, this );
+    job->setProperty( "sync", agent.second );
+    connect( job, SIGNAL(result(KJob*)), SLOT(agentCreationResult(KJob*)) );
+    job->start();
   }
 
-  if ( mPendingAgents.isEmpty() )
+  if ( isSetupDone() )
     emit setupDone();
 }
 
-void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
+void SetupTest::agentCreationResult(KJob* job)
 {
-  kDebug() << name << oldOwner << newOwner;
-
-  if ( name == QLatin1String( "org.freedesktop.Akonadi.Control" ) ) {
-    if ( oldOwner.isEmpty() ) // startup
-      setupAgents();
-    else if ( mShuttingDown ) // our own shutdown
-      shutdownHarder();
+  --mSetupJobCount;
+  if ( job->error() ) {
+    kError() << job->errorString();
+    setupFailed();
     return;
   }
-
-  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) && oldOwner.isEmpty() ) {
-    const QString identifier = name.mid( 30 );
-    if ( mPendingAgents.contains( identifier ) ) {
-      kDebug() << "Agent" << identifier << "started.";
-      mPendingAgents.removeAll( identifier );
-      if ( mPendingAgents.isEmpty() && mPendingResources.isEmpty() )
-        QTimer::singleShot( 5000, this, SLOT(synchronizeResources()) );
-    }
+  const bool needsSync = job->property( "sync" ).toBool();
+  if (needsSync) {
+    ++mSetupJobCount;
+    Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(
+      qobject_cast<Akonadi::AgentInstanceCreateJob*>(job)->instance(), this );
+    connect( sync, SIGNAL(result(KJob*)), SLOT(synchronizationResult(KJob*)) );
+    sync->start();
   }
 
-  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Resource." ) ) && oldOwner.isEmpty() ) {
-    const QString identifier = name.mid( 33 );
-    if ( mPendingResources.contains( identifier ) ) {
-      kDebug() << "Resource" << identifier << "registered.";
-      mPendingResources.removeAll( identifier );
-      if ( mPendingAgents.isEmpty() && mPendingResources.isEmpty() )
-        QTimer::singleShot( 5000, this, SLOT(synchronizeResources()) );
+  if ( isSetupDone() )
+    emit setupDone();
+}
+
+void SetupTest::synchronizationResult(KJob* job)
+{
+  --mSetupJobCount;
+  if ( job->error() ) {
+    kError() << job->errorString();
+    setupFailed();
+  }
+
+  if ( isSetupDone() )
+    emit setupDone();
+}
+
+void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
+{
+  if ( state == Akonadi::ServerManager::Running )
+    setupAgents();
+  else if ( mShuttingDown && state == Akonadi::ServerManager::NotRunning )
+    shutdownHarder();
+}
+
+void SetupTest::copyXdgDirectory(const QString& src, const QString& dst)
+{
+  const QDir srcDir( src );
+  foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
+    if (fi.isDir()) {
+      if ( fi.fileName() == QLatin1String("akonadi") ) {
+        // namespace according to instance identifier
+        copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + QLatin1String("akonadi") + QDir::separator()
+                       + QLatin1String("instance") + QDir::separator() + instanceId() );
+      } else {
+        copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+      }
+    } else {
+      QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
     }
   }
 }
 
-void SetupTest::synchronizeResources()
+void SetupTest::copyKdeHomeDirectory(const QString& src, const QString& dst)
 {
-  foreach ( const QString &id, mPendingSyncs ) {
-    QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1").arg( id ),
-      "/", "org.freedesktop.Akonadi.Resource", mInternalBus, this );
-    mSyncMapper->setMapping( iface, id );
-    connect( iface, SIGNAL(synchronized()), mSyncMapper, SLOT(map()) );
-    if ( mPendingSyncs.contains( id ) ) {
-      kDebug() << "Synchronizing resource" << id << "...";
-      QDBusReply<void> reply = iface->call( "synchronize" );
-      if ( !reply.isValid() )
-        kError() << "Syncing resource" << id << "failed: " << reply.error();
-    }
-  }
-}
+  const QDir srcDir( src );
+  QDir::root().mkpath( dst );
 
-void SetupTest::resourceSynchronized(const QString& agentId)
-{
-  if ( mPendingSyncs.contains( agentId ) ) {
-    kDebug() << "Agent" << agentId << "synchronized.";
-    mPendingSyncs.removeAll( agentId );
-    if ( mPendingSyncs.isEmpty() )
-      emit setupDone();
+  foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
+    if ( fi.isDir() ) {
+      copyKdeHomeDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+    } else {
+      if ( fi.fileName().startsWith( QLatin1String("akonadi_") ) && fi.fileName().endsWith( QLatin1String("rc") ) ) {
+        // namespace according to instance identifier
+        const QString baseName = fi.fileName().left( fi.fileName().size() - 2 );
+        QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + Akonadi::ServerManager::addNamespace( baseName ) + QLatin1String("rc") );
+      } else {
+        QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+      }
+    }
   }
 }
 
 void SetupTest::copyDirectory( const QString &src, const QString &dst )
 {
-  QDir srcDir( src );
-  srcDir.setFilter( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot );
+  const QDir srcDir( src );
+  QDir::root().mkpath( dst );
 
-  const QFileInfoList list = srcDir.entryInfoList();
-  for ( int i = 0; i < list.size(); ++i ) {
-    if ( list.at( i ).isDir() ) {
-      const QDir tmpDir( dst );
-      tmpDir.mkdir( list.at( i ).fileName() );
-      copyDirectory( list.at( i ).absoluteFilePath(), dst + QDir::separator() + list.at( i ).fileName() );
+  foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
+    if ( fi.isDir() ) {
+      copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
     } else {
-      QFile::copy( srcDir.absolutePath() + QDir::separator() + list.at( i ).fileName(), dst + QDir::separator() + list.at( i ).fileName() );
+      QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
     }
   }
 }
 
 void SetupTest::createTempEnvironment()
 {
+  kDebug() << "Creating test environment in" << basePath();
+
   const QDir tmpDir( basePath() );
   const QString testRunnerKdeHomeDir = QLatin1String( "kdehome" );
   const QString testRunnerDataDir = QLatin1String( "data" );
   const QString testRunnerConfigDir = QLatin1String( "config" );
+  const QString testRunnerTmpDir = QLatin1String( "tmp" );
 
   tmpDir.mkdir( testRunnerKdeHomeDir );
   tmpDir.mkdir( testRunnerConfigDir );
   tmpDir.mkdir( testRunnerDataDir );
+  tmpDir.mkdir( testRunnerTmpDir );
 
   const Config *config = Config::instance();
-  copyDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
-  copyDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir  );
-  copyDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
+  copyKdeHomeDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
+  copyXdgDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir );
+  copyXdgDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
 
-  // copy sycoca file from the host to increase startup speed
-  const QString sycoca = KStandardDirs::locateLocal( "cache", "ksycoca4" );
-  const QString cacheDir = basePath() + testRunnerKdeHomeDir + QDir::separator() + "cache-" + QHostInfo::localHostName() + QDir::separator();
-  QFile::copy( sycoca, cacheDir + "ksycoca4" );
-  QFile::copy( sycoca + "stamp", cacheDir + "ksycoca4stamp" );
+  setEnvironmentVariable( "KDEHOME", basePath() + testRunnerKdeHomeDir );
+  setEnvironmentVariable( "XDG_DATA_HOME", basePath() + testRunnerDataDir );
+  setEnvironmentVariable( "XDG_CONFIG_HOME", basePath() + testRunnerConfigDir );
+  setEnvironmentVariable( "TMPDIR", basePath() + testRunnerTmpDir );
 }
 
 // TODO Qt5: use QDir::removeRecursively
@@ -383,25 +237,25 @@ void SetupTest::cleanTempEnvironment()
 
 SetupTest::SetupTest() :
   mAkonadiDaemonProcess( 0 ),
-  mInternalBus( Akonadi::DBusConnectionPool::threadConnection() ),
   mShuttingDown( false ),
-  mSyncMapper( new QSignalMapper( this ) ),
   mAgentsCreated( false ),
-  mTrackAkonadiProcess( true )
+  mTrackAkonadiProcess( true ),
+  mSetupJobCount( 0 ),
+  mExitCode( 0 )
 {
-
-  clearEnvironment();
+  setupInstanceId();
   cleanTempEnvironment();
   createTempEnvironment();
 
-  setenv( "KDEHOME", qPrintable( QString( basePath() + "kdehome" ) ), 1 );
-  setenv( "XDG_DATA_HOME", qPrintable( QString( basePath() + "data" ) ), 1 );
-  setenv( "XDG_CONFIG_HOME", qPrintable( QString( basePath() + "config" ) ), 1 );
+  // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
+  setEnvironmentVariable( "AKONADI_DISABLE_AGENT_AUTOSTART", "true" );
+  setEnvironmentVariable( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
+
   QHashIterator<QString, QString> iter( Config::instance()->envVars() );
   while( iter.hasNext() ) {
     iter.next();
     kDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
-    setenv( qPrintable( iter.key() ), qPrintable( iter.value() ), 1 );
+    setEnvironmentVariable( iter.key().toLocal8Bit(), iter.value() );
   }
 
   // No kres-migrator please
@@ -409,18 +263,11 @@ SetupTest::SetupTest() :
   KConfigGroup migrationCfg( &migratorConfig, "Migration" );
   migrationCfg.writeEntry( "Enabled", false );
 
-  Symbols *symbol = Symbols::instance();
-  symbol->insertSymbol( "KDEHOME", basePath() + QLatin1String( "kdehome" ) );
-  symbol->insertSymbol( "XDG_DATA_HOME", basePath() + QLatin1String( "data" ) );
-  symbol->insertSymbol( "XDG_CONFIG_HOME", basePath() + QLatin1String( "config" ) );
-  symbol->insertSymbol( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
+  connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+           SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
-  mDBusDaemonPid = startDBusDaemon();
-
-  const QString dbusAddress = symbol->symbols()[ QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ];
-  registerWithInternalDBus( dbusAddress );
-
-  connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
+  QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Testrunner-" ) + QString::number( QCoreApplication::instance()->applicationPid() ) );
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 }
 
 SetupTest::~SetupTest()
@@ -433,42 +280,23 @@ void SetupTest::shutdown()
   if ( mShuttingDown )
     return;
   mShuttingDown = true;
-  // check first if the Akonadi server is still running, otherwise D-Bus auto-launch will actually start it here
-  if ( mInternalBus.interface()->isServiceRegistered( "org.freedesktop.Akonadi.Control" ) ) {
-    kDebug() << "Shutting down Akonadi control...";
-    QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
-                                QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
-    QDBusReply<void> reply = controlIface.call( "shutdown" );
-    if ( !reply.isValid() ) {
-      kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
-      shutdownKde();
-      shutdownHarder();
-    } else {
+
+  switch ( Akonadi::ServerManager::self()->state() ) {
+    case Akonadi::ServerManager::Running:
+    case Akonadi::ServerManager::Starting:
+    case Akonadi::ServerManager::Upgrading:
+      kDebug() << "Shutting down Akonadi control...";
+      Akonadi::ServerManager::self()->stop();
       // safety timeout
       QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
-    }
-    // in case we indirectly started KDE processes, stop those before we kill their D-Bus
-    shutdownKde();
-  } else {
-    shutdownHarder();
-  }
-}
-
-void SetupTest::shutdownKde()
-{
-  if ( mInternalBus.interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
-    QDBusInterface klauncherIface( QLatin1String( "org.kde.klauncher" ), QLatin1String( "/" ),
-                                  QLatin1String( "org.kde.KLauncher" ), mInternalBus );
-    QDBusReply<void> reply = klauncherIface.call( "terminate_kdeinit" );
-    if ( !reply.isValid() )
-      kDebug() << reply.error();
-  }
-  if ( mInternalBus.interface()->isServiceRegistered( "org.kde.kded" ) ) {
-    QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
-                                  QLatin1String( "org.kde.kded" ), mInternalBus );
-    QDBusReply<void> reply = klauncherIface.call( "quit" );
-    if ( !reply.isValid() )
-      kDebug() << reply.error();
+      break;
+    case Akonadi::ServerManager::NotRunning:
+    case Akonadi::ServerManager::Broken:
+      shutdownHarder();
+    case Akonadi::ServerManager::Stopping:
+      // safety timeout
+      QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
+      break;
   }
 }
 
@@ -477,19 +305,14 @@ void SetupTest::shutdownHarder()
   kDebug();
   mShuttingDown = false;
   stopAkonadiDaemon();
-  stopDBusDaemon( mDBusDaemonPid );
-  QCoreApplication::instance()->quit();
+  QCoreApplication::instance()->exit( mExitCode );
 }
 
 void SetupTest::restartAkonadiServer()
 {
   kDebug();
   disconnect( mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0 );
-  QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
-                              QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
-  QDBusReply<void> reply = controlIface.call( "shutdown" );
-  if ( !reply.isValid() )
-    kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
+  Akonadi::ServerManager::self()->stop();
   const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
   if ( !shutdownResult ) {
     kWarning() << "Akonadi control did not shut down in time, killing it.";
@@ -502,7 +325,6 @@ void SetupTest::restartAkonadiServer()
   connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
            this, SLOT(slotAkonadiDaemonProcessFinished(int)));
 }
-
 
 QString SetupTest::basePath() const
 {
@@ -537,3 +359,34 @@ void SetupTest::trackAkonadiProcess(bool track)
   mTrackAkonadiProcess = track;
 }
 
+QString SetupTest::instanceId() const
+{
+  return QLatin1String("testrunner-") + QString::number( QCoreApplication::instance()->applicationPid() );
+}
+
+void SetupTest::setupInstanceId()
+{
+  setEnvironmentVariable("AKONADI_INSTANCE", instanceId());
+}
+
+bool SetupTest::isSetupDone() const
+{
+  return mSetupJobCount == 0 && mExitCode == 0;
+}
+
+void SetupTest::setupFailed()
+{
+  mExitCode = 1;
+  shutdown();
+}
+
+void SetupTest::setEnvironmentVariable(const QByteArray& name, const QString& value)
+{
+  mEnvVars.push_back( qMakePair(name, value.toLocal8Bit()) );
+  setenv( name, qPrintable(value), 1 );
+}
+
+QVector< SetupTest::EnvVar > SetupTest::environmentVariables() const
+{
+  return mEnvVars;
+}

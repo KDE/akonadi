@@ -103,7 +103,6 @@ void EntityTreeModel::setIncludeUnsubscribed( bool show )
   d->endResetModel();
 }
 
-
 bool EntityTreeModel::systemEntitiesShown() const
 {
   Q_D( const EntityTreeModel );
@@ -133,7 +132,6 @@ int EntityTreeModel::columnCount( const QModelIndex & parent ) const
 
   return qMax( entityColumnCount( CollectionTreeHeaders ), entityColumnCount( ItemListHeaders ) );
 }
-
 
 QVariant EntityTreeModel::entityData( const Item &item, int column, int role ) const
 {
@@ -356,12 +354,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-
 Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 {
   Q_D( const EntityTreeModel );
   // Pass modeltest.
-  // http://labs.trolltech.com/forums/topic/79
   if ( !index.isValid() ) {
     return 0;
   }
@@ -467,7 +463,6 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 //   if ( row != -1 && column != -1 )
 //   {
 //   }
-
 
   if ( action == Qt::IgnoreAction ) {
     return true;
@@ -928,6 +923,12 @@ bool EntityTreeModel::isCollectionTreeFetched() const
   return d->m_collectionTreeFetched;
 }
 
+bool EntityTreeModel::isCollectionPopulated( Collection::Id id ) const
+{
+  Q_D( const EntityTreeModel );
+  return d->m_populatedCols.contains( id );
+}
+
 bool EntityTreeModel::entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const
 {
   Q_UNUSED( item );
@@ -1191,6 +1192,8 @@ static QModelIndex proxiedIndex( const QModelIndex &idx, QList<const QAbstractPr
 QModelIndex EntityTreeModel::modelIndexForCollection( const QAbstractItemModel *model, const Collection &collection )
 {
   QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel*> pair = proxiesAndModel( model );
+
+  Q_ASSERT( pair.second );
   QModelIndex idx = pair.second->d_ptr->indexForCollection( collection );
   return proxiedIndex( idx, pair.first );
 }

@@ -39,13 +39,12 @@ class MimeTypeCheckerTest : public QObject
     Akonadi::MimeTypeChecker mSubTypeChecker;
     Akonadi::MimeTypeChecker mAliasChecker;
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase();
     void testCollectionCheck();
     void testItemCheck();
     void testStringMatchEquivalent();
 };
-
 
 #endif
 // kate: space-indent on; indent-width 2; replace-tabs on;

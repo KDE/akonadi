@@ -18,31 +18,27 @@
 #include "shellscript.h"
 
 #include "config.h" //krazy:exclude=includes
-#include "symbols.h"
 
 #include <KDebug>
+#include <QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QHashIterator>
 
 ShellScript::ShellScript()
 {
-  mSymbol = Symbols::instance();
 }
 
 void ShellScript::writeEnvironmentVariables()
 {
-  QHashIterator<QString, QString> it( mSymbol->symbols() );
-
-  while ( it.hasNext() ) {
-    it.next();
-    mScript.append( QString::fromLatin1("_old_%1=$%2\n").arg( it.key(), it.key() ) );
-    mScript.append( it.key() );
+  foreach ( const EnvVar &envvar, mEnvVars ) {
+    mScript += "_old_" + envvar.first + "=" + envvar.first + "\n";
+    mScript.append( envvar.first );
     mScript.append( QLatin1Char( '=' ) );
-    mScript.append( it.value() );
+    mScript.append( envvar.second );
     mScript.append( QLatin1Char( '\n' ) );
 
     mScript.append( QLatin1String( "export " ) );
-    mScript.append( it.key() );
+    mScript.append( envvar.first );
     mScript.append( QLatin1Char( '\n' ) );
   }
 
@@ -54,12 +50,11 @@ void ShellScript::writeShutdownFunction()
   QString s =
     "function shutdown-testenvironment()\n"
     "{\n"
-    "  qdbus org.kde.Akonadi.Testrunner / org.kde.Akonadi.Testrunner.shutdown\n";
-  QHashIterator<QString, QString> it( mSymbol->symbols() );
-  while ( it.hasNext() ) {
-    it.next();
-    s.append( QString::fromLatin1( "  %1=$_old_%2\n" ).arg( it.key(), it.key() ) );
-    s.append( QString::fromLatin1( "  export %1\n" ).arg( it.key() ) );
+    "  qdbus org.kde.Akonadi.Testrunner-" + QString::number( QCoreApplication::instance()->applicationPid() ) + " / org.kde.Akonadi.Testrunner.shutdown\n";
+
+  foreach ( const EnvVar &envvar, mEnvVars ) {
+    s += "  " + envvar.first + "=$_old_" + envvar.first + "\n";
+    s += "  export " + envvar.first + "\n";
   }
   s.append( "}\n\n" );
   mScript.append( s );
@@ -81,3 +76,7 @@ void ShellScript::makeShellScript( const QString &fileName )
   }
 }
 
+void ShellScript::setEnvironmentVariables(const QVector< ShellScript::EnvVar >& envVars)
+{
+  mEnvVars = envVars;
+}

@@ -98,10 +98,27 @@ KEditTagsDialog::KEditTagsDialog(const QVector<Nepomuk2::Tag>& tags,
     m_deleteButtonTimer->setSingleShot( true );
     m_deleteButtonTimer->setInterval( 500 );
     connect( m_deleteButtonTimer, SIGNAL(timeout()), this, SLOT(showDeleteButton()) );
+    readConfig();
 }
 
 KEditTagsDialog::~KEditTagsDialog()
 {
+    writeConfig();
+}
+
+void KEditTagsDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "KEditTagsDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(500,400) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void KEditTagsDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "KEditTagsDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QVector<Nepomuk2::Tag> KEditTagsDialog::tags() const
@@ -131,9 +148,15 @@ void KEditTagsDialog::slotButtonClicked(int button)
             QListWidgetItem* item = m_tagsList->item( i );
             if ( item->checkState() == Qt::Checked ) {
                 const QString label = item->data( Qt::UserRole ).toString();
-                Nepomuk2::Tag tag( label );
-                tag.setLabel( label );
-                m_tags.append( tag );
+                const QString uri = item->data(UrlTag).toString();
+                if (uri.isEmpty()) {
+                    Nepomuk2::Tag tag( label );
+                    tag.setLabel( label );
+                    m_tags.append( tag );
+                } else {
+                    Nepomuk2::Tag tag( uri );
+                    m_tags.append( tag );
+                }
             }
         }
 
@@ -231,6 +254,7 @@ void KEditTagsDialog::loadTags()
 
         QListWidgetItem *item = new QListWidgetItem( label, m_tagsList );
         item->setData( Qt::UserRole, label );
+        item->setData( UrlTag, tag.uri().toString());
 
         bool check = false;
         foreach ( const Nepomuk2::Tag& selectedTag, m_tags ) {

@@ -21,6 +21,7 @@
 #define AKONADI_ITEMMONITOR_H
 
 #include "akonadi_export.h"
+#include <qglobal.h>
 
 class QStringList;
 

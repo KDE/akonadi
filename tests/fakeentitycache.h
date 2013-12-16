@@ -21,6 +21,7 @@
 #define FAKEENTITYCACHE_H
 
 #include "monitor_p.h"
+#include "notificationsource_p.h"
 
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchscope.h>
@@ -77,12 +78,42 @@ public:
   FakeNotificationSource(QObject *parent = 0)
     : QObject(parent)
   {
-
   }
 
   void emitNotify(const Akonadi::NotificationMessageV2::List &msgs ) { notifyV2(msgs); }
 
-signals:
+public Q_SLOTS:
+  void setAllMonitored( bool allMonitored )
+  {
+    Q_UNUSED( allMonitored )
+  }
+  void setMonitoredCollection( qlonglong id, bool monitored )
+  {
+    Q_UNUSED( id )
+    Q_UNUSED( monitored )
+  }
+  void setMonitoredItem( qlonglong id, bool monitored )
+  {
+    Q_UNUSED( id )
+    Q_UNUSED( monitored )
+  }
+  void setMonitoredResource( const QByteArray &resource, bool monitored )
+  {
+    Q_UNUSED( resource )
+    Q_UNUSED( monitored )
+  }
+  void setMonitoredMimeType( const QString &mimeType, bool monitored )
+  {
+    Q_UNUSED( mimeType )
+    Q_UNUSED( monitored )
+  }
+  void setIgnoredSession( const QByteArray &session, bool ignored )
+  {
+    Q_UNUSED( session )
+    Q_UNUSED( ignored )
+  }
+
+Q_SIGNALS:
   void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
 };
 
@@ -96,9 +127,9 @@ public:
 
   }
 
-  virtual QObject* createNotificationSource(QObject *parent)
+  virtual Akonadi::NotificationSource* createNotificationSource(QObject *parent)
   {
-    return new FakeNotificationSource(parent);
+    return new Akonadi::NotificationSource( new FakeNotificationSource( parent ) );
   }
 
   virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Akonadi::Session *session)
@@ -120,6 +151,5 @@ private:
   FakeCollectionCache* collectionCache;
 
 };
-
 
 #endif

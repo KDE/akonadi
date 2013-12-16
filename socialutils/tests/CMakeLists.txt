@@ -1,3 +1,4 @@
+include_directories(${CMAKE_BINARY_DIR}/akonadi/socialutils)
 
 kde4_add_unit_test(asu_tests
   TESTNAME image-provider-tests

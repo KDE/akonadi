@@ -113,8 +113,6 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
            SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
-
-
   QPalette p = palette();
   p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );
   p.setColor( foregroundRole(), Qt::white );
@@ -175,7 +173,7 @@ bool ErrorOverlay::eventFilter(QObject * object, QEvent * event)
 void ErrorOverlay::startClicked()
 {
   const ServerManager::State state = ServerManager::state();
-  if( state == ServerManager::Running ) {
+  if ( state == ServerManager::Running ) {
     serverStateChanged( state );
   } else {
     ServerManager::start();
@@ -236,8 +234,8 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
         break;
       case ServerManager::Upgrading:
         ui->progressPage->setToolTip( i18n( "Personal information management service is performing a database upgrade." ) );
-        ui->progressDescription->setText( i18n( "Personal information management service is performing a database upgrade. "
-                                                "This happens after a software update and is necessary to optimize performance. "
+        ui->progressDescription->setText( i18n( "Personal information management service is performing a database upgrade.\n"
+                                                "This happens after a software update and is necessary to optimize performance.\n"
                                                 "Depending on the amount of personal information, this might take a few minutes.") );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;

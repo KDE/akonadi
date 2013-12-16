@@ -58,6 +58,7 @@ class SearchLineEdit : public KLineEdit
     SearchLineEdit( QWidget *receiver, QWidget *parent = 0 )
       : KLineEdit( parent ), mReceiver( receiver )
     {
+        setClearButtonShown( true );
     }
 
   protected:
@@ -92,12 +93,7 @@ class EmailAddressSelectionWidget::Private
     QAbstractItemModel *mModel;
     QLabel *mDescriptionLabel;
     SearchLineEdit *mSearchLine;
-    // FIXME: Temporary until EntityTreeView compiles
-#ifndef Q_OS_WINCE
     Akonadi::EntityTreeView *mView;
-#else
-    QTreeView* mView;
-#endif
     EmailAddressSelectionProxyModel *mSelectionModel;
 };
 
@@ -136,12 +132,7 @@ void EmailAddressSelectionWidget::Private::init()
   QHBoxLayout *searchLayout = new QHBoxLayout;
   layout->addLayout( searchLayout );
 
-    // FIXME: Temporary until EntityTreeView compiles
-#ifndef Q_OS_WINCE
   mView = new Akonadi::EntityTreeView;
-#else
-  mView = new QTreeView;
-#endif
 
   QLabel *label = new QLabel( i18nc( "@label Search in a list of contacts", "Search:" ) );
   mSearchLine = new SearchLineEdit( mView );
@@ -168,18 +159,14 @@ void EmailAddressSelectionWidget::Private::init()
   q->connect( mSearchLine, SIGNAL(textChanged(QString)),
               filter, SLOT(setFilterString(QString)) );
 
-  // FIXME: Temporary until EntityTreeView compiles
-#ifndef Q_OS_WINCE
   q->connect( mView, SIGNAL(doubleClicked(Akonadi::Item)),
               q, SIGNAL(doubleClicked()));
-#endif
   Control::widgetNeedsAkonadi( q );
 
   mSearchLine->setFocus();
 
   QTimer::singleShot( 1000, mView, SLOT(expandAll()) );
 }
-
 
 EmailAddressSelectionWidget::EmailAddressSelectionWidget( QWidget * parent )
   : QWidget( parent ),

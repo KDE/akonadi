@@ -184,7 +184,6 @@ static QModelIndexList safeSelectedRows( QItemSelectionModel *selectionModel )
   return selectedRows;
 }
 
-
 /**
  * @internal
  */
@@ -221,7 +220,6 @@ class StandardActionManager::Private
                            ki18np( "&Delete Resource", "&Delete %1 Resources" ) );
       pluralLabels.insert( StandardActionManager::SynchronizeResources,
                            ki18np( "&Synchronize Resource", "&Synchronize %1 Resources" ) );
-
 
       pluralIconLabels.insert( StandardActionManager::CopyCollections,
                            ki18np( "Copy Folder", "Copy %1 Folders" ) );
@@ -375,7 +373,6 @@ class StandardActionManager::Private
       }
     }
 
-
     void updateAlternatingAction( int type )
     {
       updateAlternatingAction( static_cast<StandardActionManager::Type>( type ) );
@@ -496,7 +493,7 @@ class StandardActionManager::Private
       }
 
       mActionStateManager.updateState( selectedCollectionsList, selectedItems );
-      if( favoritesModel)
+      if ( favoritesModel)
         enableAction( StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
       emit q->actionStateUpdated();
     }
@@ -800,6 +797,16 @@ class StandardActionManager::Private
 
     bool testAndSetOnlineResources(const Akonadi::Collection& collection)
     {
+      // Shortcut for the Search resource, which is a virtual resource and thus
+      // is awlays online (but AgentManager does not know about it, so it returns
+      // an invalid AgentInstance, which is "offline").
+      //
+      // FIXME: AgentManager should return a valid AgentInstance even
+      // for virtual resources, which would be always online.
+      if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ) {
+        return true;
+      }
+
       Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
       if ( !instance.isOnline() ) {
         if ( KMessageBox::questionYesNo( parentWidget,
@@ -1433,7 +1440,6 @@ class StandardActionManager::Private
       return text.subs( value ).toString();
     }
 
-
     QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context, int count, const QString &value ) const
     {
       KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
@@ -1709,7 +1715,5 @@ void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
 {
   d->createActionFolderMenu( menu, type );
 }
-
-
 
 #include "moc_standardactionmanager.cpp"

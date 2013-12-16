@@ -50,8 +50,6 @@ static bool isSflPhoneServiceRegistered()
     return false;
 }
 
-
-
 QSflPhoneDialer::QSflPhoneDialer( const QString &applicationName )
     : QDialer( applicationName )
 {

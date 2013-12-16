@@ -28,7 +28,7 @@ using namespace Akonadi;
 class EntityDisplayAttributeTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testDeserialize_data()
     {
       QTest::addColumn<QByteArray>( "input" );

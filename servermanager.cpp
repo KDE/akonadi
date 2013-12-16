@@ -24,9 +24,7 @@
 #include "agentbase.h"
 #include "agentmanager.h"
 #include "dbusconnectionpool.h"
-#ifndef Q_OS_WINCE
 #include "selftestdialog_p.h"
-#endif
 #include "session_p.h"
 #include "firstrun_p.h"
 
@@ -171,7 +169,10 @@ bool ServerManager::start()
   }
 
   kDebug() << "executing akonadi_control";
-  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ) );
+  QStringList args;
+  if ( hasInstanceIdentifier() )
+    args << QLatin1String( "--instance" ) << instanceIdentifier();
+  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ), args );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
     QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( ServerManager::serviceName(ServerManager::Control) );
@@ -200,12 +201,10 @@ bool ServerManager::stop()
 
 void ServerManager::showSelfTestDialog( QWidget *parent )
 {
-#ifndef Q_OS_WINCE
   QPointer<Akonadi::SelfTestDialog> dlg( new Akonadi::SelfTestDialog( parent ) );
   dlg->hideIntroduction();
   dlg->exec();
   delete dlg;
-#endif
 }
 
 bool ServerManager::isRunning()
@@ -264,7 +263,7 @@ ServerManager::State ServerManager::state()
     return Broken;
   }
 
-  if ( previousState == Starting || previousState == Broken ) { // valid cases where nothing might be running (yet)
+  if ( previousState == Starting ) { // valid case where nothing is running (yet)
     return previousState;
   }
   return NotRunning;

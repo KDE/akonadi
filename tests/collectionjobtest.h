@@ -51,5 +51,4 @@ class CollectionJobTest : public QObject
     void testAncestorRetrieval();
 };
 
-
 #endif

@@ -104,6 +104,8 @@ EmailEditWidget::EmailEditWidget( QWidget *parent )
   mEditButton->setText( QLatin1String( "..." ) );
   connect( mEditButton, SIGNAL(clicked()), SLOT(edit()) );
   layout->addWidget( mEditButton );
+  setFocusProxy( mEditButton );
+  setFocusPolicy( Qt::StrongFocus );
 }
 
 EmailEditWidget::~EmailEditWidget()
@@ -169,7 +171,6 @@ void EmailEditWidget::textChanged( const QString &text )
   mEmailList.prepend( text );
 }
 
-
 EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   : KDialog( parent )
 {
@@ -233,11 +234,27 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   // set default state
   KAcceleratorManager::manage( this );
 
-  setInitialSize( QSize( 400, 200 ) );
+  readConfig();
 }
 
 EmailEditDialog::~EmailEditDialog()
 {
+    writeConfig();
+}
+
+void EmailEditDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "EmailEditDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(400,200) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void EmailEditDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "EmailEditDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QStringList EmailEditDialog::emails() const

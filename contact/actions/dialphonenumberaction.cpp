@@ -26,9 +26,6 @@
 #include "qsflphonedialer.h"
 #include "qskypedialer.h"
 #include "qekigadialer.h"
-#ifdef Q_OS_WINCE
-#include "qwincedialer.h"
-#endif // Q_OS_WINCE
 
 #include <kabc/phonenumber.h>
 #include <klocalizedstring.h>
@@ -61,11 +58,6 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
   if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype ) {
     dialer = new QSkypeDialer( QLatin1String( "AkonadiContacts" ) );
   }
-#ifdef Q_OS_WINCE
-  else if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseWinCE ) {
-    dialer = new QWinCEDialer( QLatin1String( "AkonadiContacts" ) );
-  }
-#endif // Q_OS_WINCE
   else if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSflPhone) {
     dialer = new QSflPhoneDialer( QLatin1String( "AkonadiContacts" ) );
   }

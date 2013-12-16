@@ -77,7 +77,7 @@ void ResourceScheduler::scheduleSync(const Collection & col)
   if ( queue.contains( t ) || mCurrentTask == t )
     return;
   queue << t;
-  signalTaskToTracker( t, "SyncCollection" );
+  signalTaskToTracker( t, "SyncCollection", QString::number( col.id() ) );
   scheduleNext();
 }
 
@@ -91,7 +91,7 @@ void ResourceScheduler::scheduleAttributesSync( const Collection &collection )
   if ( queue.contains( t ) || mCurrentTask == t )
     return;
   queue << t;
-  signalTaskToTracker( t, "SyncCollectionAttributes" );
+  signalTaskToTracker( t, "SyncCollectionAttributes", QString::number( collection.id() ) );
   scheduleNext();
 }
 
@@ -119,7 +119,7 @@ void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArr
 
   t.dbusMsgs << msg;
   queue << t;
-  signalTaskToTracker( t, "FetchItem" );
+  signalTaskToTracker( t, "FetchItem", QString::number( item.id() ) );
   scheduleNext();
 }
 
@@ -144,7 +144,7 @@ void ResourceScheduler::scheduleCacheInvalidation( const Collection &collection 
   if ( queue.contains( t ) || mCurrentTask == t )
     return;
   queue << t;
-  signalTaskToTracker( t, "InvalideCacheForCollection" );
+  signalTaskToTracker( t, "InvalideCacheForCollection", QString::number( collection.id() ) );
   scheduleNext();
 }
 
@@ -173,7 +173,7 @@ void ResourceScheduler::scheduleMoveReplay( const Collection &movedCollection, R
     return;
 
   queue << t;
-  signalTaskToTracker( t, "RecursiveMoveReplay" );
+  signalTaskToTracker( t, "RecursiveMoveReplay", QString::number( t.collection.id() ) );
   scheduleNext();
 }
 
@@ -401,7 +401,7 @@ void ResourceScheduler::setOnline(bool state)
   }
 }
 
-void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType )
+void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType, const QString &debugString )
 {
   // if there's a job tracer running, tell it about the new job
   if ( !s_resourcetracker && DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
@@ -413,10 +413,12 @@ void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray 
 
   if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
-    argumentList << static_cast<AgentBase*>(  parent() )->identifier()
-                 << QString::number( task.serial )
-                 << QString()
-                 << QString::fromLatin1( taskType );
+    argumentList << static_cast<AgentBase*>( parent() )->identifier()  // "session" (in our case resource)
+                 << QString::number( task.serial )                     // "job"
+                 << QString()                                          // "parent job"
+                 << QString::fromLatin1( taskType )                    // "job type"
+                 << debugString                                        // "job debugging string"
+                 ;
     s_resourcetracker->asyncCallWithArgumentList(QLatin1String( "jobCreated" ), argumentList);
   }
 }

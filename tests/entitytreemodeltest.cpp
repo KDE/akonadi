@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include <qtest_kde.h>
 
 #include <QTimer>
@@ -69,7 +68,7 @@ class EntityTreeModelTest : public QObject
 {
   Q_OBJECT
 
-private slots:
+private Q_SLOTS:
   void initTestCase();
 
   void testInitialFetch();
@@ -272,7 +271,6 @@ void EntityTreeModelTest::testCollectionMove()
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
-
 
 void EntityTreeModelTest::testCollectionAdded_data()
 {

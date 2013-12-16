@@ -25,7 +25,6 @@
 
 class KProcess;
 
-
 /**
   This tests the ability of LocalFolders to exist peacefully in multiple processes.
   The main instance (normally the first one created) is supposed to create the
@@ -46,6 +45,5 @@ class RaceTest : public QObject
     QList<KProcess*> procs;
 
 };
-
 
 #endif

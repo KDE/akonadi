@@ -23,7 +23,6 @@
 #include "session.h"
 #include "collection.h"
 
-
 using namespace Akonadi;
 
 class FakeSession : public Session
@@ -42,7 +41,7 @@ public:
    */
   void setAsDefaultSession();
 
-signals:
+Q_SIGNALS:
   void jobAdded( Akonadi::Job* );
 
   friend class FakeSessionPrivate;

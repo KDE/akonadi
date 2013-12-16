@@ -138,5 +138,4 @@ class AKONADI_EXPORT Session : public QObject
 
 }
 
-
 #endif

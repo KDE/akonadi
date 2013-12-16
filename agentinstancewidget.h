@@ -128,7 +128,6 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
      */
     void clicked( const Akonadi::AgentInstance &current );
 
-
   private:
     //@cond PRIVATE
     class Private;

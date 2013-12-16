@@ -49,7 +49,6 @@ void ImageProviderTests::setup()
     e.exec();
 }
 
-
 void ImageProviderTests::testImageNoCache()
 {
     KImageCache *cache = new KImageCache( QLatin1String( "asu_tests_cache" ), 10485760 );

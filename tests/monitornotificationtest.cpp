@@ -43,11 +43,11 @@ public:
 private Q_SLOTS:
   void testSingleMessage();
   void testFillPipeline();
-  void testMonitorNonRoot();
+  void testMonitor();
 
   void testSingleMessage_data();
   void testFillPipeline_data();
-  void testMonitorNonRoot_data();
+  void testMonitor_data();
 
 private:
   template<typename MonitorImpl>
@@ -55,7 +55,7 @@ private:
   template<typename MonitorImpl>
   void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
   template<typename MonitorImpl>
-  void testMonitorNonRoot_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+  void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
 
 private:
   FakeSession *m_fakeSession;
@@ -95,9 +95,6 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
-  monitor->setAllMonitored(true);
-
-  monitor->setCollectionMonitored(Collection::root());
 
   NotificationMessageV2::List list;
 
@@ -166,9 +163,6 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
 
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
-  monitor->setAllMonitored(true);
-
-  monitor->setCollectionMonitored(Collection::root());
 
   NotificationMessageV2::List list;
   QHash<Collection::Id, Collection> data;
@@ -205,7 +199,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
   QVERIFY(monitor->pendingNotifications().isEmpty());
 }
 
-void MonitorNotificationTest::testMonitorNonRoot_data()
+void MonitorNotificationTest::testMonitor_data()
 {
   QTest::addColumn<bool>("useChangeRecorder");
 
@@ -213,7 +207,7 @@ void MonitorNotificationTest::testMonitorNonRoot_data()
   QTest::newRow("useMonitor") << false;
 }
 
-void MonitorNotificationTest::testMonitorNonRoot()
+void MonitorNotificationTest::testMonitor()
 {
   QFETCH(bool, useChangeRecorder);
 
@@ -221,25 +215,22 @@ void MonitorNotificationTest::testMonitorNonRoot()
   FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
   FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
 
-  if (!useChangeRecorder)
-  {
-    testMonitorNonRoot_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
+  if (!useChangeRecorder) {
+    testMonitor_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
   } else {
     InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
     changeRecorder->setChangeRecordingEnabled(false);
-    testMonitorNonRoot_impl(changeRecorder, collectionCache, itemCache);
+    testMonitor_impl(changeRecorder, collectionCache, itemCache);
   }
 }
 
 template <typename MonitorImpl>
-void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
+void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
 {
   Q_UNUSED(itemCache)
 
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
-
-  monitor->setCollectionMonitored(Collection(2));
 
   NotificationMessageV2::List list;
 
@@ -250,11 +241,11 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
 
   int i = 4;
 
-  while (i < 10) {
+  while (i < 8) {
     Collection added(i++);
 
     NotificationMessageV2 msg;
-    msg.setParentCollection(added.id() % 2 == 0 ? 2 : added.id() - 1);
+    msg.setParentCollection( i % 2 ? 2 : added.id() - 1);
     msg.setOperation(Akonadi::NotificationMessageV2::Add);
     msg.setType(Akonadi::NotificationMessageV2::Collections);
     msg.addEntity( added.id() );
@@ -283,11 +274,10 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
 
   monitor->notifier()->emitNotify(list);
 
-  QCOMPARE(collectionAddedSpy.size(), 2);
+  // Collection 6 is not notified, because Collection 5 has held up the pipeline
+  QCOMPARE(collectionAddedSpy.size(), 1);
   QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 4);
-  // 5 is filtered out because we don't monitor descendants.
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 6);
-  QCOMPARE(monitor->pipeline().size(), 1);
+  QCOMPARE(monitor->pipeline().size(), 3);
   QCOMPARE(monitor->pendingNotifications().size(), 0);
 
   Collection col7(7);
@@ -296,8 +286,9 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
   collectionCache->insert(col7);
   collectionCache->emitDataAvailable();
 
+  // Collection 5 is still holding the pipeline
   QCOMPARE(collectionAddedSpy.size(), 0);
-  QCOMPARE(monitor->pipeline().size(), 1);
+  QCOMPARE(monitor->pipeline().size(), 3);
   QCOMPARE(monitor->pendingNotifications().size(), 0);
 
   Collection col5(5);
@@ -306,74 +297,10 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
   collectionCache->insert(col5);
   collectionCache->emitDataAvailable();
 
-  QCOMPARE(collectionAddedSpy.size(), 0);
-  QCOMPARE(monitor->pipeline().size(), 1);
+  // Collection 5 is in cache, pipeline is flushed
+  QCOMPARE(collectionAddedSpy.size(), 3);
+  QCOMPARE(monitor->pipeline().size(), 0);
   QCOMPARE(monitor->pendingNotifications().size(), 0);
-
-  list.clear();
-
-  QHash<Collection::Id, Collection> extraCollections;
-
-  while (i < 20) {
-    Collection added(i++);
-
-    NotificationMessageV2 msg;
-    msg.setParentCollection(added.id() % 2 == 0 ? 2 : added.id() - 1);
-    msg.setOperation(Akonadi::NotificationMessageV2::Add);
-    msg.setType(Akonadi::NotificationMessageV2::Collections);
-    msg.addEntity( added.id() );
-
-    added.setParentCollection(added.id() % 2 == 0 ? col2 : extraCollections.value(added.id() - 1));
-
-    extraCollections.insert(added.id(), added);
-
-    list << msg;
-  }
-  monitor->notifier()->emitNotify(list);
-
-  QCOMPARE(collectionAddedSpy.size(), 0);
-  QCOMPARE(monitor->pipeline().size(), 5);
-  QCOMPARE(monitor->pendingNotifications().size(), 1);
-
-  Collection col8(8);
-  col8.setParentCollection(col2);
-
-  collectionCache->insert(col8);
-  collectionCache->emitDataAvailable();
-
-  QCOMPARE(collectionAddedSpy.size(), 1);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 8);
-  QCOMPARE(monitor->pipeline().size(), 5);
-  QCOMPARE(monitor->pendingNotifications().size(), 0);
-
-  Collection col9(9);
-  col9.setParentCollection(col8);
-  collectionCache->insert(col9);
-  collectionCache->emitDataAvailable();
-
-  QCOMPARE(collectionAddedSpy.size(), 0);
-  QCOMPARE(monitor->pipeline().size(), 5);
-  QCOMPARE(monitor->pendingNotifications().size(), 0);
-
-  {
-    QHash<Collection::Id, Collection>::const_iterator it = extraCollections.constBegin();
-    const QHash<Collection::Id, Collection>::const_iterator end = extraCollections.constEnd();
-
-    for (; it != end; ++it)
-      collectionCache->insert(*it);
-    collectionCache->emitDataAvailable();
-  }
-  QCOMPARE(collectionAddedSpy.size(), 5);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 10);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 12);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 14);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 16);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 18);
-
-  QCOMPARE(collectionAddedSpy.size(), 0);
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
-
 }
 
 QTEST_MAIN( MonitorNotificationTest )

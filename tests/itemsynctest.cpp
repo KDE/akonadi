@@ -54,7 +54,7 @@ class ItemsyncTest : public QObject
       return fetch->items();
     }
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

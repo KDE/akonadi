@@ -56,8 +56,10 @@ void Entry::updateIds( Item::Id oldId, Item::Id newId )
 
   Akonadi::Item::List::iterator it = mItems.begin();
   while ( it != mItems.end() ) {
-    if ( (*it).id() == oldId )
+    if ( (*it).id() == oldId ) {
       (*it).setId( newId );
+      (*it).setRevision( 0 );
+    }
     ++it;
   }
 }
@@ -310,7 +312,7 @@ void MultiEntry::addEntry( const Entry::Ptr &entry )
 
 void MultiEntry::updateIds( Item::Id oldId, Item::Id newId )
 {
-  for( int i=0; i<mEntries.count(); ++i ) {
+  for ( int i=0; i<mEntries.count(); ++i ) {
     mEntries.at(i)->updateIds( oldId, newId );
   }
 }
@@ -325,7 +327,7 @@ bool MultiEntry::undo()
   const int count = mEntries.count();
   // To undo a batch of changes we iterate in reverse order so we don't violate
   // causality.
-  for( int i=count-1; i>=0; --i ) {
+  for ( int i=count-1; i>=0; --i ) {
     mEntries[i]->doIt( TypeUndo );
   }
 
@@ -344,7 +346,6 @@ bool MultiEntry::redo()
   mChanger->endAtomicOperation();
   return true;
 }
-
 
 void MultiEntry::onEntryFinished( Akonadi::IncidenceChanger::ResultCode resultCode,
                                   const QString &errorString )

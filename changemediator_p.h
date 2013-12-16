@@ -56,19 +56,12 @@ public:
   static void beginMoveItems( JobPrivate *movePrivate, const QByteArray &id );
   static void itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id );
 
-Q_SIGNALS:
-  void notify(const QVector<Akonadi::NotificationMessageV2> &messages);
-
 private Q_SLOTS:
-  void init();
-
   void do_registerMonitor( QObject *monitor );
   void do_unregisterMonitor( QObject *monitor );
 
   void do_invalidateCollection( const Akonadi::Collection &collection );
   void do_invalidateItem( const Akonadi::Item &item );
-
-  void processAkonadiNotifications(const Akonadi::NotificationMessageV2::List &messages);
 
   void do_registerSession( const QByteArray &id );
   void do_unregisterSession( const QByteArray &id );
@@ -78,7 +71,6 @@ private Q_SLOTS:
 private:
   QList<QObject*> m_monitors;
 
-  QObject *m_notificationSource;
   QVector<Akonadi::NotificationMessageV2> messageQueue;
   QVector<Akonadi::Job*> unfilteredJobs;
 

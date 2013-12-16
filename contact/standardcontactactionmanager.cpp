@@ -151,7 +151,6 @@ class StandardContactActionManager::Private
                         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
                         ki18n( "Could not delete address book folder: %1" ) );
 
-
             mGenericManager->setContextText(
                         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
                         i18n( "Address book folder deletion failed" ) );
@@ -333,51 +332,56 @@ class StandardContactActionManager::Private
           if ( index.isValid() ) {
             const QString mimeType = index.data( EntityTreeModel::MimeTypeRole ).toString();
             if ( mimeType == KABC::Addressee::mimeType() ) {
-              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItems )) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                                 ki18np( "Copy Contact", "Copy %1 Contacts" ) );
+              }
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )) {
                 mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Contact To" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog)) {
                 mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Contact To" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::DeleteItems)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::DeleteItems)) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                                 ki18np( "Delete Contact", "Delete %1 Contacts" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::CutItems)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CutItems)) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
                                                 ki18np( "Cut Contact", "Cut %1 Contacts" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu)) {
                 mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Contact To" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
                 mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
               }
+              if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
+                mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Contact..." ) );
+              }
             } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
-              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItems )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItems )) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                                 ki18np( "Copy Group", "Copy %1 Groups" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu)) {
                 mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Group To" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )) {
                 mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Group To" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::DeleteItems)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::DeleteItems)) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                                 ki18np( "Delete Group", "Delete %1 Groups" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::CutItems)) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CutItems)) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
                                                 ki18np( "Cut Group", "Cut %1 Groups" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )) {
                 mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Group To" ) );
               }
-              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
                 mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Group To" ) );
               }
               if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
@@ -607,7 +611,7 @@ KAction* StandardContactActionManager::createAction( Type type )
 KAction* StandardContactActionManager::createAction( StandardActionManager::Type type )
 {
   KAction *act = d->mGenericManager->action(type);
-  if(!act )
+  if (!act )
     act = d->mGenericManager->createAction( type );
   d->updateGenericAction(type);
   return act;
@@ -667,7 +671,6 @@ Akonadi::Item::List StandardContactActionManager::selectedItems() const
 {
   return d->mGenericManager->selectedItems();
 }
-
 
 void StandardContactActionManager::setCollectionPropertiesPageNames( const QStringList &names )
 {

@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #include "maildirremovereadmessages.h"
 #include "maildir.h"
 #include <QDebug>
@@ -45,7 +44,7 @@ void MailDirRemoveReadMessages::runTest() {
     ifj->exec();
     foreach ( const Item &item, ifj->items() ) {
       // delete read messages
-      if( item.hasFlag( "\\SEEN" ) ) {
+      if ( item.hasFlag( "\\SEEN" ) ) {
         ItemDeleteJob *idj = new ItemDeleteJob( item, this);
         idj->exec();
       }

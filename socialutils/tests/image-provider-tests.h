@@ -27,7 +27,6 @@
 #include <QImage>
 #include <KUrl>
 
-
 class ImageProviderTests : public QObject
 {
 Q_OBJECT

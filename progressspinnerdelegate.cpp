@@ -90,7 +90,6 @@ QPixmap DelegateAnimator::sequenceFrame(const QModelIndex& index)
   return QPixmap();
 }
 
-
 ProgressSpinnerDelegate::ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent)
   : QStyledItemDelegate(parent), m_animator(animator)
 {

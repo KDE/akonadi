@@ -72,8 +72,6 @@ class Akonadi::SpecialCollectionsRequestJobPrivate
     QVector< QPair<Collection, QByteArray> > mToRegister;
 };
 
-
-
 SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate( SpecialCollections *collections,
                                                                           SpecialCollectionsRequestJob *qq )
   : q( qq ),
@@ -275,8 +273,6 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult( KJob *job )
   if ( mPendingCreateJobs == 0 )
     nextResource();
 }
-
-
 
 // TODO KDE5: do not inherit from TransactionSequence
 SpecialCollectionsRequestJob::SpecialCollectionsRequestJob( SpecialCollections *collections, QObject *parent )

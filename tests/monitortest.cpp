@@ -283,7 +283,6 @@ void MonitorTest::testMonitor()
   QVERIFY( imvspy.isEmpty() );
   imvspy.clear();
 
-
   // Unsubscribe and re-subscribed a collection that existed before the monitor was created.
   Collection subCollection = Collection( collectionIdFromPath( "res2/foo2" ) );
   subCollection.setName( "foo2" );
@@ -323,7 +322,6 @@ void MonitorTest::testMonitor()
   QVERIFY( imvspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
 
-
   // modify a collection
   monitorCol.setName( "changed name" );
   CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
@@ -347,7 +345,6 @@ void MonitorTest::testMonitor()
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
-
 
   // move a collection
   Collection dest = Collection( collectionIdFromPath( "res1/foo" ) );
@@ -377,7 +374,6 @@ void MonitorTest::testMonitor()
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
-
 
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );

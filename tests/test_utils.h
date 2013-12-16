@@ -40,9 +40,16 @@ qint64 collectionIdFromPath( const QString &path )
   return id;
 }
 
+QString testrunnerServiceName()
+{
+  const QString pid = QString::fromLocal8Bit( qgetenv( "AKONADI_TESTRUNNER_PID" ) );
+  Q_ASSERT( !pid.isEmpty() );
+  return QLatin1String( "org.kde.Akonadi.Testrunner-" ) + pid;
+}
+
 bool restartAkonadiServer()
 {
-    QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),
+    QDBusInterface testrunnerIface( testrunnerServiceName(),
                                     QLatin1String( "/" ),
                                     QLatin1String( "org.kde.Akonadi.Testrunner" ),
                                     Akonadi::DBusConnectionPool::threadConnection() );
@@ -60,10 +67,9 @@ bool restartAkonadiServer()
     }
 }
 
-
 bool trackAkonadiProcess( bool track )
 {
-    QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),
+    QDBusInterface testrunnerIface( testrunnerServiceName(),
                                     QLatin1String( "/" ),
                                     QLatin1String( "org.kde.Akonadi.Testrunner" ),
                                     Akonadi::DBusConnectionPool::threadConnection() );

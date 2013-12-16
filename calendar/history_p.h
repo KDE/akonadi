@@ -90,6 +90,9 @@ public:
   bool isUndoAvailable() const;
   bool isRedoAvailable() const;
 
+  int redoCount() const;
+  int undoCount() const;
+
   IncidenceChanger *mChanger;
 
   QStack<Entry::Ptr> mUndoStack;

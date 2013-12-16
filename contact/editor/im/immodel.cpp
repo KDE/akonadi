@@ -66,7 +66,6 @@ bool IMAddress::preferred() const
   return mPreferred;
 }
 
-
 IMModel::IMModel( QObject *parent )
   : QAbstractItemModel( parent )
 {

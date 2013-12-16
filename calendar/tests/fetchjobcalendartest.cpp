@@ -20,7 +20,7 @@
 #include "../fetchjobcalendar.h"
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemcreatejob.h>
-#include <akonadi/collectionfetchJob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 
@@ -41,6 +41,7 @@ class FetchJobCalendarTest : public QObject
       Incidence::Ptr incidence = Incidence::Ptr( new Event() );
       incidence->setUid( uid );
       incidence->setSummary( QLatin1String( "summary" ) );
+      incidence->setDtStart( KDateTime::currentDateTime( KDateTime::UTC ) );
       item.setPayload<KCalCore::Incidence::Ptr>( incidence );
       ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
       AKVERIFYEXEC( job );
@@ -65,6 +66,8 @@ class FetchJobCalendarTest : public QObject
 private Q_SLOTS:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
+
       fetchCollection();
       qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
     }

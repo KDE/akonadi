@@ -81,6 +81,8 @@ class EmailEditDialog : public KDialog
     void selectionChanged();
 
   private:
+    void readConfig();
+    void writeConfig();
     KListWidget *mEmailListBox;
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;

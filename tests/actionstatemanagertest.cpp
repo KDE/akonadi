@@ -130,7 +130,6 @@ class ActionStateManagerTest : public QObject
       Q_UNUSED( action );
     }
 
-
   private Q_SLOTS:
 
     void init()

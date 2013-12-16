@@ -78,6 +78,18 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     void startFetchJob();
     void selectDone( KJob * job );
 
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
+      if ( mRequestedItems.isEmpty() ) {
+        return QString::fromLatin1( "All items from collection %1" ).arg( mCollection.id() );
+      } else {
+        try {
+          return QString::fromLatin1( ProtocolHelper::entitySetToByteArray( mRequestedItems, AKONADI_CMD_ITEMFETCH ) );
+        } catch ( const Exception &e ) {
+          return QString::fromUtf8( e.what() );
+        }
+      }
+    }
+
     Q_DECLARE_PUBLIC( ItemFetchJob )
 
     Collection mCollection;
@@ -163,7 +175,6 @@ ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id>& items, QObject* paren
     d->mRequestedItems.append(Item(id));
 }
 
-
 ItemFetchJob::~ItemFetchJob()
 {
 }
@@ -219,6 +230,13 @@ Item::List ItemFetchJob::items() const
   return d->mResultItems;
 }
 
+void ItemFetchJob::clearItems()
+{
+  Q_D( ItemFetchJob );
+
+  d->mResultItems.clear();
+}
+
 void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )
 {
   Q_D( ItemFetchJob );
@@ -246,6 +264,5 @@ void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 
   d->mCollection = collection;
 }
-
 
 #include "moc_itemfetchjob.cpp"

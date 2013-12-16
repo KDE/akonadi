@@ -11,8 +11,6 @@ if(CMAKE_COMPILE_GCOV)
 endif()
 
 if (KDE4_BUILD_TESTS)
-   # only with this macro the AKONADI_TESTS_EXPORT macro will do something
-   add_definitions(-DCOMPILING_TESTS)
    # add_subdirectory( tests )
 endif()
 
@@ -30,6 +28,10 @@ endif()
 
 configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
 
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
 add_subdirectory( kabc )
 message(WARNING "Akonadi/KCal needs to be ported to KCalCore")
 #add_subdirectory( kcal )
@@ -40,15 +42,15 @@ add_definitions(-DQ_DECL_CONSTRUCTOR_DEPRECATED=Q_DECL_DEPRECATED)
 # add_subdirectory( calendar )
 add_subdirectory( notes )
 # add_subdirectory( socialutils )
+add_subdirectory( xml )
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${KDE4_INCLUDE_DIR}
   ${QJSON_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/../kmime
   ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
 
@@ -125,6 +127,7 @@ set( akonadikde_LIB_SRC
   exception.cpp
   favoritecollectionsmodel.cpp
   firstrun.cpp
+  gid/gidextractor.cpp
   indexpolicyattribute.cpp
   item.cpp
   itemcreatejob.cpp
@@ -148,6 +151,7 @@ set( akonadikde_LIB_SRC
   mimetypechecker.cpp
   monitor.cpp
   monitor_p.cpp
+  notificationsource.cpp
   partfetcher.cpp
   pastehelper.cpp
   persistentsearchattribute.cpp
@@ -191,6 +195,11 @@ set( akonadikde_LIB_SRC
   resourcesettings.cpp
   renamefavoritedialog.cpp
   recentcollectionaction.cpp
+  dragdropmanager.cpp
+  collectionview.cpp
+  entitylistview.cpp
+  entitytreeviewstatesaver.cpp
+  itemview.cpp
 )
 
 if (KDEPIM_MOBILE_UI)
@@ -200,18 +209,6 @@ if (KDEPIM_MOBILE_UI)
 else()
   set( akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
        collectiondialog_desktop.cpp
-  )
-endif()
-
-if (NOT WINCE)
-  set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
-  # pending: fix KIconButton (remove icon selection stuff) and then should be ok
-  dragdropmanager.cpp
-  # pending: remove xmlguiclient stuff (for context menu) and then should be ok
-  collectionview.cpp
-  entitylistview.cpp
-  entitytreeviewstatesaver.cpp
-  itemview.cpp
   )
 endif()
 
@@ -255,7 +252,31 @@ else()
   )
 endif()
 
-kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
+add_definitions(
+  -DAKONADI_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DAKONADI_DEPRECATED_EXPORT=AKONADI_EXPORT
+)
+
+add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-kde PROPERTY DEFINE_SYMBOL akonadi_kde)
+endif()
+generate_export_header(akonadi-kde BASE_NAME akonadi)
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_TESTS_EXPORT AKONADI_EXPORT)
+endif()
+configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_TESTS_EXPORT AKONADI_EXPORT)
+endif()
+configure_file(akonadiprivate_export.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h"
+)
 
 target_link_libraries( akonadi-kde PRIVATE Qt5::Network Qt5::Sql KF5::KIOCore KF5::Solid KF5::KDE4Support )
 set( AKONADI_KDE_DEPS Qt5::Core KF5::ItemViews Qt5::DBus )
@@ -272,7 +293,7 @@ install( TARGETS akonadi-kde EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_
 ########### install files ###############
 
 install( FILES
-  akonadi_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi_export.h
   agentactionmanager.h
   agentbase.h
   agentfactory.h
@@ -307,6 +328,7 @@ install( FILES
   collectionmovejob.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
+  collectionpathresolver_p.h
   collectionquotaattribute.h
   collectionrequester.h
   collectionstatisticsdelegate.h
@@ -333,6 +355,7 @@ install( FILES
   etmviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
+  gid/gidextractorinterface.h
   indexpolicyattribute.h
   item.h
   itemcreatejob.h
@@ -400,8 +423,13 @@ install( FILES
 )
 endif()
 
-#Laurent: kdelibs commits 9f575dd and d62c854 are needed to avoid build errors with the -DQT_NO_CAST_*_ASCII flags
-if((NOT KDE_VERSION VERSION_LESS 4.10.4) AND QT_QTDESIGNER_FOUND)
+set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
+install( FILES
+  AkonadiMacros.cmake
+  DESTINATION ${module_install_dir}
+)
+
+if(QT_QTDESIGNER_FOUND)
   message(STATUS "Building Akonadi widgets")
   set(akonadiwidgets_PART_SRCS)
   kde4_add_widget_files(akonadiwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/akonadi.widgets)

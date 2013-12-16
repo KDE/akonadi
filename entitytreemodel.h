@@ -423,7 +423,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     bool systemEntitiesShown() const;
 
-
     /**
      * Returns whether unsubscribed entities will be included in the listing.
      *
@@ -442,7 +441,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @since 4.5
      */
     void setIncludeUnsubscribed( bool show );
-
 
     /**
      * Sets the item population @p strategy of the model.
@@ -529,6 +527,14 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @since 4.10
      */
     bool isCollectionTreeFetched() const;
+
+    /**
+     * Returns whether the collection has been populated.
+     *
+     * @see collectionPopulated
+     * @since 4.12
+     */
+    bool isCollectionPopulated( Akonadi::Collection::Id ) const;
 
     /**
      * Reimplemented to handle the AmazingCompletionRole.

@@ -31,7 +31,7 @@ using namespace Akonadi;
 class ServerManagerTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();

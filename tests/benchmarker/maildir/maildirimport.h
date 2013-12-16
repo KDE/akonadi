@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef MAILDIRIMPORT_H
 #define MAILDIRIMPORT_H
 

@@ -87,7 +87,7 @@ void ContactGroupLineEdit::setContactReference( const KABC::ContactGroup::Contac
 
   disconnect( this, SIGNAL(textChanged(QString)), this, SLOT(invalidateReference()) );
 
-  updateView( reference.uid(), reference.preferredEmail() );
+  updateView( reference );
 }
 
 KABC::ContactGroup::ContactReference ContactGroupLineEdit::contactReference() const
@@ -120,11 +120,17 @@ void ContactGroupLineEdit::invalidateReference()
   mContainsReference = false;
 }
 
-void ContactGroupLineEdit::updateView( const QString &uid, const QString &preferredEmail )
+void ContactGroupLineEdit::updateView( const KABC::ContactGroup::ContactReference &reference )
 {
-  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( uid.toLongLong() ) );
+  Akonadi::Item item;
+  if ( !reference.gid().isEmpty() ) {
+    item.setGid( reference.gid() );
+  } else {
+    item.setId( reference.uid().toLongLong() );
+  }
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
-  job->setProperty( "preferredEmail", preferredEmail );
+  job->setProperty( "preferredEmail", reference.preferredEmail() );
   connect( job, SIGNAL(result(KJob*)), SLOT(fetchDone(KJob*)) );
 }
 
@@ -164,6 +170,7 @@ void ContactGroupLineEdit::updateView( const Akonadi::Item &item, const QString 
     setText( QString::fromLatin1( "%1 <%2>" ).arg( name ).arg( email ) );
   }
 
+  mContactReference.setGid( contact.uid() );
   mContactReference.setUid( QString::number( item.id() ) );
 
   if ( contact.preferredEmail() != email ) {

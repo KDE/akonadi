@@ -19,10 +19,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef AKONADI_KCOLUMNFILTERPROXYMODEL_P_H
 #define AKONADI_KCOLUMNFILTERPROXYMODEL_P_H
-
 
 #include <QSortFilterProxyModel>
 

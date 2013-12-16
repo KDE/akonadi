@@ -41,6 +41,7 @@ class MonitorFilterTest : public QObject
       qRegisterMetaType<Akonadi::Item>();
       qRegisterMetaType<Akonadi::Collection>();
       qRegisterMetaType<QSet<QByteArray> >();
+      qRegisterMetaType<Akonadi::Item::List>();
     }
 
     void filterConnected_data()
@@ -72,7 +73,7 @@ class MonitorFilterTest : public QObject
 
       QVERIFY( !m.acceptNotification( msg ) );
       m.monitorAll = true;
-      QVERIFY( !m.acceptNotification( msg ) );
+      QVERIFY( m.acceptNotification( msg ) );
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
       QVERIFY( m.acceptNotification( msg ) );
@@ -179,8 +180,9 @@ class MonitorFilterTest : public QObject
       msg.setOperation( op );
       msg.setType( type );
       msg.setResource( "foo" );
-      msg.setItemParts( QSet<QByteArray>() << "bar" );
+      msg.setDestinationResource( "bar" );
       msg.setSessionId( "mysession" );
+      msg.addEntity( 1 );
 
       // using the right resource makes it pass
       QVERIFY( !m.acceptNotification( msg ) );

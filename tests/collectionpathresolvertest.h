@@ -25,12 +25,11 @@
 class CollectionPathResolverTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void initTestCase();
     void testPathResolver();
     void testRoot();
     void testFailure();
 };
-
 
 #endif

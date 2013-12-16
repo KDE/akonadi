@@ -29,10 +29,10 @@
 #include "itemfetchscope.h"
 #include "job.h"
 #include <akonadi/private/notificationmessagev2_p.h>
-#include "notificationsourceinterface.h"
 #include "entitycache_p.h"
 #include "servermanager.h"
 #include "changenotificationdependenciesfactory_p.h"
+#include "notificationsource_p.h"
 
 #include <kmimetype.h>
 
@@ -60,7 +60,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
     ChangeNotificationDependenciesFactory *dependenciesFactory;
-    QObject* notificationSource;
+    NotificationSource* notificationSource;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
@@ -94,7 +94,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification( const NotificationMessageV2 &msg, bool allowModifyFlagsConversion = false ) const;
+    bool acceptNotification( const NotificationMessageV2 &msg ) const;
     void dispatchNotifications();
     void flushPipeline();
 
@@ -120,7 +120,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /// Virtual so that ChangeRecorder can set it to 0 and handle the pipeline itself
     virtual int pipelineSize() const;
 
-    // private slots
+    // private Q_SLOTS
     void dataAvailable();
     void slotSessionDestroyed( QObject* );
     void slotStatisticsChangedFinished( KJob* );
@@ -170,7 +170,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
       Check whether a Collection is buffered using the isBuffered method.
     */
-    class PurgeBuffer
+    class AKONADI_TESTS_EXPORT PurgeBuffer
     {
       // Buffer the most recent 10 unreferenced Collections
       static const int MAXBUFFERSIZE = 10;
@@ -196,15 +196,27 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
         return m_buffer.contains( id );
       }
 
+      static int buffersize();
+
     private:
       QQueue<Collection::Id> m_buffer;
     } m_buffer;
-
 
     QHash<Collection::Id, int> refCountMap;
     bool useRefCounting;
     void ref( Collection::Id id );
     Collection::Id deref( Collection::Id id );
+
+    /**
+     * Returns true if the collection is monitored by monitor.
+     *
+     * A collection is always monitored if useRefCounting is false.
+     * If ref counting is used, the collection is only monitored,
+     * if the collection is either in refCountMap or m_buffer.
+     * If ref counting is used and the collection is not in refCountMap or m_buffer,
+     * no updates for the contained items are emitted, because they are lazily ignored.
+     */
+    bool isMonitored( Collection::Id colId ) const;
 
   private:
     // collections that need a statistics update

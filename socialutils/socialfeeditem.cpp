@@ -40,7 +40,9 @@ Akonadi::SocialFeedItem::~SocialFeedItem()
 
 Akonadi::SocialFeedItem& Akonadi::SocialFeedItem::operator=(const Akonadi::SocialFeedItem& other)
 {
-  if ( this == &other ) return *this; //Protect against self-assignment
+  if ( this == &other ) {
+    return *this; //Protect against self-assignment
+  }
   d = other.d;
   return *this;
 }

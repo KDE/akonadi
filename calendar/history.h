@@ -27,6 +27,8 @@
 #include <akonadi/item.h>
 #include <QWidget>
 
+class HistoryTest;
+
 namespace Akonadi {
 
 class IncidenceChanger;
@@ -245,6 +247,7 @@ Q_SIGNALS:
 
 private:
 
+  friend class ::HistoryTest;
   friend class IncidenceChanger;
   friend class Entry;
 

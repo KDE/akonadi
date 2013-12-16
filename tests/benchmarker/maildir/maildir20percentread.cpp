@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #include "maildir20percentread.h"
 #include "maildir.h"
 

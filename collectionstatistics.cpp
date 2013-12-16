@@ -50,7 +50,6 @@ class CollectionStatistics::Private : public QSharedData
     qint64 size;
 };
 
-
 CollectionStatistics::CollectionStatistics() :
     d( new Private )
 {

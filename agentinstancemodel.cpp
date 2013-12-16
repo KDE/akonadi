@@ -82,7 +82,6 @@ void AgentInstanceModel::Private::instanceChanged( const AgentInstance &instance
   }
 }
 
-
 AgentInstanceModel::AgentInstanceModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {

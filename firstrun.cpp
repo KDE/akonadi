@@ -163,7 +163,6 @@ void Firstrun::migrationFinished( int exitCode )
 }
 #endif
 
-
 void Firstrun::setupNext()
 {
   delete mCurrentDefault;

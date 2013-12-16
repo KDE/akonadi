@@ -96,6 +96,10 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      * @since 4.7
      */
     void setExcludeVirtualCollections( bool exclude );
+    /*
+     * @since 4.12
+     */
+    bool excludeVirtualCollections() const;
 
     /**
      * Clears all mime type filters.

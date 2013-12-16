@@ -153,7 +153,6 @@ void MobileEventHandler::openDialog()
   delete dialog;
 }
 
-
 CollectionComboBox::CollectionComboBox( QWidget *parent )
   : KComboBox( parent ), d( new Private( 0, this ) )
 {
@@ -218,6 +217,17 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
     return Akonadi::Collection();
   }
 }
+
+void CollectionComboBox::setExcludeVirtualCollections(bool b)
+{
+    d->mMimeTypeFilterModel->setExcludeVirtualCollections(b);
+}
+
+bool CollectionComboBox::excludeVirtualCollections() const
+{
+    return d->mMimeTypeFilterModel->excludeVirtualCollections();
+}
+
 
 #include "moc_collectioncombobox.cpp"
 #include "moc_collectioncombobox_p.cpp"

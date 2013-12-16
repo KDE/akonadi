@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (C) 2012-2013 Sérgio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -19,6 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 #include "scheduler_p.h"
+#include "calendarbase_p.h"
+
 #include <kcalutils/stringify.h>
 
 #include <kcalcore/icalformat.h>
@@ -36,11 +38,13 @@ struct Akonadi::Scheduler::Private
 {
   public:
     Private( Scheduler *qq ) : mFreeBusyCache( 0 )
+                             , mShowDialogs( true )
                              , q( qq )
     {
     }
 
     FreeBusyCache *mFreeBusyCache;
+    bool mShowDialogs;
     Scheduler *const q;
 };
 
@@ -55,6 +59,11 @@ Scheduler::~Scheduler()
 {
   delete mFormat;
   delete d;
+}
+
+void Scheduler::setShowDialogs( bool enable )
+{
+  d->mShowDialogs = enable;
 }
 
 void Scheduler::setFreeBusyCache( FreeBusyCache *c )
@@ -140,8 +149,15 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
             kError() << errorString;
           } else {
             newInc->setSchedulingID( newInc->uid(), oldUid );
-            calendar->modifyIncidence( newInc );
-            return; // signal will be emitted in the handleModifyFinished() slot
+            const bool success = calendar->modifyIncidence( newInc );
+
+            if ( !success ) {
+              emit transactionFinished( ResultModifyingError, QLatin1String( "Error modifying incidence" ) );
+            } else {
+              // signal will be emitted in the handleModifyFinished() slot
+            }
+
+            return;
           }
         }
       }
@@ -155,27 +171,28 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
   emit transactionFinished( result, errorString );
 }
 
-void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
+void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
                                const Akonadi::CalendarBase::Ptr &calendar,
                                ScheduleMessage::Status status,
                                const QString &email )
 {
-  Incidence::Ptr inc = incidence.staticCast<Incidence>() ;
+  Incidence::Ptr incidence = incidenceBase.staticCast<Incidence>() ;
 
-  if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
+  if ( incidence->type() == IncidenceBase::TypeFreeBusy ) {
     // reply to this request is handled in korganizer's incomingdialog
     emit transactionFinished( ResultSuccess, QString() );
     return;
   }
 
+  QString schedulingUid = incidence->uid();
   QString errorString;
   Result result = ResultSuccess;
 
-  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( inc->uid() );
+  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( schedulingUid );
   kDebug() << "status=" << KCalUtils::Stringify::scheduleMessageStatus( status ) //krazy:exclude=kdebug
            << ": found " << existingIncidences.count()
-           << " incidences with schedulingID " << inc->schedulingID()
-           << "; uid was = " << inc->uid();
+           << " incidences with schedulingID " << incidence->schedulingID()
+           << "; uid was = " << schedulingUid;
 
   if ( existingIncidences.isEmpty() ) {
     // Perfectly normal if the incidence doesn't exist. This is probably
@@ -183,9 +200,8 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
     kDebug() << "incidence not found; calendar = " << calendar.data()
              << "; incidence count = " << calendar->incidences().count();
   }
-  Incidence::List::ConstIterator incit = existingIncidences.begin();
-  for ( ; incit != existingIncidences.end() ; ++incit ) {
-    Incidence::Ptr existingIncidence = *incit;
+
+  foreach ( const KCalCore::Incidence::Ptr &existingIncidence, existingIncidences ) {
     kDebug() << "Considering this found event ("
              << ( existingIncidence->isReadOnly() ? "readonly" : "readwrite" )
              << ") :" << mFormat->toString( existingIncidence );
@@ -193,7 +209,11 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
     if ( existingIncidence->isReadOnly() ) {
       continue;
     }
-    if ( existingIncidence->revision() <= inc->revision() ) {
+
+    const QString existingUid = existingIncidence->uid();
+    const int existingRevision = existingIncidence->revision();
+
+    if ( existingRevision <= incidence->revision() ) {
       // The new incidence might be an update for the found one
       bool isUpdate = true;
       // Code for new invitations:
@@ -201,43 +221,68 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
       // It comes from a similar check inside libical, where the event is compared to
       // other events in the calendar. But if we have another version of the event around
       // (e.g. shared folder for a group), the status could be RequestNew, Obsolete or Updated.
-      kDebug() << "looking in " << existingIncidence->uid() << "'s attendees";
+      kDebug() << "looking in " << existingUid << "'s attendees";
       // This is supposed to be a new request, not an update - however we want to update
       // the existing one to handle the "clicking more than once on the invitation" case.
       // So check the attendee status of the attendee.
       const Attendee::List attendees = existingIncidence->attendees();
       Attendee::List::ConstIterator ait;
       for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
-        if( (*ait)->email() == email && (*ait)->status() == Attendee::NeedsAction ) {
+        if ( (*ait)->email() == email && (*ait)->status() == Attendee::NeedsAction ) {
           // This incidence wasn't created by me - it's probably in a shared folder
           // and meant for someone else, ignore it.
-          kDebug() << "ignoring " << existingIncidence->uid()
-                   << " since I'm still NeedsAction there";
+          kDebug() << "ignoring " << existingUid << " since I'm still NeedsAction there";
           isUpdate = false;
           break;
         }
       }
       if ( isUpdate ) {
-        if ( existingIncidence->revision() == inc->revision() &&
-             existingIncidence->lastModified() > inc->lastModified() ) {
+        if ( existingRevision == incidence->revision() &&
+             existingIncidence->lastModified() > incidence->lastModified() ) {
           // This isn't an update - the found incidence was modified more recently
           errorString = i18n( "This isn't an update. "
                               "The found incidence was modified more recently." );
-          kWarning() << errorString;
+
+          kWarning() << errorString
+                     << "; revision=" << existingIncidence->revision()
+                     << "; existing->lastModified=" << existingIncidence->lastModified()
+                     << "; update->lastModified=" << incidence->lastModified();
           emit transactionFinished( ResultOutatedUpdate, errorString );
           return;
         }
-        kDebug() << "replacing existing incidence " << existingIncidence->uid();
-        const QString oldUid = existingIncidence->uid();
-        if ( existingIncidence->type() != inc->type() ) {
+        kDebug() << "replacing existing incidence " << existingUid;
+        if ( existingIncidence->type() != incidence->type() ) {
           kError() << "assigning different incidence types";
           result = ResultAssigningDifferentTypes;
           errorString = i18n( "Error: Assigning different incidence types." );
           emit transactionFinished( result, errorString );
         } else {
-          inc->setSchedulingID( inc->uid(), oldUid );
-          calendar->modifyIncidence( inc );
-          //handleModifyFinished() will emit the final signal.
+          incidence->setSchedulingID( schedulingUid, existingUid ) ;
+
+          if ( incidence->hasRecurrenceId() ) {
+            Incidence::Ptr existingInstance = calendar->incidence(incidence->instanceIdentifier());
+            if ( !existingInstance ) {
+              // The organizer created an exception, lets create it in our calendar, we don't have it yet
+              const bool success = calendar->addIncidence(incidence);
+
+              if ( !success ) {
+                emit transactionFinished( ResultCreatingError, QLatin1String( "Error creating incidence" ) );
+              } else {
+                // Signal emitted in the result slot of addFinished()
+              }
+
+              return;
+            }
+          }
+
+
+          const bool success = calendar->modifyIncidence( incidence );
+
+          if ( !success ) {
+            emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+          } else {
+            //handleModifyFinished() will emit the final signal.
+          }
         }
         return;
       }
@@ -253,9 +298,9 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   }
 
   // Move the uid to be the schedulingID and make a unique UID
-  inc->setSchedulingID( inc->uid(), CalFormat::createUniqueId() );
+  incidence->setSchedulingID( schedulingUid, CalFormat::createUniqueId() );
   // notify the user in case this is an update and we didn't find the to-be-updated incidence
-  if ( existingIncidences.count() == 0 && inc->revision() > 0 ) {
+  if ( d->mShowDialogs && existingIncidences.isEmpty() && incidence->revision() > 0 ) {
     KMessageBox::information(
       0,
       i18nc( "@info",
@@ -270,10 +315,14 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
              "<para>This is not a problem, but we thought you should know.</para>" ),
       i18nc( "@title", "Cannot find invitation to be updated" ), "AcceptCantFindIncidence" );
   }
-  kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
-           << " and uid=" << inc->uid();
+  kDebug() << "Storing new incidence with scheduling uid=" << schedulingUid << " and uid=" << incidence->uid();
 
-  calendar->addIncidence( inc ); // The slot will emit the result
+  const bool success = calendar->addIncidence( incidence );
+  if ( !success ) {
+    emit transactionFinished( ResultCreatingError, i18n( "Error adding incidence" ) );
+  } else {
+    // The slot will emit the result
+  }
 }
 
 void Scheduler::acceptAdd( const IncidenceBase::Ptr &, ScheduleMessage::Status )
@@ -281,38 +330,43 @@ void Scheduler::acceptAdd( const IncidenceBase::Ptr &, ScheduleMessage::Status )
   emit transactionFinished( ResultSuccess, QString() );
 }
 
-void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
+void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidenceBase,
                               const Akonadi::CalendarBase::Ptr &calendar,
                               ScheduleMessage::Status status,
-                              const QString &attendee )
+                              const QString &attendeeEmail )
 {
-  Incidence::Ptr inc = incidence.staticCast<Incidence>();
+  Incidence::Ptr incidence = incidenceBase.staticCast<Incidence>();
 
-  if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
+  if ( incidence->type() == IncidenceBase::TypeFreeBusy ) {
     // reply to this request is handled in korganizer's incomingdialog
     emit transactionFinished( ResultSuccess, QString() );
     return;
   }
 
-  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( inc->uid() );
+  if ( incidence->type() == IncidenceBase::TypeJournal ) {
+    emit transactionFinished( ResultUnsupported, QLatin1String( "Unsupported incidence type") );
+    return;
+  }
+
+  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( incidence->uid() );
   kDebug() << "Scheduler::acceptCancel="
            << KCalUtils::Stringify::scheduleMessageStatus( status ) //krazy2:exclude=kdebug
            << ": found " << existingIncidences.count()
-           << " incidences with schedulingID " << inc->schedulingID();
+           << " incidences with schedulingID " << incidence->schedulingID();
 
   Result result = ResultIncidenceToDeleteNotFound;
   QString errorString = i18n( "Could not find incidence to delete." );
-  Incidence::List::ConstIterator incit = existingIncidences.begin();
-  for ( ; incit != existingIncidences.end() ; ++incit ) {
-    Incidence::Ptr i = *incit;
+  foreach ( const KCalCore::Incidence::Ptr &existingIncidence, existingIncidences ) {
     kDebug() << "Considering this found event ("
-             << ( i->isReadOnly() ? "readonly" : "readwrite" )
-             << ") :" << mFormat->toString( i );
+             << ( existingIncidence->isReadOnly() ? "readonly" : "readwrite" )
+             << ") :" << mFormat->toString( existingIncidence );
 
     // If it's readonly, we can't possible remove it.
-    if ( i->isReadOnly() ) {
+    if ( existingIncidence->isReadOnly() ) {
       continue;
     }
+
+    const QString existingUid = existingIncidence->uid();
 
     // Code for new invitations:
     // We cannot check the value of "status" to be RequestNew because
@@ -320,44 +374,58 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     // is compared to other events in the calendar. But if we have another
     // version of the event around (e.g. shared folder for a group), the
     // status could be RequestNew, Obsolete or Updated.
-    kDebug() << "looking in " << i->uid() << "'s attendees";
+    kDebug() << "looking in " << existingUid << "'s attendees";
 
     // This is supposed to be a new request, not an update - however we want
     // to update the existing one to handle the "clicking more than once
     // on the invitation" case. So check the attendee status of the attendee.
     bool isMine = true;
-    const Attendee::List attendees = i->attendees();
-    Attendee::List::ConstIterator ait;
-    for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
-      if ( (*ait)->email() == attendee &&
-           (*ait)->status() == Attendee::NeedsAction ) {
+    const Attendee::List attendees = existingIncidence->attendees();
+    foreach ( const KCalCore::Attendee::Ptr &attendee, attendees ) {
+      if ( attendee->email() == attendeeEmail &&
+           attendee->status() == Attendee::NeedsAction ) {
         // This incidence wasn't created by me - it's probably in a shared
         // folder and meant for someone else, ignore it.
-        kDebug() << "ignoring " << i->uid()
-                 << " since I'm still NeedsAction there";
+        kDebug() << "ignoring " << existingUid << " since I'm still NeedsAction there";
         isMine = false;
         break;
       }
     }
 
-    if ( isMine ) {
-      kDebug() << "removing existing incidence " << i->uid();
-      if ( i->type() == IncidenceBase::TypeEvent ) {
-        Event::Ptr event = calendar->event( i->uid() );
-        result = ( event && calendar->deleteEvent( event ) ) ? ResultSuccess : ResultErrorDelete;
-      } else if ( i->type() == IncidenceBase::TypeTodo ) {
-        Todo::Ptr todo = calendar->todo( i->uid() );
-        result = ( todo && calendar->deleteTodo( todo ) ) ? ResultSuccess : ResultErrorDelete;
-      }
-      if ( result != ResultSuccess )
-        emit transactionFinished( result, errorString );
-      // The success case will be handled in handleDeleteFinished()
-      return;
+    if ( !isMine ) {
+      continue;
     }
+
+    kDebug() << "removing existing incidence " << existingUid;
+    if ( incidence->hasRecurrenceId() ) {
+        Incidence::Ptr existingInstance = calendar->incidence( incidence->instanceIdentifier() );
+
+        if ( existingInstance ) {
+          existingInstance->setStatus( Incidence::StatusCanceled );
+          result = calendar->modifyIncidence( existingInstance ) ? ResultSuccess : ResultModifyingError;
+        } else {
+          incidence->setSchedulingID( incidence->uid(), existingIncidence->uid() );
+          incidence->setStatus( Incidence::StatusCanceled );
+          result = calendar->addIncidence( incidence ) ? ResultSuccess : ResultCreatingError;
+        }
+
+        if ( result != ResultSuccess ) {
+            emit transactionFinished( result, i18n( "Error recording exception" ) );
+        }
+
+    } else {
+      result = calendar->deleteIncidence( existingIncidence ) ? ResultSuccess : ResultErrorDelete;
+      if ( result != ResultSuccess ) {
+        emit transactionFinished( result, errorString );
+      }
+    }
+
+    // The success case will be handled in handleDeleteFinished()
+    return;
   }
 
-  // in case we didn't find the to-be-removed incidence
-  if ( existingIncidences.count() > 0 && inc->revision() > 0 ) {
+  // in case we didn't find the to-be-removed incidencez
+  if ( d->mShowDialogs && !existingIncidences.isEmpty() && incidence->revision() > 0 ) {
     KMessageBox::error(
       0,
       i18nc( "@info",
@@ -496,8 +564,12 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       if ( update && ( calendarTodo->percentComplete() != update->percentComplete() ) ) {
         calendarTodo->setPercentComplete( update->percentComplete() );
         calendarTodo->updated();
-        calendar->modifyIncidence( calendarTodo );
-        // success will be emitted in the handleModifyFinished() slot
+        const bool success = calendar->modifyIncidence( calendarTodo );
+        if ( !success ) {
+          emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+        } else {
+          // success will be emitted in the handleModifyFinished() slot
+        }
         return;
       }
     }
@@ -506,8 +578,14 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
       incidence->updated();
-      calendar->modifyIncidence( incidence );
-      // success will be emitted in the handleModifyFinished() slot
+      const bool success = calendar->modifyIncidence( incidence );
+
+      if ( !success ) {
+        emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+      } else {
+        // success will be emitted in the handleModifyFinished() slot
+      }
+
       return;
     }
   } else {
@@ -544,7 +622,7 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
   kDebug() << "freeBusyDirName:" << freeBusyDir();
 
   Person::Ptr from;
-  if( method == iTIPPublish ) {
+  if ( method == iTIPPublish ) {
     from = freebusy->organizer();
   }
   if ( ( method == iTIPReply ) && ( freebusy->attendeeCount() == 1 ) ) {
@@ -562,11 +640,18 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
 
 void Scheduler::handleCreateFinished( bool success, const QString &errorMessage )
 {
-  emit transactionFinished( success ? ResultSuccess : ResultCreatingError, errorMessage );
+  CalendarBase *calendar = qobject_cast<Akonadi::CalendarBase*>( sender() );
+  const bool cancelled = calendar && calendar->d_ptr->mLastCreationCancelled;
+
+  emit transactionFinished( success ? ResultSuccess
+                                    : ( cancelled ? ResultUserCancelled
+                                                  : ResultCreatingError ),
+                            errorMessage );
 }
 
 void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )
 {
+  kDebug() << "Modification finished. Success=" << success << errorMessage;
   emit transactionFinished( success ? ResultSuccess : ResultModifyingError, errorMessage );
 }
 

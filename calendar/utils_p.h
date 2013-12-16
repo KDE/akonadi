@@ -18,22 +18,21 @@
   02110-1301, USA.
 */
 
-
 #ifndef AKONADI_CALENDAR_UTILS_P_
 #define AKONADI_CALENDAR_UTILS_P_
 
 #include <kcalcore/incidence.h>
 #include <akonadi/item.h>
+#include <akonadi/collection.h>
 
 #include <QString>
 #include <QStringList>
 
 /**
- * Here lives a bunch of code, copied mainly from kdepim/calendarsupport/ and mostly
- * functions that existed in kcalprefs.cpp to manage identity stuff.
- *
- * These functions are to be phased out in favour of KPIMIdentities.
+ * Util functions that have no place to live.
  */
+
+class QWidget;
 
 namespace Akonadi {
   namespace CalendarUtils {
@@ -43,6 +42,12 @@ namespace Akonadi {
     QStringList allEmails();
 
     KCalCore::Incidence::Ptr incidence( const Akonadi::Item &item );
+
+    Akonadi::Collection selectCollection( QWidget *parent,
+                                          int &dialogCode,
+                                          const QStringList &mimeTypes,
+                                          const Akonadi::Collection &defaultCollection = Akonadi::Collection() );
+
   }
 }
 

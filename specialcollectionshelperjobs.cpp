@@ -158,8 +158,6 @@ void ResourceScanJob::Private::fetchResult( KJob *job )
   q->emitResult();
 }
 
-
-
 ResourceScanJob::ResourceScanJob( const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent )
   : Job( parent ),
     d( new Private( settings, this ) )
@@ -208,7 +206,6 @@ void ResourceScanJob::doStart()
   fetchJob->fetchScope().setIncludeStatistics( true );
   connect( fetchJob, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)) );
 }
-
 
 // ===================== DefaultResourceJob ============================
 
@@ -485,8 +482,6 @@ void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
   }
 }
 
-
-
 DefaultResourceJob::DefaultResourceJob( KCoreConfigSkeleton *settings, QObject *parent )
   : ResourceScanJob( QString(), settings, parent ),
     d( new DefaultResourceJobPrivate( settings, this ) )
@@ -612,7 +607,6 @@ void GetLockJob::Private::timeout()
   q->setErrorText( i18n( "Timeout trying to get lock." ) );
   q->emitResult();
 }
-
 
 GetLockJob::GetLockJob( QObject *parent )
   : KJob( parent ),

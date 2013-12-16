@@ -26,6 +26,7 @@
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
+#include "gid/gidextractor_p.h"
 
 #include <QtCore/QDateTime>
 
@@ -41,13 +42,42 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
     {
     }
 
+    QByteArray nextPartHeader();
+
     Collection mCollection;
     Item mItem;
     QSet<QByteArray> mParts;
     Item::Id mUid;
     QDateTime mDatetime;
-    QByteArray mData;
+    QByteArray mPendingData;
 };
+
+QByteArray ItemCreateJobPrivate::nextPartHeader()
+{
+  QByteArray command;
+  if ( !mParts.isEmpty() ) {
+    QSetIterator<QByteArray> it( mParts );
+    const QByteArray label = it.next();
+    mParts.remove( label );
+
+    mPendingData.clear();
+    int version = 0;
+    ItemSerializer::serialize( mItem, label, mPendingData, version );
+    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, label, version );
+    if ( mPendingData.size() > 0 ) {
+      command += " {" + QByteArray::number( mPendingData.size() ) + "}\n";
+    } else {
+      if ( mPendingData.isNull() )
+        command += " NIL";
+      else
+        command += " \"\"";
+      command += nextPartHeader();
+    }
+  } else {
+    command += ")\n";
+  }
+  return command;
+}
 
 ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QObject * parent )
   : Job( new ItemCreateJobPrivate( this ), parent )
@@ -72,53 +102,28 @@ void ItemCreateJob::doStart()
 
   QList<QByteArray> flags;
   flags.append( "\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' );
+  const QString gid = GidExtractor::getGid( d->mItem );
+  if ( !gid.isNull() ) {
+    flags.append( ImapParser::quote( "\\Gid[" + gid.toUtf8() + ']' ) );
+  }
   if ( !d->mItem.remoteId().isEmpty() )
     flags.append( ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' ) );
   if ( !d->mItem.remoteRevision().isEmpty() )
     flags.append( ImapParser::quote( "\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']' ) );
   flags += d->mItem.flags().toList();
 
-  // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
-  if ( d->mItem.attributes().isEmpty() && ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.contains( Item::FullPayload )) ) ) {
-    if ( d->mItem.hasPayload() ) {
-      int version = 0;
-      ItemSerializer::serialize( d->mItem, Item::FullPayload, d->mData, version );
-    }
-    int dataSize = d->mData.size();
-
-    d->writeData( d->newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
-        + ' ' + QByteArray::number( d->mItem.size() )
-        + " (" + ImapParser::join( flags, " " ) + ") {"
-        + QByteArray::number( dataSize ) + "}\n" );
+  QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
+      + ' ' + QByteArray::number( d->mItem.size() )
+      + " (" + ImapParser::join( flags, " " ) + ")"
+      + " ("; // list of parts
+  const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem, true );
+  if ( !attrs.isEmpty() ) {
+    command += attrs;
   }
-  else { // do a multipart X-AKAPPEND
-    QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
-        + ' ' + QByteArray::number( d->mItem.size() )
-        + " (" + ImapParser::join( flags, " " ) + ") ";
 
-    QList<QByteArray> partSpecs;
-    int totalSize = 0;
-    foreach ( const QByteArray &partName, d->mParts ) {
-      QByteArray partData;
-      int version = 0;
-      ItemSerializer::serialize( d->mItem, partName, partData, version );
-      totalSize += partData.size();
-      const QByteArray partId = ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, partName, version );
-      partSpecs.append( ImapParser::quote( partId ) + ':' + QByteArray::number( partData.size() ) );
-      d->mData += partData;
-    }
-    foreach ( const Attribute* attr, d->mItem.attributes() ) {
-      const QByteArray data = attr->serialized();
-      totalSize += data.size();
-      const QByteArray partId = ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, attr->type() );
-      partSpecs.append( ImapParser::quote( partId ) + ':' + QByteArray::number( data.size() ) );
-      d->mData += data;
-    }
-    command += '(' + ImapParser::join( partSpecs, "," ) + ") " +
-      '{' + QByteArray::number( totalSize ) + "}\n";
+  command += d->nextPartHeader();
 
-    d->writeData( command );
-  }
+  d->writeData( command );
 }
 
 void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -126,9 +131,8 @@ void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray &
   Q_D( ItemCreateJob );
 
   if ( tag == "+" ) { // ready for literal data
-    d->writeData( d->mData );
-    if ( !d->mData.endsWith( '\n' ) )
-      d->writeData( "\n" );
+    d->writeData( d->mPendingData );
+    d->writeData( d->nextPartHeader() );
     return;
   }
   if ( tag == d->tag() ) {

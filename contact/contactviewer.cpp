@@ -90,6 +90,12 @@ class ContactViewer::Private
                                            defaultPixmap );
       }
 
+      if ( mCurrentContact.logo().isIntern() ) {
+        mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                           QUrl( QLatin1String( "contact_logo" ) ),
+                                           mCurrentContact.logo().data() );
+      }
+
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "map_icon" ) ),
                                          KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) ) );

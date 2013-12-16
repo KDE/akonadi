@@ -84,6 +84,8 @@ DateEditWidget::DateEditWidget( Type type, QWidget *parent )
   }
 
   layout->addWidget( mSelectButton );
+  setFocusProxy( mSelectButton );
+  setFocusPolicy( Qt::StrongFocus );
 
   mMenu = new KDatePickerPopup( KDatePickerPopup::DatePicker, QDate(), this );
   mSelectButton->setMenu( mMenu );

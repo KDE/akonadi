@@ -37,18 +37,19 @@
 #include <QPointer>
 #include <QVector>
 
-
 class KJob;
 class QWidget;
 
 namespace Akonadi {
 
 class TransactionSequence;
+class CollectionFetchJob;
 
 class Change {
 
 public:
   typedef QSharedPointer<Change> Ptr;
+  typedef QList<Ptr> List;
   Change( IncidenceChanger *incidenceChanger, int changeId,
           IncidenceChanger::ChangeType changeType, uint operationId,
           QWidget *parent ) : id( changeId )
@@ -168,46 +169,34 @@ public:
 };
 
 struct AtomicOperation {
-  uint id;
+  uint m_id;
 
   // To make sure they are not repeated
-  QSet<Akonadi::Item::Id> mItemIdsInOperation;
+  QSet<Akonadi::Item::Id> m_itemIdsInOperation;
 
   // After endAtomicOperation() is called we don't accept more changes
-  bool endCalled;
+  bool m_endCalled;
 
   // Number of completed changes(jobs)
-  int numCompletedChanges;
-  Akonadi::TransactionSequence *transaction;
-  QString description;
-  bool transactionCompleted;
+  int m_numCompletedChanges;
+  QString m_description;
+  bool m_transactionCompleted;
 
-  AtomicOperation( uint ident ) :
-            id ( ident ),
-            endCalled( false ),
-            numCompletedChanges( 0 ),
-            transaction( 0 ),
-            transactionCompleted(false),
-            wasRolledback( false )
-  {
-    Q_ASSERT( id != 0 );
-    transaction = new Akonadi::TransactionSequence;
-    transaction->setAutomaticCommittingEnabled( true );
-  }
+  AtomicOperation( IncidenceChanger::Private *icp, uint ident );
 
   ~AtomicOperation()
   {
     //kDebug() << "AtomicOperation::~ " << wasRolledback << changes.count();
-    if ( wasRolledback ) {
-      for ( int i=0; i<changes.count(); ++i ) {
+    if ( m_wasRolledback ) {
+      for ( int i=0; i<m_changes.count(); ++i ) {
         // When a job that can finish successfully is aborted because the transaction failed
         // because of some other job, akonadi is returning an Unknown error
         // which isnt very specific
-        if ( changes[i]->completed &&
-              ( changes[i]->resultCode == IncidenceChanger::ResultCodeSuccess ||
-                ( changes[i]->resultCode == IncidenceChanger::ResultCodeJobError &&
-                  changes[i]->errorString == QLatin1String( "Unknown error." ) ) ) ) {
-          changes[i]->resultCode = IncidenceChanger::ResultCodeRolledback;
+        if ( m_changes[i]->completed &&
+              ( m_changes[i]->resultCode == IncidenceChanger::ResultCodeSuccess ||
+                ( m_changes[i]->resultCode == IncidenceChanger::ResultCodeJobError &&
+                  m_changes[i]->errorString == QLatin1String( "Unknown error." ) ) ) ) {
+          m_changes[i]->resultCode = IncidenceChanger::ResultCodeRolledback;
         }
       }
     }
@@ -216,19 +205,19 @@ struct AtomicOperation {
   // Did all jobs return ?
   bool pendingJobs() const
   {
-    return changes.count() > numCompletedChanges;
+    return m_changes.count() > m_numCompletedChanges;
   }
 
   void setRolledback()
   {
     //kDebug() << "AtomicOperation::setRolledBack()";
-    wasRolledback = true;
-    transaction->rollback();
+    m_wasRolledback = true;
+    transaction()->rollback();
   }
 
   bool rolledback() const
   {
-    return wasRolledback;
+    return m_wasRolledback;
   }
 
   void addChange( const Change::Ptr &change )
@@ -236,20 +225,24 @@ struct AtomicOperation {
     if ( change->type == IncidenceChanger::ChangeTypeDelete ) {
       DeletionChange::Ptr deletion = change.staticCast<DeletionChange>();
       foreach( Akonadi::Item::Id id, deletion->mItemIds ) {
-        Q_ASSERT( !mItemIdsInOperation.contains( id ) );
-        mItemIdsInOperation.insert( id );
+        Q_ASSERT( !m_itemIdsInOperation.contains( id ) );
+        m_itemIdsInOperation.insert( id );
       }
     } else if ( change->type == IncidenceChanger::ChangeTypeModify ) {
-      Q_ASSERT( !mItemIdsInOperation.contains( change->newItem.id() ) );
-      mItemIdsInOperation.insert( change->newItem.id() );
+      Q_ASSERT( !m_itemIdsInOperation.contains( change->newItem.id() ) );
+      m_itemIdsInOperation.insert( change->newItem.id() );
     }
 
-    changes << change;
+    m_changes << change;
   }
 
+  Akonadi::TransactionSequence *transaction();
+
 private:
-  QVector<Change::Ptr> changes;
-  bool wasRolledback;
+  QVector<Change::Ptr> m_changes;
+  bool m_wasRolledback;
+  Akonadi::TransactionSequence *m_transaction; // constructed in first use
+  IncidenceChanger::Private *m_incidenceChangerPrivate;
 };
 
 class IncidenceChanger::Private : public QObject
@@ -258,6 +251,16 @@ class IncidenceChanger::Private : public QObject
 public:
   explicit Private( bool enableHistory, IncidenceChanger *mIncidenceChanger );
   ~Private();
+
+  void loadCollections();  // async-loading of list of writable collections
+  bool isLoadingCollections() const;
+  Collection::List collectionsForMimeType(const QString &mimeType, const Collection::List &collections);
+
+  // steps for the async operation:
+  void step1DetermineDestinationCollection(const Change::Ptr &change, const Collection &collection);
+  void step2CreateIncidence(const Change::Ptr &change, const Collection &collection);
+
+
 
   /**
       Returns true if, for a specific item, an ItemDeleteJob is already running,
@@ -268,6 +271,9 @@ public:
   QString showErrorDialog( Akonadi::IncidenceChanger::ResultCode, QWidget *parent );
 
   void setChangeInternal( int changeId );
+
+  void adjustRecurrence( const KCalCore::Incidence::Ptr &originalIncidence,
+                         const KCalCore::Incidence::Ptr &incidence );
 
   bool hasRights( const Akonadi::Collection &collection, IncidenceChanger::ChangeType ) const;
   void queueModification( Change::Ptr );
@@ -290,6 +296,7 @@ public Q_SLOTS:
   void handleDeleteJobResult( KJob* );
   void handleTransactionJobResult( KJob* );
   void performNextModification( Akonadi::Item::Id id );
+  void onCollectionsLoaded( KJob* );
 
 public:
   int mLatestChangeId;
@@ -298,6 +305,7 @@ public:
   Akonadi::Collection mDefaultCollection;
   DestinationPolicy mDestinationPolicy;
   QVector<Akonadi::Item::Id> mDeletedItemIds;
+  Change::List mPendingCreations; // Creations waiting for collections to be loaded
 
   History *mHistory;
   bool mUseHistory;
@@ -333,8 +341,13 @@ public:
   uint mLatestAtomicOperationId;
   bool mBatchOperationInProgress;
   Akonadi::Collection mLastCollectionUsed;
+  bool mAutoAdjustRecurrence;
+
+  Akonadi::CollectionFetchJob *m_collectionFetchJob;
 
   QMap<KJob *, QSet<KCalCore::IncidenceBase::Field> > mDirtyFieldsByJob;
+
+  IncidenceChanger::InvitationPolicy m_invitationPolicy;
 
 private:
   IncidenceChanger *q;

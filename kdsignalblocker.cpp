@@ -35,7 +35,6 @@ using namespace Akonadi;
   QObject::signalsBlocked() are nothrow, which they normally are.
 */
 
-
 /*!
   Constructor. Blocks signals on \a o.
 

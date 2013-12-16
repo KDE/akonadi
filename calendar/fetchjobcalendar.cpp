@@ -81,5 +81,5 @@ bool FetchJobCalendar::isLoaded() const
    return d->m_isLoaded;
 }
 
-#include "fetchjobcalendar.moc"
-#include "fetchjobcalendar_p.moc"
+#include "moc_fetchjobcalendar.cpp"
+#include "moc_fetchjobcalendar_p.cpp"

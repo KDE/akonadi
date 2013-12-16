@@ -25,7 +25,7 @@
 class ItemFetchTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void initTestCase();
     void testFetch();
     void testResourceRetrieval();
@@ -35,6 +35,5 @@ class ItemFetchTest : public QObject
     void testRidFetch();
     void testAncestorRetrieval();
 };
-
 
 #endif
