@@ -26,7 +26,6 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QTimer>
 
 using namespace Akonadi;
 

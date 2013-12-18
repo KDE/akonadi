@@ -22,7 +22,6 @@
 
 #include <akonadi/item.h>
 #include <KJob>
-#include <QTime>
 
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemfetchscope.h>

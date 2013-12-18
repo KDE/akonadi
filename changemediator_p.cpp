@@ -21,7 +21,6 @@
 #include "changemediator_p.h"
 
 #include <QApplication>
-#include <QTimer>
 
 #include "changenotificationdependenciesfactory_p.h"
 #include "notificationsourceinterface.h"

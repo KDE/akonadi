@@ -28,7 +28,6 @@
 #include <klocale.h>
 #include <klocalizedstring.h>
 
-#include <QFont>
 
 using namespace Akonadi;
 

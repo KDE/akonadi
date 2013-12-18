@@ -32,7 +32,6 @@
 
 #include <KGlobal>
 #include <KLocale>
-#include <KLocalizedString>
 
 using namespace Akonadi;
 

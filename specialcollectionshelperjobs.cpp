@@ -35,7 +35,6 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <kcoreconfigskeleton.h>
 
 #include <QtDBus/QDBusConnectionInterface>

@@ -26,8 +26,6 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
 #include <QAbstractProxyModel>
-#include <QApplication>
-#include <QPalette>
 
 #include <KDE/KIcon>
 #include <KDE/KLocalizedString>

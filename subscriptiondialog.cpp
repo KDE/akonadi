@@ -28,9 +28,12 @@
 #include <kglobal.h>
 #include <ksharedconfig.h>
 
-#include <QBoxLayout>
 
 #include <klocalizedstring.h>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
 
 #ifndef KDEPIM_MOBILE_UI
 #include <klineedit.h>
@@ -40,7 +43,6 @@
 #include <QLabel>
 #include <QTreeView>
 #include <QCheckBox>
-#include <QItemSelectionModel>
 #else
 #include <kdescendantsproxymodel.h>
 #include <QListView>

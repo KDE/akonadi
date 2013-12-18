@@ -30,11 +30,7 @@
 #include <QHeaderView>
 #include <QMenu>
 
-#include <KAction>
-#include <KLocalizedString>
-#include <KMessageBox>
-#include <KUrl>
-#include <KXMLGUIFactory>
+
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
@@ -43,6 +39,8 @@
 
 #include <kdebug.h>
 #include <kxmlguiclient.h>
+#include <KXMLGUIFactory>
+
 
 #include "progressspinnerdelegate_p.h"
 

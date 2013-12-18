@@ -29,7 +29,6 @@
 
 #include <QtCore/QEvent>
 #include <QAction>
-#include <QApplication>
 
 using namespace Akonadi;
 
