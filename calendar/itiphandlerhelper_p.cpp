@@ -33,7 +33,6 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KEMailSettings>
 
 #include <QWidget>
 

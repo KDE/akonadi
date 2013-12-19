@@ -26,12 +26,10 @@
 #include <kcalcore/todo.h>
 #include <kcalcore/journal.h>
 
-#include <KDateTime>
-#include <KIconLoader>
 #include <KLocalizedString>
+#include <KIconLoader>
 
 #include <QPixmap>
-#include <QDateTime>
 
 using namespace Akonadi;
 

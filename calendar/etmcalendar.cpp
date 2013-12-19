@@ -37,7 +37,6 @@
 #include <KSelectionProxyModel>
 #include <KDescendantsProxyModel>
 
-#include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
 #include <QTreeView>
 

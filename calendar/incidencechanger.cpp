@@ -31,7 +31,6 @@
 #include <KLocalizedString>
 #include <KGuiItem>
 #include <KMessageBox>
-#include <KStandardGuiItem>
 
 #include <QBitArray>
 

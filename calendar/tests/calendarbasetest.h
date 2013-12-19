@@ -24,7 +24,6 @@
 #include <akonadi/item.h>
 
 
-#include <QTestEventLoop>
 #include <QtCore/QObject>
 #include <QStringList>
 

@@ -27,7 +27,6 @@
 #include <akonadi/collectionfetchscope.h>
 #include <QString>
 #include <QDialog>
-#include <QSet>
 
 using namespace Akonadi;
 

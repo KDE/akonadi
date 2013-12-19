@@ -27,7 +27,6 @@
 #include <kcalcore/attendee.h>
 #include <kcalcore/person.h>
 
-#include <KLineEdit>
 #include <KLocalizedString>
 
 using namespace KCalCore;

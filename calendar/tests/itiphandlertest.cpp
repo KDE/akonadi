@@ -34,7 +34,6 @@
 #include <kcalcore/event.h>
 
 #include <QString>
-#include <QTestEventLoop>
 
 using namespace Akonadi;
 using namespace KCalCore;

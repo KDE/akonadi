@@ -32,11 +32,8 @@
 #include <kpimidentities/identitymanager.h>
 
 #include <KStandardDirs>
-#include <KSystemTimeZone>
 #include <KLocalizedString>
-#include <KEMailSettings>
 
-#include <QDir>
 
 using namespace Akonadi;
 using namespace KPIMIdentities;

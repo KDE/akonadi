@@ -23,7 +23,6 @@
 #include "fetchjobcalendar.h"
 #include "calendarbase_p.h"
 
-#include <QVector>
 
 class KJob;
 

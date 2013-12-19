@@ -43,7 +43,6 @@
 
 #include <QUrl>
 #include <QFile>
-#include <QMetaObject>
 #include <QDBusInterface>
 
 using namespace KCalCore;

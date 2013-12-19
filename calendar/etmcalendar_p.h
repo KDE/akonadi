@@ -28,7 +28,6 @@
 #include <KCheckableProxyModel>
 
 #include <QSet>
-#include <QVector>
 #include <QModelIndex>
 
 class QAbstractItemModel;
