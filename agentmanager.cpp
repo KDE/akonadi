@@ -292,24 +292,23 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight( const QString &identi
   return instance;
 }
 
-void AgentManagerPrivate::serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
+void AgentManagerPrivate::serviceOwnerChanged( const QString&, const QString &oldOwner, const QString& )
 {
-  Q_UNUSED( oldOwner );
-  Q_UNUSED( newOwner );
-
-  if ( name != ServerManager::serviceName( ServerManager::Control ) ) {
-    return;
+  if ( oldOwner.isEmpty() ) {
+    readAgentTypes();
+    readAgentInstances();
   }
+}
 
-  if ( !mManager || !mManager->isValid() ) {
-    mManager = new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName( ServerManager::Control ),
-                                                            QLatin1String( "/AgentManager" ),
-                                                            DBusConnectionPool::threadConnection(), mParent );
-  }
+void AgentManagerPrivate::createDBusInterface()
+{
+  mTypes.clear();
+  mInstances.clear();
+  delete mManager;
 
-  if ( !mManager->isValid() ) {
-    return;
-  }
+  mManager = new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName( ServerManager::Control ),
+                                                          QLatin1String( "/AgentManager" ),
+                                                          DBusConnectionPool::threadConnection(), mParent );
 
   QObject::connect( mManager, SIGNAL(agentTypeAdded(QString)),
                     mParent, SLOT(agentTypeAdded(QString)) );
@@ -332,49 +331,23 @@ void AgentManagerPrivate::serviceOwnerChanged( const QString &name, const QStrin
   QObject::connect( mManager, SIGNAL(agentInstanceOnlineChanged(QString,bool)),
                     mParent, SLOT(agentInstanceOnlineChanged(QString,bool)) );
 
-  QDBusReply<QStringList> result = mManager->agentTypes();
-  if ( result.isValid() ) {
-    foreach ( const QString &type, result.value() ) {
-      const AgentType agentType = fillAgentType( type );
-      mTypes.insert( type, agentType );
+  if ( mManager->isValid() ) {
+    QDBusReply<QStringList> result = mManager->agentTypes();
+    if ( result.isValid() ) {
+      foreach ( const QString &type, result.value() ) {
+        const AgentType agentType = fillAgentType( type );
+        mTypes.insert( type, agentType );
+      }
     }
-  }
-  result = mManager->agentInstances();
-  if ( result.isValid() ) {
-    foreach ( const QString &instance, result.value() ) {
-      const AgentInstance agentInstance = fillAgentInstance( instance );
-      mInstances.insert( instance, agentInstance );
+    result = mManager->agentInstances();
+    if ( result.isValid() ) {
+      foreach ( const QString &instance, result.value() ) {
+        const AgentInstance agentInstance = fillAgentInstance( instance );
+        mInstances.insert( instance, agentInstance );
+      }
     }
-  }
-
-  if ( oldOwner.isEmpty() ) {
-    readAgentTypes();
-    readAgentInstances();
-  }
-}
-
-void AgentManagerPrivate::createDBusInterface()
-{
-  mTypes.clear();
-  mInstances.clear();
-  delete mManager;
-
-  mManager = new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName( ServerManager::Control ),
-                                                          QLatin1String( "/AgentManager" ),
-                                                          DBusConnectionPool::threadConnection(), mParent );
-  if ( !mManager->isValid() ) {
-    kDebug() << "Waiting for Akonadi Server";
-    mManager->deleteLater();
-    mManager = 0;
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName( ServerManager::Control ),
-                                                            DBusConnectionPool::threadConnection(),
-                                                            QDBusServiceWatcher::WatchForOwnerChange,
-                                                            mParent );
-    QObject::connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-                      mParent, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   } else {
-    serviceOwnerChanged( ServerManager::serviceName( ServerManager::Control ),
-                         QString(), QString() );
+    kWarning() << "AgentManager failed to get a valid AgentManager DBus interface. Error is:" << mManager->lastError().type() << mManager->lastError().name() << mManager->lastError().message();
   }
 }
 
@@ -388,6 +361,12 @@ AgentManager::AgentManager()
   qRegisterMetaType<Akonadi::AgentInstance>();
 
   d->createDBusInterface();
+
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName( ServerManager::Control ),
+                                                          DBusConnectionPool::threadConnection(),
+                                                          QDBusServiceWatcher::WatchForOwnerChange, this );
+  connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 }
 
 // @endcond
