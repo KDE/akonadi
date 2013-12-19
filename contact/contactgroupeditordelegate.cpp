@@ -34,7 +34,6 @@
 #include <QCompleter>
 #include <QMouseEvent>
 #include <QSortFilterProxyModel>
-#include <QToolButton>
 
 using namespace Akonadi;
 

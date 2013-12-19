@@ -42,9 +42,7 @@
 #include <KColorScheme>
 
 #include <QtCore/QTimer>
-#include <QGridLayout>
 #include <QMessageBox>
-#include <QTableView>
 
 using namespace Akonadi;
 
