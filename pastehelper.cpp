@@ -176,7 +176,7 @@ KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &de
       new LinkJob( destination, items, transaction );
       break;
     default:
-      Q_ASSERT( "WTF?!" == false );
+      Q_ASSERT(false); // WTF?!
       return 0;
   }
   return transaction;
