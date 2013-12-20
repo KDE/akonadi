@@ -24,7 +24,7 @@
 
 #include <kcalcore/todo.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 using namespace Akonadi;
 
 TodoPurger::Private::Private(TodoPurger *q)

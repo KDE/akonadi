@@ -26,7 +26,7 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <signal.h>
 

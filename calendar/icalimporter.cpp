@@ -33,7 +33,7 @@
 #include <kcalcore/journal.h>
 
 #include <KJob>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 #include <KDateTime>
 #include <KUrl>
