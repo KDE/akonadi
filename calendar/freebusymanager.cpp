@@ -724,8 +724,9 @@ void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
 
 namespace Akonadi {
 
-struct FreeBusyManagerStatic
+class FreeBusyManagerStatic
 {
+public:
   FreeBusyManager instance;
 };
 

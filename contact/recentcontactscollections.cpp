@@ -65,6 +65,7 @@ RecentContactsCollections::RecentContactsCollections( RecentContactsCollectionsP
   : SpecialCollections( getConfig(QLatin1String("recentcontactscollectionsrc")) ),
     d( dd )
 {
+  Q_UNUSED(d); // d isn't used yet
 }
 
 RecentContactsCollections *RecentContactsCollections::self()

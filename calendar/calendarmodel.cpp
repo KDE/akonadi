@@ -52,18 +52,14 @@ static KCalCore::Todo::Ptr todo( const Akonadi::Item &item )
 class CalendarModel::Private
 {
   public:
-    explicit Private( CalendarModel *qq )
-    :q( qq )
+    Private()
     {
     }
-
-  private:
-    CalendarModel *const q;
 };
 
 CalendarModel::CalendarModel( Akonadi::ChangeRecorder *monitor, QObject *parent )
   : EntityTreeModel( monitor, parent ),
-    d( new Private( this ) )
+    d( new Private() )
 {
   monitor->itemFetchScope().fetchAllAttributes( true );
 }

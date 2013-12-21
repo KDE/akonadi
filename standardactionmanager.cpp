@@ -141,10 +141,12 @@ static bool canCreateCollection( const Akonadi::Collection &collection )
   return true;
 }
 
+/*
 static inline bool isRootCollection( const Akonadi::Collection &collection )
 {
   return (collection == Akonadi::Collection::root());
 }
+*/
 
 static void setWorkOffline( bool offline )
 {

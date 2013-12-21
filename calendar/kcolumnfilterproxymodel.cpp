@@ -26,8 +26,9 @@
 using namespace Akonadi;
 
 namespace Akonadi {
-  struct KColumnFilterProxyModelPrivate
+  class KColumnFilterProxyModelPrivate
   {
+  public:
     QVector<int> m_visibleColumns;
   };
 }

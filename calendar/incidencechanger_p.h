@@ -168,7 +168,8 @@ public:
   QVector<Akonadi::Item::Id> mItemIds;
 };
 
-struct AtomicOperation {
+class AtomicOperation {
+public:
   uint m_id;
 
   // To make sure they are not repeated
