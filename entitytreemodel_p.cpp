@@ -1584,6 +1584,16 @@ bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
   return true;
 }
 
+bool EntityTreeModelPrivate::isMonitored( Collection::Id id )
+{
+  return m_monitor->d_ptr->isMonitored( id );
+}
+
+bool EntityTreeModelPrivate::isBuffered( Collection::Id id )
+{
+  return m_monitor->d_ptr->m_buffer.isBuffered( id );
+}
+
 void EntityTreeModelPrivate::deref( Collection::Id id )
 {
   const Collection::Id bumpedId = m_monitor->d_ptr->deref( id );

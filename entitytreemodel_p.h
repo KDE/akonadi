@@ -233,6 +233,20 @@ public:
   void deref( Collection::Id id );
 
   /**
+   * @returns true if the collection is actively monitored (referenced or buffered with refcounting enabled)
+   *
+   * purely for testing
+   */
+  bool isMonitored( Collection::Id id );
+
+  /**
+   * @returns true if the collection is buffered
+   *
+   * purely for testing
+   */
+  bool isBuffered( Collection::Id id );
+
+  /**
     @returns true if the Collection with the id of @p id should be purged.
   */
   bool shouldPurge( Collection::Id id );
