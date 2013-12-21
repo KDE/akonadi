@@ -33,7 +33,7 @@
 
 #include <kglobal.h>
 
-static const char mediatorSessionId[] = "MediatorSession";
+//static const char mediatorSessionId[] = "MediatorSession"; TODO: remove?
 
 using namespace Akonadi;
 
