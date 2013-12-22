@@ -160,7 +160,13 @@ QDBusObjectPath NotificationManager::subscribeV2( const QString &identifier, boo
   registerSource( source );
   source->setServerSideMonitorEnabled( serverSideMonitor );
 
-  Q_EMIT subscribed( identifier );
+  // The path is /subscriber/escaped_identifier. We want to extract
+  // the escaped_identifier and emit it in subscribed() instead of the original
+  // identifier
+  const QStringList paths = source->dbusPath().path().split( QLatin1Char( '/' ), QString::SkipEmptyParts );
+
+  // FIXME KF5: Emit the QDBusObjectPath instead of the identifier
+  Q_EMIT subscribed( paths.at( 1 ) );
 
   return source->dbusPath();
 }
@@ -181,8 +187,9 @@ void NotificationManager::unsubscribe( const QString &identifier )
   NotificationSource *source = mNotificationSources.value( identifier );
   if ( source ) {
     unregisterSource( source );
+    const QStringList paths = source->dbusPath().path().split( QLatin1Char( '/' ), QString::SkipEmptyParts );
     source->deleteLater();
-    Q_EMIT unsubscribed( identifier );
+    Q_EMIT unsubscribed( paths.at( 1 ) );
   } else {
     akDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
   }
