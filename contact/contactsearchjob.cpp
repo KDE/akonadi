@@ -80,101 +80,101 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
           "  "
-          "} "
+          "} "))
       );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?person ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?person <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?person nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
           "   "
-          "}"
+          "}"))
       );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "  "
-          "}"
+          "}"))
       );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    { ?r ?p \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
           "      FILTER(?p in (nco:fullname, nco:nameGiven, nco:nameFamily, nco:nameAdditional)) . }"
           "    UNION "
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . } "
           "  "
-          "}"
+          "}"))
       );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:contactUID \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "   "
-          "}"
+          "}"))
       );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:fullname ?v . "
           "    ?v bif:contains \"'%1*'\" . "
           "  "
-          "} "
+          "} "))
       );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?person ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?person <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?person nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress ?v . "
           "    ?v bif:contains \"'%1\'\" . "
           "  "
-          "}"
+          "}"))
       );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:nickname ?v . "
           "    ?v bif:contains \"'%1\'\" . "
           "  "
-          "}"
+          "}"))
       );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "   "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    { ?r ?p ?v . "
           "      FILTER(?p in (nco:fullname, nco:nameGiven, nco:nameFamily, nco:nameAdditional)). "
           "      ?v bif:contains \"'%1'\" . }"
@@ -183,64 +183,64 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?email nco:emailAddress ?v . "
           "      ?v bif:contains \"'%1'\" . }"
           "  "
-          "}"
+          "}"))
       );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1*'\" . "
           " "
-          "}"
+          "}"))
       );
     }
   } else if ( match == ContainsMatch || match == ContainsWordBoundaryMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:fullname ?v . "
           "%1"
           "  "
-          "} "
+          "} "))
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?person ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "  "
-          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?person <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?person nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress ?v . "
           "%1"
           "  "
-          "}"
+          "}"))
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:nickname ?v . "
           "%1"
           "  "
-          "}"
+          "}"))
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
-          "    ?r<" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r<") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    { ?r ?p ?v ."
           "      FILTER(?p in (nco:fullname, nco:nameGiven, nco:nameFamily, nco:nameAdditional) ) ."
           "%1 } UNION"
@@ -248,19 +248,19 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?email nco:emailAddress ?v . "
           "%1 }"
           " "
-          "}"
+          "}"))
       );
       query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
-          "SELECT DISTINCT ?r ?reqProp1 "
+          QByteArray(QByteArray("SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
+          "    ?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?reqProp1 . "
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1'\" . "
           " "
-          "}"
+          "}"))
       );
     }
   }
