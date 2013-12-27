@@ -44,11 +44,11 @@ namespace Akonadi {
  */
 class AKONADI_CALENDAR_EXPORT GroupwareUiDelegate
 {
-  public:
+public:
     virtual ~GroupwareUiDelegate();
-    virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
+    virtual void requestIncidenceEditor(const Akonadi::Item &item) = 0;
 
-    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar ) = 0;
+    virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar) = 0;
     virtual void createCalendar() = 0;
 };
 
@@ -58,107 +58,107 @@ class AKONADI_CALENDAR_EXPORT GroupwareUiDelegate
  */
 class AKONADI_CALENDAR_EXPORT ITIPHandler : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum Result {
-    ResultError,      /**< An unexpected error occurred */
-    ResultSuccess     /**< The invitation was successfuly handled. */
-  };
+    enum Result {
+        ResultError,      /**< An unexpected error occurred */
+        ResultSuccess     /**< The invitation was successfuly handled. */
+    };
 
-  /**
-   * Creates a new ITIPHandler instance.
-   */
-  explicit ITIPHandler( QObject *parent = 0 );
+    /**
+     * Creates a new ITIPHandler instance.
+     */
+    explicit ITIPHandler(QObject *parent = 0);
 
-  /**
-   * Destroys this instance.
-   */
-  ~ITIPHandler();
+    /**
+     * Destroys this instance.
+     */
+    ~ITIPHandler();
 
-  /**
-   * Processes a received iTip message.
-   *
-   * @param receiver
-   * @param iCal
-   * @param type
-   *
-   * @see iTipMessageProcessed()
-   */
-  void processiTIPMessage( const QString &receiver, const QString &iCal, const QString &type );
+    /**
+     * Processes a received iTip message.
+     *
+     * @param receiver
+     * @param iCal
+     * @param type
+     *
+     * @see iTipMessageProcessed()
+     */
+    void processiTIPMessage(const QString &receiver, const QString &iCal, const QString &type);
 
-  /**
-   * Sends an iTip message.
-   *
-   * @param method iTip method
-   * @param incidence Incidence for which we're sending the iTip message.
-   *                  Should contain a list of attendees.
-   * @param parentWidget
-   */
-  void sendiTIPMessage( KCalCore::iTIPMethod method,
-                        const KCalCore::Incidence::Ptr &incidence,
-                        QWidget *parentWidget = 0 );
+    /**
+     * Sends an iTip message.
+     *
+     * @param method iTip method
+     * @param incidence Incidence for which we're sending the iTip message.
+     *                  Should contain a list of attendees.
+     * @param parentWidget
+     */
+    void sendiTIPMessage(KCalCore::iTIPMethod method,
+                         const KCalCore::Incidence::Ptr &incidence,
+                         QWidget *parentWidget = 0);
 
-  /**
-   * Publishes incidence @p incidence.
-   * A publish dialog will prompt the user to input recipients.
-   * @see rfc2446 3.2.1
-   */
-  void publishInformation( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
+    /**
+     * Publishes incidence @p incidence.
+     * A publish dialog will prompt the user to input recipients.
+     * @see rfc2446 3.2.1
+     */
+    void publishInformation(const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0);
 
-  /**
-   * Sends an e-mail with the incidence attached as iCalendar source.
-   * A dialog will prompt the user to input recipients.
-   */
-  void sendAsICalendar( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
+    /**
+     * Sends an e-mail with the incidence attached as iCalendar source.
+     * A dialog will prompt the user to input recipients.
+     */
+    void sendAsICalendar(const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0);
 
-  /**
-   * Sets the UI delegate to edit counter proposals.
-   */
-  void setGroupwareUiDelegate( GroupwareUiDelegate * );
+    /**
+     * Sets the UI delegate to edit counter proposals.
+     */
+    void setGroupwareUiDelegate(GroupwareUiDelegate *);
 
-  /**
-   * Sets the calendar that the itip handler should use.
-   * The calendar should already be loaded.
-   *
-   * If none is set, a FetchJobCalendar will be created internally.
-   */
-  void setCalendar(const Akonadi::CalendarBase::Ptr &);
+    /**
+     * Sets the calendar that the itip handler should use.
+     * The calendar should already be loaded.
+     *
+     * If none is set, a FetchJobCalendar will be created internally.
+     */
+    void setCalendar(const Akonadi::CalendarBase::Ptr &);
 
-  /**
-   * Returns the calendar used by this itip handler.
-   */
-  Akonadi::CalendarBase::Ptr calendar() const;
+    /**
+     * Returns the calendar used by this itip handler.
+     */
+    Akonadi::CalendarBase::Ptr calendar() const;
 
 Q_SIGNALS:
-  /**
-   * Sent after processing an incoming iTip message.
-   *
-   * @param result success of the operation.
-   * @param errorMessage translated error message suitable for user dialogs.
-   *                     Empty if the operation was successul
-   */
-  void iTipMessageProcessed( Akonadi::ITIPHandler::Result result,
-                             const QString &errorMessage );
+    /**
+     * Sent after processing an incoming iTip message.
+     *
+     * @param result success of the operation.
+     * @param errorMessage translated error message suitable for user dialogs.
+     *                     Empty if the operation was successul
+     */
+    void iTipMessageProcessed(Akonadi::ITIPHandler::Result result,
+                              const QString &errorMessage);
 
-  /**
-   * Signal emitted after an iTip message was sent through sendiTIPMessage()
-   */
-  void iTipMessageSent( Akonadi::ITIPHandler::Result, const QString &errorMessage );
+    /**
+     * Signal emitted after an iTip message was sent through sendiTIPMessage()
+     */
+    void iTipMessageSent(Akonadi::ITIPHandler::Result, const QString &errorMessage);
 
-  /**
-   * Signal emitted after an incidence was published with publishInformation()
-   */
-  void informationPublished( Akonadi::ITIPHandler::Result, const QString &errorMessage );
+    /**
+     * Signal emitted after an incidence was published with publishInformation()
+     */
+    void informationPublished(Akonadi::ITIPHandler::Result, const QString &errorMessage);
 
-  /**
-   * Signal emitted after an incidence was sent with sendAsICalendar()
-   */
-  void sentAsICalendar( Akonadi::ITIPHandler::Result, const QString &errorMessage );
+    /**
+     * Signal emitted after an incidence was sent with sendAsICalendar()
+     */
+    void sentAsICalendar(Akonadi::ITIPHandler::Result, const QString &errorMessage);
 
 private:
-  Q_DISABLE_COPY( ITIPHandler )
-  class Private;
-  Private *const d;
+    Q_DISABLE_COPY(ITIPHandler)
+    class Private;
+    Private *const d;
 };
 
 }

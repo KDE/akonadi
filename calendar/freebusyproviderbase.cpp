@@ -27,50 +27,50 @@
 
 using namespace Akonadi;
 
-FreeBusyProviderBasePrivate::FreeBusyProviderBasePrivate( FreeBusyProviderBase *qq )
-  : QObject(), q( qq )
+FreeBusyProviderBasePrivate::FreeBusyProviderBasePrivate(FreeBusyProviderBase *qq)
+    : QObject(), q(qq)
 {
-  new Akonadi__FreeBusyProviderAdaptor( this );
-  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FreeBusyProvider" ),
-                                                         this, QDBusConnection::ExportAdaptors );
+    new Akonadi__FreeBusyProviderAdaptor(this);
+    DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FreeBusyProvider"),
+            this, QDBusConnection::ExportAdaptors);
 }
 
 QString FreeBusyProviderBasePrivate::lastCacheUpdate()
 {
-  KDateTime last = q->lastCacheUpdate();
-  return last.toString();
+    KDateTime last = q->lastCacheUpdate();
+    return last.toString();
 }
 
-void FreeBusyProviderBasePrivate::canHandleFreeBusy( const QString &email )
+void FreeBusyProviderBasePrivate::canHandleFreeBusy(const QString &email)
 {
-  q->canHandleFreeBusy( email );
+    q->canHandleFreeBusy(email);
 }
 
-void FreeBusyProviderBasePrivate::retrieveFreeBusy( const QString &email, const QString &_start, const QString &_end )
+void FreeBusyProviderBasePrivate::retrieveFreeBusy(const QString &email, const QString &_start, const QString &_end)
 {
-  KDateTime start = KDateTime::fromString( _start );
-  KDateTime end = KDateTime::fromString( _end );
-  q->retrieveFreeBusy( email, start, end );
+    KDateTime start = KDateTime::fromString(_start);
+    KDateTime end = KDateTime::fromString(_end);
+    q->retrieveFreeBusy(email, start, end);
 }
 
 FreeBusyProviderBase::FreeBusyProviderBase()
-  : d( new FreeBusyProviderBasePrivate( this ) )
+    : d(new FreeBusyProviderBasePrivate(this))
 {
 }
 
 FreeBusyProviderBase::~FreeBusyProviderBase()
 {
-  delete d;
+    delete d;
 }
 
-void FreeBusyProviderBase::handlesFreeBusy( const QString &email, bool handles ) const
+void FreeBusyProviderBase::handlesFreeBusy(const QString &email, bool handles) const
 {
-  emit d->handlesFreeBusy( email, handles );
+    emit d->handlesFreeBusy(email, handles);
 }
 
-void FreeBusyProviderBase::freeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText )
+void FreeBusyProviderBase::freeBusyRetrieved(const QString &email, const QString &freeBusy, bool success, const QString &errorText)
 {
-  emit d->freeBusyRetrieved( email, freeBusy, success, errorText );
+    emit d->freeBusyRetrieved(email, freeBusy, success, errorText);
 }
 
 #include "moc_freebusyproviderbase_p.cpp"

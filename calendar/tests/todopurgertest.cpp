@@ -35,9 +35,9 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
-Q_DECLARE_METATYPE( QSet<QByteArray> )
+Q_DECLARE_METATYPE(QSet<QByteArray>)
 
-void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bool completed, bool recurring )
+void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bool completed, bool recurring)
 {
     Item item;
     item.setMimeType(Todo::todoMimeType());
@@ -71,8 +71,8 @@ void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bo
 void TodoPurgerTest::fetchCollection()
 {
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(),
-                                                     CollectionFetchJob::Recursive,
-                                                     this);
+            CollectionFetchJob::Recursive,
+            this);
     // Get list of collections
     job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.todo"));
     AKVERIFYEXEC(job);

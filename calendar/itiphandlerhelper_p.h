@@ -66,26 +66,26 @@ enum Status {
  */
 class ITIPHandlerHelper : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit ITIPHandlerHelper( QWidget *parent = 0 ); // TODO
+    Q_OBJECT
+public:
+    explicit ITIPHandlerHelper(QWidget *parent = 0);   // TODO
     ~ITIPHandlerHelper();
 
     enum SendResult {
-      ResultCanceled,        /**< Sending was canceled by the user, meaning there are
+        ResultCanceled,        /**< Sending was canceled by the user, meaning there are
                                   local changes of which other attendees are not aware. */
-      ResultFailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
-      ResultFailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
-      ResultNoSendingNeeded, /**< In some cases it is not needed to send an invitation
+        ResultFailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
+        ResultFailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
+        ResultNoSendingNeeded, /**< In some cases it is not needed to send an invitation
                                 (e.g. when we are the only attendee) */
-      ResultError,           /**< An unexpected error occurred */
-      ResultSuccess          /**< The invitation was sent to all attendees. */
+        ResultError,           /**< An unexpected error occurred */
+        ResultSuccess          /**< The invitation was sent to all attendees. */
     };
 
     enum Action {
-      ActionAsk,
-      ActionSendMessage,
-      ActionDontSendMessage
+        ActionAsk,
+        ActionSendMessage,
+        ActionDontSendMessage
     };
 
     /**
@@ -97,14 +97,14 @@ class ITIPHandlerHelper : public QObject
       sendIncidence*Message() methods.
       @param action the action to set as default
      */
-    void setDefaultAction( Action action );
+    void setDefaultAction(Action action);
 
     /**
       Before an invitation is sent the user is asked for confirmation by means of
       an dialog.
       @param parent The parent widget used for the dialogs.
      */
-    void setDialogParent( QWidget *parent );
+    void setDialogParent(QWidget *parent);
 
     /**
       Handles sending of invitations for newly created incidences. This method
@@ -112,8 +112,8 @@ class ITIPHandlerHelper : public QObject
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    ITIPHandlerHelper::SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
-                                                               const KCalCore::Incidence::Ptr &incidence );
+    ITIPHandlerHelper::SendResult sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
+            const KCalCore::Incidence::Ptr &incidence);
 
     /**
        Checks if the incidence should really be modified.
@@ -125,65 +125,65 @@ class ITIPHandlerHelper : public QObject
 
        @param incidence The modified incidence. It may not be null.
      */
-    bool handleIncidenceAboutToBeModified( const KCalCore::Incidence::Ptr &incidence );
+    bool handleIncidenceAboutToBeModified(const KCalCore::Incidence::Ptr &incidence);
 
     /**
       Handles sending of invitations for modified incidences.
       @param incidence The modified incidence.
       @param attendeeStatusChanged if @c true and @p method is #iTIPRequest ask the user whether to send a status update as well
      */
-    ITIPHandlerHelper::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
-                                                                const KCalCore::Incidence::Ptr &incidence,
-                                                                bool attendeeStatusChanged );
+    ITIPHandlerHelper::SendResult sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
+            const KCalCore::Incidence::Ptr &incidence,
+            bool attendeeStatusChanged);
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    ITIPHandlerHelper::SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
-                                                               const KCalCore::Incidence::Ptr &incidence );
+    ITIPHandlerHelper::SendResult sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
+            const KCalCore::Incidence::Ptr &incidence);
 
     /**
       Send counter proposal message.
       @param oldIncidence The original event provided in the invitations.
       @param newIncidence The new event as edited by the user.
     */
-    ITIPHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
-                                                       const KCalCore::Incidence::Ptr &newIncidence );
+    ITIPHandlerHelper::SendResult sendCounterProposal(const KCalCore::Incidence::Ptr &oldIncidence,
+            const KCalCore::Incidence::Ptr &newIncidence);
 
     // Frees calendar if it doesn't have jobs running
-    void calendarJobFinished( bool success, const QString &errorString );
+    void calendarJobFinished(bool success, const QString &errorString);
 
-  Q_SIGNALS:
-    void finished( Akonadi::ITIPHandlerHelper::SendResult result,
-                   const QString &errorMessage );
+Q_SIGNALS:
+    void finished(Akonadi::ITIPHandlerHelper::SendResult result,
+                  const QString &errorMessage);
 
-  private Q_SLOTS:
-    void onSchedulerFinished( Akonadi::Scheduler::Result result, const QString &errorMsg );
+private Q_SLOTS:
+    void onSchedulerFinished(Akonadi::Scheduler::Result result, const QString &errorMsg);
 
-  private:
-    ITIPHandlerHelper::SendResult sentInvitation( int messageBoxReturnCode,
-                                                  const KCalCore::Incidence::Ptr &incidence,
-                                                  KCalCore::iTIPMethod method );
+private:
+    ITIPHandlerHelper::SendResult sentInvitation(int messageBoxReturnCode,
+            const KCalCore::Incidence::Ptr &incidence,
+            KCalCore::iTIPMethod method);
 
-    int askUserIfNeeded( const QString &question,
-                         bool ignoreDefaultAction = true,
-                         const KGuiItem &buttonYes = KGuiItem( i18n( "Send Email" ) ),
-                         const KGuiItem &buttonNo = KGuiItem( i18n( "Do Not Send" ) ) ) const;
+    int askUserIfNeeded(const QString &question,
+                        bool ignoreDefaultAction = true,
+                        const KGuiItem &buttonYes = KGuiItem(i18n("Send Email")),
+                        const KGuiItem &buttonNo = KGuiItem(i18n("Do Not Send"))) const;
 
     /**
       We are the organizer. If there is more than one attendee, or if there is
       only one, and it's not the same as the organizer, ask the user to send
       mail.
     */
-    bool weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence );
+    bool weAreOrganizerOf(const KCalCore::Incidence::Ptr &incidence);
 
     /**
       Assumes that we are the organizer. If there is more than one attendee, or if
       there is only one, and it's not the same as the organizer, ask the user to send
       mail.
      */
-    bool weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence );
+    bool weNeedToSendMailFor(const KCalCore::Incidence::Ptr &incidence);
 
     ITIPHandlerHelper::Action mDefaultAction;
     QWidget *mParent;

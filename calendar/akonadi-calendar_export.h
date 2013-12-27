@@ -25,13 +25,13 @@
 
 #ifndef AKONADI_CALENDAR_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
-   /* No export/import for static libraries */
+/* No export/import for static libraries */
 #  define AKONADI_CALENDAR_EXPORT
 # elif defined(MAKE_AKONADI_CALENDAR_LIB)
-   /* We are building this library */
+/* We are building this library */
 #  define AKONADI_CALENDAR_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */
+/* We are using this library */
 #  define AKONADI_CALENDAR_EXPORT KDE_IMPORT
 # endif
 #endif

@@ -26,10 +26,10 @@
 
 using namespace Akonadi;
 
-FreeBusyDownloadJob::FreeBusyDownloadJob( const KUrl &url, QWidget *parentWidget )
-  : mUrl( url ), mParent( parentWidget )
+FreeBusyDownloadJob::FreeBusyDownloadJob(const KUrl &url, QWidget *parentWidget)
+    : mUrl(url), mParent(parentWidget)
 {
-  setObjectName( QLatin1String( "FreeBusyDownloadJob" ) );
+    setObjectName(QLatin1String("FreeBusyDownloadJob"));
 }
 
 FreeBusyDownloadJob::~FreeBusyDownloadJob()
@@ -38,36 +38,36 @@ FreeBusyDownloadJob::~FreeBusyDownloadJob()
 
 void FreeBusyDownloadJob::start()
 {
-  KIO::TransferJob *job = KIO::get( mUrl, KIO::NoReload, KIO::HideProgressInfo );
+    KIO::TransferJob *job = KIO::get(mUrl, KIO::NoReload, KIO::HideProgressInfo);
 
-  job->ui()->setWindow( mParent );
+    job->ui()->setWindow(mParent);
 
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)) );
-  connect( job, SIGNAL(data(KIO::Job*,QByteArray)), SLOT(slotData(KIO::Job*,QByteArray)) );
+    connect(job, SIGNAL(result(KJob*)), SLOT(slotResult(KJob*)));
+    connect(job, SIGNAL(data(KIO::Job*,QByteArray)), SLOT(slotData(KIO::Job*,QByteArray)));
 }
 
 QByteArray FreeBusyDownloadJob::rawFreeBusyData() const
 {
-  return mFreeBusyData;
+    return mFreeBusyData;
 }
 
 KUrl FreeBusyDownloadJob::url() const
 {
-  return mUrl;
+    return mUrl;
 }
 
-void FreeBusyDownloadJob::slotData( KIO::Job *, const QByteArray &data )
+void FreeBusyDownloadJob::slotData(KIO::Job *, const QByteArray &data)
 {
-  mFreeBusyData += data;
+    mFreeBusyData += data;
 }
 
-void FreeBusyDownloadJob::slotResult( KJob *job )
+void FreeBusyDownloadJob::slotResult(KJob *job)
 {
-  if ( job->error() ) {
-    setErrorText( job->errorText() );
-  }
+    if (job->error()) {
+        setErrorText(job->errorText());
+    }
 
-  emitResult();
+    emitResult();
 }
 
 #include "freebusydownloadjob_p.moc"

@@ -34,11 +34,11 @@
 namespace Akonadi {
 
 struct Invitation {
-  QString receiver;
-  QString iCal;
-  QString action;
-  KCalCore::iTIPMethod method;
-  KCalCore::Incidence::Ptr incidence;
+    QString receiver;
+    QString iCal;
+    QString action;
+    KCalCore::iTIPMethod method;
+    KCalCore::Incidence::Ptr incidence;
 };
 
 /**
@@ -47,50 +47,50 @@ struct Invitation {
  * This enum is just to Q_ASSERT that.
  */
 enum Operation {
-  OperationNone,
-  OperationProcessiTIPMessage,
-  OperationSendiTIPMessage,
-  OperationPublishInformation,
-  OperationSendAsICalendar
+    OperationNone,
+    OperationProcessiTIPMessage,
+    OperationSendiTIPMessage,
+    OperationPublishInformation,
+    OperationSendAsICalendar
 };
 
 class ITIPHandler::Private : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  Private( ITIPHandler *q );
+    Private(ITIPHandler *q);
 
-  void finishProcessiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
-  void finishSendiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
-  void finishPublishInformation( Akonadi::MailScheduler::Result, const QString &errorMessage );
+    void finishProcessiTIPMessage(Akonadi::MailScheduler::Result, const QString &errorMessage);
+    void finishSendiTIPMessage(Akonadi::MailScheduler::Result, const QString &errorMessage);
+    void finishPublishInformation(Akonadi::MailScheduler::Result, const QString &errorMessage);
 
-  /**
-   * Returns the calendar.
-   * Creates a new one, if none is set.
-   */
-  CalendarBase::Ptr calendar();
-  bool isLoaded(); // don't make const
+    /**
+     * Returns the calendar.
+     * Creates a new one, if none is set.
+     */
+    CalendarBase::Ptr calendar();
+    bool isLoaded(); // don't make const
 
-  Invitation m_queuedInvitation;
-  bool m_calendarLoadError;
-  CalendarBase::Ptr m_calendar;
-  MailScheduler *m_scheduler;
-  KCalCore::Incidence::Ptr m_incidence;
-  KCalCore::iTIPMethod m_method; // METHOD field of ical rfc of incoming invitation
-  ITIPHandlerHelper *m_helper;
-  Operation m_currentOperation;
-  QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
-  GroupwareUiDelegate *m_uiDelegate;
-  ITIPHandler *const q;
+    Invitation m_queuedInvitation;
+    bool m_calendarLoadError;
+    CalendarBase::Ptr m_calendar;
+    MailScheduler *m_scheduler;
+    KCalCore::Incidence::Ptr m_incidence;
+    KCalCore::iTIPMethod m_method; // METHOD field of ical rfc of incoming invitation
+    ITIPHandlerHelper *m_helper;
+    Operation m_currentOperation;
+    QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
+    GroupwareUiDelegate *m_uiDelegate;
+    ITIPHandler *const q;
 
 private Q_SLOTS:
-  void finishSendAsICalendar( Akonadi::MailScheduler::Result, const QString &errorMessage );
-  void onLoadFinished( bool success, const QString &errorMessage );
-  void onSchedulerFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
-  void onHelperFinished( Akonadi::ITIPHandlerHelper::SendResult result,
-                         const QString &errorMessage );
+    void finishSendAsICalendar(Akonadi::MailScheduler::Result, const QString &errorMessage);
+    void onLoadFinished(bool success, const QString &errorMessage);
+    void onSchedulerFinished(Akonadi::Scheduler::Result, const QString &errorMessage);
+    void onHelperFinished(Akonadi::ITIPHandlerHelper::SendResult result,
+                          const QString &errorMessage);
 
-  void onCounterProposalDelegateFinished(bool success, const QString &errorMessage);
+    void onCounterProposalDelegateFinished(bool success, const QString &errorMessage);
 };
 
 }

@@ -119,28 +119,28 @@ void UnitTestBase::compareCalendars(const KCalCore::Calendar::Ptr &expectedCalen
     Incidence::List expectedIncidences = expectedCalendar->incidences();
 
     // First, replace the randomly generated UIDs with the UID that came in the invitation e-mail...
-    foreach (const KCalCore::Incidence::Ptr &incidence, incidences) {
+    foreach(const KCalCore::Incidence::Ptr &incidence, incidences) {
         incidence->setUid(incidence->schedulingID());
         qDebug() << "We have incidece with uid=" << incidence->uid()
                  << "; instanceidentifier=" << incidence->instanceIdentifier();
-        foreach (const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
+        foreach(const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
             attendee->setUid(attendee->email());
         }
     }
 
     // ... so we can compare them
-    foreach (const KCalCore::Incidence::Ptr &incidence, expectedIncidences) {
+    foreach(const KCalCore::Incidence::Ptr &incidence, expectedIncidences) {
         incidence->setUid(incidence->schedulingID());
         qDebug() << "We expect incidece with uid=" << incidence->uid()
                  << "; instanceidentifier=" << incidence->instanceIdentifier();
-        foreach (const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
+        foreach(const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
             attendee->setUid(attendee->email());
         }
     }
 
     QCOMPARE(incidences.count(), expectedIncidences.count());
 
-    foreach (const KCalCore::Incidence::Ptr &expectedIncidence, expectedIncidences) {
+    foreach(const KCalCore::Incidence::Ptr &expectedIncidence, expectedIncidences) {
         KCalCore::Incidence::Ptr incidence;
         for (int i=0; i<incidences.count(); i++) {
             if (incidences.at(i)->instanceIdentifier() == expectedIncidence->instanceIdentifier()) {

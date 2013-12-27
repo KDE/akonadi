@@ -31,114 +31,114 @@ using namespace Akonadi;
 class BlockAlarmsAttribute::Private
 {
 public:
-  Private():
-    audio(1),
-    display(1),
-    email(1),
-    procedure(1)
-  { }
+    Private():
+        audio(1),
+        display(1),
+        email(1),
+        procedure(1)
+    { }
 
-  int audio : 1;
-  int display : 1;
-  int email : 1;
-  int procedure : 1;
+    int audio : 1;
+    int display : 1;
+    int email : 1;
+    int procedure : 1;
 };
 
 BlockAlarmsAttribute::BlockAlarmsAttribute():
-  d(new Private)
+    d(new Private)
 {
 }
 
 BlockAlarmsAttribute::~BlockAlarmsAttribute()
 {
-  delete d;
+    delete d;
 }
 
-void BlockAlarmsAttribute::blockAlarmType( KCalCore::Alarm::Type type, bool block )
+void BlockAlarmsAttribute::blockAlarmType(KCalCore::Alarm::Type type, bool block)
 {
-  switch ( type ) {
+    switch (type) {
     case KCalCore::Alarm::Audio:
-      d->audio = block;
-      return;
+        d->audio = block;
+        return;
     case KCalCore::Alarm::Display:
-      d->display = block;
-      return;
+        d->display = block;
+        return;
     case KCalCore::Alarm::Email:
-      d->email = block;
-      return;
+        d->email = block;
+        return;
     case KCalCore::Alarm::Procedure:
-      d->procedure = block;
-      return;
+        d->procedure = block;
+        return;
     default:
-      return;
-  }
+        return;
+    }
 }
 
-bool BlockAlarmsAttribute::isAlarmTypeBlocked( KCalCore::Alarm::Type type ) const
+bool BlockAlarmsAttribute::isAlarmTypeBlocked(KCalCore::Alarm::Type type) const
 {
-  switch ( type ) {
+    switch (type) {
     case KCalCore::Alarm::Audio:
-      return d->audio;
+        return d->audio;
     case KCalCore::Alarm::Display:
-      return d->display;
+        return d->display;
     case KCalCore::Alarm::Email:
-      return d->email;
+        return d->email;
     case KCalCore::Alarm::Procedure:
-      return d->procedure;
+        return d->procedure;
     default:
-      return false;
-  }
+        return false;
+    }
 }
 
 QByteArray BlockAlarmsAttribute::type() const
 {
-  return "BlockAlarmsAttribute";
+    return "BlockAlarmsAttribute";
 }
 
 BlockAlarmsAttribute *BlockAlarmsAttribute::clone() const
 {
-  BlockAlarmsAttribute *copy = new BlockAlarmsAttribute();
-  copy->d->audio = d->audio;
-  copy->d->display = d->display;
-  copy->d->email = d->email;
-  copy->d->procedure = d->procedure;
+    BlockAlarmsAttribute *copy = new BlockAlarmsAttribute();
+    copy->d->audio = d->audio;
+    copy->d->display = d->display;
+    copy->d->email = d->email;
+    copy->d->procedure = d->procedure;
 
-  return copy;
+    return copy;
 }
 
 QByteArray BlockAlarmsAttribute::serialized() const
 {
-  QByteArray ba;
-  QDataStream stream( &ba, QIODevice::WriteOnly );
-  stream << d->audio;
-  stream << d->display;
-  stream << d->email;
-  stream << d->procedure;
+    QByteArray ba;
+    QDataStream stream(&ba, QIODevice::WriteOnly);
+    stream << d->audio;
+    stream << d->display;
+    stream << d->email;
+    stream << d->procedure;
 
-  return ba;
+    return ba;
 }
 
-void BlockAlarmsAttribute::deserialize( const QByteArray &data )
+void BlockAlarmsAttribute::deserialize(const QByteArray &data)
 {
-  // Pre-4.11, default behavior
-  if ( data.isEmpty() ) {
-    d->audio = true;
-    d->display = true;
-    d->email = true;
-    d->procedure = true;
-  } else {
-    QByteArray ba = data;
-    QDataStream stream( &ba, QIODevice::ReadOnly );
-    int i;
-    stream >> i;
-    d->audio = i;
-    stream >> i;
-    d->display = i;
-    stream >> i;
-    d->email = i;
-    stream >> i;
-    d->procedure = i;
-  }
+    // Pre-4.11, default behavior
+    if (data.isEmpty()) {
+        d->audio = true;
+        d->display = true;
+        d->email = true;
+        d->procedure = true;
+    } else {
+        QByteArray ba = data;
+        QDataStream stream(&ba, QIODevice::ReadOnly);
+        int i;
+        stream >> i;
+        d->audio = i;
+        stream >> i;
+        d->display = i;
+        stream >> i;
+        d->email = i;
+        stream >> i;
+        d->procedure = i;
+    }
 }
 
 
@@ -148,9 +148,9 @@ namespace {
 // Anonymous namespace; function is invisible outside this file.
 bool dummy()
 {
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::BlockAlarmsAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::BlockAlarmsAttribute>();
 
-  return true;
+    return true;
 }
 
 // Called when this library is loaded.
@@ -162,9 +162,9 @@ const bool registered = dummy();
 
 extern bool ___Akonadi____INIT()
 {
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::BlockAlarmsAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::BlockAlarmsAttribute>();
 
-  return true;
+    return true;
 }
 
 #endif

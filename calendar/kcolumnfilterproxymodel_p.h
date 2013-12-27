@@ -40,37 +40,37 @@ class KColumnFilterProxyModelPrivate;
 class KColumnFilterProxyModel : public QSortFilterProxyModel
 {
 public:
-  explicit KColumnFilterProxyModel( QObject* parent = 0 );
-  virtual ~KColumnFilterProxyModel();
+    explicit KColumnFilterProxyModel(QObject* parent = 0);
+    virtual ~KColumnFilterProxyModel();
 
-  /**
-    Returns a vector containing the visible columns. If the vector is empy, all
-    columns are visible.
-  */
-  QVector<int> visbileColumns() const;
+    /**
+      Returns a vector containing the visible columns. If the vector is empy, all
+      columns are visible.
+    */
+    QVector<int> visbileColumns() const;
 
-  /**
-    Convenience function. Has the same effect as:
-    @code
-    setVisibleColumns( QVector<int>() << column );
-    @endcode
-    @param column the column to set as visible
-    @see setVisbileColumns
-   */
-  void setVisibleColumn( int column );
+    /**
+      Convenience function. Has the same effect as:
+      @code
+      setVisibleColumns( QVector<int>() << column );
+      @endcode
+      @param column the column to set as visible
+      @see setVisbileColumns
+     */
+    void setVisibleColumn(int column);
 
-  /**
-    Change the visible columns. Pass an empty vector to make all columns visible.
-    @param visibleColumns the vector changing visible columns
-   */
-  void setVisibleColumns( const QVector<int> &visibleColumns );
+    /**
+      Change the visible columns. Pass an empty vector to make all columns visible.
+      @param visibleColumns the vector changing visible columns
+     */
+    void setVisibleColumns(const QVector<int> &visibleColumns);
 
 protected:
-  virtual bool filterAcceptsColumn( int column, const QModelIndex& parent ) const;
+    virtual bool filterAcceptsColumn(int column, const QModelIndex& parent) const;
 
 private:
-  KColumnFilterProxyModelPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( KColumnFilterProxyModel )
+    KColumnFilterProxyModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(KColumnFilterProxyModel)
 };
 
 }

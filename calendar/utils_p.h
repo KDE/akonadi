@@ -36,14 +36,14 @@
  */
 
 namespace Akonadi {
-  namespace CalendarUtils {
-    QString fullName();
-    QString email();
-    bool thatIsMe( const QString &email );
-    QStringList allEmails();
+namespace CalendarUtils {
+QString fullName();
+QString email();
+bool thatIsMe(const QString &email);
+QStringList allEmails();
 
-    KCalCore::Incidence::Ptr incidence( const Akonadi::Item &item );
-  }
+KCalCore::Incidence::Ptr incidence(const Akonadi::Item &item);
+}
 }
 
 #endif

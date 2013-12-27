@@ -27,49 +27,49 @@ namespace Akonadi {
 
 class CalendarModel : public Akonadi::EntityTreeModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum ItemColumn {
-    Summary=0,
-    Type,
-    DateTimeStart,
-    DateTimeEnd,
-    DateTimeDue,
-    Priority,
-    PercentComplete,
-    ItemColumnCount
-  };
+    enum ItemColumn {
+        Summary=0,
+        Type,
+        DateTimeStart,
+        DateTimeEnd,
+        DateTimeDue,
+        Priority,
+        PercentComplete,
+        ItemColumnCount
+    };
 
-  enum CollectionColumn {
-    CollectionTitle=0,
-    CollectionColumnCount
-  };
+    enum CollectionColumn {
+        CollectionTitle=0,
+        CollectionColumnCount
+    };
 
-  enum Role {
-    SortRole=Akonadi::EntityTreeModel::UserRole,
-    RecursRole
-  };
+    enum Role {
+        SortRole=Akonadi::EntityTreeModel::UserRole,
+        RecursRole
+    };
 
-  explicit CalendarModel( Akonadi::ChangeRecorder *monitor, QObject *parent = 0 );
-  ~CalendarModel();
+    explicit CalendarModel(Akonadi::ChangeRecorder *monitor, QObject *parent = 0);
+    ~CalendarModel();
 
-  /* reimp */
-  QVariant entityData( const Akonadi::Item &item, int column, int role=Qt::DisplayRole ) const;
+    /* reimp */
+    QVariant entityData(const Akonadi::Item &item, int column, int role=Qt::DisplayRole) const;
 
-  /* reimp */
-  QVariant entityData( const Akonadi::Collection &collection, int column,
-                        int role=Qt::DisplayRole ) const;
+    /* reimp */
+    QVariant entityData(const Akonadi::Collection &collection, int column,
+                        int role=Qt::DisplayRole) const;
 
-  /* reimp */
-  int entityColumnCount( EntityTreeModel::HeaderGroup headerSet ) const;
+    /* reimp */
+    int entityColumnCount(EntityTreeModel::HeaderGroup headerSet) const;
 
-  /* reimp */
-  QVariant entityHeaderData( int section, Qt::Orientation orientation, int role,
-                              EntityTreeModel::HeaderGroup headerSet ) const;
+    /* reimp */
+    QVariant entityHeaderData(int section, Qt::Orientation orientation, int role,
+                              EntityTreeModel::HeaderGroup headerSet) const;
 
 private:
-  class Private;
-  Private *const d;
+    class Private;
+    Private *const d;
 };
 
 }

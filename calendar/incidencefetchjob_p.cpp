@@ -29,56 +29,56 @@
 
 using namespace Akonadi;
 
-Akonadi::IncidenceFetchJob::IncidenceFetchJob(QObject* parent): Job(parent), m_jobCount( 0 )
+Akonadi::IncidenceFetchJob::IncidenceFetchJob(QObject* parent): Job(parent), m_jobCount(0)
 {
-  m_mimeTypeChecker.addWantedMimeType( "text/calendar" );
+    m_mimeTypeChecker.addWantedMimeType("text/calendar");
 }
 
 Item::List Akonadi::IncidenceFetchJob::items() const
 {
-  return m_items;
+    return m_items;
 }
 
 void Akonadi::IncidenceFetchJob::doStart()
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-  job->fetchScope().setContentMimeTypes( QStringList() << QLatin1String( "text/calendar" )
-                                                       << KCalCore::Event::eventMimeType()
-                                                       << KCalCore::Todo::todoMimeType()
-                                                       << KCalCore::Journal::journalMimeType() );
-  connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
+    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("text/calendar")
+                                          << KCalCore::Event::eventMimeType()
+                                          << KCalCore::Todo::todoMimeType()
+                                          << KCalCore::Journal::journalMimeType());
+    connect(job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)));
 }
 
 void Akonadi::IncidenceFetchJob::collectionFetchResult(KJob* job)
 {
-  if ( job->error() ) // handled in base class
-    return;
-  CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
-  Q_ASSERT( fetch );
-  foreach ( const Collection &col, fetch->collections() ) {
-    if ( !m_mimeTypeChecker.isWantedCollection( col ) )
-      continue;
-    ItemFetchJob *itemFetch = new ItemFetchJob( col, this );
-    itemFetch->fetchScope().fetchFullPayload( true );
-    connect( itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
-    ++m_jobCount;
-  }
+    if (job->error())   // handled in base class
+        return;
+    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
+    Q_ASSERT(fetch);
+    foreach(const Collection &col, fetch->collections()) {
+        if (!m_mimeTypeChecker.isWantedCollection(col))
+            continue;
+        ItemFetchJob *itemFetch = new ItemFetchJob(col, this);
+        itemFetch->fetchScope().fetchFullPayload(true);
+        connect(itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)));
+        ++m_jobCount;
+    }
 }
 
 void Akonadi::IncidenceFetchJob::itemFetchResult(KJob* job)
 {
-  if ( job->error() ) // handled in base class
-    return;
-  --m_jobCount;
-  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
-  foreach ( const Item &item, fetch->items() ) {
-    if ( !m_mimeTypeChecker.isWantedItem( item ) )
-      continue;
-    m_items.push_back( item );
-  }
+    if (job->error())   // handled in base class
+        return;
+    --m_jobCount;
+    ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>(job);
+    foreach(const Item &item, fetch->items()) {
+        if (!m_mimeTypeChecker.isWantedItem(item))
+            continue;
+        m_items.push_back(item);
+    }
 
-  if ( m_jobCount <= 0 )
-    emitResult();
+    if (m_jobCount <= 0)
+        emitResult();
 }
 
 #include "incidencefetchjob_p.moc"
