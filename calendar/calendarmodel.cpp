@@ -35,205 +35,205 @@
 
 using namespace Akonadi;
 
-static KCalCore::Incidence::Ptr incidence( const Akonadi::Item &item )
+static KCalCore::Incidence::Ptr incidence(const Akonadi::Item &item)
 {
-  return
-    item.hasPayload<KCalCore::Incidence::Ptr>() ?
-    item.payload<KCalCore::Incidence::Ptr>() :
-    KCalCore::Incidence::Ptr();
+    return
+        item.hasPayload<KCalCore::Incidence::Ptr>() ?
+        item.payload<KCalCore::Incidence::Ptr>() :
+        KCalCore::Incidence::Ptr();
 }
 
-static KCalCore::Todo::Ptr todo( const Akonadi::Item &item )
+static KCalCore::Todo::Ptr todo(const Akonadi::Item &item)
 {
-  return
-    item.hasPayload<KCalCore::Todo::Ptr>() ?
-    item.payload<KCalCore::Todo::Ptr>() :
-    KCalCore::Todo::Ptr();
+    return
+        item.hasPayload<KCalCore::Todo::Ptr>() ?
+        item.payload<KCalCore::Todo::Ptr>() :
+        KCalCore::Todo::Ptr();
 }
 
 class CalendarModel::Private
 {
-  public:
+public:
     Private()
     {
     }
 };
 
-CalendarModel::CalendarModel( Akonadi::ChangeRecorder *monitor, QObject *parent )
-  : EntityTreeModel( monitor, parent ),
-    d( new Private() )
+CalendarModel::CalendarModel(Akonadi::ChangeRecorder *monitor, QObject *parent)
+    : EntityTreeModel(monitor, parent),
+      d(new Private())
 {
-  monitor->itemFetchScope().fetchAllAttributes( true );
+    monitor->itemFetchScope().fetchAllAttributes(true);
 }
 
 CalendarModel::~CalendarModel()
 {
-  delete d;
+    delete d;
 }
 
-QVariant CalendarModel::entityData( const Akonadi::Item &item, int column, int role ) const
+QVariant CalendarModel::entityData(const Akonadi::Item &item, int column, int role) const
 {
-  const KCalCore::Incidence::Ptr inc = incidence( item );
-  if ( !inc ) {
-    return QVariant();
-  }
-
-  switch( role ) {
-  case Qt::DecorationRole:
-    if ( column != Summary ) {
-      return QVariant();
-    }
-    if ( inc->type() == KCalCore::IncidenceBase::TypeTodo ) {
-      return SmallIcon( QLatin1String( "view-pim-tasks" ) );
-    }
-    if ( inc->type() == KCalCore::IncidenceBase::TypeJournal ) {
-      return SmallIcon( QLatin1String( "view-pim-journal" ) );
-    }
-    if ( inc->type() == KCalCore::IncidenceBase::TypeEvent ) {
-      return SmallIcon( QLatin1String( "view-calendar" ) );
-    }
-    return SmallIcon( QLatin1String( "network-wired" ) );
-
-  case Qt::DisplayRole:
-    switch( column ) {
-    case Summary:
-      return inc->summary();
-
-    case DateTimeStart:
-      return inc->dtStart().toString();
-
-    case DateTimeEnd:
-      return inc->dateTime( KCalCore::Incidence::RoleEndTimeZone ).toString();
-
-    case DateTimeDue:
-      if ( KCalCore::Todo::Ptr t = todo( item ) ) {
-        return t->dtDue().toString();
-      } else {
+    const KCalCore::Incidence::Ptr inc = incidence(item);
+    if (!inc) {
         return QVariant();
-      }
-
-    case Priority:
-      if ( KCalCore::Todo::Ptr t = todo( item ) ) {
-        return t->priority();
-      } else {
-        return QVariant();
-      }
-
-    case PercentComplete:
-      if ( KCalCore::Todo::Ptr t = todo( item ) ) {
-        return t->percentComplete();
-      } else {
-        return QVariant();
-      }
-
-    case Type:
-      return inc->typeStr();
-    default:
-      break;
     }
+
+    switch (role) {
+    case Qt::DecorationRole:
+        if (column != Summary) {
+            return QVariant();
+        }
+        if (inc->type() == KCalCore::IncidenceBase::TypeTodo) {
+            return SmallIcon(QLatin1String("view-pim-tasks"));
+        }
+        if (inc->type() == KCalCore::IncidenceBase::TypeJournal) {
+            return SmallIcon(QLatin1String("view-pim-journal"));
+        }
+        if (inc->type() == KCalCore::IncidenceBase::TypeEvent) {
+            return SmallIcon(QLatin1String("view-calendar"));
+        }
+        return SmallIcon(QLatin1String("network-wired"));
+
+    case Qt::DisplayRole:
+        switch (column) {
+        case Summary:
+            return inc->summary();
+
+        case DateTimeStart:
+            return inc->dtStart().toString();
+
+        case DateTimeEnd:
+            return inc->dateTime(KCalCore::Incidence::RoleEndTimeZone).toString();
+
+        case DateTimeDue:
+            if (KCalCore::Todo::Ptr t = todo(item)) {
+                return t->dtDue().toString();
+            } else {
+                return QVariant();
+            }
+
+        case Priority:
+            if (KCalCore::Todo::Ptr t = todo(item)) {
+                return t->priority();
+            } else {
+                return QVariant();
+            }
+
+        case PercentComplete:
+            if (KCalCore::Todo::Ptr t = todo(item)) {
+                return t->percentComplete();
+            } else {
+                return QVariant();
+            }
+
+        case Type:
+            return inc->typeStr();
+        default:
+            break;
+        }
 
     case SortRole:
-    switch( column ) {
-    case Summary:
-      return inc->summary();
+        switch (column) {
+        case Summary:
+            return inc->summary();
 
-    case DateTimeStart:
-      return inc->dtStart().toUtc().dateTime();
+        case DateTimeStart:
+            return inc->dtStart().toUtc().dateTime();
 
-    case DateTimeEnd:
-      return inc->dateTime( KCalCore::Incidence::RoleEndTimeZone ).toUtc().dateTime();
+        case DateTimeEnd:
+            return inc->dateTime(KCalCore::Incidence::RoleEndTimeZone).toUtc().dateTime();
 
-    case DateTimeDue:
-      if ( KCalCore::Todo::Ptr t = todo( item ) ) {
-        return t->dtDue().toUtc().dateTime();
-      } else {
+        case DateTimeDue:
+            if (KCalCore::Todo::Ptr t = todo(item)) {
+                return t->dtDue().toUtc().dateTime();
+            } else {
+                return QVariant();
+            }
+
+        case Priority:
+            if (KCalCore::Todo::Ptr t = todo(item)) {
+                return t->priority();
+            } else {
+                return QVariant();
+            }
+
+        case PercentComplete:
+            if (KCalCore::Todo::Ptr t = todo(item)) {
+                return t->percentComplete();
+            } else {
+                return QVariant();
+            }
+
+        case Type:
+            return inc->type();
+
+        default:
+            break;
+        }
+
         return QVariant();
-      }
 
-    case Priority:
-      if ( KCalCore::Todo::Ptr t = todo( item ) ) {
-        return t->priority();
-      } else {
-        return QVariant();
-      }
-
-    case PercentComplete:
-      if ( KCalCore::Todo::Ptr t = todo( item ) ) {
-        return t->percentComplete();
-      } else {
-        return QVariant();
-      }
-
-    case Type:
-      return inc->type();
+    case RecursRole:
+        return inc->recurs();
 
     default:
-      break;
+        return QVariant();
     }
 
     return QVariant();
-
-  case RecursRole:
-    return inc->recurs();
-
-  default:
-    return QVariant();
-  }
-
-  return QVariant();
 }
 
-QVariant CalendarModel::entityData( const Akonadi::Collection &collection,
-                                    int column, int role ) const
+QVariant CalendarModel::entityData(const Akonadi::Collection &collection,
+                                   int column, int role) const
 {
-  return EntityTreeModel::entityData( collection, column, role );
+    return EntityTreeModel::entityData(collection, column, role);
 }
 
-int CalendarModel::entityColumnCount( EntityTreeModel::HeaderGroup headerSet ) const
+int CalendarModel::entityColumnCount(EntityTreeModel::HeaderGroup headerSet) const
 {
-  if ( headerSet == EntityTreeModel::ItemListHeaders ) {
-    return ItemColumnCount;
-  } else {
-    return CollectionColumnCount;
-  }
-}
-
-QVariant CalendarModel::entityHeaderData( int section, Qt::Orientation orientation,
-                                          int role, EntityTreeModel::HeaderGroup headerSet ) const
-{
-  if ( role != Qt::DisplayRole || orientation != Qt::Horizontal ) {
-    return QVariant();
-  }
-
-  if ( headerSet == EntityTreeModel::ItemListHeaders ) {
-    switch( section ) {
-    case Summary:
-      return i18nc( "@title:column calendar event summary", "Summary" );
-    case DateTimeStart:
-      return i18nc( "@title:column calendar event start date and time", "Start Date and Time" );
-    case DateTimeEnd:
-      return i18nc( "@title:column calendar event end date and time", "End Date and Time" );
-    case Type:
-      return i18nc( "@title:column calendar event type", "Type" );
-    case DateTimeDue:
-      return i18nc( "@title:column todo item due date and time", "Due Date and Time" );
-    case Priority:
-      return i18nc( "@title:column todo item priority", "Priority" );
-    case PercentComplete:
-      return i18nc( "@title:column todo item completion in percent", "Complete" );
-    default:
-      return QVariant();
+    if (headerSet == EntityTreeModel::ItemListHeaders) {
+        return ItemColumnCount;
+    } else {
+        return CollectionColumnCount;
     }
-  }
+}
 
-  if ( headerSet == EntityTreeModel::CollectionTreeHeaders ) {
-    switch ( section ) {
-    case CollectionTitle:
-      return i18nc( "@title:column calendar title", "Calendar" );
-    default:
-      return QVariant();
+QVariant CalendarModel::entityHeaderData(int section, Qt::Orientation orientation,
+        int role, EntityTreeModel::HeaderGroup headerSet) const
+{
+    if (role != Qt::DisplayRole || orientation != Qt::Horizontal) {
+        return QVariant();
     }
-  }
-  return QVariant();
+
+    if (headerSet == EntityTreeModel::ItemListHeaders) {
+        switch (section) {
+        case Summary:
+            return i18nc("@title:column calendar event summary", "Summary");
+        case DateTimeStart:
+            return i18nc("@title:column calendar event start date and time", "Start Date and Time");
+        case DateTimeEnd:
+            return i18nc("@title:column calendar event end date and time", "End Date and Time");
+        case Type:
+            return i18nc("@title:column calendar event type", "Type");
+        case DateTimeDue:
+            return i18nc("@title:column todo item due date and time", "Due Date and Time");
+        case Priority:
+            return i18nc("@title:column todo item priority", "Priority");
+        case PercentComplete:
+            return i18nc("@title:column todo item completion in percent", "Complete");
+        default:
+            return QVariant();
+        }
+    }
+
+    if (headerSet == EntityTreeModel::CollectionTreeHeaders) {
+        switch (section) {
+        case CollectionTitle:
+            return i18nc("@title:column calendar title", "Calendar");
+        default:
+            return QVariant();
+        }
+    }
+    return QVariant();
 }
 

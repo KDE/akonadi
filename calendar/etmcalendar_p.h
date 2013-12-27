@@ -42,16 +42,16 @@ class EntityMimeTypeFilterModel;
 class CollectionFilterProxyModel;
 class CalFilterProxyModel;
 
-static bool isStructuralCollection( const Akonadi::Collection &collection )
+static bool isStructuralCollection(const Akonadi::Collection &collection)
 {
     QStringList mimeTypes;
-    mimeTypes << QLatin1String( "text/calendar" )
+    mimeTypes << QLatin1String("text/calendar")
               << KCalCore::Event::eventMimeType()
               << KCalCore::Todo::todoMimeType()
               << KCalCore::Journal::journalMimeType();
     const QStringList collectionMimeTypes = collection.contentMimeTypes();
-    foreach ( const QString &mimeType, mimeTypes ) {
-        if ( collectionMimeTypes.contains( mimeType ) )
+    foreach(const QString &mimeType, mimeTypes) {
+        if (collectionMimeTypes.contains(mimeType))
             return false;
     }
 
@@ -79,66 +79,66 @@ public:
 
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
 
-  explicit ETMCalendarPrivate( ETMCalendar *qq );
-  ~ETMCalendarPrivate();
+    explicit ETMCalendarPrivate(ETMCalendar *qq);
+    ~ETMCalendarPrivate();
 
-  void init();
-  void setupFilteredETM();
-  void loadFromETM();
+    void init();
+    void setupFilteredETM();
+    void loadFromETM();
 
 public Q_SLOTS:
-  Akonadi::Item::List itemsFromModel( const QAbstractItemModel *model,
-                                      const QModelIndex &parentIndex = QModelIndex(),
-                                      int start = 0,
-                                      int end = -1 );
+    Akonadi::Item::List itemsFromModel(const QAbstractItemModel *model,
+                                       const QModelIndex &parentIndex = QModelIndex(),
+                                       int start = 0,
+                                       int end = -1);
 
-  Akonadi::Collection::List collectionsFromModel( const QAbstractItemModel *model,
-                                                  const QModelIndex &parentIndex = QModelIndex(),
-                                                  int start = 0,
-                                                  int end = -1 );
+    Akonadi::Collection::List collectionsFromModel(const QAbstractItemModel *model,
+            const QModelIndex &parentIndex = QModelIndex(),
+            int start = 0,
+            int end = -1);
 
-  // KCalCore::CalFilter has changed.
-  void onFilterChanged();
+    // KCalCore::CalFilter has changed.
+    void onFilterChanged();
 
-  void clear();
-  void updateItem( const Akonadi::Item & );
-  Akonadi::Item itemFromIndex( const QModelIndex &idx );
-  Akonadi::Collection collectionFromIndex( const QModelIndex &index );
-  void itemsAdded( const Akonadi::Item::List &items );
-  void itemsRemoved( const Akonadi::Item::List &items );
+    void clear();
+    void updateItem(const Akonadi::Item &);
+    Akonadi::Item itemFromIndex(const QModelIndex &idx);
+    Akonadi::Collection collectionFromIndex(const QModelIndex &index);
+    void itemsAdded(const Akonadi::Item::List &items);
+    void itemsRemoved(const Akonadi::Item::List &items);
 
-  void onRowsInserted( const QModelIndex &index, int start, int end );
-  void onRowsRemoved( const QModelIndex &index, int start, int end );
-  void onDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-  void onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
-                    const QModelIndex &destinationParent, int destinationRow );
+    void onRowsInserted(const QModelIndex &index, int start, int end);
+    void onRowsRemoved(const QModelIndex &index, int start, int end);
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onRowsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                     const QModelIndex &destinationParent, int destinationRow);
 
-  void onLayoutChangedInFilteredModel();
-  void onModelResetInFilteredModel();
-  void onDataChangedInFilteredModel( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-  void onRowsInsertedInFilteredModel( const QModelIndex &index, int start, int end );
-  void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
-  void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
-  void onCollectionPopulated(Akonadi::Collection::Id);
+    void onLayoutChangedInFilteredModel();
+    void onModelResetInFilteredModel();
+    void onDataChangedInFilteredModel(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onRowsInsertedInFilteredModel(const QModelIndex &index, int start, int end);
+    void onRowsAboutToBeRemovedInFilteredModel(const QModelIndex &index, int start, int end);
+    void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
+    void onCollectionPopulated(Akonadi::Collection::Id);
 
 public:
-  Akonadi::EntityTreeModel *mETM;
-  Akonadi::EntityMimeTypeFilterModel *mFilteredETM;
+    Akonadi::EntityTreeModel *mETM;
+    Akonadi::EntityMimeTypeFilterModel *mFilteredETM;
 
-  // akonadi id to collections
-  QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
-  CheckableProxyModel *mCheckableProxyModel;
-  Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
-  Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
-  KSelectionProxyModel *mSelectionProxy;
-  bool mCollectionFilteringEnabled;
-  QSet<Akonadi::Collection::Id> mPopulatedCollectionIds;
-  QStringList mMimeTypes;
+    // akonadi id to collections
+    QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
+    CheckableProxyModel *mCheckableProxyModel;
+    Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
+    Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
+    KSelectionProxyModel *mSelectionProxy;
+    bool mCollectionFilteringEnabled;
+    QSet<Akonadi::Collection::Id> mPopulatedCollectionIds;
+    QStringList mMimeTypes;
 private:
-  ETMCalendar *const q;
+    ETMCalendar *const q;
 };
 
 }

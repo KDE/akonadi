@@ -33,80 +33,80 @@
 using namespace KCalCore;
 using namespace Akonadi;
 
-PublishDialog::PublishDialog( QWidget *parent )
-  : KDialog( parent ), d( new Private( this ) )
+PublishDialog::PublishDialog(QWidget *parent)
+    : KDialog(parent), d(new Private(this))
 {
-  setCaption( i18n( "Select Addresses" ) );
-  setButtons( Ok|Cancel|Help );
-  setHelp( "group-scheduling", "korganizer" );
-  QWidget *widget = new QWidget( this );
-  widget->setObjectName( "PublishFreeBusy" );
-  d->mUI.setupUi( widget );
-  setMainWidget( widget );
-  d->mUI.mListWidget->setSelectionMode( QAbstractItemView::SingleSelection );
-  d->mUI.mNameLineEdit->setEnabled( false );
-  d->mUI.mEmailLineEdit->setEnabled( false );
+    setCaption(i18n("Select Addresses"));
+    setButtons(Ok|Cancel|Help);
+    setHelp("group-scheduling", "korganizer");
+    QWidget *widget = new QWidget(this);
+    widget->setObjectName("PublishFreeBusy");
+    d->mUI.setupUi(widget);
+    setMainWidget(widget);
+    d->mUI.mListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    d->mUI.mNameLineEdit->setEnabled(false);
+    d->mUI.mEmailLineEdit->setEnabled(false);
 
-  setButtonToolTip( Ok, i18n( "Send email to these recipients" ) );
-  setButtonWhatsThis( Ok, i18n( "Clicking the <b>Ok</b> button will cause "
+    setButtonToolTip(Ok, i18n("Send email to these recipients"));
+    setButtonWhatsThis(Ok, i18n("Clicking the <b>Ok</b> button will cause "
                                 "an email to be sent to the recipients you "
-                                "have entered." ) );
-  setButtonToolTip( Cancel, i18n( "Cancel recipient selection and the email" ) );
-  setButtonWhatsThis( Cancel, i18n( "Clicking the <b>Cancel</b> button will "
-                                    "cause the email operation to be terminated." ) );
+                                "have entered."));
+    setButtonToolTip(Cancel, i18n("Cancel recipient selection and the email"));
+    setButtonWhatsThis(Cancel, i18n("Clicking the <b>Cancel</b> button will "
+                                    "cause the email operation to be terminated."));
 
-  setButtonWhatsThis( Help, i18n( "Click the <b>Help</b> button to read "
-                                  "more information about Group Scheduling." ) );
+    setButtonWhatsThis(Help, i18n("Click the <b>Help</b> button to read "
+                                  "more information about Group Scheduling."));
 
-  d->mUI.mNew->setIcon( KIcon( "list-add" ) );
-  d->mUI.mRemove->setIcon( KIcon( "list-remove" ) );
-  d->mUI.mRemove->setEnabled( false );
-  d->mUI.mSelectAddressee->setIcon( KIcon( "view-pim-contacts" ) );
+    d->mUI.mNew->setIcon(KIcon("list-add"));
+    d->mUI.mRemove->setIcon(KIcon("list-remove"));
+    d->mUI.mRemove->setEnabled(false);
+    d->mUI.mSelectAddressee->setIcon(KIcon("view-pim-contacts"));
 
-  connect( d->mUI.mListWidget, SIGNAL(itemSelectionChanged()),
-           d, SLOT(updateInput()) );
-  connect( d->mUI.mNew, SIGNAL(clicked()),
-           d, SLOT(addItem()) );
-  connect( d->mUI.mRemove, SIGNAL(clicked()),
-           d, SLOT(removeItem()) );
-  connect( d->mUI.mSelectAddressee, SIGNAL(clicked()),
-           d, SLOT(openAddressbook()) );
-  connect( d->mUI.mNameLineEdit, SIGNAL(textChanged(QString)),
-           d, SLOT(updateItem()) );
-  connect( d->mUI.mEmailLineEdit, SIGNAL(textChanged(QString)),
-           d, SLOT(updateItem()) );
+    connect(d->mUI.mListWidget, SIGNAL(itemSelectionChanged()),
+            d, SLOT(updateInput()));
+    connect(d->mUI.mNew, SIGNAL(clicked()),
+            d, SLOT(addItem()));
+    connect(d->mUI.mRemove, SIGNAL(clicked()),
+            d, SLOT(removeItem()));
+    connect(d->mUI.mSelectAddressee, SIGNAL(clicked()),
+            d, SLOT(openAddressbook()));
+    connect(d->mUI.mNameLineEdit, SIGNAL(textChanged(QString)),
+            d, SLOT(updateItem()));
+    connect(d->mUI.mEmailLineEdit, SIGNAL(textChanged(QString)),
+            d, SLOT(updateItem()));
 }
 
 PublishDialog::~PublishDialog()
 {
-  delete d;
+    delete d;
 }
 
-void PublishDialog::addAttendee( const Attendee::Ptr &attendee )
+void PublishDialog::addAttendee(const Attendee::Ptr &attendee)
 {
-  d->mUI.mNameLineEdit->setEnabled( true );
-  d->mUI.mEmailLineEdit->setEnabled( true );
-  QListWidgetItem *item = new QListWidgetItem( d->mUI.mListWidget );
-  Person person( attendee->name(), attendee->email() );
-  item->setText( person.fullName() );
-  d->mUI.mListWidget->addItem( item );
-  d->mUI.mRemove->setEnabled( !d->mUI.mListWidget->selectedItems().isEmpty() );
+    d->mUI.mNameLineEdit->setEnabled(true);
+    d->mUI.mEmailLineEdit->setEnabled(true);
+    QListWidgetItem *item = new QListWidgetItem(d->mUI.mListWidget);
+    Person person(attendee->name(), attendee->email());
+    item->setText(person.fullName());
+    d->mUI.mListWidget->addItem(item);
+    d->mUI.mRemove->setEnabled(!d->mUI.mListWidget->selectedItems().isEmpty());
 }
 
 QString PublishDialog::addresses() const
 {
-  QString to;
-  QListWidgetItem *item;
-  const int count = d->mUI.mListWidget->count();
-  for ( int i=0; i<count; ++i ) {
-    item = d->mUI.mListWidget->item( i );
-    if ( !item->text().isEmpty() ) {
-      to += item->text();
-      if ( i < count-1 ) {
-        to += ", ";
-      }
+    QString to;
+    QListWidgetItem *item;
+    const int count = d->mUI.mListWidget->count();
+    for (int i=0; i<count; ++i) {
+        item = d->mUI.mListWidget->item(i);
+        if (!item->text().isEmpty()) {
+            to += item->text();
+            if (i < count-1) {
+                to += ", ";
+            }
+        }
     }
-  }
-  return to;
+    return to;
 }
 

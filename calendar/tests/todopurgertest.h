@@ -26,8 +26,8 @@
 #include <QString>
 
 namespace Akonadi {
-    class ETMCalendar;
-    class TodoPurger;
+class ETMCalendar;
+class TodoPurger;
 }
 
 class TodoPurgerTest : public QObject, KCalCore::Calendar::CalendarObserver
@@ -39,8 +39,8 @@ private Q_SLOTS:
     void testPurge();
 
 public:
-    void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );   /**Q_DECL_OVERRIDE*/
-    void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence ); /**Q_DECL_OVERRIDE*/
+    void calendarIncidenceAdded(const KCalCore::Incidence::Ptr &incidence);     /**Q_DECL_OVERRIDE*/
+    void calendarIncidenceDeleted(const KCalCore::Incidence::Ptr &incidence);   /**Q_DECL_OVERRIDE*/
 
 public Q_SLOTS:
     void onTodosPurged(bool success, int numDeleted, int numIgnored);

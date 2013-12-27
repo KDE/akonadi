@@ -46,7 +46,7 @@ KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence(const Akonadi::Item &
     // since we don't call hasPayload()
     try {
         return item.payload<KCalCore::Incidence::Ptr>();
-    } catch(Akonadi::PayloadException) {
+    } catch (Akonadi::PayloadException) {
         return KCalCore::Incidence::Ptr();
     }
 }
@@ -92,8 +92,8 @@ void ETMCalendarTest::deleteIncidence(const QString &uid)
 void ETMCalendarTest::fetchCollection()
 {
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(),
-                                                      CollectionFetchJob::Recursive,
-                                                      this);
+            CollectionFetchJob::Recursive,
+            this);
     // Get list of collections
     job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
     AKVERIFYEXEC(job);
@@ -118,7 +118,7 @@ void ETMCalendarTest:: initTestCase()
 
     mCalendar = new ETMCalendar();
     connect(mCalendar, SIGNAL(collectionsAdded(Akonadi::Collection::List)),
-             SLOT(handleCollectionsAdded(Akonadi::Collection::List)));
+            SLOT(handleCollectionsAdded(Akonadi::Collection::List)));
 
     mCalendar->registerObserver(this);
 

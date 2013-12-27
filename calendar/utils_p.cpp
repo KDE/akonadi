@@ -33,117 +33,117 @@
 using namespace Akonadi::CalendarUtils;
 
 Akonadi::Collection
-Akonadi::CalendarUtils::selectCollection( QWidget *parent,
-                                          int &dialogCode,
-                                          const QStringList &mimeTypes,
-                                          const Akonadi::Collection &defaultCollection )
+Akonadi::CalendarUtils::selectCollection(QWidget *parent,
+        int &dialogCode,
+        const QStringList &mimeTypes,
+        const Akonadi::Collection &defaultCollection)
 {
-  QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
+    QPointer<Akonadi::CollectionDialog> dlg(new Akonadi::CollectionDialog(parent));
 
-  kDebug() << "selecting collections with mimeType in " << mimeTypes;
+    kDebug() << "selecting collections with mimeType in " << mimeTypes;
 
-  dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
-  dlg->setMimeTypeFilter( mimeTypes );
-  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  if ( defaultCollection.isValid() ) {
-    dlg->setDefaultCollection( defaultCollection );
-  }
-  Akonadi::Collection collection;
-
-  // FIXME: don't use exec.
-  dialogCode = dlg->exec();
-  if ( dialogCode == QDialog::Accepted ) {
-    collection = dlg->selectedCollection();
-
-    if ( !collection.isValid() ) {
-      kWarning() <<"An invalid collection was selected!";
+    dlg->changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
+    dlg->setMimeTypeFilter(mimeTypes);
+    dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    if (defaultCollection.isValid()) {
+        dlg->setDefaultCollection(defaultCollection);
     }
-  }
-  delete dlg;
+    Akonadi::Collection collection;
 
-  return collection;
+    // FIXME: don't use exec.
+    dialogCode = dlg->exec();
+    if (dialogCode == QDialog::Accepted) {
+        collection = dlg->selectedCollection();
+
+        if (!collection.isValid()) {
+            kWarning() <<"An invalid collection was selected!";
+        }
+    }
+    delete dlg;
+
+    return collection;
 }
 
 QString Akonadi::CalendarUtils::fullName()
 {
-  KEMailSettings settings;
-  QString tusername = settings.getSetting( KEMailSettings::RealName );
+    KEMailSettings settings;
+    QString tusername = settings.getSetting(KEMailSettings::RealName);
 
-  // Quote the username as it might contain commas and other quotable chars.
-  tusername = KPIMUtils::quoteNameIfNecessary( tusername );
+    // Quote the username as it might contain commas and other quotable chars.
+    tusername = KPIMUtils::quoteNameIfNecessary(tusername);
 
-  QString tname, temail;
-  // ignore the return value from extractEmailAddressAndName() because
-  // it will always be false since tusername does not contain "@domain".
-  KPIMUtils::extractEmailAddressAndName( tusername, temail, tname );
-  return tname;
+    QString tname, temail;
+    // ignore the return value from extractEmailAddressAndName() because
+    // it will always be false since tusername does not contain "@domain".
+    KPIMUtils::extractEmailAddressAndName(tusername, temail, tname);
+    return tname;
 }
 
 QString Akonadi::CalendarUtils::email()
 {
-  KEMailSettings emailSettings;
-  return emailSettings.getSetting( KEMailSettings::EmailAddress );
+    KEMailSettings emailSettings;
+    return emailSettings.getSetting(KEMailSettings::EmailAddress);
 }
 
-bool Akonadi::CalendarUtils::thatIsMe( const QString &_email )
+bool Akonadi::CalendarUtils::thatIsMe(const QString &_email)
 {
-  KPIMIdentities::IdentityManager identityManager( /*ro=*/ true );
+    KPIMIdentities::IdentityManager identityManager(/*ro=*/ true);
 
-  // NOTE: this method is called for every created agenda view item,
-  // so we need to keep performance in mind
+    // NOTE: this method is called for every created agenda view item,
+    // so we need to keep performance in mind
 
-  /* identityManager()->thatIsMe() is quite expensive since it does parsing of
-     _email in a way which is unnecessarily complex for what we can have here,
-     so we do that ourselves. This makes sense since this
+    /* identityManager()->thatIsMe() is quite expensive since it does parsing of
+       _email in a way which is unnecessarily complex for what we can have here,
+       so we do that ourselves. This makes sense since this
 
-  if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
-    return true;
-  }
-  */
-
-  // in case email contains a full name, strip it out.
-  // the below is the simpler but slower version of the following code:
-  // const QString email = KPIM::getEmailAddress( _email );
-  const QByteArray tmp = _email.toUtf8();
-  const char *cursor = tmp.constData();
-  const char *end = tmp.data() + tmp.length();
-  KMime::Types::Mailbox mbox;
-  KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
-  const QString email = mbox.addrSpec().asString();
-
-  KEMailSettings emailSettings;
-  const QString myEmail = emailSettings.getSetting( KEMailSettings::EmailAddress );
-
-  if ( myEmail == email ) {
-    return true;
-  }
-
-  KPIMIdentities::IdentityManager::ConstIterator it;
-  for ( it = identityManager.begin();
-        it != identityManager.end(); ++it ) {
-    if ( (*it).matchesEmailAddress( email ) ) {
+    if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
       return true;
     }
-  }
+    */
 
-  return false;
+    // in case email contains a full name, strip it out.
+    // the below is the simpler but slower version of the following code:
+    // const QString email = KPIM::getEmailAddress( _email );
+    const QByteArray tmp = _email.toUtf8();
+    const char *cursor = tmp.constData();
+    const char *end = tmp.data() + tmp.length();
+    KMime::Types::Mailbox mbox;
+    KMime::HeaderParsing::parseMailbox(cursor, end, mbox);
+    const QString email = mbox.addrSpec().asString();
+
+    KEMailSettings emailSettings;
+    const QString myEmail = emailSettings.getSetting(KEMailSettings::EmailAddress);
+
+    if (myEmail == email) {
+        return true;
+    }
+
+    KPIMIdentities::IdentityManager::ConstIterator it;
+    for (it = identityManager.begin();
+            it != identityManager.end(); ++it) {
+        if ((*it).matchesEmailAddress(email)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 QStringList Akonadi::CalendarUtils::allEmails()
 {
-  KPIMIdentities::IdentityManager identityManager( /*ro=*/ true );
-  // Grab emails from the email identities
-  // Warning, this list could contain duplicates.
-  return identityManager.allEmails();
+    KPIMIdentities::IdentityManager identityManager(/*ro=*/ true);
+    // Grab emails from the email identities
+    // Warning, this list could contain duplicates.
+    return identityManager.allEmails();
 }
 
-KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence( const Akonadi::Item &item )
+KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence(const Akonadi::Item &item)
 {
-  // With this try-catch block, we get a 2x performance improvement in retrieving the payload
-  // since we don't call hasPayload()
-  try {
-    return item.payload<KCalCore::Incidence::Ptr>();
-  } catch( Akonadi::PayloadException ) {
-    return KCalCore::Incidence::Ptr();
-  }
+    // With this try-catch block, we get a 2x performance improvement in retrieving the payload
+    // since we don't call hasPayload()
+    try {
+        return item.payload<KCalCore::Incidence::Ptr>();
+    } catch (Akonadi::PayloadException) {
+        return KCalCore::Incidence::Ptr();
+    }
 }

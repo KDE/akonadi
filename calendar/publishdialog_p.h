@@ -26,21 +26,21 @@
 namespace Akonadi {
 
 class PublishDialog::Private : public QObject {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-  Private( PublishDialog *q );
+    Private(PublishDialog *q);
 
 public Q_SLOTS:
-  void addItem();
-  void removeItem();
-  void openAddressbook();
-  void updateItem();
-  void updateInput();
+    void addItem();
+    void removeItem();
+    void openAddressbook();
+    void updateItem();
+    void updateInput();
 
 public:
-  Ui::PublishDialog_base mUI;
-  PublishDialog *q;
+    Ui::PublishDialog_base mUI;
+    PublishDialog *q;
 };
 }
 #endif

@@ -26,50 +26,50 @@
 using namespace Akonadi;
 
 namespace Akonadi {
-  class KColumnFilterProxyModelPrivate
-  {
-  public:
+class KColumnFilterProxyModelPrivate
+{
+public:
     QVector<int> m_visibleColumns;
-  };
+};
 }
 
-KColumnFilterProxyModel::KColumnFilterProxyModel( QObject* parent )
-  : QSortFilterProxyModel( parent )
-  , d_ptr( new KColumnFilterProxyModelPrivate )
+KColumnFilterProxyModel::KColumnFilterProxyModel(QObject* parent)
+    : QSortFilterProxyModel(parent)
+    , d_ptr(new KColumnFilterProxyModelPrivate)
 { }
 
 KColumnFilterProxyModel::~KColumnFilterProxyModel()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
 QVector<int> KColumnFilterProxyModel::visbileColumns() const
 {
-  Q_D( const KColumnFilterProxyModel );
-  return d->m_visibleColumns;
+    Q_D(const KColumnFilterProxyModel);
+    return d->m_visibleColumns;
 }
 
-void KColumnFilterProxyModel::setVisibleColumn( int column )
+void KColumnFilterProxyModel::setVisibleColumn(int column)
 {
-  setVisibleColumns( QVector<int>() << column );
+    setVisibleColumns(QVector<int>() << column);
 }
 
-void KColumnFilterProxyModel::setVisibleColumns( const QVector<int> &visibleColumns )
+void KColumnFilterProxyModel::setVisibleColumns(const QVector<int> &visibleColumns)
 {
-  Q_D( KColumnFilterProxyModel );
-  d->m_visibleColumns = visibleColumns;
-  invalidateFilter();
+    Q_D(KColumnFilterProxyModel);
+    d->m_visibleColumns = visibleColumns;
+    invalidateFilter();
 }
 
-bool KColumnFilterProxyModel::filterAcceptsColumn( int column, const QModelIndex &parent ) const
+bool KColumnFilterProxyModel::filterAcceptsColumn(int column, const QModelIndex &parent) const
 {
-  Q_D( const KColumnFilterProxyModel );
+    Q_D(const KColumnFilterProxyModel);
 
-  if ( !d->m_visibleColumns.isEmpty() && !d->m_visibleColumns.contains( column ) ) {
-    // We only filter columns out when m_visibleColumns actually contains values.
-    return false;
-  }
+    if (!d->m_visibleColumns.isEmpty() && !d->m_visibleColumns.contains(column)) {
+        // We only filter columns out when m_visibleColumns actually contains values.
+        return false;
+    }
 
-  return QSortFilterProxyModel::filterAcceptsColumn( column, parent );
+    return QSortFilterProxyModel::filterAcceptsColumn(column, parent);
 }
 

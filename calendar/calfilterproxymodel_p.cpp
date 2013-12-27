@@ -30,52 +30,52 @@ using namespace Akonadi;
 
 class CalFilterProxyModel::Private
 {
-  public:
-    explicit Private() : filter( 0 ) {}
+public:
+    explicit Private() : filter(0) {}
     KCalCore::CalFilter *filter;
 };
 
-CalFilterProxyModel::CalFilterProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), d( new Private )
+CalFilterProxyModel::CalFilterProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent), d(new Private)
 {
-  setFilterKeyColumn( 0 );
+    setFilterKeyColumn(0);
 }
 
 CalFilterProxyModel::~CalFilterProxyModel()
 {
-  delete d;
+    delete d;
 }
 
 KCalCore::CalFilter *CalFilterProxyModel::filter() const
 {
-  return d->filter;
+    return d->filter;
 }
 
-void CalFilterProxyModel::setFilter( KCalCore::CalFilter *filter )
+void CalFilterProxyModel::setFilter(KCalCore::CalFilter *filter)
 {
-  if ( filter == d->filter )
-    return;
+    if (filter == d->filter)
+        return;
 
-  d->filter = filter;
-  invalidateFilter();
+    d->filter = filter;
+    invalidateFilter();
 }
 
-bool CalFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const
+bool CalFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  if ( !d->filter )
-    return true;
+    if (!d->filter)
+        return true;
 
-  const QModelIndex idx = sourceModel()->index( source_row, 0, source_parent );
-  if ( !idx.isValid() )
-    return false;
+    const QModelIndex idx = sourceModel()->index(source_row, 0, source_parent);
+    if (!idx.isValid())
+        return false;
 
-  const Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() )
-    return false;
+    const Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    if (!item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>())
+        return false;
 
-  const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-  if ( !incidence )
-    return false;
+    const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    if (!incidence)
+        return false;
 
-  return d->filter->filterIncidence( incidence );
+    return d->filter->filterIncidence(incidence);
 }

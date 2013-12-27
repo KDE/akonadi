@@ -39,7 +39,7 @@ void IncidenceChanger::Private::loadCollections()
     }
 
     m_collectionFetchJob = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
-                                                           Akonadi::CollectionFetchJob::Recursive);
+            Akonadi::CollectionFetchJob::Recursive);
 
     m_collectionFetchJob->fetchScope().setContentMimeTypes(KCalCore::Incidence::mimeTypes());
     connect(m_collectionFetchJob, SIGNAL(result(KJob*)), SLOT(onCollectionsLoaded(KJob*)));
@@ -47,10 +47,10 @@ void IncidenceChanger::Private::loadCollections()
 }
 
 Collection::List IncidenceChanger::Private::collectionsForMimeType(const QString &mimeType,
-                                                                   const Collection::List &collections)
+        const Collection::List &collections)
 {
     Collection::List result;
-    foreach (const Akonadi::Collection &collection, collections) {
+    foreach(const Akonadi::Collection &collection, collections) {
         if (collection.contentMimeTypes().contains(mimeType)) {
             result << collection;
         }
@@ -69,7 +69,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
 
     Q_ASSERT(job == m_collectionFetchJob);
     Akonadi::Collection::List allCollections;
-    foreach (const Akonadi::Collection &collection, m_collectionFetchJob->collections()) {
+    foreach(const Akonadi::Collection &collection, m_collectionFetchJob->collections()) {
         if (collection.rights() & Akonadi::Collection::CanCreateItem) {
             allCollections << collection;
         }
@@ -82,7 +82,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
     bool noAcl = false;
     bool invalidCollection = false;
     Collection collectionToUse;
-    foreach (const Change::Ptr &change, mPendingCreations) {
+    foreach(const Change::Ptr &change, mPendingCreations) {
         mPendingCreations.removeAll(change);
 
         if (canceled) {
@@ -122,7 +122,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
 
         const QStringList mimeTypes(incidence->mimeType());
         collectionToUse = CalendarUtils::selectCollection(parent, /*by-ref*/dialogCode,
-                                                          mimeTypes, mDefaultCollection);
+                          mimeTypes, mDefaultCollection);
         if (dialogCode != QDialog::Accepted) {
             kDebug() << "User canceled collection choosing";
             change->resultCode = ResultCodeUserCanceled;
@@ -162,7 +162,7 @@ bool IncidenceChanger::Private::isLoadingCollections() const
 }
 
 void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change::Ptr &change,
-                                                                    const Akonadi::Collection &collection)
+        const Akonadi::Collection &collection)
 {
     QWidget *parent = change->parentWidget.data();
     if (collection.isValid() && hasRights(collection, ChangeTypeCreate)) {
@@ -195,7 +195,7 @@ void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change
                 const QString errorString = showErrorDialog(ResultCodeInvalidDefaultCollection, parent);
                 kError() << errorString << "; rights are " << hasRights;
                 change->resultCode = hasRights ? ResultCodeInvalidDefaultCollection :
-                                                 ResultCodePermissions;
+                                     ResultCodePermissions;
                 change->errorString = errorString;
                 cancelTransaction();
             }
@@ -210,7 +210,7 @@ void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change
 }
 
 void IncidenceChanger::Private::step2CreateIncidence(const Change::Ptr &change,
-                                                     const Akonadi::Collection &collection)
+        const Akonadi::Collection &collection)
 {
     Q_ASSERT(change);
 

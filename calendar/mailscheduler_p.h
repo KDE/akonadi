@@ -27,11 +27,11 @@
 #include <akonadi/item.h>
 
 namespace KCalCore {
-  class ICalFormat;
+class ICalFormat;
 }
 
 namespace KPIMIdentities {
-  class IdentityManager;
+class IdentityManager;
 }
 
 namespace Akonadi {
@@ -41,27 +41,27 @@ namespace Akonadi {
 */
 class MailScheduler : public Akonadi::Scheduler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     /**
      * @param calendar Must be a valid and loaded calendar.
      */
-    explicit MailScheduler( QObject *parent = 0 );
+    explicit MailScheduler(QObject *parent = 0);
     ~MailScheduler();
 
     /** reimp */
-    void publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                  const QString &recipients );
+    void publish(const KCalCore::IncidenceBase::Ptr &incidence,
+                 const QString &recipients);
 
     /** reimp */
-    void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                             KCalCore::iTIPMethod method );
+    void performTransaction(const KCalCore::IncidenceBase::Ptr &incidence,
+                            KCalCore::iTIPMethod method);
 
     /** reimp */
-    void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                             KCalCore::iTIPMethod method,
-                             const QString &recipients );
+    void performTransaction(const KCalCore::IncidenceBase::Ptr &incidence,
+                            KCalCore::iTIPMethod method,
+                            const QString &recipients);
 
     /** Returns the directory where the free-busy information is stored */
     /** reimp*/ QString freeBusyDir() const;
@@ -72,8 +72,8 @@ class MailScheduler : public Akonadi::Scheduler
      * @param calendar A loaded calendar. Try not to use an ETMCalendar here, due to it's
      *                 async loading.
      */
-    void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence,
-                                const Akonadi::CalendarBase::Ptr &calendar );
+    void acceptCounterProposal(const KCalCore::Incidence::Ptr &incidence,
+                               const Akonadi::CalendarBase::Ptr &calendar);
 
 private Q_SLOTS:
     /**
@@ -81,11 +81,11 @@ private Q_SLOTS:
      * @param result Error code.
      * @param errorMsg Error message if @p result is not success.
      */
-    void onMailerFinished( Akonadi::MailClient::Result result, const QString &errorMsg );
+    void onMailerFinished(Akonadi::MailClient::Result result, const QString &errorMsg);
 
 private:
     //@cond PRIVATE
-    Q_DISABLE_COPY( MailScheduler )
+    Q_DISABLE_COPY(MailScheduler)
     class Private;
     Private *const d;
     //@endcond
