@@ -31,84 +31,84 @@ using namespace KCalCore;
 
 class FetchJobCalendarTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
     Collection mCollection;
 
-    void createIncidence( const QString &uid )
+    void createIncidence(const QString &uid)
     {
-      Item item;
-      item.setMimeType( Event::eventMimeType() );
-      Incidence::Ptr incidence = Incidence::Ptr( new Event() );
-      incidence->setUid( uid );
-      incidence->setSummary( QLatin1String( "summary" ) );
-      incidence->setDtStart( KDateTime::currentDateTime( KDateTime::UTC ) );
-      item.setPayload<KCalCore::Incidence::Ptr>( incidence );
-      ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
-      AKVERIFYEXEC( job );
+        Item item;
+        item.setMimeType(Event::eventMimeType());
+        Incidence::Ptr incidence = Incidence::Ptr(new Event());
+        incidence->setUid(uid);
+        incidence->setSummary(QLatin1String("summary"));
+        incidence->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
+        item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+        ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+        AKVERIFYEXEC(job);
     }
 
     void fetchCollection()
     {
-      CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
-                                                        CollectionFetchJob::Recursive,
-                                                        this );
-      // Get list of collections
-      job->fetchScope().setContentMimeTypes( QStringList() << QLatin1String( "application/x-vnd.akonadi.calendar.event" ) );
-      AKVERIFYEXEC( job );
+        CollectionFetchJob *job = new CollectionFetchJob(Collection::root(),
+                CollectionFetchJob::Recursive,
+                this);
+        // Get list of collections
+        job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
+        AKVERIFYEXEC(job);
 
-      // Find our collection
-      Collection::List collections = job->collections();
-      QVERIFY( !collections.isEmpty() );
-      mCollection = collections.first();
+        // Find our collection
+        Collection::List collections = job->collections();
+        QVERIFY(!collections.isEmpty());
+        mCollection = collections.first();
 
-      QVERIFY( mCollection.isValid() );
+        QVERIFY(mCollection.isValid());
     }
 private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
+        AkonadiTest::checkTestIsIsolated();
 
-      fetchCollection();
-      qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
+        fetchCollection();
+        qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
     }
 
     void testFetching()
     {
-      createIncidence( tr( "a" ) );
-      createIncidence( tr( "b" ) );
-      createIncidence( tr( "c" ) );
-      createIncidence( tr( "d" ) );
-      createIncidence( tr( "e" ) );
-      createIncidence( tr( "f" ) );
+        createIncidence(tr("a"));
+        createIncidence(tr("b"));
+        createIncidence(tr("c"));
+        createIncidence(tr("d"));
+        createIncidence(tr("e"));
+        createIncidence(tr("f"));
 
-      FetchJobCalendar *calendar = new FetchJobCalendar();
-      connect( calendar, SIGNAL(loadFinished(bool,QString)),
-               SLOT(handleLoadFinished(bool,QString)) );
-      QTestEventLoop::instance().enterLoop( 10 );
-      QVERIFY( !QTestEventLoop::instance().timeout() );
+        FetchJobCalendar *calendar = new FetchJobCalendar();
+        connect(calendar, SIGNAL(loadFinished(bool,QString)),
+                SLOT(handleLoadFinished(bool,QString)));
+        QTestEventLoop::instance().enterLoop(10);
+        QVERIFY(!QTestEventLoop::instance().timeout());
 
-      Incidence::List incidences = calendar->incidences();
-      QVERIFY( incidences.count() == 6 );
-      QVERIFY( calendar->item( tr( "a" ) ).isValid() );
-      QVERIFY( calendar->item( tr( "b" ) ).isValid() );
-      QVERIFY( calendar->item( tr( "c" ) ).isValid() );
-      QVERIFY( calendar->item( tr( "d" ) ).isValid() );
-      QVERIFY( calendar->item( tr( "e" ) ).isValid() );
-      QVERIFY( calendar->item( tr( "f" ) ).isValid() );
+        Incidence::List incidences = calendar->incidences();
+        QVERIFY(incidences.count() == 6);
+        QVERIFY(calendar->item(tr("a")).isValid());
+        QVERIFY(calendar->item(tr("b")).isValid());
+        QVERIFY(calendar->item(tr("c")).isValid());
+        QVERIFY(calendar->item(tr("d")).isValid());
+        QVERIFY(calendar->item(tr("e")).isValid());
+        QVERIFY(calendar->item(tr("f")).isValid());
 
-      delete calendar;
+        delete calendar;
     }
 
 public Q_SLOTS:
-  void handleLoadFinished( bool success, const QString &errorMessage )
-  {
-    if ( !success )
-      qDebug() << errorMessage;
-    QVERIFY( success );
-    QTestEventLoop::instance().exitLoop();
-  }
+    void handleLoadFinished(bool success, const QString &errorMessage)
+    {
+        if (!success)
+            qDebug() << errorMessage;
+        QVERIFY(success);
+        QTestEventLoop::instance().exitLoop();
+    }
 };
 
-QTEST_AKONADIMAIN( FetchJobCalendarTest, GUI )
+QTEST_AKONADIMAIN(FetchJobCalendarTest, GUI)
 
 #include "fetchjobcalendartest.moc"

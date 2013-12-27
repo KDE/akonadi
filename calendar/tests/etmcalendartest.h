@@ -25,7 +25,7 @@
 #include <QObject>
 
 namespace Akonadi {
-    class ETMCalendar;
+class ETMCalendar;
 }
 
 class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver

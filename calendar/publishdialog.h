@@ -32,36 +32,36 @@ namespace Akonadi {
 
 class AKONADI_CALENDAR_EXPORT PublishDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Creates a new PublishDialog
-   * @param parent the dialog's parent
-   */
-  explicit PublishDialog( QWidget *parent=0 );
+    /**
+     * Creates a new PublishDialog
+     * @param parent the dialog's parent
+     */
+    explicit PublishDialog(QWidget *parent=0);
 
-  /**
-   * Destructor
-   */
-  ~PublishDialog();
+    /**
+     * Destructor
+     */
+    ~PublishDialog();
 
-  /**
-   * Adds a new attendee to the dialog
-   * @param attendee the attendee to add
-   */
-  void addAttendee( const KCalCore::Attendee::Ptr &attendee );
+    /**
+     * Adds a new attendee to the dialog
+     * @param attendee the attendee to add
+     */
+    void addAttendee(const KCalCore::Attendee::Ptr &attendee);
 
-  /**
-   * Returns a list of e-mail addresses.
-   * //TODO: This should be a QStringList, but KCalUtils::Scheduler::publish() accepts a QString.
-   */
-  QString addresses() const;
+    /**
+     * Returns a list of e-mail addresses.
+     * //TODO: This should be a QStringList, but KCalUtils::Scheduler::publish() accepts a QString.
+     */
+    QString addresses() const;
 
 private:
-  //@cond PRIVATE
-  class Private;
-  Private *const d;
-  //@endcond
+    //@cond PRIVATE
+    class Private;
+    Private *const d;
+    //@endcond
 };
 
 }

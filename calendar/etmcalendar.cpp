@@ -45,83 +45,83 @@ using namespace KCalCore;
 
 //TODO: implement batchAdding
 
-ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate( qq )
-                                                          , mETM( 0 )
-                                                          , mFilteredETM( 0 )
-                                                          , mCheckableProxyModel( 0 )
-                                                          , mCollectionProxyModel( 0 )
-                                                          , mCalFilterProxyModel( 0 )
-                                                          , mSelectionProxy( 0 )
-                                                          , mCollectionFilteringEnabled( true )
-                                                          , q( qq )
+ETMCalendarPrivate::ETMCalendarPrivate(ETMCalendar *qq) : CalendarBasePrivate(qq)
+    , mETM(0)
+    , mFilteredETM(0)
+    , mCheckableProxyModel(0)
+    , mCollectionProxyModel(0)
+    , mCalFilterProxyModel(0)
+    , mSelectionProxy(0)
+    , mCollectionFilteringEnabled(true)
+    , q(qq)
 {
-  mListensForNewItems = true;
+    mListensForNewItems = true;
 }
 
 void ETMCalendarPrivate::init()
 {
-  Akonadi::Session *session = new Akonadi::Session( "ETMCalendar", q );
-  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( q );
-  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-           SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+    Akonadi::Session *session = new Akonadi::Session("ETMCalendar", q);
+    Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(q);
+    connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+            SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
 
-  Akonadi::ItemFetchScope scope;
-  scope.fetchFullPayload( true );
-  scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
+    Akonadi::ItemFetchScope scope;
+    scope.fetchFullPayload(true);
+    scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
-  monitor->setSession( session );
-  monitor->setCollectionMonitored( Akonadi::Collection::root() );
-  monitor->fetchCollection( true );
-  monitor->setItemFetchScope( scope );
+    monitor->setSession(session);
+    monitor->setCollectionMonitored(Akonadi::Collection::root());
+    monitor->fetchCollection(true);
+    monitor->setItemFetchScope(scope);
 
-  QStringList allMimeTypes;
-  allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
-               << KCalCore::Journal::journalMimeType();
+    QStringList allMimeTypes;
+    allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
+                 << KCalCore::Journal::journalMimeType();
 
-  foreach( const QString &mimetype, allMimeTypes ) {
-    monitor->setMimeTypeMonitored( mimetype, mMimeTypes.isEmpty() || mMimeTypes.contains(mimetype) );
-  }
+    foreach(const QString &mimetype, allMimeTypes) {
+        monitor->setMimeTypeMonitored(mimetype, mMimeTypes.isEmpty() || mMimeTypes.contains(mimetype));
+    }
 
-  mETM = new CalendarModel( monitor, q );
-  mETM->setObjectName( "ETM" );
+    mETM = new CalendarModel(monitor, q);
+    mETM->setObjectName("ETM");
 
-  setupFilteredETM();
+    setupFilteredETM();
 
-  connect( q, SIGNAL(filterChanged()), SLOT(onFilterChanged()) );
+    connect(q, SIGNAL(filterChanged()), SLOT(onFilterChanged()));
 
-  connect( mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
-           SLOT(onCollectionPopulated(Akonadi::Collection::Id)) );
-  connect( mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
-           SLOT(onRowsInserted(QModelIndex,int,int)) );
-  connect( mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-           SLOT(onDataChanged(QModelIndex,QModelIndex)) );
-  connect( mETM, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-           SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
-  connect( mETM, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-           SLOT(onRowsRemoved(QModelIndex,int,int)) );
+    connect(mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
+            SLOT(onCollectionPopulated(Akonadi::Collection::Id)));
+    connect(mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            SLOT(onRowsInserted(QModelIndex,int,int)));
+    connect(mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            SLOT(onDataChanged(QModelIndex,QModelIndex)));
+    connect(mETM, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+            SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    connect(mETM, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            SLOT(onRowsRemoved(QModelIndex,int,int)));
 
-  connect( mFilteredETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-           SLOT(onDataChangedInFilteredModel(QModelIndex,QModelIndex)) );
-  connect( mFilteredETM, SIGNAL(layoutChanged()),
-           SLOT(onLayoutChangedInFilteredModel()) );
-  connect( mFilteredETM, SIGNAL(modelReset()),
-           SLOT(onModelResetInFilteredModel()) );
-  connect( mFilteredETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
-           SLOT(onRowsInsertedInFilteredModel(QModelIndex,int,int)) );
-  connect( mFilteredETM, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-           SLOT(onRowsAboutToBeRemovedInFilteredModel(QModelIndex,int,int)) );
+    connect(mFilteredETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            SLOT(onDataChangedInFilteredModel(QModelIndex,QModelIndex)));
+    connect(mFilteredETM, SIGNAL(layoutChanged()),
+            SLOT(onLayoutChangedInFilteredModel()));
+    connect(mFilteredETM, SIGNAL(modelReset()),
+            SLOT(onModelResetInFilteredModel()));
+    connect(mFilteredETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            SLOT(onRowsInsertedInFilteredModel(QModelIndex,int,int)));
+    connect(mFilteredETM, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+            SLOT(onRowsAboutToBeRemovedInFilteredModel(QModelIndex,int,int)));
 
-  loadFromETM();
+    loadFromETM();
 }
 
 void ETMCalendarPrivate::onCollectionChanged(const Akonadi::Collection &collection,
-                                             const QSet<QByteArray> &attributeNames)
+        const QSet<QByteArray> &attributeNames)
 {
     Q_ASSERT(collection.isValid());
     // Is the collection changed to read-only, we update all Incidences
     if (attributeNames.contains("AccessRights")) {
         Akonadi::Item::List items = q->items();
-        foreach (const Akonadi::Item &item, items) {
+        foreach(const Akonadi::Item &item, items) {
             if (item.storageCollectionId() == collection.id()) {
                 KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
                 if (incidence)
@@ -135,50 +135,50 @@ void ETMCalendarPrivate::onCollectionChanged(const Akonadi::Collection &collecti
 
 void ETMCalendarPrivate::setupFilteredETM()
 {
-  // We're only interested in the CollectionTitle column
-  KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-  columnFilterProxy->setSourceModel( mETM );
-  columnFilterProxy->setVisibleColumn( CalendarModel::CollectionTitle );
-  columnFilterProxy->setObjectName( "Remove columns" );
+    // We're only interested in the CollectionTitle column
+    KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel(this);
+    columnFilterProxy->setSourceModel(mETM);
+    columnFilterProxy->setVisibleColumn(CalendarModel::CollectionTitle);
+    columnFilterProxy->setObjectName("Remove columns");
 
-  mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel( this );
-  mCollectionProxyModel->setObjectName( "Only show collections" );
-  mCollectionProxyModel->setDynamicSortFilter( true );
-  mCollectionProxyModel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
-  mCollectionProxyModel->setExcludeVirtualCollections( true );
-  mCollectionProxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-  mCollectionProxyModel->setSourceModel( columnFilterProxy );
+    mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel(this);
+    mCollectionProxyModel->setObjectName("Only show collections");
+    mCollectionProxyModel->setDynamicSortFilter(true);
+    mCollectionProxyModel->addMimeTypeFilter(QString::fromLatin1("text/calendar"));
+    mCollectionProxyModel->setExcludeVirtualCollections(true);
+    mCollectionProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    mCollectionProxyModel->setSourceModel(columnFilterProxy);
 
-  // Keep track of selected items.
-  QItemSelectionModel* selectionModel = new QItemSelectionModel( mCollectionProxyModel );
-  selectionModel->setObjectName( "Calendar Selection Model" );
+    // Keep track of selected items.
+    QItemSelectionModel* selectionModel = new QItemSelectionModel(mCollectionProxyModel);
+    selectionModel->setObjectName("Calendar Selection Model");
 
-  // Make item selection work by means of checkboxes.
-  mCheckableProxyModel = new CheckableProxyModel( this );
-  mCheckableProxyModel->setSelectionModel( selectionModel );
-  mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
-  mCheckableProxyModel->setObjectName( "Add checkboxes" );
+    // Make item selection work by means of checkboxes.
+    mCheckableProxyModel = new CheckableProxyModel(this);
+    mCheckableProxyModel->setSelectionModel(selectionModel);
+    mCheckableProxyModel->setSourceModel(mCollectionProxyModel);
+    mCheckableProxyModel->setObjectName("Add checkboxes");
 
-  mSelectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
-  mSelectionProxy->setObjectName( "Only show items of selected collection" );
-  mSelectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-  mSelectionProxy->setSourceModel( mETM );
+    mSelectionProxy = new KSelectionProxyModel(selectionModel, /**parent=*/this);
+    mSelectionProxy->setObjectName("Only show items of selected collection");
+    mSelectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
+    mSelectionProxy->setSourceModel(mETM);
 
-  mCalFilterProxyModel = new CalFilterProxyModel( this );
-  mCalFilterProxyModel->setFilter( q->filter() );
-  mCalFilterProxyModel->setSourceModel( mSelectionProxy );
-  mCalFilterProxyModel->setObjectName( "KCalCore::CalFilter filtering" );
+    mCalFilterProxyModel = new CalFilterProxyModel(this);
+    mCalFilterProxyModel->setFilter(q->filter());
+    mCalFilterProxyModel->setSourceModel(mSelectionProxy);
+    mCalFilterProxyModel->setObjectName("KCalCore::CalFilter filtering");
 
-  mFilteredETM = new Akonadi::EntityMimeTypeFilterModel( this );
-  mFilteredETM->setSourceModel( mCalFilterProxyModel );
-  mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  mFilteredETM->setSortRole( CalendarModel::SortRole );
-  mFilteredETM->setObjectName( "Show headers" );
+    mFilteredETM = new Akonadi::EntityMimeTypeFilterModel(this);
+    mFilteredETM->setSourceModel(mCalFilterProxyModel);
+    mFilteredETM->setHeaderGroup(Akonadi::EntityTreeModel::ItemListHeaders);
+    mFilteredETM->setSortRole(CalendarModel::SortRole);
+    mFilteredETM->setObjectName("Show headers");
 
 #ifdef AKONADI_CALENDAR_DEBUG_MODEL
-  QTreeView *view = new QTreeView;
-  view->setModel( mFilteredETM );
-  view->show();
+    QTreeView *view = new QTreeView;
+    view->setModel(mFilteredETM);
+    view->show();
 #endif
 }
 
@@ -188,278 +188,278 @@ ETMCalendarPrivate::~ETMCalendarPrivate()
 
 void ETMCalendarPrivate::loadFromETM()
 {
-  itemsAdded( itemsFromModel( mETM ) );
+    itemsAdded(itemsFromModel(mETM));
 }
 
 void ETMCalendarPrivate::clear()
 {
-  mCollectionMap.clear();
-  mItemsByCollection.clear();
+    mCollectionMap.clear();
+    mItemsByCollection.clear();
 
-  itemsRemoved( mItemById.values() );
+    itemsRemoved(mItemById.values());
 
-  if (!mItemById.isEmpty()) {
-    // This never happens
-    kDebug() << "This shouldnt happen: !mItemById.isEmpty()";
-    foreach(Akonadi::Item::Id id, mItemById.keys()) {
-      kDebug() << "Id = " << id;
+    if (!mItemById.isEmpty()) {
+        // This never happens
+        kDebug() << "This shouldnt happen: !mItemById.isEmpty()";
+        foreach(Akonadi::Item::Id id, mItemById.keys()) {
+            kDebug() << "Id = " << id;
+        }
+
+        mItemById.clear();
+        //Q_ASSERT(false); // TODO: discover why this happens
     }
 
-    mItemById.clear();
-    //Q_ASSERT(false); // TODO: discover why this happens
-  }
-
-  if (!mItemIdByUid.isEmpty()) {
-    // This never happens
-    kDebug() << "This shouldnt happen: !mItemIdByUid.isEmpty()";
-    foreach(const QString &uid, mItemIdByUid.keys()) {
-      kDebug() << "uid: " << uid;
+    if (!mItemIdByUid.isEmpty()) {
+        // This never happens
+        kDebug() << "This shouldnt happen: !mItemIdByUid.isEmpty()";
+        foreach(const QString &uid, mItemIdByUid.keys()) {
+            kDebug() << "uid: " << uid;
+        }
+        mItemIdByUid.clear();
+        //Q_ASSERT(false);
     }
-    mItemIdByUid.clear();
-    //Q_ASSERT(false);
-  }
-  mParentUidToChildrenUid.clear();
-  //m_virtualItems.clear();
+    mParentUidToChildrenUid.clear();
+    //m_virtualItems.clear();
 }
 
-Akonadi::Item::List ETMCalendarPrivate::itemsFromModel( const QAbstractItemModel *model,
-                                                          const QModelIndex &parentIndex,
-                                                          int start, int end )
+Akonadi::Item::List ETMCalendarPrivate::itemsFromModel(const QAbstractItemModel *model,
+        const QModelIndex &parentIndex,
+        int start, int end)
 {
-  const int endRow = end >= 0 ? end : model->rowCount( parentIndex ) - 1;
-  Akonadi::Item::List items;
-  int row = start;
-  QModelIndex i = model->index( row, 0, parentIndex );
-  while ( row <= endRow ) {
-    const Akonadi::Item item = itemFromIndex( i );
-    if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      items << item;
-    } else {
-      const QModelIndex childIndex = i.child( 0, 0 );
-      if ( childIndex.isValid() ) {
-        items << itemsFromModel( model, i );
-      }
+    const int endRow = end >= 0 ? end : model->rowCount(parentIndex) - 1;
+    Akonadi::Item::List items;
+    int row = start;
+    QModelIndex i = model->index(row, 0, parentIndex);
+    while (row <= endRow) {
+        const Akonadi::Item item = itemFromIndex(i);
+        if (item.hasPayload<KCalCore::Incidence::Ptr>()) {
+            items << item;
+        } else {
+            const QModelIndex childIndex = i.child(0, 0);
+            if (childIndex.isValid()) {
+                items << itemsFromModel(model, i);
+            }
+        }
+        ++row;
+        i = i.sibling(row, 0);
     }
-    ++row;
-    i = i.sibling( row, 0 );
-  }
-  return items;
+    return items;
 }
 
-Akonadi::Collection::List ETMCalendarPrivate::collectionsFromModel( const QAbstractItemModel *model,
-                                                                    const QModelIndex &parentIndex,
-                                                                    int start, int end )
+Akonadi::Collection::List ETMCalendarPrivate::collectionsFromModel(const QAbstractItemModel *model,
+        const QModelIndex &parentIndex,
+        int start, int end)
 {
-  const int endRow = end >= 0 ? end : model->rowCount( parentIndex ) - 1;
-  Akonadi::Collection::List collections;
-  int row = start;
-  QModelIndex i = model->index( row, 0, parentIndex );
-  while ( row <= endRow ) {
-    const Akonadi::Collection collection = collectionFromIndex( i );
-    if ( collection.isValid() ) {
-      collections << collection;
-      QModelIndex childIndex = i.child( 0, 0 );
-      if ( childIndex.isValid() ) {
-        collections << collectionsFromModel( model, i );
-      }
+    const int endRow = end >= 0 ? end : model->rowCount(parentIndex) - 1;
+    Akonadi::Collection::List collections;
+    int row = start;
+    QModelIndex i = model->index(row, 0, parentIndex);
+    while (row <= endRow) {
+        const Akonadi::Collection collection = collectionFromIndex(i);
+        if (collection.isValid()) {
+            collections << collection;
+            QModelIndex childIndex = i.child(0, 0);
+            if (childIndex.isValid()) {
+                collections << collectionsFromModel(model, i);
+            }
+        }
+        ++row;
+        i = i.sibling(row, 0);
     }
-    ++row;
-    i = i.sibling( row, 0 );
-  }
-  return collections;
+    return collections;
 }
 
-Akonadi::Item ETMCalendarPrivate::itemFromIndex( const QModelIndex &idx )
+Akonadi::Item ETMCalendarPrivate::itemFromIndex(const QModelIndex &idx)
 {
-  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  item.setParentCollection(
-    idx.data( Akonadi::EntityTreeModel::ParentCollectionRole ).value<Akonadi::Collection>() );
-  return item;
+    Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    item.setParentCollection(
+        idx.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>());
+    return item;
 }
 
-void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
+void ETMCalendarPrivate::itemsAdded(const Akonadi::Item::List &items)
 {
-  if ( !items.isEmpty() ) {
-    foreach( const Akonadi::Item &item, items ) {
-      internalInsert( item );
+    if (!items.isEmpty()) {
+        foreach(const Akonadi::Item &item, items) {
+            internalInsert(item);
+        }
+
+        Akonadi::Collection::Id id = items.first().storageCollectionId();
+        if (mPopulatedCollectionIds.contains(id)) {
+            // If the collection isn't populated yet, it will be sent later
+            // Saves some cpu cycles
+            emit q->calendarChanged();
+        }
+    }
+}
+
+void ETMCalendarPrivate::itemsRemoved(const Akonadi::Item::List &items)
+{
+    foreach(const Akonadi::Item &item, items) {
+        internalRemove(item);
+    }
+    emit q->calendarChanged();
+}
+
+Akonadi::Collection ETMCalendarPrivate::collectionFromIndex(const QModelIndex &index)
+{
+    return index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+}
+
+void ETMCalendarPrivate::onRowsInserted(const QModelIndex &index,
+                                        int start, int end)
+{
+    Akonadi::Collection::List collections = collectionsFromModel(mETM, index,
+                                            start, end);
+
+    foreach(const Akonadi::Collection &collection, collections) {
+        mCollectionMap[collection.id()] = collection;
     }
 
-    Akonadi::Collection::Id id = items.first().storageCollectionId();
-    if ( mPopulatedCollectionIds.contains( id ) ) {
-      // If the collection isn't populated yet, it will be sent later
-      // Saves some cpu cycles
-      emit q->calendarChanged();
+    if (!collections.isEmpty())
+        emit q->collectionsAdded(collections);
+}
+
+void ETMCalendarPrivate::onCollectionPopulated(Akonadi::Collection::Id id)
+{
+    mPopulatedCollectionIds.insert(id);
+    emit q->calendarChanged();
+}
+
+void ETMCalendarPrivate::onRowsRemoved(const QModelIndex &index, int start, int end)
+{
+    Akonadi::Collection::List collections = collectionsFromModel(mETM, index, start, end);
+    foreach(const Akonadi::Collection &collection, collections) {
+        mCollectionMap.remove(collection.id());
     }
-  }
+
+    if (!collections.isEmpty())
+        emit q->collectionsRemoved(collections);
 }
 
-void ETMCalendarPrivate::itemsRemoved( const Akonadi::Item::List &items )
+void ETMCalendarPrivate::onDataChanged(const QModelIndex &topLeft,
+                                       const QModelIndex &bottomRight)
 {
-  foreach( const Akonadi::Item &item, items ) {
-    internalRemove( item );
-  }
-  emit q->calendarChanged();
-}
-
-Akonadi::Collection ETMCalendarPrivate::collectionFromIndex( const QModelIndex &index )
-{
-  return index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-}
-
-void ETMCalendarPrivate::onRowsInserted( const QModelIndex &index,
-                                         int start, int end )
-{
-  Akonadi::Collection::List collections = collectionsFromModel( mETM, index,
-                                                                start, end );
-
-  foreach ( const Akonadi::Collection &collection, collections ) {
-    mCollectionMap[collection.id()] = collection;
-  }
-
-  if ( !collections.isEmpty() )
-    emit q->collectionsAdded( collections );
-}
-
-void ETMCalendarPrivate::onCollectionPopulated( Akonadi::Collection::Id id )
-{
-  mPopulatedCollectionIds.insert( id );
-  emit q->calendarChanged();
-}
-
-void ETMCalendarPrivate::onRowsRemoved( const QModelIndex &index, int start, int end )
-{
-  Akonadi::Collection::List collections = collectionsFromModel( mETM, index, start, end );
-  foreach ( const Akonadi::Collection &collection, collections ) {
-    mCollectionMap.remove( collection.id() );
-  }
-
-  if ( !collections.isEmpty() )
-    emit q->collectionsRemoved( collections );
-}
-
-void ETMCalendarPrivate::onDataChanged( const QModelIndex &topLeft,
-                                        const QModelIndex &bottomRight )
-{
-  // We only update collections, because items are handled in the filtered model
-  Q_ASSERT( topLeft.row() <= bottomRight.row() );
-  const int endRow = bottomRight.row();
-  QModelIndex i( topLeft );
-  int row = i.row();
-  while ( row <= endRow ) {
-    const Akonadi::Collection col = collectionFromIndex( i );
-    if ( col.isValid() ) {
-      // Attributes might have changed, store the new collection and discard the old one
-      mCollectionMap.insert( col.id(), col );
+    // We only update collections, because items are handled in the filtered model
+    Q_ASSERT(topLeft.row() <= bottomRight.row());
+    const int endRow = bottomRight.row();
+    QModelIndex i(topLeft);
+    int row = i.row();
+    while (row <= endRow) {
+        const Akonadi::Collection col = collectionFromIndex(i);
+        if (col.isValid()) {
+            // Attributes might have changed, store the new collection and discard the old one
+            mCollectionMap.insert(col.id(), col);
+        }
+        ++row;
     }
-    ++row;
-  }
 }
 
-void ETMCalendarPrivate::onRowsMoved( const QModelIndex &sourceParent,
-                                      int sourceStart,
-                                      int sourceEnd,
-                                      const QModelIndex &destinationParent,
-                                      int destinationRow )
+void ETMCalendarPrivate::onRowsMoved(const QModelIndex &sourceParent,
+                                     int sourceStart,
+                                     int sourceEnd,
+                                     const QModelIndex &destinationParent,
+                                     int destinationRow)
 {
-  //TODO
-  Q_UNUSED( sourceParent );
-  Q_UNUSED( sourceStart );
-  Q_UNUSED( sourceEnd );
-  Q_UNUSED( destinationParent );
-  Q_UNUSED( destinationRow );
+    //TODO
+    Q_UNUSED(sourceParent);
+    Q_UNUSED(sourceStart);
+    Q_UNUSED(sourceEnd);
+    Q_UNUSED(destinationParent);
+    Q_UNUSED(destinationRow);
 }
 
 void ETMCalendarPrivate::onLayoutChangedInFilteredModel()
 {
-  clear();
-  loadFromETM();
+    clear();
+    loadFromETM();
 }
 
 void ETMCalendarPrivate::onModelResetInFilteredModel()
 {
-  clear();
-  loadFromETM();
+    clear();
+    loadFromETM();
 }
 
-void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLeft,
-                                                       const QModelIndex &bottomRight )
+void ETMCalendarPrivate::onDataChangedInFilteredModel(const QModelIndex &topLeft,
+        const QModelIndex &bottomRight)
 {
-  Q_ASSERT( topLeft.row() <= bottomRight.row() );
-  const int endRow = bottomRight.row();
-  QModelIndex i( topLeft );
-  int row = i.row();
-  while ( row <= endRow ) {
-    const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() )
-      updateItem( item );
+    Q_ASSERT(topLeft.row() <= bottomRight.row());
+    const int endRow = bottomRight.row();
+    QModelIndex i(topLeft);
+    int row = i.row();
+    while (row <= endRow) {
+        const Akonadi::Item item = itemFromIndex(i);
+        if (item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>())
+            updateItem(item);
 
-    ++row;
-    i = i.sibling( row, topLeft.column() );
-  }
+        ++row;
+        i = i.sibling(row, topLeft.column());
+    }
 
-  emit q->calendarChanged();
+    emit q->calendarChanged();
 }
 
-void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
+void ETMCalendarPrivate::updateItem(const Akonadi::Item &item)
 {
-  Incidence::Ptr newIncidence = CalendarUtils::incidence( item );
-  Q_ASSERT( newIncidence );
-  Q_ASSERT( !newIncidence->uid().isEmpty() );
-  newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
-  IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+    Incidence::Ptr newIncidence = CalendarUtils::incidence(item);
+    Q_ASSERT(newIncidence);
+    Q_ASSERT(!newIncidence->uid().isEmpty());
+    newIncidence->setCustomProperty("VOLATILE", "AKONADI-ID", QString::number(item.id()));
+    IncidenceBase::Ptr existingIncidence = q->incidence(newIncidence->uid(), newIncidence->recurrenceId());
 
-  if ( !existingIncidence && !mItemById.contains( item.id() ) ) {
-    // We don't know about this one because it was discarded, for example because of not having DTSTART
-    return;
-  }
+    if (!existingIncidence && !mItemById.contains(item.id())) {
+        // We don't know about this one because it was discarded, for example because of not having DTSTART
+        return;
+    }
 
-  mItemsByCollection.insert( item.storageCollectionId(), item );
-  Akonadi::Item oldItem = mItemById.value( item.id() );
+    mItemsByCollection.insert(item.storageCollectionId(), item);
+    Akonadi::Item oldItem = mItemById.value(item.id());
 
-  if ( existingIncidence ) {
-    // We set the payload so that the internal incidence pointer and the one in mItemById stay the same
-    Akonadi::Item updatedItem = item;
-    updatedItem.setPayload<KCalCore::Incidence::Ptr>( existingIncidence.staticCast<KCalCore::Incidence>() );
-    mItemById.insert( item.id(), updatedItem ); // The item needs updating too, revision changed.
+    if (existingIncidence) {
+        // We set the payload so that the internal incidence pointer and the one in mItemById stay the same
+        Akonadi::Item updatedItem = item;
+        updatedItem.setPayload<KCalCore::Incidence::Ptr>(existingIncidence.staticCast<KCalCore::Incidence>());
+        mItemById.insert(item.id(), updatedItem);   // The item needs updating too, revision changed.
 
-    // Check if RELATED-TO changed, updating parenting information
-    handleParentChanged( newIncidence );
-    *(existingIncidence.data()) = *( newIncidence.data() );
-  } else {
-    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
-    // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
-    handleUidChange( oldItem, item, newIncidence->instanceIdentifier() );
-  }
+        // Check if RELATED-TO changed, updating parenting information
+        handleParentChanged(newIncidence);
+        *(existingIncidence.data()) = *(newIncidence.data());
+    } else {
+        mItemById.insert(item.id(), item);   // The item needs updating too, revision changed.
+        // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
+        handleUidChange(oldItem, item, newIncidence->instanceIdentifier());
+    }
 }
 
-void ETMCalendarPrivate::onRowsInsertedInFilteredModel( const QModelIndex &index,
-                                                        int start, int end )
+void ETMCalendarPrivate::onRowsInsertedInFilteredModel(const QModelIndex &index,
+        int start, int end)
 {
-  itemsAdded( itemsFromModel( mFilteredETM, index, start, end ) );
+    itemsAdded(itemsFromModel(mFilteredETM, index, start, end));
 }
 
-void ETMCalendarPrivate::onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index,
-                                                                int start, int end )
+void ETMCalendarPrivate::onRowsAboutToBeRemovedInFilteredModel(const QModelIndex &index,
+        int start, int end)
 {
-  itemsRemoved( itemsFromModel( mFilteredETM, index, start, end ) );
+    itemsRemoved(itemsFromModel(mFilteredETM, index, start, end));
 }
 
 void ETMCalendarPrivate::onFilterChanged()
 {
-  mCalFilterProxyModel->setFilter( q->filter() );
+    mCalFilterProxyModel->setFilter(q->filter());
 }
 
-ETMCalendar::ETMCalendar( QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
+ETMCalendar::ETMCalendar(QObject *parent) : CalendarBase(new ETMCalendarPrivate(this), parent)
 {
-  Q_D( ETMCalendar );
-  d->init();
+    Q_D(ETMCalendar);
+    d->init();
 }
 
-ETMCalendar::ETMCalendar( const QStringList &mimeTypes, QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
+ETMCalendar::ETMCalendar(const QStringList &mimeTypes, QObject *parent) : CalendarBase(new ETMCalendarPrivate(this), parent)
 {
-  Q_D( ETMCalendar );
-  d->mMimeTypes = mimeTypes;
-  d->init();
+    Q_D(ETMCalendar);
+    d->mMimeTypes = mimeTypes;
+    d->init();
 }
 
 ETMCalendar::~ETMCalendar()
@@ -467,134 +467,134 @@ ETMCalendar::~ETMCalendar()
 }
 
 //TODO: move this up?
-Akonadi::Collection ETMCalendar::collection( Akonadi::Collection::Id id ) const
+Akonadi::Collection ETMCalendar::collection(Akonadi::Collection::Id id) const
 {
-  Q_D( const ETMCalendar );
-  return d->mCollectionMap.value( id );
+    Q_D(const ETMCalendar);
+    return d->mCollectionMap.value(id);
 }
 
-bool ETMCalendar::hasRight( const QString &uid, Akonadi::Collection::Right right ) const
+bool ETMCalendar::hasRight(const QString &uid, Akonadi::Collection::Right right) const
 {
-  return hasRight( item( uid ), right );
+    return hasRight(item(uid), right);
 }
 
-bool ETMCalendar::hasRight( const Akonadi::Item &item, Akonadi::Collection::Right right ) const
+bool ETMCalendar::hasRight(const Akonadi::Item &item, Akonadi::Collection::Right right) const
 {
-  // if the users changes the rights, item.parentCollection()
-  // can still have the old rights, so we use call collection()
-  // which returns the updated one
-  const Akonadi::Collection col = collection( item.storageCollectionId() );
-  return col.rights() & right;
+    // if the users changes the rights, item.parentCollection()
+    // can still have the old rights, so we use call collection()
+    // which returns the updated one
+    const Akonadi::Collection col = collection(item.storageCollectionId());
+    return col.rights() & right;
 }
 
 QAbstractItemModel *ETMCalendar::model() const
 {
-  Q_D( const ETMCalendar );
-  return d->mFilteredETM;
+    Q_D(const ETMCalendar);
+    return d->mFilteredETM;
 }
 
 KCheckableProxyModel *ETMCalendar::checkableProxyModel() const
 {
-  Q_D( const ETMCalendar );
-  return d->mCheckableProxyModel;
+    Q_D(const ETMCalendar);
+    return d->mCheckableProxyModel;
 }
 
-KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
-                                           const KDateTime &to,
-                                           bool excludeBlockedAlarms ) const
+KCalCore::Alarm::List ETMCalendar::alarms(const KDateTime &from,
+        const KDateTime &to,
+        bool excludeBlockedAlarms) const
 {
-  Q_D( const ETMCalendar );
-  KCalCore::Alarm::List alarmList;
-  QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->mItemById );
-  while ( i.hasNext() ) {
-    const Akonadi::Item item = i.next().value();
+    Q_D(const ETMCalendar);
+    KCalCore::Alarm::List alarmList;
+    QHashIterator<Akonadi::Item::Id, Akonadi::Item> i(d->mItemById);
+    while (i.hasNext()) {
+        const Akonadi::Item item = i.next().value();
 
-    BlockAlarmsAttribute *blockedAttr = 0;
+        BlockAlarmsAttribute *blockedAttr = 0;
 
-    if ( excludeBlockedAlarms ) {
-      // take the collection from m_collectionMap, because we need the up-to-date collection attrs
-      Akonadi::Collection parentCollection = d->mCollectionMap.value( item.storageCollectionId() );
-      if ( parentCollection.isValid() && parentCollection.hasAttribute<BlockAlarmsAttribute>() ) {
-        blockedAttr = parentCollection.attribute<BlockAlarmsAttribute>();
-        if ( blockedAttr->isAlarmTypeBlocked( Alarm::Audio ) && blockedAttr->isAlarmTypeBlocked( Alarm::Display )
-             && blockedAttr->isAlarmTypeBlocked( Alarm::Email ) && blockedAttr->isAlarmTypeBlocked( Alarm::Procedure ) )
-        {
-          continue;
+        if (excludeBlockedAlarms) {
+            // take the collection from m_collectionMap, because we need the up-to-date collection attrs
+            Akonadi::Collection parentCollection = d->mCollectionMap.value(item.storageCollectionId());
+            if (parentCollection.isValid() && parentCollection.hasAttribute<BlockAlarmsAttribute>()) {
+                blockedAttr = parentCollection.attribute<BlockAlarmsAttribute>();
+                if (blockedAttr->isAlarmTypeBlocked(Alarm::Audio) && blockedAttr->isAlarmTypeBlocked(Alarm::Display)
+                        && blockedAttr->isAlarmTypeBlocked(Alarm::Email) && blockedAttr->isAlarmTypeBlocked(Alarm::Procedure))
+                {
+                    continue;
+                }
+            }
         }
-      }
-    }
 
-    KCalCore::Incidence::Ptr incidence;
-    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      incidence = KCalCore::Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
-    } else {
-      continue;
-    }
-
-    if ( !incidence ) {
-      continue;
-    }
-
-    if ( blockedAttr ) {
-      // Remove all blocked types of alarms
-      Q_FOREACH ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() ) {
-        if ( blockedAttr->isAlarmTypeBlocked( alarm->type() ) ) {
-          incidence->removeAlarm( alarm );
+        KCalCore::Incidence::Ptr incidence;
+        if (item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>()) {
+            incidence = KCalCore::Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
+        } else {
+            continue;
         }
-      }
-    }
 
-    if ( incidence->alarms().isEmpty() ) {
-      continue;
-    }
+        if (!incidence) {
+            continue;
+        }
 
-    Alarm::List tmpList;
-    if ( incidence->recurs() ) {
-      appendRecurringAlarms( tmpList, incidence, from, to );
-    } else {
-      appendAlarms( tmpList, incidence, from, to );
-    }
+        if (blockedAttr) {
+            // Remove all blocked types of alarms
+            Q_FOREACH(const KCalCore::Alarm::Ptr &alarm, incidence->alarms()) {
+                if (blockedAttr->isAlarmTypeBlocked(alarm->type())) {
+                    incidence->removeAlarm(alarm);
+                }
+            }
+        }
 
-    // We need to tag them with the incidence uid in case
-    // the caller will need it, because when we get out of
-    // this scope the incidence will be destroyed.
-    QVectorIterator<Alarm::Ptr> a( tmpList );
-    while ( a.hasNext() ) {
-      a.next()->setCustomProperty( "ETMCalendar", "parentUid", incidence->uid() );
+        if (incidence->alarms().isEmpty()) {
+            continue;
+        }
+
+        Alarm::List tmpList;
+        if (incidence->recurs()) {
+            appendRecurringAlarms(tmpList, incidence, from, to);
+        } else {
+            appendAlarms(tmpList, incidence, from, to);
+        }
+
+        // We need to tag them with the incidence uid in case
+        // the caller will need it, because when we get out of
+        // this scope the incidence will be destroyed.
+        QVectorIterator<Alarm::Ptr> a(tmpList);
+        while (a.hasNext()) {
+            a.next()->setCustomProperty("ETMCalendar", "parentUid", incidence->uid());
+        }
+        alarmList += tmpList;
     }
-    alarmList += tmpList;
-  }
-  return alarmList;
+    return alarmList;
 }
 
 Akonadi::EntityTreeModel *ETMCalendar::entityTreeModel() const
 {
-  Q_D( const ETMCalendar );
-  return d->mETM;
+    Q_D(const ETMCalendar);
+    return d->mETM;
 }
 
-void ETMCalendar::setCollectionFilteringEnabled( bool enable )
+void ETMCalendar::setCollectionFilteringEnabled(bool enable)
 {
-  Q_D( ETMCalendar );
-  if ( d->mCollectionFilteringEnabled != enable ) {
-    d->mCollectionFilteringEnabled = enable;
-    if ( enable ) {
-      d->mSelectionProxy->setSourceModel( d->mETM );
-      QAbstractItemModel *oldModel = d->mCalFilterProxyModel->sourceModel();
-      d->mCalFilterProxyModel->setSourceModel( d->mSelectionProxy );
-      delete qobject_cast<KDescendantsProxyModel *>( oldModel );
-    } else {
-      KDescendantsProxyModel *flatner = new KDescendantsProxyModel( this );
-      flatner->setSourceModel( d->mETM );
-      d->mCalFilterProxyModel->setSourceModel( flatner );
+    Q_D(ETMCalendar);
+    if (d->mCollectionFilteringEnabled != enable) {
+        d->mCollectionFilteringEnabled = enable;
+        if (enable) {
+            d->mSelectionProxy->setSourceModel(d->mETM);
+            QAbstractItemModel *oldModel = d->mCalFilterProxyModel->sourceModel();
+            d->mCalFilterProxyModel->setSourceModel(d->mSelectionProxy);
+            delete qobject_cast<KDescendantsProxyModel *>(oldModel);
+        } else {
+            KDescendantsProxyModel *flatner = new KDescendantsProxyModel(this);
+            flatner->setSourceModel(d->mETM);
+            d->mCalFilterProxyModel->setSourceModel(flatner);
+        }
     }
-  }
 }
 
 bool ETMCalendar::collectionFilteringEnabled() const
 {
-  Q_D( const ETMCalendar );
-  return d->mCollectionFilteringEnabled;
+    Q_D(const ETMCalendar);
+    return d->mCollectionFilteringEnabled;
 }
 
 #include "moc_etmcalendar.cpp"

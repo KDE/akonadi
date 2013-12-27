@@ -50,16 +50,16 @@ using namespace Akonadi;
 
 ICalImporter::Private::Private(IncidenceChanger *changer,
                                ICalImporter *qq) : QObject(), q(qq)
-                                                 , m_changer(changer)
-                                                 , m_numIncidences(0)
-                                                 , m_working(false)
-                                                 , m_temporaryFile(0)
+    , m_changer(changer)
+    , m_numIncidences(0)
+    , m_working(false)
+    , m_temporaryFile(0)
 {
     if (!changer) {
         m_changer = new IncidenceChanger(q);
     }
     connect(m_changer, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-                       SLOT(onIncidenceCreated(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+            SLOT(onIncidenceCreated(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 
 }
 
@@ -69,9 +69,9 @@ ICalImporter::Private::~Private()
 }
 
 void ICalImporter::Private::onIncidenceCreated(int changeId,
-                                               const Akonadi::Item &,
-                                               Akonadi::IncidenceChanger::ResultCode resultCode,
-                                               const QString &errorString)
+        const Akonadi::Item &,
+        Akonadi::IncidenceChanger::ResultCode resultCode,
+        const QString &errorString)
 {
     if (!m_pendingRequests.contains(changeId))
         return; // Not ours
@@ -141,7 +141,7 @@ void ICalImporter::Private::remoteDownloadFinished(KIO::Job *job, const QByteArr
 
 ICalImporter::ICalImporter(Akonadi::IncidenceChanger *changer,
                            QObject *parent) : QObject(parent)
-                                            , d(new Private(changer, this))
+    , d(new Private(changer, this))
 {
 }
 
@@ -214,8 +214,8 @@ bool ICalImporter::importIntoExistingResource(const QUrl &url, Akonadi::Collecti
         if (!collection.isValid()) {
             int dialogCode;
             QStringList mimeTypes = QStringList() << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
-                                                  << KCalCore::Journal::journalMimeType();
-            collection = CalendarUtils::selectCollection( 0, dialogCode /*by-ref*/, mimeTypes );
+                                    << KCalCore::Journal::journalMimeType();
+            collection = CalendarUtils::selectCollection(0, dialogCode /*by-ref*/, mimeTypes);
         }
 
         if (!collection.isValid()) {
@@ -227,7 +227,7 @@ bool ICalImporter::importIntoExistingResource(const QUrl &url, Akonadi::Collecti
         const IncidenceChanger::DestinationPolicy policySaved = d->m_changer->destinationPolicy();
         d->m_changer->startAtomicOperation(i18n("Merge ical file into existing calendar."));
         d->m_changer->setDestinationPolicy(IncidenceChanger::DestinationPolicyNeverAsk);
-        foreach (const Incidence::Ptr &incidence, incidences) {
+        foreach(const Incidence::Ptr &incidence, incidences) {
             Q_ASSERT(incidence);
             if (!incidence)
                 continue;

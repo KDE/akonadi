@@ -24,9 +24,9 @@
 #include <akonadi/item.h>
 
 namespace Helper {
-    bool confirmExists(const Akonadi::Item &item);
-    bool confirmDoesntExist(const Akonadi::Item &item);
-    Akonadi::Collection fetchCollection();
+bool confirmExists(const Akonadi::Item &item);
+bool confirmDoesntExist(const Akonadi::Item &item);
+Akonadi::Collection fetchCollection();
 }
 
 #endif

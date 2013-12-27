@@ -24,25 +24,26 @@
 #include <QSortFilterProxyModel>
 
 namespace KCalCore {
-  class CalFilter;
+class CalFilter;
 }
 
 namespace Akonadi {
 
 class CalFilterProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
-  public:
-    explicit CalFilterProxyModel( QObject *parent=0 );
+    Q_OBJECT
+public:
+    explicit CalFilterProxyModel(QObject *parent=0);
     ~CalFilterProxyModel();
 
     KCalCore::CalFilter *filter() const;
-    void setFilter( KCalCore::CalFilter *filter );
+    void setFilter(KCalCore::CalFilter *filter);
 
-  protected:
-    /* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const;
+protected:
+    /* reimp */
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };

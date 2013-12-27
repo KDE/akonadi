@@ -44,37 +44,37 @@ class FetchJobCalendarPrivate;
 */
 class AKONADI_CALENDAR_EXPORT FetchJobCalendar : public Akonadi::CalendarBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  typedef QSharedPointer<FetchJobCalendar> Ptr;
+    typedef QSharedPointer<FetchJobCalendar> Ptr;
 
-  /**
-    * Creates a new FetchJobCalendar. Loading begins asynchronously.
-    * @see loadFinished()
-    */
-  explicit FetchJobCalendar( QObject *parent = 0 );
+    /**
+      * Creates a new FetchJobCalendar. Loading begins asynchronously.
+      * @see loadFinished()
+      */
+    explicit FetchJobCalendar(QObject *parent = 0);
 
-  /**
-    * Destroys this FetchJobCalendar.
-    */
-  ~FetchJobCalendar();
+    /**
+      * Destroys this FetchJobCalendar.
+      */
+    ~FetchJobCalendar();
 
-  /**
-    * Returns if the calendar already finished loading.
-    * This is an alternative to listening for the loadFinished() signal.
-    */
-  bool isLoaded() const;
+    /**
+      * Returns if the calendar already finished loading.
+      * This is an alternative to listening for the loadFinished() signal.
+      */
+    bool isLoaded() const;
 
 Q_SIGNALS:
-  /**
-    * This signal is emitted when the IncidenceFetchJob finishes.
-    * @param success the success of the operation
-    * @param errorMessage if @p success is false, contains the error message
-    */
-  void loadFinished( bool success, const QString &errorMessage );
+    /**
+      * This signal is emitted when the IncidenceFetchJob finishes.
+      * @param success the success of the operation
+      * @param errorMessage if @p success is false, contains the error message
+      */
+    void loadFinished(bool success, const QString &errorMessage);
 
 private:
-  Q_DECLARE_PRIVATE( FetchJobCalendar )
+    Q_DECLARE_PRIVATE(FetchJobCalendar)
 };
 
 }

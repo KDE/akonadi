@@ -61,13 +61,13 @@ void ITIPHandlerTest::initTestCase()
     m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicySend); // don't show dialogs
 
     connect(m_changer, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-            SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+            SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 
     connect(m_changer, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
-            SLOT(onDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
+            SLOT(onDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)));
 
     connect(m_changer,SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-            SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+            SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 }
 
 void ITIPHandlerTest::testProcessITIPMessage_data()
@@ -481,7 +481,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
 
     m_cancelExpected = userCancels;
 
-    switch(changeType) {
+    switch (changeType) {
     case IncidenceChanger::ChangeTypeCreate:
         m_changer->createIncidence(incidence, mCollection);
         waitForIt();
@@ -504,7 +504,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
         waitForIt();
         QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
     }
-        break;
+    break;
     case IncidenceChanger::ChangeTypeDelete:
         // Create if first, so we have something to delete
         m_changer->setGroupwareCommunication(false);
@@ -560,7 +560,7 @@ void ITIPHandlerTest::testIdentity()
 void ITIPHandlerTest::cleanup()
 {
     Akonadi::Item::List items = calendarItems();
-    foreach (const Akonadi::Item &item, items) {
+    foreach(const Akonadi::Item &item, items) {
         ItemDeleteJob *job = new ItemDeleteJob(item);
         AKVERIFYEXEC(job);
     }
@@ -574,7 +574,7 @@ void ITIPHandlerTest::createITIPHandler()
     m_itipHandler = new Akonadi::ITIPHandler();
     m_itipHandler->setShowDialogsOnError(false);
     connect(m_itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
-            SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
+            SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)));
 }
 
 QString ITIPHandlerTest::icalData(const QString &data_filename)
@@ -607,7 +607,7 @@ Attendee::Ptr ITIPHandlerTest::ourAttendee(const KCalCore::Incidence::Ptr &incid
 {
     KCalCore::Attendee::List attendees = incidence->attendees();
     KCalCore::Attendee::Ptr me;
-    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
+    foreach(const KCalCore::Attendee::Ptr &attendee, attendees) {
         if (attendee->email() == QLatin1String(s_ourEmail)) {
             me = attendee;
             break;
@@ -678,7 +678,7 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
     }
     kDebug() << "Got result " << resultCode << m_cancelExpected;
     QCOMPARE(resultCode, m_cancelExpected ? IncidenceChanger::ResultCodeUserCanceled
-                                          : IncidenceChanger::ResultCodeSuccess);
+             : IncidenceChanger::ResultCodeSuccess);
 }
 
 

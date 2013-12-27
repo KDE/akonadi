@@ -35,19 +35,19 @@ namespace Akonadi {
  */
 class IncidenceFetchJob : public Akonadi::Job
 {
-  Q_OBJECT
-  public:
-    explicit IncidenceFetchJob( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit IncidenceFetchJob(QObject *parent = 0);
 
     Akonadi::Item::List items() const;
-  protected:
+protected:
     void doStart();
 
-  private Q_SLOTS:
-    void collectionFetchResult( KJob *job );
-    void itemFetchResult( KJob * job );
+private Q_SLOTS:
+    void collectionFetchResult(KJob *job);
+    void itemFetchResult(KJob * job);
 
-  private:
+private:
     Akonadi::Item::List m_items;
     Akonadi::MimeTypeChecker m_mimeTypeChecker;
     int m_jobCount;
