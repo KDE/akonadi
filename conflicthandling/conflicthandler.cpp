@@ -31,14 +31,14 @@
 
 using namespace Akonadi;
 
-ConflictHandler::ConflictHandler( ConflictType type, QObject *parent )
-    : QObject( parent ),
-      mConflictType( type ),
-      mSession( new Session( "conflict handling session", this ) )
+ConflictHandler::ConflictHandler(ConflictType type, QObject *parent)
+    : QObject(parent)
+    , mConflictType(type)
+    , mSession(new Session("conflict handling session", this))
 {
 }
 
-void ConflictHandler::setConflictingItems( const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem )
+void ConflictHandler::setConflictingItems(const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem)
 {
     mChangedItem = changedItem;
     mConflictingItem = conflictingItem;
@@ -46,41 +46,41 @@ void ConflictHandler::setConflictingItems( const Akonadi::Item &changedItem, con
 
 void ConflictHandler::start()
 {
-    if ( mConflictType == LocalLocalConflict || mConflictType == LocalRemoteConflict ) {
-        ItemFetchJob *job = new ItemFetchJob( mConflictingItem, mSession );
+    if (mConflictType == LocalLocalConflict || mConflictType == LocalRemoteConflict) {
+        ItemFetchJob *job = new ItemFetchJob(mConflictingItem, mSession);
         job->fetchScope().fetchFullPayload();
-        job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
-        connect( job, SIGNAL(result(KJob *)), SLOT(slotOtherItemFetched(KJob *)) );
+        job->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
+        connect(job, SIGNAL(result(KJob*)), SLOT(slotOtherItemFetched(KJob*)));
     } else {
         resolve();
     }
 }
 
-void ConflictHandler::slotOtherItemFetched( KJob *job )
+void ConflictHandler::slotOtherItemFetched(KJob *job)
 {
-    if ( job->error() ) {
-        emit error( job->errorText() ); //TODO: extend error message
+    if (job->error()) {
+        emit error(job->errorText());   //TODO: extend error message
         return;
     }
 
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>( job );
-    if ( fetchJob->items().isEmpty() ) {
-        emit error( i18n( "Did not find other item for conflict handling" ) );
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    if (fetchJob->items().isEmpty()) {
+        emit error(i18n("Did not find other item for conflict handling"));
         return;
     }
 
     mConflictingItem = fetchJob->items().first();
-    QMetaObject::invokeMethod( this, "resolve", Qt::QueuedConnection );
+    QMetaObject::invokeMethod(this, "resolve", Qt::QueuedConnection);
 }
 
 void ConflictHandler::resolve()
 {
     ConflictResolveDialog dlg;
-    dlg.setConflictingItems( mChangedItem, mConflictingItem );
+    dlg.setConflictingItems(mChangedItem, mConflictingItem);
     dlg.exec();
 
     const ResolveStrategy strategy = dlg.resolveStrategy();
-    switch ( strategy ) {
+    switch (strategy) {
     case UseLocalItem:
         useLocalItem();
         break;
@@ -99,17 +99,17 @@ void ConflictHandler::useLocalItem()
     // item. To make this happen, we have to set the revision of the local item to
     // the one of the other item to let the Akonadi server accept it.
 
-    Item newItem( mChangedItem );
-    newItem.setRevision( mConflictingItem.revision() );
+    Item newItem(mChangedItem);
+    newItem.setRevision(mConflictingItem.revision());
 
-    ItemModifyJob *job = new ItemModifyJob( newItem, mSession );
-    connect( job, SIGNAL(result(KJob *)), SLOT(slotUseLocalItemFinished(KJob *)) );
+    ItemModifyJob *job = new ItemModifyJob(newItem, mSession);
+    connect(job, SIGNAL(result(KJob*)), SLOT(slotUseLocalItemFinished(KJob*)));
 }
 
-void ConflictHandler::slotUseLocalItemFinished( KJob *job )
+void ConflictHandler::slotUseLocalItemFinished(KJob *job)
 {
-    if ( job->error() ) {
-        emit error( job->errorText() ); //TODO: extend error message
+    if (job->error()) {
+        emit error(job->errorText());   //TODO: extend error message
     } else {
         emit conflictResolved();
     }
@@ -125,14 +125,14 @@ void ConflictHandler::useBothItems()
 {
     // We have to create a new item for the local item under the collection that has
     // been retrieved when we fetched the other item.
-    ItemCreateJob *job = new ItemCreateJob( mChangedItem, mConflictingItem.parentCollection(), mSession );
-    connect( job, SIGNAL(result(KJob *)), SLOT(slotUseBothItemsFinished(KJob *)) );
+    ItemCreateJob *job = new ItemCreateJob(mChangedItem, mConflictingItem.parentCollection(), mSession);
+    connect(job, SIGNAL(result(KJob*)), SLOT(slotUseBothItemsFinished(KJob*)));
 }
 
-void ConflictHandler::slotUseBothItemsFinished( KJob *job )
+void ConflictHandler::slotUseBothItemsFinished(KJob *job)
 {
-    if ( job->error() ) {
-        emit error( job->errorText() ); //TODO: extend error message
+    if (job->error()) {
+        emit error(job->errorText());   //TODO: extend error message
     } else {
         emit conflictResolved();
     }
