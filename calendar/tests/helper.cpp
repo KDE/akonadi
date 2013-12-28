@@ -30,6 +30,7 @@ Akonadi::Collection Helper::fetchCollection()
     job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
     const bool ret = job->exec();
     Q_ASSERT(ret);
+    Q_UNUSED(ret);
 
     // Find our collection
     Collection::List collections = job->collections();
