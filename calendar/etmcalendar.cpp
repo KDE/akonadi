@@ -188,7 +188,7 @@ ETMCalendarPrivate::~ETMCalendarPrivate()
 
 void ETMCalendarPrivate::loadFromETM()
 {
-    itemsAdded(itemsFromModel(mETM));
+    itemsAdded(itemsFromModel(mFilteredETM));
 }
 
 void ETMCalendarPrivate::clear()
