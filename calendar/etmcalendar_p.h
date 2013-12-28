@@ -23,6 +23,7 @@
 #include "etmcalendar.h"
 #include "calendarbase_p.h"
 #include "incidencechanger.h"
+#include "calendarmodel_p.h"
 
 #include <akonadi/entitytreemodel.h>
 #include <KCheckableProxyModel>
@@ -124,7 +125,7 @@ public Q_SLOTS:
     void onCollectionPopulated(Akonadi::Collection::Id);
 
 public:
-    Akonadi::EntityTreeModel *mETM;
+    Akonadi::CalendarModel::Ptr mETM;
     Akonadi::EntityMimeTypeFilterModel *mFilteredETM;
 
     // akonadi id to collections

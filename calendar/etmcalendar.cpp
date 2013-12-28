@@ -60,44 +60,46 @@ ETMCalendarPrivate::ETMCalendarPrivate(ETMCalendar *qq) : CalendarBasePrivate(qq
 
 void ETMCalendarPrivate::init()
 {
-    Akonadi::Session *session = new Akonadi::Session("ETMCalendar", q);
-    Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(q);
-    connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-            SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
+    if (!mETM) {
+        Akonadi::Session *session = new Akonadi::Session("ETMCalendar", q);
+        Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(q);
+        connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+                SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
 
-    Akonadi::ItemFetchScope scope;
-    scope.fetchFullPayload(true);
-    scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
+        Akonadi::ItemFetchScope scope;
+        scope.fetchFullPayload(true);
+        scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
-    monitor->setSession(session);
-    monitor->setCollectionMonitored(Akonadi::Collection::root());
-    monitor->fetchCollection(true);
-    monitor->setItemFetchScope(scope);
+        monitor->setSession(session);
+        monitor->setCollectionMonitored(Akonadi::Collection::root());
+        monitor->fetchCollection(true);
+        monitor->setItemFetchScope(scope);
 
-    QStringList allMimeTypes;
-    allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
-                 << KCalCore::Journal::journalMimeType();
+        QStringList allMimeTypes;
+        allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
+                     << KCalCore::Journal::journalMimeType();
 
-    foreach(const QString &mimetype, allMimeTypes) {
-        monitor->setMimeTypeMonitored(mimetype, mMimeTypes.isEmpty() || mMimeTypes.contains(mimetype));
+        foreach(const QString &mimetype, allMimeTypes) {
+            monitor->setMimeTypeMonitored(mimetype, mMimeTypes.isEmpty() || mMimeTypes.contains(mimetype));
+        }
+
+        mETM = CalendarModel::create(monitor);
+        mETM->setObjectName("ETM");
     }
-
-    mETM = new CalendarModel(monitor, q);
-    mETM->setObjectName("ETM");
 
     setupFilteredETM();
 
     connect(q, SIGNAL(filterChanged()), SLOT(onFilterChanged()));
 
-    connect(mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
+    connect(mETM.data(), SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
             SLOT(onCollectionPopulated(Akonadi::Collection::Id)));
-    connect(mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
+    connect(mETM.data(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             SLOT(onRowsInserted(QModelIndex,int,int)));
-    connect(mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+    connect(mETM.data(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             SLOT(onDataChanged(QModelIndex,QModelIndex)));
-    connect(mETM, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+    connect(mETM.data(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
             SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
-    connect(mETM, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+    connect(mETM.data(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
             SLOT(onRowsRemoved(QModelIndex,int,int)));
 
     connect(mFilteredETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -137,7 +139,7 @@ void ETMCalendarPrivate::setupFilteredETM()
 {
     // We're only interested in the CollectionTitle column
     KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel(this);
-    columnFilterProxy->setSourceModel(mETM);
+    columnFilterProxy->setSourceModel(mETM.data());
     columnFilterProxy->setVisibleColumn(CalendarModel::CollectionTitle);
     columnFilterProxy->setObjectName("Remove columns");
 
@@ -162,7 +164,7 @@ void ETMCalendarPrivate::setupFilteredETM()
     mSelectionProxy = new KSelectionProxyModel(selectionModel, /**parent=*/this);
     mSelectionProxy->setObjectName("Only show items of selected collection");
     mSelectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
-    mSelectionProxy->setSourceModel(mETM);
+    mSelectionProxy->setSourceModel(mETM.data());
 
     mCalFilterProxyModel = new CalFilterProxyModel(this);
     mCalFilterProxyModel->setFilter(q->filter());
@@ -309,7 +311,7 @@ Akonadi::Collection ETMCalendarPrivate::collectionFromIndex(const QModelIndex &i
 void ETMCalendarPrivate::onRowsInserted(const QModelIndex &index,
                                         int start, int end)
 {
-    Akonadi::Collection::List collections = collectionsFromModel(mETM, index,
+    Akonadi::Collection::List collections = collectionsFromModel(mETM.data(), index,
                                             start, end);
 
     foreach(const Akonadi::Collection &collection, collections) {
@@ -328,7 +330,7 @@ void ETMCalendarPrivate::onCollectionPopulated(Akonadi::Collection::Id id)
 
 void ETMCalendarPrivate::onRowsRemoved(const QModelIndex &index, int start, int end)
 {
-    Akonadi::Collection::List collections = collectionsFromModel(mETM, index, start, end);
+    Akonadi::Collection::List collections = collectionsFromModel(mETM.data(), index, start, end);
     foreach(const Akonadi::Collection &collection, collections) {
         mCollectionMap.remove(collection.id());
     }
@@ -462,6 +464,19 @@ ETMCalendar::ETMCalendar(const QStringList &mimeTypes, QObject *parent) : Calend
     d->init();
 }
 
+ETMCalendar::ETMCalendar(ETMCalendar *other, QObject *parent)
+    : CalendarBase(new ETMCalendarPrivate(this), parent)
+{
+    Q_D(ETMCalendar);
+
+    CalendarModel *model = qobject_cast<Akonadi::CalendarModel*>(other->entityTreeModel());
+    if (model) {
+        d->mETM = model->weakPointer().toStrongRef();
+    }
+
+    d->init();
+}
+
 ETMCalendar::~ETMCalendar()
 {
 }
@@ -570,7 +585,7 @@ KCalCore::Alarm::List ETMCalendar::alarms(const KDateTime &from,
 Akonadi::EntityTreeModel *ETMCalendar::entityTreeModel() const
 {
     Q_D(const ETMCalendar);
-    return d->mETM;
+    return d->mETM.data();
 }
 
 void ETMCalendar::setCollectionFilteringEnabled(bool enable)
@@ -579,13 +594,13 @@ void ETMCalendar::setCollectionFilteringEnabled(bool enable)
     if (d->mCollectionFilteringEnabled != enable) {
         d->mCollectionFilteringEnabled = enable;
         if (enable) {
-            d->mSelectionProxy->setSourceModel(d->mETM);
+            d->mSelectionProxy->setSourceModel(d->mETM.data());
             QAbstractItemModel *oldModel = d->mCalFilterProxyModel->sourceModel();
             d->mCalFilterProxyModel->setSourceModel(d->mSelectionProxy);
             delete qobject_cast<KDescendantsProxyModel *>(oldModel);
         } else {
             KDescendantsProxyModel *flatner = new KDescendantsProxyModel(this);
-            flatner->setSourceModel(d->mETM);
+            flatner->setSourceModel(d->mETM.data());
             d->mCalFilterProxyModel->setSourceModel(flatner);
         }
     }

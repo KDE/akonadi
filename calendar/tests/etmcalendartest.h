@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testNotifyObserverBug();
     void testUidChange();
     void testItem(); // tests item()
+    void testShareETM();
 
 public Q_SLOTS:
     void calendarIncidenceAdded(const KCalCore::Incidence::Ptr &incidence);   /**Q_DECL_OVERRIDE*/

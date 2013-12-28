@@ -55,18 +55,38 @@ public:
     Private()
     {
     }
+
+    QWeakPointer<CalendarModel> m_weakPointer;
 };
 
-CalendarModel::CalendarModel(Akonadi::ChangeRecorder *monitor, QObject *parent)
-    : EntityTreeModel(monitor, parent),
+CalendarModel::CalendarModel(Akonadi::ChangeRecorder *monitor)
+    : EntityTreeModel(monitor),
       d(new Private())
 {
     monitor->itemFetchScope().fetchAllAttributes(true);
 }
 
+CalendarModel::Ptr CalendarModel::create(ChangeRecorder *monitor)
+{
+    CalendarModel *model = new CalendarModel(monitor);
+    CalendarModel::Ptr modelPtr = CalendarModel::Ptr(model);
+    model->setWeakPointer(modelPtr.toWeakRef());
+    return modelPtr;
+}
+
 CalendarModel::~CalendarModel()
 {
     delete d;
+}
+
+QWeakPointer<CalendarModel> CalendarModel::weakPointer() const
+{
+    return d->m_weakPointer;
+}
+
+void CalendarModel::setWeakPointer(const QWeakPointer<CalendarModel> &weakPointer)
+{
+    d->m_weakPointer = weakPointer;
 }
 
 QVariant CalendarModel::entityData(const Akonadi::Item &item, int column, int role) const

@@ -76,6 +76,21 @@ public:
     explicit ETMCalendar(const QStringList &mimeTypes, QObject *parent = 0);
 
     /**
+     * Constructs a new ETMCalendar.
+     *
+     * This overload exists for optimization reasons, it allows to share an EntityTreeModel across
+     * several ETMCalendars to save memory.
+     *
+     * Usually when having many ETMCalendars, the only bit that's different is the collection
+     * selection. The memory hungry EntityTreeModel is the same, so should be shared.
+     *
+     * @param calendar an existing ETMCalendar who's EntityTreeModel is to be used.
+     *
+     * @since 4.13
+     */
+    explicit ETMCalendar(ETMCalendar *calendar, QObject *parent = 0);
+
+    /**
       * Destroys this ETMCalendar.
       */
     ~ETMCalendar();
