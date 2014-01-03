@@ -22,54 +22,62 @@
 #define AKONADI_CALENDARMODEL_P_H
 
 #include <akonadi/entitytreemodel.h>
+#include <QSharedPointer>
+#include <QWeakPointer>
+
 
 namespace Akonadi {
 
 class CalendarModel : public Akonadi::EntityTreeModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum ItemColumn {
-    Summary=0,
-    Type,
-    DateTimeStart,
-    DateTimeEnd,
-    DateTimeDue,
-    Priority,
-    PercentComplete,
-    ItemColumnCount
-  };
+    typedef QSharedPointer<CalendarModel> Ptr;
+    enum ItemColumn {
+        Summary=0,
+        Type,
+        DateTimeStart,
+        DateTimeEnd,
+        DateTimeDue,
+        Priority,
+        PercentComplete,
+        ItemColumnCount
+    };
 
-  enum CollectionColumn {
-    CollectionTitle=0,
-    CollectionColumnCount
-  };
+    enum CollectionColumn {
+        CollectionTitle=0,
+        CollectionColumnCount
+    };
 
-  enum Role {
-    SortRole=Akonadi::EntityTreeModel::UserRole,
-    RecursRole
-  };
+    enum Role {
+        SortRole=Akonadi::EntityTreeModel::UserRole,
+        RecursRole
+    };
 
-  explicit CalendarModel( Akonadi::ChangeRecorder *monitor, QObject *parent = 0 );
-  ~CalendarModel();
+    static Akonadi::CalendarModel::Ptr create(Akonadi::ChangeRecorder *monitor);
+    ~CalendarModel();
 
-  /* reimp */
-  QVariant entityData( const Akonadi::Item &item, int column, int role=Qt::DisplayRole ) const;
+    QWeakPointer<CalendarModel> weakPointer() const;
+    void setWeakPointer(const QWeakPointer<CalendarModel> &weakPointer);
 
-  /* reimp */
-  QVariant entityData( const Akonadi::Collection &collection, int column,
-                        int role=Qt::DisplayRole ) const;
+    /* reimp */
+    QVariant entityData(const Akonadi::Item &item, int column, int role=Qt::DisplayRole) const;
 
-  /* reimp */
-  int entityColumnCount( EntityTreeModel::HeaderGroup headerSet ) const;
+    /* reimp */
+    QVariant entityData(const Akonadi::Collection &collection, int column,
+                        int role=Qt::DisplayRole) const;
 
-  /* reimp */
-  QVariant entityHeaderData( int section, Qt::Orientation orientation, int role,
-                              EntityTreeModel::HeaderGroup headerSet ) const;
+    /* reimp */
+    int entityColumnCount(EntityTreeModel::HeaderGroup headerSet) const;
+
+    /* reimp */
+    QVariant entityHeaderData(int section, Qt::Orientation orientation, int role,
+                              EntityTreeModel::HeaderGroup headerSet) const;
 
 private:
-  class Private;
-  Private *const d;
+    explicit CalendarModel(Akonadi::ChangeRecorder *monitor);
+    class Private;
+    Private *const d;
 };
 
 }

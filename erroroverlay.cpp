@@ -26,8 +26,6 @@
 #include <KLocalizedString>
 
 #include <QtCore/QEvent>
-#include <QBoxLayout>
-#include <QLabel>
 #include <QPalette>
 
 using namespace Akonadi;

@@ -215,7 +215,7 @@ QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity, bool ns 
 
 QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArray & label, int version )
 {
-  const QByteArray versionString( version != 0 ? '[' + QByteArray::number( version ) + ']' : "" );
+  const QByteArray versionString( version != 0 ? QByteArray(QByteArray("[") + QByteArray::number( version ) + QByteArray("]")) : "" );
   switch ( ns ) {
     case PartGlobal:
       return label + versionString;

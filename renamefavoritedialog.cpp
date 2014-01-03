@@ -20,7 +20,6 @@
 #include "renamefavoritedialog.h"
 #include <QLabel>
 #include <KLineEdit>
-#include <KStandardGuiItem>
 #include <KLocalizedString>
 #include <QVBoxLayout>
 

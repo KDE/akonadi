@@ -21,8 +21,6 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KGlobal>
-#include <KLocalizedString>
 
 #include <QHash>
 #include <QString>

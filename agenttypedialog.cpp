@@ -19,7 +19,6 @@
 #include "agenttypedialog.h"
 #include "agentfilterproxymodel.h"
 
-#include <QObject>
 #include <QVBoxLayout>
 #include <KGlobal>
 #include <KConfig>

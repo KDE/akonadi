@@ -35,20 +35,20 @@
 class QWidget;
 
 namespace Akonadi {
-  namespace CalendarUtils {
-    QString fullName();
-    QString email();
-    bool thatIsMe( const QString &email );
-    QStringList allEmails();
+namespace CalendarUtils {
+QString fullName();
+QString email();
+bool thatIsMe(const QString &email);
+QStringList allEmails();
 
-    KCalCore::Incidence::Ptr incidence( const Akonadi::Item &item );
+KCalCore::Incidence::Ptr incidence(const Akonadi::Item &item);
 
-    Akonadi::Collection selectCollection( QWidget *parent,
-                                          int &dialogCode,
-                                          const QStringList &mimeTypes,
-                                          const Akonadi::Collection &defaultCollection = Akonadi::Collection() );
+Akonadi::Collection selectCollection(QWidget *parent,
+                                     int &dialogCode,
+                                     const QStringList &mimeTypes,
+                                     const Akonadi::Collection &defaultCollection = Akonadi::Collection());
 
-  }
+}
 }
 
 #endif

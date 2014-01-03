@@ -46,7 +46,7 @@ KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence(const Akonadi::Item &
     // since we don't call hasPayload()
     try {
         return item.payload<KCalCore::Incidence::Ptr>();
-    } catch(Akonadi::PayloadException) {
+    } catch (Akonadi::PayloadException) {
         return KCalCore::Incidence::Ptr();
     }
 }
@@ -92,8 +92,8 @@ void ETMCalendarTest::deleteIncidence(const QString &uid)
 void ETMCalendarTest::fetchCollection()
 {
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(),
-                                                      CollectionFetchJob::Recursive,
-                                                      this);
+            CollectionFetchJob::Recursive,
+            this);
     // Get list of collections
     job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
     AKVERIFYEXEC(job);
@@ -118,7 +118,7 @@ void ETMCalendarTest:: initTestCase()
 
     mCalendar = new ETMCalendar();
     connect(mCalendar, SIGNAL(collectionsAdded(Akonadi::Collection::List)),
-             SLOT(handleCollectionsAdded(Akonadi::Collection::List)));
+            SLOT(handleCollectionsAdded(Akonadi::Collection::List)));
 
     mCalendar->registerObserver(this);
 
@@ -506,6 +506,27 @@ void ETMCalendarTest::testItem()
     QCOMPARE(incidence1.data(), incidence2.data());
     QCOMPARE(incidence.data(), incidence1.data());
 
+}
+
+void ETMCalendarTest::testShareETM()
+{
+    createTodo(QLatin1String("uid-123"), QString());
+    waitForIt();
+
+    ETMCalendar *calendar2 = new ETMCalendar(mCalendar, this);
+    calendar2->registerObserver(this);
+
+    // Uncheck our calendar
+    KCheckableProxyModel *checkable = calendar2->checkableProxyModel();
+    const QModelIndex firstIndex = checkable->index(0, 0);
+    QVERIFY(firstIndex.isValid());
+    mIncidencesToDelete = calendar2->incidences().count(); // number of incidence removed signals we get
+    checkable->setData(firstIndex, Qt::Unchecked, Qt::CheckStateRole);
+
+    // So, mCalendar has a calendar selection, while calendar2 has all it's calendars unchecked
+    // they are sharing the same ETM.
+    QVERIFY(!mCalendar->incidences().isEmpty());
+    QVERIFY(calendar2->incidences().isEmpty());
 }
 
 void ETMCalendarTest::waitForIt()

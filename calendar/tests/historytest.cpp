@@ -81,22 +81,22 @@ void HistoryTest::initTestCase()
     mHistory = mChanger->history();
 
     connect(mChanger,
-             SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-             SLOT(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
+            SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+            SLOT(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 
     connect(mChanger,
-             SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
-             SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)));
+            SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
+            SLOT(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)));
 
     connect(mChanger,
-             SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-             SLOT(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
+            SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+            SLOT(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 
     connect(mHistory, SIGNAL(undone(Akonadi::History::ResultCode)),
-             SLOT(handleUndone(Akonadi::History::ResultCode)));
+            SLOT(handleUndone(Akonadi::History::ResultCode)));
 
     connect(mHistory, SIGNAL(redone(Akonadi::History::ResultCode)),
-             SLOT(handleRedone(Akonadi::History::ResultCode)));
+            SLOT(handleRedone(Akonadi::History::ResultCode)));
 }
 
 void HistoryTest::testCreation_data()
@@ -173,7 +173,7 @@ void HistoryTest::testDeletion()
     QCOMPARE(mHistory->d->undoCount(), 0);
 
     const int changeId = (items.count() == 1) ? mChanger->deleteIncidence(items.first())
-                                              : mChanger->deleteIncidences(items);
+                         : mChanger->deleteIncidences(items);
     QVERIFY(changeId > 0);
     mKnownChangeIds << changeId;
     waitForSignals();
@@ -299,10 +299,10 @@ void HistoryTest::testAtomicOperations()
     for (int i=0; i<items.count(); ++i) {
         const Akonadi::Item item = items[i];
         int changeId = -1;
-        switch(changeTypes[i]) {
+        switch (changeTypes[i]) {
         case IncidenceChanger::ChangeTypeCreate:
             changeId = mChanger->createIncidence(item.hasPayload() ? item.payload<KCalCore::Incidence::Ptr>()
-                                                                   : Incidence::Ptr());
+                                                 : Incidence::Ptr());
             QVERIFY(changeId != -1);
             mKnownChangeIds << changeId;
             ++mPendingSignals[CreationSignal];
@@ -324,7 +324,7 @@ void HistoryTest::testAtomicOperations()
             mKnownChangeIds << changeId;
             ++mPendingSignals[ModificationSignal];
         }
-            break;
+        break;
         default:
             QVERIFY(false);
         }
@@ -345,7 +345,7 @@ void HistoryTest::testAtomicOperations()
     // Verify that it got undone
     for (int i=0; i<items.count(); ++i) {
         const Akonadi::Item item = items[i];
-        switch(changeTypes[i]) {
+        switch (changeTypes[i]) {
         case IncidenceChanger::ChangeTypeCreate:
             // It changed id, have no way to verify
             break;
@@ -455,7 +455,7 @@ void HistoryTest::testMix()
             ++mPendingSignals[ModificationSignal];
             waitForSignals();
         }
-            break;
+        break;
         default:
             QVERIFY(false);
         }
@@ -540,9 +540,9 @@ void HistoryTest::deleteFinished(int changeId,
 }
 
 void HistoryTest::createFinished(int changeId,
-                                  const Akonadi::Item &item,
-                                  Akonadi::IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString)
+                                 const Akonadi::Item &item,
+                                 Akonadi::IncidenceChanger::ResultCode resultCode,
+                                 const QString &errorString)
 {
     QVERIFY(changeId != -1);
 

@@ -33,8 +33,6 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 #include <QtCore/QTextStream>
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QTcpSocket>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
 

@@ -26,19 +26,13 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
-#include <QApplication>
 #include <QDragMoveEvent>
-#include <QHeaderView>
 #include <QMenu>
 
-#include <KAction>
-#include <KLocalizedString>
-#include <KMessageBox>
-#include <KUrl>
-#include <KXMLGUIFactory>
 
 #include <kdebug.h>
 #include <kxmlguiclient.h>
+#include <KXMLGUIFactory>
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>

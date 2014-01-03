@@ -38,26 +38,26 @@ class Session;
  */
 class ConflictHandler : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the type of conflict that should be resolved by
      * the conflict handler.
      */
     enum ConflictType {
-      LocalLocalConflict,   ///< Changes of two Akonadi client applications conflict.
-      LocalRemoteConflict,  ///< Changes of an Akonadi client application and a resource conflict.
-      BackendConflict       ///< Changes of a resource and the backend data conflict.
+        LocalLocalConflict,   ///< Changes of two Akonadi client applications conflict.
+        LocalRemoteConflict,  ///< Changes of an Akonadi client application and a resource conflict.
+        BackendConflict       ///< Changes of a resource and the backend data conflict.
     };
 
     /**
      * Describes the strategy that should be used for resolving the conflict.
      */
     enum ResolveStrategy {
-      UseLocalItem, ///< The local item overwrites the other item inside the Akonadi storage.
-      UseOtherItem, ///< The local item is dropped and the other item from the Akonadi storage is used.
-      UseBothItems  ///< Both items are kept in the Akonadi storage.
+        UseLocalItem, ///< The local item overwrites the other item inside the Akonadi storage.
+        UseOtherItem, ///< The local item is dropped and the other item from the Akonadi storage is used.
+        UseBothItems  ///< Both items are kept in the Akonadi storage.
     };
 
     /**
@@ -77,13 +77,13 @@ class ConflictHandler : public QObject
      */
     void setConflictingItems( const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Starts the conflict handling.
      */
     void start();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the conflict has been resolved
      * automatically or by the user.
@@ -98,13 +98,13 @@ class ConflictHandler : public QObject
      */
     void error( const QString &message );
 
-  private Q_SLOTS:
-    void slotOtherItemFetched( KJob* );
-    void slotUseLocalItemFinished( KJob* );
-    void slotUseBothItemsFinished( KJob* );
+private Q_SLOTS:
+    void slotOtherItemFetched( KJob * );
+    void slotUseLocalItemFinished( KJob * );
+    void slotUseBothItemsFinished( KJob * );
     void resolve();
 
-  private:
+private:
     void useLocalItem();
     void useOtherItem();
     void useBothItems();

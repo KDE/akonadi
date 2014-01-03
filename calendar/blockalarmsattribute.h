@@ -41,55 +41,55 @@ namespace Akonadi {
 class AKONADI_CALENDAR_EXPORT BlockAlarmsAttribute : public Akonadi::Attribute
 {
 public:
-  /**
-    * Creates a new block alarms attribute.
-    */
-  BlockAlarmsAttribute();
+    /**
+      * Creates a new block alarms attribute.
+      */
+    BlockAlarmsAttribute();
 
-  /**
-    * Destroys the block alarms attribute.
-    */
-  ~BlockAlarmsAttribute();
+    /**
+      * Destroys the block alarms attribute.
+      */
+    ~BlockAlarmsAttribute();
 
-  /**
-   * Blocks or unblocks given alarm type.
-   *
-   * By default, all alarm types are blocked.
-   *
-   * @since 4.11
-   */
-  void blockAlarmType( KCalCore::Alarm::Type type, bool block = true );
+    /**
+     * Blocks or unblocks given alarm type.
+     *
+     * By default, all alarm types are blocked.
+     *
+     * @since 4.11
+     */
+    void blockAlarmType(KCalCore::Alarm::Type type, bool block = true);
 
-  /**
-   * Returns whether given alarm type is blocked or not.
-   *
-   * @since 4.11
-   */
-  bool isAlarmTypeBlocked( KCalCore::Alarm::Type type ) const;
+    /**
+     * Returns whether given alarm type is blocked or not.
+     *
+     * @since 4.11
+     */
+    bool isAlarmTypeBlocked(KCalCore::Alarm::Type type) const;
 
-  /**
-    * Reimplemented from Attribute
-    */
-  QByteArray type() const;
+    /**
+      * Reimplemented from Attribute
+      */
+    QByteArray type() const;
 
-  /**
-    * Reimplemented from Attribute
-    */
-  BlockAlarmsAttribute *clone() const;
+    /**
+      * Reimplemented from Attribute
+      */
+    BlockAlarmsAttribute *clone() const;
 
-  /**
-    * Reimplemented from Attribute
-    */
-  QByteArray serialized() const;
+    /**
+      * Reimplemented from Attribute
+      */
+    QByteArray serialized() const;
 
-  /**
-    * Reimplemented from Attribute
-    */
-  void deserialize( const QByteArray &data );
+    /**
+      * Reimplemented from Attribute
+      */
+    void deserialize(const QByteArray &data);
 
 private:
-  class Private;
-  Private * const d;
+    class Private;
+    Private * const d;
 };
 
 }

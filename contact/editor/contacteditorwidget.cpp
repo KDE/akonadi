@@ -51,8 +51,8 @@
 #include <QtCore/QPluginLoader>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QCheckBox>
+#include <QVBoxLayout>
 
 class ContactEditorWidget::Private
 {

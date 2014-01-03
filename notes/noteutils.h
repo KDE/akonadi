@@ -23,7 +23,6 @@
 #include "akonadi-notes_export.h"
 
 #include <QtCore/QUrl>
-#include <QTextEdit>
 
 class KDateTime;
 class QString;

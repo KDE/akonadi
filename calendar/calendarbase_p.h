@@ -32,58 +32,58 @@ namespace Akonadi {
 
 class CalendarBasePrivate : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
 
-  explicit CalendarBasePrivate( CalendarBase *qq );
-  ~CalendarBasePrivate();
+    explicit CalendarBasePrivate(CalendarBase *qq);
+    ~CalendarBasePrivate();
 
-  void internalInsert( const Akonadi::Item &item );
-  void internalRemove( const Akonadi::Item &item );
+    void internalInsert(const Akonadi::Item &item);
+    void internalRemove(const Akonadi::Item &item);
 
-  void deleteAllIncidencesOfType( const QString &mimeType );
+    void deleteAllIncidencesOfType(const QString &mimeType);
 
-  void handleUidChange( const Akonadi::Item &oldItem, const Akonadi::Item &newItem, const QString &newUid );
+    void handleUidChange(const Akonadi::Item &oldItem, const Akonadi::Item &newItem, const QString &newUid);
 
-  // Checks if parent changed and adjust internal hierarchy info
-  void handleParentChanged(const KCalCore::Incidence::Ptr &incidence );
+    // Checks if parent changed and adjust internal hierarchy info
+    void handleParentChanged(const KCalCore::Incidence::Ptr &incidence);
 
 public Q_SLOTS:
-  void slotDeleteFinished( int changeId,
+    void slotDeleteFinished(int changeId,
                             const QVector<Akonadi::Item::Id> &,
                             Akonadi::IncidenceChanger::ResultCode,
-                            const QString &errorMessage );
+                            const QString &errorMessage);
 
-  void slotCreateFinished( int changeId,
+    void slotCreateFinished(int changeId,
                             const Akonadi::Item &,
                             Akonadi::IncidenceChanger::ResultCode,
-                            const QString &errorMessage );
+                            const QString &errorMessage);
 
-  void slotModifyFinished( int changeId,
+    void slotModifyFinished(int changeId,
                             const Akonadi::Item &,
                             Akonadi::IncidenceChanger::ResultCode,
-                            const QString &errorMessage );
+                            const QString &errorMessage);
 
 public:
-  QMultiHash<Akonadi::Collection::Id, Akonadi::Item> mItemsByCollection;
-  QHash<QString,Akonadi::Item::Id> mItemIdByUid;
-  QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
-  Akonadi::IncidenceChanger *mIncidenceChanger;
-  QHash<QString,QStringList> mParentUidToChildrenUid;
-  QWeakPointer<CalendarBase> mWeakPointer;
-  Akonadi::Collection mCollectionForBatchInsertion;
-  bool mBatchInsertionCancelled;
-  bool mListensForNewItems; // does this model detect new item creations ?
-  bool mLastCreationCancelled; // User pressed cancel in the collection selection dialog
+    QMultiHash<Akonadi::Collection::Id, Akonadi::Item> mItemsByCollection;
+    QHash<QString,Akonadi::Item::Id> mItemIdByUid;
+    QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
+    Akonadi::IncidenceChanger *mIncidenceChanger;
+    QHash<QString,QStringList> mParentUidToChildrenUid;
+    QWeakPointer<CalendarBase> mWeakPointer;
+    Akonadi::Collection mCollectionForBatchInsertion;
+    bool mBatchInsertionCancelled;
+    bool mListensForNewItems; // does this model detect new item creations ?
+    bool mLastCreationCancelled; // User pressed cancel in the collection selection dialog
 
-  // Hash with uid->parentUid. When receiving onDataChanged() we need a way
-  // to obtain the original RELATED-TO. Because RELATED-TO might have been modified
-  // we can't trust the incidence stored in the calendar. ( Users of this class don't
-  // operate on a incidence clone, they change the same incidence that's inside the calendar )
-  QHash<QString,QString> mUidToParent;
+    // Hash with uid->parentUid. When receiving onDataChanged() we need a way
+    // to obtain the original RELATED-TO. Because RELATED-TO might have been modified
+    // we can't trust the incidence stored in the calendar. ( Users of this class don't
+    // operate on a incidence clone, they change the same incidence that's inside the calendar )
+    QHash<QString,QString> mUidToParent;
 
 private:
-  CalendarBase *const q;
+    CalendarBase *const q;
 };
 
 }

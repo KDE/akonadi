@@ -24,17 +24,16 @@
 #include <akonadi/item.h>
 
 
-#include <QTestEventLoop>
 #include <QtCore/QObject>
 #include <QStringList>
 
 namespace Akonadi {
-    class CalendarBase;
+class CalendarBase;
 }
 
 class CalendarBaseTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public Q_SLOTS:
     void handleCreateFinished(bool success, const QString &errorString);
     void handleDeleteFinished(bool success, const QString &errorString);

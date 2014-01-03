@@ -30,7 +30,6 @@
 #include <KIcon>
 #include <KActionCollection>
 #include <KDebug>
-#include <KInputDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 

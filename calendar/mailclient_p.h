@@ -28,18 +28,18 @@
 #include <QObject>
 
 struct UnitTestResult {
-  typedef QList<UnitTestResult> List;
-  QString from;
-  QStringList to;
-  QStringList cc;
-  QStringList bcc;
-  int transportId;
-  KMime::Message::Ptr message;
-  UnitTestResult() : transportId( -1 ) {}
+    typedef QList<UnitTestResult> List;
+    QString from;
+    QStringList to;
+    QStringList cc;
+    QStringList bcc;
+    int transportId;
+    KMime::Message::Ptr message;
+    UnitTestResult() : transportId(-1) {}
 };
 
 namespace KPIMIdentities {
-  class Identity;
+class Identity;
 }
 
 class KJob;
@@ -55,36 +55,36 @@ namespace Akonadi {
 class EXPORT_MAILCLIENT MailClient : public QObject
 
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     enum Result {
-      ResultSuccess,
-      ResultNoAttendees,
-      ResultReallyNoAttendees,
-      ResultErrorCreatingTransport,
-      ResultErrorFetchingTransport,
-      ResultQueueJobError
+        ResultSuccess,
+        ResultNoAttendees,
+        ResultReallyNoAttendees,
+        ResultErrorCreatingTransport,
+        ResultErrorFetchingTransport,
+        ResultQueueJobError
     };
 
-    explicit MailClient( QObject *parent = 0 );
+    explicit MailClient(QObject *parent = 0);
     ~MailClient();
 
-    void mailAttendees( const KCalCore::IncidenceBase::Ptr &,
-                        const KPIMIdentities::Identity &identity,
-                        bool bccMe, const QString &attachment=QString(),
-                        const QString &mailTransport = QString() );
+    void mailAttendees(const KCalCore::IncidenceBase::Ptr &,
+                       const KPIMIdentities::Identity &identity,
+                       bool bccMe, const QString &attachment=QString(),
+                       const QString &mailTransport = QString());
 
-    void mailOrganizer( const KCalCore::IncidenceBase::Ptr &,
-                        const KPIMIdentities::Identity &identity,
-                        const QString &from, bool bccMe,
-                        const QString &attachment=QString(),
-                        const QString &sub=QString(),
-                        const QString &mailTransport = QString() );
+    void mailOrganizer(const KCalCore::IncidenceBase::Ptr &,
+                       const KPIMIdentities::Identity &identity,
+                       const QString &from, bool bccMe,
+                       const QString &attachment=QString(),
+                       const QString &sub=QString(),
+                       const QString &mailTransport = QString());
 
-    void mailTo( const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
-                 const QString &from, bool bccMe, const QString &recipients,
-                 const QString &attachment=QString(), const QString &mailTransport = QString() );
+    void mailTo(const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
+                const QString &from, bool bccMe, const QString &recipients,
+                const QString &attachment=QString(), const QString &mailTransport = QString());
 
     /**
       Sends mail with specified from, to and subject field and body as text.
@@ -103,18 +103,18 @@ class EXPORT_MAILCLIENT MailClient : public QObject
       @param mailTransport defines the mail transport method. See here the
       kdepimlibs/mailtransport library.
     */
-    void send( const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
-               const QString &cc, const QString &subject, const QString &body,
-               bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
-               const QString &mailTransport = QString() );
+    void send(const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
+              const QString &cc, const QString &subject, const QString &body,
+              bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
+              const QString &mailTransport = QString());
 
-  private Q_SLOTS:
-    void handleQueueJobFinished( KJob* job );
+private Q_SLOTS:
+    void handleQueueJobFinished(KJob* job);
 
-  Q_SIGNALS:
-    void finished( Akonadi::MailClient::Result result, const QString &errorString );
+Q_SIGNALS:
+    void finished(Akonadi::MailClient::Result result, const QString &errorString);
 
-  public:
+public:
     // For unit-test usage, since we can't depend on kdepim-runtime on jenkins
     static UnitTestResult::List sUnitTestResults;
     static bool sRunningUnitTests;
@@ -122,6 +122,6 @@ class EXPORT_MAILCLIENT MailClient : public QObject
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::MailClient::Result )
+Q_DECLARE_METATYPE(Akonadi::MailClient::Result)
 
 #endif

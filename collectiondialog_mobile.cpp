@@ -38,9 +38,6 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 
-#include <QApplication>
-#include <QDeclarativeContext>
-#include <QDeclarativeEngine>
 #include <QDeclarativeView>
 
 using namespace Akonadi;

@@ -22,7 +22,6 @@
 #include "waitingoverlay_p.h"
 
 #include <KDebug>
-#include <KIcon>
 #include <KJob>
 #include <KLocalizedString>
 

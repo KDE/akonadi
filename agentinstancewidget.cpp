@@ -25,11 +25,9 @@
 
 #include <KIcon>
 #include <KIconLoader>
-#include <KGlobal>
 
 #include <QtCore/QUrl>
 #include <QApplication>
-#include <QTextDocument>
 #include <QHBoxLayout>
 #include <QListView>
 #include <QPainter>

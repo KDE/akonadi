@@ -26,7 +26,6 @@
 #include <QtCore/QEvent>
 #include <QtCore/QString>
 #include <QGridLayout>
-#include <QLabel>
 #include <QPushButton>
 #include <QToolButton>
 

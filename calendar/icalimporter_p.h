@@ -36,7 +36,7 @@ class KJob;
 class KTemporaryFile;
 class QByteArray;
 namespace KIO {
-    class Job;
+class Job;
 }
 
 namespace Akonadi {

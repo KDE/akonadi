@@ -27,7 +27,6 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-#include <QObject>
 #include <QHash>
 
 

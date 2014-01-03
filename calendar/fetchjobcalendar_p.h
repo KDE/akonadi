@@ -23,7 +23,6 @@
 #include "fetchjobcalendar.h"
 #include "calendarbase_p.h"
 
-#include <QVector>
 
 class KJob;
 
@@ -31,20 +30,20 @@ namespace Akonadi {
 
 class FetchJobCalendarPrivate : public CalendarBasePrivate
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
 
-  explicit FetchJobCalendarPrivate( FetchJobCalendar *qq );
-  ~FetchJobCalendarPrivate();
+    explicit FetchJobCalendarPrivate(FetchJobCalendar *qq);
+    ~FetchJobCalendarPrivate();
 
 public Q_SLOTS:
-  void slotSearchJobFinished( KJob *job );
+    void slotSearchJobFinished(KJob *job);
 
 public:
-  bool m_isLoaded;
+    bool m_isLoaded;
 
 private:
-  FetchJobCalendar *const q;
+    FetchJobCalendar *const q;
 };
 
 }

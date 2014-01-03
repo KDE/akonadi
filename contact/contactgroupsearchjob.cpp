@@ -60,39 +60,39 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value,
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-        "SELECT DISTINCT ?group "
+        QByteArray(QByteArray("SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
-        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
         "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
         "  } "
-        "}"
+        "}"))
       );
     }
   } else if ( match == ContainsMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-        "SELECT DISTINCT ?group "
+        QByteArray(QByteArray("SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
-        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
         "    ?group nco:contactGroupName ?v . "
         "    ?v bif:contains \"'%1'\""
         "  } "
-        "}"
+        "}"))
       );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
-        "SELECT DISTINCT ?group "
+        QByteArray(QByteArray("SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
-        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
         "    ?group nco:contactGroupName ?v . "
         "    ?v bif:contains \"'%1*'\""
         "  } "
-        "}"
+        "}"))
       );
     }
   }

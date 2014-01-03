@@ -29,7 +29,7 @@
 #include <QString>
 
 namespace Akonadi {
-    class IncidenceChanger;
+class IncidenceChanger;
 }
 
 class UnitTestBase : public QObject {
