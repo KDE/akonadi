@@ -70,38 +70,167 @@ class FavoriteCollectionsModel::Private
       }
     }
 
-    void clearAndUpdateSelection()
+    void insertIfAvailable( Collection::Id col )
     {
-      q->selectionModel()->clear();
-      updateSelection();
+      if ( collectionIds.contains(col) ) {
+        select(col);
+        reference(col);
+      }
     }
 
-    void updateSelectionId( const Collection::Id &collectionId )
+    void insertIfAvailable( const QModelIndex &idx )
+    {
+      insertIfAvailable( idx.data( EntityTreeModel::CollectionIdRole ).value<Collection::Id>() );
+    }
+
+    /**
+     * Stuff changed, reload everything.
+     */
+    void reload()
+    {
+      //don't clear the selection model here. Otherwise we mess up the users selection as collections get removed and re-inserted.
+      foreach ( const Collection::Id &collectionId, collectionIds ) {
+        insertIfAvailable( collectionId );
+      }
+      //TODO remove what's no longer here
+    }
+
+    void rowsInserted(const QModelIndex &parent, int begin, int end)
+    {
+      for (int row = begin; row <= end; row++) {
+        const QModelIndex child = parent.child(row, 0);
+        if (!child.isValid()) {
+          continue;
+        }
+        insertIfAvailable(child);
+        const int childRows = q->sourceModel()->rowCount(child);
+        if (childRows > 0) {
+          rowsInserted(child, 0, childRows-1);
+        }
+      }
+    }
+
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+    {
+      for ( int row = topLeft.row(); row <= bottomRight.row(); row++ ) {
+        const QModelIndex idx = topLeft.parent().child(row, 0);
+        insertIfAvailable( idx );
+      }
+    }
+
+    /**
+     *  Selects the index in the internal selection model to make the collection visible in the model
+     */
+    void select( const Collection::Id &collectionId )
     {
       const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
-
       if ( index.isValid() ) {
         q->selectionModel()->select( index, QItemSelectionModel::Select );
       }
     }
 
-    void updateSelection()
+    void deselect( const Collection::Id &collectionId )
     {
-      foreach ( const Collection::Id &collectionId, collectionIds ) {
-        updateSelectionId( collectionId );
+      const QModelIndex idx = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection(collectionId)  );
+      if ( idx.isValid() ) {
+        q->selectionModel()->select( idx, QItemSelectionModel::Deselect );
       }
+    }
+
+    void reference( const Collection::Id &collectionId )
+    {
+      if ( referencedCollections.contains( collectionId ) ) {
+        kWarning() << "already referenced " << collectionId;
+        return;
+      }
+      const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
+      if (index.isValid()) {
+        if (q->sourceModel()->setData( index, QVariant(), EntityTreeModel::CollectionRefRole ) ) {
+          referencedCollections << collectionId;
+        } else {
+          kWarning() << "failed to reference collection";
+        }
+        q->sourceModel()->fetchMore( index );
+      }
+    }
+
+    void dereference( const Collection::Id &collectionId )
+    {
+      if ( !referencedCollections.contains( collectionId ) ) {
+        kWarning() << "not referenced " << collectionId;
+        return;
+      }
+      const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
+      if ( index.isValid( )) {
+        q->sourceModel()->setData( index, QVariant(), EntityTreeModel::CollectionDerefRole );
+        referencedCollections.remove( collectionId );
+      }
+    }
+
+    void clearReferences()
+    {
+      foreach (const Collection::Id &collectionId, referencedCollections) {
+        dereference( collectionId );
+      }
+    }
+
+    /**
+     * Adds a collection to the favorite collections
+     */
+    void add( const Collection::Id &collectionId )
+    {
+      if ( collectionIds.contains( collectionId ) ) {
+        kDebug() << "already in model " << collectionId;
+        return;
+      }
+      collectionIds << collectionId;
+      reference( collectionId );
+      select( collectionId );
+    }
+
+    void remove(const Collection::Id &collectionId)
+    {
+      collectionIds.removeAll( collectionId );
+      labelMap.remove( collectionId );
+      dereference( collectionId );
+      deselect( collectionId );
+    }
+
+    void set( const QList<Collection::Id> &collections )
+    {
+      QList<Collection::Id> colIds = collectionIds;
+      foreach ( const Collection::Id &col, collections ) {
+        const int removed = colIds.removeAll( col );
+        const bool isNewCollection = removed <= 0;
+        if ( isNewCollection ) {
+          add( col );
+        }
+      }
+      //Remove what's left
+      foreach ( const Akonadi::Collection::Id &colId, colIds ) {
+        remove( colId );
+      }
+    }
+
+    void set( const Akonadi::Collection::List &collections )
+    {
+      QList<Akonadi::Collection::Id> colIds;
+      foreach ( const Akonadi::Collection &col, collections ) {
+        colIds << col.id();
+      }
+      set( colIds );
     }
 
     void loadConfig()
     {
-      collectionIds = configGroup.readEntry( "FavoriteCollectionIds", QList<qint64>() );
+      const QList<Collection::Id> collections = configGroup.readEntry( "FavoriteCollectionIds", QList<qint64>() );
       const QStringList labels = configGroup.readEntry( "FavoriteCollectionLabels", QStringList() );
-      const int numberOfCollection( collectionIds.size() );
       const int numberOfLabels( labels.size() );
-      for ( int i = 0; i < numberOfCollection; ++i ) {
+      for ( int i = 0; i < collections.size(); ++i ) {
         if ( i<numberOfLabels ) {
-          labelMap[ collectionIds[i] ] = labels[i];
+          labelMap[ collections[i] ] = labels[i];
         }
+        add( collections[i] );
       }
     }
 
@@ -121,6 +250,7 @@ class FavoriteCollectionsModel::Private
     FavoriteCollectionsModel * const q;
 
     QList<Collection::Id> collectionIds;
+    QSet<Collection::Id> referencedCollections;
     QHash<qint64, QString> labelMap;
     KConfigGroup configGroup;
 };
@@ -129,13 +259,20 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( QAbstractItemModel *source, 
   : Akonadi::SelectionProxyModel( new QItemSelectionModel( source, parent ), parent ),
     d( new Private( group, this ) )
 {
+  //This should only be a KRecursiveFilterProxyModel, but remains a SelectionProxyModel for backwards compatiblity.
+  // We therefore disable what we anyways don't want (the referencing is handled separately).
+  disconnect( this, SIGNAL(rootIndexAdded(QModelIndex)), this, SLOT(rootIndexAdded(QModelIndex)) );
+  disconnect( this, SIGNAL(rootIndexAboutToBeRemoved(QModelIndex)), this, SLOT(rootIndexAboutToBeRemoved(QModelIndex)) );
+
   setSourceModel( source );
   setFilterBehavior( ExactSelection );
 
   d->loadConfig();
-  connect( source, SIGNAL(modelReset()), this, SLOT(clearAndUpdateSelection()) );
-  connect( source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateSelection()) );
-  d->updateSelection();
+  //React to various changes in the source model
+  connect( source, SIGNAL(modelReset()), this, SLOT(reload()) );
+  connect( source, SIGNAL(layoutChanged()), this, SLOT(reload()) );
+  connect( source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
+  connect( source, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()
@@ -145,37 +282,19 @@ FavoriteCollectionsModel::~FavoriteCollectionsModel()
 
 void FavoriteCollectionsModel::setCollections( const Collection::List &collections )
 {
-  d->collectionIds.clear();
-  foreach ( const Collection &col, collections ) {
-    d->collectionIds << col.id();
-  }
-  d->labelMap.clear();
-  d->clearAndUpdateSelection();
+  d->set( collections );
   d->saveConfig();
 }
 
 void FavoriteCollectionsModel::addCollection( const Collection &collection )
 {
-  d->collectionIds << collection.id();
-  d->updateSelectionId( collection.id() );
+  d->add( collection.id() );
   d->saveConfig();
 }
 
 void FavoriteCollectionsModel::removeCollection( const Collection &collection )
 {
-  d->collectionIds.removeAll( collection.id() );
-  d->labelMap.remove( collection.id() );
-
-  const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), collection );
-
-  if ( !idx.isValid() ) {
-    return;
-  }
-
-  selectionModel()->select( idx,
-                            QItemSelectionModel::Deselect );
-
-  d->updateSelection();
+  d->remove( collection.id() );
   d->saveConfig();
 }
 
