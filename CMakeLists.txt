@@ -148,7 +148,7 @@ find_package(Soprano)
 set_package_properties(Soprano PROPERTIES
                        URL "http://soprano.sourceforge.net"
                        DESCRIPTION "Storage of semantic data"
-                       TYPE REQUIRED
+                       TYPE OPTIONAL
                        PURPOSE "Soprano is needed for the Nepomuk search backend"
 )
 

@@ -20,6 +20,7 @@
 #include "search.h"
 
 #include "akonadi.h"
+#include "config-akonadi.h"
 #include "akonadiconnection.h"
 #include "fetchhelper.h"
 #include "handlerhelper.h"
@@ -49,9 +50,14 @@ bool Search::parseStream()
     return failureResponse( "No query specified" );
   }
 
+#ifdef HAVE_SOPRANO
   NepomukSearch *service = new NepomukSearch;
   const QStringList uids = service->search( QString::fromUtf8( queryString ) );
   delete service;
+#else
+  akError() << "Akonadi has been built without Nepomuk support!";
+  const QStringList uids;
+#endif
 
   if ( uids.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope
