@@ -28,8 +28,8 @@ class PhoneNumber;
 
 class SendSmsAction
 {
-  public:
-    void sendSms( const KABC::PhoneNumber &number );
+public:
+    void sendSms(const KABC::PhoneNumber &number);
 };
 
 #endif

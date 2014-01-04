@@ -24,8 +24,8 @@
 
 #include <klocalizedstring.h>
 
-QDialer::QDialer( const QString &applicationName)
-  : mApplicationName( applicationName )
+QDialer::QDialer(const QString &applicationName)
+    : mApplicationName(applicationName)
 {
 }
 
@@ -33,21 +33,22 @@ QDialer::~QDialer()
 {
 }
 
-bool QDialer::dialNumber( const QString &number )
+bool QDialer::dialNumber(const QString &number)
 {
-  mErrorMessage = i18n( "Dialing a number is not supported" );
+    Q_UNUSED(number);
+    mErrorMessage = i18n("Dialing a number is not supported");
 
-  return false;
+    return false;
 }
 
-bool QDialer::sendSms( const QString &number, const QString &text )
+bool QDialer::sendSms(const QString &number, const QString &text)
 {
-  mErrorMessage = i18n( "Sending an SMS is not supported" );
+    mErrorMessage = i18n("Sending an SMS is not supported");
 
-  return false;
+    return false;
 }
 
 QString QDialer::errorMessage() const
 {
-  return mErrorMessage;
+    return mErrorMessage;
 }

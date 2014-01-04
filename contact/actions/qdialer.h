@@ -27,16 +27,16 @@
 
 class QDialer
 {
-  public:
-    explicit QDialer( const QString &applicationName );
+public:
+    explicit QDialer(const QString &applicationName);
     virtual ~QDialer();
 
-    virtual bool dialNumber( const QString &number );
-    virtual bool sendSms( const QString &number, const QString &text );
+    virtual bool dialNumber(const QString &number);
+    virtual bool sendSms(const QString &number, const QString &text);
 
     QString errorMessage() const;
 
-  protected:
+protected:
     QString mApplicationName;
     QString mErrorMessage;
 };

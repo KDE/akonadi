@@ -34,22 +34,22 @@ class PhoneNumber;
 
 class SmsDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SmsDialog( const KABC::PhoneNumber &number );
+public:
+    explicit SmsDialog(const KABC::PhoneNumber &number);
     ~SmsDialog();
 
     QString message() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     /**
      * Calculates the needed amount of sms and the number of characters left in the current sms.
      * Shows the result in the QLabel mLengthLabel.
      */
     void updateCounter();
 
-  private:
+private:
     void initUI();
 
     QString mNumber;

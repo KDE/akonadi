@@ -29,10 +29,10 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-SmsDialog::SmsDialog( const KABC::PhoneNumber &number )
-  : mNumber( number.number() )
+SmsDialog::SmsDialog(const KABC::PhoneNumber &number)
+    : mNumber(number.number())
 {
-  initUI();
+    initUI();
 }
 
 SmsDialog::~SmsDialog()
@@ -41,56 +41,56 @@ SmsDialog::~SmsDialog()
 
 QString SmsDialog::message() const
 {
-  return mText;
+    return mText;
 }
 
 void SmsDialog::initUI()
 {
-  setCaption( i18n( "SMS text" ) );
-  setButtons( Ok | Cancel );
-  setDefaultButton( Ok );
-  showButtonSeparator( true );
+    setCaption(i18n("SMS text"));
+    setButtons(Ok | Cancel);
+    setDefaultButton(Ok);
+    showButtonSeparator(true);
 
-  QWidget *page = new QWidget( this );
-  setMainWidget( page );
-  page->setFixedWidth( 300 );
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    page->setFixedWidth(300);
 
-  QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setSpacing( spacingHint() );
-  topLayout->setMargin( 0 );
+    QVBoxLayout *topLayout = new QVBoxLayout(page);
+    topLayout->setSpacing(spacingHint());
+    topLayout->setMargin(0);
 
-  QLabel *label = new QLabel( i18n( "Please insert SMS text for an SMS to the following number: %1", mNumber ), page );
-  topLayout->addWidget( label );
-  label->setWordWrap( true );
+    QLabel *label = new QLabel(i18n("Please insert SMS text for an SMS to the following number: %1", mNumber), page);
+    topLayout->addWidget(label);
+    label->setWordWrap(true);
 
-  mSmsTextEdit = new KTextEdit( page );
-  mSmsTextEdit->setAcceptRichText( false );
-  label->setBuddy( mSmsTextEdit );
-  topLayout->addWidget( mSmsTextEdit );
+    mSmsTextEdit = new KTextEdit(page);
+    mSmsTextEdit->setAcceptRichText(false);
+    label->setBuddy(mSmsTextEdit);
+    topLayout->addWidget(mSmsTextEdit);
 
-  connect( mSmsTextEdit, SIGNAL(textChanged()), SLOT(updateCounter()) );
+    connect(mSmsTextEdit, SIGNAL(textChanged()), SLOT(updateCounter()));
 
-  mLengthLabel = new QLabel( QLatin1String( "-" ) , page );
-  topLayout->addWidget( mLengthLabel );
+    mLengthLabel = new QLabel(QLatin1String("-") , page);
+    topLayout->addWidget(mLengthLabel);
 
-  mSmsTextEdit->setFocus();
-  updateCounter();
+    mSmsTextEdit->setFocus();
+    updateCounter();
 }
 
 void SmsDialog::updateCounter()
 {
-  mText = mSmsTextEdit->toPlainText();
-  unsigned int messageSize = 160;
+    mText = mSmsTextEdit->toPlainText();
+    unsigned int messageSize = 160;
 
-  const int size = mText.length();
-  for ( int i = 0; i <size; ++i ) {
-    if ( mText[i].row() > 0 ) {
-      messageSize = 70;
-      break;
+    const int size = mText.length();
+    for (int i = 0; i < size; ++i) {
+        if (mText[i].row() > 0) {
+            messageSize = 70;
+            break;
+        }
     }
-  }
-  const int numberSms = ( size - ( size % messageSize ) ) / messageSize + 1;
-  const int numberChars = messageSize * numberSms;
+    const int numberSms = (size - (size % messageSize)) / messageSize + 1;
+    const int numberChars = messageSize * numberSms;
 
-  mLengthLabel->setText( i18n( "%1/%2 (%3 SMS)", size, numberChars, numberSms ) );
+    mLengthLabel->setText(i18n("%1/%2 (%3 SMS)", size, numberChars, numberSms));
 }
