@@ -21,6 +21,7 @@ option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
 option(QT5_BUILD "Build Akonadi using the Qt5 framework" FALSE)
+option(WITH_SOPRANO "Build with Soprano support. Needed for Nepomuk search integration." TRUE)
 
 if(NOT DEFINED DATABASE_BACKEND)
   set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
@@ -142,15 +143,17 @@ else()
 endif()
 
 #### Soprano ####
-set(SOPRANO_MIN_VERSION 2.7.56)
-find_package(Soprano)
+if(WITH_SOPRANO)
+  set(SOPRANO_MIN_VERSION 2.7.56)
+  find_package(Soprano)
 
-set_package_properties(Soprano PROPERTIES
-                       URL "http://soprano.sourceforge.net"
-                       DESCRIPTION "Storage of semantic data"
-                       TYPE OPTIONAL
-                       PURPOSE "Soprano is needed for the Nepomuk search backend"
-)
+  set_package_properties(Soprano PROPERTIES
+                         URL "http://soprano.sourceforge.net"
+                         DESCRIPTION "Storage of semantic data"
+                         TYPE REQUIRED
+                         PURPOSE "Soprano is needed for the Nepomuk search backend"
+  )
+endif()
 
 #### SMI ####
 set(SMI_MIN_VERSION "0.20")
