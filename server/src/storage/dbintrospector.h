@@ -83,7 +83,7 @@ class DbIntrospector
 
     /**
      * Returns the foreign key constraints on table @p tableName.
-     * The default implmentation returns an empty list, so any backend supporting
+     * The default implementation returns an empty list, so any backend supporting
      * referential integrity should reimplment this.
      */
     virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );

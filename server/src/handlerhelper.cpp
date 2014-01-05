@@ -115,7 +115,7 @@ int HandlerHelper::itemWithFlagsCount( const Akonadi::Collection &col, const QSt
   }
   Query::Condition cond( Query::Or );
   // We use the below instead of an inner join in the query above because postgres seems
-  // to struggle to optimize the two inner joins, despite having indeces that should
+  // to struggle to optimize the two inner joins, despite having indices that should
   // facilitate that. This exploits the fact that the Flag::retrieveByName is fast because
   // it hits an in-memory cache.
   Q_FOREACH ( const QString &flag, flags ) {
