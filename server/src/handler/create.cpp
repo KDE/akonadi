@@ -34,8 +34,6 @@
 #include "libs/imapparser_p.h"
 #include "imapstreamparser.h"
 
-#include <libs/protocol_p.h>
-
 using namespace Akonadi;
 
 Create::Create( Scope::SelectionScope scope )
