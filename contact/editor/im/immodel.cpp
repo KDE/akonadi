@@ -27,47 +27,47 @@
 #include <klocalizedstring.h>
 
 IMAddress::IMAddress()
-  : mProtocol( QLatin1String( "messaging/aim" ) ), mPreferred( false )
+    : mProtocol(QLatin1String("messaging/aim")), mPreferred(false)
 {
 }
 
-IMAddress::IMAddress( const QString &protocol, const QString &name, bool preferred )
-  : mProtocol( protocol ), mName( name ), mPreferred( preferred )
+IMAddress::IMAddress(const QString &protocol, const QString &name, bool preferred)
+    : mProtocol(protocol), mName(name), mPreferred(preferred)
 {
 }
 
-void IMAddress::setProtocol( const QString &protocol )
+void IMAddress::setProtocol(const QString &protocol)
 {
-  mProtocol = protocol;
+    mProtocol = protocol;
 }
 
 QString IMAddress::protocol() const
 {
-  return mProtocol;
+    return mProtocol;
 }
 
-void IMAddress::setName( const QString &name )
+void IMAddress::setName(const QString &name)
 {
-  mName = name;
+    mName = name;
 }
 
 QString IMAddress::name() const
 {
-  return mName;
+    return mName;
 }
 
-void IMAddress::setPreferred( bool preferred )
+void IMAddress::setPreferred(bool preferred)
 {
-  mPreferred = preferred;
+    mPreferred = preferred;
 }
 
 bool IMAddress::preferred() const
 {
-  return mPreferred;
+    return mPreferred;
 }
 
-IMModel::IMModel( QObject *parent )
-  : QAbstractItemModel( parent )
+IMModel::IMModel(QObject *parent)
+    : QAbstractItemModel(parent)
 {
 }
 
@@ -75,196 +75,197 @@ IMModel::~IMModel()
 {
 }
 
-void IMModel::setAddresses( const IMAddress::List &addresses )
+void IMModel::setAddresses(const IMAddress::List &addresses)
 {
-  emit layoutAboutToBeChanged();
+    emit layoutAboutToBeChanged();
 
-  mAddresses = addresses;
+    mAddresses = addresses;
 
-  emit layoutChanged();
+    emit layoutChanged();
 }
 
 IMAddress::List IMModel::addresses() const
 {
-  return mAddresses;
+    return mAddresses;
 }
 
-QModelIndex IMModel::index( int row, int column, const QModelIndex& ) const
+QModelIndex IMModel::index(int row, int column, const QModelIndex &parent) const
 {
-  return createIndex( row, column );
+    Q_UNUSED(parent);
+    return createIndex(row, column);
 }
 
-QModelIndex IMModel::parent( const QModelIndex& ) const
+QModelIndex IMModel::parent(const QModelIndex &child) const
 {
-  return QModelIndex();
+    Q_UNUSED(child);
+    return QModelIndex();
 }
 
-QVariant IMModel::data( const QModelIndex &index, int role ) const
+QVariant IMModel::data(const QModelIndex &index, int role) const
 {
-  if ( !index.isValid() ) {
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    if (index.row() < 0 || index.row() >= mAddresses.count()) {
+        return QVariant();
+    }
+
+    if (index.column() < 0 || index.column() > 1) {
+        return QVariant();
+    }
+
+    const IMAddress &address = mAddresses[index.row()];
+
+    if (role == Qt::DisplayRole) {
+        if (index.column() == 0) {
+            return IMProtocols::self()->name(address.protocol());
+        } else {
+            return address.name();
+        }
+    }
+
+    if (role == Qt::DecorationRole) {
+        if (index.column() == 1) {
+            return QVariant();
+        }
+
+        return KIcon(IMProtocols::self()->icon(address.protocol()));
+    }
+
+    if (role == Qt::EditRole) {
+        if (index.column() == 0) {
+            return address.protocol();
+        } else {
+            return address.name();
+        }
+    }
+
+    if (role == ProtocolRole) {
+        return address.protocol();
+    }
+
+    if (role == IsPreferredRole) {
+        return address.preferred();
+    }
+
     return QVariant();
-  }
+}
 
-  if ( index.row() < 0 || index.row() >= mAddresses.count() ) {
-    return QVariant();
-  }
+bool IMModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid()) {
+        return false;
+    }
 
-  if ( index.column() < 0 || index.column() > 1 ) {
-    return QVariant();
-  }
+    if (index.row() < 0 || index.row() >= mAddresses.count()) {
+        return false;
+    }
 
-  const IMAddress &address = mAddresses[ index.row() ];
+    if (index.column() < 0 || index.column() > 1) {
+        return false;
+    }
 
-  if ( role == Qt::DisplayRole ) {
-    if ( index.column() == 0 ) {
-      return IMProtocols::self()->name( address.protocol() );
+    IMAddress &address = mAddresses[index.row()];
+
+    if (role == Qt::EditRole) {
+        if (index.column() == 1) {
+            address.setName(value.toString());
+            emit dataChanged(index, index);
+            return true;
+        }
+    }
+
+    if (role == ProtocolRole) {
+        address.setProtocol(value.toString());
+        emit dataChanged(this->index(index.row(), 0), this->index(index.row(), 1));
+        return true;
+    }
+
+    if (role == IsPreferredRole) {
+        address.setPreferred(value.toBool());
+        emit dataChanged(this->index(index.row(), 0), this->index(index.row(), 1));
+        return true;
+    }
+
+    return false;
+}
+
+QVariant IMModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (section < 0 || section > 1) {
+        return QVariant();
+    }
+
+    if (orientation != Qt::Horizontal) {
+        return QVariant();
+    }
+
+    if (role != Qt::DisplayRole) {
+        return QVariant();
+    }
+
+    if (section == 0) {
+        return i18nc("instant messaging protocol", "Protocol");
     } else {
-      return address.name();
+        return i18nc("instant messaging address", "Address");
     }
-  }
+}
 
-  if ( role == Qt::DecorationRole ) {
-    if ( index.column() == 1 ) {
-      return QVariant();
+Qt::ItemFlags IMModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= mAddresses.count()) {
+        return QAbstractItemModel::flags(index);
     }
 
-    return KIcon( IMProtocols::self()->icon( address.protocol() ) );
-  }
+    const Qt::ItemFlags parentFlags = QAbstractItemModel::flags(index);
+    return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+}
 
-  if ( role == Qt::EditRole ) {
-    if ( index.column() == 0 ) {
-      return address.protocol();
+int IMModel::columnCount(const QModelIndex &parent) const
+{
+    if (!parent.isValid()) {
+        return 2;
     } else {
-      return address.name();
+        return 0;
     }
-  }
-
-  if ( role == ProtocolRole ) {
-    return address.protocol();
-  }
-
-  if ( role == IsPreferredRole ) {
-    return address.preferred();
-  }
-
-  return QVariant();
 }
 
-bool IMModel::setData( const QModelIndex &index, const QVariant &value, int role )
+int IMModel::rowCount(const QModelIndex &parent) const
 {
-  if ( !index.isValid() ) {
-    return false;
-  }
-
-  if ( index.row() < 0 || index.row() >= mAddresses.count() ) {
-    return false;
-  }
-
-  if ( index.column() < 0 || index.column() > 1 ) {
-    return false;
-  }
-
-  IMAddress &address = mAddresses[ index.row() ];
-
-  if ( role == Qt::EditRole ) {
-    if ( index.column() == 1 ) {
-      address.setName( value.toString() );
-      emit dataChanged( index, index );
-      return true;
+    if (!parent.isValid()) {
+        return mAddresses.count();
+    } else {
+        return 0;
     }
-  }
+}
 
-  if ( role == ProtocolRole ) {
-    address.setProtocol( value.toString() );
-    emit dataChanged( this->index( index.row(), 0 ), this->index( index.row(), 1 ) );
+bool IMModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    if (parent.isValid()) {
+        return false;
+    }
+
+    beginInsertRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; ++i) {
+        mAddresses.insert(row, IMAddress());
+    }
+    endInsertRows();
+
     return true;
-  }
+}
 
-  if ( role == IsPreferredRole ) {
-    address.setPreferred( value.toBool() );
-    emit dataChanged( this->index( index.row(), 0 ), this->index( index.row(), 1 ) );
+bool IMModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    if (parent.isValid()) {
+        return false;
+    }
+
+    beginRemoveRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; ++i) {
+        mAddresses.remove(row);
+    }
+    endRemoveRows();
+
     return true;
-  }
-
-  return false;
 }
-
-QVariant IMModel::headerData( int section, Qt::Orientation orientation, int role ) const
-{
-  if ( section < 0 || section > 1 ) {
-    return QVariant();
-  }
-
-  if ( orientation != Qt::Horizontal ) {
-    return QVariant();
-  }
-
-  if ( role != Qt::DisplayRole ) {
-    return QVariant();
-  }
-
-  if ( section == 0 ) {
-    return i18nc( "instant messaging protocol", "Protocol" );
-  } else {
-    return i18nc( "instant messaging address", "Address" );
-  }
-}
-
-Qt::ItemFlags IMModel::flags( const QModelIndex &index ) const
-{
-  if ( !index.isValid() || index.row() < 0 || index.row() >= mAddresses.count() ) {
-    return QAbstractItemModel::flags( index );
-  }
-
-  const Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
-  return ( parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable );
-}
-
-int IMModel::columnCount( const QModelIndex &parent ) const
-{
-  if ( !parent.isValid() ) {
-    return 2;
-  } else {
-    return 0;
-  }
-}
-
-int IMModel::rowCount( const QModelIndex &parent ) const
-{
-  if ( !parent.isValid() ) {
-    return mAddresses.count();
-  } else {
-    return 0;
-  }
-}
-
-bool IMModel::insertRows( int row, int count, const QModelIndex &parent )
-{
-  if ( parent.isValid() ) {
-    return false;
-  }
-
-  beginInsertRows( parent, row, row + count - 1 );
-  for ( int i = 0; i < count; ++i ) {
-    mAddresses.insert( row, IMAddress() );
-  }
-  endInsertRows();
-
-  return true;
-}
-
-bool IMModel::removeRows( int row, int count, const QModelIndex &parent )
-{
-  if ( parent.isValid() ) {
-    return false;
-  }
-
-  beginRemoveRows( parent, row, row + count - 1 );
-  for ( int i = 0; i < count; ++i ) {
-    mAddresses.remove( row );
-  }
-  endRemoveRows();
-
-  return true;
-}
-

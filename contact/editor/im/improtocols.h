@@ -28,23 +28,23 @@
 
 class AKONADI_CONTACT_EXPORT IMProtocols
 {
-  public:
+public:
     ~IMProtocols();
 
-    static IMProtocols* self();
+    static IMProtocols *self();
 
     /**
      * Returns the protocol identifiers in a sorted order.
      */
     QStringList protocols() const;
 
-    QString name( const QString &protocol ) const;
-    QString icon( const QString &protocol ) const;
+    QString name(const QString &protocol) const;
+    QString icon(const QString &protocol) const;
 
-  private:
+private:
     IMProtocols();
 
-    static IMProtocols* mSelf;
+    static IMProtocols *mSelf;
 
     QMap<QString, KPluginInfo> mPluginInfos;
     QStringList mSortedProtocols;

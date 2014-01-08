@@ -32,55 +32,54 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocalizedstring.h>
 #include <kicon.h>
 
-IMItemDialog::IMItemDialog( QWidget *parent )
-  : KDialog( parent )
+IMItemDialog::IMItemDialog(QWidget *parent)
+    : KDialog(parent)
 {
-  setButtons( Ok | Cancel );
-  setDefaultButton( Ok );
+    setButtons(Ok | Cancel);
+    setDefaultButton(Ok);
 
-  QWidget *widget = new QWidget( this );
-  setMainWidget( widget );
+    QWidget *widget = new QWidget(this);
+    setMainWidget(widget);
 
-  QFormLayout *layout = new QFormLayout( widget );
+    QFormLayout *layout = new QFormLayout(widget);
 
-  mProtocolCombo = new KComboBox;
-  mProtocolCombo->addItem( i18nc( "@item:inlistbox select from a list of IM protocols",
-                                  "Select..." ) );
-  layout->addRow( i18nc( "@label:listbox", "Protocol:" ), mProtocolCombo );
+    mProtocolCombo = new KComboBox;
+    mProtocolCombo->addItem(i18nc("@item:inlistbox select from a list of IM protocols",
+                                  "Select..."));
+    layout->addRow(i18nc("@label:listbox", "Protocol:"), mProtocolCombo);
 
-  const QStringList protocols = IMProtocols::self()->protocols();
-  foreach ( const QString &protocol, protocols ) {
-    mProtocolCombo->addItem( KIcon( IMProtocols::self()->icon( protocol ) ),
-                             IMProtocols::self()->name( protocol ),
-                             protocol );
-  }
+    const QStringList protocols = IMProtocols::self()->protocols();
+    foreach (const QString &protocol, protocols) {
+        mProtocolCombo->addItem(KIcon(IMProtocols::self()->icon(protocol)),
+                                IMProtocols::self()->name(protocol),
+                                protocol);
+    }
 
-  mNameEdit = new KLineEdit;
-  layout->addRow( i18nc( "@label:textbox IM address", "Address:" ), mNameEdit );
+    mNameEdit = new KLineEdit;
+    layout->addRow(i18nc("@label:textbox IM address", "Address:"), mNameEdit);
 
-  connect( mProtocolCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateButtons()) );
-  connect( mNameEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons()) );
+    connect(mProtocolCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateButtons()));
+    connect(mNameEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons()));
 
-  slotUpdateButtons();
+    slotUpdateButtons();
 }
 
-void IMItemDialog::setAddress( const IMAddress &address )
+void IMItemDialog::setAddress(const IMAddress &address)
 {
-  mProtocolCombo->setCurrentIndex(
-    IMProtocols::self()->protocols().indexOf( address.protocol() ) + 1 );
+    mProtocolCombo->setCurrentIndex(
+        IMProtocols::self()->protocols().indexOf(address.protocol()) + 1);
 
-  mNameEdit->setText( address.name() );
-  slotUpdateButtons();
+    mNameEdit->setText(address.name());
+    slotUpdateButtons();
 }
 
 IMAddress IMItemDialog::address() const
 {
-  return IMAddress( mProtocolCombo->itemData( mProtocolCombo->currentIndex() ).toString(),
-                    mNameEdit->text(), false );
+    return IMAddress(mProtocolCombo->itemData(mProtocolCombo->currentIndex()).toString(),
+                     mNameEdit->text(), false);
 }
 
 void IMItemDialog::slotUpdateButtons()
 {
-  enableButtonOk( mProtocolCombo->currentIndex()>0 && !mNameEdit->text().isEmpty() );
+    enableButtonOk(mProtocolCombo->currentIndex() > 0 && !mNameEdit->text().isEmpty());
 }
-

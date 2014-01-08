@@ -32,23 +32,23 @@ class QTreeView;
 
 class IMEditorDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit IMEditorDialog( QWidget *parent );
+public:
+    explicit IMEditorDialog(QWidget *parent);
     ~IMEditorDialog();
 
-    void setAddresses( const IMAddress::List &addresses );
+    void setAddresses(const IMAddress::List &addresses);
     IMAddress::List addresses() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotAdd();
     void slotEdit();
     void slotRemove();
     void slotSetStandard();
     void slotUpdateButtons();
 
-  private:
+private:
     void readConfig();
     void writeConfig();
     QTreeView *mView;

@@ -26,15 +26,15 @@
 
 class IMDelegate : public QStyledItemDelegate
 {
-  public:
-    explicit IMDelegate( QObject *parent = 0 );
+public:
+    explicit IMDelegate(QObject *parent = 0);
     ~IMDelegate();
 
-    virtual QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                                   const QModelIndex &index ) const;
+    virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                                  const QModelIndex &index) const;
 
-    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
-                        const QModelIndex &index ) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option,
+                       const QModelIndex &index) const;
 };
 
 #endif
