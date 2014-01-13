@@ -30,47 +30,46 @@
 
 #include <QHBoxLayout>
 
-CategoriesEditWidget::CategoriesEditWidget( QWidget *parent )
-  : QWidget( parent )
+CategoriesEditWidget::CategoriesEditWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
-  layout->setSpacing( KDialog::spacingHint() );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(KDialog::spacingHint());
 
-  mTagWidget = new TagWidget( this );
-  layout->addWidget( mTagWidget );
+    mTagWidget = new TagWidget(this);
+    layout->addWidget(mTagWidget);
 }
 
 CategoriesEditWidget::~CategoriesEditWidget()
 {
 }
 
-void CategoriesEditWidget::setReadOnly( bool readOnly )
+void CategoriesEditWidget::setReadOnly(bool readOnly)
 {
-  mTagWidget->setEnabled( !readOnly );
+    mTagWidget->setEnabled(!readOnly);
 }
 
-void CategoriesEditWidget::loadContact( const KABC::Addressee &contact )
+void CategoriesEditWidget::loadContact(const KABC::Addressee &contact)
 {
-  QVector<Nepomuk2::Tag> tags;
+    QVector<Nepomuk2::Tag> tags;
 
-  const QStringList categories = contact.categories();
-  foreach ( const QString &category, categories ) {
-    tags.append( Nepomuk2::Tag( category ) );
-  }
+    const QStringList categories = contact.categories();
+    foreach (const QString &category, categories) {
+        tags.append(Nepomuk2::Tag(category));
+    }
 
-  mTagWidget->setTags( tags );
+    mTagWidget->setTags(tags);
 }
 
-void CategoriesEditWidget::storeContact( KABC::Addressee &contact ) const
+void CategoriesEditWidget::storeContact(KABC::Addressee &contact) const
 {
-  QStringList categories;
+    QStringList categories;
 
-  const QVector<Nepomuk2::Tag> tags = mTagWidget->tags();
-  foreach ( const Nepomuk2::Tag &tag, tags ) {
-    categories.append( tag.genericLabel() );
-  }
+    const QVector<Nepomuk2::Tag> tags = mTagWidget->tags();
+    foreach (const Nepomuk2::Tag &tag, tags) {
+        categories.append(tag.genericLabel());
+    }
 
-  contact.setCategories( categories );
+    contact.setCategories(categories);
 }
-

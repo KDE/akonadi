@@ -32,15 +32,15 @@ class QCheckBox;
 
 class CustomFieldEditorDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CustomFieldEditorDialog( QWidget *parent = 0 );
+public:
+    explicit CustomFieldEditorDialog(QWidget *parent = 0);
 
-    void setCustomField( const CustomField &field );
+    void setCustomField(const CustomField &field);
     CustomField customField() const;
 
-  private:
+private:
     KLineEdit *mTitle;
     KComboBox *mType;
     QCheckBox *mScope;

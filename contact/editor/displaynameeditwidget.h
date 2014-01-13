@@ -36,44 +36,44 @@ class KComboBox;
  */
 class DisplayNameEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes what the display name should look like.
      */
     enum DisplayType {
-      SimpleName,           ///< A name of the form: givenName familyName
-      FullName,             ///< A name of the form: prefix givenName additionalName familyName suffix
-      ReverseNameWithComma, ///< A name of the form: familyName, givenName
-      ReverseName,          ///< A name of the form: familyName givenName
-      Organization,         ///< The organization name
-      CustomName            ///< Let the user input a display name
+        SimpleName,           ///< A name of the form: givenName familyName
+        FullName,             ///< A name of the form: prefix givenName additionalName familyName suffix
+        ReverseNameWithComma, ///< A name of the form: familyName, givenName
+        ReverseName,          ///< A name of the form: familyName givenName
+        Organization,         ///< The organization name
+        CustomName            ///< Let the user input a display name
     };
 
-    explicit DisplayNameEditWidget( QWidget *parent = 0 );
+    explicit DisplayNameEditWidget(QWidget *parent = 0);
     ~DisplayNameEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-    void setDisplayType( DisplayType type );
+    void setDisplayType(DisplayType type);
     DisplayType displayType() const;
 
-  public Q_SLOTS:
-    void changeName( const KABC::Addressee &contact );
-    void changeOrganization( const QString &organization );
+public Q_SLOTS:
+    void changeName(const KABC::Addressee &contact);
+    void changeOrganization(const QString &organization);
 
-  protected:
-    virtual bool eventFilter( QObject *object, QEvent *event );
+protected:
+    virtual bool eventFilter(QObject *object, QEvent *event);
 
-  private Q_SLOTS:
-    void displayTypeChanged( int );
-    void setComboBoxEditable( bool );
+private Q_SLOTS:
+    void displayTypeChanged(int);
+    void setComboBoxEditable(bool);
 
-  private:
+private:
     void updateView();
 
     KComboBox *mView;

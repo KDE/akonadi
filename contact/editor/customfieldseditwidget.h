@@ -33,31 +33,31 @@ class Addressee;
 class QPushButton;
 class QTreeView;
 
-void splitCustomField(  const QString &str, QString &app, QString &name, QString &value );
+void splitCustomField(const QString &str, QString &app, QString &name, QString &value);
 
 class CustomFieldsEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CustomFieldsEditWidget( QWidget *parent = 0 );
+public:
+    explicit CustomFieldsEditWidget(QWidget *parent = 0);
     ~CustomFieldsEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-    void setLocalCustomFieldDescriptions( const QVariantList &descriptions );
+    void setLocalCustomFieldDescriptions(const QVariantList &descriptions);
     QVariantList localCustomFieldDescriptions() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotAdd();
     void slotEdit();
     void slotRemove();
     void slotUpdateButtons();
 
-  private:
+private:
     QTreeView *mView;
 
     QPushButton *mAddButton;

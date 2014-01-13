@@ -27,12 +27,15 @@
 #include <klocalizedstring.h>
 
 IMAddress::IMAddress()
-    : mProtocol(QLatin1String("messaging/aim")), mPreferred(false)
+    : mProtocol(QLatin1String("messaging/aim"))
+    , mPreferred(false)
 {
 }
 
 IMAddress::IMAddress(const QString &protocol, const QString &name, bool preferred)
-    : mProtocol(protocol), mName(name), mPreferred(preferred)
+    : mProtocol(protocol)
+    , mName(name)
+    , mPreferred(preferred)
 {
 }
 

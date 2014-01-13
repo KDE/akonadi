@@ -33,114 +33,120 @@
 #include <QLabel>
 #include <QToolButton>
 
-DateView::DateView( QWidget *parent )
-  : QLabel( parent )
+DateView::DateView(QWidget *parent)
+    : QLabel(parent)
 {
-  setTextInteractionFlags( Qt::TextSelectableByMouse );
-  setFrameShape( QFrame::StyledPanel );
-  setFrameShadow( QFrame::Sunken );
+    setTextInteractionFlags(Qt::TextSelectableByMouse);
+    setFrameShape(QFrame::StyledPanel);
+    setFrameShadow(QFrame::Sunken);
 }
 
-void DateView::contextMenuEvent( QContextMenuEvent *event )
+void DateView::contextMenuEvent(QContextMenuEvent *event)
 {
-  if ( text().isEmpty() ) {
-    return;
-  }
+    if (text().isEmpty()) {
+        return;
+    }
 
-  QMenu menu;
-  menu.addAction( i18n( "Remove" ), this, SLOT(emitSignal()) );
+    QMenu menu;
+    menu.addAction(i18n("Remove"), this, SLOT(emitSignal()));
 
-  menu.exec( event->globalPos() );
+    menu.exec(event->globalPos());
 }
 
 void DateView::emitSignal()
 {
-  emit resetDate();
+    emit resetDate();
 }
 
-DateEditWidget::DateEditWidget( Type type, QWidget *parent )
-  : QWidget( parent ), mReadOnly( false )
+DateEditWidget::DateEditWidget(Type type, QWidget *parent)
+    : QWidget(parent)
+    , mReadOnly(false)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
 
-  mView = new DateView;
-  layout->addWidget( mView );
+    mView = new DateView;
+    layout->addWidget(mView);
 
-  mClearButton = new QToolButton;
-  if ( layoutDirection() == Qt::LeftToRight ) {
-    mClearButton->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-rtl" ) ) );
-  } else {
-    mClearButton->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-ltr" ) ) );
-  }
-  layout->addWidget( mClearButton );
+    mClearButton = new QToolButton;
+    if (layoutDirection() == Qt::LeftToRight) {
+        mClearButton->setIcon(KIcon(QLatin1String("edit-clear-locationbar-rtl")));
+    } else {
+        mClearButton->setIcon(KIcon(QLatin1String("edit-clear-locationbar-ltr")));
+    }
+    layout->addWidget(mClearButton);
 
-  mSelectButton = new QToolButton;
-  mSelectButton->setPopupMode( QToolButton::InstantPopup );
-  switch ( type ) {
-    case General: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-day" ) ) ); break;
-    case Birthday: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-birthday" ) ) ); break;
-    case Anniversary: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-wedding-anniversary" ) ) ); break;
-  }
+    mSelectButton = new QToolButton;
+    mSelectButton->setPopupMode(QToolButton::InstantPopup);
+    switch (type) {
+    case General:
+        mSelectButton->setIcon(KIcon(QLatin1String("view-calendar-day")));
+        break;
+    case Birthday:
+        mSelectButton->setIcon(KIcon(QLatin1String("view-calendar-birthday")));
+        break;
+    case Anniversary:
+        mSelectButton->setIcon(KIcon(QLatin1String("view-calendar-wedding-anniversary")));
+        break;
+    }
 
-  layout->addWidget( mSelectButton );
-  setFocusProxy( mSelectButton );
-  setFocusPolicy( Qt::StrongFocus );
+    layout->addWidget(mSelectButton);
+    setFocusProxy(mSelectButton);
+    setFocusPolicy(Qt::StrongFocus);
 
-  mMenu = new KDatePickerPopup( KDatePickerPopup::DatePicker, QDate(), this );
-  mSelectButton->setMenu( mMenu );
+    mMenu = new KDatePickerPopup(KDatePickerPopup::DatePicker, QDate(), this);
+    mSelectButton->setMenu(mMenu);
 
-  connect( mClearButton, SIGNAL(clicked()), SLOT(resetDate()) );
-  connect( mMenu, SIGNAL(dateChanged(QDate)), SLOT(dateSelected(QDate)) );
-  connect( mView, SIGNAL(resetDate()), SLOT(resetDate()) );
+    connect(mClearButton, SIGNAL(clicked()), SLOT(resetDate()));
+    connect(mMenu, SIGNAL(dateChanged(QDate)), SLOT(dateSelected(QDate)));
+    connect(mView, SIGNAL(resetDate()), SLOT(resetDate()));
 
-  updateView();
+    updateView();
 }
 
 DateEditWidget::~DateEditWidget()
 {
 }
 
-void DateEditWidget::setDate( const QDate &date )
+void DateEditWidget::setDate(const QDate &date)
 {
-  mDate = date;
-  mMenu->setDate( mDate );
-  updateView();
+    mDate = date;
+    mMenu->setDate(mDate);
+    updateView();
 }
 
 QDate DateEditWidget::date() const
 {
-  return mDate;
+    return mDate;
 }
 
-void DateEditWidget::setReadOnly( bool readOnly )
+void DateEditWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
+    mReadOnly = readOnly;
 
-  mSelectButton->setEnabled( !readOnly );
-  mClearButton->setEnabled( !readOnly );
+    mSelectButton->setEnabled(!readOnly);
+    mClearButton->setEnabled(!readOnly);
 }
 
 void DateEditWidget::dateSelected(const QDate &date)
 {
-  mDate = date;
-  updateView();
+    mDate = date;
+    updateView();
 }
 
 void DateEditWidget::resetDate()
 {
-  mDate = QDate();
-  updateView();
+    mDate = QDate();
+    updateView();
 }
 
 void DateEditWidget::updateView()
 {
-  if ( mDate.isValid() ) {
-    mView->setText( KGlobal::locale()->formatDate( mDate ) );
-    mClearButton->show();
-  } else {
-    mView->setText( QString() );
-    mClearButton->hide();
-  }
+    if (mDate.isValid()) {
+        mView->setText(KGlobal::locale()->formatDate(mDate));
+        mClearButton->show();
+    } else {
+        mView->setText(QString());
+        mClearButton->hide();
+    }
 }
-

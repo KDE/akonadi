@@ -26,15 +26,15 @@
 
 class CustomFieldsDelegate : public QStyledItemDelegate
 {
-  public:
-    explicit CustomFieldsDelegate( QObject *parent = 0 );
+public:
+    explicit CustomFieldsDelegate(QObject *parent = 0);
     ~CustomFieldsDelegate();
 
-    virtual QWidget* createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    virtual void setEditorData( QWidget *editor, const QModelIndex &index ) const;
-    virtual void setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const;
-    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    virtual void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 #endif
