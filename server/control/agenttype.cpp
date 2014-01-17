@@ -39,6 +39,32 @@ AgentType::AgentType()
 {
 }
 
+QString AgentType::readString( const QSettings &file, const QString &key )
+{
+  const QVariant value = file.value( key );
+  if ( value.isNull() ) {
+    return QString();
+  } else if ( value.canConvert<QString>() ) {
+    return QString::fromUtf8( value.toByteArray() );
+  } else if ( value.canConvert<QStringList>() ) {
+    // This is a workaround for QSettings interpreting value with a comma as
+    // a QStringList, which is not compatible with KConfig. KConfig reads everything
+    // as a QByteArray and splits it to a list when requested. See BKO#330010
+    // TODO KF5: If we end up in Tier 2 or above, depend on KConfig for parsing
+    // .desktop files
+    const QStringList parts = value.toStringList();
+    QStringList utf8Parts;
+    utf8Parts.reserve( parts.size() );
+    Q_FOREACH ( const QString &part, parts ) {
+      utf8Parts << QString::fromUtf8( part.toLatin1() );
+    }
+    return utf8Parts.join( QLatin1String( ", ") );
+  } else {
+    akError() << "Agent desktop file" << file.fileName() << "contains invalid value for key" << key;
+    return QString();
+  }
+}
+
 bool AgentType::load( const QString &fileName, AgentManager *manager )
 {
   Q_UNUSED( manager );
@@ -49,17 +75,17 @@ bool AgentType::load( const QString &fileName, AgentManager *manager )
   Q_FOREACH ( const QString &key, file.allKeys() ) {
     if ( key.startsWith( QLatin1String( "Name[" ) ) ) {
       QString lang = key.mid( 5, key.length() - 6 );
-      name.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() ) );
+      name.insert( lang, readString( file, key ) );
     } else if ( key == QLatin1String( "Name" ) ) {
-      name.insert( QLatin1String( "en_US" ), QString::fromUtf8( file.value( QLatin1String( "Name" ) ).toByteArray() ) );
+      name.insert( QLatin1String( "en_US" ), readString( file, key ) );
     } else if ( key.startsWith( QLatin1String( "Comment[" ) ) ) {
       QString lang = key.mid( 8, key.length() - 9 );
-      comment.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() ) );
+      comment.insert( lang, readString( file, key ) );
     } else if ( key == QLatin1String( "Comment" ) ) {
-      comment.insert( QLatin1String( "en_US" ), QString::fromUtf8( file.value( QLatin1String( "Comment" ) ).toByteArray() ) );
+      comment.insert( QLatin1String( "en_US" ), readString( file, key ) );
     } else if ( key.startsWith( QLatin1String( "X-Akonadi-Custom-" ) ) ) {
       QString customKey = key.mid( 17, key.length() );
-      custom[customKey] = file.value( key );
+      custom[customKey] = readString( file, key );
     }
   }
   icon = file.value( QLatin1String( "Icon" ) ).toString();
