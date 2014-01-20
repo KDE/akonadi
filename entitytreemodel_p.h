@@ -301,6 +301,15 @@ public:
   Item itemForId( Item::Id id ) const;
 
   bool canFetchMore( const QModelIndex & parent ) const;
+
+  /**
+   * Returns true if the collection matches all filters and should be part of the model.
+   * This method checks all properties that could change by modifying the collection.
+   * Currently that includes:
+   * * hidden attribute
+   * * content mime types
+   */
+  bool shouldBePartOfModel( const Collection &collection ) const;
 };
 
 }

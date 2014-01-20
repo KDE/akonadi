@@ -742,12 +742,23 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
   q->endInsertRows();
 }
 
-void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
+bool EntityTreeModelPrivate::shouldBePartOfModel( const Collection& collection ) const
 {
   if ( isHidden( collection ) ) {
-    return;
+    return false;
   }
 
+  // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
+  // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() &&
+       !m_mimeChecker.isWantedCollection( collection ) ) {
+    return false;
+  }
+  return true;
+}
+
+void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
+{
   // If the resource is removed while populating the model with it, we might still
   // get some monitor signals. These stale/out-of-order signals can't be completely eliminated
   // in the akonadi server due to implementation details, so we also handle such signals in the model silently
@@ -761,15 +772,13 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
     return;
   }
 
+  //If the resource is explicitly monitored all other checks are skipped. topLevelCollectionsFetched still checks the hidden attribute.
   if ( m_monitor->resourcesMonitored().contains( collection.resource().toUtf8() ) &&
        collection.parentCollection() == Collection::root() ) {
     return topLevelCollectionsFetched( Collection::List() << collection );
   }
 
-  // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
-  // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() &&
-       !m_mimeChecker.isWantedCollection( collection ) ) {
+  if ( !shouldBePartOfModel( collection ) ) {
     return;
   }
 
@@ -787,10 +796,6 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collection& collection )
 {
-  if ( isHidden( collection ) ) {
-    return;
-  }
-
   //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case)
   if ( ( collection == m_rootCollection ) ||
        m_monitor->collectionsMonitored().contains( collection ) ) {
@@ -810,6 +815,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   }
 
   // This may be a signal for a collection we've already removed by removing its ancestor.
+  // Or the collection may have been hidden.
   if ( !m_collections.contains( collection.id() ) ) {
     return;
   }
@@ -977,15 +983,20 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collection &collection )
 {
-  if ( isHidden( collection ) ) {
-    return;
-  }
 
   if ( !m_collections.contains( collection.id() ) ) {
     // This can happen if
     // * we get a change notification after removing the collection.
     // * a collection of a non-monitored mimetype is changed elsewhere. Monitor does not
     //    filter by content mimetype of Collections so we get notifications for all of them.
+
+    //We might match the filter now, retry adding the collection
+    monitoredCollectionAdded( collection, collection.parentCollection() );
+    return;
+  }
+
+  if ( !shouldBePartOfModel( collection ) ) {
+    monitoredCollectionRemoved( collection );
     return;
   }
 
