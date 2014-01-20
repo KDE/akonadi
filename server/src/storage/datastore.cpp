@@ -37,6 +37,7 @@
 #include "collectionqueryhelper.h"
 #include "akonadischema.h"
 #include "parttypehelper.h"
+#include "querycache.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -136,6 +137,7 @@ void Akonadi::DataStore::close()
     rollbackTransaction();
   }
 
+  QueryCache::clear();
   m_database.close();
   m_database = QSqlDatabase();
   QSqlDatabase::removeDatabase( m_connectionName );

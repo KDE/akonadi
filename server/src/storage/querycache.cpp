@@ -91,4 +91,14 @@ void QueryCache::insert( const QString &queryStatement, const QSqlQuery &query )
   }
 }
 
+void QueryCache::clear()
+{
+  if (!g_queryCache.hasLocalData()) {
+    return;
+  }
+
+  g_queryCache.localData()->cleanup();
+}
+
+
 #include <querycache.moc>
