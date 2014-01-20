@@ -66,9 +66,6 @@ class AkonadiServer : public QLocalServer
     void createDatabase();
     void stopDatabaseProcess();
 
-    void startMysqlDatabaseProcess();
-    void startPostgresqlDatabaseProcess();
-
     CacheCleaner *mCacheCleaner;
     IntervalCheck *mIntervalChecker;
     StorageJanitorThread *mStorageJanitor;
