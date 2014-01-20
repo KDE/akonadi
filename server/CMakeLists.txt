@@ -147,7 +147,6 @@ set(libakonadiprivate_SRCS
   src/storage/datastore.cpp
   src/storage/dbconfig.cpp
   src/storage/dbconfigmysql.cpp
-  src/storage/dbconfigmysqlembedded.cpp
   src/storage/dbconfigpostgresql.cpp
   src/storage/dbconfigsqlite.cpp
   src/storage/dbexception.cpp

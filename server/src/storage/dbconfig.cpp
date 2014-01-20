@@ -20,7 +20,6 @@
 #include "dbconfig.h"
 
 #include "dbconfigmysql.h"
-#include "dbconfigmysqlembedded.h"
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
 
@@ -77,8 +76,6 @@ DbConfig *DbConfig::configuredDatabase()
 
     if ( driverName == QLatin1String( "QMYSQL" ) ) {
       s_DbConfigInstance = new DbConfigMysql;
-    } else if ( driverName == QLatin1String( "QMYSQL_EMBEDDED" ) ) {
-      s_DbConfigInstance = new DbConfigMysqlEmbedded;
     } else if ( driverName == QLatin1String( "QSQLITE" ) ) {
       s_DbConfigInstance = new DbConfigSqlite( DbConfigSqlite::Default );
     } else if ( driverName == QLatin1String( "QSQLITE3" ) ) {
