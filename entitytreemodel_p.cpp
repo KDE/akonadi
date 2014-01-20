@@ -1613,6 +1613,11 @@ void EntityTreeModelPrivate::deref( Collection::Id id )
     return;
   }
 
+  //The collection has already been removed, don't purge
+  if ( !m_collections.contains( bumpedId ) ) {
+    return;
+  }
+
   if ( shouldPurge( bumpedId ) ) {
     purgeItems( bumpedId );
   }
