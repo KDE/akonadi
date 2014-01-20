@@ -30,10 +30,11 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
+#include <unistd.h>
+
 using namespace Akonadi;
 
 DbConfigPostgresql::DbConfigPostgresql()
-  : mDatabaseProcess( 0 )
 {
 }
 
@@ -54,7 +55,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
   QString defaultOptions;
   QString defaultServerPath;
   QString defaultInitDbPath;
-  QString defaultCleanShutdownCommand;
+  QString defaultPgData;
 
 #ifndef Q_WS_WIN // We assume that PostgreSQL is running as service on Windows
   const bool defaultInternalServer = true;
@@ -83,9 +84,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "pg_ctl" ), postgresSearchPath );
     defaultInitDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
     defaultHostName = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
-    defaultCleanShutdownCommand = QString::fromLatin1( "%1 stop -D%2 -m fast" )
-                                      .arg( defaultServerPath )
-                                      .arg( AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) ) );
+    defaultPgData = AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) );
   }
 
   // read settings for current driver
@@ -97,7 +96,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
   mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
   mServerPath = settings.value( QLatin1String( "ServerPath" ), defaultServerPath ).toString();
   mInitDbPath = settings.value( QLatin1String( "InitDbPath" ), defaultInitDbPath ).toString();
-  mCleanServerShutdownCommand = settings.value( QLatin1String( "CleanServerShutdownCommand" ), defaultCleanShutdownCommand ).toString();
+  mPgData = settings.value( QLatin1String( "PgData" ), defaultPgData ).toString();
   settings.endGroup();
 
   // store back the default values
@@ -146,57 +145,38 @@ bool DbConfigPostgresql::useInternalServer() const
 
 void DbConfigPostgresql::startInternalServer()
 {
-  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) );
-  const QString socketDir = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
+  // We defined the mHostName to the socket directory, during init
+  const QString socketDir = mHostName;
 
-  if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( dataDir ) ) ) {
+  if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( mPgData ) ) ) {
     // postgres data directory not initialized yet, so call initdb on it
 
-    // call 'initdb -D/home/user/.local/share/akonadi/data_db'
+    // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
     const QString command = QString::fromLatin1( "%1" ).arg( mInitDbPath );
     QStringList arguments;
-    arguments << QString::fromLatin1( "-D%2" ).arg( dataDir )
+    arguments << QString::fromLatin1( "--pgdata=%2" ).arg( mPgData )
+              // TODO check locale
               << QString::fromLatin1( "--locale=en_US.UTF-8" );
     QProcess::execute( command, arguments );
-
-    const QString configFileName = dataDir + QDir::separator() + QLatin1String( "postgresql.conf" );
-    QFile configFile( configFileName );
-    configFile.open( QIODevice::ReadOnly );
-
-    QString content = QString::fromUtf8( configFile.readAll() );
-    configFile.close();
-
-    // avoid binding to tcp port
-    content.replace( QLatin1String( "#listen_addresses = 'localhost'" ),
-                     QLatin1String( "listen_addresses = ''" ) );
-
-    // set the directory for unix domain socket communication
-    content.replace( QLatin1String( "#unix_socket_directory = ''" ),
-                     QString::fromLatin1( "unix_socket_directory = '%1'" ).arg( socketDir ) );
-
-    // treat backslashes in strings literally as defined in the SQL standard
-    content.replace( QLatin1String( "#standard_conforming_strings = off" ),
-                     QLatin1String( "standard_conforming_strings = on" ) );
-
-    configFile.open( QIODevice::WriteOnly );
-    configFile.write( content.toUtf8() );
-    configFile.close();
   }
 
   // synthesize the postgres command
   QStringList arguments;
-  arguments << QString::fromLatin1( "-w" )
-            << QString::fromLatin1( "-t10" ) // default is 60 seconds.
-            << QString::fromLatin1( "start" )
-            << QString::fromLatin1( "-D%1" ).arg( dataDir );
+  arguments << QString::fromLatin1( "start")
+            << QString::fromLatin1( "-w" )
+            << QString::fromLatin1( "--timeout=10" ) // default is 60 seconds.
+            << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
+            // set the directory for unix domain socket communication
+            // -o will pass the switch to postgres
+            << QString::fromLatin1( "-o \"-k %1\"" ).arg( socketDir );
 
-  mDatabaseProcess = new QProcess;
-  mDatabaseProcess->start( mServerPath, arguments );
-  if ( !mDatabaseProcess->waitForStarted() ) {
+  QProcess pgCtl;
+  pgCtl.start( mServerPath, arguments );
+  if ( !pgCtl.waitForStarted() ) {
     akError() << "Could not start database server!";
     akError() << "executable:" << mServerPath;
     akError() << "arguments:" << arguments;
-    akFatal() << "process error:" << mDatabaseProcess->errorString();
+    akFatal() << "process error:" << pgCtl.errorString();
   }
 
   const QLatin1String initCon( "initConnection" );
@@ -218,14 +198,14 @@ void DbConfigPostgresql::startInternalServer()
         break;
       }
 
-      if ( mDatabaseProcess->waitForFinished( 500 ) ) {
+      if ( pgCtl.waitForFinished( 500 ) ) {
         akError() << "Database process exited unexpectedly during initial connection!";
         akError() << "executable:" << mServerPath;
         akError() << "arguments:" << arguments;
-        akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
-        akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
-        akError() << "exit code:" << mDatabaseProcess->exitCode();
-        akFatal() << "process error:" << mDatabaseProcess->errorString();
+        akError() << "stdout:" << pgCtl.readAllStandardOutput();
+        akError() << "stderr:" << pgCtl.readAllStandardError();
+        akError() << "exit code:" << pgCtl.exitCode();
+        akFatal() << "process error:" << pgCtl.errorString();
       }
     }
 
@@ -234,7 +214,7 @@ void DbConfigPostgresql::startInternalServer()
         QSqlQuery query( db );
 
         // check if the 'akonadi' database already exists
-        query.exec( QString::fromLatin1( "SELECT * FROM pg_catalog.pg_database WHERE datname = '%1'" ).arg( mDatabaseName ) );
+        query.exec( QString::fromLatin1( "SELECT 1 FROM pg_catalog.pg_database WHERE datname = '%1'" ).arg( mDatabaseName ) );
 
         // if not, create it
         if ( !query.first() ) {
@@ -254,32 +234,67 @@ void DbConfigPostgresql::startInternalServer()
 
 void DbConfigPostgresql::stopInternalServer()
 {
-  if ( !mDatabaseProcess ) {
+  if ( !checkServerIsRunning() ) {
+    akDebug() << "Database is no longer running";
     return;
   }
 
-  // first, try the nicest approach
-  if ( !mCleanServerShutdownCommand.isEmpty() ) {
-    QProcess::execute( mCleanServerShutdownCommand );
-    if ( mDatabaseProcess->waitForFinished( 3000 ) ) {
-      return;
-    }
+  const QString command = QString::fromLatin1( "%1" ).arg( mServerPath );
+
+  // first, try a FAST shutdown
+  QStringList arguments;
+  arguments << QString::fromLatin1( "stop" )
+            << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
+            << QString::fromLatin1( "--mode=fast" );
+  QProcess::execute( command, arguments );
+  sleep( 3 );
+  if ( !checkServerIsRunning() ) {
+    return;
   }
 
-  // if pg_ctl couldn't terminate all the postgres processes, we have to kill the master one.
-  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) );
-  const QString pidFileName = QString::fromLatin1( "%1/postmaster.pid" ).arg( dataDir );
+  // second, try an IMMEDIATE shutdown
+  arguments.clear();
+  arguments << QString::fromLatin1( "stop" )
+            << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
+            << QString::fromLatin1( "--mode=immediate" );
+  QProcess::execute( command, arguments );
+  sleep( 3 );
+  if ( !checkServerIsRunning() ) {
+    return;
+  }
+
+  // third, pg_ctl couldn't terminate all the postgres processes, we have to
+  // kill the master one. We don't want to do that, but we've passed the last
+  // call. pg_ctl is used to send the kill signal (safe when kill is not
+  // supported by OS)
+  const QString pidFileName = QString::fromLatin1( "%1/postmaster.pid" ).arg( mPgData );
   QFile pidFile( pidFileName );
   if ( pidFile.open( QIODevice::ReadOnly ) ) {
     QString postmasterPid = QString::fromUtf8( pidFile.readLine( 0 ).trimmed() );
     akError() << "The postmaster is still running. Killing it.";
 
-    QStringList arguments;
+    arguments.clear();
     arguments << QString::fromLatin1( "kill" )
               << QString::fromLatin1( "ABRT" )
               << QString::fromLatin1( "%1" ).arg( postmasterPid );
-
-    const QString command = QString::fromLatin1( "%1" ).arg( mServerPath );
     QProcess::execute( command, arguments );
   }
+}
+
+bool DbConfigPostgresql::checkServerIsRunning()
+{
+  const QString command = QString::fromLatin1( "%1" ).arg( mServerPath );
+  QStringList arguments;
+  arguments << QString::fromLatin1( "status" )
+            << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData );
+
+  QProcess pgCtl;
+  pgCtl.start( command, arguments, QIODevice::ReadOnly );
+  if ( !pgCtl.waitForFinished( 3000 ) ) {
+    // Error?
+    return false;
+  }
+
+  const QByteArray output = pgCtl.readAllStandardOutput();
+  return output.startsWith( "pg_ctl: server is running" );
 }

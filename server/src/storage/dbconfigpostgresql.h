@@ -70,6 +70,8 @@ class DbConfigPostgresql : public DbConfig
     virtual void stopInternalServer();
 
   private:
+    bool checkServerIsRunning();
+
     QString mDatabaseName;
     QString mHostName;
     QString mUserName;
@@ -77,9 +79,8 @@ class DbConfigPostgresql : public DbConfig
     QString mConnectionOptions;
     QString mServerPath;
     QString mInitDbPath;
-    QString mCleanServerShutdownCommand;
+    QString mPgData;
     bool mInternalServer;
-    QProcess *mDatabaseProcess;
 };
 
 #endif
