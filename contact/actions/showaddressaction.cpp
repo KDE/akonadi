@@ -50,12 +50,24 @@ void ShowAddressAction::showAddress(const KABC::Address &address)
         if (!urlTemplate.isEmpty()) {
             KToolInvocation::invokeBrowser(urlTemplate);
         }
-    } else {
+    } else if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseExternalAddressApplication) {
         QString commandTemplate = ContactActionsSettings::self()->addressCommand();
         replaceArguments(commandTemplate, address);
 
         if (!commandTemplate.isEmpty()) {
             KRun::runCommand(commandTemplate, 0);
+        }
+    } else if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseGooglemap) {
+        QString urlTemplate = QLatin1String("https://maps.google.com/maps?q=%s,%l,%c");
+        replaceArguments(urlTemplate, address);
+        if (!urlTemplate.isEmpty()) {
+            KToolInvocation::invokeBrowser(urlTemplate);
+        }
+    } else if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseMapquest) {
+        QString urlTemplate = QLatin1String("http://open.mapquest.com/?q=%s,%l,%c");
+        replaceArguments(urlTemplate, address);
+        if (!urlTemplate.isEmpty()) {
+            KToolInvocation::invokeBrowser(urlTemplate);
         }
     }
 }

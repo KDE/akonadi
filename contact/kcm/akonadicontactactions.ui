@@ -18,18 +18,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="KComboBox" name="kcfg_ShowAddressAction">
-        <item>
-         <property name="text">
-          <string>Web Browser</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>External Application</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="KComboBox" name="ShowAddressAction"/>
       </item>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
@@ -64,6 +53,7 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="page_8"/>
        </widget>
       </item>
       <item>
@@ -205,22 +195,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>kcfg_ShowAddressAction</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>stackedWidget</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>185</x>
-     <y>51</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>161</x>
-     <y>80</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
