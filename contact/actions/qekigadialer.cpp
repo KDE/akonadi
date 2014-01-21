@@ -38,7 +38,7 @@ static bool isEkigaServiceRegistered()
 {
     const QLatin1String service("org.ekiga.Ekiga");
 
-    QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
+    QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
     if (interface->isServiceRegistered(service)) {
         return true;
     }
@@ -55,7 +55,7 @@ static QDBusInterface *searchEkigaDBusInterface()
     const QLatin1String service("org.ekiga.Ekiga");
     const QLatin1String path("/org/ekiga/Ekiga");
 
-    QDBusInterface *interface = new QDBusInterface(service, path, QString(), QDBusConnection::systemBus());
+    QDBusInterface *interface = new QDBusInterface(service, path, QString(), QDBusConnection::sessionBus());
     if (!interface->isValid()) {
         delete interface;
         interface = new QDBusInterface(service, path, QString(), Akonadi::DBusConnectionPool::threadConnection());
