@@ -16,7 +16,7 @@
       <default>UseBrowser</default>
     </entry>
     <entry type="String" name="AddressUrl">
-      <default>http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c</default>
+      <default>http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%l,+%c</default>
       <whatsthis>This URL defines the website that shall be used to show a contact's postal address.</whatsthis>
       <tooltip>The following placeholders can be used in the URL:
    %s: Street
