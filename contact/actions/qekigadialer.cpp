@@ -122,6 +122,7 @@ bool QEkigaDialer::sendSms(const QString &number, const QString &text)
 {
     Q_UNUSED(number);
     Q_UNUSED(text);
-    mErrorMessage = i18n("Sending an SMS is currently not supported on Ekiga");
+    mErrorMessage = i18n("Sending an SMS is currently not supported on Ekiga.");
     return false;
 }
+

@@ -56,7 +56,7 @@ void SendSmsAction::sendSms(const KABC::PhoneNumber &phoneNumber)
     QString command = ContactActionsSettings::self()->smsCommand();
 
     if (command.isEmpty()) {
-        KMessageBox::sorry(0, i18n("There is no application set which could be executed. Please go to the settings dialog and configure one."));
+        KMessageBox::sorry(0, i18n("There is no application set which could be executed.\nPlease go to the settings dialog and configure one."));
         return;
     }
 
