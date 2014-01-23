@@ -148,6 +148,11 @@ void DbConfigPostgresql::startInternalServer()
   // We defined the mHostName to the socket directory, during init
   const QString socketDir = mHostName;
 
+  // Make sure the path exists, otherwise pg_ctl fails
+  if ( !QFile::exists( socketDir ) ) {
+    QDir().mkpath( socketDir );
+  }
+
   if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( mPgData ) ) ) {
     // postgres data directory not initialized yet, so call initdb on it
 
