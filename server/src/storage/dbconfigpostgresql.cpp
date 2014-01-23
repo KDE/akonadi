@@ -247,7 +247,6 @@ void DbConfigPostgresql::stopInternalServer()
             << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
             << QString::fromLatin1( "--mode=fast" );
   QProcess::execute( command, arguments );
-  sleep( 3 );
   if ( !checkServerIsRunning() ) {
     return;
   }
@@ -258,7 +257,6 @@ void DbConfigPostgresql::stopInternalServer()
             << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
             << QString::fromLatin1( "--mode=immediate" );
   QProcess::execute( command, arguments );
-  sleep( 3 );
   if ( !checkServerIsRunning() ) {
     return;
   }
