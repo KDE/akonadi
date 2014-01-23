@@ -86,6 +86,8 @@ void AkonadiServer::init()
 
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
+    // Restrict permission to 600, as the file might contain database password in plaintext
+    QFile::setPermissions( serverConfigFile, QFile::ReadOwner | QFile::WriteOwner );
 
     if ( DbConfig::configuredDatabase()->useInternalServer() ) {
         startDatabaseProcess();
