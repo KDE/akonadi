@@ -187,7 +187,6 @@ void ContactEditorWidget::Private::initGuiContactTab()
   nameLayout->addWidget( mNameWidget, 0, 1 );
 
   mPhotoWidget = new ImageWidget( ImageWidget::Photo );
-  mPhotoWidget->setMinimumSize( QSize( 100, 140 ) );
   nameLayout->addWidget( mPhotoWidget, 0, 2, 4, 1 );
 
   label = new QLabel( i18nc( "@label The display name of a contact", "Display:" ) );
