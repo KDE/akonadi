@@ -51,8 +51,10 @@ bool SearchResult::parseStream()
   if ( mScope.scope() == Scope::Uid ) {
     // Handle empty UID set
     m_streamParser->beginList();
-    if (!m_streamParser->atListEnd()) {
+    if ( !m_streamParser->atListEnd() ) {
       mScope.parseScope( m_streamParser );
+      // FIXME: A hack to move stream parser beyond ')'
+      m_streamParser->readChar();
     }
   } else {
     mScope.parseScope( m_streamParser );
