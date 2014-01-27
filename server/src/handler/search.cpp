@@ -73,6 +73,9 @@ bool Search::parseStream()
         recursive = true;
       } else if ( param == AKONADI_PARAM_QUERY ) {
         queryString = m_streamParser->readUtf8String();
+        // TODO: This is an ugly hack, but we assume QUERY is the last parameter,
+        // followed only by fetch scope, which we parse separately below
+        break;
       } else {
         return failureResponse( "Invalid parameter" );
       }
