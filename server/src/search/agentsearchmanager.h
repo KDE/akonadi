@@ -44,6 +44,7 @@ class AgentSearchTask
     QString query;
     QStringList mimeTypes;
     QVector<qint64> collections;
+    bool complete;
 
     QMutex sharedLock;
     QWaitCondition notifier;

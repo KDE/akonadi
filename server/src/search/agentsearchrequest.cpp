@@ -122,6 +122,7 @@ void AgentSearchRequest::exec()
   task.query = mQuery;
   task.mimeTypes = mMimeTypes;
   task.collections = mCollections;
+  task.complete = false;
 
   AgentSearchManager::instance()->addTask( &task );
 
@@ -131,7 +132,7 @@ void AgentSearchRequest::exec()
 
   task.sharedLock.lock();
   Q_FOREVER {
-    if ( task.queries.isEmpty() ) {
+    if ( task.complete ) {
       akDebug() << "All queries processed!";
       break;
     } else {

@@ -173,6 +173,7 @@ AgentSearchManager::TasksMap::Iterator AgentSearchManager::cancelRunningTask( Ta
   AgentSearchTask *parentTask = task->parentTask;
   parentTask->sharedLock.lock();
   parentTask->pendingResults.clear();
+  parentTask->complete = true;
   parentTask->sharedLock.unlock();
   parentTask->notifier.wakeAll();
   delete task;
@@ -217,6 +218,7 @@ void AgentSearchManager::searchLoop()
       AgentSearchTask *parentTask = finishedTask->parentTask;
       parentTask->sharedLock.lock();
       parentTask->pendingResults = finishedTask->results;
+      parentTask->complete = true;
       parentTask->sharedLock.unlock();
       parentTask->notifier.wakeAll();
 
@@ -241,6 +243,17 @@ void AgentSearchManager::searchLoop()
     if ( !mTasklist.isEmpty() ) {
       AgentSearchTask *task = mTasklist.first();
       akDebug() << "Search task" << task->id << "available!";
+      if ( task->queries.isEmpty() ) {
+        akDebug() << "nothing to do for task";
+        task->sharedLock.lock();
+        //After this the AgentSearchTask will be destroyed
+        task->complete = true;
+        task->sharedLock.unlock();
+
+        mTasklist.remove( 0 );
+        continue;
+      }
+
       QVector<QPair<QString,qint64> >::iterator it = task->queries.begin();
       for ( ; it != task->queries.end(); ) {
         if ( !mRunningTasks.contains( it->first ) ) {
