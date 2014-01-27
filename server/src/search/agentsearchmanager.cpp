@@ -289,7 +289,9 @@ void AgentSearchManager::searchLoop()
 
       timeout = 60 * 1000; // check whether all tasks have finished within a minute
     } else {
-      timeout = ULONG_MAX;
+      if ( mRunningTasks.isEmpty() ) {
+        timeout = ULONG_MAX;
+      }
     }
   }
   mLock.unlock();
