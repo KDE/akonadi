@@ -103,6 +103,8 @@ bool Search::parseStream()
 
     // Read the fetch scope
     mFetchScope = FetchScope( m_streamParser );
+    // Read any newlines
+    m_streamParser->readUntilCommandEnd();
 
     AgentSearchRequest request( connection() );
     request.setCollections( collections );
