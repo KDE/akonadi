@@ -140,6 +140,9 @@ void AkonadiConnection::slotNewData()
         continue;
       }
       const QByteArray command = m_streamParser->readString();
+      if ( command.isEmpty() ) {
+        throw Akonadi::Exception("empty command");
+      }
       Tracer::self()->connectionInput( m_identifier, ( tag + ' ' + command + ' ' + m_streamParser->readRemainingData() ) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
