@@ -214,6 +214,7 @@ void AgentSearchManager::searchLoop()
     // First notify about available results
     while( !mPendingResults.isEmpty() ) {
       ResourceTask *finishedTask = mPendingResults.first();
+      mPendingResults.remove( 0 );
       akDebug() << "Pending results for search" << finishedTask->parentTask->id << "available!";
       AgentSearchTask *parentTask = finishedTask->parentTask;
       parentTask->sharedLock.lock();
@@ -221,8 +222,6 @@ void AgentSearchManager::searchLoop()
       parentTask->complete = true;
       parentTask->sharedLock.unlock();
       parentTask->notifier.wakeAll();
-
-      mPendingResults.remove( 0 );
       delete finishedTask;
     }
 
