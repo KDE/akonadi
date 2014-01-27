@@ -723,10 +723,6 @@ bool ImapStreamParser::atCommandEnd()
   }
   int savedPos = m_position;
   stripLeadingSpaces();
-  // ensure that the CRLF is available and complete
-  if ( !waitForMoreData( m_position + 1 >= m_data.length() ) ) {
-    throw ImapParserException( "Unable to read more data" );
-  }
   if ( m_data[m_position] == '\n' || m_data[m_position] == '\r' ) {
     if ( m_position < m_data.length() && m_data[m_position] == '\r' ) {
       ++m_position;
@@ -780,16 +776,7 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
       }
     }
 
-    if ( ( i == m_data.length() && paranthesisBalance == 0 )) {
-      break; //command end
-    }
-    if ( m_data[i] == '\n' || m_data[i] == '\r' ) {
-      if ( i < m_data.length() && m_data[m_position] == '\r' ) {
-        ++i;
-      }
-      if ( i < m_data.length() && m_data[i] == '\n' ) {
-        ++i;
-      }
+    if ( ( i == m_data.length() && paranthesisBalance == 0 ) || m_data[i] == '\n'  || m_data[i] == '\r' ) {
       break; //command end
     }
     ++i;
