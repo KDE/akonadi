@@ -27,11 +27,17 @@
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
 #include "storage/notificationcollector.h"
+#include "storage/datastore.h"
+#include "storage/querybuilder.h"
+#include "storage/transaction.h"
+#include "storage/selectquerybuilder.h"
 #include "libs/xdgbasedirs_p.h"
+
 
 #include <QDir>
 #include <QPluginLoader>
 #include <QDBusConnection>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -77,6 +83,19 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
       QLatin1String( "/SearchManager" ),
       this,
       QDBusConnection::ExportAdaptors );
+
+
+  NotificationCollector *collector = DataStore::self()->notificationCollector();
+  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV2::List)),
+           this, SLOT(scheduleSearchUpdate(Akonadi::NotificationMessageV2::List)) );
+
+  // The timer will tick 30 seconds after last change notification. If a new notification
+  // is delivered in the meantime, the timer is reset
+  mSearchUpdateTimer = new QTimer( this );
+  mSearchUpdateTimer->setInterval( 30 * 1000 );
+  mSearchUpdateTimer->setSingleShot( true );
+  connect( mSearchUpdateTimer, SIGNAL(timeout()),
+           this, SLOT(searchUpdateTimeout()) );
 }
 
 SearchManager::~SearchManager()
@@ -152,24 +171,140 @@ void SearchManager::loadSearchPlugins()
   }
 }
 
-bool SearchManager::removeSearch( qint64 id )
+void SearchManager::scheduleSearchUpdate( const NotificationMessageV2::List &notifications )
 {
-  // send to the main thread
-  QMetaObject::invokeMethod( this, "removeSearchInternal", Qt::QueuedConnection, Q_ARG( qint64, id ) );
-  return true;
-}
+  QList<Entity::Id> newChanges;
 
-void SearchManager::removeSearchInternal( qint64 id )
-{
-  Q_FOREACH ( AbstractSearchEngine *engine, mEngines ) {
-    engine->removeSearch( id );
+  Q_FOREACH ( const NotificationMessageV2 &msg, notifications ) {
+    // we don't care about collections changes
+    if ( msg.type() == NotificationMessageV2::Collections ) {
+      continue;
+    }
+
+    // Only these two operations can cause item to be added or removed from a
+    // persistent search (removal is handled automatically)
+    if ( msg.operation() == NotificationMessageV2::Add ||
+         msg.operation() == NotificationMessageV2::Modify )
+    {
+      newChanges << msg.uids();
+    }
+  }
+
+  if ( !newChanges.isEmpty() ) {
+    mPendingSearchUpdateIds << newChanges;
+    mSearchUpdateTimer->start();
   }
 }
 
-void SearchManager::updateSearch( const Akonadi::Collection &collection, NotificationCollector *collector )
+void SearchManager::searchUpdateTimeout()
 {
-  removeSearch( collection.id() );
-  collector->itemsUnlinked( collection.pimItems(), collection );
-  collection.clearPimItems();
-  addSearch( collection );
+  // Get all search collections, that is subcollections of "Search", which always has ID 1
+  const Collection::List collections = Collection::retrieveFiltered( Collection::parentIdFullColumnName(), 1 );
+  Q_FOREACH ( const Collection &collection, collections ) {
+    updateSearch( collection, DataStore::self()->notificationCollector() );
+  }
+}
+
+bool SearchManager::updateSearch( const Collection &collection, NotificationCollector *collector )
+{
+  if ( collection.queryString().size() >= 32768 ) {
+    qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
+    return false;
+  }
+  if ( collection.queryString().isEmpty() || collection.queryLanguage().isEmpty() ) {
+    return false;
+  }
+
+  QList<qint64> allCollections;
+  {
+    QueryBuilder qb( Collection::tableName() );
+    qb.addColumn( Collection::idColumn() );
+    // Exclude search folders
+    qb.addValueCondition( Collection::parentIdColumn(), Query::NotEquals, 1 );
+    if ( !qb.exec() ) {
+      return false;
+    }
+
+    while ( qb.query().next() ) {
+      allCollections << qb.query().value( 0 ).toLongLong();
+    }
+  }
+
+  QStringList allMimeTypes;
+  Q_FOREACH ( const MimeType &mt, MimeType::retrieveAll() ) {
+    if ( mt.name() != QLatin1String( "inode/directory" ) ) {
+      allMimeTypes << mt.name();
+    }
+  }
+
+  // Query all plugins for search results
+  QSet<qint64> newMatches;
+  Q_FOREACH ( AbstractSearchPlugin *plugin, mPlugins ) {
+    newMatches = plugin->search( collection.queryString(), allCollections, allMimeTypes );
+  }
+
+  QSet<qint64> existingMatches, removedMatches;
+  {
+    QueryBuilder qb( CollectionPimItemRelation::tableName() );
+    qb.addColumn( CollectionPimItemRelation::rightColumn() );
+    qb.addValueCondition( CollectionPimItemRelation::leftColumn(), Query::Equals, collection.id() );
+    if ( !qb.exec() ) {
+      return false;
+    }
+
+    while ( qb.query().next() ) {
+      const qint64 id = qb.query().value( 0 ).toLongLong();
+      if ( !newMatches.contains( id ) ) {
+        removedMatches << id;
+      } else {
+        existingMatches << id;
+      }
+    }
+  }
+
+  newMatches = newMatches - existingMatches;
+
+  const bool existingTransaction = DataStore::self()->inTransaction();
+  if ( !existingTransaction ) {
+    DataStore::self()->beginTransaction();
+  }
+
+  QVariantList newMatchesVariant;
+  Q_FOREACH ( qint64 id, newMatches ) {
+    newMatchesVariant << id;
+    Collection::addPimItem( collection.id(), id );
+  }
+
+  QVariantList removedMatchesVariant;
+  Q_FOREACH ( qint64 id, removedMatches ) {
+    removedMatchesVariant << id;
+    Collection::removePimItem( collection.id(), id );
+  }
+
+  if ( !existingTransaction && !DataStore::self()->commitTransaction() ) {
+    return false;
+  }
+
+  if ( !newMatchesVariant.isEmpty() ) {
+    SelectQueryBuilder<PimItem> qb;
+    qb.addValueCondition( PimItem::idFullColumnName(), Query::In, newMatchesVariant );
+    if ( !qb.exec() ) {
+      return false;
+    }
+    const QVector<PimItem> newItems = qb.result();
+    collector->itemsLinked( newItems, collection );
+  }
+
+  if ( !removedMatchesVariant.isEmpty() ) {
+    SelectQueryBuilder<PimItem> qb;
+    qb.addValueCondition( PimItem::idFullColumnName(), Query::In, removedMatchesVariant );
+    if ( !qb.exec() ) {
+      return false;
+    }
+
+    const QVector<PimItem> removedItems = qb.result();
+    collector->itemsUnlinked( removedItems, collection );
+  }
+
+  return true;
 }

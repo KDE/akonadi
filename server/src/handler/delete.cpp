@@ -84,8 +84,6 @@ bool Delete::parseStream()
     if ( collection.parentId() == 0 ) {
       return failureResponse( "Cannot delete virtual root collection" );
     }
-
-    SearchManager::instance()->removeSearch( collection.id() );
   }
 
   if ( !deleteRecursive( collection ) ) {

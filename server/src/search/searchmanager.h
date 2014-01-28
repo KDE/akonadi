@@ -25,6 +25,10 @@
 #include <QVector>
 #include <QDBusConnection>
 
+#include <libs/notificationmessagev2_p.h>
+
+class QTimer;
+
 namespace Akonadi {
 
 class NotificationCollector;
@@ -64,18 +68,9 @@ class SearchManager : public QObject
     void unregisterInstance( const QString &id );
 
     /**
-     * Adds the given @p collection to the search.
-     *
-     * @returns true if the collection was added successfully, false otherwise.
+     * Update the search query of the given collection.
      */
-    bool addSearch( const Collection &collection );
-
-    /**
-     * Removes the collection with the given @p id from the search.
-     *
-     * @returns true if the collection was removed successfully, false otherwise.
-     */
-    bool removeSearch( qint64 id );
+    bool updateSearch( const Collection &collection, NotificationCollector *collector );
 
     /**
      * Returns currently available search plugins.
@@ -83,8 +78,8 @@ class SearchManager : public QObject
     QVector<AbstractSearchPlugin *> searchPlugins() const;
 
   private Q_SLOTS:
-    void addSearchInternal( const Collection &collection );
-    void removeSearchInternal( qint64 id );
+    void scheduleSearchUpdate( const Akonadi::NotificationMessageV2::List &notifications );
+    void searchUpdateTimeout();
 
   private:
     void loadSearchPlugins();
@@ -96,6 +91,9 @@ class SearchManager : public QObject
 
     // agents dbus interface cache
     QDBusConnection mDBusConnection;
+
+    QList<qint64> mPendingSearchUpdateIds;
+    QTimer *mSearchUpdateTimer;
 };
 
 }
