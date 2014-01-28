@@ -23,6 +23,7 @@
 
 #include "agentsearchmanager.h"
 #include "abstractsearchplugin.h"
+#include "searchmanager.h"
 #include "akonadiconnection.h"
 #include "akdebug.h"
 #include "xdgbasedirs_p.h"
@@ -74,42 +75,12 @@ QStringList AgentSearchRequest::mimeTypes() const
   return mMimeTypes;
 }
 
-void AgentSearchRequest::doPluginSearch( const QString &pluginName )
-{
-  //Would probably benefit from some form of caching (we're listing the whole plugin directory everytime)
-  const QString pluginFile = XdgBaseDirs::findPluginFile( pluginName );
-  if ( pluginFile.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "plugin file:" << pluginName << "not found!";
-    return;
-  }
-
-  QPluginLoader loader( pluginFile );
-  if ( !loader.load() ) {
-    akError() << Q_FUNC_INFO << "Failed to load agent: " << loader.errorString();
-  }
-  QObject *instance = loader.instance();
-  if (instance) {
-    AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin*>( instance );
-    if (plugin) {
-      const QSet<qint64> result = plugin->search( mQuery, mCollections.toList(), mMimeTypes );
-      Q_EMIT resultsAvailable( result );
-    } else {
-      akError() << "Wrong plugin";
-    }
-  } else {
-    akError() << "failed to load plugin";
-  }
-}
-
 void AgentSearchRequest::searchPlugins()
 {
-  const QString testPlugin = QString::fromLatin1( qgetenv( "AKONADI_OVERRIDE_SEARCHPLUGIN" ) );
-  if ( !testPlugin.isEmpty() ) {
-    akDebug() << "Overriding the search plugins with: " << testPlugin;
-    doPluginSearch( testPlugin );
-  } else {
-    //TODO replace by plugin discovery
-    doPluginSearch( QLatin1String("akonadi_baloo_searchplugin") );
+  const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
+  Q_FOREACH ( AbstractSearchPlugin *plugin, plugins ) {
+    const QSet<qint64> result = plugin->search( mQuery, mCollections.toList(), mMimeTypes );
+    Q_EMIT resultsAvailable( result );
   }
 }
 

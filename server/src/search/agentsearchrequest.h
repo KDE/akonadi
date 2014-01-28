@@ -52,8 +52,8 @@ class AgentSearchRequest: public QObject
     void resultsAvailable( const QSet<qint64> &results );
 
   private:
-    void doPluginSearch( const QString &name );
     void searchPlugins();
+
     AkonadiConnection *mConnection;
     QString mQuery;
     QVector<qint64> mCollections;

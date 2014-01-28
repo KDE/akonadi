@@ -69,6 +69,8 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
     }
   }
 
+  loadSearchPlugins();
+
   new SearchManagerAdaptor( this );
 
   QDBusConnection::sessionBus().registerObject(
@@ -99,25 +101,54 @@ void SearchManager::unregisterInstance( const QString &id )
   AgentSearchManager::instance()->unregisterInstance( id );
 }
 
-bool SearchManager::addSearch( const Collection &collection )
+QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
 {
-  if ( collection.queryString().size() >= 32768 ) {
-    qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
-    return false;
-  }
-  if ( collection.queryString().isEmpty() || collection.queryLanguage().isEmpty() ) {
-    return false;
-  }
-
-  // send to the main thread
-  QMetaObject::invokeMethod( this, "addSearchInternal", Qt::QueuedConnection, Q_ARG( Collection, collection ) );
-  return true;
+  return mPlugins;
 }
 
-void SearchManager::addSearchInternal( const Collection &collection )
+void SearchManager::loadSearchPlugins()
 {
-  Q_FOREACH ( AbstractSearchEngine *engine, mEngines ) {
-    engine->addSearch( collection );
+  const QString pluginOverride = QString::fromLatin1( qgetenv( "AKONADI_OVERRIDE_SEARCHPLUGIN" ) );
+  if ( !pluginOverride.isEmpty() ) {
+    akDebug() << "Overriding the search plugins with: " << pluginOverride;
+  }
+
+  const QStringList dirs = XdgBaseDirs::findPluginDirs();
+  Q_FOREACH ( const QString &pluginDir, dirs ) {
+    QDir dir( pluginDir + QLatin1String( "/akonadi" ) );
+    const QStringList desktopFiles = dir.entryList( QStringList() << QLatin1String( "*.desktop" ), QDir::Files );
+    qDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String( "/akonadi" ) << ":" << desktopFiles;
+
+    Q_FOREACH ( const QString &desktopFileName, desktopFiles ) {
+      QSettings desktop( pluginDir + QLatin1String( "/akonadi/" ) + desktopFileName, QSettings::IniFormat );
+      desktop.beginGroup( QLatin1String( "Desktop Entry" ) );
+      if ( desktop.value( QLatin1String( "Type" ) ).toString() != QLatin1String( "AkonadiSearchPlugin" ) ) {
+        continue;
+      }
+
+      const QString libraryName = desktop.value( QLatin1String( "X-Akonadi-Library" ) ).toString();
+      // When search plugin override is active, ignore all plugins except for the override
+      if ( !pluginOverride.isEmpty() && libraryName != pluginOverride ) {
+        qDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+        continue;
+      }
+
+      const QString pluginFile = XdgBaseDirs::findPluginFile( libraryName, QStringList() << pluginDir + QLatin1String( "/akonadi") );
+      QPluginLoader loader( pluginFile );
+      if  ( !loader.load() ) {
+        akError() << "Failed to load search plugin" << libraryName << ":" << loader.errorString();
+        continue;
+      }
+
+      AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin *>( loader.instance() );
+      if ( !plugin ) {
+        akError() << libraryName << "is not a valid Akonadi search plugin";
+        continue;
+      }
+
+      qDebug() << "SearchManager: loaded search plugin" << libraryName;
+      mPlugins << plugin;
+    }
   }
 }
 

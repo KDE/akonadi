@@ -78,18 +78,21 @@ class SearchManager : public QObject
     bool removeSearch( qint64 id );
 
     /**
-     * Update the search query of the given collection.
+     * Returns currently available search plugins.
      */
-    void updateSearch( const Collection &collection, NotificationCollector *collector );
+    QVector<AbstractSearchPlugin *> searchPlugins() const;
 
   private Q_SLOTS:
     void addSearchInternal( const Collection &collection );
     void removeSearchInternal( qint64 id );
 
   private:
+    void loadSearchPlugins();
+
     static SearchManager *sInstance;
 
     QVector<AbstractSearchEngine *> mEngines;
+    QVector<AbstractSearchPlugin *> mPlugins;
 
     // agents dbus interface cache
     QDBusConnection mDBusConnection;
