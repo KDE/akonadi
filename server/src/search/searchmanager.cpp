@@ -147,8 +147,14 @@ void SearchManager::loadSearchPlugins()
 
       const QString libraryName = desktop.value( QLatin1String( "X-Akonadi-Library" ) ).toString();
       // When search plugin override is active, ignore all plugins except for the override
-      if ( !pluginOverride.isEmpty() && libraryName != pluginOverride ) {
-        qDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+      if ( !pluginOverride.isEmpty() ) {
+        if ( libraryName != pluginOverride ) {
+          qDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+          continue;
+        }
+
+      // When there's no override, only load plugins enabled by default
+      } else if ( !desktop.value( QLatin1String( "X-Akonadi-LoadByDefault", true ) ).toBool() ) {
         continue;
       }
 
