@@ -234,6 +234,8 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
     args.append( col.queryLanguage().toLatin1() );
     args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING );
     args.append( ImapParser::quote( col.queryString().toUtf8() ) );
+    args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS );
+    args.append( "(" + col.queryCollections().toLatin1() + ")" );
     b += ImapParser::quote( "(" + ImapParser::join( args, " " ) + ")" );
     b += ' ';
   }

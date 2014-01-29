@@ -29,11 +29,10 @@
 #include "search/searchmanager.h"
 #include "imapstreamparser.h"
 #include "libs/protocol_p.h"
+#include "libs/imapparser_p.h"
 #include <akdebug.h>
 
 #include <QtCore/QStringList>
-#include <qdbusinterface.h>
-#include <QtDBus/qdbusreply.h>
 
 using namespace Akonadi;
 
@@ -64,17 +63,26 @@ bool SearchPersistent::parseStream()
   // for legacy clients we have to guess the language
   QString lang = QLatin1String( "SPARQL" );
 
+  QList<QByteArray> mimeTypes;
+  QString queryCollections;
   if ( m_streamParser->hasList() ) {
     m_streamParser->beginList();
     while ( !m_streamParser->atListEnd() ) {
       const QByteArray key = m_streamParser->readString();
       if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
         lang = m_streamParser->readUtf8String();
+      } else if ( key == AKONADI_PARAM_MIMETYPE ) {
+        mimeTypes = m_streamParser->readParenthesizedList();
+      } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) {
+        const QList<QByteArray> collections = m_streamParser->readParenthesizedList();
+        queryCollections = QString::fromLatin1( ImapParser::join( collections, " " ) );
       }
     }
   }
 
+
   Collection col;
+  col.setQueryCollections( queryCollections );
   col.setQueryString( queryString );
   col.setQueryLanguage( lang );
   col.setRemoteId( queryString ); // ### remove, legacy compat
@@ -90,13 +98,8 @@ bool SearchPersistent::parseStream()
     return failureResponse( "Unable to set rights attribute on persistent search" );
   }
 
-  // work around the fact that we have no clue what might be in there
-  MimeType::List mts = MimeType::retrieveAll();
-  Q_FOREACH ( const MimeType &mt, mts ) {
-    if ( mt.name() == QLatin1String( "inode/directory" ) ) {
-      continue;
-    }
-    col.addMimeType( mt );
+  Q_FOREACH ( const QByteArray &mimeType, mimeTypes ) {
+    col.addMimeType( MimeType::retrieveByName( QString::fromLatin1( mimeType ) ) );
   }
 
   if ( !transaction.commit() ) {

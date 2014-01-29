@@ -173,6 +173,8 @@ bool Modify::parseStream()
       pos = ImapParser::parseString( line, tmp, pos );
       ImapParser::parseParenthesizedList( tmp, queryArgs );
       QString queryLang, queryString;
+      QString queryCollections;
+      MimeType::List queryMimeTypes;
       for ( int i = 0; i < queryArgs.size() - 1; i += 2 ) {
         const QByteArray key = queryArgs.at( i );
         const QByteArray value = queryArgs.at( i + 1 );
@@ -180,11 +182,20 @@ bool Modify::parseStream()
           queryLang = QString::fromLatin1( value );
         } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING ) {
           queryString = QString::fromUtf8( value );
+        } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) {
+          QList<QByteArray> cols;
+          ImapParser::parseParenthesizedList( value, cols );
+          queryCollections = QString::fromLatin1( ImapParser::join( cols, " " ) );
         }
       }
-      if ( collection.queryLanguage() != queryLang || collection.queryString() != queryString ) {
+
+      if ( collection.queryLanguage() != queryLang
+          || collection.queryString() != queryString
+          || collection.queryCollections() != queryCollections
+          || changes.contains( AKONADI_PARAM_MIMETYPE ) ) {
         collection.setQueryLanguage( queryLang );
         collection.setQueryString( queryString );
+        collection.setQueryCollections( queryCollections );
 
         SearchManager::instance()->updateSearch( collection, db->notificationCollector() );
 

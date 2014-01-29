@@ -215,8 +215,8 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     return false;
   }
 
-  QList<qint64> allCollections;
-  {
+  QList<qint64> queryCollections;
+  if ( collection.queryCollections().isEmpty() ) {
     QueryBuilder qb( Collection::tableName() );
     qb.addColumn( Collection::idColumn() );
     // Exclude search folders
@@ -226,21 +226,23 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     }
 
     while ( qb.query().next() ) {
-      allCollections << qb.query().value( 0 ).toLongLong();
+      queryCollections << qb.query().value( 0 ).toLongLong();
+    }
+  } else {
+    Q_FOREACH ( const QString &colId, collection.queryCollections().split( QLatin1Char( ' ' ) ) ) {
+      queryCollections << colId.toLongLong();
     }
   }
 
-  QStringList allMimeTypes;
-  Q_FOREACH ( const MimeType &mt, MimeType::retrieveAll() ) {
-    if ( mt.name() != QLatin1String( "inode/directory" ) ) {
-      allMimeTypes << mt.name();
-    }
+  QStringList queryMimeTypes;
+  Q_FOREACH ( const MimeType &mt, collection.mimeTypes() ) {
+    queryMimeTypes << mt.name();
   }
 
   // Query all plugins for search results
   QSet<qint64> newMatches;
   Q_FOREACH ( AbstractSearchPlugin *plugin, mPlugins ) {
-    newMatches = plugin->search( collection.queryString(), allCollections, allMimeTypes );
+    newMatches = plugin->search( collection.queryString(), queryCollections, queryMimeTypes );
   }
 
   QSet<qint64> existingMatches, removedMatches;

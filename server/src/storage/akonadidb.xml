@@ -92,6 +92,7 @@
     <column name="cachePolicyLocalParts" type="QString"/>
     <column name="queryString" type="QString" size="32768"/>
     <column name="queryLanguage" type="QString"/>
+    <column name="queryCollections" type="QString"/>
     <column name="isVirtual" type="bool" default="false"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
     <reference name="children" table="Collection" key="parentId"/>
