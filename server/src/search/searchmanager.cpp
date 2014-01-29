@@ -242,8 +242,9 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   // Query all plugins for search results
   QSet<qint64> newMatches;
   Q_FOREACH ( AbstractSearchPlugin *plugin, mPlugins ) {
-    newMatches = plugin->search( collection.queryString(), queryCollections, queryMimeTypes );
+    newMatches.unite( plugin->search( collection.queryString(), queryCollections, queryMimeTypes ) );
   }
+
 
   QSet<qint64> existingMatches, removedMatches;
   {
@@ -264,6 +265,8 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     }
   }
 
+  qDebug() << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "is already in the collection";
+
   newMatches = newMatches - existingMatches;
 
   const bool existingTransaction = DataStore::self()->inTransaction();
@@ -282,6 +285,8 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     removedMatchesVariant << id;
     Collection::removePimItem( collection.id(), id );
   }
+
+  qDebug() << "Added" << newMatches.count() << "results, removed" << removedMatches.count();
 
   if ( !existingTransaction && !DataStore::self()->commitTransaction() ) {
     return false;
