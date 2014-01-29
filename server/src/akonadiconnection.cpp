@@ -38,7 +38,7 @@
 
 #include <assert.h>
 
-#define AKONADI_PROTOCOL_VERSION "35"
+#define AKONADI_PROTOCOL_VERSION "36"
 
 using namespace Akonadi;
 
