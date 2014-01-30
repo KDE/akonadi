@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QSet>
 #include <QStringList>
 
 namespace Akonadi
@@ -34,7 +35,7 @@ class AgentSearchRequest: public QObject
     Q_OBJECT
 
   public:
-    AgentSearchRequest( AkonadiConnection *connection );
+    AgentSearchRequest( const QByteArray &connectionId );
     ~AgentSearchRequest();
 
     void setQuery( const QString &query );
@@ -43,21 +44,36 @@ class AgentSearchRequest: public QObject
     QVector<qint64> collections() const;
     void setMimeTypes( const QStringList &mimeTypes );
     QStringList mimeTypes() const;
+    void setRemoteSearch( bool remote );
+    bool remoteSearch() const;
 
-    AkonadiConnection *connection() const;
+    /**
+     * Whether resultsAvailable should be emitted whenever new results are available
+     * (default behavior) or whether results should be cached and will be retrieved
+     * at once via results()
+     */
+    void setEmitResults( bool emitResults );
+
+    QByteArray connectionId() const;
 
     void exec();
+
+    QSet<qint64> results() const;
 
   Q_SIGNALS:
     void resultsAvailable( const QSet<qint64> &results );
 
   private:
     void searchPlugins();
+    void emitResults( const QSet<qint64> &results );
 
-    AkonadiConnection *mConnection;
+    QByteArray mConnectionId;
     QString mQuery;
     QVector<qint64> mCollections;
     QStringList mMimeTypes;
+    bool mRemoteSearch;
+    bool mEmitResults;
+    QSet<qint64> mResults;
 
 };
 

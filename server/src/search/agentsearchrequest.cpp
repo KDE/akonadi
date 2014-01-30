@@ -30,8 +30,10 @@
 
 using namespace Akonadi;
 
-AgentSearchRequest::AgentSearchRequest( Akonadi::AkonadiConnection *connection )
-  : mConnection( connection )
+AgentSearchRequest::AgentSearchRequest( const QByteArray &connectionId )
+  : mConnectionId( connectionId )
+  , mRemoteSearch( true )
+  , mEmitResults( true )
 {
 }
 
@@ -39,9 +41,9 @@ AgentSearchRequest::~AgentSearchRequest()
 {
 }
 
-AkonadiConnection *AgentSearchRequest::connection() const
+QByteArray AgentSearchRequest::connectionId() const
 {
-  return mConnection;
+  return mConnectionId;
 }
 
 void AgentSearchRequest::setQuery( const QString &query )
@@ -75,31 +77,66 @@ QStringList AgentSearchRequest::mimeTypes() const
   return mMimeTypes;
 }
 
+void AgentSearchRequest::setRemoteSearch( bool remote )
+{
+  mRemoteSearch = remote;
+}
+
+bool AgentSearchRequest::remoteSearch() const
+{
+  return mRemoteSearch;
+}
+
+void AgentSearchRequest::setEmitResults( bool emitResults )
+{
+  mEmitResults = emitResults;
+}
+
+QSet<qint64> AgentSearchRequest::results() const
+{
+  return mResults;
+}
+
+void AgentSearchRequest::emitResults( const QSet<qint64> &results )
+{
+  if ( mEmitResults ) {
+    Q_EMIT resultsAvailable( results );
+  } else {
+    mResults.unite( results );
+  }
+}
+
 void AgentSearchRequest::searchPlugins()
 {
   const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
   Q_FOREACH ( AbstractSearchPlugin *plugin, plugins ) {
     const QSet<qint64> result = plugin->search( mQuery, mCollections.toList(), mMimeTypes );
-    Q_EMIT resultsAvailable( result );
+    emitResults( result );
   }
 }
 
 void AgentSearchRequest::exec()
 {
-  akDebug() << "Executing search" << mConnection->sessionId();
+  akDebug() << "Executing search" << mConnectionId;
+
+  //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
+  //since the plugin search is executed in this thread directly.
+  searchPlugins();
+
+  // If remote search is disabled, just finish here after searching the plugins
+  if ( !mRemoteSearch ) {
+    akDebug() << "Search done" << mConnectionId << "(without remote search)";
+    return;
+  }
 
   AgentSearchTask task;
-  task.id = mConnection->sessionId();
+  task.id = mConnectionId;
   task.query = mQuery;
   task.mimeTypes = mMimeTypes;
   task.collections = mCollections;
   task.complete = false;
 
   AgentSearchManager::instance()->addTask( &task );
-
-  //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
-  //since the plugin search is executed in this thread directly.
-  searchPlugins();
 
   task.sharedLock.lock();
   Q_FOREVER {
@@ -111,16 +148,18 @@ void AgentSearchRequest::exec()
 
       akDebug() << task.pendingResults.count() << "search results available in search" << task.id;
       if ( !task.pendingResults.isEmpty() ) {
-        Q_EMIT resultsAvailable( task.pendingResults );
+        emitResults( task.pendingResults );
       }
       task.pendingResults.clear();
     }
   }
 
   if ( !task.pendingResults.isEmpty() ) {
-    Q_EMIT resultsAvailable( task.pendingResults );
+    if ( mEmitResults ) {
+      emitResults( task.pendingResults );
+    }
   }
   task.sharedLock.unlock();
 
-  akDebug() << "Search done" << mConnection->sessionId();
+  akDebug() << "Search done" << mConnectionId;
 }

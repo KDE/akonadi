@@ -49,7 +49,7 @@ bool Search::parseStream()
 {
   QStringList mimeTypes;
   QVector<qint64> collectionIds;
-  bool recursive = false;
+  bool recursive = false, remote = false;
   QString queryString;
 
   // Backward compatibility
@@ -71,6 +71,8 @@ bool Search::parseStream()
         }
       } else if ( param == AKONADI_PARAM_RECURSIVE ) {
         recursive = true;
+      } else if ( param == AKONADI_PARAM_REMOTE ) {
+        remote = true;
       } else if ( param == AKONADI_PARAM_QUERY ) {
         queryString = m_streamParser->readUtf8String();
         // TODO: This is an ugly hack, but we assume QUERY is the last parameter,
@@ -98,6 +100,7 @@ bool Search::parseStream()
     akDebug() << "\tQuery:" << queryString;
     akDebug() << "\tMimeTypes:" << mimeTypes;
     akDebug() << "\tCollections:" << collections;
+    akDebug() << "\tRemote:" << remote;
 
     if ( collections.isEmpty() ) {
       m_streamParser->readUntilCommandEnd();
@@ -109,10 +112,11 @@ bool Search::parseStream()
     // Read any newlines
     m_streamParser->readUntilCommandEnd();
 
-    AgentSearchRequest request( connection() );
+    AgentSearchRequest request( connection()->sessionId() );
     request.setCollections( collections );
     request.setMimeTypes( mimeTypes );
     request.setQuery( queryString );
+    request.setRemoteSearch( remote );
     connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
             this, SLOT(slotResultsAvailable(QSet<qint64>)) );
     request.exec();
