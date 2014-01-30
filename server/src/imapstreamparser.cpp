@@ -131,13 +131,8 @@ bool ImapStreamParser::hasLiteral()
     m_literalSize = m_data.mid( m_position + 1, end - m_position - 1 ).toInt();
     // strip CRLF
     m_position = end + 1;
-    // ensure that the CRLF is available
-    if ( !waitForMoreData( m_position + 1 >= m_data.length() ) ) {
-      throw ImapParserException( "Unable to read more data" );
-    }
-    if ( m_position < m_data.length() && m_data[m_position] == '\r' ) {
-      ++m_position;
-    }
+
+    //IMAP inconsistency. IMAP always expects CRLF, but akonadi uses only LF.
     if ( m_position < m_data.length() && m_data[m_position] == '\n' ) {
       ++m_position;
     }
