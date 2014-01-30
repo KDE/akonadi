@@ -88,9 +88,14 @@ bool Search::parseStream()
     }
 
     QVector<qint64> collections;
+    if ( collectionIds.isEmpty() ) {
+      collectionIds << 0;
+      recursive = true;
+    }
+
     if ( recursive ) {
       Q_FOREACH ( qint64 collection, collectionIds ) {
-        collections << listCollectionsRecursive( QVector<qint64>() <<  collection, mimeTypes );
+        collections << listCollectionsRecursive( QVector<qint64>() << collection, mimeTypes );
       }
     } else {
       collections = collectionIds;
@@ -101,6 +106,7 @@ bool Search::parseStream()
     akDebug() << "\tMimeTypes:" << mimeTypes;
     akDebug() << "\tCollections:" << collections;
     akDebug() << "\tRemote:" << remote;
+    akDebug() << "\tRecursive" << recursive;
 
     if ( collections.isEmpty() ) {
       m_streamParser->readUntilCommandEnd();
@@ -153,35 +159,37 @@ QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancesto
 {
   QVector<qint64> recursiveChildren;
   Q_FOREACH ( qint64 ancestor, ancestors ) {
-    Query::Condition mimeTypeCondition;
-    mimeTypeCondition.addColumnCondition( CollectionMimeTypeRelation::rightFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-    // Exclude top-level collections and collections that cannot have items!
-    mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::NotEquals, QLatin1String( "inode/directory" ) );
-    if ( !mimeTypes.isEmpty() ) {
-      mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::In, mimeTypes );
-    }
-
-    QueryBuilder qb( Collection::tableName() );
-    qb.addColumn( Collection::idFullColumnName() );
-    qb.addColumn( MimeType::nameFullColumnName() );
-    qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(), Resource::idFullColumnName(), Collection::resourceIdFullColumnName() );
-    qb.addJoin( QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName() );
-    qb.addJoin( QueryBuilder::LeftJoin, MimeType::tableName(), mimeTypeCondition );
-    if ( ancestor == 0 ) {
-      qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
-    } else {
-      qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
-    }
-    qb.addGroupColumn( Collection::idFullColumnName() );
-    qb.exec();
-
-    QSqlQuery query = qb.query();
     QVector<qint64> searchChildren;
-    while ( query.next() ) {
-      const qint64 id = query.value( 0 ).toLongLong();
-      searchChildren << id;
-      if ( !query.value( 1 ).isNull() ) {
-        recursiveChildren << id;
+
+    { // Free the query before entering recursion to prevent too many opened connections
+
+      Query::Condition mimeTypeCondition;
+      mimeTypeCondition.addColumnCondition( CollectionMimeTypeRelation::rightFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
+      // Exclude top-level collections and collections that cannot have items!
+      mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::NotEquals, QLatin1String( "inode/directory" ) );
+      if ( !mimeTypes.isEmpty() ) {
+        mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::In, mimeTypes );
+      }
+
+      CountQueryBuilder qb( Collection::tableName(), MimeType::nameFullColumnName(), CountQueryBuilder::All );
+      qb.addColumn( Collection::idFullColumnName() );
+      qb.addJoin( QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName() );
+      qb.addJoin( QueryBuilder::LeftJoin, MimeType::tableName(), mimeTypeCondition );
+      if ( ancestor == 0 ) {
+        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
+      } else {
+        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
+      }
+      qb.addGroupColumn( Collection::idFullColumnName() );
+      qb.exec();
+
+      QSqlQuery query = qb.query();
+      while ( query.next() ) {
+        const qint64 id = query.value( 1 ).toLongLong();
+        searchChildren << id;
+        if ( query.value( 0 ).toInt() > 0 ) { // count( mimeTypeTable.name ) > 0
+          recursiveChildren << id;
+        }
       }
     }
     if ( !searchChildren.isEmpty() ) {
