@@ -26,12 +26,14 @@
 #include "akdebug.h"
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
+#include "agentsearchrequest.h"
 #include "storage/notificationcollector.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "libs/xdgbasedirs_p.h"
+#include "libs/protocol_p.h"
 
 
 #include <QDir>
@@ -154,7 +156,7 @@ void SearchManager::loadSearchPlugins()
         }
 
       // When there's no override, only load plugins enabled by default
-      } else if ( !desktop.value( QLatin1String( "X-Akonadi-LoadByDefault", true ) ).toBool() ) {
+      } else if ( !desktop.value( QLatin1String( "X-Akonadi-LoadByDefault" ), true ).toBool() ) {
         continue;
       }
 
@@ -217,9 +219,13 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
     return false;
   }
-  if ( collection.queryString().isEmpty() || collection.queryLanguage().isEmpty() ) {
+  if ( collection.queryString().isEmpty() ) {
     return false;
   }
+
+  const QStringList queryAttributes = collection.queryAttributes().split( QLatin1Char (' ') );
+  const bool remoteSearch =  queryAttributes.contains( QLatin1String( AKONADI_PARAM_REMOTE ) );
+  const bool recursive = queryAttributes.contains( QLatin1String( AKONADI_PARAM_RECURSIVE ) );
 
   QList<qint64> queryCollections;
   if ( collection.queryCollections().isEmpty() ) {
@@ -246,11 +252,17 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   }
 
   // Query all plugins for search results
-  QSet<qint64> newMatches;
-  Q_FOREACH ( AbstractSearchPlugin *plugin, mPlugins ) {
-    newMatches.unite( plugin->search( collection.queryString(), queryCollections, queryMimeTypes ) );
-  }
+  AgentSearchRequest request( "searchUpdate-" + QByteArray::number( QDateTime::currentDateTime().toTime_t() ) );
+  request.setCollections( queryCollections.toVector() );
+  request.setMimeTypes( queryMimeTypes );
+  request.setQuery( collection.queryString() );
+  request.setRemoteSearch( remoteSearch );
+  // TODO: Use resultAvailable() signal to handle results incrementally - it will
+  // speed up populating persistent search collection for the first time
+  request.setEmitResults( false );
+  request.exec(); // blocks until all searches are done
 
+  QSet<qint64> newMatches = request.results();
 
   QSet<qint64> existingMatches, removedMatches;
   {

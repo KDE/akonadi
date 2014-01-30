@@ -227,11 +227,10 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
     }
   }
 
-  if ( !col.queryLanguage().isEmpty() ) {
+  if ( !col.queryString().isEmpty() ) {
     b += AKONADI_PARAM_PERSISTENTSEARCH " ";
     QList<QByteArray> args;
-    args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG );
-    args.append( col.queryLanguage().toLatin1() );
+    args.append( col.queryAttributes().toLatin1() );
     args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING );
     args.append( ImapParser::quote( col.queryString().toUtf8() ) );
     args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS );

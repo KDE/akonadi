@@ -172,30 +172,35 @@ bool Modify::parseStream()
       QList<QByteArray> queryArgs;
       pos = ImapParser::parseString( line, tmp, pos );
       ImapParser::parseParenthesizedList( tmp, queryArgs );
-      QString queryLang, queryString;
-      QString queryCollections;
-      MimeType::List queryMimeTypes;
-      for ( int i = 0; i < queryArgs.size() - 1; i += 2 ) {
+      QString queryString, queryCollections, queryAttributes;
+      QStringList attrs;
+      for ( int i = 0; i < queryArgs.size() - 1; ++i ) {
         const QByteArray key = queryArgs.at( i );
-        const QByteArray value = queryArgs.at( i + 1 );
-        if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
-          queryLang = QString::fromLatin1( value );
-        } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING ) {
-          queryString = QString::fromUtf8( value );
+        if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING ) {
+          queryString = QString::fromUtf8( queryArgs.at( i + 1 ) );
+          ++i;
         } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) {
           QList<QByteArray> cols;
-          ImapParser::parseParenthesizedList( value, cols );
+          ImapParser::parseParenthesizedList( queryArgs.at( i +  1), cols );
           queryCollections = QString::fromLatin1( ImapParser::join( cols, " " ) );
+          ++i;
+        } else  if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
+          attrs << QString::fromLatin1( key ) << QString::fromUtf8( queryArgs.at( i + 1 ) );
+          ++i;
+        } else if ( key == AKONADI_PARAM_REMOTE ) {
+          attrs << QString::fromLatin1( key );
+        } else if ( key == AKONADI_PARAM_RECURSIVE ) {
+          attrs << QString::fromLatin1( key );
         }
       }
 
-      if ( collection.queryLanguage() != queryLang
+      queryAttributes = attrs.join( QLatin1String( " " ) );
+
+      if ( collection.queryAttributes() != queryAttributes
           || collection.queryString() != queryString
-          || collection.queryCollections() != queryCollections
           || changes.contains( AKONADI_PARAM_MIMETYPE ) ) {
-        collection.setQueryLanguage( queryLang );
         collection.setQueryString( queryString );
-        collection.setQueryCollections( queryCollections );
+        collection.setQueryAttributes( queryAttributes );
 
         SearchManager::instance()->updateSearch( collection, db->notificationCollector() );
 

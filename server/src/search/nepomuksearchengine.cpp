@@ -28,6 +28,7 @@
 #include "storage/selectquerybuilder.h"
 #include "notificationmanager.h"
 #include "libs/xdgbasedirs_p.h"
+#include "libs/protocol_p.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QUrl>
@@ -81,9 +82,12 @@ NepomukSearchEngine::~NepomukSearchEngine()
 
 void NepomukSearchEngine::addSearch( const Collection &collection )
 {
-  if ( collection.queryLanguage() != QLatin1String( "SPARQL" ) ) {
+  const QStringList queryAttributes = collection.queryAttributes().split( QLatin1Char( ' ' ) );
+  const int index = queryAttributes.indexOf( QLatin1String ( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) );
+  if ( index == -1 || queryAttributes.size() < index || queryAttributes.value( index + 1 ) != QLatin1String( "SPARQL" ) ) {
     return;
   }
+
   const QString &q = collection.queryString();
 
   if ( q.size() >= 32768 ) {
@@ -141,7 +145,7 @@ void NepomukSearchEngine::reloadSearches()
 {
   akDebug() << this << sender();
   SelectQueryBuilder<Collection> qb;
-  qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
+  qb.addValueCondition( Collection::queryAttributesFullColumnName(), Query::Like, QLatin1String( "%SPARQL%" ) );
   if ( !qb.exec() ) {
     qWarning() << "Nepomuk QueryServer: Unable to execute query!";
     return;
@@ -164,7 +168,7 @@ void NepomukSearchEngine::reloadSearches()
 void NepomukSearchEngine::stopSearches()
 {
   SelectQueryBuilder<Collection> qb;
-  qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
+  qb.addValueCondition( Collection::queryAttributesFullColumnName(), Query::Like, QLatin1String( "%SPARQL%" ) );
   if ( !qb.exec() ) {
     qWarning() << "Nepomuk QueryServer: Unable to execute query!";
     return;

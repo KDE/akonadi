@@ -65,26 +65,31 @@ bool SearchPersistent::parseStream()
 
   QList<QByteArray> mimeTypes;
   QString queryCollections;
+  QStringList queryAttributes;
   if ( m_streamParser->hasList() ) {
     m_streamParser->beginList();
     while ( !m_streamParser->atListEnd() ) {
       const QByteArray key = m_streamParser->readString();
-      if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
-        lang = m_streamParser->readUtf8String();
-      } else if ( key == AKONADI_PARAM_MIMETYPE ) {
+      if ( key == AKONADI_PARAM_MIMETYPE ) {
         mimeTypes = m_streamParser->readParenthesizedList();
       } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) {
         const QList<QByteArray> collections = m_streamParser->readParenthesizedList();
         queryCollections = QString::fromLatin1( ImapParser::join( collections, " " ) );
+      } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
+        queryAttributes << QLatin1String( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG)
+                        << QString::fromUtf8( m_streamParser->readString() );
+      } else if ( key == AKONADI_PARAM_REMOTE ) {
+        queryAttributes << QLatin1String( AKONADI_PARAM_REMOTE );
+      } else if ( key == AKONADI_PARAM_RECURSIVE ) {
+        queryAttributes << QLatin1String( AKONADI_PARAM_RECURSIVE );
       }
     }
   }
 
-
   Collection col;
-  col.setQueryCollections( queryCollections );
   col.setQueryString( queryString );
-  col.setQueryLanguage( lang );
+  col.setQueryAttributes( queryAttributes.join( QLatin1String( "," ) ) );
+  col.setQueryCollections( queryCollections );
   col.setRemoteId( queryString ); // ### remove, legacy compat
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource

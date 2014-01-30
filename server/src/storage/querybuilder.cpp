@@ -54,6 +54,8 @@ static QString compareOperatorToString( Query::CompareOperator op )
     return QLatin1String( " IN " );
   case Query::NotIn:
     return QLatin1String( " NOT IN " );
+  case Query::Like:
+    return QLatin1String( " LIKE " );
   }
   Q_ASSERT_X( false, "QueryBuilder::compareOperatorToString()", "Unknown compare operator." );
   return QString();
