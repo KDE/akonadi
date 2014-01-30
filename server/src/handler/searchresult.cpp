@@ -43,6 +43,7 @@ SearchResult::~SearchResult()
 bool SearchResult::parseStream()
 {
   const QByteArray searchId = m_streamParser->readString();
+  const qint64 collectionId = m_streamParser->readNumber();
   if ( mScope.scope() != Scope::Uid && mScope.scope() != Scope::Rid ) {
     fail( searchId, "Only UID or RID scopes are allowed in SEARECH_RESULT" );
     return false;
@@ -65,6 +66,7 @@ bool SearchResult::parseStream()
     QueryBuilder qb( PimItem::tableName() );
     qb.addColumn( PimItem::idFullColumnName() );
     ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
+    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collectionId );
 
     if ( !qb.exec() ) {
       fail( searchId, "Failed to convert RID to UID" );
