@@ -174,8 +174,9 @@ bool Modify::parseStream()
       ImapParser::parseParenthesizedList( tmp, queryArgs );
       QString queryString, queryCollections, queryAttributes;
       QStringList attrs;
-      for ( int i = 0; i < queryArgs.size() - 1; ++i ) {
+      for ( int i = 0; i < queryArgs.size(); ++i ) {
         const QByteArray key = queryArgs.at( i );
+        qDebug() << key;
         if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING ) {
           queryString = QString::fromUtf8( queryArgs.at( i + 1 ) );
           ++i;
@@ -185,7 +186,7 @@ bool Modify::parseStream()
           queryCollections = QString::fromLatin1( ImapParser::join( cols, " " ) );
           ++i;
         } else  if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
-          attrs << QString::fromLatin1( key ) << QString::fromUtf8( queryArgs.at( i + 1 ) );
+          // Ignore query lang
           ++i;
         } else if ( key == AKONADI_PARAM_REMOTE ) {
           attrs << QString::fromLatin1( key );
@@ -197,9 +198,11 @@ bool Modify::parseStream()
       queryAttributes = attrs.join( QLatin1String( " " ) );
 
       if ( collection.queryAttributes() != queryAttributes
+          || collection.queryCollections() != queryCollections
           || collection.queryString() != queryString
           || changes.contains( AKONADI_PARAM_MIMETYPE ) ) {
         collection.setQueryString( queryString );
+        collection.setQueryCollections( queryCollections );
         collection.setQueryAttributes( queryAttributes );
 
         SearchManager::instance()->updateSearch( collection, db->notificationCollector() );
