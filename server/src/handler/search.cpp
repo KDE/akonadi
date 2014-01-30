@@ -23,10 +23,10 @@
 #include "akonadiconnection.h"
 #include "fetchhelper.h"
 #include "handlerhelper.h"
+#include "searchhelper.h"
 #include "imapstreamparser.h"
 #include "nepomuksearch.h"
 #include "response.h"
-#include "storage/selectquerybuilder.h"
 #include "search/agentsearchrequest.h"
 #include "search/searchmanager.h"
 
@@ -95,7 +95,7 @@ bool Search::parseStream()
 
     if ( recursive ) {
       Q_FOREACH ( qint64 collection, collectionIds ) {
-        collections << listCollectionsRecursive( QVector<qint64>() << collection, mimeTypes );
+        collections << SearchHelper::listCollectionsRecursive( QVector<qint64>() << collection, mimeTypes );
       }
     } else {
       collections = collectionIds;
@@ -153,51 +153,6 @@ void Search::searchNepomuk()
   }
 
   slotResultsAvailable( results );
-}
-
-QVector<qint64> Search::listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes )
-{
-  QVector<qint64> recursiveChildren;
-  Q_FOREACH ( qint64 ancestor, ancestors ) {
-    QVector<qint64> searchChildren;
-
-    { // Free the query before entering recursion to prevent too many opened connections
-
-      Query::Condition mimeTypeCondition;
-      mimeTypeCondition.addColumnCondition( CollectionMimeTypeRelation::rightFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-      // Exclude top-level collections and collections that cannot have items!
-      mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::NotEquals, QLatin1String( "inode/directory" ) );
-      if ( !mimeTypes.isEmpty() ) {
-        mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::In, mimeTypes );
-      }
-
-      CountQueryBuilder qb( Collection::tableName(), MimeType::nameFullColumnName(), CountQueryBuilder::All );
-      qb.addColumn( Collection::idFullColumnName() );
-      qb.addJoin( QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName() );
-      qb.addJoin( QueryBuilder::LeftJoin, MimeType::tableName(), mimeTypeCondition );
-      if ( ancestor == 0 ) {
-        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
-      } else {
-        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
-      }
-      qb.addGroupColumn( Collection::idFullColumnName() );
-      qb.exec();
-
-      QSqlQuery query = qb.query();
-      while ( query.next() ) {
-        const qint64 id = query.value( 1 ).toLongLong();
-        searchChildren << id;
-        if ( query.value( 0 ).toInt() > 0 ) { // count( mimeTypeTable.name ) > 0
-          recursiveChildren << id;
-        }
-      }
-    }
-    if ( !searchChildren.isEmpty() ) {
-      recursiveChildren << listCollectionsRecursive( searchChildren, mimeTypes );
-    }
-  }
-
-  return recursiveChildren;
 }
 
 void Search::slotResultsAvailable( const QSet<qint64> &results )

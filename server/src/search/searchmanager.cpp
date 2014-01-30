@@ -32,6 +32,7 @@
 #include "storage/querybuilder.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
+#include <searchhelper.h>
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
 
@@ -225,35 +226,33 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
 
   const QStringList queryAttributes = collection.queryAttributes().split( QLatin1Char (' ') );
   const bool remoteSearch =  queryAttributes.contains( QLatin1String( AKONADI_PARAM_REMOTE ) );
-  const bool recursive = queryAttributes.contains( QLatin1String( AKONADI_PARAM_RECURSIVE ) );
+  bool recursive = queryAttributes.contains( QLatin1String( AKONADI_PARAM_RECURSIVE ) );
 
-  QList<qint64> queryCollections;
-  if ( collection.queryCollections().isEmpty() ) {
-    QueryBuilder qb( Collection::tableName() );
-    qb.addColumn( Collection::idColumn() );
-    // Exclude search folders
-    qb.addValueCondition( Collection::parentIdColumn(), Query::NotEquals, 1 );
-    if ( !qb.exec() ) {
-      return false;
-    }
-
-    while ( qb.query().next() ) {
-      queryCollections << qb.query().value( 0 ).toLongLong();
-    }
-  } else {
-    Q_FOREACH ( const QString &colId, collection.queryCollections().split( QLatin1Char( ' ' ) ) ) {
-      queryCollections << colId.toLongLong();
-    }
-  }
 
   QStringList queryMimeTypes;
   Q_FOREACH ( const MimeType &mt, collection.mimeTypes() ) {
     queryMimeTypes << mt.name();
   }
 
+  QVector<qint64> queryCollections, queryAncestors;
+  if ( collection.queryCollections().isEmpty() ) {
+      queryAncestors << 0;
+      recursive = true;
+  } else {
+    Q_FOREACH ( const QString &colId, collection.queryCollections().split( QLatin1Char( ' ' ) ) ) {
+      queryAncestors << colId.toLongLong();
+    }
+  }
+
+  if ( recursive ) {
+    queryCollections = SearchHelper::listCollectionsRecursive( queryAncestors, queryMimeTypes );
+  } else {
+    queryCollections = queryAncestors;
+  }
+
   // Query all plugins for search results
   AgentSearchRequest request( "searchUpdate-" + QByteArray::number( QDateTime::currentDateTime().toTime_t() ) );
-  request.setCollections( queryCollections.toVector() );
+  request.setCollections( queryCollections );
   request.setMimeTypes( queryMimeTypes );
   request.setQuery( collection.queryString() );
   request.setRemoteSearch( remoteSearch );

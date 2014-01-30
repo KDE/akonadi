@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
+ *   Copyright (C) 2014 by Daniel Vrátil <dvratil@redhat.com>              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -18,6 +19,8 @@
  ***************************************************************************/
 
 #include "searchhelper.h"
+#include "storage/countquerybuilder.h"
+#include "entities.h"
 
 #include <libs/protocol_p.h>
 
@@ -83,4 +86,51 @@ QString SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start
   }
 
   return mimeType;
+}
+
+
+QVector<qint64> SearchHelper::listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes )
+{
+  QVector<qint64> recursiveChildren;
+  Q_FOREACH ( qint64 ancestor, ancestors ) {
+    QVector<qint64> searchChildren;
+
+    { // Free the query before entering recursion to prevent too many opened connections
+
+      Query::Condition mimeTypeCondition;
+      mimeTypeCondition.addColumnCondition( CollectionMimeTypeRelation::rightFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
+      // Exclude top-level collections and collections that cannot have items!
+      mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::NotEquals, QLatin1String( "inode/directory" ) );
+      if ( !mimeTypes.isEmpty() ) {
+        mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::In, mimeTypes );
+      }
+
+      CountQueryBuilder qb( Collection::tableName(), MimeType::nameFullColumnName(), CountQueryBuilder::All );
+      qb.addColumn( Collection::idFullColumnName() );
+      qb.addJoin( QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName() );
+      qb.addJoin( QueryBuilder::LeftJoin, MimeType::tableName(), mimeTypeCondition );
+      if ( ancestor == 0 ) {
+        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
+      } else {
+        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
+      }
+      qb.addValueCondition( Collection::isVirtualFullColumnName(), Query::Equals, false );
+      qb.addGroupColumn( Collection::idFullColumnName() );
+      qb.exec();
+
+      QSqlQuery query = qb.query();
+      while ( query.next() ) {
+        const qint64 id = query.value( 1 ).toLongLong();
+        searchChildren << id;
+        if ( query.value( 0 ).toInt() > 0 ) { // count( mimeTypeTable.name ) > 0
+          recursiveChildren << id;
+        }
+      }
+    }
+    if ( !searchChildren.isEmpty() ) {
+      recursiveChildren << listCollectionsRecursive( searchChildren, mimeTypes );
+    }
+  }
+
+  return recursiveChildren;
 }
