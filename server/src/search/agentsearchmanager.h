@@ -93,6 +93,7 @@ class AgentSearchManager : public QObject
     bool mShouldStop;
 
     TasksMap::Iterator cancelRunningTask( TasksMap::Iterator &iter );
+    bool allResourceTasksCompleted( AgentSearchTask* ) const;
 
     QMap<QString, AgentSearchInstance* > mInstances;
     QMutex mInstancesLock;

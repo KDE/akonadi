@@ -167,14 +167,24 @@ void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qin
   mWait.wakeAll();
 }
 
+bool AgentSearchManager::allResourceTasksCompleted( AgentSearchTask *agentSearchTask ) const
+{
+  QMap<QString, ResourceTask*>::const_iterator it = mRunningTasks.begin();
+  for ( ; it != mRunningTasks.end(); ) {
+    if ( it.value()->parentTask == agentSearchTask ) {
+      return false;
+    }
+  }
+  return true;
+}
+
 AgentSearchManager::TasksMap::Iterator AgentSearchManager::cancelRunningTask( TasksMap::Iterator &iter )
 {
   ResourceTask *task = iter.value();
   AgentSearchTask *parentTask = task->parentTask;
-  parentTask->sharedLock.lock();
-  parentTask->pendingResults.clear();
-  parentTask->complete = true;
-  parentTask->sharedLock.unlock();
+  QMutexLocker locker(&parentTask->sharedLock);
+  // We're not clearing the results since we don't want to clear successful results from other resources
+  parentTask->complete = allResourceTasksCompleted( parentTask );
   parentTask->notifier.wakeAll();
   delete task;
 
@@ -217,10 +227,10 @@ void AgentSearchManager::searchLoop()
       mPendingResults.remove( 0 );
       akDebug() << "Pending results for search" << finishedTask->parentTask->id << "available!";
       AgentSearchTask *parentTask = finishedTask->parentTask;
-      parentTask->sharedLock.lock();
-      parentTask->pendingResults = finishedTask->results;
-      parentTask->complete = true;
-      parentTask->sharedLock.unlock();
+      QMutexLocker locker( &parentTask->sharedLock );
+      // We need to append, this agent search task is shared
+      parentTask->pendingResults += finishedTask->results;
+      parentTask->complete = allResourceTasksCompleted( parentTask );
       parentTask->notifier.wakeAll();
       delete finishedTask;
     }
