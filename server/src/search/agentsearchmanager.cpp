@@ -56,10 +56,9 @@ AgentSearchManager* AgentSearchManager::instance()
 
 void AgentSearchManager::stop()
 {
-  mLock.lock();
+  QMutexLocker locker( &mLock );
   mShouldStop = true;
   mWait.wakeAll();
-  mLock.unlock();
 }
 
 void AgentSearchManager::registerInstance( const QString &id )
@@ -133,10 +132,8 @@ void AgentSearchManager::addTask( AgentSearchTask *task )
   } while ( query.next() );
   mInstancesLock.unlock();
 
-  mLock.lock();
+  QMutexLocker locker( &mLock );
   mTasklist.append( task );
-  mLock.unlock();
-
   mWait.wakeAll();
 }
 
@@ -195,16 +192,16 @@ void AgentSearchManager::searchLoop()
 {
   qint64 timeout = ULONG_MAX;
 
-  mLock.lock();
+  QMutexLocker locker( &mLock );
+
   Q_FOREVER {
     akDebug() << "Search loop is waiting, will wake again in" << timeout << "ms";
     mWait.wait( &mLock, timeout ); // wait for a minute
 
     if ( mShouldStop ) {
       Q_FOREACH (AgentSearchTask *task, mTasklist ) {
-        task->sharedLock.lock();
+        QMutexLocker locker( &task->sharedLock );
         task->queries.clear();
-        task->sharedLock.unlock();
         task->notifier.wakeAll();
       }
 
@@ -254,11 +251,9 @@ void AgentSearchManager::searchLoop()
       akDebug() << "Search task" << task->id << "available!";
       if ( task->queries.isEmpty() ) {
         akDebug() << "nothing to do for task";
-        task->sharedLock.lock();
+        QMutexLocker locker( &task->sharedLock );
         //After this the AgentSearchTask will be destroyed
         task->complete = true;
-        task->sharedLock.unlock();
-
         mTasklist.remove( 0 );
         continue;
       }
@@ -304,5 +299,4 @@ void AgentSearchManager::searchLoop()
       }
     }
   }
-  mLock.unlock();
 }
