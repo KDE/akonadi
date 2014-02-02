@@ -312,8 +312,8 @@ void ItemHydra::testSharedPointerConversions()
     QVERIFY(  a.hasPayload<VolkerPtr>() );
     QVERIFY(  a.hasPayload<RudiPtr>() );
     QVERIFY( !a.hasPayload<GerdPtr>() );
-    QVERIFY(  a.payload<RudiPtr>() );
-    QVERIFY(  a.payload<VolkerPtr>() );
+    QVERIFY(  a.payload<RudiPtr>().get() );
+    QVERIFY(  a.payload<VolkerPtr>().get() );
     bool thrown = false, thrownCorrectly = true;
     try {
         QVERIFY( !a.payload<GerdPtr>() );
