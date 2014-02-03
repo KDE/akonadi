@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2013, 2014 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_AGENTSEARCHREQUEST_H
-#define AKONADI_AGENTSEARCHREQUEST_H
+#ifndef AKONADI_SEARCHREQUEST_H
+#define AKONADI_SEARCHREQUEST_H
 
 #include <QObject>
 #include <QVector>
@@ -30,13 +30,13 @@ namespace Akonadi
 
 class AkonadiConnection;
 
-class AgentSearchRequest: public QObject
+class SearchRequest: public QObject
 {
     Q_OBJECT
 
   public:
-    AgentSearchRequest( const QByteArray &connectionId );
-    ~AgentSearchRequest();
+    SearchRequest( const QByteArray &connectionId );
+    ~SearchRequest();
 
     void setQuery( const QString &query );
     QString query() const;
@@ -79,4 +79,4 @@ class AgentSearchRequest: public QObject
 
 }
 
-#endif // AKONADI_AGENTSEARCHREQUEST_H
+#endif // AKONADI_SEARCHREQUEST_H

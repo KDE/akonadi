@@ -18,8 +18,8 @@
 */
 
 #include "agentsearchinstance.h"
-#include "agentsearchmanager.h"
 #include "agentsearchinterface.h"
+#include "searchtaskmanager.h"
 #include "akdbus.h"
 
 using namespace Akonadi;
@@ -64,7 +64,7 @@ bool AgentSearchInstance::init()
 void AgentSearchInstance::serviceOwnerChanged( const QString &service, const QString &oldName, const QString &newName )
 {
   if ( newName.isEmpty() ) {
-    AgentSearchManager::instance()->unregisterInstance( mId );
+    SearchTaskManager::instance()->unregisterInstance( mId );
   }
 }
 

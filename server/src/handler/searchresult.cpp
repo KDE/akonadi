@@ -24,7 +24,7 @@
 #include "protocol_p.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/itemqueryhelper.h"
-#include "search/agentsearchmanager.h"
+#include "search/searchtaskmanager.h"
 #include "akdebug.h"
 
 using namespace Akonadi;
@@ -89,7 +89,7 @@ bool SearchResult::parseStream()
       }
     }
   }
-  AgentSearchManager::instance()->pushResults( searchId, ids, connection() );
+  SearchTaskManager::instance()->pushResults( searchId, ids, connection() );
 
   successResponse( "Done" );
   return true;
@@ -97,6 +97,6 @@ bool SearchResult::parseStream()
 
 void SearchResult::fail( const QByteArray &searchId, const char* error )
 {
-  AgentSearchManager::instance()->pushResults( searchId, QSet<qint64>(), connection() );
+  SearchTaskManager::instance()->pushResults( searchId, QSet<qint64>(), connection() );
   failureResponse( error );
 }

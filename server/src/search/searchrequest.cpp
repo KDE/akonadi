@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2013, 2014 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include "agentsearchrequest.h"
+#include "searchrequest.h"
 
 #include <QPluginLoader>
 
-#include "agentsearchmanager.h"
+#include "searchtaskmanager.h"
 #include "abstractsearchplugin.h"
 #include "searchmanager.h"
 #include "akonadiconnection.h"
@@ -30,74 +30,74 @@
 
 using namespace Akonadi;
 
-AgentSearchRequest::AgentSearchRequest( const QByteArray &connectionId )
+SearchRequest::SearchRequest( const QByteArray &connectionId )
   : mConnectionId( connectionId )
   , mRemoteSearch( true )
   , mEmitResults( true )
 {
 }
 
-AgentSearchRequest::~AgentSearchRequest()
+SearchRequest::~SearchRequest()
 {
 }
 
-QByteArray AgentSearchRequest::connectionId() const
+QByteArray SearchRequest::connectionId() const
 {
   return mConnectionId;
 }
 
-void AgentSearchRequest::setQuery( const QString &query )
+void SearchRequest::setQuery( const QString &query )
 {
   mQuery = query;
 }
 
-QString AgentSearchRequest::query() const
+QString SearchRequest::query() const
 {
   return mQuery;
 }
 
-void AgentSearchRequest::setCollections( const QVector<qint64> &collectionsIds )
+void SearchRequest::setCollections( const QVector<qint64> &collectionsIds )
 {
   mCollections = collectionsIds;
 }
 
-QVector<qint64> AgentSearchRequest::collections() const
+QVector<qint64> SearchRequest::collections() const
 {
   return mCollections;
 }
 
 
-void AgentSearchRequest::setMimeTypes( const QStringList &mimeTypes )
+void SearchRequest::setMimeTypes( const QStringList &mimeTypes )
 {
   mMimeTypes = mimeTypes;
 }
 
-QStringList AgentSearchRequest::mimeTypes() const
+QStringList SearchRequest::mimeTypes() const
 {
   return mMimeTypes;
 }
 
-void AgentSearchRequest::setRemoteSearch( bool remote )
+void SearchRequest::setRemoteSearch( bool remote )
 {
   mRemoteSearch = remote;
 }
 
-bool AgentSearchRequest::remoteSearch() const
+bool SearchRequest::remoteSearch() const
 {
   return mRemoteSearch;
 }
 
-void AgentSearchRequest::setEmitResults( bool emitResults )
+void SearchRequest::setEmitResults( bool emitResults )
 {
   mEmitResults = emitResults;
 }
 
-QSet<qint64> AgentSearchRequest::results() const
+QSet<qint64> SearchRequest::results() const
 {
   return mResults;
 }
 
-void AgentSearchRequest::emitResults( const QSet<qint64> &results )
+void SearchRequest::emitResults( const QSet<qint64> &results )
 {
   if ( mEmitResults ) {
     Q_EMIT resultsAvailable( results );
@@ -106,7 +106,7 @@ void AgentSearchRequest::emitResults( const QSet<qint64> &results )
   }
 }
 
-void AgentSearchRequest::searchPlugins()
+void SearchRequest::searchPlugins()
 {
   const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
   Q_FOREACH ( AbstractSearchPlugin *plugin, plugins ) {
@@ -115,7 +115,7 @@ void AgentSearchRequest::searchPlugins()
   }
 }
 
-void AgentSearchRequest::exec()
+void SearchRequest::exec()
 {
   akDebug() << "Executing search" << mConnectionId;
 
@@ -129,14 +129,14 @@ void AgentSearchRequest::exec()
     return;
   }
 
-  AgentSearchTask task;
+  SearchTask task;
   task.id = mConnectionId;
   task.query = mQuery;
   task.mimeTypes = mMimeTypes;
   task.collections = mCollections;
   task.complete = false;
 
-  AgentSearchManager::instance()->addTask( &task );
+  SearchTaskManager::instance()->addTask( &task );
 
   task.sharedLock.lock();
   Q_FOREVER {

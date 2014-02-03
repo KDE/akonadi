@@ -20,19 +20,19 @@
 
 #include "searchmanager.h"
 #include "abstractsearchplugin.h"
-#include "agentsearchmanager.h"
 #include "searchmanageradaptor.h"
 
 #include "akdebug.h"
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
-#include "agentsearchrequest.h"
+#include "searchrequest.h"
+#include "searchtaskmanager.h"
 #include "storage/notificationcollector.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
-#include <searchhelper.h>
+#include "searchhelper.h"
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
 
@@ -115,12 +115,12 @@ SearchManager *SearchManager::instance()
 
 void SearchManager::registerInstance( const QString &id )
 {
-  AgentSearchManager::instance()->registerInstance( id );
+  SearchTaskManager::instance()->registerInstance( id );
 }
 
 void SearchManager::unregisterInstance( const QString &id )
 {
-  AgentSearchManager::instance()->unregisterInstance( id );
+  SearchTaskManager::instance()->unregisterInstance( id );
 }
 
 QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
@@ -251,7 +251,7 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   }
 
   // Query all plugins for search results
-  AgentSearchRequest request( "searchUpdate-" + QByteArray::number( QDateTime::currentDateTime().toTime_t() ) );
+  SearchRequest request( "searchUpdate-" + QByteArray::number( QDateTime::currentDateTime().toTime_t() ) );
   request.setCollections( queryCollections );
   request.setMimeTypes( queryMimeTypes );
   request.setQuery( collection.queryString() );

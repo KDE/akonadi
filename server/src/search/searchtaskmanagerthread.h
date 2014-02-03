@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2013, 2014 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,27 +17,25 @@
     02110-1301, USA.
 */
 
-#include "agentsearchmanagerthread.h"
-#include "agentsearchmanager.h"
+#ifndef AKONADI_SEARCHTASKMANAGERTHREAD_H
+#define AKONADI_SEARCHTASKMANAGERTHREAD_H
 
-#include <QCoreApplication>
+#include <QThread>
 
-using namespace Akonadi;
+namespace Akonadi {
 
-AgentSearchManagerThread::AgentSearchManagerThread( QObject *parent )
-  : QThread(parent)
+class SearchTaskManagerThread : public QThread
 {
-  // make sure we are created from the main thread, ie. before all other threads start to potentially use us
-  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+  Q_OBJECT
+  public:
+    SearchTaskManagerThread( QObject *parent = 0 );
+
+    void stop();
+
+  protected:
+    /* reimpl */ void run();
+};
+
 }
 
-void AgentSearchManagerThread::run()
-{
-  AgentSearchManager mgr;
-  exec();
-}
-
-void AgentSearchManagerThread::stop()
-{
-  AgentSearchManager::instance()->stop();
-}
+#endif // AKONADI_SEARCHTASKMANAGERTHREAD_H

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2013, 2014 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "agentsearchmanager.h"
+#include "searchtaskmanager.h"
 #include "agentsearchinstance.h"
 #include "akdebug.h"
 #include "akonadiconnection.h"
@@ -30,9 +30,9 @@
 
 using namespace Akonadi;
 
-AgentSearchManager *AgentSearchManager::sInstance = 0;
+SearchTaskManager *SearchTaskManager::sInstance = 0;
 
-AgentSearchManager::AgentSearchManager()
+SearchTaskManager::SearchTaskManager()
   : QObject()
   , mShouldStop( false )
 {
@@ -41,27 +41,27 @@ AgentSearchManager::AgentSearchManager()
   QTimer::singleShot(0, this, SLOT(searchLoop()) );
 }
 
-AgentSearchManager::~AgentSearchManager()
+SearchTaskManager::~SearchTaskManager()
 {
   mInstancesLock.lock();
   qDeleteAll( mInstances );
   mInstancesLock.unlock();
 }
 
-AgentSearchManager* AgentSearchManager::instance()
+SearchTaskManager* SearchTaskManager::instance()
 {
   Q_ASSERT( sInstance );
   return sInstance;
 }
 
-void AgentSearchManager::stop()
+void SearchTaskManager::stop()
 {
   QMutexLocker locker( &mLock );
   mShouldStop = true;
   mWait.wakeAll();
 }
 
-void AgentSearchManager::registerInstance( const QString &id )
+void SearchTaskManager::registerInstance( const QString &id )
 {
   QMutexLocker locker( &mInstancesLock );
 
@@ -83,7 +83,7 @@ void AgentSearchManager::registerInstance( const QString &id )
   mInstances.insert( id, instance );
 }
 
-void AgentSearchManager::unregisterInstance( const QString &id )
+void SearchTaskManager::unregisterInstance( const QString &id )
 {
   QMutexLocker locker( &mInstancesLock );
 
@@ -95,7 +95,7 @@ void AgentSearchManager::unregisterInstance( const QString &id )
   }
 }
 
-void AgentSearchManager::addTask( AgentSearchTask *task )
+void SearchTaskManager::addTask( SearchTask *task )
 {
   QueryBuilder qb( Collection::tableName() );
   qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
@@ -111,7 +111,7 @@ void AgentSearchManager::addTask( AgentSearchTask *task )
   qb.addValueCondition( Collection::idFullColumnName(), Query::In, list );
 
   if ( !qb.exec() ) {
-    throw AgentSearchException( qb.query().lastError().text() );
+    throw SearchException( qb.query().lastError().text() );
   }
 
   QSqlQuery query = qb.query();
@@ -138,7 +138,7 @@ void AgentSearchManager::addTask( AgentSearchTask *task )
 }
 
 
-void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qint64> &ids,
+void SearchTaskManager::pushResults( const QByteArray &searchId, const QSet<qint64> &ids,
                                       AkonadiConnection* connection )
 {
   Q_UNUSED( searchId );
@@ -164,7 +164,7 @@ void AgentSearchManager::pushResults( const QByteArray &searchId, const QSet<qin
   mWait.wakeAll();
 }
 
-bool AgentSearchManager::allResourceTasksCompleted( AgentSearchTask *agentSearchTask ) const
+bool SearchTaskManager::allResourceTasksCompleted( SearchTask *agentSearchTask ) const
 {
   QMap<QString, ResourceTask*>::const_iterator it = mRunningTasks.begin();
   for ( ; it != mRunningTasks.end(); ) {
@@ -175,10 +175,10 @@ bool AgentSearchManager::allResourceTasksCompleted( AgentSearchTask *agentSearch
   return true;
 }
 
-AgentSearchManager::TasksMap::Iterator AgentSearchManager::cancelRunningTask( TasksMap::Iterator &iter )
+SearchTaskManager::TasksMap::Iterator SearchTaskManager::cancelRunningTask( TasksMap::Iterator &iter )
 {
   ResourceTask *task = iter.value();
-  AgentSearchTask *parentTask = task->parentTask;
+  SearchTask *parentTask = task->parentTask;
   QMutexLocker locker(&parentTask->sharedLock);
   // We're not clearing the results since we don't want to clear successful results from other resources
   parentTask->complete = allResourceTasksCompleted( parentTask );
@@ -188,7 +188,7 @@ AgentSearchManager::TasksMap::Iterator AgentSearchManager::cancelRunningTask( Ta
   return mRunningTasks.erase( iter );
 }
 
-void AgentSearchManager::searchLoop()
+void SearchTaskManager::searchLoop()
 {
   qint64 timeout = ULONG_MAX;
 
@@ -199,7 +199,7 @@ void AgentSearchManager::searchLoop()
     mWait.wait( &mLock, timeout ); // wait for a minute
 
     if ( mShouldStop ) {
-      Q_FOREACH (AgentSearchTask *task, mTasklist ) {
+      Q_FOREACH (SearchTask *task, mTasklist ) {
         QMutexLocker locker( &task->sharedLock );
         task->queries.clear();
         task->notifier.wakeAll();
@@ -223,7 +223,7 @@ void AgentSearchManager::searchLoop()
       ResourceTask *finishedTask = mPendingResults.first();
       mPendingResults.remove( 0 );
       akDebug() << "Pending results for search" << finishedTask->parentTask->id << "available!";
-      AgentSearchTask *parentTask = finishedTask->parentTask;
+      SearchTask *parentTask = finishedTask->parentTask;
       QMutexLocker locker( &parentTask->sharedLock );
       // We need to append, this agent search task is shared
       parentTask->pendingResults += finishedTask->results;
@@ -247,7 +247,7 @@ void AgentSearchManager::searchLoop()
     }
 
     if ( !mTasklist.isEmpty() ) {
-      AgentSearchTask *task = mTasklist.first();
+      SearchTask *task = mTasklist.first();
       akDebug() << "Search task" << task->id << "available!";
       if ( task->queries.isEmpty() ) {
         akDebug() << "nothing to do for task";

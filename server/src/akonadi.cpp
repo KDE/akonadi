@@ -37,7 +37,7 @@
 #include "storage/itemretrievalthread.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
-#include "search/agentsearchmanagerthread.h"
+#include "search/searchtaskmanagerthread.h"
 #include "response.h"
 
 #include "libs/xdgbasedirs_p.h"
@@ -190,7 +190,7 @@ void AkonadiServer::init()
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
 
-    mAgentSearchManagerThread = new AgentSearchManagerThread( this );
+    mAgentSearchManagerThread = new SearchTaskManagerThread( this );
     mAgentSearchManagerThread->start();
 
 

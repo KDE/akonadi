@@ -17,25 +17,27 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_AGENTSEARCHMANAGERTHREAD_H
-#define AKONADI_AGENTSEARCHMANAGERTHREAD_H
+#include "searchtaskmanagerthread.h"
+#include "searchtaskmanager.h"
 
-#include <QThread>
+#include <QCoreApplication>
 
-namespace Akonadi {
+using namespace Akonadi;
 
-class AgentSearchManagerThread : public QThread
+SearchTaskManagerThread::SearchTaskManagerThread( QObject *parent )
+  : QThread(parent)
 {
-  Q_OBJECT
-  public:
-    AgentSearchManagerThread( QObject *parent = 0 );
-
-    void stop();
-
-  protected:
-    /* reimpl */ void run();
-};
-
+  // make sure we are created from the main thread, ie. before all other threads start to potentially use us
+  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 }
 
-#endif // AKONADI_AGENTSEARCHMANAGERTHREAD_H
+void SearchTaskManagerThread::run()
+{
+  SearchTaskManager mgr;
+  exec();
+}
+
+void SearchTaskManagerThread::stop()
+{
+  SearchTaskManager::instance()->stop();
+}

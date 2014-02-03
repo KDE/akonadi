@@ -27,7 +27,7 @@
 #include "imapstreamparser.h"
 #include "nepomuksearch.h"
 #include "response.h"
-#include "search/agentsearchrequest.h"
+#include "search/searchrequest.h"
 #include "search/searchmanager.h"
 
 #include "libs/protocol_p.h"
@@ -118,7 +118,7 @@ bool Search::parseStream()
     // Read any newlines
     m_streamParser->readUntilCommandEnd();
 
-    AgentSearchRequest request( connection()->sessionId() );
+    SearchRequest request( connection()->sessionId() );
     request.setCollections( collections );
     request.setMimeTypes( mimeTypes );
     request.setQuery( queryString );

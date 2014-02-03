@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2013, 2014 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_AGENTSEARCHMANAGER_H
-#define AKONADI_AGENTSEARCHMANAGER_H
+#ifndef AKONADI_SEARCHTASKMANAGER_H
+#define AKONADI_SEARCHTASKMANAGER_H
 
 #include <QObject>
 #include <QMap>
@@ -32,12 +32,12 @@
 namespace Akonadi {
 
 class AkonadiConnection;
-class AgentSearchRequest;
+class SearchRequest;
 class AgentSearchInstance;
 
 class SearchResultsRetriever;
 
-class AgentSearchTask
+class SearchTask
 {
   public:
     QByteArray id;
@@ -53,19 +53,19 @@ class AgentSearchTask
     QSet<qint64> pendingResults;
 };
 
-class AgentSearchManager : public QObject
+class SearchTaskManager : public QObject
 {
   Q_OBJECT
 
   public:
-    static AgentSearchManager *instance();
+    static SearchTaskManager *instance();
 
-    ~AgentSearchManager();
+    ~SearchTaskManager();
 
     void registerInstance( const QString &id );
     void unregisterInstance( const QString &id );
 
-    void addTask( AgentSearchTask *task );
+    void addTask( SearchTask *task );
 
     void pushResults( const QByteArray &searchId, const QSet<qint64> &ids,
                       AkonadiConnection *connection );
@@ -79,7 +79,7 @@ class AgentSearchManager : public QObject
       public:
         QString resourceId;
         qint64 collectionId;
-        AgentSearchTask *parentTask;
+        SearchTask *parentTask;
         QSet<qint64> results;
 
         qint64 timestamp;
@@ -87,13 +87,13 @@ class AgentSearchManager : public QObject
 
     typedef QMap<QString /* resource */, ResourceTask *>  TasksMap;
 
-    static AgentSearchManager *sInstance;
-    AgentSearchManager();
+    static SearchTaskManager *sInstance;
+    SearchTaskManager();
     void stop();
     bool mShouldStop;
 
     TasksMap::Iterator cancelRunningTask( TasksMap::Iterator &iter );
-    bool allResourceTasksCompleted( AgentSearchTask* ) const;
+    bool allResourceTasksCompleted( SearchTask* ) const;
 
     QMap<QString, AgentSearchInstance* > mInstances;
     QMutex mInstancesLock;
@@ -101,16 +101,16 @@ class AgentSearchManager : public QObject
     QWaitCondition mWait;
     QMutex mLock;
 
-    QVector<AgentSearchTask*> mTasklist;
+    QVector<SearchTask*> mTasklist;
 
     QMap<QString /* resource */, ResourceTask *> mRunningTasks;
     QVector<ResourceTask *> mPendingResults;
 
-    friend class AgentSearchManagerThread;
+    friend class SearchTaskManagerThread;
 };
 
-AKONADI_EXCEPTION_MAKE_INSTANCE( AgentSearchException );
+AKONADI_EXCEPTION_MAKE_INSTANCE( SearchException );
 
 }
 
-#endif // AKONADI_AGENTSEARCHMANAGER_H
+#endif // AKONADI_SEARCHTASKMANAGER_H
