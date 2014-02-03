@@ -254,6 +254,7 @@ void AgentSearchManager::searchLoop()
         QMutexLocker locker( &task->sharedLock );
         //After this the AgentSearchTask will be destroyed
         task->complete = true;
+        task->notifier.wakeAll();
         mTasklist.remove( 0 );
         continue;
       }
