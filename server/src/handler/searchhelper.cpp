@@ -112,7 +112,11 @@ QVector<qint64> SearchHelper::listCollectionsRecursive( const QVector<qint64> &a
       if ( ancestor == 0 ) {
         qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
       } else {
-        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
+        // Also include current ancestor's result, so that we know whether we should search in the ancestor too
+        Query::Condition idCond( Query::Or );
+        idCond.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
+        idCond.addValueCondition( Collection::idFullColumnName(), Query::Equals, ancestor );
+        qb.addCondition( idCond );
       }
       qb.addValueCondition( Collection::isVirtualFullColumnName(), Query::Equals, false );
       qb.addGroupColumn( Collection::idFullColumnName() );
@@ -121,7 +125,10 @@ QVector<qint64> SearchHelper::listCollectionsRecursive( const QVector<qint64> &a
       QSqlQuery query = qb.query();
       while ( query.next() ) {
         const qint64 id = query.value( 1 ).toLongLong();
-        searchChildren << id;
+        // Don't add ancestor into search children, we are resolving it right now
+        if ( id != ancestor ) {
+          searchChildren << id;
+        }
         if ( query.value( 0 ).toInt() > 0 ) { // count( mimeTypeTable.name ) > 0
           recursiveChildren << id;
         }
