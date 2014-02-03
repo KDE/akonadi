@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,15 +21,19 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <QStringList>
-#include <QVector>
 #include <QObject>
+#include <QVector>
+#include <QDBusConnection>
+
+#include <libs/notificationmessagev2_p.h>
+
+class QTimer;
 
 namespace Akonadi {
 
 class NotificationCollector;
-
 class AbstractSearchEngine;
+class AbstractSearchPlugin;
 class Collection;
 
 /**
@@ -38,6 +43,8 @@ class Collection;
 class SearchManager : public QObject
 {
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.SearchManager" )
+
   public:
     /** Create a new search manager with the given @p searchEngines. */
     explicit SearchManager( const QStringList &searchEngines, QObject *parent = 0 );
@@ -49,31 +56,44 @@ class SearchManager : public QObject
     static SearchManager *instance();
 
     /**
-     * Adds the given @p collection to the search.
-     *
-     * @returns true if the collection was added successfully, false otherwise.
+     * This is called via D-Bus from AgentManager to register an agent with
+     * search interface.
      */
-    bool addSearch( const Collection &collection );
+    void registerInstance( const QString &id );
 
     /**
-     * Removes the collection with the given @p id from the search.
-     *
-     * @returns true if the collection was removed successfully, false otherwise.
+     * This is called via D-Bus from AgentManager to unregister an agent with
+     * search interface.
      */
-    bool removeSearch( qint64 id );
+    void unregisterInstance( const QString &id );
 
     /**
      * Update the search query of the given collection.
      */
-    void updateSearch( const Collection &collection, NotificationCollector *collector );
+    bool updateSearch( const Collection &collection, NotificationCollector *collector );
+
+    /**
+     * Returns currently available search plugins.
+     */
+    QVector<AbstractSearchPlugin *> searchPlugins() const;
 
   private Q_SLOTS:
-    void addSearchInternal( const Collection &collection );
-    void removeSearchInternal( qint64 id );
+    void scheduleSearchUpdate( const Akonadi::NotificationMessageV2::List &notifications );
+    void searchUpdateTimeout();
 
   private:
-    static SearchManager *m_instance;
-    QVector<AbstractSearchEngine *> m_engines;
+    void loadSearchPlugins();
+
+    static SearchManager *sInstance;
+
+    QVector<AbstractSearchEngine *> mEngines;
+    QVector<AbstractSearchPlugin *> mPlugins;
+
+    // agents dbus interface cache
+    QDBusConnection mDBusConnection;
+
+    QList<qint64> mPendingSearchUpdateIds;
+    QTimer *mSearchUpdateTimer;
 };
 
 }

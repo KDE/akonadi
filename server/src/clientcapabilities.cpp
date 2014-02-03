@@ -22,6 +22,7 @@
 ClientCapabilities::ClientCapabilities()
   : m_notificationMessageVersion( 0 )
   , m_noPayloadPath( false )
+  , m_serverSideSearch( false )
   , m_akAppendStreaming( false )
 {
 }
@@ -52,6 +53,16 @@ bool ClientCapabilities::noPayloadPath() const
 void ClientCapabilities::setNoPayloadPath( bool noPayloadPath )
 {
   m_noPayloadPath = noPayloadPath;
+}
+
+bool ClientCapabilities::serverSideSearch() const
+{
+  return m_serverSideSearch;
+}
+
+void ClientCapabilities::setServerSideSearch( bool serverSideSearch )
+{
+  m_serverSideSearch = serverSideSearch;
 }
 
 bool ClientCapabilities::akAppendStreaming() const

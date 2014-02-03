@@ -120,6 +120,7 @@ set(libakonadiprivate_SRCS
   src/handler/expunge.cpp
   src/handler/fetch.cpp
   src/handler/fetchhelper.cpp
+  src/handler/fetchscope.cpp
   src/handler/link.cpp
   src/handler/list.cpp
   src/handler/login.cpp
@@ -132,12 +133,17 @@ set(libakonadiprivate_SRCS
   src/handler/search.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
+  src/handler/searchresult.cpp
   src/handler/select.cpp
   src/handler/subscribe.cpp
   src/handler/status.cpp
   src/handler/store.cpp
   src/handler/transaction.cpp
   src/search/agentsearchengine.cpp
+  src/search/agentsearchinstance.cpp
+  src/search/searchtaskmanager.cpp
+  src/search/searchtaskmanagerthread.cpp
+  src/search/searchrequest.cpp
   src/search/searchmanager.cpp
 
   src/storage/collectionqueryhelper.cpp
@@ -216,9 +222,11 @@ qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::ResourceManager)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessormanager.h Akonadi::PreprocessorManager)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.SearchManager.xml search/searchmanager.h Akonadi::SearchManager)
 qt4_add_dbus_interfaces(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface)
+qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Search.xml agentsearchinterface)
 
 qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb.qrc)
 
@@ -264,6 +272,10 @@ install(FILES
   src/storage/mysql-global.conf
   src/storage/mysql-global-mobile.conf
   DESTINATION ${CONFIG_INSTALL_DIR}/akonadi)
+
+install(FILES
+  src/search/abstractsearchplugin.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi)
 
 ## DBus XML files
 install(FILES

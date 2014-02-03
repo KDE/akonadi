@@ -29,11 +29,10 @@
 #include "search/searchmanager.h"
 #include "imapstreamparser.h"
 #include "libs/protocol_p.h"
+#include "libs/imapparser_p.h"
 #include <akdebug.h>
 
 #include <QtCore/QStringList>
-#include <qdbusinterface.h>
-#include <QtDBus/qdbusreply.h>
 
 using namespace Akonadi;
 
@@ -64,19 +63,33 @@ bool SearchPersistent::parseStream()
   // for legacy clients we have to guess the language
   QString lang = QLatin1String( "SPARQL" );
 
+  QList<QByteArray> mimeTypes;
+  QString queryCollections;
+  QStringList queryAttributes;
   if ( m_streamParser->hasList() ) {
     m_streamParser->beginList();
     while ( !m_streamParser->atListEnd() ) {
       const QByteArray key = m_streamParser->readString();
-      if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
-        lang = m_streamParser->readUtf8String();
+      if ( key == AKONADI_PARAM_MIMETYPE ) {
+        mimeTypes = m_streamParser->readParenthesizedList();
+      } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) {
+        const QList<QByteArray> collections = m_streamParser->readParenthesizedList();
+        queryCollections = QString::fromLatin1( ImapParser::join( collections, " " ) );
+      } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
+        queryAttributes << QLatin1String( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG)
+                        << QString::fromUtf8( m_streamParser->readString() );
+      } else if ( key == AKONADI_PARAM_REMOTE ) {
+        queryAttributes << QLatin1String( AKONADI_PARAM_REMOTE );
+      } else if ( key == AKONADI_PARAM_RECURSIVE ) {
+        queryAttributes << QLatin1String( AKONADI_PARAM_RECURSIVE );
       }
     }
   }
 
   Collection col;
   col.setQueryString( queryString );
-  col.setQueryLanguage( lang );
+  col.setQueryAttributes( queryAttributes.join( QLatin1String( " " ) ) );
+  col.setQueryCollections( queryCollections );
   col.setRemoteId( queryString ); // ### remove, legacy compat
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource
@@ -90,21 +103,16 @@ bool SearchPersistent::parseStream()
     return failureResponse( "Unable to set rights attribute on persistent search" );
   }
 
-  // work around the fact that we have no clue what might be in there
-  MimeType::List mts = MimeType::retrieveAll();
-  Q_FOREACH ( const MimeType &mt, mts ) {
-    if ( mt.name() == QLatin1String( "inode/directory" ) ) {
-      continue;
-    }
-    col.addMimeType( mt );
+  Q_FOREACH ( const QByteArray &mimeType, mimeTypes ) {
+    col.addMimeType( MimeType::retrieveByName( QString::fromLatin1( mimeType ) ) );
   }
 
   if ( !transaction.commit() ) {
     return failureResponse( "Unable to commit transaction" );
   }
 
-  if ( !SearchManager::instance()->addSearch( col ) ) {
-    return failureResponse( "Unable to add search to search manager" );
+  if ( !SearchManager::instance()->updateSearch( col, DataStore::self()->notificationCollector() ) ) {
+    return failureResponse( "Unable to initialize search" );
   }
 
   const QByteArray b = HandlerHelper::collectionToByteArray( col );

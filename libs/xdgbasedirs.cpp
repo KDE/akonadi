@@ -299,7 +299,7 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
   return QString();
 }
 
-QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &searchPath )
+QStringList XdgBaseDirs::findPluginDirs()
 {
   if ( instance()->mPluginDirs.isEmpty() ) {
     QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/" );
@@ -311,8 +311,6 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
         }
       }
     }
-
-    pluginDirs += searchPath;
 
     // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
     QProcess proc;
@@ -332,13 +330,20 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
     instance()->mPluginDirs = pluginDirs;
   }
 
+  return instance()->mPluginDirs;
+}
+
+QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &searchPath )
+{
+  const QStringList searchDirs = findPluginDirs() + searchPath;
+
 #if defined(Q_OS_WIN) //krazy:exclude=cpp
   const QString pluginName = relPath + QLatin1String( ".dll" );
 #else
   const QString pluginName = relPath + QLatin1String( ".so" );
 #endif
 
-  Q_FOREACH ( const QString &path, instance()->mPluginDirs ) {
+  Q_FOREACH ( const QString &path, searchDirs ) {
     const QFileInfo fileInfo( path + QDir::separator() + pluginName );
 
     // resolve symlinks, happens eg. with Maemo optify

@@ -35,7 +35,7 @@ void Akonadi::AgentSearchEngine::addSearch( const Akonadi::Collection &collectio
   if ( agentMgr.isValid() ) {
     QList<QVariant> args;
     args << collection.queryString()
-         << collection.queryLanguage()
+         << QLatin1String("")
          << collection.id();
     agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "addSearch" ), args );
     return;

@@ -52,6 +52,8 @@ bool Capability::parseStream()
       capabilities.setNotificationMessageVersion( m_streamParser->readNumber() );
     } else if ( capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH ) {
       capabilities.setNoPayloadPath( true );
+    } else if ( capability == AKONADI_PARAM_CAPABILITY_SERVERSEARCH ) {
+      capabilities.setServerSideSearch( true );
     } else if ( capability == AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING ) {
       capabilities.setAkAppendStreaming( true );
     } else {

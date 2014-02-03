@@ -47,6 +47,7 @@
 #include "handler/resourceselect.h"
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
+#include "handler/searchresult.h"
 #include "handler/select.h"
 #include "handler/subscribe.h"
 #include "handler/status.h"
@@ -131,6 +132,9 @@ Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command
     }
     if ( command == AKONADI_CMD_SEARCH ) {
         return new Search();
+    }
+    if ( command == AKONADI_CMD_SEARCH_RESULT ) {
+        return new SearchResult( scope );
     }
     if ( command == AKONADI_CMD_ITEMFETCH ) {
         return new Fetch( scope );

@@ -186,6 +186,19 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
     static QString findPluginFile( const QString &relPath, const QStringList &searchPath = QStringList() );
 
     /**
+     @brief Returns plugin specific directories
+
+     Convenience method for listing directories that can be scanned for available
+     plugins.
+
+     @note This is not based on the XDG base dir spec, since it does not cover
+           plugins.
+
+    @return directories where application should look for plugins
+    */
+    static QStringList findPluginDirs();
+
+    /**
      @brief Searches the resource specific directories for a given subdirectory
 
      Convenience method for finding a given relative subdirectory in any of

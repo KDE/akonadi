@@ -35,6 +35,7 @@ class AkonadiConnection;
 class CacheCleaner;
 class SearchManager;
 class ItemRetrievalThread;
+class SearchTaskManagerThread;
 
 class AkonadiServer : public QLocalServer
 {
@@ -70,6 +71,7 @@ class AkonadiServer : public QLocalServer
     IntervalCheck *mIntervalChecker;
     StorageJanitorThread *mStorageJanitor;
     ItemRetrievalThread *mItemRetrievalThread;
+    SearchTaskManagerThread *mAgentSearchManagerThread;
     QProcess *mDatabaseProcess;
     QVector< QPointer<AkonadiConnection> > mConnections;
     SearchManager *mSearchManager;

@@ -220,6 +220,18 @@ void ImapSet::add( const QVector<Id> &values )
   }
 }
 
+void ImapSet::add( const QSet<Id> &values )
+{
+  QVector<Id> v;
+  v.reserve( values.size() );
+  for ( QSet<Id>::ConstIterator iter = values.constBegin(); iter != values.constEnd(); ++iter ) {
+    v.push_back( *iter );
+  }
+
+  add( v );
+}
+
+
 void ImapSet::add( const ImapInterval &interval )
 {
   d->intervals << interval;

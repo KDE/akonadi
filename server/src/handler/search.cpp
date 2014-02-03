@@ -24,11 +24,14 @@
 #include "akonadiconnection.h"
 #include "fetchhelper.h"
 #include "handlerhelper.h"
+#include "searchhelper.h"
 #include "imapstreamparser.h"
 #include "nepomuksearch.h"
 #include "response.h"
+#include "search/searchrequest.h"
+#include "search/searchmanager.h"
 
-#include <libs/protocol_p.h>
+#include "libs/protocol_p.h"
 
 #include <QtCore/QStringList>
 
@@ -45,45 +48,139 @@ Search::~Search()
 
 bool Search::parseStream()
 {
-  const QByteArray queryString = m_streamParser->readString();
-  if ( queryString.isEmpty() ) {
-    return failureResponse( "No query specified" );
+  QStringList mimeTypes;
+  QVector<qint64> collectionIds;
+  bool recursive = false, remote = false;
+  QString queryString;
+
+  // Backward compatibility
+  if ( !connection()->capabilities().serverSideSearch() ) {
+    searchNepomuk();
+  } else {
+    while (m_streamParser->hasString()) {
+      const QByteArray param = m_streamParser->readString();
+      if ( param == AKONADI_PARAM_MIMETYPE ) {
+        const QList<QByteArray> mt = m_streamParser->readParenthesizedList();
+        mimeTypes.reserve( mt.size() );
+        Q_FOREACH ( const QByteArray &ba, mt ) {
+          mimeTypes.append( QString::fromLatin1( ba ) );
+        }
+      } else if ( param == AKONADI_PARAM_COLLECTIONS ) {
+        QList<QByteArray> list = m_streamParser->readParenthesizedList();
+        Q_FOREACH ( const QByteArray &col, list ) {
+          collectionIds << col.toLongLong();
+        }
+      } else if ( param == AKONADI_PARAM_RECURSIVE ) {
+        recursive = true;
+      } else if ( param == AKONADI_PARAM_REMOTE ) {
+        remote = true;
+      } else if ( param == AKONADI_PARAM_QUERY ) {
+        queryString = m_streamParser->readUtf8String();
+        // TODO: This is an ugly hack, but we assume QUERY is the last parameter,
+        // followed only by fetch scope, which we parse separately below
+        break;
+      } else {
+        return failureResponse( "Invalid parameter" );
+      }
+    }
+
+    if ( queryString.isEmpty() ) {
+      return failureResponse( "No query specified" );
+    }
+
+    QVector<qint64> collections;
+    if ( collectionIds.isEmpty() ) {
+      collectionIds << 0;
+      recursive = true;
+    }
+
+    if ( recursive ) {
+      Q_FOREACH ( qint64 collection, collectionIds ) {
+        collections << SearchHelper::listCollectionsRecursive( QVector<qint64>() << collection, mimeTypes );
+      }
+    } else {
+      collections = collectionIds;
+    }
+
+    akDebug() << "SEARCH:";
+    akDebug() << "\tQuery:" << queryString;
+    akDebug() << "\tMimeTypes:" << mimeTypes;
+    akDebug() << "\tCollections:" << collections;
+    akDebug() << "\tRemote:" << remote;
+    akDebug() << "\tRecursive" << recursive;
+
+    if ( collections.isEmpty() ) {
+      m_streamParser->readUntilCommandEnd();
+      return successResponse( "Search done" );
+    }
+
+    // Read the fetch scope
+    mFetchScope = FetchScope( m_streamParser );
+    // Read any newlines
+    m_streamParser->readUntilCommandEnd();
+
+    SearchRequest request( connection()->sessionId() );
+    request.setCollections( collections );
+    request.setMimeTypes( mimeTypes );
+    request.setQuery( queryString );
+    request.setRemoteSearch( remote );
+    connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
+            this, SLOT(slotResultsAvailable(QSet<qint64>)) );
+    request.exec();
+
   }
+
+  //akDebug() << "\tResult:" << uids;
+  akDebug() << "\tResult:" << mAllResults.count() << "matches";
+
+  return successResponse( "Search done" );
+}
+
+void Search::searchNepomuk()
+{
+  const QString queryString = m_streamParser->readUtf8String();
+  mFetchScope = FetchScope( m_streamParser );
 
 #ifdef HAVE_SOPRANO
   NepomukSearch *service = new NepomukSearch;
-  const QStringList uids = service->search( QString::fromUtf8( queryString ) );
+  const QStringList uids = service->search( queryString );
   delete service;
 #else
   akError() << "Akonadi has been built without Nepomuk support!";
-  const QStringList uids;
+  return;
 #endif
 
   if ( uids.isEmpty() ) {
-    m_streamParser->readUntilCommandEnd(); // skip the fetch scope
-    return successResponse( "SEARCH completed" );
+    return;
+  }
+
+  QSet<qint64> results;
+  Q_FOREACH ( const QString &uid, uids ) {
+    results.insert( uid.toLongLong() );
+  }
+
+  slotResultsAvailable( results );
+}
+
+void Search::slotResultsAvailable( const QSet<qint64> &results )
+{
+  QSet<qint64> newResults = results;
+  newResults.subtract( mAllResults );
+  mAllResults.unite( newResults );
+
+  if ( newResults.isEmpty() ) {
+    return;
   }
 
   // create imap query
-  QVector<ImapSet::Id> imapIds;
-  Q_FOREACH ( const QString &uid, uids ) {
-    imapIds.append( uid.toULongLong() );
-  }
-
   ImapSet itemSet;
-  itemSet.add( imapIds );
+  itemSet.add( newResults );
   Scope scope( Scope::Uid );
   scope.setUidSet( itemSet );
 
-  FetchHelper fetchHelper( connection(), scope );
-  fetchHelper.setStreamParser( m_streamParser );
+  FetchHelper fetchHelper( connection(), scope, mFetchScope );
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Response)) );
+          this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
-  if ( !fetchHelper.parseStream( AKONADI_CMD_SEARCH ) ) {
-    return false;
-  }
-
-  successResponse( "SEARCH completed" );
-  return true;
+  fetchHelper.fetchItems( AKONADI_CMD_SEARCH );
 }

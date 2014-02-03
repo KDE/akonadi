@@ -21,6 +21,10 @@
 #define AKONADISEARCH_H
 
 #include <handler.h>
+#include "fetchscope.h"
+
+#include <QtCore/QVector>
+#include <QtCore/QSet>
 
 namespace Akonadi {
 
@@ -31,7 +35,7 @@ namespace Akonadi {
 
   A search has the following forms:
   @verbatim
-  <tag> SEARCH <SPARQL-query>
+  <tag> SEARCH [MIMETYPE (mimetype-list)] [COLLECTIONS (collections-list) [RECURSIVE]] QUERY <SPARQL-query> <fetch scope>
   @endverbatim
 */
 class Search : public Handler
@@ -44,6 +48,15 @@ class Search : public Handler
     ~Search();
 
     bool parseStream();
+
+  private Q_SLOTS:
+    void slotResultsAvailable( const QSet<qint64> &results );
+
+  private:
+    void searchNepomuk();
+
+    FetchScope mFetchScope;
+    QSet<qint64> mAllResults;
 };
 
 }

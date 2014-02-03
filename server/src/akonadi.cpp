@@ -37,6 +37,7 @@
 #include "storage/itemretrievalthread.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
+#include "search/searchtaskmanagerthread.h"
 #include "response.h"
 
 #include "libs/xdgbasedirs_p.h"
@@ -191,6 +192,10 @@ void AkonadiServer::init()
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
 
+    mAgentSearchManagerThread = new SearchTaskManagerThread( this );
+    mAgentSearchManagerThread->start();
+
+
     const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
                                                        QStringList() << QLatin1String( "Nepomuk" )
                                                                      << QLatin1String( "Agent" ) ).toStringList();
@@ -252,6 +257,8 @@ void AkonadiServer::quit()
     quitThread( mIntervalChecker );
     quitThread( mStorageJanitor );
     quitThread( mItemRetrievalThread );
+    mAgentSearchManagerThread->stop();
+    quitThread( mAgentSearchManagerThread );
 
     delete mSearchManager;
     mSearchManager = 0;

@@ -54,6 +54,8 @@ static QString compareOperatorToString( Query::CompareOperator op )
     return QLatin1String( " IN " );
   case Query::NotIn:
     return QLatin1String( " NOT IN " );
+  case Query::Like:
+    return QLatin1String( " LIKE " );
   }
   Q_ASSERT_X( false, "QueryBuilder::compareOperatorToString()", "Unknown compare operator." );
   return QString();
@@ -408,12 +410,12 @@ QString QueryBuilder::buildWhereCondition( const Query::Condition &cond )
     stmt += compareOperatorToString( cond.mCompareOp );
     if ( cond.mComparedColumn.isEmpty() ) {
       if ( cond.mComparedValue.isValid() ) {
-        if ( cond.mComparedValue.canConvert( QVariant::StringList ) ) {
+        if ( cond.mComparedValue.canConvert( QVariant::List ) ) {
           stmt += QLatin1String( "( " );
           QStringList entries;
-          Q_ASSERT_X( !cond.mComparedValue.toStringList().isEmpty(),
+          Q_ASSERT_X( !cond.mComparedValue.toList().isEmpty(),
                       "QueryBuilder::buildWhereCondition()", "No values given for IN condition." );
-          Q_FOREACH ( const QString &entry, cond.mComparedValue.toStringList() ) {
+          Q_FOREACH ( const QVariant &entry, cond.mComparedValue.toList() ) {
             entries << bindValue( entry );
           }
           stmt += entries.join( QLatin1String( ", " ) );

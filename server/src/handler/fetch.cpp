@@ -38,12 +38,11 @@ bool Fetch::parseStream()
   // sequence set
   mScope.parseScope( m_streamParser );
 
-  FetchHelper fetchHelper( connection(), mScope );
-  fetchHelper.setStreamParser( m_streamParser );
+  FetchHelper fetchHelper( connection(), mScope, FetchScope( m_streamParser ) );
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
-  if ( !fetchHelper.parseStream( AKONADI_CMD_ITEMFETCH ) ) {
+  if ( !fetchHelper.fetchItems( AKONADI_CMD_ITEMFETCH ) ) {
     return false;
   }
 

@@ -132,9 +132,7 @@ bool ImapStreamParser::hasLiteral()
     // strip CRLF
     m_position = end + 1;
 
-    if ( m_position < m_data.length() && m_data[m_position] == '\r' ) {
-      ++m_position;
-    }
+    //IMAP inconsistency. IMAP always expects CRLF, but akonadi uses only LF.
     if ( m_position < m_data.length() && m_data[m_position] == '\n' ) {
       ++m_position;
     }
@@ -377,7 +375,8 @@ QList<QByteArray> ImapStreamParser::readParenthesizedList()
 
       // We might sometime get some unwanted CRLF, but we're still not at the end
       // of the list, would make further string reads fail so eat the CRLFs.
-      while ( m_data[m_position]=='\r' || m_data[m_position]=='\n' ) {
+      while ( ( m_position < m_data.size() ) &&
+        ( m_data[m_position]=='\r' || m_data[m_position]=='\n' ) ) {
         m_position++;
       }
 
