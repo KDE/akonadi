@@ -27,7 +27,7 @@
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE(QVector<QByteArray>);
+Q_DECLARE_METATYPE(QVector<QByteArray>)
 
 class FetchScopeTest : public QObject
 {
