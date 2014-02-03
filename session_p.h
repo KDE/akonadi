@@ -30,6 +30,7 @@
 
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
+#include <QFile>
 
 class QIODevice;
 
@@ -113,7 +114,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
      */
     void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
 
-    static int minimumProtocolVersion() { return 35; }
+    static int minimumProtocolVersion() { return 36; }
 
     /**
      * Default location for akonadiconnectionrc
@@ -135,6 +136,8 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     // parser stuff
     ImapParser *parser;
+
+    QFile *logFile;
 };
 
 }
