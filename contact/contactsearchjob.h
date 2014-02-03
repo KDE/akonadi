@@ -138,7 +138,7 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
      * Sets a @p limit on how many results will be returned by this search job.
      *
      * This is useful in situation where for example only the first search result is needed anyway,
-     * setting a limit of 1 here will greatly reduce the resource usage of Nepomuk during the
+     * setting a limit of 1 here will greatly reduce the resource usage during the
      * search.
      * This needs to be called before calling setQuery() to have an effect.
      * By default, the number of results is unlimited.

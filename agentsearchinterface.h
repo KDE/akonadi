@@ -27,6 +27,7 @@ namespace Akonadi {
 
 class Collection;
 class AgentSearchInterfacePrivate;
+class ImapSet;
 
 /**
  * @short An interface for agents (or resources) that support searching in their backend.
@@ -41,6 +42,11 @@ class AgentSearchInterfacePrivate;
 class AKONADI_EXPORT AgentSearchInterface
 {
   public:
+    enum ResultScope {
+      Uid,
+      Rid
+    };
+
     /**
      * Creates a new agent search interface.
      */
@@ -69,6 +75,16 @@ class AKONADI_EXPORT AgentSearchInterface
      */
     virtual void removeSearch( const Akonadi::Collection &resultCollection ) = 0;
 
+    /**
+     * Perform a search on remote storage and return results using SearchResultJob.
+     *
+     * @since 4.13
+     */
+    virtual void search( const QString &query, const Collection &collection ) = 0;
+
+    void searchFinished( const QVector<qint64> result, ResultScope scope );
+    void searchFinished( const ImapSet &result, ResultScope scope );
+    void searchFinished( const QVector<QByteArray> &result );
   private:
     //@cond PRIVATE
     AgentSearchInterfacePrivate* const d;

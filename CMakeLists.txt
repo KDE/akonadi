@@ -161,6 +161,8 @@ set( akonadikde_LIB_SRC
   resourceselectjob.cpp
   resourcesynchronizationjob.cpp
   searchcreatejob.cpp
+  searchquery.cpp
+  searchresultjob.cpp
   selectionproxymodel.cpp
   selftestdialog.cpp
   session.cpp
@@ -272,7 +274,7 @@ configure_file(akonadiprivate_export.h.in
   "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h"
 )
 
-target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} )
+target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 if (KDEPIM_MOBILE_UI)
@@ -379,6 +381,7 @@ install( FILES
   recursivecollectionfilterproxymodel.h
   recursiveitemfetchjob.h
   searchcreatejob.h
+  searchquery.h
   selectionproxymodel.h
   session.h
   servermanager.h

@@ -28,12 +28,14 @@
 #include <QDomDocument>
 
 #include <xml/xmldocument.h>
+#include <agentsearchinterface.h>
+#include <searchquery.h>
 
 #include "settings.h"
 
 class QFileSystemWatcher;
 
-class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
+class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer, public Akonadi::AgentSearchInterface
 {
   Q_OBJECT
 
@@ -57,9 +59,14 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     void itemRemoved( const Akonadi::Item &ref );
 
+    void search(const QString& query, const Akonadi::Collection& collection);
+    void addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection);
+    void removeSearch(const Akonadi::Collection& resultCollection);
 
   private:
     QDomElement findElementByRid( const QString &rid ) const;
+
+    static QSet<qint64> parseQuery(const QString &);
 
   private Q_SLOTS:
     void load();

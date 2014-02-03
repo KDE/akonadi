@@ -11,5 +11,11 @@
       <arg name="destination" type="x" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <method name="search">
+      <arg name="searchId" type="ay" direction="in"/>
+      <arg name="query" type="s" direction="in"/>
+      <arg name="collection" type="x" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
   </interface>
 </node>
