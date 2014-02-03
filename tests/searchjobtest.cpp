@@ -25,7 +25,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/searchcreatejob.h>
 #include <akonadi/itemfetchjob.h>
-#include <Akonadi/Monitor>
+#include <akonadi/monitor.h>
 #include <akonadi/searchquery.h>
 
 #include "collectionutils_p.h"
