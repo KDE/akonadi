@@ -141,9 +141,10 @@ void Search::searchNepomuk()
   const QString queryString = m_streamParser->readUtf8String();
   mFetchScope = FetchScope( m_streamParser );
 
+  QStringList uids;
 #ifdef HAVE_SOPRANO
   NepomukSearch *service = new NepomukSearch;
-  const QStringList uids = service->search( queryString );
+  uids = service->search( queryString );
   delete service;
 #else
   akError() << "Akonadi has been built without Nepomuk support!";
