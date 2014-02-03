@@ -55,13 +55,13 @@ NotificationSource* ChangeNotificationDependenciesFactory::createNotificationSou
       KRandom::randomString( 6 ) );
   QDBusObjectPath p = manager->subscribeV2( name, true );
   const bool validError = manager->lastError().isValid();
-  delete manager;
   if ( validError ) {
     kWarning() << manager->lastError().name() << manager->lastError().message();
     // :TODO: What to do?
+    delete manager;
     return 0;
   }
-
+  delete manager;
   org::freedesktop::Akonadi::NotificationSource *notificationSource =
     new org::freedesktop::Akonadi::NotificationSource(
       ServerManager::serviceName( Akonadi::ServerManager::Server ),
