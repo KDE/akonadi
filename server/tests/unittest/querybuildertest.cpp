@@ -226,19 +226,19 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb.setDatabaseType( DbType::MySQL );
     mBuilders << qb;
     QTest::newRow( "update inner join MySQL" ) << mBuilders.count()
-        << QString( "UPDATE table1, table2 SET col = :0 WHERE ( table2.answer <> ( :1 ) AND ( table2.t1_id = table1.id ) )" ) << bindVals;
+        << QString( "UPDATE table1, table2 SET col = :0 WHERE ( table2.answer <> :1 AND ( table2.t1_id = table1.id ) )" ) << bindVals;
 
     qb = qbTpl;
     qb.setDatabaseType( DbType::PostgreSQL );
     mBuilders << qb;
     QTest::newRow( "update inner join PSQL" ) << mBuilders.count()
-        << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( table2.answer <> ( :1 ) AND ( table2.t1_id = table1.id ) )" ) << bindVals;
+        << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( table2.answer <> :1 AND ( table2.t1_id = table1.id ) )" ) << bindVals;
 
     qb = qbTpl;
     qb.setDatabaseType( DbType::Sqlite );
     mBuilders << qb;
     QTest::newRow( "update inner join SQLite" ) << mBuilders.count()
-        << QString( "UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) <> ( :1 ) )" ) << bindVals;
+        << QString( "UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) <> :1 )" ) << bindVals;
 
 
     qb = qbTpl;
@@ -252,8 +252,8 @@ void QueryBuilderTest::testQueryBuilder_data()
     bindVals << 666 << "text" << 10;
     QTest::newRow( "update inner join SQLite with subcondition" ) << mBuilders.count()
         << QString( "UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE "
-                    "( ( table2.t1_id = table1.id ) ) ) <> ( :1 ) AND "
-                    "( ( SELECT table2.col2 FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) = :2 AND table1.col3 = ( :3 ) ) AND "
+                    "( ( table2.t1_id = table1.id ) ) ) <> :1 AND "
+                    "( ( SELECT table2.col2 FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) = :2 AND table1.col3 = :3 ) AND "
                     "table1.id = :4 )" ) << bindVals;
 
   }
