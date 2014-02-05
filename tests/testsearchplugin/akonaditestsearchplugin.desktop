@@ -1,6 +1,12 @@
 [Desktop Entry]
 Type=AkonadiSearchPlugin
 Name=Akonadi Test Search Plugin
+Name[de]=Akonadi-Testsuchmodul
+Name[nl]=Akonadi-plug-in voor test met zoeken
+Name[pt]='Plugin' de Testes de Pesquisa do Akonadi
+Name[sv]=Akonadi test-sökinsticksprogram
+Name[uk]=Тестовий додаток пошуку Akonadi
+Name[x-test]=xxAkonadi Test Search Pluginxx
 X-Akonadi-Library=akonadi_test_searchplugin
 X-Akonadi-ClassName=SearchPlugin
 X-Akonadi-LoadByDefault=false
