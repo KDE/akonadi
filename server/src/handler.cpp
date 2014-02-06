@@ -53,6 +53,10 @@
 #include "handler/status.h"
 #include "handler/store.h"
 #include "handler/transaction.h"
+#include "handler/tagappend.h"
+#include "handler/tagfetch.h"
+#include "handler/tagremove.h"
+#include "handler/tagstore.h"
 
 #include "storage/querybuilder.h"
 #include "imapstreamparser.h"
@@ -195,6 +199,18 @@ Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command
     }
     if ( command == AKONADI_CMD_COLLECTIONMOVE ) {
       return new ColMove( scope );
+    }
+    if ( command == AKONADI_CMD_TAGAPPEND ) {
+      return new TagAppend();
+    }
+    if ( command == AKONADI_CMD_TAGFETCH ) {
+      return new TagFetch( scope );
+    }
+    if ( command == AKONADI_CMD_TAGREMOVE ) {
+      return new TagRemove( scope );
+    }
+    if ( command == AKONADI_CMD_TAGSTORE ) {
+      return new TagStore();
     }
 
     return 0;

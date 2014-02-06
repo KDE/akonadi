@@ -25,8 +25,9 @@
 
 using namespace Akonadi;
 
-TagFetch::TagFetch()
-    : Handler()
+TagFetch::TagFetch( Scope::SelectionScope scope )
+  : Handler()
+  , mScope( scope )
 {
 }
 
@@ -36,9 +37,13 @@ TagFetch::~TagFetch()
 
 bool TagFetch::parseStream()
 {
-  const ImapSet set = m_streamParser->readSequenceSet();
+  if ( mScope.scope() != Scope::Uid ) {
+    throw HandlerException( "Only UID-based TAGFETCH is supported" );
+  }
 
-  TagFetchHelper helper( connection(),  set );
+  mScope.parseScope( m_streamParser );
+
+  TagFetchHelper helper( connection(),  mScope.uidSet() );
   connect( &helper, SIGNAL(responseAvailable(Akonadi::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Response)) );
 

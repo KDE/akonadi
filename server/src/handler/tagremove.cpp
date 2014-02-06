@@ -37,6 +37,10 @@ TagRemove::~TagRemove()
 
 bool TagRemove::parseStream()
 {
+  if ( mScope.scope() != Scope::Uid ) {
+    throw HandlerException( "Only UID-based TAGREMOVE is supported" );
+  }
+
   mScope.parseScope( m_streamParser );
 
   // Get all PIM items that we will untag

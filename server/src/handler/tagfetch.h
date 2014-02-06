@@ -20,7 +20,8 @@
 #ifndef AKONADIFETCHTAG_H
 #define AKONADIFETCHTAG_H
 
-#include <handler.h>
+#include "handler.h"
+#include "scope.h"
 
 namespace Akonadi {
 
@@ -33,12 +34,13 @@ class TagFetch : public Handler
 {
   Q_OBJECT
 public:
-    TagFetch();
-
+    TagFetch( Scope::SelectionScope scope );
     ~TagFetch();
 
     bool parseStream();
 
+  private:
+    Scope mScope;
 };
 
 }
