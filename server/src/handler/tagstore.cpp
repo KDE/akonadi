@@ -22,6 +22,7 @@
 #include "tagfetchhelper.h"
 #include "imapstreamparser.h"
 #include "response.h"
+#include "storage/datastore.h"
 #include "libs/protocol_p.h"
 
 using namespace Akonadi;
@@ -98,6 +99,8 @@ bool TagStore::parseStream()
       }
     }
   }
+
+  DataStore::self()->notificationCollector()->tagChanged( tag );
 
   ImapSet set;
   set.add( QVector<qint64>() << tagId );

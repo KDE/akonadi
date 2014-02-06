@@ -68,6 +68,16 @@ void Akonadi::NotificationCollector::itemsFlagsChanged( const PimItem::List &ite
   itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags );
 }
 
+void Akonadi::NotificationCollector::itemsTagsChanged( const PimItem::List &items,
+                                                       const QSet<QByteArray> & addedTags,
+                                                       const QSet<QByteArray> &removedTags,
+                                                       const Collection &collection,
+                                                       const QByteArray &resource)
+{
+  itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray(), addedTags, removedTags );
+}
+
+
 void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
                                                  const Collection &collectionSrc,
                                                  const Collection &collectionDest,
@@ -132,6 +142,21 @@ void NotificationCollector::collectionUnsubscribed( const Collection &collection
   collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
 
+void NotificationCollector::tagAdded(const Tag &tag )
+{
+  tagNotification( NotificationMessageV2::Add, tag );
+}
+
+void NotificationCollector::tagChanged( const Tag &tag )
+{
+  tagNotification( NotificationMessageV2::Modify, tag );
+}
+
+void NotificationCollector::tagRemoved( const Tag &tag )
+{
+  tagNotification( NotificationMessageV2::Remove, tag );
+}
+
 void Akonadi::NotificationCollector::transactionCommitted()
 {
   dispatchNotifications();
@@ -177,7 +202,8 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   QMap<Entity::Id, PimItem> vCollections;
 
   if ( ( op == NotificationMessageV2::Modify ) ||
-       ( op == NotificationMessageV2::ModifyFlags ) ) {
+       ( op == NotificationMessageV2::ModifyFlags ) ||
+       ( op == NotificationMessageV2::ModifyTags ) ) {
     vCollections = DataStore::self()->virtualCollections( items );
   }
 
@@ -259,6 +285,19 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
 
   dispatchNotification( msg );
 }
+
+void NotificationCollector::tagNotification( NotificationMessageV2::Operation op,
+                                             const Tag &tag )
+{
+  NotificationMessageV2 msg;
+  msg.setType( NotificationMessageV2::Tags );
+  msg.setOperation( op );
+  msg.setSessionId( mSessionId );
+  msg.addEntity( tag.id() );
+
+  dispatchNotification( msg );
+}
+
 
 void NotificationCollector::dispatchNotification( const NotificationMessageV2 &msg )
 {

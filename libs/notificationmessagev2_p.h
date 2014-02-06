@@ -50,7 +50,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     enum Type {
       InvalidType,
       Collections,
-      Items
+      Items,
+      Tags
     };
 
     // NOTE: Keep this BC with NotificationMessage - i.e. append new stuff to the end
@@ -64,7 +65,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
       Unlink,
       Subscribe,
       Unsubscribe,
-      ModifyFlags
+      ModifyFlags,
+      ModifyTags
     };
 
     class Entity

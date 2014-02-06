@@ -21,7 +21,7 @@
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/queryhelper.h"
-#include "build-overlay/server/entities.h"
+#include "storage/datastore.h"
 
 using namespace Akonadi;
 
@@ -44,19 +44,35 @@ bool TagRemove::parseStream()
   mScope.parseScope( m_streamParser );
 
   // Get all PIM items that we will untag
-  SelectQueryBuilder<PimItem> qb;
-  qb.addJoin( QueryBuilder::LeftJoin, PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
-  QueryHelper::setToQuery( mScope.uidSet(), PimItemTagRelation::rightColumn(), qb );
+  SelectQueryBuilder<PimItem> itemsQuery;
+    itemsQuery.addJoin( QueryBuilder::LeftJoin, PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
+  QueryHelper::setToQuery( mScope.uidSet(), PimItemTagRelation::rightColumn(), itemsQuery );
 
-  if ( !qb.exec() ) {
+  if ( !itemsQuery.exec() ) {
     throw HandlerException( "Untagging failed" );
   }
+  const PimItem::List items = itemsQuery.result();
 
-  PimItem::List items = qb.result();
-  // TODO: Notify untag
+  SelectQueryBuilder<Tag> tagQuery;
+  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), tagQuery );
+  if ( !tagQuery.exec() ) {
+    throw HandlerException( "Failed to obtain tags" );
+  }
+  const Tag::List tags = tagQuery.result();
 
+  QSet<QByteArray> removedGids;
+  Q_FOREACH ( const Tag &tag ) {
+    removedGids.insert( tag.gid() );
+  }
+  DataStore::self()->notificationCollector()->itemsTagsChanged( items, QSet<QByteArray>(), removedGids );
+
+  Q_FOREACH ( const Tag &tag, tags ) {
+    DataStore::self()->notificationCollector()->tagRemoved( tag );
+  }
+
+  // Just remove the tags, table constraints will take care of the rest
   QueryBuilder qb( Tag::tableName(), QueryBuilder::Delete );
-  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), qb );
+  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), itemsQuery );
   if ( !qb.exec() ) {
     throw HandlerException( "Deletion failed" );
   }

@@ -315,11 +315,20 @@ QString NotificationMessageV2::toString() const
   case ModifyFlags:
     rv += QLatin1String( "added flags (" );
     rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
-    rv += QLatin1String ( ") " );
+    rv += QLatin1String( ") " );
 
     rv += QLatin1String( "removed flags (" );
     rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
-    rv += QLatin1String ( ") " );
+    rv += QLatin1String( ") " );
+    break;
+  case ModifyTags:
+    rv += QLatin1String( "added tags (" );
+    rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
+    rv += QLatin1String( ") " );
+
+    rv += QLatin1String( "removed tags (" );
+    rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
+    rv += QLatin1String( ") " );
     break;
   case Move:
     rv += QLatin1String( "moved" );
@@ -510,7 +519,9 @@ bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const Notif
           return false;
         }
 
-        else if ( msg.operation() == ModifyFlags && it->operation() == ModifyFlags ) {
+        else if ( ( msg.operation() == ModifyFlags && it->operation() == ModifyFlags )
+              ||  ( msg.operation() == ModifyTags && it->operation() == ModifyTags ) ) {
+
           ( *it ).setAddedFlags( ( *it ).addedFlags() + msg.addedFlags() );
           ( *it ).setRemovedFlags( ( *it ).removedFlags() + msg.removedFlags() );
 

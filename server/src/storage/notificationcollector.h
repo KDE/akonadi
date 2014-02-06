@@ -95,6 +95,15 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
     /**
+     Notify about changed items tags
+    **/
+    void itemsTagsChanged( const PimItem::List &items,
+                           const QSet<QByteArray> &addedTags,
+                           const QSet<QByteArray> &removedTags,
+                           const Collection &collection = Collection(),
+                           const QByteArray &resource = QByteArray() );
+
+    /**
       Notify about moved items
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
@@ -168,6 +177,21 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
     /**
+      Notify about an added tag.
+     */
+    void tagAdded( const Tag &tag );
+
+    /**
+     Notify about a changed tag.
+     */
+    void tagChanged( const Tag &tag );
+
+    /**
+      Notify about a removed tag.
+     */
+    void tagRemoved( const Tag &tag );
+
+    /**
       Trigger sending of collected notifications.
     */
     void dispatchNotifications();
@@ -194,6 +218,8 @@ class NotificationCollector : public QObject
                                  const QByteArray &resource,
                                  const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                  const QByteArray &destResource = QByteArray() );
+    void tagNotification( NotificationMessageV2::Operation op,
+                          const Tag &tag );
     void dispatchNotification( const NotificationMessageV2 &msg );
     void clear();
 

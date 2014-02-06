@@ -100,6 +100,8 @@ class NotificationSource : public QObject
     Q_SCRIPTABLE QVector<Entity::Id> monitoredCollections() const;
     Q_SCRIPTABLE void setMonitoredItem( Entity::Id id, bool monitored );
     Q_SCRIPTABLE QVector<Entity::Id> monitoredItems() const;
+    Q_SCRIPTABLE void setMonitoredTags( Entity::id id, bool monitored );
+    Q_SCRIPTABLE QVector<Entity::Id> monitoredTags() const;
     Q_SCRIPTABLE void setMonitoredResource( const QByteArray &resource, bool monitored );
     Q_SCRIPTABLE QVector<QByteArray> monitoredResources() const;
     Q_SCRIPTABLE void setMonitoredMimeType( const QString &mimeType, bool monitored );
@@ -108,6 +110,8 @@ class NotificationSource : public QObject
     Q_SCRIPTABLE bool isAllMonitored() const;
     Q_SCRIPTABLE void setIgnoredSession( const QByteArray &sessionId, bool ignored );
     Q_SCRIPTABLE QVector<QByteArray> ignoredSessions() const;
+    Q_SCRIPTABLE void setMonitoredType( NotificationMessageV2::Type type, bool monitored );
+    Q_SCRIPTABLE QVector<NotificationMessageV2::Type> monitoredTypes() const;
 
   Q_SIGNALS:
 
@@ -116,10 +120,12 @@ class NotificationSource : public QObject
 
     Q_SCRIPTABLE void monitoredCollectionsChanged();
     Q_SCRIPTABLE void monitoredItemsChanged();
+    Q_SCRIPTABLE void monitoredTagsChanged();
     Q_SCRIPTABLE void monitoredResourcesChanged();
     Q_SCRIPTABLE void monitoredMimeTypesChanged();
     Q_SCRIPTABLE void isAllMonitoredChanged();
     Q_SCRIPTABLE void ignoredSessionsChanged();
+    Q_SCRIPTABLE void monitoredTypesChanged();
 
   private Q_SLOTS:
     void serviceUnregistered( const QString &serviceName );
@@ -139,6 +145,9 @@ class NotificationSource : public QObject
     bool mAllMonitored;
     QSet<Entity::Id> mMonitoredCollections;
     QSet<Entity::Id> mMonitoredItems;
+    QSet<Entity::Id> mMonitoredTags;
+    // TODO: Make this a bitflag
+    QSet<Akonadi::NotificationMessageV2> mMonitoredTypes;
     QSet<QString> mMonitoredMimeTypes;
     QSet<QByteArray> mMonitoredResources;
     QSet<QByteArray> mIgnoredSessions;

@@ -22,6 +22,7 @@
 #include "akonadiconnection.h"
 #include "imapstreamparser.h"
 #include "response.h"
+#include "storage/datastore.h"
 #include "libs/protocol_p.h"
 
 using namespace Akonadi;
@@ -86,6 +87,8 @@ bool TagAppend::parseStream()
       throw HandlerException( "Failed to store tag attribute" );
     }
   }
+
+  DataStore::self()->notificationCollector()->tagAdded( tag );
 
   ImapSet set;
   set.add( QVector<qint64>() << tagId );
