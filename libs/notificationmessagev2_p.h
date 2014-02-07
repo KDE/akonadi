@@ -162,6 +162,7 @@ Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2 )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Entity )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::List )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Type )
+Q_DECLARE_METATYPE( QVector<Akonadi::NotificationMessageV2::Type> )
 Q_DECLARE_METATYPE( QVector<QByteArray> )
 Q_DECLARE_METATYPE( QVector<qint64> )
 
