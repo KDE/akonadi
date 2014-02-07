@@ -42,11 +42,11 @@ bool TagStore::parseStream()
 
   if ( !m_streamParser->hasList() ) {
     failureResponse( "No changes to store" );
-    return;
+    return false;
   }
 
-  Tag tag = Tag::retrieveById( tagId );
-  if ( !tag.isValid() ) {
+  Tag changedTag = Tag::retrieveById( tagId );
+  if ( !changedTag.isValid() ) {
     throw HandlerException( "No such tag" );
   }
 
@@ -61,12 +61,12 @@ bool TagStore::parseStream()
   while ( !m_streamParser->atListEnd() ) {
     const QByteArray attr = m_streamParser->readString();
 
-    if ( attr = AKONADI_PARAM_PARENT ) {
+    if ( attr == AKONADI_PARAM_PARENT ) {
       const qint64 parent = m_streamParser->readNumber();
-      tag.setParent( parent );
-    } else if ( str == AKONADI_PARAM_GID ) {
+            changedTag.setParentId( parent );
+    } else if ( attr == AKONADI_PARAM_GID ) {
       throw HandlerException( "Changing tag GID is not allowed" );
-    } else if ( str == AKONADI_PARAM_UID ) {
+    } else if ( attr == AKONADI_PARAM_UID ) {
       throw HandlerException( "Changing tag UID is not allowed" );
     } else {
       if ( attr.startsWith( '-' ) ) {
@@ -100,7 +100,7 @@ bool TagStore::parseStream()
     }
   }
 
-  DataStore::self()->notificationCollector()->tagChanged( tag );
+  DataStore::self()->notificationCollector()->tagChanged( changedTag );
 
   ImapSet set;
   set.add( QVector<qint64>() << tagId );

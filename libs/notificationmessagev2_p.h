@@ -152,6 +152,8 @@ const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::Notification
 QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );
 const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item );
 QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item );
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Type &type );
+QDBusArgument &operator<<( QDBusArgument &qrg, Akonadi::NotificationMessageV2::Type type );
 uint qHash( const Akonadi::NotificationMessageV2 &msg );
 
 Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
@@ -159,6 +161,7 @@ Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2 )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Entity )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::List )
+Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Type )
 Q_DECLARE_METATYPE( QVector<QByteArray> )
 Q_DECLARE_METATYPE( QVector<qint64> )
 

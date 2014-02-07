@@ -25,6 +25,8 @@
 #include "libs/protocol_p.h"
 #include "storage/querybuilder.h"
 #include "storage/queryhelper.h"
+#include "entities.h"
+#include "akonadiconnection.h"
 
 using namespace Akonadi;
 
@@ -65,7 +67,7 @@ QSqlQuery TagFetchHelper::buildTagQuery()
                 Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName() );
     qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(),
                 Resource::idFullColumnName(), TagRemoteIdResourceRelation::resourceIdFullColumnName() );
-    qb.addCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->resourceContext().name() );
+    qb.addValueCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->resourceContext().name() );
   }
 
   qb.addSortColumn( Tag::idFullColumnName(), Query::Descending );
@@ -93,7 +95,7 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
     const QByteArray gid = tagQuery.value( 1 ).toByteArray();
     const qint64 parentId = tagQuery.value( 2 ).toLongLong();
 
-    QStringList attributes;
+    QList<QByteArray> attributes;
     attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
     attributes << AKONADI_PARAM_PARENT << QByteArray::number( parentId );
 

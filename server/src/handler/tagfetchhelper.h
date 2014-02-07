@@ -23,6 +23,7 @@
 #include <QtCore/QObject>
 #include <QtSql/QSqlQuery>
 
+#include "libs/imapset_p.h"
 
 namespace Akonadi
 {

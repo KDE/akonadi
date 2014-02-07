@@ -100,7 +100,7 @@ class NotificationSource : public QObject
     Q_SCRIPTABLE QVector<Entity::Id> monitoredCollections() const;
     Q_SCRIPTABLE void setMonitoredItem( Entity::Id id, bool monitored );
     Q_SCRIPTABLE QVector<Entity::Id> monitoredItems() const;
-    Q_SCRIPTABLE void setMonitoredTags( Entity::id id, bool monitored );
+    Q_SCRIPTABLE void setMonitoredTag( Entity::Id id, bool monitored );
     Q_SCRIPTABLE QVector<Entity::Id> monitoredTags() const;
     Q_SCRIPTABLE void setMonitoredResource( const QByteArray &resource, bool monitored );
     Q_SCRIPTABLE QVector<QByteArray> monitoredResources() const;
@@ -147,7 +147,7 @@ class NotificationSource : public QObject
     QSet<Entity::Id> mMonitoredItems;
     QSet<Entity::Id> mMonitoredTags;
     // TODO: Make this a bitflag
-    QSet<Akonadi::NotificationMessageV2> mMonitoredTypes;
+    QSet<Akonadi::NotificationMessageV2::Type> mMonitoredTypes;
     QSet<QString> mMonitoredMimeTypes;
     QSet<QByteArray> mMonitoredResources;
     QSet<QByteArray> mIgnoredSessions;

@@ -138,6 +138,11 @@ set(libakonadiprivate_SRCS
   src/handler/subscribe.cpp
   src/handler/status.cpp
   src/handler/store.cpp
+  src/handler/tagappend.cpp
+  src/handler/tagfetch.cpp
+  src/handler/tagfetchhelper.cpp
+  src/handler/tagremove.cpp
+  src/handler/tagstore.cpp
   src/handler/transaction.cpp
   src/search/agentsearchengine.cpp
   src/search/agentsearchinstance.cpp

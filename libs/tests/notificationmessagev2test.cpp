@@ -28,8 +28,6 @@ QTEST_APPLESS_MAIN( NotificationMessageV2Test )
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE( NotificationMessageV2::Type )
-
 void NotificationMessageV2Test::testCompress()
 {
   NotificationMessageV2::List list;

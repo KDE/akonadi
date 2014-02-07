@@ -45,7 +45,7 @@ bool TagRemove::parseStream()
 
   // Get all PIM items that we will untag
   SelectQueryBuilder<PimItem> itemsQuery;
-    itemsQuery.addJoin( QueryBuilder::LeftJoin, PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
+  itemsQuery.addJoin( QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
   QueryHelper::setToQuery( mScope.uidSet(), PimItemTagRelation::rightColumn(), itemsQuery );
 
   if ( !itemsQuery.exec() ) {
@@ -61,8 +61,8 @@ bool TagRemove::parseStream()
   const Tag::List tags = tagQuery.result();
 
   QSet<QByteArray> removedGids;
-  Q_FOREACH ( const Tag &tag ) {
-    removedGids.insert( tag.gid() );
+  Q_FOREACH ( const Tag &tag, tags ) {
+    removedGids.insert( tag.gid().toLatin1() );
   }
   DataStore::self()->notificationCollector()->itemsTagsChanged( items, QSet<QByteArray>(), removedGids );
 

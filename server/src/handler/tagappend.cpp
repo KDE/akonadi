@@ -40,30 +40,30 @@ bool TagAppend::parseStream()
 {
   m_streamParser->beginList();
 
-  Tag tag;
+  Tag insertedTag;
   typedef QPair<QByteArray, QByteArray> AttributePair;
   QList<AttributePair> attributes;
-  QByteArray remoteId;
+  QString remoteId;
 
   while ( !m_streamParser->atListEnd() ) {
     const QByteArray param = m_streamParser->readString();
 
     if ( param == AKONADI_PARAM_GID ) {
-      tag.setGid( m_streamParser->readString() );
+      insertedTag.setGid( QString::fromLatin1( m_streamParser->readString() ) );
     } else if ( param == AKONADI_PARAM_PARENT ) {
-      tag.setParent( m_streamParser->readNumber() );
+      insertedTag.setParentId( m_streamParser->readNumber() );
     } else if ( param == AKONADI_PARAM_REMOTEID ) {
       if ( !connection()->resourceContext().isValid() ) {
         throw HandlerException( "Only resource can create tag with remote ID" );
       }
-      remoteId = m_streamParser->readString();
+      remoteId = QString::fromLatin1( m_streamParser->readString() );
     } else {
       attributes << qMakePair( param, m_streamParser->readString() );
     }
   }
 
   qint64 tagId = -1;
-  if  ( !tag.insert( &tagId ) ) {
+  if  ( !insertedTag.insert( &tagId ) ) {
     throw HandlerException( "Failed to store tag" );
   }
 
@@ -88,7 +88,7 @@ bool TagAppend::parseStream()
     }
   }
 
-  DataStore::self()->notificationCollector()->tagAdded( tag );
+  DataStore::self()->notificationCollector()->tagAdded( insertedTag );
 
   ImapSet set;
   set.add( QVector<qint64>() << tagId );

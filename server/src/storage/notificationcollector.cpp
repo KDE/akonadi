@@ -74,7 +74,7 @@ void Akonadi::NotificationCollector::itemsTagsChanged( const PimItem::List &item
                                                        const Collection &collection,
                                                        const QByteArray &resource)
 {
-  itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray(), addedTags, removedTags );
+  itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), addedTags, removedTags );
 }
 
 

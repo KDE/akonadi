@@ -44,19 +44,19 @@
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredTags">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64;&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64&gt;"/>
       <arg type="ax" direction="out"/>
     </method>
     <signal name="monitoredTagsChanged"/>
 
     <method name="setMonitoredType">
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="Akonadi::NotificationMessageV2::Type"/>
-      <arg name="type" type="i" direction="in"/>
+      <arg name="type" type="(i)" direction="in"/>
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredTypes">
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;Akonadi::NotificationMessageV2::Type&gt;"/>
-      <arg type="ai" direction="out"/>
+      <arg type="a(i)" direction="out"/>
     </method>
     <signal name="monitoredTypesChanged"/>
 

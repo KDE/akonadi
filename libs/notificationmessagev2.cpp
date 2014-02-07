@@ -124,6 +124,7 @@ void NotificationMessageV2::registerDBusTypes()
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2>();
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2::Entity>();
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2::List>();
+  qDBusRegisterMetaType<Akonadi::NotificationMessageV2::Type>();
   qDBusRegisterMetaType<QVector<QByteArray> >();
   qDBusRegisterMetaType<QVector<qint64> >();
 }
@@ -272,6 +273,9 @@ QString NotificationMessageV2::toString() const
     break;
   case Collections:
     rv += QLatin1String( "Collections " );
+    break;
+  case Tags:
+    rv += QLatin1String( "Tags " );
     break;
   case InvalidType:
     return QLatin1String( "*INVALID TYPE* " );
@@ -453,6 +457,22 @@ const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::Notification
   return arg;
 }
 
+QDBusArgument &operator<<( QDBusArgument &arg, Akonadi::NotificationMessageV2::Type type )
+{
+  arg << static_cast<int>( type );
+
+  return arg;
+}
+
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Type &type )
+{
+  int t;
+  arg >> t;
+  type = static_cast<NotificationMessageV2::Type>( t );
+
+  return arg;
+}
+
 uint qHash( const Akonadi::NotificationMessageV2 &msg )
 {
   uint i = 0;
@@ -565,3 +585,4 @@ bool NotificationMessageV2::appendAndCompress( QList<NotificationMessageV2> &lis
 {
   return Private::appendAndCompressImpl< QList<NotificationMessageV2> >( list, msg );
 }
+

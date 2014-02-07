@@ -164,7 +164,7 @@ QVector<Entity::Id> NotificationSource::monitoredItems() const
   return setToVector<Entity::Id>( mMonitoredItems );
 }
 
-void NotificationSource::setMonitoredTags(Entity::id id, bool monitored)
+void NotificationSource::setMonitoredTag( Entity::Id id, bool monitored )
 {
   if ( id < 0 || !isServerSideMonitorEnabled() ) {
     return;
@@ -179,7 +179,7 @@ void NotificationSource::setMonitoredTags(Entity::id id, bool monitored)
   }
 }
 
-QVector NotificationSource::monitoredTags() const
+QVector<Entity::Id> NotificationSource::monitoredTags() const
 {
   return setToVector<Entity::Id>( mMonitoredTags );
 }
