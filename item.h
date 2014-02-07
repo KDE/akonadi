@@ -25,6 +25,7 @@
 
 #include <akonadi/entity.h>
 #include <akonadi/exception.h>
+#include <akonadi/tag.h>
 #include "itempayloadinternals_p.h"
 
 #include <QtCore/QByteArray>
@@ -213,6 +214,18 @@ class AKONADI_EXPORT Item : public Entity
      * Removes all flags from the item.
      */
     void clearFlags();
+
+    void setTags( const Tag::List &list );
+
+    void setTag( const Tag & );
+
+    Tag::List tags() const;
+
+    bool hasTag( const Tag & ) const;
+
+    void clearTag( const Tag & );
+
+    void clearTags();
 
     /**
      * Sets the payload based on the canonical representation normally

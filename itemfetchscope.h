@@ -325,6 +325,26 @@ class AKONADI_EXPORT ItemFetchScope
      */
     bool fetchRemoteIdentification() const;
 
+    /**
+     * Fetch tags for items.
+     *
+     * The fetched tags have only the Tag::id() set and need to be fetched first to access further attributes.
+     *
+     * The default is @c false.
+     *
+     * @param fetchTags whether or not to load tags.
+     * @since 4.13
+     */
+    void setFetchTags( bool fetchTags );
+
+    /**
+     * Returns whether tags should be retrieved.
+     *
+     * @see setFetchTags()
+     * @since 4.13
+     */
+    bool fetchTags() const;
+
   private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;

@@ -116,6 +116,7 @@ set( akonadikde_LIB_SRC
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
+  entityannotationsattribute.cpp
   erroroverlay.cpp
   etmviewstatesaver.cpp
   exception.cpp
@@ -185,6 +186,16 @@ set( akonadikde_LIB_SRC
   transactionsequence.cpp
   transportresourcebase.cpp
   typepluginloader.cpp
+  attributeentity.cpp
+  tag.cpp
+  tagmodel.cpp
+  tagmodel_p.cpp
+  tagattribute.cpp
+  tagcreatejob.cpp
+  tagmodifyjob.cpp
+  tagfetchscope.cpp
+  tagfetchjob.cpp
+  tagdeletejob.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
@@ -210,11 +221,11 @@ endif()
 
 # DBus interfaces and adaptors
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h" )
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h" )
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerinterface )
 
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h" )
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h" )
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationsourceinterface )
 
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
@@ -306,6 +317,7 @@ install( FILES
   agenttypedialog.h
   attribute.h
   attributefactory.h
+  attributeentity.h
   cachepolicy.h
   cachepolicypage.h
   changerecorder.h
@@ -349,6 +361,7 @@ install( FILES
   entitytreeview.h
   entitytreeviewstatesaver.h
   etmviewstatesaver.h
+  entityannotationsattribute.h
   exception.h
   favoritecollectionsmodel.h
   gid/gidextractorinterface.h
@@ -390,6 +403,14 @@ install( FILES
   specialcollectionsdiscoveryjob.h
   standardactionmanager.h
   statisticsproxymodel.h
+  tagattribute.h
+  tag.h
+  tagmodel.h
+  tagmodifyjob.h
+  tagcreatejob.h
+  tagfetchjob.h
+  tagfetchscope.h
+  tagdeletejob.h
   trashjob.h
   trashrestorejob.h
   trashsettings.h

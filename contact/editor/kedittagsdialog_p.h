@@ -20,11 +20,14 @@
 #define KEDIT_TAGS_DIALOG_H
 
 #include <kdialog.h>
-#include <nepomuk2/tag.h>
+#include <akonadi/tag.h>
+#include <akonadi/tagmodel.h>
 
+#include <QtGui/QListView>
+
+class TagModel;
+class KCheckableProxyModel;
 class KLineEdit;
-class QListWidget;
-class QListWidgetItem;
 class QPushButton;
 class QTimer;
 
@@ -41,28 +44,26 @@ class KEditTagsDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit KEditTagsDialog(const QVector<Nepomuk2::Tag> &tags,
-                             QWidget *parent = 0,
-                             Qt::WindowFlags flags = 0);
+    explicit KEditTagsDialog(const Akonadi::Tag::List& tags,
+                             Akonadi::TagModel *model,
+                             QWidget* parent = 0 );
 
     virtual ~KEditTagsDialog();
 
-    QVector<Nepomuk2::Tag> tags() const;
+    Akonadi::Tag::List tags() const;
 
-    virtual bool eventFilter(QObject *watched, QEvent *event);
+    virtual bool eventFilter(QObject* watched, QEvent* event);
 
 protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
 
 private Q_SLOTS:
     void slotTextEdited(const QString &text);
-    void slotItemEntered(QListWidgetItem *item);
+    void slotItemEntered(const QModelIndex &index);
     void showDeleteButton();
     void deleteTag();
-
-private:
-    void loadTags();
-    void removeNewTagItem();
+    void slotCreateTag();
+    void slotCreateTagFinished(KJob *job);
 
 private:
     void writeConfig();
@@ -71,14 +72,16 @@ private:
         UrlTag = Qt::UserRole + 1
     };
 
-    QVector<Nepomuk2::Tag> m_tags;
-    QListWidget *m_tagsList;
-    QListWidgetItem *m_newTagItem;
-    QListWidgetItem *m_deleteCandidate;
-    KLineEdit *m_newTagEdit;
+    Akonadi::Tag::List m_tags;
+    Akonadi::TagModel *m_model;
+    QListView *m_tagsView;
+    KCheckableProxyModel *m_checkableProxy;
+    QModelIndex m_deleteCandidate;
+    QPushButton *m_newTagButton;
+    KLineEdit* m_newTagEdit;
 
-    QPushButton *m_deleteButton;
-    QTimer *m_deleteButtonTimer;
+    QPushButton* m_deleteButton;
+    QTimer* m_deleteButtonTimer;
 };
 
 #endif

@@ -192,6 +192,20 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
     }
   }
 
+  if ( item.d_func()->mTagsOverwritten ) {
+    changes << "TAGS";
+    changes << ' ' + ProtocolHelper::tagSetToImapSequenceSet( item.tags() );
+  } else {
+    if ( !item.d_func()->mAddedTags.isEmpty() ) {
+      changes << "+TAGS";
+      changes << ' ' + ProtocolHelper::tagSetToImapSequenceSet( item.d_func()->mAddedTags );
+    }
+    if ( !item.d_func()->mDeletedTags.isEmpty() ) {
+      changes << "-TAGS";
+      changes << ' ' + ProtocolHelper::tagSetToImapSequenceSet( item.d_func()->mDeletedTags );
+    }
+  }
+
   if ( !item.d_func()->mDeletedAttributes.isEmpty() ) {
     changes << "-PARTS";
     QList<QByteArray> attrs;

@@ -179,3 +179,13 @@ bool ItemFetchScope::fetchRemoteIdentification() const
 {
   return d->mFetchRid;
 }
+
+void ItemFetchScope::setFetchTags( bool fetchTags )
+{
+  d->mFetchTags = fetchTags;
+}
+
+bool ItemFetchScope::fetchTags() const
+{
+  return d->mFetchTags;
+}

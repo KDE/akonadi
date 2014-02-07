@@ -55,7 +55,7 @@ using namespace Akonadi;
 //@cond PRIVATE
 
 static const QList<QByteArray> sCapabilities = QList<QByteArray>()
-        << "NOTIFY 2"
+        << "NOTIFY 3"
         << "NOPAYLOADPATH"
         << "AKAPPENDSTREAMING"
         << "SERVERSEARCH";

@@ -24,9 +24,9 @@
 #include "tagwidget.h"
 
 #include <akonadi/item.h>
+#include <akonadi/tag.h>
 #include <kabc/addressee.h>
 #include <kdialog.h>
-#include <nepomuk2/tag.h>
 
 #include <QHBoxLayout>
 
@@ -52,11 +52,11 @@ void CategoriesEditWidget::setReadOnly(bool readOnly)
 
 void CategoriesEditWidget::loadContact(const KABC::Addressee &contact)
 {
-    QVector<Nepomuk2::Tag> tags;
+    Akonadi::Tag::List tags;
 
     const QStringList categories = contact.categories();
     foreach (const QString &category, categories) {
-        tags.append(Nepomuk2::Tag(category));
+        tags.append(Akonadi::Tag::fromUrl(category));
     }
 
     mTagWidget->setTags(tags);
@@ -66,9 +66,9 @@ void CategoriesEditWidget::storeContact(KABC::Addressee &contact) const
 {
     QStringList categories;
 
-    const QVector<Nepomuk2::Tag> tags = mTagWidget->tags();
-    foreach (const Nepomuk2::Tag &tag, tags) {
-        categories.append(tag.genericLabel());
+    const Akonadi::Tag::List tags = mTagWidget->tags();
+    foreach (const Akonadi::Tag &tag, tags) {
+        categories.append(tag.url().url());
     }
 
     contact.setCategories(categories);

@@ -61,7 +61,7 @@ void ChangeRecorder::replayNext()
     return;
 
   if ( !d->pendingNotifications.isEmpty() ) {
-    const NotificationMessageV2 msg = d->pendingNotifications.head();
+    const NotificationMessageV3 msg = d->pendingNotifications.head();
     if ( d->ensureDataAvailable( msg ) ) {
       if ( !d->emitNotification( msg ) ) {
         //If no signal was emitted (e.g. because noone was connected to it), noone is going to call changeProcessed, so we help ourselves

@@ -42,6 +42,7 @@ public:
   virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);
   virtual Akonadi::ItemCache* createItemCache(int maxCapacity, Session *session);
   virtual Akonadi::ItemListCache* createItemListCache(int maxCapacity, Session *session);
+  virtual Akonadi::TagListCache* createTagListCache(int maxCapacity, Session *session);
 };
 
 }

@@ -95,3 +95,8 @@ ItemListCache* ChangeNotificationDependenciesFactory::createItemListCache(int ma
 {
   return new ItemListCache( maxCapacity, session );
 }
+
+TagListCache* ChangeNotificationDependenciesFactory::createTagListCache( int maxCapacity, Session *session )
+{
+  return new TagListCache( maxCapacity, session );
+}

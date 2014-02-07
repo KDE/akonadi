@@ -26,8 +26,8 @@ NotificationSource::NotificationSource( QObject *source ):
 {
   Q_ASSERT( source );
 
-  connect( source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
-           this, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)) );
+  connect( source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
+           this, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)) );
 }
 
 NotificationSource::~NotificationSource()
@@ -83,6 +83,24 @@ void NotificationSource::setIgnoredSession( const QByteArray &session, bool igno
   const bool ok = QMetaObject::invokeMethod( parent(), "setIgnoredSession",
                                              Q_ARG( QByteArray, session ),
                                              Q_ARG( bool, ignored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
+}
+
+void NotificationSource::setMonitoredTag( Tag::Id id, bool monitored )
+{
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredTag",
+                                             Q_ARG( qlonglong, id ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
+}
+
+void NotificationSource::setMonitoredType( NotificationMessageV2::Type type, bool monitored )
+{
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredType",
+                                             Q_ARG( Akonadi::NotificationMessageV2::Type, type ),
+                                             Q_ARG( bool, monitored ) );
   Q_ASSERT( ok );
   Q_UNUSED( ok );
 }

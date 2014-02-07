@@ -55,11 +55,11 @@ include(../AkonadiMacros.cmake)
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationmanagerinterface )
 
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 add_library(akonaditestfake STATIC
@@ -144,3 +144,4 @@ add_akonadi_isolated_test(gidtest.cpp)
 add_akonadi_isolated_test(lazypopulationtest.cpp)
 add_akonadi_isolated_test(favoriteproxytest.cpp)
 add_akonadi_isolated_test_advanced(itemsearchjobtest.cpp testsearchplugin/testsearchplugin.cpp "")
+add_akonadi_isolated_test(tagtest.cpp)

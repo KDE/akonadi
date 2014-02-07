@@ -44,7 +44,7 @@ int ChangeRecorderPrivate::pipelineSize() const
   return MonitorPrivate::pipelineSize();
 }
 
-void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
+void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV3::List &msgs)
 {
   Q_Q( ChangeRecorder );
   const int oldChanges = pendingNotifications.size();
@@ -83,7 +83,7 @@ void ChangeRecorderPrivate::loadNotifications()
 
       for ( int i = 0; i < size; ++i ) {
         settings->setArrayIndex( i );
-        NotificationMessageV2 msg;
+        NotificationMessageV3 msg;
         msg.setSessionId( settings->value( QLatin1String( "sessionId" ) ).toByteArray() );
         msg.setType( (NotificationMessageV2::Type)settings->value( QLatin1String( "type" ) ).toInt() );
         msg.setOperation( (NotificationMessageV2::Operation)settings->value( QLatin1String( "op" ) ).toInt() );
@@ -124,11 +124,11 @@ void ChangeRecorderPrivate::loadNotifications()
     notificationsLoaded();
 }
 
-static const quint64 s_currentVersion = Q_UINT64_C(0x000200000000);
+static const quint64 s_currentVersion = Q_UINT64_C(0x000300000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
+QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 {
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
@@ -138,8 +138,9 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
   quint64 uid, parentCollection, parentDestCollection;
   QString remoteId, mimeType, remoteRevision;
   QSet<QByteArray> itemParts, addedFlags, removedFlags;
+  QSet<qint64> addedTags, removedTags;
 
-  QQueue<NotificationMessageV2> list;
+  QQueue<NotificationMessageV3> list;
 
   quint64 sizeAndVersion;
   stream >> sizeAndVersion;
@@ -183,9 +184,9 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
       msg.setParentDestCollection( parentDestCollection );
       msg.setItemParts( itemParts );
 
-    } else if ( version == 2 ) {
+    } else if ( version == 2 || version == 3 ) {
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
 
       stream >> sessionId;
       stream >> type;
@@ -205,6 +206,10 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
       stream >> itemParts;
       stream >> addedFlags;
       stream >> removedFlags;
+      if ( version == 3 ) {
+        stream >> addedTags;
+        stream >> removedTags;
+      }
 
       if ( i < startOffset )
         continue;
@@ -219,6 +224,8 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
       msg.setItemParts( itemParts );
       msg.setAddedFlags( addedFlags );
       msg.setRemovedFlags( removedFlags );
+      msg.setAddedTags( addedTags );
+      msg.setRemovedTags( removedTags );
 
       list << msg;
     }
@@ -245,6 +252,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
   quint64 parentCollection, parentDestCollection;
   QString remoteId, remoteRevision, mimeType;
   QSet<QByteArray> itemParts, addedFlags, removedFlags;
+  QSet<qint64> addedTags, removedTags;
   QVariantList items;
 
   QStringList list;
@@ -280,6 +288,10 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     stream >> itemParts;
     stream >> addedFlags;
     stream >> removedFlags;
+    if ( version == 3 ) {
+      stream >> addedTags;
+      stream >> removedTags;
+    }
 
     if ( i < startOffset )
         continue;
@@ -291,6 +303,9 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
       break;
     case NotificationMessageV2::Items:
       typeString = QLatin1String( "Items" );
+      break;
+    case NotificationMessageV2::Tags:
+      typeString = QLatin1String( "Tags" );
       break;
     default:
       typeString = QLatin1String( "InvalidType" );
@@ -307,6 +322,9 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
       break;
     case NotificationMessageV2::ModifyFlags:
       operationString = QLatin1String( "ModifyFlags" );
+      break;
+    case NotificationMessageV2::ModifyTags:
+      operationString = QLatin1String( "ModifyTags" );
       break;
     case NotificationMessageV2::Move:
       operationString = QLatin1String( "Move" );
@@ -331,15 +349,19 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
       break;
     };
 
-    QStringList itemPartsList, addedFlagsList, removedFlagsList;
+    QStringList itemPartsList, addedFlagsList, removedFlagsList, addedTagsList, removedTagsList;
     foreach( const QByteArray &b, itemParts )
       itemPartsList.push_back( QString::fromLatin1(b) );
     foreach( const QByteArray &b, addedFlags )
       addedFlagsList.push_back( QString::fromLatin1(b) );
     foreach( const QByteArray &b, removedFlags )
       removedFlagsList.push_back( QString::fromLatin1(b) );
+    foreach( qint64 id, addedTags )
+      addedTagsList.push_back( QString::number( id ) );
+    foreach( qint64 id, removedTags )
+      removedTagsList.push_back( QString::number( id ) ) ;
 
-    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11")
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11 addedTags=%12 removedTags=%13")
                           .arg( QString::fromLatin1( sessionId ) )
                           .arg( typeString )
                           .arg( operationString )
@@ -350,7 +372,9 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
                           .arg( parentDestCollection )
                           .arg( itemPartsList.join(QLatin1String(", " )) )
                           .arg( addedFlagsList.join(QLatin1String( ", " )) )
-                          .arg( removedFlagsList.join(QLatin1String( ", " )) );
+                          .arg( removedFlagsList.join(QLatin1String( ", " )) )
+                          .arg( addedTagsList.join(QLatin1String(", ")) )
+                          .arg( removedTagsList.join(QLatin1String(", ")) );
 
     result += entry + QLatin1Char('\n');
   }
@@ -358,7 +382,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
   return result;
 }
 
-void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessageV2 &msg)
+void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessageV3 &msg)
 {
   stream << msg.sessionId();
   stream << int(msg.type());
@@ -377,6 +401,8 @@ void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationM
   stream << msg.itemParts();
   stream << msg.addedFlags();
   stream << msg.removedFlags();
+  stream << msg.addedTags();
+  stream << msg.removedTags();
 }
 
 void ChangeRecorderPrivate::writeStartOffset()
@@ -438,7 +464,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
   //kDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
   for ( int i = 0; i < pendingNotifications.count(); ++i ) {
-    const NotificationMessageV2 msg = pendingNotifications.at( i );
+    const NotificationMessageV3 msg = pendingNotifications.at( i );
     addToStream( stream, msg );
   }
 }

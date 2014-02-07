@@ -1,7 +1,5 @@
 /*
-    This file is part of Akonadi Contact.
-
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,42 +17,41 @@
     02110-1301, USA.
 */
 
-#ifndef TAGWIDGET_H
-#define TAGWIDGET_H
+#ifndef AKONADI_TAGDELETEJOB_H
+#define AKONADI_TAGDELETEJOB_H
 
-#include <QWidget>
-
+#include <akonadi/job.h>
 #include <akonadi/tag.h>
 
-namespace Akonadi
+namespace Akonadi {
+
+class Tag;
+class TagDeleteJobPrivate;
+
+/**
+ * @short Job that deletes tags.
+ * @since 4.13
+ */
+class AKONADI_EXPORT TagDeleteJob : public Job
 {
-class TagModel;
-}
+    Q_OBJECT
 
-class QHBoxLayout;
-class QLabel;
+public:
+    TagDeleteJob(const Tag &tag, QObject *parent = 0);
+    TagDeleteJob(const Tag::List &tag, QObject *parent = 0);
 
-class TagWidget : public QWidget
-{
-  Q_OBJECT
+    /**
+     * Returns the tags passed to the constructor.
+     */
+    Tag::List tags() const;
 
-  public:
-    explicit TagWidget( QWidget *parent = 0 );
-    ~TagWidget();
+protected:
+    virtual void doStart();
 
-    void setTags( const Akonadi::Tag::List &tags );
-    Akonadi::Tag::List tags() const;
-
-  private Q_SLOTS:
-    void editTags();
-
-  private:
-    void updateView();
-
-    QLabel *mTagLabel;
-
-    Akonadi::TagModel *mModel;
-    Akonadi::Tag::List mTags;
+private:
+    Q_DECLARE_PRIVATE(TagDeleteJob)
 };
+
+}
 
 #endif
