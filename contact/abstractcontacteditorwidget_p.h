@@ -36,19 +36,36 @@ class ContactMetaData;
 
 class AbstractContactEditorWidget : public QWidget
 {
-  public:
+public:
+    /**
+     * Creates a new abstract contact editor widget.
+     *
+     * @param parent The parent widget.
+     */
+    AbstractContactEditorWidget(QWidget *parent = 0)
+        : QWidget(parent)
+    {
+    }
+
+    /**
+     * Destroys the abstract contact editor widget.
+     */
+    ~AbstractContactEditorWidget() { }
+
     /**
      * @param contact loads the given contact into the editor widget
      */
-    virtual void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& ) = 0;
+    virtual void loadContact(const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData) = 0;
+
     /**
      * @param contact store the given contact into the editor widget
      */
-    virtual void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const = 0;
+    virtual void storeContact(KABC::Addressee &contact, Akonadi::ContactMetaData &metaData) const = 0;
+
     /**
      * @param readOnly set read-only mode
      */
-    virtual void setReadOnly( bool readOnly ) = 0;
+    virtual void setReadOnly(bool readOnly) = 0;
 };
 
 }
