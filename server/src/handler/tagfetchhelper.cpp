@@ -96,6 +96,7 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
     const qint64 parentId = tagQuery.value( 2 ).toLongLong();
 
     QList<QByteArray> attributes;
+    attributes << AKONADI_PARAM_UID << QByteArray::number( tagId );
     attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
     attributes << AKONADI_PARAM_PARENT << QByteArray::number( parentId );
 
