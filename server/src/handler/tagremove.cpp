@@ -64,7 +64,9 @@ bool TagRemove::parseStream()
   Q_FOREACH ( const Tag &tag, tags ) {
     removedGids.insert( tag.gid().toLatin1() );
   }
-  DataStore::self()->notificationCollector()->itemsTagsChanged( items, QSet<QByteArray>(), removedGids );
+  if ( !items.isEmpty() ) {
+    DataStore::self()->notificationCollector()->itemsTagsChanged( items, QSet<QByteArray>(), removedGids );
+  }
 
   Q_FOREACH ( const Tag &tag, tags ) {
     DataStore::self()->notificationCollector()->tagRemoved( tag );
