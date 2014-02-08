@@ -335,7 +335,7 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
     itemsIds << item.id();
     for ( int i = 0; i < flags.count(); ++i ) {
       const QByteArray flagName = flags[i].name().toLatin1();
-      if ( !flagsIds.contains( flagName ) ) {
+      if ( !removedFlags.contains( flagName ) ) {
         flagsIds << flags[i].id();
         removedFlags << flagName;
       }
