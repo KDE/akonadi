@@ -67,6 +67,7 @@ class FetchHelper : public QObject
     QSqlQuery buildItemQuery();
     QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
     QSqlQuery buildFlagQuery();
+    QSqlQuery buildTagQuery();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
     QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;

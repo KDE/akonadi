@@ -59,6 +59,7 @@ class FetchScope
     bool flagsRequested() const;
     bool remoteIdRequested() const;
     bool gidRequested() const;
+    bool tagsRequested() const;
 
   private:
     class Private;
