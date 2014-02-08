@@ -356,6 +356,177 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
   return true;
 }
 
+/* --- ItemTags ----------------------------------------------------- */
+
+bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags )
+{
+  QSet<qint64> removedTags;
+  QSet<qint64> addedTags;
+  QVariantList insIds;
+  QVariantList insTags;
+  Query::Condition delConds( Query::Or );
+
+  Q_FOREACH ( const PimItem &item, items ) {
+    Q_FOREACH ( const Tag &tag, item.tags() ) {
+      if ( !tags.contains( tag ) ) {
+        // Remove tags from items that had it set
+        removedTags << tag.id();
+        Query::Condition cond;
+        cond.addValueCondition( PimItemTagRelation::leftFullColumnName(), Query::Equals, item.id() );
+        cond.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, tag.id() );
+        delConds.addCondition(cond);
+      }
+    }
+
+    Q_FOREACH ( const Tag &tag, tags ) {
+      if ( !item.tags().contains( tag ) ) {
+        // Add tags to items that did not have the tag
+        addedTags << tag.id();
+        insIds << item.id();
+        insTags << tag.id();
+      }
+    }
+  }
+
+  if ( !removedTags.empty() ) {
+    QueryBuilder qb( PimItemTagRelation::tableName(), QueryBuilder::Delete );
+    qb.addCondition( delConds );
+    if ( !qb.exec() ) {
+      return false;
+    }
+  }
+
+  if ( !addedTags.empty() ) {
+    QueryBuilder qb2( PimItemTagRelation::tableName(), QueryBuilder::Insert );
+    qb2.setColumnValue( PimItemTagRelation::leftColumn(), insIds );
+    qb2.setColumnValue( PimItemTagRelation::rightColumn(), insTags );
+    qb2.setIdentificationColumn( QString() );
+    if ( !qb2.exec() ) {
+      return false;
+    }
+  }
+
+  if ( addedTags.empty() && removedTags.empty() ) {
+    // no changes done, notification not needed
+    return true;
+  }
+
+  mNotificationCollector->itemsTagsChanged( items, addedTags, removedTags );
+
+  return true;
+}
+
+bool DataStore::doAppendItemsTag( const PimItem::List &items, const Tag &tag,
+                                   const QSet<Entity::Id> &existing, const Collection &col )
+{
+  QVariantList tagIds;
+  QVariantList appendIds;
+  PimItem::List appendItems;
+  Q_FOREACH ( const PimItem &item, items ) {
+    if ( existing.contains( item.id() ) ) {
+      continue;
+    }
+
+    tagIds << tag.id();
+    appendIds << item.id();
+    appendItems << item;
+  }
+
+  if ( appendItems.isEmpty() ) {
+    return true; // all items have the desired tags already
+  }
+
+  QueryBuilder qb2( PimItemTagRelation::tableName(), QueryBuilder::Insert );
+  qb2.setColumnValue( PimItemTagRelation::leftColumn(), appendIds );
+  qb2.setColumnValue( PimItemTagRelation::rightColumn(), tagIds );
+  qb2.setIdentificationColumn( QString() );
+  if ( !qb2.exec() ) {
+    akDebug() << "Failed to execute query:" << qb2.query().lastError();
+    return false;
+  }
+
+  mNotificationCollector->itemsTagsChanged( appendItems, QSet<qint64>() << tag.id(),
+                                             QSet<qint64>(), col );
+
+  return true;
+}
+
+bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &tags,
+                                  bool &tagsChanged, bool checkIfExists,
+                                  const Collection &col )
+{
+  QSet<QByteArray> added;
+
+  QVariantList itemsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds.append( item.id() );
+  }
+
+  tagsChanged = false;
+  Q_FOREACH ( const Tag &tag, tags ) {
+    QSet<PimItem::Id> existing;
+    if ( checkIfExists ) {
+      QueryBuilder qb( PimItemTagRelation::tableName(), QueryBuilder::Select );
+      Query::Condition cond;
+      cond.addValueCondition( PimItemTagRelation::rightColumn(), Query::Equals, tag.id() );
+      cond.addValueCondition( PimItemTagRelation::leftColumn(), Query::In, itemsIds );
+      qb.addColumn( PimItemTagRelation::leftColumn() );
+      qb.addCondition( cond );
+
+      if ( !qb.exec() ) {
+        akDebug() << "Failed to execute query:" << qb.query().lastError();
+        return false;
+      }
+
+      QSqlQuery query = qb.query();
+      if ( query.size() == items.count() ) {
+        continue;
+      }
+
+      tagsChanged = true;
+
+      while ( query.next() ) {
+        existing << query.value( 0 ).value<PimItem::Id>();
+      } }
+
+    if ( !doAppendItemsTag( items, tag, existing, col ) ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &tags )
+{
+  QSet<qint64> removedTags;
+  QVariantList itemsIds;
+  QVariantList tagsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds << item.id();
+    for ( int i = 0; i < tags.count(); ++i ) {
+      const qint64 tagId = tags[i].id();
+      if ( !removedTags.contains( tagId ) ) {
+        tagsIds << tagId;
+        removedTags << tagId;
+      }
+    }
+  }
+
+  // Delete all given tags from all given items in one go
+  QueryBuilder qb( PimItemTagRelation::tableName(), QueryBuilder::Delete );
+  Query::Condition cond( Query::And );
+  cond.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::In, tagsIds );
+  cond.addValueCondition( PimItemTagRelation::leftFullColumnName(), Query::In, itemsIds );
+  qb.addCondition( cond );
+  if ( !qb.exec() ) {
+    return false;
+  }
+
+  mNotificationCollector->itemsTagsChanged( items, QSet<qint64>(), removedTags );
+  return true;
+}
+
 /* --- ItemParts ----------------------------------------------------- */
 
 bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )

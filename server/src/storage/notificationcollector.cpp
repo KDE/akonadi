@@ -68,15 +68,14 @@ void Akonadi::NotificationCollector::itemsFlagsChanged( const PimItem::List &ite
   itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags );
 }
 
-void Akonadi::NotificationCollector::itemsTagsChanged( const PimItem::List &items,
-                                                       const QSet<QByteArray> & addedTags,
-                                                       const QSet<QByteArray> &removedTags,
-                                                       const Collection &collection,
-                                                       const QByteArray &resource)
+void NotificationCollector::itemsTagsChanged(const PimItem::List& items,
+                                             const QSet<qint64>& addedTags,
+                                             const QSet<qint64>& removedTags,
+                                             const Collection& collection,
+                                             const QByteArray& resource)
 {
-  itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), addedTags, removedTags );
+  itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), addedTags, removedTags );
 }
-
 
 void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
                                                  const Collection &collectionSrc,
@@ -196,7 +195,9 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
                                               const QByteArray &resource,
                                               const QSet<QByteArray> &parts,
                                               const QSet<QByteArray> &addedFlags,
-                                              const QSet<QByteArray> &removedFlags )
+                                              const QSet<QByteArray> &removedFlags,
+                                              const QSet<qint64> &addedTags,
+                                              const QSet<qint64> &removedTags )
 {
   Collection notificationDestCollection;
   QMap<Entity::Id, PimItem> vCollections;
@@ -215,6 +216,9 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   msg.setItemParts( parts );
   msg.setAddedFlags( addedFlags );
   msg.setRemovedFlags( removedFlags );
+  //FIXME implement
+//   msg.setAddedTags( addedTags );
+//   msg.setAddedTags( removedTags );
 
   if ( collectionDest.isValid() ) {
     QByteArray destResourceName;

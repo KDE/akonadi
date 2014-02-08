@@ -98,8 +98,8 @@ class NotificationCollector : public QObject
      Notify about changed items tags
     **/
     void itemsTagsChanged( const PimItem::List &items,
-                           const QSet<QByteArray> &addedTags,
-                           const QSet<QByteArray> &removedTags,
+                           const QSet<qint64> &addedTags,
+                           const QSet<qint64> &removedTags,
                            const Collection &collection = Collection(),
                            const QByteArray &resource = QByteArray() );
 
@@ -206,7 +206,9 @@ class NotificationCollector : public QObject
                            const QByteArray &resource,
                            const QSet<QByteArray> &parts = QSet<QByteArray>(),
                            const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
-                           const QSet<QByteArray> &removedFlags = QSet<QByteArray>() );
+                           const QSet<QByteArray> &removedFlags = QSet<QByteArray>(),
+                           const QSet<qint64> &addedTags = QSet<qint64>(),
+                           const QSet<qint64> &removedTags = QSet<qint64>() );
     void itemNotification( NotificationMessageV2::Operation op, const PimItem &item,
                            const Collection &collection,
                            const Collection &collectionDest,

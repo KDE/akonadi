@@ -122,6 +122,12 @@ class DataStore : public QObject
                            bool checkIfExists = true, const Collection &col = Collection() );
     bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
 
+    /* --- ItemTags ----------------------------------------------------- */
+    bool setItemsTags( const PimItem::List &items, const Tag::List &tags );
+    bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged,
+                           bool checkIfExists = true, const Collection &col = Collection() );
+    bool removeItemsTags( const PimItem::List &items, const Tag::List &tags );
+
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 
@@ -266,6 +272,9 @@ protected:
   private:
     bool doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
                            const QSet<PimItem::Id> &existing, const Collection &col );
+
+    bool doAppendItemsTag( const PimItem::List &items, const Tag &tag,
+                          const QSet<Entity::Id> &existing, const Collection &col );
 
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
