@@ -21,6 +21,7 @@
 #define AKONADIHANDLERHELPER_H
 
 #include <entities.h>
+#include <imapset_p.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -106,6 +107,12 @@ class HandlerHelper
       @throws HandlerException on errors during datbase operations
     */
     static Akonadi::Flag::List resolveFlags( const QList<QByteArray> &flagNames );
+
+    /**
+      Converts a imap set of tags into tag records.
+      @throws HandlerException on errors during datbase operations
+    */
+    static Akonadi::Tag::List resolveTags( const ImapSet &tags );
 };
 
 }

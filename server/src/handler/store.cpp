@@ -113,6 +113,35 @@ bool Store::deleteFlags( const PimItem::List &items, const QList<QByteArray> &fl
   return true;
 }
 
+bool Store::replaceTags( const PimItem::List &item, const ImapSet &tags )
+{
+  const Tag::List tagList = HandlerHelper::resolveTags( tags );
+  if ( !connection()->storageBackend()->setItemsTags( item, tagList ) ) {
+    throw HandlerException( "Store::replaceTags: Unable to set new item tags" );
+  }
+  return true;
+}
+
+bool Store::addTags( const PimItem::List &items, const ImapSet &tags, bool &tagsChanged )
+{
+  const Tag::List tagList = HandlerHelper::resolveTags( tags );
+  if ( !connection()->storageBackend()->appendItemsTags( items, tagList, tagsChanged ) ) {
+    akDebug() << "Store::addTags: Unable to add new item tags";
+    return false;
+  }
+  return true;
+}
+
+bool Store::deleteTags( const PimItem::List &items, const ImapSet &tags )
+{
+  const Tag::List tagList = HandlerHelper::resolveTags( tags );
+  if ( !connection()->storageBackend()->removeItemsTags( items, tagList ) ) {
+    akDebug() << "Store::deleteTags: Unable to remove item tags";
+    return false;
+  }
+  return true;
+}
+
 bool Store::parseStream()
 {
   parseCommand();
@@ -197,6 +226,27 @@ bool Store::parseStream()
 
       if ( flagsChanged && !changes.contains( AKONADI_PARAM_FLAGS ) ) {
         changes << AKONADI_PARAM_FLAGS;
+      }
+      continue;
+    }
+
+    if ( command == AKONADI_PARAM_TAGS ) {
+      bool tagsChanged = true;
+      const ImapSet tags = m_streamParser->readSequenceSet();
+      if ( op == Replace ) {
+        tagsChanged = replaceTags( pimItems, tags );
+      } else if ( op == Add ) {
+        if ( !addTags( pimItems, tags, tagsChanged ) ) {
+          return failureResponse( "Unable to add item tags." );
+        }
+      } else if ( op == Delete ) {
+        if ( !( tagsChanged = deleteTags( pimItems, tags ) ) ) {
+          return failureResponse( "Unable to remove item tags." );
+        }
+      }
+
+      if ( tagsChanged && !changes.contains( AKONADI_PARAM_TAGS ) ) {
+        changes << AKONADI_PARAM_TAGS;
       }
       continue;
     }

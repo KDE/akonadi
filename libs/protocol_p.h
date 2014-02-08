@@ -102,6 +102,7 @@
 #define AKONADI_PARAM_UNDIRTY                      "DIRTY"
 #define AKONADI_PARAM_EXTERNALPAYLOAD              "EXTERNALPAYLOAD"
 #define AKONADI_PARAM_FLAGS                        "FLAGS"
+#define AKONADI_PARAM_TAGS                         "TAGS"
 #define AKONADI_PARAM_FULLPAYLOAD                  "FULLPAYLOAD"
 #define AKONADI_PARAM_GID                          "GID"
 #define AKONADI_PARAM_IGNOREERRORS                 "IGNOREERRORS"

@@ -22,6 +22,7 @@
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/queryhelper.h"
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
 #include "handler.h"
@@ -312,4 +313,18 @@ Akonadi::Flag::List Akonadi::HandlerHelper::resolveFlags( const QList< QByteArra
     flagList.append( flag );
   }
   return flagList;
+}
+
+Tag::List HandlerHelper::resolveTags( const ImapSet& tags )
+{
+  SelectQueryBuilder<Tag> qb;
+  QueryHelper::setToQuery( tags, Tag::idFullColumnName(), qb );
+  if ( !qb.exec() ) {
+    throw HandlerException( "Unable to resolve tags" );
+  }
+  const Tag::List result = qb.result();
+  if ( result.isEmpty() ) {
+    throw HandlerException( "No tags found" );
+  }
+  return result;
 }
