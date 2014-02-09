@@ -269,7 +269,7 @@ bool AkAppend::parseStream()
 
     // TODO: Try to avoid this addition query
     if ( partSizes > item.size() ) {
-      item.setSize( size );
+      item.setSize( partSizes );
       item.update();
     }
 
