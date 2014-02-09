@@ -351,7 +351,9 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
         tags.add( QVector<qint64>() << tagId );
         tagQuery.next();
       }
-      attributes.append( AKONADI_PARAM_TAGS " " + tags.toImapSequenceSet() );
+      if ( !tags.isEmpty() ) {
+        attributes.append( AKONADI_PARAM_TAGS " " + tags.toImapSequenceSet() );
+      }
     }
 
     if ( mFetchScope.ancestorDepth() > 0 ) {
