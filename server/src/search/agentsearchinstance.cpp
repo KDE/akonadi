@@ -63,6 +63,9 @@ bool AgentSearchInstance::init()
 
 void AgentSearchInstance::serviceOwnerChanged( const QString &service, const QString &oldName, const QString &newName )
 {
+  Q_UNUSED( service );
+  Q_UNUSED( oldName );
+
   if ( newName.isEmpty() ) {
     SearchTaskManager::instance()->unregisterInstance( mId );
   }
