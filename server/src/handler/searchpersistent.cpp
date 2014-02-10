@@ -111,9 +111,7 @@ bool SearchPersistent::parseStream()
     return failureResponse( "Unable to commit transaction" );
   }
 
-  if ( !SearchManager::instance()->updateSearch( col, DataStore::self()->notificationCollector() ) ) {
-    return failureResponse( "Unable to initialize search" );
-  }
+  SearchManager::instance()->updateSearchAsync( col, DataStore::self()->notificationCollector() );
 
   const QByteArray b = HandlerHelper::collectionToByteArray( col );
 
