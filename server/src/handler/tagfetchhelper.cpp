@@ -113,6 +113,7 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
       const QByteArray attrValue = attributeQuery.value( 2 ).toByteArray();
 
       attributes << attrName << ImapParser::quote( attrValue );
+      attributeQuery.next();
     }
 
     QByteArray tagReply = QByteArray::number( tagId ) + ' ' + responseIdentifier + " (";
