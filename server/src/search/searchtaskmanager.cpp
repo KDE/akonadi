@@ -172,12 +172,19 @@ void SearchTaskManager::pushResults( const QByteArray &searchId, const QSet<qint
 
 bool SearchTaskManager::allResourceTasksCompleted( SearchTask *agentSearchTask ) const
 {
+  // Check for queries pending to be dispatched
+  if ( !agentSearchTask->queries.isEmpty() ) {
+    return false;
+  }
+
+  // Check for running queries
   QMap<QString, ResourceTask*>::const_iterator it = mRunningTasks.begin();
-  for ( ; it != mRunningTasks.end(); ) {
+  for ( ; it != mRunningTasks.end(); ++it ) {
     if ( it.value()->parentTask == agentSearchTask ) {
       return false;
     }
   }
+
   return true;
 }
 
