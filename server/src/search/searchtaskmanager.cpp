@@ -128,9 +128,9 @@ void SearchTaskManager::addTask( SearchTask *task )
     const QString resourceId = query.value( 1 ).toString();
     if ( !mInstances.contains( resourceId ) ) {
       akDebug() << "Resource" << resourceId << "does not implement Search interface, skipping";
-    } else if ( !mAgentManager.agentInstanceOnline( resourceId ) ) {
+    } else /*if ( !mAgentManager.agentInstanceOnline( resourceId ) ) {
       akDebug() << "Agent" << resourceId << "is offline, skipping";
-    } else {
+    } else*/ {
       const qint64 collectionId = query.value( 0 ).toLongLong();
       akDebug() << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
       task->queries << qMakePair( resourceId,  collectionId );
@@ -235,7 +235,7 @@ void SearchTaskManager::searchLoop()
     while( !mPendingResults.isEmpty() ) {
       ResourceTask *finishedTask = mPendingResults.first();
       mPendingResults.remove( 0 );
-      akDebug() << "Pending results for search" << finishedTask->parentTask->id << "available!";
+      akDebug() << "Pending results from" << finishedTask->resourceId << "for collection" << finishedTask->collectionId << "for search" << finishedTask->parentTask->id << "available!";
       SearchTask *parentTask = finishedTask->parentTask;
       QMutexLocker locker( &parentTask->sharedLock );
       // We need to append, this agent search task is shared
@@ -275,7 +275,7 @@ void SearchTaskManager::searchLoop()
       QVector<QPair<QString,qint64> >::iterator it = task->queries.begin();
       for ( ; it != task->queries.end(); ) {
         if ( !mRunningTasks.contains( it->first ) ) {
-          akDebug() << "\t Sending query to resource" << it->first;
+          akDebug() << "\t Sending query for collection" << it->second << "to resource" << it->first;
           ResourceTask *rTask = new ResourceTask;
           rTask->resourceId = it->first;
           rTask->collectionId = it->second;
