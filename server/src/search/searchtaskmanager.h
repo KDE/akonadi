@@ -28,6 +28,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include "exception.h"
+#include "agentmanagerinterface.h"
 
 namespace Akonadi {
 
@@ -94,6 +95,8 @@ class SearchTaskManager : public QObject
 
     TasksMap::Iterator cancelRunningTask( TasksMap::Iterator &iter );
     bool allResourceTasksCompleted( SearchTask* ) const;
+
+    org::freedesktop::Akonadi::AgentManager mAgentManager;
 
     QMap<QString, AgentSearchInstance* > mInstances;
     QMutex mInstancesLock;

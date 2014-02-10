@@ -20,6 +20,7 @@
 #include "searchtaskmanager.h"
 #include "agentsearchinstance.h"
 #include "akdebug.h"
+#include "akdbus.h"
 #include "akonadiconnection.h"
 #include "storage/selectquerybuilder.h"
 #include <entities.h>
@@ -35,6 +36,9 @@ SearchTaskManager *SearchTaskManager::sInstance = 0;
 SearchTaskManager::SearchTaskManager()
   : QObject()
   , mShouldStop( false )
+  , mAgentManager( AkDBus::serviceName( AkDBus::Control ), QLatin1String( "/AgentManager" ),
+                   QDBusConnection::sessionBus() )
+
 {
   sInstance = this;
 
@@ -124,6 +128,8 @@ void SearchTaskManager::addTask( SearchTask *task )
     const QString resourceId = query.value( 1 ).toString();
     if ( !mInstances.contains( resourceId ) ) {
       akDebug() << "Resource" << resourceId << "does not implement Search interface, skipping";
+    } else if ( !mAgentManager.agentInstanceOnline( resourceId ) ) {
+      akDebug() << "Agent" << resourceId << "is offline, skipping";
     } else {
       const qint64 collectionId = query.value( 0 ).toLongLong();
       akDebug() << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
