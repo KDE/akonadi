@@ -68,18 +68,28 @@ class SearchManager : public QObject
     void unregisterInstance( const QString &id );
 
     /**
-     * Update the search query of the given collection.
+     * Updates the search query asynchronously. Returns immediately
      */
-    bool updateSearch( const Collection &collection, NotificationCollector *collector );
+    void updateSearchAsync( const Collection &collection, NotificationCollector *collector );
 
     /**
      * Returns currently available search plugins.
      */
     QVector<AbstractSearchPlugin *> searchPlugins() const;
 
+  public Q_SLOTS:
+    /**
+     * Update the search query of the given collection synchronously.
+     *
+     * This method blocks until all search queries are finished.
+     */
+    bool updateSearch( const Collection &collection, NotificationCollector *collector );
+
+
   private Q_SLOTS:
     void scheduleSearchUpdate( const Akonadi::NotificationMessageV2::List &notifications );
     void searchUpdateTimeout();
+    void searchUpdateResultsAvailable( const QSet<qint64> &results );
 
   private:
     void loadSearchPlugins();

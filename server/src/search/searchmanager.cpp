@@ -42,6 +42,8 @@
 #include <QDBusConnection>
 #include <QTimer>
 
+Q_DECLARE_METATYPE( Akonadi::NotificationCollector* )
+
 using namespace Akonadi;
 
 SearchManager *SearchManager::sInstance = 0;
@@ -214,6 +216,14 @@ void SearchManager::searchUpdateTimeout()
   }
 }
 
+void SearchManager::updateSearchAsync(const Collection& collection, NotificationCollector* collector)
+{
+  QMetaObject::invokeMethod( this, "updateSearch",
+                             Qt::QueuedConnection,
+                             Q_ARG( Collection, collection ),
+                             Q_ARG( NotificationCollector*, collector ) );
+}
+
 bool SearchManager::updateSearch( const Collection &collection, NotificationCollector *collector )
 {
   if ( collection.queryString().size() >= 32768 ) {
@@ -256,33 +266,82 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   request.setMimeTypes( queryMimeTypes );
   request.setQuery( collection.queryString() );
   request.setRemoteSearch( remoteSearch );
-  // TODO: Use resultAvailable() signal to handle results incrementally - it will
-  // speed up populating persistent search collection for the first time
-  request.setEmitResults( false );
+  request.setStoreResults( true );
+  request.setProperty( "SearchCollection", QVariant::fromValue( collection ) );
+  request.setProperty( "NotificationCollector", QVariant::fromValue( collector ) );
+  connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
+           this, SLOT(searchUpdateResultsAvailable(QSet<qint64>)) );
   request.exec(); // blocks until all searches are done
 
-  QSet<qint64> newMatches = request.results();
+  const QSet<qint64> results = request.results();
 
-  QSet<qint64> existingMatches, removedMatches;
+  // Get all items in the collection
+  QueryBuilder qb( CollectionPimItemRelation::tableName() );
+  qb.addColumn( CollectionPimItemRelation::rightColumn() );
+  qb.addValueCondition( CollectionPimItemRelation::leftColumn(), Query::Equals, collection.id() );
+  if ( !qb.exec() ) {
+    return false;
+  }
+
+  DataStore::self()->beginTransaction();
+
+  // Unlink all items that were not in search results from the collection
+  QVariantList toRemove;
+  while ( qb.query().next() ) {
+    const qint64 id = qb.query().value( 0 ).toLongLong();
+    if ( !results.contains( id ) ) {
+      toRemove << id;
+      Collection::removePimItem( collection.id(), id );
+    }
+  }
+
+  if ( !DataStore::self()->commitTransaction() ) {
+    return false;
+  }
+
+  if ( !toRemove.isEmpty() ) {
+    SelectQueryBuilder<PimItem> qb;
+    qb.addValueCondition( PimItem::idFullColumnName(), Query::In, toRemove );
+    if ( !qb.exec() ) {
+      return false;
+    }
+
+    const QVector<PimItem> removedItems = qb.result();
+    collector->itemsUnlinked( removedItems, collection );
+  }
+
+  akDebug() << "Search update finished";
+  akDebug() << "All results:" << results.count();
+  akDebug() << "Removed results:" << toRemove.count();
+
+  return true;
+}
+
+void SearchManager::searchUpdateResultsAvailable( const QSet<qint64> &results )
+{
+  const Collection collection = sender()->property( "SearchCollection" ).value<Collection>();
+  NotificationCollector *collector = sender()->property( "NotificationCollector" ).value<NotificationCollector *>();
+  akDebug() << "searchUpdateResultsAvailable" << collection.id() << results.count() << "results";
+
+  QSet<qint64> newMatches = results;
+  QSet<qint64> existingMatches;
   {
     QueryBuilder qb( CollectionPimItemRelation::tableName() );
     qb.addColumn( CollectionPimItemRelation::rightColumn() );
     qb.addValueCondition( CollectionPimItemRelation::leftColumn(), Query::Equals, collection.id() );
     if ( !qb.exec() ) {
-      return false;
+      return;
     }
 
     while ( qb.query().next() ) {
       const qint64 id = qb.query().value( 0 ).toLongLong();
-      if ( !newMatches.contains( id ) ) {
-        removedMatches << id;
-      } else {
+      if ( newMatches.contains( id ) ) {
         existingMatches << id;
       }
     }
   }
 
-  qDebug() << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "is already in the collection";
+  qDebug() << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "are already in the collection";
 
   newMatches = newMatches - existingMatches;
 
@@ -297,38 +356,22 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     Collection::addPimItem( collection.id(), id );
   }
 
-  QVariantList removedMatchesVariant;
-  Q_FOREACH ( qint64 id, removedMatches ) {
-    removedMatchesVariant << id;
-    Collection::removePimItem( collection.id(), id );
-  }
-
-  qDebug() << "Added" << newMatches.count() << "results, removed" << removedMatches.count();
+  qDebug() << "Added" << newMatches.count();
 
   if ( !existingTransaction && !DataStore::self()->commitTransaction() ) {
-    return false;
+    akDebug() << "Failed to commit transaction";
+    return;
   }
 
   if ( !newMatchesVariant.isEmpty() ) {
     SelectQueryBuilder<PimItem> qb;
     qb.addValueCondition( PimItem::idFullColumnName(), Query::In, newMatchesVariant );
     if ( !qb.exec() ) {
-      return false;
+      return ;
     }
     const QVector<PimItem> newItems = qb.result();
     collector->itemsLinked( newItems, collection );
+    // Force collector to dispatch the notification now
+    collector->dispatchNotifications();
   }
-
-  if ( !removedMatchesVariant.isEmpty() ) {
-    SelectQueryBuilder<PimItem> qb;
-    qb.addValueCondition( PimItem::idFullColumnName(), Query::In, removedMatchesVariant );
-    if ( !qb.exec() ) {
-      return false;
-    }
-
-    const QVector<PimItem> removedItems = qb.result();
-    collector->itemsUnlinked( removedItems, collection );
-  }
-
-  return true;
 }

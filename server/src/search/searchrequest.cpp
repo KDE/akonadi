@@ -33,7 +33,7 @@ using namespace Akonadi;
 SearchRequest::SearchRequest( const QByteArray &connectionId )
   : mConnectionId( connectionId )
   , mRemoteSearch( true )
-  , mEmitResults( true )
+  , mStoreResults( false )
 {
 }
 
@@ -87,9 +87,9 @@ bool SearchRequest::remoteSearch() const
   return mRemoteSearch;
 }
 
-void SearchRequest::setEmitResults( bool emitResults )
+void SearchRequest::setStoreResults( bool storeResults )
 {
-  mEmitResults = emitResults;
+  mStoreResults = storeResults;
 }
 
 QSet<qint64> SearchRequest::results() const
@@ -99,9 +99,8 @@ QSet<qint64> SearchRequest::results() const
 
 void SearchRequest::emitResults( const QSet<qint64> &results )
 {
-  if ( mEmitResults ) {
-    Q_EMIT resultsAvailable( results );
-  } else {
+  Q_EMIT resultsAvailable( results );
+  if ( mStoreResults ) {
     mResults.unite( results );
   }
 }
@@ -155,9 +154,7 @@ void SearchRequest::exec()
   }
 
   if ( !task.pendingResults.isEmpty() ) {
-    if ( mEmitResults ) {
-      emitResults( task.pendingResults );
-    }
+    emitResults( task.pendingResults );
   }
   task.sharedLock.unlock();
 

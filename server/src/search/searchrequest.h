@@ -48,11 +48,11 @@ class SearchRequest: public QObject
     bool remoteSearch() const;
 
     /**
-     * Whether resultsAvailable should be emitted whenever new results are available
-     * (default behavior) or whether results should be cached and will be retrieved
-     * at once via results()
+     * Whether results should be stored after they are emitted via resultsAvailable(),
+     * so that they can be extracted via results() after the search is over. This
+     * is disabled by default.
      */
-    void setEmitResults( bool emitResults );
+    void setStoreResults( bool storeResults );
 
     QByteArray connectionId() const;
 
@@ -72,7 +72,7 @@ class SearchRequest: public QObject
     QVector<qint64> mCollections;
     QStringList mMimeTypes;
     bool mRemoteSearch;
-    bool mEmitResults;
+    bool mStoreResults;
     QSet<qint64> mResults;
 
 };
