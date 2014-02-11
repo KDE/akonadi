@@ -20,6 +20,8 @@
 #include "collectionrequester.h"
 #include "collectiondialog.h"
 #include "entitydisplayattribute.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
 
 #include <klineedit.h>
 #include <klocalizedstring.h>
@@ -47,6 +49,8 @@ class CollectionRequester::Private
     {
     }
 
+    QString fetchCollection(const Collection &collection);
+
     void init();
 
     // slots
@@ -58,6 +62,27 @@ class CollectionRequester::Private
     KPushButton *button;
     CollectionDialog *collectionDialog;
 };
+
+QString CollectionRequester::Private::fetchCollection(const Collection &collection)
+{
+    QString result;
+    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( collection, Akonadi::CollectionFetchJob::Base, q );
+    job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
+    if (job->exec()) {
+        if (job->collections().size() == 1) {
+            Akonadi::Collection col = job->collections().at(0);
+            if (col != Akonadi::Collection::root()) {
+                const QString tmp = fetchCollection(Akonadi::Collection(col.parent()));
+                if (tmp.isEmpty()) {
+                    result = col.displayName();
+                } else {
+                    result = fetchCollection(Akonadi::Collection(col.parent())) + QLatin1Char('/') + col.displayName();
+                }
+            }
+        }
+    }
+    return result;
+}
 
 void CollectionRequester::Private::init()
 {
@@ -141,6 +166,8 @@ void CollectionRequester::setCollection( const Collection& collection )
 
   d->edit->setText( name );
   emit collectionChanged( collection );
+  const QString result = d->fetchCollection(collection);
+  d->edit->setText( result );
 }
 
 void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )
