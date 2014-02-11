@@ -27,43 +27,43 @@
 #include <kcalcore/freebusyurlstore.h>
 #include <kurlrequester.h>
 
-FreeBusyEditWidget::FreeBusyEditWidget( QWidget *parent )
-  : QWidget( parent ), mReadOnly( false )
+FreeBusyEditWidget::FreeBusyEditWidget(QWidget *parent)
+    : QWidget(parent)
+    , mReadOnly(false)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
 
-  mURL = new KUrlRequester;
-  layout->addWidget( mURL );
-  setFocusProxy( mURL );
-  setFocusPolicy( Qt::StrongFocus );
+    mURL = new KUrlRequester;
+    layout->addWidget(mURL);
+    setFocusProxy(mURL);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 FreeBusyEditWidget::~FreeBusyEditWidget()
 {
 }
 
-void FreeBusyEditWidget::loadContact( const KABC::Addressee &contact )
+void FreeBusyEditWidget::loadContact(const KABC::Addressee &contact)
 {
-  if ( contact.preferredEmail().isEmpty() ) {
-    return;
-  }
+    if (contact.preferredEmail().isEmpty()) {
+        return;
+    }
 
-  mURL->setUrl( QUrl(KCalCore::FreeBusyUrlStore::self()->readUrl( contact.preferredEmail() ) ) );
+    mURL->setUrl(QUrl(KCalCore::FreeBusyUrlStore::self()->readUrl(contact.preferredEmail())));
 }
 
-void FreeBusyEditWidget::storeContact( KABC::Addressee &contact ) const
+void FreeBusyEditWidget::storeContact(KABC::Addressee &contact) const
 {
-  if ( contact.preferredEmail().isEmpty() ) {
-    return;
-  }
+    if (contact.preferredEmail().isEmpty()) {
+        return;
+    }
 
-  KCalCore::FreeBusyUrlStore::self()->writeUrl( contact.preferredEmail(), mURL->url().url() );
-  KCalCore::FreeBusyUrlStore::self()->sync();
+    KCalCore::FreeBusyUrlStore::self()->writeUrl(contact.preferredEmail(), mURL->url().url());
+    KCalCore::FreeBusyUrlStore::self()->sync();
 }
 
-void FreeBusyEditWidget::setReadOnly( bool readOnly )
+void FreeBusyEditWidget::setReadOnly(bool readOnly)
 {
-  mURL->setEnabled( !readOnly );
+    mURL->setEnabled(!readOnly);
 }
-

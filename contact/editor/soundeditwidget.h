@@ -33,22 +33,22 @@ class SoundLoader;
 
 class SoundEditWidget : public QToolButton
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SoundEditWidget( QWidget *parent = 0 );
+public:
+    explicit SoundEditWidget(QWidget *parent = 0);
     ~SoundEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  protected:
+protected:
     // context menu handling
-    virtual void contextMenuEvent( QContextMenuEvent* );
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void playSound();
     void updateView();
 
@@ -56,7 +56,7 @@ class SoundEditWidget : public QToolButton
     void saveSound();
     void deleteSound();
 
-  private:
+private:
     SoundLoader *soundLoader();
 
     QByteArray mSound;

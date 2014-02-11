@@ -32,84 +32,83 @@
 #include <klineedit.h>
 #include <klocalizedstring.h>
 
-NameEditWidget::NameEditWidget( QWidget *parent )
-  : QWidget( parent )
+NameEditWidget::NameEditWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
-  layout->setSpacing( KDialog::spacingHint() );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(KDialog::spacingHint());
 
-  mNameEdit = new KLineEdit;
-  layout->addWidget( mNameEdit );
-  setFocusProxy( mNameEdit );
-  setFocusPolicy( Qt::StrongFocus );
+    mNameEdit = new KLineEdit;
+    layout->addWidget(mNameEdit);
+    setFocusProxy(mNameEdit);
+    setFocusPolicy(Qt::StrongFocus);
 
-  QToolButton *button = new QToolButton;
-  button->setText( i18n( "..." ) );
-  layout->addWidget( button );
+    QToolButton *button = new QToolButton;
+    button->setText(i18n("..."));
+    layout->addWidget(button);
 
-  connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
-  connect( button, SIGNAL(clicked()), this, SLOT(openNameEditDialog()) );
+    connect(mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+    connect(button, SIGNAL(clicked()), this, SLOT(openNameEditDialog()));
 }
 
 NameEditWidget::~NameEditWidget()
 {
 }
 
-void NameEditWidget::setReadOnly( bool readOnly )
+void NameEditWidget::setReadOnly(bool readOnly)
 {
-  mNameEdit->setReadOnly( readOnly );
+    mNameEdit->setReadOnly(readOnly);
 }
 
-void NameEditWidget::loadContact( const KABC::Addressee &contact )
+void NameEditWidget::loadContact(const KABC::Addressee &contact)
 {
-  mContact = contact;
+    mContact = contact;
 
-  disconnect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
-  mNameEdit->setText( contact.assembledName() );
-  connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
+    disconnect(mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+    mNameEdit->setText(contact.assembledName());
+    connect(mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
 }
 
-void NameEditWidget::storeContact( KABC::Addressee &contact ) const
+void NameEditWidget::storeContact(KABC::Addressee &contact) const
 {
-  contact.setPrefix( mContact.prefix() );
-  contact.setGivenName( mContact.givenName() );
-  contact.setAdditionalName( mContact.additionalName() );
-  contact.setFamilyName( mContact.familyName() );
-  contact.setSuffix( mContact.suffix() );
+    contact.setPrefix(mContact.prefix());
+    contact.setGivenName(mContact.givenName());
+    contact.setAdditionalName(mContact.additionalName());
+    contact.setFamilyName(mContact.familyName());
+    contact.setSuffix(mContact.suffix());
 }
 
-void NameEditWidget::textChanged( const QString &text )
+void NameEditWidget::textChanged(const QString &text)
 {
-  mContact.setNameFromString( text );
+    mContact.setNameFromString(text);
 
-  emit nameChanged( mContact );
+    emit nameChanged(mContact);
 }
 
 void NameEditWidget::openNameEditDialog()
 {
-  QPointer<NameEditDialog> dlg = new NameEditDialog( this );
+    QPointer<NameEditDialog> dlg = new NameEditDialog(this);
 
-  dlg->setPrefix( mContact.prefix() );
-  dlg->setGivenName( mContact.givenName() );
-  dlg->setAdditionalName( mContact.additionalName() );
-  dlg->setFamilyName( mContact.familyName() );
-  dlg->setSuffix( mContact.suffix() );
+    dlg->setPrefix(mContact.prefix());
+    dlg->setGivenName(mContact.givenName());
+    dlg->setAdditionalName(mContact.additionalName());
+    dlg->setFamilyName(mContact.familyName());
+    dlg->setSuffix(mContact.suffix());
 
-  if ( dlg->exec() == QDialog::Accepted ) {
-    mContact.setPrefix( dlg->prefix() );
-    mContact.setGivenName( dlg->givenName() );
-    mContact.setAdditionalName( dlg->additionalName() );
-    mContact.setFamilyName( dlg->familyName() );
-    mContact.setSuffix( dlg->suffix() );
+    if (dlg->exec() == QDialog::Accepted) {
+        mContact.setPrefix(dlg->prefix());
+        mContact.setGivenName(dlg->givenName());
+        mContact.setAdditionalName(dlg->additionalName());
+        mContact.setFamilyName(dlg->familyName());
+        mContact.setSuffix(dlg->suffix());
 
-    disconnect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
-    mNameEdit->setText( mContact.assembledName() );
-    connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
+        disconnect(mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+        mNameEdit->setText(mContact.assembledName());
+        connect(mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
 
-    emit nameChanged( mContact );
-  }
+        emit nameChanged(mContact);
+    }
 
-  delete dlg;
+    delete dlg;
 }
-

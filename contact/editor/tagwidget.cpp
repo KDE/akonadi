@@ -31,56 +31,56 @@
 #include <QHBoxLayout>
 #include <QToolButton>
 
-TagWidget::TagWidget( QWidget *parent )
-  : QWidget( parent )
+TagWidget::TagWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  mTagLabel = new KSqueezedTextLabel;
-  mTagLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
-  layout->addWidget( mTagLabel );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    mTagLabel = new KSqueezedTextLabel;
+    mTagLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+    layout->addWidget(mTagLabel);
 
-  QToolButton *editButton = new QToolButton;
-  editButton->setText( i18n( "..." ) );
-  layout->addWidget( editButton, Qt::AlignRight );
+    QToolButton *editButton = new QToolButton;
+    editButton->setText(i18n("..."));
+    layout->addWidget(editButton, Qt::AlignRight);
 
-  layout->setStretch( 0, 10 );
+    layout->setStretch(0, 10);
 
-  connect( editButton, SIGNAL(clicked()), SLOT(editTags()) );
+    connect(editButton, SIGNAL(clicked()), SLOT(editTags()));
 }
 
 TagWidget::~TagWidget()
 {
 }
 
-void TagWidget::setTags( const QVector<Nepomuk2::Tag> &tags )
+void TagWidget::setTags(const QVector<Nepomuk2::Tag> &tags)
 {
-  mTags = tags;
-  updateView();
+    mTags = tags;
+    updateView();
 }
 
 QVector<Nepomuk2::Tag> TagWidget::tags() const
 {
-  return mTags;
+    return mTags;
 }
 
 void TagWidget::editTags()
 {
-  AutoQPointer<KEditTagsDialog> dlg = new KEditTagsDialog( mTags, this );
-  if ( dlg->exec() ) {
-    mTags = dlg->tags();
-    updateView();
-  }
+    AutoQPointer<KEditTagsDialog> dlg = new KEditTagsDialog(mTags, this);
+    if (dlg->exec()) {
+        mTags = dlg->tags();
+        updateView();
+    }
 }
 
 void TagWidget::updateView()
 {
-  QString text;
-  foreach ( const Nepomuk2::Tag &tag, mTags ) {
-    const QString separator = ( tag == mTags.last() ? QString() : QLatin1String( ", " ) );
-    text += tag.genericLabel() + separator;
-  }
+    QString text;
+    foreach (const Nepomuk2::Tag &tag, mTags) {
+        const QString separator = (tag == mTags.last() ? QString() : QLatin1String(", "));
+        text += tag.genericLabel() + separator;
+    }
 
-  qobject_cast<KSqueezedTextLabel*>( mTagLabel )->setText( text );
+    qobject_cast<KSqueezedTextLabel *>(mTagLabel)->setText(text);
 }
 
 #include "tagwidget.h"

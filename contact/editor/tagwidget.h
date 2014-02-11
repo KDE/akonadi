@@ -31,19 +31,19 @@ class QLabel;
 
 class TagWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TagWidget( QWidget *parent = 0 );
+public:
+    explicit TagWidget(QWidget *parent = 0);
     ~TagWidget();
 
-    void setTags( const QVector<Nepomuk2::Tag> &tags );
+    void setTags(const QVector<Nepomuk2::Tag> &tags);
     QVector<Nepomuk2::Tag> tags() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void editTags();
 
-  private:
+private:
     void updateView();
 
     QLabel *mTagLabel;

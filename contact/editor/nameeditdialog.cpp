@@ -27,109 +27,109 @@
 #include <klineedit.h>
 #include <klocalizedstring.h>
 
-NameEditDialog::NameEditDialog( QWidget *parent )
-  : KDialog( parent)
+NameEditDialog::NameEditDialog(QWidget *parent)
+    : KDialog(parent)
 {
-  setCaption( i18n( "Edit Contact Name" ) );
-  setButtons( Ok | Cancel );
-  setDefaultButton( Ok );
+    setCaption(i18n("Edit Contact Name"));
+    setButtons(Ok | Cancel);
+    setDefaultButton(Ok);
 
-  QWidget *page = new QWidget( this );
-  setMainWidget( page );
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
 
-  QFormLayout *layout = new QFormLayout( page );
+    QFormLayout *layout = new QFormLayout(page);
 
-  mPrefixCombo = new KComboBox( page );
-  mPrefixCombo->setDuplicatesEnabled( false );
-  mPrefixCombo->setEditable( true );
+    mPrefixCombo = new KComboBox(page);
+    mPrefixCombo->setDuplicatesEnabled(false);
+    mPrefixCombo->setEditable(true);
 
-  mGivenNameEdit = new KLineEdit( page );
+    mGivenNameEdit = new KLineEdit(page);
 
-  mAdditionalNameEdit = new KLineEdit( page );
+    mAdditionalNameEdit = new KLineEdit(page);
 
-  mFamilyNameEdit = new KLineEdit( page );
+    mFamilyNameEdit = new KLineEdit(page);
 
-  mSuffixCombo = new KComboBox( page );
-  mSuffixCombo->setDuplicatesEnabled( false );
-  mSuffixCombo->setEditable( true );
+    mSuffixCombo = new KComboBox(page);
+    mSuffixCombo->setDuplicatesEnabled(false);
+    mSuffixCombo->setEditable(true);
 
-  layout->addRow( i18n( "Honorific prefixes:" ), mPrefixCombo );
-  layout->addRow( i18n( "Given name:" ), mGivenNameEdit );
-  layout->addRow( i18n( "Additional names:" ), mAdditionalNameEdit );
-  layout->addRow( i18n( "Family names:" ), mFamilyNameEdit );
-  layout->addRow( i18n( "Honorific suffixes:" ), mSuffixCombo );
+    layout->addRow(i18n("Honorific prefixes:"), mPrefixCombo);
+    layout->addRow(i18n("Given name:"), mGivenNameEdit);
+    layout->addRow(i18n("Additional names:"), mAdditionalNameEdit);
+    layout->addRow(i18n("Family names:"), mFamilyNameEdit);
+    layout->addRow(i18n("Honorific suffixes:"), mSuffixCombo);
 
-  QStringList prefixList;
-  prefixList += QString();
-  prefixList += i18n( "Dr." );
-  prefixList += i18n( "Miss" );
-  prefixList += i18n( "Mr." );
-  prefixList += i18n( "Mrs." );
-  prefixList += i18n( "Ms." );
-  prefixList += i18n( "Prof." );
-  prefixList.sort();
+    QStringList prefixList;
+    prefixList += QString();
+    prefixList += i18n("Dr.");
+    prefixList += i18n("Miss");
+    prefixList += i18n("Mr.");
+    prefixList += i18n("Mrs.");
+    prefixList += i18n("Ms.");
+    prefixList += i18n("Prof.");
+    prefixList.sort();
 
-  QStringList suffixList;
-  suffixList += QString();
-  suffixList += i18n( "I" );
-  suffixList += i18n( "II" );
-  suffixList += i18n( "III" );
-  suffixList += i18n( "Jr." );
-  suffixList += i18n( "Sr." );
-  suffixList.sort();
+    QStringList suffixList;
+    suffixList += QString();
+    suffixList += i18n("I");
+    suffixList += i18n("II");
+    suffixList += i18n("III");
+    suffixList += i18n("Jr.");
+    suffixList += i18n("Sr.");
+    suffixList.sort();
 
-  mPrefixCombo->addItems( prefixList );
-  mSuffixCombo->addItems( suffixList );
+    mPrefixCombo->addItems(prefixList);
+    mSuffixCombo->addItems(suffixList);
 
-  mPrefixCombo->lineEdit()->setFocus();
+    mPrefixCombo->lineEdit()->setFocus();
 }
 
-void NameEditDialog::setFamilyName( const QString &name )
+void NameEditDialog::setFamilyName(const QString &name)
 {
-  mFamilyNameEdit->setText( name );
+    mFamilyNameEdit->setText(name);
 }
 
 QString NameEditDialog::familyName() const
 {
-  return mFamilyNameEdit->text();
+    return mFamilyNameEdit->text();
 }
 
-void NameEditDialog::setGivenName( const QString &name )
+void NameEditDialog::setGivenName(const QString &name)
 {
-  mGivenNameEdit->setText( name );
+    mGivenNameEdit->setText(name);
 }
 
 QString NameEditDialog::givenName() const
 {
-  return mGivenNameEdit->text();
+    return mGivenNameEdit->text();
 }
 
-void NameEditDialog::setPrefix( const QString &prefix )
+void NameEditDialog::setPrefix(const QString &prefix)
 {
-  mPrefixCombo->setItemText( mPrefixCombo->currentIndex(), prefix );
+    mPrefixCombo->setItemText(mPrefixCombo->currentIndex(), prefix);
 }
 
 QString NameEditDialog::prefix() const
 {
-  return mPrefixCombo->currentText();
+    return mPrefixCombo->currentText();
 }
 
-void NameEditDialog::setSuffix( const QString &suffix )
+void NameEditDialog::setSuffix(const QString &suffix)
 {
-  mSuffixCombo->setItemText( mSuffixCombo->currentIndex(), suffix );
+    mSuffixCombo->setItemText(mSuffixCombo->currentIndex(), suffix);
 }
 
 QString NameEditDialog::suffix() const
 {
-  return mSuffixCombo->currentText();
+    return mSuffixCombo->currentText();
 }
 
-void NameEditDialog::setAdditionalName( const QString &name )
+void NameEditDialog::setAdditionalName(const QString &name)
 {
-  mAdditionalNameEdit->setText( name );
+    mAdditionalNameEdit->setText(name);
 }
 
 QString NameEditDialog::additionalName() const
 {
-  return mAdditionalNameEdit->text();
+    return mAdditionalNameEdit->text();
 }

@@ -44,18 +44,18 @@ class KDatePicker;
 
    @author Bram Schoenmakers <bram_s@softhome.net>
 */
-class KDatePickerPopup: public QMenu
+class KDatePickerPopup : public QMenu
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum ItemFlag {
-      NoDate = 1,
-      DatePicker = 2,
-      Words = 4
+        NoDate = 1,
+        DatePicker = 2,
+        Words = 4
     };
 
-    Q_DECLARE_FLAGS( Items, ItemFlag )
+    Q_DECLARE_FLAGS(Items, ItemFlag)
 
     /**
        A constructor for the KDatePickerPopup.
@@ -64,9 +64,9 @@ class KDatePickerPopup: public QMenu
        @param date Initial date of datepicker-widget.
        @param parent The object's parent.
     */
-    explicit KDatePickerPopup( Items items = DatePicker,
-                               const QDate &date = QDate::currentDate(),
-                               QWidget *parent = 0 );
+    explicit KDatePickerPopup(Items items = DatePicker,
+                              const QDate &date = QDate::currentDate(),
+                              QWidget *parent = 0);
 
     /**
        @return A pointer to the private variable mDatePicker, an instance of
@@ -74,29 +74,31 @@ class KDatePickerPopup: public QMenu
     */
     KDatePicker *datePicker() const;
 
-    void setDate( const QDate &date );
+    void setDate(const QDate &date);
 
 #if 0
     /** Set items which should be shown and rebuilds the menu afterwards.
         Only if the menu is not visible.
         @param items List of all desirable items, separated with a bitwise OR.
     */
-    void setItems( int items = 1 );
+    void setItems(int items = 1);
 #endif
     /** @return Returns the bitwise result of the active items in the popup. */
-    int items() const { return mItems; }
+    int items() const {
+        return mItems;
+    }
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
       This signal emits the new date (selected with datepicker or other
       menu-items).
       @param date changed date
     */
-    void dateChanged ( const QDate &date );
+    void dateChanged(const QDate &date);
 
-  protected Q_SLOTS:
-    void slotDateChanged ( const QDate &date );
+protected Q_SLOTS:
+    void slotDateChanged(const QDate &date);
 
     void slotToday();
     void slotTomorrow();
@@ -104,7 +106,7 @@ class KDatePickerPopup: public QMenu
     void slotNextMonth();
     void slotNoDate();
 
-  private:
+private:
     void buildMenu();
 
     KDatePicker *mDatePicker;
@@ -112,6 +114,6 @@ class KDatePickerPopup: public QMenu
     QDate mDate;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( KDatePickerPopup::Items )
+Q_DECLARE_OPERATORS_FOR_FLAGS(KDatePickerPopup::Items)
 
 #endif

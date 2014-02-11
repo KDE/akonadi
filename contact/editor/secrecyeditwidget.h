@@ -33,18 +33,18 @@ class KComboBox;
 
 class SecrecyEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SecrecyEditWidget( QWidget *parent = 0 );
+public:
+    explicit SecrecyEditWidget(QWidget *parent = 0);
     ~SecrecyEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private:
+private:
     KComboBox *mSecrecyCombo;
 };
 

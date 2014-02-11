@@ -41,15 +41,15 @@ class QVBoxLayout;
  */
 class PhoneTypeCombo : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a phone type combo.
      *
      * @param parent The parent widget.
      */
-    explicit PhoneTypeCombo( QWidget *parent = 0 );
+    explicit PhoneTypeCombo(QWidget *parent = 0);
 
     /**
      * Destroys the phone type combo.
@@ -59,18 +59,18 @@ class PhoneTypeCombo : public KComboBox
     /**
      * Sets the phone number @p type that shall be selected.
      */
-    void setType( KABC::PhoneNumber::Type type );
+    void setType(KABC::PhoneNumber::Type type);
 
     /**
      * Returns the selected phone number type.
      */
     KABC::PhoneNumber::Type type() const;
 
-  private Q_SLOTS:
-    void selected( int );
+private Q_SLOTS:
+    void selected(int);
     void otherSelected();
 
-  private:
+private:
     void update();
 
     KABC::PhoneNumber::Type mType;
@@ -84,20 +84,20 @@ class PhoneTypeCombo : public KComboBox
  */
 class PhoneNumberWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new phone number widget.
      *
      * @param parent The parent widget.
      */
-    explicit PhoneNumberWidget( QWidget *parent = 0 );
+    explicit PhoneNumberWidget(QWidget *parent = 0);
 
     /**
      * Sets the phone @p number of the widget.
      */
-    void setNumber( const KABC::PhoneNumber &number );
+    void setNumber(const KABC::PhoneNumber &number);
 
     /**
      * Returns the phone number of the widget.
@@ -107,12 +107,12 @@ class PhoneNumberWidget : public QWidget
     /**
      * Sets the widget to @p readOnly mode.
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void modified();
 
-  private:
+private:
     PhoneTypeCombo *mTypeCombo;
     KLineEdit *mNumberEdit;
     KABC::PhoneNumber mNumber;
@@ -123,15 +123,15 @@ class PhoneNumberWidget : public QWidget
  */
 class PhoneNumberListWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new phone number list widget.
      *
      * @param parent The parent widget.
      */
-    explicit PhoneNumberListWidget( QWidget *parent = 0 );
+    explicit PhoneNumberListWidget(QWidget *parent = 0);
 
     /**
      * Destroys the phone number list widget.
@@ -141,7 +141,7 @@ class PhoneNumberListWidget : public QWidget
     /**
      * Sets the @p list of phone numbers the widget shall show.
      */
-    void setPhoneNumbers( const KABC::PhoneNumber::List &list );
+    void setPhoneNumbers(const KABC::PhoneNumber::List &list);
 
     /**
      * Returns the list of phone numbers.
@@ -151,14 +151,14 @@ class PhoneNumberListWidget : public QWidget
     /**
      * Sets the widget to @p readOnly mode.
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
     /**
      * Returns the number of phone numbers available.
      */
     int phoneNumberCount() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Adds a new phone number widget to this widget.
      */
@@ -169,14 +169,14 @@ class PhoneNumberListWidget : public QWidget
      */
     void remove();
 
-  private Q_SLOTS:
-    void changed( int );
+private Q_SLOTS:
+    void changed(int);
 
-  private:
+private:
     void recreateNumberWidgets();
 
     KABC::PhoneNumber::List mPhoneNumberList;
-    QList<PhoneNumberWidget*> mWidgets;
+    QList<PhoneNumberWidget *> mWidgets;
 
     QVBoxLayout *mWidgetLayout;
 
@@ -189,15 +189,15 @@ class PhoneNumberListWidget : public QWidget
  */
 class PhoneEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new phone edit widget.
      *
      * @param parent The parent widget.
      */
-    explicit PhoneEditWidget( QWidget *parent = 0 );
+    explicit PhoneEditWidget(QWidget *parent = 0);
 
     /**
      * Destroys the phone edit widget.
@@ -207,22 +207,22 @@ class PhoneEditWidget : public QWidget
     /**
      * Loads the data from @p contact to the widget.
      */
-    void loadContact( const KABC::Addressee &contact );
+    void loadContact(const KABC::Addressee &contact);
 
     /**
      * Stores the data from the widget to the @p contact.
      */
-    void storeContact( KABC::Addressee &contact ) const;
+    void storeContact(KABC::Addressee &contact) const;
 
     /**
      * Sets the widget to @p readOnly mode.
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void changed();
 
-  private:
+private:
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
 
@@ -237,21 +237,21 @@ class PhoneEditWidget : public QWidget
  */
 class PhoneTypeDialog : public KDialog
 {
-  public:
+public:
     /**
      * Creates a new phone type dialog.
      *
      * @param type The initial type of the phone number.
      * @param parent The parent widget.
      */
-    explicit PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent = 0 );
+    explicit PhoneTypeDialog(KABC::PhoneNumber::Type type, QWidget *parent = 0);
 
     /**
      * Returns the selected type.
      */
     KABC::PhoneNumber::Type type() const;
 
-  private:
+private:
     KABC::PhoneNumber::Type mType;
     KABC::PhoneNumber::TypeList mTypeList;
 

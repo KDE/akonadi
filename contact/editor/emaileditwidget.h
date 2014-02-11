@@ -41,22 +41,22 @@ class QToolButton;
  */
 class EmailEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EmailEditWidget( QWidget *parent = 0 );
+public:
+    explicit EmailEditWidget(QWidget *parent = 0);
     ~EmailEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void edit();
-    void textChanged( const QString& );
+    void textChanged(const QString &text);
 
-  private:
+private:
     KLineEdit *mEmailEdit;
     QToolButton *mEditButton;
     QStringList mEmailList;
@@ -64,23 +64,23 @@ class EmailEditWidget : public QWidget
 
 class EmailEditDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EmailEditDialog( const QStringList &list, QWidget *parent = 0 );
+public:
+    explicit EmailEditDialog(const QStringList &list, QWidget *parent = 0);
     ~EmailEditDialog();
 
     QStringList emails() const;
     bool changed() const;
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void add();
     void edit();
     void remove();
     void standard();
     void selectionChanged();
 
-  private:
+private:
     void readConfig();
     void writeConfig();
     KListWidget *mEmailListBox;

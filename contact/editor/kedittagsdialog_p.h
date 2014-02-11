@@ -41,22 +41,22 @@ class KEditTagsDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit KEditTagsDialog(const QVector<Nepomuk2::Tag>& tags,
-                    QWidget* parent = 0,
-                    Qt::WindowFlags flags = 0);
+    explicit KEditTagsDialog(const QVector<Nepomuk2::Tag> &tags,
+                             QWidget *parent = 0,
+                             Qt::WindowFlags flags = 0);
 
     virtual ~KEditTagsDialog();
 
     QVector<Nepomuk2::Tag> tags() const;
 
-    virtual bool eventFilter(QObject* watched, QEvent* event);
+    virtual bool eventFilter(QObject *watched, QEvent *event);
 
 protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
 
 private Q_SLOTS:
-    void slotTextEdited(const QString& text);
-    void slotItemEntered(QListWidgetItem* item);
+    void slotTextEdited(const QString &text);
+    void slotItemEntered(QListWidgetItem *item);
     void showDeleteButton();
     void deleteTag();
 
@@ -72,13 +72,13 @@ private:
     };
 
     QVector<Nepomuk2::Tag> m_tags;
-    QListWidget* m_tagsList;
-    QListWidgetItem* m_newTagItem;
-    QListWidgetItem* m_deleteCandidate;
-    KLineEdit* m_newTagEdit;
+    QListWidget *m_tagsList;
+    QListWidgetItem *m_newTagItem;
+    QListWidgetItem *m_deleteCandidate;
+    KLineEdit *m_newTagEdit;
 
-    QPushButton* m_deleteButton;
-    QTimer* m_deleteButtonTimer;
+    QPushButton *m_deleteButton;
+    QTimer *m_deleteButtonTimer;
 };
 
 #endif

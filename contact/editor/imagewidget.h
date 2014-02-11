@@ -36,42 +36,42 @@ class ImageLoader;
 
 class ImageWidget : public QPushButton
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Type {
-      Photo,
-      Logo
+        Photo,
+        Logo
     };
 
-    explicit ImageWidget( Type type, QWidget *parent = 0 );
+    explicit ImageWidget(Type type, QWidget *parent = 0);
     ~ImageWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  protected:
+protected:
     // image drop handling
-    virtual void dragEnterEvent( QDragEnterEvent* );
-    virtual void dropEvent( QDropEvent* );
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dropEvent(QDropEvent *event);
 
     // image drag handling
-    virtual void mousePressEvent( QMouseEvent* );
-    virtual void mouseMoveEvent( QMouseEvent* );
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
 
     // context menu handling
-    virtual void contextMenuEvent( QContextMenuEvent* );
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updateView();
 
     void changeImage();
     void saveImage();
     void deleteImage();
 
-  private:
+private:
     ImageLoader *imageLoader();
 
     Type mType;

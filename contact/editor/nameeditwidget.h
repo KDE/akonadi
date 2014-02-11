@@ -37,38 +37,38 @@ class KLineEdit;
  */
 class NameEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit NameEditWidget( QWidget *parent = 0 );
+public:
+    explicit NameEditWidget(QWidget *parent = 0);
     ~NameEditWidget();
 
     /**
      * @param contact KABC contact's addressee to load
      */
-    void loadContact( const KABC::Addressee &contact );
+    void loadContact(const KABC::Addressee &contact);
     /**
      * @param contact KABC contact's addressee to store
      */
-    void storeContact( KABC::Addressee &contact ) const;
+    void storeContact(KABC::Addressee &contact) const;
     /**
      * @param readOnly sets readonly mode
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the name has been changed.
      *
      * @param contact A dummy contact that contains only the name components.
      */
-    void nameChanged( const KABC::Addressee &contact );
+    void nameChanged(const KABC::Addressee &contact);
 
-  private Q_SLOTS:
-    void textChanged( const QString& );
+private Q_SLOTS:
+    void textChanged(const QString &text);
     void openNameEditDialog();
 
-  private:
+private:
     KLineEdit *mNameEdit;
     KABC::Addressee mContact;
 };

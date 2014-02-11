@@ -29,25 +29,25 @@ class KComboBox;
 
 class NameEditDialog : public KDialog
 {
-  public:
-    explicit NameEditDialog( QWidget *parent = 0 );
+public:
+    explicit NameEditDialog(QWidget *parent = 0);
 
-    void setFamilyName( const QString &name );
+    void setFamilyName(const QString &name);
     QString familyName() const;
 
-    void setGivenName( const QString &name );
+    void setGivenName(const QString &name);
     QString givenName() const;
 
-    void setPrefix( const QString &prefix );
+    void setPrefix(const QString &prefix);
     QString prefix() const;
 
-    void setSuffix( const QString &suffix );
+    void setSuffix(const QString &suffix);
     QString suffix() const;
 
-    void setAdditionalName( const QString &name );
+    void setAdditionalName(const QString &name);
     QString additionalName() const;
 
-  private:
+private:
     KComboBox *mSuffixCombo;
     KComboBox *mPrefixCombo;
     KLineEdit *mFamilyNameEdit;
