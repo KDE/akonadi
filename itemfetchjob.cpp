@@ -46,6 +46,7 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
         mValuePool( 0 )
     {
       mCollection = Collection::root();
+      mDeliveryOptions = ItemFetchJob::Default;
     }
 
     ~ItemFetchJobPrivate()
@@ -99,6 +100,7 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     Item::List mPendingItems; // items pending for emitting itemsReceived()
     QTimer* mEmitTimer;
     ProtocolHelperValuePool *mValuePool;
+    ItemFetchJob::DeliveryOptions mDeliveryOptions;
 };
 
 void ItemFetchJobPrivate::startFetchJob()
@@ -213,11 +215,18 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       if ( !item.isValid() )
         return;
 
-      d->mResultItems.append( item );
-      d->mPendingItems.append( item );
-      if ( !d->mEmitTimer->isActive() )
-        d->mEmitTimer->start();
-      return;
+      if ( d->mDeliveryOptions & ItemGetter ) {
+        d->mResultItems.append( item );
+      }
+
+      if ( d->mDeliveryOptions & EmitItemsInBatches ) {
+        d->mPendingItems.append( item );
+        if ( !d->mEmitTimer->isActive() )
+          d->mEmitTimer->start();
+      }
+      else if ( d->mDeliveryOptions & EmitItemsIndividually ) {
+        emit itemsReceived( Item::List() << item );
+      }
     }
   }
   kDebug() << "Unhandled response: " << tag << data;
@@ -264,5 +273,20 @@ void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 
   d->mCollection = collection;
 }
+
+void ItemFetchJob::setDeliveryOption(DeliveryOptions options)
+{
+  Q_D( ItemFetchJob );
+
+  d->mDeliveryOptions = options;
+}
+
+ItemFetchJob::DeliveryOptions ItemFetchJob::deliveryOptions() const
+{
+  Q_D( const ItemFetchJob );
+
+  return d->mDeliveryOptions;
+}
+
 
 #include "moc_itemfetchjob.cpp"
