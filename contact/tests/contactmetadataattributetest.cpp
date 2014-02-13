@@ -25,51 +25,50 @@
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN( ContactMetaDataAttributeTest, NoGUI )
+QTEST_KDEMAIN(ContactMetaDataAttributeTest, NoGUI)
 
 static QVariantMap testData()
 {
-  QVariantMap data;
-  data.insert( QLatin1String( "key1" ), QLatin1String( "value1" ) );
-  data.insert( QLatin1String( "key2" ), QLatin1String( "value2" ) );
+    QVariantMap data;
+    data.insert(QLatin1String("key1"), QLatin1String("value1"));
+    data.insert(QLatin1String("key2"), QLatin1String("value2"));
 
-  return data;
+    return data;
 }
 
 void ContactMetaDataAttributeTest::type()
 {
-  Akonadi::ContactMetaDataAttribute attribute;
+    Akonadi::ContactMetaDataAttribute attribute;
 
-  QVERIFY( attribute.type() == "contactmetadata" );
+    QVERIFY(attribute.type() == "contactmetadata");
 }
 
 void ContactMetaDataAttributeTest::clone()
 {
-  const QVariantMap content1 = testData();
+    const QVariantMap content1 = testData();
 
-  Akonadi::ContactMetaDataAttribute attribute1;
-  attribute1.setMetaData( content1 );
+    Akonadi::ContactMetaDataAttribute attribute1;
+    attribute1.setMetaData(content1);
 
-  Akonadi::ContactMetaDataAttribute *attribute2 = static_cast<Akonadi::ContactMetaDataAttribute*>( attribute1.clone() );
-  const QVariantMap content2 = attribute2->metaData();
+    Akonadi::ContactMetaDataAttribute *attribute2 = static_cast<Akonadi::ContactMetaDataAttribute *>(attribute1.clone());
+    const QVariantMap content2 = attribute2->metaData();
 
-  QVERIFY( content1 == content2 );
+    QVERIFY(content1 == content2);
 }
 
 void ContactMetaDataAttributeTest::serialization()
 {
-  const QVariantMap content1 = testData();
+    const QVariantMap content1 = testData();
 
-  Akonadi::ContactMetaDataAttribute attribute1;
-  attribute1.setMetaData( content1 );
+    Akonadi::ContactMetaDataAttribute attribute1;
+    attribute1.setMetaData(content1);
 
-  const QByteArray data = attribute1.serialized();
+    const QByteArray data = attribute1.serialized();
 
-  Akonadi::ContactMetaDataAttribute attribute2;
-  attribute2.deserialize( data );
+    Akonadi::ContactMetaDataAttribute attribute2;
+    attribute2.deserialize(data);
 
-  const QVariantMap content2 = attribute2.metaData();
+    const QVariantMap content2 = attribute2.metaData();
 
-  QVERIFY( content1 == content2 );
+    QVERIFY(content1 == content2);
 }
-
