@@ -79,7 +79,7 @@ bool TagStore::parseStream()
       } else if ( attr.startsWith( '+' ) ) {
         const QByteArray attrName = attr.mid( 1 );
         if ( attributesMap.contains( attrName ) ) {
-          throw HandlerException( "Attribute " + attrName + "already exists" );
+          throw HandlerException( "Attribute " + attrName + " already exists" );
         }
 
         TagAttribute attribute;
@@ -90,7 +90,7 @@ bool TagStore::parseStream()
         continue;
       } else {
         if ( !attributesMap.contains( attr ) ) {
-          throw HandlerException( "Attribute " + attr + "does not exist" );
+          throw HandlerException( "Attribute " + attr + " does not exist" );
         }
 
         TagAttribute attribute = attributesMap.value( attr );
