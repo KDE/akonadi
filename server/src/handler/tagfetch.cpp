@@ -52,5 +52,5 @@ bool TagFetch::parseStream()
     return false;
   }
 
-  successResponse( "UID TAGFETCH completed" );
+  return successResponse( "UID TAGFETCH completed" );
 }
