@@ -116,6 +116,7 @@ void CollectionRequester::Private::init()
   collectionDialog->setWindowIcon( KIcon( QLatin1String( "akonadi" ) ) );
   collectionDialog->setCaption( i18n( "Select a collection" ) );
   collectionDialog->setSelectionMode( QAbstractItemView::SingleSelection );
+  collectionDialog->changeCollectionDialogOptions(CollectionDialog::KeepTreeExpanded);
 }
 
 void CollectionRequester::Private::_k_slotOpenDialog()
