@@ -42,6 +42,7 @@ NotificationMessageV3::~NotificationMessageV3()
 void NotificationMessageV3::registerDBusTypes()
 {
   qDBusRegisterMetaType<Akonadi::NotificationMessageV3>();
+  qDBusRegisterMetaType<Akonadi::NotificationMessageV3::List>();
 }
 
 NotificationMessageV2::List NotificationMessageV3::toV2List( const NotificationMessageV3::List &list )

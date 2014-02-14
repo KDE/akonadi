@@ -59,6 +59,13 @@ class NotificationSource : public QObject
      *
      * @param notifications List of notifications to emit.
      */
+    void emitNotification( const NotificationMessageV3::List &notifications );
+
+    /**
+     * Emit the given notifications
+     *
+     * @param notifications List of notifications to emit.
+     */
     void emitNotification( const NotificationMessageV2::List &notifications );
 
     /**
@@ -87,7 +94,7 @@ class NotificationSource : public QObject
     void setServerSideMonitorEnabled( bool enabled );
     bool isServerSideMonitorEnabled() const;
 
-    bool acceptsNotification( const NotificationMessageV2 &notification );
+    bool acceptsNotification( const NotificationMessageV3 &notification );
 
   public Q_SLOTS:
     /**
@@ -135,7 +142,7 @@ class NotificationSource : public QObject
   private:
     bool isCollectionMonitored( Entity::Id id ) const;
     bool isMimeTypeMonitored( const QString &mimeType ) const;
-    bool isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const;
+    bool isMoveDestinationResourceMonitored( const NotificationMessageV3 &msg ) const;
 
   private:
     Akonadi::NotificationManager *mManager;

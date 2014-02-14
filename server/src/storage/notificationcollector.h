@@ -22,7 +22,7 @@
 
 #include "entities.h"
 
-#include "../../libs/notificationmessagev2_p.h"
+#include "../../libs/notificationmessagev3_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -197,7 +197,7 @@ class NotificationCollector : public QObject
     void dispatchNotifications();
 
   Q_SIGNALS:
-    void notify( const Akonadi::NotificationMessageV2::List &msgs );
+    void notify( const Akonadi::NotificationMessageV3::List &msgs );
 
   private:
     void itemNotification( NotificationMessageV2::Operation op, const PimItem::List &items,
@@ -222,7 +222,7 @@ class NotificationCollector : public QObject
                                  const QByteArray &destResource = QByteArray() );
     void tagNotification( NotificationMessageV2::Operation op,
                           const Tag &tag );
-    void dispatchNotification( const NotificationMessageV2 &msg );
+    void dispatchNotification( const NotificationMessageV3 &msg );
     void clear();
 
   private Q_SLOTS:
@@ -233,7 +233,7 @@ class NotificationCollector : public QObject
     DataStore *mDb;
     QByteArray mSessionId;
 
-    NotificationMessageV2::List mNotifications;
+    NotificationMessageV3::List mNotifications;
 };
 
 }

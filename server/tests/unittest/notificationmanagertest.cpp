@@ -42,21 +42,23 @@ class NotificationManagerTest : public QObject
   private Q_SLOTS:
     void testSourceFilter_data()
     {
+      qRegisterMetaType<NotificationMessageV3::List>();
+
       QTest::addColumn<bool>( "allMonitored" );
       QTest::addColumn<QVector<Entity::Id> >( "monitoredCollections" );
       QTest::addColumn<QVector<Entity::Id> >( "monitoredItems" );
       QTest::addColumn<QVector<QByteArray> >( "monitoredResources" );
       QTest::addColumn<QVector<QString> >( "monitoredMimeTypes" );
       QTest::addColumn<QVector<QByteArray> >( "ignoredSessions" );
-      QTest::addColumn<NotificationMessageV2>( "notification" );
+      QTest::addColumn<NotificationMessageV3>( "notification" );
       QTest::addColumn<bool>( "accepted" );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
 
       #define EmptyList(T) (QVector<T>())
       #define List(T,x) (QVector<T>() << x)
 
-      msg = NotificationMessageV2();
+      msg = NotificationMessageV3();
       msg.setType( NotificationMessageV2::Items );
       msg.setOperation( NotificationMessageV2::Add );
       msg.setParentCollection( 1 );
@@ -113,7 +115,7 @@ class NotificationManagerTest : public QObject
         << false;
 
       // Simulate adding a new resource
-      msg = NotificationMessageV2();
+      msg = NotificationMessageV3();
       msg.setType( NotificationMessageV2::Collections );
       msg.setOperation( NotificationMessageV2::Add );
       msg.addEntity( 1, QLatin1String( "imap://user@some.domain/" ) );
@@ -130,7 +132,7 @@ class NotificationManagerTest : public QObject
         << msg
         << true;
 
-      msg = NotificationMessageV2();
+      msg = NotificationMessageV3();
       msg.setType( NotificationMessageV2::Items );
       msg.setOperation( NotificationMessageV2::Move );
       msg.setResource( "akonadi_resource_1" );
@@ -169,7 +171,7 @@ class NotificationManagerTest : public QObject
         << msg
         << false;
 
-      msg = NotificationMessageV2();
+      msg = NotificationMessageV3();
       msg.setType( NotificationMessageV2::Collections );
       msg.setOperation( NotificationMessageV2::Add );
       msg.setSessionId( "kmail" );
@@ -185,7 +187,7 @@ class NotificationManagerTest : public QObject
         << msg
         << false;
 
-      msg = NotificationMessageV2();
+      msg = NotificationMessageV3();
       msg.setType( NotificationMessageV2::Items );
       msg.setOperation( NotificationMessageV2::Add );
       msg.setSessionId( "randomSession" );
@@ -211,11 +213,11 @@ class NotificationManagerTest : public QObject
       QFETCH( QVector<QByteArray>, monitoredResources );
       QFETCH( QVector<QString>, monitoredMimeTypes );
       QFETCH( QVector<QByteArray>, ignoredSessions );
-      QFETCH( NotificationMessageV2, notification );
+      QFETCH( NotificationMessageV3, notification );
       QFETCH( bool, accepted );
 
       ClientCapabilities caps;
-      caps.setNotificationMessageVersion( 2 );
+      caps.setNotificationMessageVersion( 3 );
       ClientCapabilityAggregator::addSession( caps );
 
       NotificationManager mgr;
@@ -240,8 +242,8 @@ class NotificationManagerTest : public QObject
         source.setIgnoredSession( session, true );
       }
 
-      QSignalSpy spy( &source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)) );
-      NotificationMessageV2::List list;
+      QSignalSpy spy( &source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)) );
+      NotificationMessageV3::List list;
       list << notification;
       mgr.slotNotify( list );
       mgr.emitPendingNotifications();
@@ -249,7 +251,7 @@ class NotificationManagerTest : public QObject
       QCOMPARE( spy.count(), accepted ? 1 : 0 );
 
       if ( accepted ) {
-        list = spy.at( 0 ).at( 0 ).value<NotificationMessageV2::List>();
+        list = spy.at( 0 ).at( 0 ).value<NotificationMessageV3::List>();
         QCOMPARE( list.count(), accepted ? 1 : 0 );
       }
     }

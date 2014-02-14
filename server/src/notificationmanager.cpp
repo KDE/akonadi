@@ -42,6 +42,7 @@ NotificationManager::NotificationManager()
 {
   NotificationMessage::registerDBusTypes();
   NotificationMessageV2::registerDBusTypes();
+  NotificationMessageV3::registerDBusTypes();
 
   new NotificationManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/notifications" ),
@@ -72,15 +73,15 @@ NotificationManager *NotificationManager::self()
 
 void NotificationManager::connectNotificationCollector( NotificationCollector *collector )
 {
-  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV2::List)),
-           SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
+  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)),
+           SLOT(slotNotify(Akonadi::NotificationMessageV3::List)) );
 }
 
-void NotificationManager::slotNotify( const Akonadi::NotificationMessageV2::List &msgs )
+void NotificationManager::slotNotify( const Akonadi::NotificationMessageV3::List &msgs )
 {
   //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
-  Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
-    NotificationMessageV2::appendAndCompress( mNotifications, msg );
+  Q_FOREACH ( const NotificationMessageV3 &msg, msgs )
+    NotificationMessageV3::appendAndCompress( mNotifications, msg );
   //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
 
   if ( !mTimer.isActive() ) {
@@ -95,7 +96,7 @@ void NotificationManager::emitPendingNotifications()
   }
 
   NotificationMessage::List legacyNotifications;
-  Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
+  Q_FOREACH ( const NotificationMessageV3 &notification, mNotifications ) {
     Tracer::self()->signal( "NotificationManager::notify", notification.toString() );
 
     if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
@@ -116,22 +117,36 @@ void NotificationManager::emitPendingNotifications()
     }
   }
 
+
+  NotificationMessageV2::List v2List;
+  if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2 ) {
+    v2List = NotificationMessageV3::toV2List( mNotifications );
+  }
+
   if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1 ) {
     Q_FOREACH ( NotificationSource *source, mNotificationSources ) {
       if ( !source->isServerSideMonitorEnabled() ) {
-        source->emitNotification( mNotifications );
+        if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2 ) {
+          source->emitNotification( v2List );
+        } else {
+          source->emitNotification( mNotifications );
+        }
         continue;
       }
 
-      NotificationMessageV2::List acceptedNotifications;
-      Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
+      NotificationMessageV3::List acceptedNotifications;
+      Q_FOREACH ( const NotificationMessageV3 &notification, mNotifications ) {
         if ( source->acceptsNotification( notification ) ) {
           acceptedNotifications << notification;
         }
       }
 
       if ( !acceptedNotifications.isEmpty() ) {
-        source->emitNotification( acceptedNotifications );
+        if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2 ) {
+          source->emitNotification( NotificationMessageV3::toV2List( acceptedNotifications ) );
+        } else {
+          source->emitNotification( acceptedNotifications );
+        }
       }
     }
   }

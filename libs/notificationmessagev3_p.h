@@ -28,8 +28,6 @@
 namespace Akonadi
 {
 
-class NotificationMessageV3Private;
-
 class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV3 : public Akonadi::NotificationMessageV2
 {
   public:

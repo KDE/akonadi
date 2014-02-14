@@ -84,6 +84,11 @@ void NotificationSource::emitNotification( const NotificationMessageV2::List &no
   Q_EMIT notifyV2( notifications );
 }
 
+void NotificationSource::emitNotification( const NotificationMessageV3::List &notifications )
+{
+  Q_EMIT notifyV3( notifications );
+}
+
 QString NotificationSource::identifier() const
 {
   return mIdentifier;
@@ -283,7 +288,7 @@ bool NotificationSource::isMimeTypeMonitored( const QString &mimeType ) const
   // FIXME: Handle mimetype aliases
 }
 
-bool NotificationSource::isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const
+bool NotificationSource::isMoveDestinationResourceMonitored( const NotificationMessageV3 &msg ) const
 {
   if ( msg.operation() != NotificationMessageV2::Move ) {
     return false;
@@ -311,7 +316,7 @@ QVector<NotificationMessageV2::Type> NotificationSource::monitoredTypes() const
   return setToVector<NotificationMessageV2::Type>( mMonitoredTypes );
 }
 
-bool NotificationSource::acceptsNotification( const NotificationMessageV2 &notification )
+bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notification )
 {
   // session is ignored
   if ( mIgnoredSessions.contains( notification.sessionId() ) ) {

@@ -208,7 +208,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
     vCollections = DataStore::self()->virtualCollections( items );
   }
 
-  NotificationMessageV2 msg;
+  NotificationMessageV3 msg;
   msg.setSessionId( mSessionId );
   msg.setType( NotificationMessageV2::Items );
   msg.setOperation( op );
@@ -216,9 +216,8 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   msg.setItemParts( parts );
   msg.setAddedFlags( addedFlags );
   msg.setRemovedFlags( removedFlags );
-  //FIXME implement
-//   msg.setAddedTags( addedTags );
-//   msg.setAddedTags( removedTags );
+  msg.setAddedTags( addedTags );
+  msg.setAddedTags( removedTags );
 
   if ( collectionDest.isValid() ) {
     QByteArray destResourceName;
@@ -230,7 +229,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
 
   /* Notify all virtual collections the items are linked to. */
   Q_FOREACH ( const Entity::Id &colId, vCollections.uniqueKeys() ) {
-    NotificationMessageV2 copy = msg;
+    NotificationMessageV3 copy = msg;
 
     Q_FOREACH ( const PimItem &item, vCollections.values( colId ) ) {
       copy.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
@@ -271,7 +270,7 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
                                                     const QSet<QByteArray> &changes,
                                                     const QByteArray &destResource )
 {
-  NotificationMessageV2 msg;
+  NotificationMessageV3 msg;
   msg.setType( NotificationMessageV2::Collections );
   msg.setOperation( op );
   msg.setSessionId( mSessionId );
@@ -293,7 +292,7 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
 void NotificationCollector::tagNotification( NotificationMessageV2::Operation op,
                                              const Tag &tag )
 {
-  NotificationMessageV2 msg;
+  NotificationMessageV3 msg;
   msg.setType( NotificationMessageV2::Tags );
   msg.setOperation( op );
   msg.setSessionId( mSessionId );
@@ -303,12 +302,12 @@ void NotificationCollector::tagNotification( NotificationMessageV2::Operation op
 }
 
 
-void NotificationCollector::dispatchNotification( const NotificationMessageV2 &msg )
+void NotificationCollector::dispatchNotification( const NotificationMessageV3 &msg )
 {
   if ( !mDb || mDb->inTransaction() ) {
-    NotificationMessageV2::appendAndCompress( mNotifications, msg );
+    NotificationMessageV3::appendAndCompress( mNotifications, msg );
   } else {
-    NotificationMessageV2::List l;
+    NotificationMessageV3::List l;
     l << msg;
     Q_EMIT notify( l );
   }
