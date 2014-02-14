@@ -135,13 +135,20 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     QSet<QByteArray> removedFlags() const;
     void setRemovedFlags( const QSet<QByteArray> &parts );
 
+    QSet<qint64> addedTags() const;
+    void setAddedTags( const QSet<qint64> &tags );
+
+    QSet<qint64> removedTags() const;
+    void setRemovedTags( const QSet<qint64> &tags );
+
     QString toString() const;
 
     QVector<NotificationMessage> toNotificationV1() const;
 
     static bool appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg );
     static bool appendAndCompress( QList<NotificationMessageV2> &list, const NotificationMessageV2 &msg );
-  private:
+
+  protected:
     class Private;
     QSharedDataPointer<Private> d;
 };

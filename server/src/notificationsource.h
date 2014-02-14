@@ -21,6 +21,7 @@
 
 #include "../libs/notificationmessage_p.h"
 #include "../libs/notificationmessagev2_p.h"
+#include "../libs/notificationmessagev3_p.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
@@ -117,6 +118,7 @@ class NotificationSource : public QObject
 
     Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
     Q_SCRIPTABLE void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
+    Q_SCRIPTABLE void notifyV3( const Akonadi::NotificationMessageV3::List &msgs );
 
     Q_SCRIPTABLE void monitoredCollectionsChanged();
     Q_SCRIPTABLE void monitoredItemsChanged();

@@ -19,6 +19,7 @@
 */
 
 #include "notificationmessagev2_p.h"
+#include "notificationmessagev2_p_p.h"
 #include "notificationmessage_p.h"
 #include "imapparser_p.h"
 
@@ -55,28 +56,9 @@ class NotificationMessageV2::Private : public QSharedData
       parts = other.parts;
       addedFlags = other.addedFlags;
       removedFlags = other.removedFlags;
+      addedTags = other.addedTags;
+      removedTags = other.removedTags;
     }
-
-    bool compareWithoutOpAndParts( const Private &other ) const
-    {
-      return items == other.items
-          && type == other.type
-          && sessionId == other.sessionId
-          && resource == other.resource
-          && destResource == other.destResource
-          && parentCollection == other.parentCollection
-          && parentDestCollection == other.parentDestCollection;
-    }
-
-    bool operator==( const Private &other ) const
-    {
-      return operation == other.operation && parts == other.parts &&
-             addedFlags == other.addedFlags && removedFlags == other.removedFlags &&
-             compareWithoutOpAndParts( other );
-    }
-
-    template <typename T>
-    static bool appendAndCompressImpl( T &list, const NotificationMessageV2 &msg );
 
     QByteArray sessionId;
     NotificationMessageV2::Type type;
@@ -89,6 +71,8 @@ class NotificationMessageV2::Private : public QSharedData
     QSet<QByteArray> parts;
     QSet<QByteArray> addedFlags;
     QSet<QByteArray> removedFlags;
+    QSet<qint64> addedTags;
+    QSet<qint64> removedTags;
 };
 
 NotificationMessageV2::NotificationMessageV2():
@@ -116,7 +100,13 @@ NotificationMessageV2 &NotificationMessageV2::operator=( const NotificationMessa
 
 bool NotificationMessageV2::operator==( const NotificationMessageV2 &other ) const
 {
-  return d == other.d;
+  return d->operation == other.d->operation
+          && d->parts == other.d->parts
+          && d->addedFlags == other.d->addedFlags
+          && d->removedFlags == other.d->removedFlags
+          && d->addedTags == other.d->addedTags
+          && d->removedTags == other.d->removedTags
+          && NotificationMessageHelpers::compareWithoutOpAndParts( *this, other );
 }
 
 void NotificationMessageV2::registerDBusTypes()
@@ -263,6 +253,26 @@ void NotificationMessageV2::setRemovedFlags( const QSet<QByteArray> &removedFlag
   d->removedFlags = removedFlags;
 }
 
+QSet<qint64> NotificationMessageV2::addedTags() const
+{
+  return d->addedTags;
+}
+
+void NotificationMessageV2::setAddedTags( const QSet<qint64> &addedTags )
+{
+  d->addedTags = addedTags;
+}
+
+QSet<qint64> NotificationMessageV2::removedTags() const
+{
+  return d->removedTags;
+}
+
+void NotificationMessageV2::setRemovedTags( const QSet<qint64> &removedTags )
+{
+  d->removedTags = removedTags;
+}
+
 QString NotificationMessageV2::toString() const
 {
   QString rv;
@@ -325,15 +335,24 @@ QString NotificationMessageV2::toString() const
     rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
     rv += QLatin1String( ") " );
     break;
-  case ModifyTags:
+  case ModifyTags: {
     rv += QLatin1String( "added tags (" );
-    rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
+    QList<QByteArray> tags;
+    Q_FOREACH ( qint64 tagId, d->addedTags ) {
+      tags << QByteArray::number( tagId );
+    }
+    rv += QString::fromLatin1( ImapParser::join( tags, ", " ) );
     rv += QLatin1String( ") " );
 
+    tags.clear();
+    Q_FOREACH ( qint64 tagId, d->removedTags ) {
+      tags << QByteArray::number( tagId );
+    }
     rv += QLatin1String( "removed tags (" );
-    rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
+    rv += QString::fromLatin1( ImapParser::join( tags, ", " ) );
     rv += QLatin1String( ") " );
     break;
+  }
   case Move:
     rv += QLatin1String( "moved" );
     break;
@@ -527,66 +546,13 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
   return v1;
 }
 
-template <typename T>
-bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const NotificationMessageV2 &msg )
-{
-  // fast-path for stuff that is not considered during O(n) compression below
-  if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
-
-    typename T::Iterator end = list.end();
-    for ( typename T::Iterator it = list.begin(); it != end; ) {
-      if ( msg.d.constData()->compareWithoutOpAndParts( *( ( *it ).d.constData() ) ) ) {
-
-        // both are modifications, merge them together and drop the new one
-        if ( msg.operation() == Modify && it->operation() == Modify ) {
-          ( *it ).setItemParts( ( *it ).itemParts() + msg.itemParts() );
-          return false;
-        }
-
-        else if ( ( msg.operation() == ModifyFlags && it->operation() == ModifyFlags )
-              ||  ( msg.operation() == ModifyTags && it->operation() == ModifyTags ) ) {
-
-          ( *it ).setAddedFlags( ( *it ).addedFlags() + msg.addedFlags() );
-          ( *it ).setRemovedFlags( ( *it ).removedFlags() + msg.removedFlags() );
-
-           // If merged notifications result in no-change notification, drop both.
-          if ( ( *it ).addedFlags() == ( *it ).removedFlags() ) {
-            it = list.erase( it );
-            end = list.end();
-          }
-
-          return false;
-        }
-        // new one is a modification, the existing one not, so drop the new one
-        else if ( ( ( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags ) ) && ( ( *it ).operation() != Modify ) && ( *it ).operation() != ModifyFlags ) {
-          return false;
-        }
-        // new one is a deletion, erase the existing modification ones (and keep going, in case there are more)
-        else if ( msg.operation() == Remove && ( ( *it ).operation() == Modify || ( *it ).operation() == ModifyFlags ) ) {
-          it = list.erase( it );
-          end = list.end();
-        }
-        // keep looking
-        else {
-          ++it;
-        }
-      } else {
-        ++it;
-      }
-    }
-  }
-
-  list.append( msg );
-  return true;
-}
-
 bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg )
 {
-  return Private::appendAndCompressImpl<NotificationMessageV2::List>( list, msg );
+  return NotificationMessageHelpers::appendAndCompressImpl<NotificationMessageV2::List, NotificationMessageV2>( list, msg );
 }
 
 bool NotificationMessageV2::appendAndCompress( QList<NotificationMessageV2> &list, const NotificationMessageV2 &msg )
 {
-  return Private::appendAndCompressImpl< QList<NotificationMessageV2> >( list, msg );
+  return NotificationMessageHelpers::appendAndCompressImpl<QList<NotificationMessageV2>, NotificationMessageV2>( list, msg );
 }
 

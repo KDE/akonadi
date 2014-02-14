@@ -13,6 +13,12 @@
       <!-- In0 annotation for compatibility with qdbusxml2cpp from Qt4.3.0 -->
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const Akonadi::NotificationMessageV2::List &amp;"/>
     </signal>
+    <signal name="notifyV3">
+      <arg name="message" type="a(ayiia(xsss)ayayxxasaayaayaiai)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="const Akonadi::NotificationMessageV3::List &amp;"/>
+      <!-- In0 annotation for compatibility with qdbusxml2cpp from Qt4.3.0 -->
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const Akonadi::NotificationMessageV3::List &amp;"/>
+    </signal>
     <method name="unsubscribe">
     </method>
 
