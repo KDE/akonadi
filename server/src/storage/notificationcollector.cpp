@@ -217,7 +217,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   msg.setAddedFlags( addedFlags );
   msg.setRemovedFlags( removedFlags );
   msg.setAddedTags( addedTags );
-  msg.setAddedTags( removedTags );
+  msg.setRemovedTags( removedTags );
 
   if ( collectionDest.isValid() ) {
     QByteArray destResourceName;
