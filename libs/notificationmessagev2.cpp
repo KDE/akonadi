@@ -459,7 +459,9 @@ const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::Notification
 
 QDBusArgument &operator<<( QDBusArgument &arg, Akonadi::NotificationMessageV2::Type type )
 {
+  arg.beginStructure();
   arg << static_cast<int>( type );
+  arg.endStructure();
 
   return arg;
 }
@@ -467,7 +469,9 @@ QDBusArgument &operator<<( QDBusArgument &arg, Akonadi::NotificationMessageV2::T
 const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Type &type )
 {
   int t;
+  arg.beginStructure();
   arg >> t;
+  arg.endStructure();
   type = static_cast<NotificationMessageV2::Type>( t );
 
   return arg;
