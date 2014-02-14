@@ -296,6 +296,7 @@ void ModificationEntry::onModifyFinished(int changeId, const Akonadi::Item &item
 MultiEntry::MultiEntry(int id, const QString &description,
                        History *q) : Entry(Item(), description, q)
     , mAtomicOperationId(id)
+    , mFinishedEntries(0)
     , mOperationInProgress(TypeNone)
 
 {
