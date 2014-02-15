@@ -55,14 +55,6 @@ void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV2::Lis
   }
 }
 
-bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessageV2 &msg)
-{
-  const bool someoneWasListening = MonitorPrivate::emitNotification( msg );
-  if ( !someoneWasListening && enableChangeRecording )
-    QMetaObject::invokeMethod( q_ptr, "replayNext", Qt::QueuedConnection ); // skip notifications no one was listening to
-  return someoneWasListening;
-}
-
 // The QSettings object isn't actually used anymore, except for migrating old data
 // and it gives us the base of the filename to use. This is all historical.
 QString ChangeRecorderPrivate::notificationsFileName() const
