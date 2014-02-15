@@ -58,7 +58,7 @@ QSqlQuery TagFetchHelper::buildAttributeQuery()
 QSqlQuery TagFetchHelper::buildTagQuery()
 {
   QueryBuilder qb( Tag::tableName() );
-  qb.addColumns( Tag::columnNames() );
+  qb.addColumns( Tag::fullColumnNames() );
 
   // Expose tag's remote ID only to resources
   if ( mConnection->resourceContext().isValid() ) {
