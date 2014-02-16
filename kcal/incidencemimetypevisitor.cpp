@@ -23,92 +23,93 @@
 
 #include "incidencemimetypevisitor.h"
 
-static QLatin1String sEventType( "application/x-vnd.akonadi.calendar.event" );
-static QLatin1String sTodoType( "application/x-vnd.akonadi.calendar.todo" );
-static QLatin1String sJournalType( "application/x-vnd.akonadi.calendar.journal" );
-static QLatin1String sFreeBusyType( "application/x-vnd.akonadi.calendar.freebusy" );
+static QLatin1String sEventType("application/x-vnd.akonadi.calendar.event");
+static QLatin1String sTodoType("application/x-vnd.akonadi.calendar.todo");
+static QLatin1String sJournalType("application/x-vnd.akonadi.calendar.journal");
+static QLatin1String sFreeBusyType("application/x-vnd.akonadi.calendar.freebusy");
 
 using namespace Akonadi;
 
 class IncidenceMimeTypeVisitor::Private
 {
-  public:
+public:
     QString mType;
 };
 
-IncidenceMimeTypeVisitor::IncidenceMimeTypeVisitor() : d( new Private() )
+IncidenceMimeTypeVisitor::IncidenceMimeTypeVisitor()
+    : d(new Private())
 {
 }
 
 IncidenceMimeTypeVisitor::~IncidenceMimeTypeVisitor()
 {
-  delete d;
+    delete d;
 }
 
-bool IncidenceMimeTypeVisitor::visit( KCal::Event *event )
+bool IncidenceMimeTypeVisitor::visit(KCal::Event *event)
 {
-  Q_UNUSED( event );
-  d->mType = sEventType;
-  return true;
+    Q_UNUSED(event);
+    d->mType = sEventType;
+    return true;
 }
 
-bool IncidenceMimeTypeVisitor::visit( KCal::Todo *todo )
+bool IncidenceMimeTypeVisitor::visit(KCal::Todo *todo)
 {
-  Q_UNUSED( todo );
-  d->mType = sTodoType;
-  return true;
+    Q_UNUSED(todo);
+    d->mType = sTodoType;
+    return true;
 }
 
-bool IncidenceMimeTypeVisitor::visit( KCal::Journal *journal )
+bool IncidenceMimeTypeVisitor::visit(KCal::Journal *journal)
 {
-  Q_UNUSED( journal );
-  d->mType = sJournalType;
-  return true;
+    Q_UNUSED(journal);
+    d->mType = sJournalType;
+    return true;
 }
 
-bool IncidenceMimeTypeVisitor::visit( KCal::FreeBusy *freebusy )
+bool IncidenceMimeTypeVisitor::visit(KCal::FreeBusy *freebusy)
 {
-  Q_UNUSED( freebusy );
-  d->mType = sFreeBusyType;
-  return true;
+    Q_UNUSED(freebusy);
+    d->mType = sFreeBusyType;
+    return true;
 }
 
 QString IncidenceMimeTypeVisitor::mimeType() const
 {
-  return d->mType;
+    return d->mType;
 }
 
 QStringList IncidenceMimeTypeVisitor::allMimeTypes() const
 {
-  return QStringList() << sEventType << sTodoType << sJournalType << sFreeBusyType;
+    return QStringList() << sEventType << sTodoType << sJournalType << sFreeBusyType;
 }
 
-QString IncidenceMimeTypeVisitor::mimeType( KCal::IncidenceBase *incidence )
+QString IncidenceMimeTypeVisitor::mimeType(KCal::IncidenceBase *incidence)
 {
-  Q_ASSERT( incidence != 0 );
+    Q_ASSERT(incidence != 0);
 
-  incidence->accept( *this );
-  return mimeType();
+    incidence->accept(*this);
+    return mimeType();
 }
 
 QString IncidenceMimeTypeVisitor::eventMimeType()
 {
-  return sEventType;
+    return sEventType;
 }
 
 QString IncidenceMimeTypeVisitor::todoMimeType()
 {
-  return sTodoType;
+    return sTodoType;
 }
 
 QString IncidenceMimeTypeVisitor::journalMimeType()
 {
-  return sJournalType;
+    return sJournalType;
 }
 
 QString IncidenceMimeTypeVisitor::freeBusyMimeType()
 {
-  return sFreeBusyType;
+    return sFreeBusyType;
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

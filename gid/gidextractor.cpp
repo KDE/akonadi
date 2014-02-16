@@ -24,29 +24,28 @@
 
 namespace Akonadi {
 
-QString GidExtractor::extractGid( const Item &item )
+QString GidExtractor::extractGid(const Item &item)
 {
-  const QObject *object = TypePluginLoader::objectForMimeTypeAndClass( item.mimeType(), item.availablePayloadMetaTypeIds() );
-  if ( object ) {
-    const GidExtractorInterface *extractor = qobject_cast<GidExtractorInterface*>( object );
-    if ( extractor ) {
-      return extractor->extractGid( item );
+    const QObject *object = TypePluginLoader::objectForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
+    if (object) {
+        const GidExtractorInterface *extractor = qobject_cast<GidExtractorInterface *>(object);
+        if (extractor) {
+            return extractor->extractGid(item);
+        }
     }
-  }
-  return QString();
-}
-
-QString GidExtractor::getGid( const Item &item )
-{
-  const QString gid = item.gid();
-  if ( !gid.isNull() ) {
-    return gid;
-  }
-  if ( item.loadedPayloadParts().isEmpty() ) {
     return QString();
-  }
-  return extractGid( item );
+}
+
+QString GidExtractor::getGid(const Item &item)
+{
+    const QString gid = item.gid();
+    if (!gid.isNull()) {
+        return gid;
+    }
+    if (item.loadedPayloadParts().isEmpty()) {
+        return QString();
+    }
+    return extractGid(item);
 }
 
 }
-

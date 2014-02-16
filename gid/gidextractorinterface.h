@@ -34,7 +34,7 @@ class Item;
  */
 class GidExtractorInterface
 {
-  public:
+public:
     /**
      * Destructor.
      */
@@ -44,11 +44,11 @@ class GidExtractorInterface
      *
      * If you want to clear the gid from the database return QString("").
      */
-    virtual QString extractGid( const Item &item ) const = 0;
+    virtual QString extractGid(const Item &item) const = 0;
 };
 
 }
 
-Q_DECLARE_INTERFACE( Akonadi::GidExtractorInterface, "org.freedesktop.Akonadi.GidExtractorInterface/1.0" )
+Q_DECLARE_INTERFACE(Akonadi::GidExtractorInterface, "org.freedesktop.Akonadi.GidExtractorInterface/1.0")
 
 #endif
