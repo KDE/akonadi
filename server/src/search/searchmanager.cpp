@@ -90,8 +90,8 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
 
 
   NotificationCollector *collector = DataStore::self()->notificationCollector();
-  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV2::List)),
-           this, SLOT(scheduleSearchUpdate(Akonadi::NotificationMessageV2::List)) );
+  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)),
+           this, SLOT(scheduleSearchUpdate(Akonadi::NotificationMessageV3::List)) );
 
   // The timer will tick 30 seconds after last change notification. If a new notification
   // is delivered in the meantime, the timer is reset
@@ -181,7 +181,7 @@ void SearchManager::loadSearchPlugins()
   }
 }
 
-void SearchManager::scheduleSearchUpdate( const NotificationMessageV2::List &notifications )
+void SearchManager::scheduleSearchUpdate( const NotificationMessageV3::List &notifications )
 {
   QList<Entity::Id> newChanges;
 

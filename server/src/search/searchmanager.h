@@ -25,7 +25,7 @@
 #include <QVector>
 #include <QDBusConnection>
 
-#include <libs/notificationmessagev2_p.h>
+#include <libs/notificationmessagev3_p.h>
 
 class QTimer;
 
@@ -81,7 +81,7 @@ class SearchManager : public QObject
     QVector<AbstractSearchPlugin *> searchPlugins() const;
 
   private Q_SLOTS:
-    void scheduleSearchUpdate( const Akonadi::NotificationMessageV2::List &notifications );
+    void scheduleSearchUpdate( const Akonadi::NotificationMessageV3::List &notifications );
     void searchUpdateTimeout();
 
   private:
