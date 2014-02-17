@@ -29,6 +29,7 @@
 #include "libs/imapset_p.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -128,6 +129,7 @@ class Store : public Handler
     bool mCheckRevision;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

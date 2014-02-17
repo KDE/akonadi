@@ -24,6 +24,7 @@
 #include <QtCore/QDateTime>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -52,6 +53,7 @@ private:
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -32,6 +32,7 @@
 class NotificationManagerTest;
 
 namespace Akonadi {
+namespace Server {
 
 class NotificationCollector;
 class NotificationSource;
@@ -113,6 +114,7 @@ class NotificationManager : public QObject, protected QDBusContext
     friend class ::NotificationManagerTest;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

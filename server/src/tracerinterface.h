@@ -24,6 +24,7 @@ class QByteArray;
 class QString;
 
 namespace Akonadi {
+namespace Server {
 
 /**
  * This interface can be reimplemented to deliver tracing information
@@ -97,6 +98,7 @@ class TracerInterface
     virtual void error( const QString &componentName, const QString &msg ) = 0;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

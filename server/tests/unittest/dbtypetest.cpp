@@ -25,6 +25,8 @@
 
 #define QL1S(x) QLatin1String(x)
 
+using namespace Akonadi::Server;
+
 Q_DECLARE_METATYPE( DbType::Type )
 
 class DbTypeTest : public QObject

@@ -20,7 +20,7 @@
 #include "dbustracer.h"
 #include "tracernotificationadaptor.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 DBusTracer::DBusTracer()
   : QObject( 0 )

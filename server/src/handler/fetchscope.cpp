@@ -23,7 +23,7 @@
 #include "handlerhelper.h"
 #include "handler.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 class FetchScope::Private : public QSharedData
 {

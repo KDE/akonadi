@@ -25,6 +25,7 @@
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 NotificationCollector::NotificationCollector( QObject *parent )
   : QObject( parent )
@@ -32,7 +33,7 @@ NotificationCollector::NotificationCollector( QObject *parent )
 {
 }
 
-Akonadi::NotificationCollector::NotificationCollector( DataStore *db )
+NotificationCollector::NotificationCollector( DataStore *db )
   : QObject( db )
   , mDb( db )
 {
@@ -40,30 +41,30 @@ Akonadi::NotificationCollector::NotificationCollector( DataStore *db )
   connect( db, SIGNAL(transactionRolledBack()), SLOT(transactionRolledBack()) );
 }
 
-Akonadi::NotificationCollector::~NotificationCollector()
+NotificationCollector::~NotificationCollector()
 {
 }
 
-void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
-                                                const Collection &collection,
-                                                const QByteArray &resource )
+void NotificationCollector::itemAdded( const PimItem &item,
+                                       const Collection &collection,
+                                       const QByteArray &resource )
 {
   itemNotification( NotificationMessageV2::Add, item, collection, Collection(), resource );
 }
 
-void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
-                                                  const QSet<QByteArray> &changedParts,
-                                                  const Collection &collection,
-                                                  const QByteArray &resource )
+void NotificationCollector::itemChanged( const PimItem &item,
+                                         const QSet<QByteArray> &changedParts,
+                                         const Collection &collection,
+                                         const QByteArray &resource )
 {
   itemNotification( NotificationMessageV2::Modify, item, collection, Collection(), resource, changedParts );
 }
 
-void Akonadi::NotificationCollector::itemsFlagsChanged( const PimItem::List &items,
-                                                        const QSet< QByteArray > &addedFlags,
-                                                        const QSet< QByteArray > &removedFlags,
-                                                        const Collection &collection,
-                                                        const QByteArray &resource )
+void NotificationCollector::itemsFlagsChanged( const PimItem::List &items,
+                                               const QSet< QByteArray > &addedFlags,
+                                               const QSet< QByteArray > &removedFlags,
+                                               const Collection &collection,
+                                               const QByteArray &resource )
 {
   itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags );
 }
@@ -77,17 +78,17 @@ void NotificationCollector::itemsTagsChanged(const PimItem::List& items,
   itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), addedTags, removedTags );
 }
 
-void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
-                                                 const Collection &collectionSrc,
-                                                 const Collection &collectionDest,
-                                                 const QByteArray &sourceResource )
+void NotificationCollector::itemsMoved( const PimItem::List &items,
+                                        const Collection &collectionSrc,
+                                        const Collection &collectionDest,
+                                        const QByteArray &sourceResource )
 {
   itemNotification( NotificationMessageV2::Move, items, collectionSrc, collectionDest, sourceResource );
 }
 
-void Akonadi::NotificationCollector::itemsRemoved( const PimItem::List &items,
-                                                   const Collection &collection,
-                                                   const QByteArray &resource )
+void NotificationCollector::itemsRemoved( const PimItem::List &items,
+                                          const Collection &collection,
+                                          const QByteArray &resource )
 {
   itemNotification( NotificationMessageV2::Remove, items, collection, Collection(), resource );
 }
@@ -102,15 +103,15 @@ void NotificationCollector::itemsUnlinked( const PimItem::List &items, const Col
   itemNotification( NotificationMessageV2::Unlink, items, collection, Collection(), QByteArray() );
 }
 
-void Akonadi::NotificationCollector::collectionAdded( const Collection &collection,
-                                                      const QByteArray &resource )
+void NotificationCollector::collectionAdded( const Collection &collection,
+                                             const QByteArray &resource )
 {
   collectionNotification( NotificationMessageV2::Add, collection, collection.parentId(), -1, resource );
 }
 
-void Akonadi::NotificationCollector::collectionChanged( const Collection &collection,
-                                                        const QList<QByteArray> &changes,
-                                                        const QByteArray &resource )
+void NotificationCollector::collectionChanged( const Collection &collection,
+                                               const QList<QByteArray> &changes,
+                                               const QByteArray &resource )
 {
   collectionNotification( NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
 }
@@ -123,8 +124,8 @@ void NotificationCollector::collectionMoved( const Collection &collection,
   collectionNotification( NotificationMessageV2::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource );
 }
 
-void Akonadi::NotificationCollector::collectionRemoved( const Collection &collection,
-                                                        const QByteArray &resource )
+void NotificationCollector::collectionRemoved( const Collection &collection,
+                                               const QByteArray &resource )
 {
   collectionNotification( NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource );
 }
@@ -156,17 +157,17 @@ void NotificationCollector::tagRemoved( const Tag &tag )
   tagNotification( NotificationMessageV2::Remove, tag );
 }
 
-void Akonadi::NotificationCollector::transactionCommitted()
+void NotificationCollector::transactionCommitted()
 {
   dispatchNotifications();
 }
 
-void Akonadi::NotificationCollector::transactionRolledBack()
+void NotificationCollector::transactionRolledBack()
 {
   clear();
 }
 
-void Akonadi::NotificationCollector::clear()
+void NotificationCollector::clear()
 {
   mNotifications.clear();
 }

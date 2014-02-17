@@ -23,8 +23,8 @@
 
 #include "handler.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
 class TagAppend : public Handler
 {
@@ -37,6 +37,7 @@ class TagAppend : public Handler
     bool parseStream();
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_TAGAPPEND_H

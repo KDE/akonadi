@@ -23,8 +23,12 @@
 #include <QObject>
 
 class QDBusAbstractInterface;
-class ItemRetrievalRequest;
 class QDBusError;
+
+namespace Akonadi {
+namespace Server {
+
+class ItemRetrievalRequest;
 
 /// Async D-Bus retrieval, no modification of the request (thus no need for locking)
 class ItemRetrievalJob : public QObject
@@ -57,5 +61,8 @@ class ItemRetrievalJob : public QObject
     QDBusAbstractInterface *m_interface;
     bool m_oldMethodCalled;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

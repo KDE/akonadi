@@ -27,7 +27,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Entity::Entity()
   : m_id( -1 )

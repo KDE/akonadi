@@ -27,10 +27,10 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMetaType>
 
-Akonadi::StorageDebugger *Akonadi::StorageDebugger::mSelf = 0;
-QMutex Akonadi::StorageDebugger::mMutex;
+Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = 0;
+QMutex Akonadi::Server::StorageDebugger::mMutex;
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE( QList< QList<QVariant> > )
 

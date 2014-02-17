@@ -30,7 +30,7 @@
 #include "imapstreamparser.h"
 #include <storage/collectionqueryhelper.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Link::Link( Scope::SelectionScope scope, bool create )
   : Handler()

@@ -27,6 +27,7 @@ class QDBusServiceWatcher;
 class OrgFreedesktopAkonadiAgentSearchInterface;
 
 namespace Akonadi {
+namespace Server {
 
 class AgentSearchInstance: public QObject
 {
@@ -50,6 +51,8 @@ class AgentSearchInstance: public QObject
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
     QDBusServiceWatcher *mServiceWatcher;
 };
-}
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_AGENTSEARCHINSTANCE_H

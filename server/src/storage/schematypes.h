@@ -26,6 +26,9 @@
 #include <QStringList>
 #include <QVector>
 
+namespace Akonadi {
+namespace Server {
+
 /**
   * @short A helper class that describes a column of a table for the DbInitializer
   */
@@ -110,5 +113,8 @@ class RelationDescription
     QString secondTable;
     QString secondColumn;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -25,7 +25,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 //BEGIN MySql
 

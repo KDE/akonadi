@@ -25,7 +25,7 @@
 #include "preprocessormanager.h"
 #include <akdebug.h>
 
-#include "entities.h" // Akonadi::PimItem
+#include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
 #include "tracer.h"
 
@@ -33,8 +33,8 @@
 
 #include <QtCore/QDebug>
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
 const int gHeartbeatTimeoutInMSecs = 30000; // 30 sec heartbeat
 
@@ -48,6 +48,11 @@ const int gMaximumItemProcessingTimeInSecs = 180;
 // After 4 minutes, if the preprocessor is still "stuck" then
 // we assume it's dead and just drop it's interface.
 const int gDeadlineItemProcessingTimeInSecs = 240;
+
+} // namespace Server
+} // namespace Akonadi
+
+using namespace Akonadi::Server;
 
 // The one and only PreprocessorManager object
 PreprocessorManager *PreprocessorManager::mSelf = NULL;
@@ -481,5 +486,3 @@ void PreprocessorManager::heartbeat()
     lockedUnregisterInstance( instance->id() );
   }
 }
-
-} // namespace Akonadi

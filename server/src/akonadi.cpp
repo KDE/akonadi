@@ -64,6 +64,7 @@
 #endif
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static AkonadiServer *s_instance = 0;
 
@@ -83,7 +84,7 @@ AkonadiServer::AkonadiServer( QObject *parent )
 
 void AkonadiServer::init()
 {
-    qRegisterMetaType<Akonadi::Response>();
+    qRegisterMetaType<Akonadi::Server::Response>();
 
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );

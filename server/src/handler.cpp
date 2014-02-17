@@ -61,7 +61,7 @@
 #include "storage/querybuilder.h"
 #include "imapstreamparser.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Handler::Handler()
     : QObject()
@@ -216,17 +216,17 @@ Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command
     return 0;
 }
 
-void Akonadi::Handler::setConnection( AkonadiConnection *connection )
+void Handler::setConnection( AkonadiConnection *connection )
 {
     m_connection = connection;
 }
 
-AkonadiConnection *Akonadi::Handler::connection() const
+AkonadiConnection *Handler::connection() const
 {
     return m_connection;
 }
 
-bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
+bool Handler::failureResponse( const QByteArray &failureMessage )
 {
   Response response;
   response.setTag( tag() );
@@ -236,7 +236,7 @@ bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
   return false;
 }
 
-bool Akonadi::Handler::failureResponse( const char *failureMessage )
+bool Handler::failureResponse( const char *failureMessage )
 {
   return failureResponse( QByteArray( failureMessage ) );
 }

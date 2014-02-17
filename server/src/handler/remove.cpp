@@ -28,7 +28,8 @@
 #include <storage/transaction.h>
 #include <libs/imapset_p.h>
 
-namespace Akonadi {
+using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Remove::Remove( Scope::SelectionScope scope )
   : mScope( scope )
@@ -61,6 +62,4 @@ bool Remove::parseStream()
   }
 
   return successResponse( "REMOVE complete" );
-}
-
 }

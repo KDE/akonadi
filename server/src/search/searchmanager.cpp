@@ -43,6 +43,7 @@
 #include <QTimer>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 SearchManager *SearchManager::sInstance = 0;
 

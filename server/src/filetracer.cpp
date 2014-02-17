@@ -21,7 +21,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTime>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 FileTracer::FileTracer( const QString &fileName )
 {

@@ -19,8 +19,8 @@
 
 #include "query.h"
 
-using namespace Akonadi;
-using namespace Akonadi::Query;
+using namespace Akonadi::Server;
+using namespace Akonadi::Server::Query;
 
 void Condition::addValueCondition( const QString &column, CompareOperator op, const QVariant &value )
 {

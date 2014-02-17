@@ -63,13 +63,13 @@ table and column names for creating SQL queries in a typo-safe way.
 
 The following classes are generated:
 <xsl:for-each select="database/table">
-- Akonadi::<xsl:value-of select="@name"/>
+- Akonadi::Server::<xsl:value-of select="@name"/>
 </xsl:for-each>
 
 For the helper tables used for n:m relations, the following classes are generated. They are only useful
 when creating SQL queries that handle the n:m relations manually.
 <xsl:for-each select="database/relation">
-- Akonadi::<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:for-each>
+- Akonadi::Server::<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:for-each>
 
 */
 </xsl:template>

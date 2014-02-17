@@ -22,7 +22,7 @@
 #include "searchtaskmanager.h"
 #include "akdbus.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 AgentSearchInstance::AgentSearchInstance( const QString &id )
  : mId( id )

@@ -29,6 +29,7 @@
 #include "akonadiconnection.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 TagFetchHelper::TagFetchHelper( AkonadiConnection *connection, const ImapSet &set )
   : QObject()

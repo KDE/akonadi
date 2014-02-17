@@ -28,6 +28,7 @@
 class QSqlQuery;
 
 namespace Akonadi {
+namespace Server {
 
 class StorageDebugger : public QObject
 {
@@ -63,6 +64,7 @@ class StorageDebugger : public QObject
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // STORAGEDEBUGGER_H

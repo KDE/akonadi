@@ -22,6 +22,9 @@
 
 #include "schematypes.h"
 
+namespace Akonadi {
+namespace Server {
+
 /** Methods to access the desired database schema (@see DbInspector for accessing
     the actual database schema).
  */
@@ -36,5 +39,8 @@ public:
   /** List of relations (N:M helper tables) in the schema. */
   virtual QVector<RelationDescription> relations() = 0;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

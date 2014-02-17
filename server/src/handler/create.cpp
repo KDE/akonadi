@@ -21,7 +21,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
 
-#include "akonadi.h"
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
@@ -35,6 +34,7 @@
 #include "imapstreamparser.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Create::Create( Scope::SelectionScope scope )
   : Handler()

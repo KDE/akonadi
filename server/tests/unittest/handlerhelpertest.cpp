@@ -22,10 +22,10 @@
 
 #include "handlerhelper.cpp"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE( Akonadi::Collection )
-Q_DECLARE_METATYPE( QStack<Akonadi::Collection> )
+Q_DECLARE_METATYPE( Akonadi::Server::Collection )
+Q_DECLARE_METATYPE( QStack<Akonadi::Server::Collection> )
 
 class HandlerHelperTest : public QObject
 {

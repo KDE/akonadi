@@ -50,6 +50,7 @@ class QSqlQuery;
 class QStringList;
 
 namespace Akonadi {
+namespace Server {
 
 // forward declaration for table classes
 <xsl:for-each select="database/table">
@@ -72,14 +73,15 @@ class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
 /** Returns a list of all table names. */
 QVector&lt;QString&gt; allDatabaseTables();
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 <xsl:for-each select="database/table">
 <xsl:call-template name="table-debug-header"/>
 </xsl:for-each>
 
 <xsl:for-each select="database/table">
-Q_DECLARE_TYPEINFO( Akonadi::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE );
 </xsl:for-each>
 #endif
 
@@ -100,7 +102,7 @@ Q_DECLARE_TYPEINFO( Akonadi::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE );
 #include &lt;QtCore/QHash&gt;
 #include &lt;QtCore/QMutex&gt;
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 <xsl:for-each select="database/table">
 <xsl:call-template name="table-source"/>
@@ -110,7 +112,7 @@ using namespace Akonadi;
 <xsl:call-template name="relation-source"/>
 </xsl:for-each>
 
-QVector&lt;QString&gt; Akonadi::allDatabaseTables()
+QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 {
   static QVector&lt;QString&gt; allTables = QVector&lt;QString&gt;()
   <xsl:for-each select="database/table">

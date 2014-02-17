@@ -26,6 +26,7 @@
 #include <QtCore/QVector>
 
 namespace Akonadi {
+namespace Server {
 
 class SearchHelper
 {
@@ -35,6 +36,7 @@ class SearchHelper
     static QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes );
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

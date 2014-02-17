@@ -24,6 +24,7 @@
 #include "storage/datastore.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 TagRemove::TagRemove( Scope::SelectionScope scope )
   : Handler()

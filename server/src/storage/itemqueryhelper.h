@@ -25,8 +25,11 @@
 
 namespace Akonadi {
 
-class AkonadiConnection;
 class ImapSet;
+
+namespace Server {
+
+class AkonadiConnection;
 class QueryBuilder;
 class Scope;
 
@@ -61,6 +64,7 @@ namespace ItemQueryHelper
   void scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb );
 }
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

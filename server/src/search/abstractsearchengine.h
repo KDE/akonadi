@@ -24,6 +24,7 @@
 #include <qglobal.h>
 
 namespace Akonadi {
+namespace Server {
 
 class Collection;
 
@@ -51,6 +52,7 @@ class AbstractSearchEngine
     virtual void removeSearch( qint64 id ) = 0;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

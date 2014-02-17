@@ -24,6 +24,9 @@
 
 class QProcess;
 
+namespace Akonadi {
+namespace Server {
+
 class DbConfigMysql : public DbConfig
 {
   public:
@@ -85,5 +88,8 @@ class DbConfigMysql : public DbConfig
     bool mInternalServer;
     QProcess *mDatabaseProcess;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

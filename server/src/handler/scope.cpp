@@ -25,6 +25,7 @@
 #include <cassert>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Scope::Scope( SelectionScope scope )
   : mScope( scope )

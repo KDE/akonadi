@@ -34,6 +34,7 @@ class QTimer;
 #include "notificationcollector.h"
 
 namespace Akonadi {
+namespace Server {
 
 class NotificationCollector;
 
@@ -143,7 +144,7 @@ class DataStore : public QObject
     bool cleanupCollection_slow( Collection &collection );
 
     /// moves the collection @p collection to @p newParent.
-    bool moveCollection( Akonadi::Collection &collection, const Akonadi::Collection &newParent );
+    bool moveCollection( Collection &collection, const Collection &newParent );
 
     bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
 
@@ -305,5 +306,7 @@ private:
     static bool s_hasForeignKeyConstraints;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
+
 #endif

@@ -30,6 +30,7 @@
 #include "entities.h"
 
 namespace Akonadi {
+namespace Server {
 
 class NotificationManager;
 
@@ -47,7 +48,7 @@ class NotificationSource : public QObject
      * @param clientServiceName The D-Bus service name of the client, used to clean up if the client does not unsubscribe correctly.
      * @param parent The parent object.
      */
-    NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager *parent );
+    NotificationSource( const QString &identifier, const QString &clientServiceName, NotificationManager *parent );
 
     /**
      * Destroy the NotificationSource.
@@ -145,7 +146,7 @@ class NotificationSource : public QObject
     bool isMoveDestinationResourceMonitored( const NotificationMessageV3 &msg ) const;
 
   private:
-    Akonadi::NotificationManager *mManager;
+    NotificationManager *mManager;
     QString mIdentifier;
     QString mDBusIdentifier;
     QDBusServiceWatcher *mClientWatcher;
@@ -163,6 +164,7 @@ class NotificationSource : public QObject
 
 }; // class NotificationSource
 
+} // namespace Server
 } // namespace Akonadi
 
 #endif // #define AKONADI_NOTIFICATIONSOURCE_H

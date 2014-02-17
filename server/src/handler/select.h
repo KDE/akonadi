@@ -23,6 +23,7 @@
 #include "scope.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -41,6 +42,7 @@ class Select : public Handler
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

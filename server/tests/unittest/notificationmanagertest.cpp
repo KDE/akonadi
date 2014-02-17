@@ -30,6 +30,7 @@
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE( QVector<QString> )
 

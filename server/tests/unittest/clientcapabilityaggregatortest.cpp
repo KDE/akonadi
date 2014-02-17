@@ -23,6 +23,8 @@
 #include "aktest.h"
 #include "clientcapabilityaggregator.h"
 
+using namespace Akonadi::Server;
+
 class ClientCapabilityAggregatorTest : public QObject
 {
   Q_OBJECT

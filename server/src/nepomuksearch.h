@@ -27,6 +27,7 @@
 #include "nepomuk/queryserviceclient.h"
 
 namespace Akonadi {
+namespace Server {
 
 class NepomukSearch : public QObject
 {
@@ -49,6 +50,7 @@ class NepomukSearch : public QObject
     Nepomuk::Query::QueryServiceClient *mSearchService;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

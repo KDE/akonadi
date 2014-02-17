@@ -33,6 +33,7 @@
 #include <QtSql/QSqlQuery>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 #define MYSQL_MIN_MAJOR 5
 #define MYSQL_MIN_MINOR 1

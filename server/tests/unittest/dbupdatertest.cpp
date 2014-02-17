@@ -26,7 +26,7 @@
 
 #include "storage/dbupdater.h"
 
-QTEST_MAIN( DbUpdaterTest )
+using namespace Akonadi::Server;
 
 void DbUpdaterTest::initTestCase()
 {
@@ -128,3 +128,5 @@ void DbUpdaterTest::cleanupTestCase()
 {
   Q_CLEANUP_RESOURCE( akonadidb );
 }
+
+QTEST_MAIN( DbUpdaterTest )

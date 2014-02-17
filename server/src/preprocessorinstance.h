@@ -32,8 +32,8 @@
 
 class OrgFreedesktopAkonadiPreprocessorInterface;
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
 class AgentInstance;
 
@@ -193,6 +193,7 @@ private Q_SLOTS:
 
 }; // class PreprocessorInstance
 
+} // namespace Server
 } // namespace Akonadi
 
 #endif //!_PREPROCESSORINSTANCE_H_

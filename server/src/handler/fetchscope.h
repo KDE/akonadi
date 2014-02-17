@@ -26,6 +26,7 @@
 #include <QStringList>
 
 namespace Akonadi {
+namespace Server {
 
 class ImapStreamParser;
 
@@ -67,6 +68,7 @@ class FetchScope
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif //AKONADI_FETCHSCOPE_H

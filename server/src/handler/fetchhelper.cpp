@@ -47,6 +47,7 @@
 #include <QtSql/QSqlQuery>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope, const FetchScope &fetchScope )
   : mStreamParser( 0 )

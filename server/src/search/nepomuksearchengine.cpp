@@ -38,6 +38,7 @@
 #include <QSettings>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static qint64 resultToId( const Nepomuk::Query::Result &result )
 {

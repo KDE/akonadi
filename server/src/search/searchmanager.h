@@ -31,9 +31,12 @@ class QTimer;
 
 namespace Akonadi {
 
+class AbstractSearchPlugin;
+
+namespace Server {
+
 class NotificationCollector;
 class AbstractSearchEngine;
-class AbstractSearchPlugin;
 class Collection;
 
 /**
@@ -96,6 +99,7 @@ class SearchManager : public QObject
     QTimer *mSearchUpdateTimer;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -37,6 +37,7 @@
 #include <QDebug>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 ItemRetriever::ItemRetriever( AkonadiConnection *connection )
   : mScope( Scope::Invalid )
@@ -80,7 +81,7 @@ void ItemRetriever::setItemSet( const ImapSet &set, bool isUid )
   }
 }
 
-void ItemRetriever::setItem( const Akonadi::Entity::Id &id )
+void ItemRetriever::setItem( const Entity::Id &id )
 {
   ImapSet set;
   set.add( ImapInterval( id, id ) );

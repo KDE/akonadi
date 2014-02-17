@@ -38,6 +38,7 @@
 #include <QSqlError>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 QString PartHelper::fileNameForPart( Part *part )
 {
@@ -161,7 +162,7 @@ bool PartHelper::insert( Part *part, qint64 *insertId )
   return result;
 }
 
-bool PartHelper::remove( Akonadi::Part *part )
+bool PartHelper::remove( Part *part )
 {
   if ( !part ) {
     return false;
@@ -256,7 +257,7 @@ QByteArray PartHelper::translateData( const Part &part )
   return translateData( part.data(), part.external() );
 }
 
-bool Akonadi::PartHelper::truncate( Part &part )
+bool PartHelper::truncate( Part &part )
 {
   if ( part.external() ) {
     const QString fileName = resolveAbsolutePath( part.data() );

@@ -19,6 +19,8 @@
 
 #include "dbtype.h"
 
+using namespace Akonadi::Server;
+
 DbType::Type DbType::type( const QSqlDatabase &db )
 {
   return typeForDriverName( db.driverName() );

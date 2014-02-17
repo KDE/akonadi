@@ -27,6 +27,7 @@
 #include <libs/protocol_p.h>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Fetch::Fetch( Scope::SelectionScope scope )
   : mScope( scope )
@@ -39,8 +40,8 @@ bool Fetch::parseStream()
   mScope.parseScope( m_streamParser );
 
   FetchHelper fetchHelper( connection(), mScope, FetchScope( m_streamParser ) );
-  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Response)) );
+  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
 
   if ( !fetchHelper.fetchItems( AKONADI_CMD_ITEMFETCH ) ) {
     return false;

@@ -26,7 +26,7 @@
 #include <storage/datastore.h>
 #include <storage/transaction.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Subscribe::Subscribe( bool subscribe )
   : mSubscribe( subscribe )

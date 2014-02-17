@@ -22,7 +22,7 @@
 #include "storage/querybuilder.h"
 #include "libs/imapset_p.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 void QueryHelper::setToQuery( const ImapSet &set, const QString &column, QueryBuilder &qb )
 {

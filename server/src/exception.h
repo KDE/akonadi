@@ -25,6 +25,7 @@
 #include <exception>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Base class for exception used internally by the Akonadi server.
@@ -59,19 +60,19 @@ class Exception : public std::exception
 };
 
 #define AKONADI_EXCEPTION_MAKE_INSTANCE( classname ) \
-class classname : public Akonadi::Exception \
+class classname : public Akonadi::Server::Exception \
 { \
   public: \
     classname ( const char *what ) throw() \
-      : Akonadi::Exception( what ) \
+      : Akonadi::Server::Exception( what ) \
     { \
     } \
     classname ( const QByteArray &what ) throw() \
-      : Akonadi::Exception( what ) \
+      : Akonadi::Server::Exception( what ) \
     { \
     } \
     classname ( const QString &what ) throw() \
-      : Akonadi::Exception( what ) \
+      : Akonadi::Server::Exception( what ) \
     { \
     } \
     const char *type() const throw() \
@@ -80,6 +81,7 @@ class classname : public Akonadi::Exception \
     } \
 }
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

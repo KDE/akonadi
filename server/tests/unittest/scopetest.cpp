@@ -24,7 +24,7 @@
 #include "handler/scope.cpp"
 #include "imapstreamparser.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE( Scope::SelectionScope )
 
@@ -134,7 +134,7 @@ class ScopeTest : public QObject
       bool didThrow = false;
       try {
         scope.parseScope( &parser );
-      } catch ( const Akonadi::Exception &e ) {
+      } catch ( const Akonadi::Server::Exception &e ) {
         didThrow = true;
         if ( success ) {
           qDebug() << e.type() << e.what();

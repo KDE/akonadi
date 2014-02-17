@@ -30,6 +30,7 @@
 #include <src/nepomuk/queryserviceclient.h>
 
 namespace Akonadi {
+namespace Server {
 
 class NotificationCollector;
 
@@ -63,6 +64,7 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
     bool m_liveSearchEnabled;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

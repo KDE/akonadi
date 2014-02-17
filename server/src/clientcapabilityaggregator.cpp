@@ -20,6 +20,9 @@
 #include "clientcapabilityaggregator.h"
 
 #include <QVector>
+#include <QMutex>
+
+using namespace Akonadi::Server;
 
 struct ClientCapabilityAggregatorData
 {

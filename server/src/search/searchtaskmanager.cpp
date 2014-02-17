@@ -28,7 +28,7 @@
 #include <QTimer>
 #include <QTime>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 SearchTaskManager *SearchTaskManager::sInstance = 0;
 

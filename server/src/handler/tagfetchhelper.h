@@ -25,12 +25,14 @@
 
 #include "libs/imapset_p.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
+
+class ImapSet;
+
+namespace Server {
 
 class ImapStreamParser;
 
-class ImapSet;
 class AkonadiConnection;
 class Response;
 
@@ -44,7 +46,7 @@ class TagFetchHelper : public QObject
     bool fetchTags( const QByteArray &responseIdentifier );
 
   Q_SIGNALS:
-    void responseAvailable( const Akonadi::Response &response );
+    void responseAvailable( const Akonadi::Server::Response &response );
 
   private:
     QSqlQuery buildTagQuery();
@@ -56,6 +58,8 @@ class TagFetchHelper : public QObject
     AkonadiConnection *mConnection;
     ImapSet mSet;
 };
-}
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_TAGFETCHHELPER_H

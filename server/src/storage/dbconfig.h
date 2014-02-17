@@ -23,6 +23,9 @@
 #include <QtCore/QSettings>
 #include <QtSql/QSqlDatabase>
 
+namespace Akonadi {
+namespace Server {
+
 /**
  * A base class that provides an unique access layer to configuration
  * and initialization of different database backends.
@@ -111,5 +114,8 @@ class DbConfig
   private:
     qint64 mSizeThreshold;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

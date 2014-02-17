@@ -35,6 +35,7 @@ class QueryBuilderTest;
 #endif
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Helper class to construct arbitrary SQL queries.
@@ -268,6 +269,7 @@ class QueryBuilder
 #endif
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

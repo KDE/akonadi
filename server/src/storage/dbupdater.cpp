@@ -20,7 +20,7 @@
 #include "dbupdater.h"
 #include "dbtype.h"
 #include "entities.h"
-#include <akonadischema.h>
+#include "akonadischema.h"
 #include "akdebug.h"
 #include "akdbus.h"
 #include "querybuilder.h"
@@ -44,6 +44,8 @@
 #include <QTime>
 #include <QtSql/qsqlresult.h>
 
+using namespace Akonadi::Server;
+
 DbUpdater::DbUpdater( const QSqlDatabase &database, const QString &filename )
   : m_database( database )
   , m_filename( filename )
@@ -55,7 +57,7 @@ bool DbUpdater::run()
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 
   // TODO error handling
-  Akonadi::SchemaVersion currentVersion = Akonadi::SchemaVersion::retrieveAll().first();
+  SchemaVersion currentVersion = SchemaVersion::retrieveAll().first();
 
   UpdateSet::Map updates;
 
@@ -232,7 +234,7 @@ bool DbUpdater::complexUpdate_25()
 {
   akDebug() << "Starting database update to version 25";
 
-  DbType::Type dbType = DbType::type( Akonadi::DataStore::self()->database() );
+  DbType::Type dbType = DbType::type( DataStore::self()->database() );
 
   QTime ttotal;
   ttotal.start();
@@ -240,18 +242,18 @@ bool DbUpdater::complexUpdate_25()
   // Recover from possibly failed or interrupted update
   {
     // We don't care if this fails, it just means that there was no failed update
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
     query.exec( QLatin1String( "ALTER TABLE PartTable_old RENAME TO PartTable" ) );
   }
 
   {
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
     query.exec( QLatin1String( "DROP TABLE IF EXISTS PartTable_new" ) );
   }
 
   {
     // Make sure the table is empty, otherwise we get duplicate key error
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
     if ( dbType == DbType::Sqlite ) {
         query.exec( QLatin1String( "DELETE FROM PartTypeTable" ) );
     } else { // MySQL, PostgreSQL
@@ -306,10 +308,10 @@ bool DbUpdater::complexUpdate_25()
     externalColumn.defaultValue = QLatin1String( "false" );
     description.columns << externalColumn;
 
-    DbInitializer::Ptr initializer = DbInitializer::createInstance( Akonadi::DataStore::self()->database() );
+    DbInitializer::Ptr initializer = DbInitializer::createInstance( DataStore::self()->database() );
     const QString queryString = initializer->buildCreateTableStatement( description );
 
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
     if ( !query.exec( queryString ) ) {
       akError() << query.lastError().text();
       return false;
@@ -319,7 +321,7 @@ bool DbUpdater::complexUpdate_25()
   akDebug() << "Migrating part types";
   {
     // Get list of all part names
-    Akonadi::QueryBuilder qb( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Select );
+    QueryBuilder qb( QLatin1String( "PartTable" ), QueryBuilder::Select );
     qb.setDistinct( true );
     qb.addColumn( QLatin1String( "PartTable.name" ) );
 
@@ -337,7 +339,7 @@ bool DbUpdater::complexUpdate_25()
       const QString name = partName.mid( 4 );
 
       {
-        Akonadi::QueryBuilder qb( QLatin1String( "PartTypeTable" ), Akonadi::QueryBuilder::Insert );
+        QueryBuilder qb( QLatin1String( "PartTypeTable" ), QueryBuilder::Insert );
         qb.setColumnValue( QLatin1String( "ns" ), ns );
         qb.setColumnValue( QLatin1String( "name" ), name );
         if ( !qb.exec() ) {
@@ -351,7 +353,7 @@ bool DbUpdater::complexUpdate_25()
 
   akDebug() << "Migrating data from PartTable to PartTable_new";
   {
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
     QString queryString;
     if ( dbType == DbType::PostgreSQL ) {
       queryString = QLatin1String( "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
@@ -384,28 +386,28 @@ bool DbUpdater::complexUpdate_25()
   {
     // Does an atomic swap
 
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
 
     if ( dbType == DbType::PostgreSQL  || dbType == DbType::Sqlite ) {
       if ( dbType == DbType::PostgreSQL ) {
-        Akonadi::DataStore::self()->database().transaction();
+        DataStore::self()->database().transaction();
       }
 
       if ( !query.exec( QLatin1String( "ALTER TABLE PartTable RENAME TO PartTable_old" ) ) ) {
         akError() << query.lastError().text();
-        Akonadi::DataStore::self()->database().rollback();
+        DataStore::self()->database().rollback();
         return false;
       }
 
       // If this fails in SQLite (i.e. without transaction), we can still recover on next start)
       if ( !query.exec( QLatin1String( "ALTER TABLE PartTable_new RENAME TO PartTable" ) ) ) {
         akError() << query.lastError().text();
-        Akonadi::DataStore::self()->database().rollback();
+        DataStore::self()->database().rollback();
         return false;
       }
 
       if ( dbType == DbType::PostgreSQL ) {
-        Akonadi::DataStore::self()->database().commit();
+        DataStore::self()->database().commit();
       }
     } else { // MySQL cannot do rename in transaction, but supports atomic renames
       if ( !query.exec( QLatin1String( "RENAME TABLE PartTable     TO PartTable_old,"
@@ -418,7 +420,7 @@ bool DbUpdater::complexUpdate_25()
 
   akDebug() << "Removing PartTable_old";
   {
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    QSqlQuery query( DataStore::self()->database() );
     if ( !query.exec( QLatin1String( "DROP TABLE PartTable_old;" ) ) ) {
       // It does not matter when this fails, we are successfully migrated
       akDebug() << query.lastError().text();

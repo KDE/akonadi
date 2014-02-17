@@ -32,8 +32,11 @@ class FetchHelperTest;
 
 namespace Akonadi {
 
-class AkonadiConnection;
 class ImapSet;
+
+namespace Server {
+
+class AkonadiConnection;
 class Response;
 
 class FetchHelper : public QObject
@@ -46,7 +49,7 @@ class FetchHelper : public QObject
     bool fetchItems( const QByteArray &responseIdentifier );
 
   Q_SIGNALS:
-    void responseAvailable( const Akonadi::Response &response );
+    void responseAvailable( const Akonadi::Server::Response &response );
 
   private:
     enum ItemQueryColumns {
@@ -84,6 +87,7 @@ class FetchHelper : public QObject
     friend class ::FetchHelperTest;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

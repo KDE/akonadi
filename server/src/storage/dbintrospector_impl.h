@@ -23,6 +23,9 @@
 
 #include "dbintrospector.h"
 
+namespace Akonadi {
+namespace Server {
+
 class DbIntrospectorMySql : public DbIntrospector
 {
   public:
@@ -45,5 +48,8 @@ class DbIntrospectorPostgreSql : public DbIntrospector
     virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
     QString hasIndexQuery( const QString &tableName, const QString &indexName );
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // DBINTROSPECTOR_IMPL_H

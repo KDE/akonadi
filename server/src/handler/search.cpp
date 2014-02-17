@@ -35,7 +35,7 @@
 
 #include <QtCore/QStringList>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Search::Search()
   : Handler()
@@ -180,8 +180,8 @@ void Search::slotResultsAvailable( const QSet<qint64> &results )
   scope.setUidSet( itemSet );
 
   FetchHelper fetchHelper( connection(), scope, mFetchScope );
-  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
-          this, SIGNAL(responseAvailable(Akonadi::Response)) );
+  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+          this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
 
   fetchHelper.fetchItems( AKONADI_CMD_SEARCH );
 }

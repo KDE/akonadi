@@ -29,6 +29,7 @@
 #define QL1S(x) QLatin1String(x)
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 class DbConfigTest : public QObject
 {

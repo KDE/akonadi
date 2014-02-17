@@ -40,6 +40,7 @@
 #include <QTemporaryFile>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Append::Append()
     : Handler()

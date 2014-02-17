@@ -25,7 +25,7 @@
 #include "storage/datastore.h"
 #include "libs/protocol_p.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 TagAppend::TagAppend()
   : Handler()
@@ -93,8 +93,8 @@ bool TagAppend::parseStream()
   ImapSet set;
   set.add( QVector<qint64>() << tagId );
   TagFetchHelper helper( connection(), set );
-  connect( &helper, SIGNAL(responseAvailable(Akonadi::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Response)) );
+  connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
 
   if ( !helper.fetchTags( AKONADI_CMD_TAGAPPEND ) ) {
     return false;

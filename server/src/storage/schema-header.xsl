@@ -27,12 +27,18 @@
 
 #include "src/storage/schema.h"
 
+namespace Akonadi {
+namespace Server {
+
 class <xsl:value-of select="$className"/> : public Schema
 {
   public:
     QVector&lt;TableDescription&gt; tables() /*override*/;
     QVector&lt;RelationDescription&gt; relations() /*override*/;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif
 </xsl:template>

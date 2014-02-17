@@ -34,6 +34,7 @@
 #include <QSettings>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 NotificationManager *NotificationManager::mSelf = 0;
 

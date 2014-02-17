@@ -22,6 +22,7 @@
 #include <handler.h>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -40,6 +41,7 @@ class Logout : public Handler
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

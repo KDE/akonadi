@@ -34,7 +34,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 ItemRetrievalManager *ItemRetrievalManager::sInstance = 0;
 

@@ -18,11 +18,13 @@
 */
 
 #include "itemretrievaljob.h"
-#include <akdebug.h>
+#include "akdebug.h"
 #include "itemretrievalrequest.h"
 
 #include <qdbusabstractinterface.h>
 #include <qdebug.h>
+
+using namespace Akonadi::Server;
 
 ItemRetrievalJob::~ItemRetrievalJob()
 {

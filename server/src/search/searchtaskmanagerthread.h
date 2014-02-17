@@ -23,6 +23,7 @@
 #include <QThread>
 
 namespace Akonadi {
+namespace Server {
 
 class SearchTaskManagerThread : public QThread
 {
@@ -36,6 +37,7 @@ class SearchTaskManagerThread : public QThread
     /* reimpl */ void run();
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_SEARCHTASKMANAGERTHREAD_H

@@ -29,6 +29,7 @@
 #include <QtCore/QStack>
 
 namespace Akonadi {
+namespace Server {
 
 class ImapStreamParser;
 
@@ -76,7 +77,7 @@ class HandlerHelper
       has actually changed
       @todo Error handling.
     */
-    static int parseCachePolicy( const QByteArray &data, Akonadi::Collection &col, int start = 0, bool *changed = 0 );
+    static int parseCachePolicy( const QByteArray &data, Collection &col, int start = 0, bool *changed = 0 );
 
     /**
       Returns the protocol representation of the cache policy of the given
@@ -106,15 +107,16 @@ class HandlerHelper
       Converts a bytearray list of flag names into flag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Akonadi::Flag::List resolveFlags( const QList<QByteArray> &flagNames );
+    static Flag::List resolveFlags( const QList<QByteArray> &flagNames );
 
     /**
       Converts a imap set of tags into tag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Akonadi::Tag::List resolveTags( const ImapSet &tags );
+    static Tag::List resolveTags( const ImapSet &tags );
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

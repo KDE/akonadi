@@ -25,6 +25,7 @@
 class QFile;
 
 namespace Akonadi {
+namespace Server {
 
 /**
  * A tracer which forwards all tracing information to a
@@ -50,6 +51,7 @@ class FileTracer : public TracerInterface
     QFile *m_file;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

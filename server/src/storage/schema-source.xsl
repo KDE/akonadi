@@ -24,6 +24,8 @@
 <xsl:template name="schema-source">
 #include "<xsl:value-of select="$fileName"/>.h"
 
+using namespace Akonadi::Server;
+
 QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
 {
   QVector&lt;TableDescription&gt; tabs;

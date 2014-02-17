@@ -23,7 +23,7 @@
 #include <entities.h>
 #include <imapstreamparser.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 ResourceSelect::ResourceSelect()
   : Handler()

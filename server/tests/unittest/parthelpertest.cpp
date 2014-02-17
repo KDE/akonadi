@@ -29,7 +29,7 @@
 
 #define QL1S(x) QString::fromLatin1(x)
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 class PartHelperTest : public QObject
 {

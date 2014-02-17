@@ -40,7 +40,7 @@
 
 #define AKONADI_PROTOCOL_VERSION "36"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent )
     : QThread( parent )
@@ -60,7 +60,7 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     m_verifyCacheOnRetrieval = settings.value( QLatin1String( "Cache/VerifyOnRetrieval" ), m_verifyCacheOnRetrieval ).toBool();
 }
 
-DataStore *Akonadi::AkonadiConnection::storageBackend()
+DataStore *AkonadiConnection::storageBackend()
 {
     if ( !m_backend ) {
       m_backend = DataStore::self();
@@ -111,7 +111,9 @@ void AkonadiConnection::run()
     // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
     // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
     // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
-    QMetaObject::invokeMethod( this, "slotResponseAvailable", Qt::DirectConnection, Q_ARG( Akonadi::Response, greeting ) );
+    QMetaObject::invokeMethod( this, "slotResponseAvailable",
+                               Qt::DirectConnection,
+                               Q_ARG( Akonadi::Server::Response, greeting ) );
 
     exec();
     delete m_socket;
@@ -141,13 +143,13 @@ void AkonadiConnection::slotNewData()
       }
       const QByteArray command = m_streamParser->readString();
       if ( command.isEmpty() ) {
-        throw Akonadi::Exception("empty command");
+        throw Akonadi::Server::Exception("empty command");
       }
       Tracer::self()->connectionInput( m_identifier, ( tag + ' ' + command + ' ' + m_streamParser->readRemainingData() ) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
-      connect( m_currentHandler, SIGNAL(responseAvailable(Akonadi::Response)),
-               this, SLOT(slotResponseAvailable(Akonadi::Response)), Qt::DirectConnection );
+      connect( m_currentHandler, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+               this, SLOT(slotResponseAvailable(Akonadi::Server::Response)), Qt::DirectConnection );
       connect( m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
               this, SLOT(slotConnectionStateChange(ConnectionState)),
               Qt::DirectConnection );
@@ -156,12 +158,12 @@ void AkonadiConnection::slotNewData()
       if ( !m_currentHandler->parseStream() ) {
         m_streamParser->skipCurrentCommand();
       }
-    } catch ( const Akonadi::HandlerException &e ) {
+    } catch ( const Akonadi::Server::HandlerException &e ) {
       m_currentHandler->failureResponse( e.what() );
       try {
         m_streamParser->skipCurrentCommand();
       } catch ( ... ) {}
-    } catch ( const Akonadi::Exception &e ) {
+    } catch ( const Akonadi::Server::Exception &e ) {
       if ( m_currentHandler ) {
         m_currentHandler->failureResponse( QByteArray( e.type() ) + QByteArray( ": " ) + QByteArray( e.what() ) );
       }
@@ -225,7 +227,7 @@ Handler *AkonadiConnection::findHandlerForCommand( const QByteArray &command )
     return handler;
 }
 
-void AkonadiConnection::slotResponseAvailable( const Akonadi::Response &response )
+void AkonadiConnection::slotResponseAvailable( const Response &response )
 {
     // FIXME handle reentrancy in the presence of continuation. Something like:
     // "if continuation pending, queue responses, once continuation is done, replay them"
@@ -252,27 +254,27 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-qint64 Akonadi::AkonadiConnection::selectedCollectionId() const
+qint64 AkonadiConnection::selectedCollectionId() const
 {
     return m_selectedConnection;
 }
 
-void Akonadi::AkonadiConnection::setSelectedCollection( qint64 collection )
+void AkonadiConnection::setSelectedCollection( qint64 collection )
 {
     m_selectedConnection = collection;
 }
 
-const Collection Akonadi::AkonadiConnection::selectedCollection()
+const Collection AkonadiConnection::selectedCollection()
 {
   return Collection::retrieveById( selectedCollectionId() );
 }
 
-void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray &msg )
+void AkonadiConnection::addStatusMessage( const QByteArray &msg )
 {
     m_statusMessageQueue.append( msg );
 }
 
-void Akonadi::AkonadiConnection::flushStatusMessageQueue()
+void AkonadiConnection::flushStatusMessageQueue()
 {
     for ( int i = 0; i < m_statusMessageQueue.count(); ++i ) {
       Response response;
@@ -301,7 +303,7 @@ QByteArray AkonadiConnection::sessionId() const
   return m_sessionId;
 }
 
-Resource Akonadi::AkonadiConnection::resourceContext() const
+Resource AkonadiConnection::resourceContext() const
 {
   return m_resourceContext;
 }

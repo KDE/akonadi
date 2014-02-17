@@ -264,7 +264,7 @@ class <xsl:value-of select="$className"/> : private Entity
 
 #ifndef QT_NO_DEBUG_STREAM
 // debug stream operator
-QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::<xsl:value-of select="$className"/>&amp; entity );
+QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::Server::<xsl:value-of select="$className"/>&amp; entity );
 #endif
 </xsl:template>
 

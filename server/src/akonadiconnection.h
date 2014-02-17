@@ -28,11 +28,13 @@
 #include "clientcapabilities.h"
 
 namespace Akonadi {
-    class Handler;
-    class Response;
-    class DataStore;
-    class Collection;
-    class ImapStreamParser;
+namespace Server {
+
+class Handler;
+class Response;
+class DataStore;
+class Collection;
+class ImapStreamParser;
 
 /**
     An AkonadiConnection represents one connection of a client to the server.
@@ -77,7 +79,7 @@ protected Q_SLOTS:
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotResponseAvailable( const Akonadi::Response &response );
+    void slotResponseAvailable( const Akonadi::Server::Response &response );
     void slotConnectionStateChange( ConnectionState );
 
 protected:
@@ -101,6 +103,7 @@ private:
     bool m_verifyCacheOnRetrieval;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

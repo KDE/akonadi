@@ -23,7 +23,7 @@
 
 #include "storage/itemretriever.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 class ItemRetrieverTest : public QObject
 {

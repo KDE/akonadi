@@ -25,7 +25,9 @@
 #include <QtCore/QObject>
 
 namespace Akonadi {
+namespace Server {
 class QueryBuilder;
+}
 }
 
 class QueryBuilderTest : public QObject
@@ -36,7 +38,7 @@ class QueryBuilderTest : public QObject
     void testQueryBuilder();
 
   private:
-    QList< Akonadi::QueryBuilder > mBuilders;
+    QList< Akonadi::Server::QueryBuilder > mBuilders;
 };
 
 #endif

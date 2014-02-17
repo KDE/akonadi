@@ -32,7 +32,7 @@
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
 #define DEFAULT_TRACER QLatin1String( "null" )
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Tracer *Tracer::mSelf = 0;
 
@@ -96,7 +96,7 @@ void Tracer::signal( const QString &signalName, const QString &msg )
   mMutex.unlock();
 }
 
-void Akonadi::Tracer::signal( const char *signalName, const QString &msg )
+void Tracer::signal( const char *signalName, const QString &msg )
 {
   signal( QLatin1String( signalName ), msg );
 }
@@ -115,7 +115,7 @@ void Tracer::error( const QString &componentName, const QString &msg )
   mMutex.unlock();
 }
 
-void Akonadi::Tracer::error( const char *componentName, const QString &msg )
+void Tracer::error( const char *componentName, const QString &msg )
 {
   error( QLatin1String( componentName ), msg );
 }

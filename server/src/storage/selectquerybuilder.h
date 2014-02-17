@@ -23,6 +23,7 @@
 #include "storage/querybuilder.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Helper class for creating and executing database SELECT queries.
@@ -48,6 +49,7 @@ template <typename T> class SelectQueryBuilder : public QueryBuilder
     }
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

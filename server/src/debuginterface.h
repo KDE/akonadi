@@ -22,6 +22,9 @@
 
 #include <QObject>
 
+namespace Akonadi {
+namespace Server {
+
 /**
  * Interface to configure and query debugging options.
  */
@@ -38,5 +41,8 @@ class DebugInterface : public QObject
     Q_SCRIPTABLE void setTracer( const QString &tracer );
 
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -23,10 +23,10 @@
 
 #include "handler.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
-class TagStore : public Akonadi::Handler
+class TagStore : public Handler
 {
   Q_OBJECT
 
@@ -38,6 +38,7 @@ class TagStore : public Akonadi::Handler
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_TAGSTORE_H

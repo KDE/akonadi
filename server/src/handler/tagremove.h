@@ -23,8 +23,8 @@
 #include "handler.h"
 #include "scope.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
 class TagRemove : public Handler
 {
@@ -38,6 +38,8 @@ class TagRemove : public Handler
   private:
     Scope mScope;
 };
-}
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_TAGREMOVE_H

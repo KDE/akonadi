@@ -42,6 +42,7 @@ static bool createSocketDirectory( const QString &link, const QString &tmpl );
 #endif
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
 {

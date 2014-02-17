@@ -40,6 +40,7 @@
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 AkAppend::AkAppend()
     : Handler()

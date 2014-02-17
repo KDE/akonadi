@@ -24,7 +24,7 @@
 
 #include "handler.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 #define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << #command << "Akonadi::" #class;
 

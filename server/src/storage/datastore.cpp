@@ -56,7 +56,7 @@
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlQuery>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static QMutex sTransactionMutex;
 bool DataStore::s_hasForeignKeyConstraints = false;
@@ -119,7 +119,7 @@ void DataStore::open()
   DbConfig::configuredDatabase()->initSession( m_database );
 }
 
-void Akonadi::DataStore::close()
+void DataStore::close()
 {
 
   if ( m_keepAliveTimer ) {
@@ -145,7 +145,7 @@ void Akonadi::DataStore::close()
   m_dbOpened = false;
 }
 
-bool Akonadi::DataStore::init()
+bool DataStore::init()
 {
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 
@@ -178,7 +178,7 @@ bool Akonadi::DataStore::init()
 
 QThreadStorage<DataStore *> instances;
 
-DataStore *Akonadi::DataStore::self()
+DataStore *DataStore::self()
 {
   if ( !instances.hasLocalData() ) {
     instances.setLocalData( new DataStore() );
@@ -587,7 +587,7 @@ bool DataStore::appendCollection( Collection &collection )
   return true;
 }
 
-bool Akonadi::DataStore::cleanupCollection( Collection &collection )
+bool DataStore::cleanupCollection( Collection &collection )
 {
   if ( !s_hasForeignKeyConstraints ) {
     return cleanupCollection_slow( collection );
@@ -709,7 +709,7 @@ static bool recursiveSetResourceId( const Collection &collection, qint64 resourc
   return true;
 }
 
-bool Akonadi::DataStore::moveCollection( Collection &collection, const Collection &newParent )
+bool DataStore::moveCollection( Collection &collection, const Collection &newParent )
 {
   if ( collection.parentId() == newParent.id() ) {
     return true;
@@ -1014,7 +1014,7 @@ bool DataStore::addCollectionAttribute( const Collection &col, const QByteArray 
   return true;
 }
 
-bool Akonadi::DataStore::removeCollectionAttribute( const Collection &col, const QByteArray &key )
+bool DataStore::removeCollectionAttribute( const Collection &col, const QByteArray &key )
 {
   SelectQueryBuilder<CollectionAttribute> qb;
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
@@ -1079,7 +1079,7 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray &dateTime )
     return QDateTime::fromString( QString::fromLatin1( dateTime ), QLatin1String( "yyyy-MM-dd hh:mm:ss" ) );
 }
 
-bool Akonadi::DataStore::beginTransaction()
+bool DataStore::beginTransaction()
 {
   if ( !m_dbOpened ) {
     return false;
@@ -1100,7 +1100,7 @@ bool Akonadi::DataStore::beginTransaction()
   return true;
 }
 
-bool Akonadi::DataStore::rollbackTransaction()
+bool DataStore::rollbackTransaction()
 {
   if ( !m_dbOpened ) {
     return false;
@@ -1128,7 +1128,7 @@ bool Akonadi::DataStore::rollbackTransaction()
   return true;
 }
 
-bool Akonadi::DataStore::commitTransaction()
+bool DataStore::commitTransaction()
 {
   if ( !m_dbOpened ) {
     return false;
@@ -1155,7 +1155,7 @@ bool Akonadi::DataStore::commitTransaction()
   return true;
 }
 
-bool Akonadi::DataStore::inTransaction() const
+bool DataStore::inTransaction() const
 {
   return m_transactionLevel > 0;
 }

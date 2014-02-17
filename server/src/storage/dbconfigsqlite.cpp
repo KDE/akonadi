@@ -29,6 +29,7 @@
 #include <QtSql/QSqlQuery>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static QString dataDir()
 {

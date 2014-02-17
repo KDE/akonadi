@@ -20,6 +20,8 @@
 
 #include "storage/dbinitializer_p.h"
 
+using namespace Akonadi::Server;
+
 //BEGIN MySQL
 
 DbInitializerMySql::DbInitializerMySql( const QSqlDatabase &database )

@@ -27,6 +27,7 @@
 #include <QSqlError>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Helper class for creating queries to count elements in a database.
@@ -80,6 +81,7 @@ class CountQueryBuilder : public QueryBuilder
     }
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

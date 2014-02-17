@@ -23,6 +23,7 @@
 #include <QMetaType>
 
 namespace Akonadi {
+namespace Server {
 
 /**
     @brief A command result.
@@ -63,8 +64,9 @@ private:
     QByteArray m_tag;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
-Q_DECLARE_METATYPE( Akonadi::Response )
+Q_DECLARE_METATYPE( Akonadi::Server::Response )
 
 #endif

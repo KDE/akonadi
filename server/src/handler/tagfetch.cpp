@@ -25,6 +25,7 @@
 #include "tagfetchhelper.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 TagFetch::TagFetch( Scope::SelectionScope scope )
   : Handler()
@@ -45,8 +46,8 @@ bool TagFetch::parseStream()
   mScope.parseScope( m_streamParser );
 
   TagFetchHelper helper( connection(),  mScope.uidSet() );
-  connect( &helper, SIGNAL(responseAvailable(Akonadi::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Response)) );
+  connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
 
   if ( !helper.fetchTags( AKONADI_CMD_TAGFETCH ) ) {
     return false;

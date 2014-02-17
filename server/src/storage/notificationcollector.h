@@ -30,6 +30,7 @@
 #include <QtCore/QString>
 
 namespace Akonadi {
+namespace Server {
 
 class DataStore;
 
@@ -236,6 +237,7 @@ class NotificationCollector : public QObject
     NotificationMessageV3::List mNotifications;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

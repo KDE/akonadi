@@ -22,7 +22,7 @@
 #include "akonadiconnection.h"
 #include "imapstreamparser.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Login::Login(): Handler()
 {

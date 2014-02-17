@@ -35,6 +35,7 @@
 #include <akdebug.h>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Modify::Modify( Scope::SelectionScope scope )
   : m_scope( scope )

@@ -28,7 +28,8 @@
 #include <storage/selectquerybuilder.h>
 #include <akdebug.h>
 
-namespace Akonadi {
+using namespace Akonadi;
+using namespace Akonadi::Server;
 
 ColMove::ColMove( Scope::SelectionScope scope )
   : m_scope( scope )
@@ -80,6 +81,4 @@ bool ColMove::parseStream()
   }
 
   return successResponse( "COLMOVE complete" );
-}
-
 }

@@ -27,7 +27,8 @@
 #include <QThread>
 #include <QMutex>
 
-using namespace Akonadi;
+namespace Akonadi {
+namespace Server {
 
 /**
   Interval checking thread.
@@ -62,5 +63,8 @@ class IntervalCheck : public QThread
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

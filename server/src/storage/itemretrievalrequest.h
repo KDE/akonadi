@@ -23,6 +23,9 @@
 #include <QByteArray>
 #include <QStringList>
 
+namespace Akonadi {
+namespace Server {
+
 /// Details of a single item retrieval request
 class ItemRetrievalRequest
 {
@@ -41,5 +44,8 @@ class ItemRetrievalRequest
   private:
     Q_DISABLE_COPY( ItemRetrievalRequest )
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

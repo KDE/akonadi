@@ -31,8 +31,10 @@
 AKONADI_EXCEPTION_MAKE_INSTANCE( ItemRetrieverException );
 
 namespace Akonadi {
-  class AkonadiConnection;
-  class QueryBuilder;
+namespace Server {
+
+class AkonadiConnection;
+class QueryBuilder;
 
 /**
   Helper class for retrieving missing items parts from remote resources.
@@ -54,9 +56,9 @@ class ItemRetriever
     void setRetrieveFullPayload( bool fullPayload );
     void setItemSet( const ImapSet &set, const Collection &collection = Collection() );
     void setItemSet( const ImapSet &set, bool isUid );
-    void setItem( const Akonadi::Entity::Id &id );
+    void setItem( const Entity::Id &id );
     /** Retrieve all items in the given collection. */
-    void setCollection( const Akonadi::Collection &collection, bool recursive = true );
+    void setCollection( const Collection &collection, bool recursive = true );
 
     /** Retrieve all items matching the given item scope. */
     void setScope( const Scope &scope );
@@ -75,7 +77,7 @@ class ItemRetriever
      */
     void verifyCache();
 
-    ImapSet mItemSet;
+    Akonadi::ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;
     AkonadiConnection *mConnection;
@@ -85,6 +87,7 @@ class ItemRetriever
     mutable QByteArray mLastError;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

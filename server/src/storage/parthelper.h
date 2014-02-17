@@ -28,8 +28,8 @@ class QString;
 class QVariant;
 class QFile;
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
 class ImapStreamParser;
 
@@ -89,7 +89,7 @@ namespace PartHelper
   bool truncate( Part &part );
 
   /** Verifies and if necessary fixes the external reference of this part. */
-  bool verify( Akonadi::Part &part );
+  bool verify( Part &part );
 
 // private: for unit testing only
   /**
@@ -123,8 +123,9 @@ namespace PartHelper
   bool storeStreamedParts( const QByteArray &command, ImapStreamParser* streamParser,
                            const PimItem &item, bool checkExists,
                            QByteArray &partName, qint64 &partSize, QByteArray &error );
-}
+} // namespace PartHelper
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

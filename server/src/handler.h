@@ -29,10 +29,13 @@
 
 namespace Akonadi {
 
+class ImapSet;
+
+namespace Server {
+
 class Response;
 class AkonadiConnection;
 class QueryBuilder;
-class ImapSet;
 class ImapStreamParser;
 
 AKONADI_EXCEPTION_MAKE_INSTANCE( HandlerException );
@@ -120,7 +123,7 @@ Q_SIGNALS:
      * be several responses per command.
      * @param response The response to be sent to the client.
      */
-    void responseAvailable( const Akonadi::Response &response );
+    void responseAvailable( const Akonadi::Server::Response &response );
 
     /**
      * Emitted whenever a handler wants the connection to change into a
@@ -149,6 +152,7 @@ class UnknownCommandHandler : public Handler
     QByteArray mCommand;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

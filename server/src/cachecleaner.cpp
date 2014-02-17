@@ -28,7 +28,7 @@
 #include <QDebug>
 #include <QTimer>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 CacheCleaner::CacheCleaner( QObject *parent )
   : QThread( parent )

@@ -46,6 +46,7 @@
 #include <functional>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static bool payloadChanged( const QSet<QByteArray> &changes )
 {

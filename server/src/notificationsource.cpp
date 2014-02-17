@@ -24,6 +24,7 @@
 #include "notificationmanager.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 template<typename T>
 QVector<T> setToVector( const QSet<T> &set )
@@ -37,7 +38,7 @@ QVector<T> setToVector( const QSet<T> &set )
   return v;
 }
 
-NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager *parent )
+NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, NotificationManager *parent )
   : QObject( parent )
   , mManager( parent )
   , mIdentifier( identifier )
