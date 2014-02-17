@@ -74,7 +74,7 @@ bool TagRemove::parseStream()
 
   // Just remove the tags, table constraints will take care of the rest
   QueryBuilder qb( Tag::tableName(), QueryBuilder::Delete );
-  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), itemsQuery );
+  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), qb );
   if ( !qb.exec() ) {
     throw HandlerException( "Deletion failed" );
   }
