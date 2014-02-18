@@ -96,7 +96,7 @@ bool TagAppend::parseStream()
   connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
 
-  if ( !helper.fetchTags( AKONADI_CMD_TAGAPPEND ) ) {
+  if ( !helper.fetchTags( AKONADI_CMD_TAGFETCH ) ) {
     return false;
   }
 
