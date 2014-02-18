@@ -33,6 +33,7 @@ public:
     KDatePickerAction(KDatePicker *widget, QObject *parent)
         : QWidgetAction(parent)
         , mDatePicker(widget)
+        , mOriginalParent(widget->parentWidget())
     {
     }
 
