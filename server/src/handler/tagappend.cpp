@@ -90,17 +90,6 @@ bool TagAppend::parseStream()
       throw HandlerException( "Failed to store tag" );
     }
 
-    if ( !remoteId.isEmpty() ) {
-      Resource resource = Resource::retrieveByName( connection()->resourceContext().name() );
-      TagRemoteIdResourceRelation rel;
-      rel.setTagId( tagId );
-      rel.setResourceId( resource.id() );
-      rel.setRemoteId( remoteId );
-      if ( !rel.insert() ) {
-        throw HandlerException( "Failed to store tag remote ID" );
-      }
-    }
-
     Q_FOREACH ( const AttributePair &pair, attributes ) {
       TagAttribute attribute;
       attribute.setTagId( tagId );
@@ -112,6 +101,17 @@ bool TagAppend::parseStream()
     }
 
     DataStore::self()->notificationCollector()->tagAdded( insertedTag );
+  }
+
+  if ( !remoteId.isEmpty() ) {
+    Resource resource = Resource::retrieveByName( connection()->resourceContext().name() );
+    TagRemoteIdResourceRelation rel;
+    rel.setTagId( tagId );
+    rel.setResourceId( resource.id() );
+    rel.setRemoteId( remoteId );
+    if ( !rel.insert() ) {
+      throw HandlerException( "Failed to store tag remote ID" );
+    }
   }
 
   ImapSet set;
