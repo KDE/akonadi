@@ -74,28 +74,17 @@ bool TagStore::parseStream()
         if ( attributesMap.contains( attrName ) ) {
           TagAttribute attribute = attributesMap.value( attrName );
           TagAttribute::remove( attribute.id() );
-          continue;
         }
-      } else if ( attr.startsWith( '+' ) ) {
-        const QByteArray attrName = attr.mid( 1 );
-        if ( attributesMap.contains( attrName ) ) {
-          throw HandlerException( "Attribute " + attrName + " already exists" );
-        }
-
-        TagAttribute attribute;
-        attribute.setTagId( tagId );
-        attribute.setType( attrName );
-        attribute.setValue( m_streamParser->readString() );
-        attribute.insert();
-        continue;
-      } else {
-        if ( !attributesMap.contains( attr ) ) {
-          throw HandlerException( "Attribute " + attr + " does not exist" );
-        }
-
+      } else if ( attributesMap.contains( attr ) ) {
         TagAttribute attribute = attributesMap.value( attr );
         attribute.setValue( m_streamParser->readString() );
         attribute.update();
+      } else {
+        TagAttribute attribute;
+        attribute.setTagId( tagId );
+        attribute.setType( attr );
+        attribute.setValue( m_streamParser->readString() );
+        attribute.insert();
       }
     }
   }
