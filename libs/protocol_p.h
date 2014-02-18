@@ -110,6 +110,7 @@
 #define AKONADI_PARAM_INTERVAL                     "INTERVAL"
 #define AKONADI_PARAM_INVALIDATECACHE              "INVALIDATECACHE"
 #define AKONADI_PARAM_MIMETYPE                     "MIMETYPE"
+#define AKONADI_PARAM_MERGE                        "MERGE"
 #define AKONADI_PARAM_LOCALPARTS                   "LOCALPARTS"
 #define AKONADI_PARAM_NAME                         "NAME"
 #define AKONADI_PARAM_CAPABILITY_NOTIFY            "NOTIFY"

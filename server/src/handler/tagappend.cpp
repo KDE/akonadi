@@ -23,6 +23,8 @@
 #include "imapstreamparser.h"
 #include "response.h"
 #include "storage/datastore.h"
+#include "storage/querybuilder.h"
+#include "entities.h"
 #include "libs/protocol_p.h"
 
 using namespace Akonadi::Server;
@@ -40,55 +42,77 @@ bool TagAppend::parseStream()
 {
   m_streamParser->beginList();
 
-  Tag insertedTag;
   typedef QPair<QByteArray, QByteArray> AttributePair;
   QList<AttributePair> attributes;
   QString remoteId;
+  bool merge = false;
+  QString gid;
+  qint64 parentId = -1;
 
   while ( !m_streamParser->atListEnd() ) {
     const QByteArray param = m_streamParser->readString();
 
     if ( param == AKONADI_PARAM_GID ) {
-      insertedTag.setGid( QString::fromLatin1( m_streamParser->readString() ) );
+      gid = QString::fromLatin1( m_streamParser->readString() );
     } else if ( param == AKONADI_PARAM_PARENT ) {
-      insertedTag.setParentId( m_streamParser->readNumber() );
+      parentId = m_streamParser->readNumber();
     } else if ( param == AKONADI_PARAM_REMOTEID ) {
       if ( !connection()->resourceContext().isValid() ) {
         throw HandlerException( "Only resource can create tag with remote ID" );
       }
       remoteId = QString::fromLatin1( m_streamParser->readString() );
+    } else if ( param == AKONADI_PARAM_MERGE ) {
+      merge = true;
     } else {
       attributes << qMakePair( param, m_streamParser->readString() );
     }
   }
 
   qint64 tagId = -1;
-  if  ( !insertedTag.insert( &tagId ) ) {
-    throw HandlerException( "Failed to store tag" );
-  }
-
-  if ( !remoteId.isEmpty() ) {
-    Resource resource = Resource::retrieveByName( connection()->resourceContext().name() );
-    TagRemoteIdResourceRelation rel;
-    rel.setTagId( tagId );
-    rel.setResourceId( resource.id() );
-    rel.setRemoteId( remoteId );
-    if ( !rel.insert() ) {
-      throw HandlerException( "Failed to store tag remote ID" );
+  if ( merge ) {
+    QueryBuilder qb( Tag::tableName() );
+    qb.addColumn( Tag::idColumn() );
+    qb.addValueCondition( Tag::gidColumn(), Query::Equals, gid );
+    if ( !qb.exec() ) {
+      throw HandlerException( "Unable to list tags" );
+    }
+    if (qb.query().next()) {
+      tagId = qb.query().value( 0 ).toLongLong();
     }
   }
-
-  Q_FOREACH ( const AttributePair &pair, attributes ) {
-    TagAttribute attribute;
-    attribute.setTagId( tagId );
-    attribute.setType( pair.first );
-    attribute.setValue( pair.second );
-    if ( !attribute.insert() ) {
-      throw HandlerException( "Failed to store tag attribute" );
+  if (tagId < 0) {
+    Tag insertedTag;
+    insertedTag.setGid( gid );
+    if ( parentId >= 0 ) {
+      insertedTag.setParentId( parentId );
     }
-  }
+    if  ( !insertedTag.insert( &tagId ) ) {
+      throw HandlerException( "Failed to store tag" );
+    }
 
-  DataStore::self()->notificationCollector()->tagAdded( insertedTag );
+    if ( !remoteId.isEmpty() ) {
+      Resource resource = Resource::retrieveByName( connection()->resourceContext().name() );
+      TagRemoteIdResourceRelation rel;
+      rel.setTagId( tagId );
+      rel.setResourceId( resource.id() );
+      rel.setRemoteId( remoteId );
+      if ( !rel.insert() ) {
+        throw HandlerException( "Failed to store tag remote ID" );
+      }
+    }
+
+    Q_FOREACH ( const AttributePair &pair, attributes ) {
+      TagAttribute attribute;
+      attribute.setTagId( tagId );
+      attribute.setType( pair.first );
+      attribute.setValue( pair.second );
+      if ( !attribute.insert() ) {
+        throw HandlerException( "Failed to store tag attribute" );
+      }
+    }
+
+    DataStore::self()->notificationCollector()->tagAdded( insertedTag );
+  }
 
   ImapSet set;
   set.add( QVector<qint64>() << tagId );
