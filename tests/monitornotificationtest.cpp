@@ -96,12 +96,12 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
 
-  NotificationMessageV2::List list;
+  NotificationMessageV3::List list;
 
   Collection parent(1);
   Collection added(2);
 
-  NotificationMessageV2 msg;
+  NotificationMessageV3 msg;
   msg.setParentCollection(parent.id());
   msg.setOperation(Akonadi::NotificationMessageV2::Add);
   msg.setType(Akonadi::NotificationMessageV2::Collections);
@@ -164,7 +164,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
 
-  NotificationMessageV2::List list;
+  NotificationMessageV3::List list;
   QHash<Collection::Id, Collection> data;
 
   int i = 1;
@@ -172,7 +172,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     Collection parent(i++);
     Collection added(i++);
 
-    NotificationMessageV2 msg;
+    NotificationMessageV3 msg;
     msg.setParentCollection(parent.id());
     msg.setOperation(Akonadi::NotificationMessageV2::Add);
     msg.setType(Akonadi::NotificationMessageV2::Collections);
@@ -232,7 +232,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
 
-  NotificationMessageV2::List list;
+  NotificationMessageV3::List list;
 
   Collection col2(2);
   col2.setParentCollection(Collection::root());
@@ -244,7 +244,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
   while (i < 8) {
     Collection added(i++);
 
-    NotificationMessageV2 msg;
+    NotificationMessageV3 msg;
     msg.setParentCollection( i % 2 ? 2 : added.id() - 1);
     msg.setOperation(Akonadi::NotificationMessageV2::Add);
     msg.setType(Akonadi::NotificationMessageV2::Collections);
