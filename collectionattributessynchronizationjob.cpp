@@ -59,7 +59,7 @@ class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
     void slotTimeout();
 };
 
-int CollectionAttributesSynchronizationJobPrivate::timeoutCountLimit = 60;
+int CollectionAttributesSynchronizationJobPrivate::timeoutCountLimit = 2;
 
 CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob( const Collection &collection, QObject *parent )
   : KJob( parent ),
@@ -69,7 +69,7 @@ CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob( 
   d->collection = collection;
   d->safetyTimer = new QTimer( this );
   connect( d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
-  d->safetyTimer->setInterval( 10 * 1000 );
+  d->safetyTimer->setInterval( 5 * 1000 );
   d->safetyTimer->setSingleShot( false );
 }
 
