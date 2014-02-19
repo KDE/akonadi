@@ -134,6 +134,11 @@ class AgentBasePrivate : public QObject
     virtual void collectionRemoved( const Akonadi::Collection &collection );
     void collectionSubscribed( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     void collectionUnsubscribed( const Akonadi::Collection &collection );
+
+    virtual void tagAdded( const Akonadi::Tag &tag );
+    virtual void tagChanged( const Akonadi::Tag &tag );
+    virtual void tagRemoved( const Akonadi::Tag &tag );
+    virtual void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags );
 };
 
 }

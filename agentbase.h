@@ -357,6 +357,53 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     };
 
     /**
+     * Observer that adds support for item tagging
+     *
+     * @warning ObserverV4 subclasses ObserverV3 which changes behavior of some of the
+     * virtual methods from Observer and ObserverV2. Please make sure you read
+     * documentation of ObserverV3 and adapt your agent accordingly.
+     *
+     * @since 4.13
+     */
+    class AKONADI_EXPORT ObserverV4: public ObserverV3 // krazy:exclude=dpointer
+    {
+      public:
+        /**
+         * Reimplement to handle tags additions
+         *
+         * @param tag Newly added tag
+         */
+        virtual void tagAdded( const Akonadi::Tag &tag );
+
+        /**
+         * Reimplement to handle tags changes
+         *
+         * @param tag Tag that has been changed
+         */
+        virtual void tagChanged( const Akonadi::Tag &tag );
+
+        /**
+         * Reimplement to handle tags removal.
+         *
+         * @note All items that were tagged by @p tag will get a separate notification
+         * about untagging via itemsTagsChanged(). It is guaranteed that the itemsTagsChanged()
+         * notification will be delivered before this one.
+         *
+         * @param tag Tag that has been removed.
+         */
+        virtual void tagRemoved( const Akonadi::Tag &tag );
+
+        /**
+         * Reimplement to handle items tagging
+         *
+         * @param items Items that were tagged or untagged
+         * @param addedTags Set of tags that were added to all @p items
+         * @param removedTags Set of tags that were removed from all @p items
+         */
+        virtual void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags );
+    };
+
+    /**
      * This enum describes the different states the
      * agent can be in.
      */

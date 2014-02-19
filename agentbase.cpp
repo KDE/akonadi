@@ -237,6 +237,58 @@ void AgentBase::ObserverV3::itemsUnlinked(const Akonadi::Item::List& items, cons
   }
 }
 
+void AgentBase::ObserverV4::tagAdded( const Tag &tag )
+{
+  Q_UNUSED( tag );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimization in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(tagAdded(Akonadi::Tag)),
+                         sAgentBase->d_ptr, SLOT(tagAdded(Akonadi::Tag)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV4::tagChanged( const Tag &tag )
+{
+  Q_UNUSED( tag );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimization in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(tagChanged(Akonadi::Tag)),
+                         sAgentBase->d_ptr, SLOT(tagChanged(Akonadi::Tag)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV4::tagRemoved( const Tag &tag )
+{
+  Q_UNUSED( tag );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimization in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(tagRemoved(Akonadi::Tag)),
+                         sAgentBase->d_ptr, SLOT(tagRemoved(Akonadi::Tag)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV4::itemsTagsChanged( const Item::List &items, const QSet<Tag> &addedTags, const QSet<Tag> &removedTags )
+{
+  Q_UNUSED( items );
+  Q_UNUSED( addedTags );
+  Q_UNUSED( removedTags );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimization in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
+                         sAgentBase->d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+
+
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
@@ -505,6 +557,54 @@ void AgentBasePrivate::itemsUnlinked( const Akonadi::Item::List &items, const Ak
     observer3->itemsUnlinked( items, collection );
   } else {
     Q_ASSERT_X( false, Q_FUNC_INFO, "Batch slots must never be called when ObserverV3 is not available" );
+  }
+}
+
+void AgentBasePrivate::tagAdded( const Akonadi::Tag &tag )
+{
+  if ( !mObserver ) {
+    return;
+  }
+
+  AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4*>( mObserver );
+  if ( observer4 ) {
+    observer4->tagAdded( tag );
+  }
+}
+
+void AgentBasePrivate::tagChanged( const Akonadi::Tag &tag )
+{
+  if ( !mObserver ) {
+    return;
+  }
+
+  AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4*>( mObserver );
+  if ( observer4 ) {
+    observer4->tagChanged( tag );
+  }
+}
+
+void AgentBasePrivate::tagRemoved( const Akonadi::Tag &tag )
+{
+  if ( !mObserver ) {
+    return;
+  }
+
+  AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4*>( mObserver );
+  if ( observer4 ) {
+    observer4->tagRemoved( tag );;
+  }
+}
+
+void AgentBasePrivate::itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags )
+{
+  if ( !mObserver ) {
+    return;
+  }
+
+  AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4*>( mObserver );
+  if ( observer4 ) {
+    observer4->itemsTagsChanged( items, addedTags, removedTags );
   }
 }
 
@@ -918,8 +1018,16 @@ void AgentBase::registerObserver( Observer *observer )
   // TODO in theory we should re-connect change recorder signals here that we disconnected previously
   d_ptr->mObserver = observer;
 
-  const bool haveObserverV3 = (dynamic_cast<AgentBase::ObserverV3*>(d_ptr->mObserver) != 0);
+  const bool haveObserverV4 = (dynamic_cast<AgentBase::ObserverV4*>(d_ptr->mObserver) != 0);
 
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
+              d_ptr, SLOT(tagAdded(Akonadi::Tag)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
+              d_ptr, SLOT(tagChanged(Akonadi::Tag)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
+              d_ptr, SLOT(tagRemoved(Akonadi::Tag)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
+              d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) );
   disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
               d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
   disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
@@ -939,7 +1047,18 @@ void AgentBase::registerObserver( Observer *observer )
   disconnect( d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
               d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
 
-  if ( haveObserverV3 ) {
+  if ( haveObserverV4 ) {
+    // V4
+    connect( d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
+             d_ptr, SLOT(tagAdded(Akonadi::Tag)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
+             d_ptr, SLOT(tagChanged(Akonadi::Tag)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
+             d_ptr, SLOT(tagRemoved(Akonadi::Tag)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
+             d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) );
+
+    // V3
     connect( d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
              d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
     connect( d_ptr->mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
@@ -951,6 +1070,7 @@ void AgentBase::registerObserver( Observer *observer )
     connect( d_ptr->mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
              d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
   } else {
+    // V2
     connect( d_ptr->mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
              d_ptr, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
     connect( d_ptr->mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
