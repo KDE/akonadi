@@ -42,7 +42,7 @@
 #include <QDBusConnection>
 #include <QTimer>
 
-Q_DECLARE_METATYPE( Akonadi::NotificationCollector* )
+Q_DECLARE_METATYPE( Akonadi::Server::NotificationCollector* )
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
