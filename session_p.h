@@ -114,7 +114,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
      */
     void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
 
-    static int minimumProtocolVersion() { return 36; }
+    static int minimumProtocolVersion() { return 37; }
 
     /**
      * Default location for akonadiconnectionrc
