@@ -66,6 +66,8 @@ public:
 
     Tag(const Tag &);
 
+    ~Tag();
+
     Tag &operator=(const Tag &);
     //Avoid slicing
     AttributeEntity &operator=(const AttributeEntity &);

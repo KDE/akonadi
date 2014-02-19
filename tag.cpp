@@ -29,6 +29,9 @@ struct Akonadi::Tag::Private {
         :id(-1)
     {}
 
+    ~Private()
+    {}
+
     Id id;
     QByteArray gid;
     QByteArray remoteId;
@@ -63,6 +66,10 @@ Tag::Tag(const Tag &other)
     d(new Private)
 {
     operator=(other);
+}
+
+Tag::~Tag()
+{
 }
 
 Tag& Tag::operator=(const Tag &other)
