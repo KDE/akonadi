@@ -27,6 +27,7 @@
 #include <QtCore/QSet>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -59,6 +60,7 @@ class Search : public Handler
     QSet<qint64> mAllResults;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

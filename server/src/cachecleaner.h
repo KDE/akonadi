@@ -23,6 +23,7 @@
 #include <QtCore/QThread>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Cache cleaner thread.
@@ -52,6 +53,7 @@ class CacheCleaner : public QThread
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -24,6 +24,7 @@
 #include <QStringList>
 
 namespace Akonadi {
+namespace Server {
 
 class ImapStreamParser;
 
@@ -71,6 +72,7 @@ class Scope
     QStringList mGidSet;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

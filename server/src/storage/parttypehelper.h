@@ -24,6 +24,7 @@
 #include "query.h"
 
 namespace Akonadi {
+namespace Server {
 
 class PartType;
 
@@ -85,8 +86,10 @@ namespace PartTypeHelper
    * @internal
    */
   QPair<QString, QString> parseFqName( const QString &fqName );
-}
 
-}
+} // namespace PartTypeHelper
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

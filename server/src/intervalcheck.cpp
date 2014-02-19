@@ -25,7 +25,7 @@
 #include <QDebug>
 #include <QTimer>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
 static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
@@ -79,7 +79,7 @@ void IntervalCheck::doIntervalCheck()
   QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );
 }
 
-void IntervalCheck::requestCollectionSync( const Akonadi::Collection &collection )
+void IntervalCheck::requestCollectionSync( const Collection &collection )
 {
   const QDateTime now = QDateTime::currentDateTime();
 

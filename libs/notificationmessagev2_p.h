@@ -50,7 +50,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     enum Type {
       InvalidType,
       Collections,
-      Items
+      Items,
+      Tags
     };
 
     // NOTE: Keep this BC with NotificationMessage - i.e. append new stuff to the end
@@ -64,7 +65,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
       Unlink,
       Subscribe,
       Unsubscribe,
-      ModifyFlags
+      ModifyFlags,
+      ModifyTags
     };
 
     class Entity
@@ -133,13 +135,20 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     QSet<QByteArray> removedFlags() const;
     void setRemovedFlags( const QSet<QByteArray> &parts );
 
+    QSet<qint64> addedTags() const;
+    void setAddedTags( const QSet<qint64> &tags );
+
+    QSet<qint64> removedTags() const;
+    void setRemovedTags( const QSet<qint64> &tags );
+
     QString toString() const;
 
     QVector<NotificationMessage> toNotificationV1() const;
 
     static bool appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg );
     static bool appendAndCompress( QList<NotificationMessageV2> &list, const NotificationMessageV2 &msg );
-  private:
+
+  protected:
     class Private;
     QSharedDataPointer<Private> d;
 };
@@ -150,6 +159,8 @@ const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::Notification
 QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );
 const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item );
 QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item );
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Type &type );
+QDBusArgument &operator<<( QDBusArgument &qrg, Akonadi::NotificationMessageV2::Type type );
 uint qHash( const Akonadi::NotificationMessageV2 &msg );
 
 Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
@@ -157,6 +168,8 @@ Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2 )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Entity )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::List )
+Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Type )
+Q_DECLARE_METATYPE( QVector<Akonadi::NotificationMessageV2::Type> )
 Q_DECLARE_METATYPE( QVector<QByteArray> )
 Q_DECLARE_METATYPE( QVector<qint64> )
 

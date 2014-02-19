@@ -20,9 +20,9 @@
 #include "debuginterface.h"
 #include "debuginterfaceadaptor.h"
 #include "tracer.h"
-using Akonadi::Tracer;
-
 #include <QtDBus>
+
+using namespace Akonadi::Server;
 
 DebugInterface::DebugInterface( QObject *parent )
   : QObject( parent )

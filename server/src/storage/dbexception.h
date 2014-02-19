@@ -25,12 +25,18 @@
 class QSqlError;
 class QSqlQuery;
 
+namespace Akonadi {
+namespace Server {
+
 /** Exception for reporting SQL errors. */
-class DbException : public Akonadi::Exception
+class DbException : public Exception
 {
   public:
     explicit DbException( const QSqlQuery &query, const char *what = 0 );
     virtual const char *type() const throw();
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // DBEXCEPTION_H

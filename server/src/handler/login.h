@@ -22,6 +22,7 @@
 #include <handler.h>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -36,6 +37,7 @@ class Login : public Handler
     bool parseStream();
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

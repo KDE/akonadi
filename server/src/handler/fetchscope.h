@@ -26,6 +26,7 @@
 #include <QStringList>
 
 namespace Akonadi {
+namespace Server {
 
 class ImapStreamParser;
 
@@ -59,6 +60,7 @@ class FetchScope
     bool flagsRequested() const;
     bool remoteIdRequested() const;
     bool gidRequested() const;
+    bool tagsRequested() const;
 
   private:
     class Private;
@@ -66,6 +68,7 @@ class FetchScope
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif //AKONADI_FETCHSCOPE_H

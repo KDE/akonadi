@@ -23,15 +23,17 @@
 #include "abstractsearchengine.h"
 
 namespace Akonadi {
+namespace Server {
 
 /** Search engine for distributing searches to agents. */
 class AgentSearchEngine : public AbstractSearchEngine
 {
   public:
-    virtual void addSearch( const Akonadi::Collection &collection );
+    virtual void addSearch( const Collection &collection );
     virtual void removeSearch( qint64 id );
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

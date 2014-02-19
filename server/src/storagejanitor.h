@@ -25,8 +25,9 @@
 #include <QtDBus/QDBusConnection>
 
 namespace Akonadi {
+namespace Server {
+
 class Collection;
-}
 
 class StorageJanitorThread : public QThread
 {
@@ -78,7 +79,7 @@ class StorageJanitor : public QObject
      * Verifies there is a path from @p col to the root of the collection tree
      * and that that everything along that path belongs to the same resource.
      */
-    void checkPathToRoot( const Akonadi::Collection &col );
+    void checkPathToRoot( const Collection &col );
 
     /**
      * Look for items belonging to non-existing collections.
@@ -114,5 +115,8 @@ class StorageJanitor : public QObject
     QDBusConnection m_connection;
     qint64 m_lostFoundCollectionId;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // STORAGEJANITOR_H

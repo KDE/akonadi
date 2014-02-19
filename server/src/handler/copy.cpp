@@ -33,6 +33,7 @@
 #include "imapstreamparser.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 bool Copy::copyItem( const PimItem &item, const Collection &target )
 {

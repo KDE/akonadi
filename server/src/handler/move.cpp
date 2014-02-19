@@ -30,7 +30,7 @@
 #include <storage/transaction.h>
 #include <storage/collectionqueryhelper.h>
 
-namespace Akonadi {
+using namespace Akonadi::Server;
 
 Move::Move( Scope::SelectionScope scope )
   : mScope( scope )
@@ -126,6 +126,4 @@ bool Move::parseStream()
   }
 
   return successResponse( "MOVE complete" );
-}
-
 }

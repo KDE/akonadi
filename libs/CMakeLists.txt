@@ -8,6 +8,7 @@ set(akonadiprotocolinternals_srcs
   imapset.cpp
   notificationmessage.cpp
   notificationmessagev2.cpp
+  notificationmessagev3.cpp
   xdgbasedirs.cpp
 )
 
@@ -28,6 +29,7 @@ install(FILES
   imapset_p.h
   notificationmessage_p.h
   notificationmessagev2_p.h
+  notificationmessagev3_p.h
   protocol_p.h
   xdgbasedirs_p.h
   capabilities_p.h

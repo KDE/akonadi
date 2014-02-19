@@ -25,6 +25,7 @@
 #include <QThread>
 
 namespace Akonadi {
+namespace Server {
 
 /** Container thread for the item retrieval manager. */
 class ItemRetrievalThread : public QThread
@@ -37,6 +38,7 @@ class ItemRetrievalThread : public QThread
     /* reimpl */ void run();
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -26,6 +26,7 @@
 #include "tracerinterface.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
  * The global tracer instance where all akonadi components can
@@ -135,6 +136,7 @@ class Tracer : public QObject, public TracerInterface
     mutable QMutex mMutex;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

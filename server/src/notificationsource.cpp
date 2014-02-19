@@ -24,6 +24,7 @@
 #include "notificationmanager.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 template<typename T>
 QVector<T> setToVector( const QSet<T> &set )
@@ -37,7 +38,7 @@ QVector<T> setToVector( const QSet<T> &set )
   return v;
 }
 
-NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager *parent )
+NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, NotificationManager *parent )
   : QObject( parent )
   , mManager( parent )
   , mIdentifier( identifier )
@@ -82,6 +83,11 @@ void NotificationSource::emitNotification( const NotificationMessage::List &noti
 void NotificationSource::emitNotification( const NotificationMessageV2::List &notifications )
 {
   Q_EMIT notifyV2( notifications );
+}
+
+void NotificationSource::emitNotification( const NotificationMessageV3::List &notifications )
+{
+  Q_EMIT notifyV3( notifications );
 }
 
 QString NotificationSource::identifier() const
@@ -162,6 +168,26 @@ void NotificationSource::setMonitoredItem( Entity::Id id, bool monitored )
 QVector<Entity::Id> NotificationSource::monitoredItems() const
 {
   return setToVector<Entity::Id>( mMonitoredItems );
+}
+
+void NotificationSource::setMonitoredTag( Entity::Id id, bool monitored )
+{
+  if ( id < 0 || !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  if ( monitored && !mMonitoredTags.contains( id ) ) {
+    mMonitoredTags.insert( id );
+    Q_EMIT monitoredTagsChanged();
+  } else if ( !monitored ) {
+    mMonitoredTags.remove( id );
+    Q_EMIT monitoredTagsChanged();
+  }
+}
+
+QVector<Entity::Id> NotificationSource::monitoredTags() const
+{
+  return setToVector<Entity::Id>( mMonitoredTags );
 }
 
 void NotificationSource::setMonitoredResource( const QByteArray &resource, bool monitored )
@@ -263,7 +289,7 @@ bool NotificationSource::isMimeTypeMonitored( const QString &mimeType ) const
   // FIXME: Handle mimetype aliases
 }
 
-bool NotificationSource::isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const
+bool NotificationSource::isMoveDestinationResourceMonitored( const NotificationMessageV3 &msg ) const
 {
   if ( msg.operation() != NotificationMessageV2::Move ) {
     return false;
@@ -271,7 +297,27 @@ bool NotificationSource::isMoveDestinationResourceMonitored( const NotificationM
   return mMonitoredResources.contains( msg.destinationResource() );
 }
 
-bool NotificationSource::acceptsNotification( const NotificationMessageV2 &notification )
+void NotificationSource::setMonitoredType( NotificationMessageV2::Type type, bool monitored )
+{
+  if ( !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  if ( monitored && !mMonitoredTypes.contains( type ) ) {
+    mMonitoredTypes.insert( type );
+    Q_EMIT monitoredTypesChanged();
+  } else if ( !monitored ) {
+    mMonitoredTypes.remove( type );
+    Q_EMIT monitoredTypesChanged();
+  }
+}
+
+QVector<NotificationMessageV2::Type> NotificationSource::monitoredTypes() const
+{
+  return setToVector<NotificationMessageV2::Type>( mMonitoredTypes );
+}
+
+bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notification )
 {
   // session is ignored
   if ( mIgnoredSessions.contains( notification.sessionId() ) ) {
@@ -293,6 +339,9 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV2 &notif
     return false;
 
   case NotificationMessageV2::Items:
+    if ( !mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains( NotificationMessageV2::Items ) ) {
+      return false;
+    }
     // we have a resource or mimetype filter
     if ( !mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty() ) {
       if ( mMonitoredResources.contains( notification.resource() ) ) {
@@ -323,6 +372,10 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV2 &notif
         || isCollectionMonitored( notification.parentDestCollection() );
 
   case NotificationMessageV2::Collections:
+    if ( !mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains( NotificationMessageV2::Collections ) ) {
+      return false;
+    }
+
     // we have a resource filter
     if ( !mMonitoredResources.isEmpty() ) {
       const bool resourceMatches = mMonitoredResources.contains( notification.resource() )
@@ -345,6 +398,23 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV2 &notif
 
     return isCollectionMonitored( notification.parentCollection() )
         || isCollectionMonitored( notification.parentDestCollection() );
+
+  case NotificationMessageV2::Tags:
+    if ( !mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains( NotificationMessageV2::Tags ) ) {
+      return false;
+    }
+
+    if ( mMonitoredTags.isEmpty() ) {
+      return true;
+    }
+
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+      if ( mMonitoredTags.contains( entity.id ) ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   return false;

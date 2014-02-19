@@ -24,6 +24,9 @@
 
 class QProcess;
 
+namespace Akonadi {
+namespace Server {
+
 class DbConfigSqlite : public DbConfig
 {
   public:
@@ -77,5 +80,8 @@ class DbConfigSqlite : public DbConfig
     QString mPassword;
     QString mConnectionOptions;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

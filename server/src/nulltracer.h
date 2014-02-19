@@ -23,6 +23,7 @@
 #include "tracerinterface.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
  * A tracer which forwards all tracing information to /dev/null ;)
@@ -54,6 +55,7 @@ class NullTracer : public TracerInterface
     { Q_UNUSED( componentName ); Q_UNUSED( msg ); }
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

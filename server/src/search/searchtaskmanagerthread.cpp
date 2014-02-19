@@ -22,7 +22,7 @@
 
 #include <QCoreApplication>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 SearchTaskManagerThread::SearchTaskManagerThread( QObject *parent )
   : QThread(parent)

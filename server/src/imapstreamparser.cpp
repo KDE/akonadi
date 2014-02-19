@@ -29,6 +29,7 @@
 #include <QIODevice>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 ImapStreamParser::ImapStreamParser( QIODevice *socket )
   : m_socket( socket )

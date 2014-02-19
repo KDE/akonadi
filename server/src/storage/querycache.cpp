@@ -26,7 +26,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QTimer>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 // After these seconds without activity the cache is cleaned
 #define CLEANUP_TIMEOUT 30 // seconds

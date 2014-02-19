@@ -23,6 +23,7 @@
 #include <handler.h>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -48,6 +49,7 @@ class TransactionHandler : public Handler
     Mode mMode;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

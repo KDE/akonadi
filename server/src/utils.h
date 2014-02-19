@@ -23,6 +23,8 @@
 
 #include <QtCore/QVariant>
 
+namespace Akonadi {
+namespace Server {
 namespace Utils {
 
 /**
@@ -63,6 +65,8 @@ static inline QByteArray variantToByteArray( const QVariant &variant )
  */
 QString preferredSocketDirectory( const QString &directory );
 
-}
+} // namespace Utils
+} // namespace Server
+} // namespace Akonadi
 
 #endif

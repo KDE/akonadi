@@ -29,7 +29,7 @@
 
 QTEST_MAIN( QueryBuilderTest )
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 void QueryBuilderTest::testQueryBuilder_data()
 {

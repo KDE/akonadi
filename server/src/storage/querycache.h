@@ -24,6 +24,7 @@ class QString;
 class QSqlQuery;
 
 namespace Akonadi {
+namespace Server {
 
 /**
  * A per-thread cache (should be per session, but that'S the same for us) prepared
@@ -42,8 +43,10 @@ namespace QueryCache
 
   /// Clears all queries from current thread
   void clear();
-}
 
-}
+} // namespace QueryCache
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_QUERYCACHE_H

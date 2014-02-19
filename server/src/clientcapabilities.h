@@ -19,8 +19,12 @@
 
 #include "capability.h"
 
-#ifndef CLIENTCAPABILITIES_H
-#define CLIENTCAPABILITIES_H
+#ifndef AKONADI_CLIENTCAPABILITIES_H
+#define AKONADI_CLIENTCAPABILITIES_H
+
+
+namespace Akonadi {
+namespace Server {
 
 /** Describes the capabilities of a specific session.
     Filled by the CAPABILITY command.
@@ -53,5 +57,8 @@ private:
   int m_serverSideSearch : 1;
   int m_akAppendStreaming : 1;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // CLIENTCAPABILITIES_H

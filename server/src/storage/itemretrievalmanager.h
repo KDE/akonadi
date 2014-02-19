@@ -30,12 +30,13 @@
 class QReadWriteLock;
 class QWaitCondition;
 class OrgFreedesktopAkonadiResourceInterface;
-class ItemRetrievalJob;
-class ItemRetrievalRequest;
 
 namespace Akonadi {
+namespace Server {
 
 class Collection;
+class ItemRetrievalJob;
+class ItemRetrievalRequest;
 
 /** Manages and processes item retrieval requests. */
 class ItemRetrievalManager : public QObject
@@ -85,6 +86,7 @@ class ItemRetrievalManager : public QObject
     QDBusConnection mDBusConnection;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

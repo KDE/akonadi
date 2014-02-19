@@ -27,7 +27,7 @@
 #include "search/searchtaskmanager.h"
 #include "akdebug.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 SearchResult::SearchResult( Scope::SelectionScope scope )
   : Handler()

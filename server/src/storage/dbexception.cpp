@@ -22,7 +22,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 DbException::DbException( const QSqlQuery &query, const char *what )
   : Exception( what )

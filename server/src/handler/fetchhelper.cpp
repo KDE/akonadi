@@ -47,6 +47,7 @@
 #include <QtSql/QSqlQuery>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope, const FetchScope &fetchScope )
   : mStreamParser( 0 )
@@ -194,6 +195,32 @@ QSqlQuery FetchHelper::buildFlagQuery()
   return flagQuery.query();
 }
 
+enum TagQueryColumns {
+  TagQueryItemIdColumn,
+  TagQueryTagIdColumn,
+};
+
+QSqlQuery FetchHelper::buildTagQuery()
+{
+  QueryBuilder tagQuery( PimItem::tableName() );
+  tagQuery.addJoin( QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
+                     PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName() );
+  tagQuery.addJoin( QueryBuilder::InnerJoin, Tag::tableName(),
+                     Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName() );
+  tagQuery.addColumn( PimItem::idFullColumnName() );
+  tagQuery.addColumn( Tag::idFullColumnName() );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection, tagQuery );
+  tagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
+
+  if ( !tagQuery.exec() ) {
+    throw HandlerException( "Unable to retrieve item tags" );
+  }
+
+  tagQuery.query().next();
+
+  return tagQuery.query();
+}
+
 bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
 {
   // retrieve missing parts
@@ -247,6 +274,12 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
   QSqlQuery flagQuery;
   if ( mFetchScope.flagsRequested() ) {
     flagQuery = buildFlagQuery();
+  }
+
+  // build tag query if needed
+  QSqlQuery tagQuery;
+  if ( mFetchScope.tagsRequested() ) {
+    tagQuery = buildTagQuery();
   }
 
   // build responses
@@ -303,6 +336,25 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
         flagQuery.next();
       }
       attributes.append( AKONADI_PARAM_FLAGS " (" + ImapParser::join( flags, " " ) + ')' );
+    }
+
+    if ( mFetchScope.tagsRequested() ) {
+      ImapSet tags;
+      while ( tagQuery.isValid() ) {
+        const qint64 id = tagQuery.value( TagQueryItemIdColumn ).toLongLong();
+        if ( id > pimItemId ) {
+          tagQuery.next();
+          continue;
+        } else if ( id < pimItemId ) {
+          break;
+        }
+        const qint64 tagId = tagQuery.value( TagQueryTagIdColumn ).toLongLong();
+        tags.add( QVector<qint64>() << tagId );
+        tagQuery.next();
+      }
+      if ( !tags.isEmpty() ) {
+        attributes.append( AKONADI_PARAM_TAGS " " + tags.toImapSequenceSet() );
+      }
     }
 
     if ( mFetchScope.ancestorDepth() > 0 ) {

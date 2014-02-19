@@ -25,8 +25,8 @@
 #include <QSet>
 #include <QStringList>
 
-namespace Akonadi
-{
+namespace Akonadi {
+namespace Server {
 
 class AkonadiConnection;
 
@@ -77,6 +77,7 @@ class SearchRequest: public QObject
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_SEARCHREQUEST_H

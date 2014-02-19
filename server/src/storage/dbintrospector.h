@@ -25,6 +25,11 @@
 #include <QSqlDatabase>
 #include <QStringList>
 
+class DbIntrospectorTest;
+
+namespace Akonadi {
+namespace Server {
+
 /**
  * Methods for introspecting the current state of a database schema.
  * I.e. this is about the structure of a database, not its content.
@@ -109,8 +114,11 @@ class DbIntrospector
     QSqlDatabase m_database;
 
   private:
-    friend class DbIntrospectorTest;
+    friend class ::DbIntrospectorTest;
     QHash<QString, QStringList> m_columnCache; // avoids extra db roundtrips
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // DBINTROSPECTOR_H

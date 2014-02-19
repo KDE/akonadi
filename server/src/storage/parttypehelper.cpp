@@ -24,7 +24,7 @@
 
 #include <QtCore/QStringList>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 QPair< QString, QString > PartTypeHelper::parseFqName(const QString& fqName)
 {

@@ -23,6 +23,9 @@
 
 #include "storage/dbinitializer.h"
 
+namespace Akonadi {
+namespace Server {
+
 class DbInitializerMySql : public DbInitializer
 {
   public:
@@ -60,5 +63,8 @@ class DbInitializerPostgreSql : public DbInitializer
     virtual QString buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const;
     virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

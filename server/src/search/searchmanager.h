@@ -25,15 +25,18 @@
 #include <QVector>
 #include <QDBusConnection>
 
-#include <libs/notificationmessagev2_p.h>
+#include <libs/notificationmessagev3_p.h>
 
 class QTimer;
 
 namespace Akonadi {
 
+class AbstractSearchPlugin;
+
+namespace Server {
+
 class NotificationCollector;
 class AbstractSearchEngine;
-class AbstractSearchPlugin;
 class Collection;
 
 /**
@@ -87,7 +90,7 @@ class SearchManager : public QObject
 
 
   private Q_SLOTS:
-    void scheduleSearchUpdate( const Akonadi::NotificationMessageV2::List &notifications );
+    void scheduleSearchUpdate( const Akonadi::NotificationMessageV3::List &notifications );
     void searchUpdateTimeout();
     void searchUpdateResultsAvailable( const QSet<qint64> &results );
 
@@ -106,6 +109,7 @@ class SearchManager : public QObject
     QTimer *mSearchUpdateTimer;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

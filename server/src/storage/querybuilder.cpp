@@ -29,7 +29,7 @@
 #include <QSqlRecord>
 #include <QSqlError>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static QString compareOperatorToString( Query::CompareOperator op )
 {

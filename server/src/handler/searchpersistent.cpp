@@ -35,6 +35,7 @@
 #include <QtCore/QStringList>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 SearchPersistent::SearchPersistent()
   : Handler()

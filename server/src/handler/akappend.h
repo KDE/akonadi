@@ -26,6 +26,7 @@
 
 class QTemporaryFile;
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -56,6 +57,7 @@ protected:
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

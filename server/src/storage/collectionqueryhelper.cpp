@@ -28,7 +28,7 @@
 #include "handler.h"
 #include "queryhelper.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 void CollectionQueryHelper::remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb )
 {
@@ -135,7 +135,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &rid
   return result;
 }
 
-Collection Akonadi::CollectionQueryHelper::singleCollectionFromScope( const Akonadi::Scope &scope, AkonadiConnection *connection )
+Collection CollectionQueryHelper::singleCollectionFromScope( const Scope &scope, AkonadiConnection *connection )
 {
   // root
   if ( ( scope.scope() == Scope::Uid || scope.scope() == Scope::None ) && scope.uidSet().intervals().count() == 1 ) {

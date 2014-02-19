@@ -24,6 +24,7 @@
 #include "scope.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -59,6 +60,7 @@ class ColMove : public Handler
     Scope m_scope;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

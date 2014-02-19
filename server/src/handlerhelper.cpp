@@ -22,6 +22,7 @@
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/queryhelper.h"
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
 #include "handler.h"
@@ -29,6 +30,7 @@
 #include <QtSql/QSqlError>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Collection HandlerHelper::collectionFromIdOrName( const QByteArray &id )
 {
@@ -75,7 +77,7 @@ QString HandlerHelper::pathForCollection( const Collection &col )
   return parts.join( QLatin1String( "/" ) );
 }
 
-bool HandlerHelper::itemStatistics( const Akonadi::Collection &col, qint64 &count, qint64 &size )
+bool HandlerHelper::itemStatistics( const Collection &col, qint64 &count, qint64 &size )
 {
   QueryBuilder qb( PimItem::tableName() );
   qb.addAggregation( PimItem::idColumn(), QLatin1String( "count" ) );
@@ -101,7 +103,7 @@ bool HandlerHelper::itemStatistics( const Akonadi::Collection &col, qint64 &coun
   return true;
 }
 
-int HandlerHelper::itemWithFlagsCount( const Akonadi::Collection &col, const QStringList &flags )
+int HandlerHelper::itemWithFlagsCount( const Collection &col, const QStringList &flags )
 {
   CountQueryBuilder qb( PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct );
   qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
@@ -145,7 +147,7 @@ int HandlerHelper::parseCachePolicy( const QByteArray &data, Collection &col, in
   bool somethingElseChanged = false;
 
   QList<QByteArray> params;
-  int end = Akonadi::ImapParser::parseParenthesizedList( data, params, start );
+  int end = ImapParser::parseParenthesizedList( data, params, start );
   for ( int i = 0; i < params.count() - 1; i += 2 ) {
     const QByteArray key = params[i];
     const QByteArray value = params[i + 1];
@@ -169,7 +171,7 @@ int HandlerHelper::parseCachePolicy( const QByteArray &data, Collection &col, in
     } else if ( key == AKONADI_PARAM_LOCALPARTS ) {
       QList<QByteArray> tmp;
       QStringList partsList;
-      Akonadi::ImapParser::parseParenthesizedList( value, tmp );
+      ImapParser::parseParenthesizedList( value, tmp );
       Q_FOREACH ( const QByteArray &ba, tmp ) {
         partsList << QString::fromLatin1( ba );
       }
@@ -298,7 +300,7 @@ int HandlerHelper::parseDepth( const QByteArray &depth )
   return result;
 }
 
-Akonadi::Flag::List Akonadi::HandlerHelper::resolveFlags( const QList< QByteArray > &flagNames )
+Flag::List HandlerHelper::resolveFlags( const QList< QByteArray > &flagNames )
 {
   Flag::List flagList;
   Q_FOREACH ( const QByteArray &flagName, flagNames ) {
@@ -312,4 +314,18 @@ Akonadi::Flag::List Akonadi::HandlerHelper::resolveFlags( const QList< QByteArra
     flagList.append( flag );
   }
   return flagList;
+}
+
+Tag::List HandlerHelper::resolveTags( const ImapSet &tags )
+{
+  SelectQueryBuilder<Tag> qb;
+  QueryHelper::setToQuery( tags, Tag::idFullColumnName(), qb );
+  if ( !qb.exec() ) {
+    throw HandlerException( "Unable to resolve tags" );
+  }
+  const Tag::List result = qb.result();
+  if ( result.isEmpty() ) {
+    throw HandlerException( "No tags found" );
+  }
+  return result;
 }

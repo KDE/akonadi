@@ -27,7 +27,10 @@
 #include <QDBusInterface>
 #include <QDBusError>
 
-void Akonadi::AgentSearchEngine::addSearch( const Akonadi::Collection &collection )
+using namespace Akonadi;
+using namespace Akonadi::Server;
+
+void AgentSearchEngine::addSearch( const Collection &collection )
 {
   QDBusInterface agentMgr( AkDBus::serviceName( AkDBus::Control ),
                            QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
@@ -44,7 +47,7 @@ void Akonadi::AgentSearchEngine::addSearch( const Akonadi::Collection &collectio
   akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }
 
-void Akonadi::AgentSearchEngine::removeSearch( qint64 id )
+void AgentSearchEngine::removeSearch( qint64 id )
 {
   QDBusInterface agentMgr( AkDBus::serviceName( AkDBus::Control ),
                             QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),

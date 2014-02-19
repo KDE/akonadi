@@ -23,6 +23,7 @@
 #include <handler.h>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -49,6 +50,7 @@ class Subscribe : public Handler
     bool mSubscribe;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

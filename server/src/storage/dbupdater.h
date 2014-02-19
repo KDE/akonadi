@@ -26,6 +26,10 @@
 #include <QtSql/QSqlDatabase>
 
 class QDomElement;
+class DbUpdaterTest;
+
+namespace Akonadi {
+namespace Server {
 
 /**
  * @short A helper class that contains an update set.
@@ -74,7 +78,7 @@ class DbUpdater: public QObject
     bool complexUpdate_25();
 
   private:
-    friend class DbUpdaterTest;
+    friend class ::DbUpdaterTest;
 
     bool updateApplicable( const QString &backends ) const;
     QString buildRawSqlStatement( const QDomElement &element ) const;
@@ -84,5 +88,8 @@ class DbUpdater: public QObject
     QSqlDatabase m_database;
     QString m_filename;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

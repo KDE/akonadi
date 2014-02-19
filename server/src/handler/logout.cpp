@@ -22,7 +22,7 @@
 
 #include "response.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Logout::Logout(): Handler()
 {

@@ -56,7 +56,7 @@
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlQuery>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static QMutex sTransactionMutex;
 bool DataStore::s_hasForeignKeyConstraints = false;
@@ -119,7 +119,7 @@ void DataStore::open()
   DbConfig::configuredDatabase()->initSession( m_database );
 }
 
-void Akonadi::DataStore::close()
+void DataStore::close()
 {
 
   if ( m_keepAliveTimer ) {
@@ -145,7 +145,7 @@ void Akonadi::DataStore::close()
   m_dbOpened = false;
 }
 
-bool Akonadi::DataStore::init()
+bool DataStore::init()
 {
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 
@@ -178,7 +178,7 @@ bool Akonadi::DataStore::init()
 
 QThreadStorage<DataStore *> instances;
 
-DataStore *Akonadi::DataStore::self()
+DataStore *DataStore::self()
 {
   if ( !instances.hasLocalData() ) {
     instances.setLocalData( new DataStore() );
@@ -335,7 +335,7 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
     itemsIds << item.id();
     for ( int i = 0; i < flags.count(); ++i ) {
       const QByteArray flagName = flags[i].name().toLatin1();
-      if ( !flagsIds.contains( flagName ) ) {
+      if ( !removedFlags.contains( flagName ) ) {
         flagsIds << flags[i].id();
         removedFlags << flagName;
       }
@@ -353,6 +353,177 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
   }
 
   mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
+  return true;
+}
+
+/* --- ItemTags ----------------------------------------------------- */
+
+bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags )
+{
+  QSet<qint64> removedTags;
+  QSet<qint64> addedTags;
+  QVariantList insIds;
+  QVariantList insTags;
+  Query::Condition delConds( Query::Or );
+
+  Q_FOREACH ( const PimItem &item, items ) {
+    Q_FOREACH ( const Tag &tag, item.tags() ) {
+      if ( !tags.contains( tag ) ) {
+        // Remove tags from items that had it set
+        removedTags << tag.id();
+        Query::Condition cond;
+        cond.addValueCondition( PimItemTagRelation::leftFullColumnName(), Query::Equals, item.id() );
+        cond.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, tag.id() );
+        delConds.addCondition(cond);
+      }
+    }
+
+    Q_FOREACH ( const Tag &tag, tags ) {
+      if ( !item.tags().contains( tag ) ) {
+        // Add tags to items that did not have the tag
+        addedTags << tag.id();
+        insIds << item.id();
+        insTags << tag.id();
+      }
+    }
+  }
+
+  if ( !removedTags.empty() ) {
+    QueryBuilder qb( PimItemTagRelation::tableName(), QueryBuilder::Delete );
+    qb.addCondition( delConds );
+    if ( !qb.exec() ) {
+      return false;
+    }
+  }
+
+  if ( !addedTags.empty() ) {
+    QueryBuilder qb2( PimItemTagRelation::tableName(), QueryBuilder::Insert );
+    qb2.setColumnValue( PimItemTagRelation::leftColumn(), insIds );
+    qb2.setColumnValue( PimItemTagRelation::rightColumn(), insTags );
+    qb2.setIdentificationColumn( QString() );
+    if ( !qb2.exec() ) {
+      return false;
+    }
+  }
+
+  if ( addedTags.empty() && removedTags.empty() ) {
+    // no changes done, notification not needed
+    return true;
+  }
+
+  mNotificationCollector->itemsTagsChanged( items, addedTags, removedTags );
+
+  return true;
+}
+
+bool DataStore::doAppendItemsTag( const PimItem::List &items, const Tag &tag,
+                                   const QSet<Entity::Id> &existing, const Collection &col )
+{
+  QVariantList tagIds;
+  QVariantList appendIds;
+  PimItem::List appendItems;
+  Q_FOREACH ( const PimItem &item, items ) {
+    if ( existing.contains( item.id() ) ) {
+      continue;
+    }
+
+    tagIds << tag.id();
+    appendIds << item.id();
+    appendItems << item;
+  }
+
+  if ( appendItems.isEmpty() ) {
+    return true; // all items have the desired tags already
+  }
+
+  QueryBuilder qb2( PimItemTagRelation::tableName(), QueryBuilder::Insert );
+  qb2.setColumnValue( PimItemTagRelation::leftColumn(), appendIds );
+  qb2.setColumnValue( PimItemTagRelation::rightColumn(), tagIds );
+  qb2.setIdentificationColumn( QString() );
+  if ( !qb2.exec() ) {
+    akDebug() << "Failed to execute query:" << qb2.query().lastError();
+    return false;
+  }
+
+  mNotificationCollector->itemsTagsChanged( appendItems, QSet<qint64>() << tag.id(),
+                                             QSet<qint64>(), col );
+
+  return true;
+}
+
+bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &tags,
+                                  bool &tagsChanged, bool checkIfExists,
+                                  const Collection &col )
+{
+  QSet<QByteArray> added;
+
+  QVariantList itemsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds.append( item.id() );
+  }
+
+  tagsChanged = false;
+  Q_FOREACH ( const Tag &tag, tags ) {
+    QSet<PimItem::Id> existing;
+    if ( checkIfExists ) {
+      QueryBuilder qb( PimItemTagRelation::tableName(), QueryBuilder::Select );
+      Query::Condition cond;
+      cond.addValueCondition( PimItemTagRelation::rightColumn(), Query::Equals, tag.id() );
+      cond.addValueCondition( PimItemTagRelation::leftColumn(), Query::In, itemsIds );
+      qb.addColumn( PimItemTagRelation::leftColumn() );
+      qb.addCondition( cond );
+
+      if ( !qb.exec() ) {
+        akDebug() << "Failed to execute query:" << qb.query().lastError();
+        return false;
+      }
+
+      QSqlQuery query = qb.query();
+      if ( query.size() == items.count() ) {
+        continue;
+      }
+
+      tagsChanged = true;
+
+      while ( query.next() ) {
+        existing << query.value( 0 ).value<PimItem::Id>();
+      } }
+
+    if ( !doAppendItemsTag( items, tag, existing, col ) ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &tags )
+{
+  QSet<qint64> removedTags;
+  QVariantList itemsIds;
+  QVariantList tagsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds << item.id();
+    for ( int i = 0; i < tags.count(); ++i ) {
+      const qint64 tagId = tags[i].id();
+      if ( !removedTags.contains( tagId ) ) {
+        tagsIds << tagId;
+        removedTags << tagId;
+      }
+    }
+  }
+
+  // Delete all given tags from all given items in one go
+  QueryBuilder qb( PimItemTagRelation::tableName(), QueryBuilder::Delete );
+  Query::Condition cond( Query::And );
+  cond.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::In, tagsIds );
+  cond.addValueCondition( PimItemTagRelation::leftFullColumnName(), Query::In, itemsIds );
+  qb.addCondition( cond );
+  if ( !qb.exec() ) {
+    return false;
+  }
+
+  mNotificationCollector->itemsTagsChanged( items, QSet<qint64>(), removedTags );
   return true;
 }
 
@@ -416,7 +587,7 @@ bool DataStore::appendCollection( Collection &collection )
   return true;
 }
 
-bool Akonadi::DataStore::cleanupCollection( Collection &collection )
+bool DataStore::cleanupCollection( Collection &collection )
 {
   if ( !s_hasForeignKeyConstraints ) {
     return cleanupCollection_slow( collection );
@@ -538,7 +709,7 @@ static bool recursiveSetResourceId( const Collection &collection, qint64 resourc
   return true;
 }
 
-bool Akonadi::DataStore::moveCollection( Collection &collection, const Collection &newParent )
+bool DataStore::moveCollection( Collection &collection, const Collection &newParent )
 {
   if ( collection.parentId() == newParent.id() ) {
     return true;
@@ -843,7 +1014,7 @@ bool DataStore::addCollectionAttribute( const Collection &col, const QByteArray 
   return true;
 }
 
-bool Akonadi::DataStore::removeCollectionAttribute( const Collection &col, const QByteArray &key )
+bool DataStore::removeCollectionAttribute( const Collection &col, const QByteArray &key )
 {
   SelectQueryBuilder<CollectionAttribute> qb;
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
@@ -908,7 +1079,7 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray &dateTime )
     return QDateTime::fromString( QString::fromLatin1( dateTime ), QLatin1String( "yyyy-MM-dd hh:mm:ss" ) );
 }
 
-bool Akonadi::DataStore::beginTransaction()
+bool DataStore::beginTransaction()
 {
   if ( !m_dbOpened ) {
     return false;
@@ -929,7 +1100,7 @@ bool Akonadi::DataStore::beginTransaction()
   return true;
 }
 
-bool Akonadi::DataStore::rollbackTransaction()
+bool DataStore::rollbackTransaction()
 {
   if ( !m_dbOpened ) {
     return false;
@@ -957,7 +1128,7 @@ bool Akonadi::DataStore::rollbackTransaction()
   return true;
 }
 
-bool Akonadi::DataStore::commitTransaction()
+bool DataStore::commitTransaction()
 {
   if ( !m_dbOpened ) {
     return false;
@@ -984,7 +1155,7 @@ bool Akonadi::DataStore::commitTransaction()
   return true;
 }
 
-bool Akonadi::DataStore::inTransaction() const
+bool DataStore::inTransaction() const
 {
   return m_transactionLevel > 0;
 }

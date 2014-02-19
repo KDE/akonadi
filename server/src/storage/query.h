@@ -25,6 +25,7 @@
 #include <QtCore/QVector>
 
 namespace Akonadi {
+namespace Server {
 
 class QueryBuilder;
 
@@ -72,7 +73,7 @@ enum SortOrder {
 */
 class Condition
 {
-  friend class Akonadi::QueryBuilder;
+  friend class Akonadi::Server::QueryBuilder;
   public:
     /** A list of conditions. */
     typedef QVector<Condition> List;
@@ -126,12 +127,13 @@ class Condition
     QVariant mComparedValue;
     CompareOperator mCompareOp;
     LogicOperator mCombineOp;
-};
 
-}
+}; // class Condition
 
-}
+} // namespace Query
+} // namespace Server
+} // namespace Akonadi
 
-Q_DECLARE_TYPEINFO( Akonadi::Query::Condition, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO( Akonadi::Server::Query::Condition, Q_MOVABLE_TYPE );
 
 #endif

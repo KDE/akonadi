@@ -26,18 +26,18 @@
 #include <QtDBus/QDBusConnection>
 #include "storage/transaction.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 ResourceManager *ResourceManager::mSelf = 0;
 
-Akonadi::ResourceManager::ResourceManager( QObject *parent )
+ResourceManager::ResourceManager( QObject *parent )
   : QObject( parent )
 {
   new ResourceManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/ResourceManager" ), this );
 }
 
-void Akonadi::ResourceManager::addResourceInstance( const QString &name, const QStringList &capabilities )
+void ResourceManager::addResourceInstance( const QString &name, const QStringList &capabilities )
 {
   Transaction transaction( DataStore::self() );
   Resource resource = Resource::retrieveByName( name );
@@ -55,7 +55,7 @@ void Akonadi::ResourceManager::addResourceInstance( const QString &name, const Q
   transaction.commit();
 }
 
-void Akonadi::ResourceManager::removeResourceInstance( const QString &name )
+void ResourceManager::removeResourceInstance( const QString &name )
 {
   DataStore *db = DataStore::self();
 
@@ -81,7 +81,7 @@ QStringList ResourceManager::resourceInstances() const
   return result;
 }
 
-ResourceManager *Akonadi::ResourceManager::self()
+ResourceManager *ResourceManager::self()
 {
   if ( !mSelf ) {
     mSelf = new ResourceManager();

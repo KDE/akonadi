@@ -24,6 +24,7 @@
 #include <entities.h>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -63,6 +64,7 @@ class ColCopy : public Copy
     bool copyCollection( const Collection &source, const Collection &target );
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

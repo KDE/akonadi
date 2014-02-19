@@ -34,6 +34,7 @@ class QTimer;
 #include "notificationcollector.h"
 
 namespace Akonadi {
+namespace Server {
 
 class NotificationCollector;
 
@@ -122,6 +123,12 @@ class DataStore : public QObject
                            bool checkIfExists = true, const Collection &col = Collection() );
     bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
 
+    /* --- ItemTags ----------------------------------------------------- */
+    bool setItemsTags( const PimItem::List &items, const Tag::List &tags );
+    bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged,
+                           bool checkIfExists = true, const Collection &col = Collection() );
+    bool removeItemsTags( const PimItem::List &items, const Tag::List &tags );
+
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 
@@ -137,7 +144,7 @@ class DataStore : public QObject
     bool cleanupCollection_slow( Collection &collection );
 
     /// moves the collection @p collection to @p newParent.
-    bool moveCollection( Akonadi::Collection &collection, const Akonadi::Collection &newParent );
+    bool moveCollection( Collection &collection, const Collection &newParent );
 
     bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
 
@@ -267,6 +274,9 @@ protected:
     bool doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
                            const QSet<PimItem::Id> &existing, const Collection &col );
 
+    bool doAppendItemsTag( const PimItem::List &items, const Tag &tag,
+                          const QSet<Entity::Id> &existing, const Collection &col );
+
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
         @param dateTime the date/time in UTC
@@ -296,5 +306,7 @@ private:
     static bool s_hasForeignKeyConstraints;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
+
 #endif

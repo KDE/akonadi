@@ -22,7 +22,8 @@
 
 #include "clientcapabilities.h"
 
-#include <QMutex>
+namespace Akonadi {
+namespace Server {
 
 /** Aggregates client capabilities of all active sessions. */
 namespace ClientCapabilityAggregator
@@ -38,5 +39,8 @@ namespace ClientCapabilityAggregator
   /** Maximum required notification message version */
   int maximumNotificationMessageVersion();
 }
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif // CLIENTCAPABILITYAGGREGATOR_H

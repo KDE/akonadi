@@ -20,7 +20,7 @@
 
 #include <QtCore/QTextStream>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 static const char *s_resultCodeStrings[] = {
     "OK", "NO", "BAD", "BYE", ""
@@ -83,7 +83,7 @@ void Response::setString( const QByteArray &string )
     m_responseString = string;
 }
 
-void Akonadi::Response::setString( const char *string )
+void Response::setString( const char *string )
 {
     m_responseString = QByteArray( string );
 }

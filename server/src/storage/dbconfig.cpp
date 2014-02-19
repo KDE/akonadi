@@ -33,6 +33,7 @@
 #include <QtCore/QStringBuilder>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 //TODO: make me Q_GLOBAL_STATIC
 static DbConfig *s_DbConfigInstance = 0;

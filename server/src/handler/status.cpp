@@ -32,7 +32,7 @@
 
 #include <libs/protocol_p.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Status::Status(): Handler()
 {

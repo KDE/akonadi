@@ -35,6 +35,7 @@
 #include <QDBusInterface>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Delete::Delete( Scope scope )
   : Handler()

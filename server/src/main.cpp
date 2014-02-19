@@ -44,7 +44,7 @@ void shutdownHandler( int )
 {
   akDebug() << "Shutting down AkonadiServer...";
 
-  Akonadi::AkonadiServer::instance()->quit();
+  Akonadi::Server::AkonadiServer::instance()->quit();
 
   exit( 255 );
 }
@@ -70,12 +70,12 @@ int main( int argc, char ** argv )
      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
    }
 
-    Akonadi::AkonadiServer::instance(); // trigger singleton creation
+    Akonadi::Server::AkonadiServer::instance(); // trigger singleton creation
     AkonadiCrash::setShutdownMethod( shutdownHandler );
 
     const int result = app.exec();
 
-    Akonadi::AkonadiServer::instance()->quit();
+    Akonadi::Server::AkonadiServer::instance()->quit();
 
     Q_CLEANUP_RESOURCE( akonadidb );
 

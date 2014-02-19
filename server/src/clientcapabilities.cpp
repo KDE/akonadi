@@ -19,6 +19,8 @@
 
 #include "clientcapabilities.h"
 
+using namespace Akonadi::Server;
+
 ClientCapabilities::ClientCapabilities()
   : m_notificationMessageVersion( 0 )
   , m_noPayloadPath( false )

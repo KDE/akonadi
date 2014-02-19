@@ -31,14 +31,19 @@
 
 #include <boost/shared_ptr.hpp>
 
+class DbInitializerTest;
+
+namespace Akonadi {
+namespace Server {
+
+class Schema;
+
 class TestInterface
 {
   public:
     virtual ~TestInterface() {}
     virtual void execStatement( const QString &statement ) = 0;
 };
-
-class Schema;
 
 /**
  * A helper class which takes a reference to a database object and
@@ -137,7 +142,7 @@ class DbInitializer
     static QString buildPrimaryKeyStatement( const TableDescription &table );
 
   private:
-    friend class DbInitializerTest;
+    friend class ::DbInitializerTest;
 
     /**
      * Sets the debug @p interface that shall be used on unit test run.
@@ -178,5 +183,8 @@ class DbInitializer
     QStringList m_pendingForeignKeys;
     QStringList m_removedForeignKeys;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -23,6 +23,8 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
+using namespace Akonadi::Server;
+
 ColumnDescription::ColumnDescription()
   : size( -1 )
   , allowNull( true )

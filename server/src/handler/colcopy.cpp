@@ -28,6 +28,7 @@
 #include "imapstreamparser.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 bool ColCopy::copyCollection( const Collection &source, const Collection &target )
 {

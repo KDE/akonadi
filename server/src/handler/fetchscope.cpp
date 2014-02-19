@@ -23,7 +23,7 @@
 #include "handlerhelper.h"
 #include "handler.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 class FetchScope::Private : public QSharedData
 {
@@ -53,6 +53,7 @@ class FetchScope::Private : public QSharedData
     uint mFlagsRequested : 1;
     uint mRemoteIdRequested : 1;
     uint mGidRequested : 1;
+    uint mTagsRequested : 1;
 };
 
 FetchScope::Private::Private()
@@ -71,6 +72,7 @@ FetchScope::Private::Private()
   , mFlagsRequested( false )
   , mRemoteIdRequested( false )
   , mGidRequested( false )
+  , mTagsRequested( false )
 {
 }
 
@@ -93,6 +95,7 @@ FetchScope::Private::Private( const Private &other )
   , mFlagsRequested( other.mFlagsRequested )
   , mRemoteIdRequested( other.mRemoteIdRequested )
   , mGidRequested( other.mGidRequested )
+  , mTagsRequested( other.mTagsRequested )
 {
 }
 
@@ -159,6 +162,8 @@ void FetchScope::Private::parsePartList()
       mRemoteRevisionRequested = true;
     } else if ( b == AKONADI_PARAM_GID ) {
       mGidRequested = true;
+    } else if ( b == AKONADI_PARAM_TAGS ) {
+      mTagsRequested = true;
     } else if ( b == AKONADI_PARAM_COLLECTIONID ) {
       // we always return collection IDs anyway
     } else {
@@ -288,4 +293,9 @@ bool FetchScope::remoteIdRequested() const
 bool FetchScope::gidRequested() const
 {
   return d->mGidRequested;
+}
+
+bool FetchScope::tagsRequested() const
+{
+  return d->mTagsRequested;
 }

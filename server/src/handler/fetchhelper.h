@@ -32,8 +32,11 @@ class FetchHelperTest;
 
 namespace Akonadi {
 
-class AkonadiConnection;
 class ImapSet;
+
+namespace Server {
+
+class AkonadiConnection;
 class Response;
 
 class FetchHelper : public QObject
@@ -46,7 +49,7 @@ class FetchHelper : public QObject
     bool fetchItems( const QByteArray &responseIdentifier );
 
   Q_SIGNALS:
-    void responseAvailable( const Akonadi::Response &response );
+    void responseAvailable( const Akonadi::Server::Response &response );
 
   private:
     enum ItemQueryColumns {
@@ -67,6 +70,7 @@ class FetchHelper : public QObject
     QSqlQuery buildItemQuery();
     QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
     QSqlQuery buildFlagQuery();
+    QSqlQuery buildTagQuery();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
     QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
@@ -83,6 +87,7 @@ class FetchHelper : public QObject
     friend class ::FetchHelperTest;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

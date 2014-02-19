@@ -25,6 +25,7 @@
 #include "tracerinterface.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
  * A tracer which forwards all tracing information as dbus signals.
@@ -55,6 +56,7 @@ class DBusTracer : public QObject, public TracerInterface
     void errorEmitted( const QString &componentName, const QString &msg );
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

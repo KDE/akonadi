@@ -31,7 +31,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 DbIntrospector::Ptr DbIntrospector::createInstance( const QSqlDatabase &database )
 {

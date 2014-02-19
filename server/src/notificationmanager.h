@@ -21,7 +21,7 @@
 #define AKONADI_NOTIFICATIONMANAGER_H
 
 #include "../libs/notificationmessage_p.h"
-#include "../libs/notificationmessagev2_p.h"
+#include "../libs/notificationmessagev3_p.h"
 #include "storage/entity.h"
 
 #include <QtCore/QHash>
@@ -32,6 +32,7 @@
 class NotificationManagerTest;
 
 namespace Akonadi {
+namespace Server {
 
 class NotificationCollector;
 class NotificationSource;
@@ -93,7 +94,7 @@ class NotificationManager : public QObject, protected QDBusContext
     Q_SCRIPTABLE void unsubscribed( const QString &identifier );
 
   private Q_SLOTS:
-    void slotNotify( const Akonadi::NotificationMessageV2::List &msgs );
+    void slotNotify( const Akonadi::NotificationMessageV3::List &msgs );
 
   private:
     NotificationManager();
@@ -103,7 +104,7 @@ class NotificationManager : public QObject, protected QDBusContext
     void unregisterSource( NotificationSource *source );
 
     static NotificationManager *mSelf;
-    NotificationMessageV2::List mNotifications;
+    NotificationMessageV3::List mNotifications;
     QTimer mTimer;
 
     //! One message source for each subscribed process
@@ -113,6 +114,7 @@ class NotificationManager : public QObject, protected QDBusContext
     friend class ::NotificationManagerTest;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

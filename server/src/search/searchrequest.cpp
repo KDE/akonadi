@@ -28,7 +28,7 @@
 #include "akdebug.h"
 #include "xdgbasedirs_p.h"
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 SearchRequest::SearchRequest( const QByteArray &connectionId )
   : mConnectionId( connectionId )

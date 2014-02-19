@@ -25,17 +25,18 @@
 
 #include <QtNetwork/QLocalServer>
 
-class StorageJanitorThread;
 class QProcess;
-class IntervalCheck;
 
 namespace Akonadi {
+namespace Server {
 
 class AkonadiConnection;
 class CacheCleaner;
 class SearchManager;
 class ItemRetrievalThread;
 class SearchTaskManagerThread;
+class StorageJanitorThread;
+class IntervalCheck;
 
 class AkonadiServer : public QLocalServer
 {
@@ -78,5 +79,6 @@ class AkonadiServer : public QLocalServer
     bool mAlreadyShutdown;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 #endif

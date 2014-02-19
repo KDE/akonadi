@@ -23,6 +23,7 @@
 #include <QtCore/QObject>
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Listens to agent instance added/removed signals and creates/removes
@@ -47,6 +48,7 @@ class ResourceManager : public QObject
     static ResourceManager *mSelf;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

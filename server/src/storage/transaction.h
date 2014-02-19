@@ -23,6 +23,7 @@
 #include <qglobal.h>
 
 namespace Akonadi {
+namespace Server {
 
 class DataStore;
 
@@ -67,6 +68,7 @@ class Transaction
     bool mCommitted;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -32,7 +32,7 @@
 
 #include <unistd.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 DbConfigPostgresql::DbConfigPostgresql()
 {

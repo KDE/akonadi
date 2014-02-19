@@ -35,6 +35,7 @@
 #include <akdebug.h>
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Modify::Modify( Scope::SelectionScope scope )
   : m_scope( scope )
@@ -176,7 +177,6 @@ bool Modify::parseStream()
       QStringList attrs;
       for ( int i = 0; i < queryArgs.size(); ++i ) {
         const QByteArray key = queryArgs.at( i );
-        qDebug() << key;
         if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING ) {
           queryString = QString::fromUtf8( queryArgs.at( i + 1 ) );
           ++i;
@@ -196,6 +196,10 @@ bool Modify::parseStream()
       }
 
       queryAttributes = attrs.join( QLatin1String( " " ) );
+
+      qDebug() << collection.queryAttributes() << queryAttributes;
+      qDebug() << collection.queryCollections() << queryCollections;
+      qDebug() << collection.queryString() << queryString;
 
       if ( collection.queryAttributes() != queryAttributes
           || collection.queryCollections() != queryCollections

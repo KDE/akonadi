@@ -27,6 +27,8 @@
 
 #define QL1S(x) QLatin1String(x)
 
+using namespace Akonadi::Server;
+
 class DbIntrospectorTest : public QObject
 {
   Q_OBJECT

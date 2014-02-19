@@ -38,6 +38,7 @@ class QIODevice;
 class ImapStreamParserTest;
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Parser for IMAP messages that operates on a local socket stream.
@@ -268,6 +269,7 @@ class ImapStreamParser
     bool m_peeking;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -47,7 +47,7 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 StorageJanitorThread::StorageJanitorThread( QObject *parent )
   : QThread( parent )
@@ -230,12 +230,12 @@ void StorageJanitor::findOrphanedCollections()
   }
 }
 
-void StorageJanitor::checkPathToRoot( const Akonadi::Collection &col )
+void StorageJanitor::checkPathToRoot( const Collection &col )
 {
   if ( col.parentId() == 0 ) {
     return;
   }
-  const Akonadi::Collection parent = col.parent();
+  const Collection parent = col.parent();
   if ( !parent.isValid() ) {
     inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id() )
           + QLatin1Literal( ") has no valid parent." ) );
@@ -433,7 +433,7 @@ void StorageJanitor::findDirtyObjects()
 
   SelectQueryBuilder<PimItem> iqb2;
   iqb2.addValueCondition( PimItem::dirtyColumn(), Query::Equals, true );
-  iqb2.addValueCondition( PimItem::remoteIdColumn(), Akonadi::Query::IsNot, QVariant() );
+  iqb2.addValueCondition( PimItem::remoteIdColumn(), Query::IsNot, QVariant() );
   iqb2.addSortColumn( PimItem::idFullColumnName() );
   iqb2.exec();
   const PimItem::List dirtyItems = iqb2.result();
@@ -448,7 +448,7 @@ void StorageJanitor::vacuum()
   const DbType::Type dbType = DbType::type( DataStore::self()->database() );
   if ( dbType == DbType::MySQL || dbType == DbType::PostgreSQL ) {
     inform( "vacuuming database, that'll take some time and require a lot of temporary disk space..." );
-    Q_FOREACH ( const QString &table, Akonadi::allDatabaseTables() ) {
+    Q_FOREACH ( const QString &table, allDatabaseTables() ) {
       inform( QString::fromLatin1( "optimizing table %1..." ).arg( table ) );
 
       QString queryStr;

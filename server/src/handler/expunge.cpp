@@ -28,6 +28,7 @@
 #include "imapstreamparser.h"
 
 using namespace Akonadi;
+using namespace Akonadi::Server;
 
 Expunge::Expunge()
   : Handler()

@@ -24,6 +24,9 @@
 
 class QProcess;
 
+namespace Akonadi {
+namespace Server {
+
 class DbConfigPostgresql : public DbConfig
 {
   public:
@@ -82,5 +85,8 @@ class DbConfigPostgresql : public DbConfig
     QString mPgData;
     bool mInternalServer;
 };
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

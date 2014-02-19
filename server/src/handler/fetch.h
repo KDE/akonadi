@@ -25,6 +25,7 @@
 #include "scope.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -58,6 +59,7 @@ class Fetch : public Handler
     Scope mScope;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

@@ -33,7 +33,7 @@
 #include <libs/protocol_p.h>
 #include <storage/collectionqueryhelper.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 template <typename T>
 static bool intersect( const QVector<typename T::Id> &l1, const QVector<T> &l2 )

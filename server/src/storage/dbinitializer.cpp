@@ -38,7 +38,7 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 DbInitializer::Ptr DbInitializer::createInstance( const QSqlDatabase &database, Schema *schema )
 {

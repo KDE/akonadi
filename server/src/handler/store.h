@@ -29,6 +29,7 @@
 #include "libs/imapset_p.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -114,6 +115,9 @@ class Store : public Handler
     bool replaceFlags( const PimItem::List &items, const QList<QByteArray> &flags );
     bool addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool &flagsChanged );
     bool deleteFlags( const PimItem::List &items, const QList<QByteArray> &flags );
+    bool replaceTags( const PimItem::List &items, const ImapSet &tags );
+    bool addTags( const PimItem::List &items, const ImapSet &tags, bool &tagsChanged );
+    bool deleteTags( const PimItem::List &items, const ImapSet &tags );
     bool setGid( const PimItem &item, const QString &gid );
     void sendPimItemResponse( const PimItem &pimItem );
 
@@ -125,6 +129,7 @@ class Store : public Handler
     bool mCheckRevision;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

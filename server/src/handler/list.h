@@ -27,6 +27,7 @@
 template <typename T> class QStack;
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -104,6 +105,7 @@ class List : public Handler
 
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

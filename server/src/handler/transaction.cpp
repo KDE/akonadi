@@ -25,12 +25,14 @@
 
 #include <QMetaEnum>
 
-Akonadi::TransactionHandler::TransactionHandler( Mode mode )
+using namespace Akonadi::Server;
+
+TransactionHandler::TransactionHandler( Mode mode )
   : mMode( mode )
 {
 }
 
-bool Akonadi::TransactionHandler::parseStream()
+bool TransactionHandler::parseStream()
 {
   DataStore *store = connection()->storageBackend();
 

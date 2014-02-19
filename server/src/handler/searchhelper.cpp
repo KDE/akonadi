@@ -24,7 +24,7 @@
 
 #include <libs/protocol_p.h>
 
-using namespace Akonadi;
+using namespace Akonadi::Server;
 
 QList<QByteArray> SearchHelper::splitLine( const QByteArray &line )
 {

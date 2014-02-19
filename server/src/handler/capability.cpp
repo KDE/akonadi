@@ -29,6 +29,7 @@
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
+using namespace Server;
 
 Capability::Capability(): Handler()
 {

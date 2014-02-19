@@ -31,6 +31,7 @@
 #include "agentmanagerinterface.h"
 
 namespace Akonadi {
+namespace Server {
 
 class AkonadiConnection;
 class SearchRequest;
@@ -114,6 +115,7 @@ class SearchTaskManager : public QObject
 
 AKONADI_EXCEPTION_MAKE_INSTANCE( SearchException );
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_SEARCHTASKMANAGER_H

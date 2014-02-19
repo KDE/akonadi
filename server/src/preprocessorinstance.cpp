@@ -38,8 +38,7 @@
 
 #include <QtCore/QTimer>
 
-namespace Akonadi
-{
+using namespace Akonadi::Server;
 
 PreprocessorInstance::PreprocessorInstance( const QString &id )
   : QObject()
@@ -247,5 +246,3 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
   // Stay busy and process next item in the queue
   processHeadItem();
 }
-
-} // namespace Akonadi

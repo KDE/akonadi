@@ -29,7 +29,7 @@
 
 #define QL1S(x) QLatin1String(x)
 
-AKTEST_MAIN( DbInitializerTest )
+using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE( QVector<DbIntrospector::ForeignKey> )
 
@@ -179,3 +179,5 @@ QString DbInitializerTest::readNextStatement( QIODevice *io )
 
   return statement;
 }
+
+AKTEST_MAIN( DbInitializerTest )

@@ -30,6 +30,7 @@ class QVariant;
 class QSqlDatabase;
 
 namespace Akonadi {
+namespace Server {
 
 /**
   Base class for classes representing database records. It also contains
@@ -181,6 +182,7 @@ namespace _detail {
     };
 }
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif

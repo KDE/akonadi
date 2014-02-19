@@ -27,6 +27,7 @@
 #include "scope.h"
 
 namespace Akonadi {
+namespace Server {
 
 /**
   @ingroup akonadi_server_handler
@@ -54,6 +55,7 @@ class SearchResult : public Handler
     Scope mScope;
 };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif // AKONADI_SEARCHRESULT_H

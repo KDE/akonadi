@@ -22,6 +22,9 @@
 
 #include <QSqlDatabase>
 
+namespace Akonadi {
+namespace Server {
+
 /** Helper methods for checking the database system we are dealing with. */
 namespace DbType
 {
@@ -38,6 +41,9 @@ namespace DbType
 
   /** Returns the type for the given driver name. */
   Type typeForDriverName( const QString &driverName );
-}
+
+} // namespace DbType
+} // namespace Server
+} // namespace Akonadi
 
 #endif // DBTYPE_H

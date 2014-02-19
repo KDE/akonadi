@@ -20,6 +20,7 @@
 #define GLOBAL_H
 
 namespace Akonadi {
+namespace Server {
 
     // rfc1730 section 3
   /** The state of the client
@@ -31,6 +32,7 @@ namespace Akonadi {
         LoggingOut
     };
 
-}
+} // namespace Server
+} // namespace Akonadi
 
 #endif
