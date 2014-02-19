@@ -181,16 +181,16 @@
     <index name="tagIndex" columns="tagId" unique="false"/>
   </table>
 
-  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
-
-  <relation table1="PimItem" column1="id" table2="Tag" column2="id"/>
-
   <table name="TagRemoteIdResourceRelation">
     <column name="tagId" type="qint64" allowNull="false" refTable="Tag" refColumn="id" onDelete="Cascade" />
     <column name="resourceId"  type="qint64" allowNull="false" refTable="Resource" refColumn="id" onDelete="Cascade" />
     <column name="remoteId" type="QString" allowNull="false" />
     <index name="TagAndResourceIndex" columns="tagId,resourceId" unique="true"/>
   </table>
+
+  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
+
+  <relation table1="PimItem" column1="id" table2="Tag" column2="id"/>
 
   <relation table1="Collection" column1="id" table2="MimeType" column2="id">
     <comment>Specifies allowed MimeType for a Collection</comment>

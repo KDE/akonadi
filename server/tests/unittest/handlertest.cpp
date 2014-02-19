@@ -26,7 +26,7 @@
 
 using namespace Akonadi::Server;
 
-#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << #command << "Akonadi::" #class;
+#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << #command << "Akonadi::Server::" #class;
 
 class HandlerTest : public QObject
 {
