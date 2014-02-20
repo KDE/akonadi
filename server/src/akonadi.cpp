@@ -274,7 +274,6 @@ void AkonadiServer::quit()
     PreprocessorManager::done();
 
     DataStore::self()->close();
-    Q_ASSERT( QSqlDatabase::connectionNames().isEmpty() );
 
     akDebug() << "stopping db process";
     stopDatabaseProcess();
