@@ -200,7 +200,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
       Default = ItemGetter | EmitItemsInBatches
     };
-    Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption);
+    Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption)
 
     /**
      * Sets the mechanisms by which the items should be fetched
@@ -241,6 +241,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::ItemFetchJob::DeliveryOptions);
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::ItemFetchJob::DeliveryOptions)
 
 #endif

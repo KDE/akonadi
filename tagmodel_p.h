@@ -57,7 +57,7 @@ class TagModelPrivate
     QHash<Tag::Id /* missing parent */, Tag::List > mPendingTags;
 
   protected:
-    Q_DECLARE_PUBLIC(TagModel);
+    Q_DECLARE_PUBLIC(TagModel)
     TagModel *q_ptr;
 
 };
