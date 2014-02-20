@@ -227,6 +227,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       else if ( d->mDeliveryOptions & EmitItemsIndividually ) {
         emit itemsReceived( Item::List() << item );
       }
+      return;
     }
   }
   kDebug() << "Unhandled response: " << tag << data;
