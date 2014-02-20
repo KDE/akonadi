@@ -131,7 +131,9 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex &parent) cons
   }
 
   const Tag::List &children = d->mChildTags.value(parentId);
-  Q_ASSERT(row < children.count());
+  if (row >= children.count()) {
+    return QModelIndex();
+  }
 
   return createIndex(row, column, (int) parentId);
 }
