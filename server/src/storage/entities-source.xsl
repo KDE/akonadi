@@ -185,7 +185,7 @@ void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-
 }
 
 // comparisson operator
-bool <xsl:value-of select="$className"/>::operator==( const <xsl:value-of select="$className"/> &amp; other )
+bool <xsl:value-of select="$className"/>::operator==( const <xsl:value-of select="$className"/> &amp; other ) const
 {
   return id() == other.id();
 }

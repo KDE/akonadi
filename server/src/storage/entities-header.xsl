@@ -71,7 +71,7 @@ class <xsl:value-of select="$className"/> : private Entity
     <xsl:value-of select="$className"/>&amp; operator=( const <xsl:value-of select="$className"/> &amp; other );
 
     /// comparisson operator, compares ids, not content
-    bool operator==( const <xsl:value-of select="$className"/> &amp; other );
+    bool operator==( const <xsl:value-of select="$className"/> &amp; other ) const;
 
     // accessor methods
     <xsl:for-each select="column[@name != 'id']">
