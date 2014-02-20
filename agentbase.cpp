@@ -1019,6 +1019,7 @@ void AgentBase::registerObserver( Observer *observer )
   d_ptr->mObserver = observer;
 
   const bool haveObserverV4 = (dynamic_cast<AgentBase::ObserverV4*>(d_ptr->mObserver) != 0);
+  const bool haveObserverV3 = (dynamic_cast<AgentBase::ObserverV3*>(d_ptr->mObserver) != 0);
 
   disconnect( d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
               d_ptr, SLOT(tagAdded(Akonadi::Tag)) );
@@ -1047,16 +1048,18 @@ void AgentBase::registerObserver( Observer *observer )
   disconnect( d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
               d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
 
-  if ( haveObserverV4 ) {
+  if ( haveObserverV4 || haveObserverV3 ) {
     // V4
-    connect( d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
-             d_ptr, SLOT(tagAdded(Akonadi::Tag)) );
-    connect( d_ptr->mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
-             d_ptr, SLOT(tagChanged(Akonadi::Tag)) );
-    connect( d_ptr->mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
-             d_ptr, SLOT(tagRemoved(Akonadi::Tag)) );
-    connect( d_ptr->mChangeRecorder, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
-             d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) );
+    if ( haveObserverV4 ) {
+      connect( d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
+               d_ptr, SLOT(tagAdded(Akonadi::Tag)) );
+      connect( d_ptr->mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
+               d_ptr, SLOT(tagChanged(Akonadi::Tag)) );
+      connect( d_ptr->mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
+               d_ptr, SLOT(tagRemoved(Akonadi::Tag)) );
+      connect( d_ptr->mChangeRecorder, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
+               d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) );
+    }
 
     // V3
     connect( d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
