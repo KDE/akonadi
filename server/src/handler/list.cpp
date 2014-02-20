@@ -25,7 +25,7 @@
 #include "storage/entity.h"
 #include "storage/selectquerybuilder.h"
 
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "response.h"
 #include "handlerhelper.h"
 #include "imapstreamparser.h"

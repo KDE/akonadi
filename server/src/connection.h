@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef AKONADICONNECTION_H
-#define AKONADICONNECTION_H
+#ifndef AKONADI_CONNECTION_H
+#define AKONADI_CONNECTION_H
 
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
@@ -39,12 +39,12 @@ class ImapStreamParser;
 /**
     An AkonadiConnection represents one connection of a client to the server.
 */
-class AkonadiConnection : public QThread
+class Connection : public QThread
 {
     Q_OBJECT
 public:
-    AkonadiConnection( quintptr socketDescriptor, QObject *parent );
-    virtual ~AkonadiConnection();
+    Connection( quintptr socketDescriptor, QObject *parent );
+    virtual ~Connection();
     void run();
 
     virtual DataStore *storageBackend();
@@ -83,7 +83,7 @@ protected Q_SLOTS:
     void slotConnectionStateChange( ConnectionState );
 
 protected:
-    AkonadiConnection() {} // used for testing
+    Connection() {} // used for testing
     void writeOut( const QByteArray &data );
     Handler *findHandlerForCommand( const QByteArray &command );
 

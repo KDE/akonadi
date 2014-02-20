@@ -33,7 +33,7 @@
 namespace Akonadi {
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 class SearchRequest;
 class AgentSearchInstance;
 
@@ -70,7 +70,7 @@ class SearchTaskManager : public QObject
     void addTask( SearchTask *task );
 
     void pushResults( const QByteArray &searchId, const QSet<qint64> &ids,
-                      AkonadiConnection *connection );
+                      Connection *connection );
 
 
   private Q_SLOTS:

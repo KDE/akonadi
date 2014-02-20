@@ -19,7 +19,7 @@
 
 #include "delete.h"
 
-#include <akonadiconnection.h>
+#include <connection.h>
 #include <handlerhelper.h>
 #include <response.h>
 #include <storage/datastore.h>

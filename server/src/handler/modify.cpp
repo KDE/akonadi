@@ -19,7 +19,7 @@
 
 #include "modify.h"
 
-#include <akonadiconnection.h>
+#include <connection.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
 #include <storage/transaction.h>

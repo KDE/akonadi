@@ -22,7 +22,7 @@
 #include "response.h"
 #include "imapstreamparser.h"
 #include "clientcapabilities.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 
 #include <libs/protocol_p.h>
 

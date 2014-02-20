@@ -22,7 +22,7 @@
 #include "imapstreamparser.h"
 #include <protocol_p.h>
 #include <handlerhelper.h>
-#include <akonadiconnection.h>
+#include <connection.h>
 #include <storage/datastore.h>
 #include <storage/transaction.h>
 

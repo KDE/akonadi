@@ -19,7 +19,7 @@
 
 #include "tagappend.h"
 #include "tagfetchhelper.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "imapstreamparser.h"
 #include "response.h"
 #include "storage/datastore.h"

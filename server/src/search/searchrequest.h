@@ -28,7 +28,7 @@
 namespace Akonadi {
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 
 class SearchRequest: public QObject
 {

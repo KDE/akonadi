@@ -21,7 +21,7 @@
 #include "agentsearchinstance.h"
 #include "akdebug.h"
 #include "akdbus.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "storage/selectquerybuilder.h"
 #include <entities.h>
 
@@ -145,7 +145,7 @@ void SearchTaskManager::addTask( SearchTask *task )
 
 
 void SearchTaskManager::pushResults( const QByteArray &searchId, const QSet<qint64> &ids,
-                                      AkonadiConnection* connection )
+                                      Connection* connection )
 {
   Q_UNUSED( searchId );
 

@@ -19,7 +19,7 @@
 
 #include "colcopy.h"
 
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"

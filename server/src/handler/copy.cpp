@@ -19,7 +19,7 @@
 
 #include "copy.h"
 
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "handlerhelper.h"
 
 #include "storage/datastore.h"

@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "akonadi.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "serveradaptor.h"
 #include <akdbus.h>
 #include <akdebug.h>
@@ -306,7 +306,7 @@ void AkonadiServer::incomingConnection( quintptr socketDescriptor )
     if ( mAlreadyShutdown ) {
         return;
     }
-    QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
+    QPointer<Connection> thread = new Connection( socketDescriptor, this );
     connect( thread, SIGNAL(finished()), thread, SLOT(deleteLater()) );
     mConnections.append( thread );
     thread->start();

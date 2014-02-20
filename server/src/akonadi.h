@@ -30,7 +30,7 @@ class QProcess;
 namespace Akonadi {
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 class CacheCleaner;
 class SearchManager;
 class ItemRetrievalThread;
@@ -74,7 +74,7 @@ class AkonadiServer : public QLocalServer
     ItemRetrievalThread *mItemRetrievalThread;
     SearchTaskManagerThread *mAgentSearchManagerThread;
     QProcess *mDatabaseProcess;
-    QVector< QPointer<AkonadiConnection> > mConnections;
+    QVector< QPointer<Connection> > mConnections;
     SearchManager *mSearchManager;
     bool mAlreadyShutdown;
 };

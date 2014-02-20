@@ -27,7 +27,7 @@
 #include "handlerhelper.h"
 
 #include "akonadi.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "preprocessormanager.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"

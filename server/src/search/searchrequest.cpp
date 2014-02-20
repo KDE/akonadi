@@ -24,7 +24,7 @@
 #include "searchtaskmanager.h"
 #include "abstractsearchplugin.h"
 #include "searchmanager.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "akdebug.h"
 #include "xdgbasedirs_p.h"
 

@@ -20,7 +20,7 @@
 #include "colmove.h"
 #include <handlerhelper.h>
 #include <storage/datastore.h>
-#include <akonadiconnection.h>
+#include <connection.h>
 #include <storage/itemretriever.h>
 #include <imapstreamparser.h>
 #include <storage/transaction.h>

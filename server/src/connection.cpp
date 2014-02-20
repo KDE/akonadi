@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#include "akonadiconnection.h"
+#include "connection.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
@@ -42,7 +42,7 @@
 
 using namespace Akonadi::Server;
 
-AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent )
+Connection::Connection( quintptr socketDescriptor, QObject *parent )
     : QThread( parent )
     , m_socketDescriptor( socketDescriptor )
     , m_socket( 0 )
@@ -60,7 +60,7 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     m_verifyCacheOnRetrieval = settings.value( QLatin1String( "Cache/VerifyOnRetrieval" ), m_verifyCacheOnRetrieval ).toBool();
 }
 
-DataStore *AkonadiConnection::storageBackend()
+DataStore *Connection::storageBackend()
 {
     if ( !m_backend ) {
       m_backend = DataStore::self();
@@ -68,18 +68,18 @@ DataStore *AkonadiConnection::storageBackend()
     return m_backend;
 }
 
-AkonadiConnection::~AkonadiConnection()
+Connection::~Connection()
 {
     ClientCapabilityAggregator::removeSession( m_clientCapabilities );
     Tracer::self()->endConnection( m_identifier, QString() );
 }
 
-void AkonadiConnection::run()
+void Connection::run()
 {
     m_socket = new QLocalSocket();
 
     if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
-        qWarning() << "AkonadiConnection(" << m_identifier
+        qWarning() << "Connection(" << m_identifier
                    << ")::run: failed to set socket descriptor: "
                    << m_socket->error() << "(" << m_socket->errorString() << ")";
         delete m_socket;
@@ -122,12 +122,12 @@ void AkonadiConnection::run()
     m_streamParser = 0;
 }
 
-void AkonadiConnection::slotDisconnected()
+void Connection::slotDisconnected()
 {
     quit();
 }
 
-void AkonadiConnection::slotNewData()
+void Connection::slotNewData()
 {
   // On Windows, calling readLiteralPart() triggers the readyRead() signal recursively and leads to parse errors
   if ( m_currentHandler ) {
@@ -190,7 +190,7 @@ void AkonadiConnection::slotNewData()
   }
 }
 
-void AkonadiConnection::writeOut( const QByteArray &data )
+void Connection::writeOut( const QByteArray &data )
 {
     QByteArray block = data + "\r\n";
     m_socket->write( block );
@@ -199,7 +199,7 @@ void AkonadiConnection::writeOut( const QByteArray &data )
     Tracer::self()->connectionOutput( m_identifier, block );
 }
 
-Handler *AkonadiConnection::findHandlerForCommand( const QByteArray &command )
+Handler *Connection::findHandlerForCommand( const QByteArray &command )
 {
     Handler *handler = Handler::findHandlerForCommandAlwaysAllowed( command );
     if ( handler ) {
@@ -227,14 +227,14 @@ Handler *AkonadiConnection::findHandlerForCommand( const QByteArray &command )
     return handler;
 }
 
-void AkonadiConnection::slotResponseAvailable( const Response &response )
+void Connection::slotResponseAvailable( const Response &response )
 {
     // FIXME handle reentrancy in the presence of continuation. Something like:
     // "if continuation pending, queue responses, once continuation is done, replay them"
     writeOut( response.asString() );
 }
 
-void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
+void Connection::slotConnectionStateChange( ConnectionState state )
 {
     if ( state == m_connectionState ) {
         return;
@@ -254,27 +254,27 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-qint64 AkonadiConnection::selectedCollectionId() const
+qint64 Connection::selectedCollectionId() const
 {
     return m_selectedConnection;
 }
 
-void AkonadiConnection::setSelectedCollection( qint64 collection )
+void Connection::setSelectedCollection( qint64 collection )
 {
     m_selectedConnection = collection;
 }
 
-const Collection AkonadiConnection::selectedCollection()
+const Collection Connection::selectedCollection()
 {
   return Collection::retrieveById( selectedCollectionId() );
 }
 
-void AkonadiConnection::addStatusMessage( const QByteArray &msg )
+void Connection::addStatusMessage( const QByteArray &msg )
 {
     m_statusMessageQueue.append( msg );
 }
 
-void AkonadiConnection::flushStatusMessageQueue()
+void Connection::flushStatusMessageQueue()
 {
     for ( int i = 0; i < m_statusMessageQueue.count(); ++i ) {
       Response response;
@@ -287,7 +287,7 @@ void AkonadiConnection::flushStatusMessageQueue()
     m_statusMessageQueue.clear();
 }
 
-void AkonadiConnection::setSessionId( const QByteArray &id )
+void Connection::setSessionId( const QByteArray &id )
 {
   m_identifier.sprintf( "%s (%p)", id.data(), static_cast<void *>( this ) );
   Tracer::self()->beginConnection( m_identifier, QString() );
@@ -298,22 +298,22 @@ void AkonadiConnection::setSessionId( const QByteArray &id )
   storageBackend()->notificationCollector()->setSessionId( id );
 }
 
-QByteArray AkonadiConnection::sessionId() const
+QByteArray Connection::sessionId() const
 {
   return m_sessionId;
 }
 
-Resource AkonadiConnection::resourceContext() const
+Resource Connection::resourceContext() const
 {
   return m_resourceContext;
 }
 
-void AkonadiConnection::setResourceContext( const Resource &res )
+void Connection::setResourceContext( const Resource &res )
 {
   m_resourceContext = res;
 }
 
-bool AkonadiConnection::isOwnerResource( const PimItem &item ) const
+bool Connection::isOwnerResource( const PimItem &item ) const
 {
   if ( resourceContext().isValid() && item.collection().resourceId() == resourceContext().id() ) {
     return true;
@@ -325,7 +325,7 @@ bool AkonadiConnection::isOwnerResource( const PimItem &item ) const
   return false;
 }
 
-bool AkonadiConnection::isOwnerResource( const Collection &collection ) const
+bool Connection::isOwnerResource( const Collection &collection ) const
 {
   if ( resourceContext().isValid() && collection.resourceId() == resourceContext().id() ) {
     return true;
@@ -336,19 +336,19 @@ bool AkonadiConnection::isOwnerResource( const Collection &collection ) const
   return false;
 }
 
-const ClientCapabilities &AkonadiConnection::capabilities() const
+const ClientCapabilities &Connection::capabilities() const
 {
   return m_clientCapabilities;
 }
 
-void AkonadiConnection::setCapabilities( const ClientCapabilities &capabilities )
+void Connection::setCapabilities( const ClientCapabilities &capabilities )
 {
   ClientCapabilityAggregator::removeSession( m_clientCapabilities );
   m_clientCapabilities = capabilities;
   ClientCapabilityAggregator::addSession( m_clientCapabilities );
 }
 
-bool AkonadiConnection::verifyCacheOnRetrieval() const
+bool Connection::verifyCacheOnRetrieval() const
 {
   return m_verifyCacheOnRetrieval;
 }

@@ -33,7 +33,7 @@ AKONADI_EXCEPTION_MAKE_INSTANCE( ItemRetrieverException );
 namespace Akonadi {
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 class QueryBuilder;
 
 /**
@@ -46,10 +46,10 @@ class QueryBuilder;
 class ItemRetriever
 {
   public:
-    ItemRetriever( AkonadiConnection *connection );
+    ItemRetriever( Connection *connection );
     ~ItemRetriever();
 
-    AkonadiConnection *connection() const;
+    Connection *connection() const;
 
     void setRetrieveParts( const QStringList &parts );
     QStringList retrieveParts() const;
@@ -80,7 +80,7 @@ class ItemRetriever
     Akonadi::ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;
-    AkonadiConnection *mConnection;
+    Connection *mConnection;
     QStringList mParts;
     bool mFullPayload;
     bool mRecursive;

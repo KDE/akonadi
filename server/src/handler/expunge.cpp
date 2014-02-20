@@ -20,7 +20,7 @@
 #include "expunge.h"
 
 #include "akonadi.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"

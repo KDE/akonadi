@@ -29,7 +29,7 @@ class ImapSet;
 
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 class QueryBuilder;
 class Scope;
 
@@ -42,13 +42,13 @@ namespace CollectionQueryHelper
     Add conditions to @p qb for the given remote identifier @p rid.
     The rid context is taken from @p connection.
   */
-  void remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb );
+  void remoteIdToQuery( const QStringList &rids, Connection *connection, QueryBuilder &qb );
 
   /**
     Add conditions to @p qb for the given collection operation scope @p scope.
     The rid context is taken from @p connection, if none is specified an exception is thrown.
   */
-  void scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb );
+  void scopeToQuery( const Scope &scope, Connection *connection, QueryBuilder &qb );
 
   /**
     Checks if a collection could exist in the given parent folder with the given name.
@@ -69,7 +69,7 @@ namespace CollectionQueryHelper
     Returns an existing collection specified by the given scope. If that does not
     specify exactly one valid collection, an exception is thrwon.
   */
-  Collection singleCollectionFromScope( const Scope &scope, AkonadiConnection *connection );
+  Collection singleCollectionFromScope( const Scope &scope, Connection *connection );
 }
 
 } // namespace Server

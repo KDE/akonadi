@@ -20,7 +20,7 @@
 #include "fetch.h"
 
 #include "akonadi.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "fetchhelper.h"
 #include "response.h"
 

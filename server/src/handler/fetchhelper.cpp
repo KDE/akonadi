@@ -20,7 +20,7 @@
 #include "fetchhelper.h"
 
 #include "akdebug.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "handler.h"
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
@@ -49,7 +49,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope, const FetchScope &fetchScope )
+FetchHelper::FetchHelper( Connection *connection, const Scope &scope, const FetchScope &fetchScope )
   : mStreamParser( 0 )
   , mConnection( connection )
   , mScope( scope )

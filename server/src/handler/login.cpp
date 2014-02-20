@@ -19,7 +19,7 @@
 #include "login.h"
 
 #include "response.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "imapstreamparser.h"
 
 using namespace Akonadi::Server;

@@ -21,7 +21,7 @@
 #include "itemretriever.h"
 
 #include "akdebug.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
@@ -39,7 +39,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ItemRetriever::ItemRetriever( AkonadiConnection *connection )
+ItemRetriever::ItemRetriever( Connection *connection )
   : mScope( Scope::Invalid )
   , mConnection( connection )
   , mFullPayload( false )
@@ -51,7 +51,7 @@ ItemRetriever::~ItemRetriever()
 {
 }
 
-AkonadiConnection *ItemRetriever::connection() const
+Connection *ItemRetriever::connection() const
 {
   return mConnection;
 }

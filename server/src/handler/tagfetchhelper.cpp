@@ -26,12 +26,12 @@
 #include "storage/querybuilder.h"
 #include "storage/queryhelper.h"
 #include "entities.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagFetchHelper::TagFetchHelper( AkonadiConnection *connection, const ImapSet &set )
+TagFetchHelper::TagFetchHelper( Connection *connection, const ImapSet &set )
   : QObject()
   , mConnection( connection )
   , mSet( set )

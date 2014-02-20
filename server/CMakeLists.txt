@@ -102,7 +102,7 @@ akonadi_generate_schema(${AKONADI_DB_SCHEME} AkonadiSchema akonadischema)
 
 set(libakonadiprivate_SRCS
   src/akonadi.cpp
-  src/akonadiconnection.cpp
+  src/connection.cpp
   src/clientcapabilities.cpp
   src/clientcapabilityaggregator.cpp
   src/handler.cpp

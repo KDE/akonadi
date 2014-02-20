@@ -36,7 +36,7 @@ class ImapSet;
 
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 class Response;
 
 class FetchHelper : public QObject
@@ -44,7 +44,7 @@ class FetchHelper : public QObject
   Q_OBJECT
 
   public:
-    FetchHelper( AkonadiConnection *connection, const Scope &scope, const FetchScope &fetchScope );
+    FetchHelper( Connection *connection, const Scope &scope, const FetchScope &fetchScope );
 
     bool fetchItems( const QByteArray &responseIdentifier );
 
@@ -78,7 +78,7 @@ class FetchHelper : public QObject
   private:
     ImapStreamParser *mStreamParser;
 
-    AkonadiConnection *mConnection;
+    Connection *mConnection;
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     Scope mScope;
     FetchScope mFetchScope;

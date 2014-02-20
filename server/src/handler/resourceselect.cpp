@@ -19,7 +19,7 @@
 
 #include "resourceselect.h"
 
-#include <akonadiconnection.h>
+#include <connection.h>
 #include <entities.h>
 #include <imapstreamparser.h>
 

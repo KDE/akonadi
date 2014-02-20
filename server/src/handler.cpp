@@ -24,7 +24,7 @@
 #include "libs/imapset_p.h"
 #include "libs/protocol_p.h"
 
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "response.h"
 #include "scope.h"
 #include "handler/akappend.h"
@@ -216,12 +216,12 @@ Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command
     return 0;
 }
 
-void Handler::setConnection( AkonadiConnection *connection )
+void Handler::setConnection( Connection *connection )
 {
     m_connection = connection;
 }
 
-AkonadiConnection *Handler::connection() const
+Connection *Handler::connection() const
 {
     return m_connection;
 }

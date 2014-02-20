@@ -34,7 +34,7 @@ class ImapSet;
 namespace Server {
 
 class Response;
-class AkonadiConnection;
+class Connection;
 class QueryBuilder;
 class ImapStreamParser;
 
@@ -88,8 +88,8 @@ public:
      */
     static Handler *findHandlerForCommandAuthenticated( const QByteArray &line, ImapStreamParser *streamParser );
 
-    void setConnection( AkonadiConnection *connection );
-    AkonadiConnection *connection() const;
+    void setConnection( Connection *connection );
+    Connection *connection() const;
 
     /** Send a failure response with the given message. */
     bool failureResponse( const QByteArray &failureMessage );
@@ -135,7 +135,7 @@ Q_SIGNALS:
 
 private:
     QByteArray m_tag;
-    AkonadiConnection *m_connection;
+    Connection *m_connection;
 
 protected:
     ImapStreamParser *m_streamParser;

@@ -19,7 +19,7 @@
 
 #include "itemqueryhelper.h"
 
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "entities.h"
 #include "storage/querybuilder.h"
 #include "libs/imapset_p.h"
@@ -44,7 +44,7 @@ void ItemQueryHelper::itemSetToQuery( const ImapSet &set, QueryBuilder &qb, cons
   }
 }
 
-void ItemQueryHelper::itemSetToQuery( const ImapSet &set, bool isUid, AkonadiConnection *connection, QueryBuilder &qb )
+void ItemQueryHelper::itemSetToQuery( const ImapSet &set, bool isUid, Connection *connection, QueryBuilder &qb )
 {
   if ( !isUid && connection->selectedCollectionId() >= 0 ) {
     itemSetToQuery( set, qb, connection->selectedCollection() );
@@ -53,7 +53,7 @@ void ItemQueryHelper::itemSetToQuery( const ImapSet &set, bool isUid, AkonadiCon
   }
 }
 
-void ItemQueryHelper::remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb )
+void ItemQueryHelper::remoteIdToQuery( const QStringList &rids, Connection *connection, QueryBuilder &qb )
 {
   if ( rids.size() == 1 ) {
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::Equals, rids.first() );
@@ -80,7 +80,7 @@ void ItemQueryHelper::gidToQuery( const QStringList &gids, QueryBuilder &qb )
 
 }
 
-void ItemQueryHelper::scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb )
+void ItemQueryHelper::scopeToQuery( const Scope &scope, Connection *connection, QueryBuilder &qb )
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, connection, qb );

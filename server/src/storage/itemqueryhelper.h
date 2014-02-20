@@ -29,7 +29,7 @@ class ImapSet;
 
 namespace Server {
 
-class AkonadiConnection;
+class Connection;
 class QueryBuilder;
 class Scope;
 
@@ -48,20 +48,20 @@ namespace ItemQueryHelper
   /**
     Convenience method, does essentially the same as the one above.
   */
-  void itemSetToQuery( const ImapSet &set, bool isUid, AkonadiConnection *connection, QueryBuilder &qb );
+  void itemSetToQuery( const ImapSet &set, bool isUid, Connection *connection, QueryBuilder &qb );
 
   /**
     Add conditions to @p qb for the given remote identifier @p rid.
     The rid context is taken from @p connection.
   */
-  void remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb );
+  void remoteIdToQuery( const QStringList &rids, Connection *connection, QueryBuilder &qb );
   void gidToQuery( const QStringList &gids, QueryBuilder &qb );
 
   /**
     Add conditions to @p qb for the given item operation scope @p scope.
     The rid context is taken from @p connection, if none is specified an exception is thrown.
   */
-  void scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb );
+  void scopeToQuery( const Scope &scope, Connection *connection, QueryBuilder &qb );
 }
 
 } // namespace Server

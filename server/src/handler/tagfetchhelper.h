@@ -33,7 +33,7 @@ namespace Server {
 
 class ImapStreamParser;
 
-class AkonadiConnection;
+class Connection;
 class Response;
 
 class TagFetchHelper : public QObject
@@ -41,7 +41,7 @@ class TagFetchHelper : public QObject
   Q_OBJECT
 
   public:
-    TagFetchHelper( AkonadiConnection *connection, const ImapSet &set );
+    TagFetchHelper( Connection *connection, const ImapSet &set );
 
     bool fetchTags( const QByteArray &responseIdentifier );
 
@@ -55,7 +55,7 @@ class TagFetchHelper : public QObject
   private:
     ImapStreamParser *mStreamParser;
 
-    AkonadiConnection *mConnection;
+    Connection *mConnection;
     ImapSet mSet;
 };
 

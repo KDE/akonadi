@@ -19,7 +19,7 @@
 
 #include "transaction.h"
 #include "storage/datastore.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "response.h"
 #include "imapstreamparser.h"
 

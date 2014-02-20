@@ -21,7 +21,7 @@
 
 #include "akonadi.h"
 #include "config-akonadi.h"
-#include "akonadiconnection.h"
+#include "connection.h"
 #include "fetchhelper.h"
 #include "handlerhelper.h"
 #include "searchhelper.h"
