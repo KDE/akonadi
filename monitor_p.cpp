@@ -995,6 +995,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV3 &msg )
   // And subscription modify the visibility of the collection by the collectionFetchScope.
   if ( msg.operation() == NotificationMessageV2::Modify
         || msg.operation() == NotificationMessageV2::ModifyFlags
+        || msg.operation() == NotificationMessageV3::ModifyTags
         || msg.operation() == NotificationMessageV2::Move
         || msg.operation() == NotificationMessageV2::Subscribe ) {
     if ( msg.type() == NotificationMessageV2::Collections ) {
