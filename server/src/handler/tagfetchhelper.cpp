@@ -66,9 +66,10 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     qb.addColumn( TagRemoteIdResourceRelation::remoteIdFullColumnName() );
     qb.addJoin( QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(),
                 Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName() );
-    qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(),
-                Resource::idFullColumnName(), TagRemoteIdResourceRelation::resourceIdFullColumnName() );
-    qb.addValueCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->resourceContext().name() );
+    Query::Condition joinCondition;
+    joinCondition.addColumnCondition( Resource::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::resourceIdFullColumnName() );
+    joinCondition.addValueCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->resourceContext().name() );
+    qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), joinCondition );
   }
 
   qb.addSortColumn( Tag::idFullColumnName(), Query::Descending );
@@ -95,11 +96,18 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
     const qint64 tagId = tagQuery.value( 0 ).toLongLong();
     const QByteArray gid = tagQuery.value( 1 ).toByteArray();
     const qint64 parentId = tagQuery.value( 2 ).toLongLong();
+    QByteArray remoteId;
+    if ( mConnection->resourceContext().isValid() ) {
+      remoteId = tagQuery.value( 3 ).toByteArray();
+    }
 
     QList<QByteArray> attributes;
     attributes << AKONADI_PARAM_UID << QByteArray::number( tagId );
     attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
     attributes << AKONADI_PARAM_PARENT << QByteArray::number( parentId );
+    if ( !remoteId.isEmpty() ) {
+      attributes << AKONADI_PARAM_REMOTEID << remoteId;
+    }
 
     while ( attributeQuery.isValid() ) {
       const qint64 id = attributeQuery.value( 0 ).toLongLong();
