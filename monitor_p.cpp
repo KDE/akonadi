@@ -146,6 +146,14 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV3 &msg, bool all
 {
   NotificationMessageV2::Operation op = msg.operation();
 
+  if ( msg.type() == NotificationMessageV2::Tags
+    && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(tagAdded(Akonadi::Tag)) ) == 0 )
+      || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(tagChanged(Akonadi::Tag)) ) == 0 )
+      || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(tagRemoved(Akonadi::Tag)) ) == 0 ) ) )
+  {
+    return true;
+  }
+
   if ( !fetchCollectionStatistics &&
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0
@@ -362,7 +370,7 @@ bool MonitorPrivate::acceptNotification( const Akonadi::NotificationMessageV3 &m
         }
         return false;
       }
-      return true;;
+      return true;
   }
   Q_ASSERT( false );
   return false;
@@ -372,7 +380,7 @@ void MonitorPrivate::cleanOldNotifications()
 {
   bool erased = false;
   for ( QQueue<NotificationMessageV3>::iterator it = pipeline.begin(); it != pipeline.end(); ) {
-    if ( !acceptNotification( *it ) ) {
+    if ( !acceptNotification( *it ) || isLazilyIgnored( *it ) ) {
       it = pipeline.erase( it );
       erased = true;
     } else {
@@ -381,7 +389,7 @@ void MonitorPrivate::cleanOldNotifications()
   }
 
   for ( QQueue<NotificationMessageV3>::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
-    if ( !acceptNotification( *it ) ) {
+    if ( !acceptNotification( *it ) || isLazilyIgnored( *it ) ) {
       it = pendingNotifications.erase( it );
       erased = true;
     } else {
@@ -394,6 +402,15 @@ void MonitorPrivate::cleanOldNotifications()
 
 bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV3 &msg )
 {
+  if ( msg.type() == NotificationMessageV2::Tags ) {
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+      if ( !tagCache->ensureCached( QList<Tag::Id>() << entity.id, mTagFetchScope ) ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   bool allCached = true;
   if ( fetchCollection ) {
     if ( !collectionCache->ensureCached( msg.parentCollection(), mCollectionFetchScope ) )
@@ -451,44 +468,42 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV3 &msg )
         break;
       }
     }
-  } else if ( msg.type() == NotificationMessageV2::Tags ) {
-    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-      if ( !tagCache->ensureCached( QList<Tag::Id>() << entity.id, mTagFetchScope ) ) {
-        allCached = false;
-        break;
-      }
-    }
   }
   return allCached;
 }
 
 bool MonitorPrivate::emitNotification( const NotificationMessageV3 &msg )
 {
-  const Collection parent = collectionCache->retrieve( msg.parentCollection() );
-  Collection destParent;
-  if ( msg.operation() == NotificationMessageV2::Move )
-    destParent = collectionCache->retrieve( msg.parentDestCollection() );
-
   bool someoneWasListening = false;
-  if ( msg.type() == NotificationMessageV2::Collections ) {
-    Collection col;
-    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-      col = collectionCache->retrieve( entity.id );
-      if ( emitCollectionNotification( msg, col, parent, destParent ) && !someoneWasListening )
-        someoneWasListening = true;
-    }
-  } else if ( msg.type() == NotificationMessageV2::Items ) {
-    //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
-    const Item::List items = itemCache->retrieve( msg.uids() );
-    someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
-  } else if ( msg.type() == NotificationMessageV2::Tags ) {
+  if ( msg.type() == NotificationMessageV2::Tags ) {
     //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
     const Tag::List tags = tagCache->retrieve( msg.uids() );
     someoneWasListening = emitTagsNotification( msg, tags );
+  } else {
+    const Collection parent = collectionCache->retrieve( msg.parentCollection() );
+    Collection destParent;
+    if ( msg.operation() == NotificationMessageV2::Move ) {
+      destParent = collectionCache->retrieve( msg.parentDestCollection() );
+    }
+
+    if ( msg.type() == NotificationMessageV2::Collections ) {
+      Collection col;
+      Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+        col = collectionCache->retrieve( entity.id );
+        if ( emitCollectionNotification( msg, col, parent, destParent ) && !someoneWasListening ) {
+          someoneWasListening = true;
+        }
+      }
+    } else if ( msg.type() == NotificationMessageV2::Items ) {
+      //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
+      const Item::List items = itemCache->retrieve( msg.uids() );
+      someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
+    }
   }
 
-  if ( !someoneWasListening )
+  if ( !someoneWasListening ) {
     cleanOldNotifications(); // probably someone disconnected a signal in the meantime, get rid of the no longer interesting stuff
+  }
 
   return someoneWasListening;
 }
@@ -550,6 +565,11 @@ int MonitorPrivate::translateAndCompress( QQueue< NotificationMessageV3 >& notif
   // is not monitored.
   if ( msg.operation() != NotificationMessageV2::Move ) {
     return NotificationMessageV3::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
+  }
+
+  // Always handle tags
+  if ( msg.type() == NotificationMessageV2::Tags ) {
+    return NotificationMessageV3::appendAndCompress( notificationQueue, msg );
   }
 
   bool sourceWatched = false;
