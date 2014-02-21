@@ -166,6 +166,9 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
      */
     void invalidateItemCache( qint64 itemId );
 
+    /**
+     * This method is called by the ChangeMediator to enforce an invalidation of the passed tag.
+     */
     void invalidateTagCache( qint64 tagId );
 
     /**

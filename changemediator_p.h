@@ -50,6 +50,7 @@ public:
 
   static void invalidateCollection( const Akonadi::Collection &collection );
   static void invalidateItem( const Akonadi::Item &item );
+  static void invalidateTag( const Akonadi::Tag &tag );
 
   static void registerSession( const QByteArray &id );
   static void unregisterSession( const QByteArray &id );
@@ -62,6 +63,7 @@ private Q_SLOTS:
 
   void do_invalidateCollection( const Akonadi::Collection &collection );
   void do_invalidateItem( const Akonadi::Item &item );
+  void do_invalidateTag( const Akonadi::Tag &tag );
 
   void do_registerSession( const QByteArray &id );
   void do_unregisterSession( const QByteArray &id );

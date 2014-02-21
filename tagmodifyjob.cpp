@@ -21,6 +21,7 @@
 #include "job_p.h"
 #include "tag.h"
 #include "protocolhelper_p.h"
+#include "changemediator_p.h"
 
 using namespace Akonadi;
 
@@ -82,4 +83,17 @@ void TagModifyJob::doStart()
     command += ")";
 
     d->writeData( command );
+}
+
+void TagModifyJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
+{
+  Q_D(TagModifyJob);
+  Q_UNUSED(tag);
+
+  if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
+    ChangeMediator::invalidateTag(d->mTag);
+  }
+
+  emitResult();
+  return;
 }
