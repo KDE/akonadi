@@ -44,12 +44,22 @@ NameEditWidget::NameEditWidget(QWidget *parent)
     setFocusProxy(mNameEdit);
     setFocusPolicy(Qt::StrongFocus);
 
+<<<<<<< HEAD
     QToolButton *button = new QToolButton;
     button->setText(i18n("..."));
     layout->addWidget(button);
 
     connect(mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
     connect(button, SIGNAL(clicked()), this, SLOT(openNameEditDialog()));
+=======
+  mButtonEdit = new QToolButton;
+  mButtonEdit->setText(i18n("..."));
+  layout->addWidget(mButtonEdit);
+
+
+  connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
+  connect( mButtonEdit, SIGNAL(clicked()), this, SLOT(openNameEditDialog()) );
+>>>>>>> Disable button too
 }
 
 NameEditWidget::~NameEditWidget()
@@ -58,7 +68,12 @@ NameEditWidget::~NameEditWidget()
 
 void NameEditWidget::setReadOnly(bool readOnly)
 {
+<<<<<<< HEAD
     mNameEdit->setReadOnly(readOnly);
+=======
+  mNameEdit->setReadOnly( readOnly );
+  mButtonEdit->setEnabled(!readOnly);
+>>>>>>> Disable button too
 }
 
 void NameEditWidget::loadContact(const KABC::Addressee &contact)

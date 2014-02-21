@@ -27,7 +27,7 @@
 #include <kabc/addressee.h>
 
 class KLineEdit;
-
+class QToolButton;
 /**
  * @short A widget for editing the name of a contact.
  *
@@ -71,6 +71,7 @@ private Q_SLOTS:
 private:
     KLineEdit *mNameEdit;
     KABC::Addressee mContact;
+    QToolButton *mButtonEdit;
 };
 
 #endif
