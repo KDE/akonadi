@@ -16,6 +16,7 @@ add_executable(akonadictl ${akonadictl_SRCS})
 set_target_properties(akonadictl PROPERTIES OUTPUT_NAME akonadictl)
 target_link_libraries(akonadictl 
   akonadi_shared
+  akonadiprotocolinternals
   ${QT_QTCORE_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}

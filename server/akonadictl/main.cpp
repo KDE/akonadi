@@ -22,6 +22,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
@@ -36,6 +37,7 @@
 
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
+#include "xdgbasedirs_p.h"
 
 #if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
 #include <unistd.h>
@@ -70,38 +72,58 @@ static bool stopServer()
   return true;
 }
 
-static bool statusServer()
+static bool checkAkonadiControlStatus()
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Control ) );
+  const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Control ) );
   fprintf( stderr, "Akonadi Control: %s\n", registered ? "running" : "stopped" );
+  return registered;
+}
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Server ) );
+static bool checkAkonadiServerStatus()
+{
+  const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Server ) );
   fprintf( stderr, "Akonadi Server: %s\n", registered ? "running" : "stopped" );
+  return registered;
+}
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ) );
-  if ( registered ) {
-    QString backend = QLatin1String( "Unknown" );
+static bool checkSearchSupportStatus()
+{
+  QStringList searchMethods;
+  searchMethods << QLatin1String( "Remote Search" );
 
-    // check which backend is used
-    QDBusInterface interface( QLatin1String( "org.kde.NepomukStorage" ), QLatin1String( "/nepomukstorage" ) );
-    const QDBusReply<QString> reply = interface.call( QLatin1String( "usedSopranoBackend" ) );
-    if ( reply.isValid() ) {
-      const QString name = reply.value();
+  const QString pluginOverride = QString::fromLatin1( qgetenv( "AKONADI_OVERRIDE_SEARCHPLUGIN" ) );
+  if ( !pluginOverride.isEmpty() ) {
+    searchMethods << pluginOverride;
+  } else {
+    const QStringList dirs = Akonadi::XdgBaseDirs::findPluginDirs();
+    Q_FOREACH ( const QString &pluginDir, dirs ) {
+      QDir dir( pluginDir + QLatin1String( "/akonadi" ) );
+      const QStringList desktopFiles = dir.entryList( QStringList() << QLatin1String( "*.desktop" ), QDir::Files );
+      Q_FOREACH ( const QString &desktopFileName, desktopFiles ) {
+        QSettings desktop( pluginDir + QLatin1String( "/akonadi/" ) + desktopFileName, QSettings::IniFormat );
+        desktop.beginGroup( QLatin1String( "Desktop Entry" ) );
+        if ( desktop.value( QLatin1String( "Type" ) ).toString() != QLatin1String( "AkonadiSearchPlugin" ) ) {
+          continue;
+        }
+        if ( !desktop.value( QLatin1String( "X-Akonadi-LoadByDefault" ), true ).toBool() ) {
+          continue;
+        }
 
-      if ( name == QLatin1String( "redland" ) ) {
-        backend = QLatin1String( "Redland" );
-      } else if ( name == QLatin1String( "sesame2" ) ) {
-        backend = QLatin1String( "Sesame2" );
-      } else if ( name == QLatin1String( "virtuosobackend" ) ) {
-        backend = QLatin1String( "Virtuoso" );
+        searchMethods << desktop.value( QLatin1String( "Name" ) ).toString();
       }
     }
-
-    fprintf( stderr, "Akonadi Server Search Support: available (backend: %s)\n", qPrintable( backend ) );
-  } else {
-    fprintf( stderr, "Akonadi Server Search Support: not available\n" );
   }
 
+  // There's always at least server-search available
+  fprintf( stderr, "Akonadi Server Search Support: available (%s)\n", qPrintable( searchMethods.join( QLatin1String( ", " ) ) ) );
+  return true;
+}
+
+static bool statusServer()
+{
+  checkAkonadiControlStatus();
+  checkAkonadiServerStatus();
+  checkSearchSupportStatus();
   return true;
 }
 
