@@ -35,7 +35,7 @@ class ContactViewerDialog::Private
 {
   public:
     Private( ContactViewerDialog *parent )
-      : q( parent )
+      : q( parent ), mViewer( 0 )
     {
     }
 

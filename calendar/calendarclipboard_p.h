@@ -83,7 +83,6 @@ public:
     Akonadi::CalendarBase::Ptr m_calendar;
     Akonadi::IncidenceChanger *m_changer;
     KCalUtils::DndFactory *m_dndfactory;
-    int m_numChildsToDelete;
     bool m_abortCurrentOperation;
     QSet<int> m_pendingChangeIds;
     CalendarClipboard *const q;

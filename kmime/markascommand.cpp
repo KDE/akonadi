@@ -29,6 +29,7 @@ MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const 
   mMessages = msgList;
   mTargetStatus = targetStatus;
   mFolderListJobCount = 0;
+  mMarkJobCount = 0;
 }
 
 MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, bool invert, QObject* parent): CommandBase( parent )
@@ -37,6 +38,7 @@ MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const A
   mFolders = folders;
   mTargetStatus = targetStatus;
   mFolderListJobCount = mFolders.size();
+  mMarkJobCount = 0;
 }
 
 void MarkAsCommand::slotFetchDone(KJob* job)
