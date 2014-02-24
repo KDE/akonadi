@@ -1056,6 +1056,12 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
     return;
   }
 
+  //Adding items to not yet populated columns would block fetchMore, resulting in only new items showing up in the collection
+  //This is only a problem with lazy population, otherwise fetchMore is not used at all
+  if ( (m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains( collection.id() ) ) {
+    return;
+  }
+
   int row;
   QModelIndex parentIndex;
   if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) {
