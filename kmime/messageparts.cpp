@@ -20,6 +20,6 @@
 
 #include "messageparts.h"
 
-const char* Akonadi::MessagePart::Envelope = "ENVELOPE";
-const char* Akonadi::MessagePart::Body = "RFC822";
-const char* Akonadi::MessagePart::Header = "HEAD";
+const char *Akonadi::MessagePart::Envelope = "ENVELOPE";
+const char *Akonadi::MessagePart::Body = "RFC822";
+const char *Akonadi::MessagePart::Header = "HEAD";

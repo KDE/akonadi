@@ -30,17 +30,17 @@
 class KJob;
 class MoveCommand : public CommandBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  MoveCommand(const Akonadi::Collection& destFolder, const Akonadi::Item::List& msgList, QObject* parent = 0);
-  void execute();
+    MoveCommand(const Akonadi::Collection &destFolder, const Akonadi::Item::List &msgList, QObject *parent = 0);
+    void execute();
 
 private Q_SLOTS:
-  void slotMoveResult( KJob* job );
+    void slotMoveResult(KJob *job);
 
 private:
-  Akonadi::Collection mDestFolder;
-  QList<Akonadi::Item> mMessages;
+    Akonadi::Collection mDestFolder;
+    QList<Akonadi::Item> mMessages;
 };
 
 #endif // MOVECOMMAND_H

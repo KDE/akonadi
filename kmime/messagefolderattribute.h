@@ -33,7 +33,7 @@ namespace Akonadi {
 */
 class AKONADI_KMIME_EXPORT MessageFolderAttribute : public Attribute
 {
-  public:
+public:
     /**
       Creates an empty folder attribute.
     */
@@ -42,7 +42,7 @@ class AKONADI_KMIME_EXPORT MessageFolderAttribute : public Attribute
     /**
       Copy constructor.
     */
-    MessageFolderAttribute( const MessageFolderAttribute &other );
+    MessageFolderAttribute(const MessageFolderAttribute &other);
 
     /**
       Destructor.
@@ -65,13 +65,13 @@ class AKONADI_KMIME_EXPORT MessageFolderAttribute : public Attribute
 
     // reimpl.
     QByteArray type() const;
-    MessageFolderAttribute* clone() const;
+    MessageFolderAttribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-  private:
+private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 }

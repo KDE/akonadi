@@ -29,53 +29,54 @@ typedef SpecialMailCollectionsSettings Settings;
 
 SpecialMailCollectionsTesting *SpecialMailCollectionsTesting::_t_self()
 {
-  static SpecialMailCollectionsTesting *instance = 0;
-  if ( !instance ) {
-    instance = new SpecialMailCollectionsTesting;
-  }
-  return instance;
+    static SpecialMailCollectionsTesting *instance = 0;
+    if (!instance) {
+        instance = new SpecialMailCollectionsTesting;
+    }
+    return instance;
 }
 
-void SpecialMailCollectionsTesting::_t_setDefaultResourceId( const QString &resourceId )
+void SpecialMailCollectionsTesting::_t_setDefaultResourceId(const QString &resourceId)
 {
-  Settings::setDefaultResourceId( resourceId );
+    Settings::setDefaultResourceId(resourceId);
 }
 
-void SpecialMailCollectionsTesting::_t_forgetFoldersForResource( const QString &resourceId )
+void SpecialMailCollectionsTesting::_t_forgetFoldersForResource(const QString &resourceId)
 {
-  static_cast<SpecialCollections*>(SpecialMailCollections::self())->d->forgetFoldersForResource( resourceId );
+    static_cast<SpecialCollections *>(SpecialMailCollections::self())->d->forgetFoldersForResource(resourceId);
 }
 
 void SpecialMailCollectionsTesting::_t_beginBatchRegister()
 {
-  static_cast<SpecialCollections*>(SpecialMailCollections::self())->d->beginBatchRegister();
+    static_cast<SpecialCollections *>(SpecialMailCollections::self())->d->beginBatchRegister();
 }
 
 void SpecialMailCollectionsTesting::_t_endBatchRegister()
 {
-  static_cast<SpecialCollections*>(SpecialMailCollections::self())->d->endBatchRegister();
+    static_cast<SpecialCollections *>(SpecialMailCollections::self())->d->endBatchRegister();
 }
 
 int SpecialMailCollectionsTesting::_t_knownResourceCount() const
 {
-  return static_cast<SpecialCollections*>(SpecialMailCollections::self())->d->mFoldersForResource.count();
+    return static_cast<SpecialCollections *>(SpecialMailCollections::self())->d->mFoldersForResource.count();
 }
 
 int SpecialMailCollectionsTesting::_t_knownFolderCount() const
 {
-  const SpecialCollectionsPrivate *d = static_cast<SpecialCollections*>(SpecialMailCollections::self())->d;
-  int ret = 0;
+    const SpecialCollectionsPrivate *d = static_cast<SpecialCollections *>(SpecialMailCollections::self())->d;
+    int ret = 0;
 
-  QHashIterator<QString, QHash<QByteArray, Collection> > resourceIt( d->mFoldersForResource );
-  while ( resourceIt.hasNext() ) {
-    resourceIt.next();
+    QHashIterator<QString, QHash<QByteArray, Collection> > resourceIt(d->mFoldersForResource);
+    while (resourceIt.hasNext()) {
+        resourceIt.next();
 
-    QHashIterator<QByteArray, Collection> it( resourceIt.value() );
-    while ( it.hasNext() ) {
-      it.next();
-      if ( it.value().isValid() )
-        ret++;
+        QHashIterator<QByteArray, Collection> it(resourceIt.value());
+        while (it.hasNext()) {
+            it.next();
+            if (it.value().isValid()) {
+                ret++;
+            }
+        }
     }
-  }
-  return ret;
+    return ret;
 }

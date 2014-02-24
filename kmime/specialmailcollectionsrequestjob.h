@@ -48,8 +48,8 @@ class SpecialMailCollectionsRequestJobPrivate;
  *
  * SpecialMailCollectionsRequestJob *job = new SpecialMailCollectionsRequestJob( this );
  * job->requestDefaultCollection( SpecialMailCollections::Outbox );
- * connect( job, SIGNAL( result( KJob* ) ),
- *          this, SLOT( requestDone( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)),
+ *          this, SLOT(requestDone(KJob*)) );
  *
  * ...
  *
@@ -71,13 +71,13 @@ class SpecialMailCollectionsRequestJobPrivate;
 */
 class AKONADI_KMIME_EXPORT SpecialMailCollectionsRequestJob : public SpecialCollectionsRequestJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new special mail collections request job.
      */
-    explicit SpecialMailCollectionsRequestJob( QObject *parent = 0 );
+    explicit SpecialMailCollectionsRequestJob(QObject *parent = 0);
 
     /**
      * Destroys the special mail collections request job.
@@ -87,14 +87,14 @@ class AKONADI_KMIME_EXPORT SpecialMailCollectionsRequestJob : public SpecialColl
     /**
      * Requests a special mail collection of the given @p type in the default resource.
      */
-    void requestDefaultCollection( SpecialMailCollections::Type type );
+    void requestDefaultCollection(SpecialMailCollections::Type type);
 
     /**
      * Requests a special mail collection of the given @p type in the given resource @p instance.
      */
-    void requestCollection( SpecialMailCollections::Type type, const AgentInstance &instance );
+    void requestCollection(SpecialMailCollections::Type type, const AgentInstance &instance);
 
-  private:
+private:
     //@cond PRIVATE
     friend class SpecialMailCollectionsRequestJobPrivate;
 

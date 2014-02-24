@@ -40,7 +40,7 @@ namespace Akonadi {
  */
 class AKONADI_KMIME_EXPORT RemoveDuplicatesJob : public Akonadi::Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     /**
@@ -49,7 +49,7 @@ public:
      * @param folder The folder where to search for duplicates
      * @param parent The parent object
      */
-    RemoveDuplicatesJob( const Akonadi::Collection &folder, QObject* parent = 0 );
+    RemoveDuplicatesJob(const Akonadi::Collection &folder, QObject *parent = 0);
 
     /**
      * Creates a new job that will remove duplicates in all @p folders.
@@ -57,7 +57,7 @@ public:
      * @param folders Folders where to search for duplicates
      * @param parent The parent object
      */
-    RemoveDuplicatesJob( const Akonadi::Collection::List &folders, QObject* parent);
+    RemoveDuplicatesJob(const Akonadi::Collection::List &folders, QObject *parent);
 
     /**
      * Destroys the job.
@@ -70,10 +70,10 @@ protected:
 
 private:
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotFetchDone( KJob *job ) )
-    Q_PRIVATE_SLOT( d, void slotDeleteDone( KJob *job ) )
+    Q_PRIVATE_SLOT(d, void slotFetchDone(KJob *job))
+    Q_PRIVATE_SLOT(d, void slotDeleteDone(KJob *job))
 };
 
 } /* namespace Akonadi */

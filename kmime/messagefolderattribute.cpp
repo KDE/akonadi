@@ -23,68 +23,67 @@ using namespace Akonadi;
 
 class Akonadi::MessageFolderAttribute::Private
 {
-  public:
+public:
     Private()
-      : isOutboundFolder( false ) { }
+        : isOutboundFolder(false) { }
 
     bool isOutboundFolder;
 };
 
-MessageFolderAttribute::MessageFolderAttribute() :
-    d( new Private )
+MessageFolderAttribute::MessageFolderAttribute()
+    : d(new Private)
 {
 }
 
-MessageFolderAttribute::MessageFolderAttribute(const MessageFolderAttribute & other) :
-    Attribute( other ),
-    d( new Private( *(other.d) ) )
+MessageFolderAttribute::MessageFolderAttribute(const MessageFolderAttribute &other)
+    : Attribute(other)
+    , d(new Private(*(other.d)))
 {
 }
 
 MessageFolderAttribute::~MessageFolderAttribute()
 {
-  delete d;
+    delete d;
 }
 
 QByteArray MessageFolderAttribute::type() const
 {
-  return "MESSAGEFOLDER";
+    return "MESSAGEFOLDER";
 }
 
-MessageFolderAttribute * MessageFolderAttribute::clone() const
+MessageFolderAttribute *MessageFolderAttribute::clone() const
 {
-  return new MessageFolderAttribute( *this );
+    return new MessageFolderAttribute(*this);
 }
 
 QByteArray MessageFolderAttribute::serialized() const
 {
-  QByteArray rv;
+    QByteArray rv;
 
-  if ( d->isOutboundFolder ) {
-    rv+= "outbound";
-  } else {
-    rv+= "inbound";
-  }
+    if (d->isOutboundFolder) {
+        rv += "outbound";
+    } else {
+        rv += "inbound";
+    }
 
-  return rv;
+    return rv;
 }
 
 void MessageFolderAttribute::deserialize(const QByteArray &data)
 {
-  if ( data == "outbound" ) {
-    d->isOutboundFolder = true;
-  } else {
-    d->isOutboundFolder = false;
-  }
+    if (data == "outbound") {
+        d->isOutboundFolder = true;
+    } else {
+        d->isOutboundFolder = false;
+    }
 }
 
 bool MessageFolderAttribute::isOutboundFolder() const
 {
-  return d->isOutboundFolder;
+    return d->isOutboundFolder;
 }
 
 void MessageFolderAttribute::setOutboundFolder(bool outbound)
 {
-  d->isOutboundFolder = outbound;
+    d->isOutboundFolder = outbound;
 }
-

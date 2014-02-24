@@ -23,40 +23,39 @@
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemdeletejob.h>
 
-MoveCommand::MoveCommand( const Akonadi::Collection& destFolder,
-                          const QList<Akonadi::Item> &msgList,
-                          QObject *parent
-                        ) : CommandBase( parent )
+MoveCommand::MoveCommand(const Akonadi::Collection &destFolder,
+                         const QList<Akonadi::Item> &msgList,
+                         QObject *parent)
+    : CommandBase(parent)
 {
-  mDestFolder = destFolder;
-  mMessages = msgList;
+    mDestFolder = destFolder;
+    mMessages = msgList;
 }
 
 void MoveCommand::execute()
 {
-  if ( mMessages.isEmpty() ) {
-    emitResult( OK );
-    return;
-  }
-  if ( mDestFolder.isValid() ) {
-    Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mMessages, mDestFolder, this );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );
-  }
-  else {
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( mMessages, this );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );
-  }
+    if (mMessages.isEmpty()) {
+        emitResult(OK);
+        return;
+    }
+    if (mDestFolder.isValid()) {
+        Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mMessages, mDestFolder, this);
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)));
+    } else {
+        Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mMessages, this);
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)));
+    }
 }
 
-void MoveCommand::slotMoveResult(KJob* job)
+void MoveCommand::slotMoveResult(KJob *job)
 {
-  if ( job->error() ) {
-    // handle errors
-    Util::showJobError(job);
-    emitResult( Failed );
-  }
-  else
-    emitResult( OK );
+    if (job->error()) {
+        // handle errors
+        Util::showJobError(job);
+        emitResult(Failed);
+    }
+    else
+        emitResult(OK);
 }
 
 #include "moc_movecommand_p.cpp"

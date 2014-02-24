@@ -28,7 +28,7 @@
 #include <akonadi/attribute.h>
 
 namespace MailTransport {
-  class Transport;
+class Transport;
 }
 
 namespace Akonadi {
@@ -41,24 +41,24 @@ namespace Akonadi {
 */
 class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
       Creates a new AddressAttribute.
     */
-    explicit AddressAttribute( const QString &from = QString(),
-                               const QStringList &to = QStringList(),
-                               const QStringList &cc = QStringList(),
-                               const QStringList &bcc = QStringList() );
+    explicit AddressAttribute(const QString &from = QString(),
+                              const QStringList &to = QStringList(),
+                              const QStringList &cc = QStringList(),
+                              const QStringList &bcc = QStringList());
     /**
       Destroys the AddressAttribute.
     */
     virtual ~AddressAttribute();
 
     /* reimpl */
-    virtual AddressAttribute* clone() const;
+    virtual AddressAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
     /**
       Returns the address of the sender.
@@ -68,7 +68,7 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
     /**
       Sets the address of the sender.
     */
-    void setFrom( const QString &from );
+    void setFrom(const QString &from);
 
     /**
       Returns the addresses of the "To:" receivers.
@@ -79,7 +79,7 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
       * Sets the addresses of the "To: "receivers."
       * @param to address of the receiver.
       */
-    void setTo( const QStringList &to );
+    void setTo(const QStringList &to);
 
     /**
       Returns the addresses of the "Cc:" receivers.
@@ -90,7 +90,7 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
       * Sets the addresses of the "Cc:" receivers."
       * @param cc addresses of the recievers (CC)
       */
-    void setCc( const QStringList &cc );
+    void setCc(const QStringList &cc);
 
     /**
       * Returns the addresses of the "Bcc:" receivers.
@@ -101,9 +101,9 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
     * Sets the addresses of the "Bcc:" receivers."
     * @param bcc addresses of the recievers (CC)
     */
-    void setBcc( const QStringList &bcc );
+    void setBcc(const QStringList &bcc);
 
-  private:
+private:
     class Private;
     Private *const d;
 

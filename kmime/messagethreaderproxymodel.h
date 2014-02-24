@@ -37,14 +37,14 @@ class Collection;
  */
 class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Create a new MessageThreaderProxyModel
      * @param parent The parent object
      */
-    MessageThreaderProxyModel( QObject *parent = 0 );
+    MessageThreaderProxyModel(QObject *parent = 0);
 
     /**
      * Destroy the model
@@ -54,32 +54,32 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreaderProxyModel : public QAbstra
     /**
      * Reimplemented to actually do the threading.
      */
-    QModelIndex parent ( const QModelIndex & index ) const;
+    QModelIndex parent(const QModelIndex &index) const;
 
     /**
      * Reimplemented
      */
-    int rowCount( const QModelIndex & index ) const;
+    int rowCount(const QModelIndex &index) const;
 
     /**
      * Reimplemented
      */
-    QModelIndex index( int row, int column, const QModelIndex& parent ) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const;
 
     /**
      * Reimplemented
      */
-    bool hasChildren( const QModelIndex& index ) const;
+    bool hasChildren(const QModelIndex &index) const;
 
     /**
      * Reimplemented
      */
-    QModelIndex createIndex( int row, int column, quint32 internalId ) const;
+    QModelIndex createIndex(int row, int column, quint32 internalId) const;
 
     /**
      * Reimplemented
      */
-    int columnCount( const QModelIndex& index ) const;
+    int columnCount(const QModelIndex &index) const;
 
     /**
      * Reimplemented
@@ -94,27 +94,27 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreaderProxyModel : public QAbstra
     /**
      * Reimplemented
      */
-    QModelIndex mapFromSource( const QModelIndex& index ) const;
+    QModelIndex mapFromSource(const QModelIndex &index) const;
 
     /**
      * Reimplemented
      */
-    QModelIndex mapToSource(const QModelIndex& index ) const;
+    QModelIndex mapToSource(const QModelIndex &index) const;
 
     /**
      * Set the source model.
      * @param sourceMessageModel the source model.
      * Be careful, sourceMessageModel <b>has to be</b> a MessageModel.
      */
-    void setSourceModel( QAbstractItemModel *sourceMessageModel );
+    void setSourceModel(QAbstractItemModel *sourceMessageModel);
 
-  private:
+private:
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotInsertRows( const QModelIndex&, int, int) )
-    Q_PRIVATE_SLOT( d, void slotRemoveRows( const QModelIndex&, int, int) )
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged() )
+    Q_PRIVATE_SLOT(d, void slotInsertRows(const QModelIndex &, int, int))
+    Q_PRIVATE_SLOT(d, void slotRemoveRows(const QModelIndex &, int, int))
+    Q_PRIVATE_SLOT(d, void slotCollectionChanged())
 };
 
 }

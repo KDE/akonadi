@@ -27,8 +27,8 @@ namespace {
 // Anonymous namespace; function is invisible outside this file.
 bool messagefolder_dummy()
 {
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
-  return true;
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
+    return true;
 }
 
 // Called when this library is loaded.
@@ -40,8 +40,8 @@ const bool registered = messagefolder_dummy();
 
 extern bool ___AkonadiKMime____INIT()
 {
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
-  return true;
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
+    return true;
 }
 
 #endif
