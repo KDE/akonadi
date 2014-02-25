@@ -119,12 +119,15 @@ private:
     return expectedSignal;
   }
 
-  QPair<FakeServerData*, Akonadi::EntityTreeModel*> populateModel( const QString &serverContent )
+  QPair<FakeServerData*, Akonadi::EntityTreeModel*> populateModel( const QString &serverContent, const QString &mimeType = QString() )
   {
     FakeMonitor *fakeMonitor = new FakeMonitor(this);
 
     fakeMonitor->setSession( m_fakeSession );
     fakeMonitor->setCollectionMonitored(Collection::root());
+    if (!mimeType.isEmpty()) {
+      fakeMonitor->setMimeTypeMonitored(mimeType);
+    }
     EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
 
     m_modelSpy = new ModelSpy(this);
@@ -369,22 +372,26 @@ void EntityTreeModelTest::testCollectionChanged_data()
 {
   QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "collectionName" );
+  QTest::addColumn<QString>( "monitoredMimeType" );
 
-//   QTest::newRow("change-collection01") << serverContent1 << "Col 1";
-  QTest::newRow("change-collection02") << serverContent1 << "Col 2";
-  QTest::newRow("change-collection03") << serverContent1 << "Col 3";
-  QTest::newRow("change-collection04") << serverContent1 << "Col 4";
-  QTest::newRow("change-collection05") << serverContent1 << "Col 5";
-  QTest::newRow("change-collection06") << serverContent1 << "Col 6";
-  QTest::newRow("change-collection07") << serverContent1 << "Col 7";
+  QTest::newRow("change-collection01") << serverContent1 << "Col 1" << QString();
+  QTest::newRow("change-collection02") << serverContent1 << "Col 2" << QString();
+  QTest::newRow("change-collection03") << serverContent1 << "Col 3" << QString();
+  QTest::newRow("change-collection04") << serverContent1 << "Col 4" << QString();
+  QTest::newRow("change-collection05") << serverContent1 << "Col 5" << QString();
+  QTest::newRow("change-collection06") << serverContent1 << "Col 6" << QString();
+  QTest::newRow("change-collection07") << serverContent1 << "Col 7" << QString();
+  //Don't remove the parent due to a missing mimetype
+  QTest::newRow("change-collection08") << serverContent1 << "Col 1" << QString::fromLatin1("message/rfc822");
 }
 
 void EntityTreeModelTest::testCollectionChanged()
 {
   QFETCH( QString, serverContent );
   QFETCH( QString, collectionName );
+  QFETCH( QString, monitoredMimeType );
 
-  QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
+  QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent, monitoredMimeType );
   FakeServerData *serverData = testDrivers.first;
   Akonadi::EntityTreeModel *model = testDrivers.second;
 
@@ -392,6 +399,7 @@ void EntityTreeModelTest::testCollectionChanged()
   Q_ASSERT( !list.isEmpty() );
   QModelIndex changedIndex = list.first();
   QString parentCollection = changedIndex.parent().data().toString();
+  kDebug() << parentCollection;
   int changedRow = changedIndex.row();
 
   FakeCollectionChangedCommand *changeCommand = new FakeCollectionChangedCommand( collectionName, parentCollection, serverData );

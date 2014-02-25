@@ -749,6 +749,12 @@ bool EntityTreeModelPrivate::shouldBePartOfModel( const Collection& collection )
     return false;
   }
 
+  // We want a parent collection if it has at least one child that matches the
+  // wanted mimetype
+  if ( m_childEntities.contains( collection.id() ) ) {
+    return true;
+  }
+
   // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
   // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() &&
@@ -831,26 +837,11 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   Q_ASSERT( m_collections.contains( parentId ) );
 
+  const Collection parentCollection = m_collections.value( parentId );
+
   m_populatedCols.remove( collection.id() );
 
-  const QModelIndex parentIndex = indexForCollection( m_collections.value( parentId ) );
-
-  // Top-level search collection
-  if ( parentId == 1 &&
-       m_childEntities.value( parentId ).size() == 1 &&
-       row == 0 ) {
-    // Special case for removing the last search folder.
-    // We need to remove the top-level search folder in that case.
-    const int searchCollectionRow = parentIndex.row();
-    q->beginRemoveRows( QModelIndex(), searchCollectionRow, searchCollectionRow );
-
-    removeChildEntities( parentId );
-    delete m_childEntities[ m_rootCollection.id() ].takeAt( searchCollectionRow );
-    m_collections.remove( parentId );
-
-    q->endRemoveRows();
-    return;
-  }
+  const QModelIndex parentIndex = indexForCollection( parentCollection );
 
   q->beginRemoveRows( parentIndex, row, row );
 
@@ -864,6 +855,11 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   m_collections.remove( collection.id() );
 
   q->endRemoveRows();
+
+  // After removing a collection, check whether it's parent should be removed too
+  if ( !shouldBePartOfModel( parentCollection ) ) {
+    monitoredCollectionRemoved( parentCollection );
+  }
 }
 
 void EntityTreeModelPrivate::collectionSubscribed( const Akonadi::Collection& col, const Akonadi::Collection& parent )
@@ -984,7 +980,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collection &collection )
 {
-
   if ( !m_collections.contains( collection.id() ) ) {
     // This can happen if
     // * we get a change notification after removing the collection.

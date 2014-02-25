@@ -86,8 +86,11 @@ void ModelSpy::verifySignal( SignalType type, const QModelIndex& topLeft, const 
   ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
   QCOMPARE( int(type), int(expectedSignal.signalType) );
   QModelIndex parent = topLeft.parent();
-  if ( expectedSignal.parentData.isValid() )
-    QCOMPARE( parent.data(), expectedSignal.parentData );
+  //This check won't work for toplevel indexes
+  if ( parent.isValid() ) {
+    if ( expectedSignal.parentData.isValid() )
+      QCOMPARE( parent.data(), expectedSignal.parentData );
+  }
   QCOMPARE( topLeft.row(), expectedSignal.startRow );
   QCOMPARE( bottomRight.row(), expectedSignal.endRow );
   for ( int i = 0, row = topLeft.row(); row <= bottomRight.row(); ++row, ++i )
