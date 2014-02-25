@@ -20,7 +20,7 @@
 #include "tagmodel_p.h"
 #include "tagmodel.h"
 
-#include "changerecorder.h"
+#include "monitor.h"
 #include <akonadi/tagfetchjob.h>
 #include <QDebug>
 
@@ -37,21 +37,21 @@ TagModelPrivate::~TagModelPrivate()
 {
 }
 
-void TagModelPrivate::init(ChangeRecorder *monitor)
+void TagModelPrivate::init(Monitor *monitor)
 {
   Q_Q(TagModel);
 
-  mChangeRecorder = monitor;
+  mMonitor = monitor;
 
-  q->connect(mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
+  q->connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)),
              q, SLOT(monitoredTagAdded(Akonadi::Tag)));
-  q->connect(mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
+  q->connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)),
              q, SLOT(monitoredTagChanged(Akonadi::Tag)));
-  q->connect(mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
+  q->connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)),
              q, SLOT(monitoredTagRemoved(Akonadi::Tag)));
 
   TagFetchJob *fetchJob = new TagFetchJob(q);
-  fetchJob->setFetchScope(mChangeRecorder->tagFetchScope());
+  fetchJob->setFetchScope(mMonitor->tagFetchScope());
   q->connect(fetchJob, SIGNAL(tagsReceived(Akonadi::Tag::List)),
              q, SLOT(tagsFetched(Akonadi::Tag::List)));
   q->connect(fetchJob, SIGNAL(finished(KJob*)),
