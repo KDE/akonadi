@@ -21,10 +21,9 @@
 
 #include "categorieseditwidget.h"
 
-#include "tagwidget.h"
-
 #include <akonadi/item.h>
 #include <akonadi/tag.h>
+#include <akonadi/tagwidget.h>
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
@@ -37,7 +36,7 @@ CategoriesEditWidget::CategoriesEditWidget(QWidget *parent)
     layout->setMargin(0);
     layout->setSpacing(KDialog::spacingHint());
 
-    mTagWidget = new TagWidget(this);
+    mTagWidget = new Akonadi::TagWidget(this);
     layout->addWidget(mTagWidget);
 }
 
@@ -59,14 +58,14 @@ void CategoriesEditWidget::loadContact(const KABC::Addressee &contact)
         tags.append(Akonadi::Tag::fromUrl(category));
     }
 
-    mTagWidget->setTags(tags);
+    mTagWidget->setSelection(tags);
 }
 
 void CategoriesEditWidget::storeContact(KABC::Addressee &contact) const
 {
     QStringList categories;
 
-    const Akonadi::Tag::List tags = mTagWidget->tags();
+    const Akonadi::Tag::List tags = mTagWidget->selection();
     foreach (const Akonadi::Tag &tag, tags) {
         categories.append(tag.url().url());
     }

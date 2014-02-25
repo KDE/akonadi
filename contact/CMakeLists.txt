@@ -60,13 +60,11 @@ set(akonadicontact_editor_SRCS
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
   editor/kdatepickerpopup.cpp
-  editor/kedittagsdialog.cpp
   editor/nameeditdialog.cpp
   editor/nameeditwidget.cpp
   editor/phoneeditwidget.cpp
   editor/secrecyeditwidget.cpp
   editor/soundeditwidget.cpp
-  editor/tagwidget.cpp
 )
 
 set(akonadicontact_LIB_SRC

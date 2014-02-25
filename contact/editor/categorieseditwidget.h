@@ -26,7 +26,9 @@
 
 #include <kabc/addressee.h>
 
-class TagWidget;
+namespace Akonadi {
+    class TagWidget;
+}
 
 /**
  * @short A widget for editing the categories of a contact.
@@ -45,7 +47,7 @@ public:
     void setReadOnly(bool readOnly);
 
 private:
-    TagWidget *mTagWidget;
+    Akonadi::TagWidget *mTagWidget;
 };
 
 #endif
