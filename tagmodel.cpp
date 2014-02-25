@@ -28,7 +28,7 @@
 using namespace Akonadi;
 
 
-TagModel::TagModel(ChangeRecorder *recorder, QObject *parent):
+TagModel::TagModel(Monitor *recorder, QObject *parent):
   QAbstractItemModel(parent),
   d_ptr(new TagModelPrivate(this))
 {
@@ -36,7 +36,7 @@ TagModel::TagModel(ChangeRecorder *recorder, QObject *parent):
   d->init(recorder);
 }
 
-TagModel::TagModel(ChangeRecorder *recorder, TagModelPrivate *dd, QObject *parent):
+TagModel::TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent):
   QAbstractItemModel(parent),
   d_ptr(dd)
 {

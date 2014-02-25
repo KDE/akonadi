@@ -60,13 +60,40 @@ private Q_SLOTS:
    * * reloading after a collection becomes referenced again
    */
   void testItemAdded();
+  /*
+   * Test what happens if we
+   * * Create an item
+   * * Reference before item added signal arrives
+   * * Try fetching rest of items
+   */
+  void testItemAddedBeforeFetch();
+
+private:
+  Collection res3;
+  static const int numberOfRootCollections = 4;
+  static const int bufferSize;
 };
+
+const int LazyPopulationTest::bufferSize = MonitorPrivate::PurgeBuffer::buffersize();
 
 void LazyPopulationTest::initTestCase()
 {
   AkonadiTest::checkTestIsIsolated();
-  Akonadi::Control::start();
   AkonadiTest::setAllResourcesOffline();
+
+  res3 = Collection( collectionIdFromPath( "res3" ) );
+
+  //Set up a bunch of collections that we can select to purge a collection from the buffer
+
+  //Number of buffered collections in the monitor
+  const int bufferSize = MonitorPrivate::PurgeBuffer::buffersize();
+  for (int i = 0; i < bufferSize; i++) {
+    Collection col;
+    col.setParentCollection(res3);
+    col.setName(QString("col%1").arg(i));
+    CollectionCreateJob *create = new CollectionCreateJob(col, this);
+    AKVERIFYEXEC(create);
+  }
 }
 
 
@@ -111,8 +138,7 @@ void referenceCollections(EntityTreeModel *model, int count)
 
 void LazyPopulationTest::testItemAdded()
 {
-  Collection res3 = Collection( collectionIdFromPath( "res3" ) );
-
+  const int bufferSize = MonitorPrivate::PurgeBuffer::buffersize();
   const QString mainCollectionName("main");
   Collection monitorCol;
   {
@@ -121,16 +147,6 @@ void LazyPopulationTest::testItemAdded()
     CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
     AKVERIFYEXEC(create);
     monitorCol = create->collection();
-  }
-
-  //Number of buffered collections in the monitor
-  const int bufferSize = MonitorPrivate::PurgeBuffer::buffersize();
-  for (int i = 0; i < bufferSize; i++) {
-    Collection col;
-    col.setParentCollection(res3);
-    col.setName(QString("col%1").arg(i));
-    CollectionCreateJob *create = new CollectionCreateJob(col, this);
-    AKVERIFYEXEC(create);
   }
 
   Item item1;
@@ -146,7 +162,6 @@ void LazyPopulationTest::testItemAdded()
   InspectableETM *model = new InspectableETM( changeRecorder, this );
   model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
-  const int numberOfRootCollections = 4;
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
@@ -155,6 +170,8 @@ void LazyPopulationTest::testItemAdded()
 
   QModelIndex monitorIndex = getIndex(mainCollectionName, model);
   QVERIFY(monitorIndex.isValid());
+
+  //Start
 
   //---Check that the item is present after the collection was referenced
   model->setData(monitorIndex, QVariant(), EntityTreeModel::CollectionRefRole);
@@ -213,6 +230,68 @@ void LazyPopulationTest::testItemAdded()
   //ensure we cannot refetch
   QVERIFY(!model->etmPrivate()->canFetchMore(monitorIndex));
 }
+
+void LazyPopulationTest::testItemAddedBeforeFetch()
+{
+  const QString mainCollectionName("main2");
+  Collection monitorCol;
+  {
+    monitorCol.setParentCollection(res3);
+    monitorCol.setName(mainCollectionName);
+    CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+    AKVERIFYEXEC(create);
+    monitorCol = create->collection();
+  }
+
+  ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+  changeRecorder->setCollectionMonitored(Collection::root());
+  InspectableETM *model = new InspectableETM( changeRecorder, this );
+  model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
+
+  //Wait for initial listing to complete
+  QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
+
+  const QModelIndex res3Index = getIndex("res3", model);
+  QVERIFY(waitForPopulation(res3Index, model, bufferSize + 1));
+
+  QModelIndex monitorIndex = getIndex(mainCollectionName, model);
+  QVERIFY(monitorIndex.isValid());
+
+  //Create a first item before referencing, it should not show up in the ETM
+  {
+    Item item1;
+    item1.setMimeType("application/octet-stream");
+    ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
+    AKVERIFYEXEC(append);
+  }
+
+  //Before referenced or fetchMore is called, the collection should be empty
+  QTest::qWait(500);
+  QCOMPARE(model->rowCount(monitorIndex), 0);
+
+  //Reference the collection
+  QVERIFY(!model->etmPrivate()->isMonitored(monitorCol.id()));
+  model->setData(monitorIndex, QVariant(), EntityTreeModel::CollectionRefRole);
+  QVERIFY(model->etmPrivate()->isMonitored(monitorCol.id()));
+
+  //Create another item, it should not be added to the ETM although the signal is emitted from the monitor, but we should be able to fetchMore
+  {
+    QSignalSpy addedSpy(changeRecorder, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+    QVERIFY(addedSpy.isValid());
+    Item item2;
+    item2.setMimeType("application/octet-stream");
+    ItemCreateJob *append = new ItemCreateJob(item2, monitorCol, this);
+    AKVERIFYEXEC(append);
+    QTRY_VERIFY(addedSpy.count() >= 1);
+  }
+
+  QVERIFY(model->etmPrivate()->canFetchMore(monitorIndex));
+
+  model->fetchMore(monitorIndex);
+  //Wait for collection to be fetched
+  QVERIFY(waitForPopulation(monitorIndex, model, 2));
+}
+
 
 #include "lazypopulationtest.moc"
 

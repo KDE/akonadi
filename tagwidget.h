@@ -1,7 +1,8 @@
 /*
-    This file is part of Akonadi Contact.
+    This file is part of Akonadi
 
     Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,42 +20,47 @@
     02110-1301, USA.
 */
 
-#ifndef TAGWIDGET_H
-#define TAGWIDGET_H
+#ifndef AKONADI_TAGWIDGET_H
+#define AKONADI_TAGWIDGET_H
+
+#include "akonadi_export.h"
 
 #include <QWidget>
+#include "akonadi/tag.h"
 
-#include <akonadi/tag.h>
-
-namespace Akonadi
-{
+namespace Akonadi {
 class TagModel;
-}
 
-class QHBoxLayout;
-class QLabel;
-
-class TagWidget : public QWidget
+/**
+ * A widget that shows a tag selection and provides means to edit that selection.
+ *
+ * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
+ * @since 4.13
+ */
+class AKONADI_EXPORT TagWidget : public QWidget
 {
-  Q_OBJECT
-
-  public:
-    explicit TagWidget( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TagWidget(QWidget *parent = 0);
     ~TagWidget();
 
-    void setTags( const Akonadi::Tag::List &tags );
-    Akonadi::Tag::List tags() const;
+    void setSelection(const Akonadi::Tag::List &tags);
+    Akonadi::Tag::List selection() const;
 
-  private Q_SLOTS:
+Q_SIGNALS:
+    void selectionChanged(const Akonadi::Tag::List &tags);
+
+private Q_SLOTS:
     void editTags();
 
-  private:
+private:
     void updateView();
 
-    QLabel *mTagLabel;
-
-    Akonadi::TagModel *mModel;
-    Akonadi::Tag::List mTags;
+private:
+    class Private;
+    QSharedPointer<Private> d;
 };
+
+}
 
 #endif

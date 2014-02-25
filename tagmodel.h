@@ -28,7 +28,7 @@
 namespace Akonadi
 {
 
-class ChangeRecorder;
+class Monitor;
 class TagModelPrivate;
 
 class AKONADI_EXPORT TagModel : public QAbstractItemModel
@@ -49,7 +49,7 @@ class AKONADI_EXPORT TagModel : public QAbstractItemModel
       EndRole = 65535
     };
 
-    explicit TagModel( ChangeRecorder *recorder, QObject *parent );
+    explicit TagModel( Monitor *recorder, QObject *parent );
     virtual ~TagModel();
 
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
@@ -72,7 +72,7 @@ class AKONADI_EXPORT TagModel : public QAbstractItemModel
     Q_DECLARE_PRIVATE( TagModel )
     TagModelPrivate * d_ptr;
 
-    TagModel( ChangeRecorder *recorder, TagModelPrivate *dd, QObject *parent = 0 );
+    TagModel( Monitor *recorder, TagModelPrivate *dd, QObject *parent = 0 );
 
   private:
     virtual bool insertRows(int, int, const QModelIndex & = QModelIndex());

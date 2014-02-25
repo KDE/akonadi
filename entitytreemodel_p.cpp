@@ -182,6 +182,7 @@ ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent,
   itemJob->setFetchScope( scope );
   itemJob->fetchScope().setAncestorRetrieval( ItemFetchScope::All );
   itemJob->fetchScope().setIgnoreRetrievalErrors( true );
+  itemJob->setDeliveryOption( ItemFetchJob::EmitItemsInBatches );
   return itemJob;
 }
 
@@ -1064,6 +1065,12 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() &&
        !m_mimeChecker.isWantedItem( item ) ) {
+    return;
+  }
+
+  //Adding items to not yet populated collections would block fetchMore, resulting in only new items showing up in the collection
+  //This is only a problem with lazy population, otherwise fetchMore is not used at all
+  if ( (m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains( collection.id() ) ) {
     return;
   }
 

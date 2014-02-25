@@ -27,7 +27,7 @@ class QModelIndex;
 namespace Akonadi
 {
 
-class ChangeRecorder;
+class Monitor;
 class TagModel;
 
 class TagModelPrivate
@@ -36,7 +36,7 @@ class TagModelPrivate
     explicit TagModelPrivate(TagModel *parent);
     virtual ~TagModelPrivate();
 
-    void init(ChangeRecorder *recorder);
+    void init(Monitor *recorder);
 
     void tagsFetchDone(KJob *job);
     void tagsFetched(const Akonadi::Tag::List &tags);
@@ -49,7 +49,7 @@ class TagModelPrivate
 
     void removeTagsRecursively(qint64 parentTag);
 
-    ChangeRecorder *mChangeRecorder;
+    Monitor *mMonitor;
 
     QHash<Tag::Id /* parent */, Tag::List > mChildTags;
     QHash<Tag::Id /* tag ID */, Tag> mTags;
