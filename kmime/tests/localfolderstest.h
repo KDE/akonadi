@@ -30,9 +30,9 @@ namespace Akonadi
 
 class LocalFoldersTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
 
     // Tests for GetLockJob:
@@ -54,7 +54,7 @@ class LocalFoldersTest : public QObject
     void testDefaultResourceJob();
     void testRecoverDefaultResource();
 
-  private:
+private:
     QMap<QByteArray, QString> mDisplayNameMap;
     QMap<QByteArray, QString> mIconNameMap;
 };
