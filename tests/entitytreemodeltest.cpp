@@ -138,7 +138,7 @@ private:
     serverData->setCommands( initialFetchResponse );
 
     // Give the model a chance to populate
-    QTest::qWait(10);
+    QTest::qWait(100);
     return qMakePair( serverData, model );
   }
 
@@ -415,7 +415,7 @@ void EntityTreeModelTest::testCollectionChanged()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(100);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
