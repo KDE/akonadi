@@ -494,7 +494,7 @@ void FetchHelper::triggerOnDemandFetch()
     return;
   }
 
-  IntervalCheck::instance()->requestCollectionSync( collection );
+  IntervalCheck::self()->requestCollectionSync( collection );
 }
 
 QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
