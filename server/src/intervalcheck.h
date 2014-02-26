@@ -20,12 +20,10 @@
 #ifndef INTERVALCHECK_H
 #define INTERVALCHECK_H
 
-#include "entities.h"
+#include "collectionscheduler.h"
 
 #include <QDateTime>
 #include <QHash>
-#include <QThread>
-#include <QMutex>
 
 namespace Akonadi {
 namespace Server {
@@ -33,7 +31,7 @@ namespace Server {
 /**
   Interval checking thread.
 */
-class IntervalCheck : public QThread
+class IntervalCheck : public CollectionScheduler
 {
   Q_OBJECT
 
@@ -41,7 +39,7 @@ class IntervalCheck : public QThread
     IntervalCheck( QObject *parent = 0 );
     ~IntervalCheck();
 
-    static IntervalCheck *instance();
+    static IntervalCheck *self();
 
     /**
      * Requests the given collection to be synced.
@@ -52,16 +50,17 @@ class IntervalCheck : public QThread
     void requestCollectionSync( const Collection &collection );
 
   protected:
-    void run();
-
-  private Q_SLOTS:
-    void doIntervalCheck();
+    int collectionScheduleInterval( const Collection &collection );
+    bool hasChanged( const Collection &collection, const Collection &changed );
+    bool shouldScheduleCollection( const Collection &collection );
+    void collectionExpired( const Collection &collection );
 
   private:
-    static IntervalCheck *s_instance;
     QMutex m_lastSyncMutex;
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
+
+    static IntervalCheck *s_instance;
 };
 
 } // namespace Server

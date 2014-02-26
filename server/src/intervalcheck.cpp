@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Volker Krause <vkrause@kde.org>
+    Copyright (C) 2014 Daniel Vrátil <dvraitl@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,10 +22,6 @@
 #include "storage/datastore.h"
 #include "storage/itemretrievalmanager.h"
 
-#include <QCoreApplication>
-#include <QDebug>
-#include <QTimer>
-
 using namespace Akonadi::Server;
 
 static int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
@@ -33,11 +30,8 @@ static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 IntervalCheck *IntervalCheck::s_instance = 0;
 
 IntervalCheck::IntervalCheck( QObject *parent )
-  : QThread( parent )
+  : CollectionScheduler( parent )
 {
-  // make sure we are created from the main thread, ie. before all other threads start to potentially use us
-  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
-
   Q_ASSERT( s_instance == 0 );
   s_instance = this;
 }
@@ -46,75 +40,68 @@ IntervalCheck::~ IntervalCheck()
 {
 }
 
-void IntervalCheck::run()
-{
-  DataStore::self();
-  QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );
-  exec();
-  DataStore::self()->close();
-}
-
-IntervalCheck *IntervalCheck::instance()
+IntervalCheck *IntervalCheck::self()
 {
   Q_ASSERT( s_instance );
   return s_instance;
 }
 
-void IntervalCheck::doIntervalCheck()
-{
-  // cycle over all collections
-  const QDateTime now = QDateTime::currentDateTime();
-  const QVector<Collection> collections = Collection::retrieveAll();
-  Q_FOREACH ( /*sic!*/ Collection collection, collections ) {
-    // determine active cache policy
-    DataStore::self()->activeCachePolicy( collection );
-
-    // check if there is something to sync at all
-    if ( collection.cachePolicyCheckInterval() <= 0 || !collection.subscribed() ) {
-      continue;
-    }
-    requestCollectionSync( collection );
-  }
-
-  QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );
-}
-
 void IntervalCheck::requestCollectionSync( const Collection &collection )
 {
-  const QDateTime now = QDateTime::currentDateTime();
+  QMetaObject::invokeMethod( this, "scheduleCollection",
+                             Qt::QueuedConnection,
+                             Q_ARG( Collection, collection ) );
+}
 
-  // if the collection is a resource collection we trigger a synchronization
-  // of the collection hierarchy as well
+int IntervalCheck::collectionScheduleInterval( const Collection &collection )
+{
+  return collection.cachePolicyCheckInterval();
+}
+
+bool IntervalCheck::hasChanged( const Collection &collection, const Collection &changed )
+{
+  return collection.cachePolicyCheckInterval() != changed.cachePolicyCheckInterval()
+        || collection.subscribed() != changed.subscribed();
+}
+
+bool IntervalCheck::shouldScheduleCollection( const Collection &collection )
+{
+  return collection.cachePolicyCheckInterval() > 0
+        && collection.subscribed();
+}
+
+void IntervalCheck::collectionExpired( const Collection &collection )
+{
+  const QDateTime now( QDateTime::currentDateTime() );
+
   if ( collection.parentId() == 0 ) {
     const QString resourceName = collection.resource().name();
 
-    int minInterval = MINIMUM_COLTREESYNC_INTERVAL;
-    if ( collection.cachePolicyCheckInterval() > 0 ) {
-      minInterval = collection.cachePolicyCheckInterval();
-    }
+    const int interval = qMax( MINIMUM_COLTREESYNC_INTERVAL, collection.cachePolicyCheckInterval() );
 
-    const QDateTime lastExpectedCheck = now.addSecs( minInterval * -60 );
+    const QDateTime lastExpectedCheck = now.addSecs( interval * -60 );
     QMutexLocker locker( &m_lastSyncMutex );
     if ( !mLastCollectionTreeSyncs.contains( resourceName ) || mLastCollectionTreeSyncs.value( resourceName ) < lastExpectedCheck ) {
       mLastCollectionTreeSyncs.insert( resourceName, now );
       locker.unlock();
-      QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionTreeSync", Qt::QueuedConnection, Q_ARG( QString, resourceName ) );
+      QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionTreeSync",
+                                 Qt::QueuedConnection,
+                                 Q_ARG( QString, resourceName ) );
     }
   }
 
   // now on to the actual collection syncing
-  int minInterval = MINIMUM_AUTOSYNC_INTERVAL;
-  if ( collection.cachePolicyCheckInterval() > 0 ) {
-    minInterval = collection.cachePolicyCheckInterval();
-  }
+  const int interval = qMax( MINIMUM_AUTOSYNC_INTERVAL, collection.cachePolicyCheckInterval() );
 
-  const QDateTime lastExpectedCheck = now.addSecs( minInterval * -60 );
+  const QDateTime lastExpectedCheck = now.addSecs( interval * -60 );
   QMutexLocker locker( &m_lastSyncMutex );
   if ( mLastChecks.contains( collection.id() ) && mLastChecks.value( collection.id() ) > lastExpectedCheck ) {
     return;
   }
   mLastChecks.insert( collection.id(), now );
   locker.unlock();
-  QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionSync", Qt::QueuedConnection,
-                             Q_ARG( QString, collection.resource().name() ), Q_ARG( qint64, collection.id() ) );
+  QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionSync",
+                             Qt::QueuedConnection,
+                             Q_ARG( QString, collection.resource().name() ),
+                             Q_ARG( qint64, collection.id() ) );
 }

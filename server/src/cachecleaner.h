@@ -20,15 +20,17 @@
 #ifndef AKONADI_CACHECLEANER_H
 #define AKONADI_CACHECLEANER_H
 
-#include <QtCore/QThread>
+#include "collectionscheduler.h"
 
 namespace Akonadi {
 namespace Server {
 
+class Collection;
+
 /**
   Cache cleaner thread.
 */
-class CacheCleaner : public QThread
+class CacheCleaner : public CollectionScheduler
 {
   Q_OBJECT
 
@@ -38,19 +40,18 @@ class CacheCleaner : public QThread
       @param parent The parent object.
     */
     CacheCleaner( QObject *parent = 0 );
-
     ~CacheCleaner();
 
-  protected:
-    virtual void run();
+    static CacheCleaner *self();
 
-  private Q_SLOTS:
-    void cleanCache();
+  protected:
+    void collectionExpired( const Collection &collection );
+    int collectionScheduleInterval( const Collection &collection );
+    bool hasChanged( const Collection &collection, const Collection &changed );
+    bool shouldScheduleCollection( const Collection &collection );
 
   private:
-    short int mTime;
-    qint64 mLoops;
-
+    static CacheCleaner *sInstance;
 };
 
 } // namespace Server

@@ -1,0 +1,85 @@
+/*
+    Copyright (c) 2014 Daniel Vrátil <dvratil@redhat.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+
+#ifndef AKONADI_SERVER_COLLECTIONSCHEDULER_H
+#define AKONADI_SERVER_COLLECTIONSCHEDULER_H
+
+#include <QThread>
+#include <QTimer>
+#include <QMultiMap>
+#include <QMutex>
+
+#include "entities.h"
+
+namespace Akonadi {
+namespace Server {
+
+class Collection;
+
+class CollectionScheduler: public QThread
+{
+    Q_OBJECT
+
+  public:
+    CollectionScheduler( QObject *parent = 0 );
+    virtual ~CollectionScheduler();
+
+    void collectionChanged( qint64 collectionId );
+    void collectionRemoved( qint64 collectionId );
+    void collectionAdded( qint64 collectionId );
+
+    /**
+     * Sets the minimum timeout interval.
+     *
+     * Default value is 5.
+     *
+     * @p intervalMinutes Minimum timeout interval in minutes.
+     */
+    void setMinimumInterval( int intervalMinutes );
+    int minimumInterval() const;
+
+  protected:
+    virtual void run();
+
+    virtual bool shouldScheduleCollection( const Collection &collection ) = 0;
+    virtual bool hasChanged( const Collection &collection, const Collection &changed ) = 0;
+    /**
+     * @return Return cache timeout in minutes
+     */
+    virtual int collectionScheduleInterval( const Collection &collection ) = 0;
+    virtual void collectionExpired( const Collection &collection ) = 0;
+
+  protected Q_SLOTS:
+    void initScheduler();
+    void schedulerTimeout();
+    void startScheduler();
+    void scheduleCollection( /*sic!*/ Collection collection );
+
+  protected:
+    QMutex mScheduleLock;
+    QMultiMap<uint /*timestamp*/, Collection> mSchedule;
+    QTimer *mScheduler;
+    int mMinInterval;
+};
+
+} // namespace Server
+} // namespace Akonadi
+
+#endif // AKONADI_SERVER_COLLECTIONSCHEDULER_H
