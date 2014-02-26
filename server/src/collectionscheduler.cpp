@@ -150,13 +150,13 @@ void CollectionScheduler::scheduleCollection( Collection collection )
   // Check whether there's another check scheduled within a minute after this one.
   // If yes, then delay this check so that it's scheduled together with the others
   // This is a minor optimization to reduce wakeups and SQL queries
-  QMap<uint, Collection>::ConstIterator it = mSchedule.lowerBound( nextCheck );
-  if ( it != mSchedule.constEnd() && it.key() - nextCheck < 60 ) {
+  QMap<uint, Collection>::iterator it = mSchedule.lowerBound( nextCheck );
+  if ( it != mSchedule.end() && it.key() - nextCheck < 60 ) {
     nextCheck = it.key();
 
   // Also check whether there's another checked scheduled within a minute before
   // this one.
-  } else if ( it != mSchedule.constBegin() ) {
+  } else if ( it != mSchedule.begin() ) {
     --it;
     if ( nextCheck - it.key() < 60 ) {
       nextCheck = it.key();
