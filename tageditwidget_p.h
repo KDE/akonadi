@@ -1,7 +1,6 @@
 /*
     This file is part of Akonadi
 
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,40 +19,32 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_TAGWIDGET_H
-#define AKONADI_TAGWIDGET_H
-
-#include "akonadi_export.h"
+#ifndef AKONADI_TAGEDITWIDGET_P_H
+#define AKONADI_TAGEDITWIDGET_P_H
 
 #include <QWidget>
 #include "akonadi/tag.h"
 
 namespace Akonadi {
 
+class TagModel;
 /**
- * A widget that shows a tag selection and provides means to edit that selection.
+ * A widget that offers facilities to add/remove tags and optionally provides a way to select tags.
  *
- * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
  * @since 4.13
  */
-class AKONADI_EXPORT TagWidget : public QWidget
+class TagEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TagWidget(QWidget *parent = 0);
-    ~TagWidget();
+    explicit TagEditWidget(Akonadi::TagModel *model, QWidget *parent = 0, bool enableSelection = false);
+    virtual ~TagEditWidget();
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Akonadi::Tag::List selection() const;
+    Akonadi::Tag::List selection();
 
-Q_SIGNALS:
-    void selectionChanged(const Akonadi::Tag::List &tags);
-
-private Q_SLOTS:
-    void editTags();
-
-private:
-    void updateView();
+protected:
+    bool eventFilter(QObject* watched, QEvent* event);
 
 private:
     class Private;

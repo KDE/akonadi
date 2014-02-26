@@ -1,7 +1,6 @@
 /*
     This file is part of Akonadi
 
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,12 +19,12 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_TAGWIDGET_H
-#define AKONADI_TAGWIDGET_H
+#ifndef AKONADI_TAGSELECTIONDIALOG_H
+#define AKONADI_TAGSELECTIONDIALOG_H
 
 #include "akonadi_export.h"
 
-#include <QWidget>
+#include <KDialog>
 #include "akonadi/tag.h"
 
 namespace Akonadi {
@@ -36,24 +35,18 @@ namespace Akonadi {
  * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
  * @since 4.13
  */
-class AKONADI_EXPORT TagWidget : public QWidget
+class AKONADI_EXPORT TagSelectionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit TagWidget(QWidget *parent = 0);
-    ~TagWidget();
+    explicit TagSelectionDialog(QWidget *parent = 0);
+    virtual ~TagSelectionDialog();
 
     void setSelection(const Akonadi::Tag::List &tags);
     Akonadi::Tag::List selection() const;
 
 Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);
-
-private Q_SLOTS:
-    void editTags();
-
-private:
-    void updateView();
 
 private:
     class Private;

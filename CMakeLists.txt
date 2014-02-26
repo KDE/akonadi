@@ -196,7 +196,9 @@ set( akonadikde_LIB_SRC
   tagfetchscope.cpp
   tagfetchjob.cpp
   tagdeletejob.cpp
-  contact/editor/kedittagsdialog.cpp
+  tageditwidget.cpp
+  tagmanagementdialog.cpp
+  tagselectiondialog.cpp
   tagwidget.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
@@ -414,6 +416,8 @@ install( FILES
   tagfetchscope.h
   tagdeletejob.h
   tagwidget.h
+  tagmanagementdialog.h
+  tagselectiondialog.h
   trashjob.h
   trashrestorejob.h
   trashsettings.h

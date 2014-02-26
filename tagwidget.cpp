@@ -22,10 +22,9 @@
 
 #include "tagwidget.h"
 
-#include <akonadi/tagmodel.h>
-#include <akonadi/changerecorder.h>
-
-#include "contact/editor/kedittagsdialog_p.h"
+#include "tagmodel.h"
+#include "changerecorder.h"
+#include "tagselectiondialog.h"
 
 #include <kicon.h>
 #include <klocalizedstring.h>
@@ -38,8 +37,8 @@ using namespace Akonadi;
 
 struct TagWidget::Private {
     QLabel *mTagLabel;
-    Akonadi::TagModel *mModel;
     Akonadi::Tag::List mTags;
+    Akonadi::TagModel *mModel;
 };
 
 TagWidget::TagWidget(QWidget *parent)
@@ -48,7 +47,6 @@ TagWidget::TagWidget(QWidget *parent)
 {
     Monitor *monitor = new Monitor(this);
     monitor->setTypeMonitored(Monitor::Tags);
-
     d->mModel = new Akonadi::TagModel(monitor, this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -82,9 +80,10 @@ Akonadi::Tag::List TagWidget::selection() const
 
 void TagWidget::editTags()
 {
-    QScopedPointer<KEditTagsDialog> dlg(new KEditTagsDialog(d->mTags, d->mModel, this));
-    if ( dlg->exec() ) {
-        d->mTags = dlg->tags();
+    QScopedPointer<Akonadi::TagSelectionDialog> dlg(new TagSelectionDialog(this));
+    dlg->setSelection(d->mTags);
+    if (dlg->exec() == QDialog::Accepted) {
+        d->mTags = dlg->selection();
         updateView();
         emit selectionChanged(d->mTags);
     }
