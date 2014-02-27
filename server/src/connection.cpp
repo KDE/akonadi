@@ -294,6 +294,7 @@ void Connection::setSessionId( const QByteArray &id )
   m_streamParser->setTracerIdentifier( m_identifier );
 
   m_sessionId = id;
+  setObjectName( QString::fromLatin1( id ) );
   storageBackend()->setSessionId( id );
   storageBackend()->notificationCollector()->setSessionId( id );
 }
