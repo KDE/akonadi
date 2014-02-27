@@ -173,4 +173,9 @@ Q_DECLARE_METATYPE( QVector<Akonadi::NotificationMessageV2::Type> )
 Q_DECLARE_METATYPE( QVector<QByteArray> )
 Q_DECLARE_METATYPE( QVector<qint64> )
 
+// V3 is used in NotificationSource.xml interface, so it must be
+// defined so that old clients that only include this header
+// will compile
+#include "notificationmessagev3_p.h"
+
 #endif // NOTIFICATIONMESSAGEV2_H
