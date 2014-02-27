@@ -244,6 +244,8 @@ class QueryBuilder
      */
     void sqliteAdaptUpdateJoin( Query::Condition &cond );
 
+    bool retryLastTransaction();
+
   private:
     QString mTable;
     DbType::Type mDatabaseType;

@@ -320,6 +320,17 @@ QString QueryBuilder::buildQuery()
   return statement;
 }
 
+bool QueryBuilder::retryLastTransaction()
+{
+#ifndef QUERYBUILDER_UNITTEST
+  mQuery = DataStore::self()->retryLastTransaction();
+  return !mQuery.lastError().isValid();
+#else
+  return true;
+#endif
+}
+
+
 bool QueryBuilder::exec()
 {
   const QString statement = buildQuery();
@@ -342,7 +353,9 @@ bool QueryBuilder::exec()
     }
     //akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
+
   bool ret;
+
   if ( StorageDebugger::instance()->isSQLDebuggingEnabled() ) {
     QTime t;
     t.start();
@@ -352,7 +365,6 @@ bool QueryBuilder::exec()
       ret = mQuery.exec();
     }
     StorageDebugger::instance()->queryExecuted( mQuery, t.elapsed() );
-
   } else {
     StorageDebugger::instance()->incSequence();
     if ( isBatch ) {
@@ -362,8 +374,42 @@ bool QueryBuilder::exec()
     }
   }
 
+  // Add the query to DataStore so that we can replay it in case transaction deadlocks.
+  // The method does nothing when this query is not executed within a transaction.
+  // We don't care whether the query was successful or not. In case of error, the caller
+  // will rollback the transaction anyway, and all cached queries will be removed.
+  DataStore::self()->addQueryToTransaction( mQuery, isBatch );
+
   if ( !ret ) {
-    akError() << "Error during executing query" << statement << ": " << mQuery.lastError().text();
+    // Handle transaction deadlocks and timeouts by attempting to replay the transaction.
+    if ( mDatabaseType == DbType::PostgreSQL ) {
+      const QString dbError = mQuery.lastError().databaseText();
+      if ( dbError.contains( QLatin1String( "40P01" /* deadlock_detected */ ) ) ) {
+        akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+        akDebug() << mQuery.lastError().text();
+        return retryLastTransaction();
+      }
+    } else if ( mDatabaseType == DbType::MySQL ) {
+      const int error = mQuery.lastError().number();
+      if ( error == 1213 /* ER_LOCK_DEADLOCK */ ) {
+        akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+        akDebug() << mQuery.lastError().text();
+        return retryLastTransaction();
+      } else if ( error == 1205 /* ER_LOCK_WAIT_TIMEOUT */ ) {
+        akDebug() << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
+        akDebug() << mQuery.lastError().text();
+        return retryLastTransaction();
+      }
+    } else if ( mDatabaseType == DbType::Sqlite ) {
+      // We can't have a transaction deadlock in SQLite, because it does not support
+      // concurrent transactions and DataStore serializes them through a global lock.
+    }
+
+    akError() << "DATABASE ERROR:";
+    akError() << "  Error code:" << mQuery.lastError().number();
+    akError() << "  DB error: " << mQuery.lastError().databaseText();
+    akError() << "  Error text:" << mQuery.lastError().text();
+    akError() << "  Query:" << statement;
     return false;
   }
 #else

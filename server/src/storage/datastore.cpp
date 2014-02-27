@@ -76,7 +76,6 @@ DataStore::DataStore()
 {
   open();
 
-  m_transactionLevel = 0;
   NotificationManager::self()->connectNotificationCollector( mNotificationCollector );
 
   if ( DbConfig::configuredDatabase()->driverName() == QLatin1String( "QMYSQL" ) ) {
@@ -1079,6 +1078,87 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray &dateTime )
     return QDateTime::fromString( QString::fromLatin1( dateTime ), QLatin1String( "yyyy-MM-dd hh:mm:ss" ) );
 }
 
+void DataStore::addQueryToTransaction( const QSqlQuery &query, bool isBatch )
+{
+  DbType::Type dbType = DbType::type( m_database );
+  // This is used for replaying deadlocked transactions, so only record queries
+  // for backends that support concurrent transactions.
+  if ( !inTransaction() || ( dbType != DbType::MySQL && dbType != DbType::PostgreSQL ) ) {
+    return;
+  }
+
+  m_transactionQueries.append( qMakePair( query, isBatch ) );
+}
+
+QSqlQuery DataStore::retryLastTransaction()
+{
+  DbType::Type dbType = DbType::type( m_database );
+  if ( !inTransaction() || ( dbType != DbType::MySQL && dbType != DbType::PostgreSQL ) ) {
+    return QSqlQuery();
+  }
+
+  // The database has rolled back the actual transaction, so reset the counter
+  // to 0 and start a new one in beginTransaction(). Then restore the level
+  // because this has to be completely transparent to the original caller
+  const int oldTransactionLevel = m_transactionLevel;
+  m_transactionLevel = 0;
+  if ( !beginTransaction() ) {
+    m_transactionLevel = oldTransactionLevel;
+    return QSqlQuery();
+  }
+  m_transactionLevel = oldTransactionLevel;
+
+  QSqlQuery ret;
+  typedef QPair<QSqlQuery, bool> QueryBoolPair;
+  QMutableVectorIterator<QueryBoolPair> iter( m_transactionQueries );
+  while ( iter.hasNext() ) {
+    iter.next();
+    QSqlQuery query = iter.value().first;
+    const bool isBatch = iter.value().second;
+
+    // Make sure the query is ready to be executed again
+    if ( query.isActive() ) {
+      query.finish();
+    }
+
+    bool res = false;
+    if ( isBatch ) {
+      // QSqlQuery::execBatch() does not reset lastError(), so for the sake
+      // of transparency (make it look to the caller like if the query was
+      // successful the first time), we create a copy of the original query,
+      // which has lastError empty.
+      QSqlQuery copiedQuery( m_database );
+      copiedQuery.prepare( query.executedQuery() );
+      const QVariantList values = query.boundValues().values();
+      for (int i = 0; i < values.size(); ++i) {
+        copiedQuery.bindValue(i, values[i]);
+      }
+      query = copiedQuery;
+      res = query.execBatch();
+    } else {
+      res = query.exec();
+    }
+
+    if ( !res ) {
+      // Don't do another deadlock detection here, just give up.
+      akError() << "DATABASE ERROR:";
+      akError() << "  Error code:" << query.lastError().number();
+      akError() << "  DB error: " << query.lastError().databaseText();
+      akError() << "  Error text:" << query.lastError().text();
+      akError() << "  Query:" << query.executedQuery();
+
+      // Return the last query, because that's what caller expects to retrieve
+      // from QueryBuilder. It is in error state anyway.
+      return m_transactionQueries.last().first;
+    }
+
+    // Update the query in the list
+    iter.setValue( qMakePair( query, isBatch ) );
+  }
+
+  return m_transactionQueries.last().first;
+}
+
 bool DataStore::beginTransaction()
 {
   if ( !m_dbOpened ) {
@@ -1095,7 +1175,7 @@ bool DataStore::beginTransaction()
     }
   }
 
-  m_transactionLevel++;
+  ++m_transactionLevel;
 
   return true;
 }
@@ -1111,7 +1191,7 @@ bool DataStore::rollbackTransaction()
     return false;
   }
 
-  m_transactionLevel--;
+  --m_transactionLevel;
 
   if ( m_transactionLevel == 0 ) {
     QSqlDriver *driver = m_database.driver();
@@ -1121,8 +1201,9 @@ bool DataStore::rollbackTransaction()
       debugLastDbError( "DataStore::rollbackTransaction" );
       return false;
     }
-
     TRANSACTION_MUTEX_UNLOCK;
+
+    m_transactionQueries.clear();
   }
 
   return true;
@@ -1149,6 +1230,8 @@ bool DataStore::commitTransaction()
       TRANSACTION_MUTEX_UNLOCK;
       Q_EMIT transactionCommitted();
     }
+
+    m_transactionQueries.clear();
   }
 
   m_transactionLevel--;
