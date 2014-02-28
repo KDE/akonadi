@@ -1,3 +1,20 @@
+1.11.80                       28-February-2014
+----------------------------------------------
+- Server-search support
+- Search plugins support
+- Tags support
+- Fixes and improvements in search
+- Fixes in protocol parser
+- Fixed inter-resource moves
+- Fixed .desktop files parsing
+- Optimized collections tasks scheduling
+- Optimized flags handling
+- Optimized appending new items via AK-APPEND
+- Handle database transactions deadlocks and timeouts
+- Improved PostgreSQL support
+- Soprano is now an optional dependency
+- Removed MySQL Embedded support
+
 1.11.0			      28-November-2013
 ----------------------------------------------
 - fix joined UPDATE queries failing with SQLite

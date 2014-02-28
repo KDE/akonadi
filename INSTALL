@@ -36,6 +36,8 @@ The following options are available when running CMake:
 * STATIC_LIBRARY (Default: FALSE): Build the Akonadi server libraries statically. Only useful for certain cases (eg: WINCE builds).
 * DATABASE_BACKEND (Default: MYSQL, available: MYSQL, POSTGRES, SQLITE): Define which database driver to use by default.
   MYSQL is preferred, SQLITE should be avoided.
+* QT5_BUILD (Default: FALSE): Build against Qt5 instead of Qt4.
+* WITH_SOPRANO (Default: TRUE): Don't build with Soprano/Nepomuk support
 
 === Build Requirements ===
 
@@ -45,15 +47,14 @@ Required:
 * CMake (http://www.cmake.org) >= 2.8.8
 * Qt4 >= 4.6.0 (http://qt.nokia.com/downloads)
 * Shared-mime-info >= 0.20 (http://freedesktop.org/wiki/Software/shared-mime-info)
-* Soprano (http://soprano.sourceforge.net)
 * Xsltproc (http://xmlsoft.org/XSLT/downloads.html)
 
 Optional:
 
 * Mysqld (http://www.mysql.com) - Optional at build time. You can pass -DMYSQLD_EXECUTABLE=/path/to/mysqld when running CMake instead
 * SQlite >= 3.6.23 (http://www.sqlite.org) - Needed if you want to build the Sqlite backend
-- Postgresql (http://www.postgres.org) - Optional at build time. You can pass -DPOSTGRES_PATH=/path/to/pg_ctl when running CMake instead
-
+* Postgresql (http://www.postgres.org) - Optional at build time. You can pass -DPOSTGRES_PATH=/path/to/pg_ctl when running CMake instead
+* Soprano (http://soprano.sourceforge.net)
 
 === Runtime Requirements ===
 
