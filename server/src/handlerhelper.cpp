@@ -249,6 +249,10 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   const CollectionAttribute::List attrs = col.attributes();
   for ( int i = 0; i < attrs.size(); ++i ) {
     const CollectionAttribute &attr = attrs[i];
+    //Workaround to skip invalid "PARENT " attributes that were accidentaly created after 6e5bbf6
+    if ( attr.type() == "PARENT" ) {
+      continue;
+    }
     b += attr.type() + ' ' + ImapParser::quote( attr.value() );
     if ( i != attrs.size() - 1 ) {
       b += ' ';
