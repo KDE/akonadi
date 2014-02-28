@@ -134,7 +134,7 @@ bool Modify::parseStream()
       bool ok = false;
       pos = ImapParser::parseNumber( line, newParent, &ok, pos );
       if ( !ok ) {
-        return failureResponse( "Invalid syntax" );
+        return failureResponse( "Invalid syntax: " + line);
       }
       if ( collection.parentId() == newParent ) {
         continue;
