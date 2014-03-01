@@ -41,10 +41,10 @@ class ImapSet;
  */
 class AKONADI_EXPORT AgentSearchInterface
 {
-  public:
+public:
     enum ResultScope {
-      Uid,
-      Rid
+        Uid,
+        Rid
     };
 
     /**
@@ -65,7 +65,7 @@ class AKONADI_EXPORT AgentSearchInterface
      * @param resultCollection The destination collection for the search results. It's a virtual
      * collection, results can be added/removed using Akonadi::LinkJob and Akonadi::UnlinkJob respectively.
      */
-    virtual void addSearch( const QString &query, const QString &queryLanguage, const Akonadi::Collection &resultCollection ) = 0;
+    virtual void addSearch(const QString &query, const QString &queryLanguage, const Akonadi::Collection &resultCollection) = 0;
 
     /**
      * Removes a previously added search.
@@ -73,21 +73,21 @@ class AKONADI_EXPORT AgentSearchInterface
      * You do not need to take care of deleting results in there, the collection is just provided as a way to
      * identify the search.
      */
-    virtual void removeSearch( const Akonadi::Collection &resultCollection ) = 0;
+    virtual void removeSearch(const Akonadi::Collection &resultCollection) = 0;
 
     /**
      * Perform a search on remote storage and return results using SearchResultJob.
      *
      * @since 4.13
      */
-    virtual void search( const QString &query, const Collection &collection ) = 0;
+    virtual void search(const QString &query, const Collection &collection) = 0;
 
-    void searchFinished( const QVector<qint64> result, ResultScope scope );
-    void searchFinished( const ImapSet &result, ResultScope scope );
-    void searchFinished( const QVector<QByteArray> &result );
-  private:
+    void searchFinished(const QVector<qint64> result, ResultScope scope);
+    void searchFinished(const ImapSet &result, ResultScope scope);
+    void searchFinished(const QVector<QByteArray> &result);
+private:
     //@cond PRIVATE
-    AgentSearchInterfacePrivate* const d;
+    AgentSearchInterfacePrivate *const d;
     //@endcond
 };
 

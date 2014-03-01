@@ -49,25 +49,25 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the roles of this model.
      */
     enum Roles {
-      TypeRole = Qt::UserRole + 1,             ///< The agent type itself
-      TypeIdentifierRole,                      ///< The identifier of the agent type
-      DescriptionRole,                         ///< A description of the agent type
-      MimeTypesRole,                           ///< A list of supported mimetypes
-      CapabilitiesRole,                        ///< A list of supported capabilities
-      InstanceRole,                            ///< The agent instance itself
-      InstanceIdentifierRole,                  ///< The identifier of the agent instance
-      StatusRole,                              ///< The current status (numerical) of the instance
-      StatusMessageRole,                       ///< A textual presentation of the current status
-      ProgressRole,                            ///< The current progress (numerical in percent) of an operation
-      OnlineRole,                              ///< The current online/offline status
-      UserRole  = Qt::UserRole + 42            ///< Role for user extensions
+        TypeRole = Qt::UserRole + 1,             ///< The agent type itself
+        TypeIdentifierRole,                      ///< The identifier of the agent type
+        DescriptionRole,                         ///< A description of the agent type
+        MimeTypesRole,                           ///< A list of supported mimetypes
+        CapabilitiesRole,                        ///< A list of supported capabilities
+        InstanceRole,                            ///< The agent instance itself
+        InstanceIdentifierRole,                  ///< The identifier of the agent instance
+        StatusRole,                              ///< The current status (numerical) of the instance
+        StatusMessageRole,                       ///< A textual presentation of the current status
+        ProgressRole,                            ///< The current progress (numerical in percent) of an operation
+        OnlineRole,                              ///< The current online/offline status
+        UserRole  = Qt::UserRole + 42            ///< Role for user extensions
     };
 
     /**
@@ -75,30 +75,30 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
      *
      * @param parent The parent object.
      */
-    explicit AgentInstanceModel( QObject *parent = 0 );
+    explicit AgentInstanceModel(QObject *parent = 0);
 
     /**
      * Destroys the agent instance model.
      */
     virtual ~AgentInstanceModel();
 
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-    virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex &index ) const;
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-    virtual bool setData( const QModelIndex &index, const QVariant &value, int role );
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void instanceAdded( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceRemoved( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceChanged( const Akonadi::AgentInstance& ) )
+    Q_PRIVATE_SLOT(d, void instanceAdded(const Akonadi::AgentInstance &))
+    Q_PRIVATE_SLOT(d, void instanceRemoved(const Akonadi::AgentInstance &))
+    Q_PRIVATE_SLOT(d, void instanceChanged(const Akonadi::AgentInstance &))
     //@endcond
 };
 

@@ -51,14 +51,14 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Create a new agent filter proxy model.
      * By default no filtering is done.
      * @param parent parent object
      */
-    explicit AgentFilterProxyModel( QObject *parent = 0 );
+    explicit AgentFilterProxyModel(QObject *parent = 0);
 
     /**
      * Destroys the agent filter proxy model.
@@ -68,12 +68,12 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
     /**
      * Accept agents supporting @p mimeType.
      */
-    void addMimeTypeFilter( const QString &mimeType );
+    void addMimeTypeFilter(const QString &mimeType);
 
     /**
      * Accept agents with the given @p capability.
      */
-    void addCapabilityFilter( const QString &capability );
+    void addCapabilityFilter(const QString &capability);
 
     /**
      * Clear the filters ( mimeTypes & capabilities ).
@@ -85,15 +85,15 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
      * @param capability undesired agent capability
      * @since 4.6
      */
-    void excludeCapabilities( const QString &capability );
+    void excludeCapabilities(const QString &capability);
 
-  protected:
-    bool filterAcceptsRow( int row, const QModelIndex &parent ) const;
+protected:
+    bool filterAcceptsRow(int row, const QModelIndex &parent) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

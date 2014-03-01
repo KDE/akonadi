@@ -31,44 +31,44 @@
 #include <QtCore/QThread>
 #include <QtCore/QThreadStorage>
 
-QThreadStorage<KComponentData*> s_agentComponentDatas;
+QThreadStorage<KComponentData *> s_agentComponentDatas;
 
 using namespace Akonadi;
 
 class Akonadi::AgentFactoryBasePrivate
 {
-  public:
+public:
     QString catalogName;
 };
 
-AgentFactoryBase::AgentFactoryBase( const char *catalogName, QObject *parent)
-  : QObject( parent ), d( new AgentFactoryBasePrivate )
+AgentFactoryBase::AgentFactoryBase(const char *catalogName, QObject *parent)
+    : QObject(parent)
+    , d(new AgentFactoryBasePrivate)
 {
-  d->catalogName = QString::fromLatin1( catalogName );
-  if ( !KGlobal::hasMainComponent() ) {
-    new KComponentData( "AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
-  }
+    d->catalogName = QString::fromLatin1(catalogName);
+    if (!KGlobal::hasMainComponent()) {
+        new KComponentData("AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent);
+    }
 
-  KGlobal::locale()->insertCatalog( d->catalogName );
+    KGlobal::locale()->insertCatalog(d->catalogName);
 
-  Internal::setClientType( Internal::Agent );
-  ServerManager::self(); // make sure it's created in the main thread
+    Internal::setClientType(Internal::Agent);
+    ServerManager::self(); // make sure it's created in the main thread
 }
 
 AgentFactoryBase::~AgentFactoryBase()
 {
-  delete d;
+    delete d;
 }
 
-void AgentFactoryBase::createComponentData( const QString& identifier ) const
+void AgentFactoryBase::createComponentData(const QString &identifier) const
 {
-  Q_ASSERT( !s_agentComponentDatas.hasLocalData() );
+    Q_ASSERT(!s_agentComponentDatas.hasLocalData());
 
-  if ( QThread::currentThread() != QCoreApplication::instance()->thread() ) {
-    s_agentComponentDatas.setLocalData( new KComponentData( ServerManager::addNamespace( identifier ).toLatin1(), d->catalogName.toLatin1(),
-                                                            KComponentData::SkipMainComponentRegistration ) );
-  } else {
-    s_agentComponentDatas.setLocalData( new KComponentData( ServerManager::addNamespace( identifier ).toLatin1(), d->catalogName.toLatin1() ) );
-  }
+    if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
+        s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1(),
+                                                              KComponentData::SkipMainComponentRegistration));
+    } else {
+        s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1()));
+    }
 }
-

@@ -39,23 +39,23 @@ static void iconsEarlyCleanup();
 
 struct Icons
 {
-  Icons()
-   : readyPixmap( KIcon( QLatin1String( "user-online" ) ).pixmap( QSize( 16, 16 ) ) )
-   , syncPixmap( KIcon( QLatin1String( "network-connect" ) ).pixmap( QSize( 16, 16 ) ) )
-   , errorPixmap( KIcon( QLatin1String( "dialog-error" ) ).pixmap( QSize( 16, 16 ) ) )
-   , offlinePixmap( KIcon( QLatin1String( "network-disconnect" ) ).pixmap( QSize( 16, 16 ) ) )
-  {
-    qAddPostRoutine( iconsEarlyCleanup );
-  }
-  QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
+    Icons()
+        : readyPixmap(KIcon(QLatin1String("user-online")).pixmap(QSize(16, 16)))
+        , syncPixmap(KIcon(QLatin1String("network-connect")).pixmap(QSize(16, 16)))
+        , errorPixmap(KIcon(QLatin1String("dialog-error")).pixmap(QSize(16, 16)))
+        , offlinePixmap(KIcon(QLatin1String("network-disconnect")).pixmap(QSize(16, 16)))
+    {
+        qAddPostRoutine(iconsEarlyCleanup);
+    }
+    QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
 };
 
-K_GLOBAL_STATIC( Icons, s_icons )
+K_GLOBAL_STATIC(Icons, s_icons)
 
 // called as a Qt post routine, to prevent pixmap leaking
 void iconsEarlyCleanup() {
-  Icons * const ic = s_icons;
-  ic->readyPixmap = ic->syncPixmap = ic->errorPixmap = ic->offlinePixmap = QPixmap();
+    Icons *const ic = s_icons;
+    ic->readyPixmap = ic->syncPixmap = ic->errorPixmap = ic->offlinePixmap = QPixmap();
 }
 
 static const int s_delegatePaddingSize = 7;
@@ -66,11 +66,11 @@ static const int s_delegatePaddingSize = 7;
 
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
-  public:
-    AgentInstanceWidgetDelegate( QObject *parent = 0 );
+public:
+    AgentInstanceWidgetDelegate(QObject *parent = 0);
 
-    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-    virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 }
@@ -82,15 +82,18 @@ using Akonadi::Internal::AgentInstanceWidgetDelegate;
  */
 class AgentInstanceWidget::Private
 {
-  public:
-    Private( AgentInstanceWidget *parent )
-      : mParent( parent ), mView( 0 ), mModel( 0 ), proxy( 0 )
+public:
+    Private(AgentInstanceWidget *parent)
+        : mParent(parent)
+        , mView(0)
+        , mModel(0)
+        , proxy(0)
     {
     }
 
-    void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& );
-    void currentAgentInstanceDoubleClicked( const QModelIndex& );
-    void currentAgentInstanceClicked( const QModelIndex &currentIndex );
+    void currentAgentInstanceChanged(const QModelIndex &, const QModelIndex &);
+    void currentAgentInstanceDoubleClicked(const QModelIndex &);
+    void currentAgentInstanceClicked(const QModelIndex &currentIndex);
 
     AgentInstanceWidget *mParent;
     QListView *mView;
@@ -98,199 +101,200 @@ class AgentInstanceWidget::Private
     AgentFilterProxyModel *proxy;
 };
 
-void AgentInstanceWidget::Private::currentAgentInstanceChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
-{
-  AgentInstance currentInstance;
-  if ( currentIndex.isValid() ) {
-    currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
-  }
-
-  AgentInstance previousInstance;
-  if ( previousIndex.isValid() ) {
-    previousInstance = previousIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
-  }
-
-  emit mParent->currentChanged( currentInstance, previousInstance );
-}
-
-void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked( const QModelIndex &currentIndex )
-{
-  AgentInstance currentInstance;
-  if ( currentIndex.isValid() ) {
-    currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
-  }
-
-  emit mParent->doubleClicked( currentInstance );
-}
-
-void AgentInstanceWidget::Private::currentAgentInstanceClicked( const QModelIndex &currentIndex )
+void AgentInstanceWidget::Private::currentAgentInstanceChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)
 {
     AgentInstance currentInstance;
-    if ( currentIndex.isValid() ) {
-      currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+    if (currentIndex.isValid()) {
+        currentInstance = currentIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
     }
 
-    emit mParent->clicked( currentInstance );
+    AgentInstance previousInstance;
+    if (previousIndex.isValid()) {
+        previousInstance = previousIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
+    }
+
+    emit mParent->currentChanged(currentInstance, previousInstance);
 }
 
-AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
-  : QWidget( parent ), d( new Private( this ) )
+void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
+    AgentInstance currentInstance;
+    if (currentIndex.isValid()) {
+        currentInstance = currentIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
+    }
 
-  d->mView = new QListView( this );
-  d->mView->setContextMenuPolicy( Qt::NoContextMenu );
-  d->mView->setItemDelegate( new Internal::AgentInstanceWidgetDelegate( d->mView ) );
-  d->mView->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-  d->mView->setAlternatingRowColors( true );
-  d->mView->setSelectionMode( QAbstractItemView::ExtendedSelection );
-  layout->addWidget( d->mView );
+    emit mParent->doubleClicked(currentInstance);
+}
 
-  d->mModel = new AgentInstanceModel( this );
+void AgentInstanceWidget::Private::currentAgentInstanceClicked(const QModelIndex &currentIndex)
+{
+    AgentInstance currentInstance;
+    if (currentIndex.isValid()) {
+        currentInstance = currentIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
+    }
 
-  d->proxy = new AgentFilterProxyModel( this );
-  d->proxy->setSourceModel( d->mModel );
-  d->mView->setModel( d->proxy );
+    emit mParent->clicked(currentInstance);
+}
 
-  d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
-  d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
+AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
+    : QWidget(parent)
+    , d(new Private(this))
+{
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
 
-  connect( d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           this, SLOT(currentAgentInstanceChanged(QModelIndex,QModelIndex)) );
-  connect( d->mView, SIGNAL(doubleClicked(QModelIndex)),
-           this, SLOT(currentAgentInstanceDoubleClicked(QModelIndex)) );
-  connect( d->mView, SIGNAL(clicked(QModelIndex)),
-           this, SLOT(currentAgentInstanceClicked(QModelIndex)) );
+    d->mView = new QListView(this);
+    d->mView->setContextMenuPolicy(Qt::NoContextMenu);
+    d->mView->setItemDelegate(new Internal::AgentInstanceWidgetDelegate(d->mView));
+    d->mView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    d->mView->setAlternatingRowColors(true);
+    d->mView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    layout->addWidget(d->mView);
+
+    d->mModel = new AgentInstanceModel(this);
+
+    d->proxy = new AgentFilterProxyModel(this);
+    d->proxy->setSourceModel(d->mModel);
+    d->mView->setModel(d->proxy);
+
+    d->mView->selectionModel()->setCurrentIndex(d->mView->model()->index(0, 0), QItemSelectionModel::Select);
+    d->mView->scrollTo(d->mView->model()->index(0, 0));
+
+    connect(d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(currentAgentInstanceChanged(QModelIndex,QModelIndex)));
+    connect(d->mView, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(currentAgentInstanceDoubleClicked(QModelIndex)));
+    connect(d->mView, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(currentAgentInstanceClicked(QModelIndex)));
 }
 
 AgentInstanceWidget::~AgentInstanceWidget()
 {
-  delete d;
+    delete d;
 }
 
 AgentInstance AgentInstanceWidget::currentAgentInstance() const
 {
-  QItemSelectionModel *selectionModel = d->mView->selectionModel();
-  if ( !selectionModel ) {
-    return AgentInstance();
-  }
+    QItemSelectionModel *selectionModel = d->mView->selectionModel();
+    if (!selectionModel) {
+        return AgentInstance();
+    }
 
-  QModelIndex index = selectionModel->currentIndex();
-  if ( !index.isValid() ) {
-    return AgentInstance();
-  }
+    QModelIndex index = selectionModel->currentIndex();
+    if (!index.isValid()) {
+        return AgentInstance();
+    }
 
-  return index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+    return index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
 }
 
 QList<AgentInstance> AgentInstanceWidget::selectedAgentInstances() const
 {
-  QList<AgentInstance> list;
-  QItemSelectionModel *selectionModel = d->mView->selectionModel();
-  if ( !selectionModel ) {
+    QList<AgentInstance> list;
+    QItemSelectionModel *selectionModel = d->mView->selectionModel();
+    if (!selectionModel) {
+        return list;
+    }
+
+    const QModelIndexList indexes = selectionModel->selection().indexes();
+
+    foreach (const QModelIndex &index, indexes) {
+        list.append(index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>());
+    }
+
     return list;
-  }
-
-  const QModelIndexList indexes = selectionModel->selection().indexes();
-
-  foreach ( const QModelIndex &index, indexes ) {
-    list.append( index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>() );
-  }
-
-  return list;
 }
 
-QAbstractItemView* AgentInstanceWidget::view() const
+QAbstractItemView *AgentInstanceWidget::view() const
 {
-  return d->mView;
+    return d->mView;
 }
 
-AgentFilterProxyModel* AgentInstanceWidget::agentFilterProxyModel() const
+AgentFilterProxyModel *AgentInstanceWidget::agentFilterProxyModel() const
 {
-  return d->proxy;
+    return d->proxy;
 }
 
-AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate( QObject *parent )
- : QAbstractItemDelegate( parent )
+AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate(QObject *parent)
+    : QAbstractItemDelegate(parent)
 {
 }
 
-void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  if ( !index.isValid() ) {
-    return;
-  }
+    if (!index.isValid()) {
+        return;
+    }
 
-  QStyle *style = QApplication::style();
-  style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
+    QStyle *style = QApplication::style();
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
 
-  QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
-  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
-  uint progress = index.model()->data( index, AgentInstanceModel::ProgressRole ).toUInt();
-  QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+    QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
+    const QString name = index.model()->data(index, Qt::DisplayRole).toString();
+    int status = index.model()->data(index, AgentInstanceModel::StatusRole).toInt();
+    uint progress = index.model()->data(index, AgentInstanceModel::ProgressRole).toUInt();
+    QString statusMessage = index.model()->data(index, AgentInstanceModel::StatusMessageRole).toString();
 
-  QPixmap statusPixmap;
+    QPixmap statusPixmap;
 
-  if ( !index.data( AgentInstanceModel::OnlineRole ).toBool() ) {
-    statusPixmap = s_icons->offlinePixmap;
-  } else if ( status == AgentInstance::Idle ) {
-    statusPixmap = s_icons->readyPixmap;
-  } else if ( status == AgentInstance::Running ) {
-    statusPixmap = s_icons->syncPixmap;
-  } else {
-    statusPixmap = s_icons->errorPixmap;
-  }
+    if (!index.data(AgentInstanceModel::OnlineRole).toBool()) {
+        statusPixmap = s_icons->offlinePixmap;
+    } else if (status == AgentInstance::Idle) {
+        statusPixmap = s_icons->readyPixmap;
+    } else if (status == AgentInstance::Running) {
+        statusPixmap = s_icons->syncPixmap;
+    } else {
+        statusPixmap = s_icons->errorPixmap;
+    }
 
-  if (status == 1) {
-    statusMessage.append(QString::fromLatin1(" (%1%)").arg(progress));
-  }
+    if (status == 1) {
+        statusMessage.append(QString::fromLatin1(" (%1%)").arg(progress));
+    }
 
-  QRect innerRect = option.rect.adjusted( s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize ); //add some padding round entire delegate
+    QRect innerRect = option.rect.adjusted(s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize);   //add some padding round entire delegate
 
-  const QSize decorationSize( KIconLoader::global()->currentSize( KIconLoader::Desktop ), KIconLoader::global()->currentSize( KIconLoader::Desktop ) );
-  const QSize statusIconSize = QSize(16,16);//= KIconLoader::global()->currentSize(KIconLoader::Small);
+    const QSize decorationSize(KIconLoader::global()->currentSize(KIconLoader::Desktop), KIconLoader::global()->currentSize(KIconLoader::Desktop));
+    const QSize statusIconSize = QSize(16, 16); //= KIconLoader::global()->currentSize(KIconLoader::Small);
 
-  QFont nameFont = option.font;
-  nameFont.setBold(true);
+    QFont nameFont = option.font;
+    nameFont.setBold(true);
 
-  QFont statusTextFont = option.font;
-  const QRect decorationRect( innerRect.left(), innerRect.top(), decorationSize.width(), innerRect.height() );
-  const QRect nameTextRect( decorationRect.topRight() + QPoint( 4, 0 ), innerRect.topRight() + QPoint( 0, innerRect.height() / 2) );
-  const QRect statusTextRect( decorationRect.bottomRight() + QPoint( 4, - innerRect.height()/2 ), innerRect.bottomRight() );
+    QFont statusTextFont = option.font;
+    const QRect decorationRect(innerRect.left(), innerRect.top(), decorationSize.width(), innerRect.height());
+    const QRect nameTextRect(decorationRect.topRight() + QPoint(4, 0), innerRect.topRight() + QPoint(0, innerRect.height() / 2));
+    const QRect statusTextRect(decorationRect.bottomRight() + QPoint(4, - innerRect.height() / 2), innerRect.bottomRight());
 
-  const QPixmap iconPixmap = icon.pixmap(decorationSize);
+    const QPixmap iconPixmap = icon.pixmap(decorationSize);
 
-  QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
-  if ( cg == QPalette::Normal && ! ( option.state & QStyle::State_Active ) ) {
-    cg = QPalette::Inactive;
-  }
+    QPalette::ColorGroup cg = option.state &QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
+    if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
+        cg = QPalette::Inactive;
+    }
 
-  if ( option.state & QStyle::State_Selected ) {
-    painter->setPen(option.palette.color( cg, QPalette::HighlightedText ) );
-  } else {
-    painter->setPen(option.palette.color( cg, QPalette::Text ) );
-  }
+    if (option.state & QStyle::State_Selected) {
+        painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
+    } else {
+        painter->setPen(option.palette.color(cg, QPalette::Text));
+    }
 
-  painter->drawPixmap( style->itemPixmapRect( decorationRect, Qt::AlignCenter, iconPixmap ), iconPixmap );
+    painter->drawPixmap(style->itemPixmapRect(decorationRect, Qt::AlignCenter, iconPixmap), iconPixmap);
 
-  painter->setFont(nameFont);
-  painter->drawText(nameTextRect, Qt::AlignVCenter | Qt::AlignLeft, name);
+    painter->setFont(nameFont);
+    painter->drawText(nameTextRect, Qt::AlignVCenter | Qt::AlignLeft, name);
 
-  painter->setFont(statusTextFont);
-  painter->drawText(statusTextRect.adjusted( statusIconSize.width() + 4, 0, 0, 0 ), Qt::AlignVCenter | Qt::AlignLeft, statusMessage );
-  painter->drawPixmap(style->itemPixmapRect( statusTextRect, Qt::AlignVCenter | Qt::AlignLeft, statusPixmap ), statusPixmap );
+    painter->setFont(statusTextFont);
+    painter->drawText(statusTextRect.adjusted(statusIconSize.width() + 4, 0, 0, 0), Qt::AlignVCenter | Qt::AlignLeft, statusMessage);
+    painter->drawPixmap(style->itemPixmapRect(statusTextRect, Qt::AlignVCenter | Qt::AlignLeft, statusPixmap), statusPixmap);
 }
 
-QSize AgentInstanceWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  Q_UNUSED ( index );
+    Q_UNUSED(index);
 
-  const int iconHeight = KIconLoader::global()->currentSize(KIconLoader::Desktop) + ( s_delegatePaddingSize*2 );  //icon height + padding either side
-  const int textHeight = option.fontMetrics.height() + qMax( option.fontMetrics.height(), 16 ) + ( s_delegatePaddingSize*2 ); //height of text + icon/text + padding either side
+    const int iconHeight = KIconLoader::global()->currentSize(KIconLoader::Desktop) + (s_delegatePaddingSize * 2);  //icon height + padding either side
+    const int textHeight = option.fontMetrics.height() + qMax(option.fontMetrics.height(), 16) + (s_delegatePaddingSize * 2);   //height of text + icon/text + padding either side
 
-  return QSize( 1,qMax( iconHeight, textHeight ) ); //any width,the view will give us the whole thing in list mode
+    return QSize(1, qMax(iconHeight, textHeight));    //any width,the view will give us the whole thing in list mode
 }
 
 }

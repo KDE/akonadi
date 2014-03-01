@@ -54,13 +54,13 @@ class Collection;
  */
 class AKONADI_EXPORT AgentManager : public QObject
 {
-  friend class AgentInstance;
-  friend class AgentInstanceCreateJobPrivate;
-  friend class AgentManagerPrivate;
+    friend class AgentInstance;
+    friend class AgentInstanceCreateJobPrivate;
+    friend class AgentManagerPrivate;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Returns the global instance of the agent manager.
      */
@@ -80,7 +80,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      * Returns the agent type with the given @p identifier or
      * an invalid agent type if the identifier does not exist.
      */
-    AgentType type( const QString &identifier ) const;
+    AgentType type(const QString &identifier) const;
 
     /**
      * Returns the list of all available agent instances.
@@ -95,19 +95,19 @@ class AKONADI_EXPORT AgentManager : public QObject
      * identifier of a resource is the same as that of its agent instance.
      * @param identifier identifier to choose the agent instance
      */
-    AgentInstance instance( const QString &identifier ) const;
+    AgentInstance instance(const QString &identifier) const;
 
     /**
      * Removes the given agent @p instance.
      */
-    void removeInstance( const AgentInstance &instance );
+    void removeInstance(const AgentInstance &instance);
 
     /**
      * Trigger a synchronization of the given collection by its owning resource agent.
      *
      * @param collection The collection to synchronize.
      */
-    void synchronizeCollection( const Collection &collection );
+    void synchronizeCollection(const Collection &collection);
 
     /**
      * Trigger a synchronization of the given collection by its owning resource agent.
@@ -117,7 +117,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      *
      * @since 4.6
      */
-    void synchronizeCollection( const Collection &collection, bool recursive );
+    void synchronizeCollection(const Collection &collection, bool recursive);
 
 Q_SIGNALS:
     /**
@@ -125,28 +125,28 @@ Q_SIGNALS:
      *
      * @param type The new agent type.
      */
-    void typeAdded( const Akonadi::AgentType &type );
+    void typeAdded(const Akonadi::AgentType &type);
 
     /**
      * This signal is emitted whenever an agent type was removed from the system.
      *
      * @param type The removed agent type.
      */
-    void typeRemoved( const Akonadi::AgentType &type );
+    void typeRemoved(const Akonadi::AgentType &type);
 
     /**
      * This signal is emitted whenever a new agent instance was created.
      *
      * @param instance The new agent instance.
      */
-    void instanceAdded( const Akonadi::AgentInstance &instance );
+    void instanceAdded(const Akonadi::AgentInstance &instance);
 
     /**
      * This signal is emitted whenever an agent instance was removed.
      *
      * @param instance The removed agent instance.
      */
-    void instanceRemoved( const Akonadi::AgentInstance &instance );
+    void instanceRemoved(const Akonadi::AgentInstance &instance);
 
     /**
      * This signal is emitted whenever the status of an agent instance has
@@ -154,7 +154,7 @@ Q_SIGNALS:
      *
      * @param instance The agent instance that status has changed.
      */
-    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
+    void instanceStatusChanged(const Akonadi::AgentInstance &instance);
 
     /**
      * This signal is emitted whenever the progress of an agent instance has
@@ -162,14 +162,14 @@ Q_SIGNALS:
      *
      * @param instance The agent instance that progress has changed.
      */
-    void instanceProgressChanged( const Akonadi::AgentInstance &instance );
+    void instanceProgressChanged(const Akonadi::AgentInstance &instance);
 
     /**
      * This signal is emitted whenever the name of the agent instance has changed.
      *
      * @param instance The agent instance that name has changed.
      */
-    void instanceNameChanged( const Akonadi::AgentInstance &instance );
+    void instanceNameChanged(const Akonadi::AgentInstance &instance);
 
     /**
      * This signal is emitted whenever the agent instance raised an error.
@@ -177,7 +177,7 @@ Q_SIGNALS:
      * @param instance The agent instance that raised the error.
      * @param message The i18n'ed error message.
      */
-    void instanceError( const Akonadi::AgentInstance &instance, const QString &message );
+    void instanceError(const Akonadi::AgentInstance &instance, const QString &message);
 
     /**
      * This signal is emitted whenever the agent instance raised a warning.
@@ -185,7 +185,7 @@ Q_SIGNALS:
      * @param instance The agent instance that raised the warning.
      * @param message The i18n'ed warning message.
      */
-    void instanceWarning( const Akonadi::AgentInstance &instance, const QString &message );
+    void instanceWarning(const Akonadi::AgentInstance &instance, const QString &message);
 
     /**
      * This signal is emitted whenever the online state of an agent changed.
@@ -194,25 +194,25 @@ Q_SIGNALS:
      * @param online The new online state.
      * @since 4.2
      */
-    void instanceOnline( const Akonadi::AgentInstance &instance, bool online );
+    void instanceOnline(const Akonadi::AgentInstance &instance, bool online);
 
-  private:
+private:
     //@cond PRIVATE
     AgentManager();
 
-    AgentManagerPrivate* const d;
+    AgentManagerPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void agentTypeAdded( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentTypeRemoved( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceRemoved( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceStatusChanged( const QString&, int, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceProgressChanged( const QString&, uint, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceWarning( const QString&, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceError( const QString&, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceOnlineChanged( const QString&, bool ) )
-    Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
+    Q_PRIVATE_SLOT(d, void agentTypeAdded(const QString &))
+    Q_PRIVATE_SLOT(d, void agentTypeRemoved(const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceAdded(const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceRemoved(const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceStatusChanged(const QString &, int, const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceProgressChanged(const QString &, uint, const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceNameChanged(const QString &, const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceWarning(const QString &, const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceError(const QString &, const QString &))
+    Q_PRIVATE_SLOT(d, void agentInstanceOnlineChanged(const QString &, bool))
+    Q_PRIVATE_SLOT(d, void serviceOwnerChanged(const QString &, const QString &, const QString &))
     //@endcond
 };
 

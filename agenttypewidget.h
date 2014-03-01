@@ -51,15 +51,15 @@ class AgentType;
  */
 class AKONADI_EXPORT AgentTypeWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new agent type widget.
      *
      * @param parent The parent widget.
      */
-    explicit AgentTypeWidget( QWidget *parent = 0 );
+    explicit AgentTypeWidget(QWidget *parent = 0);
 
     /**
      * Destroys the agent type widget.
@@ -76,16 +76,16 @@ class AKONADI_EXPORT AgentTypeWidget : public QWidget
      * Returns the agent filter proxy model, use this to filter by
      * agent mimetype or capabilities.
      */
-    AgentFilterProxyModel* agentFilterProxyModel() const;
+    AgentFilterProxyModel *agentFilterProxyModel() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the current agent type changes.
      *
      * @param current The current agent type.
      * @param previous The previous agent type.
      */
-    void currentChanged( const Akonadi::AgentType &current, const Akonadi::AgentType &previous );
+    void currentChanged(const Akonadi::AgentType &current, const Akonadi::AgentType &previous);
 
     /**
       * This signal is emitted whenever the user activates an agent.
@@ -93,13 +93,13 @@ class AKONADI_EXPORT AgentTypeWidget : public QWidget
       */
     void activated();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void typeActivated( const QModelIndex &index ) )
+    Q_PRIVATE_SLOT(d, void currentAgentTypeChanged(const QModelIndex &, const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void typeActivated(const QModelIndex &index))
     //@endcond
 };
 

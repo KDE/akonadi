@@ -48,8 +48,8 @@ class AgentFilterProxyModel;
  *   mAgentInstanceWidget = new Akonadi::AgentInstanceWidget( this );
  *   layout->addWidget( mAgentInstanceWidget );
  *
- *   connect( mAgentInstanceWidget, SIGNAL( doubleClicked( Akonadi::AgentInstance ) ),
- *            this, SLOT( slotInstanceSelected( Akonadi::AgentInstance ) ) );
+ *   connect( mAgentInstanceWidget, SIGNAL(doubleClicked(Akonadi::AgentInstance)),
+ *            this, SLOT(slotInstanceSelected(Akonadi::AgentInstance)) );
  * }
  *
  * ...
@@ -65,15 +65,15 @@ class AgentFilterProxyModel;
  */
 class AKONADI_EXPORT AgentInstanceWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new agent instance widget.
      *
      * @param parent The parent widget.
      */
-    explicit AgentInstanceWidget( QWidget *parent = 0 );
+    explicit AgentInstanceWidget(QWidget *parent = 0);
 
     /**
      * Destroys the agent instance widget.
@@ -96,29 +96,29 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
      * Returns the agent filter proxy model, use this to filter by
      * agent mimetype or capabilities.
      */
-    AgentFilterProxyModel* agentFilterProxyModel() const;
+    AgentFilterProxyModel *agentFilterProxyModel() const;
 
     /**
      * Returns the view used in the widget.
      * @since 4.5
      */
-    QAbstractItemView* view() const;
+    QAbstractItemView *view() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the current agent instance changes.
      *
      * @param current The current agent instance.
      * @param previous The previous agent instance.
      */
-    void currentChanged( const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous );
+    void currentChanged(const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous);
 
     /**
      * This signal is emitted whenever there is a double click on an agent instance.
      *
      * @param current The current agent instance.
      */
-    void doubleClicked( const Akonadi::AgentInstance &current );
+    void doubleClicked(const Akonadi::AgentInstance &current);
 
     /**
      * This signal is emitted whenever there is a click on an agent instance.
@@ -126,16 +126,16 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
      * @param current The current agent instance.
      * @since 4.9.1
      */
-    void clicked( const Akonadi::AgentInstance &current );
+    void clicked(const Akonadi::AgentInstance &current);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void currentAgentInstanceDoubleClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void currentAgentInstanceClicked( const QModelIndex &currentIndex ) )
+    Q_PRIVATE_SLOT(d, void currentAgentInstanceChanged(const QModelIndex &, const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void currentAgentInstanceDoubleClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void currentAgentInstanceClicked(const QModelIndex &currentIndex))
     //@endcond
 };
 

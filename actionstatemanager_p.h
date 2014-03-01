@@ -34,7 +34,7 @@ namespace Akonadi {
  */
 class ActionStateManager
 {
-  public:
+public:
     /**
      * Creates a new action state manager.
      */
@@ -48,7 +48,7 @@ class ActionStateManager
     /**
      * Updates the states according to the selected @p collections and @p items.
      */
-    void updateState( const Collection::List &collections, const Item::List &items );
+    void updateState(const Collection::List &collections, const Item::List &items);
 
     /**
      * Sets the @p receiver object that will actually update the states.
@@ -59,22 +59,22 @@ class ActionStateManager
      *   - bool isFavoriteCollection( const Akonadi::Collection& )
      * @param receiver object that will actually update the states.
      */
-    void setReceiver( QObject *receiver );
+    void setReceiver(QObject *receiver);
 
-  protected:
-    virtual bool isRootCollection( const Collection &collection ) const;
-    virtual bool isResourceCollection( const Collection &collection ) const;
-    virtual bool isFolderCollection( const Collection &collection ) const;
-    virtual bool isSpecialCollection( const Collection &collection ) const;
-    virtual bool isFavoriteCollection( const Collection &collection ) const;
-    virtual bool hasResourceCapability( const Collection &collection, const QString &capability ) const;
-    virtual bool collectionCanHaveItems( const Collection &collection ) const;
+protected:
+    virtual bool isRootCollection(const Collection &collection) const;
+    virtual bool isResourceCollection(const Collection &collection) const;
+    virtual bool isFolderCollection(const Collection &collection) const;
+    virtual bool isSpecialCollection(const Collection &collection) const;
+    virtual bool isFavoriteCollection(const Collection &collection) const;
+    virtual bool hasResourceCapability(const Collection &collection, const QString &capability) const;
+    virtual bool collectionCanHaveItems(const Collection &collection) const;
 
-    virtual void enableAction( int action, bool state );
-    virtual void updatePluralLabel( int action, int count );
-    virtual void updateAlternatingAction( int action );
+    virtual void enableAction(int action, bool state);
+    virtual void updatePluralLabel(int action, int count);
+    virtual void updateAlternatingAction(int action);
 
-  private:
+private:
     QObject *mReceiver;
 };
 
