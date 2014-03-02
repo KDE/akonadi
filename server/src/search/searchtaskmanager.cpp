@@ -193,12 +193,14 @@ SearchTaskManager::TasksMap::Iterator SearchTaskManager::cancelRunningTask( Task
   ResourceTask *task = iter.value();
   SearchTask *parentTask = task->parentTask;
   QMutexLocker locker(&parentTask->sharedLock);
+  //erase the task before allResourceTasksCompleted
+  SearchTaskManager::TasksMap::Iterator it = mRunningTasks.erase( iter );
   // We're not clearing the results since we don't want to clear successful results from other resources
   parentTask->complete = allResourceTasksCompleted( parentTask );
   parentTask->notifier.wakeAll();
   delete task;
 
-  return mRunningTasks.erase( iter );
+  return it;
 }
 
 void SearchTaskManager::searchLoop()
