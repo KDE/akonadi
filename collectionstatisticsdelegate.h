@@ -63,9 +63,9 @@ class CollectionStatisticsDelegatePrivate;
  */
 class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     /**
      * Creates a new collection statistics delegate.
@@ -74,14 +74,14 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      *
      * @since 4.6
      */
-    explicit CollectionStatisticsDelegate( QAbstractItemView *parent );
+    explicit CollectionStatisticsDelegate(QAbstractItemView *parent);
 
     /**
      * Creates a new collection statistics delegate.
      *
      * @param parent The parent tree view, which will also take ownership.
      */
-    explicit CollectionStatisticsDelegate( QTreeView *parent );
+    explicit CollectionStatisticsDelegate(QTreeView *parent);
 
     /**
      * Destroys the collection statistics delegate.
@@ -93,7 +93,7 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      */
     void updatePalette();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets whether the unread count is drawn next to the folder name.
      *
@@ -103,7 +103,7 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      * @param enable If @c true, the unread count is drawn next to the folder name,
      *               if @c false, the folder name will be drawn normally.
      */
-    void setUnreadCountShown( bool enable );
+    void setUnreadCountShown(bool enable);
 
     /**
      * Returns whether the unread count is drawn next to the folder name.
@@ -113,32 +113,32 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
     /**
      * @param enable new mode of progress animation
      */
-    void setProgressAnimationEnabled( bool enable );
+    void setProgressAnimationEnabled(bool enable);
 
     bool progressAnimationEnabled() const;
 
-  protected:
+protected:
     /**
      * @param painter pointer for QPainter to use in method
      * @param option style options
      * @param index model index (QModelIndex)
      */
-    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
-                        const QModelIndex &index ) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option,
+                       const QModelIndex &index) const;
 
     /**
      * @param option style option view item
      * @param index model index (QModelIndex)
      */
-    virtual void initStyleOption( QStyleOptionViewItem *option,
-                                  const QModelIndex &index ) const;
+    virtual void initStyleOption(QStyleOptionViewItem *option,
+                                 const QModelIndex &index) const;
 
-  private:
+private:
     //@cond PRIVATE
-    CollectionStatisticsDelegatePrivate* const d_ptr;
+    CollectionStatisticsDelegatePrivate *const d_ptr;
     //@endcond
 
-    Q_DECLARE_PRIVATE( CollectionStatisticsDelegate )
+    Q_DECLARE_PRIVATE(CollectionStatisticsDelegate)
 };
 
 }

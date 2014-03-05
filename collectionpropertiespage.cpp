@@ -28,39 +28,38 @@ using namespace Akonadi;
  */
 class CollectionPropertiesPage::Private
 {
-  public:
+public:
     QString title;
 };
 
 //@endcond
 
-CollectionPropertiesPage::CollectionPropertiesPage( QWidget *parent ) :
-    QWidget( parent ),
-    d( new Private )
+CollectionPropertiesPage::CollectionPropertiesPage(QWidget *parent)
+    : QWidget(parent)
+    , d(new Private)
 {
 }
 
 CollectionPropertiesPage::~CollectionPropertiesPage()
 {
-  delete d;
+    delete d;
 }
 
-bool CollectionPropertiesPage::canHandle(const Collection&) const
+bool CollectionPropertiesPage::canHandle(const Collection &) const
 {
-  return true;
+    return true;
 }
 
 QString Akonadi::CollectionPropertiesPage::pageTitle() const
 {
-  return d->title;
+    return d->title;
 }
 
-void CollectionPropertiesPage::setPageTitle(const QString & title)
+void CollectionPropertiesPage::setPageTitle(const QString &title)
 {
-  d->title = title;
+    d->title = title;
 }
 
 CollectionPropertiesPageFactory::~CollectionPropertiesPageFactory()
 {
 }
-

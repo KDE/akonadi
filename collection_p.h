@@ -34,50 +34,50 @@ using namespace Akonadi;
  */
 class Akonadi::CollectionPrivate : public EntityPrivate
 {
-  public:
-    CollectionPrivate( Collection::Id id = -1 ) :
-      EntityPrivate( id ),
-      contentTypesChanged( false ),
-      cachePolicyChanged( false ),
-      isVirtual( false )
+public:
+    CollectionPrivate(Collection::Id id = -1)
+        : EntityPrivate(id)
+        , contentTypesChanged(false)
+        , cachePolicyChanged(false)
+        , isVirtual(false)
     {}
 
-    CollectionPrivate( const CollectionPrivate &other ) :
-      EntityPrivate( other )
+    CollectionPrivate(const CollectionPrivate &other)
+        : EntityPrivate(other)
     {
-      name = other.name;
-      resource = other.resource;
-      statistics = other.statistics;
-      contentTypes = other.contentTypes;
-      cachePolicy = other.cachePolicy;
-      contentTypesChanged = other.contentTypesChanged;
-      cachePolicyChanged = other.cachePolicyChanged;
-      isVirtual = other.isVirtual;
+        name = other.name;
+        resource = other.resource;
+        statistics = other.statistics;
+        contentTypes = other.contentTypes;
+        cachePolicy = other.cachePolicy;
+        contentTypesChanged = other.contentTypesChanged;
+        cachePolicyChanged = other.cachePolicyChanged;
+        isVirtual = other.isVirtual;
     }
 
     ~CollectionPrivate()
     {
     }
 
-    CollectionPrivate* clone() const
+    CollectionPrivate *clone() const
     {
-      return new CollectionPrivate( *this );
+        return new CollectionPrivate(*this);
     }
 
     void resetChangeLog()
     {
-      contentTypesChanged = false;
-      cachePolicyChanged = false;
-      EntityPrivate::resetChangeLog();
+        contentTypesChanged = false;
+        cachePolicyChanged = false;
+        EntityPrivate::resetChangeLog();
     }
 
     static Collection newRoot()
     {
-      Collection rootCollection( 0 );
-      QStringList types;
-      types << Collection::mimeType();
-      rootCollection.setContentMimeTypes( types );
-      return rootCollection;
+        Collection rootCollection(0);
+        QStringList types;
+        types << Collection::mimeType();
+        rootCollection.setContentMimeTypes(types);
+        return rootCollection;
     }
 
     QString name;

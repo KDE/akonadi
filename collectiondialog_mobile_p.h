@@ -36,27 +36,27 @@ class CollectionFilterProxyModel;
 
 class CollectionDialog::Private : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QString descriptionText READ descriptionText NOTIFY descriptionTextChanged )
-  Q_PROPERTY( bool okButtonEnabled READ okButtonEnabled NOTIFY buttonStatusChanged )
-  Q_PROPERTY( bool cancelButtonEnabled READ cancelButtonEnabled NOTIFY buttonStatusChanged )
-  Q_PROPERTY( bool createButtonEnabled READ createButtonEnabled NOTIFY buttonStatusChanged )
-  Q_PROPERTY( bool createButtonVisible READ createButtonVisible NOTIFY buttonStatusChanged )
+    Q_PROPERTY(QString descriptionText READ descriptionText NOTIFY descriptionTextChanged)
+    Q_PROPERTY(bool okButtonEnabled READ okButtonEnabled NOTIFY buttonStatusChanged)
+    Q_PROPERTY(bool cancelButtonEnabled READ cancelButtonEnabled NOTIFY buttonStatusChanged)
+    Q_PROPERTY(bool createButtonEnabled READ createButtonEnabled NOTIFY buttonStatusChanged)
+    Q_PROPERTY(bool createButtonVisible READ createButtonVisible NOTIFY buttonStatusChanged)
 
-  public:
-    Private( QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options );
+public:
+    Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options);
 
     ~Private();
 
     void slotSelectionChanged();
     void slotAddChildCollection();
-    void slotCollectionCreationResult( KJob* job );
-    void slotCollectionAvailable( const QModelIndex &index );
-    bool canCreateCollection( const Akonadi::Collection &parentCollection ) const;
-    void changeCollectionDialogOptions( CollectionDialogOptions options );
+    void slotCollectionCreationResult(KJob *job);
+    void slotCollectionAvailable(const QModelIndex &index);
+    bool canCreateCollection(const Akonadi::Collection &parentCollection) const;
+    void changeCollectionDialogOptions(CollectionDialogOptions options);
 
-    void setDescriptionText( const QString &text );
+    void setDescriptionText(const QString &text);
     QString descriptionText() const;
 
     bool okButtonEnabled() const;
@@ -64,20 +64,20 @@ class CollectionDialog::Private : public QObject
     bool createButtonEnabled() const;
     bool createButtonVisible() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void okClicked();
     void cancelClicked();
     void createClicked();
-    void setCurrentIndex( int index );
-    void setFilterText( const QString &text );
-    void selectionChanged( const QItemSelection&, const QItemSelection& );
+    void setCurrentIndex(int index);
+    void setFilterText(const QString &text);
+    void selectionChanged(const QItemSelection &, const QItemSelection &);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void descriptionTextChanged();
     void buttonStatusChanged();
-    void selectionChanged( int row );
+    void selectionChanged(int row);
 
-  public:
+public:
     CollectionDialog *mParent;
     ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;

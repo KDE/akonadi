@@ -44,50 +44,52 @@ using namespace Akonadi;
 
 class CollectionComboBox::Private
 {
-  public:
-    Private( QAbstractItemModel *customModel, CollectionComboBox *parent )
-      : mParent( parent ), mMonitor( 0 ), mModel( 0 )
+public:
+    Private(QAbstractItemModel *customModel, CollectionComboBox *parent)
+        : mParent(parent)
+        , mMonitor(0)
+        , mModel(0)
     {
-      if ( customModel ) {
-        mBaseModel = customModel;
-      } else {
-        mMonitor = new Akonadi::ChangeRecorder( mParent );
-        mMonitor->fetchCollection( true );
-        mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
+        if (customModel) {
+            mBaseModel = customModel;
+        } else {
+            mMonitor = new Akonadi::ChangeRecorder(mParent);
+            mMonitor->fetchCollection(true);
+            mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 
-        mModel = new EntityTreeModel( mMonitor, mParent );
-        mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
+            mModel = new EntityTreeModel(mMonitor, mParent);
+            mModel->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
 
-        mBaseModel = mModel;
-      }
+            mBaseModel = mModel;
+        }
 
-      KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
-      proxyModel->setDisplayAncestorData( true );
-      proxyModel->setSourceModel( mBaseModel );
+        KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel(parent);
+        proxyModel->setDisplayAncestorData(true);
+        proxyModel->setSourceModel(mBaseModel);
 
-      mMimeTypeFilterModel = new CollectionFilterProxyModel( parent );
-      mMimeTypeFilterModel->setSourceModel( proxyModel );
+        mMimeTypeFilterModel = new CollectionFilterProxyModel(parent);
+        mMimeTypeFilterModel->setSourceModel(proxyModel);
 
-      mRightsFilterModel = new EntityRightsFilterModel( parent );
-      mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
+        mRightsFilterModel = new EntityRightsFilterModel(parent);
+        mRightsFilterModel->setSourceModel(mMimeTypeFilterModel);
 
-      mParent->setModel( mRightsFilterModel );
-      mParent->model()->sort( mParent->modelColumn() );
+        mParent->setModel(mRightsFilterModel);
+        mParent->model()->sort(mParent->modelColumn());
 
-      mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
-      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
-                        mParent, SLOT(activated(QModelIndex)) );
+        mSelectionHandler = new AsyncSelectionHandler(mRightsFilterModel, mParent);
+        mParent->connect(mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                         mParent, SLOT(activated(QModelIndex)));
 
-      mParent->connect( mParent, SIGNAL(activated(int)),
-                        mParent, SLOT(activated(int)) );
+        mParent->connect(mParent, SIGNAL(activated(int)),
+                         mParent, SLOT(activated(int)));
     }
 
     ~Private()
     {
     }
 
-    void activated( int index );
-    void activated( const QModelIndex& index );
+    void activated(int index);
+    void activated(const QModelIndex &index);
 
     CollectionComboBox *mParent;
 
@@ -99,123 +101,125 @@ class CollectionComboBox::Private
     AsyncSelectionHandler *mSelectionHandler;
 };
 
-void CollectionComboBox::Private::activated( int index )
+void CollectionComboBox::Private::activated(int index)
 {
-  const QModelIndex modelIndex = mParent->model()->index( index, 0 );
-  if ( modelIndex.isValid() ) {
-    emit mParent->currentChanged( modelIndex.data( EntityTreeModel::CollectionRole ).value<Collection>() );
-  }
+    const QModelIndex modelIndex = mParent->model()->index(index, 0);
+    if (modelIndex.isValid()) {
+        emit mParent->currentChanged(modelIndex.data(EntityTreeModel::CollectionRole).value<Collection>());
+    }
 }
 
-void CollectionComboBox::Private::activated( const QModelIndex &index )
+void CollectionComboBox::Private::activated(const QModelIndex &index)
 {
-  mParent->setCurrentIndex( index.row() );
+    mParent->setCurrentIndex(index.row());
 }
 
-MobileEventHandler::MobileEventHandler( CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
-                                        EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel )
-  : QObject( comboBox ),
-    mComboBox( comboBox ),
-    mMimeTypeFilter( mimeTypeFilter ),
-    mAccessRightsFilter( accessRightsFilter ),
-    mCustomModel( customModel )
+MobileEventHandler::MobileEventHandler(CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
+                                       EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel)
+    : QObject(comboBox)
+    , mComboBox(comboBox)
+    , mMimeTypeFilter(mimeTypeFilter)
+    , mAccessRightsFilter(accessRightsFilter)
+    , mCustomModel(customModel)
 {
 }
 
-bool MobileEventHandler::eventFilter( QObject *object, QEvent *event )
+bool MobileEventHandler::eventFilter(QObject *object, QEvent *event)
 {
-  if ( object == mComboBox && mComboBox->isEnabled() && event->type() == QEvent::MouseButtonPress ) {
+    if (object == mComboBox && mComboBox->isEnabled() && event->type() == QEvent::MouseButtonPress) {
 
-    const QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
+        const QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
 
-    // we receive mouse events from other widgets as well, so check for ours
-    if ( mComboBox->rect().contains( mouseEvent->pos() ) ) {
-      QMetaObject::invokeMethod( this, "openDialog", Qt::QueuedConnection );
+        // we receive mouse events from other widgets as well, so check for ours
+        if (mComboBox->rect().contains(mouseEvent->pos())) {
+            QMetaObject::invokeMethod(this, "openDialog", Qt::QueuedConnection);
+        }
+
+        return true;
     }
 
-    return true;
-  }
-
-  return QObject::eventFilter( object, event );
+    return QObject::eventFilter(object, event);
 }
 
 void MobileEventHandler::openDialog()
 {
-  QPointer<Akonadi::CollectionDialog> dialog( new Akonadi::CollectionDialog( mCustomModel ) );
-  dialog->setMimeTypeFilter( mMimeTypeFilter->mimeTypeFilters() );
-  dialog->setAccessRightsFilter( mAccessRightsFilter->accessRights() );
+    QPointer<Akonadi::CollectionDialog> dialog(new Akonadi::CollectionDialog(mCustomModel));
+    dialog->setMimeTypeFilter(mMimeTypeFilter->mimeTypeFilters());
+    dialog->setAccessRightsFilter(mAccessRightsFilter->accessRights());
 
-  if ( dialog->exec() == QDialog::Accepted && dialog != 0 ) {
-    const Akonadi::Collection collection = dialog->selectedCollection();
-    const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mComboBox->model(), collection );
-    mComboBox->setCurrentIndex( index.row() );
-  }
-  delete dialog;
+    if (dialog->exec() == QDialog::Accepted && dialog != 0) {
+        const Akonadi::Collection collection = dialog->selectedCollection();
+        const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection(mComboBox->model(), collection);
+        mComboBox->setCurrentIndex(index.row());
+    }
+    delete dialog;
 }
 
-CollectionComboBox::CollectionComboBox( QWidget *parent )
-  : KComboBox( parent ), d( new Private( 0, this ) )
+CollectionComboBox::CollectionComboBox(QWidget *parent)
+    : KComboBox(parent)
+    , d(new Private(0, this))
 {
 #ifdef KDEPIM_MOBILE_UI
-  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, d->mBaseModel );
-  installEventFilter( handler );
+    MobileEventHandler *handler = new MobileEventHandler(this, d->mMimeTypeFilterModel, d->mRightsFilterModel, d->mBaseModel);
+    installEventFilter(handler);
 #endif
 }
 
-CollectionComboBox::CollectionComboBox( QAbstractItemModel *model, QWidget *parent )
-  : KComboBox( parent ), d( new Private( model, this ) )
+CollectionComboBox::CollectionComboBox(QAbstractItemModel *model, QWidget *parent)
+    : KComboBox(parent)
+    , d(new Private(model, this))
 {
 #ifdef KDEPIM_MOBILE_UI
-  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, d->mBaseModel );
-  installEventFilter( handler );
+    MobileEventHandler *handler = new MobileEventHandler(this, d->mMimeTypeFilterModel, d->mRightsFilterModel, d->mBaseModel);
+    installEventFilter(handler);
 #endif
 }
 
 CollectionComboBox::~CollectionComboBox()
 {
-  delete d;
+    delete d;
 }
 
-void CollectionComboBox::setMimeTypeFilter( const QStringList &contentMimeTypes )
+void CollectionComboBox::setMimeTypeFilter(const QStringList &contentMimeTypes)
 {
-  d->mMimeTypeFilterModel->clearFilters();
-  d->mMimeTypeFilterModel->addMimeTypeFilters( contentMimeTypes );
+    d->mMimeTypeFilterModel->clearFilters();
+    d->mMimeTypeFilterModel->addMimeTypeFilters(contentMimeTypes);
 
-  if ( d->mMonitor ) {
-    foreach ( const QString &mimeType, contentMimeTypes ) {
-      d->mMonitor->setMimeTypeMonitored( mimeType, true );
+    if (d->mMonitor) {
+        foreach (const QString &mimeType, contentMimeTypes) {
+            d->mMonitor->setMimeTypeMonitored(mimeType, true);
+        }
     }
-  }
 }
 
 QStringList CollectionComboBox::mimeTypeFilter() const
 {
-  return d->mMimeTypeFilterModel->mimeTypeFilters();
+    return d->mMimeTypeFilterModel->mimeTypeFilters();
 }
 
-void CollectionComboBox::setAccessRightsFilter( Collection::Rights rights )
+void CollectionComboBox::setAccessRightsFilter(Collection::Rights rights)
 {
-  d->mRightsFilterModel->setAccessRights( rights );
+    d->mRightsFilterModel->setAccessRights(rights);
 }
 
 Akonadi::Collection::Rights CollectionComboBox::accessRightsFilter() const
 {
-  return d->mRightsFilterModel->accessRights();
+    return d->mRightsFilterModel->accessRights();
 }
 
-void CollectionComboBox::setDefaultCollection( const Collection &collection )
+void CollectionComboBox::setDefaultCollection(const Collection &collection)
 {
-  d->mSelectionHandler->waitForCollection( collection );
+    d->mSelectionHandler->waitForCollection(collection);
 }
 
 Akonadi::Collection CollectionComboBox::currentCollection() const
 {
-  const QModelIndex modelIndex = model()->index( currentIndex(), 0 );
-  if ( modelIndex.isValid() ) {
-    return modelIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Collection>();
-  } else {
-    return Akonadi::Collection();
-  }
+    const QModelIndex modelIndex = model()->index(currentIndex(), 0);
+    if (modelIndex.isValid()) {
+        return modelIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Collection>();
+    } else {
+        return Akonadi::Collection();
+    }
 }
 
 void CollectionComboBox::setExcludeVirtualCollections(bool b)
@@ -227,7 +231,6 @@ bool CollectionComboBox::excludeVirtualCollections() const
 {
     return d->mMimeTypeFilterModel->excludeVirtualCollections();
 }
-
 
 #include "moc_collectioncombobox.cpp"
 #include "moc_collectioncombobox_p.cpp"

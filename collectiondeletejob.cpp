@@ -29,21 +29,21 @@ using namespace Akonadi;
 
 class Akonadi::CollectionDeleteJobPrivate : public JobPrivate
 {
-  public:
-    CollectionDeleteJobPrivate( CollectionDeleteJob *parent )
-      : JobPrivate( parent )
+public:
+    CollectionDeleteJobPrivate(CollectionDeleteJob *parent)
+        : JobPrivate(parent)
     {
     }
 
     Collection mCollection;
 };
 
-CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject * parent)
-  : Job( new CollectionDeleteJobPrivate( this ), parent )
+CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject *parent)
+    : Job(new CollectionDeleteJobPrivate(this), parent)
 {
-  Q_D( CollectionDeleteJob );
+    Q_D(CollectionDeleteJob);
 
-  d->mCollection = collection;
+    d->mCollection = collection;
 }
 
 CollectionDeleteJob::~CollectionDeleteJob()
@@ -52,19 +52,18 @@ CollectionDeleteJob::~CollectionDeleteJob()
 
 void CollectionDeleteJob::doStart()
 {
-  Q_D( CollectionDeleteJob );
+    Q_D(CollectionDeleteJob);
 
-  if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
-    setError( Unknown );
-    setErrorText( i18n( "Invalid collection" ) );
-    emitResult();
-    return;
-  }
+    if (!d->mCollection.isValid() && d->mCollection.remoteId().isEmpty()) {
+        setError(Unknown);
+        setErrorText(i18n("Invalid collection"));
+        emitResult();
+        return;
+    }
 
-  if ( d->mCollection.isValid() ) {
-    d->writeData( d->newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
-  } else {
-    d->writeData( d->newTag() + " RID DELETE " + ImapParser::quote( d->mCollection.remoteId().toUtf8() ) + '\n' );
-  }
+    if (d->mCollection.isValid()) {
+        d->writeData(d->newTag() + " DELETE " + QByteArray::number(d->mCollection.id()) + '\n');
+    } else {
+        d->writeData(d->newTag() + " RID DELETE " + ImapParser::quote(d->mCollection.remoteId().toUtf8()) + '\n');
+    }
 }
-

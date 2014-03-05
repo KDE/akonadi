@@ -33,19 +33,19 @@ class EntityRightsFilterModel;
 
 class MobileEventHandler : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    MobileEventHandler( CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
-                        EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel );
+public:
+    MobileEventHandler(CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
+                       EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel);
 
-  protected:
-    virtual bool eventFilter( QObject *object, QEvent *event );
+protected:
+    virtual bool eventFilter(QObject *object, QEvent *event);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void openDialog();
 
-  private:
+private:
     CollectionComboBox *mComboBox;
     CollectionFilterProxyModel *mMimeTypeFilter;
     EntityRightsFilterModel *mAccessRightsFilter;

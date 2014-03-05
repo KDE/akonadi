@@ -36,14 +36,14 @@ namespace Akonadi {
  */
 class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
 {
-  Q_OBJECT
-  public:
-    explicit CollectionGeneralPropertiesPage( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CollectionGeneralPropertiesPage(QWidget *parent = 0);
 
-    void load( const Collection &collection );
-    void save( Collection &collection );
+    void load(const Collection &collection);
+    void save(Collection &collection);
 
-  private:
+private:
     Ui::CollectionGeneralPropertiesPage ui;
 };
 

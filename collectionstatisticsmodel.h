@@ -51,52 +51,52 @@ class CollectionStatisticsModelPrivate;
  */
 class AKONADI_DEPRECATED_EXPORT CollectionStatisticsModel : public CollectionModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     /**
      * Describes the roles for the statistics collection model.
      */
     enum Roles {
-      UnreadRole = CollectionModel::UserRole + 1, ///< The number of unread items in this collection.
-      TotalRole,                                  ///< The number of items in this collection.
-      StatisticsRole,                             ///< A statistics object of this collection.
-      RecursiveUnreadRole,                        ///< The number of unread items in this collection and its children.
-      RecursiveTotalRole,                         ///< The number of items in this collection and its children.
-      RecursiveStatisticsRole,                    ///< A statistics object of this collection and its children.
-      SizeRole,                                  ///< The total size of the items in this collection.
-      RecursiveSizeRole,                         ///< The total size of the items in this collection and its children.
-      UserRole = CollectionModel::UserRole + 42   ///< Role for user extensions.
+        UnreadRole = CollectionModel::UserRole + 1, ///< The number of unread items in this collection.
+        TotalRole,                                  ///< The number of items in this collection.
+        StatisticsRole,                             ///< A statistics object of this collection.
+        RecursiveUnreadRole,                        ///< The number of unread items in this collection and its children.
+        RecursiveTotalRole,                         ///< The number of items in this collection and its children.
+        RecursiveStatisticsRole,                    ///< A statistics object of this collection and its children.
+        SizeRole,                                  ///< The total size of the items in this collection.
+        RecursiveSizeRole,                         ///< The total size of the items in this collection and its children.
+        UserRole = CollectionModel::UserRole + 42   ///< Role for user extensions.
     };
 
     /**
      * Creates a new collection statistics model.
      * @param parent The parent object.
      */
-    explicit CollectionStatisticsModel( QObject *parent = 0 );
+    explicit CollectionStatisticsModel(QObject *parent = 0);
 
     /**
      * @param parent parent model index
      * @return column count
      */
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**
      * @param index model index
      * @param role data role
      */
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     /**
      * @param section section of header
      * @param orientation of the data
      * @param role data role
      */
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionStatisticsModel )
+private:
+    Q_DECLARE_PRIVATE(CollectionStatisticsModel)
 };
 
 }

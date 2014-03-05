@@ -81,9 +81,9 @@ class CollectionModifyJobPrivate;
  */
 class AKONADI_EXPORT CollectionModifyJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection modify job for the given collection. The collection can be
      * identified either by its unique identifier or its remote identifier. Since the remote
@@ -94,7 +94,7 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
      * @param collection The collection to modify.
      * @param parent The parent object.
      */
-    explicit CollectionModifyJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionModifyJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the collection modify job.
@@ -108,11 +108,11 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
      */
     Collection collection() const;
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionModifyJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionModifyJob)
 };
 
 }

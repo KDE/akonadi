@@ -98,14 +98,14 @@ class Collection;
  */
 class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new collection properties page.
      *
      * @param parent The parent widget.
      */
-    explicit CollectionPropertiesPage( QWidget *parent = 0 );
+    explicit CollectionPropertiesPage(QWidget *parent = 0);
 
     /**
      * Destroys the collection properties page.
@@ -117,14 +117,14 @@ class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
      *
      * @param collection The collection to load.
      */
-    virtual void load( const Collection &collection ) = 0;
+    virtual void load(const Collection &collection) = 0;
 
     /**
      * Saves page content to the given collection.
      *
      * @param collection Reference to the collection to save to.
      */
-    virtual void save( Collection &collection ) = 0;
+    virtual void save(Collection &collection) = 0;
 
     /**
      * Checks if this page can actually handle the given collection.
@@ -134,24 +134,24 @@ class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
      * this page is not shown in the properties dialog.
      * @param collection The collection to check.
      */
-    virtual bool canHandle( const Collection &collection ) const;
+    virtual bool canHandle(const Collection &collection) const;
 
     /**
      * Sets the page title.
      *
      * @param title Translated, preferbly short tab title.
      */
-    void setPageTitle( const QString &title );
+    void setPageTitle(const QString &title);
 
     /**
      * Returns the page title.
      */
     QString pageTitle() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 
@@ -167,7 +167,7 @@ class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
  */
 class AKONADI_EXPORT CollectionPropertiesPageFactory
 {
-  public:
+public:
     /**
      * Destroys the collection properties page factory.
      */
@@ -178,7 +178,7 @@ class AKONADI_EXPORT CollectionPropertiesPageFactory
      *
      * @param parent The parent widget.
      */
-    virtual CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const = 0;
+    virtual CollectionPropertiesPage *createWidget(QWidget *parent = 0) const = 0;
 };
 
 /**
@@ -205,10 +205,10 @@ class AKONADI_EXPORT CollectionPropertiesPageFactory
  * @ingroup AkonadiMacros
  */
 #define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
-class factoryName: public Akonadi::CollectionPropertiesPageFactory \
+class factoryName : public Akonadi::CollectionPropertiesPageFactory \
 { \
   public: \
-    inline Akonadi::CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const \
+    inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = 0 ) const \
     { \
       return new className( parent ); \
     } \

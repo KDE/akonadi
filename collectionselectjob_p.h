@@ -33,8 +33,8 @@ class CollectionSelectJobPrivate;
  */
 class AKONADI_EXPORT CollectionSelectJob : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Creates a new collection select job. When providing a collection with just a remote
       identifier, make sure to specify in which resource to search for that using
@@ -42,18 +42,18 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
       @param collection The collection to select.
       @param parent The parent object.
     */
-    explicit CollectionSelectJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionSelectJob(const Collection &collection, QObject *parent = 0);
 
     /**
       Destroys this job.
     */
     virtual ~CollectionSelectJob();
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionSelectJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionSelectJob)
 };
 
 }

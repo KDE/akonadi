@@ -27,25 +27,25 @@ namespace Akonadi {
 
 class CollectionFetchScopePrivate : public QSharedData
 {
-  public:
-    CollectionFetchScopePrivate() :
-      ancestorDepth( CollectionFetchScope::None ),
-      unsubscribed( false ),
-      statistics( false )
+public:
+    CollectionFetchScopePrivate()
+        : ancestorDepth(CollectionFetchScope::None)
+        , unsubscribed(false)
+        , statistics(false)
     {
     }
 
-    CollectionFetchScopePrivate( const CollectionFetchScopePrivate &other )
-      : QSharedData( other )
+    CollectionFetchScopePrivate(const CollectionFetchScopePrivate &other)
+        : QSharedData(other)
     {
-      resource = other.resource;
-      contentMimeTypes = other.contentMimeTypes;
-      ancestorDepth = other.ancestorDepth;
-      unsubscribed = other.unsubscribed;
-      statistics = other.statistics;
+        resource = other.resource;
+        contentMimeTypes = other.contentMimeTypes;
+        ancestorDepth = other.ancestorDepth;
+        unsubscribed = other.unsubscribed;
+        statistics = other.statistics;
     }
 
-  public:
+public:
     QString resource;
     QStringList contentMimeTypes;
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
@@ -55,11 +55,11 @@ class CollectionFetchScopePrivate : public QSharedData
 
 CollectionFetchScope::CollectionFetchScope()
 {
-  d = new CollectionFetchScopePrivate();
+    d = new CollectionFetchScopePrivate();
 }
 
-CollectionFetchScope::CollectionFetchScope( const CollectionFetchScope &other )
-  : d( other.d )
+CollectionFetchScope::CollectionFetchScope(const CollectionFetchScope &other)
+    : d(other.d)
 {
 }
 
@@ -67,73 +67,73 @@ CollectionFetchScope::~CollectionFetchScope()
 {
 }
 
-CollectionFetchScope &CollectionFetchScope::operator=( const CollectionFetchScope &other )
+CollectionFetchScope &CollectionFetchScope::operator=(const CollectionFetchScope &other)
 {
-  if ( &other != this ) {
-    d = other.d;
-  }
+    if (&other != this) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
-bool CollectionFetchScope::isEmpty () const
+bool CollectionFetchScope::isEmpty() const
 {
-  return d->resource.isEmpty() && d->contentMimeTypes.isEmpty() && !d->statistics && !d->unsubscribed && d->ancestorDepth == None;
+    return d->resource.isEmpty() && d->contentMimeTypes.isEmpty() && !d->statistics && !d->unsubscribed && d->ancestorDepth == None;
 }
 
-bool CollectionFetchScope::includeUnubscribed () const
+bool CollectionFetchScope::includeUnubscribed() const
 {
-  return includeUnsubscribed();
+    return includeUnsubscribed();
 }
 
-bool CollectionFetchScope::includeUnsubscribed () const
+bool CollectionFetchScope::includeUnsubscribed() const
 {
-  return d->unsubscribed;
+    return d->unsubscribed;
 }
 
-void CollectionFetchScope::setIncludeUnsubscribed (bool include)
+void CollectionFetchScope::setIncludeUnsubscribed(bool include)
 {
-  d->unsubscribed = include;
+    d->unsubscribed = include;
 }
 
-bool CollectionFetchScope::includeStatistics () const
+bool CollectionFetchScope::includeStatistics() const
 {
-  return d->statistics;
+    return d->statistics;
 }
 
-void CollectionFetchScope::setIncludeStatistics (bool include)
+void CollectionFetchScope::setIncludeStatistics(bool include)
 {
-  d->statistics = include;
+    d->statistics = include;
 }
 
-QString CollectionFetchScope::resource () const
+QString CollectionFetchScope::resource() const
 {
-  return d->resource;
+    return d->resource;
 }
 
-void CollectionFetchScope::setResource (const QString & resource)
+void CollectionFetchScope::setResource(const QString &resource)
 {
-  d->resource = resource;
+    d->resource = resource;
 }
 
-QStringList CollectionFetchScope::contentMimeTypes () const
+QStringList CollectionFetchScope::contentMimeTypes() const
 {
-  return d->contentMimeTypes;
+    return d->contentMimeTypes;
 }
 
-void CollectionFetchScope::setContentMimeTypes (const QStringList & mimeTypes)
+void CollectionFetchScope::setContentMimeTypes(const QStringList &mimeTypes)
 {
-  d->contentMimeTypes = mimeTypes;
+    d->contentMimeTypes = mimeTypes;
 }
 
 CollectionFetchScope::AncestorRetrieval CollectionFetchScope::ancestorRetrieval() const
 {
-  return d->ancestorDepth;
+    return d->ancestorDepth;
 }
 
-void CollectionFetchScope::setAncestorRetrieval( AncestorRetrieval ancestorDepth )
+void CollectionFetchScope::setAncestorRetrieval(AncestorRetrieval ancestorDepth)
 {
-  d->ancestorDepth = ancestorDepth;
+    d->ancestorDepth = ancestorDepth;
 }
 
 }

@@ -29,20 +29,20 @@ using namespace Akonadi;
  */
 class CollectionStatistics::Private : public QSharedData
 {
-  public:
-    Private() :
-      QSharedData(),
-      count( -1 ),
-      unreadCount( -1 ),
-      size( -1 )
+public:
+    Private()
+        : QSharedData()
+        , count(-1)
+        , unreadCount(-1)
+        , size(-1)
     {}
 
-    Private( const Private &other ) :
-      QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      count = other.count;
-      unreadCount = other.unreadCount;
-      size = other.size;
+        count = other.count;
+        unreadCount = other.unreadCount;
+        size = other.size;
     }
 
     qint64 count;
@@ -50,13 +50,13 @@ class CollectionStatistics::Private : public QSharedData
     qint64 size;
 };
 
-CollectionStatistics::CollectionStatistics() :
-    d( new Private )
+CollectionStatistics::CollectionStatistics()
+    : d(new Private)
 {
 }
 
-CollectionStatistics::CollectionStatistics(const CollectionStatistics &other) :
-    d( other.d )
+CollectionStatistics::CollectionStatistics(const CollectionStatistics &other)
+    : d(other.d)
 {
 }
 
@@ -64,46 +64,46 @@ CollectionStatistics::~CollectionStatistics()
 {
 }
 
-qint64 CollectionStatistics::count( ) const
+qint64 CollectionStatistics::count() const
 {
-  return d->count;
+    return d->count;
 }
 
-void CollectionStatistics::setCount( qint64 count )
+void CollectionStatistics::setCount(qint64 count)
 {
-  d->count = count;
+    d->count = count;
 }
 
-qint64 CollectionStatistics::unreadCount( ) const
+qint64 CollectionStatistics::unreadCount() const
 {
-  return d->unreadCount;
+    return d->unreadCount;
 }
 
-void CollectionStatistics::setUnreadCount( qint64 count )
+void CollectionStatistics::setUnreadCount(qint64 count)
 {
-  d->unreadCount = count;
+    d->unreadCount = count;
 }
 
-qint64 CollectionStatistics::size( ) const
+qint64 CollectionStatistics::size() const
 {
-  return d->size;
+    return d->size;
 }
 
-void CollectionStatistics::setSize( qint64 size )
+void CollectionStatistics::setSize(qint64 size)
 {
-  d->size = size;
+    d->size = size;
 }
 
-CollectionStatistics& CollectionStatistics::operator =(const CollectionStatistics & other)
+CollectionStatistics &CollectionStatistics::operator =(const CollectionStatistics &other)
 {
-  d = other.d;
-  return *this;
+    d = other.d;
+    return *this;
 }
 
-QDebug operator<<( QDebug d, const CollectionStatistics& s )
+QDebug operator<<(QDebug d, const CollectionStatistics &s)
 {
     return d << "CollectionStatistics:" << endl
-            << "   count:" << s.count() << endl
-            << "   unread count:" << s.unreadCount() << endl
-            << "   size:" << s.size();
+           << "   count:" << s.count() << endl
+           << "   unread count:" << s.unreadCount() << endl
+           << "   size:" << s.size();
 }

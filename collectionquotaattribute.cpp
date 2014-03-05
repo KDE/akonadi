@@ -25,9 +25,10 @@ using namespace Akonadi;
 
 class CollectionQuotaAttribute::Private
 {
-  public:
-    Private( qint64 currentValue, qint64 maxValue )
-      : mCurrentValue( currentValue ), mMaximumValue( maxValue )
+public:
+    Private(qint64 currentValue, qint64 maxValue)
+        : mCurrentValue(currentValue)
+        , mMaximumValue(maxValue)
     {
     }
 
@@ -36,73 +37,73 @@ class CollectionQuotaAttribute::Private
 };
 
 CollectionQuotaAttribute::CollectionQuotaAttribute()
-  : d( new Private( -1, -1 ) )
+    : d(new Private(-1, -1))
 {
 }
 
-CollectionQuotaAttribute::CollectionQuotaAttribute( qint64 currentValue, qint64 maxValue )
-  : d( new Private( currentValue, maxValue ) )
+CollectionQuotaAttribute::CollectionQuotaAttribute(qint64 currentValue, qint64 maxValue)
+    : d(new Private(currentValue, maxValue))
 {
 }
 
 CollectionQuotaAttribute::~CollectionQuotaAttribute()
 {
-  delete d;
+    delete d;
 }
 
-void CollectionQuotaAttribute::setCurrentValue( qint64 value )
+void CollectionQuotaAttribute::setCurrentValue(qint64 value)
 {
-  d->mCurrentValue = value;
+    d->mCurrentValue = value;
 }
 
-void CollectionQuotaAttribute::setMaximumValue( qint64 value )
+void CollectionQuotaAttribute::setMaximumValue(qint64 value)
 {
-  d->mMaximumValue = value;
+    d->mMaximumValue = value;
 }
 
 qint64 CollectionQuotaAttribute::currentValue() const
 {
-  return d->mCurrentValue;
+    return d->mCurrentValue;
 }
 
 qint64 CollectionQuotaAttribute::maximumValue() const
 {
-  return d->mMaximumValue;
+    return d->mMaximumValue;
 }
 
 QByteArray CollectionQuotaAttribute::type() const
 {
-  return "collectionquota";
+    return "collectionquota";
 }
 
-Akonadi::Attribute* CollectionQuotaAttribute::clone() const
+Akonadi::Attribute *CollectionQuotaAttribute::clone() const
 {
-  return new CollectionQuotaAttribute( d->mCurrentValue, d->mMaximumValue );
+    return new CollectionQuotaAttribute(d->mCurrentValue, d->mMaximumValue);
 }
 
 QByteArray CollectionQuotaAttribute::serialized() const
 {
-  return QByteArray::number( d->mCurrentValue )
-       + ' '
-       + QByteArray::number( d->mMaximumValue );
+    return QByteArray::number(d->mCurrentValue)
+           + ' '
+           + QByteArray::number(d->mMaximumValue);
 }
 
-void CollectionQuotaAttribute::deserialize( const QByteArray &data )
+void CollectionQuotaAttribute::deserialize(const QByteArray &data)
 {
-  d->mCurrentValue = -1;
-  d->mMaximumValue = -1;
+    d->mCurrentValue = -1;
+    d->mMaximumValue = -1;
 
-  const QList<QByteArray> items = data.simplified().split( ' ' );
+    const QList<QByteArray> items = data.simplified().split(' ');
 
-  if ( items.isEmpty() ) {
-    return;
-  }
+    if (items.isEmpty()) {
+        return;
+    }
 
-  d->mCurrentValue = items[0].toLongLong();
+    d->mCurrentValue = items[0].toLongLong();
 
-  if ( items.size() < 2 ) {
-    return;
-  }
+    if (items.size() < 2) {
+        return;
+    }
 
-  d->mMaximumValue = items[1].toLongLong();
+    d->mMaximumValue = items[1].toLongLong();
 }

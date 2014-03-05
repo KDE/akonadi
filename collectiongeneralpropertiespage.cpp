@@ -32,63 +32,63 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage( QWidget *parent )
-  : CollectionPropertiesPage( parent )
+CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget *parent)
+    : CollectionPropertiesPage(parent)
 {
-  setObjectName( QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" ) );
+    setObjectName(QLatin1String("Akonadi::CollectionGeneralPropertiesPage"));
 
-  setPageTitle( i18nc( "@title:tab general properties page", "General" ) );
-  ui.setupUi( this );
+    setPageTitle(i18nc("@title:tab general properties page", "General"));
+    ui.setupUi(this);
 }
 
-void CollectionGeneralPropertiesPage::load(const Collection & collection)
+void CollectionGeneralPropertiesPage::load(const Collection &collection)
 {
-  QString displayName;
-  QString iconName;
-  if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
-    displayName = collection.attribute<EntityDisplayAttribute>()->displayName();
-    iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
-  }
+    QString displayName;
+    QString iconName;
+    if (collection.hasAttribute<EntityDisplayAttribute>()) {
+        displayName = collection.attribute<EntityDisplayAttribute>()->displayName();
+        iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
+    }
 
-  if ( displayName.isEmpty() ) {
-    ui.nameEdit->setText( collection.name() );
-  } else {
-    ui.nameEdit->setText( displayName );
-  }
+    if (displayName.isEmpty()) {
+        ui.nameEdit->setText(collection.name());
+    } else {
+        ui.nameEdit->setText(displayName);
+    }
 
 #ifndef KDEPIM_MOBILE_UI
-  if ( iconName.isEmpty() ) {
-    ui.customIcon->setIcon( CollectionUtils::defaultIconName( collection ) );
-  } else {
-    ui.customIcon->setIcon( iconName );
-  }
-  ui.customIconCheckbox->setChecked( !iconName.isEmpty() );
+    if (iconName.isEmpty()) {
+        ui.customIcon->setIcon(CollectionUtils::defaultIconName(collection));
+    } else {
+        ui.customIcon->setIcon(iconName);
+    }
+    ui.customIconCheckbox->setChecked(!iconName.isEmpty());
 #endif
 
-  if ( collection.statistics().count() >= 0 ) {
-    ui.countLabel->setText( i18ncp( "@label", "One object", "%1 objects",
-                            collection.statistics().count() ) );
-    ui.sizeLabel->setText( KGlobal::locale()->formatByteSize( collection.statistics().size() ) );
-  } else {
-    ui.statsBox->hide();
-  }
+    if (collection.statistics().count() >= 0) {
+        ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects",
+                                      collection.statistics().count()));
+        ui.sizeLabel->setText(KGlobal::locale()->formatByteSize(collection.statistics().size()));
+    } else {
+        ui.statsBox->hide();
+    }
 }
 
-void CollectionGeneralPropertiesPage::save(Collection & collection)
+void CollectionGeneralPropertiesPage::save(Collection &collection)
 {
-  if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-       !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
-    collection.attribute<EntityDisplayAttribute>()->setDisplayName( ui.nameEdit->text() );
-  } else {
-    collection.setName( ui.nameEdit->text() );
-  }
+    if (collection.hasAttribute<EntityDisplayAttribute>() &&
+        !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
+        collection.attribute<EntityDisplayAttribute>()->setDisplayName(ui.nameEdit->text());
+    } else {
+        collection.setName(ui.nameEdit->text());
+    }
 
 #ifndef KDEPIM_MOBILE_UI
-  if ( ui.customIconCheckbox->isChecked() ) {
-    collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( ui.customIcon->icon() );
-  } else if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
-    collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
-  }
+    if (ui.customIconCheckbox->isChecked()) {
+        collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing)->setIconName(ui.customIcon->icon());
+    } else if (collection.hasAttribute<EntityDisplayAttribute>()) {
+        collection.attribute<EntityDisplayAttribute>()->setIconName(QString());
+    }
 #endif
 }
 

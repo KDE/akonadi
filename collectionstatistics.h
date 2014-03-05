@@ -43,7 +43,7 @@ namespace Akonadi {
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * ...
  *
@@ -68,7 +68,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT CollectionStatistics
 {
-  public:
+public:
     /**
      * Creates a new collection statistics object.
      */
@@ -77,7 +77,7 @@ class AKONADI_EXPORT CollectionStatistics
     /**
      * Creates a collection statistics object from an @p other one.
      */
-    CollectionStatistics( const CollectionStatistics &other );
+    CollectionStatistics(const CollectionStatistics &other);
 
     /**
      * Destroys the collection statistics object.
@@ -99,7 +99,7 @@ class AKONADI_EXPORT CollectionStatistics
      * @param count The number of items.
      * @see count()
      */
-    void setCount( qint64 count );
+    void setCount(qint64 count);
 
     /**
      * Returns the number of unread items in this collection or @c -1 if
@@ -116,7 +116,7 @@ class AKONADI_EXPORT CollectionStatistics
      * @param count The number of unread messages.
      * @see unreadCount()
      */
-    void setUnreadCount( qint64 count );
+    void setUnreadCount(qint64 count);
 
     /**
      * Returns the total size of the items in this collection or @c -1 if
@@ -134,14 +134,14 @@ class AKONADI_EXPORT CollectionStatistics
      * @see size()
      * @since 4.3
      */
-    void setSize( qint64 size );
+    void setSize(qint64 size);
 
     /**
      * Assigns @p other to this statistics object and returns a reference to this one.
      */
-    CollectionStatistics& operator=( const CollectionStatistics &other );
+    CollectionStatistics &operator=(const CollectionStatistics &other);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
@@ -153,8 +153,8 @@ class AKONADI_EXPORT CollectionStatistics
 /**
  * Allows to output the collection statistics for debugging purposes.
  */
-AKONADI_EXPORT QDebug operator<<( QDebug d, const Akonadi::CollectionStatistics& );
+AKONADI_EXPORT QDebug operator<<(QDebug d, const Akonadi::CollectionStatistics &);
 
-Q_DECLARE_METATYPE( Akonadi::CollectionStatistics )
+Q_DECLARE_METATYPE(Akonadi::CollectionStatistics)
 
 #endif

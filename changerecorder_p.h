@@ -31,27 +31,27 @@ class ChangeNotificationDependenciesFactory;
 
 class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivate
 {
-  public:
-    ChangeRecorderPrivate( ChangeNotificationDependenciesFactory *dependenciesFactory_, ChangeRecorder* parent );
+public:
+    ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, ChangeRecorder *parent);
 
-    Q_DECLARE_PUBLIC( ChangeRecorder )
+    Q_DECLARE_PUBLIC(ChangeRecorder)
     QSettings *settings;
     bool enableChangeRecording;
 
     virtual int pipelineSize() const;
-    virtual void notificationsEnqueued( int count );
+    virtual void notificationsEnqueued(int count);
     virtual void notificationsErased();
 
-    virtual void slotNotify( const NotificationMessageV3::List &msgs );
+    virtual void slotNotify(const NotificationMessageV3::List &msgs);
 
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<NotificationMessageV3> loadFrom( QIODevice *device );
+    QQueue<NotificationMessageV3> loadFrom(QIODevice *device);
     QString dumpNotificationListToString() const;
-    void addToStream( QDataStream &stream, const NotificationMessageV3 &msg );
+    void addToStream(QDataStream &stream, const NotificationMessageV3 &msg);
     void saveNotifications();
-    void saveTo( QIODevice *device );
+    void saveTo(QIODevice *device);
 private:
     void dequeueNotification();
     void notificationsLoaded();

@@ -29,49 +29,50 @@ using namespace Akonadi;
 
 class Akonadi::CollectionSelectJobPrivate : public JobPrivate
 {
-  public:
-    CollectionSelectJobPrivate( CollectionSelectJob *parent )
-      : JobPrivate( parent )
+public:
+    CollectionSelectJobPrivate(CollectionSelectJob *parent)
+        : JobPrivate(parent)
     {
     }
 
-    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
-      if ( mCollection.id() > 0 )
-        return QString::number( mCollection.id() );
-      else
-        return QString::fromLatin1( "RemoteID " ) + QString::number( mCollection.id() );
+    QString jobDebuggingString() const { /*Q_DECL_OVERRIDE*/
+        if (mCollection.id() > 0) {
+            return QString::number(mCollection.id());
+        } else {
+            return QString::fromLatin1("RemoteID ") + QString::number(mCollection.id());
+        }
     }
 
     Collection mCollection;
 };
 
-CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject *parent )
-  : Job( new CollectionSelectJobPrivate( this ), parent )
+CollectionSelectJob::CollectionSelectJob(const Collection &collection, QObject *parent)
+    : Job(new CollectionSelectJobPrivate(this), parent)
 {
-  Q_D( CollectionSelectJob );
+    Q_D(CollectionSelectJob);
 
-  d->mCollection = collection;
+    d->mCollection = collection;
 }
 
-CollectionSelectJob::~CollectionSelectJob( )
+CollectionSelectJob::~CollectionSelectJob()
 {
 }
 
-void CollectionSelectJob::doStart( )
+void CollectionSelectJob::doStart()
 {
-  Q_D( CollectionSelectJob );
+    Q_D(CollectionSelectJob);
 
-  if ( d->mCollection.isValid() ) {
-    QByteArray command( d->newTag() + " SELECT SILENT " );
-    d->writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
-  } else if ( !d->mCollection.remoteId().isEmpty() ) {
-    QByteArray command( d->newTag() + " " AKONADI_CMD_RID " SELECT SILENT " );
-    d->writeData( command + ImapParser::quote( d->mCollection.remoteId().toUtf8() ) + '\n' );
-  } else {
-    setError( Unknown );
-    setErrorText( i18n( "Invalid collection specified" ) );
-    emitResult();
-  }
+    if (d->mCollection.isValid()) {
+        QByteArray command(d->newTag() + " SELECT SILENT ");
+        d->writeData(command + QByteArray::number(d->mCollection.id()) + '\n');
+    } else if (!d->mCollection.remoteId().isEmpty()) {
+        QByteArray command(d->newTag() + " " AKONADI_CMD_RID " SELECT SILENT ");
+        d->writeData(command + ImapParser::quote(d->mCollection.remoteId().toUtf8()) + '\n');
+    } else {
+        setError(Unknown);
+        setErrorText(i18n("Invalid collection specified"));
+        emitResult();
+    }
 }
 
 #include "moc_collectionselectjob_p.cpp"
