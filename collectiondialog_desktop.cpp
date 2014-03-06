@@ -118,10 +118,12 @@ class CollectionDialog::Private
       mSelectionHandler = new AsyncSelectionHandler( mFilterCollection, mParent );
       mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
                         mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
+      readConfig();
     }
 
     ~Private()
     {
+        writeConfig();
     }
 
     void slotCollectionAvailable( const QModelIndex &index )
@@ -134,6 +136,24 @@ class CollectionDialog::Private
       mFilterCollection->setFilterFixedString(filter); 
       if (mKeepTreeExpanded)
          mView->expandAll();
+    }
+
+    void readConfig()
+    {
+        KConfig config( QLatin1String( "akonadi_contactrc" ) );
+        KConfigGroup group( &config, QLatin1String( "CollectionDialog" ) );
+        const QSize size = group.readEntry( "Size", QSize(800,  500) );
+        if ( size.isValid() ) {
+            mParent->resize( size );
+        }
+    }
+
+    void writeConfig()
+    {
+        KConfig config( QLatin1String( "akonadi_contactrc" ) );
+        KConfigGroup group( &config, QLatin1String( "CollectionDialog" ) );
+        group.writeEntry( "Size", mParent->size() );
+        group.sync();
     }
 
     CollectionDialog *mParent;
