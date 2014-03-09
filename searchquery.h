@@ -217,6 +217,7 @@ class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
       HeaderXMailingList,
       HeaderXSpamFlag,
       HeaderDate, //Expects QDateTime
+      HeaderOnlyDate, //Expectes QDate
       MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
       ByteSize, //Expects int
       Attachment, //Textsearch on attachment
