@@ -324,6 +324,7 @@ QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
   mapping.insert(EmailSearchTerm::HeaderXMailingList, QLatin1String("xmailinglist"));
   mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QLatin1String("xspamflag"));
   mapping.insert(EmailSearchTerm::HeaderDate, QLatin1String("date"));
+  mapping.insert(EmailSearchTerm::HeaderOnlyDate, QLatin1String("onlydate"));
   mapping.insert(EmailSearchTerm::MessageStatus, QLatin1String("messagestatus"));
   mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
   mapping.insert(EmailSearchTerm::ByteSize, QLatin1String("size"));
