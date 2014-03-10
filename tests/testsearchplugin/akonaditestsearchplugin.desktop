@@ -2,6 +2,7 @@
 Type=AkonadiSearchPlugin
 Name=Akonadi Test Search Plugin
 Name[cs]=Modul pro testování hledání v Akonadi
+Name[da]=Testsøge-plugin til Akonadi
 Name[de]=Akonadi-Testsuchmodul
 Name[es]=Complemento de prueba de búsqueda de Akonadi
 Name[fi]=Akonadin hakuliitännäinen testaustarkoituksiin
