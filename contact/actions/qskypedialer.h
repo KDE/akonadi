@@ -28,19 +28,19 @@
 
 class QDBusInterface;
 
-class QSkypeDialer: public QDialer
+class QSkypeDialer : public QDialer
 {
-  public:
-    explicit QSkypeDialer( const QString &applicationName );
+public:
+    explicit QSkypeDialer(const QString &applicationName);
     ~QSkypeDialer();
 
-    bool dialNumber( const QString &number );
-    bool sendSms( const QString &number, const QString &text );
+    bool dialNumber(const QString &number);
+    bool sendSms(const QString &number, const QString &text);
 
-  private:
+private:
     bool initializeSkype();
 
-    QDBusInterface* mInterface;
+    QDBusInterface *mInterface;
 };
 
 #endif

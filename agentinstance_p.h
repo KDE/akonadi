@@ -33,24 +33,24 @@ namespace Akonadi
  */
 class AgentInstance::Private : public QSharedData
 {
-  public:
-    Private() :
-      mStatus(0),
-      mProgress(0),
-      mIsOnline(false)
+public:
+    Private()
+        : mStatus(0)
+        , mProgress(0)
+        , mIsOnline(false)
     {
     }
 
-    Private( const Private &other )
-      : QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      mType = other.mType;
-      mIdentifier = other.mIdentifier;
-      mName = other.mName;
-      mStatus = other.mStatus;
-      mStatusMessage = other.mStatusMessage;
-      mProgress = other.mProgress;
-      mIsOnline = other.mIsOnline;
+        mType = other.mType;
+        mIdentifier = other.mIdentifier;
+        mName = other.mName;
+        mStatus = other.mStatus;
+        mStatusMessage = other.mStatusMessage;
+        mProgress = other.mProgress;
+        mIsOnline = other.mIsOnline;
     }
 
     AgentType mType;

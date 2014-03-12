@@ -33,18 +33,18 @@ class KUrlRequester;
 
 class FreeBusyEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit FreeBusyEditWidget( QWidget *parent = 0 );
+public:
+    explicit FreeBusyEditWidget(QWidget *parent = 0);
     ~FreeBusyEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private:
+private:
     KUrlRequester *mURL;
     bool mReadOnly;
 };

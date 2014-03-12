@@ -5,15 +5,8 @@ include_directories(
     ${Boost_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}/kabc
     ${CMAKE_SOURCE_DIR}/kabc
-    ${NEPOMUK_CORE_INCLUDE_DIR}
     ${kcalcore_BINARY_DIR}
 )
-
-if (Soprano_FOUND)
-  include_directories(
-      ${SOPRANO_INCLUDE_DIR}
-  )
-endif()
 
 find_package(Prison QUIET)
 set_package_properties(Prison PROPERTIES DESCRIPTION "Prison" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
@@ -68,13 +61,11 @@ set(akonadicontact_editor_SRCS
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
   editor/kdatepickerpopup.cpp
-  editor/kedittagsdialog.cpp
   editor/nameeditdialog.cpp
   editor/nameeditwidget.cpp
   editor/phoneeditwidget.cpp
   editor/secrecyeditwidget.cpp
   editor/soundeditwidget.cpp
-  editor/tagwidget.cpp
 )
 
 set(akonadicontact_LIB_SRC
@@ -169,7 +160,6 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
 				      ${KDE4_KIO_LIBS} 
-                                      ${NEPOMUK_CORE_LIBRARY}
                                       ${KDE4_PHONON_LIBS})
 
 if(PRISON_FOUND) 
@@ -184,7 +174,6 @@ target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-				      ${NEPOMUK_CORE_LIBRARY}
                                       ${KDE4_PHONON_LIBS})
 
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

@@ -32,11 +32,11 @@ class Item;
  */
 class GidExtractor
 {
-  public:
+public:
     /**
      * Extracts the GID from @p item. using an extractor plugin.
      */
-    static QString extractGid( const Item &item );
+    static QString extractGid(const Item &item);
 
     /**
      * Extracts the gid from @p item.
@@ -45,7 +45,7 @@ class GidExtractor
      * If the item has no GID set, and the item has a payload, the GID is extracted using extractGid().
      * If the item has no GID set and no payload, a default constructed QString is returned.
      */
-    static QString getGid( const Item &item );
+    static QString getGid(const Item &item);
 };
 
 }

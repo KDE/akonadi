@@ -26,6 +26,8 @@
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/sharedvaluepool_p.h>
+#include <akonadi/attributeentity.h>
+#include <akonadi/tag.h>
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
@@ -103,6 +105,7 @@ class ProtocolHelper
       Convert attributes to their protocol representation.
     */
     static QByteArray attributesToByteArray( const Entity &entity, bool ns = false );
+    static QByteArray attributesToByteArray( const AttributeEntity &entity, bool ns = false );
 
     /**
       Encodes part label and namespace.
@@ -186,6 +189,9 @@ class ProtocolHelper
 
     static QByteArray entitySetToByteArray( const QList<Akonadi::Item> &_objects, const QByteArray &command );
 
+    static QByteArray tagSetToImapSequenceSet( const Akonadi::Tag::List &_objects );
+    static QByteArray tagSetToByteArray( const Akonadi::Tag::List &_objects, const QByteArray &command );
+
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
@@ -217,6 +223,8 @@ class ProtocolHelper
       Parses a single line from an item fetch job result into an Item object.
      */
     static void parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0 );
+    static void parseTagFetchResult( const QList<QByteArray> &lineTokens, Tag &tag );
+
 };
 
 }

@@ -32,66 +32,72 @@
 
 using namespace Akonadi;
 
-NotificationSource* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
+NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
 {
-  if ( !Akonadi::ServerManager::self()->isRunning() ) {
-    return 0;
-  }
+    if (!Akonadi::ServerManager::self()->isRunning()) {
+        return 0;
+    }
 
-  org::freedesktop::Akonadi::NotificationManager *manager =
-    new org::freedesktop::Akonadi::NotificationManager(
-      ServerManager::serviceName( Akonadi::ServerManager::Server ),
-      QLatin1String( "/notifications" ),
-      DBusConnectionPool::threadConnection() );
+    org::freedesktop::Akonadi::NotificationManager *manager =
+        new org::freedesktop::Akonadi::NotificationManager(
+            ServerManager::serviceName(Akonadi::ServerManager::Server),
+            QLatin1String("/notifications"),
+            DBusConnectionPool::threadConnection());
 
-  if ( !manager ) {
-    // :TODO: error handling
-    return 0;
-  }
+    if (!manager) {
+        // :TODO: error handling
+        return 0;
+    }
 
-  const QString name = QString::fromLatin1( "%1_%2_%3" ).arg(
-      KGlobal::mainComponent().componentName(),
-      QString::number( QCoreApplication::applicationPid() ),
-      KRandom::randomString( 6 ) );
-  QDBusObjectPath p = manager->subscribeV2( name, true );
-  const bool validError = manager->lastError().isValid();
-  delete manager;
-  if ( validError ) {
-    kWarning() << manager->lastError().name() << manager->lastError().message();
-    // :TODO: What to do?
-    return 0;
-  }
+    const QString name =
+        QString::fromLatin1("%1_%2_%3").arg(
+            KGlobal::mainComponent().componentName(),
+            QString::number(QCoreApplication::applicationPid()),
+            KRandom::randomString(6));
+    QDBusObjectPath p = manager->subscribeV2(name, true);
+    const bool validError = manager->lastError().isValid();
+    if (validError) {
+        kWarning() << manager->lastError().name() << manager->lastError().message();
+        // :TODO: What to do?
+        delete manager;
+        return 0;
+    }
+    delete manager;
+    org::freedesktop::Akonadi::NotificationSource *notificationSource =
+        new org::freedesktop::Akonadi::NotificationSource(
+            ServerManager::serviceName(Akonadi::ServerManager::Server),
+            p.path(),
+            DBusConnectionPool::threadConnection(), parent);
 
-  org::freedesktop::Akonadi::NotificationSource *notificationSource =
-    new org::freedesktop::Akonadi::NotificationSource(
-      ServerManager::serviceName( Akonadi::ServerManager::Server ),
-      p.path(),
-      DBusConnectionPool::threadConnection(), parent );
-
-  if ( !notificationSource ) {
-    // :TODO: error handling
-    return 0;
-  }
-  return new NotificationSource( notificationSource );
+    if (!notificationSource) {
+        // :TODO: error handling
+        return 0;
+    }
+    return new NotificationSource(notificationSource);
 }
 
-QObject* ChangeNotificationDependenciesFactory::createChangeMediator(QObject* parent)
+QObject *ChangeNotificationDependenciesFactory::createChangeMediator(QObject *parent)
 {
-  Q_UNUSED( parent );
-  return ChangeMediator::instance();
+    Q_UNUSED(parent);
+    return ChangeMediator::instance();
 }
 
-CollectionCache* ChangeNotificationDependenciesFactory::createCollectionCache(int maxCapacity, Session *session)
+CollectionCache *ChangeNotificationDependenciesFactory::createCollectionCache(int maxCapacity, Session *session)
 {
-  return new CollectionCache( maxCapacity, session );
+    return new CollectionCache(maxCapacity, session);
 }
 
-ItemCache* ChangeNotificationDependenciesFactory::createItemCache(int maxCapacity, Session* session)
+ItemCache *ChangeNotificationDependenciesFactory::createItemCache(int maxCapacity, Session *session)
 {
-  return new ItemCache( maxCapacity, session );
+    return new ItemCache(maxCapacity, session);
 }
 
-ItemListCache* ChangeNotificationDependenciesFactory::createItemListCache(int maxCapacity, Session *session)
+ItemListCache *ChangeNotificationDependenciesFactory::createItemListCache(int maxCapacity, Session *session)
 {
-  return new ItemListCache( maxCapacity, session );
+    return new ItemListCache(maxCapacity, session);
+}
+
+TagListCache *ChangeNotificationDependenciesFactory::createTagListCache(int maxCapacity, Session *session)
+{
+    return new TagListCache(maxCapacity, session);
 }

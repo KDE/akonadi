@@ -34,13 +34,13 @@ class KJob;
 */
 class Requester : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     Requester();
 
-  private Q_SLOTS:
-    void requestResult( KJob *job );
+private Q_SLOTS:
+    void requestResult(KJob *job);
 };
 
 #endif

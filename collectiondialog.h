@@ -67,25 +67,25 @@ namespace Akonadi {
 class AKONADI_EXPORT CollectionDialog : public KDialog
 {
     Q_OBJECT
-    Q_DISABLE_COPY( CollectionDialog )
+    Q_DISABLE_COPY(CollectionDialog)
 
-  public:
+public:
     /* @since 4.6
      */
     enum CollectionDialogOption {
-      None = 0,
-      AllowToCreateNewChildCollection = 1,
-      KeepTreeExpanded = 2
+        None = 0,
+        AllowToCreateNewChildCollection = 1,
+        KeepTreeExpanded = 2
     };
 
-    Q_DECLARE_FLAGS( CollectionDialogOptions, CollectionDialogOption )
+    Q_DECLARE_FLAGS(CollectionDialogOptions, CollectionDialogOption)
 
     /**
      * Creates a new collection dialog.
      *
      * @param parent The parent widget.
      */
-    explicit CollectionDialog( QWidget *parent = 0 );
+    explicit CollectionDialog(QWidget *parent = 0);
 
     /**
      * Creates a new collection dialog with a custom @p model.
@@ -98,7 +98,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      *
      * @since 4.4
      */
-    explicit CollectionDialog( QAbstractItemModel *model, QWidget *parent = 0 );
+    explicit CollectionDialog(QAbstractItemModel *model, QWidget *parent = 0);
 
     /**
      * Creates a new collection dialog with a custom @p model.
@@ -113,7 +113,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @since 4.6
      */
 
-    explicit CollectionDialog( CollectionDialogOptions options, QAbstractItemModel *model = 0, QWidget *parent = 0 );
+    explicit CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model = 0, QWidget *parent = 0);
 
     /**
      * Destroys the collection dialog.
@@ -125,7 +125,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * Note that mime types are not enabled by default.
      * @param mimeTypes MIME type filter values
      */
-    void setMimeTypeFilter( const QStringList &mimeTypes );
+    void setMimeTypeFilter(const QStringList &mimeTypes);
 
     /**
      * Returns the mime types any of which the selected collection(s) shall support.
@@ -137,7 +137,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @param rights access rights filter values
      * @since 4.4
      */
-    void setAccessRightsFilter( Collection::Rights rights );
+    void setAccessRightsFilter(Collection::Rights rights);
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
@@ -151,14 +151,14 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @param text the dialog's description text
      * @since 4.4
      */
-    void setDescription( const QString &text );
+    void setDescription(const QString &text);
 
     /**
      * Sets the @p collection that shall be selected by default.
      * @param collection the dialog's pre-selected collection
      * @since 4.4
      */
-    void setDefaultCollection( const Collection &collection );
+    void setDefaultCollection(const Collection &collection);
 
     /**
      * Sets the selection mode. The initial default mode is
@@ -166,7 +166,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @param mode the selection mode to use
      * @see QAbstractItemView::setSelectionMode()
      */
-    void setSelectionMode( QAbstractItemView::SelectionMode mode );
+    void setSelectionMode(QAbstractItemView::SelectionMode mode);
 
     /**
      * Returns the selection mode.
@@ -191,27 +191,27 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @param options the collection dialog options to change
      * @since 4.6
      */
-    void changeCollectionDialogOptions( CollectionDialogOptions options );
+    void changeCollectionDialogOptions(CollectionDialogOptions options);
 
     /**
       * @since 4.13
       */
-    void setUseFolderByDefault( bool b );
+    void setUseFolderByDefault(bool b);
     /**
       * @since 4.13
       */
     bool useFolderByDefault() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotCollectionAvailable( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-    Q_PRIVATE_SLOT( d, void slotAddChildCollection() )
-    Q_PRIVATE_SLOT( d, void slotCollectionCreationResult(KJob* job) )
-    Q_PRIVATE_SLOT( d, void slotFilterFixedString( const QString & ) )
+    Q_PRIVATE_SLOT(d, void slotCollectionAvailable(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
+    Q_PRIVATE_SLOT(d, void slotAddChildCollection())
+    Q_PRIVATE_SLOT(d, void slotCollectionCreationResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void slotFilterFixedString(const QString &))
     //@endcond
 };
 

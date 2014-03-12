@@ -26,6 +26,8 @@
 #include "indexpolicyattribute.h"
 #include "persistentsearchattribute.h"
 #include "entitydeletedattribute.h"
+#include "tagattribute.h"
+#include "entityannotationsattribute.h"
 
 #include <KGlobal>
 
@@ -41,22 +43,31 @@ namespace Internal {
  */
 class DefaultAttribute : public Attribute
 {
-  public:
-    explicit DefaultAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
-      mType( type ),
-      mValue( value )
+public:
+    explicit DefaultAttribute(const QByteArray &type, const QByteArray &value = QByteArray())
+        : mType(type)
+        , mValue(value)
     {}
 
-    QByteArray type() const { return mType; }
-    Attribute* clone() const
+    QByteArray type() const
     {
-      return new DefaultAttribute( mType, mValue );
+        return mType;
+    }
+    Attribute *clone() const
+    {
+        return new DefaultAttribute(mType, mValue);
     }
 
-    QByteArray serialized() const { return mValue; }
-    void deserialize( const QByteArray &data ) { mValue = data; }
+    QByteArray serialized() const
+    {
+        return mValue;
+    }
+    void deserialize(const QByteArray &data)
+    {
+        mValue = data;
+    }
 
-  private:
+private:
     QByteArray mType, mValue;
 };
 
@@ -65,27 +76,31 @@ class DefaultAttribute : public Attribute
  */
 class StaticAttributeFactory : public AttributeFactory
 {
-  public:
-    StaticAttributeFactory() : AttributeFactory(), initialized( false ) {}
+public:
+    StaticAttributeFactory()
+        : AttributeFactory()
+        , initialized(false) {}
     void init() {
-      if ( initialized ) {
-        return;
-      }
-      initialized = true;
+        if (initialized) {
+            return;
+        }
+        initialized = true;
 
-      // Register built-in attributes
-      AttributeFactory::registerAttribute<CollectionQuotaAttribute>();
-      AttributeFactory::registerAttribute<CollectionRightsAttribute>();
-      AttributeFactory::registerAttribute<EntityDisplayAttribute>();
-      AttributeFactory::registerAttribute<EntityHiddenAttribute>();
-      AttributeFactory::registerAttribute<IndexPolicyAttribute>();
-      AttributeFactory::registerAttribute<PersistentSearchAttribute>();
-      AttributeFactory::registerAttribute<EntityDeletedAttribute>();
+        // Register built-in attributes
+        AttributeFactory::registerAttribute<CollectionQuotaAttribute>();
+        AttributeFactory::registerAttribute<CollectionRightsAttribute>();
+        AttributeFactory::registerAttribute<EntityDisplayAttribute>();
+        AttributeFactory::registerAttribute<EntityHiddenAttribute>();
+        AttributeFactory::registerAttribute<IndexPolicyAttribute>();
+        AttributeFactory::registerAttribute<PersistentSearchAttribute>();
+        AttributeFactory::registerAttribute<EntityDeletedAttribute>();
+        AttributeFactory::registerAttribute<EntityAnnotationsAttribute>();
+        AttributeFactory::registerAttribute<TagAttribute>();
     }
     bool initialized;
 };
 
-Q_GLOBAL_STATIC( StaticAttributeFactory, s_attributeInstance )
+Q_GLOBAL_STATIC(StaticAttributeFactory, s_attributeInstance)
 
 }
 
@@ -96,47 +111,46 @@ using Akonadi::Internal::s_attributeInstance;
  */
 class AttributeFactory::Private
 {
-  public:
-    QHash<QByteArray, Attribute*> attributes;
+public:
+    QHash<QByteArray, Attribute *> attributes;
 };
 
-AttributeFactory* AttributeFactory::self()
+AttributeFactory *AttributeFactory::self()
 {
-  s_attributeInstance->init();
-  return s_attributeInstance;
+    s_attributeInstance->init();
+    return s_attributeInstance;
 }
 
 AttributeFactory::AttributeFactory()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
 AttributeFactory::~ AttributeFactory()
 {
-  qDeleteAll( d->attributes );
-  delete d;
+    qDeleteAll(d->attributes);
+    delete d;
 }
 
 void AttributeFactory::registerAttribute(Attribute *attr)
 {
-  Q_ASSERT( attr );
-  Q_ASSERT( !attr->type().contains( ' ' ) && !attr->type().contains( '\'' ) && !attr->type().contains( '"' ) );
-  QHash<QByteArray, Attribute*>::Iterator it = d->attributes.find( attr->type() );
-  if ( it != d->attributes.end() ) {
-    delete *it;
-    d->attributes.erase( it );
-  }
-  d->attributes.insert( attr->type(), attr );
+    Q_ASSERT(attr);
+    Q_ASSERT(!attr->type().contains(' ') && !attr->type().contains('\'') && !attr->type().contains('"'));
+    QHash<QByteArray, Attribute *>::Iterator it = d->attributes.find(attr->type());
+    if (it != d->attributes.end()) {
+        delete *it;
+        d->attributes.erase(it);
+    }
+    d->attributes.insert(attr->type(), attr);
 }
 
-Attribute* AttributeFactory::createAttribute(const QByteArray &type)
+Attribute *AttributeFactory::createAttribute(const QByteArray &type)
 {
-  Attribute *attr = self()->d->attributes.value( type );
-  if ( attr ) {
-    return attr->clone();
-  }
-  return new Internal::DefaultAttribute( type );
+    Attribute *attr = self()->d->attributes.value(type);
+    if (attr) {
+        return attr->clone();
+    }
+    return new Internal::DefaultAttribute(type);
 }
 
 }
-

@@ -43,21 +43,21 @@ class GeoMapWidget;
 
 class GeoEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit GeoEditWidget( QWidget *parent = 0 );
+public:
+    explicit GeoEditWidget(QWidget *parent = 0);
     ~GeoEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void changeClicked();
 
-  private:
+private:
     void updateView();
 
     GeoMapWidget *mMap;
@@ -69,36 +69,36 @@ class GeoEditWidget : public QWidget
 
 class GeoDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    GeoDialog( const KABC::Geo &coordinates, QWidget *parent );
+public:
+    GeoDialog(const KABC::Geo &coordinates, QWidget *parent);
 
     KABC::Geo coordinates() const;
 
-  private:
+private:
     enum ExceptType {
-      ExceptNone = 0,
-      ExceptCity = 1,
-      ExceptSexagesimal = 2,
-      ExceptDecimal = 4
+        ExceptNone = 0,
+        ExceptCity = 1,
+        ExceptSexagesimal = 2,
+        ExceptDecimal = 4
     };
 
-  private Q_SLOTS:
-    void updateInputs( ExceptType type = ExceptNone );
+private Q_SLOTS:
+    void updateInputs(ExceptType type = ExceptNone);
 
     void decimalInputChanged();
     void sexagesimalInputChanged();
     void cityInputChanged();
 
-  private:
+private:
     void loadCityList();
-    int nearestCity( double, double ) const;
+    int nearestCity(double, double) const;
 
     typedef struct {
-      double latitude;
-      double longitude;
-      QString country;
+        double latitude;
+        double longitude;
+        QString country;
     } GeoData;
 
     KComboBox *mCityCombo;

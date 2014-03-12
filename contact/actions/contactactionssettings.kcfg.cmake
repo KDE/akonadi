@@ -11,12 +11,14 @@
       <choices>
         <choice name="UseBrowser"/>
         <choice name="UseExternalAddressApplication"/>
+        <choice name="UseGooglemap"/>
+        <choice name="UseMapquest"/>
       </choices>
       <whatsthis>Defines which application shall be used to show the postal address of a contact on a map. If 'Web Browser' is selected, an URL can be defined with placeholders for the single address parts. If 'External Application' is selected, a command with placeholders can be defined.</whatsthis>
       <default>UseBrowser</default>
     </entry>
     <entry type="String" name="AddressUrl">
-      <default>http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c</default>
+      <default>http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%l,+%c</default>
       <whatsthis>This URL defines the website that shall be used to show a contact's postal address.</whatsthis>
       <tooltip>The following placeholders can be used in the URL:
    %s: Street

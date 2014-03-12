@@ -29,33 +29,45 @@
 
 using namespace Akonadi;
 
-static void replaceArguments(QString & templateStr, const KABC::Address &address)
+static void replaceArguments(QString &templateStr, const KABC::Address &address)
 {
-    templateStr.replace( QLatin1String( "%s" ), address.street() ).
-                replace( QLatin1String( "%r" ), address.region() ).
-                replace( QLatin1String( "%l" ), address.locality() ).
-                replace( QLatin1String( "%z" ), address.postalCode() ).
-                replace( QLatin1String( "%n" ), address.country() ).
-                replace( QLatin1String( "%c" ), address.countryToISO( address.country() ) );
+    templateStr.replace(QLatin1String("%s"), address.street()).
+    replace(QLatin1String("%r"), address.region()).
+    replace(QLatin1String("%l"), address.locality()).
+    replace(QLatin1String("%z"), address.postalCode()).
+    replace(QLatin1String("%n"), address.country()).
+    replace(QLatin1String("%c"), address.countryToISO(address.country()));
 }
 
-void ShowAddressAction::showAddress( const KABC::Address &address )
+void ShowAddressAction::showAddress(const KABC::Address &address)
 {
-  // synchronize
-  ContactActionsSettings::self()->readConfig();
+    // synchronize
+    ContactActionsSettings::self()->readConfig();
 
-  if ( ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseBrowser ) {
-    QString urlTemplate = ContactActionsSettings::self()->addressUrl();
-    replaceArguments(urlTemplate, address);
-    if ( !urlTemplate.isEmpty() ) {
-      KToolInvocation::invokeBrowser( urlTemplate );
-    }
-  } else {
-    QString commandTemplate = ContactActionsSettings::self()->addressCommand();
-    replaceArguments(commandTemplate, address);
+    if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseBrowser) {
+        QString urlTemplate = ContactActionsSettings::self()->addressUrl();
+        replaceArguments(urlTemplate, address);
+        if (!urlTemplate.isEmpty()) {
+            KToolInvocation::invokeBrowser(urlTemplate);
+        }
+    } else if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseExternalAddressApplication) {
+        QString commandTemplate = ContactActionsSettings::self()->addressCommand();
+        replaceArguments(commandTemplate, address);
 
-    if ( !commandTemplate.isEmpty() ) {
-      KRun::runCommand( commandTemplate, 0 );
+        if (!commandTemplate.isEmpty()) {
+            KRun::runCommand(commandTemplate, 0);
+        }
+    } else if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseGooglemap) {
+        QString urlTemplate = QLatin1String("https://maps.google.com/maps?q=%s,%l,%c");
+        replaceArguments(urlTemplate, address);
+        if (!urlTemplate.isEmpty()) {
+            KToolInvocation::invokeBrowser(urlTemplate);
+        }
+    } else if (ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseMapquest) {
+        QString urlTemplate = QLatin1String("http://open.mapquest.com/?q=%s,%l,%c");
+        replaceArguments(urlTemplate, address);
+        if (!urlTemplate.isEmpty()) {
+            KToolInvocation::invokeBrowser(urlTemplate);
+        }
     }
-  }
 }

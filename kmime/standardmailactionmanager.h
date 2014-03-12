@@ -46,27 +46,27 @@ class Item;
  */
 class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the supported actions.
      */
     enum Type {
-      MarkMailAsRead = StandardActionManager::LastType + 1, ///< Marks a mail as read
-      MarkMailAsUnread,                                 ///< Marks a mail as unread
-      MarkMailAsImportant,                              ///< Marks a mail as important
-      MarkMailAsActionItem,                             ///< Marks a mail as action item
-      MarkAllMailAsRead,                                ///< Marks all mails in a folder as read.
-      MarkAllMailAsUnread,                              ///< Marks all mails in a folder as unread.
-      MarkAllMailAsImportant,                           ///< Marks all mails in a folder as important
-      MarkAllMailAsActionItem,                          ///< Marks all mails in a folder as action item
-      MoveToTrash,                                      ///< Move all selected messages and folders to trash.
-      MoveAllToTrash,                                   ///< Move all messages of the current folder to trash.
-      RemoveDuplicates,                                 ///< Removes all duplicated messages.
-      EmptyAllTrash,                                    ///< Empties trash folders on all accounts
-      EmptyTrash,                                       ///< Empties the trash folder, if a trash folder was selected
-      LastType                                          ///< Marks last action.
+        MarkMailAsRead = StandardActionManager::LastType + 1, ///< Marks a mail as read
+        MarkMailAsUnread,                                 ///< Marks a mail as unread
+        MarkMailAsImportant,                              ///< Marks a mail as important
+        MarkMailAsActionItem,                             ///< Marks a mail as action item
+        MarkAllMailAsRead,                                ///< Marks all mails in a folder as read.
+        MarkAllMailAsUnread,                              ///< Marks all mails in a folder as unread.
+        MarkAllMailAsImportant,                           ///< Marks all mails in a folder as important
+        MarkAllMailAsActionItem,                          ///< Marks all mails in a folder as action item
+        MoveToTrash,                                      ///< Move all selected messages and folders to trash.
+        MoveAllToTrash,                                   ///< Move all messages of the current folder to trash.
+        RemoveDuplicates,                                 ///< Removes all duplicated messages.
+        EmptyAllTrash,                                    ///< Empties trash folders on all accounts
+        EmptyTrash,                                       ///< Empties the trash folder, if a trash folder was selected
+        LastType                                          ///< Marks last action.
     };
 
     /**
@@ -75,7 +75,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * @param actionCollection The action collection to operate on.
      * @param parent The parent widget.
      */
-    explicit StandardMailActionManager( KActionCollection *actionCollection, QWidget *parent = 0 );
+    explicit StandardMailActionManager(KActionCollection *actionCollection, QWidget *parent = 0);
 
     /**
      * Destroys the standard mail action manager.
@@ -89,7 +89,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      *
      * @param selectionModel selection model for collections
      */
-    void setCollectionSelectionModel( QItemSelectionModel *selectionModel );
+    void setCollectionSelectionModel(QItemSelectionModel *selectionModel);
 
     /**
      * Sets the item selection model based on which the item related actions
@@ -97,7 +97,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      *
      * @param selectionModel selection model for items
      */
-    void setItemSelectionModel( QItemSelectionModel* selectionModel );
+    void setItemSelectionModel(QItemSelectionModel *selectionModel);
 
     /**
      * Creates the action of the given type and adds it to the action collection
@@ -106,7 +106,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      *
      * @param type action type
      */
-    KAction* createAction( Type type );
+    KAction *createAction(Type type);
 
     /**
      * Creates the action of the given type and adds it to the action collection
@@ -114,7 +114,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * connected to its default implementation provided by this class.
      * @param type action type
      */
-    KAction* createAction( StandardActionManager::Type type );
+    KAction *createAction(StandardActionManager::Type type);
 
     /**
      * Convenience method to create all standard actions.
@@ -126,13 +126,13 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * Returns the action of the given type, 0 if it has not been created (yet).
      * @param type action type
      */
-    KAction* action( Type type ) const;
+    KAction *action(Type type) const;
 
     /**
      * Returns the action of the given type, 0 if it has not been created (yet).
      * @param type action type
      */
-    KAction* action( StandardActionManager::Type type ) const;
+    KAction *action(StandardActionManager::Type type) const;
 
     /**
      * Sets the label of the action @p type to @p text, which is used during
@@ -149,7 +149,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * @param type action type
      * @param text localized text for action
      */
-    void setActionText( StandardActionManager::Type type, const KLocalizedString &text );
+    void setActionText(StandardActionManager::Type type, const KLocalizedString &text);
 
     /**
      * Sets whether the default implementation for the given action @p type
@@ -158,7 +158,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * @param intercept If @c false, the default implementation will be executed,
      *                  if @c true no action is taken.
      */
-    void interceptAction( Type type, bool intercept = true );
+    void interceptAction(Type type, bool intercept = true);
 
     /**
      * Sets whether the default implementation for the given action @p type
@@ -168,7 +168,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * @param intercept If @c false, the default implementation will be executed,
      *                  if @c true no action is taken.
      */
-    void interceptAction( StandardActionManager::Type type, bool intercept = true );
+    void interceptAction(StandardActionManager::Type type, bool intercept = true);
 
     /**
      * Returns the list of collections that are currently selected.
@@ -189,7 +189,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      *
      * @param favoritesModel model for a user's favorite mail collections
      */
-    void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
+    void setFavoriteCollectionsModel(FavoriteCollectionsModel *favoritesModel);
 
     /**
      * Sets the favorite collection selection model based on which the favorite
@@ -198,12 +198,12 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      *
      * @param selection model for favorite collections
      */
-    void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
+    void setFavoriteSelectionModel(QItemSelectionModel *selectionModel);
 
-    void setCollectionPropertiesPageNames( const QStringList &names );
+    void setCollectionPropertiesPageNames(const QStringList &names);
 
-    Akonadi::StandardActionManager* standardActionManager() const;
-  Q_SIGNALS:
+    Akonadi::StandardActionManager *standardActionManager() const;
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
      * In case you have special needs for changing the state of some actions,
@@ -211,20 +211,20 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      */
     void actionStateUpdated();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void updateActions() )
-    Q_PRIVATE_SLOT( d, void slotMarkAs() )
-    Q_PRIVATE_SLOT( d, void slotMarkAllAs() )
-    Q_PRIVATE_SLOT( d, void slotMoveToTrash() )
-    Q_PRIVATE_SLOT( d, void slotMoveAllToTrash() )
-    Q_PRIVATE_SLOT( d, void slotRemoveDuplicates() )
-    Q_PRIVATE_SLOT( d, void slotEmptyAllTrash() )
-    Q_PRIVATE_SLOT( d, void slotEmptyTrash() )
-    Q_PRIVATE_SLOT( d, void slotJobFinished( KJob* ) )
+    Q_PRIVATE_SLOT(d, void updateActions())
+    Q_PRIVATE_SLOT(d, void slotMarkAs())
+    Q_PRIVATE_SLOT(d, void slotMarkAllAs())
+    Q_PRIVATE_SLOT(d, void slotMoveToTrash())
+    Q_PRIVATE_SLOT(d, void slotMoveAllToTrash())
+    Q_PRIVATE_SLOT(d, void slotRemoveDuplicates())
+    Q_PRIVATE_SLOT(d, void slotEmptyAllTrash())
+    Q_PRIVATE_SLOT(d, void slotEmptyTrash())
+    Q_PRIVATE_SLOT(d, void slotJobFinished(KJob *))
     //@endcond
 };
 

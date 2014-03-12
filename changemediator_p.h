@@ -39,42 +39,44 @@ class Item;
 
 class ChangeMediator : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ChangeMediator(QObject* parent = 0);
+    explicit ChangeMediator(QObject *parent = 0);
 
-  static ChangeMediator* instance();
+    static ChangeMediator *instance();
 
-  static void registerMonitor( QObject *monitor );
-  static void unregisterMonitor( QObject *monitor );
+    static void registerMonitor(QObject *monitor);
+    static void unregisterMonitor(QObject *monitor);
 
-  static void invalidateCollection( const Akonadi::Collection &collection );
-  static void invalidateItem( const Akonadi::Item &item );
+    static void invalidateCollection(const Akonadi::Collection &collection);
+    static void invalidateItem(const Akonadi::Item &item);
+    static void invalidateTag(const Akonadi::Tag &tag);
 
-  static void registerSession( const QByteArray &id );
-  static void unregisterSession( const QByteArray &id );
-  static void beginMoveItems( JobPrivate *movePrivate, const QByteArray &id );
-  static void itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id );
+    static void registerSession(const QByteArray &id);
+    static void unregisterSession(const QByteArray &id);
+    static void beginMoveItems(JobPrivate *movePrivate, const QByteArray &id);
+    static void itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id);
 
 private Q_SLOTS:
-  void do_registerMonitor( QObject *monitor );
-  void do_unregisterMonitor( QObject *monitor );
+    void do_registerMonitor(QObject *monitor);
+    void do_unregisterMonitor(QObject *monitor);
 
-  void do_invalidateCollection( const Akonadi::Collection &collection );
-  void do_invalidateItem( const Akonadi::Item &item );
+    void do_invalidateCollection(const Akonadi::Collection &collection);
+    void do_invalidateItem(const Akonadi::Item &item);
+    void do_invalidateTag(const Akonadi::Tag &tag);
 
-  void do_registerSession( const QByteArray &id );
-  void do_unregisterSession( const QByteArray &id );
-  void do_beginMoveItems( JobPrivate *movePrivate, const QByteArray &id );
-  void do_itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id);
+    void do_registerSession(const QByteArray &id);
+    void do_unregisterSession(const QByteArray &id);
+    void do_beginMoveItems(JobPrivate *movePrivate, const QByteArray &id);
+    void do_itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id);
 
 private:
-  QList<QObject*> m_monitors;
+    QList<QObject *> m_monitors;
 
-  QVector<Akonadi::NotificationMessageV2> messageQueue;
-  QVector<Akonadi::Job*> unfilteredJobs;
+    QVector<Akonadi::NotificationMessageV2> messageQueue;
+    QVector<Akonadi::Job *> unfilteredJobs;
 
-  QSet<QByteArray> m_sessions;
+    QSet<QByteArray> m_sessions;
 };
 
 }

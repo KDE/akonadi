@@ -35,13 +35,14 @@ class NotificationSource;
 class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
 {
 public:
-  virtual ~ChangeNotificationDependenciesFactory() {}
-  virtual NotificationSource* createNotificationSource(QObject *parent);
-  virtual QObject* createChangeMediator(QObject *parent);
+    virtual ~ChangeNotificationDependenciesFactory() {}
+    virtual NotificationSource *createNotificationSource(QObject *parent);
+    virtual QObject *createChangeMediator(QObject *parent);
 
-  virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);
-  virtual Akonadi::ItemCache* createItemCache(int maxCapacity, Session *session);
-  virtual Akonadi::ItemListCache* createItemListCache(int maxCapacity, Session *session);
+    virtual Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Session *session);
+    virtual Akonadi::ItemCache *createItemCache(int maxCapacity, Session *session);
+    virtual Akonadi::ItemListCache *createItemListCache(int maxCapacity, Session *session);
+    virtual Akonadi::TagListCache *createTagListCache(int maxCapacity, Session *session);
 };
 
 }

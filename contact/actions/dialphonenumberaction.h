@@ -35,8 +35,8 @@ namespace Akonadi {
  */
 class DialPhoneNumberAction
 {
-  public:
-    void dialNumber( const KABC::PhoneNumber &number );
+public:
+    void dialNumber(const KABC::PhoneNumber &number);
 };
 
 }

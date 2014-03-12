@@ -20,6 +20,8 @@
 #include "collectionrequester.h"
 #include "collectiondialog.h"
 #include "entitydisplayattribute.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
 
 #include <klineedit.h>
 #include <klocalizedstring.h>
@@ -34,18 +36,20 @@ using namespace Akonadi;
 
 class CollectionRequester::Private
 {
-  public:
-    Private( CollectionRequester *parent )
-      : q( parent ),
-        edit( 0 ),
-        button( 0 ),
-        collectionDialog( 0 )
+public:
+    Private(CollectionRequester *parent)
+        : q(parent)
+        , edit(0)
+        , button(0)
+        , collectionDialog(0)
     {
     }
 
     ~Private()
     {
     }
+
+    QString fetchCollection(const Collection &collection);
 
     void init();
 
@@ -59,127 +63,151 @@ class CollectionRequester::Private
     CollectionDialog *collectionDialog;
 };
 
+QString CollectionRequester::Private::fetchCollection(const Collection &collection)
+{
+    QString result;
+    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, q);
+    job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::Parent);
+    if (job->exec()) {
+        if (job->collections().size() == 1) {
+            Akonadi::Collection col = job->collections().at(0);
+            if (col != Akonadi::Collection::root()) {
+                const QString tmp = fetchCollection(Akonadi::Collection(col.parent()));
+                if (tmp.isEmpty()) {
+                    result = col.displayName();
+                } else {
+                    result = fetchCollection(Akonadi::Collection(col.parent())) + QLatin1Char('/') + col.displayName();
+                }
+            }
+        }
+    }
+    return result;
+}
+
 void CollectionRequester::Private::init()
 {
-  q->setMargin( 0 );
+    q->setMargin(0);
 
-  edit = new KLineEdit( q );
-  edit->setReadOnly( true );
-  edit->setClickMessage( i18n( "No Folder" ) );
-  edit->setClearButtonShown( false );
-  edit->setFocusPolicy( Qt::NoFocus );
+    edit = new KLineEdit(q);
+    edit->setReadOnly(true);
+    edit->setClickMessage(i18n("No Folder"));
+    edit->setClearButtonShown(false);
+    edit->setFocusPolicy(Qt::NoFocus);
 
-  button = new KPushButton( q );
-  button->setIcon( KIcon( QLatin1String( "document-open" ) ) );
-  const int buttonSize = edit->sizeHint().height();
-  button->setFixedSize( buttonSize, buttonSize );
-  button->setToolTip( i18n( "Open collection dialog" ) );
+    button = new KPushButton(q);
+    button->setIcon(KIcon(QLatin1String("document-open")));
+    const int buttonSize = edit->sizeHint().height();
+    button->setFixedSize(buttonSize, buttonSize);
+    button->setToolTip(i18n("Open collection dialog"));
 
-  q->setSpacing( -1 );
+    q->setSpacing(-1);
 
-  edit->installEventFilter( q );
-  q->setFocusProxy( button );
-  q->setFocusPolicy( Qt::StrongFocus );
+    edit->installEventFilter(q);
+    q->setFocusProxy(button);
+    q->setFocusPolicy(Qt::StrongFocus);
 
-  q->connect( button, SIGNAL(clicked()), q, SLOT(_k_slotOpenDialog()) );
+    q->connect(button, SIGNAL(clicked()), q, SLOT(_k_slotOpenDialog()));
 
-  QAction *openAction = new QAction( q );
-  openAction->setShortcut( KStandardShortcut::Open );
-  q->connect( openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()) );
+    QAction *openAction = new QAction(q);
+    openAction->setShortcut(KStandardShortcut::Open);
+    q->connect(openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()));
 
-  collectionDialog = new CollectionDialog( q );
-  collectionDialog->setWindowIcon( KIcon( QLatin1String( "akonadi" ) ) );
-  collectionDialog->setCaption( i18n( "Select a collection" ) );
-  collectionDialog->setSelectionMode( QAbstractItemView::SingleSelection );
+    collectionDialog = new CollectionDialog(q);
+    collectionDialog->setWindowIcon(KIcon(QLatin1String("akonadi")));
+    collectionDialog->setCaption(i18n("Select a collection"));
+    collectionDialog->setSelectionMode(QAbstractItemView::SingleSelection);
+    collectionDialog->changeCollectionDialogOptions(CollectionDialog::KeepTreeExpanded);
 }
 
 void CollectionRequester::Private::_k_slotOpenDialog()
 {
-  CollectionDialog *dlg = collectionDialog;
+    CollectionDialog *dlg = collectionDialog;
 
-  if ( dlg->exec() != QDialog::Accepted ) {
-    return;
-  }
+    if (dlg->exec() != QDialog::Accepted) {
+        return;
+    }
 
-  const Akonadi::Collection collection = dlg->selectedCollection();
-  q->setCollection( collection );
-  emit q->collectionChanged( collection );
+    const Akonadi::Collection collection = dlg->selectedCollection();
+    q->setCollection(collection);
+    emit q->collectionChanged(collection);
 }
 
-CollectionRequester::CollectionRequester( QWidget *parent )
-  : KHBox( parent ),
-    d( new Private( this ) )
+CollectionRequester::CollectionRequester(QWidget *parent)
+    : KHBox(parent)
+    , d(new Private(this))
 {
-  d->init();
+    d->init();
 }
 
-CollectionRequester::CollectionRequester( const Akonadi::Collection &collection, QWidget *parent )
-  : KHBox( parent ),
-    d( new Private( this ) )
+CollectionRequester::CollectionRequester(const Akonadi::Collection &collection, QWidget *parent)
+    : KHBox(parent)
+    , d(new Private(this))
 {
-  d->init();
-  setCollection( collection );
+    d->init();
+    setCollection(collection);
 }
 
 CollectionRequester::~CollectionRequester()
 {
-  delete d;
+    delete d;
 }
 
 Collection CollectionRequester::collection() const
 {
-  return d->collection;
+    return d->collection;
 }
 
-void CollectionRequester::setCollection( const Collection& collection )
+void CollectionRequester::setCollection(const Collection &collection)
 {
-  d->collection = collection;
-  QString name;
-  if ( collection.isValid() ) {
-    name = collection.displayName();
-  }
+    d->collection = collection;
+    QString name;
+    if (collection.isValid()) {
+        name = collection.displayName();
+    }
 
-  d->edit->setText( name );
-  emit collectionChanged( collection );
+    d->edit->setText(name);
+    emit collectionChanged(collection);
+    const QString result = d->fetchCollection(collection);
+    d->edit->setText(result);
 }
 
-void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )
+void CollectionRequester::setMimeTypeFilter(const QStringList &mimeTypes)
 {
-  if ( d->collectionDialog ) {
-    d->collectionDialog->setMimeTypeFilter( mimeTypes );
-  }
+    if (d->collectionDialog) {
+        d->collectionDialog->setMimeTypeFilter(mimeTypes);
+    }
 }
 
 QStringList CollectionRequester::mimeTypeFilter() const
 {
-  if ( d->collectionDialog ) {
-    return d->collectionDialog->mimeTypeFilter();
-  } else {
-    return QStringList();
-  }
+    if (d->collectionDialog) {
+        return d->collectionDialog->mimeTypeFilter();
+    } else {
+        return QStringList();
+    }
 }
 
-void CollectionRequester::setAccessRightsFilter( Collection::Rights rights )
+void CollectionRequester::setAccessRightsFilter(Collection::Rights rights)
 {
-  if ( d->collectionDialog ) {
-    d->collectionDialog->setAccessRightsFilter( rights );
-  }
+    if (d->collectionDialog) {
+        d->collectionDialog->setAccessRightsFilter(rights);
+    }
 }
 
 Collection::Rights CollectionRequester::accessRightsFilter() const
 {
-  if ( d->collectionDialog ) {
-    return d->collectionDialog->accessRightsFilter();
-  } else {
-    return Akonadi::Collection::ReadOnly;
-  }
+    if (d->collectionDialog) {
+        return d->collectionDialog->accessRightsFilter();
+    } else {
+        return Akonadi::Collection::ReadOnly;
+    }
 }
 
-void CollectionRequester::changeCollectionDialogOptions( CollectionDialog::CollectionDialogOptions options )
+void CollectionRequester::changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options)
 {
-  if ( d->collectionDialog ) {
-    d->collectionDialog->changeCollectionDialogOptions( options );
-  }
+    if (d->collectionDialog) {
+        d->collectionDialog->changeCollectionDialogOptions(options);
+    }
 }
 
 #include "moc_collectionrequester.cpp"

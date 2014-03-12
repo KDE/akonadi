@@ -33,46 +33,46 @@ class QToolButton;
 
 class DateView : public QLabel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DateView( QWidget *parent = 0 );
+public:
+    explicit DateView(QWidget *parent = 0);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void resetDate();
 
-  protected:
-    virtual void contextMenuEvent( QContextMenuEvent* );
+protected:
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void emitSignal();
 };
 
 class DateEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Type {
-      General,
-      Birthday,
-      Anniversary
+        General,
+        Birthday,
+        Anniversary
     };
 
-    explicit DateEditWidget( Type type = General, QWidget *parent = 0 );
+    explicit DateEditWidget(Type type = General, QWidget *parent = 0);
     ~DateEditWidget();
 
-    void setDate( const QDate &date );
+    void setDate(const QDate &date);
     QDate date() const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private Q_SLOTS:
-    void dateSelected( const QDate& );
+private Q_SLOTS:
+    void dateSelected(const QDate &date);
     void resetDate();
     void updateView();
 
-  private:
+private:
     QDate mDate;
     DateView *mView;
     QToolButton *mSelectButton;

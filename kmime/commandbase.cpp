@@ -19,15 +19,16 @@
 
 #include "commandbase_p.h"
 
-CommandBase::CommandBase( QObject* parent ) : QObject( parent )
+CommandBase::CommandBase(QObject *parent)
+    : QObject(parent)
 {
 
 }
 
-void CommandBase::emitResult( Result value )
+void CommandBase::emitResult(Result value)
 {
-  emit result( value );
-  deleteLater();
+    emit result(value);
+    deleteLater();
 }
 
 #include "moc_commandbase_p.cpp"

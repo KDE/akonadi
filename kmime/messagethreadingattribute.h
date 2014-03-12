@@ -33,7 +33,7 @@ namespace Akonadi {
  */
 class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribute
 {
-  public:
+public:
     /**
       Creates an empty threading attribute.
     */
@@ -42,7 +42,7 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribu
     /**
       Copy constructor.
     */
-    MessageThreadingAttribute( const MessageThreadingAttribute &other );
+    MessageThreadingAttribute(const MessageThreadingAttribute &other);
 
     /**
       Destructor.
@@ -57,7 +57,7 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribu
     /**
       Sets the list of perfect parent message ids.
     */
-    void setPerfectParents( const QList<Item::Id> &parents );
+    void setPerfectParents(const QList<Item::Id> &parents);
 
     /**
       Returns the list of non-perfect parent message ids.
@@ -67,7 +67,7 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribu
     /**
       Sets the list of non-perfect parent message ids.
     */
-    void setUnperfectParents( const QList<Item::Id> &parents );
+    void setUnperfectParents(const QList<Item::Id> &parents);
 
     /**
       Returns the list of possible parent message ids based on analyzing the subject.
@@ -77,17 +77,17 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribu
     /**
       Sets the list of possible parent message ids based on analyzing the subject.
     */
-    void setSubjectParents( const QList<Item::Id> &parents );
+    void setSubjectParents(const QList<Item::Id> &parents);
 
     // reimpl.
     QByteArray type() const;
-    MessageThreadingAttribute* clone() const;
+    MessageThreadingAttribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-  private:
+private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 }

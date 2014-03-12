@@ -24,6 +24,8 @@
 
 namespace Akonadi {
 
+class Collection;
+
 /**
  * @short An attribute to store query properties of persistent search collections.
  *
@@ -83,14 +85,19 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 
     /**
      * Returns the query language used for this search.
+     *
+     * @deprecated Deprecated as of 4.13. This method returns "SPARQL" for
+     * compatibility reasons and should not be used with new code.
      */
-    QString queryLanguage() const;
+    AKONADI_DEPRECATED QString queryLanguage() const;
 
     /**
      * Sets the query language used for this search.
      * @param language the query language
+     *
+     * @deprecated Deprecated as of 4.13. This method has no effect.
      */
-    void setQueryLanguage( const QString &language );
+    AKONADI_DEPRECATED void setQueryLanguage( const QString &language );
 
     /**
      * Returns the query string used for this search.
@@ -102,6 +109,72 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      * @param query The query string.
      */
     void setQueryString( const QString &query );
+
+    /**
+     * Returns IDs of collections that will be queried
+     * @since 4.13
+     */
+    QList<qint64> queryCollections() const;
+
+    /**
+     * Sets collections to be queried.
+     * @param collections List of collections to be queries
+     * @since 4.13
+     */
+    void setQueryCollections( const QList<Collection> &collections );
+
+    /**
+     * Sets IDs of collections to be queries
+     * @param collectionsIDs IDs of collections to query
+     * @since 4.13
+     */
+    void setQueryCollections( const QList<qint64> &collectionsIds );
+
+    /**
+     * Sets whether resources should be queried too.
+     *
+     * When set to true, Akonadi will search local indexed items and will also
+     * query resources that support server-side search, to forward the query
+     * to remote storage (for example using SEARCH feature on IMAP servers) and
+     * merge their results with results from local index.
+     *
+     * This is useful especially when searching resources, that don't fetch full
+     * payload by default, for example the IMAP resource, which only fetches headers
+     * by default and the body is fetched on demand, which means that emails that
+     * were not yet fully fetched cannot be indexed in local index, and thus cannot
+     * be searched. With remote search, even those emails can be included in search
+     * results.
+     *
+     * @param enabled Whether remote search is enabled
+     * @since 4.13
+     */
+    void setRemoteSearchEnabled( bool enabled );
+
+    /**
+     * Returns whether remote search is enabled.
+     *
+     * @since 4.13
+     */
+    bool isRemoteSearchEnabled() const;
+
+    /**
+     * Sets whether the search should recurse into collections
+     *
+     * When set to true, all child collections of the specific collections will
+     * be search recursively.
+     *
+     * @param recursive Whether to search recursively
+     * @since 4.13
+     */
+    void setRecursive( bool recursive );
+
+    /**
+     * Returns whether the search is recursive
+     *
+     * @since 4.13
+     */
+    bool isRecursive() const;
+
 
     //@cond PRIVATE
     virtual QByteArray type() const;

@@ -213,6 +213,16 @@ QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity, bool ns 
   return ImapParser::join( l, " " );
 }
 
+QByteArray ProtocolHelper::attributesToByteArray(const AttributeEntity & entity, bool ns )
+{
+  QList<QByteArray> l;
+  foreach ( const Attribute *attr, entity.attributes() ) {
+    l << encodePartIdentifier( ns ? PartAttribute : PartGlobal, attr->type() );
+    l << ImapParser::quote( attr->serialized() );
+  }
+  return ImapParser::join( l, " " );
+}
+
 QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArray & label, int version )
 {
   const QByteArray versionString( version != 0 ? QByteArray(QByteArray("[") + QByteArray::number( version ) + QByteArray("]")) : "" );
@@ -279,6 +289,53 @@ QByteArray ProtocolHelper::entitySetToByteArray( const QList<Item> &_objects, co
   return entitySetToByteArray<Item>(objects, command);
 }
 
+QByteArray ProtocolHelper::tagSetToImapSequenceSet( const Akonadi::Tag::List &_objects )
+{
+  if ( _objects.isEmpty() )
+    throw Exception( "No objects specified" );
+
+  Tag::List objects( _objects );
+
+  std::sort( objects.begin(), objects.end(), boost::bind( &Tag::id, _1 ) < boost::bind( &Tag::id, _2 ) );
+  if ( !objects.first().isValid() ) {
+    throw Exception( "Not all tags have a uid" );
+  }
+  // all items have a uid set
+  QVector<Tag::Id>  uids;
+  foreach ( const Tag &object, objects )
+    uids << object.id();
+  ImapSet set;
+  set.add( uids );
+  return set.toImapSequenceSet();
+}
+
+QByteArray ProtocolHelper::tagSetToByteArray( const Tag::List &_objects, const QByteArray &command )
+{
+  if ( _objects.isEmpty() )
+    throw Exception( "No objects specified" );
+
+  Tag::List objects( _objects );
+
+  QByteArray rv;
+  std::sort( objects.begin(), objects.end(), boost::bind( &Tag::id, _1 ) < boost::bind( &Tag::id, _2 ) );
+  if ( objects.first().isValid() ) {
+    // all items have a uid set
+    rv += " " AKONADI_CMD_UID " ";
+    if ( !command.isEmpty() ) {
+      rv += command;
+      rv += ' ';
+    }
+    QVector<Tag::Id>  uids;
+    foreach ( const Tag &object, objects )
+      uids << object.id();
+    ImapSet set;
+    set.add( uids );
+    rv += set.toImapSequenceSet();
+    return rv;
+  }
+  throw Exception( "Not all tags have a uid" );
+}
+
 QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
 {
   if ( col == Collection::root() )
@@ -333,6 +390,8 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " " AKONADI_PARAM_REMOTEID " " AKONADI_PARAM_REMOTEREVISION;
   if ( fetchScope.fetchGid() )
     command += " GID";
+  if ( fetchScope.fetchTags() )
+    command += " TAGS";
   if ( fetchScope.fetchModificationTime() )
     command += " DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
@@ -419,6 +478,19 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         }
         item.setFlags( convertedFlags );
       }
+    } else if ( key == "TAGS" ) {
+      ImapSet set;
+      ImapParser::parseSequenceSet( lineTokens[i + 1], set );
+      Tag::List tags;
+      Q_FOREACH ( const ImapInterval &interval, set.intervals() ) {
+        Q_ASSERT( interval.hasDefinedBegin() );
+        Q_ASSERT( interval.hasDefinedEnd() );
+        for ( qint64 i = interval.begin(); i <= interval.end(); i++ ) {
+          //TODO use value pool when tag is shared data
+          tags << Tag( i );
+        }
+      }
+      item.setTags( tags );
     } else if ( key == "CACHEDPARTS" ) {
       QSet<QByteArray> partsSet;
       QList<QByteArray> parts;
@@ -486,4 +558,30 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   }
 
   item.d_ptr->resetChangeLog();
+}
+
+void ProtocolHelper::parseTagFetchResult( const QList<QByteArray> &lineTokens, Tag &tag )
+{
+  for (int i = 0; i < lineTokens.count() - 1; i += 2) {
+    const QByteArray key = lineTokens.value(i);
+    const QByteArray value = lineTokens.value(i + 1);
+
+    if (key == "UID") {
+      tag.setId(value.toLongLong());
+    } else if (key == "GID") {
+      tag.setGid(value);
+    } else if (key == "REMOTEID") {
+      tag.setRemoteId(value);
+    } else if (key == "PARENT") {
+      tag.setParent(Tag(value.toLongLong()));
+    } else {
+      Attribute *attr = AttributeFactory::createAttribute(key);
+      if (!attr) {
+        kWarning() << "Unknown tag attribute" << key;
+        continue;
+      }
+      attr->deserialize(value);
+      tag.addAttribute(attr);
+    }
+  }
 }

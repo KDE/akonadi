@@ -1,7 +1,7 @@
 /*
-    This file is part of Akonadi Contact.
+    This file is part of Akonadi
 
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,36 +19,38 @@
     02110-1301, USA.
 */
 
-#ifndef TAGWIDGET_H
-#define TAGWIDGET_H
+#ifndef AKONADI_TAGEDITWIDGET_P_H
+#define AKONADI_TAGEDITWIDGET_P_H
 
 #include <QWidget>
+#include "akonadi/tag.h"
 
-#include <nepomuk2/tag.h>
+namespace Akonadi {
 
-class QHBoxLayout;
-class QLabel;
-
-class TagWidget : public QWidget
+class TagModel;
+/**
+ * A widget that offers facilities to add/remove tags and optionally provides a way to select tags.
+ *
+ * @since 4.13
+ */
+class TagEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
+public:
+    explicit TagEditWidget(Akonadi::TagModel *model, QWidget *parent = 0, bool enableSelection = false);
+    virtual ~TagEditWidget();
 
-  public:
-    explicit TagWidget( QWidget *parent = 0 );
-    ~TagWidget();
+    void setSelection(const Akonadi::Tag::List &tags);
+    Akonadi::Tag::List selection();
 
-    void setTags( const QVector<Nepomuk2::Tag> &tags );
-    QVector<Nepomuk2::Tag> tags() const;
+protected:
+    bool eventFilter(QObject* watched, QEvent* event);
 
-  private Q_SLOTS:
-    void editTags();
-
-  private:
-    void updateView();
-
-    QLabel *mTagLabel;
-
-    QVector<Nepomuk2::Tag> mTags;
+private:
+    class Private;
+    QSharedPointer<Private> d;
 };
+
+}
 
 #endif

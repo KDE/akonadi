@@ -27,11 +27,11 @@ class QDBusInterface;
 class QEkigaDialer : public QDialer
 {
 public:
-    explicit QEkigaDialer( const QString &applicationName );
+    explicit QEkigaDialer(const QString &applicationName);
     ~QEkigaDialer();
 
-    bool dialNumber( const QString &number );
-    bool sendSms( const QString &number, const QString &text );
+    bool dialNumber(const QString &number);
+    bool sendSms(const QString &number, const QString &text);
 private:
     bool initializeEkiga();
     QDBusInterface *mInterface;

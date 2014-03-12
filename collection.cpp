@@ -39,38 +39,38 @@ using namespace Akonadi;
 
 class CollectionRoot : public Collection
 {
-  public:
+public:
     CollectionRoot()
-      : Collection( 0 )
+        : Collection(0)
     {
-      QStringList types;
-      types << Collection::mimeType();
-      setContentMimeTypes( types );
+        QStringList types;
+        types << Collection::mimeType();
+        setContentMimeTypes(types);
 
-      // The root collection is read-only for the users
-      Collection::Rights rights;
-      rights |= Collection::ReadOnly;
-      setRights( rights );
+        // The root collection is read-only for the users
+        Collection::Rights rights;
+        rights |= Collection::ReadOnly;
+        setRights(rights);
     }
 };
 
-Q_GLOBAL_STATIC( CollectionRoot, s_root )
+Q_GLOBAL_STATIC(CollectionRoot, s_root)
 
-Collection::Collection() :
-    Entity( new CollectionPrivate )
+Collection::Collection()
+    : Entity(new CollectionPrivate)
 {
-  Q_D( Collection );
-  static int lastId = -1;
-  d->mId = lastId--;
+    Q_D(Collection);
+    static int lastId = -1;
+    d->mId = lastId--;
 }
 
-Collection::Collection( Id id ) :
-    Entity( new CollectionPrivate( id ) )
+Collection::Collection(Id id)
+    : Entity(new CollectionPrivate(id))
 {
 }
 
-Collection::Collection(const Collection & other) :
-    Entity( other )
+Collection::Collection(const Collection &other)
+    : Entity(other)
 {
 }
 
@@ -78,196 +78,196 @@ Collection::~Collection()
 {
 }
 
-QString Collection::name( ) const
+QString Collection::name() const
 {
-  return d_func()->name;
+    return d_func()->name;
 }
 
 QString Collection::displayName() const
 {
-  const EntityDisplayAttribute* const attr = attribute<EntityDisplayAttribute>();
-  const QString displayName = attr ? attr->displayName() : QString();
-  return !displayName.isEmpty() ? displayName : d_func()->name;
+    const EntityDisplayAttribute *const attr = attribute<EntityDisplayAttribute>();
+    const QString displayName = attr ? attr->displayName() : QString();
+    return !displayName.isEmpty() ? displayName : d_func()->name;
 }
 
-void Collection::setName( const QString & name )
+void Collection::setName(const QString &name)
 {
-  Q_D( Collection );
-  d->name = name;
+    Q_D(Collection);
+    d->name = name;
 }
 
 Collection::Rights Collection::rights() const
 {
-  CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>();
-  if ( attr ) {
-    return attr->rights();
-  } else {
-    return AllRights;
-  }
+    CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>();
+    if (attr) {
+        return attr->rights();
+    } else {
+        return AllRights;
+    }
 }
 
-void Collection::setRights( Rights rights )
+void Collection::setRights(Rights rights)
 {
-  CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>( AddIfMissing );
-  attr->setRights( rights );
+    CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>(AddIfMissing);
+    attr->setRights(rights);
 }
 
 QStringList Collection::contentMimeTypes() const
 {
-  return d_func()->contentTypes;
+    return d_func()->contentTypes;
 }
 
-void Collection::setContentMimeTypes( const QStringList & types )
+void Collection::setContentMimeTypes(const QStringList &types)
 {
-  Q_D( Collection );
-  if ( d->contentTypes != types ) {
-    d->contentTypes = types;
-    d->contentTypesChanged = true;
-  }
+    Q_D(Collection);
+    if (d->contentTypes != types) {
+        d->contentTypes = types;
+        d->contentTypesChanged = true;
+    }
 }
 
 Collection::Id Collection::parent() const
 {
-  return parentCollection().id();
+    return parentCollection().id();
 }
 
-void Collection::setParent( Id parent )
+void Collection::setParent(Id parent)
 {
-  parentCollection().setId( parent );
+    parentCollection().setId(parent);
 }
 
-void Collection::setParent(const Collection & collection)
+void Collection::setParent(const Collection &collection)
 {
-  setParentCollection( collection );
+    setParentCollection(collection);
 }
 
 QString Collection::parentRemoteId() const
 {
-  return parentCollection().remoteId();
+    return parentCollection().remoteId();
 }
 
-void Collection::setParentRemoteId(const QString & remoteParent)
+void Collection::setParentRemoteId(const QString &remoteParent)
 {
-  parentCollection().setRemoteId( remoteParent );
+    parentCollection().setRemoteId(remoteParent);
 }
 
 KUrl Collection::url() const
 {
-  return url( UrlShort );
+    return url(UrlShort);
 }
 
-KUrl Collection::url( UrlType type ) const
+KUrl Collection::url(UrlType type) const
 {
-  KUrl url;
-  url.setProtocol( QString::fromLatin1( "akonadi" ) );
-  url.addQueryItem( QLatin1String( "collection" ), QString::number( id() ) );
+    KUrl url;
+    url.setProtocol(QString::fromLatin1("akonadi"));
+    url.addQueryItem(QLatin1String("collection"), QString::number(id()));
 
-  if ( type == UrlWithName ) {
-    url.addQueryItem( QLatin1String( "name" ), name() );
-  }
+    if (type == UrlWithName) {
+        url.addQueryItem(QLatin1String("name"), name());
+    }
 
-  return url;
+    return url;
 }
 
-Collection Collection::fromUrl( const KUrl &url )
+Collection Collection::fromUrl(const KUrl &url)
 {
-  if ( url.protocol() != QLatin1String( "akonadi" ) ) {
-    return Collection();
-  }
+    if (url.protocol() != QLatin1String("akonadi")) {
+        return Collection();
+    }
 
-  const QString colStr = url.queryItem( QLatin1String( "collection" ) );
-  bool ok = false;
-  Collection::Id colId = colStr.toLongLong( &ok );
-  if ( !ok ) {
-    return Collection();
-  }
+    const QString colStr = url.queryItem(QLatin1String("collection"));
+    bool ok = false;
+    Collection::Id colId = colStr.toLongLong(&ok);
+    if (!ok) {
+        return Collection();
+    }
 
-  if ( colId == 0 ) {
-    return Collection::root();
-  }
+    if (colId == 0) {
+        return Collection::root();
+    }
 
-  return Collection( colId );
+    return Collection(colId);
 }
 
 Collection Collection::root()
 {
-  return *s_root;
+    return *s_root;
 }
 
-QString Collection::mimeType( )
+QString Collection::mimeType()
 {
-  return QString::fromLatin1( "inode/directory" );
+    return QString::fromLatin1("inode/directory");
 }
 
-QString Akonadi::Collection::virtualMimeType( )
+QString Akonadi::Collection::virtualMimeType()
 {
-  return QString::fromLatin1( "application/x-vnd.akonadi.collection.virtual" );
+    return QString::fromLatin1("application/x-vnd.akonadi.collection.virtual");
 }
 
 QString Collection::resource() const
 {
-  return d_func()->resource;
+    return d_func()->resource;
 }
 
-void Collection::setResource(const QString & resource)
+void Collection::setResource(const QString &resource)
 {
-  Q_D( Collection );
-  d->resource = resource;
+    Q_D(Collection);
+    d->resource = resource;
 }
 
-uint qHash( const Akonadi::Collection &collection )
+uint qHash(const Akonadi::Collection &collection)
 {
-  return qHash( collection.id() );
+    return qHash(collection.id());
 }
 
-QDebug operator <<( QDebug d, const Akonadi::Collection &collection )
+QDebug operator <<(QDebug d, const Akonadi::Collection &collection)
 {
     return d << "Collection ID:" << collection.id()
-             << "   remote ID:" << collection.remoteId() << endl
-             << "   name:" << collection.name() << endl
-             << "   url:" << collection.url() << endl
-             << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << endl
-             << "   resource:" << collection.resource() << endl
-             << "   rights:" << collection.rights() << endl
-             << "   contents mime type:" << collection.contentMimeTypes() << endl
-             << "   isVirtual:" << collection.isVirtual() << endl
-             << "   " << collection.cachePolicy() << endl
-             << "   " << collection.statistics();
+           << "   remote ID:" << collection.remoteId() << endl
+           << "   name:" << collection.name() << endl
+           << "   url:" << collection.url() << endl
+           << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << endl
+           << "   resource:" << collection.resource() << endl
+           << "   rights:" << collection.rights() << endl
+           << "   contents mime type:" << collection.contentMimeTypes() << endl
+           << "   isVirtual:" << collection.isVirtual() << endl
+           << "   " << collection.cachePolicy() << endl
+           << "   " << collection.statistics();
 }
 
 CollectionStatistics Collection::statistics() const
 {
-  return d_func()->statistics;
+    return d_func()->statistics;
 }
 
-void Collection::setStatistics(const CollectionStatistics & statistics)
+void Collection::setStatistics(const CollectionStatistics &statistics)
 {
-  Q_D( Collection );
-  d->statistics = statistics;
+    Q_D(Collection);
+    d->statistics = statistics;
 }
 
 CachePolicy Collection::cachePolicy() const
 {
-  return d_func()->cachePolicy;
+    return d_func()->cachePolicy;
 }
 
-void Collection::setCachePolicy(const CachePolicy & cachePolicy)
+void Collection::setCachePolicy(const CachePolicy &cachePolicy)
 {
-  Q_D( Collection );
-  d->cachePolicy = cachePolicy;
-  d->cachePolicyChanged = true;
+    Q_D(Collection);
+    d->cachePolicy = cachePolicy;
+    d->cachePolicyChanged = true;
 }
 
 bool Collection::isVirtual() const
 {
-  return d_func()->isVirtual;
+    return d_func()->isVirtual;
 }
 
 void Akonadi::Collection::setVirtual(bool isVirtual)
 {
-  Q_D( Collection );
+    Q_D(Collection);
 
-  d->isVirtual = isVirtual;
+    d->isVirtual = isVirtual;
 }
 
-AKONADI_DEFINE_PRIVATE( Akonadi::Collection )
+AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

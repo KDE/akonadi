@@ -29,67 +29,67 @@
 #include <QFormLayout>
 #include <QRegExpValidator>
 
-CustomFieldEditorDialog::CustomFieldEditorDialog( QWidget *parent )
-  : KDialog( parent )
+CustomFieldEditorDialog::CustomFieldEditorDialog(QWidget *parent)
+    : KDialog(parent)
 {
-  setCaption( i18n( "Edit Custom Field" ) );
-  setButtons( Ok | Cancel | Details );
+    setCaption(i18n("Edit Custom Field"));
+    setButtons(Ok | Cancel | Details);
 
-  QWidget *widget = new QWidget( this );
-  setMainWidget( widget );
+    QWidget *widget = new QWidget(this);
+    setMainWidget(widget);
 
-  QFormLayout *layout = new QFormLayout( widget );
+    QFormLayout *layout = new QFormLayout(widget);
 
-  mKey = new KLineEdit;
-  mTitle = new KLineEdit;
-  mType = new KComboBox;
-  mScope = new QCheckBox( i18n( "Use field for all contacts" ) );
+    mKey = new KLineEdit;
+    mTitle = new KLineEdit;
+    mType = new KComboBox;
+    mScope = new QCheckBox(i18n("Use field for all contacts"));
 
-  layout->addRow( i18nc( "The title of a custom field", "Title" ), mTitle );
-  layout->addRow( i18nc( "The type of a custom field", "Type" ), mType );
-  layout->addRow( QString(), mScope );
+    layout->addRow(i18nc("The title of a custom field", "Title"), mTitle);
+    layout->addRow(i18nc("The type of a custom field", "Type"), mType);
+    layout->addRow(QString(), mScope);
 
-  QWidget *detailsWidget = new QWidget;
-  QFormLayout *detailsLayout = new QFormLayout( detailsWidget );
-  detailsLayout->addRow( i18n( "Key" ), mKey );
+    QWidget *detailsWidget = new QWidget;
+    QFormLayout *detailsLayout = new QFormLayout(detailsWidget);
+    detailsLayout->addRow(i18n("Key"), mKey);
 
-  setDetailsWidget( detailsWidget );
-  setButtonText( Details, i18nc( "@label Opens the advanced dialog", "Advanced" ) );
+    setDetailsWidget(detailsWidget);
+    setButtonText(Details, i18nc("@label Opens the advanced dialog", "Advanced"));
 
-  mType->addItem( i18n( "Text" ), CustomField::TextType );
-  mType->addItem( i18n( "Numeric" ), CustomField::NumericType );
-  mType->addItem( i18n( "Boolean" ), CustomField::BooleanType );
-  mType->addItem( i18n( "Date" ), CustomField::DateType );
-  mType->addItem( i18n( "Time" ), CustomField::TimeType );
-  mType->addItem( i18n( "DateTime" ), CustomField::DateTimeType );
-  mType->addItem( i18n( "Url" ), CustomField::UrlType );
+    mType->addItem(i18n("Text"), CustomField::TextType);
+    mType->addItem(i18n("Numeric"), CustomField::NumericType);
+    mType->addItem(i18n("Boolean"), CustomField::BooleanType);
+    mType->addItem(i18n("Date"), CustomField::DateType);
+    mType->addItem(i18n("Time"), CustomField::TimeType);
+    mType->addItem(i18n("DateTime"), CustomField::DateTimeType);
+    mType->addItem(i18n("Url"), CustomField::UrlType);
 
-  mKey->setValidator( new QRegExpValidator( QRegExp( QLatin1String( "[a-zA-Z0-9\\-]+" ) ), this ) );
-  mTitle->setFocus();
+    mKey->setValidator(new QRegExpValidator(QRegExp(QLatin1String("[a-zA-Z0-9\\-]+")), this));
+    mTitle->setFocus();
 }
 
-void CustomFieldEditorDialog::setCustomField( const CustomField &field )
+void CustomFieldEditorDialog::setCustomField(const CustomField &field)
 {
-  mCustomField = field;
+    mCustomField = field;
 
-  mKey->setText( mCustomField.key() );
-  mTitle->setText( mCustomField.title() );
-  mType->setCurrentIndex( mType->findData( mCustomField.type() ) );
-  mScope->setChecked( ( mCustomField.scope() == CustomField::GlobalScope ) );
+    mKey->setText(mCustomField.key());
+    mTitle->setText(mCustomField.title());
+    mType->setCurrentIndex(mType->findData(mCustomField.type()));
+    mScope->setChecked((mCustomField.scope() == CustomField::GlobalScope));
 }
 
 CustomField CustomFieldEditorDialog::customField() const
 {
-  CustomField customField( mCustomField );
+    CustomField customField(mCustomField);
 
-  customField.setKey( mKey->text() );
-  customField.setTitle( mTitle->text() );
-  customField.setType( static_cast<CustomField::Type>( mType->itemData( mType->currentIndex() ).toInt() ) );
+    customField.setKey(mKey->text());
+    customField.setTitle(mTitle->text());
+    customField.setType(static_cast<CustomField::Type>(mType->itemData(mType->currentIndex()).toInt()));
 
-  if ( customField.scope() != CustomField::ExternalScope ) {
-    // do not change the scope for externally defined custom fields
-    customField.setScope( mScope->isChecked() ? CustomField::GlobalScope : CustomField::LocalScope );
-  }
+    if (customField.scope() != CustomField::ExternalScope) {
+        // do not change the scope for externally defined custom fields
+        customField.setScope(mScope->isChecked() ? CustomField::GlobalScope : CustomField::LocalScope);
+    }
 
-  return customField;
+    return customField;
 }

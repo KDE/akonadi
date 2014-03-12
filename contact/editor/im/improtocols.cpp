@@ -24,61 +24,61 @@
 #include <kiconloader.h>
 #include <kservicetypetrader.h>
 
-IMProtocols* IMProtocols::mSelf = 0;
+IMProtocols *IMProtocols::mSelf = 0;
 
 IMProtocols::IMProtocols()
 {
-  KIconLoader::global()->addAppDir( QLatin1String( "akonadi/contact" ) );
+    KIconLoader::global()->addAppDir(QLatin1String("akonadi/contact"));
 
-  const QList<KPluginInfo> list = KPluginInfo::fromServices( KServiceTypeTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
+    const QList<KPluginInfo> list = KPluginInfo::fromServices(KServiceTypeTrader::self()->query(QString::fromLatin1("KABC/IMProtocol")));
 
-  // sort the protocol information by user visible name
-  QMap<QString, KPluginInfo> sortingMap;
-  foreach ( const KPluginInfo &info, list ) {
-    sortingMap.insert( info.name(), info );
+    // sort the protocol information by user visible name
+    QMap<QString, KPluginInfo> sortingMap;
+    foreach (const KPluginInfo &info, list) {
+        sortingMap.insert(info.name(), info);
 
-    mPluginInfos.insert( info.property( QLatin1String( "X-KDE-InstantMessagingKABCField" ) ).toString(), info );
-  }
+        mPluginInfos.insert(info.property(QLatin1String("X-KDE-InstantMessagingKABCField")).toString(), info);
+    }
 
-  QMapIterator<QString, KPluginInfo> it( sortingMap );
-  while ( it.hasNext() ) {
-    it.next();
-    mSortedProtocols.append( it.value().property( QLatin1String( "X-KDE-InstantMessagingKABCField" ) ).toString() );
-  }
+    QMapIterator<QString, KPluginInfo> it(sortingMap);
+    while (it.hasNext()) {
+        it.next();
+        mSortedProtocols.append(it.value().property(QLatin1String("X-KDE-InstantMessagingKABCField")).toString());
+    }
 }
 
 IMProtocols::~IMProtocols()
 {
 }
 
-IMProtocols* IMProtocols::self()
+IMProtocols *IMProtocols::self()
 {
-  if ( !mSelf ) {
-    mSelf = new IMProtocols;
-  }
+    if (!mSelf) {
+        mSelf = new IMProtocols;
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 QStringList IMProtocols::protocols() const
 {
-  return mSortedProtocols;
+    return mSortedProtocols;
 }
 
-QString IMProtocols::name( const QString &protocol ) const
+QString IMProtocols::name(const QString &protocol) const
 {
-  if ( !mPluginInfos.contains( protocol ) ) {
-    return QString();
-  }
+    if (!mPluginInfos.contains(protocol)) {
+        return QString();
+    }
 
-  return mPluginInfos.value( protocol ).name();
+    return mPluginInfos.value(protocol).name();
 }
 
-QString IMProtocols::icon( const QString &protocol ) const
+QString IMProtocols::icon(const QString &protocol) const
 {
-  if ( !mPluginInfos.contains( protocol ) ) {
-    return QString();
-  }
+    if (!mPluginInfos.contains(protocol)) {
+        return QString();
+    }
 
-  return mPluginInfos.value( protocol ).icon();
+    return mPluginInfos.value(protocol).icon();
 }

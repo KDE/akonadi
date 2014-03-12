@@ -26,9 +26,9 @@
 
 class ContactMetaDataAttributeTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void type();
     void clone();
     void serialization();

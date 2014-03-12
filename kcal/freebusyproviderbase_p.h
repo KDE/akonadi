@@ -37,12 +37,12 @@ namespace Akonadi
  */
 class FreeBusyProviderBasePrivate : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit FreeBusyProviderBasePrivate( FreeBusyProviderBase *qq );
+public:
+    explicit FreeBusyProviderBasePrivate(FreeBusyProviderBase *qq);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal gets emitted when the resource answered
      * the free-busy handling request.
@@ -52,7 +52,7 @@ class FreeBusyProviderBasePrivate : public QObject
      * @param handles Whether the resource handles free-busy information
      *              (true) or not (false).
      */
-    void handlesFreeBusy( const QString &email, bool handles );
+    void handlesFreeBusy(const QString &email, bool handles);
 
     /**
      * This signal gets emitted when the resource answered the
@@ -65,16 +65,16 @@ class FreeBusyProviderBasePrivate : public QObject
      * @param errorText A human friendly error message in case something
      *                  went wrong.
      */
-    void freeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText );
+    void freeBusyRetrieved(const QString &email, const QString &freeBusy, bool success, const QString &errorText);
 
-  private:
+private:
     friend class FreeBusyProviderBase;
     friend class ::Akonadi__FreeBusyProviderAdaptor;
 
     // D-Bus calls
     QString lastCacheUpdate();
-    void canHandleFreeBusy( const QString &email );
-    void retrieveFreeBusy( const QString &email, const QString &start, const QString &end );
+    void canHandleFreeBusy(const QString &email);
+    void retrieveFreeBusy(const QString &email, const QString &start, const QString &end);
 
     FreeBusyProviderBase *const q;
 };

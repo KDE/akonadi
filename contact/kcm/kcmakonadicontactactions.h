@@ -33,7 +33,7 @@ class KCMAkonadiContactActions : public KCModule
     Q_OBJECT
 
 public:
-    KCMAkonadiContactActions( QWidget *parent, const QVariantList &args );
+    KCMAkonadiContactActions(QWidget *parent, const QVariantList &args);
 
     virtual void load();
     virtual void save();
@@ -42,7 +42,7 @@ public:
 private Q_SLOTS:
     void slotDialPhoneNumberActionChanged(int);
     void slotSmsPhoneNumberActionChanged(int value);
-
+    void slotShowAddressActionChanged(int value);
 private:
     KConfigDialogManager *mConfigManager;
     Ui_AkonadiContactActions ui;

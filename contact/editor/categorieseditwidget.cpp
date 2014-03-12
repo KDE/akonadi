@@ -21,56 +21,54 @@
 
 #include "categorieseditwidget.h"
 
-#include "tagwidget.h"
-
 #include <akonadi/item.h>
+#include <akonadi/tag.h>
+#include <akonadi/tagwidget.h>
 #include <kabc/addressee.h>
 #include <kdialog.h>
-#include <nepomuk2/tag.h>
 
 #include <QHBoxLayout>
 
-CategoriesEditWidget::CategoriesEditWidget( QWidget *parent )
-  : QWidget( parent )
+CategoriesEditWidget::CategoriesEditWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
-  layout->setMargin( 0 );
-  layout->setSpacing( KDialog::spacingHint() );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(KDialog::spacingHint());
 
-  mTagWidget = new TagWidget( this );
-  layout->addWidget( mTagWidget );
+    mTagWidget = new Akonadi::TagWidget(this);
+    layout->addWidget(mTagWidget);
 }
 
 CategoriesEditWidget::~CategoriesEditWidget()
 {
 }
 
-void CategoriesEditWidget::setReadOnly( bool readOnly )
+void CategoriesEditWidget::setReadOnly(bool readOnly)
 {
-  mTagWidget->setEnabled( !readOnly );
+    mTagWidget->setEnabled(!readOnly);
 }
 
-void CategoriesEditWidget::loadContact( const KABC::Addressee &contact )
+void CategoriesEditWidget::loadContact(const KABC::Addressee &contact)
 {
-  QVector<Nepomuk2::Tag> tags;
+    Akonadi::Tag::List tags;
 
-  const QStringList categories = contact.categories();
-  foreach ( const QString &category, categories ) {
-    tags.append( Nepomuk2::Tag( category ) );
-  }
+    const QStringList categories = contact.categories();
+    foreach (const QString &category, categories) {
+        tags.append(Akonadi::Tag::fromUrl(category));
+    }
 
-  mTagWidget->setTags( tags );
+    mTagWidget->setSelection(tags);
 }
 
-void CategoriesEditWidget::storeContact( KABC::Addressee &contact ) const
+void CategoriesEditWidget::storeContact(KABC::Addressee &contact) const
 {
-  QStringList categories;
+    QStringList categories;
 
-  const QVector<Nepomuk2::Tag> tags = mTagWidget->tags();
-  foreach ( const Nepomuk2::Tag &tag, tags ) {
-    categories.append( tag.genericLabel() );
-  }
+    const Akonadi::Tag::List tags = mTagWidget->selection();
+    foreach (const Akonadi::Tag &tag, tags) {
+        categories.append(tag.url().url());
+    }
 
-  contact.setCategories( categories );
+    contact.setCategories(categories);
 }
-

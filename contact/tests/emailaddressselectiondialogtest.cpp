@@ -25,17 +25,17 @@
 #include <kcmdlineargs.h>
 #include <klocalizedstring.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "emailaddressselectiondialogtest", 0, ki18n( "Test EmailAddressSelectionDialog" ), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData("emailaddressselectiondialogtest", 0, ki18n("Test EmailAddressSelectionDialog"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  Akonadi::EmailAddressSelectionDialog dlg;
-  if ( dlg.exec() ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses() ) {
-      qDebug( "%s: %s", qPrintable( selection.name() ), qPrintable( selection.email() ) );
+    Akonadi::EmailAddressSelectionDialog dlg;
+    if (dlg.exec()) {
+        foreach (const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses()) {
+            qDebug("%s: %s", qPrintable(selection.name()), qPrintable(selection.email()));
+        }
     }
-  }
 }

@@ -782,6 +782,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
     } else if ( role == CollectionRefRole ) {
       d->ref( collection.id() );
     }
+    return true;
   }
 
   if ( index.column() == 0 &&

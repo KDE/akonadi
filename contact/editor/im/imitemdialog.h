@@ -32,19 +32,19 @@ class KLineEdit;
 
 class IMItemDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit IMItemDialog( QWidget *parent );
+public:
+    explicit IMItemDialog(QWidget *parent);
     ~IMItemDialog() {}
 
-    void setAddress( const IMAddress &address );
+    void setAddress(const IMAddress &address);
     IMAddress address() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotUpdateButtons();
 
-  private:
+private:
     KComboBox *mProtocolCombo;
     KLineEdit *mNameEdit;
 };

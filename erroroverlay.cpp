@@ -52,6 +52,7 @@ static bool isParentOf( QObject* o1, QObject* o2 )
 ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
     QWidget( parent ? parent : baseWidget->window() ),
     mBaseWidget( baseWidget ),
+    mOverlayActive( false ),
     mBaseWidgetIsParent( false ),
     ui( new Ui::ErrorOverlay )
 {

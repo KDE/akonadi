@@ -195,6 +195,58 @@ bool Item::hasFlag( const QByteArray & name ) const
   return d_func()->mFlags.contains( name );
 }
 
+void Item::setTags( const Tag::List& list )
+{
+  Q_D( Item );
+  d->mTags = list;
+  d->mTagsOverwritten = true;
+}
+
+void Item::setTag( const Tag &tag )
+{
+  Q_D( Item );
+  d->mTags << tag;
+  if ( !d->mTagsOverwritten ) {
+    if ( d->mDeletedTags.contains( tag ) ) {
+      d->mDeletedTags.removeOne( tag );
+    } else {
+      d->mAddedTags << tag ;
+    }
+  }
+}
+
+void Item::clearTags()
+{
+  Q_D( Item );
+  d->mTags.clear();
+  d->mTagsOverwritten = true;
+}
+
+void Item::clearTag( const Tag &tag )
+{
+  Q_D( Item );
+  d->mTags.removeOne( tag );
+  if ( !d->mTagsOverwritten ) {
+    if ( d->mAddedTags.contains( tag ) ) {
+      d->mAddedTags.removeOne( tag );
+    } else {
+      d->mDeletedTags << tag;
+    }
+  }
+}
+
+bool Item::hasTag( const Tag &tag ) const
+{
+  Q_D( const Item );
+  return d->mTags.contains( tag );
+}
+
+Tag::List Item::tags() const
+{
+  Q_D( const Item );
+  return d->mTags;
+}
+
 QSet<QByteArray> Item::loadedPayloadParts() const
 {
   return ItemSerializer::parts( *this );
@@ -494,6 +546,7 @@ void Item::apply( const Item &other )
   setRevision( other.revision() );
   setRemoteRevision( other.remoteRevision() );
   setFlags( other.flags() );
+  setTags( other.tags() );
   setModificationTime( other.modificationTime() );
   setSize( other.size() );
   setParentCollection( other.parentCollection() );

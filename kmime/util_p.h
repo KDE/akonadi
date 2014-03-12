@@ -27,10 +27,10 @@ class QString;
 
 namespace Util
 {
-  /// Helper to sanely show an error message for a job
-  void showJobError( KJob* job );
+/// Helper to sanely show an error message for a job
+void showJobError(KJob *job);
 
-  OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
+OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(const QString &ident);
 }
 
 #endif // UTIL_H

@@ -19,5 +19,5 @@
 
 #include "contactparts.h"
 
-const char* Akonadi::ContactPart::Lookup = "CONTACT_LOOKUP";
-const char* Akonadi::ContactPart::Standard = "CONTACT_STANDARD";
+const char *Akonadi::ContactPart::Lookup = "CONTACT_LOOKUP";
+const char *Akonadi::ContactPart::Standard = "CONTACT_STANDARD";

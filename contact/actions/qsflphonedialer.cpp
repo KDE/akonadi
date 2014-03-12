@@ -35,22 +35,22 @@
 
 static bool isSflPhoneServiceRegistered()
 {
-    const QLatin1String service( "org.sflphone.SFLphone" );
+    const QLatin1String service("org.sflphone.SFLphone");
 
-    QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
-    if ( interface->isServiceRegistered( service ) ) {
+    QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
+    if (interface->isServiceRegistered(service)) {
         return true;
     }
 
     interface = Akonadi::DBusConnectionPool::threadConnection().interface();
-    if ( interface->isServiceRegistered( service ) ) {
+    if (interface->isServiceRegistered(service)) {
         return true;
     }
     return false;
 }
 
-QSflPhoneDialer::QSflPhoneDialer( const QString &applicationName )
-    : QDialer( applicationName )
+QSflPhoneDialer::QSflPhoneDialer(const QString &applicationName)
+    : QDialer(applicationName)
 {
 }
 
@@ -61,18 +61,18 @@ QSflPhoneDialer::~QSflPhoneDialer()
 bool QSflPhoneDialer::initializeSflPhone()
 {
     // first check whether dbus interface is available yet
-    if ( !isSflPhoneServiceRegistered() ) {
+    if (!isSflPhoneServiceRegistered()) {
 
         // it could be skype is not running yet, so start it now
-        if ( !QProcess::startDetached( QLatin1String( "sflphone-client-kde" ), QStringList() ) ) {
-            mErrorMessage = i18n( "Unable to start sflphone-client-kde process, check that sflphone-client-kde executable is in your PATH variable." );
+        if (!QProcess::startDetached(QLatin1String("sflphone-client-kde"), QStringList())) {
+            mErrorMessage = i18n("Unable to start sflphone-client-kde process, check that sflphone-client-kde executable is in your PATH variable.");
             return false;
         }
 
         const int runs = 100;
-        for ( int i = 0; i < runs; ++i ) {
-            if ( !isSflPhoneServiceRegistered() ) {
-                ::sleep( 2 );
+        for (int i = 0; i < runs; ++i) {
+            if (!isSflPhoneServiceRegistered()) {
+                ::sleep(2);
             } else {
                 return true;
             }
@@ -83,14 +83,14 @@ bool QSflPhoneDialer::initializeSflPhone()
 
 bool QSflPhoneDialer::dialNumber(const QString &number)
 {
-    if ( !initializeSflPhone() ) {
+    if (!initializeSflPhone()) {
         return false;
     }
 
     QStringList arguments;
     arguments << QLatin1String("--place-call");
     arguments << number;
-    if (!QProcess::startDetached( QLatin1String( "sflphone-client-kde" ), arguments)) {
+    if (!QProcess::startDetached(QLatin1String("sflphone-client-kde"), arguments)) {
         return false;
     }
 
@@ -99,7 +99,7 @@ bool QSflPhoneDialer::dialNumber(const QString &number)
 
 bool QSflPhoneDialer::sendSms(const QString &number, const QString &text)
 {
-    if ( !initializeSflPhone() ) {
+    if (!initializeSflPhone()) {
         return false;
     }
 
@@ -108,7 +108,7 @@ bool QSflPhoneDialer::sendSms(const QString &number, const QString &text)
     arguments << number;
     arguments << QLatin1String("--message");
     arguments << text;
-    if (!QProcess::startDetached( QLatin1String( "sflphone-client-kde" ), arguments)) {
+    if (!QProcess::startDetached(QLatin1String("sflphone-client-kde"), arguments)) {
         return false;
     }
     return true;

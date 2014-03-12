@@ -23,113 +23,121 @@ using namespace Akonadi;
 
 class Akonadi::MessageThreadingAttribute::Private
 {
-  public:
+public:
     QList<Item::Id> perfectParents;
     QList<Item::Id> unperfectParents;
     QList<Item::Id> subjectParents;
 };
 
-MessageThreadingAttribute::MessageThreadingAttribute() :
-    d( new Private )
+MessageThreadingAttribute::MessageThreadingAttribute()
+    : d(new Private)
 {
 }
 
-MessageThreadingAttribute::MessageThreadingAttribute(const MessageThreadingAttribute & other) :
-    Attribute( other ),
-    d( new Private( *(other.d) ) )
+MessageThreadingAttribute::MessageThreadingAttribute(const MessageThreadingAttribute &other)
+    : Attribute(other)
+    , d(new Private(*(other.d)))
 {
 }
 
 MessageThreadingAttribute::~ MessageThreadingAttribute()
 {
-  delete d;
+    delete d;
 }
 
 QByteArray MessageThreadingAttribute::type() const
 {
-  return "MESSAGETHREADING";
+    return "MESSAGETHREADING";
 }
 
-MessageThreadingAttribute * MessageThreadingAttribute::clone() const
+MessageThreadingAttribute *MessageThreadingAttribute::clone() const
 {
-  return new MessageThreadingAttribute( *this );
+    return new MessageThreadingAttribute(*this);
 }
 
 QByteArray MessageThreadingAttribute::serialized() const
 {
-  QByteArray rv;
-  foreach ( const Item::Id id, d->perfectParents )
-    rv += QByteArray::number( id ) + ',';
-  if ( !d->perfectParents.isEmpty() )
-    rv[rv.size() - 1] = ';';
-  else
-    rv += ';';
-  foreach ( const Item::Id id, d->unperfectParents )
-    rv += QByteArray::number( id ) + ',';
-  if ( !d->unperfectParents.isEmpty() )
-    rv[rv.size() - 1] = ';';
-  else
-    rv += ';';
-  foreach ( const Item::Id id, d->subjectParents )
-    rv += QByteArray::number( id ) + ',';
-  if ( !d->perfectParents.isEmpty() )
-    rv.chop( 1 );
+    QByteArray rv;
+    foreach (const Item::Id id, d->perfectParents) {
+        rv += QByteArray::number(id) + ',';
+    }
+    if (!d->perfectParents.isEmpty()) {
+        rv[rv.size() - 1] = ';';
+    } else {
+        rv += ';';
+    }
+    foreach (const Item::Id id, d->unperfectParents) {
+        rv += QByteArray::number(id) + ',';
+    }
+    if (!d->unperfectParents.isEmpty()) {
+        rv[rv.size() - 1] = ';';
+    } else {
+        rv += ';';
+    }
+    foreach (const Item::Id id, d->subjectParents) {
+        rv += QByteArray::number(id) + ',';
+    }
+    if (!d->perfectParents.isEmpty()) {
+        rv.chop(1);
+    }
 
-  return rv;
+    return rv;
 }
 
-static void parseIdList( const QByteArray &data, QList<Item::Id> &result )
+static void parseIdList(const QByteArray &data, QList<Item::Id> &result)
 {
-  bool ok = false;
-  foreach( const QByteArray &s, data.split( ',' ) ) {
-    Item::Id id = s.toLongLong( &ok );
-    if ( !ok )
-      continue;
-    result << id;
-  }
+    bool ok = false;
+    foreach (const QByteArray &s, data.split(',')) {
+        Item::Id id = s.toLongLong(&ok);
+        if (!ok) {
+            continue;
+        }
+        result << id;
+    }
 }
 
-void MessageThreadingAttribute::deserialize(const QByteArray & data)
+void MessageThreadingAttribute::deserialize(const QByteArray &data)
 {
-  d->perfectParents.clear();
-  d->unperfectParents.clear();
-  d->subjectParents.clear();
+    d->perfectParents.clear();
+    d->unperfectParents.clear();
+    d->subjectParents.clear();
 
-  QList<QByteArray> lists = data.split( ';' );
-  if ( lists.size() != 3 )
-    return;
+    QList<QByteArray> lists = data.split(';');
+    if (lists.size() != 3) {
+        return;
+    }
 
-  parseIdList( lists[0], d->perfectParents );
-  parseIdList( lists[1], d->unperfectParents );
-  parseIdList( lists[2], d->subjectParents );
+    parseIdList(lists[0], d->perfectParents);
+    parseIdList(lists[1], d->unperfectParents);
+    parseIdList(lists[2], d->subjectParents);
 }
 
 QList< Item::Id > MessageThreadingAttribute::perfectParents() const
 {
-  return d->perfectParents;
+    return d->perfectParents;
 }
 
-void MessageThreadingAttribute::setPerfectParents(const QList< Item::Id > & parents)
+void MessageThreadingAttribute::setPerfectParents(const QList< Item::Id > &parents)
 {
-  d->perfectParents = parents;
+    d->perfectParents = parents;
 }
 
 QList< Item::Id > MessageThreadingAttribute::unperfectParents() const
 {
-  return d->unperfectParents;
+    return d->unperfectParents;
 }
 
-void MessageThreadingAttribute::setUnperfectParents(const QList< Item::Id > & parents)
+void MessageThreadingAttribute::setUnperfectParents(const QList< Item::Id > &parents)
 {
-  d->unperfectParents = parents;
+    d->unperfectParents = parents;
 }
 
 QList< Item::Id > MessageThreadingAttribute::subjectParents() const
 {
-  return d->subjectParents;
+    return d->subjectParents;
 }
 
-void MessageThreadingAttribute::setSubjectParents(const QList< Item::Id > & parents)
+void MessageThreadingAttribute::setSubjectParents(const QList< Item::Id > &parents)
 {
-  d->subjectParents = parents;
+    d->subjectParents = parents;
 }

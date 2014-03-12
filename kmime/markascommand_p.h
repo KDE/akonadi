@@ -31,25 +31,25 @@
 class KJob;
 class MarkAsCommand : public CommandBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List & msgList, bool invert = false, QObject* parent = 0 );
-  MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Collection::List& folders, bool invert = false, QObject* parent = 0 );
-  void execute();
+    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert = false, QObject *parent = 0);
+    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert = false, QObject *parent = 0);
+    void execute();
 
 private Q_SLOTS:
-  void slotFetchDone( KJob* job );
-  void slotModifyItemDone( KJob * job );
+    void slotFetchDone(KJob *job);
+    void slotModifyItemDone(KJob *job);
 
 private:
-  void markMessages();
+    void markMessages();
 
-  Akonadi::Collection::List mFolders;
-  QList<Akonadi::Item> mMessages;
-  Akonadi::MessageStatus mTargetStatus;
-  int mMarkJobCount;
-  int mFolderListJobCount;
-  int mInvertMark;
+    Akonadi::Collection::List mFolders;
+    QList<Akonadi::Item> mMessages;
+    Akonadi::MessageStatus mTargetStatus;
+    int mMarkJobCount;
+    int mFolderListJobCount;
+    int mInvertMark;
 };
 
 #endif // MARKASCOMMAND_H

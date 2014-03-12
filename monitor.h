@@ -20,6 +20,7 @@
 #ifndef AKONADI_MONITOR_H
 #define AKONADI_MONITOR_H
 
+#include <akonadi/tag.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
@@ -33,6 +34,8 @@ class Item;
 class ItemFetchScope;
 class MonitorPrivate;
 class Session;
+class TagFetchScope;
+
 
 /**
  * @short Monitors an item or collection for changes.
@@ -74,6 +77,15 @@ class AKONADI_EXPORT Monitor : public QObject
   Q_OBJECT
 
   public:
+    enum Type {
+      /**
+       * @internal This must be kept in sync with Akonadi::NotificationMessageV2::Type
+       */
+      Collections = 1,
+      Items,
+      Tags
+    };
+
     /**
      * Creates a new monitor.
      *
@@ -141,6 +153,29 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param monitored Whether to monitor the mime type.
      */
     void setMimeTypeMonitored( const QString &mimetype, bool monitored = true );
+
+    /**
+     * Sets whether the specified tag shall be monitored for changes.
+     *
+     * Same rules as for item monitoring apply.
+     *
+     * @param tag Tag to monitor.
+     * @param monitored Whether to monitor the tag.
+     * @since 4.13
+     */
+    void setTagMonitored( const Tag &tag, bool monitored = true );
+
+    /**
+     * Sets whether given type (Collection, Item, Tag should be monitored).
+     *
+     * By default all types are monitored, but once you change one, you have
+     * to explicitly enable all other types you want to monitor.
+     *
+     * @param type Type to monitor.
+     * @param monitored Whether to monitor the type
+     * @since 4.13
+     */
+    void setTypeMonitored( Type type, bool monitored = true );
 
     /**
      * Sets whether all items shall be monitored.
@@ -254,6 +289,30 @@ class AKONADI_EXPORT Monitor : public QObject
     CollectionFetchScope &collectionFetchScope();
 
     /**
+     * Sets the tag fetch scope.
+     *
+     * Controls how much of an tag's data is fetched from the server.
+     *
+     * @param fetchScope The new scope for tag fetch operations.
+     *
+     * @see tagFetchScope()
+     */
+    void setTagFetchScope( const TagFetchScope &fetchScope );
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable.
+     *
+     * @return a reference to the current tag fetch scope
+     *
+     * @see setTagFetchScope() for replacing the current tag fetch scope
+     */
+    TagFetchScope &tagFetchScope();
+
+    /**
      * Returns the list of collections being monitored.
      *
      * @since 4.3
@@ -284,6 +343,20 @@ class AKONADI_EXPORT Monitor : public QObject
      * @since 4.3
      */
     QStringList mimeTypesMonitored() const;
+
+    /**
+     * Returns the set of tags being monitored.
+     *
+     * @since 4.13
+     */
+    QVector<Tag::Id> tagsMonitored() const;
+
+    /**
+     * Returns the set of types being monitored.
+     *
+     * @since 4.13
+     */
+    QVector<Type> typesMonitored() const;
 
     /**
      * Returns the set of identifiers for resources being monitored.
@@ -342,6 +415,17 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     void itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
                                                               const QSet<QByteArray> &removedFlags );
+
+    /**
+     * This signal is emitted if tags of monitored items have changed.
+     *
+     * @param items Items that were changed
+     * @param addedTags Tags that have been added to each item in @p items.
+     * @param removedTags Tags that have been removed from each item in @p items
+     * @since 4.13
+     */
+    void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags,
+                                                             const QSet<Akonadi::Tag> &removedTags );
 
     /**
      * This signal is emitted if a monitored item has been moved between two collections
@@ -506,6 +590,34 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionStatisticsChanged( Akonadi::Collection::Id id,
                                       const Akonadi::CollectionStatistics &statistics );
 
+
+    /**
+     * This signal is emitted if a tag has been added to Akonadi storage.
+     *
+     * @param tag The added tag
+     * @since 4.13
+     */
+    void tagAdded( const Akonadi::Tag &tag );
+
+    /**
+     * This signal is emitted if a monitored tag is changed on the server.
+     *
+     * @param tag The changed tag.
+     * @since 4.13
+     */
+    void tagChanged( const Akonadi::Tag &tag );
+
+    /**
+     * This signal is emitted if a monitored tag is removed from the server storage.
+     *
+     * The monitor will also emit itemTagsChanged() signal for all monitored items
+     * (if any) that were tagged by @p tag.
+     *
+     * @param tag The removed tag.
+     * @since 4.13
+     */
+    void tagRemoved( const Akonadi::Tag &tag );
+
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p collection explicitly.
      * @param collection The collection
@@ -550,6 +662,22 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     void allMonitored( bool monitored );
 
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring @p tag explicitly.
+     * @param tag The tag.
+     * @param monitored Whether the tag is now being monitored or not.
+     * @since 4.13
+     */
+    void tagMonitored( const Akonadi::Tag &tag, bool monitored );
+
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring @p type explicitly
+     * @param type The type.
+     * @param monitored Whether the type is now being monitored or not.
+     * @since 4.13
+     */
+    void typeMonitored( const Akonadi::Monitor::Type type, bool monitored );
+
   protected:
     //@cond PRIVATE
     friend class EntityTreeModel;
@@ -565,11 +693,12 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
-    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV2::List& ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV3::List& ) )
     Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
     Q_PRIVATE_SLOT( d_ptr, void serverStateChanged( Akonadi::ServerManager::State ) )
     Q_PRIVATE_SLOT( d_ptr, void invalidateCollectionCache( qint64 ) )
     Q_PRIVATE_SLOT( d_ptr, void invalidateItemCache( qint64 ) )
+    Q_PRIVATE_SLOT( d_ptr, void invalidateTagCache( qint64 ) )
 
     friend class ResourceBasePrivate;
     //@endcond

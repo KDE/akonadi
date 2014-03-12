@@ -23,6 +23,7 @@
 #include "settingsadaptor.h"
 #include "xml/xmlwriter.h"
 #include "xml/xmlreader.h"
+#include <searchquery.h>
 
 #include <akonadi/agentfactory.h>
 #include <akonadi/changerecorder.h>
@@ -275,6 +276,35 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   save();
   changeProcessed();
 }
+
+QSet<qint64> KnutResource::parseQuery(const QString &queryString)
+{
+  QSet<qint64> resultSet;
+  Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
+  foreach (const Akonadi::SearchTerm &term, query.term().subTerms()) {
+      if (term.key() == QLatin1String("resource")) {
+          resultSet << term.value().toInt();
+      }
+  }
+  return resultSet;
+}
+
+void KnutResource::search(const QString& query, const Collection& collection)
+{
+  kDebug() << query;
+  searchFinished(parseQuery(query).toList().toVector(), Akonadi::AgentSearchInterface::Uid);
+}
+
+void KnutResource::addSearch(const QString& query, const QString& queryLanguage, const Collection& resultCollection)
+{
+  kDebug();
+}
+
+void KnutResource::removeSearch(const Collection& resultCollection)
+{
+  kDebug();
+}
+
 
 AKONADI_AGENT_FACTORY( KnutResource, akonadi_knut_resource )
 

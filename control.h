@@ -61,9 +61,9 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT Control : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Destroys the control object.
      */
@@ -81,7 +81,7 @@ class AKONADI_EXPORT Control : public QObject
      * @param parent The parent widget.
      * @since 4.2
      */
-    static bool start( QWidget *parent );
+    static bool start(QWidget *parent);
 
     /**
      * Stops the Akonadi server synchronously if it is currently running.
@@ -96,7 +96,7 @@ class AKONADI_EXPORT Control : public QObject
      * @param parent The parent widget.
      * @since 4.2
      */
-    static bool stop( QWidget *parent );
+    static bool stop(QWidget *parent);
 
     /**
      * Restarts the Akonadi server synchronously.
@@ -111,7 +111,7 @@ class AKONADI_EXPORT Control : public QObject
      * @param parent The parent widget.
      * @since 4.2
      */
-    static bool restart( QWidget *parent );
+    static bool restart(QWidget *parent);
 
     /**
      * Disable the given widget when Akonadi is not operational and show
@@ -120,22 +120,22 @@ class AKONADI_EXPORT Control : public QObject
      * @param widget The widget depending on Akonadi being operational.
      * @since 4.2
      */
-    static void widgetNeedsAkonadi( QWidget *widget );
+    static void widgetNeedsAkonadi(QWidget *widget);
 
-  protected:
+protected:
     /**
      * Creates the control object.
      */
     Control();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void serverStateChanged( Akonadi::ServerManager::State ) )
-    Q_PRIVATE_SLOT( d, void createErrorOverlays() )
-    Q_PRIVATE_SLOT( d, void cleanup() )
+    Q_PRIVATE_SLOT(d, void serverStateChanged(Akonadi::ServerManager::State))
+    Q_PRIVATE_SLOT(d, void createErrorOverlays())
+    Q_PRIVATE_SLOT(d, void cleanup())
     //@endcond
 };
 

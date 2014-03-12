@@ -39,186 +39,185 @@
  */
 class SoundLoader
 {
-  public:
-    SoundLoader( QWidget *parent = 0 );
+public:
+    SoundLoader(QWidget *parent = 0);
 
-    QByteArray loadSound( const KUrl &url, bool *ok );
+    QByteArray loadSound(const KUrl &url, bool *ok);
 
-  private:
+private:
     QByteArray mSound;
     QWidget *mParent;
 };
 
-SoundLoader::SoundLoader( QWidget *parent )
-  : mParent( parent )
+SoundLoader::SoundLoader(QWidget *parent)
+    : mParent(parent)
 {
 }
 
-QByteArray SoundLoader::loadSound( const KUrl &url, bool *ok )
+QByteArray SoundLoader::loadSound(const KUrl &url, bool *ok)
 {
-  QByteArray sound;
-  QString tempFile;
+    QByteArray sound;
+    QString tempFile;
 
-  if ( url.isEmpty() ) {
-    return sound;
-  }
-
-  ( *ok ) = false;
-
-  if ( url.isLocalFile() ) {
-    QFile file( url.toLocalFile() );
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      sound = file.readAll();
-      file.close();
-      ( *ok ) = true;
+    if (url.isEmpty()) {
+        return sound;
     }
-  } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
-    QFile file( tempFile );
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      sound = file.readAll();
-      file.close();
-      ( *ok ) = true;
+
+    (*ok) = false;
+
+    if (url.isLocalFile()) {
+        QFile file(url.toLocalFile());
+        if (file.open(QIODevice::ReadOnly)) {
+            sound = file.readAll();
+            file.close();
+            (*ok) = true;
+        }
+    } else if (KIO::NetAccess::download(url, tempFile, mParent)) {
+        QFile file(tempFile);
+        if (file.open(QIODevice::ReadOnly)) {
+            sound = file.readAll();
+            file.close();
+            (*ok) = true;
+        }
+        KIO::NetAccess::removeTempFile(tempFile);
     }
-    KIO::NetAccess::removeTempFile( tempFile );
-  }
 
-  if ( !( *ok ) ) {
-    KMessageBox::sorry( mParent, i18n( "This contact's sound cannot be found." ) );
+    if (!(*ok)) {
+        KMessageBox::sorry(mParent, i18n("This contact's sound cannot be found."));
+        return sound;
+    }
+
+    (*ok) = true;
+
     return sound;
-  }
-
-  ( *ok ) = true;
-
-  return sound;
 }
 
-SoundEditWidget::SoundEditWidget( QWidget *parent )
-  : QToolButton( parent ),
-    mHasSound( false ),
-    mReadOnly( false ),
-    mSoundLoader( 0 )
+SoundEditWidget::SoundEditWidget(QWidget *parent)
+    : QToolButton(parent)
+    , mHasSound(false)
+    , mReadOnly(false)
+    , mSoundLoader(0)
 {
-  connect( this, SIGNAL(clicked()), SLOT(playSound()) );
+    connect(this, SIGNAL(clicked()), SLOT(playSound()));
 
-  updateView();
+    updateView();
 }
 
 SoundEditWidget::~SoundEditWidget()
 {
-  delete mSoundLoader;
+    delete mSoundLoader;
 }
 
-void SoundEditWidget::loadContact( const KABC::Addressee &contact )
+void SoundEditWidget::loadContact(const KABC::Addressee &contact)
 {
-  const KABC::Sound sound = contact.sound();
-  if ( sound.isIntern() && !sound.data().isEmpty() ) {
-    mHasSound = true;
-    mSound = sound.data();
-  }
+    const KABC::Sound sound = contact.sound();
+    if (sound.isIntern() && !sound.data().isEmpty()) {
+        mHasSound = true;
+        mSound = sound.data();
+    }
 
-  updateView();
+    updateView();
 }
 
-void SoundEditWidget::storeContact( KABC::Addressee &contact ) const
+void SoundEditWidget::storeContact(KABC::Addressee &contact) const
 {
-  KABC::Sound sound( contact.sound() );
-  sound.setData( mSound );
-  contact.setSound( sound );
+    KABC::Sound sound(contact.sound());
+    sound.setData(mSound);
+    contact.setSound(sound);
 }
 
-void SoundEditWidget::setReadOnly( bool readOnly )
+void SoundEditWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
+    mReadOnly = readOnly;
 }
 
 void SoundEditWidget::updateView()
 {
-  if ( mHasSound ) {
-    setIcon( KIcon( QLatin1String( "audio-volume-medium" ) ) );
-    setToolTip( i18n( "Click to play pronunciation" ) );
-  } else {
-    setIcon( KIcon( QLatin1String( "audio-volume-muted" ) ) );
-    setToolTip( i18n( "No pronunciation available" ) );
-  }
+    if (mHasSound) {
+        setIcon(KIcon(QLatin1String("audio-volume-medium")));
+        setToolTip(i18n("Click to play pronunciation"));
+    } else {
+        setIcon(KIcon(QLatin1String("audio-volume-muted")));
+        setToolTip(i18n("No pronunciation available"));
+    }
 }
 
-void SoundEditWidget::contextMenuEvent( QContextMenuEvent *event )
+void SoundEditWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-  QMenu menu;
+    QMenu menu;
 
-  if ( mHasSound ) {
-    menu.addAction( i18n( "Play" ), this, SLOT(playSound()) );
-  }
-
-  if ( !mReadOnly ) {
-    menu.addAction( i18n( "Change..." ), this, SLOT(changeSound()) );
-  }
-
-  if ( mHasSound ) {
-    menu.addAction( i18n( "Save..." ), this, SLOT(saveSound()) );
-
-    if ( !mReadOnly ) {
-      menu.addAction( i18n( "Remove" ), this, SLOT(deleteSound()) );
+    if (mHasSound) {
+        menu.addAction(i18n("Play"), this, SLOT(playSound()));
     }
-  }
 
-  menu.exec( event->globalPos() );
+    if (!mReadOnly) {
+        menu.addAction(i18n("Change..."), this, SLOT(changeSound()));
+    }
+
+    if (mHasSound) {
+        menu.addAction(i18n("Save..."), this, SLOT(saveSound()));
+
+        if (!mReadOnly) {
+            menu.addAction(i18n("Remove"), this, SLOT(deleteSound()));
+        }
+    }
+
+    menu.exec(event->globalPos());
 }
 
 void SoundEditWidget::playSound()
 {
-  if ( !mHasSound ) {
-    return;
-  }
+    if (!mHasSound) {
+        return;
+    }
 
-  Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
-  QBuffer* soundData = new QBuffer( player );
-  soundData->setData( mSound );
-  player->setCurrentSource( soundData );
-  player->setParent( this );
-  connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
-  player->play();
+    Phonon::MediaObject *player = Phonon::createPlayer(Phonon::NotificationCategory);
+    QBuffer *soundData = new QBuffer(player);
+    soundData->setData(mSound);
+    player->setCurrentSource(soundData);
+    player->setParent(this);
+    connect(player, SIGNAL(finished()), player, SLOT(deleteLater()));
+    player->play();
 }
 
 void SoundEditWidget::changeSound()
 {
-  const KUrl url = KFileDialog::getOpenUrl( QUrl(), QLatin1String( "*.wav" ), this );
-  if ( url.isValid() ) {
-    bool ok = false;
-    const QByteArray sound = soundLoader()->loadSound( url, &ok );
-    if ( ok ) {
-      mSound = sound;
-      mHasSound = true;
-      updateView();
+    const KUrl url = KFileDialog::getOpenUrl(QUrl(), QLatin1String("*.wav"), this);
+    if (url.isValid()) {
+        bool ok = false;
+        const QByteArray sound = soundLoader()->loadSound(url, &ok);
+        if (ok) {
+            mSound = sound;
+            mHasSound = true;
+            updateView();
+        }
     }
-  }
 }
 
 void SoundEditWidget::saveSound()
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), QLatin1String( "*.wav" ), this );
-  if ( !fileName.isEmpty() ) {
-    QFile file( fileName );
-    if ( file.open( QIODevice::WriteOnly ) ) {
-      file.write( mSound );
-      file.close();
+    const QString fileName = KFileDialog::getSaveFileName(KUrl(), QLatin1String("*.wav"), this);
+    if (!fileName.isEmpty()) {
+        QFile file(fileName);
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(mSound);
+            file.close();
+        }
     }
-  }
 }
 
 void SoundEditWidget::deleteSound()
 {
-  mHasSound = false;
-  mSound = QByteArray();
-  updateView();
+    mHasSound = false;
+    mSound = QByteArray();
+    updateView();
 }
 
-SoundLoader* SoundEditWidget::soundLoader()
+SoundLoader *SoundEditWidget::soundLoader()
 {
-  if ( !mSoundLoader ) {
-    mSoundLoader = new SoundLoader;
-  }
+    if (!mSoundLoader) {
+        mSoundLoader = new SoundLoader;
+    }
 
-  return mSoundLoader;
+    return mSoundLoader;
 }
-

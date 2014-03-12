@@ -70,7 +70,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT CachePolicy
 {
-  public:
+public:
     /**
      * Creates an empty cache policy.
      */
@@ -79,7 +79,7 @@ class AKONADI_EXPORT CachePolicy
     /**
      * Creates a cache policy from an @p other cache policy.
      */
-    CachePolicy( const CachePolicy &other );
+    CachePolicy(const CachePolicy &other);
 
     /**
      * Destroys the cache policy.
@@ -94,7 +94,7 @@ class AKONADI_EXPORT CachePolicy
     /**
      * Sets whether the cache policy should be inherited from the parent collection.
      */
-    void setInheritFromParent( bool inherit );
+    void setInheritFromParent(bool inherit);
 
     /**
      * Returns the parts to permanently cache locally.
@@ -104,7 +104,7 @@ class AKONADI_EXPORT CachePolicy
     /**
      * Specifies the parts to permanently cache locally.
      */
-    void setLocalParts( const QStringList &parts );
+    void setLocalParts(const QStringList &parts);
 
     /**
      * Returns the cache timeout for non-permanently cached parts in minutes;
@@ -116,7 +116,7 @@ class AKONADI_EXPORT CachePolicy
      * Sets cache timeout for non-permanently cached parts.
      * @param timeout Timeout in minutes, -1 for indefinitely.
      */
-    void setCacheTimeout( int timeout );
+    void setCacheTimeout(int timeout);
 
     /**
      * Returns the interval check time in minutes, -1 for never.
@@ -127,7 +127,7 @@ class AKONADI_EXPORT CachePolicy
      * Sets interval check time.
      * @param time Check time interval in minutes, -1 for never.
      */
-    void setIntervalCheckTime( int time );
+    void setIntervalCheckTime(int time);
 
     /**
      * Returns whether the collection will be synced automatically when necessary,
@@ -140,21 +140,21 @@ class AKONADI_EXPORT CachePolicy
      * i.e. as soon as it is accessed by a client.
      * @param enable If @c true the collection is synced.
      */
-    void setSyncOnDemand( bool enable );
+    void setSyncOnDemand(bool enable);
 
     /**
      * @internal.
      * @param other other cache policy
      */
-    CachePolicy& operator=( const CachePolicy &other );
+    CachePolicy &operator=(const CachePolicy &other);
 
     /**
      * @internal
      * @param other other cache policy
      */
-    bool operator==( const CachePolicy &other ) const;
+    bool operator==(const CachePolicy &other) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
@@ -166,6 +166,6 @@ class AKONADI_EXPORT CachePolicy
 /**
  * Allows a cache policy to be output for debugging purposes.
  */
-AKONADI_EXPORT QDebug operator<<( QDebug, const Akonadi::CachePolicy& );
+AKONADI_EXPORT QDebug operator<<(QDebug, const Akonadi::CachePolicy &);
 
 #endif

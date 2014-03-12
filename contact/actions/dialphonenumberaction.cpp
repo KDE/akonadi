@@ -34,57 +34,55 @@
 
 using namespace Akonadi;
 
-static QString strippedDialNumber( const QString &number )
+static QString strippedDialNumber(const QString &number)
 {
-  QString result;
+    QString result;
 
-  for ( int i = 0; i < number.length(); ++i ) {
-    const QChar character = number.at( i );
-    if ( character.isDigit() || ( character == QLatin1Char( '+' ) && i == 0 ) ) {
-      result += character;
+    for (int i = 0; i < number.length(); ++i) {
+        const QChar character = number.at(i);
+        if (character.isDigit() || (character == QLatin1Char('+') && i == 0)) {
+            result += character;
+        }
     }
-  }
 
-  return result;
+    return result;
 }
 
-void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
+void DialPhoneNumberAction::dialNumber(const KABC::PhoneNumber &number)
 {
-  // synchronize
-  ContactActionsSettings::self()->readConfig();
+    // synchronize
+    ContactActionsSettings::self()->readConfig();
 
-  QDialer *dialer = NULL;
-  // we handle skype separated
-  if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype ) {
-    dialer = new QSkypeDialer( QLatin1String( "AkonadiContacts" ) );
-  }
-  else if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSflPhone) {
-    dialer = new QSflPhoneDialer( QLatin1String( "AkonadiContacts" ) );
-  }
-  else if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseEkiga) {
-    dialer = new QEkigaDialer( QLatin1String( "AkonadiContacts" ) );
-  }
-  if ( dialer ) {
-    if ( !dialer->dialNumber( strippedDialNumber( number.number().trimmed() ) ) ) {
-      KMessageBox::sorry( 0, dialer->errorMessage() );
+    QDialer *dialer = NULL;
+    // we handle skype separated
+    if (ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype) {
+        dialer = new QSkypeDialer(QLatin1String("AkonadiContacts"));
+    } else if (ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSflPhone) {
+        dialer = new QSflPhoneDialer(QLatin1String("AkonadiContacts"));
+    } else if (ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseEkiga) {
+        dialer = new QEkigaDialer(QLatin1String("AkonadiContacts"));
     }
-    delete dialer;
-    return;
-  }
+    if (dialer) {
+        if (!dialer->dialNumber(strippedDialNumber(number.number().trimmed()))) {
+            KMessageBox::sorry(0, dialer->errorMessage());
+        }
+        delete dialer;
+        return;
+    }
 
-  QString command = ContactActionsSettings::self()->phoneCommand();
+    QString command = ContactActionsSettings::self()->phoneCommand();
 
-  if ( command.isEmpty() ) {
-    KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
-    return;
-  }
+    if (command.isEmpty()) {
+        KMessageBox::sorry(0, i18n("There is no application set which could be executed.\nPlease go to the settings dialog and configure one."));
+        return;
+    }
 
-  /*
-   * %N the raw number
-   * %n the number with all additional non-number characters removed
-   */
-  command = command.replace( QLatin1String( "%N" ), number.number() );
-  command = command.replace( QLatin1String( "%n" ), strippedDialNumber( number.number().trimmed() ) );
+    /*
+     * %N the raw number
+     * %n the number with all additional non-number characters removed
+     */
+    command = command.replace(QLatin1String("%N"), number.number());
+    command = command.replace(QLatin1String("%n"), strippedDialNumber(number.number().trimmed()));
 
-  KRun::runCommand( command, 0 );
+    KRun::runCommand(command, 0);
 }

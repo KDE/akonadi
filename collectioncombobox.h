@@ -61,15 +61,15 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT CollectionComboBox : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection combobox.
      *
      * @param parent The parent widget.
      */
-    explicit CollectionComboBox( QWidget *parent = 0 );
+    explicit CollectionComboBox(QWidget *parent = 0);
 
     /**
      * Creates a new collection combobox with a custom @p model.
@@ -80,7 +80,7 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
      * @param model The custom model to use.
      * @param parent The parent widget.
      */
-    explicit CollectionComboBox( QAbstractItemModel *model, QWidget *parent = 0 );
+    explicit CollectionComboBox(QAbstractItemModel *model, QWidget *parent = 0);
 
     /**
      * Destroys the collection combobox.
@@ -90,7 +90,7 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
     /**
      * Sets the content @p mimetypes the collections shall be filtered by.
      */
-    void setMimeTypeFilter( const QStringList &mimetypes );
+    void setMimeTypeFilter(const QStringList &mimetypes);
 
     /**
      * Returns the content mimetype the collections are filtered by.
@@ -101,7 +101,7 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
     /**
      * Sets the access @p rights the collections shall be filtered by.
      */
-    void setAccessRightsFilter( Collection::Rights rights );
+    void setAccessRightsFilter(Collection::Rights rights);
 
     /**
      * Returns the access rights the collections are filtered by.
@@ -111,7 +111,7 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
     /**
      * Sets the @p collection that shall be selected by default.
      */
-    void setDefaultCollection( const Collection &collection );
+    void setDefaultCollection(const Collection &collection);
 
     /**
      * Returns the current selection.
@@ -127,22 +127,22 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
      */
     bool excludeVirtualCollections() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the current selection
      * has been changed.
      *
      * @param collection The current selection.
      */
-    void currentChanged( const Akonadi::Collection &collection );
+    void currentChanged(const Akonadi::Collection &collection);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void activated( int ) )
-    Q_PRIVATE_SLOT( d, void activated( const QModelIndex& ) )
+    Q_PRIVATE_SLOT(d, void activated(int))
+    Q_PRIVATE_SLOT(d, void activated(const QModelIndex &))
     //@endcond
 };
 

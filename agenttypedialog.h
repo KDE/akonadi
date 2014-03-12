@@ -52,15 +52,15 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT AgentTypeDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new agent type dialog.
      *
      * @param parent The parent widget of the dialog.
      */
-    AgentTypeDialog( QWidget *parent = 0 );
+    AgentTypeDialog(QWidget *parent = 0);
 
     /**
      * Destroys the agent type dialog.
@@ -78,15 +78,15 @@ class AKONADI_EXPORT AgentTypeDialog : public KDialog
      * to filter the agent types that shall be shown in the
      * dialog.
      */
-    AgentFilterProxyModel* agentFilterProxyModel() const;
+    AgentFilterProxyModel *agentFilterProxyModel() const;
 
-  public Q_SLOTS:
-    virtual void done( int result );
+public Q_SLOTS:
+    virtual void done(int result);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private * const d;
+    Private *const d;
     //@endcond
 };
 

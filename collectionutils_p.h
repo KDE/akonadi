@@ -32,106 +32,106 @@ namespace Akonadi {
  */
 namespace CollectionUtils
 {
-  inline bool isVirtualParent( const Collection &collection )
-  {
-    return ( collection.parentCollection() == Collection::root() && collection.isVirtual() );
-  }
+inline bool isVirtualParent(const Collection &collection)
+{
+    return (collection.parentCollection() == Collection::root() && collection.isVirtual());
+}
 
-  inline bool isReadOnly( const Collection &collection )
-  {
-    return !( collection.rights() & Collection::CanCreateItem );
-  }
+inline bool isReadOnly(const Collection &collection)
+{
+    return !(collection.rights() &Collection::CanCreateItem);
+}
 
-  inline bool isRoot( const Collection &collection )
-  {
-    return ( collection == Collection::root() );
-  }
+inline bool isRoot(const Collection &collection)
+{
+    return (collection == Collection::root());
+}
 
-  inline bool isResource( const Collection &collection )
-  {
-    return ( collection.parentCollection() == Collection::root() );
-  }
+inline bool isResource(const Collection &collection)
+{
+    return (collection.parentCollection() == Collection::root());
+}
 
-  inline bool isStructural( const Collection &collection )
-  {
+inline bool isStructural(const Collection &collection)
+{
     return collection.contentMimeTypes().isEmpty();
-  }
+}
 
-  inline bool isFolder( const Collection &collection )
-  {
-    return ( !isRoot( collection ) &&
-             !isResource( collection ) &&
-             !isStructural( collection ) &&
-             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
-             collection.resource() != QLatin1String( "akonadi_nepomuktag_resource" ) );
-  }
+inline bool isFolder(const Collection &collection)
+{
+    return (!isRoot(collection) &&
+            !isResource(collection) &&
+            !isStructural(collection) &&
+            collection.resource() != QLatin1String("akonadi_search_resource") &&
+            collection.resource() != QLatin1String("akonadi_nepomuktag_resource"));
+}
 
-  inline QString defaultIconName( const Collection &col )
-  {
-    if ( CollectionUtils::isVirtualParent( col ) ) {
-      return QLatin1String( "edit-find" );
+inline QString defaultIconName(const Collection &col)
+{
+    if (CollectionUtils::isVirtualParent(col)) {
+        return QLatin1String("edit-find");
     }
-    if ( col.isVirtual() ) {
-      return QLatin1String( "document-preview" );
+    if (col.isVirtual()) {
+        return QLatin1String("document-preview");
     }
-    if ( CollectionUtils::isResource( col ) ) {
-      return QLatin1String( "network-server" );
+    if (CollectionUtils::isResource(col)) {
+        return QLatin1String("network-server");
     }
-    if ( CollectionUtils::isStructural( col ) ) {
-      return QLatin1String( "folder-grey" );
+    if (CollectionUtils::isStructural(col)) {
+        return QLatin1String("folder-grey");
     }
-    if ( CollectionUtils::isReadOnly( col ) ) {
-      return QLatin1String( "folder-grey" );
+    if (CollectionUtils::isReadOnly(col)) {
+        return QLatin1String("folder-grey");
     }
 
     const QStringList content = col.contentMimeTypes();
-    if ( ( content.size() == 1 ) ||
-         ( content.size() == 2 && content.contains( Collection::mimeType() ) ) ) {
-      if ( content.contains( QLatin1String( "text/x-vcard" ) ) ||
-           content.contains( QLatin1String( "text/directory" ) ) ||
-           content.contains( QLatin1String( "text/vcard" ) ) ) {
-        return QLatin1String( "x-office-address-book" );
-      }
-      // TODO: add all other content types and/or fix their mimetypes
-      if ( content.contains( QLatin1String( "akonadi/event" ) ) || content.contains( QLatin1String( "text/ical" ) ) ) {
-        return QLatin1String( "view-pim-calendar" );
-      }
-      if ( content.contains( QLatin1String( "akonadi/task" ) ) ) {
-        return QLatin1String( "view-pim-tasks" );
-      }
-    } else if ( content.isEmpty() ) {
-      return QLatin1String( "folder-grey" );
+    if ((content.size() == 1) ||
+        (content.size() == 2 && content.contains(Collection::mimeType()))) {
+        if (content.contains(QLatin1String("text/x-vcard")) ||
+            content.contains(QLatin1String("text/directory")) ||
+            content.contains(QLatin1String("text/vcard"))) {
+            return QLatin1String("x-office-address-book");
+        }
+        // TODO: add all other content types and/or fix their mimetypes
+        if (content.contains(QLatin1String("akonadi/event")) || content.contains(QLatin1String("text/ical"))) {
+            return QLatin1String("view-pim-calendar");
+        }
+        if (content.contains(QLatin1String("akonadi/task"))) {
+            return QLatin1String("view-pim-tasks");
+        }
+    } else if (content.isEmpty()) {
+        return QLatin1String("folder-grey");
     }
-    return QLatin1String( "folder" );
-  }
-  inline QString displayIconName( const Collection &col )
-  {
-    QString iconName = defaultIconName( col );
-    if ( col.hasAttribute<EntityDisplayAttribute>() &&
-         !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
-      if ( !col.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && col.statistics().unreadCount()> 0 ) {
-        iconName = col.attribute<EntityDisplayAttribute>()->activeIconName();
-      } else {
-        iconName = col.attribute<EntityDisplayAttribute>()->iconName();
-      }
+    return QLatin1String("folder");
+}
+inline QString displayIconName(const Collection &col)
+{
+    QString iconName = defaultIconName(col);
+    if (col.hasAttribute<EntityDisplayAttribute>() &&
+        !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
+        if (!col.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && col.statistics().unreadCount() > 0) {
+            iconName = col.attribute<EntityDisplayAttribute>()->activeIconName();
+        } else {
+            iconName = col.attribute<EntityDisplayAttribute>()->iconName();
+        }
     }
     return iconName;
 
-  }
-  inline bool hasValidHierarchicalRID( const Collection &col )
-  {
-    if ( col == Collection::root() ) {
-      return true;
+}
+inline bool hasValidHierarchicalRID(const Collection &col)
+{
+    if (col == Collection::root()) {
+        return true;
     }
-    if ( col.remoteId().isEmpty() ) {
-      return false;
+    if (col.remoteId().isEmpty()) {
+        return false;
     }
-    return hasValidHierarchicalRID( col.parentCollection() );
-  }
-  inline bool hasValidHierarchicalRID( const Item &item )
-  {
-    return !item.remoteId().isEmpty() && hasValidHierarchicalRID( item.parentCollection() );
-  }
+    return hasValidHierarchicalRID(col.parentCollection());
+}
+inline bool hasValidHierarchicalRID(const Item &item)
+{
+    return !item.remoteId().isEmpty() && hasValidHierarchicalRID(item.parentCollection());
+}
 }
 
 }

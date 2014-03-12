@@ -27,46 +27,45 @@
 #include <kabc/secrecy.h>
 #include <kcombobox.h>
 
-SecrecyEditWidget::SecrecyEditWidget( QWidget *parent )
-  : QWidget( parent )
+SecrecyEditWidget::SecrecyEditWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  layout->setMargin( 0 );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setMargin(0);
 
-  mSecrecyCombo = new KComboBox( this );
-  layout->addWidget( mSecrecyCombo );
+    mSecrecyCombo = new KComboBox(this);
+    layout->addWidget(mSecrecyCombo);
 
-  const KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
-  KABC::Secrecy::TypeList::ConstIterator it;
+    const KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
+    KABC::Secrecy::TypeList::ConstIterator it;
 
-  // (*it) is the type enum, which is also used as the index in the combo
-  KABC::Secrecy::TypeList::ConstIterator end(list.constEnd());
-  for ( it = list.constBegin(); it != end; ++it ) {
-    mSecrecyCombo->insertItem( *it, KABC::Secrecy::typeLabel( *it ) );
-  }
+    // (*it) is the type enum, which is also used as the index in the combo
+    KABC::Secrecy::TypeList::ConstIterator end(list.constEnd());
+    for (it = list.constBegin(); it != end; ++it) {
+        mSecrecyCombo->insertItem(*it, KABC::Secrecy::typeLabel(*it));
+    }
 }
 
 SecrecyEditWidget::~SecrecyEditWidget()
 {
 }
 
-void SecrecyEditWidget::setReadOnly( bool readOnly )
+void SecrecyEditWidget::setReadOnly(bool readOnly)
 {
-  mSecrecyCombo->setEnabled( !readOnly );
+    mSecrecyCombo->setEnabled(!readOnly);
 }
 
-void SecrecyEditWidget::loadContact( const KABC::Addressee &contact )
+void SecrecyEditWidget::loadContact(const KABC::Addressee &contact)
 {
-  if ( contact.secrecy().type() != KABC::Secrecy::Invalid ) {
-    mSecrecyCombo->setCurrentIndex( contact.secrecy().type() );
-  }
+    if (contact.secrecy().type() != KABC::Secrecy::Invalid) {
+        mSecrecyCombo->setCurrentIndex(contact.secrecy().type());
+    }
 }
 
-void SecrecyEditWidget::storeContact( KABC::Addressee &contact ) const
+void SecrecyEditWidget::storeContact(KABC::Addressee &contact) const
 {
-  KABC::Secrecy secrecy;
-  secrecy.setType( (KABC::Secrecy::Type)mSecrecyCombo->currentIndex() );
+    KABC::Secrecy secrecy;
+    secrecy.setType((KABC::Secrecy::Type)mSecrecyCombo->currentIndex());
 
-  contact.setSecrecy( secrecy );
+    contact.setSecrecy(secrecy);
 }
-

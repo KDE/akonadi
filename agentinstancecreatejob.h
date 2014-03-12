@@ -46,8 +46,8 @@ class AgentInstanceCreateJobPrivate;
  *   Akonadi::AgentType type = Akonadi::AgentManager::self()->type( "akonadi_vcard_resource" );
  *
  *   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type );
- *   connect( job, SIGNAL( result( KJob * ) ),
- *            this, SLOT( slotCreated( KJob * ) ) );
+ *   connect( job, SIGNAL(result(KJob*)),
+ *            this, SLOT(slotCreated(KJob*)) );
  *
  *   // use this widget as parent for the config dialog
  *   job->configure( this );
@@ -70,16 +70,16 @@ class AgentInstanceCreateJobPrivate;
  */
 class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new agent instance create job.
      *
      * @param type The type of the agent to create.
      * @param parent The parent object.
      */
-    explicit AgentInstanceCreateJob( const AgentType &type, QObject *parent = 0 );
+    explicit AgentInstanceCreateJob(const AgentType &type, QObject *parent = 0);
 
     /**
      * Creates a new agent instance create job.
@@ -88,7 +88,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
      * @param parent The parent object.
      * @since 4.5
      */
-    explicit AgentInstanceCreateJob( const QString &typeId, QObject *parent = 0 );
+    explicit AgentInstanceCreateJob(const QString &typeId, QObject *parent = 0);
 
     /**
      * Destroys the agent instance create job.
@@ -100,7 +100,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
      * has been successfully started.
      * @param parent The parent window for the configuration dialog.
      */
-    void configure( QWidget *parent = 0 );
+    void configure(QWidget *parent = 0);
 
     /**
      * Returns the AgentInstance object of the newly created agent instance.
@@ -112,17 +112,17 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
      */
     void start();
 
-  private:
+private:
     //@cond PRIVATE
     friend class Akonadi::AgentInstanceCreateJobPrivate;
-    AgentInstanceCreateJobPrivate* const d;
+    AgentInstanceCreateJobPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void doConfigure() )
-    Q_PRIVATE_SLOT( d, void timeout() )
-    Q_PRIVATE_SLOT( d, void emitResult() )
-    Q_PRIVATE_SLOT( d, void configurationDialogAccepted() )
-    Q_PRIVATE_SLOT( d, void configurationDialogRejected() )
+    Q_PRIVATE_SLOT(d, void agentInstanceAdded(const Akonadi::AgentInstance &))
+    Q_PRIVATE_SLOT(d, void doConfigure())
+    Q_PRIVATE_SLOT(d, void timeout())
+    Q_PRIVATE_SLOT(d, void emitResult())
+    Q_PRIVATE_SLOT(d, void configurationDialogAccepted())
+    Q_PRIVATE_SLOT(d, void configurationDialogRejected())
     //@endcond
 };
 

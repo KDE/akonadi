@@ -40,15 +40,15 @@ class KTextEdit;
  */
 class AddressSelectionWidget : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new address selection widget.
      *
      * @param parent The parent widget.
      */
-    explicit AddressSelectionWidget( QWidget *parent = 0 );
+    explicit AddressSelectionWidget(QWidget *parent = 0);
 
     /**
      * Destroys the address selection widget.
@@ -59,32 +59,32 @@ class AddressSelectionWidget : public KComboBox
      * Sets the list of @p addresses that can be chosen from.
      * @param addresses list of addresses that can be chosen from
      */
-    void setAddresses( const KABC::Address::List &addresses );
+    void setAddresses(const KABC::Address::List &addresses);
 
     /**
      * Sets the current @p address.
      * @param address new current address
      */
-    void setCurrentAddress( const KABC::Address &address );
+    void setCurrentAddress(const KABC::Address &address);
 
     /**
      * Returns the current selected address.
      */
     KABC::Address currentAddress() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the selection of the
      * address has changed.
      *
      * @param address The new selected address.
      */
-    void selectionChanged( const KABC::Address &address );
+    void selectionChanged(const KABC::Address &address);
 
-  private Q_SLOTS:
-    void selected( int );
+private Q_SLOTS:
+    void selected(int);
 
-  private:
+private:
     void updateView();
 
     KABC::Address::List mAddresses;
@@ -95,15 +95,15 @@ class AddressSelectionWidget : public KComboBox
  */
 class AddressTypeCombo : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new address type combo.
      *
      * @param parent The parent widget.
      */
-    explicit AddressTypeCombo( QWidget *parent = 0 );
+    explicit AddressTypeCombo(QWidget *parent = 0);
 
     /**
      * Destroys the address type combo.
@@ -114,18 +114,18 @@ class AddressTypeCombo : public KComboBox
      * Sets the type that shall be selected in the combobox.
      * @param type KABC address type to set.
      */
-    void setType( KABC::Address::Type type );
+    void setType(KABC::Address::Type type);
 
     /**
      * Returns the type that is currently selected.
      */
     KABC::Address::Type type() const;
 
-  private Q_SLOTS:
-    void selected( int );
+private Q_SLOTS:
+    void selected(int);
     void otherSelected();
 
-  private:
+private:
     void update();
 
     KABC::Address::Type mType;
@@ -138,29 +138,29 @@ class AddressTypeCombo : public KComboBox
  */
 class AddressEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit AddressEditWidget( QWidget *parent = 0 );
+public:
+    explicit AddressEditWidget(QWidget *parent = 0);
     ~AddressEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  public Q_SLOTS:
-    void updateName( const QString &name );
+public Q_SLOTS:
+    void updateName(const QString &name);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updateAddressView();
     void createAddress();
     void editAddress();
     void deleteAddress();
 
-  private:
+private:
     void updateButtons();
-    void fixPreferredAddress( const KABC::Address &preferredAddress );
+    void fixPreferredAddress(const KABC::Address &preferredAddress);
 
     AddressSelectionWidget *mAddressSelectionWidget;
 
@@ -179,19 +179,19 @@ class AddressEditWidget : public QWidget
  */
 class AddressEditDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit AddressEditDialog( QWidget *parent = 0 );
+public:
+    explicit AddressEditDialog(QWidget *parent = 0);
     ~AddressEditDialog();
 
-    void setAddress( const KABC::Address &address );
+    void setAddress(const KABC::Address &address);
     KABC::Address address() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void editLabel();
 
-  private:
+private:
     void fillCountryCombo();
 
     AddressTypeCombo *mTypeCombo;

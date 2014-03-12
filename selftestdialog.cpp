@@ -50,8 +50,6 @@
 
 // @cond PRIVATE
 
-#define AKONADI_SEARCH_SERVICE QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" )
-
 using namespace Akonadi;
 
 static QString makeLink( const QString &file )
@@ -155,7 +153,6 @@ void SelfTestDialog::runTests()
   }
   testAkonadiCtl();
   testServerStatus();
-  testSearchStatus();
   testProtocolVersion();
   testResources();
   testServerLog();
@@ -421,39 +418,6 @@ void SelfTestDialog::testServerStatus()
     report( Error, ki18n( "Akonadi server process not registered at D-Bus." ),
                  ki18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
-  }
-}
-
-void SelfTestDialog::testSearchStatus()
-{
-  bool searchAvailable = false;
-  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SEARCH_SERVICE ) ) {
-    searchAvailable = true;
-    report( Success, ki18n( "Nepomuk search service registered at D-Bus." ),
-                   ki18n( "The Nepomuk search service is registered at D-Bus which typically indicates it is operational." ) );
-  } else {
-    report( Error, ki18n( "Nepomuk search service not registered at D-Bus." ),
-                   ki18n( "The Nepomuk search service is not registered at D-Bus which typically means it was not started "
-                          "or encountered a fatal error during startup."  ) );
-  }
-
-  if ( searchAvailable ) {
-    // check which backend is used
-    QDBusInterface interface( QLatin1String( "org.kde.NepomukStorage" ), QLatin1String( "/nepomukstorage" ) );
-    const QDBusReply<QString> reply = interface.call( QLatin1String( "usedSopranoBackend" ) );
-    if ( reply.isValid() ) {
-      const QString name = reply.value();
-
-      // put blacklisted backends here
-      if ( name.contains( QLatin1String( "redland" ) ) ) {
-        report( Error, ki18n( "Nepomuk search service uses inappropriate backend." ),
-                       ki18n( "The Nepomuk search service uses the '%1' backend, which is not "
-                              "recommended for use with Akonadi." ).subs( name ) );
-      } else {
-        report( Success, ki18n( "Nepomuk search service uses an appropriate backend. " ),
-                         ki18n( "The Nepomuk search service uses one of the recommended backends." ) );
-      }
-    }
   }
 }
 

@@ -40,7 +40,7 @@ class CollectionMoveJobPrivate;
  * const Akonadi::Collection newParent = ...
  *
  * Akonadi::CollectionMoveJob *job = new Akonadi::CollectionMoveJob( collection, newParent );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( moveResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(moveResult(KJob*)) );
  *
  * @endcode
  *
@@ -49,9 +49,9 @@ class CollectionMoveJobPrivate;
  */
 class AKONADI_EXPORT CollectionMoveJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection move job for the given collection and destination
      *
@@ -59,13 +59,13 @@ class AKONADI_EXPORT CollectionMoveJob : public Job
      * @param destination The destination collection where @p collection should be moved to.
      * @param parent The parent object.
      */
-    CollectionMoveJob( const Collection &collection, const Collection &destination, QObject *parent = 0 );
+    CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent = 0);
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionMoveJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionMoveJob)
     template <typename T, typename MoveJob> friend class MoveJobImpl;
 };
 

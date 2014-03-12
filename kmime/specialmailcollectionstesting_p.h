@@ -32,10 +32,10 @@ namespace Akonadi {
 */
 class AKONADI_KMIME_TEST_EXPORT SpecialMailCollectionsTesting
 {
-  public:
+public:
     static SpecialMailCollectionsTesting *_t_self();
-    void _t_setDefaultResourceId( const QString &resourceId );
-    void _t_forgetFoldersForResource( const QString &resourceId );
+    void _t_setDefaultResourceId(const QString &resourceId);
+    void _t_forgetFoldersForResource(const QString &resourceId);
     void _t_beginBatchRegister();
     void _t_endBatchRegister();
     int _t_knownResourceCount() const;

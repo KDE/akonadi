@@ -52,8 +52,8 @@ namespace Akonadi {
  */
 class ShowAddressAction
 {
-  public:
-    void showAddress( const KABC::Address &address );
+public:
+    void showAddress(const KABC::Address &address);
 };
 
 }

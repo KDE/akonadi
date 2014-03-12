@@ -83,7 +83,6 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     void testPSQLServer();
     void testAkonadiCtl();
     void testServerStatus();
-    void testSearchStatus();
     void testProtocolVersion();
     void testResources();
     void testServerLog();

@@ -41,27 +41,27 @@ namespace Akonadi
  */
 class AsyncSelectionHandler : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      */
-    explicit AsyncSelectionHandler( QAbstractItemModel *model, QObject *parent = 0 );
+    explicit AsyncSelectionHandler(QAbstractItemModel *model, QObject *parent = 0);
 
     ~AsyncSelectionHandler();
 
-    void waitForCollection( const Collection &collection );
-    void waitForItem( const Item &item );
+    void waitForCollection(const Collection &collection);
+    void waitForItem(const Item &item);
 
-  Q_SIGNALS:
-    void collectionAvailable( const QModelIndex &index );
-    void itemAvailable( const QModelIndex &index );
+Q_SIGNALS:
+    void collectionAvailable(const QModelIndex &index);
+    void itemAvailable(const QModelIndex &index);
 
-  private Q_SLOTS:
-    void rowsInserted( const QModelIndex&, int, int );
+private Q_SLOTS:
+    void rowsInserted(const QModelIndex &, int, int);
 
-  private:
-    bool scanSubTree( const QModelIndex &index, bool searchForItem );
+private:
+    bool scanSubTree(const QModelIndex &index, bool searchForItem);
 
     QAbstractItemModel *mModel;
     Collection mCollection;

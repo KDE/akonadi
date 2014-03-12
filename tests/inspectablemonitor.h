@@ -35,7 +35,7 @@ public:
   InspectableMonitorPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableMonitor* parent);
   ~InspectableMonitorPrivate() {}
 
-  virtual bool emitNotification( const Akonadi::NotificationMessageV2& msg )
+  virtual bool emitNotification( const Akonadi::NotificationMessageV3& msg )
   {
     // TODO: Check/Log
     return Akonadi::MonitorPrivate::emitNotification(msg);
@@ -52,8 +52,8 @@ public:
     return qobject_cast<FakeNotificationSource*>(d_ptr->notificationSource->source());
   }
 
-  QQueue<Akonadi::NotificationMessageV2> pendingNotifications() const { return d_ptr->pendingNotifications; }
-  QQueue<Akonadi::NotificationMessageV2> pipeline() const { return d_ptr->pipeline; }
+  QQueue<Akonadi::NotificationMessageV3> pendingNotifications() const { return d_ptr->pendingNotifications; }
+  QQueue<Akonadi::NotificationMessageV3> pipeline() const { return d_ptr->pipeline; }
 
 Q_SIGNALS:
   void dummySignal();

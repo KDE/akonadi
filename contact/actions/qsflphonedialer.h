@@ -26,14 +26,14 @@
 class QSflPhoneDialer : public QDialer
 {
 public:
-    explicit QSflPhoneDialer( const QString &applicationName );
+    explicit QSflPhoneDialer(const QString &applicationName);
     ~QSflPhoneDialer();
 
-    bool dialNumber( const QString &number );
-    bool sendSms( const QString &number, const QString &text );
+    bool dialNumber(const QString &number);
+    bool sendSms(const QString &number, const QString &text);
 
 private:
-  bool initializeSflPhone();
+    bool initializeSflPhone();
 
 };
 #endif // QSFLPHONEDIALER_H

@@ -51,6 +51,7 @@
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <kglobal.h>
+#include <akonadi/tagmodifyjob.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -244,6 +245,27 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::itemsFlagsChanged( validItems, addedFlags, removedFlags );
     }
 
+    void itemsTagsChanged( const Item::List &items, const QSet<Tag> &addedTags, const QSet<Tag> &removedTags )
+    {
+      if ( addedTags.isEmpty() && removedTags.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::itemsTagsChanged( validItems, addedTags, removedTags );
+    }
+
     // TODO move the move translation code from AgentBasePrivate here, it's wrong for agents
     void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination)
     {
@@ -365,6 +387,36 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         return;
       }
       AgentBasePrivate::collectionRemoved( collection );
+    }
+
+    void tagAdded( const Akonadi::Tag &tag )
+    {
+      if ( !tag.isValid() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::tagAdded( tag );
+    }
+
+    void tagChanged( const Akonadi::Tag &tag )
+    {
+      if ( tag.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::tagChanged( tag );
+    }
+
+    void tagRemoved( const Akonadi::Tag &tag )
+    {
+      if ( tag.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::tagRemoved( tag );
     }
 
   public:
@@ -631,6 +683,7 @@ void ResourceBase::changesCommitted(const Item::List& items)
   job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   job->setIgnorePayload( true ); // we only want to reset the dirty flag and update the remote id
+  job->setUpdateGid( true ); // allow resources to update GID too
   connect( job, SIGNAL(finished(KJob*)), this, SLOT(changeCommittedResult(KJob*)) );
 }
 
@@ -650,10 +703,16 @@ void ResourceBasePrivate::changeCommittedResult( KJob *job )
     mChangeRecorder->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
   } else {
     // TODO: Error handling for item changes?
-    // Item cache is invalidated by ItemModifyJob
+    // Item and tag cache is invalidated by modify job
   }
 
   changeProcessed();
+}
+
+void ResourceBase::changeCommitted( const Tag &tag )
+{
+  TagModifyJob *job = new TagModifyJob( tag );
+  connect( job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)) );
 }
 
 bool ResourceBase::requestItemDelivery( qint64 uid, const QString &remoteId,

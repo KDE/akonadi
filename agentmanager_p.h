@@ -36,30 +36,30 @@ class AgentManager;
  */
 class AgentManagerPrivate
 {
-  friend class AgentManager;
+    friend class AgentManager;
 
-  public:
-    AgentManagerPrivate( AgentManager *parent )
-      : mParent( parent ),
-        mManager( 0 )
+public:
+    AgentManagerPrivate(AgentManager *parent)
+        : mParent(parent)
+        , mManager(0)
     {
     }
 
     /*
      * Used by AgentInstanceCreateJob
      */
-    AgentInstance createInstance( const AgentType &type );
+    AgentInstance createInstance(const AgentType &type);
 
-    void agentTypeAdded( const QString& );
-    void agentTypeRemoved( const QString& );
-    void agentInstanceAdded( const QString& );
-    void agentInstanceRemoved( const QString& );
-    void agentInstanceStatusChanged( const QString&, int, const QString& );
-    void agentInstanceProgressChanged( const QString&, uint, const QString& );
-    void agentInstanceNameChanged( const QString&, const QString& );
-    void agentInstanceWarning( const QString&, const QString& );
-    void agentInstanceError( const QString&, const QString& );
-    void agentInstanceOnlineChanged( const QString&, bool );
+    void agentTypeAdded(const QString &);
+    void agentTypeRemoved(const QString &);
+    void agentInstanceAdded(const QString &);
+    void agentInstanceRemoved(const QString &);
+    void agentInstanceStatusChanged(const QString &, int, const QString &);
+    void agentInstanceProgressChanged(const QString &, uint, const QString &);
+    void agentInstanceNameChanged(const QString &, const QString &);
+    void agentInstanceWarning(const QString &, const QString &);
+    void agentInstanceError(const QString &, const QString &);
+    void agentInstanceOnlineChanged(const QString &, bool);
 
     /**
      * Reads the information about all known agent types from the serverside
@@ -77,18 +77,18 @@ class AgentManagerPrivate
      */
     void readAgentInstances();
 
-    void setName( const AgentInstance&, const QString& );
-    void setOnline( const AgentInstance&, bool );
-    void configure( const AgentInstance&, QWidget* );
-    void synchronize( const AgentInstance& );
-    void synchronizeCollectionTree( const AgentInstance& );
+    void setName(const AgentInstance &, const QString &);
+    void setOnline(const AgentInstance &, bool);
+    void configure(const AgentInstance &, QWidget *);
+    void synchronize(const AgentInstance &);
+    void synchronizeCollectionTree(const AgentInstance &);
 
-    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void createDBusInterface();
 
-    AgentType fillAgentType( const QString &identifier ) const;
-    AgentInstance fillAgentInstance( const QString &identifier ) const;
-    AgentInstance fillAgentInstanceLight( const QString &identifier ) const;
+    AgentType fillAgentType(const QString &identifier) const;
+    AgentInstance fillAgentInstance(const QString &identifier) const;
+    AgentInstance fillAgentInstanceLight(const QString &identifier) const;
 
     static AgentManager *mSelf;
 

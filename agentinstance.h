@@ -61,10 +61,10 @@ class AgentType;
  */
 class AKONADI_EXPORT AgentInstance
 {
-  friend class AgentManager;
-  friend class AgentManagerPrivate;
+    friend class AgentManager;
+    friend class AgentManagerPrivate;
 
-  public:
+public:
     /**
      * Describes a list of agent instances.
      */
@@ -74,10 +74,10 @@ class AKONADI_EXPORT AgentInstance
      * Describes the status of the agent instance.
      */
     enum Status {
-      Idle = 0, ///< The agent instance does currently nothing.
-      Running,  ///< The agent instance is working on something.
-      Broken,    ///< The agent instance encountered an error state.
-      NotConfigured  ///< The agent is lacking required configuration
+        Idle = 0, ///< The agent instance does currently nothing.
+        Running,  ///< The agent instance is working on something.
+        Broken,    ///< The agent instance encountered an error state.
+        NotConfigured  ///< The agent is lacking required configuration
     };
 
     /**
@@ -88,7 +88,7 @@ class AKONADI_EXPORT AgentInstance
     /**
      * Creates an agent instance from an @p other agent instance.
      */
-    AgentInstance( const AgentInstance &other );
+    AgentInstance(const AgentInstance &other);
 
     /**
      * Destroys the agent instance object.
@@ -118,7 +118,7 @@ class AKONADI_EXPORT AgentInstance
     /**
      * Sets the user visible @p name of the agent instance.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
      * Returns the status of the agent instance.
@@ -144,14 +144,14 @@ class AKONADI_EXPORT AgentInstance
     /**
      * Sets @p online status of the agent instance.
      */
-    void setIsOnline( bool online );
+    void setIsOnline(bool online);
 
     /**
      * Triggers the agent instance to show its configuration dialog.
      *
      * @param parent Parent window for the configuration dialog.
      */
-    void configure( QWidget *parent = 0 );
+    void configure(QWidget *parent = 0);
 
     /**
      * Triggers the agent instance to start synchronization.
@@ -167,13 +167,13 @@ class AKONADI_EXPORT AgentInstance
      * @internal
      * @param other other agent instance
      */
-    AgentInstance& operator=( const AgentInstance &other );
+    AgentInstance &operator=(const AgentInstance &other);
 
     /**
      * @internal
      * @param other other agent instance
      */
-    bool operator==( const AgentInstance &other ) const;
+    bool operator==(const AgentInstance &other) const;
 
     /**
      * Tell the agent to abort its current operation.
@@ -191,7 +191,7 @@ class AKONADI_EXPORT AgentInstance
      */
     void restart() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
@@ -200,8 +200,8 @@ class AKONADI_EXPORT AgentInstance
 
 }
 
-Q_DECLARE_TYPEINFO( Akonadi::AgentInstance, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::AgentInstance, Q_MOVABLE_TYPE);
 
-Q_DECLARE_METATYPE( Akonadi::AgentInstance )
+Q_DECLARE_METATYPE(Akonadi::AgentInstance)
 
 #endif

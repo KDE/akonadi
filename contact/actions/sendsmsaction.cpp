@@ -32,64 +32,63 @@
 
 #include <QPointer>
 
-static QString strippedSmsNumber( const QString &number )
+static QString strippedSmsNumber(const QString &number)
 {
-  QString result;
+    QString result;
 
-  for ( int i = 0; i < number.length(); ++i ) {
-    const QChar character = number.at( i );
-    if ( character.isDigit() || ( character == QLatin1Char( '+' ) && i == 0 ) ) {
-      result += character;
+    for (int i = 0; i < number.length(); ++i) {
+        const QChar character = number.at(i);
+        if (character.isDigit() || (character == QLatin1Char('+') && i == 0)) {
+            result += character;
+        }
     }
-  }
 
-  return result;
+    return result;
 }
 
-void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
+void SendSmsAction::sendSms(const KABC::PhoneNumber &phoneNumber)
 {
-  const QString number = phoneNumber.number().trimmed();
+    const QString number = phoneNumber.number().trimmed();
 
-  // synchronize
-  ContactActionsSettings::self()->readConfig();
+    // synchronize
+    ContactActionsSettings::self()->readConfig();
 
-  QString command = ContactActionsSettings::self()->smsCommand();
+    QString command = ContactActionsSettings::self()->smsCommand();
 
-  if ( command.isEmpty() ) {
-    KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
-    return;
-  }
-
-  QPointer<SmsDialog> dlg( new SmsDialog( number ) );
-  if ( dlg->exec() != QDialog::Accepted ) { // the cancel button has been clicked
-    delete dlg;
-    return;
-  }
-  const QString message = ( dlg != 0 ? dlg->message() : QString() );
-  delete dlg;
-
-
-  //   we handle skype separated
-  if ( ContactActionsSettings::self()->sendSmsAction() == ContactActionsSettings::UseSkypeSms ) {
-    QSkypeDialer dialer( QLatin1String( "AkonadiContacts" ) );
-    if ( dialer.sendSms( number, message ) ) {
-      // I'm not sure whether here should be a notification.
-      // Skype can do a notification itself if whished.
-    } else {
-      KMessageBox::sorry( 0, dialer.errorMessage() );
+    if (command.isEmpty()) {
+        KMessageBox::sorry(0, i18n("There is no application set which could be executed.\nPlease go to the settings dialog and configure one."));
+        return;
     }
 
-    return;
-  }
+    QPointer<SmsDialog> dlg(new SmsDialog(number));
+    if (dlg->exec() != QDialog::Accepted) {   // the cancel button has been clicked
+        delete dlg;
+        return;
+    }
+    const QString message = (dlg != 0 ? dlg->message() : QString());
+    delete dlg;
 
-  /*
-   * %N the raw number
-   * %n the number with all additional non-number characters removed
-   */
-  command = command.replace( QLatin1String( "%N" ), phoneNumber.number() );
-  command = command.replace( QLatin1String( "%n" ), strippedSmsNumber( number ) );
-  command = command.replace( QLatin1String( "%t" ), message );
-  //Bug: 293232 In KDE3 We used %F to replace text
-  command = command.replace( QLatin1String( "%F" ), message );
-  KRun::runCommand( command, 0 );
+    //   we handle skype separated
+    if (ContactActionsSettings::self()->sendSmsAction() == ContactActionsSettings::UseSkypeSms) {
+        QSkypeDialer dialer(QLatin1String("AkonadiContacts"));
+        if (dialer.sendSms(number, message)) {
+            // I'm not sure whether here should be a notification.
+            // Skype can do a notification itself if whished.
+        } else {
+            KMessageBox::sorry(0, dialer.errorMessage());
+        }
+
+        return;
+    }
+
+    /*
+     * %N the raw number
+     * %n the number with all additional non-number characters removed
+     */
+    command = command.replace(QLatin1String("%N"), phoneNumber.number());
+    command = command.replace(QLatin1String("%n"), strippedSmsNumber(number));
+    command = command.replace(QLatin1String("%t"), message);
+    //Bug: 293232 In KDE3 We used %F to replace text
+    command = command.replace(QLatin1String("%F"), message);
+    KRun::runCommand(command, 0);
 }

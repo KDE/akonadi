@@ -307,7 +307,6 @@ void FakeCollectionChangedCommand::doCommand()
   Collection parent = getCollectionByDisplayName( m_parentName );
 
   Q_ASSERT( collection.isValid() );
-  Q_ASSERT( parent.isValid() );
 
   emit_monitoredCollectionChanged( collection );
 }

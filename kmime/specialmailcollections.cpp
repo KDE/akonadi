@@ -32,7 +32,7 @@ using namespace Akonadi;
 
 class Akonadi::SpecialMailCollectionsPrivate
 {
-  public:
+public:
     SpecialMailCollectionsPrivate();
     ~SpecialMailCollectionsPrivate();
 
@@ -41,7 +41,7 @@ class Akonadi::SpecialMailCollectionsPrivate
 
 typedef SpecialMailCollectionsSettings Settings;
 
-Q_GLOBAL_STATIC( SpecialMailCollectionsPrivate, sInstance )
+Q_GLOBAL_STATIC(SpecialMailCollectionsPrivate, sInstance)
 
 static const char s_specialCollectionTypes[SpecialMailCollections::LastType][11] = {
     "local-mail",
@@ -53,11 +53,11 @@ static const char s_specialCollectionTypes[SpecialMailCollections::LastType][11]
     "templates"
 };
 
-static const int s_numTypes = sizeof s_specialCollectionTypes / sizeof *s_specialCollectionTypes;
+static const int s_numTypes = sizeof s_specialCollectionTypes / sizeof * s_specialCollectionTypes;
 
 BOOST_STATIC_ASSERT(s_numTypes == SpecialMailCollections::LastType);
 
-static inline QByteArray enumToType( SpecialMailCollections::Type value )
+static inline QByteArray enumToType(SpecialMailCollections::Type value)
 {
     return s_specialCollectionTypes[value];
 }
@@ -73,110 +73,110 @@ static inline SpecialMailCollections::Type typeToEnum(const QByteArray &type)
 }
 
 SpecialMailCollectionsPrivate::SpecialMailCollectionsPrivate()
-  : mInstance( new SpecialMailCollections( this ) )
+    : mInstance(new SpecialMailCollections(this))
 {
 }
 
 SpecialMailCollectionsPrivate::~SpecialMailCollectionsPrivate()
 {
-  delete mInstance;
+    delete mInstance;
 }
 
-static KCoreConfigSkeleton *getConfig( const QString &filename)
+static KCoreConfigSkeleton *getConfig(const QString &filename)
 {
-  Settings::instance( ServerManager::addNamespace(filename) );
-  return Settings::self();
+    Settings::instance(ServerManager::addNamespace(filename));
+    return Settings::self();
 }
 
-SpecialMailCollections::SpecialMailCollections( SpecialMailCollectionsPrivate *dd )
-  : SpecialCollections( getConfig(QLatin1String("specialmailcollectionsrc")) ),
-    d( dd )
+SpecialMailCollections::SpecialMailCollections(SpecialMailCollectionsPrivate *dd)
+    : SpecialCollections(getConfig(QLatin1String("specialmailcollectionsrc")))
+    , d(dd)
 {
 }
 
 SpecialMailCollections *SpecialMailCollections::self()
 {
-  return sInstance->mInstance;
+    return sInstance->mInstance;
 }
 
-bool SpecialMailCollections::hasCollection( Type type, const AgentInstance &instance ) const
+bool SpecialMailCollections::hasCollection(Type type, const AgentInstance &instance) const
 {
-  return SpecialCollections::hasCollection( enumToType( type ), instance );
+    return SpecialCollections::hasCollection(enumToType(type), instance);
 }
 
-Collection SpecialMailCollections::collection( Type type, const AgentInstance &instance ) const
+Collection SpecialMailCollections::collection(Type type, const AgentInstance &instance) const
 {
-  return SpecialCollections::collection( enumToType( type ), instance );
+    return SpecialCollections::collection(enumToType(type), instance);
 }
 
-bool SpecialMailCollections::registerCollection( Type type, const Collection &collection )
+bool SpecialMailCollections::registerCollection(Type type, const Collection &collection)
 {
-  return SpecialCollections::registerCollection( enumToType( type ), collection );
+    return SpecialCollections::registerCollection(enumToType(type), collection);
 }
 
-bool SpecialMailCollections::unregisterCollection( const Collection &collection )
+bool SpecialMailCollections::unregisterCollection(const Collection &collection)
 {
-  if (collection != Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash )) {
-    return SpecialCollections::unregisterCollection( collection );
-  } else {
-    return false;
-  }
-}
-
-bool SpecialMailCollections::hasDefaultCollection( Type type ) const
-{
-  return SpecialCollections::hasDefaultCollection( enumToType( type ) );
-}
-
-Collection SpecialMailCollections::defaultCollection( Type type ) const
-{
-  return SpecialCollections::defaultCollection( enumToType( type ) );
-}
-
-void SpecialMailCollections::verifyI18nDefaultCollection( Type type )
-{
-  Collection collection = defaultCollection( type );
-  QString defaultI18n;
-
-  switch ( type ) {
-  case SpecialMailCollections::Inbox:
-    defaultI18n = i18nc( "local mail folder", "inbox" );
-    break;
-  case SpecialMailCollections::Outbox:
-    defaultI18n = i18nc( "local mail folder", "outbox" );
-    break;
-  case SpecialMailCollections::SentMail:
-    defaultI18n = i18nc( "local mail folder", "sent-mail" );
-    break;
-  case SpecialMailCollections::Trash:
-     defaultI18n = i18nc( "local mail folder", "trash" );
-     break;
-  case SpecialMailCollections::Drafts:
-     defaultI18n = i18nc( "local mail folder", "drafts" );
-     break;
-  case SpecialMailCollections::Templates:
-     defaultI18n = i18nc( "local mail folder", "templates" );
-     break;
-  default:
-     break;
-  }
-  if (!defaultI18n.isEmpty()) {
-    if (collection.hasAttribute<Akonadi::EntityDisplayAttribute>()) {
-      if ( collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName() != defaultI18n) {
-          collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName( defaultI18n );
-          Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
-          connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
-      }
+    if (collection != Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::Trash)) {
+        return SpecialCollections::unregisterCollection(collection);
+    } else {
+        return false;
     }
-  }
 }
 
-void SpecialMailCollections::slotCollectionModified(KJob*job)
+bool SpecialMailCollections::hasDefaultCollection(Type type) const
 {
-  if ( job->error() ) {
-    kDebug()<<" Error when we modified collection";
-    return;
-  }
+    return SpecialCollections::hasDefaultCollection(enumToType(type));
+}
+
+Collection SpecialMailCollections::defaultCollection(Type type) const
+{
+    return SpecialCollections::defaultCollection(enumToType(type));
+}
+
+void SpecialMailCollections::verifyI18nDefaultCollection(Type type)
+{
+    Collection collection = defaultCollection(type);
+    QString defaultI18n;
+
+    switch (type) {
+    case SpecialMailCollections::Inbox:
+        defaultI18n = i18nc("local mail folder", "inbox");
+        break;
+    case SpecialMailCollections::Outbox:
+        defaultI18n = i18nc("local mail folder", "outbox");
+        break;
+    case SpecialMailCollections::SentMail:
+        defaultI18n = i18nc("local mail folder", "sent-mail");
+        break;
+    case SpecialMailCollections::Trash:
+        defaultI18n = i18nc("local mail folder", "trash");
+        break;
+    case SpecialMailCollections::Drafts:
+        defaultI18n = i18nc("local mail folder", "drafts");
+        break;
+    case SpecialMailCollections::Templates:
+        defaultI18n = i18nc("local mail folder", "templates");
+        break;
+    default:
+        break;
+    }
+    if (!defaultI18n.isEmpty()) {
+        if (collection.hasAttribute<Akonadi::EntityDisplayAttribute>()) {
+            if (collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName() != defaultI18n) {
+                collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName(defaultI18n);
+                Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob(collection, this);
+                connect(job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)));
+            }
+        }
+    }
+}
+
+void SpecialMailCollections::slotCollectionModified(KJob *job)
+{
+    if (job->error()) {
+        kDebug() << " Error when we modified collection";
+        return;
+    }
 }
 
 SpecialMailCollections::Type SpecialMailCollections::specialCollectionType(const Akonadi::Collection &collection)
@@ -187,4 +187,3 @@ SpecialMailCollections::Type SpecialMailCollections::specialCollectionType(const
         return typeToEnum(collection.attribute<SpecialCollectionAttribute>()->collectionType());
     }
 }
-

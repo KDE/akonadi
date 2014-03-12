@@ -31,29 +31,29 @@ class QAbstractItemModel;
 class KJob;
 class MoveToTrashCommand : public CommandBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  MoveToTrashCommand( const QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent = 0 );
-  MoveToTrashCommand( const QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0 );
+    MoveToTrashCommand(const QAbstractItemModel *model, const QList< Akonadi::Item > &msgList, QObject *parent = 0);
+    MoveToTrashCommand(const QAbstractItemModel *model, const Akonadi::Collection::List &folders, QObject *parent = 0);
 
-  /*reimp*/ void execute();
+    /*reimp*/ void execute();
 
 private Q_SLOTS:
-  void slotFetchDone( KJob* job );
-  void slotMoveDone( const Result &result);
+    void slotFetchDone(KJob *job);
+    void slotMoveDone(const Result &result);
 
 private:
-  void moveMessages();
-  Akonadi::Collection trashCollectionFromResource( const Akonadi::Collection & col );
-  Akonadi::Collection trashCollectionFolder();
-  Akonadi::Collection findTrashFolder( const Akonadi::Collection& folder );
-  Akonadi::Collection collectionFromId(const Akonadi::Collection::Id& id) const;
+    void moveMessages();
+    Akonadi::Collection trashCollectionFromResource(const Akonadi::Collection &col);
+    Akonadi::Collection trashCollectionFolder();
+    Akonadi::Collection findTrashFolder(const Akonadi::Collection &folder);
+    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
 
-  Akonadi::Collection::List mFolders;
-  QList<Akonadi::Item> mMessages;
-  Akonadi::Collection::Id the_trashCollectionFolder;
-  const QAbstractItemModel* mModel;
-  int mFolderListJobCount;
+    Akonadi::Collection::List mFolders;
+    QList<Akonadi::Item> mMessages;
+    Akonadi::Collection::Id the_trashCollectionFolder;
+    const QAbstractItemModel *mModel;
+    int mFolderListJobCount;
 };
 
 #endif // MOVETOTRASHCOMMAND_H

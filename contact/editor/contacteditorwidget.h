@@ -36,19 +36,20 @@ class Addressee;
  */
 class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
 {
-  public:
+public:
+    enum DisplayMode {
+        FullMode, ///< Show all pages
+        VCardMode ///< Show just pages with elements stored in vcard.
+    };
+
     /**
      * Creates a new contact editor widget.
      *
      * @param parent The parent widget.
      */
-    enum DisplayMode {
-      FullMode, //Show all pages
-      VCardMode //Show just pages with elements stored in vcard.
-    };
-    explicit ContactEditorWidget( QWidget *parent = 0 );
+    explicit ContactEditorWidget(QWidget *parent = 0);
 
-    ContactEditorWidget( DisplayMode displayMode, QWidget *parent );
+    ContactEditorWidget(DisplayMode displayMode, QWidget *parent);
 
     /**
      * Destroys the contact editor widget.
@@ -59,23 +60,23 @@ class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
      * Initializes the fields of the contact editor
      * with the values from a @p contact.
      */
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& );
+    void loadContact(const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData);
 
     /**
      * Stores back the fields of the contact editor
      * into the given @p contact.
      */
-    void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const;
+    void storeContact(KABC::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
     /**
      * Sets whether the contact in the editor allows
      * the user to edit the contact or not.
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private:
+private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 #endif

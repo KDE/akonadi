@@ -53,18 +53,18 @@ class CollectionModelPrivate;
  */
 class AKONADI_DEPRECATED_EXPORT CollectionModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the roles for collections.
      */
     enum Roles {
-      OldCollectionIdRole = Qt::UserRole + 1, ///< The collection identifier. For binary compatibility to <4.3
-      OldCollectionRole =  Qt::UserRole + 2, ///< The actual collection object. For binary compatibility to <4.3
-      CollectionIdRole = Qt::UserRole + 10, ///< The collection identifier.
-      CollectionRole = Qt::UserRole + 11,   ///< The actual collection object.
-      UserRole = Qt::UserRole + 42          ///< Role for user extensions.
+        OldCollectionIdRole = Qt::UserRole + 1, ///< The collection identifier. For binary compatibility to <4.3
+        OldCollectionRole =  Qt::UserRole + 2, ///< The actual collection object. For binary compatibility to <4.3
+        CollectionIdRole = Qt::UserRole + 10, ///< The collection identifier.
+        CollectionRole = Qt::UserRole + 11,   ///< The actual collection object.
+        UserRole = Qt::UserRole + 42          ///< Role for user extensions.
     };
 
     /**
@@ -72,7 +72,7 @@ class AKONADI_DEPRECATED_EXPORT CollectionModel : public QAbstractItemModel
      *
      * @param parent The parent object.
      */
-    explicit CollectionModel( QObject *parent = 0 );
+    explicit CollectionModel(QObject *parent = 0);
 
     /**
      * Destroys the collection model.
@@ -86,53 +86,53 @@ class AKONADI_DEPRECATED_EXPORT CollectionModel : public QAbstractItemModel
      * @see CollectionStatistics.
      * @param enable whether to fetch collecton statistics
      */
-    void fetchCollectionStatistics( bool enable );
+    void fetchCollectionStatistics(bool enable);
 
     /**
      * Sets whether unsubscribed collections shall be listed in the model.
      */
-    void includeUnsubscribed( bool include = true );
+    void includeUnsubscribed(bool include = true);
 
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex & index ) const;
-    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-    virtual bool setHeaderData( int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole );
-    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual Qt::DropActions supportedDropActions() const;
-    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
-    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual QStringList mimeTypes() const;
 
-  protected:
+protected:
     /**
      * Returns the collection for a given collection @p id.
      */
-    Collection collectionForId( Collection::Id id ) const;
+    Collection collectionForId(Collection::Id id) const;
 
     //@cond PRIVATE
     Akonadi::CollectionModelPrivate *d_ptr;
-    explicit CollectionModel( CollectionModelPrivate *d, QObject *parent = 0 );
+    explicit CollectionModel(CollectionModelPrivate *d, QObject *parent = 0);
     //@endcond
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionModel )
+private:
+    Q_DECLARE_PRIVATE(CollectionModel)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
-    Q_PRIVATE_SLOT( d_func(), void collectionRemoved( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionChanged( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d_func(), void updateDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionStatisticsChanged(
-                                        Akonadi::Collection::Id,
-                                        const Akonadi::CollectionStatistics& ) )
-    Q_PRIVATE_SLOT( d_func(), void listDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void editDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void dropResult( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionsChanged( const Akonadi::Collection::List& ) )
+    Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
+    Q_PRIVATE_SLOT(d_func(), void collectionRemoved(const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void collectionChanged(const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void updateDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void collectionStatisticsChanged(
+                       Akonadi::Collection::Id,
+                       const Akonadi::CollectionStatistics &))
+    Q_PRIVATE_SLOT(d_func(), void listDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void editDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void dropResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void collectionsChanged(const Akonadi::Collection::List &))
     //@endcond
 };
 

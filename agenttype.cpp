@@ -25,12 +25,12 @@
 using namespace Akonadi;
 
 AgentType::AgentType()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
-AgentType::AgentType( const AgentType &other )
-  : d( other.d )
+AgentType::AgentType(const AgentType &other)
+    : d(other.d)
 {
 }
 
@@ -40,59 +40,59 @@ AgentType::~AgentType()
 
 bool AgentType::isValid() const
 {
-  return !d->mIdentifier.isEmpty();
+    return !d->mIdentifier.isEmpty();
 }
 
 QString AgentType::identifier() const
 {
-  return d->mIdentifier;
+    return d->mIdentifier;
 }
 
 QString AgentType::name() const
 {
-  return d->mName;
+    return d->mName;
 }
 
 QString AgentType::description() const
 {
-  return d->mDescription;
+    return d->mDescription;
 }
 
 QString AgentType::iconName() const
 {
-  return d->mIconName;
+    return d->mIconName;
 }
 
 QIcon AgentType::icon() const
 {
-  return KIcon( d->mIconName );
+    return KIcon(d->mIconName);
 }
 
 QStringList AgentType::mimeTypes() const
 {
-  return d->mMimeTypes;
+    return d->mMimeTypes;
 }
 
 QStringList AgentType::capabilities() const
 {
-  return d->mCapabilities;
+    return d->mCapabilities;
 }
 
 QVariantMap AgentType::customProperties() const
 {
-  return d->mCustomProperties;
+    return d->mCustomProperties;
 }
 
-AgentType& AgentType::operator=( const AgentType &other )
+AgentType &AgentType::operator=(const AgentType &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
+    if (this != &other) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
-bool AgentType::operator==( const AgentType &other ) const
+bool AgentType::operator==(const AgentType &other) const
 {
-  return ( d->mIdentifier == other.d->mIdentifier );
+    return (d->mIdentifier == other.d->mIdentifier);
 }

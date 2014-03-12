@@ -23,6 +23,7 @@
 #include "itemfetchscope.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
+#include "searchquery.h"
 
 #include <QtCore/QTimer>
 #include <QThreadStorage>
@@ -32,9 +33,19 @@ using namespace Akonadi;
 class Akonadi::ItemSearchJobPrivate : public JobPrivate
 {
   public:
-    ItemSearchJobPrivate( ItemSearchJob *parent, const QString &query )
-      : JobPrivate( parent ), mQuery( query ), mEmitTimer( 0 )
+    ItemSearchJobPrivate( ItemSearchJob *parent, const SearchQuery &query )
+      : JobPrivate( parent ), mQuery( query ), mRecursive( false ), mRemote( true ), mEmitTimer( 0 )
     {
+    }
+
+    void init()
+    {
+      Q_Q( ItemSearchJob );
+      mEmitTimer = new QTimer( q );
+      mEmitTimer->setSingleShot( true );
+      mEmitTimer->setInterval( 100 );
+      q->connect( mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
+      q->connect( q, SIGNAL(result(KJob*)), q, SLOT(timeout()) );
     }
 
     void timeout()
@@ -51,10 +62,16 @@ class Akonadi::ItemSearchJobPrivate : public JobPrivate
 
     Q_DECLARE_PUBLIC( ItemSearchJob )
 
-    QString mQuery;
-    Item::List mItems;
+    SearchQuery mQuery;
+    Collection::List mCollections;
+    QStringList mMimeTypes;
+    bool mRecursive;
+    bool mRemote;
     ItemFetchScope mFetchScope;
+
+    Item::List mItems;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
+
     QTimer* mEmitTimer;
 };
 
@@ -76,16 +93,21 @@ static QObject *sessionForJob( QObject *parent )
   return defaultSearchSession();
 }
 
-ItemSearchJob::ItemSearchJob( const QString & query, QObject * parent )
+ItemSearchJob::ItemSearchJob( const SearchQuery &query, QObject *parent )
   : Job( new ItemSearchJobPrivate( this, query ), sessionForJob( parent ) )
 {
   Q_D( ItemSearchJob );
 
-  d->mEmitTimer = new QTimer( this );
-  d->mEmitTimer->setSingleShot( true );
-  d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
-  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
+  d->init();
+}
+
+
+ItemSearchJob::ItemSearchJob( const QString &query, QObject * parent )
+  : Job( new ItemSearchJobPrivate( this, SearchQuery::fromJSON( query.toUtf8()) ), sessionForJob( parent ) )
+{
+  Q_D( ItemSearchJob );
+
+  d->init();
 }
 
 ItemSearchJob::~ItemSearchJob()
@@ -96,8 +118,16 @@ void ItemSearchJob::setQuery( const QString &query )
 {
   Q_D( ItemSearchJob );
 
+  d->mQuery = SearchQuery::fromJSON( query.toUtf8() );
+}
+
+void ItemSearchJob::setQuery( const SearchQuery &query )
+{
+  Q_D( ItemSearchJob );
+
   d->mQuery = query;
 }
+
 
 void ItemSearchJob::setFetchScope( const ItemFetchScope &fetchScope )
 {
@@ -113,12 +143,77 @@ ItemFetchScope &ItemSearchJob::fetchScope()
   return d->mFetchScope;
 }
 
+void ItemSearchJob::setSearchCollections( const Collection::List &collections )
+{
+  Q_D( ItemSearchJob );
+
+  d->mCollections = collections;
+}
+
+Collection::List ItemSearchJob::searchCollections() const
+{
+  return d_func()->mCollections;
+}
+
+void ItemSearchJob::setMimeTypes( const QStringList &mimeTypes )
+{
+  Q_D( ItemSearchJob );
+
+  d->mMimeTypes = mimeTypes;
+}
+
+QStringList ItemSearchJob::mimeTypes() const
+{
+  return d_func()->mMimeTypes;
+}
+
+void ItemSearchJob::setRecursive( bool recursive )
+{
+  Q_D( ItemSearchJob );
+
+  d->mRecursive = recursive;
+}
+
+bool ItemSearchJob::isRecursive() const
+{
+  return d_func()->mRecursive;
+}
+
+void ItemSearchJob::setRemoteSearchEnabled(bool enabled)
+{
+  Q_D( ItemSearchJob );
+
+  d->mRemote = enabled;
+}
+
+bool ItemSearchJob::isRemoteSearchEnabled() const
+{
+  return d_func()->mRemote;
+}
+
 void ItemSearchJob::doStart()
 {
   Q_D( ItemSearchJob );
 
   QByteArray command = d->newTag() + " SEARCH ";
-  command += ImapParser::quote( d->mQuery.toUtf8() );
+  if ( !d->mMimeTypes.isEmpty() ) {
+    command += "MIMETYPE (" + d->mMimeTypes.join( QLatin1String( " ") ).toLatin1() + ") ";
+  }
+  if ( !d->mCollections.isEmpty() ) {
+    command += "COLLECTIONS (";
+    Q_FOREACH (const Collection &collection, d->mCollections ) {
+      command += QByteArray::number( collection.id() ) + ' ';
+    }
+    command += ") ";
+  }
+  if ( d->mRecursive ) {
+    command += "RECURSIVE ";
+  }
+  if ( d->mRemote ) {
+    command += "REMOTE ";
+  }
+
+  command += "QUERY " + ImapParser::quote( d->mQuery.toJSON() );
   command += ' ' + ProtocolHelper::itemFetchScopeToByteArray( d->mFetchScope );
   command += '\n';
   d->writeData( command );

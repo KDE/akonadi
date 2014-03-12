@@ -37,18 +37,18 @@ namespace Akonadi {
  */
 class AKONADI_KMIME_DEPRECATED_EXPORT MessageModel : public Akonadi::ItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Column types.
     */
     enum Column {
-      Subject, /**< Subject column. */
-      Sender, /**< Sender column. */
-      Receiver, /**< Receiver column. */
-      Date, /**< Date column. */
-      Size /**< Size column. */
+        Subject, /**< Subject column. */
+        Sender, /**< Sender column. */
+        Receiver, /**< Receiver column. */
+        Date, /**< Date column. */
+        Size /**< Size column. */
     };
 
     /**
@@ -56,7 +56,7 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageModel : public Akonadi::ItemModel
 
       @param parent The parent object.
     */
-    explicit MessageModel( QObject* parent = 0 );
+    explicit MessageModel(QObject *parent = 0);
 
     /**
       Deletes the message model.
@@ -66,30 +66,30 @@ class AKONADI_KMIME_DEPRECATED_EXPORT MessageModel : public Akonadi::ItemModel
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     /**
       Reimplemented from QAbstractItemModel.
      */
     virtual QStringList mimeTypes() const;
-  private:
+private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 }

@@ -30,7 +30,7 @@ using namespace Akonadi;
 
 class AgentTypeDialog::Private
 {
-  public:
+public:
     Private(AgentTypeDialog *qq)
         : q(qq)
     {
@@ -45,65 +45,66 @@ class AgentTypeDialog::Private
 
 void AgentTypeDialog::Private::writeConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AgentTypeDialog" );
-  group.writeEntry( "Size", q->size() );
+    KConfigGroup group(KGlobal::config(), "AgentTypeDialog");
+    group.writeEntry("Size", q->size());
 }
 
 void AgentTypeDialog::Private::readConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AgentTypeDialog" );
-  const QSize sizeDialog = group.readEntry( "Size", QSize(460, 320) );
-  if ( sizeDialog.isValid() ) {
-     q->resize( sizeDialog );
-  }
+    KConfigGroup group(KGlobal::config(), "AgentTypeDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(460, 320));
+    if (sizeDialog.isValid()) {
+        q->resize(sizeDialog);
+    }
 }
 
-AgentTypeDialog::AgentTypeDialog( QWidget *parent )
-    : KDialog( parent ), d( new Private(this) )
+AgentTypeDialog::AgentTypeDialog(QWidget *parent)
+    : KDialog(parent)
+    , d(new Private(this))
 {
-  setButtons( Ok | Cancel );
-  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
-  layout->setMargin( 0 );
+    setButtons(Ok | Cancel);
+    QVBoxLayout *layout = new QVBoxLayout(mainWidget());
+    layout->setMargin(0);
 
-  d->Widget = new Akonadi::AgentTypeWidget( mainWidget() );
-  connect( d->Widget, SIGNAL(activated()), this, SLOT(accept()) );
+    d->Widget = new Akonadi::AgentTypeWidget(mainWidget());
+    connect(d->Widget, SIGNAL(activated()), this, SLOT(accept()));
 
-  KFilterProxySearchLine* searchLine = new KFilterProxySearchLine( mainWidget() );
-  layout->addWidget( searchLine );
-  searchLine->setProxy( d->Widget->agentFilterProxyModel() );
+    KFilterProxySearchLine *searchLine = new KFilterProxySearchLine(mainWidget());
+    layout->addWidget(searchLine);
+    searchLine->setProxy(d->Widget->agentFilterProxyModel());
 
-  layout->addWidget( d->Widget );
+    layout->addWidget(d->Widget);
 
-  connect( this, SIGNAL(okClicked()), this, SLOT(accept()) );
+    connect(this, SIGNAL(okClicked()), this, SLOT(accept()));
 
-  d->readConfig();
+    d->readConfig();
 
-  searchLine->lineEdit()->setFocus();
+    searchLine->lineEdit()->setFocus();
 }
 
 AgentTypeDialog::~AgentTypeDialog()
 {
-  d->writeConfig();
-  delete d;
+    d->writeConfig();
+    delete d;
 }
 
-void AgentTypeDialog::done( int result )
+void AgentTypeDialog::done(int result)
 {
-  if ( result == Accepted ) {
-    d->agentType = d->Widget->currentAgentType();
-  } else {
-    d->agentType = AgentType();
-  }
+    if (result == Accepted) {
+        d->agentType = d->Widget->currentAgentType();
+    } else {
+        d->agentType = AgentType();
+    }
 
-  KDialog::done( result );
+    KDialog::done(result);
 }
 
 AgentType AgentTypeDialog::agentType() const
 {
-  return d->agentType;
+    return d->agentType;
 }
 
-AgentFilterProxyModel* AgentTypeDialog::agentFilterProxyModel() const
+AgentFilterProxyModel *AgentTypeDialog::agentFilterProxyModel() const
 {
-  return d->Widget->agentFilterProxyModel();
+    return d->Widget->agentFilterProxyModel();
 }

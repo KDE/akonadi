@@ -57,10 +57,10 @@ namespace Akonadi
  */
 class AKONADI_EXPORT AgentType
 {
-  friend class AgentManager;
-  friend class AgentManagerPrivate;
+    friend class AgentManager;
+    friend class AgentManagerPrivate;
 
-  public:
+public:
     /**
      * Describes a list of agent types.
      */
@@ -74,7 +74,7 @@ class AKONADI_EXPORT AgentType
     /**
      * Creates an agent type from an @p other agent type.
      */
-    AgentType( const AgentType &other );
+    AgentType(const AgentType &other);
 
     /**
      * Destroys the agent type.
@@ -131,15 +131,15 @@ class AKONADI_EXPORT AgentType
      * @internal
      * @param other other agent type
      */
-    AgentType& operator=( const AgentType &other );
+    AgentType &operator=(const AgentType &other);
 
     /**
      * @internal
      * @param other other agent type
      */
-    bool operator==( const AgentType &other ) const;
+    bool operator==(const AgentType &other) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
@@ -148,8 +148,8 @@ class AKONADI_EXPORT AgentType
 
 }
 
-Q_DECLARE_TYPEINFO( Akonadi::AgentType, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::AgentType, Q_MOVABLE_TYPE);
 
-Q_DECLARE_METATYPE( Akonadi::AgentType )
+Q_DECLARE_METATYPE(Akonadi::AgentType)
 
 #endif

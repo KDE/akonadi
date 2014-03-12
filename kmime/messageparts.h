@@ -25,29 +25,29 @@
 
 namespace Akonadi
 {
-  /**
-   * @short Contains predefined part identifiers.
-   *
-   * This namespace contains identifiers of item parts that are used for
-   * handling email items.
-   */
-  namespace MessagePart
-  {
-      /**
-       * The part identifier for envelope parts.
-       */
-      AKONADI_KMIME_EXPORT extern const char* Envelope;
+/**
+ * @short Contains predefined part identifiers.
+ *
+ * This namespace contains identifiers of item parts that are used for
+ * handling email items.
+ */
+namespace MessagePart
+{
+/**
+ * The part identifier for envelope parts.
+ */
+AKONADI_KMIME_EXPORT extern const char *Envelope;
 
-      /**
-       * The part identifier for the main body part.
-       */
-      AKONADI_KMIME_EXPORT extern const char* Body;
+/**
+ * The part identifier for the main body part.
+ */
+AKONADI_KMIME_EXPORT extern const char *Body;
 
-      /**
-       * The part identifier for the header part.
-       */
-      AKONADI_KMIME_EXPORT extern const char* Header;
-  }
+/**
+ * The part identifier for the header part.
+ */
+AKONADI_KMIME_EXPORT extern const char *Header;
+}
 }
 
 #endif

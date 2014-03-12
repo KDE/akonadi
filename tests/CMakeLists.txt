@@ -17,6 +17,7 @@ include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi/kmime
@@ -29,6 +30,7 @@ include_directories(
 add_subdirectory(etm_test_app)
 add_subdirectory(testrunner)
 add_subdirectory(testresource)
+add_subdirectory(testsearchplugin)
 
 # add benchmarker
 add_subdirectory(benchmarker)
@@ -46,18 +48,18 @@ macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
 endmacro()
 
 include(../AkonadiMacros.cmake)
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationmanagerinterface )
 
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 add_library(akonaditestfake STATIC
@@ -101,6 +103,7 @@ add_akonadi_test(proxymodelstest.cpp)
 add_akonadi_test(actionstatemanagertest.cpp)
 add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
+add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
@@ -139,3 +142,6 @@ add_akonadi_isolated_test(collectioncreator.cpp)
 add_akonadi_isolated_test(itembenchmark.cpp)
 add_akonadi_isolated_test(gidtest.cpp)
 add_akonadi_isolated_test(lazypopulationtest.cpp)
+add_akonadi_isolated_test(favoriteproxytest.cpp)
+add_akonadi_isolated_test_advanced(itemsearchjobtest.cpp testsearchplugin/testsearchplugin.cpp "")
+add_akonadi_isolated_test(tagtest.cpp)

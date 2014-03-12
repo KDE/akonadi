@@ -21,7 +21,9 @@
 
 #include "contactgroupsearchjob.h"
 
+#include <searchquery.h>
 #include <akonadi/itemfetchscope.h>
+#include <QStringList>
 
 using namespace Akonadi;
 
@@ -37,8 +39,12 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
   fetchScope().fetchFullPayload();
   d->mLimit = -1;
 
+  setMimeTypes( QStringList() << KABC::ContactGroup::mimeType() );
+
   // by default search for all contact groups
-  ItemSearchJob::setQuery( QLatin1String( "SELECT ?r WHERE { ?r a nco:ContactGroup }" ) );
+  Akonadi::SearchQuery query;
+  query.addTerm( ContactSearchTerm(ContactSearchTerm::All, QVariant(), SearchTerm::CondEqual) );
+  ItemSearchJob::setQuery( query );
 }
 
 ContactGroupSearchJob::~ContactGroupSearchJob()
@@ -53,55 +59,26 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value 
   setQuery( criterion, value, ExactMatch );
 }
 
+static Akonadi::SearchTerm::Condition matchType( ContactGroupSearchJob::Match match )
+{
+  switch( match ) {
+    case ContactGroupSearchJob::ExactMatch:
+      return Akonadi::SearchTerm::CondEqual;
+    case ContactGroupSearchJob::StartsWithMatch:
+    case ContactGroupSearchJob::ContainsMatch:
+      return Akonadi::SearchTerm::CondContains;
+  }
+  return Akonadi::SearchTerm::SearchTerm::CondEqual;
+}
+
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
-  QString query;
-
-  if ( match == ExactMatch ) {
-    if ( criterion == Name ) {
-      query += QString::fromLatin1(
-        QByteArray(QByteArray("SELECT DISTINCT ?group "
-        "WHERE { "
-        "  graph ?g { "
-        "    ?group <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
-        "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
-        "  } "
-        "}"))
-      );
-    }
-  } else if ( match == ContainsMatch ) {
-    if ( criterion == Name ) {
-      query += QString::fromLatin1(
-        QByteArray(QByteArray("SELECT DISTINCT ?group "
-        "WHERE { "
-        "  graph ?g { "
-        "    ?group <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
-        "    ?group nco:contactGroupName ?v . "
-        "    ?v bif:contains \"'%1'\""
-        "  } "
-        "}"))
-      );
-    }
-  } else if ( match == StartsWithMatch ) {
-    if ( criterion == Name ) {
-      query += QString::fromLatin1(
-        QByteArray(QByteArray("SELECT DISTINCT ?group "
-        "WHERE { "
-        "  graph ?g { "
-        "    ?group <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
-        "    ?group nco:contactGroupName ?v . "
-        "    ?v bif:contains \"'%1*'\""
-        "  } "
-        "}"))
-      );
-    }
+  Akonadi::SearchQuery query;
+  if ( criterion == Name ) {
+    query.addTerm(ContactSearchTerm(ContactSearchTerm::Name, value, matchType(match)));
   }
 
-  if ( d->mLimit != -1 ) {
-    query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
-  }
-
-  query = query.arg( value );
+  query.setLimit( d->mLimit );
 
   ItemSearchJob::setQuery( query );
 }

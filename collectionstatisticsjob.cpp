@@ -30,82 +30,81 @@ using namespace Akonadi;
 
 class Akonadi::CollectionStatisticsJobPrivate : public JobPrivate
 {
-  public:
-    CollectionStatisticsJobPrivate( CollectionStatisticsJob *parent )
-      : JobPrivate( parent )
+public:
+    CollectionStatisticsJobPrivate(CollectionStatisticsJob *parent)
+        : JobPrivate(parent)
     {
     }
 
-    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
-      return QString::fromLatin1( "Collection Id %1").arg( mCollection.id() );
+    QString jobDebuggingString() const { /*Q_DECL_OVERRIDE*/
+        return QString::fromLatin1("Collection Id %1").arg(mCollection.id());
     }
 
     Collection mCollection;
     CollectionStatistics mStatistics;
 };
 
-CollectionStatisticsJob::CollectionStatisticsJob( const Collection &collection, QObject * parent )
-  : Job( new CollectionStatisticsJobPrivate( this ), parent )
+CollectionStatisticsJob::CollectionStatisticsJob(const Collection &collection, QObject *parent)
+    : Job(new CollectionStatisticsJobPrivate(this), parent)
 {
-  Q_D( CollectionStatisticsJob );
+    Q_D(CollectionStatisticsJob);
 
-  d->mCollection = collection;
+    d->mCollection = collection;
 }
 
 CollectionStatisticsJob::~CollectionStatisticsJob()
 {
 }
 
-void CollectionStatisticsJob::doStart( )
+void CollectionStatisticsJob::doStart()
 {
-  Q_D( CollectionStatisticsJob );
+    Q_D(CollectionStatisticsJob);
 
-  d->writeData( d->newTag() + " STATUS " + QByteArray::number( d->mCollection.id() ) + " (MESSAGES UNSEEN SIZE)\n" );
+    d->writeData(d->newTag() + " STATUS " + QByteArray::number(d->mCollection.id()) + " (MESSAGES UNSEEN SIZE)\n");
 }
 
-void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void CollectionStatisticsJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
 {
-  Q_D( CollectionStatisticsJob );
+    Q_D(CollectionStatisticsJob);
 
-  if ( tag == "*" ) {
-    QByteArray token;
-    int current = ImapParser::parseString( data, token );
-    if ( token == "STATUS" ) {
-      // folder path
-      current = ImapParser::parseString( data, token, current );
-      // result list
-      QList<QByteArray> list;
-      current = ImapParser::parseParenthesizedList( data, list, current );
-      for ( int i = 0; i < list.count() - 1; i += 2 ) {
-        if ( list[i] == "MESSAGES" ) {
-          d->mStatistics.setCount( list[i+1].toLongLong() );
-        } else if ( list[i] == "UNSEEN" ) {
-          d->mStatistics.setUnreadCount( list[i+1].toLongLong() );
-        } else if ( list[i] == "SIZE" ) {
-          d->mStatistics.setSize( list[i+1].toLongLong() );
-        } else {
-          kDebug() << "Unknown STATUS response: " << list[i];
+    if (tag == "*") {
+        QByteArray token;
+        int current = ImapParser::parseString(data, token);
+        if (token == "STATUS") {
+            // folder path
+            current = ImapParser::parseString(data, token, current);
+            // result list
+            QList<QByteArray> list;
+            current = ImapParser::parseParenthesizedList(data, list, current);
+            for (int i = 0; i < list.count() - 1; i += 2) {
+                if (list[i] == "MESSAGES") {
+                    d->mStatistics.setCount(list[i + 1].toLongLong());
+                } else if (list[i] == "UNSEEN") {
+                    d->mStatistics.setUnreadCount(list[i + 1].toLongLong());
+                } else if (list[i] == "SIZE") {
+                    d->mStatistics.setSize(list[i + 1].toLongLong());
+                } else {
+                    kDebug() << "Unknown STATUS response: " << list[i];
+                }
+            }
+
+            d->mCollection.setStatistics(d->mStatistics);
+            return;
         }
-      }
-
-      d->mCollection.setStatistics( d->mStatistics );
-      return;
     }
-  }
-  kDebug() << "Unhandled response: " << tag << data;
+    kDebug() << "Unhandled response: " << tag << data;
 }
 
 Collection CollectionStatisticsJob::collection() const
 {
-  Q_D( const CollectionStatisticsJob );
+    Q_D(const CollectionStatisticsJob);
 
-  return d->mCollection;
+    return d->mCollection;
 }
 
 CollectionStatistics Akonadi::CollectionStatisticsJob::statistics() const
 {
-  Q_D( const CollectionStatisticsJob );
+    Q_D(const CollectionStatisticsJob);
 
-  return d->mStatistics;
+    return d->mStatistics;
 }
-

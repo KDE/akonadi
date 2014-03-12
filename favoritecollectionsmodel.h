@@ -62,6 +62,7 @@ class EntityTreeModel;
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
+//TODO_KDE5: Make this a KRecursiveFilterProxyModel instead of a SelectionProxyModel
 class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
@@ -157,8 +158,9 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void clearAndUpdateSelection() )
-    Q_PRIVATE_SLOT( d, void updateSelection() )
+    Q_PRIVATE_SLOT( d, void reload() )
+    Q_PRIVATE_SLOT( d, void rowsInserted(QModelIndex,int,int) )
+    Q_PRIVATE_SLOT( d, void dataChanged(QModelIndex,QModelIndex) )
     //@endcond
 };
 

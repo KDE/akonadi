@@ -29,16 +29,16 @@ class KTextBrowser;
 
 class MainWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     MainWidget();
 
-  private Q_SLOTS:
-    void selectionModeChanged( int );
+private Q_SLOTS:
+    void selectionModeChanged(int);
     void showSelection();
 
-  private:
+private:
     Akonadi::EmailAddressSelectionWidget *mAddressesWidget;
     KTextBrowser *mInfo;
 };

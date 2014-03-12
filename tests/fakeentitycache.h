@@ -80,7 +80,7 @@ public:
   {
   }
 
-  void emitNotify(const Akonadi::NotificationMessageV2::List &msgs ) { notifyV2(msgs); }
+  void emitNotify(const Akonadi::NotificationMessageV3::List &msgs ) { notifyV3(msgs); }
 
 public Q_SLOTS:
   void setAllMonitored( bool allMonitored )
@@ -114,7 +114,7 @@ public Q_SLOTS:
   }
 
 Q_SIGNALS:
-  void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
+  void notifyV3( const Akonadi::NotificationMessageV3::List &msgs );
 };
 
 class FakeMonitorDependeciesFactory : public Akonadi::ChangeNotificationDependenciesFactory

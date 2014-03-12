@@ -42,6 +42,7 @@
 #include <QtNetwork/QLocalSocket>
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QHostAddress>
+#include <QApplication>
 
 // ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
 // in order to work around exec() deadlocks. As a result of that Session knows to late about a finished job and still
@@ -54,9 +55,10 @@ using namespace Akonadi;
 //@cond PRIVATE
 
 static const QList<QByteArray> sCapabilities = QList<QByteArray>()
-        << "NOTIFY 2"
+        << "NOTIFY 3"
         << "NOPAYLOADPATH"
-        << "AKAPPENDSTREAMING";
+        << "AKAPPENDSTREAMING"
+        << "SERVERSEARCH";
 
 void SessionPrivate::startNext()
 {
@@ -189,6 +191,10 @@ void SessionPrivate::dataReceived()
     } else if ( socket->canReadLine() ) {
       if ( !parser->parseNextLine( socket->readLine() ) )
         continue; // response not yet completed
+
+      if ( logFile ) {
+        logFile->write( "S: " + parser->data() );
+      }
 
       // handle login response
       if ( parser->tag() == QByteArray( "0" ) ) {
@@ -335,10 +341,19 @@ int SessionPrivate::nextTag()
 
 void SessionPrivate::writeData(const QByteArray & data)
 {
-  if ( socket )
+  if ( logFile ) {
+    logFile->write( "C: " + data );
+    if ( !data.endsWith( '\n' ) ) {
+      logFile->write( "\n" );
+    }
+    logFile->flush();
+  }
+
+  if ( socket ) {
     socket->write( data );
-  else
+  } else {
     kWarning() << "Trying to write while session is disconnected!" << kBacktrace();
+  }
 }
 
 void SessionPrivate::serverStateChanged( ServerManager::State state )
@@ -358,7 +373,7 @@ void SessionPrivate::itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevis
 //@endcond
 
 SessionPrivate::SessionPrivate( Session *parent )
-    : mParent( parent ), socket( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 )
+    : mParent( parent ), socket( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 ), logFile( 0 )
 {
 }
 
@@ -382,6 +397,19 @@ void SessionPrivate::init( const QByteArray &id )
     ServerManager::start();
   mParent->connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
                     SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+
+  const QByteArray sessionLogFile = qgetenv( "AKONADI_SESSION_LOGFILE" );
+  if ( !sessionLogFile.isEmpty() ) {
+    logFile = new QFile( QString::fromLatin1( "%1.%2.%3" ).arg( QString::fromLatin1( sessionLogFile ) )
+                                                          .arg( QString::number( QApplication::applicationPid() ) )
+                                                          .arg( QString::fromLatin1( sessionId ) ),
+                         mParent );
+    if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+      kWarning() << "Failed to open Akonadi Session log file" << logFile->fileName();
+      delete logFile;
+      logFile = 0;
+    }
+  }
 
   reconnect();
 }

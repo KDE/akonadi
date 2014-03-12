@@ -26,26 +26,28 @@
 
 #include <kabc/addressee.h>
 
-class TagWidget;
+namespace Akonadi {
+    class TagWidget;
+}
 
 /**
  * @short A widget for editing the categories of a contact.
  */
 class CategoriesEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CategoriesEditWidget( QWidget *parent = 0 );
+public:
+    explicit CategoriesEditWidget(QWidget *parent = 0);
     ~CategoriesEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact(const KABC::Addressee &contact);
+    void storeContact(KABC::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private:
-    TagWidget *mTagWidget;
+private:
+    Akonadi::TagWidget *mTagWidget;
 };
 
 #endif

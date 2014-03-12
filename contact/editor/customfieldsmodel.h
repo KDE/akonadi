@@ -29,31 +29,31 @@
 
 class CustomFieldsModel : public QAbstractItemModel
 {
-  public:
+public:
     enum Role {
-      TypeRole = Qt::UserRole,
-      ScopeRole
+        TypeRole = Qt::UserRole,
+        ScopeRole
     };
 
-    explicit CustomFieldsModel( QObject *parent = 0 );
+    explicit CustomFieldsModel(QObject *parent = 0);
     ~CustomFieldsModel();
 
-    void setCustomFields( const CustomField::List &addresses );
+    void setCustomFields(const CustomField::List &addresses);
     CustomField::List customFields() const;
 
-    virtual QModelIndex index( int row, int col, const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex &child ) const;
-    virtual QVariant data( const QModelIndex &index, int role ) const;
-    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role ) const;
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual QModelIndex index(int row, int col, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &child) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
-    virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-  private:
+private:
     CustomField::List mCustomFields;
 };
 

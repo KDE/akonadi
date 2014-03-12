@@ -47,7 +47,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT AttributeFactory
 {
-  public:
+public:
     //@cond PRIVATE
     ~AttributeFactory();
     //@endcond
@@ -58,7 +58,7 @@ class AKONADI_EXPORT AttributeFactory
      */
     template <typename T> inline static void registerAttribute()
     {
-      AttributeFactory::self()->registerAttribute( new T );
+        AttributeFactory::self()->registerAttribute(new T);
     }
 
     /**
@@ -67,18 +67,18 @@ class AKONADI_EXPORT AttributeFactory
      *
      * @param type The attribute type.
      */
-    static Attribute* createAttribute( const QByteArray &type );
+    static Attribute *createAttribute(const QByteArray &type);
 
-  protected:
+protected:
     //@cond PRIVATE
     AttributeFactory();
 
-  private:
-    static AttributeFactory* self();
-    void registerAttribute( Attribute *attribute );
+private:
+    static AttributeFactory *self();
+    void registerAttribute(Attribute *attribute);
 
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

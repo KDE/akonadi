@@ -26,22 +26,24 @@ using namespace Akonadi;
 
 class Akonadi::CollectionMoveJobPrivate : public MoveJobImpl<Collection, CollectionMoveJob>
 {
-  public:
-    CollectionMoveJobPrivate( CollectionMoveJob *parent ) : MoveJobImpl<Collection, CollectionMoveJob>( parent ) {}
-    Q_DECLARE_PUBLIC( CollectionMoveJob )
+public:
+    CollectionMoveJobPrivate(CollectionMoveJob *parent)
+        : MoveJobImpl<Collection, CollectionMoveJob>(parent)
+    {
+    }
+    Q_DECLARE_PUBLIC(CollectionMoveJob)
 };
 
-CollectionMoveJob::CollectionMoveJob( const Collection &collection, const Collection &destination, QObject * parent )
-  : Job( new CollectionMoveJobPrivate( this ), parent )
+CollectionMoveJob::CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent)
+    : Job(new CollectionMoveJobPrivate(this), parent)
 {
-  Q_D( CollectionMoveJob );
-  d->destination = destination;
-  d->objectsToMove.append( collection );
+    Q_D(CollectionMoveJob);
+    d->destination = destination;
+    d->objectsToMove.append(collection);
 }
 
 void CollectionMoveJob::doStart()
 {
-  Q_D( CollectionMoveJob );
-  d->sendCommand( "COLMOVE" );
+    Q_D(CollectionMoveJob);
+    d->sendCommand("COLMOVE");
 }
-

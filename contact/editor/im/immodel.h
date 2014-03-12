@@ -27,22 +27,22 @@
 
 class IMAddress
 {
-  public:
+public:
     typedef QVector<IMAddress> List;
 
     IMAddress();
-    IMAddress( const QString &protocol, const QString &name, bool preferred );
+    IMAddress(const QString &protocol, const QString &name, bool preferred);
 
-    void setProtocol( const QString &protocol );
+    void setProtocol(const QString &protocol);
     QString protocol() const;
 
-    void setName( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
-    void setPreferred( bool preferred );
+    void setPreferred(bool preferred);
     bool preferred() const;
 
-  private:
+private:
     QString mProtocol;
     QString mName;
     bool mPreferred;
@@ -50,31 +50,31 @@ class IMAddress
 
 class IMModel : public QAbstractItemModel
 {
-  public:
+public:
     enum Role {
-      ProtocolRole = Qt::UserRole,
-      IsPreferredRole
+        ProtocolRole = Qt::UserRole,
+        IsPreferredRole
     };
 
-    explicit IMModel( QObject *parent = 0 );
+    explicit IMModel(QObject *parent = 0);
     ~IMModel();
 
-    void setAddresses( const IMAddress::List &addresses );
+    void setAddresses(const IMAddress::List &addresses);
     IMAddress::List addresses() const;
 
-    virtual QModelIndex index( int row, int col, const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex &child ) const;
-    virtual QVariant data( const QModelIndex &index, int role ) const;
-    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role ) const;
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual QModelIndex index(int row, int col, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &child) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
-    virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-  private:
+private:
     IMAddress::List mAddresses;
 };
 

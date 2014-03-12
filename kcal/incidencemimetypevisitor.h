@@ -51,7 +51,7 @@ namespace Akonadi {
  */
 class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase::Visitor
 {
-  public:
+public:
     /**
       Creates a visitor instance.
 
@@ -72,7 +72,7 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
 
       @return always returns @c true
      */
-    virtual bool visit( KCal::Event *event );
+    virtual bool visit(KCal::Event *event);
 
     /**
       Sets the MIME type to "application/x-vnd.akonadi.calendar.todo"
@@ -82,7 +82,7 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
 
       @return always returns @c true
      */
-    virtual bool visit( KCal::Todo *todo );
+    virtual bool visit(KCal::Todo *todo);
 
     /**
       Sets the MIME type to "application/x-vnd.akonadi.calendar.journal"
@@ -92,7 +92,7 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
 
       @return always returns @c true
      */
-    virtual bool visit( KCal::Journal *journal );
+    virtual bool visit(KCal::Journal *journal);
 
     /**
       Sets the MIME type to "application/x-vnd.akonadi.calendar.freebusy"
@@ -102,7 +102,7 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
 
       @return always returns @c true
      */
-    virtual bool visit( KCal::FreeBusy *freebusy );
+    virtual bool visit(KCal::FreeBusy *freebusy);
 
     /**
       Returns the Akonadi specific @c text/calendar sub MIME type of the last
@@ -128,7 +128,7 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
       return visitor.mimeType();
       @endcode
     */
-    QString mimeType( KCal::IncidenceBase *incidence );
+    QString mimeType(KCal::IncidenceBase *incidence);
 
     /**
       Returns the sub MIME type for Events
@@ -150,13 +150,13 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
     */
     static QString freeBusyMimeType();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
     //@endcond
 
-    Q_DISABLE_COPY( IncidenceMimeTypeVisitor )
+    Q_DISABLE_COPY(IncidenceMimeTypeVisitor)
 };
 
 }

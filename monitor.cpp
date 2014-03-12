@@ -143,6 +143,48 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
   emit mimeTypeMonitored( mimetype, monitored );
 }
 
+
+void Monitor::setTagMonitored( const Akonadi::Tag &tag, bool monitored )
+{
+  Q_D( Monitor );
+  if ( !d->tags.contains( tag.id() ) && monitored ) {
+    d->tags.insert( tag.id() );
+    if ( d->notificationSource ) {
+      d->notificationSource->setMonitoredTag( tag.id(), true );
+    }
+  } else if ( !monitored ) {
+    if ( d->tags.remove( tag.id() ) ) {
+      d->cleanOldNotifications();
+      if ( d->notificationSource ) {
+        d->notificationSource->setMonitoredTag( tag.id(), false );
+      }
+    }
+  }
+
+  emit tagMonitored( tag, monitored );
+}
+
+void Monitor::setTypeMonitored( Monitor::Type type, bool monitored )
+{
+  Q_D( Monitor );
+  if ( !d->types.contains( type ) && monitored ) {
+    d->types.insert( type );
+    if ( d->notificationSource ) {
+      d->notificationSource->setMonitoredType( static_cast<NotificationMessageV2::Type>( type ), true );
+    }
+  } else if ( !monitored ) {
+    if ( d->types.remove( type ) ) {
+      d->cleanOldNotifications();
+      if ( d->notificationSource ) {
+        d->notificationSource->setMonitoredType( static_cast<NotificationMessageV2::Type>( type ), false );
+      }
+    }
+  }
+
+  emit typeMonitored( type, monitored );
+}
+
+
 void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
   Q_D( Monitor );
@@ -218,6 +260,18 @@ CollectionFetchScope& Monitor::collectionFetchScope()
   return d->mCollectionFetchScope;
 }
 
+void Monitor::setTagFetchScope( const TagFetchScope &fetchScope )
+{
+  Q_D( Monitor );
+  d->mTagFetchScope = fetchScope;
+}
+
+TagFetchScope &Monitor::tagFetchScope()
+{
+  Q_D( Monitor );
+  return d->mTagFetchScope;
+}
+
 Akonadi::Collection::List Monitor::collectionsMonitored() const
 {
   Q_D( const Monitor );
@@ -236,6 +290,24 @@ QVector<Item::Id> Monitor::itemsMonitoredEx() const
   QVector<Item::Id> result;
   result.reserve( d->items.size() );
   qCopy( d->items.begin(), d->items.end(), std::back_inserter( result ) );
+  return result;
+}
+
+QVector<Tag::Id> Monitor::tagsMonitored() const
+{
+  Q_D( const Monitor );
+  QVector<Tag::Id> result;
+  result.reserve( d->tags.size() );
+  qCopy( d->tags.begin(), d->tags.end(), std::back_inserter( result ) );
+  return result;
+}
+
+QVector<Monitor::Type> Monitor::typesMonitored() const
+{
+  Q_D( const Monitor );
+  QVector<Monitor::Type> result;
+  result.reserve( d->types.size() );
+  qCopy( d->types.begin(), d->types.end(), std::back_inserter( result ) );
   return result;
 }
 

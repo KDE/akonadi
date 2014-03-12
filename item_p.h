@@ -26,6 +26,7 @@
 
 #include "entity_p.h"
 #include "itempayloadinternals_p.h"
+#include "tag.h"
 
 #include <boost/bind.hpp>
 
@@ -172,6 +173,7 @@ class ItemPrivate : public EntityPrivate
         mSize( 0 ),
         mModificationTime(),
         mFlagsOverwritten( false ),
+        mTagsOverwritten( false ),
         mSizeChanged( false ),
         mClearPayload( false )
     {
@@ -208,6 +210,9 @@ class ItemPrivate : public EntityPrivate
       mAddedFlags.clear();
       mDeletedFlags.clear();
       mSizeChanged = false;
+      mTagsOverwritten = false;
+      mAddedTags.clear();
+      mDeletedTags.clear();
     }
 
     EntityPrivate *clone() const
@@ -289,6 +294,7 @@ class ItemPrivate : public EntityPrivate
     mutable bool mConversionInProgress;
     int mRevision;
     Item::Flags mFlags;
+    Tag::List mTags;
     Entity::Id mCollectionId;
     qint64 mSize;
     QDateTime mModificationTime;
@@ -296,8 +302,11 @@ class ItemPrivate : public EntityPrivate
     QString mGid;
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;
+    Tag::List mAddedTags;
+    Tag::List mDeletedTags;
     QSet<QByteArray> mCachedPayloadParts;
     bool mFlagsOverwritten : 1;
+    bool mTagsOverwritten : 1;
     bool mSizeChanged : 1;
     bool mClearPayload : 1;
 };

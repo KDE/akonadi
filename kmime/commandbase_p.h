@@ -24,19 +24,24 @@
 
 class CommandBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit CommandBase( QObject *parent = 0 );
+    explicit CommandBase(QObject *parent = 0);
     virtual void execute() = 0;
 
-    enum Result { Undefined, OK, Canceled, Failed };
+    enum Result {
+        Undefined,
+        OK,
+        Canceled,
+        Failed
+    };
 
 Q_SIGNALS:
-    void result( Result );
+    void result(Result);
 
 protected Q_SLOTS:
-    virtual void emitResult( Result result );
+    virtual void emitResult(Result result);
 };
 
 #endif // COMMANDBASE_H

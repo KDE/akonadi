@@ -66,26 +66,25 @@ class SpecialMailCollectionsPrivate;
 */
 class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the possible types of special mail collections.
      *
      * Generally, there may not be two special mail collections of
      * the same type in the same resource.
      */
-    enum Type
-    {
-      Invalid = -1,    ///< An invalid special collection.
-      Root = 0,        ///< The root collection containing the local folders.
-      Inbox,           ///< The inbox collection.
-      Outbox,          ///< The outbox collection.
-      SentMail,        ///< The sent-mail collection.
-      Trash,           ///< The trash collection.
-      Drafts,          ///< The drafts collection.
-      Templates,       ///< The templates collection.
-      LastType         ///< @internal marker
+    enum Type {
+        Invalid = -1,    ///< An invalid special collection.
+        Root = 0,        ///< The root collection containing the local folders.
+        Inbox,           ///< The inbox collection.
+        Outbox,          ///< The outbox collection.
+        SentMail,        ///< The sent-mail collection.
+        Trash,           ///< The trash collection.
+        Drafts,          ///< The drafts collection.
+        Templates,       ///< The templates collection.
+        LastType         ///< @internal marker
     };
 
     /**
@@ -97,13 +96,13 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
      * Returns whether the given agent @p instance has a special collection of
      * the given @p type.
      */
-    bool hasCollection( Type type, const AgentInstance &instance ) const;
+    bool hasCollection(Type type, const AgentInstance &instance) const;
 
     /**
      * Returns the special mail collection of the given @p type in the given agent
      * @p instance, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection collection( Type type, const AgentInstance &instance ) const;
+    Akonadi::Collection collection(Type type, const AgentInstance &instance) const;
 
     /**
      * Returns the special collection type for a given collection, or empty if the collection
@@ -121,7 +120,7 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
      * Registering a new collection of a previously registered type forgets the
      * old collection.
      */
-    bool registerCollection( Type type, const Akonadi::Collection &collection );
+    bool registerCollection(Type type, const Akonadi::Collection &collection);
 
     /**
      * Unregisters the given @p collection as a special mail collection
@@ -129,24 +128,24 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
      * The collection must be owned by a valid resource.
      * @since 4.12
      */
-    bool unregisterCollection( const Collection &collection );
+    bool unregisterCollection(const Collection &collection);
 
     /**
      * Returns whether the default resource has a special mail collection of
      * the given @p type.
      */
-    bool hasDefaultCollection( Type type ) const;
+    bool hasDefaultCollection(Type type) const;
 
     /**
      * Returns the special mail collection of given @p type in the default
      * resource, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection defaultCollection( Type type ) const;
+    Akonadi::Collection defaultCollection(Type type) const;
 
-    void verifyI18nDefaultCollection( Type type );
+    void verifyI18nDefaultCollection(Type type);
 private Q_SLOTS:
-    void slotCollectionModified(KJob*);
-  private:
+    void slotCollectionModified(KJob *job);
+private:
     //@cond PRIVATE
     friend class SpecialMailCollectionsPrivate;
 
@@ -155,7 +154,7 @@ private Q_SLOTS:
     friend class LocalFoldersTest;
 #endif
 
-    SpecialMailCollections( SpecialMailCollectionsPrivate *dd );
+    SpecialMailCollections(SpecialMailCollectionsPrivate *dd);
 
     SpecialMailCollectionsPrivate *const d;
     //@endcond

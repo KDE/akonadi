@@ -30,31 +30,31 @@ class KJob;
 
 class EmptyTrashCommand : public CommandBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-    EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent);
-    EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent);
+    EmptyTrashCommand(const QAbstractItemModel *model, QObject *parent);
+    EmptyTrashCommand(const Akonadi::Collection &folder, QObject *parent);
     /*reimp*/ void execute();
 
 private Q_SLOTS:
-  void slotExpungeJob( KJob *job );
-  void slotDeleteJob( KJob *job );
+    void slotExpungeJob(KJob *job);
+    void slotDeleteJob(KJob *job);
 
 protected Q_SLOTS:
-    void emitResult( Result result );
+    void emitResult(Result result);
 
 private:
-  void expunge( const Akonadi::Collection& );
-  Akonadi::AgentInstance::List agentInstances();
-  Akonadi::Collection trashCollectionFolder();
-  Akonadi::Collection collectionFromId(const Akonadi::Collection::Id& id) const;
-  bool folderIsTrash( const Akonadi::Collection & col );
+    void expunge(const Akonadi::Collection &col);
+    Akonadi::AgentInstance::List agentInstances();
+    Akonadi::Collection trashCollectionFolder();
+    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
+    bool folderIsTrash(const Akonadi::Collection &col);
 
-  const QAbstractItemModel* mModel;
-  Akonadi::Collection::Id the_trashCollectionFolder;
-  Akonadi::Collection mFolder;
-  int mNumberOfTrashToEmpty;
+    const QAbstractItemModel *mModel;
+    Akonadi::Collection::Id the_trashCollectionFolder;
+    Akonadi::Collection mFolder;
+    int mNumberOfTrashToEmpty;
 };
 
 #endif // EMPTYTRASHCOMMAND_P_H

@@ -53,7 +53,7 @@ class FreeBusyProviderBasePrivate;
 
 class AKONADI_KCAL_EXPORT FreeBusyProviderBase
 {
-  public:
+public:
     /**
      * Creates a new FreeBusyProvider
      */
@@ -91,7 +91,7 @@ class AKONADI_KCAL_EXPORT FreeBusyProviderBase
      * @see handlesFreeBusy()
      *
      */
-    virtual void canHandleFreeBusy( const QString &email ) const = 0;
+    virtual void canHandleFreeBusy(const QString &email) const = 0;
 
     /**
      * Derivate classes must call this method once they know
@@ -105,7 +105,7 @@ class AKONADI_KCAL_EXPORT FreeBusyProviderBase
      * @param handles Whether this resource handles free-busy (true)
      *              or not (false).
      */
-    void handlesFreeBusy( const QString &email, bool handles ) const;
+    void handlesFreeBusy(const QString &email, bool handles) const;
 
     /**
      * This method is called when the resource must do the real
@@ -124,7 +124,7 @@ class AKONADI_KCAL_EXPORT FreeBusyProviderBase
      * @param end The end of the free-busy period
      * @see freeBusyRetrieved()
      */
-    virtual void retrieveFreeBusy( const QString &email, const KDateTime &start, const KDateTime &end ) = 0;
+    virtual void retrieveFreeBusy(const QString &email, const KDateTime &start, const KDateTime &end) = 0;
 
     /**
      * Derivate classes must call this method to notify the requestor
@@ -144,9 +144,9 @@ class AKONADI_KCAL_EXPORT FreeBusyProviderBase
      * @param errorText An optional error message that can be displayed back
      *                  to the user.
      */
-    void freeBusyRetrieved( const QString &email, const QString &freeBusy, bool success, const QString &errorText = QString() );
+    void freeBusyRetrieved(const QString &email, const QString &freeBusy, bool success, const QString &errorText = QString());
 
-  private:
+private:
     //@cond PRIVATE
     FreeBusyProviderBasePrivate *const d;
     //@endcond

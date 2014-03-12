@@ -23,128 +23,132 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 
-MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List& msgList, bool invert, QObject* parent): CommandBase( parent )
+MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert, QObject *parent)
+    : CommandBase(parent)
 {
-  mInvertMark = invert;
-  mMessages = msgList;
-  mTargetStatus = targetStatus;
-  mFolderListJobCount = 0;
+    mInvertMark = invert;
+    mMessages = msgList;
+    mTargetStatus = targetStatus;
+    mFolderListJobCount = 0;
+    mMarkJobCount = 0;
 }
 
-MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, bool invert, QObject* parent): CommandBase( parent )
+MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert, QObject *parent)
+    : CommandBase(parent)
 {
-  mInvertMark = invert;
-  mFolders = folders;
-  mTargetStatus = targetStatus;
-  mFolderListJobCount = mFolders.size();
+    mInvertMark = invert;
+    mFolders = folders;
+    mTargetStatus = targetStatus;
+    mFolderListJobCount = mFolders.size();
+    mMarkJobCount = 0;
 }
 
-void MarkAsCommand::slotFetchDone(KJob* job)
+void MarkAsCommand::slotFetchDone(KJob *job)
 {
-  mFolderListJobCount--;
+    mFolderListJobCount--;
 
-  if ( job->error() ) {
-    // handle errors
-    Util::showJobError(job);
-    emitResult( Failed );
-    return;
-  }
-
-  Akonadi::ItemFetchJob *fjob = static_cast<Akonadi::ItemFetchJob*>( job );
-  mMessages.clear();
-  foreach( const Akonadi::Item &item, fjob->items() ) {
-    Akonadi::MessageStatus status;
-    status.setStatusFromFlags( item.flags() );
-    if ( mInvertMark ) {
-      if ( status & mTargetStatus ) {
-        mMessages.append( item );
-      }
-    } else
-      if ( !( status & mTargetStatus ) ) {
-        mMessages.append( item );
-      }
-  }
-  if ( mMessages.empty() ) {
-    if ( mFolderListJobCount == 0 ) {
-      emitResult( OK );
-      return;
+    if (job->error()) {
+        // handle errors
+        Util::showJobError(job);
+        emitResult(Failed);
+        return;
     }
-  } else {
-    markMessages();
-  }
-  if ( mFolderListJobCount > 0 ) {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
-  }
+
+    Akonadi::ItemFetchJob *fjob = static_cast<Akonadi::ItemFetchJob *>(job);
+    mMessages.clear();
+    foreach (const Akonadi::Item &item, fjob->items()) {
+        Akonadi::MessageStatus status;
+        status.setStatusFromFlags(item.flags());
+        if (mInvertMark) {
+            if (status & mTargetStatus) {
+                mMessages.append(item);
+            }
+        } else if (!(status & mTargetStatus)) {
+            mMessages.append(item);
+        }
+    }
+    if (mMessages.empty()) {
+        if (mFolderListJobCount == 0) {
+            emitResult(OK);
+            return;
+        }
+    } else {
+        markMessages();
+    }
+    if (mFolderListJobCount > 0) {
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mFolders[mFolderListJobCount - 1], parent());
+        job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)));
+    }
 }
 
 void MarkAsCommand::execute()
 {
-  if ( !mFolders.isEmpty() ) {
-    //yes, we go backwards, shouldn't matter
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
-  } else if ( !mMessages.isEmpty() ) {
-    mFolders << mMessages.first().parentCollection();
-    markMessages();
-  } else {
-    emitResult( OK );
-  }
+    if (!mFolders.isEmpty()) {
+        //yes, we go backwards, shouldn't matter
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mFolders[mFolderListJobCount - 1], parent());
+        job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)));
+    } else if (!mMessages.isEmpty()) {
+        mFolders << mMessages.first().parentCollection();
+        markMessages();
+    } else {
+        emitResult(OK);
+    }
 }
 
 void MarkAsCommand::markMessages()
 {
-  mMarkJobCount = 0;
+    mMarkJobCount = 0;
 
-  QSet<QByteArray> flags = mTargetStatus.statusFlags();
-  Q_ASSERT( flags.size() == 1 );
-  Akonadi::Item::Flag flag;
-  if ( !flags.isEmpty() )
-    flag = *( flags.begin() );
-
-  Akonadi::Item::List itemsToModify;
-  foreach( const Akonadi::Item &it, mMessages ) {
-    Akonadi::Item item( it );
-
-    // be careful to only change the flags we want to change, not to overwrite them
-    // otherwise ItemModifyJob will not do what we expect
-    if ( mInvertMark ) {
-      if ( item.hasFlag( flag ) ) {
-        item.clearFlag( flag );
-        itemsToModify.push_back( item );
-      }
-    } else {
-      if ( !item.hasFlag( flag ) ) {
-        item.setFlag( flag );
-        itemsToModify.push_back( item );
-      }
+    QSet<QByteArray> flags = mTargetStatus.statusFlags();
+    Q_ASSERT(flags.size() == 1);
+    Akonadi::Item::Flag flag;
+    if (!flags.isEmpty()) {
+        flag = *(flags.begin());
     }
-  }
 
-  mMarkJobCount++;
-  if ( itemsToModify.isEmpty() ) {
-    slotModifyItemDone( 0 ); // pretend we did something
-  } else {
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( itemsToModify, this );
-    modifyJob->setIgnorePayload( true );
-    modifyJob->disableRevisionCheck();
-    connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
-  }
+    Akonadi::Item::List itemsToModify;
+    foreach (const Akonadi::Item &it, mMessages) {
+        Akonadi::Item item(it);
+
+        // be careful to only change the flags we want to change, not to overwrite them
+        // otherwise ItemModifyJob will not do what we expect
+        if (mInvertMark) {
+            if (item.hasFlag(flag)) {
+                item.clearFlag(flag);
+                itemsToModify.push_back(item);
+            }
+        } else {
+            if (!item.hasFlag(flag)) {
+                item.setFlag(flag);
+                itemsToModify.push_back(item);
+            }
+        }
+    }
+
+    mMarkJobCount++;
+    if (itemsToModify.isEmpty()) {
+        slotModifyItemDone(0);   // pretend we did something
+    } else {
+        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(itemsToModify, this);
+        modifyJob->setIgnorePayload(true);
+        modifyJob->disableRevisionCheck();
+        connect(modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)));
+    }
 }
 
-void MarkAsCommand::slotModifyItemDone( KJob * job )
+void MarkAsCommand::slotModifyItemDone(KJob *job)
 {
-  mMarkJobCount--;
-  //NOTE(Andras): from kmail/kmmcommands, KMSetStatusCommand
-  if ( job && job->error() ) {
-    kDebug()<<" Error trying to set item status:" << job->errorText();
-    emitResult( Failed );
-  }
-  if ( mMarkJobCount == 0 && mFolderListJobCount == 0 ) {
-    emitResult( OK );
-  }
+    mMarkJobCount--;
+    //NOTE(Andras): from kmail/kmmcommands, KMSetStatusCommand
+    if (job && job->error()) {
+        kDebug() << " Error trying to set item status:" << job->errorText();
+        emitResult(Failed);
+    }
+    if (mMarkJobCount == 0 && mFolderListJobCount == 0) {
+        emitResult(OK);
+    }
 }
 
 #include "moc_markascommand_p.cpp"

@@ -79,9 +79,9 @@ class Session;
  */
 class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * @short The interface for reacting on monitored or replayed changes.
      *
@@ -126,7 +126,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * };
      *
      * ExampleAgent::ExampleAgent( const QString &id )
-     *   : AgentBase( id ), mObserver( 0 )
+         : AgentBase( id )
+         , mObserver( 0 )
      * {
      *   mObserver = new ExampleObserver();
      *   registerObserver( mObserver );
@@ -160,7 +161,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * };
      *
      * ExampleAgent::ExampleAgent( const QString &id )
-     *   : AgentBase( id )
+         : AgentBase( id )
      * {
      *   // no need to create or register observer since
      *   // we are the observer and registration happens automatically
@@ -184,7 +185,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     class AKONADI_EXPORT Observer  // krazy:exclude=dpointer
     {
-      public:
+    public:
         /**
          * Creates an observer instance.
          */
@@ -200,39 +201,39 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param item The newly added item.
          * @param collection The collection @p item got added to.
          */
-        virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+        virtual void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
         /**
          * Reimplement to handle changes to existing items.
          * @param item The changed item.
          * @param partIdentifiers The identifiers of the item parts that has been changed.
          */
-        virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
+        virtual void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers);
 
         /**
          * Reimplement to handle deletion of items.
          * @param item The deleted item.
          */
-        virtual void itemRemoved( const Akonadi::Item &item );
+        virtual void itemRemoved(const Akonadi::Item &item);
 
         /**
          * Reimplement to handle adding of new collections.
          * @param collection The newly added collection.
          * @param parent The parent collection.
           */
-        virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+        virtual void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
 
         /**
          * Reimplement to handle changes to existing collections.
          * @param collection The changed collection.
          */
-        virtual void collectionChanged( const Akonadi::Collection &collection );
+        virtual void collectionChanged(const Akonadi::Collection &collection);
 
         /**
          * Reimplement to handle deletion of collections.
          * @param collection The deleted collection.
          */
-        virtual void collectionRemoved( const Akonadi::Collection &collection );
+        virtual void collectionRemoved(const Akonadi::Collection &collection);
     };
 
     /**
@@ -243,7 +244,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     class AKONADI_EXPORT ObserverV2 : public Observer  // krazy:exclude=dpointer
     {
-      public:
+    public:
         using Observer::collectionChanged;
 
         /**
@@ -256,8 +257,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param collectionSource The collection the item has been moved from.
          * @param collectionDestination The collection the item has been moved to.
          */
-        virtual void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
-                                const Akonadi::Collection &collectionDestination );
+        virtual void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
+                               const Akonadi::Collection &collectionDestination);
 
         /**
          * Reimplement to handle item linking.
@@ -265,7 +266,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param item The linked item.
          * @param collection The collection the item is linked to.
          */
-        virtual void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+        virtual void itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
         /**
          * Reimplement to handle item unlinking.
@@ -273,7 +274,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param item The unlinked item.
          * @param collection The collection the item is unlinked from.
          */
-        virtual void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+        virtual void itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
         /**
          * Reimplement to handle collection moves.
@@ -285,15 +286,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param collectionSource The previous parent collection.
          * @param collectionDestination The new parent collection.
          */
-        virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &collectionSource,
-                                      const Akonadi::Collection &collectionDestination );
+        virtual void collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &collectionSource,
+                                     const Akonadi::Collection &collectionDestination);
 
         /**
          * Reimplement to handle changes to existing collections.
          * @param collection The changed collection.
          * @param changedAttributes The identifiers of the collection parts/attributes that has been changed.
          */
-        virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes );
+        virtual void collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes);
     };
 
     /**
@@ -308,7 +309,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     class AKONADI_EXPORT ObserverV3 : public ObserverV2 // krazy:exclude=dpointer
     {
-      public:
+    public:
         /**
          * Reimplement to handle changes in flags of existing items
          *
@@ -320,14 +321,14 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param addedFlags Flags that have been added to the item
          * @param removedFlags Flags that have been removed from the item
          */
-        virtual void itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags );
+        virtual void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags);
 
         /**
          * Reimplement to handle batch notification about items deletion.
          *
          * @param items List of deleted items
          */
-        virtual void itemsRemoved( const Akonadi::Item::List &items );
+        virtual void itemsRemoved(const Akonadi::Item::List &items);
 
         /**
          * Reimplement to handle batch notification about items move
@@ -336,8 +337,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param sourceCollection Collection from where the items were moved
          * @param destinationCollection Collection to which the items were moved
          */
-        virtual void itemsMoved( const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection,
-                                 const Akonadi::Collection &destinationCollection );
+        virtual void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection,
+                                const Akonadi::Collection &destinationCollection);
 
         /**
          * Reimplement to handle batch notifications about items linking.
@@ -345,7 +346,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param items Linked items
          * @param collection Collection to which the items have been linked
          */
-        virtual void itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+        virtual void itemsLinked(const Akonadi::Item::List &items, const Akonadi::Collection &collection);
 
         /**
          * Reimplement to handle batch notifications about items unlinking.
@@ -353,7 +354,54 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param items Unlinked items
          * @param collection Collection from which the items have been unlinked
          */
-        virtual void itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+        virtual void itemsUnlinked(const Akonadi::Item::List &items, const Akonadi::Collection &collection);
+    };
+
+    /**
+     * Observer that adds support for item tagging
+     *
+     * @warning ObserverV4 subclasses ObserverV3 which changes behavior of some of the
+     * virtual methods from Observer and ObserverV2. Please make sure you read
+     * documentation of ObserverV3 and adapt your agent accordingly.
+     *
+     * @since 4.13
+     */
+    class AKONADI_EXPORT ObserverV4 : public ObserverV3 // krazy:exclude=dpointer
+    {
+    public:
+        /**
+         * Reimplement to handle tags additions
+         *
+         * @param tag Newly added tag
+         */
+        virtual void tagAdded(const Akonadi::Tag &tag);
+
+        /**
+         * Reimplement to handle tags changes
+         *
+         * @param tag Tag that has been changed
+         */
+        virtual void tagChanged(const Akonadi::Tag &tag);
+
+        /**
+         * Reimplement to handle tags removal.
+         *
+         * @note All items that were tagged by @p tag will get a separate notification
+         * about untagging via itemsTagsChanged(). It is guaranteed that the itemsTagsChanged()
+         * notification will be delivered before this one.
+         *
+         * @param tag Tag that has been removed.
+         */
+        virtual void tagRemoved(const Akonadi::Tag &tag);
+
+        /**
+         * Reimplement to handle items tagging
+         *
+         * @param items Items that were tagged or untagged
+         * @param addedTags Set of tags that were added to all @p items
+         * @param removedTags Set of tags that were removed from all @p items
+         */
+        virtual void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags);
     };
 
     /**
@@ -361,10 +409,10 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * agent can be in.
      */
     enum Status {
-      Idle = 0, ///< The agent does currently nothing.
-      Running,  ///< The agent is working on something.
-      Broken,    ///< The agent encountered an error state.
-      NotConfigured ///< The agent is lacking required configuration
+        Idle = 0, ///< The agent does currently nothing.
+        Running,  ///< The agent is working on something.
+        Broken,    ///< The agent encountered an error state.
+        NotConfigured ///< The agent is lacking required configuration
     };
 
     /**
@@ -392,19 +440,19 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @param argv arguments for the function
      */
     template <typename T>
-    static int init( int argc, char **argv )
+    static int init(int argc, char **argv)
     {
-      const QString id = parseArguments( argc, argv );
-      KApplication app;
-      T* r = new T( id );
+        const QString id = parseArguments(argc, argv);
+        KApplication app;
+        T *r = new T(id);
 
-      // check if T also inherits AgentBase::Observer and
-      // if it does, automatically register it on itself
-      Observer *observer = dynamic_cast<Observer*>( r );
-      if ( observer != 0 ) {
-        r->registerObserver( observer );
-      }
-      return init( r );
+        // check if T also inherits AgentBase::Observer and
+        // if it does, automatically register it on itself
+        Observer *observer = dynamic_cast<Observer *>(r);
+        if (observer != 0) {
+            r->registerObserver(observer);
+        }
+        return init(r);
     }
 
     /**
@@ -434,7 +482,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     virtual QString progressMessage() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * This method is called whenever the agent shall show its configuration dialog
      * to the user. It will be automatically called when the agent is started for
@@ -445,9 +493,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @note If the method is reimplemented it has to emit the configurationDialogAccepted()
      *       or configurationDialogRejected() signals depending on the users choice.
      */
-    virtual void configure( WId windowId );
+    virtual void configure(WId windowId);
 
-  public:
+public:
     /**
      * This method returns the windows id, which should be used for dialogs.
      */
@@ -458,7 +506,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Overload of @ref configure needed because WId cannot be automatically casted
      * to qlonglong on Windows.
      */
-    void configure( qlonglong windowId );
+    void configure(qlonglong windowId);
 #endif
 
     /**
@@ -482,7 +530,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *                 the caller stays owner of the pointer and can reset
      *                 the registration by calling this method with @c 0
      */
-    void registerObserver( Observer *observer );
+    void registerObserver(Observer *observer);
 
     /**
      * This method is used to set the name of the agent.
@@ -491,7 +539,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @param name name of the agent
      */
     //FIXME_API: make sure location is renamed to this by agentbase
-    void setAgentName( const QString &name );
+    void setAgentName(const QString &name);
 
     /**
      * Returns the name of the agent.
@@ -510,7 +558,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     static KComponentData componentData();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the agent has changed.
      *
@@ -518,14 +566,14 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * @since 4.3
      */
-    void agentNameChanged( const QString &name );
+    void agentNameChanged(const QString &name);
 
     /**
      * This signal should be emitted whenever the status of the agent has been changed.
      * @param status The new Status code.
      * @param message A i18n'ed description of the new status.
      */
-    void status( int status, const QString &message = QString() );
+    void status(int status, const QString &message = QString());
 
     /**
      * This signal should be emitted whenever the progress of an action in the agent
@@ -533,21 +581,21 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * @param progress The progress of the action in percent.
      */
-    void percent( int progress );
+    void percent(int progress);
 
     /**
      * This signal shall be used to report warnings.
      *
      * @param message The i18n'ed warning message.
      */
-    void warning( const QString& message );
+    void warning(const QString &message);
 
     /**
      * This signal shall be used to report errors.
      *
      * @param message The i18n'ed error message.
      */
-    void error( const QString& message );
+    void error(const QString &message);
 
     /**
      * This signal should be emitted whenever the status of the agent has been changed.
@@ -555,7 +603,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * @since 4.6
      */
-    void advancedStatus( const QVariantMap &status );
+    void advancedStatus(const QVariantMap &status);
 
     /**
      * Emitted when another application has remotely asked the agent to abort
@@ -580,7 +628,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @param online The online state.
      * @since 4.2
      */
-    void onlineChanged( bool online );
+    void onlineChanged(bool online);
 
     /**
      * This signal is emitted whenever the user has accepted the configuration dialog.
@@ -602,13 +650,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     void configurationDialogRejected();
 
-  protected:
+protected:
     /**
      * Creates an agent base.
      *
      * @param id The instance id of the agent.
      */
-    AgentBase( const QString & id );
+    AgentBase(const QString &id);
 
     /**
      * Destroys the agent base.
@@ -628,7 +676,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Returns the Akonadi::ChangeRecorder object used for monitoring.
      * Use this to configure which parts you want to monitor.
      */
-    ChangeRecorder* changeRecorder() const;
+    ChangeRecorder *changeRecorder() const;
 
     /**
      * Returns the config object for this Agent.
@@ -657,17 +705,17 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *       the onLine status of the agent.
      * @param needsNetwork @c true if the agents needs network. Defaults to @c false
      */
-    void setNeedsNetwork( bool needsNetwork );
+    void setNeedsNetwork(bool needsNetwork);
 
     /**
      * Sets whether the agent shall be online or not.
      */
-    void setOnline( bool state );
+    void setOnline(bool state);
 
-  protected:
+protected:
     //@cond PRIVATE
     AgentBasePrivate *d_ptr;
-    explicit AgentBase( AgentBasePrivate* d, const QString &id );
+    explicit AgentBase(AgentBasePrivate *d, const QString &id);
     friend class ObserverV2;
     //@endcond
 
@@ -676,13 +724,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Reimplement this method to react on online status changes.
      * @param online online status
      */
-    virtual void doSetOnline( bool online );
+    virtual void doSetOnline(bool online);
 
-  private:
+private:
     //@cond PRIVATE
-    static QString parseArguments( int, char** );
-    static int init( AgentBase *r );
-    void setOnlineInternal( bool state );
+    static QString parseArguments(int, char **);
+    static int init(AgentBase *r);
+    void setOnlineInternal(bool state);
 
     // D-Bus interface stuff
     void abort();
@@ -693,14 +741,14 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     friend class ::Akonadi__StatusAdaptor;
     friend class ::Akonadi__ControlAdaptor;
 
-    Q_DECLARE_PRIVATE( AgentBase )
-    Q_PRIVATE_SLOT( d_func(), void delayedInit() )
-    Q_PRIVATE_SLOT( d_func(), void slotStatus( int, const QString& ) )
-    Q_PRIVATE_SLOT( d_func(), void slotPercent( int ) )
-    Q_PRIVATE_SLOT( d_func(), void slotWarning( const QString& ) )
-    Q_PRIVATE_SLOT( d_func(), void slotError( const QString& ) )
-    Q_PRIVATE_SLOT( d_func(), void slotNetworkStatusChange( Solid::Networking::Status ) )
-    Q_PRIVATE_SLOT( d_func(), void slotResumedFromSuspend() )
+    Q_DECLARE_PRIVATE(AgentBase)
+    Q_PRIVATE_SLOT(d_func(), void delayedInit())
+    Q_PRIVATE_SLOT(d_func(), void slotStatus(int, const QString &))
+    Q_PRIVATE_SLOT(d_func(), void slotPercent(int))
+    Q_PRIVATE_SLOT(d_func(), void slotWarning(const QString &))
+    Q_PRIVATE_SLOT(d_func(), void slotError(const QString &))
+    Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange(Solid::Networking::Status))
+    Q_PRIVATE_SLOT(d_func(), void slotResumedFromSuspend())
 
     //@endcond
 };

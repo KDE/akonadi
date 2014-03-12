@@ -82,6 +82,7 @@ class ItemFetchScope;
 class AKONADI_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
+    Q_FLAGS(DeliveryOptions)
   public:
     /**
      * Creates a new item fetch job that retrieves all items inside the given collection.
@@ -193,6 +194,26 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      */
     void setCollection( const Collection &collection );
 
+    enum DeliveryOption {
+      ItemGetter = 0x1,            ///< items available through items()
+      EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
+      EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
+      Default = ItemGetter | EmitItemsInBatches
+    };
+    Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption)
+
+    /**
+     * Sets the mechanisms by which the items should be fetched
+     * @since 4.13
+     */
+    void setDeliveryOption( DeliveryOptions options );
+
+    /**
+     * Returns the delivery options
+     * @since 4.13
+     */
+    DeliveryOptions deliveryOptions() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever new items have been fetched completely.
@@ -219,5 +240,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::ItemFetchJob::DeliveryOptions)
 
 #endif

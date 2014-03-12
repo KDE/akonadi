@@ -23,8 +23,8 @@
 
 #include "immodel.h"
 
-IMDelegate::IMDelegate( QObject *parent )
-  : QStyledItemDelegate( parent )
+IMDelegate::IMDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -32,23 +32,22 @@ IMDelegate::~IMDelegate()
 {
 }
 
-QWidget *IMDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &item,
-                                   const QModelIndex &index ) const
+QWidget *IMDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &item,
+                                  const QModelIndex &index) const
 {
-  Q_UNUSED( parent );
-  Q_UNUSED( item );
-  Q_UNUSED( index );
-  return 0;
+    Q_UNUSED(parent);
+    Q_UNUSED(item);
+    Q_UNUSED(index);
+    return 0;
 }
 
-void IMDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option,
-                        const QModelIndex &index ) const
+void IMDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+                       const QModelIndex &index) const
 {
-  QStyleOptionViewItem newOption( option );
-  if ( index.data( IMModel::IsPreferredRole ).toBool() ) {
-    newOption.font.setBold( true );
-  }
+    QStyleOptionViewItem newOption(option);
+    if (index.data(IMModel::IsPreferredRole).toBool()) {
+        newOption.font.setBold(true);
+    }
 
-  QStyledItemDelegate::paint( painter, newOption, index );
+    QStyledItemDelegate::paint(painter, newOption, index);
 }
-

@@ -33,16 +33,16 @@ class KProcess;
  */
 class RaceTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
     void testMultipleProcesses_data();
     void testMultipleProcesses();
     void killZombies();
 
-  private:
-    QList<KProcess*> procs;
+private:
+    QList<KProcess *> procs;
 
 };
 

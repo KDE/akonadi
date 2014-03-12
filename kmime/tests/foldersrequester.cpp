@@ -34,32 +34,31 @@ using namespace Akonadi;
 
 Requester::Requester()
 {
-  Control::start();
+    Control::start();
 
-  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
-  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(requestResult(KJob*)) );
-  rjob->start();
+    SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob(this);
+    rjob->requestDefaultCollection(SpecialMailCollections::Outbox);
+    connect(rjob, SIGNAL(result(KJob*)), this, SLOT(requestResult(KJob*)));
+    rjob->start();
 }
 
-void Requester::requestResult( KJob *job )
+void Requester::requestResult(KJob *job)
 {
-  if ( job->error() ) {
-    kError() << "LocalFoldersRequestJob failed:" << job->errorString();
-    KApplication::exit( 1 );
-  } else {
-    // Success.
-    KApplication::exit( 2 );
-  }
+    if (job->error()) {
+        kError() << "LocalFoldersRequestJob failed:" << job->errorString();
+        KApplication::exit(1);
+    } else {
+        // Success.
+        KApplication::exit(2);
+    }
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KCmdLineArgs::init( argc, argv, "foldersrequester", 0,
-                      ki18n( "foldersrequester" ), "0",
-                      ki18n( "An app that requests LocalFolders" ) );
-  KApplication app;
-  new Requester();
-  return app.exec();
+    KCmdLineArgs::init(argc, argv, "foldersrequester", 0,
+                       ki18n("foldersrequester"), "0",
+                       ki18n("An app that requests LocalFolders"));
+    KApplication app;
+    new Requester();
+    return app.exec();
 }
-
