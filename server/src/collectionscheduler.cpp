@@ -65,7 +65,8 @@ void CollectionScheduler::setMinimumInterval( int intervalMinutes )
 
 void CollectionScheduler::collectionAdded( qint64 collectionId )
 {
-  const Collection collection = Collection::retrieveById( collectionId );
+  Collection collection = Collection::retrieveById( collectionId );
+  DataStore::self()->activeCachePolicy( collection );
   if ( shouldScheduleCollection( collection ) ) {
     QMetaObject::invokeMethod( this, "scheduleCollection",
                                Qt::QueuedConnection,
@@ -79,6 +80,7 @@ void CollectionScheduler::collectionChanged( qint64 collectionId )
   Q_FOREACH ( const Collection &collection, mSchedule ) {
     if ( collection.id() == collectionId ) {
       Collection changed = Collection::retrieveById( collectionId );
+      DataStore::self()->activeCachePolicy( changed );
       if ( hasChanged( collection, changed ) ) {
         if ( shouldScheduleCollection( changed ) ) {
           locker.unlock();

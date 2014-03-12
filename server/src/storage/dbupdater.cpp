@@ -361,7 +361,7 @@ bool DbUpdater::complexUpdate_25()
                                    "       PartTable.datasize, PartTable.version, PartTable.external "
                                    "FROM PartTable "
                                    "LEFT JOIN PartTypeTable ON "
-                                   "       PartTable.name = CONCAT(encode(PartTypeTable.ns, 'escape'), ':', encode(PartTypeTable.name, 'escape'))"  );
+                                   "       PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)"  );
     } else if ( dbType == DbType::MySQL ) {
       queryString = QLatin1String( "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
                                    "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
