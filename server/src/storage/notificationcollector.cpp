@@ -23,6 +23,8 @@
 #include "handlerhelper.h"
 #include "cachecleaner.h"
 #include "intervalcheck.h"
+#include "search/searchmanager.h"
+#include <search.h>
 
 #include <QtCore/QDebug>
 
@@ -51,6 +53,7 @@ void NotificationCollector::itemAdded( const PimItem &item,
                                        const Collection &collection,
                                        const QByteArray &resource )
 {
+  SearchManager::instance()->scheduleSearchUpdate();
   itemNotification( NotificationMessageV2::Add, item, collection, Collection(), resource );
 }
 
@@ -59,6 +62,7 @@ void NotificationCollector::itemChanged( const PimItem &item,
                                          const Collection &collection,
                                          const QByteArray &resource )
 {
+  SearchManager::instance()->scheduleSearchUpdate();
   itemNotification( NotificationMessageV2::Modify, item, collection, Collection(), resource, changedParts );
 }
 
@@ -85,6 +89,7 @@ void NotificationCollector::itemsMoved( const PimItem::List &items,
                                         const Collection &collectionDest,
                                         const QByteArray &sourceResource )
 {
+  SearchManager::instance()->scheduleSearchUpdate();
   itemNotification( NotificationMessageV2::Move, items, collectionSrc, collectionDest, sourceResource );
 }
 

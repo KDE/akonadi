@@ -25,9 +25,9 @@
 #include "akdebug.h"
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
+#include "notificationmanager.h"
 #include "searchrequest.h"
 #include "searchtaskmanager.h"
-#include "storage/notificationcollector.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/transaction.h"
@@ -91,14 +91,10 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
       QDBusConnection::ExportAdaptors );
 
 
-  NotificationCollector *collector = DataStore::self()->notificationCollector();
-  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)),
-           this, SLOT(scheduleSearchUpdate(Akonadi::NotificationMessageV3::List)) );
-
-  // The timer will tick 30 seconds after last change notification. If a new notification
+  // The timer will tick 15 seconds after last change notification. If a new notification
   // is delivered in the meantime, the timer is reset
   mSearchUpdateTimer = new QTimer( this );
-  mSearchUpdateTimer->setInterval( 30 * 1000 );
+  mSearchUpdateTimer->setInterval( 15 * 1000 );
   mSearchUpdateTimer->setSingleShot( true );
   connect( mSearchUpdateTimer, SIGNAL(timeout()),
            this, SLOT(searchUpdateTimeout()) );
@@ -183,29 +179,10 @@ void SearchManager::loadSearchPlugins()
   }
 }
 
-void SearchManager::scheduleSearchUpdate( const NotificationMessageV3::List &notifications )
+void SearchManager::scheduleSearchUpdate()
 {
-  QList<Entity::Id> newChanges;
-
-  Q_FOREACH ( const NotificationMessageV2 &msg, notifications ) {
-    // we don't care about collections changes
-    if ( msg.type() == NotificationMessageV2::Collections ) {
-      continue;
-    }
-
-    // Only these two operations can cause item to be added or removed from a
-    // persistent search (removal is handled automatically)
-    if ( msg.operation() == NotificationMessageV2::Add ||
-         msg.operation() == NotificationMessageV2::Modify )
-    {
-      newChanges << msg.uids();
-    }
-  }
-
-  if ( !newChanges.isEmpty() ) {
-    mPendingSearchUpdateIds << newChanges;
-    mSearchUpdateTimer->start();
-  }
+  // Reset if the timer is active
+  mSearchUpdateTimer->start();
 }
 
 void SearchManager::searchUpdateTimeout()
