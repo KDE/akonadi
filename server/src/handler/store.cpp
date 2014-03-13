@@ -360,6 +360,8 @@ bool Store::parseStream()
       // flags change notification went separatly during command parsing
       // GID-only changes are ignored to prevent resources from updating their storage when no actual change happened
       if ( !changes.isEmpty() && !onlyFlagsChanged && !onlyGIDChanged ) {
+        // Don't send FLAGS notification in itemChanged
+        changes.remove( AKONADI_PARAM_FLAGS );
         store->notificationCollector()->itemChanged( item, changes );
       }
 

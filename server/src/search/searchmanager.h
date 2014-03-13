@@ -88,9 +88,9 @@ class SearchManager : public QObject
      */
     bool updateSearch( const Collection &collection, NotificationCollector *collector );
 
+    void scheduleSearchUpdate();
 
   private Q_SLOTS:
-    void scheduleSearchUpdate( const Akonadi::NotificationMessageV3::List &notifications );
     void searchUpdateTimeout();
     void searchUpdateResultsAvailable( const QSet<qint64> &results );
 
@@ -105,7 +105,6 @@ class SearchManager : public QObject
     // agents dbus interface cache
     QDBusConnection mDBusConnection;
 
-    QList<qint64> mPendingSearchUpdateIds;
     QTimer *mSearchUpdateTimer;
 };
 
