@@ -361,7 +361,7 @@ bool DbUpdater::complexUpdate_25()
                                    "       PartTable.datasize, PartTable.version, PartTable.external "
                                    "FROM PartTable "
                                    "LEFT JOIN PartTypeTable ON "
-                                   "       PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)"  );
+                                   "          PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)"  );
     } else if ( dbType == DbType::MySQL ) {
       queryString = QLatin1String( "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
                                    "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
@@ -390,28 +390,30 @@ bool DbUpdater::complexUpdate_25()
 
     if ( dbType == DbType::PostgreSQL  || dbType == DbType::Sqlite ) {
       if ( dbType == DbType::PostgreSQL ) {
-        DataStore::self()->database().transaction();
+        DataStore::self()->beginTransaction();
       }
 
       if ( !query.exec( QLatin1String( "ALTER TABLE PartTable RENAME TO PartTable_old" ) ) ) {
         akError() << query.lastError().text();
-        DataStore::self()->database().rollback();
+        DataStore::self()->rollbackTransaction();
         return false;
       }
 
       // If this fails in SQLite (i.e. without transaction), we can still recover on next start)
       if ( !query.exec( QLatin1String( "ALTER TABLE PartTable_new RENAME TO PartTable" ) ) ) {
         akError() << query.lastError().text();
-        DataStore::self()->database().rollback();
+        if ( DataStore::self()->inTransaction() ) {
+          DataStore::self()->rollbackTransaction();
+        }
         return false;
       }
 
       if ( dbType == DbType::PostgreSQL ) {
-        DataStore::self()->database().commit();
+        DataStore::self()->commitTransaction();
       }
     } else { // MySQL cannot do rename in transaction, but supports atomic renames
-      if ( !query.exec( QLatin1String( "RENAME TABLE PartTable     TO PartTable_old,"
-                                            "             PartTable_new TO PartTable" ) ) ) {
+      if ( !query.exec( QLatin1String( "RENAME TABLE PartTable TO PartTable_old,"
+                                       "             PartTable_new TO PartTable" ) ) ) {
         akError() << query.lastError().text();
         return false;
       }
@@ -425,6 +427,20 @@ bool DbUpdater::complexUpdate_25()
       // It does not matter when this fails, we are successfully migrated
       akDebug() << query.lastError().text();
       akDebug() << "Not a fatal problem, continuing...";
+    }
+  }
+
+  // Fine tuning for PostgreSQL
+  akDebug() << "Final tuning of new PartTable";
+  {
+    QSqlQuery query( DataStore::self()->database() );
+    if ( dbType == DbType::PostgreSQL ) {
+      query.exec( QLatin1String( "ALTER TABLE PartTable RENAME CONSTRAINT parttable_new_pkey TO parttable_pkey" ) );
+      query.exec( QLatin1String( "ALTER SEQUENCE parttable_new_id_seq RENAME TO parttable_id_seq" ) );
+      query.exec( QLatin1String( "SELECT setval('parttable_id_seq', MAX(id) + 1) FROM PartTable") );
+    } else if ( dbType == DbType::MySQL ) {
+      // 0 will automatically reset AUTO_INCREMENT to SELECT MAX(id) + 1 FROM PartTable
+      query.exec( QLatin1String( "ALTER TABLE PartTable AUTO_INCREMENT = 0" ) );
     }
   }
 
