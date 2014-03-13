@@ -410,8 +410,8 @@ bool DbUpdater::complexUpdate_25()
         DataStore::self()->database().commit();
       }
     } else { // MySQL cannot do rename in transaction, but supports atomic renames
-      if ( !query.exec( QLatin1String( "RENAME TABLE PartTable     TO PartTable_old,"
-                                            "             PartTable_new TO PartTable" ) ) ) {
+      if ( !query.exec( QLatin1String( "RENAME TABLE PartTable TO PartTable_old,"
+                                       "             PartTable_new TO PartTable" ) ) ) {
         akError() << query.lastError().text();
         return false;
       }
