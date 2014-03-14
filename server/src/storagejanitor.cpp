@@ -24,6 +24,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/parthelper.h"
+#include "storage/dbconfig.h"
 #include "resourcemanager.h"
 #include "entities.h"
 
@@ -108,6 +109,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
   inform( "Verifying external parts..." );
   verifyExternalParts();
+
+  inform( "Checking size treshold changes..." );
+  checkSizeTreshold();
 
   inform( "Looking for dirty objects..." );
   findDirtyObjects();
@@ -467,6 +471,93 @@ void StorageJanitor::vacuum()
     inform( "vacuum done" );
   } else {
     inform( "Vacuum not supported for this database backend." );
+  }
+}
+
+void StorageJanitor::checkSizeTreshold()
+{
+  {
+    QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
+    qb.addColumn( Part::idFullColumnName() );
+    qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, false );
+    qb.addValueCondition( Part::datasizeFullColumnName(), Query::Greater, DbConfig::configuredDatabase()->sizeThreshold() );
+    qb.exec();
+
+    QSqlQuery query = qb.query();
+    inform( QString::fromLatin1( "Found %1 parts to be moved to external files" ).arg( query.size() ) );
+
+    while ( query.next() ) {
+      Transaction transaction( DataStore::self() );
+      Part part = Part::retrieveById( query.value( 0 ).toLongLong() );
+      const QByteArray name = PartHelper::fileNameForPart( &part ).toUtf8() + "_r" + QByteArray::number( part.version() );
+      const QString partPath = PartHelper::resolveAbsolutePath( name );
+      QFile f( partPath );
+      if ( f.exists() ) {
+        akDebug() << "External payload file" << name << "already exists";
+        // That however is not a critical issue, since the part is not external,
+        // so we can safely overwrite it
+      }
+      if ( !f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+        akError() << "Failed to open file" << name << "for writing";
+        continue;
+      }
+      if ( f.write( part.data() ) != part.datasize() ) {
+        akError() << "Failed to write data to payload file" << name;
+        f.remove();
+        continue;
+      }
+
+      part.setData( name );
+      part.setExternal( true );
+      if ( !part.update() || !transaction.commit() ) {
+        akError() << "Failed to update database entry of part" << part.id();
+        f.remove();
+        continue;
+      }
+
+      inform( QString::fromLatin1( "Moved part %1 from database into external file %2" ).arg( part.id() ).arg( QString::fromLatin1( name ) ) );
+    }
+  }
+
+  {
+    QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
+    qb.addColumn( Part::idFullColumnName() );
+    qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
+    qb.addValueCondition( Part::datasizeFullColumnName(), Query::Less, DbConfig::configuredDatabase()->sizeThreshold() );
+    qb.exec();
+
+    QSqlQuery query = qb.query();
+    inform( QString::fromLatin1( "Found %1 parts to be moved to database" ).arg( query.size() ) );
+
+    while ( query.next() ) {
+      Transaction transaction( DataStore::self() );
+      Part part = Part::retrieveById( query.value( 0 ).toLongLong() );
+      const QString partPath = PartHelper::resolveAbsolutePath( part.data() );
+      QFile f( partPath );
+      if ( !f.exists() ) {
+        akError() << "Part file" << part.data() << "does not exist";
+        continue;
+      }
+      if ( !f.open( QIODevice::ReadOnly ) ) {
+        akError() << "Failed to open part file" << part.data() << "for reading";
+        continue;
+      }
+
+      part.setExternal( false );
+      part.setData( f.readAll() );
+      if ( part.data().size() != part.datasize() ) {
+        akError() << "Sizes of" << part.id() << "data don't match";
+        continue;
+      }
+      if ( !part.update() || !transaction.commit() ) {
+        akError() << "Failed to update database entry of part" << part.id();
+        continue;
+      }
+
+      f.close();
+      f.remove();
+      inform( QString::fromLatin1( "Moved part %1 from external file into database" ).arg( part.id() ) );
+    }
   }
 }
 
