@@ -28,7 +28,7 @@
 #include <boost/scoped_ptr.hpp>
 
 namespace Ui {
-  class ErrorOverlay;
+class ErrorOverlay;
 }
 
 namespace Akonadi {
@@ -42,29 +42,29 @@ namespace Akonadi {
  */
 class ErrorOverlay : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Create an overlay widget for @p baseWidget.
      * @p baseWidget must not be null.
      * @p parent must not be equal to @p baseWidget
      */
-    explicit ErrorOverlay( QWidget *baseWidget, QWidget *parent = 0 );
+    explicit ErrorOverlay(QWidget *baseWidget, QWidget *parent = 0);
     ~ErrorOverlay();
 
-  protected:
-    bool eventFilter( QObject *object, QEvent *event );
+protected:
+    bool eventFilter(QObject *object, QEvent *event);
 
-  private:
+private:
     void reposition();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void startClicked();
     void quitClicked();
     void selfTestClicked();
-    void serverStateChanged( Akonadi::ServerManager::State state );
+    void serverStateChanged(Akonadi::ServerManager::State state);
 
-  private:
+private:
     QPointer<QWidget> mBaseWidget;
     bool mPreviousState;
     bool mOverlayActive;

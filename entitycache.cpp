@@ -21,13 +21,15 @@
 
 using namespace Akonadi;
 
-EntityCacheBase::EntityCacheBase( Session *_session, QObject *parent ) : QObject( parent ), session(_session)
+EntityCacheBase::EntityCacheBase(Session *_session, QObject *parent)
+    : QObject(parent)
+    , session(_session)
 {
 }
 
-void EntityCacheBase::setSession( Session *_session )
+void EntityCacheBase::setSession(Session *_session)
 {
-  session = _session;
+    session = _session;
 }
 
 #include "moc_entitycache_p.cpp"

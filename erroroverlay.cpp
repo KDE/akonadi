@@ -34,214 +34,223 @@ using namespace Akonadi;
 
 class ErrorOverlayStatic
 {
-  public:
+public:
     QVector<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
 };
 
-K_GLOBAL_STATIC( ErrorOverlayStatic, sInstanceOverlay )
+K_GLOBAL_STATIC(ErrorOverlayStatic, sInstanceOverlay)
 
-static bool isParentOf( QObject* o1, QObject* o2 )
+static bool isParentOf(QObject *o1, QObject *o2)
 {
-  if ( !o1 || !o2 )
-    return false;
-  if ( o1 == o2 )
-    return true;
-  return isParentOf( o1, o2->parent() );
+    if (!o1 || !o2) {
+        return false;
+    }
+    if (o1 == o2) {
+        return true;
+    }
+    return isParentOf(o1, o2->parent());
 }
 
-ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
-    QWidget( parent ? parent : baseWidget->window() ),
-    mBaseWidget( baseWidget ),
-    mOverlayActive( false ),
-    mBaseWidgetIsParent( false ),
-    ui( new Ui::ErrorOverlay )
+ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
+    : QWidget(parent ? parent : baseWidget->window())
+    , mBaseWidget(baseWidget)
+    , mOverlayActive(false)
+    , mBaseWidgetIsParent(false)
+    , ui(new Ui::ErrorOverlay)
 {
-  Q_ASSERT( baseWidget );
+    Q_ASSERT(baseWidget);
 
-  mBaseWidgetIsParent = isParentOf( mBaseWidget, this );
+    mBaseWidgetIsParent = isParentOf(mBaseWidget, this);
 
-  // check existing overlays to detect cascading
-  for ( QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
-        it != sInstanceOverlay->baseWidgets.end(); ) {
-    if ( ( *it ).first == 0 || ( *it ).second == 0 ) {
-      // garbage collection
-      it = sInstanceOverlay->baseWidgets.erase( it );
-      continue;
+    // check existing overlays to detect cascading
+    for (QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
+         it != sInstanceOverlay->baseWidgets.end();) {
+        if ((*it).first == 0 || (*it).second == 0) {
+            // garbage collection
+            it = sInstanceOverlay->baseWidgets.erase(it);
+            continue;
+        }
+        if (isParentOf((*it).first, baseWidget)) {
+            // parent already has an overlay, kill ourselves
+            mBaseWidget = 0;
+            hide();
+            deleteLater();
+            return;
+        }
+        if (isParentOf(baseWidget, (*it).first)) {
+            // child already has overlay, kill that one
+            delete(*it).second;
+            it = sInstanceOverlay->baseWidgets.erase(it);
+            continue;
+        }
+        ++it;
     }
-    if ( isParentOf( ( *it ).first, baseWidget ) ) {
-      // parent already has an overlay, kill ourselves
-      mBaseWidget = 0;
-      hide();
-      deleteLater();
-      return;
-    }
-    if ( isParentOf( baseWidget, ( *it ).first ) ) {
-      // child already has overlay, kill that one
-      delete ( *it ).second;
-      it = sInstanceOverlay->baseWidgets.erase( it );
-      continue;
-    }
-    ++it;
-  }
-  sInstanceOverlay->baseWidgets.append( qMakePair( mBaseWidget, QPointer<QWidget>( this ) ) );
+    sInstanceOverlay->baseWidgets.append(qMakePair(mBaseWidget, QPointer<QWidget>(this)));
 
-  connect( baseWidget, SIGNAL(destroyed()), SLOT(deleteLater()) );
-  mPreviousState = mBaseWidget->isEnabled();
+    connect(baseWidget, SIGNAL(destroyed()), SLOT(deleteLater()));
+    mPreviousState = mBaseWidget->isEnabled();
 
-  ui->setupUi( this );
-  ui->notRunningIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 64 ) );
-  ui->brokenIcon->setPixmap( KIcon( QString::fromLatin1( "dialog-error" ) ).pixmap( 64 ) );
-  ui->progressIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 32 ) );
-  ui->quitButton->setText( KStandardGuiItem::quit().text() );
-  ui->detailsQuitButton->setText( KStandardGuiItem::quit().text() );
+    ui->setupUi(this);
+    ui->notRunningIcon->setPixmap(KIcon(QLatin1String("akonadi")).pixmap(64));
+    ui->brokenIcon->setPixmap(KIcon(QString::fromLatin1("dialog-error")).pixmap(64));
+    ui->progressIcon->setPixmap(KIcon(QLatin1String("akonadi")).pixmap(32));
+    ui->quitButton->setText(KStandardGuiItem::quit().text());
+    ui->detailsQuitButton->setText(KStandardGuiItem::quit().text());
 
 #ifndef KDEPIM_MOBILE_UI
-  ui->quitButton->hide();
-  ui->detailsQuitButton->hide();
+    ui->quitButton->hide();
+    ui->detailsQuitButton->hide();
 #endif
 
-  connect( ui->startButton, SIGNAL(clicked()), SLOT(startClicked()) );
-  connect( ui->quitButton, SIGNAL(clicked()), SLOT(quitClicked()) );
-  connect( ui->detailsQuitButton, SIGNAL(clicked()), SLOT(quitClicked()) );
-  connect( ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()) );
+    connect(ui->startButton, SIGNAL(clicked()), SLOT(startClicked()));
+    connect(ui->quitButton, SIGNAL(clicked()), SLOT(quitClicked()));
+    connect(ui->detailsQuitButton, SIGNAL(clicked()), SLOT(quitClicked()));
+    connect(ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()));
 
-  const ServerManager::State state = ServerManager::state();
-  mOverlayActive = (state == ServerManager::Running);
-  serverStateChanged( state );
+    const ServerManager::State state = ServerManager::state();
+    mOverlayActive = (state == ServerManager::Running);
+    serverStateChanged(state);
 
-  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-           SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+            SLOT(serverStateChanged(Akonadi::ServerManager::State)));
 
-  QPalette p = palette();
-  p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );
-  p.setColor( foregroundRole(), Qt::white );
-  setPalette( p );
-  setAutoFillBackground( true );
+    QPalette p = palette();
+    p.setColor(backgroundRole(), QColor(0, 0, 0, 128));
+    p.setColor(foregroundRole(), Qt::white);
+    setPalette(p);
+    setAutoFillBackground(true);
 
-  mBaseWidget->installEventFilter( this );
+    mBaseWidget->installEventFilter(this);
 
-  reposition();
+    reposition();
 }
 
 ErrorOverlay::~ ErrorOverlay()
 {
-  if ( mBaseWidget && !mBaseWidgetIsParent )
-    mBaseWidget->setEnabled( mPreviousState );
+    if (mBaseWidget && !mBaseWidgetIsParent) {
+        mBaseWidget->setEnabled(mPreviousState);
+    }
 }
 
 void ErrorOverlay::reposition()
 {
-  if ( !mBaseWidget )
-    return;
+    if (!mBaseWidget) {
+        return;
+    }
 
-  // reparent to the current top level widget of the base widget if needed
-  // needed eg. in dock widgets
-  if ( parentWidget() != mBaseWidget->window() )
-    setParent( mBaseWidget->window() );
+    // reparent to the current top level widget of the base widget if needed
+    // needed eg. in dock widgets
+    if (parentWidget() != mBaseWidget->window()) {
+        setParent(mBaseWidget->window());
+    }
 
-  // follow base widget visibility
-  // needed eg. in tab widgets
-  if ( !mBaseWidget->isVisible() ) {
-    hide();
-    return;
-  }
-  if ( mOverlayActive )
-    show();
+    // follow base widget visibility
+    // needed eg. in tab widgets
+    if (!mBaseWidget->isVisible()) {
+        hide();
+        return;
+    }
+    if (mOverlayActive) {
+        show();
+    }
 
-  // follow position changes
-  const QPoint topLevelPos = mBaseWidget->mapTo( window(), QPoint( 0, 0 ) );
-  const QPoint parentPos = parentWidget()->mapFrom( window(), topLevelPos );
-  move( parentPos );
+    // follow position changes
+    const QPoint topLevelPos = mBaseWidget->mapTo(window(), QPoint(0, 0));
+    const QPoint parentPos = parentWidget()->mapFrom(window(), topLevelPos);
+    move(parentPos);
 
-  // follow size changes
-  // TODO: hide/scale icon if we don't have enough space
-  resize( mBaseWidget->size() );
+    // follow size changes
+    // TODO: hide/scale icon if we don't have enough space
+    resize(mBaseWidget->size());
 }
 
-bool ErrorOverlay::eventFilter(QObject * object, QEvent * event)
+bool ErrorOverlay::eventFilter(QObject *object, QEvent *event)
 {
-  if ( object == mBaseWidget && mOverlayActive &&
-    ( event->type() == QEvent::Move || event->type() == QEvent::Resize ||
-      event->type() == QEvent::Show || event->type() == QEvent::Hide ||
-      event->type() == QEvent::ParentChange ) ) {
-    reposition();
-  }
-  return QWidget::eventFilter( object, event );
+    if (object == mBaseWidget && mOverlayActive &&
+        (event->type() == QEvent::Move || event->type() == QEvent::Resize ||
+         event->type() == QEvent::Show || event->type() == QEvent::Hide ||
+         event->type() == QEvent::ParentChange)) {
+        reposition();
+    }
+    return QWidget::eventFilter(object, event);
 }
 
 void ErrorOverlay::startClicked()
 {
-  const ServerManager::State state = ServerManager::state();
-  if ( state == ServerManager::Running ) {
-    serverStateChanged( state );
-  } else {
-    ServerManager::start();
-  }
+    const ServerManager::State state = ServerManager::state();
+    if (state == ServerManager::Running) {
+        serverStateChanged(state);
+    } else {
+        ServerManager::start();
+    }
 }
 
 void ErrorOverlay::quitClicked()
 {
-  qApp->quit();
+    qApp->quit();
 }
 
 void ErrorOverlay::selfTestClicked()
 {
-  SelfTestDialog dlg;
-  dlg.exec();
+    SelfTestDialog dlg;
+    dlg.exec();
 }
 
-void ErrorOverlay::serverStateChanged( ServerManager::State state )
+void ErrorOverlay::serverStateChanged(ServerManager::State state)
 {
-  if ( !mBaseWidget )
-    return;
-
-  if ( state == ServerManager::Running && mOverlayActive ) {
-    mOverlayActive = false;
-    hide();
-    if ( !mBaseWidgetIsParent )
-      mBaseWidget->setEnabled( mPreviousState );
-  } else if ( !mOverlayActive ) {
-    mOverlayActive = true;
-    if ( mBaseWidget->isVisible() )
-      show();
-
-    if ( !mBaseWidgetIsParent ) {
-      mPreviousState = mBaseWidget->isEnabled();
-      mBaseWidget->setEnabled( false );
+    if (!mBaseWidget) {
+        return;
     }
 
-    reposition();
-  }
+    if (state == ServerManager::Running && mOverlayActive) {
+        mOverlayActive = false;
+        hide();
+        if (!mBaseWidgetIsParent) {
+            mBaseWidget->setEnabled(mPreviousState);
+        }
+    } else if (!mOverlayActive) {
+        mOverlayActive = true;
+        if (mBaseWidget->isVisible()) {
+            show();
+        }
 
-  if ( mOverlayActive ) {
-    switch ( state ) {
-      case ServerManager::NotRunning:
-        ui->stackWidget->setCurrentWidget( ui->notRunningPage );
-        break;
-      case ServerManager::Broken:
-        ui->stackWidget->setCurrentWidget( ui->brokenPage );
-        break;
-      case ServerManager::Starting:
-        ui->progressPage->setToolTip( i18n( "Personal information management service is starting..." ) );
-        ui->progressDescription->setText( i18n( "Personal information management service is starting..." ) );
-        ui->stackWidget->setCurrentWidget( ui->progressPage );
-        break;
-      case ServerManager::Stopping:
-        ui->progressPage->setToolTip( i18n( "Personal information management service is shutting down..." ) );
-        ui->progressDescription->setText( i18n( "Personal information management service is shutting down..." ) );
-        ui->stackWidget->setCurrentWidget( ui->progressPage );
-        break;
-      case ServerManager::Upgrading:
-        ui->progressPage->setToolTip( i18n( "Personal information management service is performing a database upgrade." ) );
-        ui->progressDescription->setText( i18n( "Personal information management service is performing a database upgrade.\n"
-                                                "This happens after a software update and is necessary to optimize performance.\n"
-                                                "Depending on the amount of personal information, this might take a few minutes.") );
-        ui->stackWidget->setCurrentWidget( ui->progressPage );
-        break;
-      case ServerManager::Running:
-        break;
+        if (!mBaseWidgetIsParent) {
+            mPreviousState = mBaseWidget->isEnabled();
+            mBaseWidget->setEnabled(false);
+        }
+
+        reposition();
     }
-  }
+
+    if (mOverlayActive) {
+        switch (state) {
+        case ServerManager::NotRunning:
+            ui->stackWidget->setCurrentWidget(ui->notRunningPage);
+            break;
+        case ServerManager::Broken:
+            ui->stackWidget->setCurrentWidget(ui->brokenPage);
+            break;
+        case ServerManager::Starting:
+            ui->progressPage->setToolTip(i18n("Personal information management service is starting..."));
+            ui->progressDescription->setText(i18n("Personal information management service is starting..."));
+            ui->stackWidget->setCurrentWidget(ui->progressPage);
+            break;
+        case ServerManager::Stopping:
+            ui->progressPage->setToolTip(i18n("Personal information management service is shutting down..."));
+            ui->progressDescription->setText(i18n("Personal information management service is shutting down..."));
+            ui->stackWidget->setCurrentWidget(ui->progressPage);
+            break;
+        case ServerManager::Upgrading:
+            ui->progressPage->setToolTip(i18n("Personal information management service is performing a database upgrade."));
+            ui->progressDescription->setText(i18n("Personal information management service is performing a database upgrade.\n"
+                                                  "This happens after a software update and is necessary to optimize performance.\n"
+                                                  "Depending on the amount of personal information, this might take a few minutes."));
+            ui->stackWidget->setCurrentWidget(ui->progressPage);
+            break;
+        case ServerManager::Running:
+            break;
+        }
+    }
 }
 
 //@endcond

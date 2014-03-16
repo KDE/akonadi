@@ -88,15 +88,15 @@ class EntityTreeViewStateSaverPrivate;
  */
 class AKONADI_DEPRECATED_EXPORT EntityTreeViewStateSaver : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new state saver, for saving or restoring.
      *
      * @param view The QTreeView which state should be saved/restored.
      */
-    explicit EntityTreeViewStateSaver( QTreeView* view );
+    explicit EntityTreeViewStateSaver(QTreeView *view);
 
     /**
      * Destroys this state saver.
@@ -108,7 +108,7 @@ class AKONADI_DEPRECATED_EXPORT EntityTreeViewStateSaver : public QObject
      *
      * @param configGroup Config file group into which the state is supposed to be stored.
      */
-    void saveState( KConfigGroup &configGroup ) const;
+    void saveState(KConfigGroup &configGroup) const;
 
     /**
      * Restore the state stored in @p configGroup as soon as the corresponding entities
@@ -117,13 +117,13 @@ class AKONADI_DEPRECATED_EXPORT EntityTreeViewStateSaver : public QObject
      *
      * @param configGroup Config file group containing a previously stored EntityTreeView state.
      */
-    void restoreState( const KConfigGroup &configGroup ) const;
+    void restoreState(const KConfigGroup &configGroup) const;
 
-  private:
+private:
     //@cond PRIVATE
-    EntityTreeViewStateSaverPrivate* const d;
-    Q_PRIVATE_SLOT( d, void rowsInserted( const QModelIndex&, int, int ) )
-    Q_PRIVATE_SLOT( d, void restoreScrollBarState() )
+    EntityTreeViewStateSaverPrivate *const d;
+    Q_PRIVATE_SLOT(d, void rowsInserted(const QModelIndex &, int, int))
+    Q_PRIVATE_SLOT(d, void restoreScrollBarState())
     //@endcond
 };
 

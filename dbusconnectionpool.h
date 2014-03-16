@@ -35,17 +35,16 @@
 namespace Akonadi {
 
 namespace DBusConnectionPool {
-  /**
-   * The DBusConnectionPool works around the problem
-   * of QDBusConnection not being thread-safe. As soon as that
-   * has been fixed (either directly in libdbus or with a work-
-   * around in Qt) this method can be dropped in favor of
-   * QDBusConnection::sessionBus().
-   */
-  AKONADI_EXPORT QDBusConnection threadConnection();
+/**
+ * The DBusConnectionPool works around the problem
+ * of QDBusConnection not being thread-safe. As soon as that
+ * has been fixed (either directly in libdbus or with a work-
+ * around in Qt) this method can be dropped in favor of
+ * QDBusConnection::sessionBus().
+ */
+AKONADI_EXPORT QDBusConnection threadConnection();
 } // DBusConnectionPool
 
 } // Akonadi
 
 #endif
-
