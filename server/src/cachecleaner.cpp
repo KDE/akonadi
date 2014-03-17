@@ -93,8 +93,12 @@ void CacheCleaner::collectionExpired( const Collection &collection )
       akDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
       // clear data field
       Q_FOREACH ( Part part, parts ) {
-        if ( !PartHelper::truncate( part ) ) {
-          akDebug() << "failed to update item part" << part.id();
+        try {
+          if ( !PartHelper::truncate( part ) ) {
+            akDebug() << "failed to update item part" << part.id();
+          }
+        } catch ( const PartHelperException &e ) {
+            akError() << e.type() << e.what();
         }
       }
     }
