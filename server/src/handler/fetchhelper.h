@@ -74,6 +74,7 @@ class FetchHelper : public QObject
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
     QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
+    bool isScopeLocal( const Scope &scope );
 
   private:
     ImapStreamParser *mStreamParser;
