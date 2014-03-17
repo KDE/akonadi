@@ -65,9 +65,9 @@ class EntityTreeModel;
 //TODO_KDE5: Make this a KRecursiveFilterProxyModel instead of a SelectionProxyModel
 class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new favorite collections model.
      *
@@ -77,7 +77,7 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
      *              selection of favorite collections.
      * @param parent The parent object.
      */
-    FavoriteCollectionsModel( QAbstractItemModel *model, const KConfigGroup &group, QObject *parent = 0 );
+    FavoriteCollectionsModel(QAbstractItemModel *model, const KConfigGroup &group, QObject *parent = 0);
 
     /**
      * Destroys the favorite collections model.
@@ -117,50 +117,50 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
     /**
      * Return associate label for collection
      */
-    QString favoriteLabel( const Akonadi::Collection & col );
+    QString favoriteLabel(const Akonadi::Collection &col);
 
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-    virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual QStringList mimeTypes() const;
-    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the @p collections as favorite collections.
      */
-    void setCollections( const Collection::List &collections );
+    void setCollections(const Collection::List &collections);
 
     /**
      * Adds a @p collection to the list of favorite collections.
      */
-    void addCollection( const Collection &collection );
+    void addCollection(const Collection &collection);
 
     /**
      * Removes a @p collection from the list of favorite collections.
      */
-    void removeCollection( const Collection &collection );
+    void removeCollection(const Collection &collection);
 
     /**
      * Sets a custom @p label that will be used when showing the
      * favorite @p collection.
      */
-    void setFavoriteLabel( const Collection &collection, const QString &label );
+    void setFavoriteLabel(const Collection &collection, const QString &label);
 
-  private Q_SLOTS:
-    void pasteJobDone( KJob *job );
+private Q_SLOTS:
+    void pasteJobDone(KJob *job);
 
-  private:
+private:
     //@cond PRIVATE
     using KSelectionProxyModel::setSourceModel;
 
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void reload() )
-    Q_PRIVATE_SLOT( d, void rowsInserted(QModelIndex,int,int) )
-    Q_PRIVATE_SLOT( d, void dataChanged(QModelIndex,QModelIndex) )
+    Q_PRIVATE_SLOT(d, void reload())
+    Q_PRIVATE_SLOT(d, void rowsInserted(QModelIndex, int, int))
+    Q_PRIVATE_SLOT(d, void dataChanged(QModelIndex, QModelIndex))
     //@endcond
 };
 
