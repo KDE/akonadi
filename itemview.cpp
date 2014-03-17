@@ -36,157 +36,165 @@ using namespace Akonadi;
  */
 class ItemView::Private
 {
-  public:
-    Private( ItemView *parent ) :
-      xmlGuiClient( 0 ),
-      mParent( parent )
+public:
+    Private(ItemView *parent)
+        : xmlGuiClient(0)
+        , mParent(parent)
     {
     }
 
     void init();
-    void itemActivated( const QModelIndex& );
-    void itemCurrentChanged( const QModelIndex& );
-    void itemClicked( const QModelIndex& );
-    void itemDoubleClicked( const QModelIndex& );
+    void itemActivated(const QModelIndex &index);
+    void itemCurrentChanged(const QModelIndex &index);
+    void itemClicked(const QModelIndex &index);
+    void itemDoubleClicked(const QModelIndex &index);
 
-    Item itemForIndex( const QModelIndex& );
+    Item itemForIndex(const QModelIndex &index);
 
     KXMLGUIClient *xmlGuiClient;
 
-  private:
+private:
     ItemView *mParent;
 };
 
 void ItemView::Private::init()
 {
-  mParent->setRootIsDecorated( false );
+    mParent->setRootIsDecorated(false);
 
-  mParent->header()->setClickable( true );
-  mParent->header()->setStretchLastSection( true );
+    mParent->header()->setClickable(true);
+    mParent->header()->setStretchLastSection(true);
 
-  mParent->connect( mParent, SIGNAL(activated(QModelIndex)),
-                    mParent, SLOT(itemActivated(QModelIndex)) );
-  mParent->connect( mParent, SIGNAL(clicked(QModelIndex)),
-                    mParent, SLOT(itemClicked(QModelIndex)) );
-  mParent->connect( mParent, SIGNAL(doubleClicked(QModelIndex)),
-                    mParent, SLOT(itemDoubleClicked(QModelIndex)) );
+    mParent->connect(mParent, SIGNAL(activated(QModelIndex)),
+                     mParent, SLOT(itemActivated(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)),
+                     mParent, SLOT(itemClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)),
+                     mParent, SLOT(itemDoubleClicked(QModelIndex)));
 
-  Control::widgetNeedsAkonadi( mParent );
+    Control::widgetNeedsAkonadi(mParent);
 }
 
-Item ItemView::Private::itemForIndex( const QModelIndex &index )
+Item ItemView::Private::itemForIndex(const QModelIndex &index)
 {
-  if ( !index.isValid() )
-    return Item();
+    if (!index.isValid()) {
+        return Item();
+    }
 
-  const Item::Id currentItem = index.sibling( index.row(), ItemModel::Id ).data( ItemModel::IdRole ).toLongLong();
-  if ( currentItem <= 0 )
-    return Item();
+    const Item::Id currentItem = index.sibling(index.row(), ItemModel::Id).data(ItemModel::IdRole).toLongLong();
+    if (currentItem <= 0) {
+        return Item();
+    }
 
-  const QString remoteId = index.sibling( index.row(), ItemModel::RemoteId ).data( ItemModel::IdRole ).toString();
-  const QString mimeType = index.sibling( index.row(), ItemModel::MimeType ).data( ItemModel::MimeTypeRole ).toString();
+    const QString remoteId = index.sibling(index.row(), ItemModel::RemoteId).data(ItemModel::IdRole).toString();
+    const QString mimeType = index.sibling(index.row(), ItemModel::MimeType).data(ItemModel::MimeTypeRole).toString();
 
-  Item item( currentItem );
-  item.setRemoteId( remoteId );
-  item.setMimeType( mimeType );
+    Item item(currentItem);
+    item.setRemoteId(remoteId);
+    item.setMimeType(mimeType);
 
-  return item;
+    return item;
 }
 
-void ItemView::Private::itemActivated( const QModelIndex &index )
+void ItemView::Private::itemActivated(const QModelIndex &index)
 {
-  const Item item = itemForIndex( index );
+    const Item item = itemForIndex(index);
 
-  if ( !item.isValid() )
-    return;
+    if (!item.isValid()) {
+        return;
+    }
 
-  emit mParent->activated( item );
+    emit mParent->activated(item);
 }
 
-void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
+void ItemView::Private::itemCurrentChanged(const QModelIndex &index)
 {
-  const Item item = itemForIndex( index );
+    const Item item = itemForIndex(index);
 
-  if ( !item.isValid() )
-    return;
+    if (!item.isValid()) {
+        return;
+    }
 
-  emit mParent->currentChanged( item );
+    emit mParent->currentChanged(item);
 }
 
-void ItemView::Private::itemClicked( const QModelIndex &index )
+void ItemView::Private::itemClicked(const QModelIndex &index)
 {
-  const Item item = itemForIndex( index );
+    const Item item = itemForIndex(index);
 
-  if ( !item.isValid() )
-    return;
+    if (!item.isValid()) {
+        return;
+    }
 
-  emit mParent->clicked( item );
+    emit mParent->clicked(item);
 }
 
-void ItemView::Private::itemDoubleClicked( const QModelIndex &index )
+void ItemView::Private::itemDoubleClicked(const QModelIndex &index)
 {
-  const Item item = itemForIndex( index );
+    const Item item = itemForIndex(index);
 
-  if ( !item.isValid() )
-    return;
+    if (!item.isValid()) {
+        return;
+    }
 
-  emit mParent->doubleClicked( item );
+    emit mParent->doubleClicked(item);
 }
 
-ItemView::ItemView( QWidget * parent ) :
-    QTreeView( parent ),
-    d( new Private( this ) )
+ItemView::ItemView(QWidget *parent)
+    : QTreeView(parent)
+    , d(new Private(this))
 {
-  d->init();
+    d->init();
 }
 
-ItemView::ItemView(KXmlGuiWindow * xmlGuiWindow, QWidget * parent) :
-    QTreeView( parent ),
-    d( new Private( this ) )
+ItemView::ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent)
+    : QTreeView(parent)
+    , d(new Private(this))
 {
-  d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
-  d->init();
+    d->xmlGuiClient = static_cast<KXMLGUIClient *>(xmlGuiWindow);
+    d->init();
 }
 
-ItemView::ItemView(KXMLGUIClient * xmlGuiClient, QWidget * parent) :
-    QTreeView( parent ),
-    d( new Private( this ) )
+ItemView::ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
+    : QTreeView(parent)
+    , d(new Private(this))
 {
-  d->xmlGuiClient = xmlGuiClient;
-  d->init();
+    d->xmlGuiClient = xmlGuiClient;
+    d->init();
 }
 
 ItemView::~ItemView()
 {
-  delete d;
+    delete d;
 }
 
-void ItemView::setModel( QAbstractItemModel * model )
+void ItemView::setModel(QAbstractItemModel *model)
 {
-  QTreeView::setModel( model );
+    QTreeView::setModel(model);
 
-  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           this, SLOT(itemCurrentChanged(QModelIndex)) );
+    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(itemCurrentChanged(QModelIndex)));
 }
 
-void ItemView::contextMenuEvent(QContextMenuEvent * event)
+void ItemView::contextMenuEvent(QContextMenuEvent *event)
 {
-  if ( !d->xmlGuiClient )
-    return;
-  QMenu *popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
-                                      QLatin1String( "akonadi_itemview_contextmenu" ), d->xmlGuiClient ) );
-  if ( popup )
-    popup->exec( event->globalPos() );
+    if (!d->xmlGuiClient) {
+        return;
+    }
+    QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(
+                                            QLatin1String("akonadi_itemview_contextmenu"), d->xmlGuiClient));
+    if (popup) {
+        popup->exec(event->globalPos());
+    }
 }
 
-void ItemView::setXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
+void ItemView::setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow)
 {
-  d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
+    d->xmlGuiClient = static_cast<KXMLGUIClient *>(xmlGuiWindow);
 }
 
-void ItemView::setXmlGuiClient(KXMLGUIClient * xmlGuiClient)
+void ItemView::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
 {
-  d->xmlGuiClient = xmlGuiClient;
+    d->xmlGuiClient = xmlGuiClient;
 }
 
 #include "moc_itemview.cpp"

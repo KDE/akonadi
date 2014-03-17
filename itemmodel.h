@@ -55,26 +55,26 @@ class Session;
  */
 class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the types of the columns in the model.
      */
     enum Column {
-      Id = 0,     ///< The unique id.
-      RemoteId,   ///< The remote identifier.
-      MimeType    ///< The item's mime type.
+        Id = 0,     ///< The unique id.
+        RemoteId,   ///< The remote identifier.
+        MimeType    ///< The item's mime type.
     };
 
     /**
      * Describes the roles of the model.
      */
     enum Roles {
-      IdRole = Qt::UserRole + 1,      ///< The id of the item.
-      ItemRole,                       ///< The item object.
-      MimeTypeRole,                   ///< The mime type of the item.
-      UserRole = Qt::UserRole + 42    ///< Role for user extensions.
+        IdRole = Qt::UserRole + 1,      ///< The id of the item.
+        ItemRole,                       ///< The item object.
+        MimeTypeRole,                   ///< The mime type of the item.
+        UserRole = Qt::UserRole + 42    ///< Role for user extensions.
     };
 
     /**
@@ -82,24 +82,24 @@ class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
      *
      * @param parent The parent object.
      */
-    explicit ItemModel( QObject* parent = 0 );
+    explicit ItemModel(QObject *parent = 0);
 
     /**
      * Destroys the item model.
      */
     virtual ~ItemModel();
 
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
 
     virtual QStringList mimeTypes() const;
 
@@ -115,7 +115,7 @@ class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
      *
      * @see fetchScope()
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -134,7 +134,7 @@ class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
     /**
      * Returns the item at the given @p index.
      */
-    Item itemForIndex( const QModelIndex &index ) const;
+    Item itemForIndex(const QModelIndex &index) const;
 
     /**
      * Returns the model index for the given item, with the given column.
@@ -142,16 +142,16 @@ class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
      * @param item The item to find.
      * @param column The column for the returned index.
      */
-    QModelIndex indexForItem( const Akonadi::Item& item, const int column ) const;
+    QModelIndex indexForItem(const Akonadi::Item &item, const int column) const;
 
-    bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
     /**
      * Returns the collection being displayed in the model.
      */
     Collection collection() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the collection the model should display. If the collection has
      * changed, the model is reset and a new message listing is requested
@@ -159,34 +159,34 @@ class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
      *
      * @param collection The collection.
      */
-    void setCollection( const Akonadi::Collection &collection );
+    void setCollection(const Akonadi::Collection &collection);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever setCollection is called.
      *
      * @param collection The new collection.
      */
-     void collectionChanged( const Akonadi::Collection &collection );
+    void collectionChanged(const Akonadi::Collection &collection);
 
-  protected:
+protected:
     /**
      * Returns the Session object used for all operations by this model.
      */
-    Session* session() const;
+    Session *session() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void listingDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void collectionFetchResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
-    Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
-    Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List& ) )
-    Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::Item& ) )
+    Q_PRIVATE_SLOT(d, void listingDone(KJob *))
+    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
+    Q_PRIVATE_SLOT(d, void itemChanged(const Akonadi::Item &, const QSet<QByteArray> &))
+    Q_PRIVATE_SLOT(d, void itemMoved(const Akonadi::Item &, const Akonadi::Collection &, const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d, void itemAdded(const Akonadi::Item &))
+    Q_PRIVATE_SLOT(d, void itemsAdded(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d, void itemRemoved(const Akonadi::Item &))
     //@endcond
 };
 

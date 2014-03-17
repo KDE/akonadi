@@ -32,40 +32,40 @@ namespace Akonadi {
  */
 class ItemFetchScopePrivate : public QSharedData
 {
-  public:
-    ItemFetchScopePrivate() :
-        mAncestorDepth( ItemFetchScope::None ),
-        mFullPayload( false ),
-        mAllAttributes( false ),
-        mCacheOnly( false ),
-        mCheckCachedPayloadPartsOnly( false ),
-        mFetchMtime( true ),
-        mIgnoreRetrievalErrors( false ),
-        mFetchRid( true ),
-        mFetchGid( false ),
-        mFetchTags( false )
+public:
+    ItemFetchScopePrivate()
+        : mAncestorDepth(ItemFetchScope::None)
+        , mFullPayload(false)
+        , mAllAttributes(false)
+        , mCacheOnly(false)
+        , mCheckCachedPayloadPartsOnly(false)
+        , mFetchMtime(true)
+        , mIgnoreRetrievalErrors(false)
+        , mFetchRid(true)
+        , mFetchGid(false)
+        , mFetchTags(false)
     {
     }
 
-    ItemFetchScopePrivate( const ItemFetchScopePrivate &other )
-      : QSharedData( other )
+    ItemFetchScopePrivate(const ItemFetchScopePrivate &other)
+        : QSharedData(other)
     {
-      mPayloadParts = other.mPayloadParts;
-      mAttributes = other.mAttributes;
-      mAncestorDepth = other.mAncestorDepth;
-      mFullPayload = other.mFullPayload;
-      mAllAttributes = other.mAllAttributes;
-      mCacheOnly = other.mCacheOnly;
-      mCheckCachedPayloadPartsOnly = other.mCheckCachedPayloadPartsOnly;
-      mFetchMtime = other.mFetchMtime;
-      mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
-      mChangedSince = other.mChangedSince;
-      mFetchRid = other.mFetchRid;
-      mFetchGid = other.mFetchGid;
-      mFetchTags = other.mFetchTags;
+        mPayloadParts = other.mPayloadParts;
+        mAttributes = other.mAttributes;
+        mAncestorDepth = other.mAncestorDepth;
+        mFullPayload = other.mFullPayload;
+        mAllAttributes = other.mAllAttributes;
+        mCacheOnly = other.mCacheOnly;
+        mCheckCachedPayloadPartsOnly = other.mCheckCachedPayloadPartsOnly;
+        mFetchMtime = other.mFetchMtime;
+        mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
+        mChangedSince = other.mChangedSince;
+        mFetchRid = other.mFetchRid;
+        mFetchGid = other.mFetchGid;
+        mFetchTags = other.mFetchTags;
     }
 
-  public:
+public:
     QSet<QByteArray> mPayloadParts;
     QSet<QByteArray> mAttributes;
     ItemFetchScope::AncestorRetrieval mAncestorDepth;

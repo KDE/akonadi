@@ -27,11 +27,11 @@ using namespace Akonadi;
 
 ItemFetchScope::ItemFetchScope()
 {
-  d = new ItemFetchScopePrivate();
+    d = new ItemFetchScopePrivate();
 }
 
-ItemFetchScope::ItemFetchScope( const ItemFetchScope &other )
-  : d( other.d )
+ItemFetchScope::ItemFetchScope(const ItemFetchScope &other)
+    : d(other.d)
 {
 }
 
@@ -39,153 +39,157 @@ ItemFetchScope::~ItemFetchScope()
 {
 }
 
-ItemFetchScope &ItemFetchScope::operator=( const ItemFetchScope &other )
+ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other)
 {
-  if ( &other != this )
-    d = other.d;
+    if (&other != this) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
 QSet< QByteArray > ItemFetchScope::payloadParts() const
 {
-  return d->mPayloadParts;
+    return d->mPayloadParts;
 }
 
-void ItemFetchScope::fetchPayloadPart(const QByteArray & part, bool fetch)
+void ItemFetchScope::fetchPayloadPart(const QByteArray &part, bool fetch)
 {
-  if ( fetch )
-    d->mPayloadParts.insert( part );
-  else
-    d->mPayloadParts.remove( part );
+    if (fetch) {
+        d->mPayloadParts.insert(part);
+    } else {
+        d->mPayloadParts.remove(part);
+    }
 }
 
 bool ItemFetchScope::fullPayload() const
 {
-  return d->mFullPayload;
+    return d->mFullPayload;
 }
 
 void ItemFetchScope::fetchFullPayload(bool fetch)
 {
-  d->mFullPayload = fetch;
+    d->mFullPayload = fetch;
 }
 
 QSet< QByteArray > ItemFetchScope::attributes() const
 {
-  return d->mAttributes;
+    return d->mAttributes;
 }
 
-void ItemFetchScope::fetchAttribute(const QByteArray & type, bool fetch)
+void ItemFetchScope::fetchAttribute(const QByteArray &type, bool fetch)
 {
-  if ( fetch )
-    d->mAttributes.insert( type );
-  else
-    d->mAttributes.remove( type );
+    if (fetch) {
+        d->mAttributes.insert(type);
+    } else {
+        d->mAttributes.remove(type);
+    }
 }
 
 bool ItemFetchScope::allAttributes() const
 {
-  return d->mAllAttributes;
+    return d->mAllAttributes;
 }
 
 void ItemFetchScope::fetchAllAttributes(bool fetch)
 {
-  d->mAllAttributes = fetch;
+    d->mAllAttributes = fetch;
 }
 
 bool ItemFetchScope::isEmpty() const
 {
-  return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes;
+    return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes;
 }
 
 bool ItemFetchScope::cacheOnly() const
 {
-  return d->mCacheOnly;
+    return d->mCacheOnly;
 }
 
 void ItemFetchScope::setCacheOnly(bool cacheOnly)
 {
-  d->mCacheOnly = cacheOnly;
+    d->mCacheOnly = cacheOnly;
 }
 
-void ItemFetchScope::setCheckForCachedPayloadPartsOnly( bool check )
+void ItemFetchScope::setCheckForCachedPayloadPartsOnly(bool check)
 {
-  if ( check )
-    setCacheOnly(true);
-  d->mCheckCachedPayloadPartsOnly = check;
+    if (check) {
+        setCacheOnly(true);
+    }
+    d->mCheckCachedPayloadPartsOnly = check;
 }
 
 bool ItemFetchScope::checkForCachedPayloadPartsOnly() const
 {
-  return d->mCheckCachedPayloadPartsOnly;
+    return d->mCheckCachedPayloadPartsOnly;
 }
 
 ItemFetchScope::AncestorRetrieval ItemFetchScope::ancestorRetrieval() const
 {
-  return d->mAncestorDepth;
+    return d->mAncestorDepth;
 }
 
-void ItemFetchScope::setAncestorRetrieval( AncestorRetrieval depth )
+void ItemFetchScope::setAncestorRetrieval(AncestorRetrieval depth)
 {
-  d->mAncestorDepth = depth;
+    d->mAncestorDepth = depth;
 }
 
-void ItemFetchScope::setFetchModificationTime( bool retrieveMtime )
+void ItemFetchScope::setFetchModificationTime(bool retrieveMtime)
 {
-  d->mFetchMtime = retrieveMtime;
+    d->mFetchMtime = retrieveMtime;
 }
 
 bool ItemFetchScope::fetchModificationTime() const
 {
-  return d->mFetchMtime;
+    return d->mFetchMtime;
 }
 
-void ItemFetchScope::setFetchGid( bool retrieveGid )
+void ItemFetchScope::setFetchGid(bool retrieveGid)
 {
-  d->mFetchGid = retrieveGid;
+    d->mFetchGid = retrieveGid;
 }
 
 bool ItemFetchScope::fetchGid() const
 {
-  return d->mFetchGid;
+    return d->mFetchGid;
 }
 
-void ItemFetchScope::setIgnoreRetrievalErrors( bool ignore )
+void ItemFetchScope::setIgnoreRetrievalErrors(bool ignore)
 {
-  d->mIgnoreRetrievalErrors = ignore;
+    d->mIgnoreRetrievalErrors = ignore;
 }
 
 bool ItemFetchScope::ignoreRetrievalErrors() const
 {
-  return d->mIgnoreRetrievalErrors;
+    return d->mIgnoreRetrievalErrors;
 }
 
-void ItemFetchScope::setFetchChangedSince( const KDateTime &changedSince )
+void ItemFetchScope::setFetchChangedSince(const KDateTime &changedSince)
 {
-  d->mChangedSince = changedSince;
+    d->mChangedSince = changedSince;
 }
 
 KDateTime ItemFetchScope::fetchChangedSince() const
 {
-  return d->mChangedSince;
+    return d->mChangedSince;
 }
 
 void ItemFetchScope::setFetchRemoteIdentification(bool retrieveRid)
 {
-  d->mFetchRid = retrieveRid;
+    d->mFetchRid = retrieveRid;
 }
 
 bool ItemFetchScope::fetchRemoteIdentification() const
 {
-  return d->mFetchRid;
+    return d->mFetchRid;
 }
 
-void ItemFetchScope::setFetchTags( bool fetchTags )
+void ItemFetchScope::setFetchTags(bool fetchTags)
 {
-  d->mFetchTags = fetchTags;
+    d->mFetchTags = fetchTags;
 }
 
 bool ItemFetchScope::fetchTags() const
 {
-  return d->mFetchTags;
+    return d->mFetchTags;
 }

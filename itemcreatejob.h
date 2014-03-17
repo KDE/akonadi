@@ -54,7 +54,7 @@ class ItemCreateJobPrivate;
  * Akonadi::Collection collection = getCollection();
  *
  * Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * ...
  *
@@ -72,9 +72,9 @@ class ItemCreateJobPrivate;
  */
 class AKONADI_EXPORT ItemCreateJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item create job.
      *
@@ -83,7 +83,7 @@ class AKONADI_EXPORT ItemCreateJob : public Job
      * @param collection The parent collection where the new item shall be located in.
      * @param parent The parent object.
      */
-    ItemCreateJob( const Item &item, const Collection &collection, QObject *parent = 0 );
+    ItemCreateJob(const Item &item, const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the item create job.
@@ -95,12 +95,12 @@ class AKONADI_EXPORT ItemCreateJob : public Job
      */
     Item item() const;
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( ItemCreateJob )
+private:
+    Q_DECLARE_PRIVATE(ItemCreateJob)
 };
 
 }

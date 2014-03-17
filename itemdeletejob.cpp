@@ -29,56 +29,56 @@
 #include <akonadi/private/imapset_p.h>
 #include <akonadi/private/protocol_p.h>
 
-
 using namespace Akonadi;
 
 class Akonadi::ItemDeleteJobPrivate : public JobPrivate
 {
-  public:
-    ItemDeleteJobPrivate( ItemDeleteJob *parent )
-      : JobPrivate( parent )
+public:
+    ItemDeleteJobPrivate(ItemDeleteJob *parent)
+        : JobPrivate(parent)
     {
     }
 
-    void selectResult( KJob *job );
+    void selectResult(KJob *job);
 
-    Q_DECLARE_PUBLIC( ItemDeleteJob )
+    Q_DECLARE_PUBLIC(ItemDeleteJob)
 
     Item::List mItems;
     Collection mCollection;
 };
 
-void ItemDeleteJobPrivate::selectResult( KJob *job )
+void ItemDeleteJobPrivate::selectResult(KJob *job)
 {
-  if ( job->error() )
-    return; // KCompositeJob takes care of errors
+    if (job->error()) {
+        return; // KCompositeJob takes care of errors
+    }
 
-  const QByteArray command = newTag() + " " AKONADI_CMD_ITEMDELETE " 1:*\n";
-  writeData( command );
+    const QByteArray command = newTag() + " " AKONADI_CMD_ITEMDELETE " 1:*\n";
+    writeData(command);
 }
 
-ItemDeleteJob::ItemDeleteJob( const Item & item, QObject * parent )
-  : Job( new ItemDeleteJobPrivate( this ), parent )
+ItemDeleteJob::ItemDeleteJob(const Item &item, QObject *parent)
+    : Job(new ItemDeleteJobPrivate(this), parent)
 {
-  Q_D( ItemDeleteJob );
+    Q_D(ItemDeleteJob);
 
-  d->mItems << item;
+    d->mItems << item;
 }
 
-ItemDeleteJob::ItemDeleteJob(const Item::List& items, QObject* parent)
-  : Job( new ItemDeleteJobPrivate( this ), parent )
+ItemDeleteJob::ItemDeleteJob(const Item::List &items, QObject *parent)
+    : Job(new ItemDeleteJobPrivate(this), parent)
 {
-  Q_D( ItemDeleteJob );
+    Q_D(ItemDeleteJob);
 
-  d->mItems = items;
+    d->mItems = items;
 }
 
-ItemDeleteJob::ItemDeleteJob(const Collection& collection, QObject* parent)
-  : Job( new ItemDeleteJobPrivate( this ), parent )
+ItemDeleteJob::ItemDeleteJob(const Collection &collection, QObject *parent)
+    : Job(new ItemDeleteJobPrivate(this), parent)
 {
-  Q_D( ItemDeleteJob );
+    Q_D(ItemDeleteJob);
 
-  d->mCollection = collection;
+    d->mCollection = collection;
 }
 
 ItemDeleteJob::~ItemDeleteJob()
@@ -87,32 +87,32 @@ ItemDeleteJob::~ItemDeleteJob()
 
 Item::List ItemDeleteJob::deletedItems() const
 {
-  Q_D( const ItemDeleteJob );
+    Q_D(const ItemDeleteJob);
 
-  return d->mItems;
+    return d->mItems;
 }
 
 void ItemDeleteJob::doStart()
 {
-  Q_D( ItemDeleteJob );
+    Q_D(ItemDeleteJob);
 
-  if ( !d->mItems.isEmpty() ) {
-    QByteArray command = d->newTag();
-    try {
-      command += ProtocolHelper::entitySetToByteArray( d->mItems, AKONADI_CMD_ITEMDELETE );
-    } catch ( const std::exception &e ) {
-      setError( Unknown );
-      setErrorText( QString::fromUtf8( e.what() ) );
-      emitResult();
-      return;
+    if (!d->mItems.isEmpty()) {
+        QByteArray command = d->newTag();
+        try {
+            command += ProtocolHelper::entitySetToByteArray(d->mItems, AKONADI_CMD_ITEMDELETE);
+        } catch (const std::exception &e) {
+            setError(Unknown);
+            setErrorText(QString::fromUtf8(e.what()));
+            emitResult();
+            return;
+        }
+        command += '\n';
+        d->writeData(command);
+    } else {
+        CollectionSelectJob *job = new CollectionSelectJob(d->mCollection, this);
+        connect(job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)));
+        addSubjob(job);
     }
-    command += '\n';
-    d->writeData( command );
-  } else {
-    CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
-    addSubjob( job );
-  }
 }
 
 #include "moc_itemdeletejob.cpp"

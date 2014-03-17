@@ -42,7 +42,7 @@ class ItemDeleteJobPrivate;
  * const Akonadi::Item item = ...
  *
  * ItemDeleteJob *job = new ItemDeleteJob( item );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
  * @endcode
  *
@@ -53,7 +53,7 @@ class ItemDeleteJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * ItemDeleteJob *job = new ItemDeleteJob( items );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
  * @endcode
  *
@@ -61,9 +61,9 @@ class ItemDeleteJobPrivate;
  */
 class AKONADI_EXPORT ItemDeleteJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item delete job that deletes @p item. The item
      * needs to either have a unique identifier or a remote identifier
@@ -73,7 +73,7 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      * @param item The item to delete.
      * @param parent The parent object.
      */
-    explicit ItemDeleteJob( const Item &item, QObject *parent = 0 );
+    explicit ItemDeleteJob(const Item &item, QObject *parent = 0);
 
     /**
      * Creates a new item delete job that deletes all items in the list
@@ -85,7 +85,7 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      *
      * @since 4.3
      */
-    explicit ItemDeleteJob( const Item::List &items, QObject *parent = 0 );
+    explicit ItemDeleteJob(const Item::List &items, QObject *parent = 0);
 
     /**
      * Creates a new item delete job that deletes all items in the collection
@@ -98,7 +98,7 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      *
      * @since 4.3
      */
-    explicit ItemDeleteJob( const Collection &collection, QObject *parent = 0 );
+    explicit ItemDeleteJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the item delete job.
@@ -109,15 +109,15 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      * Returns the items passed on in the constructor.
      * @since 4.4
      */
-     Item::List deletedItems() const;
+    Item::List deletedItems() const;
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( ItemDeleteJob )
-    Q_PRIVATE_SLOT( d_func(), void selectResult( KJob* ) )
+    Q_DECLARE_PRIVATE(ItemDeleteJob)
+    Q_PRIVATE_SLOT(d_func(), void selectResult(KJob *))
     //@endcond
 };
 

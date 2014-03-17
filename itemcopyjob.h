@@ -41,7 +41,7 @@ class ItemCopyJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( items, collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * ...
  *
@@ -59,9 +59,9 @@ class ItemCopyJobPrivate;
  */
 class AKONADI_EXPORT ItemCopyJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item copy job.
      *
@@ -69,7 +69,7 @@ class AKONADI_EXPORT ItemCopyJob : public Job
      * @param target The target collection.
      * @param parent The parent object.
      */
-    ItemCopyJob( const Item &item, const Collection &target, QObject *parent = 0 );
+    ItemCopyJob(const Item &item, const Collection &target, QObject *parent = 0);
 
     /**
      * Creates a new item copy job.
@@ -78,18 +78,18 @@ class AKONADI_EXPORT ItemCopyJob : public Job
      * @param target The target collection.
      * @param parent The parent object.
      */
-    ItemCopyJob( const Item::List &items, const Collection &target, QObject *parent = 0 );
+    ItemCopyJob(const Item::List &items, const Collection &target, QObject *parent = 0);
 
     /**
      * Destroys the item copy job.
      */
     ~ItemCopyJob();
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( ItemCopyJob )
+private:
+    Q_DECLARE_PRIVATE(ItemCopyJob)
 };
 
 }

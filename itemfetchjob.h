@@ -55,7 +55,7 @@ class ItemFetchScope;
  * const Collection collection = getCollection();
  *
  * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  * job->fetchScope().fetchFullPayload();
  *
  * ...
@@ -83,14 +83,14 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
     Q_FLAGS(DeliveryOptions)
-  public:
+public:
     /**
      * Creates a new item fetch job that retrieves all items inside the given collection.
      *
      * @param collection The parent collection to fetch all items from.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob( const Collection &collection, QObject *parent = 0 );
+    explicit ItemFetchJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Creates a new item fetch job that retrieves the specified item.
@@ -103,7 +103,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @param item The item to fetch.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob( const Item &item, QObject *parent = 0 );
+    explicit ItemFetchJob(const Item &item, QObject *parent = 0);
 
     /**
      * Creates a new item fetch job that retrieves the specified items.
@@ -117,13 +117,13 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @param parent The parent object.
      * @since 4.4
      */
-    explicit ItemFetchJob( const Item::List &items, QObject *parent = 0 );
+    explicit ItemFetchJob(const Item::List &items, QObject *parent = 0);
 
     /**
      * Convenience ctor equivalent to ItemFetchJob( const Item::List &items, QObject *parent = 0 )
      * @since 4.8
      */
-    explicit ItemFetchJob( const QList<Item::Id> &items, QObject *parent = 0 );
+    explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = 0);
 
     /**
      * Destroys the item fetch job.
@@ -155,7 +155,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @see fetchScope()
      */
-    void setFetchScope( ItemFetchScope &fetchScope ); // KDE5: remove
+    void setFetchScope(ItemFetchScope &fetchScope);   // KDE5: remove
 
     /**
      * Sets the item fetch scope.
@@ -169,7 +169,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @see fetchScope()
      * @since 4.4
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -192,13 +192,13 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @see Akonadi::ResourceSelectJob
      */
-    void setCollection( const Collection &collection );
+    void setCollection(const Collection &collection);
 
     enum DeliveryOption {
-      ItemGetter = 0x1,            ///< items available through items()
-      EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
-      EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
-      Default = ItemGetter | EmitItemsInBatches
+        ItemGetter = 0x1,            ///< items available through items()
+        EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
+        EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
+        Default = ItemGetter | EmitItemsInBatches
     };
     Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption)
 
@@ -206,7 +206,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * Sets the mechanisms by which the items should be fetched
      * @since 4.13
      */
-    void setDeliveryOption( DeliveryOptions options );
+    void setDeliveryOption(DeliveryOptions options);
 
     /**
      * Returns the delivery options
@@ -214,7 +214,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      */
     DeliveryOptions deliveryOptions() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever new items have been fetched completely.
      *
@@ -224,18 +224,18 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @param items The fetched items.
      */
-    void itemsReceived( const Akonadi::Item::List &items );
+    void itemsReceived(const Akonadi::Item::List &items);
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( ItemFetchJob )
+private:
+    Q_DECLARE_PRIVATE(ItemFetchJob)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void selectDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void timeout() )
+    Q_PRIVATE_SLOT(d_func(), void selectDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void timeout())
     //@endcond
 };
 

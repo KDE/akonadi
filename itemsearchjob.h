@@ -46,7 +46,7 @@ class SearchQuery;
  *
  * Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob( query );
  * job->fetchScope().fetchFullPayload();
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(searchResult(KJob*)) );
  *
  * ...
  *
@@ -66,9 +66,9 @@ class SearchQuery;
  */
 class AKONADI_EXPORT ItemSearchJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates an item search job.
      *
@@ -76,7 +76,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * @param parent The parent object.
      * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    explicit AKONADI_DEPRECATED ItemSearchJob( const QString &query, QObject *parent = 0 );
+    explicit AKONADI_DEPRECATED ItemSearchJob(const QString &query, QObject *parent = 0);
 
     /**
      * Creates an item search job.
@@ -85,7 +85,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * @param parent The parent object.
      * @since 4.13
      */
-    explicit ItemSearchJob( const SearchQuery &query, QObject *parent = 0 );
+    explicit ItemSearchJob(const SearchQuery &query, QObject *parent = 0);
 
     /**
      * Destroys the item search job.
@@ -97,14 +97,14 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      *
      * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    void AKONADI_DEPRECATED setQuery( const QString &query );
+    void AKONADI_DEPRECATED setQuery(const QString &query);
 
     /**
      * Sets the search @p query.
      *
      * @since 4.13
      */
-    void setQuery( const SearchQuery &query );
+    void setQuery(const SearchQuery &query);
 
     /**
      * Sets the item fetch scope.
@@ -117,7 +117,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      *
      * @see fetchScope()
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -152,13 +152,12 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      */
     static AKONADI_DEPRECATED QUrl akonadiItemIdUri();
 
-
     /**
      * Search only for items of given mime types.
      *
      * @since 4.13
      */
-    void setMimeTypes( const QStringList &mimeTypes );
+    void setMimeTypes(const QStringList &mimeTypes);
 
     /**
      * Returns list of mime types to search in
@@ -178,7 +177,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * @param collections Collections to search
      * @since 4.13
      */
-    void setSearchCollections( const Collection::List &collections );
+    void setSearchCollections(const Collection::List &collections);
 
     /**
      * Returns list of collections to search.
@@ -199,7 +198,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * @param recursive Whether to search recursively
      * @since 4.13
      */
-    void setRecursive( bool recursive );
+    void setRecursive(bool recursive);
 
     /**
      * Returns whether the search is recursive
@@ -232,7 +231,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * @param enabled Whether remote search is enabled
      * @since 4.13
      */
-    void setRemoteSearchEnabled( bool enabled );
+    void setRemoteSearchEnabled(bool enabled);
 
     /**
      * Returns whether remote search is enabled.
@@ -241,7 +240,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      */
     bool isRemoteSearchEnabled() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever new matching items have been fetched completely.
      *
@@ -251,17 +250,17 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      *
      * @param items The matching items.
      */
-    void itemsReceived( const Akonadi::Item::List &items );
+    void itemsReceived(const Akonadi::Item::List &items);
 
-  protected:
+protected:
     void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( ItemSearchJob )
+    Q_DECLARE_PRIVATE(ItemSearchJob)
 
-    Q_PRIVATE_SLOT( d_func(), void timeout() )
+    Q_PRIVATE_SLOT(d_func(), void timeout())
     //@endcond
 };
 
