@@ -29,6 +29,7 @@
 #include <solid/networking.h>
 
 class QSettings;
+class QTimer;
 
 namespace Akonadi {
 
@@ -52,6 +53,7 @@ class AgentBasePrivate : public QObject
     void slotError( const QString& message );
     void slotNetworkStatusChange( Solid::Networking::Status );
     void slotResumedFromSuspend();
+    void slotTemporaryOfflineTimeout();
 
     virtual void changeProcessed();
 
@@ -107,6 +109,8 @@ class AgentBasePrivate : public QObject
     org::freedesktop::Akonadi::Tracer *mTracer;
 
     AgentBase::Observer *mObserver;
+
+    QTimer *mTemporaryOfflineTimer;
 
   public Q_SLOTS:
     // Dump the contents of the current ChangeReplay
