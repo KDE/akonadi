@@ -101,6 +101,9 @@ class SubscriptionDialog::Private
     void slotSetPattern(const QString &text)
     {
       filterRecursiveCollectionFilter->setSearchPattern( text );
+#ifndef KDEPIM_MOBILE_UI
+      collectionView->expandAll();
+#endif
     }
     void slotSetIncludeCheckedOnly(bool checked)
     {
