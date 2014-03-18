@@ -1274,7 +1274,12 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
     Q_ASSERT(m_collections.contains(collection.id()));
 
-    const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
+    const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
+    if ( row < 0 || row >= m_childEntities[ collection.id() ].size() ) {
+       kWarning() << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
+       Q_ASSERT(false);
+       return;
+    }
 
     const QModelIndex parentIndex = indexForCollection(m_collections.value(collection.id()));
 

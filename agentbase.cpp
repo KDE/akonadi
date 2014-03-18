@@ -301,6 +301,7 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mChangeRecorder(0)
     , mTracer(0)
     , mObserver(0)
+    , mTemporaryOfflineTimer(0)
 {
     Internal::setClientType(Internal::Agent);
 }
@@ -749,6 +750,12 @@ void AgentBasePrivate::slotResumedFromSuspend()
     }
 }
 
+void AgentBasePrivate::slotTemporaryOfflineTimeout()
+{
+  Q_Q(AgentBase);
+  q->setOnlineInternal(true);
+}
+
 QString AgentBasePrivate::dumpNotificationListToString() const
 {
     return mChangeRecorder->dumpNotificationListToString();
@@ -913,15 +920,39 @@ void AgentBase::setOnline(bool state)
     setOnlineInternal(state);
 }
 
-void AgentBase::setOnlineInternal(bool state)
+void AgentBase::setTemporaryOffline(int makeOnlineInSeconds)
+{
+  Q_D(AgentBase);
+
+  // if not currently online, avoid bringing it online after the timeout
+  if (!d->mOnline) {
+      return;
+  }
+
+  setOnlineInternal(false);
+
+  if (!d->mTemporaryOfflineTimer) {
+      d->mTemporaryOfflineTimer = new QTimer(d);
+      d->mTemporaryOfflineTimer->setSingleShot(true);
+      connect(d->mTemporaryOfflineTimer, SIGNAL(timeout()), this, SLOT(slotTemporaryOfflineTimeout()));
+  }
+  d->mTemporaryOfflineTimer->setInterval(makeOnlineInSeconds * 1000);
+  d->mTemporaryOfflineTimer->start();
+}
+
+void AgentBase::setOnlineInternal( bool state )
 {
     Q_D(AgentBase);
     d->mOnline = state;
 
-    const QString newMessage = d->defaultReadyMessage();
-    if (d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken) {
-        emit status(d->mStatusCode, newMessage);
+    if (d->mTemporaryOfflineTimer) {
+        d->mTemporaryOfflineTimer->stop();
     }
+
+    const QString newMessage = d->defaultReadyMessage();
+    if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken ) {
+        emit status( d->mStatusCode, newMessage );
+     }
 
     doSetOnline(state);
     emit onlineChanged(state);

@@ -713,6 +713,31 @@ protected:
     void setOnline(bool state);
 
 protected:
+    /**
+      * Sets the agent offline but will make it online again after a given time
+      *
+      * Use this method when the agent detects some problem with its backend but it wants
+      * to retry all pending operations after some time - e.g. a server can not be reached currently
+      *
+      * Example usage:
+      * @code
+      * void ExampleResource::onItemRemovedFinished(KJob *job)
+      * {
+      *     if (job->error()) {
+      *         emit status(Broken, job->errorString());
+      *         deferTask();
+      *         setTemporaryOffline(300);
+      *         return;
+      *     }
+      *     ...
+      * }
+      * @endcode
+      *
+      * @since 4.13
+      * @param makeOnlineInSeconds timeout in seconds after which the agent changes to online
+      */
+    void setTemporaryOffline(int makeOnlineInSeconds = 300);
+
     //@cond PRIVATE
     AgentBasePrivate *d_ptr;
     explicit AgentBase(AgentBasePrivate *d, const QString &id);
@@ -749,6 +774,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotError(const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange(Solid::Networking::Status))
     Q_PRIVATE_SLOT(d_func(), void slotResumedFromSuspend())
+    Q_PRIVATE_SLOT(d_func(), void slotTemporaryOfflineTimeout())
 
     //@endcond
 };
