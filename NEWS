@@ -1,3 +1,10 @@
+1.11.90                          19-March-2014
+----------------------------------------------
+- Fixed collection scheduling
+- Fixed indexing of expired items from local resources
+- Fixed database schema update with PostgreSQL
+- Fixes in searching and search updates
+
 1.11.80                       28-February-2014
 ----------------------------------------------
 - Server-search support
