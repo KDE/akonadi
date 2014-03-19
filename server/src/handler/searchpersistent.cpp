@@ -112,7 +112,7 @@ bool SearchPersistent::parseStream()
     return failureResponse( "Unable to commit transaction" );
   }
 
-  SearchManager::instance()->updateSearchAsync( col, DataStore::self()->notificationCollector() );
+  SearchManager::instance()->updateSearchAsync( col );
 
   const QByteArray b = HandlerHelper::collectionToByteArray( col );
 

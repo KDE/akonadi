@@ -51,28 +51,40 @@ SearchManager *SearchManager::sInstance = 0;
 
 Q_DECLARE_METATYPE( Collection )
 Q_DECLARE_METATYPE( QSet<qint64> )
+Q_DECLARE_METATYPE( QWaitCondition* )
+
+SearchManagerThread::SearchManagerThread( const QStringList &searchEngines, QObject *parent )
+  : QThread( parent )
+  , mSearchEngines( searchEngines )
+{
+  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+}
+
+SearchManagerThread::~SearchManagerThread()
+{
+}
+
+void SearchManagerThread::run()
+{
+  SearchManager manager( mSearchEngines, this );
+  exec();
+}
 
 SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
   : QObject( parent )
-  , mDBusConnection( QDBusConnection::connectToBus(
-          QDBusConnection::SessionBus,
-          QString::fromLatin1( "AkonadiServerSearchManager" ) ) )
 {
   qRegisterMetaType< QSet<qint64> >();
+  qRegisterMetaType<Collection>();
+  qRegisterMetaType<QWaitCondition*>();
 
-  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
   Q_ASSERT( sInstance == 0 );
   sInstance = this;
-
-  qRegisterMetaType<Collection>();
 
   mEngines.reserve( searchEngines.size() );
   Q_FOREACH ( const QString &engineName, searchEngines ) {
     if ( engineName == QLatin1String( "Nepomuk" ) ) {
 #ifdef HAVE_SOPRANO
       m_engines.append( new NepomukSearchEngine );
-#else
-      akError() << "Akonadi has been built without Nepomuk support!";
 #endif
     } else if ( engineName == QLatin1String( "Agent" ) ) {
       mEngines.append( new AgentSearchEngine );
@@ -89,7 +101,6 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
       QLatin1String( "/SearchManager" ),
       this,
       QDBusConnection::ExportAdaptors );
-
 
   // The timer will tick 15 seconds after last change notification. If a new notification
   // is delivered in the meantime, the timer is reset
@@ -129,6 +140,7 @@ QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
 
 void SearchManager::loadSearchPlugins()
 {
+  QStringList loadedPlugins;
   const QString pluginOverride = QString::fromLatin1( qgetenv( "AKONADI_OVERRIDE_SEARCHPLUGIN" ) );
   if ( !pluginOverride.isEmpty() ) {
     akDebug() << "Overriding the search plugins with: " << pluginOverride;
@@ -148,6 +160,10 @@ void SearchManager::loadSearchPlugins()
       }
 
       const QString libraryName = desktop.value( QLatin1String( "X-Akonadi-Library" ) ).toString();
+      if ( loadedPlugins.contains( libraryName ) ) {
+        qDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
+        continue;
+      }
       // When search plugin override is active, ignore all plugins except for the override
       if ( !pluginOverride.isEmpty() ) {
         if ( libraryName != pluginOverride ) {
@@ -175,6 +191,7 @@ void SearchManager::loadSearchPlugins()
 
       qDebug() << "SearchManager: loaded search plugin" << libraryName;
       mPlugins << plugin;
+      loadedPlugins << libraryName;
     }
   }
 }
@@ -190,26 +207,61 @@ void SearchManager::searchUpdateTimeout()
   // Get all search collections, that is subcollections of "Search", which always has ID 1
   const Collection::List collections = Collection::retrieveFiltered( Collection::parentIdFullColumnName(), 1 );
   Q_FOREACH ( const Collection &collection, collections ) {
-    updateSearch( collection, DataStore::self()->notificationCollector() );
+    updateSearch( collection );
   }
 }
 
-void SearchManager::updateSearchAsync(const Collection& collection, NotificationCollector* collector)
+void SearchManager::updateSearchAsync( const Collection& collection )
 {
-  QMetaObject::invokeMethod( this, "updateSearch",
+  QMetaObject::invokeMethod( this, "updateSearchImpl",
                              Qt::QueuedConnection,
                              Q_ARG( Collection, collection ),
-                             Q_ARG( NotificationCollector*, collector ) );
+                             Q_ARG( QWaitCondition*, 0 ) );
 }
 
-bool SearchManager::updateSearch( const Collection &collection, NotificationCollector *collector )
+void SearchManager::updateSearch( const Collection &collection )
+{
+  QMutex mutex;
+  QWaitCondition cond;
+
+  mLock.lock();
+  if ( mUpdatingCollections.contains( collection.id() ) ) {
+    mLock.unlock();
+    return;
+  }
+  mUpdatingCollections.insert( collection.id() );
+  mLock.unlock();
+
+  QMetaObject::invokeMethod( this, "updateSearchImpl",
+                             Qt::QueuedConnection,
+                             Q_ARG( Collection, collection ),
+                             Q_ARG( QWaitCondition*, &cond ) );
+
+  // Now wait for updateSearchImpl to wake us.
+  mutex.lock();
+  cond.wait( &mutex );
+  mutex.unlock();
+
+  mLock.lock();
+  mUpdatingCollections.remove( collection.id() );
+  mLock.unlock();
+}
+
+#define wakeUpCaller(cond) \
+  if (cond) { \
+    cond->wakeAll(); \
+  }
+
+void SearchManager::updateSearchImpl( const Collection &collection, QWaitCondition *cond )
 {
   if ( collection.queryString().size() >= 32768 ) {
     qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
-    return false;
+    wakeUpCaller(cond);
+    return;
   }
   if ( collection.queryString().isEmpty() ) {
-    return false;
+    wakeUpCaller(cond);
+    return;
   }
 
   const QStringList queryAttributes = collection.queryAttributes().split( QLatin1Char (' ') );
@@ -238,6 +290,13 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
     queryCollections = queryAncestors;
   }
 
+  //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
+  if ( queryCollections.isEmpty() ) {
+    akDebug() << "No collections to search, you're probably trying to search a virtual collection.";
+    wakeUpCaller(cond);
+    return;
+  }
+
   // Query all plugins for search results
   SearchRequest request( "searchUpdate-" + QByteArray::number( QDateTime::currentDateTime().toTime_t() ) );
   request.setCollections( queryCollections );
@@ -246,7 +305,6 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   request.setRemoteSearch( remoteSearch );
   request.setStoreResults( true );
   request.setProperty( "SearchCollection", QVariant::fromValue( collection ) );
-  request.setProperty( "NotificationCollector", QVariant::fromValue( collector ) );
   connect( &request, SIGNAL(resultsAvailable(QSet<qint64>)),
            this, SLOT(searchUpdateResultsAvailable(QSet<qint64>)) );
   request.exec(); // blocks until all searches are done
@@ -258,7 +316,8 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   qb.addColumn( CollectionPimItemRelation::rightColumn() );
   qb.addValueCondition( CollectionPimItemRelation::leftColumn(), Query::Equals, collection.id() );
   if ( !qb.exec() ) {
-    return false;
+    wakeUpCaller(cond);
+    return;
   }
 
   DataStore::self()->beginTransaction();
@@ -274,31 +333,32 @@ bool SearchManager::updateSearch( const Collection &collection, NotificationColl
   }
 
   if ( !DataStore::self()->commitTransaction() ) {
-    return false;
+    wakeUpCaller(cond);
+    return;
   }
 
   if ( !toRemove.isEmpty() ) {
     SelectQueryBuilder<PimItem> qb;
     qb.addValueCondition( PimItem::idFullColumnName(), Query::In, toRemove );
     if ( !qb.exec() ) {
-      return false;
+      wakeUpCaller(cond);
+      return;
     }
 
     const QVector<PimItem> removedItems = qb.result();
-    collector->itemsUnlinked( removedItems, collection );
+    DataStore::self()->notificationCollector()->itemsUnlinked( removedItems, collection );
   }
 
   akDebug() << "Search update finished";
   akDebug() << "All results:" << results.count();
   akDebug() << "Removed results:" << toRemove.count();
 
-  return true;
+  wakeUpCaller(cond);
 }
 
 void SearchManager::searchUpdateResultsAvailable( const QSet<qint64> &results )
 {
   const Collection collection = sender()->property( "SearchCollection" ).value<Collection>();
-  NotificationCollector *collector = sender()->property( "NotificationCollector" ).value<NotificationCollector *>();
   akDebug() << "searchUpdateResultsAvailable" << collection.id() << results.count() << "results";
 
   QSet<qint64> newMatches = results;
@@ -348,8 +408,8 @@ void SearchManager::searchUpdateResultsAvailable( const QSet<qint64> &results )
       return ;
     }
     const QVector<PimItem> newItems = qb.result();
-    collector->itemsLinked( newItems, collection );
+    DataStore::self()->notificationCollector()->itemsLinked( newItems, collection );
     // Force collector to dispatch the notification now
-    collector->dispatchNotifications();
+    DataStore::self()->notificationCollector()->dispatchNotifications();
   }
 }
