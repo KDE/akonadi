@@ -129,10 +129,11 @@ void CollectionScheduler::startScheduler()
 
   // Get next collection to expire and start the timer
   const uint next = mSchedule.constBegin().key();
-  mScheduler->start( ( next - QDateTime::currentDateTime().toTime_t() ) * 1000 );
+  // cast next - now() to int, so that we get negative result when next is in the past
+  mScheduler->start( qMax( 0, ( int ) ( next - QDateTime::currentDateTime().toTime_t() ) * 1000 ) );
 }
 
-void CollectionScheduler::scheduleCollection( Collection collection )
+void CollectionScheduler::scheduleCollection( Collection collection, bool shouldStartScheduler )
 {
   QMutexLocker locker( &mScheduleLock );
   if ( mSchedule.values().contains( collection ) ) {
@@ -166,7 +167,7 @@ void CollectionScheduler::scheduleCollection( Collection collection )
   }
 
   mSchedule.insert( nextCheck, collection );
-  if ( !mScheduler->isActive() ) {
+  if ( shouldStartScheduler && !mScheduler->isActive() ) {
     mScheduleLock.unlock();
     startScheduler();
   }
@@ -190,11 +191,9 @@ void CollectionScheduler::schedulerTimeout()
   mSchedule.remove( timestamp );
   mScheduleLock.unlock();
 
-  const QDateTime now = QDateTime::currentDateTime();
-
   Q_FOREACH ( const Collection &collection, collections ) {
     collectionExpired( collection );
-    scheduleCollection( collection );
+    scheduleCollection( collection, false );
   }
 
   startScheduler();

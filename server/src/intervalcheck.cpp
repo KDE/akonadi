@@ -48,7 +48,7 @@ IntervalCheck *IntervalCheck::self()
 
 void IntervalCheck::requestCollectionSync( const Collection &collection )
 {
-  QMetaObject::invokeMethod( this, "scheduleCollection",
+  QMetaObject::invokeMethod( this, "collectionExpired",
                              Qt::QueuedConnection,
                              Q_ARG( Collection, collection ) );
 }
@@ -80,10 +80,8 @@ void IntervalCheck::collectionExpired( const Collection &collection )
     const int interval = qMax( MINIMUM_COLTREESYNC_INTERVAL, collection.cachePolicyCheckInterval() );
 
     const QDateTime lastExpectedCheck = now.addSecs( interval * -60 );
-    QMutexLocker locker( &m_lastSyncMutex );
     if ( !mLastCollectionTreeSyncs.contains( resourceName ) || mLastCollectionTreeSyncs.value( resourceName ) < lastExpectedCheck ) {
       mLastCollectionTreeSyncs.insert( resourceName, now );
-      locker.unlock();
       QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionTreeSync",
                                  Qt::QueuedConnection,
                                  Q_ARG( QString, resourceName ) );
@@ -94,12 +92,10 @@ void IntervalCheck::collectionExpired( const Collection &collection )
   const int interval = qMax( MINIMUM_AUTOSYNC_INTERVAL, collection.cachePolicyCheckInterval() );
 
   const QDateTime lastExpectedCheck = now.addSecs( interval * -60 );
-  QMutexLocker locker( &m_lastSyncMutex );
   if ( mLastChecks.contains( collection.id() ) && mLastChecks.value( collection.id() ) > lastExpectedCheck ) {
     return;
   }
   mLastChecks.insert( collection.id(), now );
-  locker.unlock();
   QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionSync",
                              Qt::QueuedConnection,
                              Q_ARG( QString, collection.resource().name() ),

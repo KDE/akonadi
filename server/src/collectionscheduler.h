@@ -70,7 +70,7 @@ class CollectionScheduler: public QThread
     void initScheduler();
     void schedulerTimeout();
     void startScheduler();
-    void scheduleCollection( /*sic!*/ Collection collection );
+    void scheduleCollection( /*sic!*/ Collection collection, bool shouldStartScheduler = true );
 
   protected:
     QMutex mScheduleLock;
