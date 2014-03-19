@@ -185,17 +185,19 @@ void ItemFetchJob::doStart()
 {
   Q_D( ItemFetchJob );
 
-  if ( d->mRequestedItems.isEmpty() ) { // collection content listing
-    if ( d->mCollection == Collection::root() ) {
+  if ( d->mCollection == Collection::root() ) {
+    if ( d->mRequestedItems.isEmpty() ) { // collection content listing
       setErrorText( i18n( "Cannot list root collection." ) );
       setError( Unknown );
       emitResult();
+    } else {
+      d->startFetchJob();
     }
+  } else {
     CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
     addSubjob( job );
-  } else
-    d->startFetchJob();
+  }
 }
 
 void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
