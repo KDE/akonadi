@@ -41,8 +41,8 @@ class ItemDeleteJobPrivate;
  *
  * const Akonadi::Item item = ...
  *
- * ItemDeleteJob *job = new ItemDeleteJob( item );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
+ * ItemDeleteJob *job = new ItemDeleteJob(item);
+ * connect(job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)));
  *
  * @endcode
  *
@@ -52,8 +52,8 @@ class ItemDeleteJobPrivate;
  *
  * const Akonadi::Item::List items = ...
  *
- * ItemDeleteJob *job = new ItemDeleteJob( items );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
+ * ItemDeleteJob *job = new ItemDeleteJob(items);
+ * connect(job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)));
  *
  * @endcode
  *
@@ -66,9 +66,13 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
 public:
     /**
      * Creates a new item delete job that deletes @p item. The item
-     * needs to either have a unique identifier or a remote identifier
-     * set. In the latter case a collection or resource context needs
-     * to be selected (using CollectionSelectJob or ResourceSelectJob).
+     * needs to have a unique identifier set.
+     *
+     * @internal
+     * For internal use only, the item may have a remote identifier set instead
+     * of a unique identifier. In this case, a collection or resource context
+     * needs to be selected using CollectionSelectJob or ResourceSelectJob.
+     * @endinternal
      *
      * @param item The item to delete.
      * @param parent The parent object.
@@ -77,8 +81,14 @@ public:
 
     /**
      * Creates a new item delete job that deletes all items in the list
-     * @p items. These items can be located in any collection. The same
-     * restrictions on item identifiers apply as in the constructor above.
+     * @p items. Each item needs to have a unique identifier set. These items
+     * can be located in any collection.
+     *
+     * @internal
+     * For internal use only, the items may have remote identifiers set instead
+     * of unique identifiers. In this case, a collection or resource context
+     * needs to be selected using CollectionSelectJob or ResourceSelectJob.
+     * @endinternal
      *
      * @param items The items to delete.
      * @param parent The parent object.
@@ -89,9 +99,13 @@ public:
 
     /**
      * Creates a new item delete job that deletes all items in the collection
-     * @p collection. The collection needs to have either a unique identifier
-     * or a remote identifier set. In the latter case a resource context
-     * needs to be selected using ResourceSelectJob.
+     * @p collection. The collection needs to have a unique identifier set.
+     *
+     * @internal
+     * For internal use only, the collection may have a remote identifier set
+     * instead of a unique identifier. In this case, a resource context needs
+     * to be selected using ResourceSelectJob.
+     * @endinternal
      *
      * @param collection The collection which content should be deleted.
      * @param parent The parent object.

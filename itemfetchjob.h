@@ -54,23 +54,23 @@ class ItemFetchScope;
  *
  * const Collection collection = getCollection();
  *
- * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection);
+ * connect(job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)));
  * job->fetchScope().fetchFullPayload();
  *
  * ...
  *
- * MyClass::jobFinished( KJob *job )
+ * MyClass::jobFinished(KJob *job)
  * {
- *   if ( job->error() ) {
+ *   if (job->error()) {
  *     qDebug() << "Error occurred";
  *     return;
  *   }
  *
- *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+ *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>(job);
  *
  *   const Akonadi::Item::List items = fetchJob->items();
- *   foreach ( const Akonadi::Item &item, items ) {
+ *   foreach (const Akonadi::Item &item, items) {
  *     qDebug() << "Item ID:" << item.id();
  *   }
  * }
@@ -97,8 +97,13 @@ public:
      * If the item has a uid set, this is used to identify the item on the Akonadi
      * server. If only a remote identifier is available, that is used.
      * However, as remote identifiers are not necessarily globally unique, you
-     * need to specify the resource and/or collection to search in in that case,
-     * using setCollection() or Akonadi::ResourceSelectJob.
+     * need to specify the collection to search in in that case, using
+     * setCollection().
+     *
+     * @internal
+     * For internal use only when using remote identifiers, the resource search
+     * context can be set globally by ResourceSelectJob.
+     * @endinternal
      *
      * @param item The item to fetch.
      * @param parent The parent object.
@@ -110,8 +115,13 @@ public:
      * If the items have a uid set, this is used to identify the item on the Akonadi
      * server. If only a remote identifier is available, that is used.
      * However, as remote identifiers are not necessarily globally unique, you
-     * need to specify the resource and/or collection to search in in that case,
-     * using setCollection() or Akonadi::ResourceSelectJob.
+     * need to specify the collection to search in in that case, using
+     * setCollection().
+     *
+     * @internal
+     * For internal use only when using remote identifiers, the resource search
+     * context can be set globally by ResourceSelectJob.
+     * @endinternal
      *
      * @param items The items to fetch.
      * @param parent The parent object.
@@ -120,7 +130,7 @@ public:
     explicit ItemFetchJob(const Item::List &items, QObject *parent = 0);
 
     /**
-     * Convenience ctor equivalent to ItemFetchJob( const Item::List &items, QObject *parent = 0 )
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = 0)
      * @since 4.8
      */
     explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = 0);
@@ -133,7 +143,7 @@ public:
     /**
      * Returns the fetched items.
      *
-     * @note The items are invalid before the result( KJob* )
+     * @note The items are invalid before the result(KJob*)
      *       signal has been emitted or if an error occurred.
      */
     Item::List items() const;
@@ -187,10 +197,12 @@ public:
 
     /**
      * Specifies the collection the item is in.
-     * This is only required when retrieving an item based on its remote id which might not be
-     * unique globally.
+     * This is only required when retrieving an item based on its remote id
+     * which might not be unique globally.
      *
-     * @see Akonadi::ResourceSelectJob
+     * @internal
+     * @see ResourceSelectJob (for internal use only)
+     * @endinternal
      */
     void setCollection(const Collection &collection);
 
