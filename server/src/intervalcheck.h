@@ -53,10 +53,11 @@ class IntervalCheck : public CollectionScheduler
     int collectionScheduleInterval( const Collection &collection );
     bool hasChanged( const Collection &collection, const Collection &changed );
     bool shouldScheduleCollection( const Collection &collection );
+
+  protected Q_SLOTS:
     void collectionExpired( const Collection &collection );
 
   private:
-    QMutex m_lastSyncMutex;
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
 

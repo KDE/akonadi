@@ -66,8 +66,12 @@ SearchManagerThread::~SearchManagerThread()
 
 void SearchManagerThread::run()
 {
+  DataStore::self();
   SearchManager manager( mSearchEngines, this );
+
   exec();
+
+  DataStore::self()->close();
 }
 
 SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
