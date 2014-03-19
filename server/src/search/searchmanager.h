@@ -21,12 +21,14 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <QObject>
+#include <QThread>
 #include <QVector>
+#include <QMutex>
 #include <QDBusConnection>
 
 #include <libs/notificationmessagev3_p.h>
 
+class QWaitCondition;
 class QTimer;
 
 namespace Akonadi {
@@ -38,6 +40,20 @@ namespace Server {
 class NotificationCollector;
 class AbstractSearchEngine;
 class Collection;
+
+
+class SearchManagerThread : public QThread
+{
+  public:
+    SearchManagerThread( const QStringList &searchEngines, QObject *parent = 0 );
+    ~SearchManagerThread();
+
+    void run();
+
+  private:
+    QStringList mSearchEngines;
+};
+
 
 /**
  * SearchManager creates and deletes persistent searches for all currently
@@ -73,7 +89,12 @@ class SearchManager : public QObject
     /**
      * Updates the search query asynchronously. Returns immediately
      */
-    void updateSearchAsync( const Collection &collection, NotificationCollector *collector );
+    void updateSearchAsync( const Collection &collection );
+
+    /**
+     * Updates the search query synchronously.
+     */
+    void updateSearch( const Collection &collection );
 
     /**
      * Returns currently available search plugins.
@@ -81,18 +102,21 @@ class SearchManager : public QObject
     QVector<AbstractSearchPlugin *> searchPlugins() const;
 
   public Q_SLOTS:
-    /**
-     * Update the search query of the given collection synchronously.
-     *
-     * This method blocks until all search queries are finished.
-     */
-    bool updateSearch( const Collection &collection, NotificationCollector *collector );
-
     void scheduleSearchUpdate();
 
   private Q_SLOTS:
     void searchUpdateTimeout();
     void searchUpdateResultsAvailable( const QSet<qint64> &results );
+
+    /**
+     * Actual implementation of search updates.
+     *
+     * Since caller invokes this method from a different thread, they use
+     * QMetaObject::invokeMethod(). To still make it possible for callers to behave
+     * synchrounously, we can pass in a QWaitCondition that the code will wake up
+     * once the search update is completed.
+     */
+    void updateSearchImpl( const Collection &collection, QWaitCondition *cond );
 
   private:
     void loadSearchPlugins();
@@ -102,10 +126,10 @@ class SearchManager : public QObject
     QVector<AbstractSearchEngine *> mEngines;
     QVector<AbstractSearchPlugin *> mPlugins;
 
-    // agents dbus interface cache
-    QDBusConnection mDBusConnection;
-
     QTimer *mSearchUpdateTimer;
+
+    QMutex mLock;
+    QSet<qint64> mUpdatingCollections;
 };
 
 } // namespace Server

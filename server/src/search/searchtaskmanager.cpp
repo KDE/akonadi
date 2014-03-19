@@ -108,6 +108,7 @@ void SearchTaskManager::addTask( SearchTask *task )
   qb.addColumn( Collection::idFullColumnName() );
   qb.addColumn( Resource::nameFullColumnName() );
 
+  Q_ASSERT(!task->collections.isEmpty());
   QVariantList list;
   Q_FOREACH ( qint64 collection, task->collections ) {
     list << collection;

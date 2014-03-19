@@ -209,7 +209,7 @@ bool Modify::parseStream()
         collection.setQueryCollections( queryCollections );
         collection.setQueryAttributes( queryAttributes );
 
-        SearchManager::instance()->updateSearch( collection, db->notificationCollector() );
+        SearchManager::instance()->updateSearch( collection );
 
         changes.append( AKONADI_PARAM_PERSISTENTSEARCH );
       }

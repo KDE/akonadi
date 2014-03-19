@@ -200,7 +200,8 @@ void AkonadiServer::init()
     const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
                                                        QStringList() << QLatin1String( "Nepomuk" )
                                                                      << QLatin1String( "Agent" ) ).toStringList();
-    mSearchManager = new SearchManager( searchManagers, this );
+    mSearchManager = new SearchManagerThread( searchManagers, this );
+    mSearchManager->start();
 
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
@@ -260,6 +261,7 @@ void AkonadiServer::quit()
     quitThread( mItemRetrievalThread );
     mAgentSearchManagerThread->stop();
     quitThread( mAgentSearchManagerThread );
+    quitThread( mSearchManager );
 
     delete mSearchManager;
     mSearchManager = 0;

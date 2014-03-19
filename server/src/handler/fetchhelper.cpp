@@ -20,6 +20,7 @@
 #include "fetchhelper.h"
 
 #include "akdebug.h"
+#include "akdbus.h"
 #include "connection.h"
 #include "handler.h"
 #include "handlerhelper.h"
@@ -36,6 +37,7 @@
 #include "storage/transaction.h"
 #include "utils.h"
 #include "intervalcheck.h"
+#include "agentmanagerinterface.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -221,10 +223,54 @@ QSqlQuery FetchHelper::buildTagQuery()
   return tagQuery.query();
 }
 
+bool FetchHelper::isScopeLocal( const Scope &scope )
+{
+  // Get list of all resources that own all items in the scope
+  QueryBuilder qb( PimItem::tableName(), QueryBuilder::Select );
+  qb.setDistinct( true );
+  qb.addColumn( Resource::nameFullColumnName() );
+  qb.addJoin( QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+  qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
+  ItemQueryHelper::scopeToQuery( scope, mConnection, qb );
+
+  if ( !qb.exec() ) {
+    throw HandlerException( "Failed to query database" );
+    return false;
+  }
+
+  // If there is more than one resource, i.e. this is a fetch from multiple
+  // collections, then don't bother and just return FALSE. This case is aimed
+  // specifically on Baloo, which fetches items from each collection independently,
+  // so it will pass this check.
+  QSqlQuery query = qb.query();
+  if ( query.size() != 1) {
+    return false;
+  }
+
+  query.next();
+  const QString resourceName = query.value( 0 ).toString();
+  // Workaround for QDBusConnectionPrivate not being thread-safe in Qt 4, fixed in Qt 5.2
+  // TODO: Remove in KF5
+  const QDBusConnection connection = QDBusConnection::connectToBus( QDBusConnection::SessionBus,
+                                                                    QString::fromLatin1( mConnection->sessionId() ) );
+  org::freedesktop::Akonadi::AgentManager manager( AkDBus::serviceName( AkDBus::Control ),
+                                                   QLatin1String( "/AgentManager" ),
+                                                   connection );
+  const QString typeIdentifier = manager.agentInstanceType( resourceName );
+  const QVariantMap properties = manager.agentCustomProperties( typeIdentifier );
+  return properties.value( QLatin1String( "HasLocalStorage" ), false ).toBool();
+}
+
 bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
 {
   // retrieve missing parts
-  if ( !mFetchScope.cacheOnly() ) {
+  // HACK: isScopeLocal() is a workaround for resources that have cache expiration
+  // because when the cache expires, Baloo is not able to content of the items. So
+  // we allow fetch of items that belong to local resources (like maildir) to ignore
+  // cacheOnly and retrieve missing parts from the resource. However ItemRetriever
+  // is painfully slow with many items and is generally designed to fetch a few
+  // messages, not all of them. In the long term, we need a better way to do this.
+  if ( !mFetchScope.cacheOnly() || isScopeLocal( mScope ) ) {
     // trigger a collection sync if configured to do so
     triggerOnDemandFetch();
 
