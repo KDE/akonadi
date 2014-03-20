@@ -34,44 +34,47 @@ namespace Akonadi {
 /** Shared implementation details between item and collection move jobs. */
 template <typename LinkJob> class LinkJobImpl : public JobPrivate
 {
-  public:
-    LinkJobImpl( Job *parent ) : JobPrivate( parent ) {}
-
-    inline void sendCommand( const char* asapCommand )
+public:
+    LinkJobImpl(Job *parent)
+        : JobPrivate(parent)
     {
-      LinkJob *q = static_cast<LinkJob*>( q_func() ); // Job would be enough already, but then we don't have access to the non-public stuff...
-      if ( objectsToLink.isEmpty() ) {
-        q->emitResult();
-        return;
-      }
-      if ( !destination.isValid() && destination.remoteId().isEmpty() ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( i18n( "No valid destination specified" ) );
-        q->emitResult();
-        return;
-      }
+    }
 
-      QByteArray command = newTag();
-      try {
-        command += ProtocolHelper::entitySetToByteArray( Collection::List() << destination, asapCommand );
-      } catch ( const std::exception &e ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( QString::fromUtf8( e.what() ) );
-        q->emitResult();
-        return;
-      }
+    inline void sendCommand(const char *asapCommand)
+    {
+        LinkJob *q = static_cast<LinkJob *>(q_func());  // Job would be enough already, but then we don't have access to the non-public stuff...
+        if (objectsToLink.isEmpty()) {
+            q->emitResult();
+            return;
+        }
+        if (!destination.isValid() && destination.remoteId().isEmpty()) {
+            q->setError(Job::Unknown);
+            q->setErrorText(i18n("No valid destination specified"));
+            q->emitResult();
+            return;
+        }
 
-      try {
-        command += ProtocolHelper::entitySetToByteArray( objectsToLink, QByteArray() );
-      } catch ( const std::exception &e ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( QString::fromUtf8( e.what() ) );
-        q->emitResult();
-        return;
-      }
-      command += '\n';
+        QByteArray command = newTag();
+        try {
+            command += ProtocolHelper::entitySetToByteArray(Collection::List() << destination, asapCommand);
+        } catch (const std::exception &e) {
+            q->setError(Job::Unknown);
+            q->setErrorText(QString::fromUtf8(e.what()));
+            q->emitResult();
+            return;
+        }
 
-      writeData( command );
+        try {
+            command += ProtocolHelper::entitySetToByteArray(objectsToLink, QByteArray());
+        } catch (const std::exception &e) {
+            q->setError(Job::Unknown);
+            q->setErrorText(QString::fromUtf8(e.what()));
+            q->emitResult();
+            return;
+        }
+        command += '\n';
+
+        writeData(command);
     }
 
     Item::List objectsToLink;

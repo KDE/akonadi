@@ -43,7 +43,7 @@ class LinkJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * Akonadi::LinkJob *job = new Akonadi::LinkJob( virtualCollection, items );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * ...
  *
@@ -63,8 +63,8 @@ class LinkJobPrivate;
  */
 class AKONADI_EXPORT LinkJob : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates the link job.
      *
@@ -74,18 +74,18 @@ class AKONADI_EXPORT LinkJob : public Job
      * @param items The items of which the references should be created.
      * @param parent The parent object.
      */
-    LinkJob( const Collection &collection, const Item::List &items, QObject *parent = 0 );
+    LinkJob(const Collection &collection, const Item::List &items, QObject *parent = 0);
 
     /**
      * Destroys the link job.
      */
     ~LinkJob();
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( LinkJob )
+private:
+    Q_DECLARE_PRIVATE(LinkJob)
     template <typename T> friend class LinkJobImpl;
 };
 

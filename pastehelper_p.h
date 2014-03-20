@@ -40,30 +40,30 @@ class Session;
 */
 namespace PasteHelper
 {
-  /**
-    Check whether the given mime data can be pasted into the given collection.
-    @param mimeData The pasted/dropped data.
-    @param collection The collection to paste/drop into.
-  */
-  bool canPaste( const QMimeData* mimeData, const Collection &collection );
+/**
+  Check whether the given mime data can be pasted into the given collection.
+  @param mimeData The pasted/dropped data.
+  @param collection The collection to paste/drop into.
+*/
+bool canPaste(const QMimeData *mimeData, const Collection &collection);
 
-  /**
-    Paste/drop the given mime data into the given collection.
-    @param mimeData The pasted/dropped data.
-    @param collection The target collection.
-    @param copy Indicate whether this is a copy or a move.
-    @returns The job performing the paste, 0 if there is nothing to paste.
-  */
-  KJob* paste( const QMimeData* mimeData, const Collection &collection, bool copy = true, Session *session = 0 );
+/**
+  Paste/drop the given mime data into the given collection.
+  @param mimeData The pasted/dropped data.
+  @param collection The target collection.
+  @param copy Indicate whether this is a copy or a move.
+  @returns The job performing the paste, 0 if there is nothing to paste.
+*/
+KJob *paste(const QMimeData *mimeData, const Collection &collection, bool copy = true, Session *session = 0);
 
-  /**
-    URI list paste/drop.
-    @param mimeData The pasted/dropped data.
-    @param collection The target collection.
-    @param action The drop action (copy/move/link).
-    @returns The job performing the paste, 0 if there is nothing to paste.
-  */
-  KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action, Session *session = 0 );
+/**
+  URI list paste/drop.
+  @param mimeData The pasted/dropped data.
+  @param collection The target collection.
+  @param action The drop action (copy/move/link).
+  @returns The job performing the paste, 0 if there is nothing to paste.
+*/
+KJob *pasteUriList(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action, Session *session = 0);
 }
 
 }

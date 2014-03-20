@@ -40,10 +40,11 @@ using namespace Akonadi;
 
   \post o->signalsBlocked() == true
 */
-KDSignalBlocker::KDSignalBlocker( QObject * o )
-    : wasBlocked( o->signalsBlocked() ), object( o )
+KDSignalBlocker::KDSignalBlocker(QObject *o)
+    : wasBlocked(o->signalsBlocked())
+    , object(o)
 {
-    o->blockSignals( true );
+    o->blockSignals(true);
 }
 
 /*!
@@ -51,10 +52,11 @@ KDSignalBlocker::KDSignalBlocker( QObject * o )
 
   \post o.signalsBlocked() == true
 */
-KDSignalBlocker::KDSignalBlocker( QObject & o )
-    : wasBlocked( o.signalsBlocked() ), object( &o )
+KDSignalBlocker::KDSignalBlocker(QObject &o)
+    : wasBlocked(o.signalsBlocked())
+    , object(&o)
 {
-    o.blockSignals( true );
+    o.blockSignals(true);
 }
 
 /*!
@@ -77,7 +79,7 @@ KDSignalBlocker::~KDSignalBlocker()
 */
 void KDSignalBlocker::unblock()
 {
-    object->blockSignals( wasBlocked );
+    object->blockSignals(wasBlocked);
 }
 
 /*
@@ -86,6 +88,5 @@ void KDSignalBlocker::unblock()
 */
 void KDSignalBlocker::reblock()
 {
-    object->blockSignals( true );
+    object->blockSignals(true);
 }
-

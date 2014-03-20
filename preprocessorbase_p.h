@@ -32,27 +32,27 @@ namespace Akonadi {
 
 class PreprocessorBasePrivate : public AgentBasePrivate
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit PreprocessorBasePrivate( PreprocessorBase *parent );
+public:
+    explicit PreprocessorBasePrivate(PreprocessorBase *parent);
 
     void delayedInit();
 
-    void beginProcessItem( qlonglong itemId, qlonglong collectionId, const QString &mimeType );
+    void beginProcessItem(qlonglong itemId, qlonglong collectionId, const QString &mimeType);
 
-  Q_SIGNALS:
-    void itemProcessed( qlonglong id );
+Q_SIGNALS:
+    void itemProcessed(qlonglong id);
 
-  private Q_SLOTS:
-    void itemFetched( KJob *job );
+private Q_SLOTS:
+    void itemFetched(KJob *job);
 
-  public:
+public:
     bool mInDelayedProcessing;
     qlonglong mDelayedProcessingItemId;
     ItemFetchScope mFetchScope;
 
-    Q_DECLARE_PUBLIC( PreprocessorBase )
+    Q_DECLARE_PUBLIC(PreprocessorBase)
 };
 
 }

@@ -43,8 +43,8 @@ class SessionPrivate;
  * @code
  *
  *  Akonadi::Job *job = new Akonadi::SomeJob( some parameter );
- *  connect( job, SIGNAL( result( KJob* ) ),
- *           this, SLOT( slotResult( KJob* ) ) );
+ *  connect( job, SIGNAL(result(KJob*)),
+ *           this, SLOT(slotResult(KJob*)) );
  *
  * @endcode
  *
@@ -85,29 +85,28 @@ class SessionPrivate;
  */
 class AKONADI_EXPORT Job : public KCompositeJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class Session;
-  friend class SessionPrivate;
+    friend class Session;
+    friend class SessionPrivate;
 
-  public:
+public:
     /**
      * Describes a list of jobs.
      */
-    typedef QList<Job*> List;
+    typedef QList<Job *> List;
 
     /**
      * Describes the error codes that can be emitted by this class.
      * Subclasses can provide additional codes, starting from UserError
      * onwards
      */
-    enum Error
-    {
-      ConnectionFailed = UserDefinedError, ///< The connection to the Akonadi server failed.
-      ProtocolVersionMismatch,             ///< The server protocol version is too old or too new.
-      UserCanceled,                        ///< The user canceld this job.
-      Unknown,                             ///< Unknown error.
-      UserError = UserDefinedError + 42    ///< Starting point for error codes defined by sub-classes.
+    enum Error {
+        ConnectionFailed = UserDefinedError, ///< The connection to the Akonadi server failed.
+        ProtocolVersionMismatch,             ///< The server protocol version is too old or too new.
+        UserCanceled,                        ///< The user canceld this job.
+        Unknown,                             ///< Unknown error.
+        UserError = UserDefinedError + 42    ///< Starting point for error codes defined by sub-classes.
     };
 
     /**
@@ -119,7 +118,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
      *
      * @param parent The parent object, job or session.
      */
-    explicit Job( QObject *parent = 0 );
+    explicit Job(QObject *parent = 0);
 
     /**
      * Destroys the job.
@@ -138,13 +137,13 @@ class AKONADI_EXPORT Job : public KCompositeJob
      */
     virtual QString errorString() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted directly before the job will be started.
      *
      * @param job The started job.
      */
-    void aboutToStart( Akonadi::Job *job );
+    void aboutToStart(Akonadi::Job *job);
 
     /**
      * This signal is emitted if the job has finished all write operations, ie.
@@ -154,9 +153,9 @@ class AKONADI_EXPORT Job : public KCompositeJob
      * @param job This job.
      * @see emitWriteFinished()
      */
-    void writeFinished( Akonadi::Job *job );
+    void writeFinished(Akonadi::Job *job);
 
-  protected:
+protected:
     /**
      * This method must be reimplemented in the concrete jobs. It will be called
      * after the job has been started and a connection to the Akonadi backend has
@@ -172,7 +171,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
      * @param tag The tag of the corresponding command, empty if this is an untagged response.
      * @param data The received data.
      */
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
     /**
      * Adds the given job as a subjob to this job. This method is automatically called
@@ -182,14 +181,14 @@ class AKONADI_EXPORT Job : public KCompositeJob
      *
      * @param job The new subjob.
      */
-    virtual bool addSubjob( KJob* job );
+    virtual bool addSubjob(KJob *job);
 
     /**
      * Removes the given subjob of this job.
      *
      * @param job The subjob to remove.
      */
-    virtual bool removeSubjob( KJob* job );
+    virtual bool removeSubjob(KJob *job);
 
     /**
      * Kills the execution of the job.
@@ -202,24 +201,24 @@ class AKONADI_EXPORT Job : public KCompositeJob
      */
     void emitWriteFinished();
 
-  protected Q_SLOTS:
-    virtual void slotResult( KJob* job );
+protected Q_SLOTS:
+    virtual void slotResult(KJob *job);
 
-  protected:
+protected:
     //@cond PRIVATE
-    Job( JobPrivate *dd, QObject *parent );
-    JobPrivate* const d_ptr;
+    Job(JobPrivate *dd, QObject *parent);
+    JobPrivate *const d_ptr;
     //@endcond
 
-  private:
-    Q_DECLARE_PRIVATE( Job )
+private:
+    Q_DECLARE_PRIVATE(Job)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void slotSubJobAboutToStart( Akonadi::Job* ) )
-    Q_PRIVATE_SLOT( d_func(), void startNext() )
-    Q_PRIVATE_SLOT( d_func(), void signalCreationToJobTracker() )
-    Q_PRIVATE_SLOT( d_func(), void signalStartedToJobTracker() )
-    Q_PRIVATE_SLOT( d_func(), void delayedEmitResult() )
+    Q_PRIVATE_SLOT(d_func(), void slotSubJobAboutToStart(Akonadi::Job *))
+    Q_PRIVATE_SLOT(d_func(), void startNext())
+    Q_PRIVATE_SLOT(d_func(), void signalCreationToJobTracker())
+    Q_PRIVATE_SLOT(d_func(), void signalStartedToJobTracker())
+    Q_PRIVATE_SLOT(d_func(), void delayedEmitResult())
     //@endcond
 };
 

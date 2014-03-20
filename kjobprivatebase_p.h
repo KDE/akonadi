@@ -34,17 +34,17 @@ namespace Akonadi {
  */
 class KJobPrivateBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /** Call from KJob::start() reimplementation. */
     void start();
 
     /** Reimplement and put here what was in KJob::start() before. */
     virtual void doStart() = 0;
 
-  private Q_SLOTS:
-    void serverStateChanged( Akonadi::ServerManager::State state );
+private Q_SLOTS:
+    void serverStateChanged(Akonadi::ServerManager::State state);
 };
 
 }

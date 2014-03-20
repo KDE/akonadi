@@ -31,39 +31,44 @@ namespace Akonadi {
 
 class DelegateAnimator : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit DelegateAnimator(QAbstractItemView *view);
+    explicit DelegateAnimator(QAbstractItemView *view);
 
     void push(const QModelIndex &index);
     void pop(const QModelIndex &index);
 
-  QPixmap sequenceFrame(const QModelIndex &index);
+    QPixmap sequenceFrame(const QModelIndex &index);
 
-  static const int sCount = 7;
-  struct Animation {
-      inline Animation(const QPersistentModelIndex &idx)
-          : frame(0), index(idx)
-      {
-      }
+    static const int sCount = 7;
+    struct Animation {
+        inline Animation(const QPersistentModelIndex &idx)
+            : frame(0)
+            , index(idx)
+        {
+        }
 
-      bool operator==(const Animation &other) const
-      { return index == other.index; }
+        bool operator==(const Animation &other) const
+        {
+            return index == other.index;
+        }
 
-      inline void nextFrame() const { frame = ( frame + 1 ) % sCount; }
-      mutable int frame;
-      QPersistentModelIndex index;
-  };
+        inline void nextFrame() const {
+            frame = (frame + 1) % sCount;
+        }
+        mutable int frame;
+        QPersistentModelIndex index;
+    };
 
 protected:
-  virtual void timerEvent(QTimerEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 
 private:
 
-  QSet<Animation> m_animations;
-  QAbstractItemView *m_view;
-  KPixmapSequence m_pixmapSequence;
-  int m_timerId;
+    QSet<Animation> m_animations;
+    QAbstractItemView *m_view;
+    KPixmapSequence m_pixmapSequence;
+    int m_timerId;
 };
 
 uint qHash(Akonadi::DelegateAnimator::Animation anim);
@@ -73,15 +78,15 @@ uint qHash(Akonadi::DelegateAnimator::Animation anim);
  */
 class ProgressSpinnerDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
+    explicit ProgressSpinnerDelegate(DelegateAnimator *animator, QObject *parent = 0);
 
 protected:
-  virtual void initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const;
+    virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
 
 private:
-  DelegateAnimator *m_animator;
+    DelegateAnimator *m_animator;
 };
 
 }

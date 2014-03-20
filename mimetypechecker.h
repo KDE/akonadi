@@ -28,9 +28,9 @@ class QString;
 class QStringList;
 
 namespace Akonadi {
-  class Collection;
-  class Item;
-  class MimeTypeCheckerPrivate;
+class Collection;
+class Item;
+class MimeTypeCheckerPrivate;
 
 /**
  * @short Helper for checking MIME types of Collections and Items.
@@ -108,7 +108,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT MimeTypeChecker
 {
-  public:
+public:
     /**
      * Creates an empty MIME type checker.
      *
@@ -119,7 +119,7 @@ class AKONADI_EXPORT MimeTypeChecker
     /**
      * Creates a new MIME type checker from an @p other.
      */
-    MimeTypeChecker( const MimeTypeChecker &other );
+    MimeTypeChecker(const MimeTypeChecker &other);
 
     /**
      * Destroys the MIME type checker.
@@ -129,7 +129,7 @@ class AKONADI_EXPORT MimeTypeChecker
     /**
      * Assigns the @p other to this checker and returns a reference to this checker.
      */
-    MimeTypeChecker &operator=( const MimeTypeChecker &other );
+    MimeTypeChecker &operator=(const MimeTypeChecker &other);
 
     /**
      * Returns the list of wanted MIME types this instance checks against.
@@ -145,7 +145,7 @@ class AKONADI_EXPORT MimeTypeChecker
      *
      * @see wantedMimeTypes()
      */
-    void setWantedMimeTypes( const QStringList &mimeTypes );
+    void setWantedMimeTypes(const QStringList &mimeTypes);
 
     /**
      * Adds another MIME type to the list of wanted MIME types this instance checks against.
@@ -154,7 +154,7 @@ class AKONADI_EXPORT MimeTypeChecker
      *
      * @see setWantedMimeTypes()
      */
-    void addWantedMimeType( const QString &mimeType );
+    void addWantedMimeType(const QString &mimeType);
 
     /**
      * Removes a MIME type from the list of wanted MIME types this instance checks against.
@@ -163,7 +163,7 @@ class AKONADI_EXPORT MimeTypeChecker
      *
      * @see addWantedMimeType()
      */
-    void removeWantedMimeType( const QString &mimeType );
+    void removeWantedMimeType(const QString &mimeType);
 
     /**
      * Checks whether a given @p item has one of the wanted MIME types
@@ -176,7 +176,7 @@ class AKONADI_EXPORT MimeTypeChecker
      * @see setWantedMimeTypes()
      * @see Item::mimeType()
      */
-    bool isWantedItem( const Item &item ) const;
+    bool isWantedItem(const Item &item) const;
 
     /**
      * Checks whether a given @p collection has one of the wanted MIME types
@@ -190,7 +190,7 @@ class AKONADI_EXPORT MimeTypeChecker
      * @see setWantedMimeTypes()
      * @see Collection::contentMimeTypes()
      */
-    bool isWantedCollection( const Collection &collection ) const;
+    bool isWantedCollection(const Collection &collection) const;
 
     /**
      * Checks whether a given mime type is covered by one of the wanted MIME types.
@@ -202,7 +202,7 @@ class AKONADI_EXPORT MimeTypeChecker
      *
      * @since 4.6
      */
-    bool isWantedMimeType( const QString& mimeType ) const;
+    bool isWantedMimeType(const QString &mimeType) const;
 
     /**
      * Checks whether any of the given MIME types is covered by one of the wanted MIME types.
@@ -214,7 +214,7 @@ class AKONADI_EXPORT MimeTypeChecker
      *
      * @since 4.6
      */
-    bool containsWantedMimeType( const QStringList &mimeTypes ) const;
+    bool containsWantedMimeType(const QStringList &mimeTypes) const;
 
     /**
      * Checks whether a given @p item has the given wanted MIME type
@@ -228,7 +228,7 @@ class AKONADI_EXPORT MimeTypeChecker
      * @see setWantedMimeTypes()
      * @see Item::mimeType()
      */
-    static bool isWantedItem( const Item &item, const QString &wantedMimeType );
+    static bool isWantedItem(const Item &item, const QString &wantedMimeType);
 
     /**
      * Checks whether a given @p collection has the given MIME type
@@ -243,9 +243,9 @@ class AKONADI_EXPORT MimeTypeChecker
      * @see setWantedMimeTypes()
      * @see Collection::contentMimeTypes()
      */
-    static bool isWantedCollection( const Collection &collection, const QString &wantedMimeType );
+    static bool isWantedCollection(const Collection &collection, const QString &wantedMimeType);
 
-  private:
+private:
     //@cond PRIVATE
     QSharedDataPointer<MimeTypeCheckerPrivate> d;
     //@endcond

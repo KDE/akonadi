@@ -32,9 +32,9 @@ namespace Akonadi {
 
 class AKONADI_TESTS_EXPORT PluginMetaData
 {
-  public:
+public:
     PluginMetaData();
-    PluginMetaData( const QString & lib, const QString & name, const QString & comment, const QString & cname );
+    PluginMetaData(const QString &lib, const QString &name, const QString &comment, const QString &cname);
 
     QString library;
     QString nameLabel;
@@ -45,24 +45,24 @@ class AKONADI_TESTS_EXPORT PluginMetaData
 
 class AKONADI_TESTS_EXPORT PluginLoader
 {
-  public:
+public:
     ~PluginLoader();
 
-    static PluginLoader* self();
+    static PluginLoader *self();
 
     QStringList names() const;
 
-    QObject* createForName( const QString & name );
+    QObject *createForName(const QString &name);
 
-    PluginMetaData infoForName( const QString & name ) const;
+    PluginMetaData infoForName(const QString &name) const;
 
     void scan();
 
-  private:
+private:
     PluginLoader();
 
     static PluginLoader *mSelf;
-    QHash<QString, QPluginLoader*> mPluginLoaders;
+    QHash<QString, QPluginLoader *> mPluginLoaders;
     QHash<QString, PluginMetaData> mPluginInfos;
 };
 

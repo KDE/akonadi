@@ -39,145 +39,145 @@
 
 using namespace Akonadi;
 
-bool PasteHelper::canPaste( const QMimeData * mimeData, const Collection & collection )
+bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection)
 {
-  if ( !mimeData || !collection.isValid() ) {
+    if (!mimeData || !collection.isValid()) {
+        return false;
+    }
+
+    // check that the target collection has the rights to
+    // create the pasted items resp. collections
+    Collection::Rights neededRights = Collection::ReadOnly;
+    if (KUrl::List::canDecode(mimeData)) {
+        const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
+        foreach (const KUrl &url, urls) {
+            if (url.hasQueryItem(QLatin1String("item"))) {
+                neededRights |= Collection::CanCreateItem;
+            } else if (url.hasQueryItem(QLatin1String("collection"))) {
+                neededRights |= Collection::CanCreateCollection;
+            }
+        }
+
+        if ((collection.rights() & neededRights) == 0) {
+            return false;
+        }
+
+        // check that the target collection supports the mime types of the
+        // items/collections that shall be pasted
+        bool supportsMimeTypes = true;
+        foreach (const KUrl &url, urls) {
+            // collections do not provide mimetype information, so ignore this check
+            if (url.hasQueryItem(QLatin1String("collection"))) {
+                continue;
+            }
+
+            const QString mimeType = url.queryItemValue(QLatin1String("type"));
+            if (!collection.contentMimeTypes().contains(mimeType)) {
+                supportsMimeTypes = false;
+                break;
+            }
+        }
+
+        if (!supportsMimeTypes) {
+            return false;
+        }
+
+        return true;
+    }
+
     return false;
-  }
-
-  // check that the target collection has the rights to
-  // create the pasted items resp. collections
-  Collection::Rights neededRights = Collection::ReadOnly;
-  if ( KUrl::List::canDecode( mimeData ) ) {
-    const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
-    foreach ( const KUrl &url, urls ) {
-      if ( url.hasQueryItem( QLatin1String( "item" ) ) ) {
-        neededRights |= Collection::CanCreateItem;
-      } else if ( url.hasQueryItem( QLatin1String( "collection" ) ) ) {
-        neededRights |= Collection::CanCreateCollection;
-      }
-    }
-
-    if ( ( collection.rights() & neededRights ) == 0 ) {
-      return false;
-    }
-
-    // check that the target collection supports the mime types of the
-    // items/collections that shall be pasted
-    bool supportsMimeTypes = true;
-    foreach ( const KUrl &url, urls ) {
-      // collections do not provide mimetype information, so ignore this check
-      if ( url.hasQueryItem( QLatin1String( "collection" ) ) ) {
-        continue;
-      }
-
-      const QString mimeType = url.queryItemValue( QLatin1String( "type" ) );
-      if ( !collection.contentMimeTypes().contains( mimeType ) ) {
-        supportsMimeTypes = false;
-        break;
-      }
-    }
-
-    if ( !supportsMimeTypes ) {
-      return false;
-    }
-
-    return true;
-  }
-
-  return false;
 }
 
-KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collection, bool copy, Session *session )
+KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection, bool copy, Session *session)
 {
-  if ( !canPaste( mimeData, collection ) ) {
-    return 0;
-  }
-
-  // we try to drop data not coming with the akonadi:// url
-  // find a type the target collection supports
-  foreach ( const QString &type, mimeData->formats() ) {
-    if ( !collection.contentMimeTypes().contains( type ) ) {
-      continue;
+    if (!canPaste(mimeData, collection)) {
+        return 0;
     }
 
-    QByteArray item = mimeData->data( type );
-    // HACK for some unknown reason the data is sometimes 0-terminated...
-    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 ) {
-      item.resize( item.size() - 1 );
+    // we try to drop data not coming with the akonadi:// url
+    // find a type the target collection supports
+    foreach (const QString &type, mimeData->formats()) {
+        if (!collection.contentMimeTypes().contains(type)) {
+            continue;
+        }
+
+        QByteArray item = mimeData->data(type);
+        // HACK for some unknown reason the data is sometimes 0-terminated...
+        if (!item.isEmpty() && item.at(item.size() - 1) == 0) {
+            item.resize(item.size() - 1);
+        }
+
+        Item it;
+        it.setMimeType(type);
+        it.setPayloadFromData(item);
+
+        ItemCreateJob *job = new ItemCreateJob(it, collection);
+        return job;
     }
 
-    Item it;
-    it.setMimeType( type );
-    it.setPayloadFromData( item );
+    if (!KUrl::List::canDecode(mimeData)) {
+        return 0;
+    }
 
-    ItemCreateJob *job = new ItemCreateJob( it, collection );
-    return job;
-  }
-
-  if ( !KUrl::List::canDecode( mimeData ) ) {
-    return 0;
-  }
-
-  // data contains an url list
-  return pasteUriList( mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction, session );
+    // data contains an url list
+    return pasteUriList(mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction, session);
 }
 
-KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &destination, Qt::DropAction action, Session *session )
+KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &destination, Qt::DropAction action, Session *session)
 {
-  if ( !KUrl::List::canDecode( mimeData ) ) {
-    return 0;
-  }
-
-  if ( !canPaste( mimeData, destination ) ) {
-    return 0;
-  }
-
-  const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
-  Collection::List collections;
-  Item::List items;
-  foreach ( const KUrl &url, urls ) {
-    const Collection collection = Collection::fromUrl( url );
-    if ( collection.isValid() ) {
-      collections.append( collection );
+    if (!KUrl::List::canDecode(mimeData)) {
+        return 0;
     }
-    const Item item = Item::fromUrl( url );
-    if ( item.isValid() ) {
-      items.append( item );
+
+    if (!canPaste(mimeData, destination)) {
+        return 0;
     }
-    // TODO: handle non Akonadi URLs?
-  }
 
-  TransactionSequence *transaction = new TransactionSequence( session );
+    const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
+    Collection::List collections;
+    Item::List items;
+    foreach (const KUrl &url, urls) {
+        const Collection collection = Collection::fromUrl(url);
+        if (collection.isValid()) {
+            collections.append(collection);
+        }
+        const Item item = Item::fromUrl(url);
+        if (item.isValid()) {
+            items.append(item);
+        }
+        // TODO: handle non Akonadi URLs?
+    }
 
-  //FIXME: The below code disables transactions in otder to avoid data loss due to nested
-  //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
-  //Remove once this is fixed properly, see the other FIXME comments.
-  transaction->setProperty( "transactionsDisabled", true );
+    TransactionSequence *transaction = new TransactionSequence(session);
 
-  switch ( action ) {
+    //FIXME: The below code disables transactions in otder to avoid data loss due to nested
+    //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
+    //Remove once this is fixed properly, see the other FIXME comments.
+    transaction->setProperty("transactionsDisabled", true);
+
+    switch (action) {
     case Qt::CopyAction:
-      if ( !items.isEmpty() ) {
-        new ItemCopyJob( items, destination, transaction );
-      }
-      foreach ( const Collection &col, collections ) { // FIXME: remove once we have a batch job for collections as well
-        new CollectionCopyJob( col, destination, transaction );
-      }
-      break;
+        if (!items.isEmpty()) {
+            new ItemCopyJob(items, destination, transaction);
+        }
+        foreach (const Collection &col, collections) {   // FIXME: remove once we have a batch job for collections as well
+            new CollectionCopyJob(col, destination, transaction);
+        }
+        break;
     case Qt::MoveAction:
-      if ( !items.isEmpty() ) {
-        new ItemMoveJob( items, destination, transaction );
-      }
-      foreach ( const Collection &col, collections ) { // FIXME: remove once we have a batch job for collections as well
-        new CollectionMoveJob( col, destination, transaction );
-      }
-      break;
+        if (!items.isEmpty()) {
+            new ItemMoveJob(items, destination, transaction);
+        }
+        foreach (const Collection &col, collections) {   // FIXME: remove once we have a batch job for collections as well
+            new CollectionMoveJob(col, destination, transaction);
+        }
+        break;
     case Qt::LinkAction:
-      new LinkJob( destination, items, transaction );
-      break;
+        new LinkJob(destination, items, transaction);
+        break;
     default:
-      Q_ASSERT(false); // WTF?!
-      return 0;
-  }
-  return transaction;
+        Q_ASSERT(false); // WTF?!
+        return 0;
+    }
+    return transaction;
 }
