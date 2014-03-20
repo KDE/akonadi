@@ -36,33 +36,33 @@ namespace Akonadi {
  */
 class RecursiveMover : public KCompositeJob
 {
-  Q_OBJECT
-  public:
-    explicit RecursiveMover(AgentBasePrivate* parent);
+    Q_OBJECT
+public:
+    explicit RecursiveMover(AgentBasePrivate *parent);
 
     /// Set the collection that is actually moved.
-    void setCollection( const Akonadi::Collection &collection, const Akonadi::Collection &parentCollection );
+    void setCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parentCollection);
 
     virtual void start();
 
     /// Call once the last replayed change has been processed.
     void changeProcessed();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /// Trigger the next change replay, will call emitResult() once everything has been replayed
     void replayNext();
 
-  private:
+private:
     void replayNextCollection();
     void replayNextItem();
 
-  private Q_SLOTS:
-    void collectionListResult( KJob *job );
-    void collectionFetchResult( KJob *job );
-    void itemListResult( KJob *job );
-    void itemFetchResult( KJob *job );
+private Q_SLOTS:
+    void collectionListResult(KJob *job);
+    void collectionFetchResult(KJob *job);
+    void itemListResult(KJob *job);
+    void itemFetchResult(KJob *job);
 
-  private:
+private:
     AgentBasePrivate *m_agentBase;
     Collection m_movedCollection;
     /// sorted queue of collections still to be processed
@@ -75,9 +75,9 @@ class RecursiveMover : public KCompositeJob
     Item m_currentItem;
 
     enum CurrentAction {
-      None,
-      AddCollection,
-      AddItem
+        None,
+        AddCollection,
+        AddItem
     } m_currentAction;
 
     int m_runningJobs;
@@ -86,6 +86,6 @@ class RecursiveMover : public KCompositeJob
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::RecursiveMover* )
+Q_DECLARE_METATYPE(Akonadi::RecursiveMover *)
 
 #endif // AKONADI_RECURSIVEMOVER_P_H

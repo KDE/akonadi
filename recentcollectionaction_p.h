@@ -36,37 +36,36 @@ class QAction;
 namespace Akonadi {
 class RecentCollectionAction : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Creates a new collection recent action
-   */
-  explicit RecentCollectionAction(const QAbstractItemModel *model, QMenu *menu);
-  /**
-   * Destroys the collection recent action.
-   */
-  ~RecentCollectionAction();
+    /**
+     * Creates a new collection recent action
+     */
+    explicit RecentCollectionAction(const QAbstractItemModel *model, QMenu *menu);
+    /**
+     * Destroys the collection recent action.
+     */
+    ~RecentCollectionAction();
 
-  /**
-   * Add new collection. Will create a new item.
-   */
-  void addRecentCollection( Akonadi::Collection::Id id);
+    /**
+     * Add new collection. Will create a new item.
+     */
+    void addRecentCollection(Akonadi::Collection::Id id);
 
-  void cleanRecentCollection();
-
-private:
-  void writeConfig();
-  void fillRecentCollection();
-  QString actionName(QModelIndex index);
+    void cleanRecentCollection();
 
 private:
-  QStringList mListRecentCollection;
-  QMenu *mMenu;
-  const QAbstractItemModel *mModel;
-  QAction *mRecentAction;
-  KSharedConfig::Ptr mAkonadiConfig;
+    void writeConfig();
+    void fillRecentCollection();
+    QString actionName(QModelIndex index);
+
+private:
+    QStringList mListRecentCollection;
+    QMenu *mMenu;
+    const QAbstractItemModel *mModel;
+    QAction *mRecentAction;
+    KSharedConfig::Ptr mAkonadiConfig;
 };
 }
 
 #endif /* RECENTCOLLECTIONACTION_P_H */
-

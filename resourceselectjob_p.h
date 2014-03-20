@@ -50,7 +50,7 @@ class ResourceSelectJobPrivate;
  *
  * ResourceSelectJob *job = new ResourceSelectJob( "my_mail_resource", resourceSession );
  *
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( resourceSelected( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(resourceSelected(KJob*)) );
  * ...
  *
  * void resourceSelected( KJob *job )
@@ -62,7 +62,7 @@ class ResourceSelectJobPrivate;
  *   item.setRemoteIdentifier( "d1627013c6d5a2e7bb58c12560c27047" );
  *
  *   ItemFetchJob *fetchJob = new ItemFetchJob( item, m_resourceSession );
- *   connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( itemFetched( KJob* ) ) );
+ *   connect( fetchJob, SIGNAL(result(KJob*)), SLOT(itemFetched(KJob*)) );
  * }
  *
  * void itemFetched( KJob *job )
@@ -81,8 +81,8 @@ class ResourceSelectJobPrivate;
  */
 class AKONADI_TESTS_EXPORT ResourceSelectJob : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Selects the specified resource for all following remote identifier
      * based operations in the same session.
@@ -91,14 +91,14 @@ class AKONADI_TESTS_EXPORT ResourceSelectJob : public Job
      *                   the selection.
      * @param parent The parent object.
      */
-    explicit ResourceSelectJob( const QString &identifier, QObject *parent = 0 );
+    explicit ResourceSelectJob(const QString &identifier, QObject *parent = 0);
 
-  protected:
+protected:
     void doStart();
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( ResourceSelectJob )
+    Q_DECLARE_PRIVATE(ResourceSelectJob)
     //@endcond PRIVATE
 };
 

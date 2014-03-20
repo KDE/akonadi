@@ -28,23 +28,22 @@ class KLineEdit;
 
 class RenameFavoriteDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit RenameFavoriteDialog(const QString& caption, const QString& text, const QString &value, const QString& defaultName, QWidget *parent );
-  ~RenameFavoriteDialog();
+    explicit RenameFavoriteDialog(const QString &caption, const QString &text, const QString &value, const QString &defaultName, QWidget *parent);
+    ~RenameFavoriteDialog();
 
-  QString newName() const;
+    QString newName() const;
 
 protected:
 
 protected Q_SLOTS:
-  void slotEditTextChanged(const QString&);
-  void slotDefaultName();
+    void slotEditTextChanged(const QString &);
+    void slotDefaultName();
 private:
-  QString m_defaultName;
-  QLabel *m_label;
-  KLineEdit *m_lineEdit;
+    QString m_defaultName;
+    QLabel *m_label;
+    KLineEdit *m_lineEdit;
 };
 
 #endif /* RENAMEFAVORITEDIALOG_H */
-
