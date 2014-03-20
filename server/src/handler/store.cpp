@@ -186,6 +186,7 @@ bool Store::parseStream()
   bool invalidateCache = false;
   bool undirty = false;
   bool silent = false;
+  bool notify = true;
 
   // apply modifications
   m_streamParser->beginList();
@@ -291,6 +292,8 @@ bool Store::parseStream()
       undirty = true;
     } else if ( command == AKONADI_PARAM_INVALIDATECACHE ) {
       invalidateCache = true;
+    } else if ( command == AKONADI_PARAM_SILENT ) {
+      notify = false;
     } else if ( command == AKONADI_PARAM_SIZE ) {
       mSize = m_streamParser->readNumber();
       changes << AKONADI_PARAM_SIZE;
@@ -359,7 +362,7 @@ bool Store::parseStream()
 
       // flags change notification went separatly during command parsing
       // GID-only changes are ignored to prevent resources from updating their storage when no actual change happened
-      if ( !changes.isEmpty() && !onlyFlagsChanged && !onlyGIDChanged ) {
+      if ( notify && !changes.isEmpty() && !onlyFlagsChanged && !onlyGIDChanged ) {
         // Don't send FLAGS notification in itemChanged
         changes.remove( AKONADI_PARAM_FLAGS );
         store->notificationCollector()->itemChanged( item, changes );
