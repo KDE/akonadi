@@ -96,6 +96,9 @@ void CollectionScheduler::collectionChanged( qint64 collectionId )
       return;
     }
   }
+
+  // We don't know the collection yet, but maybe now it can be scheduled
+  collectionAdded( collectionId );
 }
 
 void CollectionScheduler::collectionRemoved( qint64 collectionId )

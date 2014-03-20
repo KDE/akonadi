@@ -232,6 +232,9 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
   qb.addJoin( QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
   qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
   ItemQueryHelper::scopeToQuery( scope, mConnection, qb );
+  if ( mConnection->resourceContext().isValid() ) {
+    qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals, mConnection->resourceContext().name() );
+  }
 
   if ( !qb.exec() ) {
     throw HandlerException( "Failed to query database" );
@@ -258,6 +261,7 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
                                                    connection );
   const QString typeIdentifier = manager.agentInstanceType( resourceName );
   const QVariantMap properties = manager.agentCustomProperties( typeIdentifier );
+  QDBusConnection::disconnectFromBus( QString::fromLatin1( mConnection->sessionId() ) );
   return properties.value( QLatin1String( "HasLocalStorage" ), false ).toBool();
 }
 

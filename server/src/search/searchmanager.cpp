@@ -66,12 +66,9 @@ SearchManagerThread::~SearchManagerThread()
 
 void SearchManagerThread::run()
 {
-  DataStore::self();
-  SearchManager manager( mSearchEngines, this );
-
+  SearchManager *manager = new SearchManager( mSearchEngines );
   exec();
-
-  DataStore::self()->close();
+  delete manager;
 }
 
 SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
@@ -113,11 +110,14 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
   mSearchUpdateTimer->setSingleShot( true );
   connect( mSearchUpdateTimer, SIGNAL(timeout()),
            this, SLOT(searchUpdateTimeout()) );
+
+  DataStore::self();
 }
 
 SearchManager::~SearchManager()
 {
   qDeleteAll( mEngines );
+  DataStore::self()->close();
   sInstance = 0;
 }
 
@@ -211,7 +211,7 @@ void SearchManager::searchUpdateTimeout()
   // Get all search collections, that is subcollections of "Search", which always has ID 1
   const Collection::List collections = Collection::retrieveFiltered( Collection::parentIdFullColumnName(), 1 );
   Q_FOREACH ( const Collection &collection, collections ) {
-    updateSearch( collection );
+    updateSearchAsync( collection );
   }
 }
 
