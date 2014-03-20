@@ -40,6 +40,7 @@ ItemModifyJobPrivate::ItemModifyJobPrivate(ItemModifyJob *parent)
     , mRevCheck(true)
     , mIgnorePayload(false)
     , mAutomaticConflictHandlingEnabled(true)
+    , mSilent(false)
 {
 }
 
@@ -108,6 +109,11 @@ QString ItemModifyJobPrivate::jobDebuggingString() const
     } catch (const Exception &e) {
         return QString::fromUtf8(e.what());
     }
+}
+
+void ItemModifyJobPrivate::setSilent( bool silent )
+{
+  mSilent = silent;
 }
 
 ItemModifyJob::ItemModifyJob(const Item &item, QObject *parent)
@@ -180,6 +186,9 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
     if (item.d_func()->mClearPayload) {
         changes << "INVALIDATECACHE";
     }
+  if ( mSilent ) {
+    changes << "SILENT";
+  }
 
     if (item.d_func()->mFlagsOverwritten) {
         changes << "FLAGS";

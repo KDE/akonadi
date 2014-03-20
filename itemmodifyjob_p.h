@@ -50,6 +50,8 @@ public:
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
     QByteArray fullCommand() const;
 
+    void setSilent( bool silent );
+
     Q_DECLARE_PUBLIC(ItemModifyJob)
 
     QSet<int> mOperations;
@@ -60,6 +62,7 @@ public:
     QByteArray mPendingData;
     bool mIgnorePayload;
     bool mAutomaticConflictHandlingEnabled;
+    bool mSilent;
 };
 
 }
