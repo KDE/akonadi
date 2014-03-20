@@ -129,9 +129,11 @@ void SearchTaskManager::addTask( SearchTask *task )
     const QString resourceId = query.value( 1 ).toString();
     if ( !mInstances.contains( resourceId ) ) {
       akDebug() << "Resource" << resourceId << "does not implement Search interface, skipping";
-    } else /*if ( !mAgentManager.agentInstanceOnline( resourceId ) ) {
+    } else if ( !mAgentManager.agentInstanceOnline( resourceId ) ) {
       akDebug() << "Agent" << resourceId << "is offline, skipping";
-    } else*/ {
+    } else if ( mAgentManager.agentInstanceStatus( resourceId ) > 2 ) { // 2 == Broken, 3 == Not Configured
+      akDebug() << "Agent" << resourceId << "is broken or not configured";
+    } else {
       const qint64 collectionId = query.value( 0 ).toLongLong();
       akDebug() << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
       task->queries << qMakePair( resourceId,  collectionId );
