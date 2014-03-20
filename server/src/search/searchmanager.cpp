@@ -211,7 +211,7 @@ void SearchManager::searchUpdateTimeout()
   // Get all search collections, that is subcollections of "Search", which always has ID 1
   const Collection::List collections = Collection::retrieveFiltered( Collection::parentIdFullColumnName(), 1 );
   Q_FOREACH ( const Collection &collection, collections ) {
-    updateSearch( collection );
+    updateSearchAsync( collection );
   }
 }
 
