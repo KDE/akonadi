@@ -44,18 +44,18 @@ add_custom_command(
           --stringparam code header
           --stringparam className ${_className}
           --stringparam fileName ${_fileBaseName}
-          ${CMAKE_SOURCE_DIR}/server/src/storage/schema.xsl
+          ${Akonadi_SOURCE_DIR}/server/src/storage/schema.xsl
           ${_schemaXml}
   COMMAND ${XSLTPROC_EXECUTABLE}
           --output ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.cpp
           --stringparam code source
           --stringparam className ${_className}
           --stringparam fileName ${_fileBaseName}
-          ${CMAKE_SOURCE_DIR}/server/src/storage/schema.xsl
+          ${Akonadi_SOURCE_DIR}/server/src/storage/schema.xsl
           ${_schemaXml}
-  DEPENDS ${CMAKE_SOURCE_DIR}/server/src/storage/schema.xsl
-          ${CMAKE_SOURCE_DIR}/server/src/storage/schema-header.xsl
-          ${CMAKE_SOURCE_DIR}/server/src/storage/schema-source.xsl
+  DEPENDS ${Akonadi_SOURCE_DIR}/server/src/storage/schema.xsl
+          ${Akonadi_SOURCE_DIR}/server/src/storage/schema-header.xsl
+          ${Akonadi_SOURCE_DIR}/server/src/storage/schema-source.xsl
           ${_schemaXml}
 )
 endmacro()
