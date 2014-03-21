@@ -140,13 +140,13 @@ QVariant CollectionStatisticsModel::data(const QModelIndex &index, int role) con
 
         qint64 value = -1;
         switch (index.column()) {
-        case 1 :
+        case 1:
             value = unread;
             break;
-        case 2 :
+        case 2:
             value = total;
             break;
-        case 3 :
+        case 3:
             value = size;
             break;
         }

@@ -28,36 +28,36 @@
 
 using namespace Akonadi;
 
-class SearchTerm::Private: public QSharedData
+class SearchTerm::Private : public QSharedData
 {
-  public:
-    Private():
-      QSharedData(),
-      condition( SearchTerm::CondEqual ),
-      relation( SearchTerm::RelAnd ),
-      isNegated( false )
+public:
+    Private()
+        : QSharedData()
+        , condition(SearchTerm::CondEqual)
+        , relation(SearchTerm::RelAnd)
+        , isNegated(false)
     {
     }
 
-    Private( const Private &other ):
-      QSharedData( other ),
-      key( other.key ),
-      value( other.value ),
-      condition( other.condition ),
-      relation( other.relation ),
-      terms( other.terms ),
-      isNegated( other.isNegated )
+    Private(const Private &other)
+        : QSharedData(other)
+        , key(other.key)
+        , value(other.value)
+        , condition(other.condition)
+        , relation(other.relation)
+        , terms(other.terms)
+        , isNegated(other.isNegated)
     {
     }
 
-    bool operator==( const Private &other ) const
+    bool operator==(const Private &other) const
     {
-      return relation == other.relation
-             && isNegated == other.isNegated
-             && terms == other.terms
-             && key == other.key
-             && value == other.value
-             && condition == other.condition;
+        return relation == other.relation
+               && isNegated == other.isNegated
+               && terms == other.terms
+               && key == other.key
+               && value == other.value
+               && condition == other.condition;
     }
 
     QString key;
@@ -68,91 +68,91 @@ class SearchTerm::Private: public QSharedData
     bool isNegated;
 };
 
-class SearchQuery::Private: public QSharedData
+class SearchQuery::Private : public QSharedData
 {
-  public:
-    Private():
-      QSharedData(),
-      limit(-1)
+public:
+    Private()
+        : QSharedData()
+        , limit(-1)
     {
     }
 
-    Private( const Private &other ):
-      QSharedData( other ),
-      rootTerm( other.rootTerm ),
-      limit( other.limit )
+    Private(const Private &other)
+        : QSharedData(other)
+        , rootTerm(other.rootTerm)
+        , limit(other.limit)
     {
     }
 
-    bool operator==( const Private &other ) const
+    bool operator==(const Private &other) const
     {
-      return rootTerm == other.rootTerm && limit == other.limit;
+        return rootTerm == other.rootTerm && limit == other.limit;
     }
 
-    static QVariantMap termToJSON( const SearchTerm &term )
+    static QVariantMap termToJSON(const SearchTerm &term)
     {
-      const QList<SearchTerm> &subTerms = term.subTerms();
-      QVariantMap termJSON;
-      termJSON.insert( QLatin1String( "negated"), term.isNegated() );
-      if ( subTerms.isEmpty() ) {
-        termJSON.insert( QLatin1String( "key" ), term.key() );
-        termJSON.insert( QLatin1String( "value" ), term.value() );
-        termJSON.insert( QLatin1String( "cond" ), static_cast<int>( term.condition() )  );
-      } else {
-        termJSON.insert( QLatin1String( "rel" ), static_cast<int>( term.relation() ) );
-        QVariantList subTermsJSON;
-        Q_FOREACH ( const SearchTerm &term, subTerms ) {
-          subTermsJSON.append( termToJSON( term ) );
+        const QList<SearchTerm> &subTerms = term.subTerms();
+        QVariantMap termJSON;
+        termJSON.insert(QLatin1String("negated"), term.isNegated());
+        if (subTerms.isEmpty()) {
+            termJSON.insert(QLatin1String("key"), term.key());
+            termJSON.insert(QLatin1String("value"), term.value());
+            termJSON.insert(QLatin1String("cond"), static_cast<int>(term.condition()));
+        } else {
+            termJSON.insert(QLatin1String("rel"), static_cast<int>(term.relation()));
+            QVariantList subTermsJSON;
+            Q_FOREACH (const SearchTerm &term, subTerms) {
+                subTermsJSON.append(termToJSON(term));
+            }
+            termJSON.insert(QLatin1String("subTerms"), subTermsJSON);
         }
-        termJSON.insert( QLatin1String( "subTerms" ), subTermsJSON );
-      }
 
-      return termJSON;
+        return termJSON;
     }
 
-    static SearchTerm JSONToTerm( const QVariantMap &json )
+    static SearchTerm JSONToTerm(const QVariantMap &json)
     {
-      if ( json.contains( QLatin1String( "key" ) ) ) {
-        SearchTerm term( json[QLatin1String( "key" )].toString(),
-                           json[QLatin1String( "value" )],
-                           static_cast<SearchTerm::Condition>( json[QLatin1String( "cond" )].toInt() ) );
-        term.setIsNegated( json[QLatin1String( "negated" )].toBool() );
-        return term;
-      } else if ( json.contains( QLatin1String( "rel" ) ) ) {
-        SearchTerm term( static_cast<SearchTerm::Relation>( json[QLatin1String( "rel" )].toInt() ) );
-        term.setIsNegated( json[QLatin1String( "negated" )].toBool() );
-        const QVariantList subTermsJSON = json[QLatin1String( "subTerms" )].toList();
-        Q_FOREACH ( const QVariant &subTermJSON, subTermsJSON ) {
-          term.addSubTerm( JSONToTerm( subTermJSON.toMap() ) );
+        if (json.contains(QLatin1String("key"))) {
+            SearchTerm term(json[QLatin1String("key")].toString(),
+                            json[QLatin1String("value")],
+                            static_cast<SearchTerm::Condition>(json[QLatin1String("cond")].toInt()));
+            term.setIsNegated(json[QLatin1String("negated")].toBool());
+            return term;
+        } else if (json.contains(QLatin1String("rel"))) {
+            SearchTerm term(static_cast<SearchTerm::Relation>(json[QLatin1String("rel")].toInt()));
+            term.setIsNegated(json[QLatin1String("negated")].toBool());
+            const QVariantList subTermsJSON = json[QLatin1String("subTerms")].toList();
+            Q_FOREACH (const QVariant &subTermJSON, subTermsJSON) {
+                term.addSubTerm(JSONToTerm(subTermJSON.toMap()));
+            }
+            return term;
+        } else {
+            kWarning() << "Invalid JSON for term: " << json;
+            return SearchTerm();
         }
-        return term;
-      } else {
-        kWarning() << "Invalid JSON for term: "<< json;
-        return SearchTerm();
-      }
     }
 
     SearchTerm rootTerm;
     int limit;
 };
 
-SearchTerm::SearchTerm( SearchTerm::Relation relation ):
-  d( new Private )
+SearchTerm::SearchTerm(SearchTerm::Relation relation)
+    : d(new Private)
 {
-  d->relation = relation;
+    d->relation = relation;
 }
 
-SearchTerm::SearchTerm( const QString &key, const QVariant &value, SearchTerm::Condition condition ):
-  d( new Private )
+SearchTerm::SearchTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition)
+    : d(new Private)
 {
-  d->relation = RelAnd;
-  d->key = key;
-  d->value = value;
-  d->condition = condition;
+    d->relation = RelAnd;
+    d->key = key;
+    d->value = value;
+    d->condition = condition;
 }
 
-SearchTerm::SearchTerm( const SearchTerm &other ):
-  d( other.d )
+SearchTerm::SearchTerm(const SearchTerm &other)
+    : d(other.d)
 {
 }
 
@@ -160,71 +160,70 @@ SearchTerm::~SearchTerm()
 {
 }
 
-SearchTerm& SearchTerm::operator=( const SearchTerm &other )
+SearchTerm &SearchTerm::operator=(const SearchTerm &other)
 {
-  d = other.d;
-  return *this;
+    d = other.d;
+    return *this;
 }
 
-bool SearchTerm::operator==( const SearchTerm &other ) const
+bool SearchTerm::operator==(const SearchTerm &other) const
 {
-  return *d == *other.d;
+    return *d == *other.d;
 }
 
 bool SearchTerm::isNull() const
 {
-  return d->key.isEmpty() && d->value.isNull() && d->terms.isEmpty();
+    return d->key.isEmpty() && d->value.isNull() && d->terms.isEmpty();
 }
 
 QString SearchTerm::key() const
 {
-  return d->key;
+    return d->key;
 }
 
 QVariant SearchTerm::value() const
 {
-  return d->value;
+    return d->value;
 }
 
 SearchTerm::Condition SearchTerm::condition() const
 {
-  return d->condition;
+    return d->condition;
 }
 
-void SearchTerm::setIsNegated( bool negated )
+void SearchTerm::setIsNegated(bool negated)
 {
-  d->isNegated = negated;
+    d->isNegated = negated;
 }
 
 bool SearchTerm::isNegated() const
 {
-  return d->isNegated;
+    return d->isNegated;
 }
 
-void SearchTerm::addSubTerm( const SearchTerm &term )
+void SearchTerm::addSubTerm(const SearchTerm &term)
 {
-  d->terms << term;
+    d->terms << term;
 }
 
 QList< SearchTerm > SearchTerm::subTerms() const
 {
-  return d->terms;
+    return d->terms;
 }
 
 SearchTerm::Relation SearchTerm::relation() const
 {
-  return d->relation;
+    return d->relation;
 }
 
-
-SearchQuery::SearchQuery( SearchTerm::Relation rel ):
-  d( new Private )
+SearchQuery::SearchQuery(SearchTerm::Relation rel)
+    : d(new Private)
 {
-  d->rootTerm = SearchTerm( rel );
+    d->rootTerm = SearchTerm(rel);
 }
 
-SearchQuery::SearchQuery( const SearchQuery &other ):
-  d( other.d )
+SearchQuery::SearchQuery(const SearchQuery &other)
+    : d(other.d)
 {
 }
 
@@ -232,149 +231,149 @@ SearchQuery::~SearchQuery()
 {
 }
 
-SearchQuery& SearchQuery::operator=( const SearchQuery &other )
+SearchQuery &SearchQuery::operator=(const SearchQuery &other)
 {
-  d = other.d;
-  return *this;
+    d = other.d;
+    return *this;
 }
 
-bool SearchQuery::operator==( const SearchQuery &other ) const
+bool SearchQuery::operator==(const SearchQuery &other) const
 {
-  return *d == *other.d;
+    return *d == *other.d;
 }
 
 bool SearchQuery::isNull() const
 {
-  return d->rootTerm.isNull();
+    return d->rootTerm.isNull();
 }
 
 SearchTerm SearchQuery::term() const
 {
-  return d->rootTerm;
+    return d->rootTerm;
 }
 
-void SearchQuery::addTerm( const QString &key, const QVariant &value, SearchTerm::Condition condition )
+void SearchQuery::addTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition)
 {
-  addTerm( SearchTerm( key, value, condition ) );
+    addTerm(SearchTerm(key, value, condition));
 }
 
-void SearchQuery::addTerm( const SearchTerm &term )
+void SearchQuery::addTerm(const SearchTerm &term)
 {
-  d->rootTerm.addSubTerm( term );
+    d->rootTerm.addSubTerm(term);
 }
 
-void SearchQuery::setTerm( const SearchTerm& term )
+void SearchQuery::setTerm(const SearchTerm &term)
 {
-  d->rootTerm = term;
+    d->rootTerm = term;
 }
 
-void SearchQuery::setLimit( int limit )
+void SearchQuery::setLimit(int limit)
 {
-  d->limit = limit;
+    d->limit = limit;
 }
 
 int SearchQuery::limit() const
 {
-  return d->limit;
+    return d->limit;
 }
 
 QByteArray SearchQuery::toJSON() const
 {
-  QVariantMap root = Private::termToJSON( d->rootTerm );
-  root.insert( QLatin1String( "limit" ), d->limit );
+    QVariantMap root = Private::termToJSON(d->rootTerm);
+    root.insert(QLatin1String("limit"), d->limit);
 
-  QJson::Serializer serializer;
-  return serializer.serialize( root );
+    QJson::Serializer serializer;
+    return serializer.serialize(root);
 }
 
-SearchQuery SearchQuery::fromJSON( const QByteArray &jsonData )
+SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
 {
-  QJson::Parser parser;
-  bool ok = false;
-  const QVariant json = parser.parse( jsonData, &ok );
-  if ( !ok || json.isNull() ) {
-    return SearchQuery();
-  }
+    QJson::Parser parser;
+    bool ok = false;
+    const QVariant json = parser.parse(jsonData, &ok);
+    if (!ok || json.isNull()) {
+        return SearchQuery();
+    }
 
-  const QVariantMap map = json.toMap();
-  SearchQuery query;
-  query.d->rootTerm = Private::JSONToTerm( map );
-  if ( map.contains( QLatin1String("limit") ) ) {
-    query.d->limit = map.value( QLatin1String("limit") ).toInt();
-  }
-  return query;
+    const QVariantMap map = json.toMap();
+    SearchQuery query;
+    query.d->rootTerm = Private::JSONToTerm(map);
+    if (map.contains(QLatin1String("limit"))) {
+        query.d->limit = map.value(QLatin1String("limit")).toInt();
+    }
+    return query;
 }
 
 QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
 {
-  QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
-  mapping.insert(EmailSearchTerm::Body, QLatin1String("body"));
-  mapping.insert(EmailSearchTerm::Headers, QLatin1String("headers"));
-  mapping.insert(EmailSearchTerm::Subject, QLatin1String("subject"));
-  mapping.insert(EmailSearchTerm::Message, QLatin1String("message"));
-  mapping.insert(EmailSearchTerm::HeaderFrom, QLatin1String("from"));
-  mapping.insert(EmailSearchTerm::HeaderTo, QLatin1String("to"));
-  mapping.insert(EmailSearchTerm::HeaderCC, QLatin1String("cc"));
-  mapping.insert(EmailSearchTerm::HeaderBCC, QLatin1String("bcc"));
-  mapping.insert(EmailSearchTerm::HeaderReplyTo, QLatin1String("replyto"));
-  mapping.insert(EmailSearchTerm::HeaderOrganization, QLatin1String("organization"));
-  mapping.insert(EmailSearchTerm::HeaderListId, QLatin1String("listid"));
-  mapping.insert(EmailSearchTerm::HeaderResentFrom, QLatin1String("resentfrom"));
-  mapping.insert(EmailSearchTerm::HeaderXLoop, QLatin1String("xloop"));
-  mapping.insert(EmailSearchTerm::HeaderXMailingList, QLatin1String("xmailinglist"));
-  mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QLatin1String("xspamflag"));
-  mapping.insert(EmailSearchTerm::HeaderDate, QLatin1String("date"));
-  mapping.insert(EmailSearchTerm::HeaderOnlyDate, QLatin1String("onlydate"));
-  mapping.insert(EmailSearchTerm::MessageStatus, QLatin1String("messagestatus"));
-  mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
-  mapping.insert(EmailSearchTerm::ByteSize, QLatin1String("size"));
-  mapping.insert(EmailSearchTerm::Attachment, QLatin1String("attachment"));
-  return mapping;
+    QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
+    mapping.insert(EmailSearchTerm::Body, QLatin1String("body"));
+    mapping.insert(EmailSearchTerm::Headers, QLatin1String("headers"));
+    mapping.insert(EmailSearchTerm::Subject, QLatin1String("subject"));
+    mapping.insert(EmailSearchTerm::Message, QLatin1String("message"));
+    mapping.insert(EmailSearchTerm::HeaderFrom, QLatin1String("from"));
+    mapping.insert(EmailSearchTerm::HeaderTo, QLatin1String("to"));
+    mapping.insert(EmailSearchTerm::HeaderCC, QLatin1String("cc"));
+    mapping.insert(EmailSearchTerm::HeaderBCC, QLatin1String("bcc"));
+    mapping.insert(EmailSearchTerm::HeaderReplyTo, QLatin1String("replyto"));
+    mapping.insert(EmailSearchTerm::HeaderOrganization, QLatin1String("organization"));
+    mapping.insert(EmailSearchTerm::HeaderListId, QLatin1String("listid"));
+    mapping.insert(EmailSearchTerm::HeaderResentFrom, QLatin1String("resentfrom"));
+    mapping.insert(EmailSearchTerm::HeaderXLoop, QLatin1String("xloop"));
+    mapping.insert(EmailSearchTerm::HeaderXMailingList, QLatin1String("xmailinglist"));
+    mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QLatin1String("xspamflag"));
+    mapping.insert(EmailSearchTerm::HeaderDate, QLatin1String("date"));
+    mapping.insert(EmailSearchTerm::HeaderOnlyDate, QLatin1String("onlydate"));
+    mapping.insert(EmailSearchTerm::MessageStatus, QLatin1String("messagestatus"));
+    mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
+    mapping.insert(EmailSearchTerm::ByteSize, QLatin1String("size"));
+    mapping.insert(EmailSearchTerm::Attachment, QLatin1String("attachment"));
+    return mapping;
 }
 
 static QMap<EmailSearchTerm::EmailSearchField, QString> emailSearchFieldMapping = initializeMapping();
 
-EmailSearchTerm::EmailSearchTerm( EmailSearchTerm::EmailSearchField field, const QVariant& value, SearchTerm::Condition condition )
-  : SearchTerm( toKey( field ), value, condition )
+EmailSearchTerm::EmailSearchTerm(EmailSearchTerm::EmailSearchField field, const QVariant &value, SearchTerm::Condition condition)
+    : SearchTerm(toKey(field), value, condition)
 {
 
 }
 
-QString EmailSearchTerm::toKey( EmailSearchTerm::EmailSearchField field )
+QString EmailSearchTerm::toKey(EmailSearchTerm::EmailSearchField field)
 {
-  return emailSearchFieldMapping.value( field );
+    return emailSearchFieldMapping.value(field);
 }
 
-EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey( const QString &key )
+EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey(const QString &key)
 {
-  return emailSearchFieldMapping.key(key);
+    return emailSearchFieldMapping.key(key);
 }
 
 QMap<ContactSearchTerm::ContactSearchField, QString> initializeContactMapping()
 {
-  QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
-  mapping.insert(ContactSearchTerm::Name, QLatin1String("name"));
-  mapping.insert(ContactSearchTerm::Nickname, QLatin1String("nickname"));
-  mapping.insert(ContactSearchTerm::Email, QLatin1String("email"));
-  mapping.insert(ContactSearchTerm::Uid, QLatin1String("uid"));
-  mapping.insert(ContactSearchTerm::All, QLatin1String("all"));
-  return mapping;
+    QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
+    mapping.insert(ContactSearchTerm::Name, QLatin1String("name"));
+    mapping.insert(ContactSearchTerm::Nickname, QLatin1String("nickname"));
+    mapping.insert(ContactSearchTerm::Email, QLatin1String("email"));
+    mapping.insert(ContactSearchTerm::Uid, QLatin1String("uid"));
+    mapping.insert(ContactSearchTerm::All, QLatin1String("all"));
+    return mapping;
 }
 
 static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMapping = initializeContactMapping();
 
-ContactSearchTerm::ContactSearchTerm( ContactSearchTerm::ContactSearchField field, const QVariant& value, SearchTerm::Condition condition )
-  : SearchTerm( toKey( field ), value, condition )
+ContactSearchTerm::ContactSearchTerm(ContactSearchTerm::ContactSearchField field, const QVariant &value, SearchTerm::Condition condition)
+    : SearchTerm(toKey(field), value, condition)
 {
 
 }
 
-QString ContactSearchTerm::toKey( ContactSearchTerm::ContactSearchField field )
+QString ContactSearchTerm::toKey(ContactSearchTerm::ContactSearchField field)
 {
-  return contactSearchFieldMapping.value( field );
+    return contactSearchFieldMapping.value(field);
 }
 
-ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey( const QString &key )
+ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &key)
 {
-  return contactSearchFieldMapping.key(key);
+    return contactSearchFieldMapping.key(key);
 }

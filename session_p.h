@@ -41,38 +41,38 @@ namespace Akonadi {
  */
 class AKONADI_TESTS_EXPORT SessionPrivate
 {
-  public:
-    explicit SessionPrivate( Session *parent );
+public:
+    explicit SessionPrivate(Session *parent);
 
     virtual ~SessionPrivate()
     {
-      delete parser;
+        delete parser;
     }
 
-    virtual void init( const QByteArray &sessionId );
+    virtual void init(const QByteArray &sessionId);
 
     void startNext();
     /// Disconnects a previously existing connection and tries to reconnect
     void forceReconnect();
     /// Attemps to establish a connections to the Akonadi server.
     virtual void reconnect();
-    void serverStateChanged( ServerManager::State );
+    void serverStateChanged(ServerManager::State);
     void socketDisconnected();
-    void socketError( QLocalSocket::LocalSocketError error );
-    void socketError( QAbstractSocket::SocketError error );
+    void socketError(QLocalSocket::LocalSocketError error);
+    void socketError(QAbstractSocket::SocketError error);
     void dataReceived();
     void doStartNext();
-    void startJob( Job* job );
+    void startJob(Job *job);
 
     /**
       @internal For testing purposes only. See FakeSesson.
       @param job the job to end
     */
-    void endJob( Job* job );
+    void endJob(Job *job);
 
-    void jobDone( KJob* job );
-    void jobWriteFinished( Akonadi::Job* job );
-    void jobDestroyed( QObject *job );
+    void jobDone(KJob *job);
+    void jobWriteFinished(Akonadi::Job *job);
+    void jobDestroyed(QObject *job);
 
     bool canPipelineNext();
 
@@ -86,18 +86,18 @@ class AKONADI_TESTS_EXPORT SessionPrivate
      * id is used automatically.
      * @param sessionId the id of new default session
      */
-    static void createDefaultSession( const QByteArray &sessionId );
+    static void createDefaultSession(const QByteArray &sessionId);
 
     /**
      * Sets the default session.
      * @internal Only for unit tests.
      */
-    static void setDefaultSession( Session *session );
+    static void setDefaultSession(Session *session);
 
     /**
       Associates the given Job object with this session.
     */
-    virtual void addJob( Job* job );
+    virtual void addJob(Job *job);
 
     /**
       Returns the next IMAP tag.
@@ -107,14 +107,17 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     /**
       Sends the given raw data.
     */
-    void writeData( const QByteArray &data );
+    void writeData(const QByteArray &data);
 
     /**
      * Propagate item revision changes to following jobs.
      */
-    void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
+    void itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision);
 
-    static int minimumProtocolVersion() { return 37; }
+    static int minimumProtocolVersion()
+    {
+        return 37;
+    }
 
     /**
      * Default location for akonadiconnectionrc
@@ -123,15 +126,15 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     Session *mParent;
     QByteArray sessionId;
-    QIODevice* socket;
+    QIODevice *socket;
     bool connected;
     int theNextTag;
     int protocolVersion;
 
     // job management
-    QQueue<Job*> queue;
-    QQueue<Job*> pipeline;
-    Job* currentJob;
+    QQueue<Job *> queue;
+    QQueue<Job *> pipeline;
+    Job *currentJob;
     bool jobRunning;
 
     // parser stuff

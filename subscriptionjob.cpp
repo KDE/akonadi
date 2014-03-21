@@ -25,47 +25,48 @@ using namespace Akonadi;
 
 class Akonadi::SubscriptionJobPrivate : public JobPrivate
 {
-  public:
-    SubscriptionJobPrivate( SubscriptionJob *parent )
-      : JobPrivate( parent )
+public:
+    SubscriptionJobPrivate(SubscriptionJob *parent)
+        : JobPrivate(parent)
     {
     }
 
-    void sendCommand( const QByteArray &cmd, const Collection::List &list )
+    void sendCommand(const QByteArray &cmd, const Collection::List &list)
     {
-      mTag = newTag();
-      QByteArray line = mTag + ' ' + cmd;
-      foreach ( const Collection &col, list )
-        line += ' ' + QByteArray::number( col.id() );
-      line += '\n';
-      writeData( line );
-      newTag(); // prevent automatic response handling
+        mTag = newTag();
+        QByteArray line = mTag + ' ' + cmd;
+        foreach (const Collection &col, list) {
+            line += ' ' + QByteArray::number(col.id());
+        }
+        line += '\n';
+        writeData(line);
+        newTag(); // prevent automatic response handling
     }
 
     void sendNextCommand()
     {
-      Q_Q( SubscriptionJob );
+        Q_Q(SubscriptionJob);
 
-      QByteArray cmd;
-      if ( !mSub.isEmpty() ) {
-        sendCommand( "SUBSCRIBE", mSub );
-        mSub.clear();
-      } else if ( !mUnsub.isEmpty() ) {
-        sendCommand( "UNSUBSCRIBE", mUnsub );
-        mUnsub.clear();
-      } else {
-        q->emitResult();
-      }
+        QByteArray cmd;
+        if (!mSub.isEmpty()) {
+            sendCommand("SUBSCRIBE", mSub);
+            mSub.clear();
+        } else if (!mUnsub.isEmpty()) {
+            sendCommand("UNSUBSCRIBE", mUnsub);
+            mUnsub.clear();
+        } else {
+            q->emitResult();
+        }
     }
 
-    Q_DECLARE_PUBLIC( SubscriptionJob )
+    Q_DECLARE_PUBLIC(SubscriptionJob)
 
     QByteArray mTag;
     Collection::List mSub, mUnsub;
 };
 
-SubscriptionJob::SubscriptionJob(QObject * parent)
-  : Job( new SubscriptionJobPrivate( this ), parent )
+SubscriptionJob::SubscriptionJob(QObject *parent)
+    : Job(new SubscriptionJobPrivate(this), parent)
 {
 }
 
@@ -73,41 +74,41 @@ SubscriptionJob::~SubscriptionJob()
 {
 }
 
-void SubscriptionJob::subscribe(const Collection::List & list)
+void SubscriptionJob::subscribe(const Collection::List &list)
 {
-  Q_D( SubscriptionJob );
+    Q_D(SubscriptionJob);
 
-  d->mSub = list;
+    d->mSub = list;
 }
 
-void SubscriptionJob::unsubscribe(const Collection::List & list)
+void SubscriptionJob::unsubscribe(const Collection::List &list)
 {
-  Q_D( SubscriptionJob );
+    Q_D(SubscriptionJob);
 
-  d->mUnsub = list;
+    d->mUnsub = list;
 }
 
 void SubscriptionJob::doStart()
 {
-  Q_D( SubscriptionJob );
+    Q_D(SubscriptionJob);
 
-  d->sendNextCommand();
+    d->sendNextCommand();
 }
 
-void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
+void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray &data)
 {
-  Q_D( SubscriptionJob );
+    Q_D(SubscriptionJob);
 
-  if ( _tag == d->mTag ) {
-    if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
-      d->sendNextCommand();
-    } else {
-      setError( Unknown );
-      setErrorText( QString::fromUtf8( data ) );
-      emitResult();
+    if (_tag == d->mTag) {
+        if (data.startsWith("OK")) {     //krazy:exclude=strings
+            d->sendNextCommand();
+        } else {
+            setError(Unknown);
+            setErrorText(QString::fromUtf8(data));
+            emitResult();
+        }
+        return;
     }
-    return;
-  }
 }
 
 #include "moc_subscriptionjob_p.cpp"

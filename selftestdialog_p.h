@@ -43,38 +43,38 @@ namespace Akonadi {
  */
 class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new self test dialog.
      *
      * @param parent The parent widget.
      */
-    explicit SelfTestDialog( QWidget *parent = 0 );
+    explicit SelfTestDialog(QWidget *parent = 0);
 
     /**
      * Hides the label with the introduction message.
      */
     void hideIntroduction();
 
-  private Q_SLOTS:
-    void selectionChanged( const QModelIndex &index );
+private Q_SLOTS:
+    void selectionChanged(const QModelIndex &index);
     void saveReport();
     void copyReport();
-    void linkActivated( const QString &link );
+    void linkActivated(const QString &link);
     void runTests();
 
-  private:
+private:
     enum ResultType {
-      Skip,
-      Success,
-      Warning,
-      Error
+        Skip,
+        Success,
+        Warning,
+        Error
     };
-    QStandardItem* report( ResultType type, const KLocalizedString &summary, const KLocalizedString &details );
-    QVariant serverSetting( const QString &group, const char *key, const QVariant &def ) const;
+    QStandardItem *report(ResultType type, const KLocalizedString &summary, const KLocalizedString &details);
+    QVariant serverSetting(const QString &group, const char *key, const QVariant &def) const;
     bool useStandaloneMysqlServer() const;
-    bool runProcess( const QString &app, const QStringList &args, QString &result ) const;
+    bool runProcess(const QString &app, const QStringList &args, QString &result) const;
 
     void testSQLDriver();
     void testMySQLServer();
@@ -92,7 +92,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     QString createReport();
 
     Ui::SelfTestDialog ui;
-    QStandardItemModel* mTestModel;
+    QStandardItemModel *mTestModel;
 };
 
 }

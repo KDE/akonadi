@@ -30,50 +30,50 @@ using namespace Akonadi;
 */
 class SpecialCollectionAttribute::Private
 {
-  public:
+public:
     QByteArray mType;
 };
 
-SpecialCollectionAttribute::SpecialCollectionAttribute( const QByteArray &type )
-  : d( new Private )
+SpecialCollectionAttribute::SpecialCollectionAttribute(const QByteArray &type)
+    : d(new Private)
 {
-  d->mType = type;
+    d->mType = type;
 }
 
 SpecialCollectionAttribute::~SpecialCollectionAttribute()
 {
-  delete d;
+    delete d;
 }
 
-SpecialCollectionAttribute* SpecialCollectionAttribute::clone() const
+SpecialCollectionAttribute *SpecialCollectionAttribute::clone() const
 {
-  return new SpecialCollectionAttribute( d->mType );
+    return new SpecialCollectionAttribute(d->mType);
 }
 
 QByteArray SpecialCollectionAttribute::type() const
 {
-  static const QByteArray sType( "SpecialCollectionAttribute" );
-  return sType;
+    static const QByteArray sType("SpecialCollectionAttribute");
+    return sType;
 }
 
 QByteArray SpecialCollectionAttribute::serialized() const
 {
-  return d->mType;
+    return d->mType;
 }
 
-void SpecialCollectionAttribute::deserialize( const QByteArray &data )
+void SpecialCollectionAttribute::deserialize(const QByteArray &data)
 {
-  d->mType = data;
+    d->mType = data;
 }
 
-void SpecialCollectionAttribute::setCollectionType( const QByteArray &type )
+void SpecialCollectionAttribute::setCollectionType(const QByteArray &type)
 {
-  d->mType = type;
+    d->mType = type;
 }
 
 QByteArray SpecialCollectionAttribute::collectionType() const
 {
-  return d->mType;
+    return d->mType;
 }
 
 // Register the attribute when the library is loaded.
@@ -81,9 +81,9 @@ namespace {
 
 bool dummySpecialCollectionAttribute()
 {
-  using namespace Akonadi;
-  AttributeFactory::registerAttribute<SpecialCollectionAttribute>();
-  return true;
+    using namespace Akonadi;
+    AttributeFactory::registerAttribute<SpecialCollectionAttribute>();
+    return true;
 }
 
 const bool registeredSpecialCollectionAttribute = dummySpecialCollectionAttribute();

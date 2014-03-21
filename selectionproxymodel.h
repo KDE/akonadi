@@ -98,25 +98,25 @@ class SelectionProxyModelPrivate;
  */
 class AKONADI_EXPORT SelectionProxyModel : public KSelectionProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new selection proxy model.
      *
      * @param selectionModel The selection model of the source view.
      * @param parent The parent object.
      */
-    explicit SelectionProxyModel( QItemSelectionModel *selectionModel, QObject *parent = 0 );
+    explicit SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent = 0);
     ~SelectionProxyModel();
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( SelectionProxyModel )
+    Q_DECLARE_PRIVATE(SelectionProxyModel)
     SelectionProxyModelPrivate *const d_ptr;
 
-    Q_PRIVATE_SLOT( d_func(), void rootIndexAdded( const QModelIndex & ) )
-    Q_PRIVATE_SLOT( d_func(), void rootIndexAboutToBeRemoved( const QModelIndex & ) )
+    Q_PRIVATE_SLOT(d_func(), void rootIndexAdded(const QModelIndex &))
+    Q_PRIVATE_SLOT(d_func(), void rootIndexAboutToBeRemoved(const QModelIndex &))
     //@endcond
 };
 

@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef AKONADI_SEARCHQUERY_H
 #define AKONADI_SEARCHQUERY_H
 
@@ -39,36 +38,36 @@ namespace Akonadi
  */
 class AKONADI_EXPORT SearchTerm
 {
-  public:
+public:
     enum Relation {
-      RelAnd,
-      RelOr
+        RelAnd,
+        RelOr
     };
 
     enum Condition {
-      CondEqual,
-      CondGreaterThan,
-      CondGreaterOrEqual,
-      CondLessThan,
-      CondLessOrEqual,
-      CondContains
+        CondEqual,
+        CondGreaterThan,
+        CondGreaterOrEqual,
+        CondLessThan,
+        CondLessOrEqual,
+        CondContains
     };
 
     /**
      * Constructs a term where all subterms will be in given relation
      */
-    SearchTerm( SearchTerm::Relation relation = SearchTerm::RelAnd );
+    SearchTerm(SearchTerm::Relation relation = SearchTerm::RelAnd);
 
     /**
      * Constructs an end term
      */
-    SearchTerm( const QString &key, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
+    SearchTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
-    SearchTerm( const SearchTerm &other );
+    SearchTerm(const SearchTerm &other);
     ~SearchTerm();
 
-    SearchTerm& operator=( const SearchTerm &other );
-    bool operator==( const SearchTerm &other ) const;
+    SearchTerm &operator=(const SearchTerm &other);
+    bool operator==(const SearchTerm &other) const;
 
     bool isNull() const;
 
@@ -94,7 +93,7 @@ class AKONADI_EXPORT SearchTerm
      *
      * If there are subterms in a term, key, value and condition are ignored.
      */
-    void addSubTerm( const SearchTerm &term );
+    void addSubTerm(const SearchTerm &term);
 
     /**
      * Returns all subterms, or an empty list if this is an end term.
@@ -109,14 +108,14 @@ class AKONADI_EXPORT SearchTerm
     /**
      * Sets whether the entire term is negated.
      */
-    void setIsNegated( bool negated );
+    void setIsNegated(bool negated);
 
     /**
      * Returns whether the entire term is negated.
      */
     bool isNegated() const;
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };
@@ -128,33 +127,33 @@ class AKONADI_EXPORT SearchTerm
  */
 class AKONADI_EXPORT SearchQuery
 {
-  public:
+public:
     /**
      * Constructs query where all added terms will be in given relation
      */
-    SearchQuery( SearchTerm::Relation rel = SearchTerm::RelAnd );
+    SearchQuery(SearchTerm::Relation rel = SearchTerm::RelAnd);
 
     ~SearchQuery();
-    SearchQuery( const SearchQuery &other );
-    SearchQuery& operator=( const SearchQuery &other );
-    bool operator==( const SearchQuery &other ) const;
+    SearchQuery(const SearchQuery &other);
+    SearchQuery &operator=(const SearchQuery &other);
+    bool operator==(const SearchQuery &other) const;
 
     bool isNull() const;
 
     /**
      * Adds a new term.
      */
-    void addTerm( const QString &key, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
+    void addTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
     /**
      * Adds a new term with subterms
      */
-    void addTerm( const SearchTerm &term );
+    void addTerm(const SearchTerm &term);
 
     /**
      * Sets the root term
      */
-    void setTerm( const SearchTerm &term );
+    void setTerm(const SearchTerm &term);
 
     /**
      * Returns the root term.
@@ -167,7 +166,7 @@ class AKONADI_EXPORT SearchQuery
      * Note that this limit is only evaluated per search backend,
      * so the total number of results retrieved may be larger.
      */
-    void setLimit( int limit );
+    void setLimit(int limit);
 
     /**
      * Returns the maximum number of results.
@@ -177,9 +176,9 @@ class AKONADI_EXPORT SearchQuery
     int limit() const;
 
     QByteArray toJSON() const;
-    static SearchQuery fromJSON( const QByteArray &json );
+    static SearchQuery fromJSON(const QByteArray &json);
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 
@@ -194,50 +193,50 @@ class AKONADI_EXPORT SearchQuery
  */
 class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
 {
-  public:
+public:
 
     /**
      * All fields expect a search string unless noted otherwise.
      */
     enum EmailSearchField {
-      Unknown,
-      Subject,
-      Body,
-      Message, //Complete message including headers, body and attachment
-      Headers, //All headers
-      HeaderFrom,
-      HeaderTo,
-      HeaderCC,
-      HeaderBCC,
-      HeaderReplyTo,
-      HeaderOrganization,
-      HeaderListId,
-      HeaderResentFrom,
-      HeaderXLoop,
-      HeaderXMailingList,
-      HeaderXSpamFlag,
-      HeaderDate, //Expects QDateTime
-      HeaderOnlyDate, //Expectes QDate
-      MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
-      ByteSize, //Expects int
-      Attachment, //Textsearch on attachment
-      MessageTag
+        Unknown,
+        Subject,
+        Body,
+        Message, //Complete message including headers, body and attachment
+        Headers, //All headers
+        HeaderFrom,
+        HeaderTo,
+        HeaderCC,
+        HeaderBCC,
+        HeaderReplyTo,
+        HeaderOrganization,
+        HeaderListId,
+        HeaderResentFrom,
+        HeaderXLoop,
+        HeaderXMailingList,
+        HeaderXSpamFlag,
+        HeaderDate, //Expects QDateTime
+        HeaderOnlyDate, //Expectes QDate
+        MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
+        ByteSize, //Expects int
+        Attachment, //Textsearch on attachment
+        MessageTag
     };
 
     /**
      * Constructs an email end term
      */
-    EmailSearchTerm( EmailSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
+    EmailSearchTerm(EmailSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
     /**
      * Translates field to key
      */
-    static QString toKey( EmailSearchField );
+    static QString toKey(EmailSearchField);
 
     /**
      * Translates key to field
      */
-    static EmailSearchField fromKey( const QString &key );
+    static EmailSearchField fromKey(const QString &key);
 };
 
 /**
@@ -249,27 +248,27 @@ class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
  */
 class AKONADI_EXPORT ContactSearchTerm : public SearchTerm
 {
-  public:
+public:
     enum ContactSearchField {
-      Unknown,
-      Name,
-      Email,
-      Nickname,
-      Uid,
-      All //Special field: matches all contacts.
+        Unknown,
+        Name,
+        Email,
+        Nickname,
+        Uid,
+        All //Special field: matches all contacts.
     };
 
-    ContactSearchTerm( ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
+    ContactSearchTerm(ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 
     /**
      * Translates field to key
      */
-    static QString toKey( ContactSearchField );
+    static QString toKey(ContactSearchField);
 
     /**
      * Translates key to field
      */
-    static ContactSearchField fromKey( const QString &key );
+    static ContactSearchField fromKey(const QString &key);
 };
 
 }
