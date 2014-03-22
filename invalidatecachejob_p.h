@@ -33,21 +33,21 @@ class InvalidateCacheJobPrivate;
  */
 class InvalidateCacheJob : public Akonadi::Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Create a job to invalidate all cached content in @p collection.
      */
-    explicit InvalidateCacheJob( const Collection &collection, QObject *parent );
+    explicit InvalidateCacheJob(const Collection &collection, QObject *parent);
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( InvalidateCacheJob )
-    Q_PRIVATE_SLOT( d_func(), void collectionFetchResult(KJob* job) )
-    Q_PRIVATE_SLOT( d_func(), void itemFetchResult(KJob* job) )
-    Q_PRIVATE_SLOT( d_func(), void itemStoreResult(KJob* job) )
+private:
+    Q_DECLARE_PRIVATE(InvalidateCacheJob)
+    Q_PRIVATE_SLOT(d_func(), void collectionFetchResult(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void itemFetchResult(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void itemStoreResult(KJob *job))
 };
 
 }

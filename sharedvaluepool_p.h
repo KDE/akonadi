@@ -30,11 +30,16 @@ namespace Internal {
 {
   private:
     typedef char sizeOne;
-    typedef struct { char a[2]; } sizeTwo;
+    typedef struct
+    {
+        char a[2];
+    } sizeTwo;
     template <typename C> static sizeOne testForKeyType( typename C::key_type const* );
     template <typename C> static sizeTwo testForKeyType( ... );
   public:
-    enum { isAssociative = sizeof( container_traits<T>::testForKeyType<T>( 0 ) ) == 1 };
+    enum {
+        isAssociative=sizeof(container_traits<T>::testForKeyType<T>(0))==1
+    };
 };*/
 
 /**
@@ -44,10 +49,10 @@ namespace Internal {
 template <typename T, template <typename> class Container>
 class SharedValuePool
 {
-  public:
+public:
     /** Returns the shared value equal to @p value .*/
     /*template <typename C>
-    typename boost::enable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value, const int* = 0 )
+    typename boost::enable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value, const int * = 0 )
     {
       typename Container<T>::const_iterator it = m_pool.constFind( value );
       if ( it != m_pool.constEnd() )
@@ -58,17 +63,18 @@ class SharedValuePool
 
     template <typename C>
     typename boost::disable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value )*/
-    T sharedValue( const T &value )
+    T sharedValue(const T &value)
     {
-      // for small pool sizes this is actually faster than using lower_bound and a sorted vector
-      typename Container<T>::const_iterator it = std::find( m_pool.constBegin(), m_pool.constEnd(), value );
-      if ( it != m_pool.constEnd() )
-        return *it;
-      m_pool.push_back( value );
-      return value;
+        // for small pool sizes this is actually faster than using lower_bound and a sorted vector
+        typename Container<T>::const_iterator it = std::find(m_pool.constBegin(), m_pool.constEnd(), value);
+        if (it != m_pool.constEnd()) {
+            return *it;
+        }
+        m_pool.push_back(value);
+        return value;
     }
 
-  private:
+private:
     Container<T> m_pool;
 };
 

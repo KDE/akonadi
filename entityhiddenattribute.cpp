@@ -26,7 +26,7 @@
 using namespace Akonadi;
 
 EntityHiddenAttribute::EntityHiddenAttribute()
-  : d( 0 )
+    : d(0)
 {
 }
 
@@ -36,21 +36,21 @@ EntityHiddenAttribute::~EntityHiddenAttribute()
 
 QByteArray Akonadi::EntityHiddenAttribute::type() const
 {
-  return "HIDDEN";
+    return "HIDDEN";
 }
 
-EntityHiddenAttribute * EntityHiddenAttribute::clone() const
+EntityHiddenAttribute *EntityHiddenAttribute::clone() const
 {
-  return new EntityHiddenAttribute();
+    return new EntityHiddenAttribute();
 }
 
 QByteArray EntityHiddenAttribute::serialized() const
 {
-  return QByteArray();
+    return QByteArray();
 }
 
-void EntityHiddenAttribute::deserialize( const QByteArray &data )
+void EntityHiddenAttribute::deserialize(const QByteArray &data)
 {
-  Q_ASSERT( data.isEmpty() );
-  Q_UNUSED( data );
+    Q_ASSERT(data.isEmpty());
+    Q_UNUSED(data);
 }

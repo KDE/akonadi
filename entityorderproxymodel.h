@@ -43,15 +43,15 @@ class EntityOrderProxyModelPrivate;
  */
 class AKONADI_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new entity order proxy model.
      *
      * @param parent The parent object.
      */
-    EntityOrderProxyModel( QObject *parent = 0 );
+    EntityOrderProxyModel(QObject *parent = 0);
 
     /**
      * Destroys the entity order proxy model.
@@ -61,41 +61,41 @@ class AKONADI_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
     /**
      * Sets the config @p group that will be used for storing the order.
      */
-    void setOrderConfig( KConfigGroup &group );
+    void setOrderConfig(KConfigGroup &group);
 
     /**
      * Saves the order.
      */
     void saveOrder();
 
-    void clearOrder( const QModelIndex &index );
+    void clearOrder(const QModelIndex &index);
     void clearTreeOrder();
 
     /**
      * @reimp
      */
-    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
     /**
      * @reimp
      */
-    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
     /**
      * @reimp
      */
-    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
 
-  protected:
-    EntityOrderProxyModelPrivate * const d_ptr;
+protected:
+    EntityOrderProxyModelPrivate *const d_ptr;
 
-    virtual QString parentConfigString( const QModelIndex &index ) const;
-    virtual QString configString( const QModelIndex &index ) const;
+    virtual QString parentConfigString(const QModelIndex &index) const;
+    virtual QString configString(const QModelIndex &index) const;
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( EntityOrderProxyModel )
+    Q_DECLARE_PRIVATE(EntityOrderProxyModel)
     //@endcond
 };
 

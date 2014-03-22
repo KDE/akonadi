@@ -38,7 +38,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
 {
-  public:
+public:
     /**
      * Creates a new entity display attribute.
      */
@@ -52,7 +52,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     /**
      * Sets the @p name that should be used for display.
      */
-    void setDisplayName( const QString &name );
+    void setDisplayName(const QString &name);
 
     /**
      * Returns the name that should be used for display.
@@ -63,7 +63,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     /**
      * Sets the icon @p name for the default icon.
      */
-    void setIconName( const QString &name );
+    void setIconName(const QString &name);
 
     /**
      * Returns the icon that should be used for this collection or item.
@@ -80,7 +80,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
      * @param name the icon name to use
      * @since 4.4
      */
-    void setActiveIconName( const QString &name );
+    void setActiveIconName(const QString &name);
 
     /**
      * Returns the icon that should be used for this collection or item when active.
@@ -105,18 +105,18 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
      * @param color the background color to use
      * @since 4.4
      */
-    void setBackgroundColor( const QColor &color );
+    void setBackgroundColor(const QColor &color);
 
     /* reimpl */
     QByteArray type() const;
-    EntityDisplayAttribute* clone() const;
+    EntityDisplayAttribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

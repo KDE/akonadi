@@ -115,7 +115,7 @@ class ItemPrivate;
  */
 class AKONADI_EXPORT Item : public Entity
 {
-  public:
+public:
     /**
      * Describes a list of items.
      */
@@ -135,7 +135,7 @@ class AKONADI_EXPORT Item : public Entity
      * Describes the part name that is used to fetch the
      * full payload of an item.
      */
-    static const char* FullPayload;
+    static const char *FullPayload;
 
     /**
      * Creates a new item.
@@ -145,19 +145,19 @@ class AKONADI_EXPORT Item : public Entity
     /**
      * Creates a new item with the given unique @p id.
      */
-    explicit Item( Id id );
+    explicit Item(Id id);
 
     /**
      * Creates a new item with the given mime type.
      *
      * @param mimeType The mime type of the item.
      */
-    explicit Item( const QString &mimeType );
+    explicit Item(const QString &mimeType);
 
     /**
      * Creates a new item from an @p other item.
      */
-    Item( const Item &other );
+    Item(const Item &other);
 
     /**
      * Destroys the item.
@@ -167,7 +167,7 @@ class AKONADI_EXPORT Item : public Entity
     /**
      * Creates an item from the given @p url.
      */
-    static Item fromUrl( const KUrl &url );
+    static Item fromUrl(const KUrl &url);
 
     /**
      * Returns all flags of this item.
@@ -187,43 +187,43 @@ class AKONADI_EXPORT Item : public Entity
      * it is updated automatically by the revision checking functions.
      * @since 4.2
      */
-    void setModificationTime( const QDateTime &datetime );
+    void setModificationTime(const QDateTime &datetime);
 
     /**
      * Returns whether the flag with the given @p name is
      * set in the item.
      */
-    bool hasFlag( const QByteArray &name ) const;
+    bool hasFlag(const QByteArray &name) const;
 
     /**
      * Sets the flag with the given @p name in the item.
      */
-    void setFlag( const QByteArray &name );
+    void setFlag(const QByteArray &name);
 
     /**
      * Removes the flag with the given @p name from the item.
      */
-    void clearFlag( const QByteArray &name );
+    void clearFlag(const QByteArray &name);
 
     /**
      * Overwrites all flags of the item by the given @p flags.
      */
-    void setFlags( const Flags &flags );
+    void setFlags(const Flags &flags);
 
     /**
      * Removes all flags from the item.
      */
     void clearFlags();
 
-    void setTags( const Tag::List &list );
+    void setTags(const Tag::List &list);
 
-    void setTag( const Tag & );
+    void setTag(const Tag &tag);
 
     Tag::List tags() const;
 
-    bool hasTag( const Tag & ) const;
+    bool hasTag(const Tag &tag) const;
 
-    void clearTag( const Tag & );
+    void clearTag(const Tag &tag);
 
     void clearTags();
 
@@ -234,7 +234,7 @@ class AKONADI_EXPORT Item : public Entity
      * @param data The encoded data.
      * @see fullPayloadData
      */
-    void setPayloadFromData( const QByteArray &data );
+    void setPayloadFromData(const QByteArray &data);
 
     /**
      * Returns the full payload in its canonical representation, e.g. the
@@ -267,7 +267,7 @@ class AKONADI_EXPORT Item : public Entity
      * @note Do not modify this value from within an application,
      * it is updated automatically by the revision checking functions.
      */
-    void setRevision( int revision );
+    void setRevision(int revision);
 
     /**
      * Returns the revision number of the item.
@@ -289,7 +289,7 @@ class AKONADI_EXPORT Item : public Entity
      * @param size the size of the item in bytes
      * @since 4.2
      */
-    void setSize( qint64 size );
+    void setSize(qint64 size);
 
     /**
      * Returns the size of the items in bytes.
@@ -301,7 +301,7 @@ class AKONADI_EXPORT Item : public Entity
     /**
      * Sets the mime type of the item to @p mimeType.
      */
-    void setMimeType( const QString &mimeType );
+    void setMimeType(const QString &mimeType);
 
     /**
      * Returns the mime type of the item.
@@ -313,7 +313,7 @@ class AKONADI_EXPORT Item : public Entity
      *
      * @since 4.12
      */
-    void setGid( const QString &gid );
+    void setGid(const QString &gid);
 
     /**
      * Returns the gid of the entity.
@@ -341,10 +341,10 @@ class AKONADI_EXPORT Item : public Entity
      * shared pointer implementation (currently boost::shared_ptr and QSharedPointer)
      * and make sure there is a specialization of Akonadi::super_trait for your class.
      */
-    template <typename T> void setPayload( const T &p );
+    template <typename T> void setPayload(const T &p);
     //@cond PRIVATE
-    template <typename T> void setPayload( T* p );
-    template <typename T> void setPayload( std::auto_ptr<T> p );
+    template <typename T> void setPayload(T *p);
+    template <typename T> void setPayload(std::auto_ptr<T> p);
     //@endcond
 
     /**
@@ -381,16 +381,15 @@ class AKONADI_EXPORT Item : public Entity
     /**
      * Describes the type of url which is returned in url().
      */
-    enum UrlType
-    {
-      UrlShort = 0,         ///< A short url which contains the identifier only (default)
-      UrlWithMimeType = 1   ///< A url with identifier and mimetype
+    enum UrlType {
+        UrlShort = 0,         ///< A short url which contains the identifier only (default)
+        UrlWithMimeType = 1   ///< A url with identifier and mimetype
     };
 
     /**
      * Returns the url of the item.
      */
-    KUrl url( UrlType type = UrlShort ) const;
+    KUrl url(UrlType type = UrlShort) const;
 
     /**
      * Returns the parts available for this item.
@@ -426,7 +425,7 @@ class AKONADI_EXPORT Item : public Entity
      * @param other the item to get values from
      * @since 4.4
      */
-    void apply( const Item &other );
+    void apply(const Item &other);
 
     /**
      * Registers \a T as a legacy type for mime type \a mimeType.
@@ -437,276 +436,282 @@ class AKONADI_EXPORT Item : public Entity
      * @param mimeType the mimeType to register
      * @since 4.6
      */
-    template <typename T> static void addToLegacyMapping( const QString & mimeType );
+    template <typename T> static void addToLegacyMapping(const QString &mimeType);
     void setCachedPayloadParts(const QSet<QByteArray> &cachedParts);
 
-  private:
+private:
     //@cond PRIVATE
     friend class ItemCreateJob;
     friend class ItemModifyJob;
     friend class ItemModifyJobPrivate;
     friend class ItemSync;
     friend class ProtocolHelper;
-    PayloadBase* payloadBase() const;
-    void setPayloadBase( PayloadBase* );
-    PayloadBase* payloadBaseV2( int sharedPointerId, int metaTypeId ) const;
+    PayloadBase *payloadBase() const;
+    void setPayloadBase(PayloadBase *p);
+    PayloadBase *payloadBaseV2(int sharedPointerId, int metaTypeId) const;
     //std::auto_ptr<PayloadBase> takePayloadBase( int sharedPointerId, int metaTypeId );
-    void setPayloadBaseV2( int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p );
-    void addPayloadBaseVariant( int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p ) const;
-    static void addToLegacyMappingImpl( const QString & mimeType, int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p );
+    void setPayloadBaseV2(int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p);
+    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p) const;
+    static void addToLegacyMappingImpl(const QString &mimeType, int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p);
 
     /**
      * Try to ensure that we have a variant of the payload for metatype id @a mtid.
      * @return @c true if a type exists or could be created through conversion, @c false otherwise.
      */
-    bool ensureMetaTypeId( int mtid ) const;
+    bool ensureMetaTypeId(int mtid) const;
 
     template <typename T>
-    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,void>::type
-    setPayloadImpl( const T &, const int * /*disambiguate*/ = 0 );
+    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, void>::type
+    setPayloadImpl(const T &p, const int * /*disambiguate*/ = 0);
     template <typename T>
-    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,void>::type
-    setPayloadImpl( const T & );
+    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, void>::type
+    setPayloadImpl(const T &p);
 
     template <typename T>
-    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
-    payloadImpl( const int * /*disambiguate*/ = 0 ) const;
+    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
+    payloadImpl(const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
+    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
     payloadImpl() const;
 
     template <typename T>
-    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
-    hasPayloadImpl( const int * /*disambiguate*/ = 0 ) const;
+    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+    hasPayloadImpl(const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
+    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
     hasPayloadImpl() const;
 
     template <typename T>
-    typename boost::enable_if<Internal::is_shared_pointer<T>,bool>::type
-    tryToClone( T *, const int * /*disambiguate*/ = 0 ) const;
+    typename boost::enable_if<Internal::is_shared_pointer<T>, bool>::type
+    tryToClone(T *ret, const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename boost::disable_if<Internal::is_shared_pointer<T>,bool>::type
-    tryToClone( T * ) const;
+    typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
+    tryToClone(T *) const;
 
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
      * @param collectionId the unique identifier of the collection where this item is stored in.
      * @since 4.3
      */
-    void setStorageCollectionId( Entity::Id collectionId);
+    void setStorageCollectionId(Entity::Id collectionId);
 
 #if 0
     /**
      * Helper function for non-template throwing of PayloadException.
      */
-    QString payloadExceptionText( int spid, int mtid ) const;
+    QString payloadExceptionText(int spid, int mtid) const;
 
     /**
      * Non-template throwing of PayloadException.
      * Needs to be inline, otherwise catch (Akonadi::PayloadException)
      * won't work (only catch (Akonadi::Exception))
      */
-    inline void throwPayloadException( int spid, int mtid ) const {
-        throw PayloadException( payloadExceptionText( spid, mtid ) );
+    inline void throwPayloadException(int spid, int mtid) const {
+        throw PayloadException(payloadExceptionText(spid, mtid));
     }
 #else
-    void throwPayloadException( int spid, int mtid ) const;
+    void throwPayloadException(int spid, int mtid) const;
 #endif
     //@endcond
 
-    AKONADI_DECLARE_PRIVATE( Item )
+    AKONADI_DECLARE_PRIVATE(Item)
 };
 
 template <typename T>
 T Item::payload() const
 {
-  BOOST_STATIC_ASSERT( !boost::is_pointer<T>::value );
+    BOOST_STATIC_ASSERT(!boost::is_pointer<T>::value);
 
-  if ( !hasPayload() )
-    throwPayloadException( -1, -1 );
+    if (!hasPayload()) {
+        throwPayloadException(-1, -1);
+    }
 
-  return payloadImpl<T>();
+    return payloadImpl<T>();
 }
 
 template <typename T>
-typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
-Item::payloadImpl( const int * ) const
+typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
+Item::payloadImpl(const int *) const
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
 
-  typedef typename Internal::get_hierarchy_root<T>::type Root_T;
-  typedef Internal::PayloadTrait<Root_T> RootType;
-  BOOST_STATIC_ASSERT(( !RootType::isPolymorphic )); // prevent endless recursion
+    typedef typename Internal::get_hierarchy_root<T>::type Root_T;
+    typedef Internal::PayloadTrait<Root_T> RootType;
+    BOOST_STATIC_ASSERT((!RootType::isPolymorphic));   // prevent endless recursion
 
-  return PayloadType::castFrom( payloadImpl<Root_T>() );
+    return PayloadType::castFrom(payloadImpl<Root_T>());
 }
 
 template <typename T>
-typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
+typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
 Item::payloadImpl() const
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
 
-  const int metaTypeId = PayloadType::elementMetaTypeId();
+    const int metaTypeId = PayloadType::elementMetaTypeId();
 
-  // make sure that we have a payload format represented by 'metaTypeId':
-  if ( !ensureMetaTypeId( metaTypeId ) )
-      throwPayloadException( PayloadType::sharedPointerId, metaTypeId );
+    // make sure that we have a payload format represented by 'metaTypeId':
+    if (!ensureMetaTypeId(metaTypeId)) {
+        throwPayloadException(PayloadType::sharedPointerId, metaTypeId);
+    }
 
-  // Check whether we have the exact payload
-  // (metatype id and shared pointer type match)
-  if ( const Payload<T> * const p = Internal::payload_cast<T>( payloadBaseV2( PayloadType::sharedPointerId, metaTypeId ) ) )
-      return p->payload;
+    // Check whether we have the exact payload
+    // (metatype id and shared pointer type match)
+    if (const Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+        return p->payload;
+    }
 
-  T ret;
-  if ( !tryToClone<T>( &ret ) )
-      throwPayloadException( PayloadType::sharedPointerId, metaTypeId );
-  return ret;
+    T ret;
+    if (!tryToClone<T>(&ret)) {
+        throwPayloadException(PayloadType::sharedPointerId, metaTypeId);
+    }
+    return ret;
 }
 
 template <typename T>
-typename boost::enable_if<Internal::is_shared_pointer<T>,bool>::type
-Item::tryToClone( T * ret, const int * ) const
+typename boost::enable_if<Internal::is_shared_pointer<T>, bool>::type
+Item::tryToClone(T *ret, const int *) const
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
 
-  const int metaTypeId = PayloadType::elementMetaTypeId();
+    const int metaTypeId = PayloadType::elementMetaTypeId();
 
-  // Check whether we have the same payload in 'the other
-  // shared pointer' (### make it recurse, trying to find one, but
-  // don't introduce infinite recursion):
-  typedef typename Internal::shared_pointer_traits<T>::next_shared_ptr NewT;
-  typedef Internal::PayloadTrait<NewT> NewPayloadType;
+    // Check whether we have the same payload in 'the other
+    // shared pointer' (### make it recurse, trying to find one, but
+    // don't introduce infinite recursion):
+    typedef typename Internal::shared_pointer_traits<T>::next_shared_ptr NewT;
+    typedef Internal::PayloadTrait<NewT> NewPayloadType;
 
-  if ( const Payload<NewT> * const p = Internal::payload_cast<NewT>( payloadBaseV2( NewPayloadType::sharedPointerId, metaTypeId ) ) ) {
-      // If found, attempt to make a clone (required the payload to provide virtual T * T::clone() const)
-      const T nt = PayloadType::clone( p->payload );
-      if ( !PayloadType::isNull( nt ) ) {
-          // if clone succeeded, add the clone to the Item:
-          std::auto_ptr<PayloadBase> npb( new Payload<T>( nt ) );
-          addPayloadBaseVariant( PayloadType::sharedPointerId, metaTypeId, npb  );
-          // and return it
-          if ( ret ) {
-            *ret = nt;
-          }
-          return true;
-      }
-  }
+    if (const Payload<NewT> *const p = Internal::payload_cast<NewT>(payloadBaseV2(NewPayloadType::sharedPointerId, metaTypeId))) {
+        // If found, attempt to make a clone (required the payload to provide virtual T * T::clone() const)
+        const T nt = PayloadType::clone(p->payload);
+        if (!PayloadType::isNull(nt)) {
+            // if clone succeeded, add the clone to the Item:
+            std::auto_ptr<PayloadBase> npb(new Payload<T>(nt));
+            addPayloadBaseVariant(PayloadType::sharedPointerId, metaTypeId, npb);
+            // and return it
+            if (ret) {
+                *ret = nt;
+            }
+            return true;
+        }
+    }
 
-  return false;
+    return false;
 }
 
 template <typename T>
 typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
-Item::tryToClone( T * ) const
+Item::tryToClone(T *) const
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
 
-  return false;
+    return false;
 }
 
 template <typename T>
 bool Item::hasPayload() const
 {
-  BOOST_STATIC_ASSERT( !boost::is_pointer<T>::value );
-  return hasPayload() && hasPayloadImpl<T>();
+    BOOST_STATIC_ASSERT(!boost::is_pointer<T>::value);
+    return hasPayload() && hasPayloadImpl<T>();
 }
 
 template <typename T>
-typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
-Item::hasPayloadImpl( const int * ) const
+typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+Item::hasPayloadImpl(const int *) const
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
 
-  typedef typename Internal::get_hierarchy_root<T>::type Root_T;
-  typedef Internal::PayloadTrait<Root_T> RootType;
-  BOOST_STATIC_ASSERT(( !RootType::isPolymorphic )); // prevent endless recursion
+    typedef typename Internal::get_hierarchy_root<T>::type Root_T;
+    typedef Internal::PayloadTrait<Root_T> RootType;
+    BOOST_STATIC_ASSERT((!RootType::isPolymorphic));   // prevent endless recursion
 
-  try {
-      return hasPayloadImpl<Root_T>()
-          && PayloadType::canCastFrom( payload<Root_T>() );
-  } catch ( const Akonadi::PayloadException & ) {
-      return false;
-  }
+    try {
+        return hasPayloadImpl<Root_T>()
+               && PayloadType::canCastFrom(payload<Root_T>());
+    } catch (const Akonadi::PayloadException &) {
+        return false;
+    }
 }
 
 template <typename T>
-typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
+typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
 Item::hasPayloadImpl() const
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
 
-  const int metaTypeId = PayloadType::elementMetaTypeId();
+    const int metaTypeId = PayloadType::elementMetaTypeId();
 
-  // make sure that we have a payload format represented by 'metaTypeId':
-  if ( !ensureMetaTypeId( metaTypeId ) )
-      return false;
+    // make sure that we have a payload format represented by 'metaTypeId':
+    if (!ensureMetaTypeId(metaTypeId)) {
+        return false;
+    }
 
-  // Check whether we have the exact payload
-  // (metatype id and shared pointer type match)
-  if ( const Payload<T> * const p = Internal::payload_cast<T>( payloadBaseV2( PayloadType::sharedPointerId, metaTypeId ) ) )
-      return true;
+    // Check whether we have the exact payload
+    // (metatype id and shared pointer type match)
+    if (const Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+        return true;
+    }
 
-  return tryToClone<T>( 0 );
+    return tryToClone<T>(0);
 }
 
 template <typename T>
-void Item::setPayload( const T &p )
+void Item::setPayload(const T &p)
 {
-  BOOST_STATIC_ASSERT(( !boost::is_pointer<T>::value ));
-  setPayloadImpl( p );
+    BOOST_STATIC_ASSERT((!boost::is_pointer<T>::value));
+    setPayloadImpl(p);
 }
 
 template <typename T>
 typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
-Item::setPayloadImpl( const T & p, const int * )
+Item::setPayloadImpl(const T &p, const int *)
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
 
-  typedef typename Internal::get_hierarchy_root<T>::type Root_T;
-  typedef Internal::PayloadTrait<Root_T> RootType;
-  BOOST_STATIC_ASSERT(( !RootType::isPolymorphic )); // prevent endless recursion
+    typedef typename Internal::get_hierarchy_root<T>::type Root_T;
+    typedef Internal::PayloadTrait<Root_T> RootType;
+    BOOST_STATIC_ASSERT((!RootType::isPolymorphic));   // prevent endless recursion
 
-  setPayloadImpl<Root_T>( p );
+    setPayloadImpl<Root_T>(p);
 }
 
 template <typename T>
 typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
-Item::setPayloadImpl( const T & p )
+Item::setPayloadImpl(const T &p)
 {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  std::auto_ptr<PayloadBase> pb( new Payload<T>( p ) );
-  setPayloadBaseV2( PayloadType::sharedPointerId,
-                    PayloadType::elementMetaTypeId(),
-                    pb );
+    typedef Internal::PayloadTrait<T> PayloadType;
+    std::auto_ptr<PayloadBase> pb(new Payload<T>(p));
+    setPayloadBaseV2(PayloadType::sharedPointerId,
+                     PayloadType::elementMetaTypeId(),
+                     pb);
 }
 
 template <typename T>
-void Item::setPayload( T* p )
+void Item::setPayload(T *p)
 {
-  p->You_MUST_NOT_use_a_pointer_as_payload;
+    p->You_MUST_NOT_use_a_pointer_as_payload;
 }
 
 template <typename T>
-void Item::setPayload( std::auto_ptr<T> p )
+void Item::setPayload(std::auto_ptr<T> p)
 {
-  p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
+    p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
 }
 
 template <typename T>
-void Item::addToLegacyMapping( const QString & mimeType ) {
-  typedef Internal::PayloadTrait<T> PayloadType;
-  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
-  std::auto_ptr<PayloadBase> p( new Payload<T> );
-  addToLegacyMappingImpl( mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p );
+void Item::addToLegacyMapping(const QString &mimeType) {
+    typedef Internal::PayloadTrait<T> PayloadType;
+    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
+    std::auto_ptr<PayloadBase> p(new Payload<T>);
+    addToLegacyMappingImpl(mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p);
 }
 
 }

@@ -30,43 +30,45 @@ ItemSerializerPlugin::~ItemSerializerPlugin()
 {
 }
 
-QSet<QByteArray> ItemSerializerPlugin::parts( const Item & item ) const
+QSet<QByteArray> ItemSerializerPlugin::parts(const Item &item) const
 {
-  QSet<QByteArray> set;
-  if ( item.hasPayload() )
-    set.insert( Item::FullPayload );
+    QSet<QByteArray> set;
+    if (item.hasPayload()) {
+        set.insert(Item::FullPayload);
+    }
 
-  return set;
+    return set;
 }
 
-void ItemSerializerPlugin::overridePluginLookup( QObject *p )
+void ItemSerializerPlugin::overridePluginLookup(QObject *p)
 {
-  ItemSerializer::overridePluginLookup( p );
+    ItemSerializer::overridePluginLookup(p);
 }
 
 ItemSerializerPluginV2::~ItemSerializerPluginV2()
 {
 }
 
-QSet<QByteArray> ItemSerializerPluginV2::availableParts( const Item & item ) const
+QSet<QByteArray> ItemSerializerPluginV2::availableParts(const Item &item) const
 {
-  if ( item.hasPayload() )
-    return QSet<QByteArray>();
+    if (item.hasPayload()) {
+        return QSet<QByteArray>();
+    }
 
-  return QSet<QByteArray>() << Item::FullPayload;
+    return QSet<QByteArray>() << Item::FullPayload;
 }
 
-void ItemSerializerPluginV2::apply( Item &item, const Item &other )
+void ItemSerializerPluginV2::apply(Item &item, const Item &other)
 {
-  QBuffer buffer;
-  QByteArray data( other.payloadData() );
-  buffer.setBuffer( &data );
-  buffer.open( QIODevice::ReadOnly );
+    QBuffer buffer;
+    QByteArray data(other.payloadData());
+    buffer.setBuffer(&data);
+    buffer.open(QIODevice::ReadOnly);
 
-  foreach ( const QByteArray &part, other.loadedPayloadParts() ) {
-    buffer.seek( 0 );
-    deserialize( item, part, buffer, 0 );
-  }
+    foreach (const QByteArray &part, other.loadedPayloadParts()) {
+        buffer.seek(0);
+        deserialize(item, part, buffer, 0);
+    }
 
-  buffer.close();
+    buffer.close();
 }

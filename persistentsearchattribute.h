@@ -42,7 +42,7 @@ class Collection;
  * const QString query = "...";
  *
  * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * MyClass::jobFinished( KJob *job )
  * {
@@ -60,7 +60,7 @@ class Collection;
  *     attribute->setQueryString( "... another query string ..." );
  *
  *     Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob( searchCollection );
- *     connect( modifyJob, SIGNAL( result( KJob* ) ), SLOT( modifyFinished( KJob* ) ) );
+ *     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
  *   }
  *   ...
  * }
@@ -72,7 +72,7 @@ class Collection;
  */
 class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * Creates a new persistent search attribute.
      */
@@ -97,7 +97,7 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      *
      * @deprecated Deprecated as of 4.13. This method has no effect.
      */
-    AKONADI_DEPRECATED void setQueryLanguage( const QString &language );
+    AKONADI_DEPRECATED void setQueryLanguage(const QString &language);
 
     /**
      * Returns the query string used for this search.
@@ -108,7 +108,7 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      * Sets the query string to be used for this search.
      * @param query The query string.
      */
-    void setQueryString( const QString &query );
+    void setQueryString(const QString &query);
 
     /**
      * Returns IDs of collections that will be queried
@@ -121,14 +121,14 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      * @param collections List of collections to be queries
      * @since 4.13
      */
-    void setQueryCollections( const QList<Collection> &collections );
+    void setQueryCollections(const QList<Collection> &collections);
 
     /**
      * Sets IDs of collections to be queries
      * @param collectionsIDs IDs of collections to query
      * @since 4.13
      */
-    void setQueryCollections( const QList<qint64> &collectionsIds );
+    void setQueryCollections(const QList<qint64> &collectionsIds);
 
     /**
      * Sets whether resources should be queried too.
@@ -148,7 +148,7 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      * @param enabled Whether remote search is enabled
      * @since 4.13
      */
-    void setRemoteSearchEnabled( bool enabled );
+    void setRemoteSearchEnabled(bool enabled);
 
     /**
      * Returns whether remote search is enabled.
@@ -166,7 +166,7 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      * @param recursive Whether to search recursively
      * @since 4.13
      */
-    void setRecursive( bool recursive );
+    void setRecursive(bool recursive);
 
     /**
      * Returns whether the search is recursive
@@ -175,18 +175,17 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      */
     bool isRecursive() const;
 
-
     //@cond PRIVATE
     virtual QByteArray type() const;
     virtual Attribute *clone() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
     //@endcond
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

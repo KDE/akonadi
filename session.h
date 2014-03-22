@@ -50,7 +50,7 @@ class SessionPrivate;
  *                                                   CollectionFetchJob::Recursive,
  *                                                   session );
  *
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
  *
  * @endcode
  *
@@ -58,13 +58,13 @@ class SessionPrivate;
  */
 class AKONADI_EXPORT Session : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class Job;
-  friend class JobPrivate;
-  friend class SessionPrivate;
+    friend class Job;
+    friend class JobPrivate;
+    friend class SessionPrivate;
 
-  public:
+public:
     /**
      * Creates a new session.
      *
@@ -74,7 +74,7 @@ class AKONADI_EXPORT Session : public QObject
      *
      * @see defaultSession()
      */
-    explicit Session( const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
+    explicit Session(const QByteArray &sessionId = QByteArray(), QObject *parent = 0);
 
     /**
      * Destroys the session.
@@ -89,14 +89,14 @@ class AKONADI_EXPORT Session : public QObject
     /**
      * Returns the default session for this thread.
      */
-    static Session* defaultSession();
+    static Session *defaultSession();
 
     /**
      * Stops all jobs queued for execution.
      */
     void clear();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the session has been reconnected
      * to the server (e.g. after a server crash).
@@ -105,7 +105,7 @@ class AKONADI_EXPORT Session : public QObject
      */
     void reconnected();
 
-  protected:
+protected:
     /**
      * Creates a new session with shared private object.
      *
@@ -116,23 +116,23 @@ class AKONADI_EXPORT Session : public QObject
      *
      * @note This constructor is needed for unit testing only.
      */
-    explicit Session( SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
+    explicit Session(SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = 0);
 
-  private:
+private:
     //@cond PRIVATE
-    SessionPrivate* const d;
+    SessionPrivate *const d;
     friend class ::FakeSession;
 
-    Q_PRIVATE_SLOT( d, void reconnect() )
-    Q_PRIVATE_SLOT( d, void socketError( QLocalSocket::LocalSocketError ) )
-    Q_PRIVATE_SLOT( d, void socketError( QAbstractSocket::SocketError ) )
-    Q_PRIVATE_SLOT( d, void socketDisconnected() )
-    Q_PRIVATE_SLOT( d, void dataReceived() )
-    Q_PRIVATE_SLOT( d, void doStartNext() )
-    Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void jobWriteFinished( Akonadi::Job* ) )
-    Q_PRIVATE_SLOT( d, void jobDestroyed( QObject* ) )
-    Q_PRIVATE_SLOT( d, void serverStateChanged( Akonadi::ServerManager::State ) )
+    Q_PRIVATE_SLOT(d, void reconnect())
+    Q_PRIVATE_SLOT(d, void socketError(QLocalSocket::LocalSocketError))
+    Q_PRIVATE_SLOT(d, void socketError(QAbstractSocket::SocketError))
+    Q_PRIVATE_SLOT(d, void socketDisconnected())
+    Q_PRIVATE_SLOT(d, void dataReceived())
+    Q_PRIVATE_SLOT(d, void doStartNext())
+    Q_PRIVATE_SLOT(d, void jobDone(KJob *))
+    Q_PRIVATE_SLOT(d, void jobWriteFinished(Akonadi::Job *))
+    Q_PRIVATE_SLOT(d, void jobDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d, void serverStateChanged(Akonadi::ServerManager::State))
     //@endcond PRIVATE
 };
 

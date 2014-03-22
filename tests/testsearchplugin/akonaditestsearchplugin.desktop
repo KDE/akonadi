@@ -1,11 +1,13 @@
 [Desktop Entry]
 Type=AkonadiSearchPlugin
 Name=Akonadi Test Search Plugin
+Name[ca]=Connector de cerca de prova per a l'Akonadi
 Name[cs]=Modul pro testování hledání v Akonadi
 Name[da]=Testsøge-plugin til Akonadi
 Name[de]=Akonadi-Testsuchmodul
 Name[es]=Complemento de prueba de búsqueda de Akonadi
 Name[fi]=Akonadin hakuliitännäinen testaustarkoituksiin
+Name[fr]=Module externe de test pour les recherches Akonadi
 Name[hu]=Akonadi teszt keresés bővítmény
 Name[ko]=Akonadi 테스트 검색 플러그인
 Name[nds]=Akonadi-Testsöökmoduul

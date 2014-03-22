@@ -60,15 +60,15 @@ class EntityMimeTypeFilterModelPrivate;
  */
 class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new entity mime type filter model.
      *
      * @param parent The parent object.
      */
-    explicit EntityMimeTypeFilterModel( QObject *parent = 0 );
+    explicit EntityMimeTypeFilterModel(QObject *parent = 0);
 
     /**
      * Destroys the entity mime type filter model.
@@ -80,28 +80,28 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
      *
      * @param mimeTypes A list of mime types to be included.
      */
-    void addMimeTypeInclusionFilters( const QStringList &mimeTypes );
+    void addMimeTypeInclusionFilters(const QStringList &mimeTypes);
 
     /**
      * Add mimetypes to filter out
      *
      * @param mimeTypes A list to exclude from the model.
      */
-    void addMimeTypeExclusionFilters( const QStringList &mimeTypes );
+    void addMimeTypeExclusionFilters(const QStringList &mimeTypes);
 
     /**
      * Add mime type to be shown by the filter.
      *
      * @param mimeType A mime type to be shown.
      */
-    void addMimeTypeInclusionFilter( const QString &mimeType );
+    void addMimeTypeInclusionFilter(const QString &mimeType);
 
     /**
      * Add mime type to be excluded by the filter.
      *
      * @param mimeType A mime type to be excluded.
      */
-    void addMimeTypeExclusionFilter( const QString &mimeType );
+    void addMimeTypeExclusionFilter(const QString &mimeType);
 
     /**
      * Returns the list of mime type inclusion filters.
@@ -123,26 +123,26 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
      * @param headerGroup the header to set.
      * \sa EntityTreeModel::HeaderGroup
      */
-    void setHeaderGroup( EntityTreeModel::HeaderGroup headerGroup );
+    void setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup);
 
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const;
+    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
 
     virtual bool canFetchMore(const QModelIndex &parent) const;
 
-    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
 
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-  protected:
-    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
-    virtual bool filterAcceptsColumn(int sourceColumn, const QModelIndex& sourceParent) const;
+protected:
+    virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+    virtual bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const;
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( EntityMimeTypeFilterModel )
-    EntityMimeTypeFilterModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(EntityMimeTypeFilterModel)
+    EntityMimeTypeFilterModelPrivate *const d_ptr;
     //@endcond
 };
 

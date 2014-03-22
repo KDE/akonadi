@@ -27,16 +27,19 @@ using namespace Akonadi;
 
 class Akonadi::LinkJobPrivate : public LinkJobImpl<LinkJob>
 {
-  public:
-    LinkJobPrivate( LinkJob *parent ) : LinkJobImpl<LinkJob>( parent ) {}
+public:
+    LinkJobPrivate(LinkJob *parent)
+        : LinkJobImpl<LinkJob>(parent)
+    {
+    }
 };
 
-LinkJob::LinkJob( const Collection &collection, const Item::List &items, QObject *parent ) :
-    Job( new LinkJobPrivate( this ), parent )
+LinkJob::LinkJob(const Collection &collection, const Item::List &items, QObject *parent)
+    : Job(new LinkJobPrivate(this), parent)
 {
-  Q_D( LinkJob );
-  d->destination = collection;
-  d->objectsToLink = items;
+    Q_D(LinkJob);
+    d->destination = collection;
+    d->objectsToLink = items;
 }
 
 LinkJob::~LinkJob()
@@ -45,7 +48,6 @@ LinkJob::~LinkJob()
 
 void LinkJob::doStart()
 {
-  Q_D( LinkJob );
-  d->sendCommand( "LINK" );
+    Q_D(LinkJob);
+    d->sendCommand("LINK");
 }
-

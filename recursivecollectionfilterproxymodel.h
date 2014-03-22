@@ -38,15 +38,15 @@ class RecursiveCollectionFilterProxyModelPrivate;
  */
 class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new recursive collection filter proxy model.
      *
      * @param parent The parent object.
      */
-    RecursiveCollectionFilterProxyModel( QObject *parent = 0 );
+    RecursiveCollectionFilterProxyModel(QObject *parent = 0);
 
     /**
      * Destroys the recursive collection filter proxy model.
@@ -58,14 +58,14 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
      *
      * @param mimeType A mime type to be shown.
      */
-    void addContentMimeTypeInclusionFilter( const QString &mimeType );
+    void addContentMimeTypeInclusionFilter(const QString &mimeType);
 
     /**
      * Add content mime types to be shown by the filter.
      *
      * @param mimeTypes A list of content mime types to be included.
      */
-    void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+    void addContentMimeTypeInclusionFilters(const QStringList &mimeTypes);
 
     /**
      * Clears the current filters.
@@ -77,7 +77,7 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
      *
      * @param mimeTypes A list of content mime types to be included.
      */
-    void setContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+    void setContentMimeTypeInclusionFilters(const QStringList &mimeTypes);
 
     /**
      * Returns the currently included mimetypes in the filter.
@@ -89,21 +89,21 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
      * @param pattern the search pattern to add
      * @since 4.8.1
      */
-    void setSearchPattern( const QString &pattern );
+    void setSearchPattern(const QString &pattern);
 
     /**
      * Show only checked item
      * @param checked only shows checked item if set as @c true
      * @since 4.9
      */
-    void setIncludeCheckedOnly( bool checked );
+    void setIncludeCheckedOnly(bool checked);
 
-  protected:
-    /* reimp */ bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
-    /* reimp */ int columnCount( const QModelIndex& index ) const;
+protected:
+    /* reimp */ bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
+    /* reimp */ int columnCount(const QModelIndex &index) const;
 
-  protected:
-    RecursiveCollectionFilterProxyModelPrivate * const d_ptr;
+protected:
+    RecursiveCollectionFilterProxyModelPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)
 };
 

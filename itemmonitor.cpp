@@ -27,44 +27,45 @@
 using namespace Akonadi;
 
 ItemMonitor::ItemMonitor()
-  : d( new Private( this ) )
+    : d(new Private(this))
 {
 }
 
 ItemMonitor::~ItemMonitor()
 {
-  delete d;
+    delete d;
 }
 
-void ItemMonitor::setItem( const Item &item )
+void ItemMonitor::setItem(const Item &item)
 {
-  if ( item == d->mItem )
-    return;
+    if (item == d->mItem) {
+        return;
+    }
 
-  d->mMonitor->setItemMonitored( d->mItem, false );
+    d->mMonitor->setItemMonitored(d->mItem, false);
 
-  d->mItem = item;
+    d->mItem = item;
 
-  d->mMonitor->setItemMonitored( d->mItem, true );
+    d->mMonitor->setItemMonitored(d->mItem, true);
 
-  if ( !d->mItem.isValid() ) {
-    itemRemoved();
-    return;
-  }
+    if (!d->mItem.isValid()) {
+        itemRemoved();
+        return;
+    }
 
-  // start initial fetch of the new item
-  ItemFetchJob* job = new ItemFetchJob( d->mItem );
-  job->setFetchScope( fetchScope() );
+    // start initial fetch of the new item
+    ItemFetchJob *job = new ItemFetchJob(d->mItem);
+    job->setFetchScope(fetchScope());
 
-  d->connect( job, SIGNAL(result(KJob*)), d, SLOT(initialFetchDone(KJob*)) );
+    d->connect(job, SIGNAL(result(KJob*)), d, SLOT(initialFetchDone(KJob*)));
 }
 
 Item ItemMonitor::item() const
 {
-  return d->mItem;
+    return d->mItem;
 }
 
-void ItemMonitor::itemChanged( const Item& )
+void ItemMonitor::itemChanged(const Item &)
 {
 }
 
@@ -72,14 +73,14 @@ void ItemMonitor::itemRemoved()
 {
 }
 
-void ItemMonitor::setFetchScope( const ItemFetchScope &fetchScope )
+void ItemMonitor::setFetchScope(const ItemFetchScope &fetchScope)
 {
-  d->mMonitor->setItemFetchScope( fetchScope );
+    d->mMonitor->setItemFetchScope(fetchScope);
 }
 
 ItemFetchScope &ItemMonitor::fetchScope()
 {
-  return d->mMonitor->itemFetchScope();
+    return d->mMonitor->itemFetchScope();
 }
 
 #include "moc_itemmonitor_p.cpp"

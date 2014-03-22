@@ -29,6 +29,7 @@
 #include <solid/networking.h>
 
 class QSettings;
+class QTimer;
 
 namespace Akonadi {
 
@@ -52,6 +53,7 @@ public:
     void slotError(const QString &message);
     void slotNetworkStatusChange(Solid::Networking::Status);
     void slotResumedFromSuspend();
+    void slotTemporaryOfflineTimeout();
 
     virtual void changeProcessed();
 
@@ -108,7 +110,9 @@ public:
 
     AgentBase::Observer *mObserver;
 
-public Q_SLOTS:
+    QTimer *mTemporaryOfflineTimer;
+
+  public Q_SLOTS:
     // Dump the contents of the current ChangeReplay
     Q_SCRIPTABLE QString dumpNotificationListToString() const;
     Q_SCRIPTABLE void dumpMemoryInfo() const;

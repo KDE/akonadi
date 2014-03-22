@@ -125,63 +125,63 @@ class FavoriteCollectionsModel;
  */
 class AKONADI_EXPORT StandardActionManager : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Describes the supported actions.
      */
     enum Type {
-      CreateCollection,          ///< Creates an collection
-      CopyCollections,           ///< Copies the selected collections
-      DeleteCollections,         ///< Deletes the selected collections
-      SynchronizeCollections,    ///< Synchronizes collections
-      CollectionProperties,      ///< Provides collection properties
-      CopyItems,                 ///< Copies the selected items
-      Paste,                     ///< Paste collections or items
-      DeleteItems,               ///< Deletes the selected items
-      ManageLocalSubscriptions,  ///< Manages local subscriptions
-      AddToFavoriteCollections,  ///< Add the collection to the favorite collections model @since 4.4
-      RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model @since 4.4
-      RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model @since 4.4
-      CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection @since 4.4
-      CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection @since 4.4
-      MoveItemToMenu,            ///< Menu allowing to move item into a collection @since 4.4
-      MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection @since 4.4
-      CutItems,                  ///< Cuts the selected items @since 4.4
-      CutCollections,            ///< Cuts the selected collections @since 4.4
-      CreateResource,            ///< Creates a new resource @since 4.6
-      DeleteResources,           ///< Deletes the selected resources @since 4.6
-      ResourceProperties,        ///< Provides the resource properties @since 4.6
-      SynchronizeResources,      ///< Synchronizes the selected resources @since 4.6
-      ToggleWorkOffline,         ///< Toggles the work offline state of all resources @since 4.6
-      CopyCollectionToDialog,    ///< Copy a collection into another collection, select the target in a dialog @since 4.6
-      MoveCollectionToDialog,    ///< Move a collection into another collection, select the target in a dialog @since 4.6
-      CopyItemToDialog,          ///< Copy an item into a collection, select the target in a dialog @since 4.6
-      MoveItemToDialog,          ///< Move an item into a collection, select the target in a dialog @since 4.6
-      SynchronizeCollectionsRecursive,    ///< Synchronizes collections in a recursive way @since 4.6
-      MoveCollectionsToTrash,    ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
-      MoveItemsToTrash,          ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
-      RestoreCollectionsFromTrash,///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
-      RestoreItemsFromTrash,     ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
-      MoveToTrashRestoreCollection,  ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
-      MoveToTrashRestoreCollectionAlternative,   ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
-      MoveToTrashRestoreItem,    ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
-      MoveToTrashRestoreItemAlternative,   ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
-      SynchronizeFavoriteCollections,   ///< Synchronize favorite collections @since 4.8
-      LastType                   ///< Marks last action
+        CreateCollection,                        ///< Creates an collection
+        CopyCollections,                         ///< Copies the selected collections
+        DeleteCollections,                       ///< Deletes the selected collections
+        SynchronizeCollections,                  ///< Synchronizes collections
+        CollectionProperties,                    ///< Provides collection properties
+        CopyItems,                               ///< Copies the selected items
+        Paste,                                   ///< Paste collections or items
+        DeleteItems,                             ///< Deletes the selected items
+        ManageLocalSubscriptions,                ///< Manages local subscriptions
+        AddToFavoriteCollections,                ///< Add the collection to the favorite collections model @since 4.4
+        RemoveFromFavoriteCollections,           ///< Remove the collection from the favorite collections model @since 4.4
+        RenameFavoriteCollection,                ///< Rename the collection of the favorite collections model @since 4.4
+        CopyCollectionToMenu,                    ///< Menu allowing to quickly copy a collection into another collection @since 4.4
+        CopyItemToMenu,                          ///< Menu allowing to quickly copy an item into a collection @since 4.4
+        MoveItemToMenu,                          ///< Menu allowing to move item into a collection @since 4.4
+        MoveCollectionToMenu,                    ///< Menu allowing to move a collection into another collection @since 4.4
+        CutItems,                                ///< Cuts the selected items @since 4.4
+        CutCollections,                          ///< Cuts the selected collections @since 4.4
+        CreateResource,                          ///< Creates a new resource @since 4.6
+        DeleteResources,                         ///< Deletes the selected resources @since 4.6
+        ResourceProperties,                      ///< Provides the resource properties @since 4.6
+        SynchronizeResources,                    ///< Synchronizes the selected resources @since 4.6
+        ToggleWorkOffline,                       ///< Toggles the work offline state of all resources @since 4.6
+        CopyCollectionToDialog,                  ///< Copy a collection into another collection, select the target in a dialog @since 4.6
+        MoveCollectionToDialog,                  ///< Move a collection into another collection, select the target in a dialog @since 4.6
+        CopyItemToDialog,                        ///< Copy an item into a collection, select the target in a dialog @since 4.6
+        MoveItemToDialog,                        ///< Move an item into a collection, select the target in a dialog @since 4.6
+        SynchronizeCollectionsRecursive,         ///< Synchronizes collections in a recursive way @since 4.6
+        MoveCollectionsToTrash,                  ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
+        MoveItemsToTrash,                        ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
+        RestoreCollectionsFromTrash,             ///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
+        RestoreItemsFromTrash,                   ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
+        MoveToTrashRestoreCollection,            ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+        MoveToTrashRestoreCollectionAlternative, ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
+        MoveToTrashRestoreItem,                  ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+        MoveToTrashRestoreItemAlternative,       ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
+        SynchronizeFavoriteCollections,          ///< Synchronize favorite collections @since 4.8
+        LastType                                 ///< Marks last action
     };
 
     /**
      * Describes the text context that can be customized.
      */
     enum TextContext {
-      DialogTitle,                ///< The window title of a dialog
-      DialogText,                 ///< The text of a dialog
-      MessageBoxTitle,            ///< The window title of a message box
-      MessageBoxText,             ///< The text of a message box
-      MessageBoxAlternativeText,  ///< An alternative text of a message box
-      ErrorMessageTitle,          ///< The window title of an error message
-      ErrorMessageText            ///< The text of an error message
+        DialogTitle,                ///< The window title of a dialog
+        DialogText,                 ///< The text of a dialog
+        MessageBoxTitle,            ///< The window title of a message box
+        MessageBoxText,             ///< The text of a message box
+        MessageBoxAlternativeText,  ///< An alternative text of a message box
+        ErrorMessageTitle,          ///< The window title of an error message
+        ErrorMessageText            ///< The text of an error message
     };
 
     /**
@@ -190,7 +190,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param actionCollection The action collection to operate on.
      * @param parent The parent widget.
      */
-    explicit StandardActionManager( KActionCollection *actionCollection, QWidget *parent = 0 );
+    explicit StandardActionManager(KActionCollection *actionCollection, QWidget *parent = 0);
 
     /**
      * Destroys the standard action manager.
@@ -204,7 +204,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      *
      * @param selectionModel model to be set for collection
      */
-    void setCollectionSelectionModel( QItemSelectionModel *selectionModel );
+    void setCollectionSelectionModel(QItemSelectionModel *selectionModel);
 
     /**
      * Sets the item selection model based on which the item related actions
@@ -212,7 +212,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      *
      * @param selectionModel selection model for items
      */
-    void setItemSelectionModel( QItemSelectionModel* selectionModel );
+    void setItemSelectionModel(QItemSelectionModel *selectionModel);
 
     /**
      * Sets the favorite collections model based on which the collection
@@ -222,7 +222,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param favoritesModel model for the user's favorite collections
      * @since 4.4
      */
-    void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
+    void setFavoriteCollectionsModel(FavoriteCollectionsModel *favoritesModel);
 
     /**
      * Sets the favorite collection selection model based on which the favorite
@@ -232,7 +232,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param selectionModel selection model for favorite collections
      * @since 4.4
      */
-    void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
+    void setFavoriteSelectionModel(QItemSelectionModel *selectionModel);
 
     /**
      * Creates the action of the given type and adds it to the action collection
@@ -241,7 +241,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      *
      * @param type action to be created
      */
-    KAction* createAction( Type type );
+    KAction *createAction(Type type);
 
     /**
      * Convenience method to create all standard actions.
@@ -253,7 +253,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Returns the action of the given type, 0 if it has not been created (yet).
      * @param type action type
      */
-    KAction* action( Type type ) const;
+    KAction *action(Type type) const;
 
     /**
      * Sets the label of the action @p type to @p text, which is used during
@@ -268,7 +268,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      *                         ki18np( "Copy Mail", "Copy %1 Mails" ) );
      * @endcode
      */
-    void setActionText( Type type, const KLocalizedString &text );
+    void setActionText(Type type, const KLocalizedString &text);
 
     /**
      * Sets whether the default implementation for the given action @p type
@@ -280,7 +280,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      *
      * @since 4.6
      */
-    void interceptAction( Type type, bool intercept = true );
+    void interceptAction(Type type, bool intercept = true);
 
     /**
      * Returns the list of collections that are currently selected.
@@ -306,7 +306,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param text content to set for the action
      * @since 4.6
      */
-    void setContextText( Type type, TextContext context, const QString &text );
+    void setContextText(Type type, TextContext context, const QString &text);
 
     /**
      * Sets the @p text of the action @p type for the given @p context.
@@ -316,7 +316,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param text content to set for the action
      * @since 4.6
      */
-    void setContextText( Type type, TextContext context, const KLocalizedString &text );
+    void setContextText(Type type, TextContext context, const KLocalizedString &text);
 
     /**
      * Sets the mime type filter that will be used when creating new resources.
@@ -324,7 +324,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param mimeTypes filter for creating new resources
      * @since 4.6
      */
-    void setMimeTypeFilter( const QStringList &mimeTypes );
+    void setMimeTypeFilter(const QStringList &mimeTypes);
 
     /**
      * Sets the capability filter that will be used when creating new resources.
@@ -332,7 +332,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param capabilities filter for creating new resources
      * @since 4.6
      */
-    void setCapabilityFilter( const QStringList &capabilities );
+    void setCapabilityFilter(const QStringList &capabilities);
 
     /**
      * Sets the page @p names of the config pages that will be used by the
@@ -341,7 +341,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @param names list of names which will be used
      * @since 4.6
      */
-    void setCollectionPropertiesPageNames( const QStringList &names );
+    void setCollectionPropertiesPageNames(const QStringList &names);
 
     /**
      * Create a popup menu.
@@ -352,7 +352,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      */
     void createActionFolderMenu(QMenu *menu, Type type);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
      * In case you have special needs for changing the state of some actions,
@@ -360,10 +360,10 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      */
     void actionStateUpdated();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void updateActions() )
 #ifndef QT_NO_CLIPBOARD

@@ -46,7 +46,7 @@ class ResourceSynchronizationJobPrivate;
  * const AgentInstance resource = AgentManager::self()->instance( "myresourceidentifier" );
  *
  * ResourceSynchronizationJob *job = new ResourceSynchronizationJob( resource );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( synchronizationFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(synchronizationFinished(KJob*)) );
  * job->start();
  *
  * @endcode
@@ -58,15 +58,15 @@ class ResourceSynchronizationJobPrivate;
  */
 class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new synchronization job for the given resource.
      *
      * @param instance The resource instance to synchronize.
      */
-    explicit ResourceSynchronizationJob( const AgentInstance &instance, QObject *parent = 0 );
+    explicit ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent = 0);
 
     /**
      * Destroys the synchronization job.
@@ -87,7 +87,7 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
      * @param collectionTreeOnly If set, only the collection tree will be synchronized.
      * @since 4.8
      */
-    void setCollectionTreeOnly( bool collectionTreeOnly );
+    void setCollectionTreeOnly(bool collectionTreeOnly);
 
     /**
      * Returns the resource that has been synchronized.
@@ -97,13 +97,13 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
     /* reimpl */
     void start();
 
-  private:
+private:
     //@cond PRIVATE
-    ResourceSynchronizationJobPrivate* const d;
+    ResourceSynchronizationJobPrivate *const d;
     friend class ResourceSynchronizationJobPrivate;
 
-    Q_PRIVATE_SLOT( d, void slotSynchronized() )
-    Q_PRIVATE_SLOT( d, void slotTimeout() )
+    Q_PRIVATE_SLOT(d, void slotSynchronized())
+    Q_PRIVATE_SLOT(d, void slotTimeout())
     //@endcond
 };
 

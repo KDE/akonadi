@@ -23,14 +23,12 @@
 
 #include <akonadi/private/protocol_p.h>
 
-
-
 namespace Akonadi {
 
-class SearchResultJobPrivate: public Akonadi::JobPrivate
+class SearchResultJobPrivate : public Akonadi::JobPrivate
 {
-  public:
-    SearchResultJobPrivate( SearchResultJob *parent );
+public:
+    SearchResultJobPrivate(SearchResultJob *parent);
 
     QByteArray searchId;
     Collection collection;
@@ -38,84 +36,83 @@ class SearchResultJobPrivate: public Akonadi::JobPrivate
     QVector<QByteArray> rid;
 };
 
-SearchResultJobPrivate::SearchResultJobPrivate( SearchResultJob *parent)
- : JobPrivate( parent )
+SearchResultJobPrivate::SearchResultJobPrivate(SearchResultJob *parent)
+    : JobPrivate(parent)
 {
 }
 
 }
-
 
 using namespace Akonadi;
 
-SearchResultJob::SearchResultJob( const QByteArray &searchId, const Collection &collection, QObject *parent )
- : Job(new SearchResultJobPrivate( this ), parent )
+SearchResultJob::SearchResultJob(const QByteArray &searchId, const Collection &collection, QObject *parent)
+    : Job(new SearchResultJobPrivate(this), parent)
 {
-  Q_D( SearchResultJob );
-  Q_ASSERT( collection.isValid() );
+    Q_D(SearchResultJob);
+    Q_ASSERT(collection.isValid());
 
-  d->searchId = searchId;
-  d->collection = collection;
+    d->searchId = searchId;
+    d->collection = collection;
 }
 
 SearchResultJob::~SearchResultJob()
 {
 }
 
-void SearchResultJob::setSearchId( const QByteArray &searchId )
+void SearchResultJob::setSearchId(const QByteArray &searchId)
 {
-  Q_D( SearchResultJob );
-  d->searchId = searchId;
+    Q_D(SearchResultJob);
+    d->searchId = searchId;
 }
 
 QByteArray SearchResultJob::searchId() const
 {
-  return d_func()->searchId;
+    return d_func()->searchId;
 }
 
-void SearchResultJob::setResult( const ImapSet &set )
+void SearchResultJob::setResult(const ImapSet &set)
 {
-  Q_D( SearchResultJob );
-  d->rid.clear();
-  d->uid = set;
+    Q_D(SearchResultJob);
+    d->rid.clear();
+    d->uid = set;
 }
 
-void SearchResultJob::setResult( const QVector<qint64> &ids )
+void SearchResultJob::setResult(const QVector<qint64> &ids)
 {
-  Q_D( SearchResultJob );
-  d->rid.clear();
-  d->uid = ImapSet();
-  d->uid.add( ids );
+    Q_D(SearchResultJob);
+    d->rid.clear();
+    d->uid = ImapSet();
+    d->uid.add(ids);
 }
 
-void SearchResultJob::setResult( const QVector<QByteArray> &remoteIds )
+void SearchResultJob::setResult(const QVector<QByteArray> &remoteIds)
 {
-  Q_D( SearchResultJob );
-  d->uid = ImapSet();
-  d->rid = remoteIds;
+    Q_D(SearchResultJob);
+    d->uid = ImapSet();
+    d->rid = remoteIds;
 }
 
 void SearchResultJob::doStart()
 {
-  Q_D( SearchResultJob );
+    Q_D(SearchResultJob);
 
-  QByteArray command = d->newTag() + ' ';
+    QByteArray command = d->newTag() + ' ';
 
-  if ( !d->rid.isEmpty() ) {
-    command += AKONADI_CMD_RID;
-  } else {
-    command += AKONADI_CMD_UID;
-  }
+    if (!d->rid.isEmpty()) {
+        command += AKONADI_CMD_RID;
+    } else {
+        command += AKONADI_CMD_UID;
+    }
 
-  command += " SEARCH_RESULT " + d->searchId + " " + QByteArray::number( d->collection.id() ) + " (";
+    command += " SEARCH_RESULT " + d->searchId + " " + QByteArray::number(d->collection.id()) + " (";
 
-  if ( !d->rid.isEmpty() ) {
-    command += ImapParser::join( d->rid.toList(), " " );
-  } else if ( !d->uid.isEmpty() ) {
-    command += d->uid.toImapSequenceSet();
-  }
+    if (!d->rid.isEmpty()) {
+        command += ImapParser::join(d->rid.toList(), " ");
+    } else if (!d->uid.isEmpty()) {
+        command += d->uid.toImapSequenceSet();
+    }
 
-  command += ")";
+    command += ")";
 
-  d->writeData( command );
+    d->writeData(command);
 }

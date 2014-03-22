@@ -31,53 +31,58 @@ using namespace Akonadi;
 
 class RecursiveItemFetchJob::Private
 {
-  public:
-    Private( const Collection &collection, const QStringList &mimeTypes, RecursiveItemFetchJob *parent )
-      : mParent( parent ), mCollection( collection ), mMimeTypes( mimeTypes ), mFetchCount( 0 )
+public:
+    Private(const Collection &collection, const QStringList &mimeTypes, RecursiveItemFetchJob *parent)
+        : mParent(parent)
+        , mCollection(collection)
+        , mMimeTypes(mimeTypes)
+        , mFetchCount(0)
     {
     }
 
-    void collectionFetchResult( KJob *job )
+    void collectionFetchResult(KJob *job)
     {
-      if ( job->error() ) {
-        mParent->emitResult();
-        return;
-      }
-
-      const CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
-
-      Collection::List collections = fetchJob->collections();
-      collections.prepend( mCollection );
-
-      foreach ( const Collection &collection, collections ) {
-        ItemFetchJob *itemFetchJob = new ItemFetchJob( collection, mParent );
-        itemFetchJob->setFetchScope( mFetchScope );
-        mParent->connect( itemFetchJob, SIGNAL(result(KJob*)),
-                          mParent, SLOT(itemFetchResult(KJob*)) );
-
-        mFetchCount++;
-      }
-    }
-
-    void itemFetchResult( KJob *job )
-    {
-      if ( !job->error() ) {
-        const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-
-        if ( !mMimeTypes.isEmpty() ) {
-          foreach ( const Item &item, fetchJob->items() ) {
-            if ( mMimeTypes.contains( item.mimeType() ) )
-              mItems << item;
-          }
-        } else {
-          mItems << fetchJob->items();
+        if (job->error()) {
+            mParent->emitResult();
+            return;
         }
-      }
 
-      mFetchCount--;
+        const CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
 
-      if ( mFetchCount == 0 )
-        mParent->emitResult();
+        Collection::List collections = fetchJob->collections();
+        collections.prepend(mCollection);
+
+        foreach (const Collection &collection, collections) {
+            ItemFetchJob *itemFetchJob = new ItemFetchJob(collection, mParent);
+            itemFetchJob->setFetchScope(mFetchScope);
+            mParent->connect(itemFetchJob, SIGNAL(result(KJob*)),
+                             mParent, SLOT(itemFetchResult(KJob*)));
+
+            mFetchCount++;
+        }
+    }
+
+    void itemFetchResult(KJob *job)
+    {
+        if (!job->error()) {
+            const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+
+            if (!mMimeTypes.isEmpty()) {
+                foreach (const Item &item, fetchJob->items()) {
+                    if (mMimeTypes.contains(item.mimeType())) {
+                        mItems << item;
+                    }
+                }
+            } else {
+                mItems << fetchJob->items();
+            }
+        }
+
+        mFetchCount--;
+
+        if (mFetchCount == 0) {
+            mParent->emitResult();
+        }
     }
 
     RecursiveItemFetchJob *mParent;
@@ -89,41 +94,41 @@ class RecursiveItemFetchJob::Private
     int mFetchCount;
 };
 
-RecursiveItemFetchJob::RecursiveItemFetchJob( const Collection &collection,
-                                              const QStringList &mimeTypes,
-                                              QObject * parent )
-  : KJob( parent ), d( new Private( collection, mimeTypes, this ) )
+RecursiveItemFetchJob::RecursiveItemFetchJob(const Collection &collection, const QStringList &mimeTypes, QObject *parent)
+    : KJob(parent)
+    , d(new Private(collection, mimeTypes, this))
 {
 }
 
 RecursiveItemFetchJob::~RecursiveItemFetchJob()
 {
-  delete d;
+    delete d;
 }
 
-void RecursiveItemFetchJob::setFetchScope( const ItemFetchScope &fetchScope )
+void RecursiveItemFetchJob::setFetchScope(const ItemFetchScope &fetchScope)
 {
-  d->mFetchScope = fetchScope;
+    d->mFetchScope = fetchScope;
 }
 
 ItemFetchScope &RecursiveItemFetchJob::fetchScope()
 {
-  return d->mFetchScope;
+    return d->mFetchScope;
 }
 
 void RecursiveItemFetchJob::start()
 {
-  CollectionFetchJob *job = new CollectionFetchJob( d->mCollection, CollectionFetchJob::Recursive, this );
+    CollectionFetchJob *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Recursive, this);
 
-  if ( !d->mMimeTypes.isEmpty() )
-    job->fetchScope().setContentMimeTypes( d->mMimeTypes );
+    if (!d->mMimeTypes.isEmpty()) {
+        job->fetchScope().setContentMimeTypes(d->mMimeTypes);
+    }
 
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)) );
+    connect(job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)));
 }
 
 Akonadi::Item::List RecursiveItemFetchJob::items() const
 {
-  return d->mItems;
+    return d->mItems;
 }
 
 #include "moc_recursiveitemfetchjob.cpp"

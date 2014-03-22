@@ -34,26 +34,26 @@ namespace Akonadi {
 */
 class AKONADI_EXPORT Exception : public std::exception //krazy:exclude=dpointer
 {
-  public:
+public:
     /**
       Creates a new exception with the error message @p what.
     */
-    Exception( const char *what ) throw();
+    Exception(const char *what) throw();
 
     /**
       Creates a new exception with the error message @p what.
     */
-    Exception( const QByteArray &what ) throw();
+    Exception(const QByteArray &what) throw();
 
     /**
       Creates a new exception with the error message @p what.
     */
-    Exception( const QString &what ) throw();
+    Exception(const QString &what) throw();
 
     /**
       Copy constructor.
     */
-    Exception( const Exception &other ) throw();
+    Exception(const Exception &other) throw();
 
     /**
       Destructor.
@@ -63,16 +63,16 @@ class AKONADI_EXPORT Exception : public std::exception //krazy:exclude=dpointer
     /**
       Returns the error message associated with this exception.
     */
-    const char* what() const throw();
+    const char *what() const throw();
 
     /**
       Returns the type of this exception.
     */
-    virtual QByteArray type() const throw(); // ### Akonadi 2: return const char*
+    virtual QByteArray type() const throw(); // ### Akonadi 2: return const char *
 
-  private:
+private:
     class Private;
-    Private * d;
+    Private *d;
 };
 
 #define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \

@@ -34,14 +34,14 @@ class SubscriptionJobPrivate;
  */
 class AKONADI_EXPORT SubscriptionJob : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new subscription job.
      *
      * @param parent The parent object.
      */
-    explicit SubscriptionJob( QObject *parent = 0 );
+    explicit SubscriptionJob(QObject *parent = 0);
 
     /**
      * Destroys the subscription job.
@@ -53,21 +53,21 @@ class AKONADI_EXPORT SubscriptionJob : public Job
      *
      * @param collections List of collections to subscribe to.
      */
-    void subscribe( const Collection::List &collections );
+    void subscribe(const Collection::List &collections);
 
     /**
      * Unsubscribes from the given list of collections.
      *
      * @param collections List of collections to unsubscribe from.
      */
-    void unsubscribe( const Collection::List &collections );
+    void unsubscribe(const Collection::List &collections);
 
-  protected:
+protected:
     void doStart();
-    void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( SubscriptionJob )
+private:
+    Q_DECLARE_PRIVATE(SubscriptionJob)
 };
 
 }

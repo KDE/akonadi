@@ -26,21 +26,21 @@ namespace Akonadi {
 
 namespace Internal {
 
-  int serverProtocolVersion();
-  void setServerProtocolVersion( int version );
+int serverProtocolVersion();
+void setServerProtocolVersion(int version);
 
-  enum ClientType {
+enum ClientType {
     User,
     Agent,
     Resource
-  };
-  ClientType clientType();
-  void setClientType( ClientType type );
+};
+ClientType clientType();
+void setClientType(ClientType type);
 
-  /** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
-  * @note: Does not need to include the "akonadi/" in @p relPath.
-  */
-  QString xdgSaveDir( const char* resource, const QString &relPath = QString() );
+/** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
+* @note: Does not need to include the "akonadi/" in @p relPath.
+*/
+QString xdgSaveDir(const char *resource, const QString &relPath = QString());
 
 }
 

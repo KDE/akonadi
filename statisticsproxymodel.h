@@ -50,15 +50,15 @@ namespace Akonadi {
  */
 class AKONADI_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new statistics proxy model.
      *
      * @param parent The parent object.
      */
-    explicit StatisticsProxyModel( QObject *parent = 0 );
+    explicit StatisticsProxyModel(QObject *parent = 0);
 
     /**
      * Destroys the statistics proxy model.
@@ -68,7 +68,7 @@ class AKONADI_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyMo
     /**
      * @param enable Display tooltips
      */
-    void setToolTipEnabled( bool enable);
+    void setToolTipEnabled(bool enable);
 
     /**
      * Return true if we display tooltips, otherwise false
@@ -78,33 +78,33 @@ class AKONADI_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyMo
     /**
      * @param enable Display extra statistics columns
      */
-    void setExtraColumnsEnabled( bool enable);
+    void setExtraColumnsEnabled(bool enable);
 
     /**
      * Return true if we display extra statistics columns, otherwise false
      */
     bool isExtraColumnsEnabled() const;
 
-    virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-    virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
 
-    virtual void setSourceModel(QAbstractItemModel* sourceModel);
-    virtual void connectNotify(const char* signal);
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
+    virtual void connectNotify(const char *signal);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void proxyDataChanged( QModelIndex, QModelIndex ) )
-    Q_PRIVATE_SLOT( d, void sourceLayoutAboutToBeChanged() )
-    Q_PRIVATE_SLOT( d, void sourceLayoutChanged() )
+    Q_PRIVATE_SLOT(d, void proxyDataChanged(QModelIndex, QModelIndex))
+    Q_PRIVATE_SLOT(d, void sourceLayoutAboutToBeChanged())
+    Q_PRIVATE_SLOT(d, void sourceLayoutChanged())
     //@endcond
 };
 

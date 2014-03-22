@@ -32,35 +32,38 @@ namespace Akonadi {
  */
 class MimeTypeCheckerPrivate : public QSharedData
 {
-  public:
+public:
     MimeTypeCheckerPrivate()
     {
     }
 
-    MimeTypeCheckerPrivate( const MimeTypeCheckerPrivate &other )
-      : QSharedData( other )
+    MimeTypeCheckerPrivate(const MimeTypeCheckerPrivate &other)
+        : QSharedData(other)
     {
-      mWantedMimeTypes = other.mWantedMimeTypes;
+        mWantedMimeTypes = other.mWantedMimeTypes;
     }
 
-    bool isWantedMimeType( const QString &mimeType ) const
+    bool isWantedMimeType(const QString &mimeType) const
     {
-      if ( mWantedMimeTypes.contains( mimeType ) )
-        return true;
+        if (mWantedMimeTypes.contains(mimeType)) {
+            return true;
+        }
 
-      KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
-      if ( mimeTypePtr.isNull() )
+        KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
+        if (mimeTypePtr.isNull()) {
+            return false;
+        }
+
+        foreach (const QString &wantedMimeType, mWantedMimeTypes) {
+            if (mimeTypePtr->is(wantedMimeType)) {
+                return true;
+            }
+        }
+
         return false;
-
-      foreach ( const QString &wantedMimeType, mWantedMimeTypes ) {
-        if ( mimeTypePtr->is( wantedMimeType ) )
-          return true;
-      }
-
-      return false;
     }
 
-  public:
+public:
     QSet<QString> mWantedMimeTypes;
 };
 

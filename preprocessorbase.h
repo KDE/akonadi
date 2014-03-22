@@ -54,45 +54,44 @@ class PreprocessorBasePrivate;
  */
 class AKONADI_EXPORT PreprocessorBase : public AgentBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the possible return values of the processItem() method.
      */
-    enum ProcessingResult
-    {
-      /**
-       * Processing completed successfully for this item.
-       * The Akonadi server will push in a new item when it's available.
-       */
-      ProcessingCompleted,
+    enum ProcessingResult {
+        /**
+         * Processing completed successfully for this item.
+         * The Akonadi server will push in a new item when it's available.
+         */
+        ProcessingCompleted,
 
-      /**
-       * Processing was delayed to a later stage.
-       * This must be returned when implementing asynchronous preprocessing.
-       *
-       * If this value is returned, finishProcessing() has to be called
-       * when processing is done.
-       */
-      ProcessingDelayed,
+        /**
+         * Processing was delayed to a later stage.
+         * This must be returned when implementing asynchronous preprocessing.
+         *
+         * If this value is returned, finishProcessing() has to be called
+         * when processing is done.
+         */
+        ProcessingDelayed,
 
-      /**
-       * Processing for this item failed (and the failure is unrecoverable).
-       * The Akonadi server will push in a new item when it's available,
-       * after possibly logging the failure.
-       */
-      ProcessingFailed,
+        /**
+         * Processing for this item failed (and the failure is unrecoverable).
+         * The Akonadi server will push in a new item when it's available,
+         * after possibly logging the failure.
+         */
+        ProcessingFailed,
 
-      /**
-       * Processing for this item was refused. This is very
-       * similar to ProcessingFailed above but additionally remarks
-       * that the item that the Akonadi server pushed in wasn't
-       * meant for this Preprocessor.
-       * The Akonadi server will push in a new item when it's available,
-       * after possibly logging the failure and maybe taking some additional action.
-       */
-      ProcessingRefused
+        /**
+         * Processing for this item was refused. This is very
+         * similar to ProcessingFailed above but additionally remarks
+         * that the item that the Akonadi server pushed in wasn't
+         * meant for this Preprocessor.
+         * The Akonadi server will push in a new item when it's available,
+         * after possibly logging the failure and maybe taking some additional action.
+         */
+        ProcessingRefused
     };
 
     /**
@@ -113,7 +112,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * appropriately (as the server MAY abort your async job
      * if it decides that it's taking too long).
      */
-    virtual ProcessingResult processItem( const Item &item ) = 0;
+    virtual ProcessingResult processItem(const Item &item) = 0;
 
     /**
      * This method must be called if processing is implemented asynchronously.
@@ -126,7 +125,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * PocessingRefused and ProcessingFailed. Passing any
      * other value will lead to a runtime assertion.
      */
-    void finishProcessing( ProcessingResult result );
+    void finishProcessing(ProcessingResult result);
 
     /**
      * Sets the item fetch scope.
@@ -139,7 +138,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      *
      * @see fetchScope()
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -155,22 +154,22 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      */
     ItemFetchScope &fetchScope();
 
-  protected:
+protected:
     /**
      * Creates a new preprocessor base agent.
      *
      * @param id The instance id of the preprocessor base agent.
      */
-    PreprocessorBase( const QString &id );
+    PreprocessorBase(const QString &id);
 
     /**
      * Destroys the preprocessor base agent.
      */
     virtual ~PreprocessorBase();
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( PreprocessorBase )
+    Q_DECLARE_PRIVATE(PreprocessorBase)
     //@endcond
 
 }; // class PreprocessorBase

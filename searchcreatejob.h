@@ -41,7 +41,7 @@ class SearchCreateJobPrivate;
  * const QString query = "...";
  *
  * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * MyClass::jobFinished( KJob *job )
  * {
@@ -61,9 +61,9 @@ class SearchCreateJobPrivate;
  */
 class AKONADI_EXPORT SearchCreateJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a search create job.
      *
@@ -72,7 +72,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param parent The parent object.
      * @deprecated Deprecated as of 4.13, use Akonadi::SearchQuery instead
      */
-    AKONADI_DEPRECATED SearchCreateJob( const QString &name, const QString &query, QObject *parent = 0 );
+    AKONADI_DEPRECATED SearchCreateJob(const QString &name, const QString &query, QObject *parent = 0);
 
     /**
      * Creates a search create job
@@ -82,7 +82,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param parent The parent object.
      * @since 4.13
      */
-    SearchCreateJob( const QString &name, const SearchQuery &searchQuery, QObject *parent = 0 );
+    SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent = 0);
 
     /**
      * Sets the query language.
@@ -91,7 +91,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @deprecated This method is deprecated as of 4.13 and has no effect.
      *
      */
-    AKONADI_DEPRECATED void setQueryLanguage( const QString &queryLanguage );
+    AKONADI_DEPRECATED void setQueryLanguage(const QString &queryLanguage);
 
     /**
      * Sets list of mime types of items that search results can contain
@@ -99,7 +99,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param mimeTypes Mime types of items to include in search
      * @since 4.13
      */
-    void setSearchMimeTypes( const QStringList &mimeTypes );
+    void setSearchMimeTypes(const QStringList &mimeTypes);
 
     /**
      * Returns list of mime types that search results can contain
@@ -117,7 +117,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param collections Collections to search in, or an empty list to search all
      * @since 4.13
      */
-    void setSearchCollections( const Collection::List &collections );
+    void setSearchCollections(const Collection::List &collections);
 
     /**
      * Returns list of collections to search in
@@ -146,7 +146,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param enabled Whether remote search is enabled
      * @since 4.13
      */
-    void setRemoteSearchEnabled( bool enabled );
+    void setRemoteSearchEnabled(bool enabled);
 
     /**
      * Returns whether remote search is enabled.
@@ -164,7 +164,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param recursive Whether to search recursively
      * @since 4.13
      */
-    void setRecursive( bool recursive );
+    void setRecursive(bool recursive);
 
     /**
      * Returns whether the search is recursive
@@ -186,7 +186,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      */
     Collection createdCollection() const;
 
-  protected:
+protected:
     /**
      * Reimplemented from Akonadi::Job
      */
@@ -195,10 +195,10 @@ class AKONADI_EXPORT SearchCreateJob : public Job
     /**
      * Reimplemented from Akonadi::Job
      */
-    void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( SearchCreateJob )
+private:
+    Q_DECLARE_PRIVATE(SearchCreateJob)
 };
 
 }

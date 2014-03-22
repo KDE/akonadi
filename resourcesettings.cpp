@@ -25,12 +25,12 @@ ResourceSettings *ResourceSettings::mSelf = 0;
 
 ResourceSettings *ResourceSettings::self()
 {
-  if ( !mSelf ) {
-    mSelf = new ResourceSettings();
-    mSelf->readConfig();
-  }
+    if (!mSelf) {
+        mSelf = new ResourceSettings();
+        mSelf->readConfig();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 ResourceSettings::ResourceSettings()
@@ -40,4 +40,3 @@ ResourceSettings::ResourceSettings()
 ResourceSettings::~ResourceSettings()
 {
 }
-

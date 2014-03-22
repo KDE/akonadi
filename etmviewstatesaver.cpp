@@ -27,84 +27,86 @@
 
 using namespace Akonadi;
 
-ETMViewStateSaver::ETMViewStateSaver(QObject* parent)
-  : KViewStateSaver(parent)
+ETMViewStateSaver::ETMViewStateSaver(QObject *parent)
+    : KViewStateSaver(parent)
 {
 }
 
-QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString& key) const
+QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString &key) const
 {
-  if ( key.startsWith( QLatin1Char( 'x' ) ) )
-    return QModelIndex();
-
-  Entity::Id id = key.mid( 1 ).toLongLong();
-  if ( id < 0 )
-    return QModelIndex();
-
-  if ( key.startsWith( QLatin1Char( 'c' ) ) ) {
-    QModelIndex idx = EntityTreeModel::modelIndexForCollection( model, Collection( id ) );
-    if ( !idx.isValid() ) {
-      return QModelIndex();
+    if (key.startsWith(QLatin1Char('x'))) {
+        return QModelIndex();
     }
-    return idx;
-  } else if ( key.startsWith( QLatin1Char( 'i' ) ) ) {
-    QModelIndexList list = EntityTreeModel::modelIndexesForItem( model, Item( id ) );
-    if ( list.isEmpty() ) {
-      return QModelIndex();
+
+    Entity::Id id = key.mid(1).toLongLong();
+    if (id < 0) {
+        return QModelIndex();
     }
-    return list.first();
-   }
-  return QModelIndex();
+
+    if (key.startsWith(QLatin1Char('c'))) {
+        QModelIndex idx = EntityTreeModel::modelIndexForCollection(model, Collection(id));
+        if (!idx.isValid()) {
+            return QModelIndex();
+        }
+        return idx;
+    } else if (key.startsWith(QLatin1Char('i'))) {
+        QModelIndexList list = EntityTreeModel::modelIndexesForItem(model, Item(id));
+        if (list.isEmpty()) {
+            return QModelIndex();
+        }
+        return list.first();
+    }
+    return QModelIndex();
 }
 
-QString ETMViewStateSaver::indexToConfigString(const QModelIndex& index) const
+QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
 {
-  if ( !index.isValid() ) {
-    return QLatin1String( "x-1" );
-  }
-  const Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( c.isValid() ) {
-    return QString::fromLatin1( "c%1" ).arg( c.id() );
-  }
-  Entity::Id id = index.data( EntityTreeModel::ItemIdRole ).value<Entity::Id>();
-  if ( id >= 0 ) {
-    return QString::fromLatin1( "i%1" ).arg( id );
-  }
-  return QString();
+    if (!index.isValid()) {
+        return QLatin1String("x-1");
+    }
+    const Collection c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (c.isValid()) {
+        return QString::fromLatin1("c%1").arg(c.id());
+    }
+    Entity::Id id = index.data(EntityTreeModel::ItemIdRole).value<Entity::Id>();
+    if (id >= 0) {
+        return QString::fromLatin1("i%1").arg(id);
+    }
+    return QString();
 }
 
-void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List& list)
+void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List &list)
 {
-  QStringList colStrings;
-  foreach ( const Collection &col, list ) {
-    colStrings << QString::fromLatin1( "c%1" ).arg( col.id() );
-  }
-  restoreSelection( colStrings );
+    QStringList colStrings;
+    foreach (const Collection &col, list) {
+        colStrings << QString::fromLatin1("c%1").arg(col.id());
+    }
+    restoreSelection(colStrings);
 }
 
-void ETMViewStateSaver::selectCollections(const QList< Collection::Id >& list)
+void ETMViewStateSaver::selectCollections(const QList< Collection::Id > &list)
 {
-  QStringList colStrings;
-  foreach ( const Collection::Id &colId, list ) {
-    colStrings << QString::fromLatin1( "c%1" ).arg( colId );
-  }
-  restoreSelection( colStrings );
+    QStringList colStrings;
+    foreach (const Collection::Id &colId, list) {
+        colStrings << QString::fromLatin1("c%1").arg(colId);
+    }
+    restoreSelection(colStrings);
 }
 
-void ETMViewStateSaver::selectItems(const Akonadi::Item::List& list)
+void ETMViewStateSaver::selectItems(const Akonadi::Item::List &list)
 {
-  QStringList itemStrings;
-  foreach ( const Item &item, list ) {
-    itemStrings << QString::fromLatin1( "i%1" ).arg( item.id() );
-  }
-  restoreSelection( itemStrings );
+    QStringList itemStrings;
+    foreach (const Item &item, list) {
+        itemStrings << QString::fromLatin1("i%1").arg(item.id());
+    }
+    restoreSelection(itemStrings);
 }
 
-void ETMViewStateSaver::selectItems(const QList< Item::Id >& list)
+void ETMViewStateSaver::selectItems(const QList< Item::Id > &list)
 {
-  QStringList itemStrings;
-  foreach (const Item::Id &itemId, list) {
-    itemStrings << QString::fromLatin1( "i%1" ).arg( itemId );
-  }
-  restoreSelection( itemStrings );
+    QStringList itemStrings;
+    foreach (const Item::Id &itemId, list) {
+        itemStrings << QString::fromLatin1("i%1").arg(itemId);
+    }
+    restoreSelection(itemStrings);
 }

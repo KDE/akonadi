@@ -74,15 +74,15 @@ class Item;
  */
 class AKONADI_EXPORT EntityListView : public QListView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new favorite collections view.
      *
      * @param parent The parent widget.
      */
-    explicit EntityListView( QWidget *parent = 0 );
+    explicit EntityListView(QWidget *parent = 0);
 
     /**
      * Creates a new favorite collections view.
@@ -92,7 +92,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit EntityListView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit EntityListView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
 
     /**
      * Destroys the favorite collections view.
@@ -106,7 +106,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      *
      * @param xmlGuiClient The KXMLGUIClient the view is used in.
      */
-    void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
+    void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
     /**
      * Return the XML GUI client which the view is used in.
@@ -118,7 +118,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      * @reimp
      * @param model the model to set
      */
-    virtual void setModel( QAbstractItemModel * model );
+    virtual void setModel(QAbstractItemModel *model);
 
     /**
      * Sets whether the drop action menu is @p enabled and will
@@ -126,7 +126,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      * @param enabled enables drop action menu if set as @c true
      * @since 4.7
      */
-    void setDropActionMenuEnabled( bool enabled );
+    void setDropActionMenuEnabled(bool enabled);
 
     /**
      * Returns whether the drop action menu is enabled and will
@@ -136,14 +136,14 @@ class AKONADI_EXPORT EntityListView : public QListView
      */
     bool isDropActionMenuEnabled() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
      * a collection in the view.
      *
      * @param collection The clicked collection.
      */
-    void clicked( const Akonadi::Collection &collection );
+    void clicked(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the user has clicked
@@ -151,7 +151,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      *
      * @param item The clicked item.
      */
-    void clicked( const Akonadi::Item &item );
+    void clicked(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the user has double clicked
@@ -159,7 +159,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      *
      * @param collection The double clicked collection.
      */
-    void doubleClicked( const Akonadi::Collection &collection );
+    void doubleClicked(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the user has double clicked
@@ -167,7 +167,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      *
      * @param item The double clicked item.
      */
-    void doubleClicked( const Akonadi::Item &item );
+    void doubleClicked(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the current collection
@@ -175,7 +175,7 @@ class AKONADI_EXPORT EntityListView : public QListView
      *
      * @param collection The new current collection.
      */
-    void currentChanged( const Akonadi::Collection &collection );
+    void currentChanged(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the current item
@@ -183,28 +183,28 @@ class AKONADI_EXPORT EntityListView : public QListView
      *
      * @param item The new current item.
      */
-    void currentChanged( const Akonadi::Item &item );
+    void currentChanged(const Akonadi::Item &item);
 
-  protected:
+protected:
     using QListView::currentChanged;
 #ifndef QT_NO_DRAGANDDROP
-    virtual void startDrag( Qt::DropActions supportedActions );
-    virtual void dropEvent( QDropEvent *event );
-    virtual void dragMoveEvent( QDragMoveEvent *event );
+    virtual void startDrag(Qt::DropActions supportedActions);
+    virtual void dropEvent(QDropEvent *event);
+    virtual void dragMoveEvent(QDragMoveEvent *event);
 #endif
 
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 #endif
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemDoubleClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
+    Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemDoubleClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
     //@endcond
 };
 

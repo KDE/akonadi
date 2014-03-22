@@ -41,8 +41,8 @@ class ItemDeleteJobPrivate;
  *
  * const Akonadi::Item item = ...
  *
- * ItemDeleteJob *job = new ItemDeleteJob( item );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ * ItemDeleteJob *job = new ItemDeleteJob(item);
+ * connect(job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)));
  *
  * @endcode
  *
@@ -52,8 +52,8 @@ class ItemDeleteJobPrivate;
  *
  * const Akonadi::Item::List items = ...
  *
- * ItemDeleteJob *job = new ItemDeleteJob( items );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ * ItemDeleteJob *job = new ItemDeleteJob(items);
+ * connect(job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)));
  *
  * @endcode
  *
@@ -61,44 +61,58 @@ class ItemDeleteJobPrivate;
  */
 class AKONADI_EXPORT ItemDeleteJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item delete job that deletes @p item. The item
-     * needs to either have a unique identifier or a remote identifier
-     * set. In the latter case a collection or resource context needs
-     * to be selected (using CollectionSelectJob or ResourceSelectJob).
+     * needs to have a unique identifier set.
+     *
+     * @internal
+     * For internal use only, the item may have a remote identifier set instead
+     * of a unique identifier. In this case, a collection or resource context
+     * needs to be selected using CollectionSelectJob or ResourceSelectJob.
+     * @endinternal
      *
      * @param item The item to delete.
      * @param parent The parent object.
      */
-    explicit ItemDeleteJob( const Item &item, QObject *parent = 0 );
+    explicit ItemDeleteJob(const Item &item, QObject *parent = 0);
 
     /**
      * Creates a new item delete job that deletes all items in the list
-     * @p items. These items can be located in any collection. The same
-     * restrictions on item identifiers apply as in the constructor above.
+     * @p items. Each item needs to have a unique identifier set. These items
+     * can be located in any collection.
+     *
+     * @internal
+     * For internal use only, the items may have remote identifiers set instead
+     * of unique identifiers. In this case, a collection or resource context
+     * needs to be selected using CollectionSelectJob or ResourceSelectJob.
+     * @endinternal
      *
      * @param items The items to delete.
      * @param parent The parent object.
      *
      * @since 4.3
      */
-    explicit ItemDeleteJob( const Item::List &items, QObject *parent = 0 );
+    explicit ItemDeleteJob(const Item::List &items, QObject *parent = 0);
 
     /**
      * Creates a new item delete job that deletes all items in the collection
-     * @p collection. The collection needs to have either a unique identifier
-     * or a remote identifier set. In the latter case a resource context
-     * needs to be selected using ResourceSelectJob.
+     * @p collection. The collection needs to have a unique identifier set.
+     *
+     * @internal
+     * For internal use only, the collection may have a remote identifier set
+     * instead of a unique identifier. In this case, a resource context needs
+     * to be selected using ResourceSelectJob.
+     * @endinternal
      *
      * @param collection The collection which content should be deleted.
      * @param parent The parent object.
      *
      * @since 4.3
      */
-    explicit ItemDeleteJob( const Collection &collection, QObject *parent = 0 );
+    explicit ItemDeleteJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the item delete job.
@@ -109,15 +123,15 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      * Returns the items passed on in the constructor.
      * @since 4.4
      */
-     Item::List deletedItems() const;
+    Item::List deletedItems() const;
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( ItemDeleteJob )
-    Q_PRIVATE_SLOT( d_func(), void selectResult( KJob* ) )
+    Q_DECLARE_PRIVATE(ItemDeleteJob)
+    Q_PRIVATE_SLOT(d_func(), void selectResult(KJob *))
     //@endcond
 };
 

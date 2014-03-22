@@ -27,11 +27,11 @@ namespace Akonadi {
 
 class AKONADI_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //krazy:exclude=dpointer
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     static ResourceSettings *self();
 
-  private:
+private:
     ResourceSettings();
     virtual ~ResourceSettings();
     static ResourceSettings *mSelf;
@@ -40,4 +40,3 @@ class AKONADI_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //k
 }
 
 #endif /* RESOURCESETTINGS_H */
-

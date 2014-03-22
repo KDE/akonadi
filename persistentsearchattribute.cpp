@@ -29,10 +29,10 @@ using namespace Akonadi;
 
 class PersistentSearchAttribute::Private
 {
-  public:
+public:
     Private()
-      : remote( true )
-      , recursive( false )
+        : remote(true)
+        , recursive(false)
     {
     }
 
@@ -43,134 +43,134 @@ class PersistentSearchAttribute::Private
 };
 
 PersistentSearchAttribute::PersistentSearchAttribute()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
 PersistentSearchAttribute::~PersistentSearchAttribute()
 {
-  delete d;
+    delete d;
 }
 
 QString PersistentSearchAttribute::queryLanguage() const
 {
-  return QLatin1String( "SPARQL" );
+    return QLatin1String("SPARQL");
 }
 
-void PersistentSearchAttribute::setQueryLanguage( const QString &language )
+void PersistentSearchAttribute::setQueryLanguage(const QString &language)
 {
-  Q_UNUSED( language );
+    Q_UNUSED(language);
 }
 
 QString PersistentSearchAttribute::queryString() const
 {
-  return d->queryString;
+    return d->queryString;
 }
 
-void PersistentSearchAttribute::setQueryString( const QString &query )
+void PersistentSearchAttribute::setQueryString(const QString &query)
 {
-  d->queryString = query;
+    d->queryString = query;
 }
 
 QList<qint64> PersistentSearchAttribute::queryCollections() const
 {
-  return d->queryCollections;
+    return d->queryCollections;
 }
 
-void PersistentSearchAttribute::setQueryCollections( const QList<Collection> &collections )
+void PersistentSearchAttribute::setQueryCollections(const QList<Collection> &collections)
 {
-  d->queryCollections.clear();
-  Q_FOREACH ( const Collection &collection, collections ) {
-    d->queryCollections << collection.id();
-  }
+    d->queryCollections.clear();
+    Q_FOREACH (const Collection &collection, collections) {
+        d->queryCollections << collection.id();
+    }
 }
 
-void PersistentSearchAttribute::setQueryCollections( const QList<qint64> &collectionsIds )
+void PersistentSearchAttribute::setQueryCollections(const QList<qint64> &collectionsIds)
 {
-  d->queryCollections = collectionsIds;
+    d->queryCollections = collectionsIds;
 }
 
 bool PersistentSearchAttribute::isRecursive() const
 {
-  return d->recursive;
+    return d->recursive;
 }
 
-void PersistentSearchAttribute::setRecursive( bool recursive )
+void PersistentSearchAttribute::setRecursive(bool recursive)
 {
-  d->recursive = recursive;
+    d->recursive = recursive;
 }
 
 bool PersistentSearchAttribute::isRemoteSearchEnabled() const
 {
-  return d->remote;
+    return d->remote;
 }
 
-void PersistentSearchAttribute::setRemoteSearchEnabled( bool enabled )
+void PersistentSearchAttribute::setRemoteSearchEnabled(bool enabled)
 {
-  d->remote = enabled;
+    d->remote = enabled;
 }
 
 QByteArray PersistentSearchAttribute::type() const
 {
-  return "PERSISTENTSEARCH"; // ### should eventually be AKONADI_PARAM_PERSISTENTSEARCH
+    return "PERSISTENTSEARCH"; // ### should eventually be AKONADI_PARAM_PERSISTENTSEARCH
 }
 
-Attribute* PersistentSearchAttribute::clone() const
+Attribute *PersistentSearchAttribute::clone() const
 {
-  PersistentSearchAttribute* attr = new PersistentSearchAttribute;
-  attr->setQueryString( queryString() );
-  attr->setQueryCollections( queryCollections() );
-  attr->setRecursive( isRecursive() );
-  attr->setRemoteSearchEnabled( isRemoteSearchEnabled() );
-  return attr;
+    PersistentSearchAttribute *attr = new PersistentSearchAttribute;
+    attr->setQueryString(queryString());
+    attr->setQueryCollections(queryCollections());
+    attr->setRecursive(isRecursive());
+    attr->setRemoteSearchEnabled(isRemoteSearchEnabled());
+    return attr;
 }
 
 QByteArray PersistentSearchAttribute::serialized() const
 {
-  QStringList cols;
-  Q_FOREACH ( qint64 colId, d->queryCollections ) {
-    cols << QString::number( colId );
-  }
+    QStringList cols;
+    Q_FOREACH (qint64 colId, d->queryCollections) {
+        cols << QString::number(colId);
+    }
 
-  QList<QByteArray> l;
-  // ### eventually replace with the AKONADI_PARAM_PERSISTENTSEARCH_XXX constants
-  l.append( "QUERYSTRING" );
-  l.append( ImapParser::quote( d->queryString.toUtf8() ) );
-  l.append( "QUERYCOLLECTIONS" );
-  l.append( "(" + cols.join( QLatin1String( " " ) ).toLatin1() + ")" );
-  if ( d->remote ) {
-    l.append( "REMOTE" );
-  }
-  if ( d->recursive ) {
-    l.append( "RECURSIVE" );
-  }
-  return "(" + ImapParser::join( l, " " ) + ')'; //krazy:exclude=doublequote_chars
+    QList<QByteArray> l;
+    // ### eventually replace with the AKONADI_PARAM_PERSISTENTSEARCH_XXX constants
+    l.append("QUERYSTRING");
+    l.append(ImapParser::quote(d->queryString.toUtf8()));
+    l.append("QUERYCOLLECTIONS");
+    l.append("(" + cols.join(QLatin1String(" ")).toLatin1() + ")");
+    if (d->remote) {
+        l.append("REMOTE");
+    }
+    if (d->recursive) {
+        l.append("RECURSIVE");
+    }
+    return "(" + ImapParser::join(l, " ") + ')';   //krazy:exclude=doublequote_chars
 }
 
-void PersistentSearchAttribute::deserialize(const QByteArray& data)
+void PersistentSearchAttribute::deserialize(const QByteArray &data)
 {
-  QList<QByteArray> l;
-  ImapParser::parseParenthesizedList( data, l );
-  for ( int i = 0; i < l.size() - 1; ++i) {
-    const QByteArray key = l.at( i );
-    if ( key == "QUERYLANGUAGE" ) {
-      // Skip the value
-      ++i;
-    } else if ( key == "QUERYSTRING" ) {
-      d->queryString = QString::fromUtf8( l.at( i + 1 ) );
-      ++i;
-    } else if ( key == "QUERYCOLLECTIONS" ) {
-      QList<QByteArray> ids;
-      ImapParser::parseParenthesizedList( l.at ( i + 1 ), ids );
-      d->queryCollections.clear();
-      Q_FOREACH ( const QByteArray &id, ids ) {
-        d->queryCollections << id.toLongLong();
-      }
-      ++i;
-    } else if ( key == "REMOTE" ) {
-      d->remote = true;
-    } else if ( key == "RECURSIVE" ) {
-      d->recursive = true;
+    QList<QByteArray> l;
+    ImapParser::parseParenthesizedList(data, l);
+    for (int i = 0; i < l.size() - 1; ++i) {
+        const QByteArray key = l.at(i);
+        if (key == "QUERYLANGUAGE") {
+            // Skip the value
+            ++i;
+        } else if (key == "QUERYSTRING") {
+            d->queryString = QString::fromUtf8(l.at(i + 1));
+            ++i;
+        } else if (key == "QUERYCOLLECTIONS") {
+            QList<QByteArray> ids;
+            ImapParser::parseParenthesizedList(l.at(i + 1), ids);
+            d->queryCollections.clear();
+            Q_FOREACH (const QByteArray &id, ids) {
+                d->queryCollections << id.toLongLong();
+            }
+            ++i;
+        } else if (key == "REMOTE") {
+            d->remote = true;
+        } else if (key == "RECURSIVE") {
+            d->recursive = true;
+        }
     }
-  }
 }

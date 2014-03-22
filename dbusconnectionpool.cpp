@@ -30,20 +30,22 @@ class DBusConnectionPoolPrivate
 {
 public:
     DBusConnectionPoolPrivate()
-        : m_connection( QDBusConnection::connectToBus(
-                            QDBusConnection::SessionBus,
-                            QString::fromLatin1("AkonadiKde%1").arg(newNumber()) ) )
+        : m_connection(QDBusConnection::connectToBus(
+                           QDBusConnection::SessionBus,
+                           QString::fromLatin1("AkonadiKde%1").arg(newNumber())))
     {
     }
     ~DBusConnectionPoolPrivate() {
-        QDBusConnection::disconnectFromBus( m_connection.name() );
+        QDBusConnection::disconnectFromBus(m_connection.name());
     }
 
-    QDBusConnection connection() const { return m_connection; }
+    QDBusConnection connection() const {
+        return m_connection;
+    }
 
 private:
     static int newNumber() {
-        return s_connectionCounter.fetchAndAddAcquire( 1 );
+        return s_connectionCounter.fetchAndAddAcquire(1);
     }
     QDBusConnection m_connection;
 };
@@ -53,11 +55,11 @@ QThreadStorage<DBusConnectionPoolPrivate *> s_perThreadConnection;
 
 QDBusConnection Akonadi::DBusConnectionPool::threadConnection()
 {
-    if ( !QCoreApplication::instance() || QCoreApplication::instance()->thread() == QThread::currentThread() ) {
+    if (!QCoreApplication::instance() || QCoreApplication::instance()->thread() == QThread::currentThread()) {
         return QDBusConnection::sessionBus(); // main thread, use the default session bus, breaks unported resources otherwise
     }
-    if ( !s_perThreadConnection.hasLocalData() ) {
-        s_perThreadConnection.setLocalData( new DBusConnectionPoolPrivate );
+    if (!s_perThreadConnection.hasLocalData()) {
+        s_perThreadConnection.setLocalData(new DBusConnectionPoolPrivate);
     }
     return s_perThreadConnection.localData()->connection();
 }

@@ -29,7 +29,6 @@
 #include <QDragMoveEvent>
 #include <QMenu>
 
-
 #include <kdebug.h>
 #include <kxmlguiclient.h>
 #include <KXMLGUIFactory>
@@ -49,218 +48,218 @@ using namespace Akonadi;
 class EntityListView::Private
 {
 public:
-  Private( EntityListView *parent )
-      : mParent( parent )
+    Private(EntityListView *parent)
+        : mParent(parent)
 #ifndef QT_NO_DRAGANDDROP
-      , mDragDropManager( new DragDropManager( mParent ) )
+        , mDragDropManager(new DragDropManager(mParent))
 #endif
-      , mXmlGuiClient( 0 )
-  {
-  }
+        , mXmlGuiClient(0)
+    {
+    }
 
-  void init();
-  void itemClicked( const QModelIndex& );
-  void itemDoubleClicked( const QModelIndex& );
-  void itemCurrentChanged( const QModelIndex& );
+    void init();
+    void itemClicked(const QModelIndex &index);
+    void itemDoubleClicked(const QModelIndex &index);
+    void itemCurrentChanged(const QModelIndex &index);
 
-  EntityListView *mParent;
-  DragDropManager *mDragDropManager;
-  KXMLGUIClient *mXmlGuiClient;
+    EntityListView *mParent;
+    DragDropManager *mDragDropManager;
+    KXMLGUIClient *mXmlGuiClient;
 };
 
 void EntityListView::Private::init()
 {
-  mParent->setEditTriggers( QAbstractItemView::EditKeyPressed );
-  mParent->setAcceptDrops( true );
+    mParent->setEditTriggers(QAbstractItemView::EditKeyPressed);
+    mParent->setAcceptDrops(true);
 #ifndef QT_NO_DRAGANDDROP
-  mParent->setDropIndicatorShown( true );
-  mParent->setDragDropMode( DragDrop );
-  mParent->setDragEnabled( true );
+    mParent->setDropIndicatorShown(true);
+    mParent->setDragDropMode(DragDrop);
+    mParent->setDragEnabled(true);
 #endif
-  mParent->connect( mParent, SIGNAL(clicked(QModelIndex)),
-                    mParent, SLOT(itemClicked(QModelIndex)) );
-  mParent->connect( mParent, SIGNAL(doubleClicked(QModelIndex)),
-                    mParent, SLOT(itemDoubleClicked(QModelIndex)) );
+    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)),
+                     mParent, SLOT(itemClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)),
+                     mParent, SLOT(itemDoubleClicked(QModelIndex)));
 
-  DelegateAnimator *animator = new DelegateAnimator( mParent );
-  ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate( animator, mParent );
-  mParent->setItemDelegate( customDelegate );
+    DelegateAnimator *animator = new DelegateAnimator(mParent);
+    ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
+    mParent->setItemDelegate(customDelegate);
 
-  Control::widgetNeedsAkonadi( mParent );
+    Control::widgetNeedsAkonadi(mParent);
 }
 
-void EntityListView::Private::itemClicked( const QModelIndex &index )
+void EntityListView::Private::itemClicked(const QModelIndex &index)
 {
-  if ( !index.isValid() ) {
-    return;
-  }
-
-  const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( collection.isValid() ) {
-    emit mParent->clicked( collection );
-  } else {
-    const Item item = index.model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() ) {
-      emit mParent->clicked( item );
+    if (!index.isValid()) {
+        return;
     }
-  }
-}
 
-void EntityListView::Private::itemDoubleClicked( const QModelIndex &index )
-{
-  if ( !index.isValid() ) {
-    return;
-  }
-
-  const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( collection.isValid() ) {
-    emit mParent->doubleClicked( collection );
-  } else {
-    const Item item = index.model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() ) {
-      emit mParent->doubleClicked( item );
+    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    if (collection.isValid()) {
+        emit mParent->clicked(collection);
+    } else {
+        const Item item = index.model()->data(index, EntityTreeModel::ItemRole).value<Item>();
+        if (item.isValid()) {
+            emit mParent->clicked(item);
+        }
     }
-  }
 }
 
-void EntityListView::Private::itemCurrentChanged( const QModelIndex &index )
+void EntityListView::Private::itemDoubleClicked(const QModelIndex &index)
 {
-  if ( !index.isValid() ) {
-    return;
-  }
-
-  const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( collection.isValid() ) {
-    emit mParent->currentChanged( collection );
-  } else {
-    const Item item = index.model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() ) {
-      emit mParent->currentChanged( item );
+    if (!index.isValid()) {
+        return;
     }
-  }
+
+    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    if (collection.isValid()) {
+        emit mParent->doubleClicked(collection);
+    } else {
+        const Item item = index.model()->data(index, EntityTreeModel::ItemRole).value<Item>();
+        if (item.isValid()) {
+            emit mParent->doubleClicked(item);
+        }
+    }
 }
 
-EntityListView::EntityListView( QWidget * parent )
-  : QListView( parent ),
-    d( new Private( this ) )
+void EntityListView::Private::itemCurrentChanged(const QModelIndex &index)
 {
-  setSelectionMode( QAbstractItemView::SingleSelection );
-  d->init();
+    if (!index.isValid()) {
+        return;
+    }
+
+    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    if (collection.isValid()) {
+        emit mParent->currentChanged(collection);
+    } else {
+        const Item item = index.model()->data(index, EntityTreeModel::ItemRole).value<Item>();
+        if (item.isValid()) {
+            emit mParent->currentChanged(item);
+        }
+    }
 }
 
-EntityListView::EntityListView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
-  : QListView( parent ),
-    d( new Private( this ) )
+EntityListView::EntityListView(QWidget *parent)
+    : QListView(parent)
+    , d(new Private(this))
 {
-  d->mXmlGuiClient = xmlGuiClient;
-  d->init();
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    d->init();
+}
+
+EntityListView::EntityListView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
+    : QListView(parent)
+    , d(new Private(this))
+{
+    d->mXmlGuiClient = xmlGuiClient;
+    d->init();
 }
 
 EntityListView::~EntityListView()
 {
-  delete d->mDragDropManager;
-  delete d;
+    delete d->mDragDropManager;
+    delete d;
 }
 
-void EntityListView::setModel( QAbstractItemModel * model )
+void EntityListView::setModel(QAbstractItemModel *model)
 {
-  if ( selectionModel() ) {
-    disconnect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           this, SLOT(itemCurrentChanged(QModelIndex)) );
-  }
+    if (selectionModel()) {
+        disconnect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+                   this, SLOT(itemCurrentChanged(QModelIndex)));
+    }
 
-  QListView::setModel( model );
+    QListView::setModel(model);
 
-  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(itemCurrentChanged(QModelIndex)) );
+    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(itemCurrentChanged(QModelIndex)));
 }
 
 #ifndef QT_NO_DRAGANDDROP
-void EntityListView::dragMoveEvent( QDragMoveEvent * event )
+void EntityListView::dragMoveEvent(QDragMoveEvent *event)
 {
-  if ( d->mDragDropManager->dropAllowed( event ) ||
-       qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
-    // All urls are supported. process the event.
-    QListView::dragMoveEvent( event );
-    return;
-  }
+    if (d->mDragDropManager->dropAllowed(event) ||
+        qobject_cast<Akonadi::FavoriteCollectionsModel *>(model())) {
+        // All urls are supported. process the event.
+        QListView::dragMoveEvent(event);
+        return;
+    }
 
-  event->setDropAction( Qt::IgnoreAction );
+    event->setDropAction(Qt::IgnoreAction);
 }
 
-void EntityListView::dropEvent( QDropEvent * event )
+void EntityListView::dropEvent(QDropEvent *event)
 {
-  bool menuCanceled = false;
-  if ( d->mDragDropManager->processDropEvent( event, menuCanceled ) &&
-       !menuCanceled ) {
-    if ( menuCanceled ) {
-      return;
+    bool menuCanceled = false;
+    if (d->mDragDropManager->processDropEvent(event, menuCanceled) &&
+        !menuCanceled) {
+        if (menuCanceled) {
+            return;
+        }
+        QListView::dropEvent(event);
+    } else if (qobject_cast<Akonadi::FavoriteCollectionsModel *>(model()) &&
+               !menuCanceled) {
+        QListView::dropEvent(event);
     }
-    QListView::dropEvent( event );
-  } else if ( qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) &&
-              !menuCanceled ) {
-    QListView::dropEvent( event );
-  }
 }
 #endif
 
 #ifndef QT_NO_CONTEXTMENU
-void EntityListView::contextMenuEvent( QContextMenuEvent * event )
+void EntityListView::contextMenuEvent(QContextMenuEvent *event)
 {
-  if ( !d->mXmlGuiClient ) {
-    return;
-  }
+    if (!d->mXmlGuiClient) {
+        return;
+    }
 
-  const QModelIndex index = indexAt( event->pos() );
+    const QModelIndex index = indexAt(event->pos());
 
-  QMenu *popup = 0;
+    QMenu *popup = 0;
 
-  // check if the index under the cursor is a collection or item
-  const Collection collection = model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( collection.isValid() ) {
-    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
-                                 QLatin1String( "akonadi_favoriteview_contextmenu" ), d->mXmlGuiClient ) );
-  } else {
-    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
-                                   QLatin1String( "akonadi_favoriteview_emptyselection_contextmenu" ), d->mXmlGuiClient ) );
-  }
+    // check if the index under the cursor is a collection or item
+    const Collection collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    if (collection.isValid()) {
+        popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
+                                         QLatin1String("akonadi_favoriteview_contextmenu"), d->mXmlGuiClient));
+    } else {
+        popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
+                                         QLatin1String("akonadi_favoriteview_emptyselection_contextmenu"), d->mXmlGuiClient));
+    }
 
-  if ( popup ) {
-    popup->exec( event->globalPos() );
-  }
+    if (popup) {
+        popup->exec(event->globalPos());
+    }
 }
 #endif
 
-void EntityListView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
+void EntityListView::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
 {
-  d->mXmlGuiClient = xmlGuiClient;
+    d->mXmlGuiClient = xmlGuiClient;
 }
 
 KXMLGUIClient *EntityListView::xmlGuiClient() const
 {
-  return d->mXmlGuiClient;
+    return d->mXmlGuiClient;
 }
 
 #ifndef QT_NO_DRAGANDDROP
-void EntityListView::startDrag( Qt::DropActions supportedActions )
+void EntityListView::startDrag(Qt::DropActions supportedActions)
 {
-  d->mDragDropManager->startDrag( supportedActions );
+    d->mDragDropManager->startDrag(supportedActions);
 }
 #endif
 
-void EntityListView::setDropActionMenuEnabled( bool enabled )
+void EntityListView::setDropActionMenuEnabled(bool enabled)
 {
 #ifndef QT_NO_DRAGANDDROP
-  d->mDragDropManager->setShowDropActionMenu( enabled );
+    d->mDragDropManager->setShowDropActionMenu(enabled);
 #endif
 }
 
 bool EntityListView::isDropActionMenuEnabled() const
 {
 #ifndef QT_NO_DRAGANDDROP
-  return d->mDragDropManager->showDropActionMenu();
+    return d->mDragDropManager->showDropActionMenu();
 #else
-  return false;
+    return false;
 #endif
 }
 

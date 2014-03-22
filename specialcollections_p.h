@@ -43,22 +43,22 @@ class Monitor;
 */
 class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
 {
-  public:
-    SpecialCollectionsPrivate( KCoreConfigSkeleton *settings, SpecialCollections *qq );
+public:
+    SpecialCollectionsPrivate(KCoreConfigSkeleton *settings, SpecialCollections *qq);
     ~SpecialCollectionsPrivate();
 
     QString defaultResourceId() const;
-    void emitChanged( const QString &resourceId );
-    void collectionRemoved( const Collection &collection ); // slot
-    void collectionFetchJobFinished( KJob* ); // slot
-    void collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ); // slot
+    void emitChanged(const QString &resourceId);
+    void collectionRemoved(const Collection &collection);   // slot
+    void collectionFetchJobFinished(KJob *);  // slot
+    void collectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &);  // slot
 
     /**
       Forgets all folders owned by the given resource.
       This method is used by SpecialCollectionsRequestJob.
       @param resourceId the identifier of the resource for which to forget folders
     */
-    void forgetFoldersForResource( const QString &resourceId );
+    void forgetFoldersForResource(const QString &resourceId);
 
     /**
       Avoids emitting the foldersChanged() signal until endBatchRegister()

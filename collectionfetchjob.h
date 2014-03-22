@@ -40,11 +40,11 @@ class CollectionFetchJobPrivate;
  * using namespace Akonadi;
  *
  * // fetching all collections containing emails recursively, starting at the root collection
- * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
- * job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
- * connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
- *          this, SLOT(myCollectionsReceived(Akonadi::Collection::List)) );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)) );
+ * CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+ * job->fetchScope().setContentMimeTypes(QStringList() << "message/rfc822");
+ * connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+ *         this, SLOT(myCollectionsReceived(Akonadi::Collection::List)));
+ * connect(job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)));
  *
  * @endcode
  *
@@ -68,10 +68,14 @@ public:
     /**
      * Creates a new collection fetch job. If the given base collection
      * has a unique identifier, this is used to identify the collection in the
-     * Akonadi server. If only a remote identifier is avaiable the collection
+     * Akonadi server. If only a remote identifier is available the collection
      * is identified using that, provided that a resource search context has
-     * been specified. There are two ways of doing that: by calling
-     * setResource(), or globally using Akonadi::ResourceSelectJob.
+     * been specified by calling setResource().
+     *
+     * @internal
+     * For internal use only, if a remote identifier is set, the resource
+     * search context can be set globally using ResourceSelectJob.
+     * @endinternal
      *
      * @param collection The base collection for the listing.
      * @param type The type of fetch depth.
@@ -81,8 +85,15 @@ public:
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
-     * The same rules for identifiers apply as noted in the constructor
-     * description.
+     * If a given collection has a unique identifier, this is used to identify
+     * the collection in the Akonadi server. If only a remote identifier is
+     * available the collection is identified using that, provided that a
+     * resource search context has been specified by calling setResource().
+     *
+     * @internal
+     * For internal use only, if a remote identifier is set, the resource
+     * search context can be set globally using ResourceSelectJob.
+     * @endinternal
      *
      * @param collections A list of collections to fetch. Must not be empty.
      * @param parent The parent object.
@@ -91,8 +102,15 @@ public:
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
-     * The same rules for identifiers apply as noted in the constructor
-     * description.
+     * If a given collection has a unique identifier, this is used to identify
+     * the collection in the Akonadi server. If only a remote identifier is
+     * available the collection is identified using that, provided that a
+     * resource search context has been specified by calling setResource().
+     *
+     * @internal
+     * For internal use only, if a remote identifier is set, the resource
+     * search context can be set globally using ResourceSelectJob.
+     * @endinternal
      *
      * @param collections A list of collections to fetch. Must not be empty.
      * @param type The type of fetch depth.
@@ -103,7 +121,7 @@ public:
     CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = 0);
 
     /**
-     * Convenience ctor equivalent to CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 )
+     * Convenience ctor equivalent to CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = 0)
      * @since 4.8
      * @param collections list of collection ids
      * @param type fetch job type

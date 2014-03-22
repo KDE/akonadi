@@ -34,18 +34,19 @@ namespace Akonadi
 
 class AKONADI_EXPORT ETMViewStateSaver : public KViewStateSaver  //krazy:exclude=dpointer
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ETMViewStateSaver(QObject *parent = 0);
+    ETMViewStateSaver(QObject *parent = 0);
 
-  void selectCollections( const Akonadi::Collection::List &list );
-  void selectCollections( const QList<Akonadi::Collection::Id> &list );
-  void selectItems( const Akonadi::Item::List &list );
-  void selectItems( const QList<Akonadi::Item::Id> &list );
+    void selectCollections(const Akonadi::Collection::List &list);
+    void selectCollections(const QList<Akonadi::Collection::Id> &list);
+    void selectItems(const Akonadi::Item::List &list);
+    void selectItems(const QList<Akonadi::Item::Id> &list);
 
 protected:
-  /* reimp */ QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const;
-  /* reimp */ QString indexToConfigString(const QModelIndex &index) const;
+    /* reimp */
+    QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const;
+    /* reimp */ QString indexToConfigString(const QModelIndex &index) const;
 
 };
 

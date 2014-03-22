@@ -54,23 +54,23 @@ class ItemFetchScope;
  *
  * const Collection collection = getCollection();
  *
- * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection);
+ * connect(job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)));
  * job->fetchScope().fetchFullPayload();
  *
  * ...
  *
- * MyClass::jobFinished( KJob *job )
+ * MyClass::jobFinished(KJob *job)
  * {
- *   if ( job->error() ) {
+ *   if (job->error()) {
  *     qDebug() << "Error occurred";
  *     return;
  *   }
  *
- *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+ *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>(job);
  *
  *   const Akonadi::Item::List items = fetchJob->items();
- *   foreach ( const Akonadi::Item &item, items ) {
+ *   foreach (const Akonadi::Item &item, items) {
  *     qDebug() << "Item ID:" << item.id();
  *   }
  * }
@@ -83,47 +83,57 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
     Q_FLAGS(DeliveryOptions)
-  public:
+public:
     /**
      * Creates a new item fetch job that retrieves all items inside the given collection.
      *
      * @param collection The parent collection to fetch all items from.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob( const Collection &collection, QObject *parent = 0 );
+    explicit ItemFetchJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Creates a new item fetch job that retrieves the specified item.
      * If the item has a uid set, this is used to identify the item on the Akonadi
      * server. If only a remote identifier is available, that is used.
      * However, as remote identifiers are not necessarily globally unique, you
-     * need to specify the resource and/or collection to search in in that case,
-     * using setCollection() or Akonadi::ResourceSelectJob.
+     * need to specify the collection to search in in that case, using
+     * setCollection().
+     *
+     * @internal
+     * For internal use only when using remote identifiers, the resource search
+     * context can be set globally by ResourceSelectJob.
+     * @endinternal
      *
      * @param item The item to fetch.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob( const Item &item, QObject *parent = 0 );
+    explicit ItemFetchJob(const Item &item, QObject *parent = 0);
 
     /**
      * Creates a new item fetch job that retrieves the specified items.
      * If the items have a uid set, this is used to identify the item on the Akonadi
      * server. If only a remote identifier is available, that is used.
      * However, as remote identifiers are not necessarily globally unique, you
-     * need to specify the resource and/or collection to search in in that case,
-     * using setCollection() or Akonadi::ResourceSelectJob.
+     * need to specify the collection to search in in that case, using
+     * setCollection().
+     *
+     * @internal
+     * For internal use only when using remote identifiers, the resource search
+     * context can be set globally by ResourceSelectJob.
+     * @endinternal
      *
      * @param items The items to fetch.
      * @param parent The parent object.
      * @since 4.4
      */
-    explicit ItemFetchJob( const Item::List &items, QObject *parent = 0 );
+    explicit ItemFetchJob(const Item::List &items, QObject *parent = 0);
 
     /**
-     * Convenience ctor equivalent to ItemFetchJob( const Item::List &items, QObject *parent = 0 )
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = 0)
      * @since 4.8
      */
-    explicit ItemFetchJob( const QList<Item::Id> &items, QObject *parent = 0 );
+    explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = 0);
 
     /**
      * Destroys the item fetch job.
@@ -133,7 +143,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     /**
      * Returns the fetched items.
      *
-     * @note The items are invalid before the result( KJob* )
+     * @note The items are invalid before the result(KJob*)
      *       signal has been emitted or if an error occurred.
      */
     Item::List items() const;
@@ -155,7 +165,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @see fetchScope()
      */
-    void setFetchScope( ItemFetchScope &fetchScope ); // KDE5: remove
+    void setFetchScope(ItemFetchScope &fetchScope);   // KDE5: remove
 
     /**
      * Sets the item fetch scope.
@@ -169,7 +179,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @see fetchScope()
      * @since 4.4
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -187,18 +197,20 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
      * Specifies the collection the item is in.
-     * This is only required when retrieving an item based on its remote id which might not be
-     * unique globally.
+     * This is only required when retrieving an item based on its remote id
+     * which might not be unique globally.
      *
-     * @see Akonadi::ResourceSelectJob
+     * @internal
+     * @see ResourceSelectJob (for internal use only)
+     * @endinternal
      */
-    void setCollection( const Collection &collection );
+    void setCollection(const Collection &collection);
 
     enum DeliveryOption {
-      ItemGetter = 0x1,            ///< items available through items()
-      EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
-      EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
-      Default = ItemGetter | EmitItemsInBatches
+        ItemGetter = 0x1,            ///< items available through items()
+        EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
+        EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
+        Default = ItemGetter | EmitItemsInBatches
     };
     Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption)
 
@@ -206,7 +218,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * Sets the mechanisms by which the items should be fetched
      * @since 4.13
      */
-    void setDeliveryOption( DeliveryOptions options );
+    void setDeliveryOption(DeliveryOptions options);
 
     /**
      * Returns the delivery options
@@ -214,7 +226,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      */
     DeliveryOptions deliveryOptions() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever new items have been fetched completely.
      *
@@ -224,18 +236,18 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @param items The fetched items.
      */
-    void itemsReceived( const Akonadi::Item::List &items );
+    void itemsReceived(const Akonadi::Item::List &items);
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( ItemFetchJob )
+private:
+    Q_DECLARE_PRIVATE(ItemFetchJob)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void selectDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void timeout() )
+    Q_PRIVATE_SLOT(d_func(), void selectDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void timeout())
     //@endcond
 };
 

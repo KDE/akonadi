@@ -30,23 +30,23 @@ class SearchResultJobPrivate;
 
 class SearchResultJob : public Akonadi::Job
 {
-  Q_OBJECT
-  public:
-    explicit SearchResultJob( const QByteArray &searchId, const Collection &collection, QObject* parent = 0 );
+    Q_OBJECT
+public:
+    explicit SearchResultJob(const QByteArray &searchId, const Collection &collection, QObject *parent = 0);
     virtual ~SearchResultJob();
 
-    void setSearchId( const QByteArray &searchId );
+    void setSearchId(const QByteArray &searchId);
     QByteArray searchId() const;
 
-    void setResult( const ImapSet &set );
-    void setResult( const QVector<QByteArray> &remoteIds );
-    void setResult( const QVector<qint64> &ids );
+    void setResult(const ImapSet &set);
+    void setResult(const QVector<QByteArray> &remoteIds);
+    void setResult(const QVector<qint64> &ids);
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( SearchResultJob )
+private:
+    Q_DECLARE_PRIVATE(SearchResultJob)
 };
 }
 

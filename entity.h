@@ -27,7 +27,7 @@ namespace Akonadi {
 class Entity;
 }
 
-AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
+AKONADI_EXPORT uint qHash(const Akonadi::Entity &);
 
 #include <akonadi/attribute.h>
 
@@ -37,8 +37,8 @@ AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 #include <QtCore/QSharedDataPointer>
 
 #define AKONADI_DECLARE_PRIVATE( Class ) \
-    Class##Private* d_func(); \
-    const Class##Private* d_func() const; \
+    Class##Private *d_func(); \
+    const Class##Private *d_func() const; \
     friend class Class##Private;
 
 namespace Akonadi {
@@ -58,7 +58,7 @@ class EntityPrivate;
  */
 class AKONADI_EXPORT Entity
 {
-  public:
+public:
     /**
      * Describes the unique id type.
      */
@@ -67,7 +67,7 @@ class AKONADI_EXPORT Entity
     /**
      * Sets the unique @p identifier of the entity.
      */
-    void setId( Id identifier );
+    void setId(Id identifier);
 
     /**
      * Returns the unique identifier of the entity.
@@ -77,7 +77,7 @@ class AKONADI_EXPORT Entity
     /**
      * Sets the remote @p id of the entity.
      */
-    void setRemoteId( const QString& id );
+    void setRemoteId(const QString &id);
 
     /**
      * Returns the remote id of the entity.
@@ -93,7 +93,7 @@ class AKONADI_EXPORT Entity
      * @note This method is supposed to be used by resources only.
      * @since 4.5
      */
-    void setRemoteRevision( const QString& revision );
+    void setRemoteRevision(const QString &revision);
 
     /**
      * Returns the remote revision of the entity.
@@ -112,26 +112,26 @@ class AKONADI_EXPORT Entity
      * Returns whether the entity's id equals the
      * id of the @p other entity.
      */
-    bool operator==( const Entity &other ) const;
+    bool operator==(const Entity &other) const;
 
     /**
      * Returns whether the entity's id does not equal the id
      * of the @p other entity.
      */
-    bool operator!=( const Entity &other ) const;
+    bool operator!=(const Entity &other) const;
 
     /**
      * Assigns the @p other to this entity and returns a reference to this entity.
      * @param other the entity to assign
      */
-    Entity& operator=( const Entity &other );
+    Entity &operator=(const Entity &other);
 
     /**
      * @internal For use with containers only.
      *
      * @since 4.8
      */
-    bool operator<( const Entity &other ) const;
+    bool operator<(const Entity &other) const;
 
     /**
      * Returns the parent collection of this object.
@@ -147,7 +147,7 @@ class AKONADI_EXPORT Entity
      *       from the Akonadi server.
      * @since 4.4
      */
-    Collection& parentCollection();
+    Collection &parentCollection();
 
     /**
      * Set the parent collection of this object.
@@ -158,7 +158,7 @@ class AKONADI_EXPORT Entity
      * @param parent The parent collection.
      * @since 4.4
      */
-    void setParentCollection( const Collection &parent );
+    void setParentCollection(const Collection &parent);
 
     /**
      * Adds an attribute to the entity.
@@ -170,18 +170,18 @@ class AKONADI_EXPORT Entity
      *
      * @note The entity takes the ownership of the attribute.
      */
-    void addAttribute( Attribute *attribute );
+    void addAttribute(Attribute *attribute);
 
     /**
      * Removes and deletes the attribute of the given type @p name.
      */
-    void removeAttribute( const QByteArray &name );
+    void removeAttribute(const QByteArray &name);
 
     /**
      * Returns @c true if the entity has an attribute of the given type @p name,
      * false otherwise.
      */
-    bool hasAttribute( const QByteArray &name ) const;
+    bool hasAttribute(const QByteArray &name) const;
 
     /**
      * Returns a list of all attributes of the entity.
@@ -196,13 +196,13 @@ class AKONADI_EXPORT Entity
     /**
      * Returns the attribute of the given type @p name if available, 0 otherwise.
      */
-    Attribute* attribute( const QByteArray &name ) const;
+    Attribute *attribute(const QByteArray &name) const;
 
     /**
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-      AddIfMissing    ///< Creates the attribute if it is missing
+        AddIfMissing    ///< Creates the attribute if it is missing
     };
 
     /**
@@ -212,40 +212,41 @@ class AKONADI_EXPORT Entity
      *
      * @param option The create options.
      */
-    template <typename T> inline T* attribute( CreateOption option )
+    template <typename T> inline T *attribute(CreateOption option)
     {
-      Q_UNUSED( option );
+        Q_UNUSED(option);
 
-      const T dummy;
-      if ( hasAttribute( dummy.type() ) ) {
-        T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
-        if ( attr ) {
-          return attr;
+        const T dummy;
+        if (hasAttribute(dummy.type())) {
+            T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+            if (attr) {
+                return attr;
+            }
+            kWarning(5250) << "Found attribute of unknown type" << dummy.type()
+                           << ". Did you forget to call AttributeFactory::registerAttribute()?";
         }
-        kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
-          << ". Did you forget to call AttributeFactory::registerAttribute()?";
-      }
 
-      T* attr = new T();
-      addAttribute( attr );
-      return attr;
+        T *attr = new T();
+        addAttribute(attr);
+        return attr;
     }
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
-    template <typename T> inline T* attribute() const
+    template <typename T> inline T *attribute() const
     {
-      const T dummy;
-      if ( hasAttribute( dummy.type() ) ) {
-        T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
-        if ( attr )
-          return attr;
-        kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
-          << ". Did you forget to call AttributeFactory::registerAttribute()?";
-      }
+        const T dummy;
+        if (hasAttribute(dummy.type())) {
+            T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+            if (attr) {
+                return attr;
+            }
+            kWarning(5250) << "Found attribute of unknown type" << dummy.type()
+                           << ". Did you forget to call AttributeFactory::registerAttribute()?";
+        }
 
-      return 0;
+        return 0;
     }
 
     /**
@@ -253,8 +254,8 @@ class AKONADI_EXPORT Entity
      */
     template <typename T> inline void removeAttribute()
     {
-      const T dummy;
-      removeAttribute( dummy.type() );
+        const T dummy;
+        removeAttribute(dummy.type());
     }
 
     /**
@@ -262,15 +263,15 @@ class AKONADI_EXPORT Entity
      */
     template <typename T> inline bool hasAttribute() const
     {
-      const T dummy;
-      return hasAttribute( dummy.type() );
+        const T dummy;
+        return hasAttribute(dummy.type());
     }
 
-  protected:
+protected:
     /**
      * Creates an entity from an @p other entity.
      */
-    Entity( const Entity &other );
+    Entity(const Entity &other);
 
     /**
      * Destroys the entity.
@@ -278,11 +279,11 @@ class AKONADI_EXPORT Entity
     ~Entity();
 
     //@cond PRIVATE
-    Entity( EntityPrivate *dd );
+    Entity(EntityPrivate *dd);
     QSharedDataPointer<EntityPrivate> d_ptr;
     //@endcond
 
-    AKONADI_DECLARE_PRIVATE( Entity )
+    AKONADI_DECLARE_PRIVATE(Entity)
 };
 
 }

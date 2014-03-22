@@ -29,15 +29,18 @@
 using namespace Akonadi;
 
 DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
-  : QObject(view), m_view(view), m_timerId(-1)
+    : QObject(view)
+    , m_view(view)
+    , m_timerId(-1)
 {
-  m_pixmapSequence = KPixmapSequence(QLatin1String("process-working"), 22);
+    m_pixmapSequence = KPixmapSequence(QLatin1String("process-working"), 22);
 }
 
 void DelegateAnimator::push(const QModelIndex &index)
 {
-    if (m_animations.isEmpty())
+    if (m_animations.isEmpty()) {
         m_timerId = startTimer(200);
+    }
     m_animations.insert(Animation(index));
 }
 
@@ -51,69 +54,68 @@ void DelegateAnimator::pop(const QModelIndex &index)
     }
 }
 
-void DelegateAnimator::timerEvent(QTimerEvent* event)
+void DelegateAnimator::timerEvent(QTimerEvent *event)
 {
-  if (!(event->timerId() == m_timerId && m_view))
-    return QObject::timerEvent(event);
-
-  QRegion region;
-  foreach (const Animation &animation, m_animations)
-  {
-    // Check if loading is finished (we might not be notified, if the index is scrolled out of view)
-    const QVariant fetchState = animation.index.data(Akonadi::EntityTreeModel::FetchStateRole);
-    if ( fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
-      pop( animation.index );
-      continue;
+    if (!(event->timerId() == m_timerId && m_view)) {
+        return QObject::timerEvent(event);
     }
 
-    // This repaints the entire delegate (icon and text).
-    // TODO: See if there's a way to repaint only part of it (the icon).
-    animation.nextFrame();
-    const QRect rect = m_view->visualRect(animation.index);
-    region += rect;
-  }
+    QRegion region;
+    foreach (const Animation &animation, m_animations) {
+        // Check if loading is finished (we might not be notified, if the index is scrolled out of view)
+        const QVariant fetchState = animation.index.data(Akonadi::EntityTreeModel::FetchStateRole);
+        if (fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
+            pop(animation.index);
+            continue;
+        }
 
-  if ( !region.isEmpty() ) {
-    m_view->viewport()->update(region);
-  }
-}
-
-QPixmap DelegateAnimator::sequenceFrame(const QModelIndex& index)
-{
-  foreach(const Animation &animation, m_animations)
-  {
-    if (animation.index == index)
-    {
-      return m_pixmapSequence.frameAt(animation.frame);
+        // This repaints the entire delegate (icon and text).
+        // TODO: See if there's a way to repaint only part of it (the icon).
+        animation.nextFrame();
+        const QRect rect = m_view->visualRect(animation.index);
+        region += rect;
     }
-  }
-  return QPixmap();
+
+    if (!region.isEmpty()) {
+        m_view->viewport()->update(region);
+    }
 }
 
-ProgressSpinnerDelegate::ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent)
-  : QStyledItemDelegate(parent), m_animator(animator)
+QPixmap DelegateAnimator::sequenceFrame(const QModelIndex &index)
+{
+    foreach (const Animation &animation, m_animations) {
+        if (animation.index == index) {
+            return m_pixmapSequence.frameAt(animation.frame);
+        }
+    }
+    return QPixmap();
+}
+
+ProgressSpinnerDelegate::ProgressSpinnerDelegate(DelegateAnimator *animator, QObject *parent)
+    : QStyledItemDelegate(parent)
+    , m_animator(animator)
 {
 
 }
 
-void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const
+void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
-  QStyledItemDelegate::initStyleOption(option, index);
+    QStyledItemDelegate::initStyleOption(option, index);
 
-  const QVariant fetchState = index.data( Akonadi::EntityTreeModel::FetchStateRole );
-  if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
-    m_animator->pop(index);
-    return;
-  }
+    const QVariant fetchState = index.data(Akonadi::EntityTreeModel::FetchStateRole);
+    if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
+        m_animator->pop(index);
+        return;
+    }
 
-  m_animator->push(index);
+    m_animator->push(index);
 
-  if (QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>(option)) {
-    v4->icon = m_animator->sequenceFrame(index);
-  }
+    if (QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>(option)) {
+        v4->icon = m_animator->sequenceFrame(index);
+    }
 }
 
 uint Akonadi::qHash(Akonadi::DelegateAnimator::Animation anim)
 {
-  return qHash(anim.index);
+    return qHash(anim.index);
 }

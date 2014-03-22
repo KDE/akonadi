@@ -29,29 +29,30 @@ namespace Akonadi {
  */
 class ItemModifyJobPrivate : public JobPrivate
 {
-  public:
-    enum Operation
-    {
-      RemoteId,
-      RemoteRevision,
-      Gid,
-      Dirty
+public:
+    enum Operation {
+        RemoteId,
+        RemoteRevision,
+        Gid,
+        Dirty
     };
 
-    ItemModifyJobPrivate( ItemModifyJob *parent );
+    ItemModifyJobPrivate(ItemModifyJob *parent);
 
     void setClean();
     QByteArray nextPartHeader();
 
     void conflictResolved();
-    void conflictResolveError( const QString& );
+    void conflictResolveError(const QString &);
 
-    void doUpdateItemRevision( Entity::Id, int oldRevision, int newRevision );
+    void doUpdateItemRevision(Entity::Id, int oldRevision, int newRevision);
 
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
     QByteArray fullCommand() const;
 
-    Q_DECLARE_PUBLIC( ItemModifyJob )
+    void setSilent( bool silent );
+
+    Q_DECLARE_PUBLIC(ItemModifyJob)
 
     QSet<int> mOperations;
     QByteArray mTag;
@@ -61,6 +62,7 @@ class ItemModifyJobPrivate : public JobPrivate
     QByteArray mPendingData;
     bool mIgnorePayload;
     bool mAutomaticConflictHandlingEnabled;
+    bool mSilent;
 };
 
 }

@@ -33,14 +33,14 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT SubscriptionDialog : public KDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new subscription dialog.
      *
      * @param parent The parent widget.
      */
-    explicit SubscriptionDialog( QWidget *parent = 0 );
+    explicit SubscriptionDialog(QWidget *parent = 0);
 
     /**
      * Creates a new subscription dialog.
@@ -49,7 +49,7 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
      * @param mimetypes The specific mimetypes
      * @since 4.6
      */
-    explicit SubscriptionDialog( const QStringList &mimetypes, QWidget *parent = 0 );
+    explicit SubscriptionDialog(const QStringList &mimetypes, QWidget *parent = 0);
 
     /**
      * Destroys the subscription dialog.
@@ -66,19 +66,19 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
      */
     void showHiddenCollection(bool showHidden);
 
-  private:
+private:
     class Private;
-    Private* const d;
+    Private *const d;
 
-    void init( const QStringList &mimetypes );
+    void init(const QStringList &mimetypes);
 
-    Q_PRIVATE_SLOT( d, void done() )
-    Q_PRIVATE_SLOT( d, void subscriptionResult( KJob* job ) )
-    Q_PRIVATE_SLOT( d, void modelLoaded() )
-    Q_PRIVATE_SLOT( d, void slotSetPattern(const QString &) )
-    Q_PRIVATE_SLOT( d, void slotSetIncludeCheckedOnly(bool) )
-    Q_PRIVATE_SLOT( d, void slotUnSubscribe())
-    Q_PRIVATE_SLOT( d, void slotSubscribe())
+    Q_PRIVATE_SLOT(d, void done())
+    Q_PRIVATE_SLOT(d, void subscriptionResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void modelLoaded())
+    Q_PRIVATE_SLOT(d, void slotSetPattern(const QString &))
+    Q_PRIVATE_SLOT(d, void slotSetIncludeCheckedOnly(bool))
+    Q_PRIVATE_SLOT(d, void slotUnSubscribe())
+    Q_PRIVATE_SLOT(d, void slotSubscribe())
 };
 
 }

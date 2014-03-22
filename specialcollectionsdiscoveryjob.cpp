@@ -32,15 +32,18 @@ class Akonadi::SpecialCollectionsDiscoveryJobPrivate
 {
 public:
     SpecialCollectionsDiscoveryJobPrivate(SpecialCollections *collections, const QStringList &mimeTypes)
-        : mSpecialCollections(collections), mMimeTypes(mimeTypes) {}
+        : mSpecialCollections(collections)
+        , mMimeTypes(mimeTypes)
+    {
+    }
 
     SpecialCollections *mSpecialCollections;
     QStringList mMimeTypes;
 };
 
 Akonadi::SpecialCollectionsDiscoveryJob::SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent)
-    : KCompositeJob(parent),
-      d(new SpecialCollectionsDiscoveryJobPrivate(collections, mimeTypes))
+    : KCompositeJob(parent)
+    , d(new SpecialCollectionsDiscoveryJobPrivate(collections, mimeTypes))
 {
 }
 
@@ -51,18 +54,18 @@ Akonadi::SpecialCollectionsDiscoveryJob::~SpecialCollectionsDiscoveryJob()
 
 void Akonadi::SpecialCollectionsDiscoveryJob::start()
 {
-    CollectionFetchJob* job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
     job->fetchScope().setContentMimeTypes(d->mMimeTypes);
     addSubjob(job);
 }
 
-void Akonadi::SpecialCollectionsDiscoveryJob::slotResult( KJob *job )
+void Akonadi::SpecialCollectionsDiscoveryJob::slotResult(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qWarning() << job->errorString();
         return;
     }
-    Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+    Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
     foreach (const Akonadi::Collection &collection, fetchJob->collections()) {
         if (collection.hasAttribute<SpecialCollectionAttribute>()) {
             d->mSpecialCollections->registerCollection(collection.attribute<SpecialCollectionAttribute>()->collectionType(), collection);

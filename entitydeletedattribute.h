@@ -48,7 +48,7 @@ namespace Akonadi
  */
 class AKONADI_EXPORT EntityDeletedAttribute : public Attribute
 {
-  public:
+public:
     /**
      * Creates a new entity deleted attribute.
      */
@@ -62,7 +62,7 @@ class AKONADI_EXPORT EntityDeletedAttribute : public Attribute
      * Sets the collection used to restore items which have been moved to trash using a TrashJob
      * If the Resource is set on the collection, the resource root will be used as fallback during the restore operation.
      */
-    void setRestoreCollection( const Collection &col );
+    void setRestoreCollection(const Collection &col);
 
     /**
      * Returns the original collection of an item that has been moved to trash using a TrashJob
@@ -82,7 +82,7 @@ class AKONADI_EXPORT EntityDeletedAttribute : public Attribute
     /**
      * Reimplemented from Attribute
      */
-    EntityDeletedAttribute* clone() const;
+    EntityDeletedAttribute *clone() const;
 
     /**
      * Reimplemented from Attribute
@@ -92,13 +92,13 @@ class AKONADI_EXPORT EntityDeletedAttribute : public Attribute
     /**
      * Reimplemented from Attribute
      */
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class EntityDeletedAttributePrivate;
-    EntityDeletedAttributePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( EntityDeletedAttribute )
+    EntityDeletedAttributePrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(EntityDeletedAttribute)
     //@endcond
 };
 

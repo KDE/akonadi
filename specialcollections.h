@@ -64,9 +64,9 @@ class SpecialCollectionsPrivate;
 */
 class AKONADI_EXPORT SpecialCollections : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Destroys the special collections object.
      */
@@ -76,13 +76,13 @@ class AKONADI_EXPORT SpecialCollections : public QObject
      * Returns whether the given agent @p instance has a special collection of
      * the given @p type.
      */
-    bool hasCollection( const QByteArray &type, const AgentInstance &instance ) const;
+    bool hasCollection(const QByteArray &type, const AgentInstance &instance) const;
 
     /**
      * Returns the special collection of the given @p type in the given agent
      * @p instance, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection collection( const QByteArray &type, const AgentInstance &instance ) const;
+    Akonadi::Collection collection(const QByteArray &type, const AgentInstance &instance) const;
 
     /**
      * Registers the given @p collection as a special collection
@@ -93,14 +93,14 @@ class AKONADI_EXPORT SpecialCollections : public QObject
      * Registering a new collection of a previously registered type forgets the
      * old collection.
      */
-    bool registerCollection( const QByteArray &type, const Akonadi::Collection &collection );
+    bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
 
     /**
      * Unregisters the given @p collection as a spec ial collection.
      * @param type the special type of @c collection
      * @since 4.12
      */
-    bool unregisterCollection( const Collection &collection );
+    bool unregisterCollection(const Collection &collection);
 
     /**
      * unsets the special collection attribute which marks @p collection as being a special
@@ -123,22 +123,22 @@ class AKONADI_EXPORT SpecialCollections : public QObject
      * Returns whether the default resource has a special collection of
      * the given @p type.
      */
-    bool hasDefaultCollection( const QByteArray &type ) const;
+    bool hasDefaultCollection(const QByteArray &type) const;
 
     /**
      * Returns the special collection of given @p type in the default
      * resource, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection defaultCollection( const QByteArray &type ) const;
+    Akonadi::Collection defaultCollection(const QByteArray &type) const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Emitted when the special collections for a resource have been changed
      * (for example, some become available, or some become unavailable).
      *
      * @param instance The instance of the resource the collection belongs to.
      */
-    void collectionsChanged( const Akonadi::AgentInstance &instance );
+    void collectionsChanged(const Akonadi::AgentInstance &instance);
 
     /**
      * Emitted when the special collections for the default resource have
@@ -146,16 +146,16 @@ class AKONADI_EXPORT SpecialCollections : public QObject
      */
     void defaultCollectionsChanged();
 
-  protected:
+protected:
     /**
      * Creates a new special collections object.
      *
      * @param config The configuration skeleton that provides the default resource id.
      * @param parent The parent object.
      */
-    explicit SpecialCollections( KCoreConfigSkeleton *config, QObject *parent = 0 );
+    explicit SpecialCollections(KCoreConfigSkeleton *config, QObject *parent = 0);
 
-  private:
+private:
     //@cond PRIVATE
     friend class SpecialCollectionsRequestJob;
     friend class SpecialCollectionsRequestJobPrivate;
@@ -168,9 +168,9 @@ class AKONADI_EXPORT SpecialCollections : public QObject
 
     SpecialCollectionsPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void collectionRemoved( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) )
-    Q_PRIVATE_SLOT( d, void collectionFetchJobFinished( KJob* ) )
+    Q_PRIVATE_SLOT(d, void collectionRemoved(const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d, void collectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &))
+    Q_PRIVATE_SLOT(d, void collectionFetchJobFinished(KJob *))
     //@endcond
 };
 

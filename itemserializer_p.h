@@ -42,56 +42,56 @@ class Item;
 */
 class AKONADI_TESTS_EXPORT ItemSerializer
 {
-  public:
-      /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version, bool external );
-      /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QByteArray& label, QIODevice& data, int version );
-      /** throws ItemSerializerException on failure */
-      static void serialize( const Item& item, const QByteArray& label, QByteArray& data, int &version );
-      /** throws ItemSerializerException on failure */
-      static void serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version );
+public:
+    /** throws ItemSerializerException on failure */
+    static void deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, bool external);
+    /** throws ItemSerializerException on failure */
+    static void deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
+    /** throws ItemSerializerException on failure */
+    static void serialize(const Item &item, const QByteArray &label, QByteArray &data, int &version);
+    /** throws ItemSerializerException on failure */
+    static void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
 
-      /**
-       * Throws ItemSerializerException on failure.
-       * @param item the item to apply to
-       * @param other the item to get values from
-       * @since 4.4
-       */
-      static void apply( Item& item, const Item &other );
+    /**
+     * Throws ItemSerializerException on failure.
+     * @param item the item to apply to
+     * @param other the item to get values from
+     * @since 4.4
+     */
+    static void apply(Item &item, const Item &other);
 
-      /**
-       * Returns a list of parts available in the item payload.
-       */
-      static QSet<QByteArray> parts( const Item &item );
+    /**
+     * Returns a list of parts available in the item payload.
+     */
+    static QSet<QByteArray> parts(const Item &item);
 
-      /**
-       * Returns a list of parts available remotely in the item payload.
-       * @param item the item for which to list payload parts
-       * @since 4.4
-       */
-      static QSet<QByteArray> availableParts( const Item &item );
+    /**
+     * Returns a list of parts available remotely in the item payload.
+     * @param item the item for which to list payload parts
+     * @since 4.4
+     */
+    static QSet<QByteArray> availableParts(const Item &item);
 
-      /**
-       * Tries to convert the payload in \a item into type with
-       * metatype-id \a metaTypeId.
-       * Throws ItemSerializerException or returns an Item w/o payload on failure.
-       * @param item the item to convert
-       * @param metaTypeID the meta type id used to convert items payload
-       * @since 4.6
-       */
-      static Item convert( const Item & item, int metaTypeId );
+    /**
+     * Tries to convert the payload in \a item into type with
+     * metatype-id \a metaTypeId.
+     * Throws ItemSerializerException or returns an Item w/o payload on failure.
+     * @param item the item to convert
+     * @param metaTypeID the meta type id used to convert items payload
+     * @since 4.6
+     */
+    static Item convert(const Item &item, int metaTypeId);
 
-      /**
-      * Override the plugin-lookup with @p plugin.
-      *
-      * After calling this each lookup will always return @p plugin.
-      * This is useful to inject a special plugin for testing purposes.
-      * To reset the plugin, set to 0.
-      *
-      * @since 4.12
-      */
-      static void overridePluginLookup( QObject *plugin );
+    /**
+    * Override the plugin-lookup with @p plugin.
+    *
+    * After calling this each lookup will always return @p plugin.
+    * This is useful to inject a special plugin for testing purposes.
+    * To reset the plugin, set to 0.
+    *
+    * @since 4.12
+    */
+    static void overridePluginLookup(QObject *plugin);
 };
 
 /**
@@ -100,13 +100,13 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 */
 class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 {
-  Q_OBJECT
-  Q_INTERFACES( Akonadi::ItemSerializerPlugin )
-  public:
+    Q_OBJECT
+    Q_INTERFACES(Akonadi::ItemSerializerPlugin)
+public:
     DefaultItemSerializerPlugin();
 
-    bool deserialize( Item&, const QByteArray&, QIODevice&, int );
-    void serialize( const Item&, const QByteArray&, QIODevice&, int& );
+    bool deserialize(Item &, const QByteArray &, QIODevice &, int);
+    void serialize(const Item &, const QByteArray &, QIODevice &, int &);
 };
 
 /**
@@ -115,13 +115,13 @@ class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 */
 class StdStringItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 {
-  Q_OBJECT
-  Q_INTERFACES( Akonadi::ItemSerializerPlugin )
+    Q_OBJECT
+    Q_INTERFACES(Akonadi::ItemSerializerPlugin)
 public:
-  StdStringItemSerializerPlugin();
+    StdStringItemSerializerPlugin();
 
-  bool deserialize( Item&, const QByteArray&, QIODevice&, int );
-  void serialize( const Item&, const QByteArray&, QIODevice&, int& );
+    bool deserialize(Item &, const QByteArray &, QIODevice &, int);
+    void serialize(const Item &, const QByteArray &, QIODevice &, int &);
 };
 
 }

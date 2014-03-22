@@ -29,7 +29,8 @@
 using namespace Akonadi;
 
 struct TagSelectionDialog::Private {
-    Private(KDialog *parent): d(parent){}
+    Private(KDialog *parent): d(parent), mTagWidget(0)
+    {}
     void writeConfig();
     void readConfig();
     KDialog *d;

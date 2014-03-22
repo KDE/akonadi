@@ -52,16 +52,16 @@ class ItemFetchScope;
  */
 class AKONADI_EXPORT ItemSync : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item synchronizer.
      *
      * @param collection The collection we are syncing.
      * @param parent The parent object.
      */
-    explicit ItemSync( const Collection &collection, QObject *parent = 0 );
+    explicit ItemSync(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the item synchronizer.
@@ -78,7 +78,7 @@ class AKONADI_EXPORT ItemSync : public Job
      *
      * @param items A list of items.
      */
-    void setFullSyncItems( const Item::List &items );
+    void setFullSyncItems(const Item::List &items);
 
     /**
      * Set the amount of items which you are going to return in total
@@ -86,7 +86,7 @@ class AKONADI_EXPORT ItemSync : public Job
      *
      * @param amount The amount of items in total.
      */
-    void setTotalItems( int amount );
+    void setTotalItems(int amount);
 
     /**
       Enable item streaming. Item streaming means that the items delivered by setXItems() calls
@@ -94,7 +94,7 @@ class AKONADI_EXPORT ItemSync : public Job
       by calling deliveryDone().
       @param enable @c true to enable item streaming
     */
-    void setStreamingEnabled( bool enable );
+    void setStreamingEnabled(bool enable);
 
     /**
       Notify ItemSync that all remote items have been delivered.
@@ -113,8 +113,8 @@ class AKONADI_EXPORT ItemSync : public Job
      * @param changedItems A list of items added or changed by the client.
      * @param removedItems A list of items deleted by the client.
      */
-    void setIncrementalSyncItems( const Item::List &changedItems,
-                                  const Item::List &removedItems );
+    void setIncrementalSyncItems(const Item::List &changedItems,
+                                 const Item::List &removedItems);
 
     /**
      * Sets the item fetch scope.
@@ -127,7 +127,7 @@ class AKONADI_EXPORT ItemSync : public Job
      *
      * @see fetchScope()
      */
-    void setFetchScope( ItemFetchScope &fetchScope );
+    void setFetchScope(ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -156,9 +156,9 @@ class AKONADI_EXPORT ItemSync : public Job
      * @since 4.6
      */
     enum TransactionMode {
-      SingleTransaction, ///< Use a single transaction for the entire sync process (default), provides maximum consistency ("all or nothing") and best performance
-      MultipleTransactions, ///< Use one transaction per chunk of delivered items, good compromise between the other two when using streaming
-      NoTransaction ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer), no consistency guaranteed (can fail anywhere in the sync process)
+        SingleTransaction, ///< Use a single transaction for the entire sync process (default), provides maximum consistency ("all or nothing") and best performance
+        MultipleTransactions, ///< Use one transaction per chunk of delivered items, good compromise between the other two when using streaming
+        NoTransaction ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer), no consistency guaranteed (can fail anywhere in the sync process)
     };
 
     /**
@@ -167,11 +167,11 @@ class AKONADI_EXPORT ItemSync : public Job
      * @param mode the transaction mode to use
      * @since 4.6
      */
-    void setTransactionMode( TransactionMode mode );
+    void setTransactionMode(TransactionMode mode);
 
-  protected:
+protected:
     void doStart();
-    void slotResult( KJob* job );
+    void slotResult(KJob *job);
 
     /**
      * Reimplement this method to customize the synchronization algorithm.
@@ -180,17 +180,17 @@ class AKONADI_EXPORT ItemSync : public Job
      * You can update the @p newItem according to the @p storedItem before
      * it gets committed.
      */
-    virtual bool updateItem( const Item &storedItem, Item &newItem );
+    virtual bool updateItem(const Item &storedItem, Item &newItem);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotLocalDeleteDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotLocalChangeDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotTransactionResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void slotLocalListDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotLocalDeleteDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotLocalChangeDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotTransactionResult(KJob *))
     //@endcond
 };
 

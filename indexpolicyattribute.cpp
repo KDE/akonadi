@@ -27,58 +27,62 @@ using namespace Akonadi;
 
 class IndexPolicyAttribute::Private
 {
-  public:
-    Private() : enable( true ) {}
+public:
+    Private()
+        : enable(true)
+    {
+    }
     bool enable;
 };
 
 IndexPolicyAttribute::IndexPolicyAttribute()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
 IndexPolicyAttribute::~IndexPolicyAttribute()
 {
-  delete d;
+    delete d;
 }
 
 bool IndexPolicyAttribute::indexingEnabled() const
 {
-  return d->enable;
+    return d->enable;
 }
 
 void IndexPolicyAttribute::setIndexingEnabled(bool enable)
 {
-  d->enable = enable;
+    d->enable = enable;
 }
 
 QByteArray IndexPolicyAttribute::type() const
 {
-  return "INDEXPOLICY";
+    return "INDEXPOLICY";
 }
 
-Attribute* IndexPolicyAttribute::clone() const
+Attribute *IndexPolicyAttribute::clone() const
 {
-  IndexPolicyAttribute* attr = new IndexPolicyAttribute;
-  attr->setIndexingEnabled( indexingEnabled() );
-  return attr;
+    IndexPolicyAttribute *attr = new IndexPolicyAttribute;
+    attr->setIndexingEnabled(indexingEnabled());
+    return attr;
 }
 
 QByteArray IndexPolicyAttribute::serialized() const
 {
-  QList<QByteArray> l;
-  l.append( "ENABLE" );
-  l.append( d->enable ? "true" : "false" );
-  return "(" + ImapParser::join( l, " " ) + ')'; //krazy:exclude=doublequote_chars
+    QList<QByteArray> l;
+    l.append("ENABLE");
+    l.append(d->enable ? "true" : "false");
+    return "(" + ImapParser::join(l, " ") + ')';   //krazy:exclude=doublequote_chars
 }
 
-void IndexPolicyAttribute::deserialize(const QByteArray& data)
+void IndexPolicyAttribute::deserialize(const QByteArray &data)
 {
-  QList<QByteArray> l;
-  ImapParser::parseParenthesizedList( data, l );
-  for ( int i = 0; i < l.size() - 1; i += 2 ) {
-    const QByteArray key = l.at( i );
-    if ( key == "ENABLE" )
-      d->enable = l.at( i + 1 ) == "true";
-  }
+    QList<QByteArray> l;
+    ImapParser::parseParenthesizedList(data, l);
+    for (int i = 0; i < l.size() - 1; i += 2) {
+        const QByteArray key = l.at(i);
+        if (key == "ENABLE") {
+            d->enable = l.at(i + 1) == "true";
+        }
+    }
 }

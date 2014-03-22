@@ -28,11 +28,11 @@ using namespace Akonadi;
 
 MimeTypeChecker::MimeTypeChecker()
 {
-  d = new MimeTypeCheckerPrivate();
+    d = new MimeTypeCheckerPrivate();
 }
 
-MimeTypeChecker::MimeTypeChecker( const MimeTypeChecker &other )
-  : d( other.d )
+MimeTypeChecker::MimeTypeChecker(const MimeTypeChecker &other)
+    : d(other.d)
 {
 }
 
@@ -40,124 +40,142 @@ MimeTypeChecker::~MimeTypeChecker()
 {
 }
 
-MimeTypeChecker &MimeTypeChecker::operator=( const MimeTypeChecker &other )
+MimeTypeChecker &MimeTypeChecker::operator=(const MimeTypeChecker &other)
 {
-  if ( &other != this )
-    d = other.d;
+    if (&other != this) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
 QStringList MimeTypeChecker::wantedMimeTypes() const
 {
-  return d->mWantedMimeTypes.values();
+    return d->mWantedMimeTypes.values();
 }
 
-void MimeTypeChecker::setWantedMimeTypes( const QStringList &mimeTypes )
+void MimeTypeChecker::setWantedMimeTypes(const QStringList &mimeTypes)
 {
-  d->mWantedMimeTypes = QSet<QString>::fromList( mimeTypes );
+    d->mWantedMimeTypes = QSet<QString>::fromList(mimeTypes);
 }
 
-void MimeTypeChecker::addWantedMimeType( const QString &mimeType )
+void MimeTypeChecker::addWantedMimeType(const QString &mimeType)
 {
-  d->mWantedMimeTypes.insert( mimeType );
+    d->mWantedMimeTypes.insert(mimeType);
 }
 
-void MimeTypeChecker::removeWantedMimeType(const QString &mimeType )
+void MimeTypeChecker::removeWantedMimeType(const QString &mimeType)
 {
-  d->mWantedMimeTypes.remove( mimeType );
+    d->mWantedMimeTypes.remove(mimeType);
 }
 
-bool MimeTypeChecker::isWantedItem( const Item &item ) const
+bool MimeTypeChecker::isWantedItem(const Item &item) const
 {
-  if ( d->mWantedMimeTypes.isEmpty() || !item.isValid() )
-    return false;
+    if (d->mWantedMimeTypes.isEmpty() || !item.isValid()) {
+        return false;
+    }
 
-  const QString mimeType = item.mimeType();
-  if ( mimeType.isEmpty() )
-    return false;
+    const QString mimeType = item.mimeType();
+    if (mimeType.isEmpty()) {
+        return false;
+    }
 
-  return d->isWantedMimeType( mimeType );
+    return d->isWantedMimeType(mimeType);
 }
 
-bool MimeTypeChecker::isWantedCollection( const Collection &collection ) const
+bool MimeTypeChecker::isWantedCollection(const Collection &collection) const
 {
-  if ( d->mWantedMimeTypes.isEmpty() || !collection.isValid() )
+    if (d->mWantedMimeTypes.isEmpty() || !collection.isValid()) {
+        return false;
+    }
+
+    const QStringList contentMimeTypes = collection.contentMimeTypes();
+    if (contentMimeTypes.isEmpty()) {
+        return false;
+    }
+
+    foreach (const QString &mimeType, contentMimeTypes) {
+        if (mimeType.isEmpty()) {
+            continue;
+        }
+
+        if (d->isWantedMimeType(mimeType)) {
+            return true;
+        }
+    }
+
     return false;
-
-  const QStringList contentMimeTypes = collection.contentMimeTypes();
-  if ( contentMimeTypes.isEmpty() )
-    return false;
-
-  foreach ( const QString &mimeType, contentMimeTypes ) {
-    if ( mimeType.isEmpty() )
-      continue;
-
-    if ( d->isWantedMimeType( mimeType ) )
-      return true;
-  }
-
-  return false;
 }
 
-bool MimeTypeChecker::isWantedItem( const Item &item, const QString &wantedMimeType )
+bool MimeTypeChecker::isWantedItem(const Item &item, const QString &wantedMimeType)
 {
-  if ( wantedMimeType.isEmpty() || !item.isValid() )
-    return false;
+    if (wantedMimeType.isEmpty() || !item.isValid()) {
+        return false;
+    }
 
-  const QString mimeType = item.mimeType();
-  if ( mimeType.isEmpty() )
-    return false;
+    const QString mimeType = item.mimeType();
+    if (mimeType.isEmpty()) {
+        return false;
+    }
 
-  if ( mimeType == wantedMimeType )
-    return true;
+    if (mimeType == wantedMimeType) {
+        return true;
+    }
 
-  KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
-  if ( mimeTypePtr.isNull() )
-    return false;
+    KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
+    if (mimeTypePtr.isNull()) {
+        return false;
+    }
 
-  return mimeTypePtr->is( wantedMimeType );
+    return mimeTypePtr->is(wantedMimeType);
 }
 
-bool MimeTypeChecker::isWantedCollection( const Collection &collection, const QString &wantedMimeType )
+bool MimeTypeChecker::isWantedCollection(const Collection &collection, const QString &wantedMimeType)
 {
-  if ( wantedMimeType.isEmpty() || !collection.isValid() )
+    if (wantedMimeType.isEmpty() || !collection.isValid()) {
+        return false;
+    }
+
+    const QStringList contentMimeTypes = collection.contentMimeTypes();
+    if (contentMimeTypes.isEmpty()) {
+        return false;
+    }
+
+    foreach (const QString &mimeType, contentMimeTypes) {
+        if (mimeType.isEmpty()) {
+            continue;
+        }
+
+        if (mimeType == wantedMimeType) {
+            return true;
+        }
+
+        KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
+        if (mimeTypePtr.isNull()) {
+            continue;
+        }
+
+        if (mimeTypePtr->is(wantedMimeType)) {
+            return true;
+        }
+    }
+
     return false;
-
-  const QStringList contentMimeTypes = collection.contentMimeTypes();
-  if ( contentMimeTypes.isEmpty() )
-    return false;
-
-  foreach ( const QString &mimeType, contentMimeTypes ) {
-    if ( mimeType.isEmpty() )
-      continue;
-
-    if ( mimeType == wantedMimeType )
-      return true;
-
-    KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
-    if ( mimeTypePtr.isNull() )
-      continue;
-
-   if ( mimeTypePtr->is( wantedMimeType ) )
-     return true;
-  }
-
-  return false;
 }
 
-bool MimeTypeChecker::isWantedMimeType(const QString& mimeType) const
+bool MimeTypeChecker::isWantedMimeType(const QString &mimeType) const
 {
-  return d->isWantedMimeType( mimeType );
+    return d->isWantedMimeType(mimeType);
 }
 
-bool MimeTypeChecker::containsWantedMimeType(const QStringList& mimeTypes) const
+bool MimeTypeChecker::containsWantedMimeType(const QStringList &mimeTypes) const
 {
-  foreach ( const QString &mt, mimeTypes ) {
-    if ( d->isWantedMimeType( mt ) )
-      return true;
-  }
-  return false;
+    foreach (const QString &mt, mimeTypes) {
+        if (d->isWantedMimeType(mt)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

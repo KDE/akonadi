@@ -44,13 +44,13 @@ namespace Akonadi {
 */
 class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new ResourceScanJob.
     */
-    explicit ResourceScanJob( const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent = 0 );
+    explicit ResourceScanJob(const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent = 0);
 
     /**
       Destroys this ResourceScanJob.
@@ -65,7 +65,7 @@ class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
     /**
       Sets the resource ID of the resource to scan.
     */
-    void setResourceId( const QString &resourceId );
+    void setResourceId(const QString &resourceId);
 
     /**
       Returns the root collection of the resource being scanned.
@@ -80,16 +80,16 @@ class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
     */
     Akonadi::Collection::List specialCollections() const;
 
-  protected:
+protected:
     /* reimpl */
     virtual void doStart();
 
-  private:
+private:
     class Private;
     friend class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void fetchResult(KJob *))
 };
 
 // ===================== DefaultResourceJob ============================
@@ -115,13 +115,13 @@ class DefaultResourceJobPrivate;
 */
 class AKONADI_TESTS_EXPORT DefaultResourceJob : public ResourceScanJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new DefaultResourceJob.
      */
-    explicit DefaultResourceJob( KCoreConfigSkeleton *settings, QObject *parent = 0 );
+    explicit DefaultResourceJob(KCoreConfigSkeleton *settings, QObject *parent = 0);
 
     /**
      * Destroys the DefaultResourceJob.
@@ -132,43 +132,43 @@ class AKONADI_TESTS_EXPORT DefaultResourceJob : public ResourceScanJob
      * Sets the @p type of the resource that shall be created if the requested
      * special collection does not exist yet.
      */
-    void setDefaultResourceType( const QString &type );
+    void setDefaultResourceType(const QString &type);
 
     /**
      * Sets the configuration @p options that shall be applied to the new resource
      * that is created if the requested special collection does not exist yet.
      */
-    void setDefaultResourceOptions( const QVariantMap &options );
+    void setDefaultResourceOptions(const QVariantMap &options);
 
     /**
      * Sets the list of well known special collection @p types.
      */
-    void setTypes( const QList<QByteArray> &types );
+    void setTypes(const QList<QByteArray> &types);
 
     /**
      * Sets the @p map of special collection types to display names.
      */
-    void setNameForTypeMap( const QMap<QByteArray, QString> &map );
+    void setNameForTypeMap(const QMap<QByteArray, QString> &map);
 
     /**
      * Sets the @p map of special collection types to icon names.
      */
-    void setIconForTypeMap( const QMap<QByteArray, QString> &map );
+    void setIconForTypeMap(const QMap<QByteArray, QString> &map);
 
-  protected:
+protected:
     /* reimpl */
     virtual void doStart();
     /* reimpl */
-    virtual void slotResult( KJob *job );
+    virtual void slotResult(KJob *job);
 
-  private:
+private:
     friend class DefaultResourceJobPrivate;
     DefaultResourceJobPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void resourceCreateResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void resourceSyncResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void collectionFetchResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void collectionModifyResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void resourceCreateResult(KJob *))
+    Q_PRIVATE_SLOT(d, void resourceSyncResult(KJob *))
+    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
+    Q_PRIVATE_SLOT(d, void collectionModifyResult(KJob *))
 };
 
 // ===================== GetLockJob ============================
@@ -193,13 +193,13 @@ class AKONADI_TESTS_EXPORT DefaultResourceJob : public ResourceScanJob
 */
 class AKONADI_TESTS_EXPORT GetLockJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new GetLockJob.
     */
-    explicit GetLockJob( QObject *parent = 0 );
+    explicit GetLockJob(QObject *parent = 0);
 
     /**
       Destroys the GetLockJob.
@@ -209,14 +209,14 @@ class AKONADI_TESTS_EXPORT GetLockJob : public KJob
     /* reimpl */
     virtual void start();
 
-  private:
+private:
     class Private;
     friend class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void doStart() )
-    Q_PRIVATE_SLOT( d, void serviceOwnerChanged( QString, QString, QString ) )
-    Q_PRIVATE_SLOT( d, void timeout() )
+    Q_PRIVATE_SLOT(d, void doStart())
+    Q_PRIVATE_SLOT(d, void serviceOwnerChanged(QString, QString, QString))
+    Q_PRIVATE_SLOT(d, void timeout())
 };
 
 // ===================== helper functions ============================
@@ -229,9 +229,9 @@ class AKONADI_TESTS_EXPORT GetLockJob : public KJob
   * @param nameForType collection name for type
   * @param iconForType collection icon for type
 */
-void setCollectionAttributes( Akonadi::Collection &col, const QByteArray &type,
-                              const QMap<QByteArray, QString> &nameForType,
-                              const QMap<QByteArray, QString> &iconForType );
+void setCollectionAttributes(Akonadi::Collection &col, const QByteArray &type,
+                             const QMap<QByteArray, QString> &nameForType,
+                             const QMap<QByteArray, QString> &iconForType);
 
 /**
   Releases the SpecialCollectionsRequestJob lock that was obtained through
