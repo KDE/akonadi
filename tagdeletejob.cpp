@@ -31,7 +31,6 @@ struct Akonadi::TagDeleteJobPrivate : public JobPrivate
     }
 
     Tag::List mTagsToRemove;
-    qint64 mUid;
 };
 
 TagDeleteJob::TagDeleteJob(const Akonadi::Tag& tag, QObject* parent)

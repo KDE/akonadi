@@ -46,6 +46,7 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , session(Session::defaultSession())
     , collectionCache(0)
     , itemCache(0)
+    , tagCache(0)
     , fetchCollection(false)
     , fetchCollectionStatistics(false)
     , collectionMoveTranslationEnabled(true)

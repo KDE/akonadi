@@ -32,7 +32,8 @@ class Akonadi::TagFetchJobPrivate : public JobPrivate
 {
 public:
     TagFetchJobPrivate(TagFetchJob *parent)
-        :JobPrivate(parent)
+        :JobPrivate(parent),
+         mEmitTimer(0)
     {
     }
 

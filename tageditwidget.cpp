@@ -84,7 +84,9 @@ TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)
         m_model(model),
         m_tagsView(0),
         m_newTagButton(0),
+        
         m_newTagEdit(0),
+        m_deleteButton(0),
         m_deleteButtonTimer(0)
 {
 
