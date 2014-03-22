@@ -21,9 +21,7 @@ set(akonadi_social_utils_HDRS
 )
 
 add_library(akonadi-socialutils SHARED ${akonadi_social_utils_SRCS})
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-  set_property(TARGET akonadi-socialutils PROPERTY DEFINE_SYMBOL akonadi_socialutils)
-endif()
+
 generate_export_header(akonadi-socialutils
   BASE_NAME libakonadisocialutils
   EXPORT_FILE_NAME libakonadisocialutils_export.h

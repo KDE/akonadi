@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(akonadi-kde)
 
 find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Core Sql DBus)
@@ -278,9 +280,8 @@ add_definitions(
 )
 
 add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-  set_property(TARGET akonadi-kde PROPERTY DEFINE_SYMBOL akonadi_kde)
-endif()
+set_property(TARGET akonadi-kde PROPERTY DEFINE_SYMBOL akonadi_kde)
+
 generate_export_header(akonadi-kde BASE_NAME akonadi)
 
 if (KDE4_BUILD_TESTS)

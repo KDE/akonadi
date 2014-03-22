@@ -30,9 +30,7 @@ include_directories(
 )
 
 add_library( akonadi-kcal ${LIBRARY_TYPE} ${kcalakonadi_LIB_SRC} )
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-  set_property(TARGET akonadi-kcal PROPERTY DEFINE_SYMBOL akonadi_kcal)
-endif()
+
 generate_export_header(akonadi-kcal
   BASE_NAME akonadi_kcal
   EXPORT_FILE_NAME akonadi-kcal_export.h

@@ -12,9 +12,7 @@ set( kabcakonadi_LIB_SRC
 )
 
 add_library( akonadi-kabc ${LIBRARY_TYPE} ${kabcakonadi_LIB_SRC} )
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-  set_property(TARGET akonadi-kabc PROPERTY DEFINE_SYMBOL akonadi_kabc)
-endif()
+
 generate_export_header(akonadi-kabc
   BASE_NAME akonadi_kabc
   EXPORT_FILE_NAME akonadi-kabc_export.h

@@ -131,9 +131,7 @@ include_directories(
 )
 
 add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-  set_property(TARGET akonadi-contact PROPERTY DEFINE_SYMBOL akonadi_contact)
-endif()
+
 generate_export_header(akonadi-contact
   BASE_NAME akonadi_contact
   EXPORT_FILE_NAME akonadi-contact_export.h

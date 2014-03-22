@@ -87,9 +87,7 @@ include_directories(
 )
 
 add_library( akonadi-kmime ${LIBRARY_TYPE} ${kmimeakonadi_LIB_SRC} )
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-  set_property(TARGET akonadi-kmime PROPERTY DEFINE_SYMBOL akonadi_kmime)
-endif()
+
 generate_export_header(akonadi-kmime
   BASE_NAME akonadi_kmime
   EXPORT_FILE_NAME akonadi-kmime_export.h
