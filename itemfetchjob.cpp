@@ -81,7 +81,10 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
       if ( mRequestedItems.isEmpty() ) {
-        return QString::fromLatin1( "All items from collection %1" ).arg( mCollection.id() );
+        QString str = QString::fromLatin1( "All items from collection %1" ).arg( mCollection.id() );
+        if ( mFetchScope.fetchChangedSince().isValid() )
+          str += QString::fromLatin1( " changed since %1" ).arg( mFetchScope.fetchChangedSince().toString() );
+        return str;
       } else {
         try {
           return QString::fromLatin1( ProtocolHelper::entitySetToByteArray( mRequestedItems, AKONADI_CMD_ITEMFETCH ) );
