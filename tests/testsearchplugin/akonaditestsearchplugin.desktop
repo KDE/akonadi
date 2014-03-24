@@ -2,9 +2,11 @@
 Type=AkonadiSearchPlugin
 Name=Akonadi Test Search Plugin
 Name[ca]=Connector de cerca de prova per a l'Akonadi
+Name[ca@valencia]=Connector de cerca de prova per a l'Akonadi
 Name[cs]=Modul pro testování hledání v Akonadi
 Name[da]=Testsøge-plugin til Akonadi
 Name[de]=Akonadi-Testsuchmodul
+Name[el]=Πρόσθετο δοκιμαστικής αναζήτησης Akonadi
 Name[es]=Complemento de prueba de búsqueda de Akonadi
 Name[fi]=Akonadin hakuliitännäinen testaustarkoituksiin
 Name[fr]=Module externe de test pour les recherches Akonadi
