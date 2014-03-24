@@ -50,388 +50,431 @@ static const char _APPLICATION_OCTETSTREAM[] = "application/octet-stream";
 
 namespace Akonadi {
 
-K_GLOBAL_STATIC( DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin )
+K_GLOBAL_STATIC(DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin)
 
 class PluginEntry
 {
-  public:
+public:
     PluginEntry()
-      : mPlugin( 0 )
+        : mPlugin(0)
     {
     }
 
-    explicit PluginEntry( const QString &identifier, QObject *plugin = 0 )
-      : mIdentifier( identifier ), mPlugin( plugin )
+    explicit PluginEntry(const QString &identifier, QObject *plugin = 0)
+        : mIdentifier(identifier)
+        , mPlugin(plugin)
     {
     }
 
-    QObject* plugin() const
+    QObject *plugin() const
     {
-      if ( mPlugin )
+        if (mPlugin) {
+            return mPlugin;
+        }
+
+        QObject *object = PluginLoader::self()->createForName(mIdentifier);
+        if (!object) {
+            kWarning() << "ItemSerializerPluginLoader: "
+                       << "plugin" << mIdentifier << "is not valid!" << endl;
+
+            // we try to use the default in that case
+            mPlugin = s_defaultItemSerializerPlugin;
+        }
+
+        mPlugin = object;
+        if (!qobject_cast<ItemSerializerPlugin *>(mPlugin)) {
+            kWarning() << "ItemSerializerPluginLoader: "
+                       << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
+
+            // we try to use the default in that case
+            mPlugin = s_defaultItemSerializerPlugin;
+        }
+
+        Q_ASSERT(mPlugin);
+
         return mPlugin;
-
-      QObject *object = PluginLoader::self()->createForName( mIdentifier );
-      if ( !object ) {
-        kWarning() << "ItemSerializerPluginLoader: "
-                   << "plugin" << mIdentifier << "is not valid!" << endl;
-
-        // we try to use the default in that case
-        mPlugin = s_defaultItemSerializerPlugin;
-      }
-
-      mPlugin = object;
-      if ( !qobject_cast<ItemSerializerPlugin*>( mPlugin ) ) {
-        kWarning() << "ItemSerializerPluginLoader: "
-                   << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
-
-        // we try to use the default in that case
-        mPlugin = s_defaultItemSerializerPlugin;
-      }
-
-      Q_ASSERT( mPlugin );
-
-      return mPlugin;
     }
 
-    const char * pluginClassName() const
+    const char *pluginClassName() const
     {
         return plugin()->metaObject()->className();
     }
 
     QString identifier() const
     {
-      return mIdentifier;
+        return mIdentifier;
     }
 
-    bool operator<( const PluginEntry &other ) const
+    bool operator<(const PluginEntry &other) const
     {
-      return mIdentifier < other.mIdentifier;
+        return mIdentifier < other.mIdentifier;
     }
 
-    bool operator<( const QString &identifier ) const
+    bool operator<(const QString &identifier) const
     {
-      return mIdentifier < identifier;
+        return mIdentifier < identifier;
     }
 
-  private:
+private:
     QString mIdentifier;
     mutable QObject *mPlugin;
 };
 
-static bool operator<( const QString &identifier, const PluginEntry &entry )
+static bool operator<(const QString &identifier, const PluginEntry &entry)
 {
-  return identifier < entry.identifier();
+    return identifier < entry.identifier();
 }
 
 class MimeTypeEntry
 {
 public:
-  explicit MimeTypeEntry( const QString & mimeType )
-    : m_mimeType( mimeType ), m_plugins(), m_pluginsByMetaTypeId() {}
-
-  QString type() const { return m_mimeType; }
-
-  void add( const QByteArray & class_, const PluginEntry & entry ) {
-    m_pluginsByMetaTypeId.clear(); // iterators will be invalidated by next line
-    m_plugins.insert( class_, entry );
-  }
-
-  const PluginEntry * plugin( const QByteArray & class_ ) const {
-    const QHash<QByteArray,PluginEntry>::const_iterator it = m_plugins.find( class_ );
-    return it == m_plugins.end() ? 0 : it.operator->() ;
-  }
-
-  const PluginEntry * defaultPlugin() const {
-    // 1. If there's an explicit default plugin, use that one:
-    if ( const PluginEntry * pe = plugin( DEFAULT_NAME ) )
-      return pe;
-
-    // 2. Otherwise, look through the already instantiated plugins,
-    //    and return one of them (preferably not the legacy one):
-    bool sawZero = false;
-    for ( QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator it = m_pluginsByMetaTypeId.constBegin(), end = m_pluginsByMetaTypeId.constEnd() ; it != end ; ++it )
-      if ( it.key() == 0 )
-        sawZero = true;
-      else
-        if ( *it != m_plugins.end() )
-          return it->operator->();
-
-    // 3. Otherwise, look through the whole list (again, preferably not the legacy one):
-    for ( QHash<QByteArray,PluginEntry>::const_iterator it = m_plugins.constBegin(), end = m_plugins.constEnd() ; it != end ; ++it )
-        if ( it.key() == LEGACY_NAME )
-            sawZero = true;
-        else
-            return it.operator->() ;
-
-    // 4. take the legacy one:
-    if ( sawZero )
-      return plugin( 0 );
-    return 0;
-  }
-
-  const PluginEntry * plugin( int metaTypeId ) const {
-    const QMap<int,QHash<QByteArray,PluginEntry>::const_iterator> & c_pluginsByMetaTypeId = m_pluginsByMetaTypeId;
-    QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator it = c_pluginsByMetaTypeId.find( metaTypeId );
-    if ( it == c_pluginsByMetaTypeId.end() )
-      it = QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator( m_pluginsByMetaTypeId.insert( metaTypeId, m_plugins.find( metaTypeId ? QMetaType::typeName( metaTypeId ) : LEGACY_NAME ) ) );
-    return *it == m_plugins.end() ? 0 : it->operator->() ;
-  }
-
-  const PluginEntry * plugin( const QVector<int> & metaTypeIds, int & chosen ) const {
-    bool sawZero = false;
-    for ( QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end() ; it != end ; ++it )
-      if ( *it == 0 ) {
-        sawZero = true; // skip the legacy type and see if we can find something else first
-      } else if ( const PluginEntry * const entry = plugin( *it ) ) {
-        chosen = *it;
-        return entry;
-      }
-    if ( sawZero ) {
-      chosen = 0;
-      return plugin( 0 );
+    explicit MimeTypeEntry(const QString &mimeType)
+        : m_mimeType(mimeType)
+        , m_plugins()
+        , m_pluginsByMetaTypeId()
+    {
     }
-    return 0;
-  }
+
+    QString type() const
+    {
+        return m_mimeType;
+    }
+
+    void add(const QByteArray &class_, const PluginEntry &entry)
+    {
+        m_pluginsByMetaTypeId.clear(); // iterators will be invalidated by next line
+        m_plugins.insert(class_, entry);
+    }
+
+    const PluginEntry *plugin(const QByteArray &class_) const
+    {
+        const QHash<QByteArray, PluginEntry>::const_iterator it = m_plugins.find(class_);
+        return it == m_plugins.end() ? 0 : it.operator->();
+    }
+
+    const PluginEntry *defaultPlugin() const
+    {
+        // 1. If there's an explicit default plugin, use that one:
+        if (const PluginEntry *pe = plugin(DEFAULT_NAME)) {
+            return pe;
+        }
+
+        // 2. Otherwise, look through the already instantiated plugins,
+        //    and return one of them (preferably not the legacy one):
+        bool sawZero = false;
+        for (QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator it = m_pluginsByMetaTypeId.constBegin(), end = m_pluginsByMetaTypeId.constEnd(); it != end; ++it) {
+            if (it.key() == 0) {
+                sawZero = true;
+            } else if (*it != m_plugins.end()) {
+                return it->operator->();
+            }
+        }
+
+        // 3. Otherwise, look through the whole list (again, preferably not the legacy one):
+        for (QHash<QByteArray, PluginEntry>::const_iterator it = m_plugins.constBegin(), end = m_plugins.constEnd(); it != end; ++it) {
+            if (it.key() == LEGACY_NAME) {
+                sawZero = true;
+            } else {
+                return it.operator->();
+            }
+        }
+
+        // 4. take the legacy one:
+        if (sawZero) {
+            return plugin(0);
+        }
+        return 0;
+    }
+
+    const PluginEntry *plugin(int metaTypeId) const
+    {
+        const QMap<int, QHash<QByteArray, PluginEntry>::const_iterator> &c_pluginsByMetaTypeId = m_pluginsByMetaTypeId;
+        QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator it = c_pluginsByMetaTypeId.find(metaTypeId);
+        if (it == c_pluginsByMetaTypeId.end()) {
+            it = QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator(m_pluginsByMetaTypeId.insert(metaTypeId, m_plugins.find(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME)));
+        }
+        return *it == m_plugins.end() ? 0 : it->operator->();
+    }
+
+    const PluginEntry *plugin(const QVector<int> &metaTypeIds, int &chosen) const
+    {
+        bool sawZero = false;
+        for (QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
+            if (*it == 0) {
+                sawZero = true; // skip the legacy type and see if we can find something else first
+            } else if (const PluginEntry *const entry = plugin(*it)) {
+                chosen = *it;
+                return entry;
+            }
+        }
+        if (sawZero) {
+            chosen = 0;
+            return plugin(0);
+        }
+        return 0;
+    }
 
 private:
-  QString m_mimeType;
-  QHash< QByteArray/* class */, PluginEntry > m_plugins;
-  mutable QMap<int,QHash<QByteArray,PluginEntry>::const_iterator> m_pluginsByMetaTypeId;
+    QString m_mimeType;
+    QHash<QByteArray/* class */, PluginEntry> m_plugins;
+    mutable QMap<int, QHash<QByteArray, PluginEntry>::const_iterator> m_pluginsByMetaTypeId;
 };
 
-static bool operator<( const MimeTypeEntry & lhs, const MimeTypeEntry & rhs )
+static bool operator<(const MimeTypeEntry &lhs, const MimeTypeEntry &rhs)
 {
-  return lhs.type() < rhs.type() ;
+    return lhs.type() < rhs.type();
 }
 
-static bool operator<( const MimeTypeEntry & lhs, const QString & rhs )
+static bool operator<(const MimeTypeEntry &lhs, const QString &rhs)
 {
-  return lhs.type() < rhs ;
+    return lhs.type() < rhs;
 }
 
-static bool operator<( const QString & lhs, const MimeTypeEntry & rhs )
+static bool operator<(const QString &lhs, const MimeTypeEntry &rhs)
 {
-  return lhs < rhs.type();
+    return lhs < rhs.type();
 }
 
-static QString format( const QString & mimeType, const QVector<int> & metaTypeIds ) {
-  if ( metaTypeIds.empty() )
-    return QLatin1String( "default for " ) + mimeType;
-  QStringList classTypes;
-  Q_FOREACH( int metaTypeId, metaTypeIds )
-    classTypes.push_back( QString::fromLatin1( metaTypeId ? QMetaType::typeName( metaTypeId ) : LEGACY_NAME ) );
-  return mimeType + QLatin1String("@{") + classTypes.join(QLatin1String(",")) + QLatin1Char('}');
+static QString format(const QString &mimeType, const QVector<int> &metaTypeIds) {
+    if (metaTypeIds.empty()) {
+        return QLatin1String("default for ") + mimeType;
+    }
+    QStringList classTypes;
+    Q_FOREACH (int metaTypeId, metaTypeIds) {
+        classTypes.push_back(QString::fromLatin1(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME));
+    }
+    return mimeType + QLatin1String("@{") + classTypes.join(QLatin1String(",")) + QLatin1Char('}');
 }
 
 class PluginRegistry
 {
-  public:
+public:
     PluginRegistry()
-      : mDefaultPlugin( PluginEntry( QLatin1String( "application/octet-stream@QByteArray" ), s_defaultItemSerializerPlugin ) ),
-        mOverridePlugin( 0 )
+        : mDefaultPlugin(PluginEntry(QLatin1String("application/octet-stream@QByteArray"), s_defaultItemSerializerPlugin))
+        , mOverridePlugin(0)
     {
-      const PluginLoader* pl = PluginLoader::self();
-      if ( !pl ) {
-        kWarning() << "Cannot instantiate plugin loader!" << endl;
-        return;
-      }
-      const QStringList names = pl->names();
-      kDebug() << "ItemSerializerPluginLoader: "
-               << "found" << names.size() << "plugins." << endl;
-      QMap<QString,MimeTypeEntry> map;
-      QRegExp rx( QLatin1String( "(.+)@(.+)" ) );
-      Q_FOREACH ( const QString & name, names )
-        if ( rx.exactMatch( name ) ) {
-          KMimeType::Ptr mime = KMimeType::mimeType( rx.cap(1), KMimeType::ResolveAliases );
-          if ( mime ) {
-              const QString mimeType = mime->name();
-              const QByteArray classType = rx.cap(2).toLatin1();
-              QMap<QString,MimeTypeEntry>::iterator it = map.find( mimeType );
-              if ( it == map.end() )
-                  it = map.insert( mimeType, MimeTypeEntry( mimeType ) );
-              it->add( classType, PluginEntry( name ) );
-          }
-        } else {
-          kDebug() << "ItemSerializerPluginLoader: "
-                   << "name" << name << "doesn't look like mimetype@classtype" << endl;
+        const PluginLoader *pl = PluginLoader::self();
+        if (!pl) {
+            kWarning() << "Cannot instantiate plugin loader!" << endl;
+            return;
         }
-      const QString APPLICATION_OCTETSTREAM = QLatin1String( _APPLICATION_OCTETSTREAM );
-      QMap<QString,MimeTypeEntry>::iterator it = map.find( APPLICATION_OCTETSTREAM );
-      if ( it == map.end() )
-          it = map.insert( APPLICATION_OCTETSTREAM, MimeTypeEntry( APPLICATION_OCTETSTREAM ) );
-      it->add( "QByteArray", mDefaultPlugin );
-      it->add( LEGACY_NAME,  mDefaultPlugin );
-      const int size = map.size();
-      allMimeTypes.reserve( size );
-      std::copy( map.begin(), map.end(),
-                 std::back_inserter( allMimeTypes ) );
+        const QStringList names = pl->names();
+        kDebug() << "ItemSerializerPluginLoader: "
+                 << "found" << names.size() << "plugins." << endl;
+        QMap<QString, MimeTypeEntry> map;
+        QRegExp rx(QLatin1String("(.+)@(.+)"));
+        Q_FOREACH (const QString &name, names) {
+            if (rx.exactMatch(name)) {
+                KMimeType::Ptr mime = KMimeType::mimeType(rx.cap(1), KMimeType::ResolveAliases);
+                if (mime) {
+                    const QString mimeType = mime->name();
+                    const QByteArray classType = rx.cap(2).toLatin1();
+                    QMap<QString, MimeTypeEntry>::iterator it = map.find(mimeType);
+                    if (it == map.end()) {
+                        it = map.insert(mimeType, MimeTypeEntry(mimeType));
+                    }
+                    it->add(classType, PluginEntry(name));
+                }
+            } else {
+                kDebug() << "ItemSerializerPluginLoader: "
+                         << "name" << name << "doesn't look like mimetype@classtype" << endl;
+            }
+        }
+        const QString APPLICATION_OCTETSTREAM = QLatin1String(_APPLICATION_OCTETSTREAM);
+        QMap<QString, MimeTypeEntry>::iterator it = map.find(APPLICATION_OCTETSTREAM);
+        if (it == map.end()) {
+            it = map.insert(APPLICATION_OCTETSTREAM, MimeTypeEntry(APPLICATION_OCTETSTREAM));
+        }
+        it->add("QByteArray", mDefaultPlugin);
+        it->add(LEGACY_NAME,  mDefaultPlugin);
+        const int size = map.size();
+        allMimeTypes.reserve(size);
+        std::copy(map.begin(), map.end(), std::back_inserter(allMimeTypes));
     }
 
-    QObject * findBestMatch( const QString & type, const QVector<int> & metaTypeId, TypePluginLoader::Options opt ) {
-      if ( QObject * const plugin = findBestMatch( type, metaTypeId ) ) {
-        if ( ( opt & TypePluginLoader::NoDefault ) && plugin == mDefaultPlugin.plugin() )
-          return 0;
+    QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeId, TypePluginLoader::Options opt)
+    {
+        if (QObject *const plugin = findBestMatch(type, metaTypeId)) { {
+            if ((opt &TypePluginLoader::NoDefault) && plugin == mDefaultPlugin.plugin()) {
+                return 0;
+            }
+            return plugin;
+        }
+        }
+        return 0;
+    }
+
+    QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeIds)
+    {
+        if (mOverridePlugin) {
+            return mOverridePlugin;
+        }
+        if (QObject *const plugin = cacheLookup(type, metaTypeIds)) {
+            // plugin cached, so let's take that one
+            return plugin;
+        }
+        int chosen = -1;
+        QObject *const plugin = findBestMatchImpl(type, metaTypeIds, chosen);
+        if (metaTypeIds.empty()) {
+            if (plugin) {
+                cachedDefaultPlugins[type] = plugin;
+            }
+        }
+        if (chosen >= 0) {
+            cachedPlugins[type][chosen] = plugin;
+        }
         return plugin;
-      }
-      return 0;
     }
 
-    QObject * findBestMatch( const QString & type, const QVector<int> & metaTypeIds ) {
-      if ( mOverridePlugin ) {
-        return mOverridePlugin;
-      }
-      if ( QObject * const plugin = cacheLookup( type, metaTypeIds ) )
-        // plugin cached, so let's take that one
-        return plugin;
-      int chosen = -1;
-      QObject * const plugin = findBestMatchImpl( type, metaTypeIds, chosen );
-      if ( metaTypeIds.empty() )
-        if ( plugin )
-          cachedDefaultPlugins[type] = plugin;
-      if ( chosen >= 0 )
-          cachedPlugins[type][chosen] = plugin;
-      return plugin;
-    }
-
-    void overrideDefaultPlugin( QObject *p ) {
-      mOverridePlugin = p;
+    void overrideDefaultPlugin(QObject *p)
+    {
+        mOverridePlugin = p;
     }
 
 private:
-    QObject * findBestMatchImpl( const QString &type, const QVector<int> & metaTypeIds, int & chosen ) const
+    QObject *findBestMatchImpl(const QString &type, const QVector<int> &metaTypeIds, int &chosen) const
     {
-      KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
-      if ( mimeType.isNull() )
-        return mDefaultPlugin.plugin();
-
-      // step 1: find all plugins that match at all
-      QVector<int> matchingIndexes;
-      for ( int i = 0, end = allMimeTypes.size(); i < end; ++i ) {
-        if ( mimeType->is( allMimeTypes[i].type() ) )
-          matchingIndexes.append( i );
-      }
-
-      // step 2: if we have more than one match, find the most specific one using topological sort
-      QVector<int> order;
-      if ( matchingIndexes.size() <= 1 ) {
-        order.push_back( 0 );
-      } else {
-        boost::adjacency_list<> graph( matchingIndexes.size() );
-        for ( int i = 0, end = matchingIndexes.size() ; i != end ; ++i ) {
-          KMimeType::Ptr mimeType = KMimeType::mimeType( allMimeTypes[matchingIndexes[i]].type(), KMimeType::ResolveAliases );
-          if ( mimeType.isNull() )
-            continue;
-          for ( int j = 0; j != end; ++j ) {
-            if ( i != j && mimeType->is( allMimeTypes[matchingIndexes[j]].type() ) )
-              boost::add_edge( j, i, graph );
-          }
+        KMimeType::Ptr mimeType = KMimeType::mimeType(type, KMimeType::ResolveAliases);
+        if (mimeType.isNull()) {
+            return mDefaultPlugin.plugin();
         }
 
-        order.reserve( matchingIndexes.size() );
-        try {
-          boost::topological_sort( graph, std::back_inserter( order ) );
-        } catch ( boost::not_a_dag &e ) {
-          kWarning() << "Mimetype tree is not a DAG!";
-          return mDefaultPlugin.plugin();
+        // step 1: find all plugins that match at all
+        QVector<int> matchingIndexes;
+        for (int i = 0, end = allMimeTypes.size(); i < end; ++i) {
+            if (mimeType->is(allMimeTypes[i].type())) {
+                matchingIndexes.append(i);
+            }
         }
-      }
 
-      // step 3: ask each one in turn if it can handle any of the metaTypeIds:
+        // step 2: if we have more than one match, find the most specific one using topological sort
+        QVector<int> order;
+        if (matchingIndexes.size() <= 1) {
+            order.push_back(0);
+        } else {
+            boost::adjacency_list<> graph(matchingIndexes.size());
+            for (int i = 0, end = matchingIndexes.size(); i != end; ++i) {
+                KMimeType::Ptr mimeType = KMimeType::mimeType(allMimeTypes[matchingIndexes[i]].type(), KMimeType::ResolveAliases);
+                if (mimeType.isNull()) {
+                    continue;
+                }
+                for (int j = 0; j != end; ++j) {
+                    if (i != j && mimeType->is(allMimeTypes[matchingIndexes[j]].type())) {
+                        boost::add_edge(j, i, graph);
+                    }
+                }
+            }
+
+            order.reserve(matchingIndexes.size());
+            try {
+                boost::topological_sort(graph, std::back_inserter(order));
+            } catch (boost::not_a_dag &e) {
+                kWarning() << "Mimetype tree is not a DAG!";
+                return mDefaultPlugin.plugin();
+            }
+        }
+
+        // step 3: ask each one in turn if it can handle any of the metaTypeIds:
 //       kDebug() << "Looking for " << format( type, metaTypeIds );
-      for ( QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd() ; it != end ; ++it ) {
+        for (QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd(); it != end; ++it) {
 //         kDebug() << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
 // //                  << "as the closest match";
-        const MimeTypeEntry & mt = allMimeTypes[matchingIndexes[*it]];
-        if ( metaTypeIds.empty() ) {
-          if ( const PluginEntry * const entry = mt.defaultPlugin() ) {
+            const MimeTypeEntry &mt = allMimeTypes[matchingIndexes[*it]];
+            if (metaTypeIds.empty()) {
+                if (const PluginEntry *const entry = mt.defaultPlugin()) {
 //             kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
-            return entry->plugin();
-          } else {
+                    return entry->plugin();
+                } else {
 //             kDebug() << "    -> no default plugin for this mime type, trying next";
-          }
-        } else if ( const PluginEntry * const entry = mt.plugin( metaTypeIds, chosen ) ) {
+                }
+            } else if (const PluginEntry *const entry = mt.plugin(metaTypeIds, chosen)) {
 //           kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
-          return entry->plugin();
-        } else {
+                return entry->plugin();
+            } else {
 //           kDebug() << "   -> can't handle any of the types, trying next";
+            }
         }
-      }
 
 //       kDebug() << "  No further candidates, using default plugin";
-      // no luck? Use the default plugin
-      return mDefaultPlugin.plugin();
+        // no luck? Use the default plugin
+        return mDefaultPlugin.plugin();
     }
 
     std::vector<MimeTypeEntry> allMimeTypes;
-    QHash<QString, QMap<int,QObject*> > cachedPlugins;
-    QHash<QString, QObject*> cachedDefaultPlugins;
+    QHash<QString, QMap<int, QObject *> > cachedPlugins;
+    QHash<QString, QObject *> cachedDefaultPlugins;
 
     // ### cache NULLs, too
-    QObject * cacheLookup( const QString & mimeType, const QVector<int> & metaTypeIds ) const {
-      if ( metaTypeIds.empty() ) {
-        const QHash<QString,QObject*>::const_iterator hit = cachedDefaultPlugins.find( mimeType );
-        if ( hit != cachedDefaultPlugins.end() )
-            return *hit;
-      }
+    QObject *cacheLookup(const QString &mimeType, const QVector<int> &metaTypeIds) const {
+        if (metaTypeIds.empty()) {
+            const QHash<QString, QObject *>::const_iterator hit = cachedDefaultPlugins.find(mimeType);
+            if (hit != cachedDefaultPlugins.end()) {
+                return *hit;
+            }
+        }
 
-      const QHash<QString,QMap<int,QObject*> >::const_iterator hit = cachedPlugins.find( mimeType );
-      if ( hit == cachedPlugins.end() )
+        const QHash<QString, QMap<int, QObject *> >::const_iterator hit = cachedPlugins.find(mimeType);
+        if (hit == cachedPlugins.end()) {
+            return 0;
+        }
+        bool sawZero = false;
+        for (QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
+            if (*it == 0) {
+                sawZero = true; // skip the legacy type and see if we can find something else first
+            } else if (QObject *const o = hit->value(*it)) {
+                return o;
+            }
+        }
+        if (sawZero) {
+            return hit->value(0);
+        }
         return 0;
-      bool sawZero = false;
-      for ( QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end() ; it != end ; ++it )
-        if ( *it == 0 )
-          sawZero = true; // skip the legacy type and see if we can find something else first
-        else if ( QObject * const o = hit->value( *it ) )
-          return o;
-      if ( sawZero )
-        return hit->value( 0 );
-      return 0;
     }
 
-  private:
+private:
     PluginEntry mDefaultPlugin;
     QObject *mOverridePlugin;
 };
 
-K_GLOBAL_STATIC( PluginRegistry, s_pluginRegistry )
+K_GLOBAL_STATIC(PluginRegistry, s_pluginRegistry)
 
-QObject* TypePluginLoader::objectForMimeTypeAndClass( const QString &mimetype, const QVector<int> & metaTypeIds, Options opt )
+QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options opt)
 {
-  return s_pluginRegistry->findBestMatch( mimetype, metaTypeIds, opt );
+    return s_pluginRegistry->findBestMatch(mimetype, metaTypeIds, opt);
 }
 
 #if 0
-QObject* TypePluginLoader::legacyObjectForMimeType( const QString &mimetype ) {
+QObject *TypePluginLoader::legacyObjectForMimeType(const QString &mimetype) {
     // ### impl specifically - only works b/c vector isn't used in impl ###
-    return objectForMimeTypeAndClass( mimetype, QVector<int>( 1, 0 ) );
+    return objectForMimeTypeAndClass(mimetype, QVector<int>(1, 0));
 }
 #endif
 
-QObject* TypePluginLoader::defaultObjectForMimeType( const QString &mimetype ) {
-    return objectForMimeTypeAndClass( mimetype, QVector<int>() );
+QObject *TypePluginLoader::defaultObjectForMimeType(const QString &mimetype) {
+    return objectForMimeTypeAndClass(mimetype, QVector<int>());
 }
 
-ItemSerializerPlugin* TypePluginLoader::pluginForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options opt )
+ItemSerializerPlugin *TypePluginLoader::pluginForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options opt)
 {
-  return qobject_cast<ItemSerializerPlugin*>( objectForMimeTypeAndClass( mimetype, metaTypeIds, opt ) );
+    return qobject_cast<ItemSerializerPlugin *>(objectForMimeTypeAndClass(mimetype, metaTypeIds, opt));
 }
 
 #if 0
-ItemSerializerPlugin* TypePluginLoader::legacyPluginForMimeType( const QString &mimetype ) {
-  ItemSerializerPlugin* plugin = qobject_cast<ItemSerializerPlugin*>( legacyObjectForMimeType( mimetype ) );
-  Q_ASSERT( plugin );
-  return plugin;
+ItemSerializerPlugin *TypePluginLoader::legacyPluginForMimeType(const QString &mimetype) {
+    ItemSerializerPlugin *plugin = qobject_cast<ItemSerializerPlugin *>(legacyObjectForMimeType(mimetype));
+    Q_ASSERT(plugin);
+    return plugin;
 }
 #endif
 
-ItemSerializerPlugin* TypePluginLoader::defaultPluginForMimeType( const QString &mimetype ) {
-  ItemSerializerPlugin* plugin = qobject_cast<ItemSerializerPlugin*>( defaultObjectForMimeType( mimetype ) );
-  Q_ASSERT( plugin );
-  return plugin;
+ItemSerializerPlugin *TypePluginLoader::defaultPluginForMimeType(const QString &mimetype) {
+    ItemSerializerPlugin *plugin = qobject_cast<ItemSerializerPlugin *>(defaultObjectForMimeType(mimetype));
+    Q_ASSERT(plugin);
+    return plugin;
 }
 
-void TypePluginLoader::overridePluginLookup( QObject *p ) {
-    s_pluginRegistry->overrideDefaultPlugin( p );
+void TypePluginLoader::overridePluginLookup(QObject *p) {
+    s_pluginRegistry->overrideDefaultPlugin(p);
 }
 
 }

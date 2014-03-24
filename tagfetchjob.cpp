@@ -32,8 +32,8 @@ class Akonadi::TagFetchJobPrivate : public JobPrivate
 {
 public:
     TagFetchJobPrivate(TagFetchJob *parent)
-        :JobPrivate(parent),
-         mEmitTimer(0)
+        : JobPrivate(parent)
+        , mEmitTimer(0)
     {
     }
 
@@ -64,40 +64,40 @@ public:
     Tag::List mRequestedTags;
     Tag::List mResultTags;
     Tag::List mPendingTags; // items pending for emitting itemsReceived()
-    QTimer* mEmitTimer;
+    QTimer *mEmitTimer;
     TagFetchScope mFetchScope;
 };
 
 TagFetchJob::TagFetchJob(QObject *parent)
-    :Job(new TagFetchJobPrivate(this), parent)
+    : Job(new TagFetchJobPrivate(this), parent)
 {
     Q_D(TagFetchJob);
     d->init();
 }
 
 TagFetchJob::TagFetchJob(const Tag &tag, QObject *parent)
-    :Job(new TagFetchJobPrivate(this), parent)
+    : Job(new TagFetchJobPrivate(this), parent)
 {
     Q_D(TagFetchJob);
     d->init();
     d->mRequestedTags << tag;
 }
 
-TagFetchJob::TagFetchJob(const Tag::List& tags, QObject* parent)
-    :Job(new TagFetchJobPrivate(this), parent)
+TagFetchJob::TagFetchJob(const Tag::List &tags, QObject *parent)
+    : Job(new TagFetchJobPrivate(this), parent)
 {
     Q_D(TagFetchJob);
     d->init();
     d->mRequestedTags = tags;
 }
 
-TagFetchJob::TagFetchJob(const QList<Tag::Id>& ids, QObject* parent)
+TagFetchJob::TagFetchJob(const QList<Tag::Id> &ids, QObject *parent)
     : Job(new TagFetchJobPrivate(this), parent)
 {
     Q_D(TagFetchJob);
     d->init();
     Q_FOREACH (Tag::Id id, ids) {
-      d->mRequestedTags << Tag(id);
+        d->mRequestedTags << Tag(id);
     }
 }
 
@@ -107,7 +107,7 @@ void TagFetchJob::setFetchScope(const TagFetchScope &fetchScope)
     d->mFetchScope = fetchScope;
 }
 
-TagFetchScope& TagFetchJob::fetchScope()
+TagFetchScope &TagFetchJob::fetchScope()
 {
     Q_D(TagFetchJob);
     return d->mFetchScope;
@@ -136,7 +136,7 @@ void TagFetchJob::doStart()
     }
     command += ")\n";
 
-    d->writeData( command );
+    d->writeData(command);
 }
 
 void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
@@ -153,10 +153,10 @@ void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data
             Tag tag;
             ProtocolHelper::parseTagFetchResult(fetchResponse, tag);
 
-            if (tag.isValid() ) {
+            if (tag.isValid()) {
                 d->mResultTags.append(tag);
                 d->mPendingTags.append(tag);
-                if ( !d->mEmitTimer->isActive() ) {
+                if (!d->mEmitTimer->isActive()) {
                     d->mEmitTimer->start();
                 }
             }

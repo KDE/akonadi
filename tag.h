@@ -27,8 +27,7 @@ namespace Akonadi {
 class Tag;
 }
 
-AKONADI_EXPORT uint qHash( const Akonadi::Tag & );
-
+AKONADI_EXPORT uint qHash(const Akonadi::Tag &);
 
 #include <akonadi/attributeentity.h>
 #include <QVector>
@@ -55,7 +54,7 @@ public:
      *
      * PLAIN tags are general purpose tags that are easy to map by backends.
      */
-    static const char* PLAIN;
+    static const char *PLAIN;
 
     Tag();
     explicit Tag(Id id);
@@ -73,7 +72,7 @@ public:
     AttributeEntity &operator=(const AttributeEntity &);
     bool operator==(const Tag &) const;
 
-    static Tag fromUrl( const KUrl &url );
+    static Tag fromUrl(const KUrl &url);
 
     /**
      * Returns the url of the tag.

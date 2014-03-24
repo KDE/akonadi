@@ -45,26 +45,26 @@ class TransactionCommitJobPrivate;
  */
 class AKONADI_EXPORT TransactionBeginJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new transaction begin job.
      *
      * @param parent The parent job or Session, must not be 0.
      */
-    explicit TransactionBeginJob( QObject *parent );
+    explicit TransactionBeginJob(QObject *parent);
 
     /**
      * Destroys the transaction begin job.
      */
     ~TransactionBeginJob();
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( TransactionBeginJob )
+private:
+    Q_DECLARE_PRIVATE(TransactionBeginJob)
 };
 
 /**
@@ -80,27 +80,27 @@ class AKONADI_EXPORT TransactionBeginJob : public Job
  */
 class AKONADI_EXPORT TransactionRollbackJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new transaction rollback job.
      * The parent must be the same parent as for the TransactionBeginJob.
      *
      * @param parent The parent job or Session, must not be 0.
      */
-    explicit TransactionRollbackJob( QObject *parent );
+    explicit TransactionRollbackJob(QObject *parent);
 
     /**
      * Destroys the transaction rollback job.
      */
     ~TransactionRollbackJob();
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( TransactionRollbackJob )
+private:
+    Q_DECLARE_PRIVATE(TransactionRollbackJob)
 };
 
 /**
@@ -112,27 +112,27 @@ class AKONADI_EXPORT TransactionRollbackJob : public Job
  */
 class AKONADI_EXPORT TransactionCommitJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new transaction commit job.
      * The parent must be the same parent as for the TransactionBeginJob.
      *
      * @param parent The parent job or Session, must not be 0.
      */
-    explicit TransactionCommitJob( QObject *parent );
+    explicit TransactionCommitJob(QObject *parent);
 
     /**
      * Destroys the transaction commit job.
      */
     ~TransactionCommitJob();
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( TransactionCommitJob )
+private:
+    Q_DECLARE_PRIVATE(TransactionCommitJob)
 };
 
 }

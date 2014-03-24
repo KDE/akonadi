@@ -26,22 +26,22 @@ using namespace Akonadi;
 struct Akonadi::TagDeleteJobPrivate : public JobPrivate
 {
     TagDeleteJobPrivate(TagDeleteJob *parent)
-        :JobPrivate(parent)
+        : JobPrivate(parent)
     {
     }
 
     Tag::List mTagsToRemove;
 };
 
-TagDeleteJob::TagDeleteJob(const Akonadi::Tag& tag, QObject* parent)
-    :Job(new TagDeleteJobPrivate(this), parent)
+TagDeleteJob::TagDeleteJob(const Akonadi::Tag &tag, QObject *parent)
+    : Job(new TagDeleteJobPrivate(this), parent)
 {
     Q_D(TagDeleteJob);
     d->mTagsToRemove << tag;
 }
 
-TagDeleteJob::TagDeleteJob(const Tag::List& tags, QObject* parent)
-    :Job(new TagDeleteJobPrivate(this), parent)
+TagDeleteJob::TagDeleteJob(const Tag::List &tags, QObject *parent)
+    : Job(new TagDeleteJobPrivate(this), parent)
 {
     Q_D(TagDeleteJob);
     d->mTagsToRemove = tags;
@@ -53,15 +53,15 @@ void TagDeleteJob::doStart()
     QByteArray command = d->newTag();
     try {
         command += ProtocolHelper::tagSetToByteArray(d->mTagsToRemove, "TAGREMOVE");
-    } catch ( const std::exception &e ) {
+    } catch (const std::exception &e) {
         setError(Unknown);
-        setErrorText( QString::fromUtf8(e.what()));
+        setErrorText(QString::fromUtf8(e.what()));
         emitResult();
         return;
     }
     command += "\n";
 
-    d->writeData( command );
+    d->writeData(command);
 }
 
 Tag::List TagDeleteJob::tags() const
@@ -69,4 +69,3 @@ Tag::List TagDeleteJob::tags() const
     Q_D(const TagDeleteJob);
     return d->mTagsToRemove;
 }
-

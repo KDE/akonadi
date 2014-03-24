@@ -44,7 +44,7 @@ class TransactionSequencePrivate;
  *
  * // Delete a couple of items inside a transaction
  * Akonadi::TransactionSequence *transaction = new Akonadi::TransactionSequence;
- * connect( transaction, SIGNAL( result( KJob* ) ), SLOT( transactionFinished( KJob* ) ) );
+ * connect( transaction, SIGNAL(result(KJob*)), SLOT(transactionFinished(KJob*)) );
  *
  * const Akonadi::Item::List items = ...
  *
@@ -68,14 +68,14 @@ class TransactionSequencePrivate;
  */
 class AKONADI_EXPORT TransactionSequence : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new transaction sequence.
      *
      * @param parent The parent object.
      */
-    explicit TransactionSequence( QObject *parent = 0 );
+    explicit TransactionSequence(QObject *parent = 0);
 
     /**
      * Destroys the transaction sequence.
@@ -102,7 +102,7 @@ class AKONADI_EXPORT TransactionSequence : public Job
      * @param job a job to ignore errors from
      * @since 4.5
      */
-    void setIgnoreJobFailure( KJob *job );
+    void setIgnoreJobFailure(KJob *job);
 
     /**
      * Disable automatic committing.
@@ -114,21 +114,21 @@ class AKONADI_EXPORT TransactionSequence : public Job
      * @param enable @c true to enable autocommitting (default), @c false to disable it
      * @since 4.5
      */
-    void setAutomaticCommittingEnabled( bool enable );
+    void setAutomaticCommittingEnabled(bool enable);
 
-  protected:
-    bool addSubjob( KJob* job );
+protected:
+    bool addSubjob(KJob *job);
     void doStart();
 
-  protected Q_SLOTS:
-    void slotResult( KJob *job );
+protected Q_SLOTS:
+    void slotResult(KJob *job);
 
-  private:
-    Q_DECLARE_PRIVATE( TransactionSequence )
+private:
+    Q_DECLARE_PRIVATE(TransactionSequence)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void commitResult(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void rollbackResult(KJob*) )
+    Q_PRIVATE_SLOT(d_func(), void commitResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void rollbackResult(KJob *))
     //@endcond
 };
 

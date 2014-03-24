@@ -42,8 +42,8 @@ struct TagWidget::Private {
 };
 
 TagWidget::TagWidget(QWidget *parent)
-:   QWidget(parent),
-    d(new Private)
+    : QWidget(parent)
+    , d(new Private)
 {
     Monitor *monitor = new Monitor(this);
     monitor->setTypeMonitored(Monitor::Tags);
@@ -94,7 +94,7 @@ void TagWidget::updateView()
     QStringList tagsNames;
     // Load the real tag names from the model
     for (int i = 0; i < d->mModel->rowCount(); ++i) {
-        const QModelIndex index = d->mModel->index( i, 0 );
+        const QModelIndex index = d->mModel->index(i, 0);
         const Akonadi::Tag tag = d->mModel->data(index, Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
         if (d->mTags.contains(tag)) {
             tagsNames << tag.name();

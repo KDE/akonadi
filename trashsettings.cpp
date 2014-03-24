@@ -27,19 +27,19 @@
 
 using namespace Akonadi;
 
-Akonadi::Collection TrashSettings::getTrashCollection( const QString& resource )
+Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
 {
-  KConfig config( QString::fromLatin1( "akonaditrashrc" ) );
-  KConfigGroup group( &config, resource );
-  const Akonadi::Entity::Id colId = group.readEntry<Akonadi::Entity::Id> ( "TrashCollection", -1 );
-  kWarning() << resource << colId;
-  return Collection( colId );
+    KConfig config(QString::fromLatin1("akonaditrashrc"));
+    KConfigGroup group(&config, resource);
+    const Akonadi::Entity::Id colId = group.readEntry<Akonadi::Entity::Id> ("TrashCollection", -1);
+    kWarning() << resource << colId;
+    return Collection(colId);
 }
 
-void TrashSettings::setTrashCollection( const QString& resource, const Akonadi::Collection& collection )
+void TrashSettings::setTrashCollection(const QString &resource, const Akonadi::Collection &collection)
 {
-  KConfig config( QString::fromLatin1( "akonaditrashrc" ) );
-  KConfigGroup group( &config, resource );
-  kWarning() << resource << collection.id();
-  group.writeEntry( "TrashCollection", collection.id() );
+    KConfig config(QString::fromLatin1("akonaditrashrc"));
+    KConfigGroup group(&config, resource);
+    kWarning() << resource << collection.id();
+    group.writeEntry("TrashCollection", collection.id());
 }

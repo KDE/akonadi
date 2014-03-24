@@ -44,7 +44,7 @@ public:
     Akonadi::Tag::List selection();
 
 protected:
-    bool eventFilter(QObject* watched, QEvent* event);
+    bool eventFilter(QObject *watched, QEvent *event);
 
 private:
     class Private;

@@ -28,15 +28,15 @@ using namespace Akonadi;
 struct Akonadi::TagModifyJobPrivate : public JobPrivate
 {
     TagModifyJobPrivate(TagModifyJob *parent)
-      : JobPrivate(parent)
+        : JobPrivate(parent)
     {
     }
 
     Tag mTag;
 };
 
-TagModifyJob::TagModifyJob(const Akonadi::Tag& tag, QObject* parent)
-    :Job(new TagModifyJobPrivate(this), parent)
+TagModifyJob::TagModifyJob(const Akonadi::Tag &tag, QObject *parent)
+    : Job(new TagModifyJobPrivate(this), parent)
 {
     Q_D(TagModifyJob);
     d->mTag = tag;
@@ -59,9 +59,9 @@ void TagModifyJob::doStart()
     QByteArray command = d->newTag();
     try {
         command += ProtocolHelper::tagSetToByteArray(Tag::List() << d->mTag, "TAGSTORE");
-    } catch ( const std::exception &e ) {
+    } catch (const std::exception &e) {
         setError(Unknown);
-        setErrorText( QString::fromUtf8(e.what()));
+        setErrorText(QString::fromUtf8(e.what()));
         emitResult();
         return;
     }
@@ -69,31 +69,31 @@ void TagModifyJob::doStart()
     command += ImapParser::join(list, " ");
     command += " ";
 
-    if ( !d->mTag.attributes().isEmpty() ) {
+    if (!d->mTag.attributes().isEmpty()) {
         command += ProtocolHelper::attributesToByteArray(d->mTag, false);
     }
-    if ( !d->mTag.removedAttributes().isEmpty() ) {
+    if (!d->mTag.removedAttributes().isEmpty()) {
         QList<QByteArray> l;
-        Q_FOREACH ( const QByteArray &attr, d->mTag.removedAttributes()) {
+        Q_FOREACH (const QByteArray &attr, d->mTag.removedAttributes()) {
             l << '-' + attr;
         }
-        command += ImapParser::join( l, " " );
+        command += ImapParser::join(l, " ");
     }
 
     command += ")";
 
-    d->writeData( command );
+    d->writeData(command);
 }
 
-void TagModifyJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
+void TagModifyJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
 {
-  Q_D(TagModifyJob);
-  Q_UNUSED(tag);
+    Q_D(TagModifyJob);
+    Q_UNUSED(tag);
 
-  if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
-    ChangeMediator::invalidateTag(d->mTag);
-  }
+    if (data.startsWith("OK")) {     //krazy:exclude=strings
+        ChangeMediator::invalidateTag(d->mTag);
+    }
 
-  emitResult();
-  return;
+    emitResult();
+    return;
 }
