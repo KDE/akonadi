@@ -23,8 +23,8 @@
 #include "dbusconnectionpool.h"
 #include "transportadaptor.h"
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
 
 #include <QtDBus/QDBusConnection>
 

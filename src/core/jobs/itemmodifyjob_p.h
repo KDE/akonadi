@@ -20,6 +20,7 @@
 #ifndef AKONADI_ITEMMODIFYJOB_P_H
 #define AKONADI_ITEMMODIFYJOB_P_H
 
+#include "akonadicore_export.h"
 #include "job_p.h"
 
 namespace Akonadi {
@@ -27,7 +28,7 @@ namespace Akonadi {
 /**
  * @internal
  */
-class ItemModifyJobPrivate : public JobPrivate
+class AKONADICORE_EXPORT ItemModifyJobPrivate : public JobPrivate
 {
 public:
     enum Operation {

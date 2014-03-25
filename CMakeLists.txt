@@ -25,7 +25,7 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADI
 )
 
 ########### Find packages ###########
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews KIO KDE4Support)
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews KIO Config Solid KDE4Support)
 
 # Workaround for Akonadi server conflicting with our framework (same variable names)
 # TODO: Remove once we merge both repositories into one

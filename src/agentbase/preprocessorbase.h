@@ -22,11 +22,10 @@
 #ifndef AKONADI_PREPROCESSORBASE_H
 #define AKONADI_PREPROCESSORBASE_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/agentbase.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "akonadiagentbase_export.h"
+#include "agentbase.h"
+#include "collection.h"
+#include "item.h"
 
 namespace Akonadi
 {
@@ -52,7 +51,7 @@ class PreprocessorBasePrivate;
  * @author Szymon Stefanek <s.stefanek@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT PreprocessorBase : public AgentBase
+class AKONADIAGENTBASE_EXPORT PreprocessorBase : public AgentBase
 {
     Q_OBJECT
 

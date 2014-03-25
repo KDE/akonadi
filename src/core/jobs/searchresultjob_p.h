@@ -20,6 +20,7 @@
 #ifndef AKONADI_SEARCHRESULTJOB_H
 #define AKONADI_SEARCHRESULTJOB_H
 
+#include "akonadicore_export.h"
 #include "job.h"
 
 namespace Akonadi {
@@ -28,7 +29,7 @@ class SearchResultJobPrivate;
 class ImapSet;
 class Collection;
 
-class SearchResultJob : public Akonadi::Job
+class AKONADICORE_EXPORT SearchResultJob : public Akonadi::Job
 {
     Q_OBJECT
 public:

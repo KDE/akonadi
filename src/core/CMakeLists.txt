@@ -1,11 +1,6 @@
 # Turn exceptions on
 kde_enable_exceptions()
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/jobs
-    ${CMAKE_CURRENT_SOURCE_DIR}/models
-)
-
 set(akonadicore_base_SRCS
     agentinstance.cpp
     agentmanager.cpp
@@ -137,7 +132,7 @@ set(akonadicore_jobs_SRCS
 )
 
 # FIXME KF5: Remove once we merge Akonadi repository in
-# This is so that we find
+# This is so that we find akonadi/private/notificationmessagev3_p.h
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
@@ -162,22 +157,14 @@ set(akonadicore_SRCS
 
 add_library(KF5AkonadiCore ${akonadicore_SRCS})
 
-# qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase resourceadaptor Akonadi__ResourceAdaptor )
-# qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Preprocessor.xml preprocessorbase_p.h Akonadi::PreprocessorBasePrivate preprocessoradaptor Akonadi__PreprocessorAdaptor )
-# qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase statusadaptor Akonadi__StatusAdaptor )
-# qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase controladaptor Akonadi__ControlAdaptor)
-# qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml transportresourcebase_p.h Akonadi::TransportResourceBasePrivate transportadaptor Akonadi__TransportAdaptor )
-# qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Agent.Search.xml agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate searchadaptor Akonadi__SearchAdaptor )
-#
-
-
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
 
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/akonadi;${Boost_INCLUDE_DIR}>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AkonadiCore_SOURCE_DIR}/src;${AkonadiCore_BINARY_DIR}/src>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AkonadiCore_SOURCE_DIR}/src/core;${AkonadiCore_BINARY_DIR}/src/core>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/Akonadi;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_BINARY_DIR}/src/core/jobs>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_BINARY_DIR}/src/core/models>")
 
 target_link_libraries(KF5AkonadiCore
     KF5::ItemModels

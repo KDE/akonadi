@@ -24,8 +24,8 @@
 #ifndef AKONADI_AGENTBASE_H
 #define AKONADI_AGENTBASE_H
 
-#include "akonadi_export.h"
-#include <akonadi/item.h>
+#include "akonadiagentbase_export.h"
+#include "item.h"
 
 #include <KDE/KApplication>
 
@@ -77,7 +77,7 @@ class Session;
  *
  * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
+class AKONADIAGENTBASE_EXPORT AgentBase : public QObject, protected QDBusContext
 {
     Q_OBJECT
 
@@ -183,7 +183,7 @@ public:
      *
      * @deprecated Use ObserverV2 instead
      */
-    class AKONADI_EXPORT Observer  // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT Observer  // krazy:exclude=dpointer
     {
     public:
         /**
@@ -242,7 +242,7 @@ public:
      *
      * @since 4.4
      */
-    class AKONADI_EXPORT ObserverV2 : public Observer  // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer  // krazy:exclude=dpointer
     {
     public:
         using Observer::collectionChanged;
@@ -307,7 +307,7 @@ public:
      *
      * @since 4.11
      */
-    class AKONADI_EXPORT ObserverV3 : public ObserverV2 // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT ObserverV3 : public ObserverV2 // krazy:exclude=dpointer
     {
     public:
         /**
@@ -366,7 +366,7 @@ public:
      *
      * @since 4.13
      */
-    class AKONADI_EXPORT ObserverV4 : public ObserverV3 // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT ObserverV4 : public ObserverV3 // krazy:exclude=dpointer
     {
     public:
         /**

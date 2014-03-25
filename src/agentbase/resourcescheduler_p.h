@@ -20,10 +20,10 @@
 #ifndef AKONADI_RESOURCESCHEDULER_P_H
 #define AKONADI_RESOURCESCHEDULER_P_H
 
-#include <akonadi/agentbase.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/resourcebase.h>
+#include "agentbase.h"
+#include "collection.h"
+#include "item.h"
+#include "resourcebase.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

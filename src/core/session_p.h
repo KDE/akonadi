@@ -20,7 +20,7 @@
 #ifndef AKONADI_SESSION_P_H
 #define AKONADI_SESSION_P_H
 
-#include "akonadiprivate_export.h"
+#include "akonadicore_export.h"
 #include "session.h"
 #include "item.h"
 #include "servermanager.h"
@@ -39,7 +39,7 @@ namespace Akonadi {
 /**
  * @internal
  */
-class AKONADI_TESTS_EXPORT SessionPrivate
+class AKONADICORE_EXPORT SessionPrivate
 {
 public:
     explicit SessionPrivate(Session *parent);

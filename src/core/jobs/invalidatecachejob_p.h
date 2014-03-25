@@ -20,6 +20,7 @@
 #ifndef AKONADI_INVALIDATECACHEJOB_P_H
 #define AKONADI_INVALIDATECACHEJOB_P_H
 
+#include "akonadicore_export.h"
 #include "job.h"
 
 namespace Akonadi {
@@ -31,7 +32,7 @@ class InvalidateCacheJobPrivate;
  * Helper job to invalidate item cache for an entire collection.
  * @since 4.8
  */
-class InvalidateCacheJob : public Akonadi::Job
+class AKONADICORE_EXPORT InvalidateCacheJob : public Akonadi::Job
 {
     Q_OBJECT
 public:

@@ -20,12 +20,12 @@
 #ifndef RESOURCESETTINGS_H
 #define RESOURCESETTINGS_H
 
-#include "akonadi_export.h"
-#include "akonadi/resourcebasesettings.h"
+#include "akonadiagentbase_export.h"
+#include "resourcebasesettings.h"
 
 namespace Akonadi {
 
-class AKONADI_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //krazy:exclude=dpointer
+class AKONADIAGENTBASE_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //krazy:exclude=dpointer
 {
     Q_OBJECT
 public:

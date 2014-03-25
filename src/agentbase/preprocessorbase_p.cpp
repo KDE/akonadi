@@ -24,7 +24,7 @@
 #include "preprocessoradaptor.h"
 #include "servermanager.h"
 
-#include <akonadi/itemfetchjob.h>
+#include "itemfetchjob.h"
 
 using namespace Akonadi;
 

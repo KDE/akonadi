@@ -27,6 +27,7 @@
 #include "collectionfetchscope.h"
 #include "servermanager.h"
 #include "agentbase.h"
+#include <akonadi/private/imapset_p.h>
 
 using namespace Akonadi;
 

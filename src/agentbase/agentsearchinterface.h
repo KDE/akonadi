@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTSEARCHINTERFACE_H
 #define AKONADI_AGENTSEARCHINTERFACE_H
 
-#include "akonadi_export.h"
+#include "akonadiagentbase_export.h"
 #include <QString>
 
 namespace Akonadi {
@@ -39,7 +39,7 @@ class ImapSet;
  *
  * @since 4.5
  */
-class AKONADI_EXPORT AgentSearchInterface
+class AKONADIAGENTBASE_EXPORT AgentSearchInterface
 {
 public:
     enum ResultScope {

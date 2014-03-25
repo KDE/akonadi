@@ -21,9 +21,10 @@
 #define AKOANDI_AGENTSEARCHINTERFACE_P_H
 
 #include "agentsearchinterface.h"
+#include "collection.h"
+
 #include <QObject>
 
-#include <akonadi/collection.h>
 
 class KJob;
 

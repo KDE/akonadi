@@ -23,7 +23,7 @@
 #ifndef AKONADI_AGENTFACTORY_H
 #define AKONADI_AGENTFACTORY_H
 
-#include "akonadi_export.h"
+#include "akonadiagentbase_export.h"
 #include "agentbase.h"
 
 #include <QtCore/QObject>
@@ -40,7 +40,7 @@ class AgentFactoryBasePrivate;
  * @internal
  * @since 4.6
  */
-class AKONADI_EXPORT AgentFactoryBase : public QObject
+class AKONADIAGENTBASE_EXPORT AgentFactoryBase : public QObject
 {
     Q_OBJECT
 

@@ -21,6 +21,7 @@
 #define AKONADI_RESOURCESELECTJOB_P_H
 
 #include "akonadiprivate_export.h"
+#include "akonadicore_export.h"
 #include "job.h"
 
 namespace Akonadi {
@@ -78,7 +79,7 @@ class ResourceSelectJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_TESTS_EXPORT ResourceSelectJob : public Job
+class AKONADICORE_EXPORT ResourceSelectJob : public Job
 {
     Q_OBJECT
 public:

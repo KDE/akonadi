@@ -20,7 +20,7 @@
 #ifndef AKONADI_MONITOR_P_H
 #define AKONADI_MONITOR_P_H
 
-#include "akonadiprivate_export.h"
+#include "akonadicore_export.h"
 #include "monitor.h"
 #include "collection.h"
 #include "collectionstatisticsjob.h"
@@ -48,7 +48,7 @@ class Monitor;
 /**
  * @internal
  */
-class AKONADI_TESTS_EXPORT MonitorPrivate
+class AKONADICORE_EXPORT MonitorPrivate
 {
 public:
     MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);

@@ -20,11 +20,11 @@
 #ifndef AKONADI_TRANSPORTRESOURCEBASE_H
 #define AKONADI_TRANSPORTRESOURCEBASE_H
 
-#include "akonadi_export.h"
+#include "akonadiagentbase_export.h"
+#include "item.h"
 
 #include <QtCore/QString>
 
-#include <akonadi/item.h>
 
 class KJob;
 
@@ -52,7 +52,7 @@ class TransportResourceBasePrivate;
   * @author Constantin Berzan <exit3219@gmail.com>
   * @since 4.4
  */
-class AKONADI_EXPORT TransportResourceBase
+class AKONADIAGENTBASE_EXPORT TransportResourceBase
 {
 public:
     /**

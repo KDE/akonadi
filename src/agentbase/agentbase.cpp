@@ -23,12 +23,12 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
+#include "akonadi_version.h"
 #include "agentmanager.h"
 #include "changerecorder.h"
 #include "controladaptor.h"
 #include "dbusconnectionpool.h"
 #include "itemfetchjob.h"
-#include "kdepimlibs-version.h"
 #include "monitor_p.h"
 #include "servermanager_p.h"
 #include "session.h"
@@ -423,7 +423,7 @@ void AgentBasePrivate::setProgramName()
     if (!mName.isEmpty()) {
         programName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName) ;
     }
-    const_cast<K4AboutData*>(KGlobal::mainComponent().aboutData())->setProgramName(ki18n(programName.toUtf8()));
+    const_cast<K4AboutData*>(KGlobal::mainComponent().aboutData())->setProgramName(ki18n(programName.toUtf8().constData()));
 }
 
 void AgentBasePrivate::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
@@ -841,7 +841,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     // strip off full path and possible .exe suffix
     const QByteArray catalog = fi.baseName().toLatin1();
 
-    KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog, ki18n("Akonadi Agent"), KDEPIMLIBS_VERSION,
+    KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog, ki18n("Akonadi Agent"), AKONADI_VERSION_STRING,
                        ki18n("Akonadi Agent"));
 
     KCmdLineOptions options;

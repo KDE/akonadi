@@ -23,12 +23,11 @@
 #ifndef AKONADI_RESOURCEBASE_H
 #define AKONADI_RESOURCEBASE_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/agentbase.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/itemsync.h>
+#include "akonadiagentbase_export.h"
+#include "agentbase.h"
+#include "collection.h"
+#include "item.h"
+#include "itemsync.h"
 
 class KJob;
 class Akonadi__ResourceAdaptor;
@@ -144,7 +143,7 @@ class ResourceBasePrivate;
  * @todo Convenience base class for collection-less resources
  */
 // FIXME_API: API dox need to be updated for Observer approach (kevin)
-class AKONADI_EXPORT ResourceBase : public AgentBase
+class AKONADIAGENTBASE_EXPORT ResourceBase : public AgentBase
 {
     Q_OBJECT
 

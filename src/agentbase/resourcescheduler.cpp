@@ -342,14 +342,14 @@ void ResourceScheduler::executeNext()
     case Custom:
     {
       const QByteArray methodSig = mCurrentTask.methodName + "(QVariant)";
-      const bool hasSlotWithVariant = mCurrentTask.receiver->metaObject()->indexOfMethod(methodSig) != -1;
+      const bool hasSlotWithVariant = mCurrentTask.receiver->metaObject()->indexOfMethod(methodSig.constData()) != -1;
       bool success = false;
       if ( hasSlotWithVariant ) {
-        success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
+        success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName.constData(), Q_ARG(QVariant, mCurrentTask.argument) );
         Q_ASSERT_X( success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found" );
       }
       if ( !success )
-        success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName );
+        success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName.constData() );
 
       if ( !success )
         kError() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;

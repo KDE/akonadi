@@ -23,8 +23,7 @@
 #include "agentbase_p.h"
 
 #include "preprocessorbase.h"
-
-#include <akonadi/itemfetchscope.h>
+#include "itemfetchscope.h"
 
 class KJob;
 

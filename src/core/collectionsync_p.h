@@ -20,6 +20,7 @@
 #ifndef AKONADI_COLLECTIONSYNC_P_H
 #define AKONADI_COLLECTIONSYNC_P_H
 
+#include "akonadicore_export.h"
 #include "collection.h"
 #include "transactionsequence.h"
 
@@ -50,7 +51,7 @@ namespace Akonadi {
     to chose mostly depends on what the backend provides in this regard.
 
 */
-class CollectionSync : public Job
+class AKONADICORE_EXPORT CollectionSync : public Job
 {
     Q_OBJECT
 

@@ -20,27 +20,29 @@
 #ifndef AKONADI_SERVERMANAGER_P_H
 #define AKONADI_SERVERMANAGER_P_H
 
+#include "akonadicore_export.h"
+
 class QString;
 
 namespace Akonadi {
 
 namespace Internal {
 
-int serverProtocolVersion();
-void setServerProtocolVersion(int version);
+AKONADICORE_EXPORT int serverProtocolVersion();
+AKONADICORE_EXPORT void setServerProtocolVersion(int version);
 
 enum ClientType {
     User,
     Agent,
     Resource
 };
-ClientType clientType();
-void setClientType(ClientType type);
+AKONADICORE_EXPORT ClientType clientType();
+AKONADICORE_EXPORT void setClientType(ClientType type);
 
 /** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
 * @note: Does not need to include the "akonadi/" in @p relPath.
 */
-QString xdgSaveDir(const char *resource, const QString &relPath = QString());
+AKONADICORE_EXPORT QString xdgSaveDir(const char *resource, const QString &relPath = QString());
 
 }
 

@@ -26,10 +26,10 @@
 #include "collectionsync_p.h"
 #include "dbusconnectionpool.h"
 #include "itemsync.h"
-#include "kdepimlibs-version.h"
+#include "akonadi_version.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
-#include "xdgbasedirs_p.h"
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include "changerecorder.h"
 #include "collectionfetchjob.h"
@@ -45,13 +45,13 @@
 #include "monitor_p.h"
 #include "servermanager_p.h"
 #include "recursivemover_p.h"
+#include "tagmodifyjob.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <kglobal.h>
-#include <akonadi/tagmodifyjob.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -542,7 +542,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     const QByteArray catalog = fi.baseName().toLatin1();
 
     KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog,
-                       ki18nc("@title application name", "Akonadi Resource"), KDEPIMLIBS_VERSION,
+                       ki18nc("@title application name", "Akonadi Resource"), AKONADI_VERSION_STRING,
                        ki18nc("@title application description", "Akonadi Resource"));
 
     KCmdLineOptions options;
