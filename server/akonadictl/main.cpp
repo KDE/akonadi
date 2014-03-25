@@ -38,6 +38,7 @@
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
 #include "xdgbasedirs_p.h"
+#include <QSettings>
 
 #if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
 #include <unistd.h>
@@ -119,11 +120,40 @@ static bool checkSearchSupportStatus()
   return true;
 }
 
+static bool checkAvailableAgentTypes()
+{
+  const QStringList dirs = Akonadi::XdgBaseDirs::findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
+  QStringList types;
+  Q_FOREACH ( const QString &pluginDir, dirs ) {
+    QDir dir( pluginDir );
+    const QStringList plugins = dir.entryList( QStringList() << QLatin1String( "*.desktop" ), QDir::Files );
+    Q_FOREACH ( const QString &plugin, plugins ) {
+      QSettings pluginInfo( pluginDir + QLatin1String("/") + plugin, QSettings::IniFormat );
+      pluginInfo.beginGroup( QLatin1String( "Desktop Entry" ) );
+      types << pluginInfo.value( QLatin1String( "X-Akonadi-Identifier" ) ).toString();
+    }
+  }
+
+  // Remove duplicates from multiple pluginDirs
+  types.removeDuplicates();
+  types.sort();
+
+  fprintf( stderr, "Available Agent Types: ");
+  if ( types.isEmpty() ) {
+    fprintf( stderr, "No agent types found! \n");
+  } else {
+    fprintf( stderr, "%s\n", qPrintable( types.join( QLatin1String( ", " ) ) ) );
+  }
+
+  return true;
+}
+
 static bool statusServer()
 {
   checkAkonadiControlStatus();
   checkAkonadiServerStatus();
   checkSearchSupportStatus();
+  checkAvailableAgentTypes();
   return true;
 }
 
