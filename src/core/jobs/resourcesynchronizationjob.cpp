@@ -19,9 +19,8 @@
 #include "dbusconnectionpool.h"
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
-
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
+#include "agentinstance.h"
+#include "agentmanager.h"
 
 #include <KDebug>
 #include <KLocalizedString>

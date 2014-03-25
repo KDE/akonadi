@@ -19,8 +19,8 @@
 
 #include "specialcollectionsdiscoveryjob.h"
 #include "specialcollectionattribute_p.h"
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/collectionfetchjob.h>
+#include "collectionfetchscope.h"
+#include "collectionfetchjob.h"
 #include <QStringList>
 
 using namespace Akonadi;

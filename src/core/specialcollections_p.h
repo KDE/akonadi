@@ -25,9 +25,9 @@
 
 #include "akonadiprivate_export.h"
 
-#include "akonadi/collection.h"
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/item.h>
+#include "collection.h"
+#include "collectionstatistics.h"
+#include "item.h"
 
 class KCoreConfigSkeleton;
 class KJob;

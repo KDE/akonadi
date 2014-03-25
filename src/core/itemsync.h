@@ -20,10 +20,9 @@
 #ifndef AKONADI_ITEMSYNC_H
 #define AKONADI_ITEMSYNC_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/item.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "item.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -50,7 +49,7 @@ class ItemFetchScope;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT ItemSync : public Job
+class AKONADICORE_EXPORT ItemSync : public Job
 {
     Q_OBJECT
 

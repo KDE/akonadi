@@ -20,7 +20,8 @@
 #ifndef AKONADI_ITEMCREATEJOB_H
 #define AKONADI_ITEMCREATEJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -70,7 +71,7 @@ class ItemCreateJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT ItemCreateJob : public Job
+class AKONADICORE_EXPORT ItemCreateJob : public Job
 {
     Q_OBJECT
 

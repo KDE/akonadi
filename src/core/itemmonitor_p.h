@@ -22,8 +22,8 @@
 
 #include <QtCore/QObject>
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/monitor.h>
+#include "itemfetchjob.h"
+#include "monitor.h"
 
 namespace Akonadi {
 

@@ -20,13 +20,13 @@
 
 #include "conflicthandler_p.h"
 
-#include "conflictresolvedialog_p.h"
+//#include "conflictresolvedialog_p.h"
 
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/session.h>
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
+#include "session.h"
 #include <klocalizedstring.h>
 
 using namespace Akonadi;
@@ -75,6 +75,8 @@ void ConflictHandler::slotOtherItemFetched(KJob *job)
 
 void ConflictHandler::resolve()
 {
+#warning KF5 Port me!
+#if 0
     ConflictResolveDialog dlg;
     dlg.setConflictingItems(mChangedItem, mConflictingItem);
     dlg.exec();
@@ -91,6 +93,7 @@ void ConflictHandler::resolve()
         useBothItems();
         break;
     }
+#endif
 }
 
 void ConflictHandler::useLocalItem()

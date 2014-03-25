@@ -28,6 +28,7 @@
 #include "collectionstatisticsjob.h"
 #include "monitor.h"
 #include "session.h"
+#include "collectionfetchscope.h"
 
 #include <kdebug.h>
 #include <kjob.h>
@@ -35,7 +36,6 @@
 
 #include <QCoreApplication>
 #include <QtCore/QTimer>
-#include "collectionfetchscope.h"
 
 using namespace Akonadi;
 

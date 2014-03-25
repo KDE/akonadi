@@ -20,12 +20,12 @@
 #ifndef ENTITYTREEMODELPRIVATE_H
 #define ENTITYTREEMODELPRIVATE_H
 
-#include <akonadi/item.h>
 #include <KJob>
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/mimetypechecker.h>
+#include "item.h"
+#include "collectionfetchjob.h"
+#include "itemfetchscope.h"
+#include "mimetypechecker.h"
 
 #include "entitytreemodel.h"
 

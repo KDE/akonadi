@@ -25,7 +25,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QSet>
 
-#include <akonadi/item.h>
+#include "item.h"
 #include <akonadi/private/notificationmessagev2_p.h>
 
 namespace Akonadi

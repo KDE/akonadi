@@ -20,7 +20,7 @@
 #ifndef AKONADI_SESSION_H
 #define AKONADI_SESSION_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include <QtCore/QObject>
 
 class KJob;
@@ -56,7 +56,7 @@ class SessionPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT Session : public QObject
+class AKONADICORE_EXPORT Session : public QObject
 {
     Q_OBJECT
 

@@ -20,7 +20,7 @@
 #ifndef _DBUS_CONNECTION_POOL_H_
 #define _DBUS_CONNECTION_POOL_H_
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtDBus/QDBusConnection>
 
@@ -42,7 +42,7 @@ namespace DBusConnectionPool {
  * around in Qt) this method can be dropped in favor of
  * QDBusConnection::sessionBus().
  */
-AKONADI_EXPORT QDBusConnection threadConnection();
+AKONADICORE_EXPORT QDBusConnection threadConnection();
 } // DBusConnectionPool
 
 } // Akonadi

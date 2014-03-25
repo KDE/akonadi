@@ -20,7 +20,7 @@
 #ifndef AKONADI_EXCEPTION_H
 #define AKONADI_EXCEPTION_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QByteArray>
 #include <exception>
@@ -32,7 +32,7 @@ namespace Akonadi {
 /**
   Base class for exceptions used by the Akonadi library.
 */
-class AKONADI_EXPORT Exception : public std::exception //krazy:exclude=dpointer
+class AKONADICORE_EXPORT Exception : public std::exception //krazy:exclude=dpointer
 {
 public:
     /**
@@ -76,7 +76,7 @@ private:
 };
 
 #define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \
-class AKONADI_EXPORT classname : public Akonadi::Exception \
+class AKONADICORE_EXPORT classname : public Akonadi::Exception \
 { \
   public: \
     classname ( const char *what ) throw() : Akonadi::Exception( what ) {} \

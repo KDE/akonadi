@@ -20,7 +20,8 @@
 #ifndef AKONADI_ITEMMOVEJOB_H
 #define AKONADI_ITEMMOVEJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -45,7 +46,7 @@ class ItemMoveJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT ItemMoveJob : public Job
+class AKONADICORE_EXPORT ItemMoveJob : public Job
 {
     Q_OBJECT
 

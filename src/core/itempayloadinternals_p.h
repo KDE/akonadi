@@ -20,7 +20,8 @@
 #ifndef ITEMPAYLOADINTERNALS_P_H
 #define ITEMPAYLOADINTERNALS_P_H
 
-#include <kpimutils/supertrait.h>
+// FIXME KF5: Move supertrait to Akonadi framework
+#include "../../../kpimutils/src/supertrait.h"
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QSharedPointer>

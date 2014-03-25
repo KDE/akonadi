@@ -20,9 +20,10 @@
 #ifndef AKONADI_ITEMSEARCHJOB_H
 #define AKONADI_ITEMSEARCHJOB_H
 
-#include <akonadi/item.h>
-#include <akonadi/job.h>
-#include <akonadi/collection.h>
+#include "akonadicore_export.h"
+#include "item.h"
+#include "job.h"
+#include "collection.h"
 
 #include <QtCore/QUrl>
 
@@ -64,7 +65,7 @@ class SearchQuery;
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT ItemSearchJob : public Job
+class AKONADICORE_EXPORT ItemSearchJob : public Job
 {
     Q_OBJECT
 
@@ -76,7 +77,7 @@ public:
      * @param parent The parent object.
      * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    explicit AKONADI_DEPRECATED ItemSearchJob(const QString &query, QObject *parent = 0);
+    explicit AKONADICORE_DEPRECATED ItemSearchJob(const QString &query, QObject *parent = 0);
 
     /**
      * Creates an item search job.
@@ -97,7 +98,7 @@ public:
      *
      * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    void AKONADI_DEPRECATED setQuery(const QString &query);
+    void AKONADICORE_DEPRECATED setQuery(const QString &query);
 
     /**
      * Sets the search @p query.
@@ -150,7 +151,7 @@ public:
      * @since 4.4.3
      * @deprecated Deprecated as of 4.13, where SPARQL queries were replaced by Baloo
      */
-    static AKONADI_DEPRECATED QUrl akonadiItemIdUri();
+    static AKONADICORE_DEPRECATED QUrl akonadiItemIdUri();
 
     /**
      * Search only for items of given mime types.

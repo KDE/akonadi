@@ -20,8 +20,9 @@
 #ifndef AKONADI_ITEMFETCHJOB_H
 #define AKONADI_ITEMFETCHJOB_H
 
-#include <akonadi/item.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "item.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -79,7 +80,7 @@ class ItemFetchScope;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT ItemFetchJob : public Job
+class AKONADICORE_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
     Q_FLAGS(DeliveryOptions)

@@ -20,16 +20,16 @@
 #ifndef AKONADI_ENTITY_H
 #define AKONADI_ENTITY_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include <QString>
 
 namespace Akonadi {
 class Entity;
 }
 
-AKONADI_EXPORT uint qHash(const Akonadi::Entity &);
+AKONADICORE_EXPORT uint qHash(const Akonadi::Entity &);
 
-#include <akonadi/attribute.h>
+#include "attribute.h"
 
 #include <KDE/KDebug>
 
@@ -56,7 +56,7 @@ class EntityPrivate;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT Entity
+class AKONADICORE_EXPORT Entity
 {
 public:
     /**

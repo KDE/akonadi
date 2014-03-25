@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTTYPEMODEL_H
 #define AKONADI_AGENTTYPEMODEL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QAbstractItemModel>
 
@@ -47,7 +47,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
+class AKONADICORE_EXPORT AgentTypeModel : public QAbstractItemModel
 {
     Q_OBJECT
 

@@ -21,10 +21,9 @@
 #define AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
 
 #include "akonadiprivate_export.h"
-
-#include <akonadi/collection.h>
-#include <akonadi/specialcollections.h>
-#include <akonadi/transactionsequence.h>
+#include "collection.h"
+#include "specialcollections.h"
+#include "transactionsequence.h"
 
 #include <QtCore/QVariant>
 

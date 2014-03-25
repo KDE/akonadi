@@ -21,8 +21,7 @@
 #define AKONADI_RESOURCESELECTJOB_P_H
 
 #include "akonadiprivate_export.h"
-
-#include <akonadi/job.h>
+#include "job.h"
 
 namespace Akonadi {
 

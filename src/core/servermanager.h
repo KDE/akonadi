@@ -20,7 +20,7 @@
 #ifndef AKONADI_SERVERMANAGER_H
 #define AKONADI_SERVERMANAGER_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
@@ -39,7 +39,7 @@ class ServerManagerPrivate;
  * @see Akonadi::Control
  * @since 4.2
  */
-class AKONADI_EXPORT ServerManager : public QObject
+class AKONADICORE_EXPORT ServerManager : public QObject
 {
     Q_OBJECT
 public:

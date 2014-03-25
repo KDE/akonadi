@@ -20,7 +20,8 @@
 #ifndef AKONADI_ATTRIBUTEFACTORY_H
 #define AKONADI_ATTRIBUTEFACTORY_H
 
-#include <akonadi/attribute.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
 namespace Akonadi {
 
@@ -45,7 +46,7 @@ namespace Akonadi {
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT AttributeFactory
+class AKONADICORE_EXPORT AttributeFactory
 {
 public:
     //@cond PRIVATE

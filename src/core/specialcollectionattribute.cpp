@@ -18,10 +18,9 @@
 */
 
 #include "specialcollectionattribute_p.h"
+#include "attributefactory.h"
 
 #include <KDebug>
-
-#include <akonadi/attributefactory.h>
 
 using namespace Akonadi;
 

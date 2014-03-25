@@ -22,11 +22,12 @@
 #include "specialcollections_p.h"
 #include "specialcollectionattribute_p.h"
 
-#include "akonadi/agentinstance.h"
-#include "akonadi/agentmanager.h"
-#include "akonadi/collectionmodifyjob.h"
-#include "akonadi/collectionfetchjob.h"
-#include "akonadi/monitor.h"
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "collectionmodifyjob.h"
+#include "collectionfetchjob.h"
+#include "monitor.h"
+#include "collectionfetchscope.h"
 
 #include <KDebug>
 #include <kcoreconfigskeleton.h>
@@ -34,7 +35,6 @@
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QSet>
-#include <akonadi/collectionfetchscope.h>
 
 using namespace Akonadi;
 

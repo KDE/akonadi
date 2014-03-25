@@ -29,24 +29,24 @@
 #include <KDE/KMessageBox>
 #include <KDE/KUrl>
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttype.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectioncopyjob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/collectionmovejob.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/collectionstatisticsjob.h>
-#include <akonadi/entityhiddenattribute.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemmovejob.h>
-#include <akonadi/linkjob.h>
+#include "agentmanager.h"
+#include "agenttype.h"
+#include "changerecorder.h"
+#include "collectioncopyjob.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "collectionmovejob.h"
+#include "collectionstatistics.h"
+#include "collectionstatisticsjob.h"
+#include "entityhiddenattribute.h"
+#include "itemcopyjob.h"
+#include "itemfetchjob.h"
+#include "itemmodifyjob.h"
+#include "itemmovejob.h"
+#include "linkjob.h"
+#include "session.h"
+#include "servermanager.h"
 #include <akonadi/private/protocol_p.h>
-#include <akonadi/session.h>
-#include <akonadi/servermanager.h>
 
 #include <kdebug.h>
 
@@ -197,7 +197,7 @@ ItemFetchJob *EntityTreeModelPrivate::getItemFetchJob(const Item &item, const It
 void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const Collection &parent) const
 {
     Q_Q(const EntityTreeModel);
-    itemFetchJob->setProperty(FetchCollectionId(), QVariant(parent.id()));
+    itemFetchJob->setProperty(FetchCollectionId().constData(), QVariant(parent.id()));
 
     if (m_showRootCollection || parent != m_rootCollection) {
         m_pendingCollectionRetrieveJobs.insert(parent.id());
@@ -303,7 +303,7 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
     Q_ASSERT(collection.isValid());
     CollectionFetchJob *job = new CollectionFetchJob(collection, type, m_session);
 
-    job->setProperty(FetchCollectionId(), QVariant(collection.id()));
+    job->setProperty(FetchCollectionId().constData(), QVariant(collection.id()));
 
     job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
@@ -506,7 +506,7 @@ void EntityTreeModelPrivate::itemsFetched(const Akonadi::Item::List &items)
 {
     Q_Q(EntityTreeModel);
 
-    const Collection::Id collectionId = q->sender()->property(FetchCollectionId()).value<Collection::Id>();
+    const Collection::Id collectionId = q->sender()->property(FetchCollectionId().constData()).value<Collection::Id>();
 
     itemsFetched(collectionId, items);
 }
@@ -522,7 +522,7 @@ void EntityTreeModelPrivate::itemsFetched(KJob *job)
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
     const Akonadi::Item::List items = fetchJob->items();
 
-    const Collection::Id collectionId = job->property(FetchCollectionId()).value<Collection::Id>();
+    const Collection::Id collectionId = job->property(FetchCollectionId().constData()).value<Collection::Id>();
     itemsFetched(collectionId, items);
 }
 
@@ -1290,7 +1290,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
 void EntityTreeModelPrivate::fetchJobDone(KJob *job)
 {
-    const Collection::Id collectionId = job->property(FetchCollectionId()).value<Collection::Id>();
+    const Collection::Id collectionId = job->property(FetchCollectionId().constData()).value<Collection::Id>();
 
     if (job->error()) {
         kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;

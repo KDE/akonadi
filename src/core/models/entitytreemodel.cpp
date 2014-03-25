@@ -32,13 +32,13 @@
 #include <KDE/KMessageBox>
 #include <KDE/KUrl>
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/transactionsequence.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/session.h>
+#include "attributefactory.h"
+#include "changerecorder.h"
+#include "collectionmodifyjob.h"
+#include "entitydisplayattribute.h"
+#include "transactionsequence.h"
+#include "itemmodifyjob.h"
+#include "session.h"
 #include "collectionfetchscope.h"
 
 #include "collectionutils_p.h"

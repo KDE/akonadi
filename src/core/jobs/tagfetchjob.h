@@ -20,8 +20,9 @@
 #ifndef AKONADI_TAGFETCHJOB_H
 #define AKONADI_TAGFETCHJOB_H
 
-#include <akonadi/job.h>
-#include <akonadi/tag.h>
+#include "akonadicore_export.h"
+#include "job.h"
+#include "tag.h"
 
 namespace Akonadi {
 
@@ -32,7 +33,7 @@ class TagFetchJobPrivate;
  * @short Job that fetches tags.
  * @since 4.13
  */
-class AKONADI_EXPORT TagFetchJob : public Job
+class AKONADICORE_EXPORT TagFetchJob : public Job
 {
     Q_OBJECT
 

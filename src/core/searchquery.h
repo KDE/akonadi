@@ -22,7 +22,7 @@
 
 #include <QSharedPointer>
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 namespace Akonadi
 {
@@ -36,7 +36,7 @@ namespace Akonadi
  *
  * @since 4.13
  */
-class AKONADI_EXPORT SearchTerm
+class AKONADICORE_EXPORT SearchTerm
 {
 public:
     enum Relation {
@@ -125,7 +125,7 @@ private:
  *
  * @since 4.13
  */
-class AKONADI_EXPORT SearchQuery
+class AKONADICORE_EXPORT SearchQuery
 {
 public:
     /**
@@ -191,7 +191,7 @@ private:
  *
  * @since 4.13
  */
-class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
+class AKONADICORE_EXPORT EmailSearchTerm : public SearchTerm
 {
 public:
 
@@ -246,7 +246,7 @@ public:
  *
  * @since 4.13
  */
-class AKONADI_EXPORT ContactSearchTerm : public SearchTerm
+class AKONADICORE_EXPORT ContactSearchTerm : public SearchTerm
 {
 public:
     enum ContactSearchField {

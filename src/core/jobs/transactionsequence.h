@@ -20,9 +20,8 @@
 #ifndef AKONADI_TRANSACTIONSEQUENCE_H
 #define AKONADI_TRANSACTIONSEQUENCE_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -66,7 +65,7 @@ class TransactionSequencePrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT TransactionSequence : public Job
+class AKONADICORE_EXPORT TransactionSequence : public Job
 {
     Q_OBJECT
 public:

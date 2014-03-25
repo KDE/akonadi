@@ -20,7 +20,7 @@
 #ifndef MIMETYPECHECKER_H
 #define MIMETYPECHECKER_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QSharedDataPointer>
 
@@ -106,7 +106,7 @@ class MimeTypeCheckerPrivate;
  *
  * @since 4.3
  */
-class AKONADI_EXPORT MimeTypeChecker
+class AKONADICORE_EXPORT MimeTypeChecker
 {
 public:
     /**

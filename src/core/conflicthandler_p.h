@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 
-#include <akonadi/item.h>
+#include "item.h"
 
 class KJob;
 

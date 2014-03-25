@@ -23,8 +23,10 @@
 
 #include <KDebug>
 
+#if 0
 #include <qjson/parser.h>
 #include <qjson/serializer.h>
+#endif
 
 using namespace Akonadi;
 
@@ -282,12 +284,18 @@ QByteArray SearchQuery::toJSON() const
     QVariantMap root = Private::termToJSON(d->rootTerm);
     root.insert(QLatin1String("limit"), d->limit);
 
+#warning KF5 Port me!
+#if 0
     QJson::Serializer serializer;
     return serializer.serialize(root);
+#endif
+    return QByteArray();
 }
 
 SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
 {
+#warning KF5 Port me!
+#if 0
     QJson::Parser parser;
     bool ok = false;
     const QVariant json = parser.parse(jsonData, &ok);
@@ -302,6 +310,8 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
         query.d->limit = map.value(QLatin1String("limit")).toInt();
     }
     return query;
+#endif
+    return SearchQuery();
 }
 
 QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()

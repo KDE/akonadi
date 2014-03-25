@@ -20,11 +20,10 @@
 #ifndef AKONADI_SPECIALCOLLECTIONSDISCOVERYJOB_H
 #define AKONADI_SPECIALCOLLECTIONSDISCOVERYJOB_H
 
-#include "akonadi_export.h"
-
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "specialcollections.h"
 #include <kcompositejob.h>
-#include <akonadi/collection.h>
-#include <akonadi/specialcollections.h>
 
 namespace Akonadi {
 
@@ -41,7 +40,7 @@ class SpecialCollectionsDiscoveryJobPrivate;
  * @author David Faure <faure@kde.org>
  * @since 4.11
 */
-class AKONADI_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
+class AKONADICORE_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
 {
     Q_OBJECT
 

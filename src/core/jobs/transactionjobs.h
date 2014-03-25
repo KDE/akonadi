@@ -20,9 +20,8 @@
 #ifndef AKONADI_TRANSACTIONJOBS_H
 #define AKONADI_TRANSACTIONJOBS_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -43,7 +42,7 @@ class TransactionCommitJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT TransactionBeginJob : public Job
+class AKONADICORE_EXPORT TransactionBeginJob : public Job
 {
     Q_OBJECT
 
@@ -78,7 +77,7 @@ private:
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT TransactionRollbackJob : public Job
+class AKONADICORE_EXPORT TransactionRollbackJob : public Job
 {
     Q_OBJECT
 
@@ -110,7 +109,7 @@ private:
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT TransactionCommitJob : public Job
+class AKONADICORE_EXPORT TransactionCommitJob : public Job
 {
     Q_OBJECT
 

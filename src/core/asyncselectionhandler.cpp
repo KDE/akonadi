@@ -18,8 +18,7 @@
 */
 
 #include "asyncselectionhandler_p.h"
-
-#include <akonadi/entitytreemodel.h>
+#include "models/entitytreemodel.h"
 
 using namespace Akonadi;
 

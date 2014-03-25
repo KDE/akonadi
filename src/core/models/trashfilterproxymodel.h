@@ -20,7 +20,7 @@
 #ifndef AKONADI_TRASHFILTERPROXYMODEL_H
 #define AKONADI_TRASHFILTERPROXYMODEL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <krecursivefilterproxymodel.h>
 
@@ -53,7 +53,7 @@ namespace Akonadi
  * @author Christian Mollekopf <chrigi_1@fastmail.fm>
  * @since 4.8
  */
-class AKONADI_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyModel
+class AKONADICORE_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 

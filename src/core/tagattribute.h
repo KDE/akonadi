@@ -21,10 +21,11 @@
 #ifndef AKONADI_TAGATTRIBUTE_H
 #define AKONADI_TAGATTRIBUTE_H
 
+#include "akonadicore_export.h"
+#include "attribute.h"
+
 #include <QColor>
 #include <QFont>
-
-#include <akonadi/attribute.h>
 
 class KIcon;
 
@@ -35,7 +36,7 @@ namespace Akonadi {
  *
  * @since 4.13
  */
-class AKONADI_EXPORT TagAttribute : public Attribute
+class AKONADICORE_EXPORT TagAttribute : public Attribute
 {
 public:
     TagAttribute();

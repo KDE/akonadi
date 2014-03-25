@@ -20,9 +20,8 @@
 #ifndef AKONADI_AGENTINSTANCECREATEJOB_H
 #define AKONADI_AGENTINSTANCECREATEJOB_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/agenttype.h>
+#include "akonadicore_export.h"
+#include "agenttype.h"
 
 #include <kjob.h>
 
@@ -68,7 +67,7 @@ class AgentInstanceCreateJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
+class AKONADICORE_EXPORT AgentInstanceCreateJob : public KJob
 {
     Q_OBJECT
 

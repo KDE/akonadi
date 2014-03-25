@@ -21,7 +21,7 @@
 #include "tagmodel.h"
 
 #include "monitor.h"
-#include <akonadi/tagfetchjob.h>
+#include "tagfetchjob.h"
 #include <QDebug>
 
 using namespace Akonadi;

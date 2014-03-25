@@ -27,16 +27,16 @@
 
 #include <KLocalizedString>
 
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/itemmovejob.h>
-#include <akonadi/collectionmovejob.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchscope.h>
+#include "itemdeletejob.h"
+#include "collectiondeletejob.h"
+#include "itemmovejob.h"
+#include "collectionmovejob.h"
+#include "itemmodifyjob.h"
+#include "collectionmodifyjob.h"
+#include "collectionfetchjob.h"
+#include "itemfetchjob.h"
+#include "collectionfetchscope.h"
+#include "itemfetchscope.h"
 
 #include <QHash>
 

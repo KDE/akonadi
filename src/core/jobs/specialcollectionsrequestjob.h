@@ -20,11 +20,10 @@
 #ifndef AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H
 #define AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/collection.h>
-#include <akonadi/specialcollections.h>
-#include <akonadi/transactionsequence.h>
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "specialcollections.h"
+#include "transactionsequence.h"
 
 #include <QtCore/QVariant>
 
@@ -51,7 +50,7 @@ class SpecialCollectionsRequestJobPrivate;
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
 */
-class AKONADI_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
+class AKONADICORE_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
 {
     Q_OBJECT
 

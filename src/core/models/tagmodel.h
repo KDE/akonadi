@@ -20,10 +20,10 @@
 #ifndef AKONADI_TAGMODEL_H
 #define AKONADI_TAGMODEL_H
 
-#include <QtCore/QModelIndex>
+#include <QAbstractItemModel>
 
-#include "akonadi_export.h"
-#include <akonadi/tag.h>
+#include "akonadicore_export.h"
+#include "tag.h"
 
 namespace Akonadi
 {
@@ -31,7 +31,7 @@ namespace Akonadi
 class Monitor;
 class TagModelPrivate;
 
-class AKONADI_EXPORT TagModel : public QAbstractItemModel
+class AKONADICORE_EXPORT TagModel : public QAbstractItemModel
 {
     Q_OBJECT
 

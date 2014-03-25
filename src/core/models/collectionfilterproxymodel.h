@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONFILTERPROXYMODEL_H
 #define AKONADI_COLLECTIONFILTERPROXYMODEL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include <QSortFilterProxyModel>
 
 namespace Akonadi {
@@ -51,7 +51,7 @@ class CollectionModel;
  *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
  */
-class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
+class AKONADICORE_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

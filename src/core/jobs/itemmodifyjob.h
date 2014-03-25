@@ -20,10 +20,9 @@
 #ifndef AKONADI_ITEMMODIFYJOB_H
 #define AKONADI_ITEMMODIFYJOB_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/item.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "item.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -94,7 +93,7 @@ class ItemModifyJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT ItemModifyJob : public Job
+class AKONADICORE_EXPORT ItemModifyJob : public Job
 {
     friend class ResourceBase;
 

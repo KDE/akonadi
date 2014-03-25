@@ -18,7 +18,7 @@
 #ifndef AKONADI_RESOURCESYNCHRONIZATIONJOB_H
 #define AKONADI_RESOURCESYNCHRONIZATIONJOB_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <kjob.h>
 
@@ -56,7 +56,7 @@ class ResourceSynchronizationJobPrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
+class AKONADICORE_EXPORT ResourceSynchronizationJob : public KJob
 {
     Q_OBJECT
 

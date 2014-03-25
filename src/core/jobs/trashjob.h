@@ -20,11 +20,10 @@
 #ifndef AKONADI_TRASHJOB_H
 #define AKONADI_TRASHJOB_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/item.h>
-#include <akonadi/collection.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "item.h"
+#include "collection.h"
+#include "job.h"
 
 namespace Akonadi
 {
@@ -63,7 +62,7 @@ namespace Akonadi
  * @author Christian Mollekopf <chrigi_1@fastmail.fm>
  * @since 4.8
  */
-class AKONADI_EXPORT TrashJob : public Job
+class AKONADICORE_EXPORT TrashJob : public Job
 {
     Q_OBJECT
 

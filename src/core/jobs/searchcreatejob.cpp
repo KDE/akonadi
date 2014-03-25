@@ -22,7 +22,7 @@
 #include "searchcreatejob.h"
 
 #include "collection.h"
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "protocolhelper_p.h"
 #include "job_p.h"
 #include "searchquery.h"

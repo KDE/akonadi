@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTFILTERPROXYMODEL_H
 #define AKONADI_AGENTFILTERPROXYMODEL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include <QSortFilterProxyModel>
 
 namespace Akonadi {
@@ -49,7 +49,7 @@ namespace Akonadi {
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
+class AKONADICORE_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:

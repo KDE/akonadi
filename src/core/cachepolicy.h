@@ -20,7 +20,7 @@
 #ifndef AKONADI_CACHEPOLICY_H
 #define AKONADI_CACHEPOLICY_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>
@@ -68,7 +68,7 @@ namespace Akonadi {
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CachePolicy
+class AKONADICORE_EXPORT CachePolicy
 {
 public:
     /**
@@ -166,6 +166,6 @@ private:
 /**
  * Allows a cache policy to be output for debugging purposes.
  */
-AKONADI_EXPORT QDebug operator<<(QDebug, const Akonadi::CachePolicy &);
+AKONADICORE_EXPORT QDebug operator<<(QDebug, const Akonadi::CachePolicy &);
 
 #endif

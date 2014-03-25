@@ -20,9 +20,9 @@
 #ifndef AKONADI_COLLECTIONFETCHJOB_H
 #define AKONADI_COLLECTIONFETCHJOB_H
 
-#include "akonadi_export.h"
-#include <akonadi/collection.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -50,7 +50,7 @@ class CollectionFetchJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionFetchJob : public Job
+class AKONADICORE_EXPORT CollectionFetchJob : public Job
 {
     Q_OBJECT
 
@@ -145,14 +145,14 @@ public:
      * @param resource The resource identifier.
      * @deprecated Use CollectionFetchScope instead.
      */
-    AKONADI_DEPRECATED void setResource(const QString &resource);
+    AKONADICORE_DEPRECATED void setResource(const QString &resource);
 
     /**
      * Include also unsubscribed collections.
      * @deprecated Use CollectionFetchScope instead.
      * @param include whether to also fetch unsubscribed collections
      */
-    AKONADI_DEPRECATED void includeUnsubscribed(bool include = true);
+    AKONADICORE_DEPRECATED void includeUnsubscribed(bool include = true);
 
     /**
      * Include also statistics about the collections.
@@ -161,7 +161,7 @@ public:
      * @deprecated Use CollectionFetchScope instead.
      * @param include whether to also fetch statistics
      */
-    AKONADI_DEPRECATED void includeStatistics(bool include = true);
+    AKONADICORE_DEPRECATED void includeStatistics(bool include = true);
 
     /**
      * Sets the collection fetch scope.

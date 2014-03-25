@@ -20,7 +20,7 @@
 #ifndef AKONADI_STATISTICSPROXYMODEL_H
 #define AKONADI_STATISTICSPROXYMODEL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QSortFilterProxyModel>
 
@@ -48,7 +48,7 @@ namespace Akonadi {
  * @since 4.4
  * @deprecated use the one in kdepim, which is much faster
  */
-class AKONADI_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
+class AKONADICORE_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

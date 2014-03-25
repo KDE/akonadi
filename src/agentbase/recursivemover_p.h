@@ -20,8 +20,9 @@
 #ifndef AKONADI_RECURSIVEMOVER_P_H
 #define AKONADI_RECURSIVEMOVER_P_H
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "item.h"
+#include "collection.h"
+#include "item.h"
 #include "agentbase_p.h"
 
 #include <kcompositejob.h>

@@ -20,8 +20,8 @@
 #ifndef AKONADI_TRASHSETTINGS_H
 #define AKONADI_TRASHSETTINGS_H
 
-#include "akonadi_export.h"
-#include <akonadi/collection.h>
+#include "akonadicore_export.h"
+#include "collection.h"
 
 class QString;
 
@@ -41,11 +41,11 @@ namespace TrashSettings
 /**
  * Set the trash collection for the given @p resource which is then used by the TrashJob
  */
-AKONADI_EXPORT void setTrashCollection(const QString &resource, const Collection &collection);
+AKONADICORE_EXPORT void setTrashCollection(const QString &resource, const Collection &collection);
 /**
  * Get the trash collection for the given @p resource
  */
-AKONADI_EXPORT Collection getTrashCollection(const QString &resource);
+AKONADICORE_EXPORT Collection getTrashCollection(const QString &resource);
 }
 
 }

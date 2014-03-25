@@ -20,7 +20,8 @@
 #ifndef AKONADI_COLLECTIONDELETEJOB_H
 #define AKONADI_COLLECTIONDELETEJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -60,7 +61,7 @@ class CollectionDeleteJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionDeleteJob : public Job
+class AKONADICORE_EXPORT CollectionDeleteJob : public Job
 {
     Q_OBJECT
 

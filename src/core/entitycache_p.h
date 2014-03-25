@@ -20,16 +20,16 @@
 #ifndef AKONADI_ENTITYCACHE_P_H
 #define AKONADI_ENTITYCACHE_P_H
 
-#include <akonadi/item.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/tag.h>
-#include <akonadi/tagfetchjob.h>
-#include <akonadi/tagfetchscope.h>
-#include <akonadi/session.h>
+#include "item.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "collection.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "tag.h"
+#include "tagfetchjob.h"
+#include "tagfetchscope.h"
+#include "session.h"
 
 #include "akonadiprivate_export.h"
 

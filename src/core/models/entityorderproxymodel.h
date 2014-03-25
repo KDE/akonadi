@@ -24,7 +24,7 @@
 
 #include <QSortFilterProxyModel>
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 class KConfigGroup;
 
@@ -41,7 +41,7 @@ class EntityOrderProxyModelPrivate;
  * @author Stephen Kelly <stephen@kdab.com>
  * @since 4.6
  */
-class AKONADI_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
+class AKONADICORE_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

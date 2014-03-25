@@ -20,7 +20,8 @@
 #ifndef TAGFETCHSCOPE_H
 #define TAGFETCHSCOPE_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
+
 #include <QSharedPointer>
 
 namespace Akonadi {
@@ -30,7 +31,7 @@ namespace Akonadi {
  *
  * @since 4.13
  */
-class AKONADI_EXPORT TagFetchScope
+class AKONADICORE_EXPORT TagFetchScope
 {
 public:
 

@@ -22,10 +22,11 @@
 
 #include <QtCore/QObject>
 
+#include "akonadiprivate_export.h"
+
 #include "entity.h"
 #include "tag.h"
-#include "akonadiprivate_export.h"
-#include <notificationmessagev3_p.h>
+#include <akonadi/private/notificationmessagev3_p.h>
 
 namespace Akonadi
 {

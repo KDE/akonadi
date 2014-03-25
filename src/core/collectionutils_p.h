@@ -21,9 +21,10 @@
 #define AKONADI_COLLECTIONUTILS_P_H
 
 #include <QtCore/QStringList>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/item.h>
+
+#include "entitydisplayattribute.h"
+#include "collectionstatistics.h"
+#include "item.h"
 
 namespace Akonadi {
 

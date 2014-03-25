@@ -20,9 +20,9 @@
 #ifndef AKONADI_ITEMMODEL_H
 #define AKONADI_ITEMMODEL_H
 
-#include "akonadi_export.h"
-#include <akonadi/item.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "item.h"
+#include "job.h"
 
 #include <QtCore/QAbstractTableModel>
 
@@ -53,7 +53,7 @@ class Session;
  * @author Volker Krause <vkrause@kde.org>
  * @deprecated Use Akonadi::EntityTreeModel instead
  */
-class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
+class AKONADICORE_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
 {
     Q_OBJECT
 

@@ -20,7 +20,8 @@
 #ifndef AKONADI_TAGMODIFYJOB_H
 #define AKONADI_TAGMODIFYJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -31,7 +32,7 @@ class TagModifyJobPrivate;
  * @short Job that modifies a tag in the Akonadi storage.
  * @since 4.13
  */
-class AKONADI_EXPORT TagModifyJob : public Job
+class AKONADICORE_EXPORT TagModifyJob : public Job
 {
     Q_OBJECT
 

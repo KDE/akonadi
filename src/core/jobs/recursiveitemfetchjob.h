@@ -20,9 +20,9 @@
 #ifndef AKONADI_RECURSIVEITEMFETCHJOB_H
 #define AKONADI_RECURSIVEITEMFETCHJOB_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
+#include "item.h"
 
-#include <akonadi/item.h>
 #include <kjob.h>
 
 namespace Akonadi {
@@ -81,7 +81,7 @@ class ItemFetchScope;
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.6
  */
-class AKONADI_EXPORT RecursiveItemFetchJob : public KJob
+class AKONADICORE_EXPORT RecursiveItemFetchJob : public KJob
 {
     Q_OBJECT
 

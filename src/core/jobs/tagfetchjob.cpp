@@ -22,9 +22,9 @@
 #include "tag.h"
 #include "protocolhelper_p.h"
 #include "tagfetchscope.h"
+#include "attributefactory.h"
 #include <QTimer>
 #include <QFile>
-#include <akonadi/attributefactory.h>
 
 using namespace Akonadi;
 

@@ -19,8 +19,7 @@
 
 #include "tagmodel.h"
 #include "tagmodel_p.h"
-
-#include <akonadi/tagattribute.h>
+#include "tagattribute.h"
 
 #include <KLocalizedString>
 #include <QIcon>

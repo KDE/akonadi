@@ -23,7 +23,7 @@
 
 #include <krecursivefilterproxymodel.h>
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 namespace Akonadi
 {
@@ -36,7 +36,7 @@ class RecursiveCollectionFilterProxyModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.6
  */
-class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilterProxyModel
+class AKONADICORE_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 

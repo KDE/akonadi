@@ -20,9 +20,10 @@
 #ifndef AKONADI_MONITOR_H
 #define AKONADI_MONITOR_H
 
-#include <akonadi/tag.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "akonadicore_export.h"
+#include "tag.h"
+#include "collection.h"
+#include "item.h"
 
 #include <QtCore/QObject>
 
@@ -71,7 +72,7 @@ class TagFetchScope;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT Monitor : public QObject
+class AKONADICORE_EXPORT Monitor : public QObject
 {
     Q_OBJECT
 
@@ -325,7 +326,7 @@ public:
      *
      * @deprecated Use itemsMonitoredEx() instead.
      */
-    AKONADI_DEPRECATED QList<Item::Id> itemsMonitored() const;
+    AKONADICORE_DEPRECATED QList<Item::Id> itemsMonitored() const;
 
     /**
      * Returns the set of items being monitored.

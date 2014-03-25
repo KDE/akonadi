@@ -20,9 +20,8 @@
 #ifndef AKONADI_COLLECTIONSTATISTICSJOB_H
 #define AKONADI_COLLECTIONSTATISTICSJOB_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -63,7 +62,7 @@ class CollectionStatisticsJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionStatisticsJob : public Job
+class AKONADICORE_EXPORT CollectionStatisticsJob : public Job
 {
     Q_OBJECT
 

@@ -19,9 +19,9 @@
 
 #include "control.h"
 #include "servermanager.h"
-#include "ui_controlprogressindicator.h"
-#include "selftestdialog_p.h"
-#include "erroroverlay_p.h"
+//#include "ui_controlprogressindicator.h"
+//#include "selftestdialog_p.h"
+//#include "erroroverlay_p.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -38,6 +38,7 @@ using namespace Akonadi;
 namespace Akonadi {
 namespace Internal {
 
+#if 0
 class ControlProgressIndicator : public QFrame
 {
 public:
@@ -60,6 +61,7 @@ public:
 
     Ui::ControlProgressIndicator ui;
 };
+#endif
 
 class StaticControl : public Control
 {
@@ -74,6 +76,7 @@ public:
 
 K_GLOBAL_STATIC(Internal::StaticControl, s_instance)
 
+
 /**
  * @internal
  */
@@ -83,7 +86,9 @@ public:
     Private(Control *parent)
         : mParent(parent)
         , mEventLoop(0)
+#if 0
         , mProgressIndicator(0)
+#endif
         , mSuccess(false)
         , mStarting(false)
         , mStopping(false)
@@ -92,26 +97,32 @@ public:
 
     ~Private()
     {
+#if 0
         delete mProgressIndicator;
+#endif
     }
 
     void setupProgressIndicator(const QString &msg, QWidget *parent = 0)
     {
+#if 0
         if (!mProgressIndicator) {
             mProgressIndicator = new Internal::ControlProgressIndicator(parent);
         }
 
         mProgressIndicator->setMessage(msg);
+#endif
     }
 
     void createErrorOverlays()
     {
+#if 0
         foreach (QWidget *widget, mPendingOverlays) {
             if (widget) {
                 new ErrorOverlay(widget);
             }
         }
         mPendingOverlays.clear();
+#endif
     }
 
     void cleanup()
@@ -124,7 +135,9 @@ public:
 
     QPointer<Control> mParent;
     QEventLoop *mEventLoop;
+#if 0
     QPointer<Internal::ControlProgressIndicator> mProgressIndicator;
+#endif
     QList<QPointer<QWidget> > mPendingOverlays;
     bool mSuccess;
 
@@ -134,10 +147,11 @@ public:
 
 bool Control::Private::exec()
 {
+#if 0
     if (mProgressIndicator) {
         mProgressIndicator->show();
     }
-
+#endif
     kDebug() << "Starting/Stopping Akonadi (using an event loop).";
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
@@ -146,6 +160,7 @@ bool Control::Private::exec()
 
     if (!mSuccess) {
         kWarning() << "Could not start/stop Akonadi!";
+#if 0
         if (mProgressIndicator && mStarting) {
             QPointer<SelfTestDialog> dlg = new SelfTestDialog(mProgressIndicator->parentWidget());
             dlg->exec();
@@ -154,10 +169,13 @@ bool Control::Private::exec()
                 return false;
             }
         }
+#endif
     }
 
+#if 0
     delete mProgressIndicator;
     mProgressIndicator = 0;
+#endif
     mStarting = false;
     mStopping = false;
 

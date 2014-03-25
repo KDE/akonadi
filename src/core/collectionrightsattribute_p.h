@@ -20,10 +20,10 @@
 #ifndef AKONADI_COLLECTIONRIGHTSATTRIBUTE_P_H
 #define AKONADI_COLLECTIONRIGHTSATTRIBUTE_P_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/attribute.h>
+#include "collection.h"
+#include "attribute.h"
 
 namespace Akonadi {
 
@@ -41,7 +41,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
+class AKONADICORE_EXPORT CollectionRightsAttribute : public Attribute
 {
 public:
     /**

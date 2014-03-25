@@ -27,6 +27,10 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADI
 ########### Find packages ###########
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews KIO KDE4Support)
 
+# Workaround for Akonadi server conflicting with our framework (same variable names)
+# TODO: Remove once we merge both repositories into one
+set(AKONADI_DBUS_INTERFACES_DIR "/usr/share/dbus-1/interfaces")
+
 set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION})
 set_package_properties(Boost PROPERTIES
@@ -37,11 +41,15 @@ set_package_properties(Boost PROPERTIES
 
 ########### Targets ###########
 
+configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 add_subdirectory(src)
 #add_subdirectory(autotests)
 
 
 ########### CMake Config Files ###########
+
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Akonadi")
 
 ecm_configure_package_config_file(

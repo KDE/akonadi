@@ -18,7 +18,7 @@
 #ifndef AKONADI_COLLECTIONATTRIBUTESSYNCHRONIZATIONJOB_H
 #define AKONADI_COLLECTIONATTRIBUTESSYNCHRONIZATIONJOB_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <kjob.h>
 
@@ -51,7 +51,7 @@ class CollectionAttributesSynchronizationJobPrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.6
  */
-class AKONADI_EXPORT CollectionAttributesSynchronizationJob : public KJob
+class AKONADICORE_EXPORT CollectionAttributesSynchronizationJob : public KJob
 {
     Q_OBJECT
 

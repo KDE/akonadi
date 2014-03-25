@@ -21,11 +21,10 @@
 #ifndef AKONADI_ITEM_H
 #define AKONADI_ITEM_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/entity.h>
-#include <akonadi/exception.h>
-#include <akonadi/tag.h>
+#include "akonadicore_export.h"
+#include "entity.h"
+#include "exception.h"
+#include "tag.h"
 #include "itempayloadinternals_p.h"
 
 #include <QtCore/QByteArray>
@@ -113,7 +112,7 @@ class ItemPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>, Marc Mutz <mutz@kde.org>
  */
-class AKONADI_EXPORT Item : public Entity
+class AKONADICORE_EXPORT Item : public Entity
 {
 public:
     /**

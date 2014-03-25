@@ -21,10 +21,10 @@
 #include "dbusconnectionpool.h"
 #include "servermanager.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttype.h>
+#include "agentinstance.h"
+#include "agentinstancecreatejob.h"
+#include "agentmanager.h"
+#include "agenttype.h"
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -303,7 +303,7 @@ QVariant::Type Firstrun::argumentType(const QMetaObject *mo, const QString &meth
         }
     }
 
-  if (m.methodSignature().isEmpty())
+    if (m.methodSignature().isEmpty()) {
         return QVariant::Invalid;
     }
 
@@ -312,7 +312,7 @@ QVariant::Type Firstrun::argumentType(const QMetaObject *mo, const QString &meth
         return QVariant::Invalid;
     }
 
-    return QVariant::nameToType(argTypes.first());
+    return QVariant::nameToType(argTypes.first().constData());
 }
 
 #include "moc_firstrun_p.cpp"

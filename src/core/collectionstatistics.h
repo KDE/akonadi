@@ -20,7 +20,8 @@
 #ifndef AKONADI_COLLECTIONSTATISTICS_H
 #define AKONADI_COLLECTIONSTATISTICS_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
+
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 
@@ -66,7 +67,7 @@ namespace Akonadi {
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionStatistics
+class AKONADICORE_EXPORT CollectionStatistics
 {
 public:
     /**
@@ -153,7 +154,7 @@ private:
 /**
  * Allows to output the collection statistics for debugging purposes.
  */
-AKONADI_EXPORT QDebug operator<<(QDebug d, const Akonadi::CollectionStatistics &);
+AKONADICORE_EXPORT QDebug operator<<(QDebug d, const Akonadi::CollectionStatistics &);
 
 Q_DECLARE_METATYPE(Akonadi::CollectionStatistics)
 

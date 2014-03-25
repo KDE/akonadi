@@ -20,12 +20,11 @@
 #ifndef AKONADI_SPECIALCOLLECTIONS_H
 #define AKONADI_SPECIALCOLLECTIONS_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "item.h"
 
 #include <QtCore/QObject>
-
-#include "akonadi/collection.h"
-#include <akonadi/item.h>
 
 class KCoreConfigSkeleton;
 class KJob;
@@ -62,7 +61,7 @@ class SpecialCollectionsPrivate;
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_EXPORT SpecialCollections : public QObject
+class AKONADICORE_EXPORT SpecialCollections : public QObject
 {
     Q_OBJECT
 

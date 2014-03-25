@@ -20,8 +20,9 @@
 #ifndef AKONADI_COLLECTIONSELECTJOB_P_H
 #define AKONADI_COLLECTIONSELECTJOB_P_H
 
-#include <akonadi/collection.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -31,7 +32,7 @@ class CollectionSelectJobPrivate;
  * @internal
  *  Selects a specific collection. See RFC 3501 for select semantics.
  */
-class AKONADI_EXPORT CollectionSelectJob : public Job
+class AKONADICORE_EXPORT CollectionSelectJob : public Job
 {
     Q_OBJECT
 public:

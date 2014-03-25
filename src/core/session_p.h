@@ -22,9 +22,9 @@
 
 #include "akonadiprivate_export.h"
 #include "session.h"
-#include "imapparser_p.h"
 #include "item.h"
 #include "servermanager.h"
+#include <akonadi/private/imapparser_p.h>
 
 #include <QtNetwork/QLocalSocket>
 

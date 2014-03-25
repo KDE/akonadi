@@ -19,7 +19,7 @@
 
 #include "itemsearchjob.h"
 
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "itemfetchscope.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"

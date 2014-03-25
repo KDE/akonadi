@@ -20,9 +20,8 @@
 #ifndef AKONADI_SPECIALCOLLECTIONATTRIBUTE_P_H
 #define AKONADI_SPECIALCOLLECTIONATTRIBUTE_P_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/attribute.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
 #include <QtCore/QByteArray>
 
@@ -36,7 +35,7 @@ namespace Akonadi {
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
+class AKONADICORE_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
 {
 public:
     /**

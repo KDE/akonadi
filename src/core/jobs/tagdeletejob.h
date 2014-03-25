@@ -20,8 +20,9 @@
 #ifndef AKONADI_TAGDELETEJOB_H
 #define AKONADI_TAGDELETEJOB_H
 
-#include <akonadi/job.h>
-#include <akonadi/tag.h>
+#include "akonadicore_export.h"
+#include "job.h"
+#include "tag.h"
 
 namespace Akonadi {
 
@@ -32,7 +33,7 @@ class TagDeleteJobPrivate;
  * @short Job that deletes tags.
  * @since 4.13
  */
-class AKONADI_EXPORT TagDeleteJob : public Job
+class AKONADICORE_EXPORT TagDeleteJob : public Job
 {
     Q_OBJECT
 

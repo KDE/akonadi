@@ -20,11 +20,9 @@
 #ifndef AKONADI_ENTITYDELETEDATTRIBUTE_H
 #define AKONADI_ENTITYDELETEDATTRIBUTE_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/attribute.h>
-
-#include <akonadi/collection.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
+#include "collection.h"
 
 namespace Akonadi
 {
@@ -46,7 +44,7 @@ namespace Akonadi
  * @see Akonadi::Attribute
  * @since 4.8
  */
-class AKONADI_EXPORT EntityDeletedAttribute : public Attribute
+class AKONADICORE_EXPORT EntityDeletedAttribute : public Attribute
 {
 public:
     /**

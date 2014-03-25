@@ -20,10 +20,10 @@
 #ifndef AKONADI_AGENTMANAGER_H
 #define AKONADI_AGENTMANAGER_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentinstance.h>
+#include "agenttype.h"
+#include "agentinstance.h"
 
 #include <QtCore/QObject>
 
@@ -52,7 +52,7 @@ class Collection;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentManager : public QObject
+class AKONADICORE_EXPORT AgentManager : public QObject
 {
     friend class AgentInstance;
     friend class AgentInstanceCreateJobPrivate;

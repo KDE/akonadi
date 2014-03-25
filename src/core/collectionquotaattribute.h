@@ -20,7 +20,8 @@
 #ifndef AKONADI_COLLECTIONQUOTAATTRIBUTE_H
 #define AKONADI_COLLECTIONQUOTAATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
 namespace Akonadi {
 
@@ -47,7 +48,7 @@ namespace Akonadi {
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
+class AKONADICORE_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
 {
 public:
     /**

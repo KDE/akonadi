@@ -20,9 +20,9 @@
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collection.h>
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "collection.h"
 
 #include <KDebug>
 #include <KLocalizedString>

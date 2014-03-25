@@ -21,7 +21,7 @@
 #ifndef AKONADI_ENTITYMIMETYPEFILTERMODEL_H
 #define AKONADI_ENTITYMIMETYPEFILTERMODEL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include "entitytreemodel.h"
 
 #include <QSortFilterProxyModel>
@@ -58,7 +58,7 @@ class EntityMimeTypeFilterModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
+class AKONADICORE_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

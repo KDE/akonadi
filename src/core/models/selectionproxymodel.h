@@ -22,7 +22,7 @@
 
 #include <kselectionproxymodel.h>
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 namespace Akonadi
 {
@@ -96,7 +96,7 @@ class SelectionProxyModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT SelectionProxyModel : public KSelectionProxyModel
+class AKONADICORE_EXPORT SelectionProxyModel : public KSelectionProxyModel
 {
     Q_OBJECT
 

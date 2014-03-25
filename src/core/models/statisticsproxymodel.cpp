@@ -22,9 +22,9 @@
 #include "entitytreemodel.h"
 #include "collectionutils_p.h"
 
-#include <akonadi/collectionquotaattribute.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/entitydisplayattribute.h>
+#include "collectionquotaattribute.h"
+#include "collectionstatistics.h"
+#include "entitydisplayattribute.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>

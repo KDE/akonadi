@@ -20,7 +20,7 @@
 #ifndef AKONADI_ATTRIBUTE_H
 #define AKONADI_ATTRIBUTE_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QList>
 
@@ -135,7 +135,7 @@ namespace Akonadi {
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT Attribute
+class AKONADICORE_EXPORT Attribute
 {
 public:
     /**

@@ -20,9 +20,8 @@
 #ifndef AKONADI_COLLECTIONMODIFYJOB_H
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -79,7 +78,7 @@ class CollectionModifyJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionModifyJob : public Job
+class AKONADICORE_EXPORT CollectionModifyJob : public Job
 {
     Q_OBJECT
 

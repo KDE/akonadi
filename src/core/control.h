@@ -20,7 +20,8 @@
 #ifndef AKONADI_CONTROL_H
 #define AKONADI_CONTROL_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
+
 #include <QtCore/QObject>
 
 namespace Akonadi {
@@ -59,7 +60,7 @@ namespace Akonadi {
  *
  * @see Akonadi::ServerManager
  */
-class AKONADI_EXPORT Control : public QObject
+class AKONADICORE_EXPORT Control : public QObject
 {
     Q_OBJECT
 

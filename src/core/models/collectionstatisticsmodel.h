@@ -20,8 +20,8 @@
 #ifndef AKONADI_COLLECTIONSTATISTICSMODEL_H
 #define AKONADI_COLLECTIONSTATISTICSMODEL_H
 
-#include "akonadi_export.h"
-#include <akonadi/collectionmodel.h>
+#include "akonadicore_export.h"
+#include "collectionmodel.h"
 
 namespace Akonadi {
 
@@ -49,7 +49,7 @@ class CollectionStatisticsModelPrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @deprecated Use Akonadi::EntityTreeModel with an Akonadi::StatisticsProxyModel on top
  */
-class AKONADI_DEPRECATED_EXPORT CollectionStatisticsModel : public CollectionModel
+class AKONADICORE_DEPRECATED_EXPORT CollectionStatisticsModel : public CollectionModel
 {
     Q_OBJECT
 

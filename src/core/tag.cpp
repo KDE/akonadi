@@ -18,7 +18,7 @@
 */
 
 #include "tag.h"
-#include <akonadi/tagattribute.h>
+#include "tagattribute.h"
 
 using namespace Akonadi;
 

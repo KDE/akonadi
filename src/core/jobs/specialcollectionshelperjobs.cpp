@@ -24,14 +24,14 @@
 #include "specialcollections.h"
 #include "servermanager.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/resourcesynchronizationjob.h>
+#include "agentinstance.h"
+#include "agentinstancecreatejob.h"
+#include "agentmanager.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "collectionmodifyjob.h"
+#include "entitydisplayattribute.h"
+#include "resourcesynchronizationjob.h"
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -82,7 +82,7 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
         }
     }
 
-  if (m.methodSignature().isEmpty())
+    if (m.methodSignature().isEmpty()) {
         return QVariant::Invalid;
     }
 
@@ -91,7 +91,7 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
         return QVariant::Invalid;
     }
 
-    return QVariant::nameToType(argTypes.first());
+    return QVariant::nameToType(argTypes.first().constData());
 }
 
 // ===================== ResourceScanJob ============================

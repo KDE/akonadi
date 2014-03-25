@@ -25,7 +25,7 @@
 #include <QtCore/QSet>
 
 #include "item.h"
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 class QIODevice;
 
@@ -116,7 +116,7 @@ namespace Akonadi {
  *
  * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT ItemSerializerPlugin
+class AKONADICORE_EXPORT ItemSerializerPlugin
 {
 public:
     /**
@@ -190,7 +190,7 @@ public:
  *
  * @since 4.4
  */
-class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
+class AKONADICORE_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
 {
 public:
     /**

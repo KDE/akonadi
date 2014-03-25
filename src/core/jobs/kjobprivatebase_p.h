@@ -22,7 +22,7 @@
 
 #include <QtCore/QObject>
 
-#include <akonadi/servermanager.h>
+#include "servermanager.h"
 
 namespace Akonadi {
 

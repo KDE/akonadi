@@ -20,7 +20,8 @@
 #ifndef AKONADI_SEARCHCREATEJOB_H
 #define AKONADI_SEARCHCREATEJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 #include "collection.h"
 
 namespace Akonadi {
@@ -59,7 +60,7 @@ class SearchCreateJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT SearchCreateJob : public Job
+class AKONADICORE_EXPORT SearchCreateJob : public Job
 {
     Q_OBJECT
 
@@ -72,7 +73,7 @@ public:
      * @param parent The parent object.
      * @deprecated Deprecated as of 4.13, use Akonadi::SearchQuery instead
      */
-    AKONADI_DEPRECATED SearchCreateJob(const QString &name, const QString &query, QObject *parent = 0);
+    AKONADICORE_DEPRECATED SearchCreateJob(const QString &name, const QString &query, QObject *parent = 0);
 
     /**
      * Creates a search create job
@@ -91,7 +92,7 @@ public:
      * @deprecated This method is deprecated as of 4.13 and has no effect.
      *
      */
-    AKONADI_DEPRECATED void setQueryLanguage(const QString &queryLanguage);
+    AKONADICORE_DEPRECATED void setQueryLanguage(const QString &queryLanguage);
 
     /**
      * Sets list of mime types of items that search results can contain

@@ -20,7 +20,8 @@
 #ifndef AKONADI_COLLECTIONCOPYJOB_H
 #define AKONADI_COLLECTIONCOPYJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -54,7 +55,7 @@ class CollectionCopyJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionCopyJob : public Job
+class AKONADICORE_EXPORT CollectionCopyJob : public Job
 {
     Q_OBJECT
 

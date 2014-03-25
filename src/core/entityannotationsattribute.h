@@ -21,9 +21,9 @@
 #ifndef AKONADI_ENTITYANNOTATIONSATTRIBUTE_H
 #define AKONADI_ENTITYANNOTATIONSATTRIBUTE_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
+#include "attribute.h"
 
-#include <akonadi/attribute.h>
 #include <QMap>
 
 namespace Akonadi {
@@ -41,7 +41,7 @@ namespace Akonadi {
  *
  * @since 4.13
  */
-class AKONADI_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute
+class AKONADICORE_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
     EntityAnnotationsAttribute();

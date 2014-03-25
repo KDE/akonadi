@@ -1,6 +1,11 @@
 # Turn exceptions on
 kde_enable_exceptions()
 
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/jobs
+    ${CMAKE_CURRENT_SOURCE_DIR}/models
+)
+
 set(akonadicore_base_SRCS
     agentinstance.cpp
     agentmanager.cpp
@@ -13,6 +18,7 @@ set(akonadicore_base_SRCS
     changemediator_p.cpp
     changenotificationdependenciesfactory.cpp
     changerecorder.cpp
+    changerecorder_p.cpp
     collection.cpp
     collectionfetchscope.cpp
     collectionpathresolver.cpp
@@ -29,6 +35,7 @@ set(akonadicore_base_SRCS
     entitycache.cpp
     entitydeletedattribute.cpp
     entitydeletedattribute.cpp
+    entitydisplayattribute.cpp
     entityhiddenattribute.cpp
     exception.cpp
     firstrun.cpp
@@ -54,6 +61,7 @@ set(akonadicore_base_SRCS
     servermanager.cpp
     session.cpp
     specialcollectionattribute.cpp
+    specialcollections.cpp
     tag.cpp
     tagattribute.cpp
     tagfetchscope.cpp
@@ -125,19 +133,35 @@ set(akonadicore_jobs_SRCS
     jobs/trashjob.cpp
     jobs/trashrestorejob.cpp
     jobs/unlinkjob.cpp
+
 )
+
+# FIXME KF5: Remove once we merge Akonadi repository in
+# This is so that we find
+include_directories("${CMAKE_INSTALL_PREFIX}/include")
+
+set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h" )
+qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface )
+
+set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h" )
+qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface )
+
+
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml )
 
 set(akonadicore_SRCS
     ${akonadicore_base_SRCS}
     ${akonadicore_jobs_SRCS}
     ${akonadicore_models_SRCS}
+    ${akonadicore_dbus_SRCS}
 )
 
 add_library(KF5AkonadiCore ${akonadicore_SRCS})
 
-qt5_add_dbus_interfaces(akonadicore_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
-qt5_add_dbus_interfaces(akonadicore_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
-qt5_add_dbus_interfaces(akonadicore_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml )
 # qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase resourceadaptor Akonadi__ResourceAdaptor )
 # qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Preprocessor.xml preprocessorbase_p.h Akonadi::PreprocessorBasePrivate preprocessoradaptor Akonadi__PreprocessorAdaptor )
 # qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase statusadaptor Akonadi__StatusAdaptor )
@@ -156,9 +180,10 @@ target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AkonadiCor
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AkonadiCore_SOURCE_DIR}/src/core;${AkonadiCore_BINARY_DIR}/src/core>")
 
 target_link_libraries(KF5AkonadiCore
-    KF5::ItemViews
+    KF5::ItemModels
     KF5::KIOCore
     KF5::KDE4Support
+    ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/libakonadiprotocolinternals.so
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES
@@ -188,5 +213,5 @@ install(FILES
     ${AkonadiCore_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel)
 
-ecm_generate_pri_file(BASE_NAME AkonadiCore LIB_NAME KF5AkonadiCore DEPS "ItemViews KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME AkonadiCore LIB_NAME KF5AkonadiCore DEPS "ItemModels KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})

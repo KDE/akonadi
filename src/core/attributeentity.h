@@ -20,11 +20,14 @@
 #ifndef AKONADI_ATTRIBUTEENTITY_H
 #define AKONADI_ATTRIBUTEENTITY_H
 
-#include <akonadi/job.h>
-#include <QVector>
-#include <qsharedpointer.h>
+#include "akonadicore_export.h"
+
+#include "job.h"
 #include "attribute.h"
-#include <kdebug.h>
+
+#include <QVector>
+#include <QSharedPointer>
+#include <KDebug>
 
 namespace Akonadi {
 
@@ -37,7 +40,7 @@ namespace Akonadi {
  * calls etc.
  * An even better solution is probably ot make AttributeEntity a private member of Entity, with all Attribute related member functions forwarding to this class.
  */
-class AKONADI_EXPORT AttributeEntity {
+class AKONADICORE_EXPORT AttributeEntity {
 public:
     AttributeEntity();
 

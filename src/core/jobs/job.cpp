@@ -23,7 +23,7 @@
 #include "job_p.h"
 #include "dbusconnectionpool.h"
 #include <QTime>
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "session.h"
 #include "session_p.h"
 

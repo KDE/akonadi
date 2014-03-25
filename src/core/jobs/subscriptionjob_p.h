@@ -20,8 +20,9 @@
 #ifndef AKONADI_SUBSCRIPTIONJOB_P_H
 #define AKONADI_SUBSCRIPTIONJOB_P_H
 
-#include <akonadi/collection.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -32,7 +33,7 @@ class SubscriptionJobPrivate;
  *
  * @short Job to manipulate the local subscription state of a set of collections.
  */
-class AKONADI_EXPORT SubscriptionJob : public Job
+class AKONADICORE_EXPORT SubscriptionJob : public Job
 {
     Q_OBJECT
 public:

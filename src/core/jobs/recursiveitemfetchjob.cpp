@@ -18,11 +18,10 @@
 */
 
 #include "recursiveitemfetchjob.h"
-
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>

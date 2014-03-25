@@ -20,9 +20,8 @@
 #ifndef AKONADI_COLLECTION_H
 #define AKONADI_COLLECTION_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/entity.h>
+#include "akonadicore_export.h"
+#include "entity.h"
 
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
@@ -72,7 +71,7 @@ class CollectionStatistics;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT Collection : public Entity
+class AKONADICORE_EXPORT Collection : public Entity
 {
 public:
     /**
@@ -172,35 +171,35 @@ public:
      * Returns the identifier of the parent collection.
      * @deprecated Use parentCollection()
      */
-    AKONADI_DEPRECATED Id parent() const;
+    AKONADICORE_DEPRECATED Id parent() const;
 
     /**
      * Sets the identifier of the @p parent collection.
      * @param parent the parent identifier to set
      * @deprecated Use setParentCollection()
      */
-    AKONADI_DEPRECATED void setParent(Id parent);
+    AKONADICORE_DEPRECATED void setParent(Id parent);
 
     /**
      * Sets the parent @p collection.
      * @param collection the parent collection to set
      * @deprecated Use setParentCollection()
      */
-    AKONADI_DEPRECATED void setParent(const Collection &collection);
+    AKONADICORE_DEPRECATED void setParent(const Collection &collection);
 
     /**
      * Returns the parent remote identifier.
      * @note This usually returns nothing for collections retrieved from the backend.
      * @deprecated Use parentCollection()
      */
-    AKONADI_DEPRECATED QString parentRemoteId() const;
+    AKONADICORE_DEPRECATED QString parentRemoteId() const;
 
     /**
      * Sets the parent's remote @p identifier.
      * @param identifier the parent's remote identifier to set
      * @deprecated Use setParentCollection()
      */
-    AKONADI_DEPRECATED void setParentRemoteId(const QString &identifier);
+    AKONADICORE_DEPRECATED void setParentRemoteId(const QString &identifier);
 
     /**
      * Returns the root collection.
@@ -296,11 +295,11 @@ private:
 
 }
 
-AKONADI_EXPORT uint qHash(const Akonadi::Collection &collection);
+AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);
 /**
  * Allows to output a collection for debugging purposes.
  */
-AKONADI_EXPORT QDebug operator<<(QDebug d, const Akonadi::Collection &collection);
+AKONADICORE_EXPORT QDebug operator<<(QDebug d, const Akonadi::Collection &collection);
 
 Q_DECLARE_METATYPE(Akonadi::Collection)
 Q_DECLARE_METATYPE(Akonadi::Collection::List)

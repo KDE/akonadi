@@ -20,8 +20,8 @@
 #ifndef AKONADI_COLLECTIONSYNC_P_H
 #define AKONADI_COLLECTIONSYNC_P_H
 
-#include <akonadi/collection.h>
-#include <akonadi/transactionsequence.h>
+#include "collection.h"
+#include "transactionsequence.h"
 
 namespace Akonadi {
 

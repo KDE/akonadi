@@ -20,9 +20,10 @@
 #ifndef AKONADI_ENTITYDISPLAYATTRIBUTE_H
 #define AKONADI_ENTITYDISPLAYATTRIBUTE_H
 
-#include <QColor>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
-#include <akonadi/attribute.h>
+#include <QColor>
 
 class KIcon;
 
@@ -36,7 +37,7 @@ namespace Akonadi {
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
  */
-class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
+class AKONADICORE_EXPORT EntityDisplayAttribute : public Attribute
 {
 public:
     /**

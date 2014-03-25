@@ -20,16 +20,16 @@
 #ifndef AKONADI_TAG_H
 #define AKONADI_TAG_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include <QString>
 
 namespace Akonadi {
 class Tag;
 }
 
-AKONADI_EXPORT uint qHash(const Akonadi::Tag &);
+AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 
-#include <akonadi/attributeentity.h>
+#include "attributeentity.h"
 #include <QVector>
 #include <QSharedPointer>
 #include <KUrl>
@@ -40,7 +40,7 @@ namespace Akonadi {
 /**
  * An Akonadi Tag.
  */
-class AKONADI_EXPORT Tag : public AttributeEntity
+class AKONADICORE_EXPORT Tag : public AttributeEntity
 {
 public:
     typedef QList<Tag> List;
@@ -119,7 +119,7 @@ private:
 
 }
 
-AKONADI_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Tag &tag);
+AKONADICORE_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Tag &tag);
 
 Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)

@@ -20,7 +20,7 @@
 #ifndef AKONADI_PASTEHELPER_P_H
 #define AKONADI_PASTEHELPER_P_H
 
-#include <akonadi/collection.h>
+#include "collection.h"
 
 #include <QtCore/QList>
 

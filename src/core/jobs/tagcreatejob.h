@@ -20,7 +20,8 @@
 #ifndef AKONADI_TAGCREATEJOB_H
 #define AKONADI_TAGCREATEJOB_H
 
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -31,7 +32,7 @@ class TagCreateJobPrivate;
  * @short Job that creates a new tag in the Akonadi storage.
  * @since 4.13
  */
-class AKONADI_EXPORT TagCreateJob : public Job
+class AKONADICORE_EXPORT TagCreateJob : public Job
 {
     Q_OBJECT
 

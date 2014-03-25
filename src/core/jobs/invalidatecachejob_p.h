@@ -20,7 +20,7 @@
 #ifndef AKONADI_INVALIDATECACHEJOB_P_H
 #define AKONADI_INVALIDATECACHEJOB_P_H
 
-#include <akonadi/job.h>
+#include "job.h"
 
 namespace Akonadi {
 

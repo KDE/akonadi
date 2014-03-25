@@ -20,7 +20,8 @@
 #ifndef AKONADI_CHANGERECORDER_H
 #define AKONADI_CHANGERECORDER_H
 
-#include <akonadi/monitor.h>
+#include "akonadicore_export.h"
+#include "monitor.h"
 
 class QSettings;
 
@@ -44,7 +45,7 @@ class ChangeRecorderPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT ChangeRecorder : public Monitor
+class AKONADICORE_EXPORT ChangeRecorder : public Monitor
 {
     Q_OBJECT
 public:

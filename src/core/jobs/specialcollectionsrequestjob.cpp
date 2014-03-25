@@ -24,9 +24,9 @@
 #include "specialcollections_p.h"
 #include "specialcollectionshelperjobs_p.h"
 
-#include "akonadi/agentmanager.h"
-#include "akonadi/collectioncreatejob.h"
-#include "akonadi/entitydisplayattribute.h"
+#include "agentmanager.h"
+#include "collectioncreatejob.h"
+#include "entitydisplayattribute.h"
 
 #include <KDebug>
 

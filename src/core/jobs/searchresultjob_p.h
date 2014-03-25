@@ -20,13 +20,13 @@
 #ifndef AKONADI_SEARCHRESULTJOB_H
 #define AKONADI_SEARCHRESULTJOB_H
 
-#include <akonadi/job.h>
-#include <akonadi/private/imapset_p.h>
-#include <akonadi/collection.h>
+#include "job.h"
 
 namespace Akonadi {
 
 class SearchResultJobPrivate;
+class ImapSet;
+class Collection;
 
 class SearchResultJob : public Akonadi::Job
 {

@@ -20,14 +20,14 @@
 #ifndef AKONADI_PROTOCOLHELPER_P_H
 #define AKONADI_PROTOCOLHELPER_P_H
 
-#include <akonadi/cachepolicy.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionutils_p.h>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/sharedvaluepool_p.h>
-#include <akonadi/attributeentity.h>
-#include <akonadi/tag.h>
+#include "cachepolicy.h"
+#include "collection.h"
+#include "collectionutils_p.h"
+#include "item.h"
+#include "itemfetchscope.h"
+#include "sharedvaluepool_p.h"
+#include "attributeentity.h"
+#include "tag.h"
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>

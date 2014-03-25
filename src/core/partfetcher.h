@@ -22,7 +22,7 @@
 
 #include <kjob.h>
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 class QModelIndex;
 
@@ -70,7 +70,7 @@ class PartFetcherPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT PartFetcher : public KJob
+class AKONADICORE_EXPORT PartFetcher : public KJob
 {
     Q_OBJECT
 

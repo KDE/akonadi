@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTINSTANCE_H
 #define AKONADI_AGENTINSTANCE_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
@@ -59,7 +59,7 @@ class AgentType;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentInstance
+class AKONADICORE_EXPORT AgentInstance
 {
     friend class AgentManager;
     friend class AgentManagerPrivate;

@@ -20,8 +20,9 @@
 #ifndef AKONADI_UNLINKJOB_H
 #define AKONADI_UNLINKJOB_H
 
-#include <akonadi/job.h>
-#include <akonadi/item.h>
+#include "akonadicore_export.h"
+#include "job.h"
+#include "item.h"
 
 namespace Akonadi {
 
@@ -61,7 +62,7 @@ class UnlinkJobPrivate;
  * @since 4.2
  * @see LinkJob
  */
-class AKONADI_EXPORT UnlinkJob : public Job
+class AKONADICORE_EXPORT UnlinkJob : public Job
 {
     Q_OBJECT
 public:

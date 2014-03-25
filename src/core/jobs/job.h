@@ -22,7 +22,7 @@
 #ifndef AKONADI_JOB_H
 #define AKONADI_JOB_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <kcompositejob.h>
 
@@ -83,7 +83,7 @@ class SessionPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>, Tobias Koenig <tokoe@kde.org>, Marc Mutz <mutz@kde.org>
  */
-class AKONADI_EXPORT Job : public KCompositeJob
+class AKONADICORE_EXPORT Job : public KCompositeJob
 {
     Q_OBJECT
 

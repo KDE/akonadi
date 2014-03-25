@@ -25,10 +25,10 @@
 #include "collectionstatistics.h"
 #include "dbusconnectionpool.h"
 #include "itemfetchjob.h"
-#include "notificationmessagev2_p.h"
 #include "notificationmanagerinterface.h"
 #include "session.h"
 #include "changemediator_p.h"
+#include <akonadi/private/notificationmessagev2_p.h>
 
 #include <kdebug.h>
 #include <kcomponentdata.h>

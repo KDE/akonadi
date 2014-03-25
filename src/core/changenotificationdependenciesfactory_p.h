@@ -20,8 +20,7 @@
 #ifndef CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
 #define CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
 
-#include <akonadi/session.h>
-
+#include "session.h"
 #include "entitycache_p.h"
 
 namespace Akonadi {

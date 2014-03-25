@@ -21,7 +21,7 @@
 #ifndef AKONADI_COLLECTIONFETCHSCOPE_H
 #define AKONADI_COLLECTIONFETCHSCOPE_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QSharedDataPointer>
 
@@ -65,7 +65,7 @@ class CollectionFetchScopePrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT CollectionFetchScope
+class AKONADICORE_EXPORT CollectionFetchScope
 {
 public:
     /**
@@ -105,7 +105,7 @@ public:
      *
      * @deprecated Use includeUnsubscribed()
      */
-    AKONADI_DEPRECATED bool includeUnubscribed() const;
+    AKONADICORE_DEPRECATED bool includeUnubscribed() const;
 
     /**
      * Returns whether unsubscribed collection should be included.

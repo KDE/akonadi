@@ -20,7 +20,8 @@
 #ifndef AKONADI_PERSISTENTSEARCHATTRIBUTE_H
 #define AKONADI_PERSISTENTSEARCHATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
 namespace Akonadi {
 
@@ -70,7 +71,7 @@ class Collection;
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.5
  */
-class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
+class AKONADICORE_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 {
 public:
     /**
@@ -89,7 +90,7 @@ public:
      * @deprecated Deprecated as of 4.13. This method returns "SPARQL" for
      * compatibility reasons and should not be used with new code.
      */
-    AKONADI_DEPRECATED QString queryLanguage() const;
+    AKONADICORE_DEPRECATED QString queryLanguage() const;
 
     /**
      * Sets the query language used for this search.
@@ -97,7 +98,7 @@ public:
      *
      * @deprecated Deprecated as of 4.13. This method has no effect.
      */
-    AKONADI_DEPRECATED void setQueryLanguage(const QString &language);
+    AKONADICORE_DEPRECATED void setQueryLanguage(const QString &language);
 
     /**
      * Returns the query string used for this search.

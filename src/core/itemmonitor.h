@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMMONITOR_H
 #define AKONADI_ITEMMONITOR_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 #include <qglobal.h>
 
 class QStringList;
@@ -79,7 +79,7 @@ class ItemFetchScope;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT ItemMonitor
+class AKONADICORE_EXPORT ItemMonitor
 {
 public:
     /**

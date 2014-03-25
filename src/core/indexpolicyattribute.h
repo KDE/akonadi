@@ -20,7 +20,8 @@
 #ifndef AKONADI_INDEXPOLICYATTRIBUTE_H
 #define AKONADI_INDEXPOLICYATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
 namespace Akonadi {
 
@@ -32,7 +33,7 @@ namespace Akonadi {
  *
  * @since 4.6
  */
-class AKONADI_EXPORT IndexPolicyAttribute : public Akonadi::Attribute
+class AKONADICORE_EXPORT IndexPolicyAttribute : public Akonadi::Attribute
 {
 public:
     /**

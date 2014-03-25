@@ -20,9 +20,8 @@
 #ifndef AKONADI_COLLECTIONMODEL_H
 #define AKONADI_COLLECTIONMODEL_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/collection.h>
+#include "akonadicore_export.h"
+#include "collection.h"
 
 #include <QtCore/QAbstractItemModel>
 
@@ -51,7 +50,7 @@ class CollectionModelPrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @deprecated Use Akonadi::EntityTreeModel instead
  */
-class AKONADI_DEPRECATED_EXPORT CollectionModel : public QAbstractItemModel
+class AKONADICORE_DEPRECATED_EXPORT CollectionModel : public QAbstractItemModel
 {
     Q_OBJECT
 

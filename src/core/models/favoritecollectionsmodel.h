@@ -20,11 +20,9 @@
 #ifndef AKONADI_FAVORITECOLLECTIONSMODEL_H
 #define AKONADI_FAVORITECOLLECTIONSMODEL_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/selectionproxymodel.h>
-
-#include <akonadi/collection.h>
+#include "akonadicore_export.h"
+#include "selectionproxymodel.h"
+#include "collection.h"
 
 class KConfigGroup;
 class KJob;
@@ -63,7 +61,7 @@ class EntityTreeModel;
  * @since 4.4
  */
 //TODO_KDE5: Make this a KRecursiveFilterProxyModel instead of a SelectionProxyModel
-class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyModel
+class AKONADICORE_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyModel
 {
     Q_OBJECT
 

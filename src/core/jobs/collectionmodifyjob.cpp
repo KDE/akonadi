@@ -22,7 +22,7 @@
 #include "changemediator_p.h"
 #include "collection_p.h"
 #include "collectionstatistics.h"
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
 #include "protocolhelper_p.h"
 

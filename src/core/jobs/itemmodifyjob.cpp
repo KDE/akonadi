@@ -22,14 +22,14 @@
 
 #include "changemediator_p.h"
 #include "collection.h"
-#include "conflicthandling/conflicthandler_p.h"
+#include "conflicthandler_p.h"
 #include "entity_p.h"
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
-#include "gid/gidextractor_p.h"
+#include "gidextractor_p.h"
 
 #include <kdebug.h>
 

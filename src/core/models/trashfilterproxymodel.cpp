@@ -18,11 +18,10 @@
 */
 #include "trashfilterproxymodel.h"
 
-#include <akonadi/entity.h>
-#include <akonadi/entitydeletedattribute.h>
-#include <akonadi/item.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/resourcesettings.h>
+#include "entity.h"
+#include "entitydeletedattribute.h"
+#include "item.h"
+#include "entitytreemodel.h"
 
 using namespace Akonadi;
 

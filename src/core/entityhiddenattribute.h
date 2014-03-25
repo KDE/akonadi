@@ -22,7 +22,8 @@
 #ifndef AKONADI_ENTITYHIDDENATTRIBUTE_H
 #define AKONADI_ENTITYHIDDENATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include "akonadicore_export.h"
+#include "attribute.h"
 
 namespace Akonadi {
 
@@ -57,7 +58,7 @@ namespace Akonadi {
  * @see Akonadi::Attribute
  * @since 4.4
  */
-class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
+class AKONADICORE_EXPORT EntityHiddenAttribute : public Attribute
 {
 public:
     /**

@@ -20,8 +20,9 @@
 #ifndef AKONADI_COLLECTIONPATHRESOLVER_P_H
 #define AKONADI_COLLECTIONPATHRESOLVER_P_H
 
-#include <akonadi/collection.h>
-#include <akonadi/job.h>
+#include "akonadicore_export.h"
+#include "collection.h"
+#include "job.h"
 
 namespace Akonadi {
 
@@ -39,7 +40,7 @@ class CollectionPathResolverPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionPathResolver : public Job
+class AKONADICORE_EXPORT CollectionPathResolver : public Job
 {
     Q_OBJECT
 

@@ -20,7 +20,7 @@
 #ifndef ITEMFETCHSCOPE_H
 #define ITEMFETCHSCOPE_H
 
-#include "akonadi_export.h"
+#include "akonadicore_export.h"
 
 #include <QtCore/QSharedDataPointer>
 #include <KDE/KDateTime>
@@ -65,7 +65,7 @@ class ItemFetchScopePrivate;
  *
  * @author Kevin Krammer <kevin.krammer@gmx.at>
  */
-class AKONADI_EXPORT ItemFetchScope
+class AKONADICORE_EXPORT ItemFetchScope
 {
 public:
     /**
