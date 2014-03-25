@@ -276,7 +276,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
 
   //Create another item, it should not be added to the ETM although the signal is emitted from the monitor, but we should be able to fetchMore
   {
-    QSignalSpy addedSpy(changeRecorder, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+    QSignalSpy addedSpy(changeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
     QVERIFY(addedSpy.isValid());
     Item item2;
     item2.setMimeType("application/octet-stream");

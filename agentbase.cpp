@@ -739,8 +739,9 @@ void AgentBasePrivate::slotError(const QString &message)
 
 void AgentBasePrivate::slotNetworkStatusChange(Solid::Networking::Status stat)
 {
+    Q_UNUSED(stat);
     Q_Q(AgentBase);
-    q->setOnlineInternal(mDesiredOnlineState && (stat == Solid::Networking::Unknown || stat == Solid::Networking::Connected));
+    q->setOnlineInternal(mDesiredOnlineState);
 }
 
 void AgentBasePrivate::slotResumedFromSuspend()
@@ -943,6 +944,13 @@ void AgentBase::setTemporaryOffline(int makeOnlineInSeconds)
 void AgentBase::setOnlineInternal( bool state )
 {
     Q_D(AgentBase);
+    if (state && d->mNeedsNetwork) {
+        const Solid::Networking::Status stat = Solid::Networking::status();
+        if (stat != Solid::Networking::Unknown && stat != Solid::Networking::Connected) {
+            //Don't go online if the resource needs network but there is none
+            state = false;
+        }
+    }
     d->mOnline = state;
 
     if (d->mTemporaryOfflineTimer) {

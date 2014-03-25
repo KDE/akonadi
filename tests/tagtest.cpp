@@ -285,7 +285,7 @@ void TagTest::testTagItem()
 
     item1.setTag(tag);
 
-    QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List, QSet<Akonadi::Tag>, QSet<Akonadi::Tag>)));
+    QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
     QVERIFY(tagsSpy.isValid());
 
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);
