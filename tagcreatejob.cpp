@@ -28,8 +28,8 @@ using namespace Akonadi;
 struct Akonadi::TagCreateJobPrivate : public JobPrivate
 {
     TagCreateJobPrivate(TagCreateJob *parent)
-        :JobPrivate(parent),
-        mMerge(false)
+        : JobPrivate(parent)
+        , mMerge(false)
     {
     }
 
@@ -39,7 +39,7 @@ struct Akonadi::TagCreateJobPrivate : public JobPrivate
 };
 
 TagCreateJob::TagCreateJob(const Akonadi::Tag &tag, QObject *parent)
-    :Job(new TagCreateJobPrivate(this), parent)
+    : Job(new TagCreateJobPrivate(this), parent)
 {
     Q_D(TagCreateJob);
     d->mTag = tag;
@@ -58,7 +58,7 @@ void TagCreateJob::doStart()
     if (d->mTag.gid().isEmpty()) {
         kWarning() << "The gid of a new tag must not be empty";
         setError(Job::Unknown);
-        setErrorText( i18n("Failed to create tag.") );
+        setErrorText(i18n("Failed to create tag."));
         emitResult();
         return;
     }
@@ -89,22 +89,22 @@ void TagCreateJob::doStart()
     }
     command += ")";
 
-    d->writeData( command );
+    d->writeData(command);
 }
 
 void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
 {
     Q_D(TagCreateJob);
 
-    if ( tag == "*" ) {
+    if (tag == "*") {
         int begin = data.indexOf("TAGFETCH");
-        if ( begin >= 0 ) {
+        if (begin >= 0) {
             // split fetch response into key/value pairs
             QList<QByteArray> fetchResponse;
             ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
             if (!d->mMerge) {
-              //If merge is enabled there is the possibility that existing attributes etc are not valid anymore
-              d->mResultTag = d->mTag;
+                //If merge is enabled there is the possibility that existing attributes etc are not valid anymore
+                d->mResultTag = d->mTag;
             }
             ProtocolHelper::parseTagFetchResult(fetchResponse, d->mResultTag);
         }

@@ -43,7 +43,7 @@ class UnlinkJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * Akonadi::UnlinkJob *job = new Akonadi::UnlinkJob( virtualCollection, items );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * ...
  *
@@ -63,8 +63,8 @@ class UnlinkJobPrivate;
  */
 class AKONADI_EXPORT UnlinkJob : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new unlink job.
      *
@@ -74,18 +74,18 @@ class AKONADI_EXPORT UnlinkJob : public Job
      * @param items The items of which the references should be removed.
      * @param parent The parent object.
      */
-    UnlinkJob( const Collection &collection, const Item::List &items, QObject *parent = 0 );
+    UnlinkJob(const Collection &collection, const Item::List &items, QObject *parent = 0);
 
     /**
      * Destroys the unlink job.
      */
     ~UnlinkJob();
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( UnlinkJob )
+private:
+    Q_DECLARE_PRIVATE(UnlinkJob)
     template <typename T> friend class LinkJobImpl;
 };
 

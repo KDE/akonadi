@@ -46,7 +46,7 @@ namespace Akonadi
  * const Akonadi::Item::List items = ...
  *
  * TrashRestoreJob *job = new TrashRestoreJob( items );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( restoreResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(restoreResult(KJob*)) );
  *
  * @endcode
  *
@@ -56,16 +56,16 @@ namespace Akonadi
 class AKONADI_EXPORT TrashRestoreJob : public Job
 {
     Q_OBJECT
-  public:
+public:
 
     /**
      * All items need to be from the same resource
      */
-    explicit TrashRestoreJob( const Item &item, QObject *parent = 0 );
+    explicit TrashRestoreJob(const Item &item, QObject *parent = 0);
 
-    explicit TrashRestoreJob( const Item::List &items, QObject *parent = 0 );
+    explicit TrashRestoreJob(const Item::List &items, QObject *parent = 0);
 
-    explicit TrashRestoreJob( const Collection &collection, QObject *parent = 0 );
+    explicit TrashRestoreJob(const Collection &collection, QObject *parent = 0);
 
     ~TrashRestoreJob();
 
@@ -74,22 +74,22 @@ class AKONADI_EXPORT TrashRestoreJob : public Job
      * If not set the item will be restored in the collection saved in the EntityDeletedAttribute.
      * @param collection the collection to set as target
      */
-    void setTargetCollection( const Collection collection );
+    void setTargetCollection(const Collection collection);
 
     Item::List items() const;
-  protected:
+protected:
     virtual void doStart();
 
-  private:
+private:
     //@cond PRIVATE
     class TrashRestoreJobPrivate;
-    Q_DECLARE_PRIVATE( TrashRestoreJob )
-    Q_PRIVATE_SLOT( d_func(), void selectResult( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void targetCollectionFetched( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void removeAttribute( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void removeAttribute( const Akonadi::Item::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionsReceived( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void itemsReceived( const Akonadi::Item::List & ) )
+    Q_DECLARE_PRIVATE(TrashRestoreJob)
+    Q_PRIVATE_SLOT(d_func(), void selectResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void targetCollectionFetched(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void removeAttribute(const Akonadi::Collection::List &))
+    Q_PRIVATE_SLOT(d_func(), void removeAttribute(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d_func(), void collectionsReceived(const Akonadi::Collection::List &))
+    Q_PRIVATE_SLOT(d_func(), void itemsReceived(const Akonadi::Item::List &))
     //@endcond
 };
 

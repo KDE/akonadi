@@ -79,15 +79,14 @@ public:
 };
 
 TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)
-    :   QObject(),
-        d(parent),
-        m_model(model),
-        m_tagsView(0),
-        m_newTagButton(0),
-        
-        m_newTagEdit(0),
-        m_deleteButton(0),
-        m_deleteButtonTimer(0)
+    : QObject()
+    , d(parent)
+    , m_model(model)
+    , m_tagsView(0)
+    , m_newTagButton(0)
+    , m_newTagEdit(0)
+    , m_deleteButton(0)
+    , m_deleteButtonTimer(0)
 {
 
 }
@@ -113,8 +112,8 @@ void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start
 void TagEditWidget::Private::slotCreateTag()
 {
     Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag(m_newTagEdit->text()), this);
-    connect(createJob, SIGNAL(finished(KJob *)),
-            this, SLOT(slotCreateTagFinished(KJob *)));
+    connect(createJob, SIGNAL(finished(KJob*)),
+            this, SLOT(slotCreateTagFinished(KJob*)));
 
     m_newTagEdit->clear();
     m_newTagEdit->setEnabled(false);
@@ -191,8 +190,8 @@ void TagEditWidget::Private::deleteTag()
 }
 
 TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)
-    :   QWidget(parent),
-        d(new Private(model, this))
+    : QWidget(parent)
+    , d(new Private(model, this))
 {
     QVBoxLayout *topLayout = new QVBoxLayout(this);
 
@@ -200,7 +199,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     d->m_checkableProxy = new KCheckableProxyModel(this);
     d->m_checkableProxy->setSourceModel(d->m_model);
     d->m_checkableProxy->setSelectionModel(selectionModel);
-    connect(d->m_model, SIGNAL(rowsInserted(QModelIndex, int, int)), d.data(), SLOT(onRowsInserted(QModelIndex, int, int)));
+    connect(d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), d.data(), SLOT(onRowsInserted(QModelIndex,int,int)));
 
     d->m_tagsView = new QListView(this);
     d->m_tagsView->setMouseTracking(true);
@@ -285,6 +284,5 @@ bool TagEditWidget::eventFilter(QObject *watched, QEvent *event)
     }
     return QWidget::eventFilter(watched, event);
 }
-
 
 #include "tageditwidget.moc"

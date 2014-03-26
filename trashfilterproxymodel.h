@@ -57,24 +57,24 @@ class AKONADI_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 
-  public:
-    explicit TrashFilterProxyModel( QObject *parent = 0 );
+public:
+    explicit TrashFilterProxyModel(QObject *parent = 0);
     virtual ~TrashFilterProxyModel();
 
-    void showTrash( bool enable );
+    void showTrash(bool enable);
     bool trashIsShown() const;
 
-  protected:
+protected:
     /**
      * Sort filter criterias, according to how expensive the operation is
      */
-    virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
+    virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
-  private:
+private:
     //@cond PRIVATE
     class TrashFilterProxyModelPrivate;
-    TrashFilterProxyModelPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( TrashFilterProxyModel )
+    TrashFilterProxyModelPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(TrashFilterProxyModel)
     //@endcond
 };
 

@@ -50,45 +50,45 @@ enum Option {
     NoDefault = 1,
 
     _LastOption,
-    OptionMask = 2*_LastOption-1
+    OptionMask = 2 * _LastOption - 1
 };
-Q_DECLARE_FLAGS( Options, Option )
+Q_DECLARE_FLAGS(Options, Option)
 
 #if 0
 /**
  * Returns the legacy (pre-KDE-4.6) item serializer plugin that matches the given @p mimetype.
  */
-ItemSerializerPlugin* legacyPluginForMimeType( const QString &mimetype );
+ItemSerializerPlugin *legacyPluginForMimeType(const QString &mimetype);
 #endif
 
 /**
  * Returns the default item serializer plugin that matches the given @p mimetype.
  */
-ItemSerializerPlugin* defaultPluginForMimeType( const QString &mimetype );
+ItemSerializerPlugin *defaultPluginForMimeType(const QString &mimetype);
 
 /**
  * Returns the item serializer plugin that matches the given
  * @p mimetype, and any of the classes described by @p metaTypeIds.
  */
-ItemSerializerPlugin* pluginForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options options=NoOptions );
+ItemSerializerPlugin *pluginForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options options = NoOptions);
 
 #if 0
 /**
  * Returns the legacy (pre-KDE-4.6) type plugin object that matches the given @p mimetype.
  */
-QObject* legacyObjectForMimeType( const QString &mimetype );
+QObject *legacyObjectForMimeType(const QString &mimetype);
 #endif
 
 /**
  * Returns the default type plugin object that matches the given @p mimetype.
  */
-QObject* defaultObjectForMimeType( const QString &mimetype );
+QObject *defaultObjectForMimeType(const QString &mimetype);
 
 /**
  * Returns the type plugin object that matches the given @p mimetype,
  * and any of the classes described by @p metaTypeIds.
  */
-QObject* objectForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options options=NoOptions );
+QObject *objectForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options options = NoOptions);
 
 /**
  * Override the plugin-lookup with @p plugin.
@@ -99,12 +99,12 @@ QObject* objectForMimeTypeAndClass( const QString &mimetype, const QVector<int> 
  *
  * @since 4.12
  */
-void overridePluginLookup( QObject *plugin );
+void overridePluginLookup(QObject *plugin);
 
 }
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( Akonadi::TypePluginLoader::Options )
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::TypePluginLoader::Options)
 
 #endif

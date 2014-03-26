@@ -32,7 +32,7 @@ class TagModel;
 
 class TagModelPrivate
 {
-  public:
+public:
     explicit TagModelPrivate(TagModel *parent);
     virtual ~TagModelPrivate();
 
@@ -56,7 +56,7 @@ class TagModelPrivate
 
     QHash<Tag::Id /* missing parent */, Tag::List > mPendingTags;
 
-  protected:
+protected:
     Q_DECLARE_PUBLIC(TagModel)
     TagModel *q_ptr;
 

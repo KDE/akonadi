@@ -27,16 +27,19 @@ using namespace Akonadi;
 
 class Akonadi::UnlinkJobPrivate : public LinkJobImpl<UnlinkJob>
 {
-  public:
-    UnlinkJobPrivate( UnlinkJob *parent ) : LinkJobImpl<UnlinkJob>( parent ) {}
+public:
+    UnlinkJobPrivate(UnlinkJob *parent)
+        : LinkJobImpl<UnlinkJob>(parent)
+    {
+    }
 };
 
-UnlinkJob::UnlinkJob( const Collection &collection, const Item::List &items, QObject *parent ) :
-    Job( new UnlinkJobPrivate( this ), parent )
+UnlinkJob::UnlinkJob(const Collection &collection, const Item::List &items, QObject *parent)
+    : Job(new UnlinkJobPrivate(this), parent)
 {
-  Q_D( UnlinkJob );
-  d->destination = collection;
-  d->objectsToLink = items;
+    Q_D(UnlinkJob);
+    d->destination = collection;
+    d->objectsToLink = items;
 }
 
 UnlinkJob::~UnlinkJob()
@@ -45,7 +48,6 @@ UnlinkJob::~UnlinkJob()
 
 void UnlinkJob::doStart()
 {
-  Q_D( UnlinkJob );
-  d->sendCommand( "UNLINK" );
+    Q_D(UnlinkJob);
+    d->sendCommand("UNLINK");
 }
-

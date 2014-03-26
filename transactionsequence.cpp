@@ -29,51 +29,50 @@ using namespace Akonadi;
 
 class Akonadi::TransactionSequencePrivate : public JobPrivate
 {
-  public:
-    TransactionSequencePrivate( TransactionSequence *parent )
-      : JobPrivate( parent ),
-        mState( Idle ),
-        mAutoCommit( true )
+public:
+    TransactionSequencePrivate(TransactionSequence *parent)
+        : JobPrivate(parent)
+        , mState(Idle)
+        , mAutoCommit(true)
     {
     }
 
-    enum TransactionState
-    {
-      Idle,
-      Running,
-      WaitingForSubjobs,
-      RollingBack,
-      Committing
+    enum TransactionState {
+        Idle,
+        Running,
+        WaitingForSubjobs,
+        RollingBack,
+        Committing
     };
 
-    Q_DECLARE_PUBLIC( TransactionSequence )
+    Q_DECLARE_PUBLIC(TransactionSequence)
 
     TransactionState mState;
-    QSet<KJob*> mIgnoredErrorJobs;
+    QSet<KJob *> mIgnoredErrorJobs;
     bool mAutoCommit;
 
-    void commitResult( KJob *job )
+    void commitResult(KJob *job)
     {
-      Q_Q( TransactionSequence );
+        Q_Q(TransactionSequence);
 
-      if ( job->error() ) {
-        q->setError( job->error() );
-        q->setErrorText( job->errorText() );
-      }
-      q->emitResult();
+        if (job->error()) {
+            q->setError(job->error());
+            q->setErrorText(job->errorText());
+        }
+        q->emitResult();
     }
 
-    void rollbackResult( KJob *job )
+    void rollbackResult(KJob *job)
     {
-      Q_Q( TransactionSequence );
+        Q_Q(TransactionSequence);
 
-      Q_UNUSED( job );
-      q->emitResult();
+        Q_UNUSED(job);
+        q->emitResult();
     }
 };
 
-TransactionSequence::TransactionSequence( QObject * parent )
-  : Job( new TransactionSequencePrivate( this ), parent )
+TransactionSequence::TransactionSequence(QObject *parent)
+    : Job(new TransactionSequencePrivate(this), parent)
 {
 }
 
@@ -81,141 +80,144 @@ TransactionSequence::~TransactionSequence()
 {
 }
 
-bool TransactionSequence::addSubjob(KJob * job)
+bool TransactionSequence::addSubjob(KJob *job)
 {
-  Q_D( TransactionSequence );
+    Q_D(TransactionSequence);
 
-  // TODO KDE5: remove property hack once SpecialCollectionsRequestJob has been fixed
-  if ( d->mState == TransactionSequencePrivate::Idle && !property( "transactionsDisabled" ).toBool() ) {
-    d->mState = TransactionSequencePrivate::Running; // needs to be set before creating the transaction job to avoid infinite recursion
-    new TransactionBeginJob( this );
-  } else {
-    d->mState = TransactionSequencePrivate::Running;
-  }
-  return Job::addSubjob( job );
+    // TODO KDE5: remove property hack once SpecialCollectionsRequestJob has been fixed
+    if (d->mState == TransactionSequencePrivate::Idle && !property("transactionsDisabled").toBool()) {
+        d->mState = TransactionSequencePrivate::Running; // needs to be set before creating the transaction job to avoid infinite recursion
+        new TransactionBeginJob(this);
+    } else {
+        d->mState = TransactionSequencePrivate::Running;
+    }
+    return Job::addSubjob(job);
 }
 
-void TransactionSequence::slotResult(KJob * job)
+void TransactionSequence::slotResult(KJob *job)
 {
-  Q_D( TransactionSequence );
+    Q_D(TransactionSequence);
 
-  if ( !job->error() || d->mIgnoredErrorJobs.contains( job ) ) {
-    // If we have an error but want to ignore it, we can't call Job::slotResult
-    // because it would confuse the subjob queue processing logic. Just removing
-    // the subjob instead is fine.
-    if ( !job->error() )
-      Job::slotResult( job );
-    else
-      Job::removeSubjob( job );
+    if (!job->error() || d->mIgnoredErrorJobs.contains(job)) {
+        // If we have an error but want to ignore it, we can't call Job::slotResult
+        // because it would confuse the subjob queue processing logic. Just removing
+        // the subjob instead is fine.
+        if (!job->error()) {
+            Job::slotResult(job);
+        } else {
+            Job::removeSubjob(job);
+        }
 
-    if ( !hasSubjobs() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
-      if ( property( "transactionsDisabled" ).toBool() ) {
-        emitResult();
-        return;
-      }
-      d->mState = TransactionSequencePrivate::Committing;
-      TransactionCommitJob *job = new TransactionCommitJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+        if (!hasSubjobs() && d->mState == TransactionSequencePrivate::WaitingForSubjobs) {
+            if (property("transactionsDisabled").toBool()) {
+                emitResult();
+                return;
+            }
+            d->mState = TransactionSequencePrivate::Committing;
+            TransactionCommitJob *job = new TransactionCommitJob(this);
+            connect(job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)));
+        }
+    } else {
+        setError(job->error());
+        setErrorText(job->errorText());
+        removeSubjob(job);
+
+        // cancel all subjobs in case someone else is listening (such as ItemSync), but without notifying ourselves again
+        foreach (KJob *job, subjobs()) {
+            disconnect(job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)));
+            job->kill(EmitResult);
+        }
+        clearSubjobs();
+
+        if (d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs) {
+            if (property("transactionsDisabled").toBool()) {
+                emitResult();
+                return;
+            }
+            d->mState = TransactionSequencePrivate::RollingBack;
+            TransactionRollbackJob *job = new TransactionRollbackJob(this);
+            connect(job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)));
+        }
     }
-  } else {
-    setError( job->error() );
-    setErrorText( job->errorText() );
-    removeSubjob( job );
-
-    // cancel all subjobs in case someone else is listening (such as ItemSync), but without notifying ourselves again
-    foreach ( KJob* job, subjobs() ) {
-      disconnect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
-      job->kill( EmitResult );
-    }
-    clearSubjobs();
-
-    if ( d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
-      if ( property( "transactionsDisabled" ).toBool() ) {
-        emitResult();
-        return;
-      }
-      d->mState = TransactionSequencePrivate::RollingBack;
-      TransactionRollbackJob *job = new TransactionRollbackJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
-    }
-  }
 }
 
 void TransactionSequence::commit()
 {
-  Q_D( TransactionSequence );
+    Q_D(TransactionSequence);
 
-  if ( d->mState == TransactionSequencePrivate::Running ) {
-    d->mState = TransactionSequencePrivate::WaitingForSubjobs;
-  } else {
-    // we never got any subjobs, that means we never started a transaction
-    // so we can just quit here
-    if ( d->mState == TransactionSequencePrivate::Idle )
-      emitResult();
-    return;
-  }
-
-  if ( subjobs().isEmpty() ) {
-    if ( property( "transactionsDisabled" ).toBool() ) {
-      emitResult();
-      return;
-    }
-    if ( !error() ) {
-      d->mState = TransactionSequencePrivate::Committing;
-      TransactionCommitJob *job = new TransactionCommitJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+    if (d->mState == TransactionSequencePrivate::Running) {
+        d->mState = TransactionSequencePrivate::WaitingForSubjobs;
     } else {
-      d->mState = TransactionSequencePrivate::RollingBack;
-      TransactionRollbackJob *job = new TransactionRollbackJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
+        // we never got any subjobs, that means we never started a transaction
+        // so we can just quit here
+        if (d->mState == TransactionSequencePrivate::Idle) {
+            emitResult();
+        }
+        return;
     }
-  }
+
+    if (subjobs().isEmpty()) {
+        if (property("transactionsDisabled").toBool()) {
+            emitResult();
+            return;
+        }
+        if (!error()) {
+            d->mState = TransactionSequencePrivate::Committing;
+            TransactionCommitJob *job = new TransactionCommitJob(this);
+            connect(job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)));
+        } else {
+            d->mState = TransactionSequencePrivate::RollingBack;
+            TransactionRollbackJob *job = new TransactionRollbackJob(this);
+            connect(job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)));
+        }
+    }
 }
 
-void TransactionSequence::setIgnoreJobFailure( KJob *job )
+void TransactionSequence::setIgnoreJobFailure(KJob *job)
 {
-  Q_D( TransactionSequence );
+    Q_D(TransactionSequence);
 
-  // make sure this is one of our sub jobs
-  Q_ASSERT( subjobs().contains( job ) );
+    // make sure this is one of our sub jobs
+    Q_ASSERT(subjobs().contains(job));
 
-  d->mIgnoredErrorJobs.insert( job );
+    d->mIgnoredErrorJobs.insert(job);
 }
 
 void TransactionSequence::doStart()
 {
-  Q_D( TransactionSequence );
+    Q_D(TransactionSequence);
 
-  if ( d->mAutoCommit ) {
-    if ( d->mState == TransactionSequencePrivate::Idle )
-      emitResult();
-    else
-      commit();
-  }
+    if (d->mAutoCommit) {
+        if (d->mState == TransactionSequencePrivate::Idle) {
+            emitResult();
+        } else {
+            commit();
+        }
+    }
 }
 
 void TransactionSequence::setAutomaticCommittingEnabled(bool enable)
 {
-  Q_D( TransactionSequence );
-  d->mAutoCommit = enable;
+    Q_D(TransactionSequence);
+    d->mAutoCommit = enable;
 }
 
 void TransactionSequence::rollback()
 {
-  Q_D( TransactionSequence );
+    Q_D(TransactionSequence);
 
-  setError( UserCanceled );
-  // we never really started
-  if ( d->mState == TransactionSequencePrivate::Idle ) {
-    emitResult();
-    return;
-  }
+    setError(UserCanceled);
+    // we never really started
+    if (d->mState == TransactionSequencePrivate::Idle) {
+        emitResult();
+        return;
+    }
 
-  // TODO cancel not yet executed sub-jobs here
+    // TODO cancel not yet executed sub-jobs here
 
-  d->mState = TransactionSequencePrivate::RollingBack;
-  TransactionRollbackJob *job = new TransactionRollbackJob( this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
+    d->mState = TransactionSequencePrivate::RollingBack;
+    TransactionRollbackJob *job = new TransactionRollbackJob(this);
+    connect(job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)));
 }
 
 #include "moc_transactionsequence.cpp"
