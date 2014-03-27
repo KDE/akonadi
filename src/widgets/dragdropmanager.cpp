@@ -18,7 +18,7 @@
 */
 
 #include "dragdropmanager_p.h"
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 #include "collectionutils_p.h"
 
 #include <QApplication>

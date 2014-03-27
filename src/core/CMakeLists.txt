@@ -101,6 +101,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     ServerManager
     Session
     SpecialCollections
+    SpecialCollectionAttribute
     Tag
     TagAttribute
     TagFetchScope

@@ -19,7 +19,7 @@
 
 #include "specialcollectionsrequestjob.h"
 
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 #include "specialcollections.h"
 #include "specialcollections_p.h"
 #include "specialcollectionshelperjobs_p.h"

@@ -22,7 +22,7 @@
 #include "agentmanager.h"
 #include "collectionutils_p.h"
 #include "pastehelper_p.h"
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 #include "standardactionmanager.h"
 #include "entitydeletedattribute.h"
 

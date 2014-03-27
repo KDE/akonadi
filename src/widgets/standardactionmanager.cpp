@@ -35,7 +35,7 @@
 #include "itemmodel.h"
 #include "metatypes.h"
 #include "pastehelper_p.h"
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 #include "collectionpropertiesdialog.h"
 #include "subscriptiondialog_p.h"
 #include "renamefavoritedialog.h"

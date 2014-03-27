@@ -18,7 +18,7 @@
 */
 
 #include "specialcollectionsdiscoveryjob.h"
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 #include "collectionfetchscope.h"
 #include "collectionfetchjob.h"
 #include <QStringList>

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 #include "attributefactory.h"
 
 #include <KDebug>

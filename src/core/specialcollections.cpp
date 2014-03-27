@@ -20,7 +20,7 @@
 #include "specialcollections.h"
 
 #include "specialcollections_p.h"
-#include "specialcollectionattribute_p.h"
+#include "specialcollectionattribute.h"
 
 #include "agentinstance.h"
 #include "agentmanager.h"
