@@ -21,8 +21,7 @@
 #define AKONADI_XMLWRITEJOB_H
 
 #include "akonadi-xml_export.h"
-
-#include <akonadi/job.h>
+#include "job.h"
 
 namespace Akonadi {
 

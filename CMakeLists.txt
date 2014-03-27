@@ -40,6 +40,13 @@ set_package_properties(Boost PROPERTIES
     TYPE REQUIRED
 )
 
+find_package(LibXml2)
+set_package_properties(LibXml2 PROPERTIES
+    DESCRIPTION "The LibXML2 library"
+    URL "http://xmlsoft.org"
+    TYPE REQUIRED
+)
+
 ########### Targets ###########
 
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")

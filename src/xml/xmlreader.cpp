@@ -21,7 +21,7 @@
 #include "xmlreader.h"
 #include "format_p.h"
 
-#include <akonadi/attributefactory.h>
+#include "attributefactory.h"
 
 #include <QStringList>
 

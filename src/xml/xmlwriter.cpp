@@ -21,9 +21,9 @@
 #include "xmlwriter.h"
 #include "format_p.h"
 
-#include <akonadi/attribute.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "attribute.h"
+#include "collection.h"
+#include "item.h"
 
 #include <QStringList>
 

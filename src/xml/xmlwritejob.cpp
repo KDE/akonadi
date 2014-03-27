@@ -21,11 +21,11 @@
 #include "xmldocument.h"
 #include "xmlwriter.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include "collection.h"
+#include "collectionfetchjob.h"
+#include "item.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
 
 #include <KDebug>
 

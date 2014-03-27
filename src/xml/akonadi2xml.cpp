@@ -19,10 +19,10 @@
 
 #include "xmlwritejob.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/collectionpathresolver_p.h>
+#include "collection.h"
+#include "collectionpathresolver_p.h"
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KDebug>
@@ -31,11 +31,11 @@ using namespace Akonadi;
 
 int main( int argc, char *argv[] )
 {
-  KAboutData aboutdata( "akonadi2xml", 0,
+  K4AboutData aboutdata( "akonadi2xml", 0,
                         ki18n( "Akonadi To XML converter" ),
                         "1.0",
                         ki18n( "Converts an Akonadi collection subtree into a XML file." ),
-                        KAboutData::License_GPL,
+                        K4AboutData::License_GPL,
                         ki18n( "(c) 2009 Volker Krause <vkrause@kde.org>" ) );
 
   KCmdLineArgs::init( argc, argv, &aboutdata );
