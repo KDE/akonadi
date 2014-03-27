@@ -28,6 +28,12 @@ ecm_setup_version(${KF5_VERSION}
 ########### Find packages ###########
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews KIO Config Solid KDE4Support)
 
+find_package(Qt5Designer NO_MODULE)
+set_package_properties(Qt5Designer PROPERTIES
+   PURPOSE "Required to build the Qt Designer plugins"
+   TYPE OPTIONAL
+)
+
 # Workaround for Akonadi server conflicting with our framework (same variable names)
 # TODO: Remove once we merge both repositories into one
 set(AKONADI_DBUS_INTERFACES_DIR "/usr/share/dbus-1/interfaces")
@@ -94,16 +100,3 @@ install( FILES
     kcfg2dbus.xsl
     DESTINATION ${DATA_INSTALL_DIR}/akonadi
 )
-
-# if(QT_QTDESIGNER_FOUND)
-#   message(STATUS "Building Akonadi widgets")
-#   set(akonadiwidgets_PART_SRCS)
-#   kde4_add_widget_files(akonadiwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/akonadi.widgets)
-#
-#   kde4_add_plugin(akonadiwidgets ${akonadiwidgets_PART_SRCS})
-#
-#   target_link_libraries(akonadiwidgets ${KDE4_KIO_LIBS} akonadi-kde)
-#
-#   install(TARGETS akonadiwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-# endif()
-#
