@@ -18,8 +18,19 @@ set(akonadiagentbase_SRCS
     transportresourcebase.cpp
 )
 
+ecm_generate_headers(AkonadiAgentBase_HEADERS
+    HEADER_NAMES
+    AgentBase
+    AgentFactory
+    AgentSearchInterface
+    ResourceBase
+    ResourceSettings
+    TransportResourceBase
+    REQUIRED_HEADERS AkonadiAgentBase_HEADERS
+)
+
+
 KCONFIG_ADD_KCFG_FILES(akonadiagentbase_SRCS resourcebasesettings.kcfgc)
-# install( FILES resourcebase.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
 qt5_add_dbus_interfaces(akonadiagentbase_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
 
@@ -57,26 +68,35 @@ set_target_properties(KF5AkonadiAgentBase PROPERTIES
     EXPORT_NAME AkonadiAgentBase
 )
 
-# ecm_generate_headers(KSyndication_CamelCase_HEADERS
-#   HEADER_NAMES
-#   AbstractParser
-#   REQUIRED_HEADERS KSyndication_HEADERS
-#   PREFIX Syndication
-# )
+ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
+    LIB_NAME KF5AkonadiAgentBase
+    DEPS "KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME
+)
 
-
-install(TARGETS KF5AkonadiAgentBase EXPORT KF5AkonadiTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS
+    KF5AkonadiAgentBase
+    EXPORT KF5AkonadiTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 install(FILES
-    #${KSyndication_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/Akonadi
+    ${AkonadiAgentBase_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiAgentBase
     COMPONENT Devel
 )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiagentbase_export.h
     ${AkonadiAgentBase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiAgentBase COMPONENT Devel
+)
 
-ecm_generate_pri_file(BASE_NAME AkonadiAgentBase LIB_NAME KF5AkonadiAgentBase DEPS "KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME)
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+install(FILES
+    resourcebase.kcfg
+    DESTINATION ${KCFG_INSTALL_DIR}
+)
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
+)

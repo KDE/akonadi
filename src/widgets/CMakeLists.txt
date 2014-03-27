@@ -40,6 +40,32 @@ set(akonadiwidgets_UI
     erroroverlay.ui
 )
 
+
+ecm_generate_headers(AkonadiWidgets_HEADERS
+    HEADER_NAMES
+    AgentActionManager
+    AgentInstanceWidget
+    AgentTypeDialog
+    AgentTypeWidget
+    CollectionComboBox
+    CollectionDialog
+    CollectionPropertiesDialog
+    CollectionRequester
+    CollectionStatisticsDelegate
+    CollectionView
+    EntityListView
+    EntityTreeView
+    EntityTreeViewStateSaver
+    ETMViewStateSaver
+    ItemView
+    RenameFavoriteDialog
+    StandardActionManager
+    TagManagementDialog
+    TagSelectionDialog
+    TagWidget
+    REQUIRED_HEADERS AkonadiWidgets_HEADERS
+)
+
 if (KDEPIM_MOBILE_UI)
     set(akonadiwidgets_SRCS
         ${akonadiwidgets_SRCS}
@@ -83,26 +109,36 @@ set_target_properties(KF5AkonadiWidgets PROPERTIES
     EXPORT_NAME AkonadiWidgets
 )
 
-# ecm_generate_headers(KSyndication_CamelCase_HEADERS
-#   HEADER_NAMES
-#   AbstractParser
-#   REQUIRED_HEADERS KSyndication_HEADERS
-#   PREFIX Syndication
-# )
+ecm_generate_pri_file(BASE_NAME AkonadiWidgets
+    LIB_NAME KF5AkonadiWidgets
+    DEPS "AkonadiCore KDE4Support" FILENAME_VAR PRI_FILENAME
+)
 
-
-install(TARGETS KF5AkonadiWidgets EXPORT KF5AkonadiTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS
+    KF5AkonadiWidgets
+    EXPORT KF5AkonadiTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 install(FILES
-    #${KSyndication_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/Akonadi
+    ${AkonadiWidgets_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiWidgets
     COMPONENT Devel
 )
 
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/akonadiwivets_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets_export.h
     ${AkonadiWidgets_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiWidgets COMPONENT Devel
+)
 
-ecm_generate_pri_file(BASE_NAME AkonadiWidgets LIB_NAME KF5AkonadiWidgets DEPS "AkonadiCore KDE4Support" FILENAME_VAR PRI_FILENAME)
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+if (KDEPIM_MOBILE_UI)
+    install(FILES
+        CollectionDialogMobile.qml
+        DESTINATION ${DATA_INSTALL_DIR}/akonadi/qml
+    )
+endif()
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
+)

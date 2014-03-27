@@ -64,6 +64,50 @@ set(akonadicore_base_SRCS
     typepluginloader.cpp
 )
 
+
+ecm_generate_headers(AkonadiCore_base_HEADERS
+    HEADER_NAMES
+    AgentInstance
+    AgentManager
+    AgentType
+    Attribute
+    AttributeEntity
+    AttributeFactory
+    CachePolicy
+    ChangeRecorder
+    Collection
+    CollectionFetchScope
+    CollectionQuotaAttribute
+    CollectionStatistics
+    Control
+    DBusConnectionPool
+    Entity
+    EntityAnnotationsAttribute
+    EntityDeletedAttribute
+    EntityHiddenAttribute
+    Exception
+    IndexPolicyAttribute
+    Item
+    ItemFetchScope
+    ItemMonitor
+    ItemSerializerPlugin
+    ItemSync
+    KDSignalBlocker
+    MimeTypeChecker
+    Monitor
+    PartFetcher
+    PersistentSearchAttribute
+    SearchQuery
+    ServerManager
+    Session
+    SpecialCollections
+    Tag
+    TagAttribute
+    TagFetchScope
+    TrashSettings
+    REQUIRED_HEADERS AkonadiCore_base_HEADERS
+)
+
 set(akonadicore_models_SRCS
     models/agentfilterproxymodel.cpp
     models/agentinstancemodel.cpp
@@ -86,6 +130,29 @@ set(akonadicore_models_SRCS
     models/tagmodel.cpp
     models/tagmodel_p.cpp
     models/trashfilterproxymodel.cpp
+)
+
+ecm_generate_headers(AkonadiCore_models_HEADERS
+    HEADER_NAMES
+    AgentFilterProxyModel
+    AgentInstanceModel
+    AgentTypeModel
+    CollectionFilterProxyModel
+    CollectionModel
+    CollectionStatisticsModel
+    EntityMimeTypefilterModel
+    EntityOrderProxyModel
+    EntityRightsFilterModel
+    EntityTreeModel
+    FavoriteCollectionsModel
+    ItemModel
+    RecursiveCollectionFilterProxyModel
+    SelectionProxyModel
+    StatisticsProxyModel
+    TagModel
+    TrashFilterProxyModel
+    REQUIRED_HEADERS AkonadiCore_models_HEADERS
+    RELATIVE models
 )
 
 set(akonadicore_jobs_SRCS
@@ -128,7 +195,43 @@ set(akonadicore_jobs_SRCS
     jobs/trashjob.cpp
     jobs/trashrestorejob.cpp
     jobs/unlinkjob.cpp
+)
 
+ecm_generate_headers(AkonadiCore_jobs_HEADERS
+    HEADER_NAMES
+    AgentInstanceCreateJob
+    CollectionAttributesSynchronizationJob
+    CollectionCopyJob
+    CollectionCreateJob
+    CollectionDeletEJob
+    CollectionFetchJob
+    CollectionModifyJob
+    CollectionMoveJob
+    CollectionStatisticsJob
+    ItemCopyJob
+    ItemCreateJob
+    ItemDeleteJob
+    ItemFetchJob
+    ItemModifyJob
+    ItemSearchJob
+    Job
+    LinkJob
+    RecursiveItemFetchJob
+    ResourceSynchronizationJob
+    SearchCreateJob
+    SpecialCollectionsDiscoveryJob
+    SpecialCollectionsRequestJob
+    TagCreateJob
+    TagDeleteJob
+    TagFetchJob
+    TagModifyJob
+    TransactionJobs
+    TransactionSequence
+    TrashJob
+    TrashRestoreJob
+    UnlinkJob
+    REQUIRED_HEADERS AkonadiCore_jobs_HEADERS
+    RELATIVE jobs
 )
 
 # FIXME KF5: Remove once we merge Akonadi repository in
@@ -179,26 +282,32 @@ set_target_properties(KF5AkonadiCore PROPERTIES
     EXPORT_NAME AkonadiCore
 )
 
-# ecm_generate_headers(KSyndication_CamelCase_HEADERS
-#   HEADER_NAMES
-#   AbstractParser
-#   REQUIRED_HEADERS KSyndication_HEADERS
-#   PREFIX Syndication
-# )
+ecm_generate_pri_file(BASE_NAME AkonadiCore
+    LIB_NAME KF5AkonadiCore
+    DEPS "ItemModels KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME
+)
 
-
-install(TARGETS KF5AkonadiCore EXPORT KF5AkonadiTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS
+    KF5AkonadiCore
+    EXPORT KF5AkonadiTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 install(FILES
-    #${KSyndication_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/Akonadi
+    ${AkonadiCore_base_HEADERS}
+    ${AkonadiCore_models_HEADERS}
+    ${AkonadiCore_jobs_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiCore
     COMPONENT Devel
 )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
+)
 
-ecm_generate_pri_file(BASE_NAME AkonadiCore LIB_NAME KF5AkonadiCore DEPS "ItemModels KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME)
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
+)
