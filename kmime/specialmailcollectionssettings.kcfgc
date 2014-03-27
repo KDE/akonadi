@@ -1,7 +1,0 @@
-File=specialmailcollections.kcfg
-ClassName=SpecialMailCollectionsSettings
-NameSpace=Akonadi
-Singleton=true
-ItemAccessors=true
-Mutators=true
-SetUserTextx=true

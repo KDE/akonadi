@@ -1,3 +1,0 @@
-
-#include "akonadi-kmime_export.h"
-#define AKONADI_KMIME_TEST_EXPORT @AKONADI_KMIME_TEST_EXPORT@
