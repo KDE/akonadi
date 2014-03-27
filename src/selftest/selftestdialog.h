@@ -20,7 +20,6 @@
 #ifndef AKONADI_SELFTESTDIALOG_P_H
 #define AKONADI_SELFTESTDIALOG_P_H
 
-#include "akonadiprivate_export.h"
 #include "ui_selftestdialog.h"
 
 #include <KDialog>
@@ -28,8 +27,6 @@
 
 class QStandardItem;
 class QStandardItemModel;
-
-namespace Akonadi {
 
 /**
  * @internal
@@ -41,7 +38,7 @@ namespace Akonadi {
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
+class SelfTestDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -94,7 +91,5 @@ private:
     Ui::SelfTestDialog ui;
     QStandardItemModel *mTestModel;
 };
-
-}
 
 #endif

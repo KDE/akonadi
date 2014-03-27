@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "selftestdialog_p.h"
+#include "selftestdialog.h"
 #include "agentmanager.h"
 #include "dbusconnectionpool.h"
 #include "session_p.h"
@@ -373,7 +373,7 @@ void SelfTestDialog::testPSQLServer()
     db.setPort(port);
 
     if (!db.open()) {
-        const KLocalizedString details = ki18n(db.lastError().text().toLatin1());
+        const KLocalizedString details = ki18n(db.lastError().text().toLatin1().constData());
         report(Error, ki18n("Cannot connect to PostgreSQL server."),  details);
     } else {
         report(Success, ki18n("PostgreSQL server found."),
@@ -475,7 +475,7 @@ void SelfTestDialog::testResources()
     item->setData(QByteArray("XDG_DATA_DIRS"), EnvVarRole);
 }
 
-void Akonadi::SelfTestDialog::testServerLog()
+void SelfTestDialog::testServerLog()
 {
     QString serverLog = XdgBaseDirs::saveDir("data", QLatin1String("akonadi"))
                         + QDir::separator() + QString::fromLatin1("akonadiserver.error");
@@ -596,7 +596,7 @@ QString SelfTestDialog::createReport()
         if (item->data(EnvVarRole).isValid()) {
             s << endl;
             const QByteArray envVarName = item->data(EnvVarRole).toByteArray();
-            const QByteArray envVarValue = qgetenv(envVarName);
+            const QByteArray envVarValue = qgetenv(envVarName.constData());
             s << "Environment variable " << envVarName << " is set to '" << envVarValue << "'" << endl;
         }
     }
@@ -640,5 +640,3 @@ void SelfTestDialog::linkActivated(const QString &link)
 }
 
 // @endcond
-
-#include "moc_selftestdialog_p.cpp"

@@ -23,7 +23,6 @@
 #include "agenttype.h"
 #include "agentmanager.h"
 #include "dbusconnectionpool.h"
-//#include "selftestdialog_p.h"
 #include "session_p.h"
 #include "firstrun_p.h"
 
@@ -200,13 +199,7 @@ bool ServerManager::stop()
 
 void ServerManager::showSelfTestDialog(QWidget *parent)
 {
-#warning KF5 Port!
-#if 0
-    QPointer<Akonadi::SelfTestDialog> dlg(new Akonadi::SelfTestDialog(parent));
-    dlg->hideIntroduction();
-    dlg->exec();
-    delete dlg;
-#endif
+    QProcess::startDetached(QLatin1String("akonadiselftest"));
 }
 
 bool ServerManager::isRunning()

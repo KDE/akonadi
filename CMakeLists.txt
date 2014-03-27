@@ -34,6 +34,8 @@ set_package_properties(Qt5Designer PROPERTIES
    TYPE OPTIONAL
 )
 
+find_package(Qt5Sql NO_MODULE REQUIRED)
+
 # Workaround for Akonadi server conflicting with our framework (same variable names)
 # TODO: Remove once we merge both repositories into one
 set(AKONADI_DBUS_INTERFACES_DIR "/usr/share/dbus-1/interfaces")

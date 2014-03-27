@@ -19,6 +19,7 @@
 
 #include "control.h"
 #include "servermanager.h"
+#warning "KF5 Port me!"
 //#include "ui_controlprogressindicator.h"
 //#include "selftestdialog_p.h"
 //#include "erroroverlay_p.h"
