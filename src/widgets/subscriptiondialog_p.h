@@ -20,7 +20,7 @@
 #ifndef AKONADI_SUBSCRIPTIONDIALOG_P_H
 #define AKONADI_SUBSCRIPTIONDIALOG_P_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <kdialog.h>
 
@@ -31,7 +31,7 @@ namespace Akonadi {
  *
  * Local subsription dialog.
  */
-class AKONADI_EXPORT SubscriptionDialog : public KDialog
+class AKONADIWIDGETS_EXPORT SubscriptionDialog : public KDialog
 {
     Q_OBJECT
 public:

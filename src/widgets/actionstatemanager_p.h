@@ -20,8 +20,8 @@
 #ifndef AKONADI_ACTIONSTATEMANAGER_P_H
 #define AKONADI_ACTIONSTATEMANAGER_P_H
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "collection.h"
+#include "item.h"
 
 class QObject;
 
@@ -35,7 +35,7 @@ namespace Akonadi {
 class ActionStateManager
 {
 public:
-    /**
+    /*
      * Creates a new action state manager.
      */
     ActionStateManager();

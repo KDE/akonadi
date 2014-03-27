@@ -22,7 +22,7 @@
 #ifndef AKONADI_ENTITYLISTVIEW_H
 #define AKONADI_ENTITYLISTVIEW_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QListView>
 
@@ -72,7 +72,7 @@ class Item;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT EntityListView : public QListView
+class AKONADIWIDGETS_EXPORT EntityListView : public QListView
 {
     Q_OBJECT
 

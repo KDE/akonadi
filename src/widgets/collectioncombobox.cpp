@@ -25,15 +25,15 @@
 #include "asyncselectionhandler_p.h"
 #include "collectiondialog.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entityrightsfiltermodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/session.h>
+#include "changerecorder.h"
+#include "collectionfetchscope.h"
+#include "collectionfilterproxymodel.h"
+#include "entityrightsfiltermodel.h"
+#include "entitytreemodel.h"
+#include "session.h"
+#include "collectionutils_p.h"
 
 #include <kdescendantsproxymodel.h>
-#include "collectionutils_p.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QEvent>

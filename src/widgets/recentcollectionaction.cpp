@@ -18,8 +18,8 @@
 
 #include "recentcollectionaction_p.h"
 #include "metatypes.h"
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/collectionmodel.h>
+#include "entitytreemodel.h"
+#include "collectionmodel.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>

@@ -20,12 +20,12 @@
 #ifndef AKONADI_STANDARDACTIONMANAGER_H
 #define AKONADI_STANDARDACTIONMANAGER_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QtCore/QObject>
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "collection.h"
+#include "item.h"
 
 class KAction;
 class KActionCollection;
@@ -123,7 +123,7 @@ class FavoriteCollectionsModel;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT StandardActionManager : public QObject
+class AKONADIWIDGETS_EXPORT StandardActionManager : public QObject
 {
     Q_OBJECT
 public:

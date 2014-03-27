@@ -19,7 +19,7 @@
 #ifndef AKONADI_COLLECTIONSTATISTICSDELEGATE_H
 #define AKONADI_COLLECTIONSTATISTICSDELEGATE_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QStyledItemDelegate>
 
@@ -61,7 +61,7 @@ class CollectionStatisticsDelegatePrivate;
  *
  * @author Thomas McGuire <thomas.mcguire@gmx.net>
  */
-class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
+class AKONADIWIDGETS_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 

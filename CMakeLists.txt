@@ -166,13 +166,6 @@ endif()
 # kde4_add_kcfg_files( akonadikde_LIB_SRC resourcebasesettings.kcfgc )
 # install( FILES resourcebase.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 #
-# kde4_add_ui_files( akonadikde_LIB_SRC
-#   cachepolicypage.ui
-#   controlprogressindicator.ui
-#   selftestdialog.ui
-#   erroroverlay.ui
-# )
-#
 # if (KDEPIM_MOBILE_UI)
 #   kde4_add_ui_files( akonadikde_LIB_SRC
 #     collectiongeneralpropertiespage_mobile.ui

@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTTYPEWIDGET_H
 #define AKONADI_AGENTTYPEWIDGET_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QWidget>
 
@@ -49,7 +49,7 @@ class AgentType;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentTypeWidget : public QWidget
+class AKONADIWIDGETS_EXPORT AgentTypeWidget : public QWidget
 {
     Q_OBJECT
 

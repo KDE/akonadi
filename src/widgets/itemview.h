@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEM_VIEW
 #define AKONADI_ITEM_VIEW
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 #include <QTreeView>
 
 class KXmlGuiWindow;
@@ -57,7 +57,7 @@ class Item;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT ItemView : public QTreeView
+class AKONADIWIDGETS_EXPORT ItemView : public QTreeView
 {
     Q_OBJECT
 
@@ -77,7 +77,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit AKONADI_DEPRECATED ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
+    explicit AKONADIWIDGETS_DEPRECATED ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
 
     /**
      * Creates a new item view.
@@ -101,7 +101,7 @@ public:
      *
      * @param xmlGuiWindow The KXmlGuiWindow this view is used in.
      */
-    AKONADI_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
+    AKONADIWIDGETS_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
 
     /**
      * Sets the KXMLGUIFactory which this view is used in.

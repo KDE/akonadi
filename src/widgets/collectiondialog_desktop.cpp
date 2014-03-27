@@ -22,15 +22,15 @@
 
 #include "asyncselectionhandler_p.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entityrightsfiltermodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/session.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectionutils_p.h>
+#include "changerecorder.h"
+#include "collectionfetchscope.h"
+#include "collectionfilterproxymodel.h"
+#include "entityrightsfiltermodel.h"
+#include "entitytreemodel.h"
+#include "entitytreeview.h"
+#include "session.h"
+#include "collectioncreatejob.h"
+#include "collectionutils_p.h"
 
 #include <QHeaderView>
 #include <QLabel>
@@ -41,6 +41,7 @@
 #include <KLocalizedString>
 #include <KInputDialog>
 #include <KMessageBox>
+#include <KConfig>
 
 using namespace Akonadi;
 

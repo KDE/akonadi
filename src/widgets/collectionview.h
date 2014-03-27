@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTION_VIEW
 #define AKONADI_COLLECTION_VIEW
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 #include <QTreeView>
 
 class KXMLGUIClient;
@@ -60,7 +60,7 @@ class Collection;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionView : public QTreeView
+class AKONADIWIDGETS_EXPORT CollectionView : public QTreeView
 {
     Q_OBJECT
 
@@ -80,7 +80,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit AKONADI_DEPRECATED CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
+    explicit AKONADIWIDGETS_DEPRECATED CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
 
     /**
      * Creates a new collection view.
@@ -103,7 +103,7 @@ public:
      *
      * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
      */
-    AKONADI_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
+    AKONADIWIDGETS_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
 
     /**
      * Sets the KXMLGUIClient which the view is used in.

@@ -19,7 +19,9 @@
 
 #include "erroroverlay_p.h"
 #include "ui_erroroverlay.h"
+#if 0
 #include "selftestdialog_p.h"
+#endif
 
 #include <KDebug>
 #include <KIcon>
@@ -192,8 +194,10 @@ void ErrorOverlay::quitClicked()
 
 void ErrorOverlay::selfTestClicked()
 {
+#if 0
     SelfTestDialog dlg;
     dlg.exec();
+#endif
 }
 
 void ErrorOverlay::serverStateChanged(ServerManager::State state)

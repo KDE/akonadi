@@ -20,9 +20,8 @@
 #ifndef AKONADI_CACHEPOLICYPAGE_H
 #define AKONADI_CACHEPOLICYPAGE_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/collectionpropertiespage.h>
+#include "akonadiwidgets_export.h"
+#include "collectionpropertiespage.h"
 
 namespace Akonadi {
 
@@ -39,7 +38,7 @@ namespace Akonadi {
  * @author Till Adam <adam@kde.org>
  * @since 4.6
  */
-class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
+class AKONADIWIDGETS_EXPORT CachePolicyPage : public CollectionPropertiesPage
 {
     Q_OBJECT
 

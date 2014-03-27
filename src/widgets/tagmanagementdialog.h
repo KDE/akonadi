@@ -22,10 +22,10 @@
 #ifndef AKONADI_TAGMANAGEMENTDIALOG_H
 #define AKONADI_TAGMANAGEMENTDIALOG_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <KDialog>
-#include "akonadi/tag.h"
+#include "tag.h"
 
 namespace Akonadi {
 
@@ -34,7 +34,7 @@ namespace Akonadi {
  *
  * @since 4.13
  */
-class AKONADI_EXPORT TagManagementDialog : public KDialog
+class AKONADIWIDGETS_EXPORT TagManagementDialog : public KDialog
 {
     Q_OBJECT
 public:

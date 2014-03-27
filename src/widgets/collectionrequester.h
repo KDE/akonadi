@@ -20,10 +20,9 @@
 #ifndef AKONADI_COLLECTIONREQUESTER_H
 #define AKONADI_COLLECTIONREQUESTER_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/collection.h>
-#include <akonadi/collectiondialog.h>
+#include "akonadiwidgets_export.h"
+#include "collection.h"
+#include "collectiondialog.h"
 #include <khbox.h>
 
 namespace Akonadi {
@@ -55,7 +54,7 @@ namespace Akonadi {
  * @author Ingo Klöcker <kloecker@kde.org>
  * @since 4.3
  */
-class AKONADI_EXPORT CollectionRequester : public KHBox
+class AKONADIWIDGETS_EXPORT CollectionRequester : public KHBox
 {
     Q_OBJECT
     Q_DISABLE_COPY(CollectionRequester)

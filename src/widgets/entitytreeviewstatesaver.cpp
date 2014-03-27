@@ -19,9 +19,9 @@
 
 #include "entitytreeviewstatesaver.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
+#include "collection.h"
+#include "entitytreemodel.h"
+#include "item.h"
 
 #include <KConfigGroup>
 #include <KDebug>

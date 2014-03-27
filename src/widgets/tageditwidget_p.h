@@ -23,7 +23,7 @@
 #define AKONADI_TAGEDITWIDGET_P_H
 
 #include <QWidget>
-#include "akonadi/tag.h"
+#include "tag.h"
 
 namespace Akonadi {
 

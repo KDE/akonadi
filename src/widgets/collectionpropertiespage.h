@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONPROPERTIESPAGE_H
 #define AKONADI_COLLECTIONPROPERTIESPAGE_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QWidget>
 
@@ -96,7 +96,7 @@ class Collection;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
+class AKONADIWIDGETS_EXPORT CollectionPropertiesPage : public QWidget
 {
     Q_OBJECT
 public:
@@ -165,7 +165,7 @@ private:
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionPropertiesPageFactory
+class AKONADIWIDGETS_EXPORT CollectionPropertiesPageFactory
 {
 public:
     /**

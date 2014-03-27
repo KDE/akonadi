@@ -26,11 +26,11 @@
 #include <kmessagebox.h>
 #include <kcheckableproxymodel.h>
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/tagcreatejob.h>
-#include <akonadi/tagdeletejob.h>
-#include <akonadi/tagfetchscope.h>
-#include <akonadi/tagattribute.h>
+#include "changerecorder.h"
+#include "tagcreatejob.h"
+#include "tagdeletejob.h"
+#include "tagfetchscope.h"
+#include "tagattribute.h"
 #include "tagmodel.h"
 
 #include <QEvent>

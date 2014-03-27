@@ -27,12 +27,12 @@
 #include "collection.h"
 #include "item.h"
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 namespace Akonadi
 {
 
-class AKONADI_EXPORT ETMViewStateSaver : public KViewStateSaver  //krazy:exclude=dpointer
+class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KViewStateSaver  //krazy:exclude=dpointer
 {
     Q_OBJECT
 public:

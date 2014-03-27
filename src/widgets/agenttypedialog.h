@@ -50,7 +50,7 @@ namespace Akonadi {
  * @author Tom Albers <tomalbers@kde.nl>
  * @since 4.2
  */
-class AKONADI_EXPORT AgentTypeDialog : public KDialog
+class AKONADIWIDGETS_EXPORT AgentTypeDialog : public KDialog
 {
     Q_OBJECT
 

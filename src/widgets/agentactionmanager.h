@@ -20,9 +20,8 @@
 #ifndef AKONADI_AGENTACTIONMANAGER_H
 #define AKONADI_AGENTACTIONMANAGER_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/agentinstance.h>
+#include "akonadiwidgets_export.h"
+#include "agentinstance.h"
 
 #include <QtCore/QObject>
 
@@ -40,7 +39,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.6
  */
-class AKONADI_EXPORT AgentActionManager : public QObject
+class AKONADIWIDGETS_EXPORT AgentActionManager : public QObject
 {
     Q_OBJECT
 public:

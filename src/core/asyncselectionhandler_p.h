@@ -22,6 +22,7 @@
 
 #include <QtCore/QObject>
 
+#include "akonadicore_export.h"
 #include "collection.h"
 #include "item.h"
 
@@ -39,7 +40,7 @@ namespace Akonadi
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AsyncSelectionHandler : public QObject
+class AKONADICORE_EXPORT AsyncSelectionHandler : public QObject
 {
     Q_OBJECT
 

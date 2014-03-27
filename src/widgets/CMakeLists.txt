@@ -34,19 +34,47 @@ set(akonadiwidgets_SRCS
     tagwidget.cpp
 )
 
+set(akonadiwidgets_UI
+    cachepolicypage.ui
+    controlprogressindicator.ui
+    erroroverlay.ui
+)
+
+if (KDEPIM_MOBILE_UI)
+    set(akonadiwidgets_SRCS
+        ${akonadiwidgets_SRCS}
+        collectiondialog_mobile.cpp
+    )
+    set(akonadiwidgets_UI
+        ${akonadiwidgets_UI}
+        collectiongeneralpropertiespage_mobile.ui
+    )
+else()
+    set(akonadiwidgets_SRCS
+        ${akonadiwidgets_SRCS}
+        collectiondialog_desktop.cpp
+    )
+    set(akonadiwidgets_UI
+        ${akonadiwidgets_UI}
+        collectiongeneralpropertiespage.ui
+    )
+endif()
+
+qt5_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
+
 add_library(KF5AkonadiWidgets ${akonadiwidgets_SRCS})
 
-generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
+generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiagentbase)
 
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
-target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/akonadi;${Boost_INCLUDE_DIR}>")
-target_include_directories(KF5AkonadiWidgets PUBLIC "$<BUILD_INTERFACE:${AkonadiWidgets_SOURCE_DIR}/src;${AkonadiWidgets_BINARY_DIR}/src>")
-target_include_directories(KF5AkonadiWidgets PUBLIC "$<BUILD_INTERFACE:${AkonadiWidgets_SOURCE_DIR}/src/widgets;${AkonadiWidgets_BINARY_DIR}/src/widgets>")
+target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/Akonadi;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiWidgets
-    KF5::ItemViews
+    KF5::AkonadiCore
     KF5::ItemModels
+    KF5::ItemViews ## This is only for KFilterProxySearchLine
+    KF5::KDE4Support
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES
@@ -72,9 +100,9 @@ install(FILES
 )
 
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadiwivets_export.h
     ${AkonadiWidgets_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel)
 
-ecm_generate_pri_file(BASE_NAME AkonadiWidgets LIB_NAME KF5AkonadiWidgets DEPS "ItemViews ItemModels" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME AkonadiWidgets LIB_NAME KF5AkonadiWidgets DEPS "AkonadiCore KDE4Support" FILENAME_VAR PRI_FILENAME)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})

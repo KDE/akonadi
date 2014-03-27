@@ -30,10 +30,10 @@
 #include <QHeaderView>
 #include <QMenu>
 
-#include <akonadi/collection.h>
-#include <akonadi/control.h>
-#include <akonadi/item.h>
-#include <akonadi/entitytreemodel.h>
+#include "collection.h"
+#include "control.h"
+#include "item.h"
+#include "entitytreemodel.h"
 
 #include <kdebug.h>
 #include <kxmlguiclient.h>

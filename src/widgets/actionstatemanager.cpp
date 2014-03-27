@@ -24,8 +24,7 @@
 #include "pastehelper_p.h"
 #include "specialcollectionattribute_p.h"
 #include "standardactionmanager.h"
-
-#include <akonadi/entitydeletedattribute.h>
+#include "entitydeletedattribute.h"
 
 #include <QApplication>
 #include <QClipboard>

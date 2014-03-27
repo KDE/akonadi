@@ -30,8 +30,8 @@
 #include <KDE/KLocalizedString>
 #include <KDE/KUrl>
 
-#include "akonadi/collection.h"
-#include "akonadi/entitytreemodel.h"
+#include "collection.h"
+#include "entitytreemodel.h"
 
 using namespace Akonadi;
 

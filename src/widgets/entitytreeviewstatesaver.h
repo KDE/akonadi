@@ -20,7 +20,7 @@
 #ifndef AKONADI_ENTITYTREEVIEWSTATESAVER_H
 #define AKONADI_ENTITYTREEVIEWSTATESAVER_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QtCore/QObject>
 
@@ -86,7 +86,7 @@ class EntityTreeViewStateSaverPrivate;
  *
  * @deprecated This class is deprecated. Use ETMViewStateSaver instead.
  */
-class AKONADI_DEPRECATED_EXPORT EntityTreeViewStateSaver : public QObject
+class AKONADIWIDGETS_DEPRECATED_EXPORT EntityTreeViewStateSaver : public QObject
 {
     Q_OBJECT
 

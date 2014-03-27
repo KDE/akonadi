@@ -22,10 +22,11 @@
 #ifndef AKONADI_TAGSELECTIONDIALOG_H
 #define AKONADI_TAGSELECTIONDIALOG_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <KDialog>
-#include "akonadi/tag.h"
+
+#include "tag.h"
 
 namespace Akonadi {
 
@@ -35,7 +36,7 @@ namespace Akonadi {
  * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
  * @since 4.13
  */
-class AKONADI_EXPORT TagSelectionDialog : public KDialog
+class AKONADIWIDGETS_EXPORT TagSelectionDialog : public KDialog
 {
     Q_OBJECT
 public:

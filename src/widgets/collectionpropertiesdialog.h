@@ -20,9 +20,8 @@
 #ifndef AKONADI_COLLECTIONPROPERTIESDIALOG_H
 #define AKONADI_COLLECTIONPROPERTIESDIALOG_H
 
-#include "akonadi_export.h"
-
-#include <akonadi/collectionpropertiespage.h>
+#include "akonadiwidgets_export.h"
+#include "collectionpropertiespage.h"
 
 #include <kdialog.h>
 
@@ -51,7 +50,7 @@ class Collection;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
+class AKONADIWIDGETS_EXPORT CollectionPropertiesDialog : public KDialog
 {
     Q_OBJECT
 public:

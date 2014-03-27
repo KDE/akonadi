@@ -21,8 +21,7 @@
 #define AKONADI_DRAGDROPMANAGER_P_H
 
 #include <QAbstractItemView>
-
-#include "akonadi/collection.h"
+#include "collection.h"
 
 namespace Akonadi
 {

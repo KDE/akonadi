@@ -25,6 +25,8 @@
 #include "collection.h"
 #include "collectionutils_p.h"
 
+#include <KLocalizedString>
+
 using namespace Akonadi;
 
 class CachePolicyPage::Private

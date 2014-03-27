@@ -20,6 +20,7 @@
 #ifndef AKONADI_SUBSCRIPTIONMODEL_P_H
 #define AKONADI_SUBSCRIPTIONMODEL_P_H
 
+#include "akonadicore_export.h"
 #include "collection.h"
 #include "collectionmodel.h"
 
@@ -31,7 +32,7 @@ namespace Akonadi {
  *
  * An extended collection model used for the subscription dialog.
  */
-class SubscriptionModel : public CollectionModel
+class AKONADICORE_EXPORT SubscriptionModel : public CollectionModel
 {
     Q_OBJECT
 public:

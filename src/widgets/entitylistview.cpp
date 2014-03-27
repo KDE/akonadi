@@ -33,12 +33,11 @@
 #include <kxmlguiclient.h>
 #include <KXMLGUIFactory>
 
-#include <akonadi/collection.h>
-#include <akonadi/control.h>
-#include <akonadi/item.h>
-#include <akonadi/entitytreemodel.h>
-
-#include <progressspinnerdelegate_p.h>
+#include "collection.h"
+#include "control.h"
+#include "item.h"
+#include "entitytreemodel.h"
+#include "progressspinnerdelegate_p.h"
 
 using namespace Akonadi;
 

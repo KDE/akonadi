@@ -20,6 +20,7 @@
 #ifndef AKONADI_PASTEHELPER_P_H
 #define AKONADI_PASTEHELPER_P_H
 
+#include "akonadicore_export.h"
 #include "collection.h"
 
 #include <QtCore/QList>
@@ -45,7 +46,7 @@ namespace PasteHelper
   @param mimeData The pasted/dropped data.
   @param collection The collection to paste/drop into.
 */
-bool canPaste(const QMimeData *mimeData, const Collection &collection);
+AKONADICORE_EXPORT bool canPaste(const QMimeData *mimeData, const Collection &collection);
 
 /**
   Paste/drop the given mime data into the given collection.
@@ -54,7 +55,7 @@ bool canPaste(const QMimeData *mimeData, const Collection &collection);
   @param copy Indicate whether this is a copy or a move.
   @returns The job performing the paste, 0 if there is nothing to paste.
 */
-KJob *paste(const QMimeData *mimeData, const Collection &collection, bool copy = true, Session *session = 0);
+AKONADICORE_EXPORT KJob *paste(const QMimeData *mimeData, const Collection &collection, bool copy = true, Session *session = 0);
 
 /**
   URI list paste/drop.
@@ -63,7 +64,7 @@ KJob *paste(const QMimeData *mimeData, const Collection &collection, bool copy =
   @param action The drop action (copy/move/link).
   @returns The job performing the paste, 0 if there is nothing to paste.
 */
-KJob *pasteUriList(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action, Session *session = 0);
+AKONADICORE_EXPORT KJob *pasteUriList(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action, Session *session = 0);
 }
 
 }

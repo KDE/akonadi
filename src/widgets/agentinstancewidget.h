@@ -21,7 +21,7 @@
 #ifndef AKONADI_AGENTINSTANCEWIDGET_H
 #define AKONADI_AGENTINSTANCEWIDGET_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QWidget>
 
@@ -63,7 +63,7 @@ class AgentFilterProxyModel;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentInstanceWidget : public QWidget
+class AKONADIWIDGETS_EXPORT AgentInstanceWidget : public QWidget
 {
     Q_OBJECT
 

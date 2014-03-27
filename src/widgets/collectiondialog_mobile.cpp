@@ -25,12 +25,12 @@
 
 #include <kdescendantsproxymodel.h>
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/collectionutils_p.h>
-#include <akonadi/entityrightsfiltermodel.h>
-#include <akonadi/entitytreemodel.h>
+#include "changerecorder.h"
+#include "collectioncreatejob.h"
+#include "collectionfilterproxymodel.h"
+#include "collectionutils_p.h"
+#include "entityrightsfiltermodel.h"
+#include "entitytreemodel.h"
 
 #include <KLocalizedString>
 #include <KInputDialog>
@@ -38,7 +38,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 
-#include <QDeclarativeView>
+#include <QQuickView>
 
 using namespace Akonadi;
 
@@ -51,8 +51,8 @@ CollectionDialog::Private::Private(QAbstractItemModel *customModel, CollectionDi
     , mCreateButtonEnabled(false)
 {
     // setup GUI
-    mView = new QDeclarativeView(mParent);
-    mView->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    mView = new QQuickView(mParent);
+    mView->setResizeMode(QQuickView::SizeRootObjectToView);
 
     mParent->setMainWidget(mView);
     mParent->setButtons(KDialog::None);

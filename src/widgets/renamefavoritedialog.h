@@ -21,7 +21,7 @@
 #define RENAMEFAVORITEDIALOG_H
 
 #include <KDialog>
-#include <akonadi/collection.h>
+#include "collection.h"
 
 class QLabel;
 class KLineEdit;

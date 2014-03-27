@@ -23,10 +23,10 @@
 #ifndef AKONADI_TAGWIDGET_H
 #define AKONADI_TAGWIDGET_H
 
-#include "akonadi_export.h"
+#include "akonadiwidgets_export.h"
 
 #include <QWidget>
-#include "akonadi/tag.h"
+#include "tag.h"
 
 namespace Akonadi {
 
@@ -36,7 +36,7 @@ namespace Akonadi {
  * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
  * @since 4.13
  */
-class AKONADI_EXPORT TagWidget : public QWidget
+class AKONADIWIDGETS_EXPORT TagWidget : public QWidget
 {
     Q_OBJECT
 public:
