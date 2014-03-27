@@ -90,7 +90,7 @@ qt5_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
 
 add_library(KF5AkonadiWidgets ${akonadiwidgets_SRCS})
 
-generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiagentbase)
+generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
