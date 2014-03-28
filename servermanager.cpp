@@ -66,8 +66,19 @@ class Akonadi::ServerManagerPrivate
       delete instance;
     }
 
-    void serviceOwnerChanged( const QString&, const QString&, const QString& )
+    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
     {
+      if ( name == ServerManager::serviceName( ServerManager::ControlLock ) && !oldOwner.isEmpty() && newOwner.isEmpty() ) {
+        // Control.Lock has disappeared during startup, which means that akonadi_control
+        // has terminated, most probably because it was not able to start akonadiserver
+        // process. Don't wait 30 seconds for sefetyTimeout, but go into Broken state
+        // immediately.
+        if ( mState == ServerManager::Starting ) {
+          setState( ServerManager::Broken );
+          return;
+        }
+      }
+
       serverProtocolVersion = -1,
       checkStatusChanged();
     }
@@ -129,6 +140,7 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   watcher->addWatchedService( ServerManager::serviceName( ServerManager::Control ) );
+  watcher->addWatchedService( ServerManager::serviceName( ServerManager::ControlLock ) );
   watcher->addWatchedService( ServerManager::serviceName( ServerManager::UpgradeIndicator ) );
 
   // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading

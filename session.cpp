@@ -358,8 +358,16 @@ void SessionPrivate::writeData(const QByteArray & data)
 
 void SessionPrivate::serverStateChanged( ServerManager::State state )
 {
-  if ( state == ServerManager::Running && !connected )
+  if ( state == ServerManager::Running && !connected ) {
     reconnect();
+  } else if ( !connected && state == ServerManager::Broken ) {
+    // If the server is broken, cancel all pending jobs, otherwise they will be
+    // blocked forever and applications waiting for them to finish would be stuck
+    Q_FOREACH ( Job *job, queue ) {
+      job->setError( Job::ConnectionFailed );
+      job->kill( KJob::EmitResult );
+    }
+  }
 }
 
 void SessionPrivate::itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
