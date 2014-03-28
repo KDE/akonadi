@@ -303,6 +303,9 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
   // error if query did not find any item and scope is not listing items but
   // a request for a specific item
   if ( !itemQuery.isValid() ) {
+    if ( mFetchScope.ignoreErrors() ) {
+      return true;
+    }
     switch ( mScope.scope() ) {
     case Scope::Uid: // fall through
     case Scope::Rid: // fall through
