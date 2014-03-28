@@ -56,7 +56,8 @@ class Akonadi::ItemSyncPrivate : public JobPrivate
       mIncremental( false ),
       mLocalListDone( false ),
       mDeliveryDone( false ),
-      mFinished( false )
+      mFinished( false ),
+      mLocalListStarted( false )
     {
       // we want to fetch all data by default
       mFetchScope.fetchFullPayload();
@@ -73,6 +74,7 @@ class Akonadi::ItemSyncPrivate : public JobPrivate
     void deleteItems( const Item::List &items );
     void slotTransactionResult( KJob *job );
     Job* subjobParent() const;
+    void fetchLocalItems();
 
     Q_DECLARE_PUBLIC( ItemSync )
     Collection mSyncCollection;
@@ -104,6 +106,7 @@ class Akonadi::ItemSyncPrivate : public JobPrivate
     bool mLocalListDone;
     bool mDeliveryDone;
     bool mFinished;
+    bool mLocalListStarted;
 };
 
 void ItemSyncPrivate::createLocalItem( const Item & item )
@@ -200,14 +203,6 @@ ItemFetchScope &ItemSync::fetchScope()
 
 void ItemSync::doStart()
 {
-  Q_D( ItemSync );
-  ItemFetchJob* job = new ItemFetchJob( d->mSyncCollection, this );
-  job->setFetchScope( d->mFetchScope );
-
-  // we only can fetch parts already in the cache, otherwise this will deadlock
-  job->fetchScope().setCacheOnly( true );
-
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
 }
 
 bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
@@ -263,6 +258,37 @@ bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
   return false;
 }
 
+void ItemSyncPrivate::fetchLocalItems()
+{
+  Q_Q( ItemSync );
+  if ( mLocalListStarted ) {
+    return;
+  }
+  mLocalListStarted = true;
+  ItemFetchJob* job;
+  if ( mIncremental ) {
+    if ( mRemoteItems.isEmpty() ) {
+      // The fetch job produces an error with an empty set
+      mLocalListDone = true;
+      execute();
+      return;
+    }
+    // We need to fetch the items only to detect if they are new or modified
+    job = new ItemFetchJob( mRemoteItems, q );
+    job->setFetchScope( mFetchScope );
+    // We use this to check if items are available locally, so errors are inevitable
+    job->fetchScope().setIgnoreRetrievalErrors( true );
+  } else {
+    job = new ItemFetchJob( mSyncCollection, q );
+    job->setFetchScope( mFetchScope );
+  }
+
+  // we only can fetch parts already in the cache, otherwise this will deadlock
+  job->fetchScope().setCacheOnly( true );
+
+  connect( job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
+}
+
 void ItemSyncPrivate::slotLocalListDone( KJob * job )
 {
   if ( !job->error() ) {
@@ -283,8 +309,14 @@ void ItemSyncPrivate::slotLocalListDone( KJob * job )
 void ItemSyncPrivate::execute()
 {
   Q_Q( ItemSync );
-  if ( !mLocalListDone )
+  if ( !mLocalListDone ) {
+    // Start fetching local items only once the delivery is done for incremental fetch,
+    // so we can fetch only the required items
+    if ( mDeliveryDone || !mIncremental ) {
+      fetchLocalItems();
+    }
     return;
+  }
 
   // early exit to avoid unnecessary TransactionSequence creation in MultipleTransactions mode
   // TODO: do the transaction handling in a nicer way instead, only creating TransactionSequences when really needed
