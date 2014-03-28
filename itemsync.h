@@ -29,6 +29,7 @@ namespace Akonadi {
 
 class Collection;
 class ItemFetchScope;
+class ItemSyncPrivate;
 
 /**
  * @short Syncs between items known to a client (usually a resource) and the Akonadi storage.
@@ -184,13 +185,13 @@ class AKONADI_EXPORT ItemSync : public Job
 
   private:
     //@cond PRIVATE
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( ItemSync )
+    ItemSyncPrivate * dummy; // for BC. KF5 TODO: REMOVE.
 
-    Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotLocalDeleteDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotLocalChangeDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotTransactionResult( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotLocalDeleteDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotLocalChangeDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotTransactionResult( KJob* ) )
     //@endcond
 };
 
