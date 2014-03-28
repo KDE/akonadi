@@ -134,13 +134,13 @@ K_GLOBAL_STATIC(ServerManagerPrivate, sInstance)
 ServerManager::ServerManager(ServerManagerPrivate *dd)
     : d(dd)
 {
-<<<<<<< HEAD
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Server),
                                                            DBusConnectionPool::threadConnection(),
                                                            QDBusServiceWatcher::WatchForOwnerChange, this);
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::Control));
+    watcher->addWatchedService(ServerManager::serviceName(ServerManager::ControlLock));
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::UpgradeIndicator));
 
     // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
@@ -156,30 +156,6 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
     }
     connect(AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection);
     connect(AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection);
-=======
-  qRegisterMetaType<Akonadi::ServerManager::State>();
-
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName( ServerManager::Server ),
-                                                          DBusConnectionPool::threadConnection(),
-                                                          QDBusServiceWatcher::WatchForOwnerChange, this );
-  watcher->addWatchedService( ServerManager::serviceName( ServerManager::Control ) );
-  watcher->addWatchedService( ServerManager::serviceName( ServerManager::ControlLock ) );
-  watcher->addWatchedService( ServerManager::serviceName( ServerManager::UpgradeIndicator ) );
-
-  // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
-  // the current agent types and instances
-  // this ensures the invariant of AgentManager reporting a consistent state if ServerManager::state() == Running
-  // that's the case with direct connections as well, but only after you enter the event loop once
-  connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           this, SLOT(serviceOwnerChanged(QString,QString,QString)), Qt::QueuedConnection );
-
-  // AgentManager is dangerous to use for agents themselves
-  if ( Internal::clientType() != Internal::User ) {
-    return;
-  }
-  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection );
-  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection );
->>>>>>> KDE/4.13
 }
 
 ServerManager *Akonadi::ServerManager::self()
