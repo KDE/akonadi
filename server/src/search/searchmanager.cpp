@@ -202,8 +202,10 @@ void SearchManager::loadSearchPlugins()
 
 void SearchManager::scheduleSearchUpdate()
 {
-  // Reset if the timer is active
-  mSearchUpdateTimer->start();
+  // Reset if the timer is active (use QueuedConnection to invoke start() from
+  // the thread the QTimer lives in instead of caller's thread, otherwise crashes
+  // and weird things can happen.
+  QMetaObject::invokeMethod( mSearchUpdateTimer, "start", Qt::QueuedConnection );
 }
 
 void SearchManager::searchUpdateTimeout()

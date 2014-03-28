@@ -125,15 +125,6 @@ else()
   include(${QT_USE_FILE})
 endif()
 
-# Missing in FindQt4.cmake until Dec 2011: setting QT_NO_DEBUG_OUTPUT
-if(CMAKE_BUILD_TYPE)
-  string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
-endif()
-
-if(NOT CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
-   add_definitions(-DQT_NO_DEBUG_OUTPUT)
-endif()
-
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   set(AKONADI_STATIC_LIBS ON)
