@@ -54,6 +54,7 @@ class ItemRetriever
     void setRetrieveParts( const QStringList &parts );
     QStringList retrieveParts() const;
     void setRetrieveFullPayload( bool fullPayload );
+    void setChangedSince( const QDateTime &changedSince );
     void setItemSet( const ImapSet &set, const Collection &collection = Collection() );
     void setItemSet( const ImapSet &set, bool isUid );
     void setItem( const Entity::Id &id );
@@ -84,6 +85,7 @@ class ItemRetriever
     QStringList mParts;
     bool mFullPayload;
     bool mRecursive;
+    QDateTime mChangedSince;
     mutable QByteArray mLastError;
 };
 

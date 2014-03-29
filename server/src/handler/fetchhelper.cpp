@@ -284,6 +284,7 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
     retriever.setScope( mScope );
     retriever.setRetrieveParts( mFetchScope.requestedPayloads() );
     retriever.setRetrieveFullPayload( mFetchScope.fullPayload() );
+    retriever.setChangedSince( mFetchScope.changedSince() );
     if ( !retriever.exec() && !mFetchScope.ignoreErrors() ) { // There we go, retrieve the missing parts from the resource.
       if ( mConnection->resourceContext().isValid() ) {
         throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1, resource %2) : %3" )

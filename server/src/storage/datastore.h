@@ -120,7 +120,7 @@ class DataStore : public QObject
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
     bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged,
-                           bool checkIfExists = true, const Collection &col = Collection() );
+                           bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
     bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
 
     /* --- ItemTags ----------------------------------------------------- */
@@ -272,7 +272,8 @@ protected:
 
   private:
     bool doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
-                           const QSet<PimItem::Id> &existing, const Collection &col );
+                            const QSet<PimItem::Id> &existing, const Collection &col,
+                            bool silent );
 
     bool doAppendItemsTag( const PimItem::List &items, const Tag &tag,
                           const QSet<Entity::Id> &existing, const Collection &col );
