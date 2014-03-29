@@ -90,7 +90,7 @@ QObject *PluginLoader::createForName(const QString &name)
     }
 
     if (!info.loaded) {
-        KPluginLoader *loader = new KPluginLoader(info.library);
+        QPluginLoader *loader = new QPluginLoader(info.library);
         if (loader->fileName().isEmpty()) {
             kWarning(5300) << loader->errorString();
             delete loader;
