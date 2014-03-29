@@ -115,6 +115,11 @@ Scope ItemRetriever::scope() const
   return mScope;
 }
 
+void ItemRetriever::setChangedSince( const QDateTime &changedSince )
+{
+  mChangedSince = changedSince;
+}
+
 QStringList ItemRetriever::retrieveParts() const
 {
   return mParts;
@@ -169,6 +174,11 @@ QSqlQuery ItemRetriever::buildQuery() const
   if ( mConnection ) {
     qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals,
                           QString::fromLatin1( mConnection->sessionId() ) );
+  }
+
+  if ( mChangedSince.isValid() ) {
+    qb.addValueCondition( PimItem::datetimeFullColumnName(), Query::GreaterOrEqual,
+                          mChangedSince.toUTC() );
   }
 
   qb.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
