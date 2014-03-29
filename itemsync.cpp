@@ -286,7 +286,7 @@ void ItemSyncPrivate::fetchLocalItems()
   // we only can fetch parts already in the cache, otherwise this will deadlock
   job->fetchScope().setCacheOnly( true );
 
-  connect( job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
+  QObject::connect( job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
 }
 
 void ItemSyncPrivate::slotLocalListDone( KJob * job )
