@@ -247,7 +247,7 @@ bool AkAppend::parseStream()
   const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
   const Flag::List flagList = HandlerHelper::resolveFlags( itemFlags );
   bool flagsChanged = false;
-  if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) ) {
+  if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col, true ) ) {
     return failureResponse( "Unable to append item flags." );
   }
 

@@ -244,7 +244,8 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
 }
 
 bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
-                                   const QSet<Entity::Id> &existing, const Collection &col )
+                                   const QSet<Entity::Id> &existing, const Collection &col,
+                                   bool silent )
 {
   QVariantList flagIds;
   QVariantList appendIds;
@@ -272,15 +273,17 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
     return false;
   }
 
-  mNotificationCollector->itemsFlagsChanged( appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
-                                             QSet<QByteArray>(), col );
+  if ( !silent ) {
+    mNotificationCollector->itemsFlagsChanged( appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
+                                               QSet<QByteArray>(), col );
+  }
 
   return true;
 }
 
 bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
                                   bool &flagsChanged, bool checkIfExists,
-                                  const Collection &col )
+                                  const Collection &col, bool silent )
 {
   QSet<QByteArray> added;
 
@@ -317,7 +320,7 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
       }
     }
 
-    if ( !doAppendItemsFlag( items, flag, existing, col ) ) {
+    if ( !doAppendItemsFlag( items, flag, existing, col, silent ) ) {
       return false;
     }
   }
