@@ -91,7 +91,6 @@ bool SearchPersistent::parseStream()
   col.setQueryString( queryString );
   col.setQueryAttributes( queryAttributes.join( QLatin1String( " " ) ) );
   col.setQueryCollections( queryCollections );
-  col.setRemoteId( queryString ); // ### remove, legacy compat
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource
   col.setName( collectionName );
