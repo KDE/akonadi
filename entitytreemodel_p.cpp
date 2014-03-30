@@ -1294,7 +1294,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
     }
 #endif
   if ( ItemFetchJob *iJob = dynamic_cast<ItemFetchJob*>( job ) ) {
-    if ( iJob->items().isEmpty() ) {
+    if ( !iJob->count() ) {
       m_collectionsWithoutItems.insert( collectionId );
     } else {
       m_collectionsWithoutItems.remove( collectionId );
