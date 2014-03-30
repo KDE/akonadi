@@ -39,10 +39,6 @@ set_package_properties(Qt5Designer PROPERTIES
 
 find_package(Qt5Sql NO_MODULE REQUIRED)
 
-# Workaround for Akonadi server conflicting with our framework (same variable names)
-# TODO: Remove once we merge both repositories into one
-set(AKONADI_DBUS_INTERFACES_DIR "/usr/share/dbus-1/interfaces")
-
 set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION})
 set_package_properties(Boost PROPERTIES
@@ -61,7 +57,6 @@ set_package_properties(LibXml2 PROPERTIES
 ########### Targets ###########
 
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(src)
 #add_subdirectory(autotests)
@@ -99,7 +94,6 @@ install(FILES
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
-
 
 install( FILES
     kcfg2dbus.xsl
