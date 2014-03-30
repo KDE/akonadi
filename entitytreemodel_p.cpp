@@ -1698,6 +1698,9 @@ void EntityTreeModelPrivate::purgeItems( Collection::Id id )
     end = childEntities.end();
   }
   m_populatedCols.remove(id);
+  //if an empty collection is purged and we leave it in here, itemAdded will be ignored for the collection
+  //and the collection is never populated by fetchMore (but maybe by statistics changed?)
+  m_collectionsWithoutItems.remove(id);
 }
 
 void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIndex &bottom )
