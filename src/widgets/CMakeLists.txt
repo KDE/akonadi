@@ -94,7 +94,7 @@ generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
-target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/Akonadi;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiWidgets;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiWidgets
     KF5::AkonadiCore
