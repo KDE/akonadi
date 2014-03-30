@@ -44,7 +44,11 @@ public:
         mEmitTimer->setSingleShot(true);
         mEmitTimer->setInterval(100);
         q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
-        q->connect(q, SIGNAL(result(KJob*)), q, SLOT(timeout()));
+    }
+
+    void aboutToFinish()
+    {
+      timeout();
     }
 
     void timeout()

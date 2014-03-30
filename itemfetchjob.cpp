@@ -61,14 +61,18 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
       mEmitTimer->setSingleShot( true );
       mEmitTimer->setInterval( 100 );
       q->connect( mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
-      q->connect( q, SIGNAL(result(KJob*)), q, SLOT(timeout()) );
+    }
+
+    void aboutToFinish()
+    {
+      timeout();
     }
 
     void timeout()
     {
       Q_Q( ItemFetchJob );
 
-      mEmitTimer->stop(); // in case we are called by result()
+      mEmitTimer->stop(); // in case we are called by aboutToFinish()
       if ( !mPendingItems.isEmpty() ) {
         if ( !q->error() )
           emit q->itemsReceived( mPendingItems );
