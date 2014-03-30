@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SUBSCRIPTIONDIALOG_P_H
-#define AKONADI_SUBSCRIPTIONDIALOG_P_H
+#ifndef AKONADI_SUBSCRIPTIONDIALOG_H
+#define AKONADI_SUBSCRIPTIONDIALOG_H
 
 #include "akonadiwidgets_export.h"
 
@@ -27,9 +27,7 @@
 namespace Akonadi {
 
 /**
- * @internal
- *
- * Local subsription dialog.
+ * Local subscription dialog.
  */
 class AKONADIWIDGETS_EXPORT SubscriptionDialog : public KDialog
 {

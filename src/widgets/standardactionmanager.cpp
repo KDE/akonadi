@@ -37,7 +37,7 @@
 #include "pastehelper_p.h"
 #include "specialcollectionattribute.h"
 #include "collectionpropertiesdialog.h"
-#include "subscriptiondialog_p.h"
+#include "subscriptiondialog.h"
 #include "renamefavoritedialog.h"
 #include "trashjob.h"
 #include "trashrestorejob.h"

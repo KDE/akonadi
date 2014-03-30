@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "subscriptiondialog_p.h"
+#include "subscriptiondialog.h"
 
 #include "control.h"
 #include "recursivecollectionfilterproxymodel.h"
@@ -285,4 +285,4 @@ SubscriptionDialog::~SubscriptionDialog()
     delete d;
 }
 
-#include "moc_subscriptiondialog_p.cpp"
+#include "moc_subscriptiondialog.cpp"

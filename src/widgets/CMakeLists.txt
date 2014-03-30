@@ -60,6 +60,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     ItemView
     RenameFavoriteDialog
     StandardActionManager
+    SubscriptionDialog
     TagManagementDialog
     TagSelectionDialog
     TagWidget
