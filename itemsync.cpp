@@ -75,6 +75,7 @@ public:
     void slotTransactionResult(KJob *job);
     Job *subjobParent() const;
     void fetchLocalItems();
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
 
     Q_DECLARE_PUBLIC(ItemSync)
     Collection mSyncCollection;
@@ -320,6 +321,13 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
 
     mLocalListDone = true;
     execute();
+}
+
+QString ItemSyncPrivate::jobDebuggingString() const /*Q_DECL_OVERRIDE*/
+{
+  // TODO: also print out mIncremental and mTotalItemsProcessed, but they are set after the job
+  // started, so this requires passing jobDebuggingString to jobEnded().
+  return QString::fromLatin1("Collection %1 (%2)").arg(mSyncCollection.id()).arg(mSyncCollection.name());
 }
 
 void ItemSyncPrivate::execute()
