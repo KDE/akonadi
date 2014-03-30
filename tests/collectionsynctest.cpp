@@ -127,7 +127,7 @@ class CollectionSyncTest : public QObject
         QCOMPARE( spy.count(), 0 );
       }
       syncer->retrievalDone();
-      QTest::qWait( 1000 ); // let it finish its job
+      QTRY_COMPARE( spy.count(), 1 );
       QCOMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
       QCOMPARE( job, syncer );
@@ -219,8 +219,7 @@ class CollectionSyncTest : public QObject
         QCOMPARE( spy.count(), 0 );
       }
       syncer->retrievalDone();
-      QTest::qWait( 1000 ); // let it finish its job
-      QCOMPARE( spy.count(), 1 );
+      QTRY_COMPARE(spy.count(), 1);
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
       QCOMPARE( job, syncer );
       QCOMPARE( job->errorText(), QString() );

@@ -95,6 +95,15 @@ public:
      */
     virtual void doUpdateItemRevision(Akonadi::Item::Id, int oldRevision, int newRevision);
 
+    /**
+     * This method is called right before result() and finished() signals are emitted.
+     * Overwrite this method in your job if you need to emit some signals or process
+     * some data before the job finishes.
+     *
+     * Default implementation does nothing.
+     */
+    virtual void aboutToFinish();
+
     int protocolVersion() const;
 
     Job *q_ptr;

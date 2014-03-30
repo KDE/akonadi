@@ -66,8 +66,7 @@ class ResourceTest : public QObject
 
       AgentManager::self()->removeInstance( instance );
       AgentManager::self()->removeInstance( instance2 );
-      QTest::qWait( 2000 );
-      QCOMPARE( spyRemoveInstance.count(), 2 );
+      QTRY_COMPARE( spyRemoveInstance.count(), 2 );
       QVERIFY( !AgentManager::self()->instances().contains( instance ) );
       QVERIFY( !AgentManager::self()->instances().contains( instance2 ) );
     }
