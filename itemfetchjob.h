@@ -133,6 +133,8 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     /**
      * Returns the fetched items.
      *
+     * This returns an empty list when not using the ItemGetter DeliveryOption.
+     *
      * @note The items are invalid before the result( KJob* )
      *       signal has been emitted or if an error occurred.
      */
@@ -213,6 +215,12 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @since 4.13
      */
     DeliveryOptions deliveryOptions() const;
+
+    /**
+     * Returns the total number of retrieved items.
+     * This works also without the ItemGetter DeliveryOption.
+     */
+    int count() const;
 
   Q_SIGNALS:
     /**
