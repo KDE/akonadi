@@ -182,6 +182,7 @@ ItemFetchJob *EntityTreeModelPrivate::getItemFetchJob(const Collection &parent, 
     itemJob->setFetchScope(scope);
     itemJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
     itemJob->fetchScope().setIgnoreRetrievalErrors(true);
+    itemJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
     return itemJob;
 }
 
