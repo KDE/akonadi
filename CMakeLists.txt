@@ -27,7 +27,9 @@ ecm_setup_version(${KF5_VERSION}
 )
 
 ########### Find packages ###########
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews KIO Config Solid KDE4Support)
+find_package(KF5 CONFIG REQUIRED COMPONENTS ItemViews KIO Config Solid KDE4Support)
+
+find_package(Akonadi 1.70.40 CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
