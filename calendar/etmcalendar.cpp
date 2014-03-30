@@ -20,7 +20,6 @@
 #include "etmcalendar.h"
 #include "etmcalendar_p.h"
 #include "blockalarmsattribute.h"
-#include "incidencefetchjob_p.h"
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 #include "calfilterproxymodel_p.h"
