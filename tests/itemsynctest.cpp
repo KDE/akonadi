@@ -100,8 +100,7 @@ class ItemsyncTest : public QObject
           QCOMPARE( spy.count(), 0 );
         }
       }
-      QTest::qWait( 1000 ); // let it finish its job
-      QCOMPARE( spy.count(), 1 );
+      QTRY_COMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
       QCOMPARE( job, syncer );
       QCOMPARE( job->error(), 0 );
@@ -168,8 +167,7 @@ class ItemsyncTest : public QObject
         QCOMPARE( spy.count(), 0 );
       }
       syncer->deliveryDone();
-      QTest::qWait( 1000 ); // let it finish its job
-      QCOMPARE( spy.count(), 1 );
+      QTRY_COMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
       QCOMPARE( job, syncer );
       QCOMPARE( job->error(), 0 );
