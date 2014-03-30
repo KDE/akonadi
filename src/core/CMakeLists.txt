@@ -84,6 +84,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Entity
     EntityAnnotationsAttribute
     EntityDeletedAttribute
+    EntityDisplayAttribute
     EntityHiddenAttribute
     Exception
     IndexPolicyAttribute
@@ -214,6 +215,7 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     ItemDeleteJob
     ItemFetchJob
     ItemModifyJob
+    ItemMoveJob
     ItemSearchJob
     Job
     LinkJob
