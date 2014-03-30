@@ -134,8 +134,11 @@ void ItemAppendTest::testContent()
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
-  QVERIFY( item2.hasPayload() );
-  QCOMPARE( item2.payload<QByteArray>(), data );
+  //akonadi does not distinguish empty and no payload
+  QCOMPARE( item2.hasPayload(), !data.isEmpty() );
+  if( item2.hasPayload() ) {
+    QCOMPARE( item2.payload<QByteArray>(), data );
+  }
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   AKVERIFYEXEC( djob );
