@@ -213,13 +213,8 @@ void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const C
         }
     }
 
-#ifdef KDEPIM_MOBILE_UI
-    q->connect(itemFetchJob, SIGNAL(result(KJob*)),
-               q, SLOT(itemsFetched(KJob*)));
-#else
     q->connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
                q, SLOT(itemsFetched(Akonadi::Item::List)));
-#endif
     q->connect(itemFetchJob, SIGNAL(result(KJob*)),
                q, SLOT(fetchJobDone(KJob*)));
     ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
@@ -507,21 +502,6 @@ void EntityTreeModelPrivate::itemsFetched(const Akonadi::Item::List &items)
 
     const Collection::Id collectionId = q->sender()->property(FetchCollectionId()).value<Collection::Id>();
 
-    itemsFetched(collectionId, items);
-}
-
-void EntityTreeModelPrivate::itemsFetched(KJob *job)
-{
-    Q_ASSERT(job);
-
-    if (job->error()) {
-        return;
-    }
-
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
-    const Akonadi::Item::List items = fetchJob->items();
-
-    const Collection::Id collectionId = job->property(FetchCollectionId()).value<Collection::Id>();
     itemsFetched(collectionId, items);
 }
 
@@ -1314,7 +1294,7 @@ void EntityTreeModelPrivate::fetchJobDone(KJob *job)
     }
 #endif
     if (ItemFetchJob *iJob = dynamic_cast<ItemFetchJob *>(job)) {
-        if (iJob->items().isEmpty()) {
+        if (!iJob->count()) {
             m_collectionsWithoutItems.insert(collectionId);
         } else {
             m_collectionsWithoutItems.remove(collectionId);

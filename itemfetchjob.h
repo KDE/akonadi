@@ -143,6 +143,8 @@ public:
     /**
      * Returns the fetched items.
      *
+     * This returns an empty list when not using the ItemGetter DeliveryOption.
+     *
      * @note The items are invalid before the result(KJob*)
      *       signal has been emitted or if an error occurred.
      */
@@ -225,6 +227,13 @@ public:
      * @since 4.13
      */
     DeliveryOptions deliveryOptions() const;
+
+    /**
+     * Returns the total number of retrieved items.
+     * This works also without the ItemGetter DeliveryOption.
+     * @since 4.14
+     */
+    int count() const;
 
 Q_SIGNALS:
     /**
