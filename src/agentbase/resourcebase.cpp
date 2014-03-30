@@ -542,7 +542,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     const QByteArray catalog = fi.baseName().toLatin1();
 
     KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog,
-                       ki18nc("@title application name", "Akonadi Resource"), AKONADI_VERSION_STRING,
+                       ki18nc("@title application name", "Akonadi Resource"), AKONADILIBRARIES_VERSION_STRING,
                        ki18nc("@title application description", "Akonadi Resource"));
 
     KCmdLineOptions options;

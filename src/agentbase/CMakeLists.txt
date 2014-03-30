@@ -1,10 +1,6 @@
 # Turn exceptions on
 kde_enable_exceptions()
 
-# FIXME KF5: Remove once we merge Akonadi repository in
-# This is so that we find akonadi/private/notificationmessagev3_p.h
-include_directories("${CMAKE_INSTALL_PREFIX}/include")
-
 set(akonadiagentbase_SRCS
     agentbase.cpp
     agentfactory.cpp
@@ -63,8 +59,8 @@ target_link_libraries(KF5AkonadiAgentBase
 )
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
-    VERSION ${AKONADI_VERSION_STRING}
-    SOVERSION ${AKONADI_SOVERSION}
+    VERSION ${AKONADILIBRARIES_VERSION_STRING}
+    SOVERSION ${AKONADILIBRARIES_SOVERSION}
     EXPORT_NAME AkonadiAgentBase
 )
 

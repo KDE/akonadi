@@ -235,22 +235,17 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     RELATIVE jobs
 )
 
-# FIXME KF5: Remove once we merge Akonadi repository in
-# This is so that we find akonadi/private/notificationmessagev3_p.h
-include_directories("${CMAKE_INSTALL_PREFIX}/include")
-
 set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h" )
-qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface )
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/notificationmessagev3_p.h" )
+qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface)
 
 set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h" )
-qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface )
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/notificationmessagev3_p.h" )
+qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface)
 
-
-qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
-qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
-qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml )
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml)
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml)
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml)
 
 set(akonadicore_SRCS
     ${akonadicore_base_SRCS}
@@ -264,22 +259,21 @@ add_library(KF5AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/Akonadi;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/Akonadi;${Boost_INCLUDE_DIR};${AKONADI_INCLUDE_DIR};${AKONADI_INCLUDE_DIR}/private>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_BINARY_DIR}/src/core/jobs>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_BINARY_DIR}/src/core/models>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AKONADI_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiCore
     KF5::ItemModels
     KF5::KIOCore
     KF5::KDE4Support
-    ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/libakonadiprotocolinternals.so
+    ${AKONADI_COMMON_LIBRARIES}
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES
-    VERSION ${AKONADI_VERSION_STRING}
-    SOVERSION ${AKONADI_SOVERSION}
+    VERSION ${AKONADILIBRARIES_VERSION_STRING}
+    SOVERSION ${AKONADILIBRARIES_SOVERSION}
     EXPORT_NAME AkonadiCore
 )
 
@@ -306,7 +300,6 @@ install(FILES
     ${AkonadiCore_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
 )
-
 
 install(FILES
     ${PRI_FILENAME}

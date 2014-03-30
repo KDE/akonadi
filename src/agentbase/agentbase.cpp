@@ -841,7 +841,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     // strip off full path and possible .exe suffix
     const QByteArray catalog = fi.baseName().toLatin1();
 
-    KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog, ki18n("Akonadi Agent"), AKONADI_VERSION_STRING,
+    KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog, ki18n("Akonadi Agent"), AKONADILIBRARIES_VERSION_STRING,
                        ki18n("Akonadi Agent"));
 
     KCmdLineOptions options;
