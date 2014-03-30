@@ -266,6 +266,7 @@ void TagTest::testAttributes()
 void TagTest::testTagItem()
 {
     Akonadi::Monitor monitor;
+    monitor.itemFetchScope().setFetchTags(true);
     monitor.setAllMonitored(true);
     const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
     Tag tag;
