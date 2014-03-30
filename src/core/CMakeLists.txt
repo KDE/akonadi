@@ -268,6 +268,7 @@ target_link_libraries(KF5AkonadiCore
     KF5::ItemModels
     KF5::KIOCore
     KF5::KDE4Support
+    KF5::PimUtils
     ${AKONADI_COMMON_LIBRARIES}
 )
 

@@ -54,6 +54,10 @@ set_package_properties(LibXml2 PROPERTIES
     TYPE REQUIRED
 )
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi_SOURCE_DIR})
+  find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED) # for kpimutils/supertrait.h
+endif()
+
 ########### Targets ###########
 
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
