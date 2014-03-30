@@ -611,5 +611,21 @@ bool ETMCalendar::collectionFilteringEnabled() const
     return d->mCollectionFilteringEnabled;
 }
 
+bool ETMCalendar::isLoaded() const
+{
+    Q_D(const ETMCalendar);
+
+    if (!entityTreeModel()->isCollectionTreeFetched())
+        return false;
+
+    Akonadi::Collection::List collections = d->mCollectionMap.values();
+    foreach (const Akonadi::Collection &collection, collections) {
+        if (!entityTreeModel()->isCollectionPopulated(collection.id()))
+            return false;
+    }
+
+    return true;
+}
+
 #include "moc_etmcalendar.cpp"
 #include "moc_etmcalendar_p.cpp"
