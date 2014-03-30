@@ -298,6 +298,7 @@ install(FILES
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_HEADERS}
+    itempayloadinternals_p.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
 )
 
