@@ -414,19 +414,17 @@ void ItemSyncPrivate::deleteItems( const Item::List &items )
   Item::List itemsToDelete;
   foreach ( const Item &item, items ) {
     Item delItem( item );
-    if ( !mIncremental ) {
-      if ( !item.isValid() ) {
-        delItem = mLocalItemsByRemoteId.value( item.remoteId() );
-      }
+    if ( !item.isValid() ) {
+      delItem = mLocalItemsByRemoteId.value( item.remoteId() );
+    }
 
-      if ( !delItem.isValid() ) {
-  #ifndef NDEBUG
-        kWarning() << "Delete item (remoteeId=" << item.remoteId()
-                  << "mimeType=" << item.mimeType()
-                  << ") does not have a valid UID and no item with that remote ID exists either";
-  #endif
-        continue;
-      }
+    if ( !delItem.isValid() ) {
+#ifndef NDEBUG
+      kWarning() << "Delete item (remoteeId=" << item.remoteId()
+                 << "mimeType=" << item.mimeType()
+                 << ") does not have a valid UID and no item with that remote ID exists either";
+#endif
+      continue;
     }
 
     if ( delItem.remoteId().isEmpty() ) {
