@@ -211,14 +211,6 @@ ItemFetchScope &ItemSync::fetchScope()
 
 void ItemSync::doStart()
 {
-    Q_D(ItemSync);
-    ItemFetchJob* job = new ItemFetchJob(d->mSyncCollection, this);
-    job->setFetchScope(d->mFetchScope);
-
-    // we only can fetch parts already in the cache, otherwise this will deadlock
-    job->fetchScope().setCacheOnly(true);
-
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)));
 }
 
 bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
