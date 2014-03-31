@@ -300,6 +300,7 @@ void ItemSyncPrivate::fetchLocalItems()
         // We need to fetch the items only to detect if they are new or modified
         job = new ItemFetchJob( mRemoteItems, q );
         job->setFetchScope( mFetchScope );
+        job->setCollection( mSyncCollection );
         // We use this to check if items are available locally, so errors are inevitable
         job->fetchScope().setIgnoreRetrievalErrors( true );
     } else {
