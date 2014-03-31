@@ -213,10 +213,8 @@ void SearchTaskManager::searchLoop()
   QMutexLocker locker( &mLock );
 
   Q_FOREVER {
-    if ( !mShouldStop && mTasklist.isEmpty() ) {
-        akDebug() << "Search loop is waiting, will wake again in" << timeout << "ms";
-        mWait.wait( &mLock, timeout );
-    }
+    akDebug() << "Search loop is waiting, will wake again in" << timeout << "ms";
+    mWait.wait( &mLock, timeout );
 
     if ( mShouldStop ) {
       Q_FOREACH (SearchTask *task, mTasklist ) {
