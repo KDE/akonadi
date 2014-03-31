@@ -170,7 +170,7 @@ public:
     void createRemoteNode(const Collection &col)
     {
         if (col.remoteId().isEmpty()) {
-            kWarning() << "Collection '" << col.name() << "' does not have a remote identifier - skipping";
+            qWarning() << "Collection '" << col.name() << "' does not have a remote identifier - skipping";
             return;
         }
         RemoteNode *node = new RemoteNode(col);
@@ -246,7 +246,7 @@ public:
             }
             LocalNode *localParent = 0;
             if (collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty()) {
-                kWarning() << "Remote collection without valid parent found: " << collection;
+                qWarning() << "Remote collection without valid parent found: " << collection;
                 return 0;
             }
             if (collection.parentCollection().id() == Collection::root().id() || collection.parentCollection().remoteId() == Collection::root().remoteId()) {
@@ -262,7 +262,7 @@ public:
                 // check if we have a local folder with a matching name and no RID, if so let's use that one
                 // we would get an error if we don't do this anyway, as we'd try to create two sibling nodes with the same name
                 if (LocalNode *recoveredLocalNode = findLocalChildNodeByName(localParent, collection.name())) {
-                    kDebug() << "Recovering collection with lost RID:" << collection << recoveredLocalNode->collection;
+                    qDebug() << "Recovering collection with lost RID:" << collection << recoveredLocalNode->collection;
                     return recoveredLocalNode;
                 }
             }
@@ -287,7 +287,7 @@ public:
             return localRoot;
         }
         if (collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty()) {
-            kWarning() << "Remote collection without valid parent found: " << collection;
+            qWarning() << "Remote collection without valid parent found: " << collection;
             return 0;
         }
         bool parentIsExact = false;
@@ -543,13 +543,13 @@ public:
         Collection::List rv;
         if (!localNode->processed) {
             if (hasProcessedChildren(localNode)) {
-                kWarning() << "Found unprocessed local node with processed children, excluding from deletion";
-                kWarning() << localNode->collection;
+                qWarning() << "Found unprocessed local node with processed children, excluding from deletion";
+                qWarning() << localNode->collection;
                 return rv;
             }
             if (localNode->collection.remoteId().isEmpty()) {
-                kWarning() << "Found unprocessed local node without remoteId, excluding from deletion";
-                kWarning() << localNode->collection;
+                qWarning() << "Found unprocessed local node without remoteId, excluding from deletion";
+                qWarning() << localNode->collection;
                 return rv;
             }
             rv.append(localNode->collection);
@@ -642,7 +642,7 @@ public:
     */
     void execute()
     {
-        kDebug() << Q_FUNC_INFO << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
+        qDebug() << Q_FUNC_INFO << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
         if (!localListDone) {
             return;
         }
@@ -710,13 +710,13 @@ public:
             q->setError(Unknown);
             q->setErrorText(i18n("Found unresolved orphan collections"));
             foreach (RemoteNode *orphan, orphans) {
-                kDebug() << "found orphan collection:" << orphan->collection;
+                qDebug() << "found orphan collection:" << orphan->collection;
             }
             q->emitResult();
             return;
         }
 
-        kDebug() << Q_FUNC_INFO << "q->commit()";
+        qDebug() << Q_FUNC_INFO << "q->commit()";
         Q_ASSERT(currentTransaction);
         currentTransaction->commit();
     }

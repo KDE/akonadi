@@ -76,12 +76,12 @@ void TrashRestoreJob::TrashRestoreJobPrivate::selectResult(KJob *job)
 {
     Q_Q(TrashRestoreJob);
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return; // KCompositeJob takes care of errors
     }
 
     if (!q->hasSubjobs() || (q->subjobs().contains(static_cast<KJob *>(q->sender())) && q->subjobs().size() == 1)) {
-        //kWarning() << "trash restore finished";
+        //qWarning() << "trash restore finished";
         q->emitResult();
     }
 }
@@ -102,7 +102,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched(KJob *job)
             q->setErrorText(i18n("Could not find restore collection and restore resource is not available"));
             q->emitResult();
             //FAIL
-            kWarning() << "restore collection not available";
+            qWarning() << "restore collection not available";
             return;
         }
 
@@ -322,7 +322,7 @@ void TrashRestoreJob::doStart()
         CollectionFetchJob *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Base, this);
         connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), this, SLOT(collectionsReceived(Akonadi::Collection::List)));
     } else {
-        kWarning() << "No valid collection or empty itemlist";
+        qWarning() << "No valid collection or empty itemlist";
         setError(Job::Unknown);
         setErrorText(i18n("No valid collection or empty itemlist"));
         emitResult();

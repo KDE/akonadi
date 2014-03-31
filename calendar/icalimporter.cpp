@@ -92,7 +92,7 @@ void ICalImporter::Private::onIncidenceCreated(int changeId,
 void ICalImporter::Private::setErrorMessage(const QString &message)
 {
     m_lastErrorMessage = message;
-    kError() << message;
+    qCritical() << message;
 }
 
 void ICalImporter::Private::resourceCreated(KJob *job)

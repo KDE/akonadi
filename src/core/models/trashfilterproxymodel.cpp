@@ -77,7 +77,7 @@ bool TrashFilterProxyModel::acceptRow(int sourceRow, const QModelIndex &sourcePa
     Q_D(const TrashFilterProxyModel);
     const QModelIndex &index = sourceModel()->index(sourceRow, 0, sourceParent);
     const Item &item = index.data(EntityTreeModel::ItemRole).value<Item>();
-    //kDebug() << item.id();
+    //qDebug() << item.id();
     if (item.isValid()) {
         if (item.hasAttribute<EntityDeletedAttribute>()/* d->showEntity(item)*/) {
             return d->mTrashIsShown;

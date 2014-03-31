@@ -101,7 +101,7 @@ public:
             if (reason.isEmpty()) {
                 reason = QString::fromLatin1("this service is probably running already.");
             }
-            kError() << "Unable to register service" << serviceId << "at D-Bus:" << reason;
+            qCritical() << "Unable to register service" << serviceId << "at D-Bus:" << reason;
 
             if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
                 QCoreApplication::instance()->exit(1);
@@ -522,7 +522,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
 {
     QString identifier;
     if (argc < 3) {
-        kDebug() << "Not enough arguments passed...";
+        qDebug() << "Not enough arguments passed...";
         exit(1);
     }
 
@@ -533,7 +533,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     }
 
     if (identifier.isEmpty()) {
-        kDebug() << "Identifier argument missing";
+        qDebug() << "Identifier argument missing";
         exit(1);
     }
 
@@ -585,7 +585,7 @@ void ResourceBase::itemRetrieved(const Item &item)
     QSet<QByteArray> requestedParts = d->scheduler->currentTask().itemParts;
     foreach (const QByteArray &part, requestedParts) {
         if (!item.loadedPayloadParts().contains(part)) {
-            kWarning() << "Item does not provide part" << part;
+            qWarning() << "Item does not provide part" << part;
         }
     }
 
@@ -1088,7 +1088,7 @@ void ResourceBasePrivate::slotCollectionListForAttributesDone(KJob *job)
 
 void ResourceBase::setTotalItems(int amount)
 {
-    kDebug() << amount;
+    qDebug() << amount;
     Q_D(ResourceBase);
     setItemStreamingEnabled(true);
     if (d->mItemSyncer) {

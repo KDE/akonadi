@@ -432,7 +432,7 @@ void ChangeRecorderPrivate::writeStartOffset()
     // Skip "countAndVersion"
     file.seek(8);
 
-    //kDebug() << "Writing start offset=" << m_startOffset;
+    //qDebug() << "Writing start offset=" << m_startOffset;
 
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -475,7 +475,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
     stream << countAndVersion;
     stream << quint64(0); // no start offset
 
-    //kDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
+    //qDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
     for (int i = 0; i < pendingNotifications.count(); ++i) {
         const NotificationMessageV3 msg = pendingNotifications.at(i);
@@ -489,7 +489,7 @@ void ChangeRecorderPrivate::notificationsEnqueued(int count)
     if (enableChangeRecording) {
         m_lastKnownNotificationsCount += count;
         if (m_lastKnownNotificationsCount != pendingNotifications.count()) {
-            kWarning() << this << "The number of pending notifications changed without telling us! Expected"
+            qWarning() << this << "The number of pending notifications changed without telling us! Expected"
                        << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
                        << "Caller just added" << count;
             Q_ASSERT(pendingNotifications.count() == m_lastKnownNotificationsCount);

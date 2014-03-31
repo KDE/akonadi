@@ -113,7 +113,7 @@ class ContactGroupExpandJob::Private
 
           mContacts.append( contact );
         } else
-          kWarning() << "Contact for Akonadi item" << item.id() << "does not exist anymore!";
+          qWarning() << "Contact for Akonadi item" << item.id() << "does not exist anymore!";
       }
 
       mFetchCount--;

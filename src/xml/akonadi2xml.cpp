@@ -52,7 +52,7 @@ int main( int argc, char *argv[] )
     const QString path = args->getOption( "collection" );
     CollectionPathResolver resolver( path );
     if ( !resolver.exec() ) {
-      kError() << resolver.errorString();
+      qCritical() << resolver.errorString();
       return -1;
     }
     root = Collection( resolver.collection() );
@@ -61,7 +61,7 @@ int main( int argc, char *argv[] )
 
   XmlWriteJob writer( root, args->getOption( "output" ) );
   if ( !writer.exec() ) {
-    kError() << writer.exec();
+    qCritical() << writer.exec();
     return -1;
   }
 }

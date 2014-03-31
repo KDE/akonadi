@@ -76,7 +76,7 @@ class ChangeRecorderTest : public QObject
       ChangeRecorder *rec = createChangeRecorder();
       QVERIFY( rec->isEmpty() );
       Q_FOREACH( const QString& action, actions ) {
-        kDebug() << action;
+        qDebug() << action;
         if ( action == "rn" ) {
           replayNextAndExpectNothing( rec );
         } else if ( action == "reload" ) {
@@ -133,7 +133,7 @@ class ChangeRecorderTest : public QObject
 
     void replayNextAndProcess( ChangeRecorder* rec, Akonadi::Item::Id expectedUid )
     {
-      kDebug();
+      qDebug();
 
       QSignalSpy nothingSpy( rec, SIGNAL(nothingToReplay()) );
       QVERIFY( nothingSpy.isValid() );
@@ -153,7 +153,7 @@ class ChangeRecorderTest : public QObject
 
     void replayNextAndExpectNothing( ChangeRecorder* rec )
     {
-      kDebug();
+      qDebug();
 
       QSignalSpy nothingSpy( rec, SIGNAL(nothingToReplay()) );
       QVERIFY( nothingSpy.isValid() );

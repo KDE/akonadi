@@ -529,7 +529,7 @@ void HistoryTest::deleteFinished(int changeId,
     --mPendingSignals[DeletionSignal];
 
     if (resultCode != IncidenceChanger::ResultCodeSuccess) {
-        kDebug() << "Error string is " << errorMessage;
+        qDebug() << "Error string is " << errorMessage;
     } else {
         QVERIFY(!deletedIds.isEmpty());
         foreach(Akonadi::Item::Id id , deletedIds) {
@@ -561,7 +561,7 @@ void HistoryTest::createFinished(int changeId,
         Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
         //mItemIdByUid.insert(incidence->uid(), item.id());
     } else {
-        kDebug() << "Error string is " << errorString;
+        qDebug() << "Error string is " << errorString;
     }
 
     maybeQuitEventLoop();
@@ -584,7 +584,7 @@ void HistoryTest::modifyFinished(int changeId,
     if (resultCode == IncidenceChanger::ResultCodeSuccess)
         QVERIFY(item.isValid());
     else
-        kDebug() << "Error string is " << errorString;
+        qDebug() << "Error string is " << errorString;
 
     maybeQuitEventLoop();
 }

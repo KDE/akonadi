@@ -32,7 +32,7 @@ Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
     KConfig config(QString::fromLatin1("akonaditrashrc"));
     KConfigGroup group(&config, resource);
     const Akonadi::Entity::Id colId = group.readEntry<Akonadi::Entity::Id> ("TrashCollection", -1);
-    kWarning() << resource << colId;
+    qWarning() << resource << colId;
     return Collection(colId);
 }
 
@@ -40,6 +40,6 @@ void TrashSettings::setTrashCollection(const QString &resource, const Akonadi::C
 {
     KConfig config(QString::fromLatin1("akonaditrashrc"));
     KConfigGroup group(&config, resource);
-    kWarning() << resource << collection.id();
+    qWarning() << resource << collection.id();
     group.writeEntry("TrashCollection", collection.id());
 }

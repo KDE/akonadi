@@ -454,10 +454,10 @@ bool Item::ensureMetaTypeId(int mtid) const
         Item converted = ItemSerializer::convert(*this, mtid);
         return d->movePayloadFrom(converted.d_func(), mtid);
     } catch (const std::exception &e) {
-        kDebug() << "conversion threw:" << e.what();
+        qDebug() << "conversion threw:" << e.what();
         return false;
     } catch (...) {
-        kDebug() << "conversion threw something not derived from std::exception: fix the program!";
+        qDebug() << "conversion threw something not derived from std::exception: fix the program!";
         return false;
     }
 }
@@ -563,8 +563,8 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
 void Item::apply(const Item &other)
 {
     if (mimeType() != other.mimeType() || id() != other.id()) {
-        kDebug() << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
-        kDebug() << "id() = " << id() << "; other.id() = " << other.id();
+        qDebug() << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
+        qDebug() << "id() = " << id() << "; other.id() = " << other.id();
         Q_ASSERT_X(false, "Item::apply", "mimetype or id missmatch");
     }
 

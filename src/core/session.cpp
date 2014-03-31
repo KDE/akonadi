@@ -98,7 +98,7 @@ void SessionPrivate::reconnect()
             }
             options.insert(pair.first(), pair.last());
         }
-        kDebug() << protocol << options;
+        qDebug() << protocol << options;
 
         if (protocol == "tcp") {
             serverAddress = options.value(QLatin1String("host"));
@@ -116,7 +116,7 @@ void SessionPrivate::reconnect()
         const QString connectionConfigFile = connectionFile();
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
-            kDebug() << "Akonadi Client Session: connection config file '"
+            qDebug() << "Akonadi Client Session: connection config file '"
                      "akonadi/akonadiconnectionrc' can not be found in"
                      << XdgBaseDirs::homePath("config") << "nor in any of"
                      << XdgBaseDirs::systemPathList("config");
@@ -146,7 +146,7 @@ void SessionPrivate::reconnect()
     }
 
     // actually do connect
-    kDebug() << "connectToServer" << serverAddress;
+    qDebug() << "connectToServer" << serverAddress;
     if (!useTcp) {
         localSocket->connectToServer(serverAddress);
     } else {
@@ -164,14 +164,14 @@ QString SessionPrivate::connectionFile()
 void SessionPrivate::socketError(QLocalSocket::LocalSocketError)
 {
     Q_ASSERT(mParent->sender() == socket);
-    kWarning() << "Socket error occurred:" << qobject_cast<QLocalSocket *>(socket)->errorString();
+    qWarning() << "Socket error occurred:" << qobject_cast<QLocalSocket *>(socket)->errorString();
     socketDisconnected();
 }
 
 void SessionPrivate::socketError(QAbstractSocket::SocketError)
 {
     Q_ASSERT(mParent->sender() == socket);
-    kWarning() << "Socket error occurred:" << qobject_cast<QTcpSocket *>(socket)->errorString();
+    qWarning() << "Socket error occurred:" << qobject_cast<QTcpSocket *>(socket)->errorString();
     socketDisconnected();
 }
 
@@ -203,7 +203,7 @@ void SessionPrivate::dataReceived()
                 if (parser->data().startsWith("OK")) {     //krazy:exclude=strings
                     writeData("1 CAPABILITY (" + ImapParser::join(sCapabilities, " ") + ")");
                 } else {
-                    kWarning() << "Unable to login to Akonadi server:" << parser->data();
+                    qWarning() << "Unable to login to Akonadi server:" << parser->data();
                     socket->close();
                     QTimer::singleShot(1000, mParent, SLOT(reconnect()));
                 }
@@ -215,7 +215,7 @@ void SessionPrivate::dataReceived()
                     connected = true;
                     startNext();
                 } else {
-                    kDebug() << "Unhandled server capability response:" << parser->data();
+                    qDebug() << "Unhandled server capability response:" << parser->data();
                 }
             }
 
@@ -228,7 +228,7 @@ void SessionPrivate::dataReceived()
                     protocolVersion = tmp;
                     Internal::setServerProtocolVersion(tmp);
                 }
-                kDebug() << "Server protocol version is:" << protocolVersion;
+                qDebug() << "Server protocol version is:" << protocolVersion;
 
                 writeData("0 LOGIN " + ImapParser::quote(sessionId) + '\n');
 
@@ -360,7 +360,7 @@ void SessionPrivate::writeData(const QByteArray &data)
     if (socket) {
         socket->write(data);
     } else {
-        kWarning() << "Trying to write while session is disconnected!" << kBacktrace();
+        qWarning() << "Trying to write while session is disconnected!" << kBacktrace();
     }
 }
 
@@ -401,7 +401,7 @@ SessionPrivate::SessionPrivate(Session *parent)
 
 void SessionPrivate::init(const QByteArray &id)
 {
-    kDebug() << id;
+    qDebug() << id;
     parser = new ImapParser();
 
     if (!id.isEmpty()) {
@@ -428,7 +428,7 @@ void SessionPrivate::init(const QByteArray &id)
                             .arg(QString::fromLatin1(sessionId)),
                             mParent);
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-            kWarning() << "Failed to open Akonadi Session log file" << logFile->fileName();
+            qWarning() << "Failed to open Akonadi Session log file" << logFile->fileName();
             delete logFile;
             logFile = 0;
         }

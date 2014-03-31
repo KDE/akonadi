@@ -106,7 +106,7 @@ bool CreationEntry::undo()
     mChangeIds << changeId;
 
     if (changeId == -1)
-        kError() << "Undo failed";
+        qCritical() << "Undo failed";
 
     return changeId != -1;
 }
@@ -121,7 +121,7 @@ bool CreationEntry::redo()
     mChangeIds << changeId;
 
     if (changeId == -1)
-        kError() << "Redo failed";
+        qCritical() << "Redo failed";
 
     return changeId != -1;
 }
@@ -149,7 +149,7 @@ void CreationEntry::onCreateFinished(int changeId, const Akonadi::Item &item,
             Q_ASSERT(mItems.count() == 1);
 
             if (mItems.first().id() == item.id()) {
-                kWarning() << "Duplicate id. Old= " << mItems.first().id() << item.id();
+                qWarning() << "Duplicate id. Old= " << mItems.first().id() << item.id();
                 Q_ASSERT(false);
             }
             updateIdsGlobaly(mItems.first().id(), item.id());
@@ -203,7 +203,7 @@ bool DeletionEntry::redo()
     mChangeIds << changeId;
 
     if (changeId == -1)
-        kError() << "Redo failed";
+        qCritical() << "Redo failed";
 
     return changeId != -1;
 }
@@ -264,7 +264,7 @@ bool ModificationEntry::undo()
     mChangeIds << changeId;
 
     if (changeId == -1)
-        kError() << "Undo failed";
+        qCritical() << "Undo failed";
 
     return changeId != -1;
 }
@@ -276,7 +276,7 @@ bool ModificationEntry::redo()
     mChangeIds << changeId;
 
     if (changeId == -1)
-        kError() << "Redo failed";
+        qCritical() << "Redo failed";
 
     return changeId != -1;
 }

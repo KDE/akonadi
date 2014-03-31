@@ -143,7 +143,7 @@ public:
     void reference(const Collection::Id &collectionId)
     {
         if (referencedCollections.contains(collectionId)) {
-            kWarning() << "already referenced " << collectionId;
+            qWarning() << "already referenced " << collectionId;
             return;
         }
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
@@ -151,7 +151,7 @@ public:
             if (q->sourceModel()->setData(index, QVariant(), EntityTreeModel::CollectionRefRole)) {
                 referencedCollections << collectionId;
             } else {
-                kWarning() << "failed to reference collection";
+                qWarning() << "failed to reference collection";
             }
             q->sourceModel()->fetchMore(index);
         }
@@ -160,7 +160,7 @@ public:
     void dereference(const Collection::Id &collectionId)
     {
         if (!referencedCollections.contains(collectionId)) {
-            kWarning() << "not referenced " << collectionId;
+            qWarning() << "not referenced " << collectionId;
             return;
         }
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
@@ -183,7 +183,7 @@ public:
     void add(const Collection::Id &collectionId)
     {
         if (collectionIds.contains(collectionId)) {
-            kDebug() << "already in model " << collectionId;
+            qDebug() << "already in model " << collectionId;
             return;
         }
         collectionIds << collectionId;
@@ -405,12 +405,12 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
                 if (item.isValid()) {
                     if (item.parentCollection().id() == destCollection.id() &&
                         action != Qt::CopyAction) {
-                        kDebug() << "Error: source and destination of move are the same.";
+                        qDebug() << "Error: source and destination of move are the same.";
                         return false;
                     }
 #if 0
                     if (!mimeChecker.isWantedItem(item)) {
-                        kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
+                        qDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
                         return false;
                     }
 #endif
@@ -452,7 +452,7 @@ Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex &index) const
 void FavoriteCollectionsModel::pasteJobDone(KJob *job)
 {
     if (job->error()) {
-        kDebug() << job->errorString();
+        qDebug() << job->errorString();
     }
 }
 

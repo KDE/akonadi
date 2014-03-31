@@ -144,7 +144,7 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
             bool ok = false;
             ImapParser::parseNumber(data, d->mUid, &ok, uidNextPos + 7);
             if (!ok) {
-                kDebug() << "Invalid UIDNEXT response to APPEND command: "
+                qDebug() << "Invalid UIDNEXT response to APPEND command: "
                          << tag << data;
             }
         }
@@ -152,7 +152,7 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
         if (dateTimePos != -1) {
             int resultPos = ImapParser::parseDateTime(data, d->mDatetime, dateTimePos + 8);
             if (resultPos == (dateTimePos + 8)) {
-                kDebug() << "Invalid DATETIME response to APPEND command: "
+                qDebug() << "Invalid DATETIME response to APPEND command: "
                          << tag << data;
             }
         }

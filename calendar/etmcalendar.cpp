@@ -202,9 +202,9 @@ void ETMCalendarPrivate::clear()
 
     if (!mItemById.isEmpty()) {
         // This never happens
-        kDebug() << "This shouldnt happen: !mItemById.isEmpty()";
+        qDebug() << "This shouldnt happen: !mItemById.isEmpty()";
         foreach(Akonadi::Item::Id id, mItemById.keys()) {
-            kDebug() << "Id = " << id;
+            qDebug() << "Id = " << id;
         }
 
         mItemById.clear();
@@ -213,9 +213,9 @@ void ETMCalendarPrivate::clear()
 
     if (!mItemIdByUid.isEmpty()) {
         // This never happens
-        kDebug() << "This shouldnt happen: !mItemIdByUid.isEmpty()";
+        qDebug() << "This shouldnt happen: !mItemIdByUid.isEmpty()";
         foreach(const QString &uid, mItemIdByUid.keys()) {
-            kDebug() << "uid: " << uid;
+            qDebug() << "uid: " << uid;
         }
         mItemIdByUid.clear();
         //Q_ASSERT(false);

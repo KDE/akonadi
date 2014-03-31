@@ -676,7 +676,7 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
     if (m_pendingIncidenceChangerSignal == 0) {
         stopWaiting();
     }
-    kDebug() << "Got result " << resultCode << m_cancelExpected;
+    qDebug() << "Got result " << resultCode << m_cancelExpected;
     QCOMPARE(resultCode, m_cancelExpected ? IncidenceChanger::ResultCodeUserCanceled
              : IncidenceChanger::ResultCodeSuccess);
 }

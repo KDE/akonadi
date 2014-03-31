@@ -28,7 +28,7 @@
 
 QSet<qint64> TestSearchPlugin::search( const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes )
 {
-    kDebug() << query;
+    qDebug() << query;
     return parseQuery(query);
 }
 

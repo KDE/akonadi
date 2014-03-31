@@ -56,7 +56,7 @@ void TagCreateJob::doStart()
     Q_D(TagCreateJob);
 
     if (d->mTag.gid().isEmpty()) {
-        kWarning() << "The gid of a new tag must not be empty";
+        qWarning() << "The gid of a new tag must not be empty";
         setError(Job::Unknown);
         setErrorText(i18n("Failed to create tag."));
         emitResult();

@@ -147,7 +147,7 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
 
     if (instance.status() == AgentInstance::Idle) {
         // try again, we might have lost the synchronized() signal
-        kDebug() << "trying again to sync collection attributes" << collection.id() << instance.identifier();
+        qDebug() << "trying again to sync collection attributes" << collection.id() << instance.identifier();
         interface->call(QString::fromUtf8("synchronizeCollectionAttributes"), collection.id());
     }
 }

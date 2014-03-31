@@ -78,7 +78,7 @@ void TagTest::testCreateFetch()
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
-        kDebug() << fetchJob->tags().first().id();
+        qDebug() << fetchJob->tags().first().id();
 
         TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
         AKVERIFYEXEC(deleteJob);

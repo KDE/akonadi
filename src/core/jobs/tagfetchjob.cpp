@@ -163,7 +163,7 @@ void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data
             return;
         }
     }
-    kDebug() << "Unhandled response: " << tag << data;
+    qDebug() << "Unhandled response: " << tag << data;
 }
 
 Tag::List TagFetchJob::tags() const

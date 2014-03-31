@@ -139,10 +139,10 @@ void AgentInstance::abortCurrentTask() const
     if (iface.isValid()) {
         QDBusReply<void> reply = iface.call(QString::fromLatin1("abort"));
         if (!reply.isValid()) {
-            kWarning() << "Failed to place D-Bus call.";
+            qWarning() << "Failed to place D-Bus call.";
         }
     } else {
-        kWarning() << "Unable to obtain agent interface";
+        qWarning() << "Unable to obtain agent interface";
     }
 }
 
@@ -154,10 +154,10 @@ void AgentInstance::reconfigure() const
     if (iface.isValid()) {
         QDBusReply<void> reply = iface.call(QString::fromLatin1("reconfigure"));
         if (!reply.isValid()) {
-            kWarning() << "Failed to place D-Bus call.";
+            qWarning() << "Failed to place D-Bus call.";
         }
     } else {
-        kWarning() << "Unable to obtain agent interface";
+        qWarning() << "Unable to obtain agent interface";
     }
 }
 
@@ -169,9 +169,9 @@ void Akonadi::AgentInstance::restart() const
     if (iface.isValid()) {
         QDBusReply<void> reply = iface.call(QString::fromLatin1("restartAgentInstance"), identifier());
         if (!reply.isValid()) {
-            kWarning() << "Failed to place D-Bus call.";
+            qWarning() << "Failed to place D-Bus call.";
         }
     } else {
-        kWarning() << "Unable to obtain control interface" << iface.lastError().message();
+        qWarning() << "Unable to obtain control interface" << iface.lastError().message();
     }
 }

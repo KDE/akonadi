@@ -223,7 +223,7 @@ void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const C
 #endif
     q->connect(itemFetchJob, SIGNAL(result(KJob*)),
                q, SLOT(fetchJobDone(KJob*)));
-    ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
+    ifDebug(qDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
 }
 
 void EntityTreeModelPrivate::changeFetchState(const Collection &parent)
@@ -326,7 +326,7 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
                        q, SLOT(firstFetchJobDone(KJob*)));
         }
     }
-    ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
+    ifDebug(qDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
 // Specialization needs to be in the same namespace as the definition
@@ -561,7 +561,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
                 const Akonadi::Collection::List parents = getParentCollections(item);
                 foreach (const Akonadi::Collection &parent, parents) {
                     if (parent.id() == collectionId) {
-                        kWarning() << "Fetched an item which is already in the model";
+                        qWarning() << "Fetched an item which is already in the model";
                         // Update it in case the revision changed;
                         m_items[item.id()].apply(item);
                         isNewItem = false;
@@ -965,7 +965,7 @@ void EntityTreeModelPrivate::monitoredCollectionMoved(const Akonadi::Collection 
     const int destRow = 0; // Prepend collections
 
     if (!q->beginMoveRows(srcParentIndex, srcRow, srcRow, destParentIndex, destRow)) {
-        kWarning() << "Invalid move";
+        qWarning() << "Invalid move";
         return;
     }
 
@@ -1048,7 +1048,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch &&
         !m_collections.contains(collection.id())) {
-        kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
+        qWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1105,7 +1105,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
     }
 
     if (!m_items.contains(item.id())) {
-        kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1133,7 +1133,7 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
     }
 
     if (!m_items.contains(item.id())) {
-        kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1142,7 +1142,7 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
     const QModelIndexList indexes = indexesForItem(item);
     foreach (const QModelIndex &index, indexes) {
         if (!index.isValid()) {
-            kWarning() << "item has invalid index:" << item.id() << item.remoteId();
+            qWarning() << "item has invalid index:" << item.id() << item.remoteId();
         } else {
             dataChanged(index, index);
         }
@@ -1181,7 +1181,7 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
     // a reset of the source model inside of the message list (ouch!)
 #if 0
     if (!m_items.contains(item.id())) {
-        kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1201,7 +1201,7 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
     Q_ASSERT(srcRow >= 0);
     Q_ASSERT(destRow >= 0);
     if (!q->beginMoveRows(srcIndex, srcRow, srcRow, destIndex, destRow)) {
-        kWarning() << "Invalid move";
+        qWarning() << "Invalid move";
         return;
     }
 
@@ -1268,7 +1268,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     }
 
     if (!m_items.contains(item.id())) {
-        kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1276,7 +1276,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
     const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
     if ( row < 0 || row >= m_childEntities[ collection.id() ].size() ) {
-       kWarning() << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
+       qWarning() << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
        Q_ASSERT(false);
        return;
     }
@@ -1293,21 +1293,21 @@ void EntityTreeModelPrivate::fetchJobDone(KJob *job)
     const Collection::Id collectionId = job->property(FetchCollectionId().constData()).value<Collection::Id>();
 
     if (job->error()) {
-        kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
+        qWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
         return; // let's be safe, otherwise emitting dataChanged will get us into loops
     }
 
 #ifdef DBG_TRACK_JOB_TIMES
-    kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
+    qDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     if (CollectionFetchJob *cJob = dynamic_cast<CollectionFetchJob *>(job)) {
-        kDebug() << "was collection fetch job: collections:" << cJob->collections().size();
+        qDebug() << "was collection fetch job: collections:" << cJob->collections().size();
         if (!cJob->collections().isEmpty()) {
-            kDebug() << "first fetched collection:" << cJob->collections().first().name();
+            qDebug() << "first fetched collection:" << cJob->collections().first().name();
         }
     } else if (ItemFetchJob *iJob = dynamic_cast<ItemFetchJob *>(job)) {
-        kDebug() << "was item fetch job: items:" << iJob->items().size();
+        qDebug() << "was item fetch job: items:" << iJob->items().size();
         if (!iJob->items().isEmpty()) {
-            kDebug() << "first item collection:" << iJob->items().first().parentCollection().name();
+            qDebug() << "first item collection:" << iJob->items().first().parentCollection().name();
         }
     }
 #endif
@@ -1369,7 +1369,7 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
 {
     if (job->error()) {
         // TODO: handle job errors
-        kWarning() << "Job error:" << job->errorString();
+        qWarning() << "Job error:" << job->errorString();
     } else {
 
         ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob *>(job);
@@ -1398,7 +1398,7 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
 void EntityTreeModelPrivate::rootFetchJobDone(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return;
     }
     CollectionFetchJob *collectionJob = qobject_cast<CollectionFetchJob *>(job);
@@ -1444,7 +1444,7 @@ void EntityTreeModelPrivate::startFirstListJob()
     const bool noResources = m_monitor->resourcesMonitored().isEmpty();
     const bool generalPopulation = !noMimetypes || (noMimetypes && noResources);
 
-    kDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
+    qDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
     // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
     // necessary.
     // HACK: fix this for recursive listing if we filter on mimetypes that only exist deeper
@@ -1502,7 +1502,7 @@ void EntityTreeModelPrivate::firstCollectionsFetched(const Akonadi::Collection::
 void EntityTreeModelPrivate::firstFetchJobDone(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return;
     }
 
@@ -1519,7 +1519,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
                q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
     q->connect(job, SIGNAL(result(KJob*)),
                q, SLOT(fetchJobDone(KJob*)));
-    ifDebug(kDebug() << ""; jobTimeTracker[job].start();)
+    ifDebug(qDebug() << ""; jobTimeTracker[job].start();)
 }
 
 void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collection::List &list)
@@ -1562,7 +1562,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
                        q, SLOT(collectionsFetched(Akonadi::Collection::List)));
             q->connect(job, SIGNAL(result(KJob*)),
                        q, SLOT(fetchJobDone(KJob*)));
-            ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
+            ifDebug(qDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
         }
     }
 }
@@ -1903,7 +1903,7 @@ void EntityTreeModelPrivate::fillModel()
         CollectionFetchJob *rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
         q->connect(rootFetchJob, SIGNAL(result(KJob*)),
                    SLOT(rootFetchJobDone(KJob*)));
-        ifDebug(kDebug() << ""; jobTimeTracker[rootFetchJob].start();)
+        ifDebug(qDebug() << ""; jobTimeTracker[rootFetchJob].start();)
     }
 }
 

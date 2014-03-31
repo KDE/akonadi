@@ -153,14 +153,14 @@ bool Control::Private::exec()
         mProgressIndicator->show();
     }
 #endif
-    kDebug() << "Starting/Stopping Akonadi (using an event loop).";
+    qDebug() << "Starting/Stopping Akonadi (using an event loop).";
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
     mEventLoop->deleteLater();
     mEventLoop = 0;
 
     if (!mSuccess) {
-        kWarning() << "Could not start/stop Akonadi!";
+        qWarning() << "Could not start/stop Akonadi!";
 #if 0
         if (mProgressIndicator && mStarting) {
             QPointer<SelfTestDialog> dlg = new SelfTestDialog(mProgressIndicator->parentWidget());
@@ -187,7 +187,7 @@ bool Control::Private::exec()
 
 void Control::Private::serverStateChanged(ServerManager::State state)
 {
-    kDebug() << state;
+    qDebug() << state;
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
         if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
@@ -218,16 +218,16 @@ Control::~Control()
 bool Control::start()
 {
     if (ServerManager::state() == ServerManager::Stopping) {
-        kDebug() << "Server is currently being stopped, wont try to start it now";
+        qDebug() << "Server is currently being stopped, wont try to start it now";
         return false;
     }
     if (ServerManager::isRunning() || s_instance->d->mEventLoop) {
-        kDebug() << "Server is already running";
+        qDebug() << "Server is already running";
         return true;
     }
     s_instance->d->mStarting = true;
     if (!ServerManager::start()) {
-        kDebug() << "ServerManager::start failed -> return false";
+        qDebug() << "ServerManager::start failed -> return false";
         return false;
     }
     return s_instance->d->exec();

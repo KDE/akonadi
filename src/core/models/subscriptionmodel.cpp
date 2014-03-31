@@ -57,7 +57,7 @@ class SubscriptionModel::Private
     {
       if ( job->error() ) {
         // TODO
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return;
       }
       Collection::List cols = static_cast<CollectionFetchJob*>( job )->collections();

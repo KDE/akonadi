@@ -348,7 +348,7 @@ void AgentManagerPrivate::createDBusInterface()
             }
         }
     } else {
-        kWarning() << "AgentManager failed to get a valid AgentManager DBus interface. Error is:" << mManager->lastError().type() << mManager->lastError().name() << mManager->lastError().message();
+        qWarning() << "AgentManager failed to get a valid AgentManager DBus interface. Error is:" << mManager->lastError().type() << mManager->lastError().name() << mManager->lastError().message();
     }
 }
 

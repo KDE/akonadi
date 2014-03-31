@@ -153,7 +153,7 @@ void ItemSync::setFullSyncItems(const Item::List &items)
     }
     d->mRemoteItems += items;
     d->mTotalItemsProcessed += items.count();
-    kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+    qDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
     setTotalAmount(KJob::Bytes, d->mTotalItemsProcessed);
     if (d->mTotalItemsProcessed == d->mTotalItems) {
         d->mDeliveryDone = true;
@@ -167,7 +167,7 @@ void ItemSync::setTotalItems(int amount)
     Q_ASSERT(!d->mIncremental);
     Q_ASSERT(amount >= 0);
     setStreamingEnabled(true);
-    kDebug() << amount;
+    qDebug() << amount;
     d->mTotalItems = amount;
     setTotalAmount(KJob::Bytes, amount);
     if (d->mTotalItems == 0) {
@@ -245,7 +245,7 @@ bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
 
     // Check whether the flags differ
     if (storedItem.flags() != newItem.flags()) {
-        kDebug() << "Stored flags "  << storedItem.flags()
+        qDebug() << "Stored flags "  << storedItem.flags()
                  << "new flags " << newItem.flags();
         return true;
     }
@@ -351,7 +351,7 @@ void ItemSyncPrivate::processItems()
     foreach (Item remoteItem, mRemoteItems) {    //krazy:exclude=foreach non-const is needed here
 #ifndef NDEBUG
         if (remoteItem.remoteId().isEmpty()) {
-            kWarning() << "Item " << remoteItem.id() << " does not have a remote identifier";
+            qWarning() << "Item " << remoteItem.id() << " does not have a remote identifier";
         }
 #endif
 
@@ -400,7 +400,7 @@ void ItemSyncPrivate::deleteItems(const Item::List &items)
 
         if (!delItem.isValid()) {
 #ifndef NDEBUG
-            kWarning() << "Delete item (remoteeId=" << item.remoteId()
+            qWarning() << "Delete item (remoteeId=" << item.remoteId()
                        << "mimeType=" << item.mimeType()
                        << ") does not have a valid UID and no item with that remote ID exists either";
 #endif

@@ -469,7 +469,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         if (!parent.parent().isValid()) {
             // The drop is somehow on an item with no parent (shouldn't happen)
             // The drop should be considered handled anyway.
-            kWarning() << "Dropped onto item with no parent collection";
+            qWarning() << "Dropped onto item with no parent collection";
             return true;
         }
 
@@ -497,12 +497,12 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 if (collection.isValid()) {
                     if (collection.parentCollection().id() == destCollection.id() &&
                         action != Qt::CopyAction) {
-                        kDebug() << "Error: source and destination of move are the same.";
+                        qDebug() << "Error: source and destination of move are the same.";
                         return false;
                     }
 
                     if (!mimeChecker.isWantedCollection(collection)) {
-                        kDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
+                        qDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
                         return false;
                     }
 
@@ -520,12 +520,12 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                     const Item item = d->m_items.value(Item::fromUrl(url).id());
                     if (item.isValid()) {
                         if (item.parentCollection().id() == destCollection.id() && action != Qt::CopyAction) {
-                            kDebug() << "Error: source and destination of move are the same.";
+                            qDebug() << "Error: source and destination of move are the same.";
                             return false;
                         }
 
                         if (!mimeChecker.isWantedItem(item)) {
-                            kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
+                            qDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
                             return false;
                         }
                     }
@@ -1194,7 +1194,7 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
     QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> pair = proxiesAndModel(model);
 
     if (!pair.second) {
-        kWarning() << "Couldn't find an EntityTreeModel";
+        qWarning() << "Couldn't find an EntityTreeModel";
         return QModelIndexList();
     }
 

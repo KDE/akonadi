@@ -79,7 +79,7 @@ void Config::readConfiguration(const QString &configfile)
       } else if ( element.tagName() == "envvar" ) {
         const QString name = element.attribute( "name" );
         if ( name.isEmpty() ) {
-          kWarning() << "Given envvar with no name.";
+          qWarning() << "Given envvar with no name.";
         } else {
           mEnvVars[ name ] = element.text();
         }

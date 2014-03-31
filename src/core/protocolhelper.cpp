@@ -135,14 +135,14 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
   bool ok = false;
   pos = ImapParser::parseNumber( data, colId, &ok, pos );
   if ( !ok || colId <= 0 ) {
-    kDebug() << "Could not parse collection id from response:" << data;
+    qDebug() << "Could not parse collection id from response:" << data;
     return start;
   }
 
   Collection::Id parentId = -1;
   pos = ImapParser::parseNumber( data, parentId, &ok, pos );
   if ( !ok || parentId < 0 ) {
-    kDebug() << "Could not parse parent id from response:" << data;
+    qDebug() << "Could not parse parent id from response:" << data;
     return start;
   }
 
@@ -442,7 +442,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   }
 
   if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-    kWarning() << "Broken fetch response: UID, REV or MIMETYPE missing!";
+    qWarning() << "Broken fetch response: UID, REV or MIMETYPE missing!";
     return;
   }
 
@@ -524,7 +524,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
           if ( fileKey == "[FILE]" ) {
             isExternal = true;
             i++;
-            //kDebug() << "Payload is external: " << isExternal << " filename: " << lineTokens.value( i + 1 );
+            //qDebug() << "Payload is external: " << isExternal << " filename: " << lineTokens.value( i + 1 );
           }
           ItemSerializer::deserialize( item, plainKey, lineTokens.value( i + 1 ), version, isExternal );
           break;
@@ -539,7 +539,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
             if ( file.open( QFile::ReadOnly ) )
               attr->deserialize( file.readAll() );
             else {
-              kWarning() << "Failed to open attribute file: " << lineTokens.value( i + 1 );
+              qWarning() << "Failed to open attribute file: " << lineTokens.value( i + 1 );
               delete attr;
               attr = 0;
             }
@@ -552,7 +552,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         }
         case ProtocolHelper::PartGlobal:
         default:
-          kWarning() << "Unknown item part type:" << key;
+          qWarning() << "Unknown item part type:" << key;
       }
     }
   }
@@ -577,7 +577,7 @@ void ProtocolHelper::parseTagFetchResult( const QList<QByteArray> &lineTokens, T
     } else {
       Attribute *attr = AttributeFactory::createAttribute(key);
       if (!attr) {
-        kWarning() << "Unknown tag attribute" << key;
+        qWarning() << "Unknown tag attribute" << key;
         continue;
       }
       attr->deserialize(value);

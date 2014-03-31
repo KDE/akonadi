@@ -172,22 +172,22 @@ bool ServerManager::start()
 
     const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
-        kDebug() << "Akonadi server is already starting up";
+        qDebug() << "Akonadi server is already starting up";
         sInstance->setState(Starting);
         return true;
     }
 
-    kDebug() << "executing akonadi_control";
+    qDebug() << "executing akonadi_control";
     QStringList args;
     if (hasInstanceIdentifier()) {
         args << QLatin1String("--instance") << instanceIdentifier();
     }
     const bool ok = QProcess::startDetached(QLatin1String("akonadi_control"), args);
     if (!ok) {
-        kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
+        qWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
         QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
-            kDebug() << "Akonadi server could not be started via D-Bus either: "
+            qDebug() << "Akonadi server could not be started via D-Bus either: "
                      << reply.error().message();
             return false;
         }
@@ -259,7 +259,7 @@ ServerManager::State ServerManager::state()
 
     const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
-        kDebug() << "Akonadi server is already starting up";
+        qDebug() << "Akonadi server is already starting up";
         if (previousState == Running) {
             return NotRunning; // we don't know if it's starting or stopping, probably triggered by someone else
         }
@@ -267,7 +267,7 @@ ServerManager::State ServerManager::state()
     }
 
     if (serverRegistered) {
-        kWarning() << "Akonadi server running without control process!";
+        qWarning() << "Akonadi server running without control process!";
         return Broken;
     }
 

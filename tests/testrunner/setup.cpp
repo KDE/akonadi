@@ -50,7 +50,7 @@ bool SetupTest::startAkonadiDaemon()
   mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ), QStringList() << QLatin1String("--instance") << instanceId() );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
-  kDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
+  qDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
   return started;
 }
 
@@ -62,7 +62,7 @@ void SetupTest::stopAkonadiDaemon()
   mAkonadiDaemonProcess->terminate();
   const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
   if ( !finished ) {
-    kDebug() << "Problem finishing process.";
+    qDebug() << "Problem finishing process.";
   }
   mAkonadiDaemonProcess->close();
   mAkonadiDaemonProcess->deleteLater();
@@ -78,7 +78,7 @@ void SetupTest::setupAgents()
   const QList<QPair<QString,bool> > agents = config->agents();
   typedef QPair<QString,bool> StringBoolPair;
   foreach ( const StringBoolPair &agent, agents ) {
-    kDebug() << "Creating agent" << agent.first << "...";
+    qDebug() << "Creating agent" << agent.first << "...";
     ++mSetupJobCount;
     Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( agent.first, this );
     job->setProperty( "sync", agent.second );
@@ -94,7 +94,7 @@ void SetupTest::agentCreationResult(KJob* job)
 {
   --mSetupJobCount;
   if ( job->error() ) {
-    kError() << job->errorString();
+    qCritical() << job->errorString();
     setupFailed();
     return;
   }
@@ -115,7 +115,7 @@ void SetupTest::synchronizationResult(KJob* job)
 {
   --mSetupJobCount;
   if ( job->error() ) {
-    kError() << job->errorString();
+    qCritical() << job->errorString();
     setupFailed();
   }
 
@@ -185,7 +185,7 @@ void SetupTest::copyDirectory( const QString &src, const QString &dst )
 
 void SetupTest::createTempEnvironment()
 {
-  kDebug() << "Creating test environment in" << basePath();
+  qDebug() << "Creating test environment in" << basePath();
 
   const QDir tmpDir( basePath() );
   const QString testRunnerKdeHomeDir = QLatin1String( "kdehome" );
@@ -254,7 +254,7 @@ SetupTest::SetupTest() :
   QHashIterator<QString, QString> iter( Config::instance()->envVars() );
   while( iter.hasNext() ) {
     iter.next();
-    kDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
+    qDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
     setEnvironmentVariable( iter.key().toLocal8Bit(), iter.value() );
   }
 
@@ -285,7 +285,7 @@ void SetupTest::shutdown()
     case Akonadi::ServerManager::Running:
     case Akonadi::ServerManager::Starting:
     case Akonadi::ServerManager::Upgrading:
-      kDebug() << "Shutting down Akonadi control...";
+      qDebug() << "Shutting down Akonadi control...";
       Akonadi::ServerManager::self()->stop();
       // safety timeout
       QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
@@ -302,7 +302,7 @@ void SetupTest::shutdown()
 
 void SetupTest::shutdownHarder()
 {
-  kDebug();
+  qDebug();
   mShuttingDown = false;
   stopAkonadiDaemon();
   QCoreApplication::instance()->exit( mExitCode );
@@ -310,12 +310,12 @@ void SetupTest::shutdownHarder()
 
 void SetupTest::restartAkonadiServer()
 {
-  kDebug();
+  qDebug();
   disconnect( mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0 );
   Akonadi::ServerManager::self()->stop();
   const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
   if ( !shutdownResult ) {
-    kWarning() << "Akonadi control did not shut down in time, killing it.";
+    qWarning() << "Akonadi control did not shut down in time, killing it.";
     mAkonadiDaemonProcess->kill();
   }
   // we don't use Control::start() since we want to be able to kill
@@ -348,7 +348,7 @@ QString SetupTest::basePath() const
 void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
 {
   if ( mTrackAkonadiProcess || exitCode != EXIT_SUCCESS ) {
-    kWarning() << "Akonadi server process was terminated externally!";
+    qWarning() << "Akonadi server process was terminated externally!";
     emit serverExited( exitCode );
   }
   mAkonadiDaemonProcess = 0;

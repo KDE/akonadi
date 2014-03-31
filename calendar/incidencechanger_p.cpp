@@ -62,7 +62,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
 {
     Q_ASSERT(!mPendingCreations.isEmpty());
     if (job->error() != 0 || !m_collectionFetchJob) {
-        kError() << "Error loading collections:" << job->errorString();
+        qCritical() << "Error loading collections:" << job->errorString();
         return;
     }
 
@@ -110,7 +110,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
         if (candidateCollections.count() == 1 && candidateCollections.first().isValid()) {
             // We only have 1 writable collection, don't bother the user with a dialog
             collectionToUse = candidateCollections.first();
-            kDebug() << "Only one collection exists, will not show collection dialog: " << collectionToUse.displayName();
+            qDebug() << "Only one collection exists, will not show collection dialog: " << collectionToUse.displayName();
             step2CreateIncidence(change, collectionToUse);
             continue;
         }
@@ -123,7 +123,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
         collectionToUse = CalendarUtils::selectCollection(parent, /*by-ref*/dialogCode,
                           mimeTypes, mDefaultCollection);
         if (dialogCode != QDialog::Accepted) {
-            kDebug() << "User canceled collection choosing";
+            qDebug() << "User canceled collection choosing";
             change->resultCode = ResultCodeUserCanceled;
             canceled = true;
             cancelTransaction();
@@ -131,7 +131,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
         }
 
         if (collectionToUse.isValid() && !hasRights(collectionToUse, ChangeTypeCreate)) {
-            kWarning() << "No ACLs for incidence creation";
+            qWarning() << "No ACLs for incidence creation";
             const QString errorMessage = showErrorDialog(ResultCodePermissions, parent);
             change->resultCode = ResultCodePermissions;
             change->errorString = errorMessage;
@@ -142,7 +142,7 @@ void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
 
         // TODO: add unit test for these two situations after reviewing API
         if (!collectionToUse.isValid()) {
-            kError() << "Invalid collection selected. Can't create incidence.";
+            qCritical() << "Invalid collection selected. Can't create incidence.";
             change->resultCode = ResultCodeInvalidUserCollection;
             const QString errorString = showErrorDialog(ResultCodeInvalidUserCollection, parent);
             change->errorString = errorString;
@@ -174,7 +174,7 @@ void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change
                 step2CreateIncidence(change, mDefaultCollection);
                 break;
             }
-            kWarning() << "Destination policy is to use the default collection."
+            qWarning() << "Destination policy is to use the default collection."
                        << "But it's invalid or doesn't have proper ACLs."
                        << "isValid = "  << mDefaultCollection.isValid()
                        << "has ACLs = " << hasRights(mDefaultCollection, ChangeTypeCreate);
@@ -192,7 +192,7 @@ void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change
                 step2CreateIncidence(change, mDefaultCollection);
             } else {
                 const QString errorString = showErrorDialog(ResultCodeInvalidDefaultCollection, parent);
-                kError() << errorString << "; rights are " << hasRights;
+                qCritical() << errorString << "; rights are " << hasRights;
                 change->resultCode = hasRights ? ResultCodeInvalidDefaultCollection :
                                      ResultCodePermissions;
                 change->errorString = errorString;

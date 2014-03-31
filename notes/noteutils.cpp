@@ -180,7 +180,7 @@ class NoteMessageWrapper::NoteMessageWrapperPrivate
 void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime::Message::Ptr& msg)
 {
   if (!msg.get()) {
-    kWarning() << "Empty message";
+    qWarning() << "Empty message";
     return;
   }
   title = msg->subject( true )->asUnicodeString();
@@ -196,7 +196,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
     const QByteArray &s = lastmod->asUnicodeString().toLatin1();
     const char *cursor = s.constData();
     if (!KMime::HeaderParsing::parseDateTime( cursor, cursor + s.length(), lastModifiedDate)) {
-      kWarning() << "failed to parse lastModifiedDate";
+      qWarning() << "failed to parse lastModifiedDate";
     }
   }
 
@@ -243,7 +243,7 @@ QDomDocument loadDocument(KMime::Content *part)
   QDomDocument document;
   bool ok = document.setContent( part->body(), &errorMsg, &errorLine, &errorColumn );
   if ( !ok ) {
-    kWarning() << part->body();
+    qWarning() << part->body();
     qWarning( "Error loading document: %s, line %d, column %d", qPrintable( errorMsg ), errorLine, errorColumn );
     return QDomDocument();
   }
@@ -286,7 +286,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::parseCustomPart( KMime::Cont
       QDomElement e = n.toElement();
       custom.insert(e.tagName(), e.text());
     } else {
-      kDebug() <<"Node is not an element";
+      qDebug() <<"Node is not an element";
       Q_ASSERT(false);
     }
   }

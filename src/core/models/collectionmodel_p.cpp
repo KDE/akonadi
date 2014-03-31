@@ -94,7 +94,7 @@ void CollectionModelPrivate::updateDone(KJob *job)
 {
     if (job->error()) {
         // TODO: handle job errors
-        kWarning() << "Job error:" << job->errorString();
+        qWarning() << "Job error:" << job->errorString();
     } else {
         CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob *>(job);
         Collection result = csjob->collection();
@@ -108,7 +108,7 @@ void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collecti
     Q_Q(CollectionModel);
 
     if (!collections.contains(collection)) {
-        kWarning() << "Got statistics response for non-existing collection:" << collection;
+        qWarning() << "Got statistics response for non-existing collection:" << collection;
     } else {
         collections[collection].setStatistics(statistics);
 
@@ -122,21 +122,21 @@ void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collecti
 void CollectionModelPrivate::listDone(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Job error: " << job->errorString() << endl;
+        qWarning() << "Job error: " << job->errorString() << endl;
     }
 }
 
 void CollectionModelPrivate::editDone(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Edit failed: " << job->errorString();
+        qWarning() << "Edit failed: " << job->errorString();
     }
 }
 
 void CollectionModelPrivate::dropResult(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Paste failed:" << job->errorString();
+        qWarning() << "Paste failed:" << job->errorString();
         // TODO: error handling
     }
 }
@@ -182,7 +182,7 @@ void CollectionModelPrivate::collectionsChanged(const Collection::List &cols)
 //       if ( newChildCount == 0 )
 //       {
 //         // Sanity check.
-//         kDebug() << "No new child collections have been added to the collection:" << colId;
+//         qDebug() << "No new child collections have been added to the collection:" << colId;
 //         i.remove();
 //         currentSize--;
 //         break;
@@ -214,7 +214,7 @@ void CollectionModelPrivate::collectionsChanged(const Collection::List &cols)
             // The remaining collections in the list do not have a valid parent in the model yet. They
             // might arrive in the next batch from the monitor, so they're still in m_newCollections
             // and m_newChildCollections.
-            kDebug() << "Some collections did not have a parent in the model yet!";
+            qDebug() << "Some collections did not have a parent in the model yet!";
             break;
         }
     }
@@ -256,7 +256,7 @@ bool CollectionModelPrivate::removeRowFromModel(int row, const QModelIndex &pare
         list = childCollections.value(Collection::root().id());
     }
     if (row < 0 || row  >= list.size()) {
-        kWarning() << "Index out of bounds:" << row << " parent:" << parentCol.id();
+        qWarning() << "Index out of bounds:" << row << " parent:" << parentCol.id();
         return false;
     }
 

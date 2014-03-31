@@ -56,13 +56,13 @@ Firstrun::Firstrun(QObject *parent)
         deleteLater();
         return;
     }
-    kDebug();
+    qDebug();
     if (DBusConnectionPool::threadConnection().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
         findPendingDefaults();
-        kDebug() << mPendingDefaults;
+        qDebug() << mPendingDefaults;
         setupNext();
     } else {
-        kDebug() << "D-Bus lock found, so someone else does the work for us already.";
+        qDebug() << "D-Bus lock found, so someone else does the work for us already.";
         deleteLater();
     }
 }
@@ -71,7 +71,7 @@ Firstrun::~Firstrun()
 {
     DBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
     delete mConfig;
-    kDebug() << "done";
+    qDebug() << "done";
 }
 
 void Firstrun::findPendingDefaults()
@@ -84,7 +84,7 @@ void Firstrun::findPendingDefaults()
             KConfig c(fullName);
             const QString id = KConfigGroup(&c, "Agent").readEntry("Id", QString());
             if (id.isEmpty()) {
-                kWarning() << "Found invalid default configuration in " << fullName;
+                qWarning() << "Found invalid default configuration in " << fullName;
                 continue;
             }
             if (cfg.hasKey(id)) {
@@ -123,7 +123,7 @@ void Firstrun::migrateKresType(const QString &resourceFamily)
     const int currentVersion = migrationCfg.readEntry(QString::fromLatin1("Version-%1").arg(resourceFamily), 0);
     const int targetVersion = migrationCfg.readEntry("TargetVersion", 0);
     if (enabled && currentVersion < targetVersion) {
-        kDebug() << "Performing migration of legacy KResource settings. Good luck!";
+        qDebug() << "Performing migration of legacy KResource settings. Good luck!";
         mProcess = new KProcess(this);
         connect(mProcess, SIGNAL(finished(int)), SLOT(migrationFinished(int)));
         QStringList args = QStringList() << QLatin1String("--interactive-on-change")
@@ -146,7 +146,7 @@ void Firstrun::migrationFinished(int exitCode)
 {
     Q_ASSERT(mProcess);
     if (exitCode == 0) {
-        kDebug() << "KResource -> Akonadi migration has been successful";
+        qDebug() << "KResource -> Akonadi migration has been successful";
         KConfig config(QLatin1String("kres-migratorrc"));
         KConfigGroup migrationCfg(&config, "Migration");
         const int targetVersion = migrationCfg.readEntry("TargetVersion", 0);
@@ -154,11 +154,11 @@ void Firstrun::migrationFinished(int exitCode)
         migrationCfg.sync();
     } else if (exitCode != 1) {
         // exit code 1 means it is already running, so we are probably called by a migrator instance
-        kError() << "KResource -> Akonadi migration failed!";
-        kError() << "command was: " << mProcess->program();
-        kError() << "exit code: " << mProcess->exitCode();
-        kError() << "stdout: " << mProcess->readAllStandardOutput();
-        kError() << "stderr: " << mProcess->readAllStandardError();
+        qCritical() << "KResource -> Akonadi migration failed!";
+        qCritical() << "command was: " << mProcess->program();
+        qCritical() << "exit code: " << mProcess->exitCode();
+        qCritical() << "stdout: " << mProcess->readAllStandardOutput();
+        qCritical() << "stderr: " << mProcess->readAllStandardError();
     }
 
     setupNext();
@@ -186,7 +186,7 @@ void Firstrun::setupNext()
 
     AgentType type = AgentManager::self()->type(agentCfg.readEntry("Type", QString()));
     if (!type.isValid()) {
-        kError() << "Unable to obtain agent type for default resource agent configuration " << mCurrentDefault->name();
+        qCritical() << "Unable to obtain agent type for default resource agent configuration " << mCurrentDefault->name();
         setupNext();
         return;
     }
@@ -210,7 +210,7 @@ void Firstrun::setupNext()
             }
         }
         if (legacyResourceFound) {
-            kDebug() << "ignoring " << mCurrentDefault->name() << " as there is a KResource setup for its type already.";
+            qDebug() << "ignoring " << mCurrentDefault->name() << " as there is a KResource setup for its type already.";
             KConfigGroup cfg(mConfig, "ProcessedDefaults");
             cfg.writeEntry(agentCfg.readEntry("Id", QString()), QString::fromLatin1("kres"));
             cfg.sync();
@@ -230,7 +230,7 @@ void Firstrun::instanceCreated(KJob *job)
     Q_ASSERT(mCurrentDefault);
 
     if (job->error()) {
-        kError() << "Creating agent instance failed for " << mCurrentDefault->name();
+        qCritical() << "Creating agent instance failed for " << mCurrentDefault->name();
         setupNext();
         return;
     }
@@ -249,18 +249,18 @@ void Firstrun::instanceCreated(KJob *job)
                                                QLatin1String("/Settings"), QString(),
                                                DBusConnectionPool::threadConnection(), this);
     if (!iface->isValid()) {
-        kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
+        qCritical() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
         setupNext();
         delete iface;
         return;
     }
 
     foreach (const QString &setting, settings.keyList()) {
-        kDebug() << "Setting up " << setting << " for agent " << instance.identifier();
+        qDebug() << "Setting up " << setting << " for agent " << instance.identifier();
         const QString methodName = QString::fromLatin1("set%1").arg(setting);
         const QVariant::Type argType = argumentType(iface->metaObject(), methodName);
         if (argType == QVariant::Invalid) {
-            kError() << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
+            qCritical() << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
             continue;
         }
 
@@ -275,7 +275,7 @@ void Firstrun::instanceCreated(KJob *job)
 
         const QDBusReply<void> reply = iface->call(methodName, arg);
         if (!reply.isValid()) {
-            kError() << "Setting " << setting << " failed for agent " << instance.identifier();
+            qCritical() << "Setting " << setting << " failed for agent " << instance.identifier();
         }
     }
 

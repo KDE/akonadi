@@ -399,7 +399,7 @@ void EntityTreeModelTest::testCollectionChanged()
   Q_ASSERT( !list.isEmpty() );
   QModelIndex changedIndex = list.first();
   QString parentCollection = changedIndex.parent().data().toString();
-  kDebug() << parentCollection;
+  qDebug() << parentCollection;
   int changedRow = changedIndex.row();
 
   FakeCollectionChangedCommand *changeCommand = new FakeCollectionChangedCommand( collectionName, parentCollection, serverData );

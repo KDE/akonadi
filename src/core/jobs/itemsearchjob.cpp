@@ -249,7 +249,7 @@ void ItemSearchJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
             return;
         }
     }
-    kDebug() << "Unhandled response: " << tag << data;
+    qDebug() << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemSearchJob::items() const

@@ -77,12 +77,12 @@ void SpecialCollectionsPrivate::emitChanged(const QString &resourceId)
     if (mBatchMode) {
         mToEmitChangedFor.insert(resourceId);
     } else {
-        kDebug() << "Emitting changed for" << resourceId;
+        qDebug() << "Emitting changed for" << resourceId;
         const AgentInstance agentInstance = AgentManager::self()->instance(resourceId);
         emit q->collectionsChanged(agentInstance);
         // first compare with local value then with config value (which also updates the local value)
         if (resourceId == mDefaultResourceId || resourceId == defaultResourceId()) {
-            kDebug() << "Emitting defaultFoldersChanged.";
+            qDebug() << "Emitting defaultFoldersChanged.";
             emit q->defaultCollectionsChanged();
         }
     }
@@ -90,7 +90,7 @@ void SpecialCollectionsPrivate::emitChanged(const QString &resourceId)
 
 void SpecialCollectionsPrivate::collectionRemoved(const Collection &collection)
 {
-    kDebug() << "Collection" << collection.id() << "resource" << collection.resource();
+    qDebug() << "Collection" << collection.id() << "resource" << collection.resource();
     if (mFoldersForResource.contains(collection.resource())) {
 
         // Retrieve the list of special folders for the resource the collection belongs to
@@ -128,7 +128,7 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged(Akonadi::Collection:
 void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Error fetching collection to get name from id for statistics updating in specialcollections!";
+        qWarning() << "Error fetching collection to get name from id for statistics updating in specialcollections!";
         return;
     }
 
@@ -223,13 +223,13 @@ void SpecialCollections::unsetSpecialCollection(const Akonadi::Collection &colle
 bool SpecialCollections::unregisterCollection(const Collection &collection)
 {
     if (!collection.isValid()) {
-        kWarning() << "Invalid collection.";
+        qWarning() << "Invalid collection.";
         return false;
     }
 
     const QString &resourceId = collection.resource();
     if (resourceId.isEmpty()) {
-        kWarning() << "Collection has empty resourceId.";
+        qWarning() << "Collection has empty resourceId.";
         return false;
     }
 
@@ -244,13 +244,13 @@ bool SpecialCollections::unregisterCollection(const Collection &collection)
 bool SpecialCollections::registerCollection(const QByteArray &type, const Collection &collection)
 {
     if (!collection.isValid()) {
-        kWarning() << "Invalid collection.";
+        qWarning() << "Invalid collection.";
         return false;
     }
 
     const QString &resourceId = collection.resource();
     if (resourceId.isEmpty()) {
-        kWarning() << "Collection has empty resourceId.";
+        qWarning() << "Collection has empty resourceId.";
         return false;
     }
 

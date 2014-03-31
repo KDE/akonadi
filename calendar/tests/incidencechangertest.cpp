@@ -1014,7 +1014,7 @@ public Q_SLOTS:
         --mIncidencesToDelete;
 
         if (resultCode != IncidenceChanger::ResultCodeSuccess) {
-            kDebug() << "Error string is " << errorMessage;
+            qDebug() << "Error string is " << errorMessage;
         } else {
             QVERIFY(!deletedIds.isEmpty());
             foreach(Akonadi::Item::Id id , deletedIds) {
@@ -1046,7 +1046,7 @@ public Q_SLOTS:
             mItemIdByUid.insert(incidence->uid(), item.id());
             mLastItemCreated = item;
         } else {
-            kDebug() << "Error string is " << errorString;
+            qDebug() << "Error string is " << errorString;
         }
 
         compareExpectedResult(resultCode, mExpectedResultByChangeId[changeId],
@@ -1068,7 +1068,7 @@ public Q_SLOTS:
         if (resultCode == IncidenceChanger::ResultCodeSuccess)
             QVERIFY(item.isValid());
         else
-            kDebug() << "Error string is " << errorString;
+            qDebug() << "Error string is " << errorString;
 
         compareExpectedResult(resultCode, mExpectedResultByChangeId[changeId],
                               QLatin1String("modifyFinished"));

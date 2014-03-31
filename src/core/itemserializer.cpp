@@ -103,7 +103,7 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
             deserialize(item, label, file, version);
             file.close();
         } else {
-            kWarning() << "Failed to open external payload:" << fileName << file.errorString();
+            qWarning() << "Failed to open external payload:" << fileName << file.errorString();
         }
     } else {
         QBuffer buffer;
@@ -119,9 +119,9 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
 void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
 {
     if (!TypePluginLoader::defaultPluginForMimeType(item.mimeType())->deserialize(item, label, data, version)) {
-        kWarning() << "Unable to deserialize payload part:" << label;
+        qWarning() << "Unable to deserialize payload part:" << label;
         data.seek(0);
-        kWarning() << "Payload data was: " << data.readAll();
+        qWarning() << "Payload data was: " << data.readAll();
     }
 }
 
@@ -203,30 +203,30 @@ QSet<QByteArray> ItemSerializer::availableParts(const Item &item)
 
 Item ItemSerializer::convert(const Item &item, int mtid)
 {
-//   kDebug() << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
+//   qDebug() << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
     if (!item.hasPayload()) {
-        kDebug() << "  -> but item has no payload!";
+        qDebug() << "  -> but item has no payload!";
         return Item();
     }
 
     if (ItemSerializerPlugin *const plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), QVector<int>(1, mtid), TypePluginLoader::NoDefault)) {
-        kDebug() << "  -> found a plugin that feels responsible, trying serialising the payload";
+        qDebug() << "  -> found a plugin that feels responsible, trying serialising the payload";
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
         int version;
         serialize(item, Item::FullPayload, buffer, version);
         buffer.seek(0);
-        kDebug() << "    -> serialized payload into" << buffer.size() << "bytes" << endl
+        qDebug() << "    -> serialized payload into" << buffer.size() << "bytes" << endl
                  << "  -> going to deserialize";
         Item newItem;
         if (plugin->deserialize(newItem, Item::FullPayload, buffer, version)) {
-            kDebug() << "    -> conversion successful";
+            qDebug() << "    -> conversion successful";
             return newItem;
         } else {
-            kDebug() << "    -> conversion FAILED";
+            qDebug() << "    -> conversion FAILED";
         }
     } else {
-//     kDebug() << "  -> found NO plugin that feels responsible";
+//     qDebug() << "  -> found NO plugin that feels responsible";
     }
     return Item();
 }

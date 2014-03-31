@@ -151,7 +151,7 @@ void ResourceSynchronizationJobPrivate::slotTimeout()
 
     if (instance.status() == AgentInstance::Idle) {
         // try again, we might have lost the synchronized()/synchronizedCollectionTree() signal
-        kDebug() << "trying again to sync resource" << instance.identifier();
+        qDebug() << "trying again to sync resource" << instance.identifier();
         if (collectionTreeOnly) {
             instance.synchronizeCollectionTree();
         } else {

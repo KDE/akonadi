@@ -62,7 +62,7 @@ void ShellScript::writeShutdownFunction()
 
 void ShellScript::makeShellScript( const QString &fileName )
 {
-  kDebug() << fileName;
+  qDebug() << fileName;
   QFile file( fileName ); //can user define the file name/location?
 
   if ( file.open( QIODevice::WriteOnly ) ) {
@@ -72,7 +72,7 @@ void ShellScript::makeShellScript( const QString &fileName )
     file.write( mScript.toLatin1(), qstrlen( mScript.toAscii() ) );
     file.close();
   } else {
-    kError() << "Failed to write" << fileName;
+    qCritical() << "Failed to write" << fileName;
   }
 }
 

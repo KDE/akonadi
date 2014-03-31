@@ -103,7 +103,7 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
 {
   Q_Q( ImageProvider );
   if ( !jobs.contains( job ) ) {
-    kDebug() << "Tried to handle unknown job, returning...";
+    qDebug() << "Tried to handle unknown job, returning...";
     return;
   }
 
@@ -117,7 +117,7 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
   if ( job->error() ) {
     // TODO: error handling
     KIO::TransferJob* kiojob = dynamic_cast<KIO::TransferJob*>( job );
-    kError() << "Image job for" << jobs.value( job ) << "returned error:" << kiojob->errorString();
+    qCritical() << "Image job for" << jobs.value( job ) << "returned error:" << kiojob->errorString();
   } else {
     const QString who = jobs.value( job );
 
@@ -127,7 +127,7 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
     const QString cacheKey = who + QLatin1Char( '@' ) +
                              kiojob->property( "imageUrl" ).value<KUrl>().pathOrUrl();
 
-    kDebug() << "Downloaded image for" << who << "(key:" << cacheKey << ")";
+    qDebug() << "Downloaded image for" << who << "(key:" << cacheKey << ")";
 
     imageCache->insertImage( cacheKey, image );
     pendingPersons.removeAll( cacheKey );
@@ -184,7 +184,7 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
 
   // Make sure we only start one job per user
   if ( d->pendingPersons.contains( cacheKey ) ) {
-    kDebug() << "Job for" << who << "already running, returning";
+    qDebug() << "Job for" << who << "already running, returning";
     return QImage();
   }
 
@@ -194,16 +194,16 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
 
   if ( d->imageCache->findImage( cacheKey, &preview ) ) {
     // cache hit
-    kDebug() << "Image for" << who << "already in cache, returning it";
+    qDebug() << "Image for" << who << "already in cache, returning it";
     return polishImage ? d->polishImage( preview ) : preview;
   }
 
   if ( !url.isValid() ) {
-    kDebug() << "Invalid url, returning";
+    qDebug() << "Invalid url, returning";
     return QImage();
   }
 
-  kDebug() << "No cache, fetching image for" << who;
+  qDebug() << "No cache, fetching image for" << who;
 
   d->pendingPersons << cacheKey;
   //FIXME: since kio_http bombs the system with too many request put a temporary
@@ -211,7 +211,7 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
   // Note: seems fixed.
   if ( d->runningJobs < 500 ) {
     d->runningJobs++;
-    kDebug() << "Starting fetch job for" << who;
+    qDebug() << "Starting fetch job for" << who;
     KIO::Job *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
     job->setAutoDelete( true );
     d->jobs[job] = who;
@@ -227,7 +227,7 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
     job->setProperty( "polishImage", polishImage );
     job->start();
   } else {
-    kDebug() << "Queuing job for" << who;
+    qDebug() << "Queuing job for" << who;
     ImageProviderPrivate::QueuedJobHelper helper;
     helper.who = who;
     helper.url = url;

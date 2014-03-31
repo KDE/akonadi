@@ -115,7 +115,7 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
 void SpecialCollectionsRequestJobPrivate::lockResult(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to get lock:" << job->errorString();
+        qWarning() << "Failed to get lock:" << job->errorString();
         q->setError(job->error());
         q->setErrorText(job->errorString());
         q->emitResult();
@@ -141,14 +141,14 @@ void SpecialCollectionsRequestJobPrivate::releaseLock()
 {
     const bool ok = Akonadi::releaseLock();
     if (!ok) {
-        kWarning() << "WTF, can't release lock.";
+        qWarning() << "WTF, can't release lock.";
     }
 }
 
 void SpecialCollectionsRequestJobPrivate::nextResource()
 {
     if (mFoldersForResource.isEmpty()) {
-        kDebug() << "All done! Comitting.";
+        qDebug() << "All done! Comitting.";
 
         mSpecialCollections->d->beginBatchRegister();
 
@@ -175,7 +175,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
 
     } else {
         const QString resourceId = mFoldersForResource.keys().first();
-        kDebug() << "A resource is done," << mFoldersForResource.count()
+        qDebug() << "A resource is done," << mFoldersForResource.count()
                  << "more to do. Now doing resource" << resourceId;
         ResourceScanJob *resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
         QObject::connect(resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)));
@@ -188,17 +188,17 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
     Q_ASSERT(resjob);
 
     const QString resourceId = resjob->resourceId();
-    kDebug() << "resourceId" << resourceId;
+    qDebug() << "resourceId" << resourceId;
 
     if (job->error()) {
-        kWarning() << "Failed to request resource" << resourceId << ":" << job->errorString();
+        qWarning() << "Failed to request resource" << resourceId << ":" << job->errorString();
         return;
     }
 
     if (qobject_cast<DefaultResourceJob *>(job)) {
         // This is the default resource.
         if (resourceId != mSpecialCollections->d->defaultResourceId()) {
-            kError() << "Resource id's don't match: " << resourceId
+            qCritical() << "Resource id's don't match: " << resourceId
                      << mSpecialCollections->d->defaultResourceId();
             Q_ASSERT(false);
         }
@@ -259,7 +259,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
 void SpecialCollectionsRequestJobPrivate::collectionCreateResult(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed CollectionCreateJob." << job->errorString();
+        qWarning() << "Failed CollectionCreateJob." << job->errorString();
         return;
     }
 
@@ -271,7 +271,7 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult(KJob *job)
 
     Q_ASSERT(mPendingCreateJobs > 0);
     mPendingCreateJobs--;
-    kDebug() << "mPendingCreateJobs now" << mPendingCreateJobs;
+    qDebug() << "mPendingCreateJobs now" << mPendingCreateJobs;
 
     if (mPendingCreateJobs == 0) {
         nextResource();
@@ -354,7 +354,7 @@ void SpecialCollectionsRequestJob::slotResult(KJob *job)
 {
     if (job->error()) {
         // If we failed, let others try.
-        kWarning() << "Failed SpecialCollectionsRequestJob::slotResult" << job->errorString();
+        qWarning() << "Failed SpecialCollectionsRequestJob::slotResult" << job->errorString();
 
         d->releaseLock();
     }

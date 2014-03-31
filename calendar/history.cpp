@@ -135,13 +135,13 @@ void History::redo(QWidget *parent)
 void History::undoAll(QWidget *parent)
 {
     if (d->mOperationTypeInProgress != TypeNone) {
-        kWarning() << "Don't call History::undoAll() while an undo/redo/undoAll is in progress";
+        qWarning() << "Don't call History::undoAll() while an undo/redo/undoAll is in progress";
     } else if (d->mEnabled) {
         d->mUndoAllInProgress = true;
         d->mCurrentParent = parent;
         d->doIt(TypeUndo);
     } else {
-        kWarning() << "Don't call undo/redo when History is disabled";
+        qWarning() << "Don't call undo/redo when History is disabled";
     }
 }
 
@@ -287,10 +287,10 @@ void History::Private::undoOrRedo(OperationType type, QWidget *parent)
             mCurrentParent = parent;
             doIt(type);
         } else {
-            kWarning() << "Don't call undo/redo when History is disabled";
+            qWarning() << "Don't call undo/redo when History is disabled";
         }
     } else {
-        kWarning() << "Don't call undo/redo when the stack is empty.";
+        qWarning() << "Don't call undo/redo when the stack is empty.";
     }
 }
 

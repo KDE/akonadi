@@ -35,7 +35,7 @@ static TestRunner *runner = 0;
 
 void sigHandler( int signal )
 {
-  kDebug() << "Received signal" << signal;
+  qDebug() << "Received signal" << signal;
   static int sigCounter = 0;
   if ( sigCounter == 0 ) { // try clean shutdown
     if ( runner ) {

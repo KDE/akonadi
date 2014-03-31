@@ -148,7 +148,7 @@ void TagModelPrivate::monitoredTagRemoved(const Tag &tag)
     // Better lookup parent in our cache
     qint64 parentId = mTags.value(tag.id()).parent().id();
     if (parentId == -1) {
-        kWarning() << "Got removal notification for unknown tag" << tag.id();
+        qWarning() << "Got removal notification for unknown tag" << tag.id();
         return;
     }
 
@@ -166,7 +166,7 @@ void TagModelPrivate::monitoredTagChanged(const Tag &tag)
     Q_Q(TagModel);
 
     if (!mTags.contains(tag.id())) {
-        kWarning() << "Got change notifications for unknown tag" << tag.id();
+        qWarning() << "Got change notifications for unknown tag" << tag.id();
         return;
     }
 
@@ -205,12 +205,12 @@ void TagModelPrivate::tagsFetched(const Tag::List &tags)
 void TagModelPrivate::tagsFetchDone(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return;
     }
 
     if (!mPendingTags.isEmpty()) {
-        kWarning() << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags";
+        qWarning() << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags";
         return;
     }
 }

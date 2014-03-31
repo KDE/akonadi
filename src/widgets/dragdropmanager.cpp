@@ -157,7 +157,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     }
 
     if (!moveAllowed && !copyAllowed && !linkAllowed) {
-        kDebug() << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
+        qDebug() << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
         return false;
     }
 
@@ -187,7 +187,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     }
 
     if (actionCount == 1) {
-        kDebug() << "Selecting drop action" << defaultAction << ", there are no other possibilities";
+        qDebug() << "Selecting drop action" << defaultAction << ", there are no other possibilities";
         event->setDropAction(defaultAction);
         return true;
     }

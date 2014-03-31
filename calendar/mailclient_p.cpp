@@ -64,7 +64,7 @@ void MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
     Q_ASSERT(incidence);
     KCalCore::Attendee::List attendees = incidence->attendees();
     if (attendees.isEmpty()) {
-        kWarning() << "There are no attendees to e-mail";
+        qWarning() << "There are no attendees to e-mail";
         emit finished(ResultNoAttendees, i18n("There are no attendees to e-mail"));
         return;
     }
@@ -108,7 +108,7 @@ void MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
     }
     if (toList.isEmpty() && ccList.isEmpty()) {
         // Not really to be called a groupware meeting, eh
-        kWarning() << "There are really no attendees to e-mail";
+        qWarning() << "There are really no attendees to e-mail";
         emit finished(ResultReallyNoAttendees, i18n("There are no attendees to e-mail"));
         return;
     }
@@ -205,7 +205,7 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
 
     if (!MailTransport::TransportManager::self()->showTransportCreationDialog(
                 0, MailTransport::TransportManager::IfNoTransportExists)) {
-        kError() << "Error while creating transport";
+        qCritical() << "Error while creating transport";
         emit finished(ResultErrorCreatingTransport, i18n("Error while creating transport"));
         return;
     }
@@ -216,7 +216,7 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
     if (to.isEmpty()) {
         to = from;
     }
-    kDebug() << "\nFrom:" << from
+    qDebug() << "\nFrom:" << from
              << "\nTo:" << to
              << "\nCC:" << cc
              << "\nSubject:" << subject << "\nBody: \n" << body
@@ -236,7 +236,7 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
     }
 
     if (!transport) {
-        kError() << "Error fetching transport; mailTransport"
+        qCritical() << "Error fetching transport; mailTransport"
                  << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
         emit finished(ResultErrorFetchingTransport,
                       i18n("Error fetching transport. Unable to send invitations"));
@@ -391,11 +391,11 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
 void MailClient::handleQueueJobFinished(KJob *job)
 {
     if (job->error()) {
-        kError() << "Error queueing message:" << job->errorText();
+        qCritical() << "Error queueing message:" << job->errorText();
         emit finished(ResultQueueJobError, i18n("Error queuing message in outbox: %1",
                                                 job->errorText()));
     } else {
-        kDebug() << "Mail queued";
+        qDebug() << "Mail queued";
         emit finished(ResultSuccess, QString());
     }
 }

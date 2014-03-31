@@ -129,7 +129,7 @@ void ItemFetchJobPrivate::startFetchJob()
     //This is only required for 4.10
     if (protocolVersion() < 30) {
         if (mFetchScope.ignoreRetrievalErrors()) {
-            kDebug() << "IGNOREERRORS is not available with this akonadi protocol version";
+            qDebug() << "IGNOREERRORS is not available with this akonadi protocol version";
         }
         mFetchScope.setIgnoreRetrievalErrors(false);
     }
@@ -241,7 +241,7 @@ void ItemFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
             return;
         }
     }
-    kDebug() << "Unhandled response: " << tag << data;
+    qDebug() << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemFetchJob::items() const

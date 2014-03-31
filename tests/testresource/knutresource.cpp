@@ -199,7 +199,7 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
   const int numberOfChildren = children.count();
   for ( int i = 0; i < numberOfChildren; ++i ) {
     const QDomElement child = children.at( i ).toElement();
-    kDebug() << "reparenting " << child.tagName() << child.attribute( QLatin1String("rid") );
+    qDebug() << "reparenting " << child.tagName() << child.attribute( QLatin1String("rid") );
     if ( child.isNull() )
       continue;
     if ( child.tagName() == QLatin1String("item") || child.tagName() == QLatin1String("collection") ) {
@@ -291,18 +291,18 @@ QSet<qint64> KnutResource::parseQuery(const QString &queryString)
 
 void KnutResource::search(const QString& query, const Collection& collection)
 {
-  kDebug() << query;
+  qDebug() << query;
   searchFinished(parseQuery(query).toList().toVector(), Akonadi::AgentSearchInterface::Uid);
 }
 
 void KnutResource::addSearch(const QString& query, const QString& queryLanguage, const Collection& resultCollection)
 {
-  kDebug();
+  qDebug();
 }
 
 void KnutResource::removeSearch(const Collection& resultCollection)
 {
-  kDebug();
+  qDebug();
 }
 
 

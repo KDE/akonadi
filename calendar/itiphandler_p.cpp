@@ -44,7 +44,7 @@ void ITIPHandler::Private::onSchedulerFinished(Akonadi::Scheduler::Result result
         const QString &errorMessage)
 {
     if (m_currentOperation == OperationNone) {
-        kFatal() << "Operation can't be none!" << result << errorMessage;
+        qFatal() << "Operation can't be none!" << result << errorMessage;
         return;
     }
 
@@ -59,7 +59,7 @@ void ITIPHandler::Private::onSchedulerFinished(Akonadi::Scheduler::Result result
         finishPublishInformation(result, errorMessage);
     } else {
         Q_ASSERT(false);
-        kError() << "Unknown operation" << m_currentOperation;
+        qCritical() << "Unknown operation" << m_currentOperation;
     }
 }
 
@@ -168,7 +168,7 @@ void ITIPHandler::Private::finishSendiTIPMessage(Akonadi::MailScheduler::Result 
         if (m_parentWidget) {
             KMessageBox::error(m_parentWidget, error);
         }
-        kError() << "Groupware message sending failed." << error << errorMessage;
+        qCritical() << "Groupware message sending failed." << error << errorMessage;
         emit q->iTipMessageSent(ITIPHandler::ResultError, error + errorMessage);
     }
 }
@@ -190,7 +190,7 @@ void ITIPHandler::Private::finishPublishInformation(Akonadi::MailScheduler::Resu
         if (m_parentWidget) {
             KMessageBox::error(m_parentWidget, error);
         }
-        kError() << "Publish failed." << error << errorMessage;
+        qCritical() << "Publish failed." << error << errorMessage;
         emit q->informationPublished(ITIPHandler::ResultError, error + errorMessage);
     }
 }
@@ -213,7 +213,7 @@ void ITIPHandler::Private::finishSendAsICalendar(Akonadi::MailScheduler::Result 
                                     m_queuedInvitation.incidence->summary()),
                                i18n("Forwarding Error"));
         }
-        kError() << "Sent as iCalendar failed." << errorMessage;
+        qCritical() << "Sent as iCalendar failed." << errorMessage;
         emit q->sentAsICalendar(ITIPHandler::ResultError, errorMessage);
     }
 

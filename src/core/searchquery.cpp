@@ -129,7 +129,7 @@ public:
             }
             return term;
         } else {
-            kWarning() << "Invalid JSON for term: " << json;
+            qWarning() << "Invalid JSON for term: " << json;
             return SearchTerm();
         }
     }

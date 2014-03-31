@@ -131,7 +131,7 @@ void ItemModel::Private::listingDone(KJob *job)
     Q_UNUSED(fetch);
     if (job->error()) {
         // TODO
-        kWarning() << "Item query failed:" << job->errorString();
+        qWarning() << "Item query failed:" << job->errorString();
     }
 }
 
@@ -149,7 +149,7 @@ void ItemModel::Private::collectionFetchResult(KJob *job)
     if (!c.contentMimeTypes().isEmpty()) {
         mParent->setCollection(c);
     } else {
-        kWarning() << "Failed to retrieve the contents mime type of the collection: " << c;
+        qWarning() << "Failed to retrieve the contents mime type of the collection: " << c;
         mParent->setCollection(Collection());
     }
 }
@@ -340,7 +340,7 @@ QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void ItemModel::setCollection(const Collection &collection)
 {
-    kDebug();
+    qDebug();
     if (d->collection == collection) {
         return;
     }

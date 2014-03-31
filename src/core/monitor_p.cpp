@@ -251,7 +251,7 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &n
         default:
             needsSplit = isBatch;
             batchSupported = false;
-            kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+            qDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
             return;
         }
     } else if (msg.type() == NotificationMessageV2::Collections) {
@@ -319,7 +319,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
 
     switch (msg.type()) {
     case NotificationMessageV2::InvalidType:
-        kWarning() << "Received invalid change notification!";
+        qWarning() << "Received invalid change notification!";
         return false;
 
     case NotificationMessageV2::Items:
@@ -547,7 +547,7 @@ void MonitorPrivate::slotSessionDestroyed(QObject *object)
 void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Error on fetching collection statistics: " << job->errorText();
+        qWarning() << "Error on fetching collection statistics: " << job->errorText();
     } else {
         CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
         Q_ASSERT(statisticsJob->collection().isValid());
@@ -896,7 +896,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, con
         }
         return false;
     default:
-        kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+        qDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
     }
 
     return false;
@@ -974,7 +974,7 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
         }
         return true;
     default:
-        kDebug() << "Unknown operation type" << msg.operation() << "in collection change notification";
+        qDebug() << "Unknown operation type" << msg.operation() << "in collection change notification";
     }
 
     return false;
@@ -1020,7 +1020,7 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
         }
         return true;
     default:
-        kDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
+        qDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
     }
 
     return false;

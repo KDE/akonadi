@@ -57,7 +57,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
     QDBusObjectPath p = manager->subscribeV2(name, true);
     const bool validError = manager->lastError().isValid();
     if (validError) {
-        kWarning() << manager->lastError().name() << manager->lastError().message();
+        qWarning() << manager->lastError().name() << manager->lastError().message();
         // :TODO: What to do?
         delete manager;
         return 0;

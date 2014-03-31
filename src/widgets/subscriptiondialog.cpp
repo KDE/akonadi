@@ -89,7 +89,7 @@ public:
     {
         if (job->error()) {
             // TODO
-            kWarning() << job->errorString();
+            qWarning() << job->errorString();
         }
         q->deleteLater();
     }

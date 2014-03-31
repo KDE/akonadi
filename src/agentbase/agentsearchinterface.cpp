@@ -77,13 +77,13 @@ void AgentSearchInterfacePrivate::collectionReceived(KJob *job)
 {
     CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     if (fetchJob->error()) {
-        kError() << fetchJob->errorString();
+        qCritical() << fetchJob->errorString();
         new SearchResultJob(fetchJob->property("searchId").toByteArray(), Collection(mCollectionId), this);
         return;
     }
 
     if (fetchJob->collections().count() != 1) {
-        kDebug() << "Server requested search in invalid collection, or collection was removed in the meanwhile";
+        qDebug() << "Server requested search in invalid collection, or collection was removed in the meanwhile";
         // Tell server we are done
         new SearchResultJob(fetchJob->property("searchId").toByteArray(), Collection(mCollectionId), this);
         return;

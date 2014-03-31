@@ -371,7 +371,7 @@ private Q_SLOTS:
 
     void handleFinished(Akonadi::MailClient::Result result, const QString &errorMessage)
     {
-        kDebug() << "handleFinished: " << result << errorMessage;
+        qDebug() << "handleFinished: " << result << errorMessage;
         mLastResult = result;
         mLastErrorMessage = errorMessage;
         --mPendingSignals;

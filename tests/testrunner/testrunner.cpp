@@ -38,7 +38,7 @@ int TestRunner::exitCode() const
 
 void TestRunner::run()
 {
-  kDebug() << mArguments;
+  qDebug() << mArguments;
   mProcess = new KProcess( this );
   mProcess->setProgram( mArguments );
   connect( mProcess, SIGNAL(finished(int)), SLOT(processFinished(int)) );
@@ -46,7 +46,7 @@ void TestRunner::run()
   // environment setup seems to have been done by setuptest globally already
   mProcess->start();
   if ( !mProcess->waitForStarted() ) {
-    kWarning() << mArguments << "failed to start!";
+    qWarning() << mArguments << "failed to start!";
     mExitCode = 255;
     emit finished();
   }
@@ -64,13 +64,13 @@ void TestRunner::processFinished( int exitCode )
   // is called after a proces has finished.
   if ( mExitCode == 0 ) {
     mExitCode = exitCode;
-    kDebug() << exitCode;
+    qDebug() << exitCode;
   }
   emit finished();
 }
 
 void TestRunner::processError( QProcess::ProcessError error ) {
-    kWarning() << mArguments << "exited with an error:" << error;
+    qWarning() << mArguments << "exited with an error:" << error;
     mExitCode = 255;
     emit finished();
 }

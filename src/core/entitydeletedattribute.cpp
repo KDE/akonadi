@@ -50,12 +50,12 @@ void EntityDeletedAttribute::setRestoreCollection(const Akonadi::Collection &col
 {
     Q_D(EntityDeletedAttribute);
     if (!collection.isValid()) {
-        kWarning() << "invalid collection" << collection;
+        qWarning() << "invalid collection" << collection;
     }
     Q_ASSERT(collection.isValid());
     d->restoreCollection = collection;
     if (collection.resource().isEmpty()) {
-        kWarning() << "no resource set";
+        qWarning() << "no resource set";
     }
     d->restoreResource = collection.resource();
 }
@@ -106,7 +106,7 @@ void EntityDeletedAttribute::deserialize(const QByteArray &data)
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
     if (l.size() != 2) {
-        kWarning() << "invalid size";
+        qWarning() << "invalid size";
         return;
     }
     d->restoreResource = QString::fromUtf8(l[0]);

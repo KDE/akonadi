@@ -40,7 +40,7 @@ Akonadi::CalendarUtils::selectCollection(QWidget *parent,
 {
     QPointer<Akonadi::CollectionDialog> dlg(new Akonadi::CollectionDialog(parent));
 
-    kDebug() << "selecting collections with mimeType in " << mimeTypes;
+    qDebug() << "selecting collections with mimeType in " << mimeTypes;
 
     dlg->changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
     dlg->setMimeTypeFilter(mimeTypes);
@@ -56,7 +56,7 @@ Akonadi::CalendarUtils::selectCollection(QWidget *parent,
         collection = dlg->selectedCollection();
 
         if (!collection.isValid()) {
-            kWarning() <<"An invalid collection was selected!";
+            qWarning() <<"An invalid collection was selected!";
         }
     }
     delete dlg;

@@ -73,7 +73,7 @@ public:
 
         QObject *object = PluginLoader::self()->createForName(mIdentifier);
         if (!object) {
-            kWarning() << "ItemSerializerPluginLoader: "
+            qWarning() << "ItemSerializerPluginLoader: "
                        << "plugin" << mIdentifier << "is not valid!" << endl;
 
             // we try to use the default in that case
@@ -82,7 +82,7 @@ public:
 
         mPlugin = object;
         if (!qobject_cast<ItemSerializerPlugin *>(mPlugin)) {
-            kWarning() << "ItemSerializerPluginLoader: "
+            qWarning() << "ItemSerializerPluginLoader: "
                        << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
 
             // we try to use the default in that case
@@ -254,11 +254,11 @@ public:
     {
         const PluginLoader *pl = PluginLoader::self();
         if (!pl) {
-            kWarning() << "Cannot instantiate plugin loader!" << endl;
+            qWarning() << "Cannot instantiate plugin loader!" << endl;
             return;
         }
         const QStringList names = pl->names();
-        kDebug() << "ItemSerializerPluginLoader: "
+        qDebug() << "ItemSerializerPluginLoader: "
                  << "found" << names.size() << "plugins." << endl;
         QMap<QString, MimeTypeEntry> map;
         QRegExp rx(QLatin1String("(.+)@(.+)"));
@@ -275,7 +275,7 @@ public:
                     it->add(classType, PluginEntry(name));
                 }
             } else {
-                kDebug() << "ItemSerializerPluginLoader: "
+                qDebug() << "ItemSerializerPluginLoader: "
                          << "name" << name << "doesn't look like mimetype@classtype" << endl;
             }
         }
@@ -368,33 +368,33 @@ private:
             try {
                 boost::topological_sort(graph, std::back_inserter(order));
             } catch (boost::not_a_dag &e) {
-                kWarning() << "Mimetype tree is not a DAG!";
+                qWarning() << "Mimetype tree is not a DAG!";
                 return mDefaultPlugin.plugin();
             }
         }
 
         // step 3: ask each one in turn if it can handle any of the metaTypeIds:
-//       kDebug() << "Looking for " << format( type, metaTypeIds );
+//       qDebug() << "Looking for " << format( type, metaTypeIds );
         for (QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd(); it != end; ++it) {
-//         kDebug() << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
+//         qDebug() << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
 // //                  << "as the closest match";
             const MimeTypeEntry &mt = allMimeTypes[matchingIndexes[*it]];
             if (metaTypeIds.empty()) {
                 if (const PluginEntry *const entry = mt.defaultPlugin()) {
-//             kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+//             qDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                     return entry->plugin();
                 } else {
-//             kDebug() << "    -> no default plugin for this mime type, trying next";
+//             qDebug() << "    -> no default plugin for this mime type, trying next";
                 }
             } else if (const PluginEntry *const entry = mt.plugin(metaTypeIds, chosen)) {
-//           kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+//           qDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                 return entry->plugin();
             } else {
-//           kDebug() << "   -> can't handle any of the types, trying next";
+//           qDebug() << "   -> can't handle any of the types, trying next";
             }
         }
 
-//       kDebug() << "  No further candidates, using default plugin";
+//       qDebug() << "  No further candidates, using default plugin";
         // no luck? Use the default plugin
         return mDefaultPlugin.plugin();
     }

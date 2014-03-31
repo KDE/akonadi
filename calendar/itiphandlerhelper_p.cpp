@@ -56,11 +56,11 @@ QString proposalComment(const KCalCore::Incidence::Ptr &incidence)
     break;
     case KCalCore::IncidenceBase::TypeTodo:
     {
-        kWarning() << "NOT IMPLEMENTED: proposalComment called for to-do.";
+        qWarning() << "NOT IMPLEMENTED: proposalComment called for to-do.";
     }
     break;
     default:
-        kWarning() << "NOT IMPLEMENTED: proposalComment called for " << incidence->typeStr();
+        qWarning() << "NOT IMPLEMENTED: proposalComment called for " << incidence->typeStr();
     }
 
     return comment;
@@ -132,7 +132,7 @@ bool ITIPHandlerHelper::weAreOrganizerOf(const KCalCore::Incidence::Ptr &inciden
 bool ITIPHandlerHelper::weNeedToSendMailFor(const KCalCore::Incidence::Ptr &incidence)
 {
     if (!weAreOrganizerOf(incidence)) {
-        kError() << "We should be the organizer of this incidence."
+        qCritical() << "We should be the organizer of this incidence."
                  << "; email= "       << incidence->organizer()->email()
                  << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe(incidence->organizer()->email());
         Q_ASSERT(false);
@@ -180,7 +180,7 @@ ITIPHandlerHelper::sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
     /// When we created the incidence, we *must* be the organizer.
 
     if (!weAreOrganizerOf(incidence)) {
-        kError() << "We should be the organizer of this incidence!"
+        qCritical() << "We should be the organizer of this incidence!"
                  << "; email= "       << incidence->organizer()->email()
                  << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe(incidence->organizer()->email());
         Q_ASSERT(false);
@@ -230,7 +230,7 @@ bool ITIPHandlerHelper::handleIncidenceAboutToBeModified(const KCalCore::Inciden
             return true;
             break;
         default:
-            kError() << "Unknown incidence type: " << incidence->type() << incidence->typeStr();
+            qCritical() << "Unknown incidence type: " << incidence->type() << incidence->typeStr();
             Q_ASSERT_X(false, "ITIPHandlerHelper::handleIncidenceAboutToBeModified()",
                        "Unknown incidence type");
             return false;

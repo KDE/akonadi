@@ -41,7 +41,7 @@ QTEST_AKONADIMAIN( GidTest, NoGUI )
 
 bool TestSerializer::deserialize( Akonadi::Item& item, const QByteArray& label, QIODevice& data, int version )
 {
-  kDebug() << item.id();
+  qDebug() << item.id();
   if ( label != Akonadi::Item::FullPayload )
     return false;
   Q_UNUSED( version );
@@ -52,7 +52,7 @@ bool TestSerializer::deserialize( Akonadi::Item& item, const QByteArray& label, 
 
 void TestSerializer::serialize( const Akonadi::Item& item, const QByteArray& label, QIODevice& data, int &version )
 {
-  kDebug();
+  qDebug();
   Q_ASSERT( label == Akonadi::Item::FullPayload );
   Q_UNUSED( label );
   Q_UNUSED( version );

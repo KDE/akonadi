@@ -74,12 +74,12 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
                                      const QString &iCal,
                                      const QString &action)
 {
-    kDebug() << "processiTIPMessage called with receiver=" << receiver
+    qDebug() << "processiTIPMessage called with receiver=" << receiver
              << "; action=" << action;
 
     if (d->m_currentOperation != OperationNone) {
         d->m_currentOperation = OperationNone;
-        kFatal() << "There can't be an operation in progress!" << d->m_currentOperation;
+        qFatal() << "There can't be an operation in progress!" << d->m_currentOperation;
         return;
     }
 
@@ -94,7 +94,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
 
     if (d->m_calendarLoadError) {
         d->m_currentOperation = OperationNone;
-        kError() << "Error loading calendar";
+        qCritical() << "Error loading calendar";
         emitiTipMessageProcessed(this, ResultError, i18n("Error loading calendar."));
         return;
     }
@@ -106,7 +106,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
         const QString errorMessage = format.exception() ? i18n("Error message: %1", KCalUtils::Stringify::errorMessage(*format.exception()))
                                      : i18n("Unknown error while parsing iCal invitation");
 
-        kError() << "Error parsing" << errorMessage;
+        qCritical() << "Error parsing" << errorMessage;
 
         if (d->m_showDialogsOnError) {
             KMessageBox::detailedError(0, // mParent, TODO
@@ -125,7 +125,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
     KCalCore::ScheduleMessage::Status status = message->status();
     d->m_incidence = message->event().dynamicCast<KCalCore::Incidence>();
     if (!d->m_incidence) {
-        kError() << "Invalid incidence";
+        qCritical() << "Invalid incidence";
         d->m_currentOperation = OperationNone;
         emitiTipMessageProcessed(this, ResultError, i18n("Invalid incidence"));
         return;
@@ -167,17 +167,17 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
             return; // signal emitted in onSchedulerFinished().
         } else {
             // We don't have the incidence, nothing to cancel
-            kWarning() << "Couldn't find the incidence to delete.\n"
+            qWarning() << "Couldn't find the incidence to delete.\n"
                        << "You deleted it previously or didn't even accept the invitation it in the first place.\n"
                        << "; uid=" << d->m_incidence->uid()
                        << "; identifier=" << d->m_incidence->instanceIdentifier()
                        << "; summary=" << d->m_incidence->summary();
 
-            kDebug() << "\n Here's what we do have with such a summary:";
+            qDebug() << "\n Here's what we do have with such a summary:";
             KCalCore::Incidence::List knownIncidences = calendar()->incidences();
             foreach(const KCalCore::Incidence::Ptr &knownIncidence, knownIncidences) {
                 if (knownIncidence->summary() == d->m_incidence->summary()) {
-                    kDebug() << "\nFound: uid=" << knownIncidence->uid()
+                    qDebug() << "\nFound: uid=" << knownIncidence->uid()
                              << "; identifier=" << knownIncidence->instanceIdentifier()
                              << "; schedulingId" << knownIncidence->schedulingID();
                 }
@@ -193,7 +193,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
         }
         return; // signal emitted in onSchedulerFinished().
     } else {
-        kError() << "Unknown incoming action" << action;
+        qCritical() << "Unknown incoming action" << action;
 
         d->m_currentOperation = OperationNone;
         emitiTipMessageProcessed(this, ResultError, i18n("Invalid action: %1", action));
@@ -225,7 +225,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
             }
         } else {
             // This should never happen
-            kWarning() << "No UI delegate is set";
+            qWarning() << "No UI delegate is set";
             emitiTipMessageProcessed(this, ResultError, i18n("Could not start editor to edit counter proposal"));
         }
     }
@@ -237,7 +237,7 @@ void ITIPHandler::sendiTIPMessage(KCalCore::iTIPMethod method,
 {
     if (!incidence) {
         Q_ASSERT(false);
-        kError() << "Invalid incidence";
+        qCritical() << "Invalid incidence";
         return;
     }
 
@@ -252,7 +252,7 @@ void ITIPHandler::sendiTIPMessage(KCalCore::iTIPMethod method,
 
     Q_ASSERT(d->m_currentOperation == OperationNone);
     if (d->m_currentOperation != OperationNone) {
-        kError() << "There can't be an operation in progress!" << d->m_currentOperation;
+        qCritical() << "There can't be an operation in progress!" << d->m_currentOperation;
         return;
     }
 
@@ -283,13 +283,13 @@ void ITIPHandler::publishInformation(const KCalCore::Incidence::Ptr &incidence,
 {
     Q_ASSERT(incidence);
     if (!incidence) {
-        kError() << "Invalid incidence. Aborting.";
+        qCritical() << "Invalid incidence. Aborting.";
         return;
     }
 
     Q_ASSERT(d->m_currentOperation == OperationNone);
     if (d->m_currentOperation != OperationNone) {
-        kError() << "There can't be an operation in progress!" << d->m_currentOperation;
+        qCritical() << "There can't be an operation in progress!" << d->m_currentOperation;
         return;
     }
 
@@ -320,7 +320,7 @@ void ITIPHandler::sendAsICalendar(const KCalCore::Incidence::Ptr &originalIncide
     Q_UNUSED(parentWidget);
     Q_ASSERT(originalIncidence);
     if (!originalIncidence) {
-        kError() << "Invalid incidence";
+        qCritical() << "Invalid incidence";
         return;
     }
 

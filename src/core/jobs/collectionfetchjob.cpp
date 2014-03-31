@@ -323,7 +323,7 @@ void CollectionFetchJob::doHandleResponse(const QByteArray &tag, const QByteArra
         }
         return;
     }
-    kDebug() << "Unhandled server response" << tag << data;
+    qDebug() << "Unhandled server response" << tag << data;
 }
 
 void CollectionFetchJob::setResource(const QString &resource)

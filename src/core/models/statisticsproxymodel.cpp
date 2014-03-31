@@ -352,7 +352,7 @@ QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
                     return QString();
                 }
             } else {
-                kWarning() << "We shouldn't get there for a column which is not total, unread or size.";
+                qWarning() << "We shouldn't get there for a column which is not total, unread or size.";
                 return QVariant();
             }
         }

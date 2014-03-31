@@ -297,7 +297,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray &d
             if (dateTimePos != -1) {
                 int resultPos = ImapParser::parseDateTime(data, modificationDateTime, dateTimePos + 8);
                 if (resultPos == (dateTimePos + 8)) {
-                    kDebug() << "Invalid DATETIME response to STORE command: " << _tag << data;
+                    qDebug() << "Invalid DATETIME response to STORE command: " << _tag << data;
                 }
             }
 
@@ -334,12 +334,12 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray &d
         ImapParser::parseNumber(data, id);
         int pos = data.indexOf('(');
         if (pos <= 0 || id <= 0) {
-            kDebug() << "Ignoring strange response: " << _tag << data;
+            qDebug() << "Ignoring strange response: " << _tag << data;
             return;
         }
         Item::List::iterator it = std::find_if(d->mItems.begin(), d->mItems.end(), boost::bind(&Item::id, _1) == id);
         if (it == d->mItems.end()) {
-            kDebug() << "Received STORE response for an item we did not modify: " << _tag << data;
+            qDebug() << "Received STORE response for an item we did not modify: " << _tag << data;
             return;
         }
         QList<QByteArray> attrs;
@@ -359,7 +359,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray &d
         return;
     }
 
-    kDebug() << "Unhandled response: " << _tag << data;
+    qDebug() << "Unhandled response: " << _tag << data;
 }
 
 void ItemModifyJob::setIgnorePayload(bool ignore)

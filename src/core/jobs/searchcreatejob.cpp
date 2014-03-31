@@ -163,5 +163,5 @@ void SearchCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &
         ProtocolHelper::parseCollection(data, d->mCreatedCollection);
         return;
     }
-    kDebug() << "Unhandled response: " << tag << data;
+    qDebug() << "Unhandled response: " << tag << data;
 }

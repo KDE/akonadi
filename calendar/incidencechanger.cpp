@@ -159,7 +159,7 @@ IncidenceChanger::Private::~Private()
     if (!mAtomicOperations.isEmpty() ||
             !mQueuedModifications.isEmpty() ||
             !mModificationsInProgress.isEmpty()) {
-        kDebug() << "Normal if the application was being used. "
+        qDebug() << "Normal if the application was being used. "
                  "But might indicate a memory leak if it wasn't";
     }
 }
@@ -227,7 +227,7 @@ void IncidenceChanger::Private::performNextModification(Akonadi::Item::Id id)
 
 void IncidenceChanger::Private::handleTransactionJobResult(KJob *job)
 {
-    //kDebug();
+    //qDebug();
     TransactionSequence *transaction = qobject_cast<TransactionSequence*>(job);
     Q_ASSERT(transaction);
     Q_ASSERT(mAtomicOperationByTransaction.contains(transaction));
@@ -241,7 +241,7 @@ void IncidenceChanger::Private::handleTransactionJobResult(KJob *job)
     if (job->error()) {
         if (!operation->rolledback())
             operation->setRolledback();
-        kError() << "Transaction failed, everything was rolledback. "
+        qCritical() << "Transaction failed, everything was rolledback. "
                  << job->errorString();
     } else {
         Q_ASSERT(operation->m_endCalled);
@@ -258,7 +258,7 @@ void IncidenceChanger::Private::handleTransactionJobResult(KJob *job)
 
 void IncidenceChanger::Private::handleCreateJobResult(KJob *job)
 {
-    //kDebug();
+    //qDebug();
     QString errorString;
     ResultCode resultCode = ResultCodeSuccess;
 
@@ -281,7 +281,7 @@ void IncidenceChanger::Private::handleCreateJobResult(KJob *job)
         item = change->newItem;
         resultCode = ResultCodeJobError;
         errorString = j->errorString();
-        kError() << errorString;
+        qCritical() << errorString;
         if (mShowDialogsOnError) {
             KMessageBox::sorry(change->parentWidget,
                                i18n("Error while trying to create calendar item. Error was: %1",
@@ -305,7 +305,7 @@ void IncidenceChanger::Private::handleCreateJobResult(KJob *job)
 
 void IncidenceChanger::Private::handleDeleteJobResult(KJob *job)
 {
-    //kDebug();
+    //qDebug();
     QString errorString;
     ResultCode resultCode = ResultCodeSuccess;
 
@@ -330,7 +330,7 @@ void IncidenceChanger::Private::handleDeleteJobResult(KJob *job)
     if (j->error()) {
         resultCode = ResultCodeJobError;
         errorString = j->errorString();
-        kError() << errorString;
+        qCritical() << errorString;
         if (mShowDialogsOnError) {
             KMessageBox::sorry(change->parentWidget,
                                i18n("Error while trying to delete calendar item. Error was: %1",
@@ -382,11 +382,11 @@ void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
             // in the proper order.
             resultCode = ResultCodeAlreadyDeleted;
             errorString = j->errorString();
-            kWarning() << "Trying to change item " << item.id() << " while deletion is in progress.";
+            qWarning() << "Trying to change item " << item.id() << " while deletion is in progress.";
         } else {
             resultCode = ResultCodeJobError;
             errorString = j->errorString();
-            kError() << errorString;
+            qCritical() << errorString;
         }
         if (mShowDialogsOnError) {
             KMessageBox::sorry(change->parentWidget,
@@ -531,7 +531,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
                     handler.sendIncidenceCreatedMessage(KCalCore::iTIPRequest, incidence);
 
                 if (status == ITIPHandlerHelper::ResultFailAbortUpdate) {
-                    kError() << "Sending invitations failed, but did not delete the incidence";
+                    qCritical() << "Sending invitations failed, but did not delete the incidence";
                 }
 
                 const uint atomicOperationId = change->atomicOperationId;
@@ -651,9 +651,9 @@ int IncidenceChanger::createIncidence(const Incidence::Ptr &incidence,
                                       const Collection &collection,
                                       QWidget *parent)
 {
-    //kDebug();
+    //qDebug();
     if (!incidence) {
-        kWarning() << "An invalid payload is not allowed.";
+        qWarning() << "An invalid payload is not allowed.";
         d->cancelTransaction();
         return -1;
     }
@@ -666,7 +666,7 @@ int IncidenceChanger::createIncidence(const Incidence::Ptr &incidence,
     Q_ASSERT(!(d->mBatchOperationInProgress && !d->mAtomicOperations.contains(atomicOperationId)));
     if (d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback()) {
         const QString errorMessage = d->showErrorDialog(ResultCodeRolledback, parent);
-        kWarning() << errorMessage;
+        qWarning() << errorMessage;
 
         change->resultCode = ResultCodeRolledback;
         change->errorString = errorMessage;
@@ -695,16 +695,16 @@ int IncidenceChanger::deleteIncidence(const Item &item, QWidget *parent)
 
 int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
 {
-    //kDebug();
+    //qDebug();
     if (items.isEmpty()) {
-        kError() << "Delete what?";
+        qCritical() << "Delete what?";
         d->cancelTransaction();
         return -1;
     }
 
     foreach(const Item &item, items) {
         if (!item.isValid()) {
-            kError() << "Items must be valid!";
+            qCritical() << "Items must be valid!";
             d->cancelTransaction();
             return -1;
         }
@@ -716,7 +716,7 @@ int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
 
     foreach(const Item &item, items) {
         if (!d->hasRights(item.parentCollection(), ChangeTypeDelete)) {
-            kWarning() << "Item " << item.id() << " can't be deleted due to ACL restrictions";
+            qWarning() << "Item " << item.id() << " can't be deleted due to ACL restrictions";
             const QString errorString = d->showErrorDialog(ResultCodePermissions, parent);
             change->resultCode = ResultCodePermissions;
             change->errorString = errorString;
@@ -729,7 +729,7 @@ int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
         const QString errorString = d->showErrorDialog(ResultCodeDuplicateId, parent);
         change->resultCode = ResultCodeDuplicateId;
         change->errorString = errorString;
-        kWarning() << errorString;
+        qWarning() << errorString;
         d->cancelTransaction();
         return changeId;
     }
@@ -738,7 +738,7 @@ int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
     foreach(const Item &item, items) {
         if (d->deleteAlreadyCalled(item.id())) {
             // IncidenceChanger::deleteIncidence() called twice, ignore this one.
-            kDebug() << "Item " << item.id() << " already deleted or being deleted, skipping";
+            qDebug() << "Item " << item.id() << " already deleted or being deleted, skipping";
         } else {
             itemsToDelete.append(item);
         }
@@ -748,7 +748,7 @@ int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
         const QString errorMessage = d->showErrorDialog(ResultCodeRolledback, parent);
         change->resultCode = ResultCodeRolledback;
         change->errorString = errorMessage;
-        kError() << errorMessage;
+        qCritical() << errorMessage;
         d->cleanupTransaction();
         return changeId;
     }
@@ -756,14 +756,14 @@ int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
     if (itemsToDelete.isEmpty()) {
         QVector<Akonadi::Item::Id> itemIdList;
         itemIdList.append(Item().id());
-        kDebug() << "Items already deleted or being deleted, skipping";
+        qDebug() << "Items already deleted or being deleted, skipping";
         const QString errorMessage =
             i18n("That calendar item was already deleted, or currently being deleted.");
         // Queued emit because return must be executed first, otherwise caller won't know this workId
         change->resultCode = ResultCodeAlreadyDeleted;
         change->errorString = errorMessage;
         d->cancelTransaction();
-        kWarning() << errorMessage;
+        qWarning() << errorMessage;
         return changeId;
     }
     change->originalItems = itemsToDelete;
@@ -799,13 +799,13 @@ int IncidenceChanger::modifyIncidence(const Item &changedItem,
                                       QWidget *parent)
 {
     if (!changedItem.isValid() || !changedItem.hasPayload<Incidence::Ptr>()) {
-        kWarning() << "An invalid item or payload is not allowed.";
+        qWarning() << "An invalid item or payload is not allowed.";
         d->cancelTransaction();
         return -1;
     }
 
     if (!d->hasRights(changedItem.parentCollection(), ChangeTypeModify)) {
-        kWarning() << "Item " << changedItem.id() << " can't be deleted due to ACL restrictions";
+        qWarning() << "Item " << changedItem.id() << " can't be deleted due to ACL restrictions";
         const int changeId = ++d->mLatestChangeId;
         const QString errorString = d->showErrorDialog(ResultCodePermissions, parent);
         emitModifyFinished(this, changeId, changedItem, ResultCodePermissions, errorString);
@@ -836,13 +836,13 @@ int IncidenceChanger::modifyIncidence(const Item &changedItem,
         change->resultCode = ResultCodeDuplicateId;
         change->errorString = errorString;
         d->cancelTransaction();
-        kWarning() << "Atomic operation now allowed";
+        qWarning() << "Atomic operation now allowed";
         return changeId;
     }
 
     if (d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback()) {
         const QString errorMessage = d->showErrorDialog(ResultCodeRolledback, parent);
-        kError() << errorMessage;
+        qCritical() << errorMessage;
         d->cleanupTransaction();
         emitModifyFinished(this, changeId, changedItem, ResultCodeRolledback, errorMessage);
     } else {
@@ -864,7 +864,7 @@ void IncidenceChanger::Private::performModification(Change::Ptr change)
 
     if (deleteAlreadyCalled(id)) {
         // IncidenceChanger::deleteIncidence() called twice, ignore this one.
-        kDebug() << "Item " << id << " already deleted or being deleted, skipping";
+        qDebug() << "Item " << id << " already deleted or being deleted, skipping";
 
         // Queued emit because return must be executed first, otherwise caller won't know this workId
         emitModifyFinished(q, change->id, newItem, ResultCodeAlreadyDeleted,
@@ -877,7 +877,7 @@ void IncidenceChanger::Private::performModification(Change::Ptr change)
     if (hasAtomicOperationId &&
             mAtomicOperations[atomicOperationId]->rolledback()) {
         const QString errorMessage = showErrorDialog(ResultCodeRolledback, 0);
-        kError() << errorMessage;
+        qCritical() << errorMessage;
         emitModifyFinished(q, changeId, newItem, ResultCodeRolledback, errorMessage);
         return;
     }
@@ -885,7 +885,7 @@ void IncidenceChanger::Private::performModification(Change::Ptr change)
     const bool userCancelled = !handleInvitationsBeforeChange(change);
     if (userCancelled) {
         // User got a "You're not the organizer, do you really want to send" dialog, and said "no"
-        kDebug() << "User cancelled, giving up";
+        qDebug() << "User cancelled, giving up";
         emitModifyFinished(q, changeId, newItem, ResultCodeUserCanceled, QString());
         return;
     }
@@ -939,7 +939,7 @@ void IncidenceChanger::Private::performModification(Change::Ptr change)
 void IncidenceChanger::startAtomicOperation(const QString &operationDescription)
 {
     if (d->mBatchOperationInProgress) {
-        kDebug() << "An atomic operation is already in progress.";
+        qDebug() << "An atomic operation is already in progress.";
         return;
     }
 
@@ -954,7 +954,7 @@ void IncidenceChanger::startAtomicOperation(const QString &operationDescription)
 void IncidenceChanger::endAtomicOperation()
 {
     if (!d->mBatchOperationInProgress) {
-        kDebug() << "No atomic operation is in progress.";
+        qDebug() << "No atomic operation is in progress.";
         return;
     }
 
@@ -1196,7 +1196,7 @@ bool IncidenceChanger::Private::allowAtomicOperation(int atomicOperationId,
     }
 
     if (!allow) {
-        kWarning() << "Each change belonging to a group operation"
+        qWarning() << "Each change belonging to a group operation"
                    << "must have a different Akonadi::Item::Id";
     }
 
