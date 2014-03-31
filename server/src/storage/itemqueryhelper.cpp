@@ -65,7 +65,8 @@ void ItemQueryHelper::remoteIdToQuery( const QStringList &rids, Connection *conn
     qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
                 PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
     qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
-  } else if ( connection->selectedCollectionId() > 0 ) {
+  }
+  if ( connection->selectedCollectionId() > 0 ) {
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, connection->selectedCollectionId() );
   }
 }

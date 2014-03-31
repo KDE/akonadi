@@ -220,11 +220,13 @@ bool AkAppend::parseStream()
   // parse optional date/time string
   QDateTime dateTime;
   if ( m_streamParser->hasDateTime() ) {
-    dateTime = m_streamParser->readDateTime();
+    dateTime = m_streamParser->readDateTime().toUTC();
     // FIXME Should we return an error if m_dateTime is invalid?
+  } else {
+    // if date/time is not given then it will be set to the current date/time
+    // converted to UTC.
+    dateTime = QDateTime::currentDateTime().toUTC();
   }
-  // if date/time is not given then it will be set to the current date/time
-  // by the database
 
   // FIXME: The streaming/reading of all item parts can hold the transaction for
   // unnecessary long time -> should we wrap the PimItem into one transaction
@@ -303,11 +305,14 @@ bool AkAppend::parseStream()
     PreprocessorManager::instance()->beginHandleItem( item, db );
   }
 
+  // Date time is always stored in UTC time zone by the server.
+  const QString datetime = QLocale::c().toString( item.datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
+
   // ...aaaaaand done.
   Response response;
   response.setTag( tag() );
   response.setUserDefined();
-  response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
+  response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + " DATETIME " + ImapParser::quote( datetime.toUtf8() ) + ']' );
   Q_EMIT responseAvailable( response );
 
   response.setSuccess();
