@@ -49,12 +49,14 @@ class CollectionRequester::Private
     {
     }
 
-    QString fetchCollection(const Collection &collection);
+    void fetchCollection(const Collection &collection);
 
     void init();
 
     // slots
     void _k_slotOpenDialog();
+    void _k_collectionReceived( KJob *job );
+    void _k_collectionsNamesReceived( KJob *job );
 
     CollectionRequester *q;
     Collection collection;
@@ -63,25 +65,53 @@ class CollectionRequester::Private
     CollectionDialog *collectionDialog;
 };
 
-QString CollectionRequester::Private::fetchCollection(const Collection &collection)
+void CollectionRequester::Private::fetchCollection(const Collection &collection)
 {
-    QString result;
-    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( collection, Akonadi::CollectionFetchJob::Base, q );
-    job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
-    if (job->exec()) {
-        if (job->collections().size() == 1) {
-            Akonadi::Collection col = job->collections().at(0);
-            if (col != Akonadi::Collection::root()) {
-                const QString tmp = fetchCollection(Akonadi::Collection(col.parent()));
-                if (tmp.isEmpty()) {
-                    result = col.displayName();
-                } else {
-                    result = fetchCollection(Akonadi::Collection(col.parent())) + QLatin1Char('/') + col.displayName();
-                }
-            }
-        }
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( collection, Akonadi::CollectionFetchJob::Base, q );
+  job->setProperty( "OriginalCollectionId", collection.id() );
+  job->fetchScope().setAncestorRetrieval( CollectionFetchScope::All );
+  connect( job, SIGNAL(finished(KJob*)),
+           q, SLOT(_k_collectionReceived(KJob*)) );
+}
+
+void CollectionRequester::Private::_k_collectionReceived( KJob *job )
+{
+  CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
+  Collection::List chain;
+  if ( fetch->collections().size() == 1 ) {
+    Collection currentCollection = fetch->collections().first();
+    while ( currentCollection.isValid() ) {
+      chain << currentCollection;
+      currentCollection = Collection( currentCollection.parentCollection() );
     }
-    return result;
+
+    CollectionFetchJob *namesFetch = new CollectionFetchJob( chain, CollectionFetchJob::Base, q );
+    namesFetch->setProperty( "OriginalCollectionId", job->property( "OriginalCollectionId" ) );
+    namesFetch->fetchScope().setAncestorRetrieval( CollectionFetchScope::Parent );
+    connect( namesFetch, SIGNAL(finished(KJob*)),
+             q, SLOT(_k_collectionsNamesReceived(KJob *)) );
+  } else {
+    _k_collectionsNamesReceived( job );
+  }
+}
+
+void CollectionRequester::Private::_k_collectionsNamesReceived( KJob *job )
+{
+  CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
+  const qint64 originalId = fetch->property( "OriginalCollectionId" ).toLongLong();
+
+  QMap<qint64, Collection> names;
+  Q_FOREACH ( const Collection &collection, fetch->collections() ) {
+    names.insert( collection.id(), collection );
+  }
+
+  QStringList namesList;
+  Collection currentCollection = names.take( originalId );
+  while ( currentCollection.isValid() ) {
+    namesList.prepend( currentCollection.displayName() );
+    currentCollection = names.take( currentCollection.parent() );
+  }
+  edit->setText( namesList.join( QLatin1String( "/" ) ) );
 }
 
 void CollectionRequester::Private::init()
@@ -167,8 +197,8 @@ void CollectionRequester::setCollection( const Collection& collection )
 
   d->edit->setText( name );
   emit collectionChanged( collection );
-  const QString result = d->fetchCollection(collection);
-  d->edit->setText( result );
+  d->edit->setText( collection.displayName() );
+  d->fetchCollection( collection );
 }
 
 void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )
