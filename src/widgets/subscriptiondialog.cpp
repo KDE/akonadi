@@ -260,7 +260,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 
     KDescendantsProxyModel *flatModel = new KDescendantsProxyModel(this);
     flatModel->setDisplayAncestorData(true);
-    flatModel->setAncestorSeparator(QLatin1String("/"));
+    flatModel->setAncestorSeparator(QStringLiteral("/"));
     flatModel->setSourceModel(d->filterRecursiveCollectionFilter);
 
     CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel(this);

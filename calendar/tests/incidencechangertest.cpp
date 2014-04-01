@@ -50,7 +50,7 @@ static Akonadi::Item item()
 {
     Item item;
     Incidence::Ptr incidence = Incidence::Ptr(new Event());
-    incidence->setSummary(QLatin1String("random summary"));
+    incidence->setSummary(QStringLiteral("random summary"));
     item.setMimeType(incidence->mimeType());
     item.setPayload<KCalCore::Incidence::Ptr>(incidence);
     return item;
@@ -103,7 +103,7 @@ private Q_SLOTS:
                 CollectionFetchJob::Recursive,
                 this);
         // Get list of collections
-        job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
+        job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.event"));
         AKVERIFYEXEC(job);
 
         // Find our collection
@@ -321,13 +321,13 @@ private Q_SLOTS:
         Item item;
         item.setMimeType(Event::eventMimeType());
         Incidence::Ptr incidence = Incidence::Ptr(new Event());
-        incidence->setUid(QLatin1String("test123uid"));
-        incidence->setSummary(QLatin1String("summary"));
+        incidence->setUid(QStringLiteral("test123uid"));
+        incidence->setSummary(QStringLiteral("summary"));
         item.setPayload<KCalCore::Incidence::Ptr>(incidence);
         ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
         AKVERIFYEXEC(job);
         item = job->item();
-        incidence->setSummary(QLatin1String("New Summary"));
+        incidence->setSummary(QStringLiteral("New Summary"));
         item.setPayload<KCalCore::Incidence::Ptr>(incidence);
 
         QTest::newRow("Change summary") << item << "New Summary" << true << 1 << false
@@ -383,8 +383,8 @@ private Q_SLOTS:
         Item item;
         item.setMimeType(Event::eventMimeType());
         Incidence::Ptr incidence = Incidence::Ptr(new Event());
-        incidence->setUid(QLatin1String("test123uid"));
-        incidence->setSummary(QLatin1String("summary"));
+        incidence->setUid(QStringLiteral("test123uid"));
+        incidence->setSummary(QStringLiteral("summary"));
         item.setPayload<KCalCore::Incidence::Ptr>(incidence);
         ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
         AKVERIFYEXEC(job);
@@ -768,7 +768,7 @@ private Q_SLOTS:
             case IncidenceChanger::ChangeTypeModify:
                 QVERIFY(item.isValid());
                 QVERIFY(item.hasPayload<KCalCore::Incidence::Ptr>());
-                item.payload<KCalCore::Incidence::Ptr>()->setSummary(QLatin1String("Changed"));
+                item.payload<KCalCore::Incidence::Ptr>()->setSummary(QStringLiteral("Changed"));
                 changeId = mChanger->modifyIncidence(item);
                 if (changeId != -1)
                     ++mIncidencesToModify;
@@ -914,7 +914,7 @@ private Q_SLOTS:
         QFETCH(QDate, expectedRecurrenceEnd);
 
         Event::Ptr incidence = Event::Ptr(new Event());
-        incidence->setSummary(QLatin1String("random summary"));
+        incidence->setSummary(QStringLiteral("random summary"));
         incidence->setDtStart(dtStart);
         incidence->setDtEnd(dtEnd);
         incidence->setAllDay(allDay);
@@ -1023,7 +1023,7 @@ public Q_SLOTS:
         }
 
         compareExpectedResult(resultCode, mExpectedResultByChangeId[changeId],
-                              QLatin1String("createFinished"));
+                              QStringLiteral("createFinished"));
 
         maybeQuitEventLoop();
     }
@@ -1050,7 +1050,7 @@ public Q_SLOTS:
         }
 
         compareExpectedResult(resultCode, mExpectedResultByChangeId[changeId],
-                              QLatin1String("createFinished"));
+                              QStringLiteral("createFinished"));
 
         qDebug() << "Createfinished " << mIncidencesToAdd;
         maybeQuitEventLoop();
@@ -1071,7 +1071,7 @@ public Q_SLOTS:
             qDebug() << "Error string is " << errorString;
 
         compareExpectedResult(resultCode, mExpectedResultByChangeId[changeId],
-                              QLatin1String("modifyFinished"));
+                              QStringLiteral("modifyFinished"));
 
         maybeQuitEventLoop();
     }

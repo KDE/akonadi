@@ -56,11 +56,11 @@ void DialPhoneNumberAction::dialNumber(const KABC::PhoneNumber &number)
     QDialer *dialer = NULL;
     // we handle skype separated
     if (ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype) {
-        dialer = new QSkypeDialer(QLatin1String("AkonadiContacts"));
+        dialer = new QSkypeDialer(QStringLiteral("AkonadiContacts"));
     } else if (ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSflPhone) {
-        dialer = new QSflPhoneDialer(QLatin1String("AkonadiContacts"));
+        dialer = new QSflPhoneDialer(QStringLiteral("AkonadiContacts"));
     } else if (ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseEkiga) {
-        dialer = new QEkigaDialer(QLatin1String("AkonadiContacts"));
+        dialer = new QEkigaDialer(QStringLiteral("AkonadiContacts"));
     }
     if (dialer) {
         if (!dialer->dialNumber(strippedDialNumber(number.number().trimmed()))) {
@@ -81,8 +81,8 @@ void DialPhoneNumberAction::dialNumber(const KABC::PhoneNumber &number)
      * %N the raw number
      * %n the number with all additional non-number characters removed
      */
-    command = command.replace(QLatin1String("%N"), number.number());
-    command = command.replace(QLatin1String("%n"), strippedDialNumber(number.number().trimmed()));
+    command = command.replace(QStringLiteral("%N"), number.number());
+    command = command.replace(QStringLiteral("%n"), strippedDialNumber(number.number().trimmed()));
 
     KRun::runCommand(command, 0);
 }

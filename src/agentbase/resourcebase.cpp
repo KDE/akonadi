@@ -527,7 +527,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     }
 
     for (int i = 1; i < argc - 1; ++i) {
-        if (QLatin1String(argv[i]) == QLatin1String("--identifier")) {
+        if (QLatin1String(argv[i]) == QStringLiteral("--identifier")) {
             identifier = QLatin1String(argv[i + 1]);
         }
     }
@@ -1155,9 +1155,9 @@ void ResourceBasePrivate::slotPercent(KJob *job, unsigned long percent)
     const Collection collection = job->property("collection").value<Collection>();
     if (collection.isValid()) {
         QVariantMap statusMap;
-        statusMap.insert(QLatin1String("key"), QString::fromLatin1("collectionSyncProgress"));
-        statusMap.insert(QLatin1String("collectionId"), collection.id());
-        statusMap.insert(QLatin1String("percent"), static_cast<unsigned int>(percent));
+        statusMap.insert(QStringLiteral("key"), QString::fromLatin1("collectionSyncProgress"));
+        statusMap.insert(QStringLiteral("collectionId"), collection.id());
+        statusMap.insert(QStringLiteral("percent"), static_cast<unsigned int>(percent));
 
         mUnemittedAdvancedStatus[collection.id()] = statusMap;
     }

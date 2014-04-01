@@ -304,8 +304,8 @@ void CollectionModelPrivate::init()
     monitor->fetchCollection(true);
 
     // ### Hack to get the kmail resource folder icons
-    KIconLoader::global()->addAppDir(QLatin1String("kmail"));
-    KIconLoader::global()->addAppDir(QLatin1String("kdepim"));
+    KIconLoader::global()->addAppDir(QStringLiteral("kmail"));
+    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 
     // monitor collection changes
     q->connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection)),

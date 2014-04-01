@@ -112,7 +112,7 @@ public:
 bool ItemModel::Private::collectionIsCompatible() const
 {
     // in the generic case, we show any collection
-    if (mParent->mimeTypes() == QStringList(QLatin1String("text/uri-list"))) {
+    if (mParent->mimeTypes() == QStringList(QStringLiteral("text/uri-list"))) {
         return true;
     }
     // if the model's mime types are more specific, limit to those
@@ -419,7 +419,7 @@ Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const
 
 QStringList ItemModel::mimeTypes() const
 {
-    return QStringList() << QLatin1String("text/uri-list");
+    return QStringList() << QStringLiteral("text/uri-list");
 }
 
 Session *ItemModel::session() const

@@ -250,7 +250,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
             resourceCollectionCount++;
 
             // check that the 'NoConfig' flag is not set for the resource
-            if (hasResourceCapability(collection, QLatin1String("NoConfig"))) {
+            if (hasResourceCapability(collection, QStringLiteral("NoConfig"))) {
                 canConfigureResource = false;
             }
         } else {
@@ -389,7 +389,7 @@ bool ActionStateManager::hasResourceCapability(const Collection &collection, con
 
 bool ActionStateManager::collectionCanHaveItems(const Collection &collection) const
 {
-    return !(collection.contentMimeTypes() == (QStringList() << QLatin1String("inode/directory")) ||
+    return !(collection.contentMimeTypes() == (QStringList() << QStringLiteral("inode/directory")) ||
              CollectionUtils::isStructural(collection));
 }
 

@@ -58,7 +58,7 @@ void ETMCalendarTest::createIncidence(const QString &uid)
     Incidence::Ptr incidence = Incidence::Ptr(new Event());
     incidence->setUid(uid);
     incidence->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
-    incidence->setSummary(QLatin1String("summary"));
+    incidence->setSummary(QStringLiteral("summary"));
     item.setPayload<KCalCore::Incidence::Ptr>(incidence);
     ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
     AKVERIFYEXEC(job);
@@ -73,7 +73,7 @@ void ETMCalendarTest::createTodo(const QString &uid, const QString &parentUid)
 
     todo->setRelatedTo(parentUid);
 
-    todo->setSummary(QLatin1String("summary"));
+    todo->setSummary(QStringLiteral("summary"));
 
     item.setPayload<KCalCore::Incidence::Ptr>(todo);
     ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
@@ -95,7 +95,7 @@ void ETMCalendarTest::fetchCollection()
             CollectionFetchJob::Recursive,
             this);
     // Get list of collections
-    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.event"));
     AKVERIFYEXEC(job);
 
     // Find our collection
@@ -433,7 +433,7 @@ void ETMCalendarTest::testNotifyObserverBug()
 
     // Modify it
     mIncidencesToChange = 1;
-    incidence->setSummary(QLatin1String("new-summary"));
+    incidence->setSummary(QStringLiteral("new-summary"));
     item.setPayload(incidence);
     ItemModifyJob *job = new ItemModifyJob(item);
     AKVERIFYEXEC(job);
@@ -476,9 +476,9 @@ void ETMCalendarTest::testUidChange()
 
     // Mix the notify observer bug with an incidence that changes UID
     incidence = Incidence::Ptr(incidence->clone());
-    incidence->setSummary(QLatin1String("new-summary2"));
+    incidence->setSummary(QStringLiteral("new-summary2"));
     item = mCalendar->item(incidence->uid());
-    incidence->setUid(QLatin1String("new-uid2"));
+    incidence->setUid(QStringLiteral("new-uid2"));
     item.setPayload(incidence);
     mIncidencesToChange = 1;
     job = new ItemModifyJob(item);
@@ -510,7 +510,7 @@ void ETMCalendarTest::testItem()
 
 void ETMCalendarTest::testShareETM()
 {
-    createTodo(QLatin1String("uid-123"), QString());
+    createTodo(QStringLiteral("uid-123"), QString());
     waitForIt();
 
     ETMCalendar *calendar2 = new ETMCalendar(mCalendar, this);

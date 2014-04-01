@@ -70,9 +70,9 @@ DateEditWidget::DateEditWidget(Type type, QWidget *parent)
 
     mClearButton = new QToolButton;
     if (layoutDirection() == Qt::LeftToRight) {
-        mClearButton->setIcon(KIcon(QLatin1String("edit-clear-locationbar-rtl")));
+        mClearButton->setIcon(KIcon(QStringLiteral("edit-clear-locationbar-rtl")));
     } else {
-        mClearButton->setIcon(KIcon(QLatin1String("edit-clear-locationbar-ltr")));
+        mClearButton->setIcon(KIcon(QStringLiteral("edit-clear-locationbar-ltr")));
     }
     layout->addWidget(mClearButton);
 
@@ -80,13 +80,13 @@ DateEditWidget::DateEditWidget(Type type, QWidget *parent)
     mSelectButton->setPopupMode(QToolButton::InstantPopup);
     switch (type) {
     case General:
-        mSelectButton->setIcon(KIcon(QLatin1String("view-calendar-day")));
+        mSelectButton->setIcon(KIcon(QStringLiteral("view-calendar-day")));
         break;
     case Birthday:
-        mSelectButton->setIcon(KIcon(QLatin1String("view-calendar-birthday")));
+        mSelectButton->setIcon(KIcon(QStringLiteral("view-calendar-birthday")));
         break;
     case Anniversary:
-        mSelectButton->setIcon(KIcon(QLatin1String("view-calendar-wedding-anniversary")));
+        mSelectButton->setIcon(KIcon(QStringLiteral("view-calendar-wedding-anniversary")));
         break;
     }
 

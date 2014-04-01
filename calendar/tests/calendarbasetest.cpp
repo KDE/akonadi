@@ -57,7 +57,7 @@ void CalendarBaseTest::fetchCollection()
             CollectionFetchJob::Recursive,
             this);
     // Get list of collections
-    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.event"));
     AKVERIFYEXEC(job);
 
     // Find our collection
@@ -74,8 +74,8 @@ void CalendarBaseTest::createInitialIncidences()
 
     for (int i=0; i<5; ++i) {
         Event::Ptr event = Event::Ptr(new Event());
-        event->setUid(QLatin1String("event") + QString::number(i));
-        event->setSummary(QLatin1String("summary") + QString::number(i));
+        event->setUid(QStringLiteral("event") + QString::number(i));
+        event->setSummary(QStringLiteral("summary") + QString::number(i));
         event->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
         mUids.append(event->uid());
         QVERIFY(mCalendar->addEvent(event));
@@ -86,9 +86,9 @@ void CalendarBaseTest::createInitialIncidences()
 
     for (int i=0; i<5; ++i) {
         Todo::Ptr todo = Todo::Ptr(new Todo());
-        todo->setUid(QLatin1String("todo") + QString::number(i));
+        todo->setUid(QStringLiteral("todo") + QString::number(i));
         todo->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
-        todo->setSummary(QLatin1String("summary") + QString::number(i));
+        todo->setSummary(QStringLiteral("summary") + QString::number(i));
         mUids.append(todo->uid());
         QVERIFY(mCalendar->addTodo(todo));
         QTestEventLoop::instance().enterLoop(5);
@@ -98,8 +98,8 @@ void CalendarBaseTest::createInitialIncidences()
 
     for (int i=0; i<5; ++i) {
         Journal::Ptr journal = Journal::Ptr(new Journal());
-        journal->setUid(QLatin1String("journal") + QString::number(i));
-        journal->setSummary(QLatin1String("summary") + QString::number(i));
+        journal->setUid(QStringLiteral("journal") + QString::number(i));
+        journal->setSummary(QStringLiteral("summary") + QString::number(i));
         journal->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
         mUids.append(journal->uid());
         QVERIFY(mCalendar->addJournal(journal));
@@ -110,8 +110,8 @@ void CalendarBaseTest::createInitialIncidences()
 
     for (int i=0; i<5; ++i) {
         Incidence::Ptr incidence = Incidence::Ptr(new Event());
-        incidence->setUid(QLatin1String("incidence") + QString::number(i));
-        incidence->setSummary(QLatin1String("summary") + QString::number(i));
+        incidence->setUid(QStringLiteral("incidence") + QString::number(i));
+        incidence->setSummary(QStringLiteral("summary") + QString::number(i));
         incidence->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
         mUids.append(incidence->uid());
         QVERIFY(mCalendar->addIncidence(incidence));
@@ -276,7 +276,7 @@ Item::Id CalendarBaseTest::createTodo(const QString &uid, const QString &parentU
 {
     Todo::Ptr todo = Todo::Ptr(new Todo());
     todo->setUid(uid);
-    todo->setSummary(QLatin1String("summary"));
+    todo->setSummary(QStringLiteral("summary"));
     if (!parentUid.isEmpty()) {
         todo->setRelatedTo(parentUid);
     }

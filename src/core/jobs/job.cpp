@@ -54,9 +54,9 @@ void JobPrivate::handleResponse(const QByteArray &tag, const QByteArray &data)
         if (data.startsWith("NO ") || data.startsWith("BAD ")) {       //krazy:exclude=strings
             QString msg = QString::fromUtf8(data);
 
-            msg.remove(0, msg.startsWith(QLatin1String("NO ")) ? 3 : 4);
+            msg.remove(0, msg.startsWith(QStringLiteral("NO ")) ? 3 : 4);
 
-            if (msg.endsWith(QLatin1String("\r\n"))) {
+            if (msg.endsWith(QStringLiteral("\r\n"))) {
                 msg.chop(2);
             }
 
@@ -109,10 +109,10 @@ void JobPrivate::init(QObject *parent)
             if (s_lastTime.isNull()) {
                 s_lastTime.start();
             }
-            if (DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole"))) {
-                s_jobtracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole"),
-                                                  QLatin1String("/jobtracker"),
-                                                  QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+            if (DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole"))) {
+                s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
+                                                  QStringLiteral("/jobtracker"),
+                                                  QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                   DBusConnectionPool::threadConnection(), 0);
             } else {
                 s_lastTime.restart();
@@ -138,7 +138,7 @@ void JobPrivate::signalCreationToJobTracker()
                      << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
                      << QString::fromLatin1(q->metaObject()->className())
                      << jobDebuggingString();
-        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobCreated"), argumentList);
+        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobCreated"), argumentList);
     }
 }
 
@@ -149,7 +149,7 @@ void JobPrivate::signalStartedToJobTracker()
         // if there's a job tracker running, tell it a job started
         QList<QVariant> argumentList;
         argumentList << QString::number(reinterpret_cast<quintptr>(q), 16);
-        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobStarted"), argumentList);
+        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobStarted"), argumentList);
     }
 }
 
@@ -273,7 +273,7 @@ Job::~Job()
         QList<QVariant> argumentList;
         argumentList << QString::number(reinterpret_cast<quintptr>(this), 16)
                      << errorString();
-        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobEnded"), argumentList);
+        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobEnded"), argumentList);
     }
 }
 

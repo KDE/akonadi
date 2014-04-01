@@ -131,35 +131,35 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
         return;
     }
 
-    if (action.startsWith(QLatin1String("accepted")) ||
-            action.startsWith(QLatin1String("tentative")) ||
-            action.startsWith(QLatin1String("delegated")) ||
-            action.startsWith(QLatin1String("counter"))) {
+    if (action.startsWith(QStringLiteral("accepted")) ||
+            action.startsWith(QStringLiteral("tentative")) ||
+            action.startsWith(QStringLiteral("delegated")) ||
+            action.startsWith(QStringLiteral("counter"))) {
         // Find myself and set my status. This can't be done in the scheduler,
         // since this does not know the choice I made in the KMail bpf
         const KCalCore::Attendee::List attendees = d->m_incidence->attendees();
         foreach(KCalCore::Attendee::Ptr attendee, attendees) {
             if (attendee->email() == receiver) {
-                if (action.startsWith(QLatin1String("accepted"))) {
+                if (action.startsWith(QStringLiteral("accepted"))) {
                     attendee->setStatus(KCalCore::Attendee::Accepted);
-                } else if (action.startsWith(QLatin1String("tentative"))) {
+                } else if (action.startsWith(QStringLiteral("tentative"))) {
                     attendee->setStatus(KCalCore::Attendee::Tentative);
                 } else if (CalendarSettings::self()->outlookCompatCounterProposals() &&
-                           action.startsWith(QLatin1String("counter"))) {
+                           action.startsWith(QStringLiteral("counter"))) {
                     attendee->setStatus(KCalCore::Attendee::Tentative);
-                } else if (action.startsWith(QLatin1String("delegated"))) {
+                } else if (action.startsWith(QStringLiteral("delegated"))) {
                     attendee->setStatus(KCalCore::Attendee::Delegated);
                 }
                 break;
             }
         }
         if (CalendarSettings::self()->outlookCompatCounterProposals() ||
-                !action.startsWith(QLatin1String("counter"))) {
+                !action.startsWith(QStringLiteral("counter"))) {
             d->m_scheduler->acceptTransaction(d->m_incidence, d->calendar(), d->m_method, status, receiver);
             return; // signal emitted in onSchedulerFinished().
         }
         //TODO: what happens here? we must emit a signal
-    } else if (action.startsWith(QLatin1String("cancel"))) {
+    } else if (action.startsWith(QStringLiteral("cancel"))) {
         // Delete the old incidence, if one is present
         KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidenceFromSchedulingID(d->m_incidence->uid());
         if (existingIncidence) {
@@ -185,7 +185,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
 
             emitiTipMessageProcessed(this, ResultSuccess, QString());
         }
-    } else if (action.startsWith(QLatin1String("reply"))) {
+    } else if (action.startsWith(QStringLiteral("reply"))) {
         if (d->m_method != KCalCore::iTIPCounter) {
             d->m_scheduler->acceptTransaction(d->m_incidence, d->calendar(), d->m_method, status, QString());
         } else {
@@ -199,7 +199,7 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
         emitiTipMessageProcessed(this, ResultError, i18n("Invalid action: %1", action));
     }
 
-    if (action.startsWith(QLatin1String("counter"))) {
+    if (action.startsWith(QStringLiteral("counter"))) {
         if (d->m_uiDelegate) {
             Akonadi::Item item;
             item.setMimeType(d->m_incidence->mimeType());
@@ -263,7 +263,7 @@ void ITIPHandler::sendiTIPMessage(KCalCore::iTIPMethod method,
                                           "Therefore no groupware message will be sent.",
                                           incidence->summary()),
                                      i18n("Message Not Sent"),
-                                     QLatin1String("ScheduleNoAttendees"));
+                                     QStringLiteral("ScheduleNoAttendees"));
         }
 
         return;

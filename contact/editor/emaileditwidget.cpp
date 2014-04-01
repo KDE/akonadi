@@ -109,7 +109,7 @@ EmailEditWidget::EmailEditWidget(QWidget *parent)
     layout->addWidget(mEmailEdit);
 
     mEditButton = new QToolButton;
-    mEditButton->setText(QLatin1String("..."));
+    mEditButton->setText(QStringLiteral("..."));
     connect(mEditButton, SIGNAL(clicked()), SLOT(edit()));
     layout->addWidget(mEditButton);
     setFocusProxy(mEditButton);
@@ -226,7 +226,7 @@ EmailEditDialog::EmailEditDialog(const QStringList &list, QWidget *parent)
     topLayout->setRowStretch(4, 1);
 
     QStringList items = list;
-    if (items.removeAll(QLatin1String("")) > 0) {
+    if (items.removeAll(QStringLiteral("")) > 0) {
         mChanged = true;
     } else {
         mChanged = false;
@@ -342,7 +342,7 @@ void EmailEditDialog::remove()
     const QString text = i18n("<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>", address);
     const QString caption = i18n("Confirm Remove");
 
-    if (KMessageBox::warningContinueCancel(this, text, caption, KGuiItem(i18n("&Delete"), QLatin1String("edit-delete"))) == KMessageBox::Continue) {
+    if (KMessageBox::warningContinueCancel(this, text, caption, KGuiItem(i18n("&Delete"), QStringLiteral("edit-delete"))) == KMessageBox::Continue) {
         EmailItem *item = static_cast<EmailItem *>(mEmailListBox->currentItem());
 
         const bool preferred = item->preferred();

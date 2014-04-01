@@ -102,15 +102,15 @@ QVariant CalendarModel::entityData(const Akonadi::Item &item, int column, int ro
             return QVariant();
         }
         if (inc->type() == KCalCore::IncidenceBase::TypeTodo) {
-            return SmallIcon(QLatin1String("view-pim-tasks"));
+            return SmallIcon(QStringLiteral("view-pim-tasks"));
         }
         if (inc->type() == KCalCore::IncidenceBase::TypeJournal) {
-            return SmallIcon(QLatin1String("view-pim-journal"));
+            return SmallIcon(QStringLiteral("view-pim-journal"));
         }
         if (inc->type() == KCalCore::IncidenceBase::TypeEvent) {
-            return SmallIcon(QLatin1String("view-calendar"));
+            return SmallIcon(QStringLiteral("view-calendar"));
         }
-        return SmallIcon(QLatin1String("network-wired"));
+        return SmallIcon(QStringLiteral("network-wired"));
 
     case Qt::DisplayRole:
         switch (column) {

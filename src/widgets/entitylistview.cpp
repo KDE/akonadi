@@ -217,10 +217,10 @@ void EntityListView::contextMenuEvent(QContextMenuEvent *event)
     const Collection collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
-                                         QLatin1String("akonadi_favoriteview_contextmenu"), d->mXmlGuiClient));
+                                         QStringLiteral("akonadi_favoriteview_contextmenu"), d->mXmlGuiClient));
     } else {
         popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
-                                         QLatin1String("akonadi_favoriteview_emptyselection_contextmenu"), d->mXmlGuiClient));
+                                         QStringLiteral("akonadi_favoriteview_emptyselection_contextmenu"), d->mXmlGuiClient));
     }
 
     if (popup) {

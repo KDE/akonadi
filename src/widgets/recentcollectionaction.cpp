@@ -36,8 +36,8 @@ RecentCollectionAction::RecentCollectionAction(const QAbstractItemModel *model, 
     , mModel(model)
     , mRecentAction(0)
 {
-    mAkonadiConfig = KSharedConfig::openConfig(QLatin1String("akonadikderc"));
-    KConfigGroup group(mAkonadiConfig, QLatin1String("Recent Collections"));
+    mAkonadiConfig = KSharedConfig::openConfig(QStringLiteral("akonadikderc"));
+    KConfigGroup group(mAkonadiConfig, QStringLiteral("Recent Collections"));
 
     mListRecentCollection = group.readEntry("Collections", QStringList());
     mRecentAction = mMenu->addAction(i18n("Recent Folder"));
@@ -78,7 +78,7 @@ void RecentCollectionAction::fillRecentCollection()
 QString RecentCollectionAction::actionName(QModelIndex index)
 {
     QString name = index.data().toString();
-    name.replace(QLatin1String("&"), QLatin1String("&&"));
+    name.replace(QStringLiteral("&"), QStringLiteral("&&"));
 
     index = index.parent();
     QString topLevelName;
@@ -89,7 +89,7 @@ QString RecentCollectionAction::actionName(QModelIndex index)
     if (topLevelName.isEmpty()) {
         return QString::fromLatin1("%1").arg(name);
     } else {
-        topLevelName.replace(QLatin1String("&"), QLatin1String("&&"));
+        topLevelName.replace(QStringLiteral("&"), QStringLiteral("&&"));
         return QString::fromLatin1("%1 - %2").arg(name).arg(topLevelName);
     }
 }
@@ -110,7 +110,7 @@ void RecentCollectionAction::addRecentCollection(Akonadi::Collection::Id id)
 
 void RecentCollectionAction::writeConfig()
 {
-    KConfigGroup group(mAkonadiConfig, QLatin1String("Recent Collections"));
+    KConfigGroup group(mAkonadiConfig, QStringLiteral("Recent Collections"));
     group.writeEntry("Collections", mListRecentCollection);
     group.sync();
 }

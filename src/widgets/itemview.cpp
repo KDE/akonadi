@@ -181,7 +181,7 @@ void ItemView::contextMenuEvent(QContextMenuEvent *event)
         return;
     }
     QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(
-                                            QLatin1String("akonadi_itemview_contextmenu"), d->xmlGuiClient));
+                                            QStringLiteral("akonadi_itemview_contextmenu"), d->xmlGuiClient));
     if (popup) {
         popup->exec(event->globalPos());
     }

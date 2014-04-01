@@ -201,7 +201,7 @@ void ItemSearchJob::doStart()
 
     QByteArray command = d->newTag() + " SEARCH ";
     if (!d->mMimeTypes.isEmpty()) {
-        command += "MIMETYPE (" + d->mMimeTypes.join(QLatin1String(" ")).toLatin1() + ") ";
+        command += "MIMETYPE (" + d->mMimeTypes.join(QStringLiteral(" ")).toLatin1() + ") ";
     }
     if (!d->mCollections.isEmpty()) {
         command += "COLLECTIONS (";
@@ -261,7 +261,7 @@ Item::List ItemSearchJob::items() const
 
 QUrl ItemSearchJob::akonadiItemIdUri()
 {
-    return QUrl(QLatin1String("http://akonadi-project.org/ontologies/aneo#akonadiItemId"));
+    return QUrl(QStringLiteral("http://akonadi-project.org/ontologies/aneo#akonadiItemId"));
 }
 
 #include "moc_itemsearchjob.cpp"

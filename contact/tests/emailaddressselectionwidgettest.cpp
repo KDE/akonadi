@@ -43,12 +43,12 @@ MainWidget::MainWidget()
     layout->addWidget(mInfo, 0, 1);
 
     KComboBox *box = new KComboBox;
-    box->addItem(QLatin1String("Single Selection"));
-    box->addItem(QLatin1String("Multi Selection"));
+    box->addItem(QStringLiteral("Single Selection"));
+    box->addItem(QStringLiteral("Multi Selection"));
     connect(box, SIGNAL(activated(int)), SLOT(selectionModeChanged(int)));
     layout->addWidget(box, 1, 0);
 
-    QPushButton *button = new QPushButton(QLatin1String("Show Selection"));
+    QPushButton *button = new QPushButton(QStringLiteral("Show Selection"));
     connect(button, SIGNAL(clicked()), SLOT(showSelection()));
     layout->addWidget(button, 1, 1);
 }
@@ -60,8 +60,8 @@ void MainWidget::selectionModeChanged(int index)
 
 void MainWidget::showSelection()
 {
-    mInfo->append(QLatin1String("===========================\n"));
-    mInfo->append(QLatin1String("Current selection:\n"));
+    mInfo->append(QStringLiteral("===========================\n"));
+    mInfo->append(QStringLiteral("Current selection:\n"));
 
     foreach (const Akonadi::EmailAddressSelection &selection, mAddressesWidget->selectedAddresses()) {
         mInfo->append(QString::fromLatin1("%1: %2\n").arg(selection.name()).arg(selection.email()));

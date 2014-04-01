@@ -29,7 +29,7 @@ using namespace Akonadi;
 FreeBusyDownloadJob::FreeBusyDownloadJob(const KUrl &url, QWidget *parentWidget)
     : mUrl(url), mParent(parentWidget)
 {
-    setObjectName(QLatin1String("FreeBusyDownloadJob"));
+    setObjectName(QStringLiteral("FreeBusyDownloadJob"));
 }
 
 FreeBusyDownloadJob::~FreeBusyDownloadJob()

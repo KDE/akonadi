@@ -27,17 +27,17 @@
 int main(int argc, char *argv[])
 {
   QCommandLineParser parser;
-  KAboutData about(QLatin1String("akonadiselftest"),
-                   QLatin1String("akonadiselftest"),
+  KAboutData about(QStringLiteral("akonadiselftest"),
+                   QStringLiteral("akonadiselftest"),
                    i18n("Akonadi Self Test"),
-                   QLatin1String("1.0"),
+                   QStringLiteral("1.0"),
                    i18n("Checks and reports state of Akonadi server"),
                    KAboutData::License_GPL_V2,
                    i18n("(c) 2008 Volker Krause <vkrause@kde.org>"));
   about.setupCommandLine(&parser);
 
   QApplication app(argc, argv);
-  QCoreApplication::setApplicationName(QLatin1String("akonadiselftest"));
+  QCoreApplication::setApplicationName(QStringLiteral("akonadiselftest"));
   QCoreApplication::setApplicationVersion("1.0");
   parser.process(app);
 

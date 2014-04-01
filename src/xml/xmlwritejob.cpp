@@ -88,7 +88,7 @@ void XmlWriteJobPrivate::processCollection()
   }
 
   const Collection current = pendingSiblings.top().first();
-  qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute( QLatin1String("name") );
+  qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute( QStringLiteral("name") );
   elementStack.push( XmlWriter::writeCollection( current, elementStack.top() ) );
   CollectionFetchJob *subfetch = new CollectionFetchJob( current, CollectionFetchJob::FirstLevel, q );
   q->connect( subfetch, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)) );

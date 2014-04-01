@@ -232,7 +232,7 @@ void TagTest::testAttributes()
           //FIXME we should find a better solution for this (like returning a smart pointer or value object)
           QScopedPointer<TagAttribute> tagAttr(fetchJob->tags().first().attribute<TagAttribute>()->clone());
           QVERIFY(tagAttr);
-          QCOMPARE(tagAttr->displayName(), QLatin1String("name"));
+          QCOMPARE(tagAttr->displayName(), QStringLiteral("name"));
           QCOMPARE(tagAttr->inToolbar(), true);
       }
     }

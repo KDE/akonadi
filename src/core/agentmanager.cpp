@@ -308,7 +308,7 @@ void AgentManagerPrivate::createDBusInterface()
     delete mManager;
 
     mManager = new org::freedesktop::Akonadi::AgentManager(ServerManager::serviceName(ServerManager::Control),
-                                                           QLatin1String("/AgentManager"),
+                                                           QStringLiteral("/AgentManager"),
                                                            DBusConnectionPool::threadConnection(), mParent);
 
     QObject::connect(mManager, SIGNAL(agentTypeAdded(QString)),

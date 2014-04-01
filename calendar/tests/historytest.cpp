@@ -58,7 +58,7 @@ static Akonadi::Item item()
 {
     Item item;
     Incidence::Ptr incidence = Incidence::Ptr(new Event());
-    incidence->setSummary(QLatin1String("random summary"));
+    incidence->setSummary(QStringLiteral("random summary"));
     item.setMimeType(incidence->mimeType());
     item.setPayload<KCalCore::Incidence::Ptr>(incidence);
     return item;
@@ -202,8 +202,8 @@ void HistoryTest::testModification_data()
     QTest::addColumn<QString>("oldSummary");
     QTest::addColumn<QString>("newSummary");
     Item item1 = createItem(mCollection);
-    const QString oldSummary(QLatin1String("old"));
-    const QString newSummary(QLatin1String("new"));
+    const QString oldSummary(QStringLiteral("old"));
+    const QString newSummary(QStringLiteral("new"));
     item1.payload<KCalCore::Incidence::Ptr>()->setSummary(oldSummary);
     QTest::newRow("item1") << item1 << oldSummary << newSummary;
 }
@@ -318,7 +318,7 @@ void HistoryTest::testAtomicOperations()
             QVERIFY(item.isValid());
             QVERIFY(item.hasPayload<KCalCore::Incidence::Ptr>());
             Incidence::Ptr originalPayload = Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
-            item.payload<KCalCore::Incidence::Ptr>()->setSummary(QLatin1String("Changed"));
+            item.payload<KCalCore::Incidence::Ptr>()->setSummary(QStringLiteral("Changed"));
             changeId = mChanger->modifyIncidence(item, originalPayload);
             QVERIFY(changeId != -1);
             mKnownChangeIds << changeId;
@@ -353,7 +353,7 @@ void HistoryTest::testAtomicOperations()
             QVERIFY(Helper::confirmDoesntExist(item));
             break;
         case IncidenceChanger::ChangeTypeModify:
-            QVERIFY(checkSummary(item, QLatin1String("random summary")));
+            QVERIFY(checkSummary(item, QStringLiteral("random summary")));
             break;
         default:
             QVERIFY(false);
@@ -447,7 +447,7 @@ void HistoryTest::testMix()
             QVERIFY(item.isValid());
             QVERIFY(item.hasPayload<KCalCore::Incidence::Ptr>());
             Incidence::Ptr originalPayload = Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
-            item.payload<KCalCore::Incidence::Ptr>()->setSummary(QLatin1String("Changed"));
+            item.payload<KCalCore::Incidence::Ptr>()->setSummary(QStringLiteral("Changed"));
             QVERIFY(originalPayload);
             changeId = mChanger->modifyIncidence(item, originalPayload);
             QVERIFY(changeId != -1);

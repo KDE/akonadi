@@ -126,7 +126,7 @@ bool ITIPHandlerHelper::weAreOrganizerOf(const KCalCore::Incidence::Ptr &inciden
 {
     const QString email = incidence->organizer()->email();
     return Akonadi::CalendarUtils::thatIsMe(email) || email.isEmpty()
-           || email == QLatin1String("invalid@email.address");
+           || email == QStringLiteral("invalid@email.address");
 }
 
 bool ITIPHandlerHelper::weNeedToSendMailFor(const KCalCore::Incidence::Ptr &incidence)

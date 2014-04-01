@@ -91,7 +91,7 @@ class CollectionCopyTest : public QObject
         }
 
         QVERIFY( col.isValid() );
-        QCOMPARE( col.resource(), QLatin1String("akonadi_knut_resource_2") );
+        QCOMPARE( col.resource(), QStringLiteral("akonadi_knut_resource_2") );
         QVERIFY( col.remoteId().isEmpty() );
         ItemFetchJob *job = new ItemFetchJob( col, this );
         job->fetchScope().fetchFullPayload();

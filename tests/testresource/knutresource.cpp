@@ -114,7 +114,7 @@ void KnutResource::configure( WId windowId )
 
   const QString newFile =
       KFileDialog::getSaveFileNameWId( url,
-                                       QLatin1String("*.xml |") + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ),
+                                       QStringLiteral("*.xml |") + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ),
                                        windowId, i18n( "Select Data File" ) );
 
   if ( newFile.isEmpty() || oldFile == newFile )
@@ -199,10 +199,10 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
   const int numberOfChildren = children.count();
   for ( int i = 0; i < numberOfChildren; ++i ) {
     const QDomElement child = children.at( i ).toElement();
-    qDebug() << "reparenting " << child.tagName() << child.attribute( QLatin1String("rid") );
+    qDebug() << "reparenting " << child.tagName() << child.attribute( QStringLiteral("rid") );
     if ( child.isNull() )
       continue;
-    if ( child.tagName() == QLatin1String("item") || child.tagName() == QLatin1String("collection") ) {
+    if ( child.tagName() == QStringLiteral("item") || child.tagName() == QStringLiteral("collection") ) {
       newElem.appendChild( child ); // reparents
       --i; // children, despite being const is modified by the reparenting
     }
@@ -282,7 +282,7 @@ QSet<qint64> KnutResource::parseQuery(const QString &queryString)
   QSet<qint64> resultSet;
   Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
   foreach (const Akonadi::SearchTerm &term, query.term().subTerms()) {
-      if (term.key() == QLatin1String("resource")) {
+      if (term.key() == QStringLiteral("resource")) {
           resultSet << term.value().toInt();
       }
   }

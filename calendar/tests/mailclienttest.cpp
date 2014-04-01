@@ -87,9 +87,9 @@ private Q_SLOTS:
         QString transport;
         MailClient::Result expectedResult = MailClient::ResultNoAttendees;
         const int expectedTransportId = 69372773; // from tests/unittestenv/kdehome/share/config/mailtransports
-        const QString expectedFrom = QLatin1String("unittests@dev.nul");   // from tests/unittestenv/kdehome/share/config/emailidentities
-        KCalCore::Person::Ptr organizer(new KCalCore::Person(QLatin1String("Organizer"),
-                                        QLatin1String("unittests@dev.nul")));
+        const QString expectedFrom = QStringLiteral("unittests@dev.nul");   // from tests/unittestenv/kdehome/share/config/emailidentities
+        KCalCore::Person::Ptr organizer(new KCalCore::Person(QStringLiteral("Organizer"),
+                                        QStringLiteral("unittests@dev.nul")));
 
         QStringList toList;
         QStringList toCcList;
@@ -100,7 +100,7 @@ private Q_SLOTS:
                                       << toList << toCcList << toBccList;
         //----------------------------------------------------------------------------------------------
         // One attendee, but without e-mail
-        KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(QLatin1String("name1"),
+        KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(QStringLiteral("name1"),
                                          QString()));
         incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
         incidence->addAttendee(attendee);
@@ -110,24 +110,24 @@ private Q_SLOTS:
                 << toList << toCcList << toBccList;
         //----------------------------------------------------------------------------------------------
         // One valid attendee
-        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QLatin1String("name1"),
-                                           QLatin1String("test@foo.org")));
+        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QStringLiteral("name1"),
+                                           QStringLiteral("test@foo.org")));
         incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
         incidence->addAttendee(attendee);
         incidence->setOrganizer(organizer);
         expectedResult = MailClient::ResultSuccess;
-        toList << QLatin1String("test@foo.org");
+        toList << QStringLiteral("test@foo.org");
         QTest::newRow("One attendee") << incidence << identity << bccMe << attachment << transport
                                       << expectedResult << expectedTransportId << expectedFrom
                                       << toList << toCcList << toBccList;
         //----------------------------------------------------------------------------------------------
         // One valid attendee
-        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QLatin1String("name1"),
-                                           QLatin1String("test@foo.org")));
+        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QStringLiteral("name1"),
+                                           QStringLiteral("test@foo.org")));
         incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
         incidence->setOrganizer(organizer);
         incidence->addAttendee(attendee);
-        QString invalidTransport = QLatin1String("foo");
+        QString invalidTransport = QStringLiteral("foo");
         expectedResult = MailClient::ResultSuccess;
         // Should default to the default transport
         QTest::newRow("Invalid transport") << incidence << identity << bccMe << attachment
@@ -136,29 +136,29 @@ private Q_SLOTS:
                                            << toList << toCcList << toBccList;
         //----------------------------------------------------------------------------------------------
         // One valid attendee, and bcc me
-        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QLatin1String("name1"),
-                                           QLatin1String("test@foo.org")));
+        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QStringLiteral("name1"),
+                                           QStringLiteral("test@foo.org")));
         incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
         incidence->setOrganizer(organizer);
         incidence->addAttendee(attendee);
         expectedResult = MailClient::ResultSuccess;
         // Should default to the default transport
         toBccList.clear();
-        toBccList << QLatin1String("unittests@dev.nul");
+        toBccList << QStringLiteral("unittests@dev.nul");
         QTest::newRow("Test bcc") << incidence << identity << /*bccMe*/true << attachment
                                   << transport  << expectedResult
                                   << expectedTransportId << expectedFrom
                                   << toList << toCcList << toBccList;
         //----------------------------------------------------------------------------------------------
         // Test CC list
-        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QLatin1String("name1"),
-                                           QLatin1String("test@foo.org")));
+        attendee = KCalCore::Attendee::Ptr(new KCalCore::Attendee(QStringLiteral("name1"),
+                                           QStringLiteral("test@foo.org")));
         KCalCore::Attendee::Ptr optionalAttendee =
-            KCalCore::Attendee::Ptr(new KCalCore::Attendee(QLatin1String("opt"),
-                                    QLatin1String("optional@foo.org")));
+            KCalCore::Attendee::Ptr(new KCalCore::Attendee(QStringLiteral("opt"),
+                                    QStringLiteral("optional@foo.org")));
         KCalCore::Attendee::Ptr nonParticipant =
-            KCalCore::Attendee::Ptr(new KCalCore::Attendee(QLatin1String("non"),
-                                    QLatin1String("non@foo.org")));
+            KCalCore::Attendee::Ptr(new KCalCore::Attendee(QStringLiteral("non"),
+                                    QStringLiteral("non@foo.org")));
         optionalAttendee->setRole(KCalCore::Attendee::OptParticipant);
         nonParticipant->setRole(KCalCore::Attendee::NonParticipant);
         incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
@@ -169,11 +169,11 @@ private Q_SLOTS:
         expectedResult = MailClient::ResultSuccess;
         // Should default to the default transport
         toBccList.clear();
-        toBccList << QLatin1String("unittests@dev.nul");
+        toBccList << QStringLiteral("unittests@dev.nul");
 
         toCcList.clear();
-        toCcList << QLatin1String("optional@foo.org")
-                 << QLatin1String("non@foo.org");
+        toCcList << QStringLiteral("optional@foo.org")
+                 << QStringLiteral("non@foo.org");
         QTest::newRow("Test cc") << incidence << identity << /*bccMe*/true << attachment
                                  << transport  << expectedResult
                                  << expectedTransportId << expectedFrom
@@ -245,17 +245,17 @@ private Q_SLOTS:
         const QString from = QLatin1String(s_ourEmail);
         bool bccMe;
         QString attachment;
-        QString subject = QLatin1String("subject1");
+        QString subject = QStringLiteral("subject1");
         QString transport;
         MailClient::Result expectedResult = MailClient::ResultSuccess;
         const int expectedTransportId = 69372773; // from tests/unittestenv/kdehome/share/config/mailtransports
         QString expectedFrom = from; // from tests/unittestenv/kdehome/share/config/emailidentities
-        KCalCore::Person::Ptr organizer(new KCalCore::Person(QLatin1String("Organizer"),
-                                        QLatin1String("unittests@dev.nul")));
+        KCalCore::Person::Ptr organizer(new KCalCore::Person(QStringLiteral("Organizer"),
+                                        QStringLiteral("unittests@dev.nul")));
         incidence->setOrganizer(organizer);
 
         QStringList toList;
-        toList << QLatin1String("unittests@dev.nul");
+        toList << QStringLiteral("unittests@dev.nul");
         QStringList toBccList;
         QString expectedSubject;
         //----------------------------------------------------------------------------------------------
@@ -264,7 +264,7 @@ private Q_SLOTS:
                                << transport << expectedResult << expectedTransportId << expectedFrom
                                << toList << toBccList << expectedSubject;
         //----------------------------------------------------------------------------------------------
-        expectedSubject = QLatin1String("Free Busy Message");
+        expectedSubject = QStringLiteral("Free Busy Message");
         incidence = KCalCore::IncidenceBase::Ptr(new KCalCore::FreeBusy());
         incidence->setOrganizer(organizer);
         QTest::newRow("FreeBusy") << incidence << identity << from << bccMe << attachment << subject
@@ -323,14 +323,14 @@ private Q_SLOTS:
         KPIMIdentities::Identity identity;
         const QString from = QLatin1String(s_ourEmail);
         bool bccMe;
-        const QString recipients = QLatin1String("unittests@dev.nul");
+        const QString recipients = QStringLiteral("unittests@dev.nul");
         QString attachment;
         QString transport;
         MailClient::Result expectedResult = MailClient::ResultSuccess;
         const int expectedTransportId = 69372773; // from tests/unittestenv/kdehome/share/config/mailtransports
         QString expectedFrom = from; // from tests/unittestenv/kdehome/share/config/emailidentities
-        KCalCore::Person::Ptr organizer(new KCalCore::Person(QLatin1String("Organizer"),
-                                        QLatin1String("unittests@dev.nul")));
+        KCalCore::Person::Ptr organizer(new KCalCore::Person(QStringLiteral("Organizer"),
+                                        QStringLiteral("unittests@dev.nul")));
         QStringList toList;
         toList << QLatin1String(s_ourEmail);
         QStringList toBccList;

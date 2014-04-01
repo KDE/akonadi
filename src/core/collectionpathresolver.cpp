@@ -52,7 +52,7 @@ public:
         for (int i = 0; i < pathSize; ++i) {
             if (path[i] == QLatin1Char('/')) {
                 QString pathElement = path.mid(begin, i - begin);
-                pathElement = pathElement.replace(QLatin1String("\\/"), QLatin1String("/"));
+                pathElement = pathElement.replace(QStringLiteral("\\/"), QStringLiteral("/"));
                 rv.append(pathElement);
                 begin = i + 1;
             }
@@ -61,7 +61,7 @@ public:
             }
         }
         QString pathElement = path.mid(begin);
-        pathElement = pathElement.replace(QLatin1String("\\/"), QLatin1String("/"));
+        pathElement = pathElement.replace(QStringLiteral("\\/"), QStringLiteral("/"));
         rv.append(pathElement);
         return rv;
     }
@@ -179,7 +179,7 @@ QString CollectionPathResolver::path() const
 
 QString CollectionPathResolver::pathDelimiter()
 {
-    return QLatin1String("/");
+    return QStringLiteral("/");
 }
 
 void CollectionPathResolver::doStart()

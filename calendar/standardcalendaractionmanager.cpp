@@ -47,12 +47,12 @@ public:
           mItemSelectionModel(0),
           mParent(parent)
     {
-        KGlobal::locale()->insertCatalog(QLatin1String("libakonadi-calendar"));
+        KGlobal::locale()->insertCatalog(QStringLiteral("libakonadi-calendar"));
         mGenericManager = new StandardActionManager(actionCollection, parentWidget);
         mParent->connect(mGenericManager, SIGNAL(actionStateUpdated()),
                          mParent, SIGNAL(actionStateUpdated()));
-        mGenericManager->setMimeTypeFilter(QStringList() << QLatin1String("text/calendar"));
-        mGenericManager->setCapabilityFilter(QStringList() << QLatin1String("Resource"));
+        mGenericManager->setMimeTypeFilter(QStringList() << QStringLiteral("text/calendar"));
+        mGenericManager->setCapabilityFilter(QStringList() << QStringLiteral("Resource"));
     }
 
     ~Private()
@@ -555,7 +555,7 @@ KAction* StandardCalendarActionManager::createAction(StandardCalendarActionManag
     switch (type) {
     case CreateEvent:
         action = new KAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("appointment-new")));
+        action->setIcon(KIcon(QStringLiteral("appointment-new")));
         action->setText(i18n("New E&vent..."));
         action->setWhatsThis(i18n("Create a new event"));
         d->mActions.insert(CreateEvent, action);
@@ -564,7 +564,7 @@ KAction* StandardCalendarActionManager::createAction(StandardCalendarActionManag
         break;
     case CreateTodo:
         action = new KAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("task-new")));
+        action->setIcon(KIcon(QStringLiteral("task-new")));
         action->setText(i18n("New &To-do..."));
         action->setWhatsThis(i18n("Create a new To-do"));
         d->mActions.insert(CreateTodo, action);
@@ -573,7 +573,7 @@ KAction* StandardCalendarActionManager::createAction(StandardCalendarActionManag
         break;
     case CreateSubTodo:
         action = new KAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("new_subtodo")));
+        action->setIcon(KIcon(QStringLiteral("new_subtodo")));
         action->setText(i18n("New Su&b-to-do..."));
         action->setWhatsThis(i18n("Create a new Sub-to-do"));
         d->mActions.insert(CreateSubTodo, action);
@@ -582,7 +582,7 @@ KAction* StandardCalendarActionManager::createAction(StandardCalendarActionManag
         break;
     case CreateJournal:
         action = new KAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("journal-new")));
+        action->setIcon(KIcon(QStringLiteral("journal-new")));
         action->setText(i18n("New &Journal..."));
         action->setWhatsThis(i18n("Create a new Journal"));
         d->mActions.insert(CreateJournal, action);

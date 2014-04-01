@@ -138,9 +138,9 @@ void SelfTestDialog::runTests()
 {
     mTestModel->clear();
 
-    const QString driver = serverSetting(QLatin1String("General"), "Driver", QLatin1String("QMYSQL")).toString();
+    const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
     testSQLDriver();
-    if (driver == QLatin1String("QPSQL")) {
+    if (driver == QStringLiteral("QPSQL")) {
         testPSQLServer();
     } else {
 #ifndef Q_OS_WIN
@@ -168,8 +168,8 @@ QVariant SelfTestDialog::serverSetting(const QString &group, const char *key, co
 
 bool SelfTestDialog::useStandaloneMysqlServer() const
 {
-    const QString driver = serverSetting(QLatin1String("General"), "Driver", QLatin1String("QMYSQL")).toString();
-    if (driver != QLatin1String("QMYSQL")) {
+    const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
+    if (driver != QStringLiteral("QMYSQL")) {
         return false;
     }
     const bool startServer = serverSetting(driver, "StartServer", true).toBool();
@@ -192,7 +192,7 @@ bool SelfTestDialog::runProcess(const QString &app, const QStringList &args, QSt
 
 void SelfTestDialog::testSQLDriver()
 {
-    const QString driver = serverSetting(QLatin1String("General"), "Driver", QLatin1String("QMYSQL")).toString();
+    const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
     const QStringList availableDrivers = QSqlDatabase::drivers();
     const KLocalizedString detailsOk = ki18n("The QtSQL driver '%1' is required by your current Akonadi server configuration and was found on your system.")
                                        .subs(driver);
@@ -200,7 +200,7 @@ void SelfTestDialog::testSQLDriver()
                                                "The following drivers are installed: %2.\n"
                                                "Make sure the required driver is installed.")
                                          .subs(driver)
-                                         .subs(availableDrivers.join(QLatin1String(", ")));
+                                         .subs(availableDrivers.join(QStringLiteral(", ")));
     QStandardItem *item = 0;
     if (availableDrivers.contains(driver)) {
         item = report(Success, ki18n("Database driver found."), detailsOk);
@@ -218,8 +218,8 @@ void SelfTestDialog::testMySQLServer()
         return;
     }
 
-    const QString driver = serverSetting(QLatin1String("General"), "Driver", QLatin1String("QMYSQL")).toString();
-    const QString serverPath = serverSetting(driver,  "ServerPath", QLatin1String("")).toString();     // ### default?
+    const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
+    const QString serverPath = serverSetting(driver,  "ServerPath", QStringLiteral("")).toString();     // ### default?
 
     const KLocalizedString details = ki18n("You have currently configured Akonadi to use the MySQL server '%1'.\n"
                                            "Make sure you have the MySQL server installed, set the correct path and ensure you have the "
@@ -233,7 +233,7 @@ void SelfTestDialog::testMySQLServer()
         report(Error, ki18n("MySQL server not readable."), details);
     } else if (!info.isExecutable()) {
         report(Error, ki18n("MySQL server not executable."), details);
-    } else if (!serverPath.contains(QLatin1String("mysqld"))) {
+    } else if (!serverPath.contains(QStringLiteral("mysqld"))) {
         report(Warning, ki18n("MySQL found with unexpected name."), details);
     } else {
         report(Success, ki18n("MySQL server found."), details);
@@ -241,7 +241,7 @@ void SelfTestDialog::testMySQLServer()
 
     // be extra sure and get the server version while we are at it
     QString result;
-    if (runProcess(serverPath, QStringList() << QLatin1String("--version"), result)) {
+    if (runProcess(serverPath, QStringList() << QStringLiteral("--version"), result)) {
         const KLocalizedString details = ki18n("MySQL server found: %1").subs(result);
         report(Success, ki18n("MySQL server is executable."), details);
     } else {
@@ -259,7 +259,7 @@ void SelfTestDialog::testMySQLServerLog()
         return;
     }
 
-    const QString logFileName = XdgBaseDirs::saveDir("data", QLatin1String("akonadi/db_data"))
+    const QString logFileName = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi/db_data"))
                                 + QDir::separator() + QString::fromLatin1("mysql.err");
     const QFileInfo logFileInfo(logFileName);
     if (!logFileInfo.exists() || logFileInfo.size() == 0) {
@@ -277,13 +277,13 @@ void SelfTestDialog::testMySQLServerLog()
     QStandardItem *item = 0;
     while (!logFile.atEnd()) {
         const QString line = QString::fromUtf8(logFile.readLine());
-        if (line.contains(QLatin1String("error"), Qt::CaseInsensitive)) {
+        if (line.contains(QStringLiteral("error"), Qt::CaseInsensitive)) {
             item = report(Error, ki18n("MySQL server log contains errors."),
                           ki18n("The MySQL server error log file '%1' contains errors.").subs(makeLink(logFileName)));
             item->setData(logFileName, FileIncludeRole);
             return;
         }
-        if (!warningsFound && line.contains(QLatin1String("warn"), Qt::CaseInsensitive)) {
+        if (!warningsFound && line.contains(QStringLiteral("warn"), Qt::CaseInsensitive)) {
             warningsFound = true;
         }
     }
@@ -309,7 +309,7 @@ void SelfTestDialog::testMySQLServerConfig()
     }
 
     QStandardItem *item = 0;
-    const QString globalConfig = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-global.conf"));
+    const QString globalConfig = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
     const QFileInfo globalConfigInfo(globalConfig);
     if (!globalConfig.isEmpty() && globalConfigInfo.exists() && globalConfigInfo.isReadable()) {
         item = report(Success, ki18n("MySQL server default configuration found."),
@@ -322,7 +322,7 @@ void SelfTestDialog::testMySQLServerConfig()
                      "Check your Akonadi installation is complete and you have all required access rights."));
     }
 
-    const QString localConfig  = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-local.conf"));
+    const QString localConfig  = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-local.conf"));
     const QFileInfo localConfigInfo(localConfig);
     if (localConfig.isEmpty() || !localConfigInfo.exists()) {
         report(Skip, ki18n("MySQL server custom configuration not available."),
@@ -338,7 +338,7 @@ void SelfTestDialog::testMySQLServerConfig()
                      "Check your access rights.").subs(makeLink(localConfig)));
     }
 
-    const QString actualConfig = XdgBaseDirs::saveDir("data", QLatin1String("akonadi")) + QLatin1String("/mysql.conf");
+    const QString actualConfig = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi")) + QStringLiteral("/mysql.conf");
     const QFileInfo actualConfigInfo(actualConfig);
     if (actualConfig.isEmpty() || !actualConfigInfo.exists() || !actualConfigInfo.isReadable()) {
         report(Error, ki18n("MySQL server configuration not found or not readable."),
@@ -352,13 +352,13 @@ void SelfTestDialog::testMySQLServerConfig()
 
 void SelfTestDialog::testPSQLServer()
 {
-    const QString dbname = serverSetting(QLatin1String("QPSQL"), "Name", QLatin1String("akonadi")).toString();
-    const QString hostname = serverSetting(QLatin1String("QPSQL"), "Host", QLatin1String("localhost")).toString();
-    const QString username = serverSetting(QLatin1String("QPSQL"), "User", QString()).toString();
-    const QString password = serverSetting(QLatin1String("QPSQL"), "Password", QString()).toString();
-    const int port = serverSetting(QLatin1String("QPSQL"), "Port", 5432).toInt();
+    const QString dbname = serverSetting(QStringLiteral("QPSQL"), "Name", QStringLiteral("akonadi")).toString();
+    const QString hostname = serverSetting(QStringLiteral("QPSQL"), "Host", QStringLiteral("localhost")).toString();
+    const QString username = serverSetting(QStringLiteral("QPSQL"), "User", QString()).toString();
+    const QString password = serverSetting(QStringLiteral("QPSQL"), "Password", QString()).toString();
+    const int port = serverSetting(QStringLiteral("QPSQL"), "Port", 5432).toInt();
 
-    QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QPSQL"));
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QPSQL"));
     db.setHostName(hostname);
     db.setDatabaseName(dbname);
 
@@ -384,7 +384,7 @@ void SelfTestDialog::testPSQLServer()
 
 void SelfTestDialog::testAkonadiCtl()
 {
-    const QString path = KStandardDirs::findExe(QLatin1String("akonadictl"));
+    const QString path = KStandardDirs::findExe(QStringLiteral("akonadictl"));
     if (path.isEmpty()) {
         report(Error, ki18n("akonadictl not found"),
                ki18n("The program 'akonadictl' needs to be accessible in $PATH. "
@@ -392,7 +392,7 @@ void SelfTestDialog::testAkonadiCtl()
         return;
     }
     QString result;
-    if (runProcess(path, QStringList() << QLatin1String("--version"), result)) {
+    if (runProcess(path, QStringList() << QStringLiteral("--version"), result)) {
         report(Success, ki18n("akonadictl found and usable"),
                ki18n("The program '%1' to control the Akonadi server was found "
                      "and could be executed successfully.\nResult:\n%2").subs(path).subs(result));
@@ -451,13 +451,13 @@ void SelfTestDialog::testResources()
     AgentType::List agentTypes = AgentManager::self()->types();
     bool resourceFound = false;
     foreach (const AgentType &type, agentTypes) {
-        if (type.capabilities().contains(QLatin1String("Resource"))) {
+        if (type.capabilities().contains(QStringLiteral("Resource"))) {
             resourceFound = true;
             break;
         }
     }
 
-    const QStringList pathList = XdgBaseDirs::findAllResourceDirs("data", QLatin1String("akonadi/agents"));
+    const QStringList pathList = XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
     QStandardItem *item = 0;
     if (resourceFound) {
         item = report(Success, ki18n("Resource agents found."), ki18n("At least one resource agent has been found."));
@@ -468,7 +468,7 @@ void SelfTestDialog::testResources()
                             "The following paths have been searched: '%1'. "
                             "The XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes all paths "
                             "where Akonadi agents are installed.")
-                      .subs(pathList.join(QLatin1String(" ")))
+                      .subs(pathList.join(QStringLiteral(" ")))
                       .subs(QString::fromLocal8Bit(qgetenv("XDG_DATA_DIRS"))));
     }
     item->setData(pathList, ListDirectoryRole);
@@ -477,7 +477,7 @@ void SelfTestDialog::testResources()
 
 void SelfTestDialog::testServerLog()
 {
-    QString serverLog = XdgBaseDirs::saveDir("data", QLatin1String("akonadi"))
+    QString serverLog = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"))
                         + QDir::separator() + QString::fromLatin1("akonadiserver.error");
     QFileInfo info(serverLog);
     if (!info.exists() || info.size() <= 0) {
@@ -489,7 +489,7 @@ void SelfTestDialog::testServerLog()
         item->setData(serverLog, FileIncludeRole);
     }
 
-    serverLog += QLatin1String(".old");
+    serverLog += QStringLiteral(".old");
     info.setFile(serverLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No previous Akonadi server error log found."),
@@ -503,7 +503,7 @@ void SelfTestDialog::testServerLog()
 
 void SelfTestDialog::testControlLog()
 {
-    QString controlLog = XdgBaseDirs::saveDir("data", QLatin1String("akonadi"))
+    QString controlLog = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"))
                          + QDir::separator() + QString::fromLatin1("akonadi_control.error");
     QFileInfo info(controlLog);
     if (!info.exists() || info.size() <= 0) {
@@ -515,7 +515,7 @@ void SelfTestDialog::testControlLog()
         item->setData(controlLog, FileIncludeRole);
     }
 
-    controlLog += QLatin1String(".old");
+    controlLog += QStringLiteral(".old");
     info.setFile(controlLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No previous Akonadi control error log found."),
@@ -608,9 +608,9 @@ QString SelfTestDialog::createReport()
 
 void SelfTestDialog::saveReport()
 {
-    const QString defaultFileName = QLatin1String("akonadi-selftest-report-")
-                                    + QDate::currentDate().toString(QLatin1String("yyyyMMdd"))
-                                    + QLatin1String(".txt");
+    const QString defaultFileName = QStringLiteral("akonadi-selftest-report-")
+                                    + QDate::currentDate().toString(QStringLiteral("yyyyMMdd"))
+                                    + QStringLiteral(".txt");
     const QString fileName =  KFileDialog::getSaveFileName(QUrl(defaultFileName), QString(), this,
                                                            i18n("Save Test Report"));
     if (fileName.isEmpty()) {
@@ -636,7 +636,7 @@ void SelfTestDialog::copyReport()
 
 void SelfTestDialog::linkActivated(const QString &link)
 {
-    KRun::runUrl(KUrl::fromPath(link), QLatin1String("text/plain"), this);
+    KRun::runUrl(KUrl::fromPath(link), QStringLiteral("text/plain"), this);
 }
 
 // @endcond

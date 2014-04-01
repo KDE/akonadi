@@ -51,14 +51,14 @@ using namespace Akonadi;
 // convenient methods to get/set the default resource id
 static void setDefaultResourceId(KCoreConfigSkeleton *settings, const QString &value)
 {
-    KConfigSkeletonItem *item = settings->findItem(QLatin1String("DefaultResourceId"));
+    KConfigSkeletonItem *item = settings->findItem(QStringLiteral("DefaultResourceId"));
     Q_ASSERT(item);
     item->setProperty(value);
 }
 
 static QString defaultResourceId(KCoreConfigSkeleton *settings)
 {
-    const KConfigSkeletonItem *item = settings->findItem(QLatin1String("DefaultResourceId"));
+    const KConfigSkeletonItem *item = settings->findItem(QStringLiteral("DefaultResourceId"));
     Q_ASSERT(item);
     return item->property().toString();
 }
@@ -275,7 +275,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
         const AgentInstance::List resources = AgentManager::self()->instances();
         foreach (const AgentInstance &resource, resources) {
             if (resource.type().identifier() == mDefaultResourceType) {
-                if (resource.name() == mDefaultResourceOptions.value(QLatin1String("Name")).toString()) {
+                if (resource.name() == mDefaultResourceOptions.value(QStringLiteral("Name")).toString()) {
                     // found a matching one...
                     setDefaultResourceId(mSettings, resource.identifier());
                     mSettings->writeConfig();
@@ -324,7 +324,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 
     // Configure the resource.
     {
-        agent.setName(mDefaultResourceOptions.value(QLatin1String("Name")).toString());
+        agent.setName(mDefaultResourceOptions.value(QStringLiteral("Name")).toString());
 
         QDBusInterface conf(QString::fromLatin1("org.freedesktop.Akonadi.Resource.") + defaultId,
                             QString::fromLatin1("/Settings"), QString());
@@ -340,7 +340,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
         while (it.hasNext()) {
             it.next();
 
-            if (it.key() == QLatin1String("Name")) {
+            if (it.key() == QStringLiteral("Name")) {
                 continue;
             }
 
@@ -362,7 +362,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
             }
         }
 
-        conf.call(QLatin1String("writeConfig"));
+        conf.call(QStringLiteral("writeConfig"));
 
         agent.reconfigure();
     }

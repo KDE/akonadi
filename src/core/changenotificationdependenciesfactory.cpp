@@ -41,7 +41,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
     org::freedesktop::Akonadi::NotificationManager *manager =
         new org::freedesktop::Akonadi::NotificationManager(
             ServerManager::serviceName(Akonadi::ServerManager::Server),
-            QLatin1String("/notifications"),
+            QStringLiteral("/notifications"),
             DBusConnectionPool::threadConnection());
 
     if (!manager) {

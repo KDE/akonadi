@@ -57,7 +57,7 @@ IMEditWidget::~IMEditWidget()
 
 void IMEditWidget::loadContact(const KABC::Addressee &contact)
 {
-    mIMEdit->setText(contact.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-IMAddress")));
+    mIMEdit->setText(contact.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-IMAddress")));
 
     const QStringList customs = contact.customs();
 
@@ -65,8 +65,8 @@ void IMEditWidget::loadContact(const KABC::Addressee &contact)
         QString app, name, value;
         splitCustomField(custom, app, name, value);
 
-        if (app.startsWith(QLatin1String("messaging/"))) {
-            if (name == QLatin1String("All")) {
+        if (app.startsWith(QStringLiteral("messaging/"))) {
+            if (name == QStringLiteral("All")) {
                 const QString protocol = app;
                 const QStringList names = value.split(QChar(0xE000), QString::SkipEmptyParts);
 
@@ -81,9 +81,9 @@ void IMEditWidget::loadContact(const KABC::Addressee &contact)
 void IMEditWidget::storeContact(KABC::Addressee &contact) const
 {
     if (!mIMEdit->text().isEmpty()) {
-        contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-IMAddress"), mIMEdit->text());
+        contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-IMAddress"), mIMEdit->text());
     } else {
-        contact.removeCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-IMAddress"));
+        contact.removeCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-IMAddress"));
     }
 
     // create a map with protocol as key and list of names for that protocol as value
@@ -105,9 +105,9 @@ void IMEditWidget::storeContact(KABC::Addressee &contact) const
         it.next();
 
         if (!it.value().isEmpty()) {
-            contact.insertCustom(it.key(), QLatin1String("All"), it.value().join(QString(0xE000)));
+            contact.insertCustom(it.key(), QStringLiteral("All"), it.value().join(QString(0xE000)));
         } else {
-            contact.removeCustom(it.key(), QLatin1String("All"));
+            contact.removeCustom(it.key(), QStringLiteral("All"));
         }
     }
 }

@@ -116,7 +116,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 
-    if (!data->hasFormat(QLatin1String("text/uri-list"))) {
+    if (!data->hasFormat(QStringLiteral("text/uri-list"))) {
         return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 

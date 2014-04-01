@@ -81,7 +81,7 @@ public:
     {
         org::freedesktop::Akonadi::Agent::Control *agentControlIface =
             new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, agentInstance.identifier()),
-                                                          QLatin1String("/"), DBusConnectionPool::threadConnection(), q);
+                                                          QStringLiteral("/"), DBusConnectionPool::threadConnection(), q);
         if (!agentControlIface || !agentControlIface->isValid()) {
             delete agentControlIface;
 

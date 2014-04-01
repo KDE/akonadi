@@ -205,9 +205,9 @@ QString CollectionPropertiesDialog::defaultPageObjectName(DefaultPage page)
 {
     switch (page) {
     case GeneralPage:
-        return QLatin1String("Akonadi::CollectionGeneralPropertiesPage");
+        return QStringLiteral("Akonadi::CollectionGeneralPropertiesPage");
     case CachePage:
-        return QLatin1String("Akonadi::CachePolicyPage");
+        return QStringLiteral("Akonadi::CachePolicyPage");
     }
 
     return QString();

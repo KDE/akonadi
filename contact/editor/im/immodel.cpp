@@ -27,7 +27,7 @@
 #include <klocalizedstring.h>
 
 IMAddress::IMAddress()
-    : mProtocol(QLatin1String("messaging/aim"))
+    : mProtocol(QStringLiteral("messaging/aim"))
     , mPreferred(false)
 {
 }

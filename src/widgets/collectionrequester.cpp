@@ -95,7 +95,7 @@ void CollectionRequester::Private::init()
     edit->setFocusPolicy(Qt::NoFocus);
 
     button = new KPushButton(q);
-    button->setIcon(KIcon(QLatin1String("document-open")));
+    button->setIcon(KIcon(QStringLiteral("document-open")));
     const int buttonSize = edit->sizeHint().height();
     button->setFixedSize(buttonSize, buttonSize);
     button->setToolTip(i18n("Open collection dialog"));
@@ -113,7 +113,7 @@ void CollectionRequester::Private::init()
     q->connect(openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()));
 
     collectionDialog = new CollectionDialog(q);
-    collectionDialog->setWindowIcon(KIcon(QLatin1String("akonadi")));
+    collectionDialog->setWindowIcon(KIcon(QStringLiteral("akonadi")));
     collectionDialog->setCaption(i18n("Select a collection"));
     collectionDialog->setSelectionMode(QAbstractItemView::SingleSelection);
     collectionDialog->changeCollectionDialogOptions(CollectionDialog::KeepTreeExpanded);

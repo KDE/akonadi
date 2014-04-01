@@ -39,7 +39,7 @@ static DisplayNameEditWidget::DisplayType guessedDisplayType(const KABC::Address
         return DisplayNameEditWidget::SimpleName;
     } else if (contact.formattedName() == contact.assembledName()) {
         return DisplayNameEditWidget::FullName;
-    } else if (contact.formattedName() == (contact.familyName() + QLatin1String(", ") + contact.givenName())) {
+    } else if (contact.formattedName() == (contact.familyName() + QStringLiteral(", ") + contact.givenName())) {
         return DisplayNameEditWidget::ReverseNameWithComma;
     } else if (contact.formattedName() == (contact.familyName() + QLatin1Char(' ') + contact.givenName())) {
         return DisplayNameEditWidget::ReverseName;
@@ -232,7 +232,7 @@ void DisplayNameEditWidget::updateView()
     mView->setItemText(1, mContact.assembledName());
 
     // ReverseNameWithComma:
-    mView->setItemText(2, mContact.familyName() + QLatin1String(", ") + mContact.givenName());
+    mView->setItemText(2, mContact.familyName() + QStringLiteral(", ") + mContact.givenName());
 
     // ReverseName:
     mView->setItemText(3, mContact.familyName() + QLatin1Char(' ') + mContact.givenName());

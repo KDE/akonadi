@@ -152,7 +152,7 @@ void Scheduler::acceptPublish(const IncidenceBase::Ptr &newIncBase,
                     const bool success = calendar->modifyIncidence(newInc);
 
                     if (!success) {
-                        emit transactionFinished(ResultModifyingError, QLatin1String("Error modifying incidence"));
+                        emit transactionFinished(ResultModifyingError, QStringLiteral("Error modifying incidence"));
                     } else {
                         // signal will be emitted in the handleModifyFinished() slot
                     }
@@ -266,7 +266,7 @@ void Scheduler::acceptRequest(const IncidenceBase::Ptr &incidenceBase,
                             const bool success = calendar->addIncidence(incidence);
 
                             if (!success) {
-                                emit transactionFinished(ResultCreatingError, QLatin1String("Error creating incidence"));
+                                emit transactionFinished(ResultCreatingError, QStringLiteral("Error creating incidence"));
                             } else {
                                 // Signal emitted in the result slot of addFinished()
                             }
@@ -344,7 +344,7 @@ void Scheduler::acceptCancel(const IncidenceBase::Ptr &incidenceBase,
     }
 
     if (incidence->type() == IncidenceBase::TypeJournal) {
-        emit transactionFinished(ResultUnsupported, QLatin1String("Unsupported incidence type"));
+        emit transactionFinished(ResultUnsupported, QStringLiteral("Unsupported incidence type"));
         return;
     }
 

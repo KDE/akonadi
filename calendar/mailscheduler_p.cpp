@@ -126,7 +126,7 @@ void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incid
 
 QString MailScheduler::freeBusyDir() const
 {
-    return KStandardDirs::locateLocal("data", QLatin1String("korganizer/freebusy"));
+    return KStandardDirs::locateLocal("data", QStringLiteral("korganizer/freebusy"));
 }
 
 //TODO: AKONADI_PORT review following code
@@ -177,7 +177,7 @@ void MailScheduler::acceptCounterProposal(const KCalCore::Incidence::Ptr &incide
     }
 
     if (result != ResultSuccess) {
-        emit transactionFinished(result, QLatin1String("Error creating job"));
+        emit transactionFinished(result, QStringLiteral("Error creating job"));
     } else {
         // Nothing to do here. Signal will be emitted when we hear back from the calendar.
     }

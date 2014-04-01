@@ -60,7 +60,7 @@ void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV3::Lis
 // and it gives us the base of the filename to use. This is all historical.
 QString ChangeRecorderPrivate::notificationsFileName() const
 {
-    return settings->fileName() + QLatin1String("_changes.dat");
+    return settings->fileName() + QStringLiteral("_changes.dat");
 }
 
 void ChangeRecorderPrivate::loadNotifications()
@@ -79,23 +79,23 @@ void ChangeRecorderPrivate::loadNotifications()
      */
     if (!QFile::exists(changesFileName)) {
         QStringList list;
-        settings->beginGroup(QLatin1String("ChangeRecorder"));
-        const int size = settings->beginReadArray(QLatin1String("change"));
+        settings->beginGroup(QStringLiteral("ChangeRecorder"));
+        const int size = settings->beginReadArray(QStringLiteral("change"));
 
         for (int i = 0; i < size; ++i) {
             settings->setArrayIndex(i);
             NotificationMessageV3 msg;
-            msg.setSessionId(settings->value(QLatin1String("sessionId")).toByteArray());
-            msg.setType((NotificationMessageV2::Type)settings->value(QLatin1String("type")).toInt());
-            msg.setOperation((NotificationMessageV2::Operation)settings->value(QLatin1String("op")).toInt());
-            msg.addEntity(settings->value(QLatin1String("uid")).toLongLong(),
-                          settings->value(QLatin1String("rid")).toString(),
+            msg.setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
+            msg.setType((NotificationMessageV2::Type)settings->value(QStringLiteral("type")).toInt());
+            msg.setOperation((NotificationMessageV2::Operation)settings->value(QStringLiteral("op")).toInt());
+            msg.addEntity(settings->value(QStringLiteral("uid")).toLongLong(),
+                          settings->value(QStringLiteral("rid")).toString(),
                           QString(),
-                          settings->value(QLatin1String("mimeType")).toString());
-            msg.setResource(settings->value(QLatin1String("resource")).toByteArray());
-            msg.setParentCollection(settings->value(QLatin1String("parentCol")).toLongLong());
-            msg.setParentDestCollection(settings->value(QLatin1String("parentDestCol")).toLongLong());
-            list = settings->value(QLatin1String("itemParts")).toStringList();
+                          settings->value(QStringLiteral("mimeType")).toString());
+            msg.setResource(settings->value(QStringLiteral("resource")).toByteArray());
+            msg.setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
+            msg.setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
+            list = settings->value(QStringLiteral("itemParts")).toStringList();
             QSet<QByteArray> itemParts;
             Q_FOREACH (const QString &entry, list) {
                 itemParts.insert(entry.toLatin1());
@@ -281,10 +281,10 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
         stream >> entityCnt;
         for (int j = 0; j < entityCnt; ++j) {
             QVariantMap map;
-            stream >> map[QLatin1String("uid")];
-            stream >> map[QLatin1String("remoteId")];
-            stream >> map[QLatin1String("remoteRevision")];
-            stream >> map[QLatin1String("mimeType")];
+            stream >> map[QStringLiteral("uid")];
+            stream >> map[QStringLiteral("remoteId")];
+            stream >> map[QStringLiteral("remoteRevision")];
+            stream >> map[QStringLiteral("mimeType")];
             items << map;
         }
         stream >> resource;
@@ -306,53 +306,53 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
         QString typeString;
         switch (type) {
         case NotificationMessageV2::Collections:
-            typeString = QLatin1String("Collections");
+            typeString = QStringLiteral("Collections");
             break;
         case NotificationMessageV2::Items:
-            typeString = QLatin1String("Items");
+            typeString = QStringLiteral("Items");
             break;
         case NotificationMessageV2::Tags:
-            typeString = QLatin1String("Tags");
+            typeString = QStringLiteral("Tags");
             break;
         default:
-            typeString = QLatin1String("InvalidType");
+            typeString = QStringLiteral("InvalidType");
             break;
         };
 
         QString operationString;
         switch (operation) {
         case NotificationMessageV2::Add:
-            operationString = QLatin1String("Add");
+            operationString = QStringLiteral("Add");
             break;
         case NotificationMessageV2::Modify:
-            operationString = QLatin1String("Modify");
+            operationString = QStringLiteral("Modify");
             break;
         case NotificationMessageV2::ModifyFlags:
-            operationString = QLatin1String("ModifyFlags");
+            operationString = QStringLiteral("ModifyFlags");
             break;
         case NotificationMessageV2::ModifyTags:
-            operationString = QLatin1String("ModifyTags");
+            operationString = QStringLiteral("ModifyTags");
             break;
         case NotificationMessageV2::Move:
-            operationString = QLatin1String("Move");
+            operationString = QStringLiteral("Move");
             break;
         case NotificationMessageV2::Remove:
-            operationString = QLatin1String("Remove");
+            operationString = QStringLiteral("Remove");
             break;
         case NotificationMessageV2::Link:
-            operationString = QLatin1String("Link");
+            operationString = QStringLiteral("Link");
             break;
         case NotificationMessageV2::Unlink:
-            operationString = QLatin1String("Unlink");
+            operationString = QStringLiteral("Unlink");
             break;
         case NotificationMessageV2::Subscribe:
-            operationString = QLatin1String("Subscribe");
+            operationString = QStringLiteral("Subscribe");
             break;
         case NotificationMessageV2::Unsubscribe:
-            operationString = QLatin1String("Unsubscribe");
+            operationString = QStringLiteral("Unsubscribe");
             break;
         default:
-            operationString = QLatin1String("InvalidOp");
+            operationString = QStringLiteral("InvalidOp");
             break;
         };
 
@@ -382,11 +382,11 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
                               .arg(QString::fromLatin1(destResource))
                               .arg(parentCollection)
                               .arg(parentDestCollection)
-                              .arg(itemPartsList.join(QLatin1String(", ")))
-                              .arg(addedFlagsList.join(QLatin1String(", ")))
-                              .arg(removedFlagsList.join(QLatin1String(", ")))
-                              .arg(addedTagsList.join(QLatin1String(", ")))
-                              .arg(removedTagsList.join(QLatin1String(", ")));
+                              .arg(itemPartsList.join(QStringLiteral(", ")))
+                              .arg(addedFlagsList.join(QStringLiteral(", ")))
+                              .arg(removedFlagsList.join(QStringLiteral(", ")))
+                              .arg(addedTagsList.join(QStringLiteral(", ")))
+                              .arg(removedTagsList.join(QStringLiteral(", ")));
 
         result += entry + QLatin1Char('\n');
     }

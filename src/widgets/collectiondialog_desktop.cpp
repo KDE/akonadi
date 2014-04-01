@@ -200,7 +200,7 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
     mAllowToCreateNewChildCollection = (options & AllowToCreateNewChildCollection);
     if (mAllowToCreateNewChildCollection) {
         mParent->setButtons(Ok | Cancel | User1);
-        mParent->setButtonGuiItem(User1, KGuiItem(i18n("&New Subfolder..."), QLatin1String("folder-new"),
+        mParent->setButtonGuiItem(User1, KGuiItem(i18n("&New Subfolder..."), QStringLiteral("folder-new"),
                                                   i18n("Create a new subfolder under the currently selected folder")));
         mParent->enableButton(KDialog::User1, false);
         connect(mParent, SIGNAL(user1Clicked()), mParent, SLOT(slotAddChildCollection()));

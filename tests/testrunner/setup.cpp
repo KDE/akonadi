@@ -47,7 +47,7 @@ bool SetupTest::startAkonadiDaemon()
             this, SLOT(slotAkonadiDaemonProcessFinished(int)) );
   }
 
-  mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ), QStringList() << QLatin1String("--instance") << instanceId() );
+  mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ), QStringList() << QStringLiteral("--instance") << instanceId() );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
   qDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
@@ -136,10 +136,10 @@ void SetupTest::copyXdgDirectory(const QString& src, const QString& dst)
   const QDir srcDir( src );
   foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
     if (fi.isDir()) {
-      if ( fi.fileName() == QLatin1String("akonadi") ) {
+      if ( fi.fileName() == QStringLiteral("akonadi") ) {
         // namespace according to instance identifier
-        copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + QLatin1String("akonadi") + QDir::separator()
-                       + QLatin1String("instance") + QDir::separator() + instanceId() );
+        copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + QStringLiteral("akonadi") + QDir::separator()
+                       + QStringLiteral("instance") + QDir::separator() + instanceId() );
       } else {
         copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
       }
@@ -158,10 +158,10 @@ void SetupTest::copyKdeHomeDirectory(const QString& src, const QString& dst)
     if ( fi.isDir() ) {
       copyKdeHomeDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
     } else {
-      if ( fi.fileName().startsWith( QLatin1String("akonadi_") ) && fi.fileName().endsWith( QLatin1String("rc") ) ) {
+      if ( fi.fileName().startsWith( QStringLiteral("akonadi_") ) && fi.fileName().endsWith( QStringLiteral("rc") ) ) {
         // namespace according to instance identifier
         const QString baseName = fi.fileName().left( fi.fileName().size() - 2 );
-        QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + Akonadi::ServerManager::addNamespace( baseName ) + QLatin1String("rc") );
+        QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + Akonadi::ServerManager::addNamespace( baseName ) + QStringLiteral("rc") );
       } else {
         QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
       }
@@ -212,7 +212,7 @@ void SetupTest::createTempEnvironment()
 // TODO Qt5: use QDir::removeRecursively
 void SetupTest::deleteDirectory( const QString &dirName )
 {
-  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) || dirName.startsWith(QLatin1String("/tmp") ) ); // just to be sure we don't run amok anywhere
+  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) || dirName.startsWith(QStringLiteral("/tmp") ) ); // just to be sure we don't run amok anywhere
   QDir dir( dirName );
   dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden );
 
@@ -334,7 +334,7 @@ QString SetupTest::basePath() const
   // absolute path to the temp dir. That is nice, but on OSX it makes
   // that path really long. MySQL chokes on this, for it's socket path,
   // so work around that
-  sysTempDirPath = QLatin1String("/tmp");
+  sysTempDirPath = QStringLiteral("/tmp");
 #endif
 
   const QDir sysTempDir(sysTempDirPath);
@@ -361,7 +361,7 @@ void SetupTest::trackAkonadiProcess(bool track)
 
 QString SetupTest::instanceId() const
 {
-  return QLatin1String("testrunner-") + QString::number( QCoreApplication::instance()->applicationPid() );
+  return QStringLiteral("testrunner-") + QString::number( QCoreApplication::instance()->applicationPid() );
 }
 
 void SetupTest::setupInstanceId()

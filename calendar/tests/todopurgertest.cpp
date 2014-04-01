@@ -59,7 +59,7 @@ void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bo
         todo->setCompleted(completed);
     }
 
-    todo->setSummary(QLatin1String("summary"));
+    todo->setSummary(QStringLiteral("summary"));
 
 
     item.setPayload<KCalCore::Incidence::Ptr>(todo);
@@ -74,7 +74,7 @@ void TodoPurgerTest::fetchCollection()
             CollectionFetchJob::Recursive,
             this);
     // Get list of collections
-    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.todo"));
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.todo"));
     AKVERIFYEXEC(job);
 
     // Find our collection

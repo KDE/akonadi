@@ -35,7 +35,7 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
     : q(qq)
 {
     new Akonadi__SearchAdaptor(this);
-    DBusConnectionPool::threadConnection().registerObject(QLatin1String("/Search"),
+    DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Search"),
                                                           this, QDBusConnection::ExportAdaptors);
 
     QTimer::singleShot(0, this, SLOT(delayedInit()));
@@ -44,10 +44,10 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
 void AgentSearchInterfacePrivate::delayedInit()
 {
     QDBusInterface iface(ServerManager::serviceName(ServerManager::Server),
-                         QLatin1String("/SearchManager"),
-                         QLatin1String("org.freedesktop.Akonadi.SearchManager"),
+                         QStringLiteral("/SearchManager"),
+                         QStringLiteral("org.freedesktop.Akonadi.SearchManager"),
                          QDBusConnection::sessionBus(), this);
-    QDBusMessage msg = iface.call(QLatin1String("registerInstance"), dynamic_cast<AgentBase *>(q)->identifier());
+    QDBusMessage msg = iface.call(QStringLiteral("registerInstance"), dynamic_cast<AgentBase *>(q)->identifier());
 }
 
 void AgentSearchInterfacePrivate::addSearch(const QString &query, const QString &queryLanguage, quint64 resultCollectionId)

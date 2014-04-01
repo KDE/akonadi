@@ -87,7 +87,7 @@ Collection::List XmlReader::readCollections(const QDomElement& elem)
 
 Item XmlReader::elementToItem(const QDomElement& elem, bool includePayload)
 {
-  Item item( elem.attribute( Format::Attr::itemMimeType(), QLatin1String("application/octet-stream") ) );
+  Item item( elem.attribute( Format::Attr::itemMimeType(), QStringLiteral("application/octet-stream") ) );
   item.setRemoteId( elem.attribute( Format::Attr::remoteId() ) );
   XmlReader::readAttributes( elem, item );
   

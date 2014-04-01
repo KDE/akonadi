@@ -64,7 +64,7 @@ bool QSflPhoneDialer::initializeSflPhone()
     if (!isSflPhoneServiceRegistered()) {
 
         // it could be skype is not running yet, so start it now
-        if (!QProcess::startDetached(QLatin1String("sflphone-client-kde"), QStringList())) {
+        if (!QProcess::startDetached(QStringLiteral("sflphone-client-kde"), QStringList())) {
             mErrorMessage = i18n("Unable to start sflphone-client-kde process, check that sflphone-client-kde executable is in your PATH variable.");
             return false;
         }
@@ -88,9 +88,9 @@ bool QSflPhoneDialer::dialNumber(const QString &number)
     }
 
     QStringList arguments;
-    arguments << QLatin1String("--place-call");
+    arguments << QStringLiteral("--place-call");
     arguments << number;
-    if (!QProcess::startDetached(QLatin1String("sflphone-client-kde"), arguments)) {
+    if (!QProcess::startDetached(QStringLiteral("sflphone-client-kde"), arguments)) {
         return false;
     }
 
@@ -104,11 +104,11 @@ bool QSflPhoneDialer::sendSms(const QString &number, const QString &text)
     }
 
     QStringList arguments;
-    arguments << QLatin1String("--send-text");
+    arguments << QStringLiteral("--send-text");
     arguments << number;
-    arguments << QLatin1String("--message");
+    arguments << QStringLiteral("--message");
     arguments << text;
-    if (!QProcess::startDetached(QLatin1String("sflphone-client-kde"), arguments)) {
+    if (!QProcess::startDetached(QStringLiteral("sflphone-client-kde"), arguments)) {
         return false;
     }
     return true;

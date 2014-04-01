@@ -67,7 +67,7 @@ public:
         if (accountName.isEmpty()) {
             return nameOfCollection;
         } else {
-            return nameOfCollection + QLatin1String(" (") + accountName + QLatin1Char(')');
+            return nameOfCollection + QStringLiteral(" (") + accountName + QLatin1Char(')');
         }
     }
 
@@ -387,7 +387,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
     Q_UNUSED(action);
     Q_UNUSED(row);
     Q_UNUSED(column);
-    if (data->hasFormat(QLatin1String("text/uri-list"))) {
+    if (data->hasFormat(QStringLiteral("text/uri-list"))) {
         const KUrl::List urls = KUrl::List::fromMimeData(data);
 
         const QModelIndex sourceIndex = mapToSource(parent);
@@ -434,8 +434,8 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
 QStringList FavoriteCollectionsModel::mimeTypes() const
 {
     QStringList mts = Akonadi::SelectionProxyModel::mimeTypes();
-    if (!mts.contains(QLatin1String("text/uri-list"))) {
-        mts.append(QLatin1String("text/uri-list"));
+    if (!mts.contains(QStringLiteral("text/uri-list"))) {
+        mts.append(QStringLiteral("text/uri-list"));
     }
     return mts;
 }

@@ -83,7 +83,7 @@ bool QSkypeDialer::initializeSkype()
     if (!isSkypeServiceRegistered()) {
 
         // it could be skype is not running yet, so start it now
-        if (!QProcess::startDetached(QLatin1String("skype"), QStringList())) {
+        if (!QProcess::startDetached(QStringLiteral("skype"), QStringList())) {
             mErrorMessage = i18n("Unable to start skype process, check that skype executable is in your PATH variable.");
             return false;
         }
@@ -109,8 +109,8 @@ bool QSkypeDialer::initializeSkype()
         return false;
     }
 
-    QDBusReply<QString> reply = mInterface->call(QLatin1String("Invoke"), QString::fromLatin1("NAME %1").arg(mApplicationName));
-    if (reply.value() != QLatin1String("OK")) {
+    QDBusReply<QString> reply = mInterface->call(QStringLiteral("Invoke"), QString::fromLatin1("NAME %1").arg(mApplicationName));
+    if (reply.value() != QStringLiteral("OK")) {
         delete mInterface;
         mInterface = 0;
 
@@ -118,8 +118,8 @@ bool QSkypeDialer::initializeSkype()
         return false;
     }
 
-    reply = mInterface->call(QLatin1String("Invoke"), QLatin1String("PROTOCOL 1"));
-    if (reply.value() != QLatin1String("PROTOCOL 1")) {
+    reply = mInterface->call(QStringLiteral("Invoke"), QStringLiteral("PROTOCOL 1"));
+    if (reply.value() != QStringLiteral("PROTOCOL 1")) {
         delete mInterface;
         mInterface = 0;
 
@@ -136,7 +136,7 @@ bool QSkypeDialer::dialNumber(const QString &number)
         return false;
     }
 
-    QDBusReply<QString> reply = mInterface->call(QLatin1String("Invoke"), QString::fromLatin1("CALL %1").arg(number));
+    QDBusReply<QString> reply = mInterface->call(QStringLiteral("Invoke"), QString::fromLatin1("CALL %1").arg(number));
 
     return true;
 }
@@ -148,18 +148,18 @@ bool QSkypeDialer::sendSms(const QString &number, const QString &text)
     }
 
     // First we create a new SMS object that gets an ID. We need that ID later...
-    QDBusReply<QString> reply = mInterface->call(QLatin1String("Invoke"), QString::fromLatin1("CREATE SMS OUTGOING %1").arg(number));
-    const QString messageId = reply.value().section(QLatin1String(" "), 1, 1);
+    QDBusReply<QString> reply = mInterface->call(QStringLiteral("Invoke"), QString::fromLatin1("CREATE SMS OUTGOING %1").arg(number));
+    const QString messageId = reply.value().section(QStringLiteral(" "), 1, 1);
 
     // Set the SMS text
-    reply = mInterface->call(QLatin1String("Invoke"), QString::fromLatin1("SET SMS %1 BODY %2").arg(messageId, text));
+    reply = mInterface->call(QStringLiteral("Invoke"), QString::fromLatin1("SET SMS %1 BODY %2").arg(messageId, text));
 
     // Send the SMS
-    reply = mInterface->call(QLatin1String("Invoke"), QString::fromLatin1("ALTER SMS %1 SEND").arg(messageId));
-    if (reply.value().contains(QLatin1String("ERROR"))) {
+    reply = mInterface->call(QStringLiteral("Invoke"), QString::fromLatin1("ALTER SMS %1 SEND").arg(messageId));
+    if (reply.value().contains(QStringLiteral("ERROR"))) {
         mErrorMessage = reply.value();
         // As sending the message failed (not enough Skype credit), lets delete the message
-        reply = mInterface->call(QLatin1String("Invoke"), QString::fromLatin1("DELETE SMS %1").arg(messageId));
+        reply = mInterface->call(QStringLiteral("Invoke"), QString::fromLatin1("DELETE SMS %1").arg(messageId));
         return false;
     }
 

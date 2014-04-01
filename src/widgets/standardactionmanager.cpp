@@ -152,16 +152,16 @@ static inline bool isRootCollection( const Akonadi::Collection &collection )
 
 static void setWorkOffline(bool offline)
 {
-    KConfig config(QLatin1String("akonadikderc"));
-    KConfigGroup group(&config, QLatin1String("Actions"));
+    KConfig config(QStringLiteral("akonadikderc"));
+    KConfigGroup group(&config, QStringLiteral("Actions"));
 
     group.writeEntry("WorkOffline", offline);
 }
 
 static bool workOffline()
 {
-    KConfig config(QLatin1String("akonadikderc"));
-    const KConfigGroup group(&config, QLatin1String("Actions"));
+    KConfig config(QStringLiteral("akonadikderc"));
+    const KConfigGroup group(&config, QStringLiteral("Actions"));
 
     return group.readEntry("WorkOffline", false);
 }
@@ -846,7 +846,7 @@ public:
         //
         // FIXME: AgentManager should return a valid AgentInstance even
         // for virtual resources, which would be always online.
-        if (collection.resource() == QLatin1String("akonadi_search_resource")) {
+        if (collection.resource() == QStringLiteral("akonadi_search_resource")) {
             return true;
         }
 
@@ -1396,7 +1396,7 @@ public:
             const bool collectionIsSelected = selectedCollectionsList.contains(collection);
 
             QString label = model->data(index).toString();
-            label.replace(QLatin1String("&"), QLatin1String("&&"));
+            label.replace(QStringLiteral("&"), QStringLiteral("&&"));
 
             const QIcon icon = model->data(index, Qt::DecorationRole).value<QIcon>();
 
@@ -1467,12 +1467,12 @@ public:
         }
 
         const QByteArray cutSelectionData = "1"; //krazy:exclude=doublequote_chars
-        mimeData->setData(QLatin1String("application/x-kde.akonadi-cutselection"), cutSelectionData);
+        mimeData->setData(QStringLiteral("application/x-kde.akonadi-cutselection"), cutSelectionData);
     }
 
     bool isCutAction(const QMimeData *mimeData) const
     {
-        const QByteArray data = mimeData->data(QLatin1String("application/x-kde.akonadi-cutselection"));
+        const QByteArray data = mimeData->data(QStringLiteral("application/x-kde.akonadi-cutselection"));
         if (data.isEmpty()) {
             return false;
         } else {
@@ -1519,7 +1519,7 @@ public:
         }
 
         const QString str = text.subs(count).toString();
-        const int argCount = str.count(QRegExp(QLatin1String("%[0-9]")));
+        const int argCount = str.count(QRegExp(QStringLiteral("%[0-9]")));
         if (argCount > 0) {
             return text.subs(count).subs(value).toString();
         } else {

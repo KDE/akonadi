@@ -228,7 +228,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     if (linkAllowed) {
         sequence = QKeySequence(Qt::ControlModifier + Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        linkAction = popup.addAction(KIcon(QLatin1String("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
+        linkAction = popup.addAction(KIcon(QStringLiteral("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
     }
 
     popup.addSeparator();
@@ -286,11 +286,11 @@ void DragDropManager::startDrag(Qt::DropActions supportedActions)
     QDrag *drag = new QDrag(m_view);
     drag->setMimeData(mimeData);
     if (indexes.size() > 1) {
-        drag->setPixmap(KIcon(QLatin1String("document-multiple")).pixmap(QSize(22, 22)));
+        drag->setPixmap(KIcon(QStringLiteral("document-multiple")).pixmap(QSize(22, 22)));
     } else {
         QPixmap pixmap = indexes.first().data(Qt::DecorationRole).value<QIcon>().pixmap(QSize(22, 22));
         if (pixmap.isNull()) {
-            pixmap = KIcon(QLatin1String("text-plain")).pixmap(QSize(22, 22));
+            pixmap = KIcon(QStringLiteral("text-plain")).pixmap(QSize(22, 22));
         }
         drag->setPixmap(pixmap);
     }

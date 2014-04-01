@@ -64,7 +64,7 @@ CustomFieldEditorDialog::CustomFieldEditorDialog(QWidget *parent)
     mType->addItem(i18n("DateTime"), CustomField::DateTimeType);
     mType->addItem(i18n("Url"), CustomField::UrlType);
 
-    mKey->setValidator(new QRegExpValidator(QRegExp(QLatin1String("[a-zA-Z0-9\\-]+")), this));
+    mKey->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("[a-zA-Z0-9\\-]+")), this));
     mTitle->setFocus();
 }
 

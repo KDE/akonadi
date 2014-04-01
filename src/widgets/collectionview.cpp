@@ -251,7 +251,7 @@ void CollectionView::contextMenuEvent(QContextMenuEvent *event)
         return;
     }
     QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(
-                                            QLatin1String("akonadi_collectionview_contextmenu"), d->xmlGuiClient));
+                                            QStringLiteral("akonadi_collectionview_contextmenu"), d->xmlGuiClient));
     if (popup) {
         popup->exec(event->globalPos());
     }

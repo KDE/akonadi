@@ -64,7 +64,7 @@ public:
     static inline QString key(const QModelIndex &index)
     {
         if (!index.isValid()) {
-            return QLatin1String("x-1");
+            return QStringLiteral("x-1");
         }
         const Collection c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (c.isValid()) {

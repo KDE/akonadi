@@ -54,7 +54,7 @@ PersistentSearchAttribute::~PersistentSearchAttribute()
 
 QString PersistentSearchAttribute::queryLanguage() const
 {
-    return QLatin1String("SPARQL");
+    return QStringLiteral("SPARQL");
 }
 
 void PersistentSearchAttribute::setQueryLanguage(const QString &language)
@@ -137,7 +137,7 @@ QByteArray PersistentSearchAttribute::serialized() const
     l.append("QUERYSTRING");
     l.append(ImapParser::quote(d->queryString.toUtf8()));
     l.append("QUERYCOLLECTIONS");
-    l.append("(" + cols.join(QLatin1String(" ")).toLatin1() + ")");
+    l.append("(" + cols.join(QStringLiteral(" ")).toLatin1() + ")");
     if (d->remote) {
         l.append("REMOTE");
     }

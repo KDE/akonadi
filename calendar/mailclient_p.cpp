@@ -96,7 +96,7 @@ void MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
         // ignore the return value from extractEmailAddressAndName() because
         // it will always be false since tusername does not contain "@domain".
         KPIMUtils::extractEmailAddressAndName(username, temail/*byref*/, tname/*byref*/);
-        tname += QLatin1String(" <") + email + QLatin1Char('>');
+        tname += QStringLiteral(" <") + email + QLatin1Char('>');
 
         // Optional Participants and Non-Participants are copied on the email
         if (a->role() == KCalCore::Attendee::OptParticipant ||
@@ -114,11 +114,11 @@ void MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
     }
     QString to;
     if (!toList.isEmpty()) {
-        to = toList.join(QLatin1String(", "));
+        to = toList.join(QStringLiteral(", "));
     }
     QString cc;
     if (!ccList.isEmpty()) {
-        cc = ccList.join(QLatin1String(", "));
+        cc = ccList.join(QStringLiteral(", "));
     }
 
     QString subject;
@@ -246,9 +246,9 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
     const int transportId = transport->id();
 
     // gather config values
-    KConfig config(QLatin1String("mailviewerrc"));
+    KConfig config(QStringLiteral("mailviewerrc"));
 
-    KConfigGroup configGroup(&config, QLatin1String("Invitations"));
+    KConfigGroup configGroup(&config, QStringLiteral("Invitations"));
     const bool outlookConformInvitation = configGroup.readEntry("LegacyBodyInvites",
 #ifdef KDEPIM_ENTERPRISE_BUILD
                                           true
@@ -267,7 +267,7 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
 
     message->userAgent()->fromUnicodeString(
         KProtocolManager::userAgentForApplication(
-            QLatin1String("KOrganizer"), QLatin1String(KDEPIMLIBS_VERSION)), "utf-8");
+            QStringLiteral("KOrganizer"), QLatin1String(KDEPIMLIBS_VERSION)), "utf-8");
 
     message->from()->fromUnicodeString(from, "utf-8");
     message->to()->fromUnicodeString(to, "utf-8");
@@ -281,8 +281,8 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
     if (outlookConformInvitation) {
         message->contentType()->setMimeType("text/calendar");
         message->contentType()->setCharset("utf-8");
-        message->contentType()->setName(QLatin1String("cal.ics"), "utf-8");
-        message->contentType()->setParameter(QLatin1String("method"), QLatin1String("request"));
+        message->contentType()->setName(QStringLiteral("cal.ics"), "utf-8");
+        message->contentType()->setParameter(QStringLiteral("method"), QStringLiteral("request"));
 
         if (!attachment.isEmpty()) {
             KMime::Headers::ContentDisposition *disposition =
@@ -321,9 +321,9 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
             attachDisposition->setDisposition(KMime::Headers::CDattachment);
             attachMessage->contentType()->setMimeType("text/calendar");
             attachMessage->contentType()->setCharset("utf-8");
-            attachMessage->contentType()->setName(QLatin1String("cal.ics"), "utf-8");
-            attachMessage->contentType()->setParameter(QLatin1String("method"),
-                    QLatin1String("request"));
+            attachMessage->contentType()->setName(QStringLiteral("cal.ics"), "utf-8");
+            attachMessage->contentType()->setParameter(QStringLiteral("method"),
+                    QStringLiteral("request"));
             attachMessage->setHeader(attachDisposition);
             attachMessage->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
             attachMessage->setBody(KMime::CRLFtoLF(attachment.toUtf8()));

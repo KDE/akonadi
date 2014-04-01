@@ -33,7 +33,7 @@ DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
     , m_view(view)
     , m_timerId(-1)
 {
-    m_pixmapSequence = KPixmapSequence(QLatin1String("process-working"), 22);
+    m_pixmapSequence = KPixmapSequence(QStringLiteral("process-working"), 22);
 }
 
 void DelegateAnimator::push(const QModelIndex &index)

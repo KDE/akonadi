@@ -55,7 +55,7 @@ public:
         , mDragDropManager(new DragDropManager(mParent))
 #endif
         , mXmlGuiClient(0)
-        , mDefaultPopupMenu(QLatin1String("akonadi_collectionview_contextmenu"))
+        , mDefaultPopupMenu(QStringLiteral("akonadi_collectionview_contextmenu"))
     {
     }
 
@@ -275,8 +275,8 @@ void EntityTreeView::contextMenuEvent(QContextMenuEvent *event)
     if (index.isValid()) {                                  // popup not over empty space
         // check whether the index under the cursor is a collection or item
         const Item item = model()->data(index, EntityTreeModel::ItemRole).value<Item>();
-        popupName = (item.isValid() ? QLatin1String("akonadi_itemview_contextmenu") :
-                     QLatin1String("akonadi_collectionview_contextmenu"));
+        popupName = (item.isValid() ? QStringLiteral("akonadi_itemview_contextmenu") :
+                     QStringLiteral("akonadi_collectionview_contextmenu"));
     }
 
     QMenu *popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(popupName, d->mXmlGuiClient));

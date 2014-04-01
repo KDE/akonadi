@@ -188,7 +188,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
   if ( msg->from( false ) )
     from = msg->from( false )->asUnicodeString();
   creationDate = msg->date( true )->dateTime();
-  if ( msg->contentType( false ) && msg->contentType( false )->asUnicodeString() == QLatin1String("text/html") ) {
+  if ( msg->contentType( false ) && msg->contentType( false )->asUnicodeString() == QStringLiteral("text/html") ) {
     textFormat = Qt::RichText;
   }
 
@@ -353,7 +353,7 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     title = d->title;
   }
   // Need a non-empty body part so that the serializer regards this as a valid message.
-  QString text = QLatin1String("  ");
+  QString text = QStringLiteral("  ");
   if ( !d->text.isEmpty() ) {
     text = d->text;
   }
@@ -509,11 +509,11 @@ QString NoteMessageWrapper::toPlainText() const
   }
 
   //From cleanHtml in kdepimlibs/kcalutils/incidenceformatter.cpp
-  QRegExp rx( QLatin1String("<body[^>]*>(.*)</body>"), Qt::CaseInsensitive );
+  QRegExp rx( QStringLiteral("<body[^>]*>(.*)</body>"), Qt::CaseInsensitive );
   rx.indexIn( d->text );
   QString body = rx.cap( 1 );
 
-  return Qt::escape( body.remove( QRegExp( QLatin1String("<[^>]*>") ) ).trimmed() );
+  return Qt::escape( body.remove( QRegExp( QStringLiteral("<[^>]*>") ) ).trimmed() );
 }
 
 QList<Attachment> &NoteMessageWrapper::attachments()

@@ -188,7 +188,7 @@ Item UnitTestBase::generateIncidence(const QString &uid, const QString &organize
     const KDateTime now = KDateTime::currentUtcDateTime();
     incidence->setDtStart(now);
     incidence->setDateTime(now.addSecs(3600), Incidence::RoleEnd);
-    incidence->setSummary(QLatin1String("summary"));
+    incidence->setSummary(QStringLiteral("summary"));
     item.setPayload<KCalCore::Incidence::Ptr>(incidence);
 
     if (!organizer.isEmpty()) {

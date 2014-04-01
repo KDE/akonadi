@@ -32,7 +32,7 @@ FreeBusyProviderBasePrivate::FreeBusyProviderBasePrivate(FreeBusyProviderBase *q
     , q(qq)
 {
     new Akonadi__FreeBusyProviderAdaptor(this);
-    DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FreeBusyProvider"),
+    DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/FreeBusyProvider"),
                                                           this, QDBusConnection::ExportAdaptors);
 }
 

@@ -442,9 +442,9 @@ void ResourceScheduler::Task::sendDBusReplies( const QString &errorMsg )
   Q_FOREACH( const QDBusMessage &msg, dbusMsgs ) {
     QDBusMessage reply( msg.createReply() );
     const QString methodName = msg.member();
-    if (methodName == QLatin1String("requestItemDelivery")) {
+    if (methodName == QStringLiteral("requestItemDelivery")) {
       reply << errorMsg.isEmpty();
-    } else if (methodName == QLatin1String("requestItemDeliveryV2")) {
+    } else if (methodName == QStringLiteral("requestItemDeliveryV2")) {
       reply << errorMsg;
     } else if (methodName.isEmpty()) {
       continue; // unittest calls scheduleItemFetch with empty QDBusMessage

@@ -62,7 +62,7 @@ static KCoreConfigSkeleton *getConfig( const QString &filename)
 }
 
 RecentContactsCollections::RecentContactsCollections( RecentContactsCollectionsPrivate *dd )
-  : SpecialCollections( getConfig(QLatin1String("recentcontactscollectionsrc")) ),
+  : SpecialCollections( getConfig(QStringLiteral("recentcontactscollectionsrc")) ),
     d( dd )
 {
   Q_UNUSED(d); // d isn't used yet

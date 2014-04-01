@@ -81,7 +81,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<KCalCore::Attendee::PartStat>("expectedPartStat");
 
     QString data_filename;
-    QString action = QLatin1String("accepted");
+    QString action = QStringLiteral("accepted");
     QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
     QString receiver = QLatin1String(s_ourEmail);
     Akonadi::ITIPHandler::Result expectedResult;
@@ -91,10 +91,10 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, and we accept
     expectedResult = ITIPHandler::ResultSuccess;
-    data_filename = QLatin1String("invited_us");
+    data_filename = QStringLiteral("invited_us");
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Accepted;
-    action = QLatin1String("accepted");
+    action = QStringLiteral("accepted");
     QTest::newRow("invited us1") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
@@ -102,10 +102,10 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, and we accept conditionally
     expectedResult = ITIPHandler::ResultSuccess;
-    data_filename = QLatin1String("invited_us");
+    data_filename = QStringLiteral("invited_us");
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Tentative;
-    action = QLatin1String("tentative");
+    action = QStringLiteral("tentative");
     QTest::newRow("invited us2") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
@@ -113,12 +113,12 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we delegate it
     expectedResult = ITIPHandler::ResultSuccess;
-    data_filename = QLatin1String("invited_us");
+    data_filename = QStringLiteral("invited_us");
 
     // The e-mail to the delegate is sent by kmail's text_calendar.cpp
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Delegated;
-    action = QLatin1String("delegated");
+    action = QStringLiteral("delegated");
     QTest::newRow("invited us3") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
@@ -127,9 +127,9 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     // Process a CANCEL without having the incidence in our calendar.
     // itiphandler should return success and not error
     expectedResult = ITIPHandler::ResultSuccess;
-    data_filename = QLatin1String("invited_us");
+    data_filename = QStringLiteral("invited_us");
     expectedNumIncidences = 0;
-    action = QLatin1String("cancel");
+    action = QStringLiteral("cancel");
     QTest::newRow("invited us4") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
@@ -138,7 +138,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumIncidences = 0;
-    action = QLatin1String("accepted");
+    action = QStringLiteral("accepted");
     QTest::newRow("invalid data") << QString() << action << receiver << incidenceUid
                                   << expectedResult
                                   << expectedNumIncidences
@@ -146,9 +146,9 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Testing invalid action
     expectedResult = ITIPHandler::ResultError;
-    data_filename = QLatin1String("invitation_us");
+    data_filename = QStringLiteral("invitation_us");
     expectedNumIncidences = 0;
-    action = QLatin1String("accepted");
+    action = QStringLiteral("accepted");
     QTest::newRow("invalid action") << data_filename << QString() << receiver << incidenceUid
                                     << expectedResult
                                     << expectedNumIncidences
@@ -156,11 +156,11 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Test bug 235749
     expectedResult = ITIPHandler::ResultSuccess;
-    data_filename = QLatin1String("bug235749");
+    data_filename = QStringLiteral("bug235749");
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Accepted;
-    action = QLatin1String("accepted");
-    incidenceUid = QLatin1String("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07"); // Don't change, hardcoded in data file
+    action = QStringLiteral("accepted");
+    incidenceUid = QStringLiteral("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07"); // Don't change, hardcoded in data file
     QTest::newRow("bug 235749") << data_filename << action << receiver << incidenceUid
                                 << expectedResult
                                 << expectedNumIncidences
@@ -168,11 +168,11 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Test counterproposal without a UI delegat set
     expectedResult = ITIPHandler::ResultError;
-    data_filename = QLatin1String("invited_us");
+    data_filename = QStringLiteral("invited_us");
     expectedNumIncidences = 0;
     expectedPartStat = KCalCore::Attendee::Accepted;
-    action = QLatin1String("counter");
-    incidenceUid = QLatin1String("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07");
+    action = QStringLiteral("counter");
+    incidenceUid = QStringLiteral("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07");
     QTest::newRow("counter error") << data_filename << action << receiver << incidenceUid
                                    << expectedResult
                                    << expectedNumIncidences
@@ -221,34 +221,34 @@ void ITIPHandlerTest::testProcessITIPMessages_data()
     QStringList invitation_filenames;
     QString expected_filename;
     QStringList actions;
-    actions << QLatin1String("accepted") << QLatin1String("accepted");
+    actions << QStringLiteral("accepted") << QStringLiteral("accepted");
 
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer changes event, and we record update:
     invitation_filenames.clear();
-    invitation_filenames << QLatin1String("invited_us") << QLatin1String("invited_us_update01");
-    expected_filename = QLatin1String("expected_data/update1");
+    invitation_filenames << QStringLiteral("invited_us") << QStringLiteral("invited_us_update01");
+    expected_filename = QStringLiteral("expected_data/update1");
     QTest::newRow("accept update") << invitation_filenames << expected_filename << actions;
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer changes event, and we record update:
     invitation_filenames.clear();
-    invitation_filenames << QLatin1String("invited_us") << QLatin1String("invited_us_daily_update01");
-    expected_filename = QLatin1String("expected_data/update2");
+    invitation_filenames << QStringLiteral("invited_us") << QStringLiteral("invited_us_daily_update01");
+    expected_filename = QStringLiteral("expected_data/update2");
     QTest::newRow("accept recurringupdate") << invitation_filenames << expected_filename << actions;
     //----------------------------------------------------------------------------------------------
     // We accept a recurring event, then the organizer changes the summary to the second instance (RECID)
-    expected_filename = QLatin1String("expected_data/update3");
+    expected_filename = QStringLiteral("expected_data/update3");
     invitation_filenames.clear();
-    invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_update_recid01");
+    invitation_filenames << QStringLiteral("invited_us_daily") << QStringLiteral("invited_us_daily_update_recid01");
     QTest::newRow("accept recid update") << invitation_filenames << expected_filename << actions;
     //----------------------------------------------------------------------------------------------
     // We accept a recurring event, then we accept a CANCEL with recuring-id.
     // The result is that a exception with status CANCELLED should be created, and our main incidence
     // should not be touched
     invitation_filenames.clear();
-    invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_cancel_recid01");
-    expected_filename = QLatin1String("expected_data/cancel1");
-    actions << QLatin1String("accepted") << QLatin1String("cancel");
+    invitation_filenames << QStringLiteral("invited_us_daily") << QStringLiteral("invited_us_daily_cancel_recid01");
+    expected_filename = QStringLiteral("expected_data/cancel1");
+    actions << QStringLiteral("accepted") << QStringLiteral("cancel");
     QTest::newRow("accept recid cancel") << invitation_filenames << expected_filename << actions;
 
     //----------------------------------------------------------------------------------------------
@@ -297,15 +297,15 @@ void ITIPHandlerTest::testProcessITIPMessageCancel_data()
     QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer cancels event
-    creation_data_filename = QLatin1String("invited_us");
-    cancel_data_filename = QLatin1String("invited_us_cancel01");
+    creation_data_filename = QStringLiteral("invited_us");
+    cancel_data_filename = QStringLiteral("invited_us_cancel01");
 
     QTest::newRow("cancel1") << creation_data_filename << cancel_data_filename
                              << incidenceUid;
     //----------------------------------------------------------------------------------------------
     // Someone invited us to daily event, we accept, then organizer cancels the whole recurrence series
-    creation_data_filename = QLatin1String("invited_us_daily");
-    cancel_data_filename = QLatin1String("invited_us_daily_cancel01");
+    creation_data_filename = QStringLiteral("invited_us_daily");
+    cancel_data_filename = QStringLiteral("invited_us_daily_cancel01");
 
     QTest::newRow("cancel_daily") << creation_data_filename << cancel_data_filename
                                   << incidenceUid;
@@ -327,14 +327,14 @@ void ITIPHandlerTest::testProcessITIPMessageCancel()
     // First accept the invitation that creates the incidence:
     QString iCalData = icalData(creation_data_filename);
     Item::List items;
-    processItip(iCalData, receiver, QLatin1String("accepted"), 1, items);
+    processItip(iCalData, receiver, QStringLiteral("accepted"), 1, items);
 
     KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
     QVERIFY(incidence);
 
     // good, now accept the invitation that has the CANCEL
     iCalData = icalData(cancel_data_filename);
-    processItip(iCalData, receiver, QLatin1String("accepted"), 0, items);
+    processItip(iCalData, receiver, QStringLiteral("accepted"), 0, items);
 }
 
 void ITIPHandlerTest::testOutgoingInvitations_data()
@@ -359,10 +359,10 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
 
     const QString ourEmail     = QLatin1String(s_ourEmail);
     const Attendee::Ptr us = Attendee::Ptr(new Attendee(QString(), ourEmail));
-    const Attendee::Ptr mia = Attendee::Ptr(new Attendee(QLatin1String("Mia Wallace"), QLatin1String("mia@dev.nul")));
-    const Attendee::Ptr vincent = Attendee::Ptr(new Attendee(QLatin1String("Vincent"), QLatin1String("vincent@dev.nul")));
-    const Attendee::Ptr jules = Attendee::Ptr(new Attendee(QLatin1String("Jules"), QLatin1String("jules@dev.nul")));
-    const QString uid = QLatin1String("random-uid-123");
+    const Attendee::Ptr mia = Attendee::Ptr(new Attendee(QStringLiteral("Mia Wallace"), QStringLiteral("mia@dev.nul")));
+    const Attendee::Ptr vincent = Attendee::Ptr(new Attendee(QStringLiteral("Vincent"), QStringLiteral("vincent@dev.nul")));
+    const Attendee::Ptr jules = Attendee::Ptr(new Attendee(QStringLiteral("Jules"), QStringLiteral("jules@dev.nul")));
+    const QString uid = QStringLiteral("random-uid-123");
 
     //----------------------------------------------------------------------------------------------
     // Creation. We are organizer. We invite another person.
@@ -498,7 +498,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
 
         m_pendingIncidenceChangerSignal = 1;
         Incidence::Ptr oldIncidence = Incidence::Ptr(incidence->clone());
-        incidence->setSummary(QLatin1String("the-new-summary"));
+        incidence->setSummary(QStringLiteral("the-new-summary"));
         int changeId = m_changer->modifyIncidence(mLastInsertedItem, oldIncidence);
         QVERIFY(changeId != 1);
         waitForIt();
@@ -533,7 +533,7 @@ void ITIPHandlerTest::testIdentity_data()
     const QString myEmail = QLatin1String(s_ourEmail);
     QString myEmail2      = QString::fromLatin1("Some name <%1>").arg(myEmail);
 
-    const QString myAlias1    = QLatin1String("alias1@kde.org"); // hardcoded in emailidentities, do not change
+    const QString myAlias1    = QStringLiteral("alias1@kde.org"); // hardcoded in emailidentities, do not change
     const QString myIdentity2 = QLatin1String(s_outEmail2);
 
 

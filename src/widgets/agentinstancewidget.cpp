@@ -40,10 +40,10 @@ static void iconsEarlyCleanup();
 struct Icons
 {
     Icons()
-        : readyPixmap(KIcon(QLatin1String("user-online")).pixmap(QSize(16, 16)))
-        , syncPixmap(KIcon(QLatin1String("network-connect")).pixmap(QSize(16, 16)))
-        , errorPixmap(KIcon(QLatin1String("dialog-error")).pixmap(QSize(16, 16)))
-        , offlinePixmap(KIcon(QLatin1String("network-disconnect")).pixmap(QSize(16, 16)))
+        : readyPixmap(KIcon(QStringLiteral("user-online")).pixmap(QSize(16, 16)))
+        , syncPixmap(KIcon(QStringLiteral("network-connect")).pixmap(QSize(16, 16)))
+        , errorPixmap(KIcon(QStringLiteral("dialog-error")).pixmap(QSize(16, 16)))
+        , offlinePixmap(KIcon(QStringLiteral("network-disconnect")).pixmap(QSize(16, 16)))
     {
         qAddPostRoutine(iconsEarlyCleanup);
     }

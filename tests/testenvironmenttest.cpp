@@ -45,7 +45,7 @@ class TestEnvironmentTest : public QObject
     {
       const QString kdehome = qgetenv( "KDEHOME" );
       QVERIFY( kdehome.startsWith( QDir::tempPath().toLocal8Bit() )
-              || kdehome.startsWith( QLatin1String("/tmp") ) );
+              || kdehome.startsWith( QStringLiteral("/tmp") ) );
     }
 
     void testDBus()

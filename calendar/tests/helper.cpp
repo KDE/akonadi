@@ -27,7 +27,7 @@ Akonadi::Collection Helper::fetchCollection()
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(),
             CollectionFetchJob::Recursive);
     // Get list of collections
-    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.event"));
     const bool ret = job->exec();
     Q_ASSERT(ret);
     Q_UNUSED(ret);

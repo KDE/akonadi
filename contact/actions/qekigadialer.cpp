@@ -80,7 +80,7 @@ bool QEkigaDialer::initializeEkiga()
     if (!isEkigaServiceRegistered()) {
 
         // it could be skype is not running yet, so start it now
-        if (!QProcess::startDetached(QLatin1String("ekiga"), QStringList())) {
+        if (!QProcess::startDetached(QStringLiteral("ekiga"), QStringList())) {
             mErrorMessage = i18n("Unable to start ekiga process, check that ekiga executable is in your PATH variable.");
             return false;
         }
@@ -114,7 +114,7 @@ bool QEkigaDialer::dialNumber(const QString &number)
     if (!initializeEkiga()) {
         return false;
     }
-    QDBusReply<void> reply = mInterface->call(QLatin1String("Call"), number);
+    QDBusReply<void> reply = mInterface->call(QStringLiteral("Call"), number);
     return true;
 }
 

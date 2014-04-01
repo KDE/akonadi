@@ -125,7 +125,7 @@ PluginMetaData PluginLoader::infoForName(const QString &name) const
 
 void PluginLoader::scan()
 {
-    const QStringList list = KGlobal::dirs()->findAllResources("data", QLatin1String("akonadi/plugins/serializer/*.desktop"),
+    const QStringList list = KGlobal::dirs()->findAllResources("data", QStringLiteral("akonadi/plugins/serializer/*.desktop"),
                                                                KStandardDirs::Recursive | KStandardDirs::NoDuplicates);
     for (int i = 0; i < list.count(); ++i) {
         const QString entry = list.at(i);

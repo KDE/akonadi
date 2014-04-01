@@ -62,7 +62,7 @@ QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *m
 QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
 {
     if (!index.isValid()) {
-        return QLatin1String("x-1");
+        return QStringLiteral("x-1");
     }
     const Collection c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
     if (c.isValid()) {

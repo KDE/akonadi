@@ -37,7 +37,7 @@ PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
 
     new Akonadi__PreprocessorAdaptor(this);
 
-    if (!DBusConnectionPool::threadConnection().registerObject(QLatin1String("/Preprocessor"), this, QDBusConnection::ExportAdaptors)) {
+    if (!DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Preprocessor"), this, QDBusConnection::ExportAdaptors)) {
         q->error(i18n("Unable to register object at dbus: %1", DBusConnectionPool::threadConnection().lastError().message()));
     }
 

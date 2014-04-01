@@ -95,18 +95,18 @@ public:
     {
         const QList<SearchTerm> &subTerms = term.subTerms();
         QVariantMap termJSON;
-        termJSON.insert(QLatin1String("negated"), term.isNegated());
+        termJSON.insert(QStringLiteral("negated"), term.isNegated());
         if (subTerms.isEmpty()) {
-            termJSON.insert(QLatin1String("key"), term.key());
-            termJSON.insert(QLatin1String("value"), term.value());
-            termJSON.insert(QLatin1String("cond"), static_cast<int>(term.condition()));
+            termJSON.insert(QStringLiteral("key"), term.key());
+            termJSON.insert(QStringLiteral("value"), term.value());
+            termJSON.insert(QStringLiteral("cond"), static_cast<int>(term.condition()));
         } else {
-            termJSON.insert(QLatin1String("rel"), static_cast<int>(term.relation()));
+            termJSON.insert(QStringLiteral("rel"), static_cast<int>(term.relation()));
             QVariantList subTermsJSON;
             Q_FOREACH (const SearchTerm &term, subTerms) {
                 subTermsJSON.append(termToJSON(term));
             }
-            termJSON.insert(QLatin1String("subTerms"), subTermsJSON);
+            termJSON.insert(QStringLiteral("subTerms"), subTermsJSON);
         }
 
         return termJSON;
@@ -114,16 +114,16 @@ public:
 
     static SearchTerm JSONToTerm(const QVariantMap &json)
     {
-        if (json.contains(QLatin1String("key"))) {
-            SearchTerm term(json[QLatin1String("key")].toString(),
-                            json[QLatin1String("value")],
-                            static_cast<SearchTerm::Condition>(json[QLatin1String("cond")].toInt()));
-            term.setIsNegated(json[QLatin1String("negated")].toBool());
+        if (json.contains(QStringLiteral("key"))) {
+            SearchTerm term(json[QStringLiteral("key")].toString(),
+                            json[QStringLiteral("value")],
+                            static_cast<SearchTerm::Condition>(json[QStringLiteral("cond")].toInt()));
+            term.setIsNegated(json[QStringLiteral("negated")].toBool());
             return term;
-        } else if (json.contains(QLatin1String("rel"))) {
-            SearchTerm term(static_cast<SearchTerm::Relation>(json[QLatin1String("rel")].toInt()));
-            term.setIsNegated(json[QLatin1String("negated")].toBool());
-            const QVariantList subTermsJSON = json[QLatin1String("subTerms")].toList();
+        } else if (json.contains(QStringLiteral("rel"))) {
+            SearchTerm term(static_cast<SearchTerm::Relation>(json[QStringLiteral("rel")].toInt()));
+            term.setIsNegated(json[QStringLiteral("negated")].toBool());
+            const QVariantList subTermsJSON = json[QStringLiteral("subTerms")].toList();
             Q_FOREACH (const QVariant &subTermJSON, subTermsJSON) {
                 term.addSubTerm(JSONToTerm(subTermJSON.toMap()));
             }
@@ -282,7 +282,7 @@ int SearchQuery::limit() const
 QByteArray SearchQuery::toJSON() const
 {
     QVariantMap root = Private::termToJSON(d->rootTerm);
-    root.insert(QLatin1String("limit"), d->limit);
+    root.insert(QStringLiteral("limit"), d->limit);
 
 #warning KF5 Port me!
 #if 0
@@ -306,8 +306,8 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
     const QVariantMap map = json.toMap();
     SearchQuery query;
     query.d->rootTerm = Private::JSONToTerm(map);
-    if (map.contains(QLatin1String("limit"))) {
-        query.d->limit = map.value(QLatin1String("limit")).toInt();
+    if (map.contains(QStringLiteral("limit"))) {
+        query.d->limit = map.value(QStringLiteral("limit")).toInt();
     }
     return query;
 #endif
@@ -317,27 +317,27 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
 QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
 {
     QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
-    mapping.insert(EmailSearchTerm::Body, QLatin1String("body"));
-    mapping.insert(EmailSearchTerm::Headers, QLatin1String("headers"));
-    mapping.insert(EmailSearchTerm::Subject, QLatin1String("subject"));
-    mapping.insert(EmailSearchTerm::Message, QLatin1String("message"));
-    mapping.insert(EmailSearchTerm::HeaderFrom, QLatin1String("from"));
-    mapping.insert(EmailSearchTerm::HeaderTo, QLatin1String("to"));
-    mapping.insert(EmailSearchTerm::HeaderCC, QLatin1String("cc"));
-    mapping.insert(EmailSearchTerm::HeaderBCC, QLatin1String("bcc"));
-    mapping.insert(EmailSearchTerm::HeaderReplyTo, QLatin1String("replyto"));
-    mapping.insert(EmailSearchTerm::HeaderOrganization, QLatin1String("organization"));
-    mapping.insert(EmailSearchTerm::HeaderListId, QLatin1String("listid"));
-    mapping.insert(EmailSearchTerm::HeaderResentFrom, QLatin1String("resentfrom"));
-    mapping.insert(EmailSearchTerm::HeaderXLoop, QLatin1String("xloop"));
-    mapping.insert(EmailSearchTerm::HeaderXMailingList, QLatin1String("xmailinglist"));
-    mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QLatin1String("xspamflag"));
-    mapping.insert(EmailSearchTerm::HeaderDate, QLatin1String("date"));
-    mapping.insert(EmailSearchTerm::HeaderOnlyDate, QLatin1String("onlydate"));
-    mapping.insert(EmailSearchTerm::MessageStatus, QLatin1String("messagestatus"));
-    mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
-    mapping.insert(EmailSearchTerm::ByteSize, QLatin1String("size"));
-    mapping.insert(EmailSearchTerm::Attachment, QLatin1String("attachment"));
+    mapping.insert(EmailSearchTerm::Body, QStringLiteral("body"));
+    mapping.insert(EmailSearchTerm::Headers, QStringLiteral("headers"));
+    mapping.insert(EmailSearchTerm::Subject, QStringLiteral("subject"));
+    mapping.insert(EmailSearchTerm::Message, QStringLiteral("message"));
+    mapping.insert(EmailSearchTerm::HeaderFrom, QStringLiteral("from"));
+    mapping.insert(EmailSearchTerm::HeaderTo, QStringLiteral("to"));
+    mapping.insert(EmailSearchTerm::HeaderCC, QStringLiteral("cc"));
+    mapping.insert(EmailSearchTerm::HeaderBCC, QStringLiteral("bcc"));
+    mapping.insert(EmailSearchTerm::HeaderReplyTo, QStringLiteral("replyto"));
+    mapping.insert(EmailSearchTerm::HeaderOrganization, QStringLiteral("organization"));
+    mapping.insert(EmailSearchTerm::HeaderListId, QStringLiteral("listid"));
+    mapping.insert(EmailSearchTerm::HeaderResentFrom, QStringLiteral("resentfrom"));
+    mapping.insert(EmailSearchTerm::HeaderXLoop, QStringLiteral("xloop"));
+    mapping.insert(EmailSearchTerm::HeaderXMailingList, QStringLiteral("xmailinglist"));
+    mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QStringLiteral("xspamflag"));
+    mapping.insert(EmailSearchTerm::HeaderDate, QStringLiteral("date"));
+    mapping.insert(EmailSearchTerm::HeaderOnlyDate, QStringLiteral("onlydate"));
+    mapping.insert(EmailSearchTerm::MessageStatus, QStringLiteral("messagestatus"));
+    mapping.insert(EmailSearchTerm::MessageTag, QStringLiteral("messagetag"));
+    mapping.insert(EmailSearchTerm::ByteSize, QStringLiteral("size"));
+    mapping.insert(EmailSearchTerm::Attachment, QStringLiteral("attachment"));
     return mapping;
 }
 
@@ -362,11 +362,11 @@ EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey(const QString &key)
 QMap<ContactSearchTerm::ContactSearchField, QString> initializeContactMapping()
 {
     QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
-    mapping.insert(ContactSearchTerm::Name, QLatin1String("name"));
-    mapping.insert(ContactSearchTerm::Nickname, QLatin1String("nickname"));
-    mapping.insert(ContactSearchTerm::Email, QLatin1String("email"));
-    mapping.insert(ContactSearchTerm::Uid, QLatin1String("uid"));
-    mapping.insert(ContactSearchTerm::All, QLatin1String("all"));
+    mapping.insert(ContactSearchTerm::Name, QStringLiteral("name"));
+    mapping.insert(ContactSearchTerm::Nickname, QStringLiteral("nickname"));
+    mapping.insert(ContactSearchTerm::Email, QStringLiteral("email"));
+    mapping.insert(ContactSearchTerm::Uid, QStringLiteral("uid"));
+    mapping.insert(ContactSearchTerm::All, QStringLiteral("all"));
     return mapping;
 }
 

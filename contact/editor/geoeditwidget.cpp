@@ -46,7 +46,7 @@ public:
     GeoMapWidget(QWidget *parent = 0)
         : QWidget(parent)
     {
-        mWorld = QPixmap(KStandardDirs::locate("data", QLatin1String("akonadi/contact/pics/world.jpg")));
+        mWorld = QPixmap(KStandardDirs::locate("data", QStringLiteral("akonadi/contact/pics/world.jpg")));
 
         setAttribute(Qt::WA_NoSystemBackground, true);
         setFixedSize(400, 200);
@@ -170,7 +170,7 @@ static double calculateCoordinate(const QString &coordinate)
     int d = 0, m = 0, s = 0;
     QString str = coordinate;
 
-    neg = str.left(1) == QLatin1String("-");
+    neg = str.left(1) == QStringLiteral("-");
     str.remove(0, 1);
 
     switch (str.length()) {
@@ -207,7 +207,7 @@ GeoDialog::GeoDialog(const KABC::Geo &coordinates, QWidget *parent)
     : KDialog(parent)
     , mCoordinates(coordinates)
 {
-    KLocalizedString::insertCatalog(QLatin1String("timezones4"));
+    KLocalizedString::insertCatalog(QStringLiteral("timezones4"));
     setCaption(i18nc("@title:window", "Coordinate Selection"));
     setButtons(Ok | Cancel);
     setDefaultButton(Ok);
@@ -273,14 +273,14 @@ GeoDialog::GeoDialog(const KABC::Geo &coordinates, QWidget *parent)
     mLatMinutes->setMaximum(59);
     mLatMinutes->setValue(1);
 
-    mLatMinutes->setSuffix(QLatin1String("'"));
+    mLatMinutes->setSuffix(QStringLiteral("'"));
     sexagesimalLayout->addWidget(mLatMinutes, 0, 2);
 
     mLatSeconds = new QSpinBox(sexagesimalGroup);
     mLatSeconds->setMinimum(0);
     mLatSeconds->setMaximum(59);
     mLatSeconds->setValue(1);
-    mLatSeconds->setSuffix(QLatin1String("\""));
+    mLatSeconds->setSuffix(QStringLiteral("\""));
     sexagesimalLayout->addWidget(mLatSeconds, 0, 3);
 
     mLatDirection = new KComboBox(sexagesimalGroup);
@@ -303,14 +303,14 @@ GeoDialog::GeoDialog(const KABC::Geo &coordinates, QWidget *parent)
     mLongMinutes->setMinimum(0);
     mLongMinutes->setMaximum(59);
     mLongMinutes->setValue(1);
-    mLongMinutes->setSuffix(QLatin1String("'"));
+    mLongMinutes->setSuffix(QStringLiteral("'"));
     sexagesimalLayout->addWidget(mLongMinutes, 1, 2);
 
     mLongSeconds = new QSpinBox(sexagesimalGroup);
     mLongSeconds->setMinimum(0);
     mLongSeconds->setMaximum(59);
     mLongSeconds->setValue(1);
-    mLongSeconds->setSuffix(QLatin1String("\""));
+    mLongSeconds->setSuffix(QStringLiteral("\""));
     sexagesimalLayout->addWidget(mLongSeconds, 1, 3);
 
     mLongDirection = new KComboBox(sexagesimalGroup);
@@ -466,14 +466,14 @@ void GeoDialog::loadCityList()
     mCityCombo->clear();
     mGeoDataMap.clear();
 
-    QFile file(KStandardDirs::locate("data", QLatin1String("akonadi/contact/data/zone.tab")));
+    QFile file(KStandardDirs::locate("data", QStringLiteral("akonadi/contact/data/zone.tab")));
 
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream s(&file);
 
         QString line, country;
-        QRegExp coord(QLatin1String("[+-]\\d+[+-]\\d+"));
-        QRegExp name(QLatin1String("[^\\s]+/[^\\s]+"));
+        QRegExp coord(QStringLiteral("[+-]\\d+[+-]\\d+"));
+        QRegExp name(QStringLiteral("[^\\s]+/[^\\s]+"));
         int pos;
 
         while (!s.atEnd()) {

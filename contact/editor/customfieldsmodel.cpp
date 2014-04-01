@@ -119,7 +119,7 @@ QVariant CustomFieldsModel::data(const QModelIndex &index, int role) const
     if (role == Qt::CheckStateRole) {
         if (index.column() == 1) {
             if (customField.type() == CustomField::BooleanType) {
-                return (customField.value() == QLatin1String("true") ? Qt::Checked : Qt::Unchecked);
+                return (customField.value() == QStringLiteral("true") ? Qt::Checked : Qt::Unchecked);
             }
         }
     }
@@ -178,7 +178,7 @@ bool CustomFieldsModel::setData(const QModelIndex &index, const QVariant &value,
         if (index.column() == 1) {
             if (customField.type() == CustomField::BooleanType) {
                 customField.setValue(static_cast<Qt::CheckState>(value.toInt()) == Qt::Checked ?
-                                         QLatin1String("true") : QLatin1String("false"));
+                                         QStringLiteral("true") : QStringLiteral("false"));
                 emit dataChanged(index, index);
                 return true;
             }

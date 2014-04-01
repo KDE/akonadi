@@ -101,13 +101,13 @@ void SessionPrivate::reconnect()
         qDebug() << protocol << options;
 
         if (protocol == "tcp") {
-            serverAddress = options.value(QLatin1String("host"));
-            port = options.value(QLatin1String("port")).toUInt();
+            serverAddress = options.value(QStringLiteral("host"));
+            port = options.value(QStringLiteral("port")).toUInt();
             useTcp = true;
         } else if (protocol == "unix") {
-            serverAddress = options.value(QLatin1String("path"));
+            serverAddress = options.value(QStringLiteral("path"));
         } else if (protocol == "pipe") {
-            serverAddress = options.value(QLatin1String("name"));
+            serverAddress = options.value(QStringLiteral("name"));
         }
     }
 
@@ -124,10 +124,10 @@ void SessionPrivate::reconnect()
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
 
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
-        serverAddress = connectionSettings.value(QLatin1String("Data/NamedPipe"), QLatin1String("Akonadi")).toString();
+        serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), QStringLiteral("Akonadi")).toString();
 #else
         const QString defaultSocketDir = Internal::xdgSaveDir("data");
-        serverAddress = connectionSettings.value(QLatin1String("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
+        serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QStringLiteral("/akonadiserver.socket"))).toString();
 #endif
     }
 
@@ -158,7 +158,7 @@ void SessionPrivate::reconnect()
 
 QString SessionPrivate::connectionFile()
 {
-    return Internal::xdgSaveDir("config") + QLatin1String("/akonadiconnectionrc");
+    return Internal::xdgSaveDir("config") + QStringLiteral("/akonadiconnectionrc");
 }
 
 void SessionPrivate::socketError(QLocalSocket::LocalSocketError)

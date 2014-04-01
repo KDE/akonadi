@@ -180,9 +180,9 @@ bool ServerManager::start()
     qDebug() << "executing akonadi_control";
     QStringList args;
     if (hasInstanceIdentifier()) {
-        args << QLatin1String("--instance") << instanceIdentifier();
+        args << QStringLiteral("--instance") << instanceIdentifier();
     }
-    const bool ok = QProcess::startDetached(QLatin1String("akonadi_control"), args);
+    const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), args);
     if (!ok) {
         qWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
         QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService(ServerManager::serviceName(ServerManager::Control));
@@ -211,7 +211,7 @@ bool ServerManager::stop()
 
 void ServerManager::showSelfTestDialog(QWidget *parent)
 {
-    QProcess::startDetached(QLatin1String("akonadiselftest"));
+    QProcess::startDetached(QStringLiteral("akonadiselftest"));
 }
 
 bool ServerManager::isRunning()
@@ -247,7 +247,7 @@ ServerManager::State ServerManager::state()
             // besides the running server processes we also need at least one resource to be operational
             AgentType::List agentTypes = AgentManager::self()->types();
             foreach (const AgentType &type, agentTypes) {
-                if (type.capabilities().contains(QLatin1String("Resource"))) {
+                if (type.capabilities().contains(QStringLiteral("Resource"))) {
                     return Running;
                 }
             }
@@ -363,9 +363,9 @@ void Internal::setClientType(ClientType type)
 
 QString Internal::xdgSaveDir(const char *resource, const QString &relPath)
 {
-    QString fullRelPath = QLatin1String("akonadi");
+    QString fullRelPath = QStringLiteral("akonadi");
     if (!ServerManager::instanceIdentifier().isEmpty()) {
-        fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
+        fullRelPath += QStringLiteral("/instance/") + ServerManager::instanceIdentifier();
     }
     if (!relPath.isEmpty()) {
         fullRelPath += QLatin1Char('/') + relPath;

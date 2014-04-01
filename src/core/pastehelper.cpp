@@ -51,9 +51,9 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
     if (KUrl::List::canDecode(mimeData)) {
         const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
         foreach (const KUrl &url, urls) {
-            if (url.hasQueryItem(QLatin1String("item"))) {
+            if (url.hasQueryItem(QStringLiteral("item"))) {
                 neededRights |= Collection::CanCreateItem;
-            } else if (url.hasQueryItem(QLatin1String("collection"))) {
+            } else if (url.hasQueryItem(QStringLiteral("collection"))) {
                 neededRights |= Collection::CanCreateCollection;
             }
         }
@@ -67,11 +67,11 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
         bool supportsMimeTypes = true;
         foreach (const KUrl &url, urls) {
             // collections do not provide mimetype information, so ignore this check
-            if (url.hasQueryItem(QLatin1String("collection"))) {
+            if (url.hasQueryItem(QStringLiteral("collection"))) {
                 continue;
             }
 
-            const QString mimeType = url.queryItemValue(QLatin1String("type"));
+            const QString mimeType = url.queryItemValue(QStringLiteral("type"));
             if (!collection.contentMimeTypes().contains(mimeType)) {
                 supportsMimeTypes = false;
                 break;

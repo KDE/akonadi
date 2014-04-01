@@ -70,7 +70,7 @@ void SmsDialog::initUI()
 
     connect(mSmsTextEdit, SIGNAL(textChanged()), SLOT(updateCounter()));
 
-    mLengthLabel = new QLabel(QLatin1String("-") , page);
+    mLengthLabel = new QLabel(QStringLiteral("-") , page);
     topLayout->addWidget(mLengthLabel);
 
     mSmsTextEdit->setFocus();

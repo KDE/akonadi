@@ -100,11 +100,11 @@ bool Tag::operator==(const Tag &other) const
 
 Tag Tag::fromUrl(const KUrl &url)
 {
-    if (url.protocol() != QLatin1String("akonadi")) {
+    if (url.protocol() != QStringLiteral("akonadi")) {
         return Tag();
     }
 
-    const QString tagStr = url.queryItem(QLatin1String("tag"));
+    const QString tagStr = url.queryItem(QStringLiteral("tag"));
     bool ok = false;
     Tag::Id itemId = tagStr.toLongLong(&ok);
     if (!ok) {
@@ -118,7 +118,7 @@ KUrl Tag::url() const
 {
     KUrl url;
     url.setProtocol(QString::fromLatin1("akonadi"));
-    url.addQueryItem(QLatin1String("tag"), QString::number(id()));
+    url.addQueryItem(QStringLiteral("tag"), QString::number(id()));
     return url;
 }
 

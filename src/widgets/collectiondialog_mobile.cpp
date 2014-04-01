@@ -98,19 +98,19 @@ CollectionDialog::Private::Private(QAbstractItemModel *customModel, CollectionDi
     mParent->connect(mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
                      SLOT(slotCollectionAvailable(QModelIndex)));
 
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", QLatin1String("imports"))) {
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", QStringLiteral("imports"))) {
         mView->engine()->addImportPath(importPath);
     }
 
-    mView->rootContext()->setContextProperty(QLatin1String("dialogController"), this);
-    mView->rootContext()->setContextProperty(QLatin1String("collectionModel"), mFilterModel);
+    mView->rootContext()->setContextProperty(QStringLiteral("dialogController"), this);
+    mView->rootContext()->setContextProperty(QStringLiteral("collectionModel"), mFilterModel);
 
     // QUICKHACK: since we have no KDE integration plugin available in kdelibs, we have to do the translation in C++ space
-    mView->rootContext()->setContextProperty(QLatin1String("okButtonText"), KStandardGuiItem::ok().text().remove(QLatin1Char('&')));
-    mView->rootContext()->setContextProperty(QLatin1String("cancelButtonText"), KStandardGuiItem::cancel().text().remove(QLatin1Char('&')));
-    mView->rootContext()->setContextProperty(QLatin1String("createButtonText"), i18n("&New Subfolder...").remove(QLatin1Char('&')));
+    mView->rootContext()->setContextProperty(QStringLiteral("okButtonText"), KStandardGuiItem::ok().text().remove(QLatin1Char('&')));
+    mView->rootContext()->setContextProperty(QStringLiteral("cancelButtonText"), KStandardGuiItem::cancel().text().remove(QLatin1Char('&')));
+    mView->rootContext()->setContextProperty(QStringLiteral("createButtonText"), i18n("&New Subfolder...").remove(QLatin1Char('&')));
 
-    mView->setSource(KUrl::fromLocalFile(KStandardDirs::locate("data", QLatin1String("akonadi-kde/qml/CollectionDialogMobile.qml"))));
+    mView->setSource(KUrl::fromLocalFile(KStandardDirs::locate("data", QStringLiteral("akonadi-kde/qml/CollectionDialogMobile.qml"))));
 
 #if defined (Q_WS_MAEMO_5) || defined (MEEGO_EDITION_HARMATTAN)
     mParent->setWindowState(Qt::WindowFullScreen);

@@ -140,7 +140,7 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
                 if (!item.remoteId().isEmpty()) {
                     return item.remoteId();
                 }
-                return QString(QLatin1String("<") + QString::number(item.id()) + QLatin1String(">"));
+                return QString(QStringLiteral("<") + QString::number(item.id()) + QStringLiteral(">"));
             }
             break;
         case Qt::DecorationRole:
@@ -426,7 +426,7 @@ Qt::DropActions EntityTreeModel::supportedDropActions() const
 QStringList EntityTreeModel::mimeTypes() const
 {
     // TODO: Should this return the mimetypes that the items provide? Allow dragging a contact from here for example.
-    return QStringList() << QLatin1String("text/uri-list");
+    return QStringList() << QStringLiteral("text/uri-list");
 }
 
 bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
@@ -486,7 +486,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             return true;
         }
 
-        if (data->hasFormat(QLatin1String("text/uri-list"))) {
+        if (data->hasFormat(QStringLiteral("text/uri-list"))) {
 
             MimeTypeChecker mimeChecker;
             mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());
@@ -506,8 +506,8 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                         return false;
                     }
 
-                    if (url.hasQueryItem(QLatin1String("name"))) {
-                        const QString collectionName = url.queryItemValue(QLatin1String("name"));
+                    if (url.hasQueryItem(QStringLiteral("name"))) {
+                        const QString collectionName = url.queryItemValue(QStringLiteral("name"));
                         const QStringList collectionNames = d->childCollectionNames(destCollection);
 
                         if (collectionNames.contains(collectionName)) {

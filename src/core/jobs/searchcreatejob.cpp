@@ -144,7 +144,7 @@ void SearchCreateJob::doStart()
         command += QByteArray(AKONADI_PARAM_REMOTE) + " ";
     }
     command += QByteArray(AKONADI_PARAM_MIMETYPE) + " (";
-    command += d->mMimeTypes.join(QLatin1String(" ")).toLatin1();
+    command += d->mMimeTypes.join(QStringLiteral(" ")).toLatin1();
     command += ") )";
     command += '\n';
     d->writeData(command);

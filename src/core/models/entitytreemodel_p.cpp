@@ -78,7 +78,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
 
     org::freedesktop::Akonadi::AgentManager *manager =
         new org::freedesktop::Akonadi::AgentManager(ServerManager::serviceName(Akonadi::ServerManager::Control),
-                                                    QLatin1String("/AgentManager"),
+                                                    QStringLiteral("/AgentManager"),
                                                     DBusConnectionPool::threadConnection(), q_ptr);
 
     QObject::connect(manager, SIGNAL(agentInstanceAdvancedStatusChanged(QString,QVariantMap)),
@@ -106,7 +106,7 @@ void EntityTreeModelPrivate::init(ChangeRecorder *monitor)
 
     m_monitor->setChangeRecordingEnabled(false);
 
-    m_rootCollectionDisplayName = QLatin1String("[*]");
+    m_rootCollectionDisplayName = QStringLiteral("[*]");
 
     m_includeStatistics = true;
     m_monitor->fetchCollectionStatistics(true);
@@ -240,7 +240,7 @@ void EntityTreeModelPrivate::changeFetchState(const Collection &parent)
 void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &instance)
 {
     Q_Q(EntityTreeModel);
-    if (!instance.type().capabilities().contains(QLatin1String("Resource"))) {
+    if (!instance.type().capabilities().contains(QStringLiteral("Resource"))) {
         return;
     }
 
@@ -264,13 +264,13 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
 
 void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged(const QString &, const QVariantMap &status)
 {
-    const QString key = status.value(QLatin1String("key")).toString();
-    if (key != QLatin1String("collectionSyncProgress")) {
+    const QString key = status.value(QStringLiteral("key")).toString();
+    if (key != QStringLiteral("collectionSyncProgress")) {
         return;
     }
 
-    const Collection::Id collectionId = status.value(QLatin1String("collectionId")).toLongLong();
-    const uint percent = status.value(QLatin1String("percent")).toUInt();
+    const Collection::Id collectionId = status.value(QStringLiteral("collectionId")).toLongLong();
+    const uint percent = status.value(QStringLiteral("percent")).toUInt();
     if (m_collectionSyncProgress.value(collectionId) == percent) {
         return;
     }

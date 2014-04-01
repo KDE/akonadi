@@ -40,7 +40,7 @@ namespace Akonadi {
 
 DefaultItemSerializerPlugin::DefaultItemSerializerPlugin()
 {
-    Item::addToLegacyMapping<QByteArray>(QLatin1String("application/octet-stream"));
+    Item::addToLegacyMapping<QByteArray>(QStringLiteral("application/octet-stream"));
 }
 
 bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int)
@@ -90,11 +90,11 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
         QString fileName = QString::fromUtf8(data);
         QFileInfo fi(fileName);
         if (!fi.isAbsolute()) {
-            QString fullRelPath = QLatin1String("akonadi");
+            QString fullRelPath = QStringLiteral("akonadi");
             if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-                fullRelPath += QDir::separator() + QLatin1String("instance") + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
+                fullRelPath += QDir::separator() + QStringLiteral("instance") + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
             }
-            fullRelPath += QDir::separator() + QLatin1String("file_db_data");
+            fullRelPath += QDir::separator() + QStringLiteral("file_db_data");
             fileName = XdgBaseDirs::saveDir("data", fullRelPath) + QDir::separator() + fileName;
         }
 

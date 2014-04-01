@@ -40,7 +40,7 @@ class FetchJobCalendarTest : public QObject
         item.setMimeType(Event::eventMimeType());
         Incidence::Ptr incidence = Incidence::Ptr(new Event());
         incidence->setUid(uid);
-        incidence->setSummary(QLatin1String("summary"));
+        incidence->setSummary(QStringLiteral("summary"));
         incidence->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
         item.setPayload<KCalCore::Incidence::Ptr>(incidence);
         ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
@@ -53,7 +53,7 @@ class FetchJobCalendarTest : public QObject
                 CollectionFetchJob::Recursive,
                 this);
         // Get list of collections
-        job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
+        job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.event"));
         AKVERIFYEXEC(job);
 
         // Find our collection

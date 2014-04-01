@@ -28,7 +28,7 @@ IMProtocols *IMProtocols::mSelf = 0;
 
 IMProtocols::IMProtocols()
 {
-    KIconLoader::global()->addAppDir(QLatin1String("akonadi/contact"));
+    KIconLoader::global()->addAppDir(QStringLiteral("akonadi/contact"));
 
     const QList<KPluginInfo> list = KPluginInfo::fromServices(KServiceTypeTrader::self()->query(QString::fromLatin1("KABC/IMProtocol")));
 
@@ -37,13 +37,13 @@ IMProtocols::IMProtocols()
     foreach (const KPluginInfo &info, list) {
         sortingMap.insert(info.name(), info);
 
-        mPluginInfos.insert(info.property(QLatin1String("X-KDE-InstantMessagingKABCField")).toString(), info);
+        mPluginInfos.insert(info.property(QStringLiteral("X-KDE-InstantMessagingKABCField")).toString(), info);
     }
 
     QMapIterator<QString, KPluginInfo> it(sortingMap);
     while (it.hasNext()) {
         it.next();
-        mSortedProtocols.append(it.value().property(QLatin1String("X-KDE-InstantMessagingKABCField")).toString());
+        mSortedProtocols.append(it.value().property(QStringLiteral("X-KDE-InstantMessagingKABCField")).toString());
     }
 }
 

@@ -351,10 +351,10 @@ KUrl Item::url(UrlType type) const
 {
     KUrl url;
     url.setProtocol(QString::fromLatin1("akonadi"));
-    url.addQueryItem(QLatin1String("item"), QString::number(id()));
+    url.addQueryItem(QStringLiteral("item"), QString::number(id()));
 
     if (type == UrlWithMimeType) {
-        url.addQueryItem(QLatin1String("type"), mimeType());
+        url.addQueryItem(QStringLiteral("type"), mimeType());
     }
 
     return url;
@@ -362,11 +362,11 @@ KUrl Item::url(UrlType type) const
 
 Item Item::fromUrl(const KUrl &url)
 {
-    if (url.protocol() != QLatin1String("akonadi")) {
+    if (url.protocol() != QStringLiteral("akonadi")) {
         return Item();
     }
 
-    const QString itemStr = url.queryItem(QLatin1String("item"));
+    const QString itemStr = url.queryItem(QStringLiteral("item"));
     bool ok = false;
     Item::Id itemId = itemStr.toLongLong(&ok);
     if (!ok) {
@@ -474,7 +474,7 @@ static QString format_types(const PayloadContainer &c)
     for (PayloadContainer::const_iterator it = c.begin(), end = c.end() ; it != end ; ++it) {
         result.push_back(format_type(it->sharedPointerId, it->metaTypeId));
     }
-    return result.join(QLatin1String(", "));
+    return result.join(QStringLiteral(", "));
 }
 
 #if 0
@@ -482,7 +482,7 @@ QString Item::payloadExceptionText(int spid, int mtid) const
 {
     Q_D(const Item);
     if (d->mPayloads.empty()) {
-        return QLatin1String("No payload set");
+        return QStringLiteral("No payload set");
     } else {
         return QString::fromLatin1("Wrong payload type (requested: %1; present: %2")
                .arg(format_type(spid, mtid), format_types(d->mPayloads));

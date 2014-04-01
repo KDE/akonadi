@@ -42,7 +42,7 @@ Item::List Akonadi::IncidenceFetchJob::items() const
 void Akonadi::IncidenceFetchJob::doStart()
 {
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
-    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("text/calendar")
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("text/calendar")
                                           << KCalCore::Event::eventMimeType()
                                           << KCalCore::Todo::todoMimeType()
                                           << KCalCore::Journal::journalMimeType());

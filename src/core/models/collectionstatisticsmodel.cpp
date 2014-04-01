@@ -153,7 +153,7 @@ QVariant CollectionStatisticsModel::data(const QModelIndex &index, int role) con
         if (value < 0) {
             return QString();
         } else if (value == 0) {
-            return QLatin1String("-");
+            return QStringLiteral("-");
         } else if (index.column() == 3) {
             return KGlobal::locale()->formatByteSize(value);
         } else {

@@ -197,7 +197,7 @@ FreeBusyManagerPrivate::FreeBusyManagerPrivate(FreeBusyManager *q)
 
 QString FreeBusyManagerPrivate::freeBusyDir() const
 {
-    return KStandardDirs::locateLocal("data", QLatin1String("korganizer/freebusy"));
+    return KStandardDirs::locateLocal("data", QStringLiteral("korganizer/freebusy"));
 }
 
 void FreeBusyManagerPrivate::checkFreeBusyUrl()
@@ -208,7 +208,7 @@ void FreeBusyManagerPrivate::checkFreeBusyUrl()
 
 static QString configFile()
 {
-    static QString file = KStandardDirs::locateLocal("data", QLatin1String("korganizer/freebusyurls"));
+    static QString file = KStandardDirs::locateLocal("data", QStringLiteral("korganizer/freebusyurls"));
     return file;
 }
 
@@ -217,7 +217,7 @@ void FreeBusyManagerPrivate::fetchFreeBusyUrl(const QString &email)
     // First check if there is a specific FB url for this email
     KConfig cfg(configFile());
     KConfigGroup group = cfg.group(email);
-    QString url = group.readEntry(QLatin1String("url"));
+    QString url = group.readEntry(QStringLiteral("url"));
     if (!url.isEmpty()) {
         qDebug() << "Found cached url:" << url;
         KUrl cachedUrl(url);
@@ -250,7 +250,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished(KJob *_job)
     Akonadi::ContactSearchJob *job = qobject_cast<Akonadi::ContactSearchJob*>(_job);
     KConfig cfg(configFile());
     KConfigGroup group = cfg.group(email);
-    QString url = group.readEntry(QLatin1String("url"));
+    QString url = group.readEntry(QStringLiteral("url"));
 
     const KABC::Addressee::List contacts = job->contacts();
     foreach(const KABC::Addressee &contact, contacts) {
@@ -564,7 +564,7 @@ QStringList FreeBusyManagerPrivate::getFreeBusyProviders() const
     QStringList providers;
     Akonadi::AgentInstance::List agents = Akonadi::AgentManager::self()->instances();
     foreach(const Akonadi::AgentInstance &agent, agents) {
-        if (agent.type().capabilities().contains(QLatin1String("FreeBusyProvider"))) {
+        if (agent.type().capabilities().contains(QStringLiteral("FreeBusyProvider"))) {
             providers << agent.identifier();
         }
     }
@@ -736,7 +736,7 @@ Q_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance )
 
 FreeBusyManager::FreeBusyManager() : d_ptr(new FreeBusyManagerPrivate(this))
 {
-    setObjectName(QLatin1String("FreeBusyManager"));
+    setObjectName(QStringLiteral("FreeBusyManager"));
     connect(CalendarSettings::self(), SIGNAL(configChanged()), SLOT(checkFreeBusyUrl()));
 }
 
@@ -833,8 +833,8 @@ void FreeBusyManager::publishFreeBusy(QWidget *parentWidget)
 
     // We need to massage the list a bit so that Outlook understands
     // it.
-    messageText = messageText.replace(QRegExp(QLatin1String("ORGANIZER\\s*:MAILTO:")),
-                                      QLatin1String("ORGANIZER:"));
+    messageText = messageText.replace(QRegExp(QStringLiteral("ORGANIZER\\s*:MAILTO:")),
+                                      QStringLiteral("ORGANIZER:"));
 
     // Create a local temp file and save the message to it
     KTemporaryFile tempFile;
@@ -853,7 +853,7 @@ void FreeBusyManager::publishFreeBusy(QWidget *parentWidget)
         if (CalendarSettings::self()->publishKolab()) {
             // we use Kolab
             QString server;
-            if (CalendarSettings::self()->publishKolabServer() == QLatin1String("%SERVER%") ||
+            if (CalendarSettings::self()->publishKolabServer() == QStringLiteral("%SERVER%") ||
                     CalendarSettings::self()->publishKolabServer().isEmpty()) {
                 server = emailHost;
             } else {
@@ -982,7 +982,7 @@ KCalCore::FreeBusy::Ptr FreeBusyManager::loadFreeBusy(const QString &email)
     Q_D(FreeBusyManager);
     const QString fbd = d->freeBusyDir();
 
-    QFile f(fbd + QLatin1Char('/') + email + QLatin1String(".ifb"));
+    QFile f(fbd + QLatin1Char('/') + email + QStringLiteral(".ifb"));
     if (!f.exists()) {
         qDebug() << f.fileName() << "doesn't exist.";
         return KCalCore::FreeBusy::Ptr();
@@ -1022,7 +1022,7 @@ bool FreeBusyManager::saveFreeBusy(const KCalCore::FreeBusy::Ptr &freebusy,
     QString filename(fbd);
     filename += QLatin1Char('/');
     filename += person->email();
-    filename += QLatin1String(".ifb");
+    filename += QStringLiteral(".ifb");
     QFile f(filename);
 
     qDebug() << "filename:" << filename;

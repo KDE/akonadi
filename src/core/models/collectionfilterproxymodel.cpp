@@ -39,7 +39,7 @@ public:
         : mParent(parent)
         , mExcludeVirtualCollections(false)
     {
-        mimeChecker.addWantedMimeType(QLatin1String("text/uri-list"));
+        mimeChecker.addWantedMimeType(QStringLiteral("text/uri-list"));
     }
 
     bool collectionAccepted(const QModelIndex &index, bool checkResourceVisibility = true);

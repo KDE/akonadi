@@ -106,7 +106,7 @@ void CollectionJobTest::testTopLevelList( )
   QVERIFY( res1ColId > 0 );
   QVERIFY( CollectionUtils::isResource( col ) );
   QCOMPARE( col.parentCollection(), Collection::root() );
-  QCOMPARE( col.resource(), QLatin1String("akonadi_knut_resource_0") );
+  QCOMPARE( col.resource(), QStringLiteral("akonadi_knut_resource_0") );
 
   QVERIFY( findCol( list, "res2" ).isValid() );
   res2ColId = findCol( list, "res2" ).id();
@@ -119,7 +119,7 @@ void CollectionJobTest::testTopLevelList( )
   searchColId = col.id();
   QVERIFY( col.isValid() );
   QVERIFY( CollectionUtils::isVirtualParent( col ) );
-  QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource") );
+  QCOMPARE( col.resource(), QStringLiteral("akonadi_search_resource") );
 }
 
 void CollectionJobTest::testFolderList( )

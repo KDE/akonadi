@@ -30,8 +30,8 @@ QTEST_KDEMAIN(ContactMetaDataAttributeTest, NoGUI)
 static QVariantMap testData()
 {
     QVariantMap data;
-    data.insert(QLatin1String("key1"), QLatin1String("value1"));
-    data.insert(QLatin1String("key2"), QLatin1String("value2"));
+    data.insert(QStringLiteral("key1"), QStringLiteral("value1"));
+    data.insert(QStringLiteral("key2"), QStringLiteral("value2"));
 
     return data;
 }

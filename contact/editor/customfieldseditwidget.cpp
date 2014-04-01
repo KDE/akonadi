@@ -105,30 +105,30 @@ void CustomFieldsEditWidget::loadContact(const KABC::Addressee &contact)
         splitCustomField(custom, app, name, value);
 
         // skip all well-known fields that have separated editor widgets
-        if (custom.startsWith(QLatin1String("messaging/"))) {       // IM addresses
+        if (custom.startsWith(QStringLiteral("messaging/"))) {       // IM addresses
             continue;
         }
 
-        if (app == QLatin1String("KADDRESSBOOK")) {
+        if (app == QStringLiteral("KADDRESSBOOK")) {
             static QSet<QString> blacklist;
             if (blacklist.isEmpty()) {
-                blacklist << QLatin1String("BlogFeed")
-                          << QLatin1String("X-IMAddress")
-                          << QLatin1String("X-Profession")
-                          << QLatin1String("X-Office")
-                          << QLatin1String("X-ManagersName")
-                          << QLatin1String("X-AssistantsName")
-                          << QLatin1String("X-Anniversary")
-                          << QLatin1String("X-ANNIVERSARY")
-                          << QLatin1String("X-SpousesName")
-                          << QLatin1String("X-Profession")
-                          << QLatin1String("MailPreferedFormatting")
-                          << QLatin1String("MailAllowToRemoteContent")
-                          << QLatin1String("CRYPTOPROTOPREF")
-                          << QLatin1String("OPENPGPFP")
-                          << QLatin1String("SMIMEFP")
-                          << QLatin1String("CRYPTOSIGNPREF")
-                          << QLatin1String("CRYPTOENCRYPTPREF");
+                blacklist << QStringLiteral("BlogFeed")
+                          << QStringLiteral("X-IMAddress")
+                          << QStringLiteral("X-Profession")
+                          << QStringLiteral("X-Office")
+                          << QStringLiteral("X-ManagersName")
+                          << QStringLiteral("X-AssistantsName")
+                          << QStringLiteral("X-Anniversary")
+                          << QStringLiteral("X-ANNIVERSARY")
+                          << QStringLiteral("X-SpousesName")
+                          << QStringLiteral("X-Profession")
+                          << QStringLiteral("MailPreferedFormatting")
+                          << QStringLiteral("MailAllowToRemoteContent")
+                          << QStringLiteral("CRYPTOPROTOPREF")
+                          << QStringLiteral("OPENPGPFP")
+                          << QStringLiteral("SMIMEFP")
+                          << QStringLiteral("CRYPTOSIGNPREF")
+                          << QStringLiteral("CRYPTOENCRYPTPREF");
             }
 
             if (blacklist.contains(name)) {     // several KAddressBook specific fields
@@ -158,7 +158,7 @@ void CustomFieldsEditWidget::loadContact(const KABC::Addressee &contact)
 
         // if not local and not global it must be external
         if (!isLocalCustomField && !isGlobalCustomField) {
-            if (app == QLatin1String("KADDRESSBOOK")) {
+            if (app == QStringLiteral("KADDRESSBOOK")) {
                 // however if it starts with our prefix it might be that this is an outdated
                 // global custom field, in this case treat it as local field of type text
                 CustomField customField(name, name, CustomField::TextType, CustomField::LocalScope);
@@ -186,9 +186,9 @@ void CustomFieldsEditWidget::storeContact(KABC::Addressee &contact) const
         // write back values for local and global scope, leave external untouched
         if (customField.scope() != CustomField::ExternalScope) {
             if (!customField.value().isEmpty()) {
-                contact.insertCustom(QLatin1String("KADDRESSBOOK"), customField.key(), customField.value());
+                contact.insertCustom(QStringLiteral("KADDRESSBOOK"), customField.key(), customField.value());
             } else {
-                contact.removeCustom(QLatin1String("KADDRESSBOOK"), customField.key());
+                contact.removeCustom(QStringLiteral("KADDRESSBOOK"), customField.key());
             }
         }
     }
@@ -210,7 +210,7 @@ void CustomFieldsEditWidget::storeContact(KABC::Addressee &contact) const
             }
 
             if (!fieldStillExists) {
-                contact.removeCustom(QLatin1String("KADDRESSBOOK"), oldCustomField.key());
+                contact.removeCustom(QStringLiteral("KADDRESSBOOK"), oldCustomField.key());
             }
         }
     }

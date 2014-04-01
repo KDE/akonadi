@@ -236,20 +236,20 @@ static bool operator<(const QString &lhs, const MimeTypeEntry &rhs)
 
 static QString format(const QString &mimeType, const QVector<int> &metaTypeIds) {
     if (metaTypeIds.empty()) {
-        return QLatin1String("default for ") + mimeType;
+        return QStringLiteral("default for ") + mimeType;
     }
     QStringList classTypes;
     Q_FOREACH (int metaTypeId, metaTypeIds) {
         classTypes.push_back(QString::fromLatin1(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME));
     }
-    return mimeType + QLatin1String("@{") + classTypes.join(QLatin1String(",")) + QLatin1Char('}');
+    return mimeType + QStringLiteral("@{") + classTypes.join(QStringLiteral(",")) + QLatin1Char('}');
 }
 
 class PluginRegistry
 {
 public:
     PluginRegistry()
-        : mDefaultPlugin(PluginEntry(QLatin1String("application/octet-stream@QByteArray"), s_defaultItemSerializerPlugin))
+        : mDefaultPlugin(PluginEntry(QStringLiteral("application/octet-stream@QByteArray"), s_defaultItemSerializerPlugin))
         , mOverridePlugin(0)
     {
         const PluginLoader *pl = PluginLoader::self();
@@ -261,7 +261,7 @@ public:
         qDebug() << "ItemSerializerPluginLoader: "
                  << "found" << names.size() << "plugins." << endl;
         QMap<QString, MimeTypeEntry> map;
-        QRegExp rx(QLatin1String("(.+)@(.+)"));
+        QRegExp rx(QStringLiteral("(.+)@(.+)"));
         Q_FOREACH (const QString &name, names) {
             if (rx.exactMatch(name)) {
                 KMimeType::Ptr mime = KMimeType::mimeType(rx.cap(1), KMimeType::ResolveAliases);

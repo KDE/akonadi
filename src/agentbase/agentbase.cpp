@@ -328,12 +328,12 @@ void AgentBasePrivate::init()
     }
 
     mTracer = new org::freedesktop::Akonadi::Tracer(ServerManager::serviceName(ServerManager::Server),
-                                                    QLatin1String("/tracing"),
+                                                    QStringLiteral("/tracing"),
                                                     DBusConnectionPool::threadConnection(), q);
 
     new Akonadi__ControlAdaptor(q);
     new Akonadi__StatusAdaptor(q);
-    if (!DBusConnectionPool::threadConnection().registerObject(QLatin1String("/"), q, QDBusConnection::ExportAdaptors)) {
+    if (!DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/"), q, QDBusConnection::ExportAdaptors)) {
         q->error(i18n("Unable to register object at dbus: %1", DBusConnectionPool::threadConnection().lastError().message()));
     }
 
@@ -344,18 +344,18 @@ void AgentBasePrivate::init()
     mChangeRecorder->itemFetchScope().setCacheOnly(true);
     mChangeRecorder->setConfig(mSettings);
 
-    mDesiredOnlineState = mSettings->value(QLatin1String("Agent/DesiredOnlineState"), true).toBool();
+    mDesiredOnlineState = mSettings->value(QStringLiteral("Agent/DesiredOnlineState"), true).toBool();
     mOnline = mDesiredOnlineState;
 
     // reinitialize the status message now that online state is available
     mStatusMessage = defaultReadyMessage();
 
-    mName = mSettings->value(QLatin1String("Agent/Name")).toString();
+    mName = mSettings->value(QStringLiteral("Agent/Name")).toString();
     if (mName.isEmpty()) {
-        mName = mSettings->value(QLatin1String("Resource/Name")).toString();
+        mName = mSettings->value(QStringLiteral("Resource/Name")).toString();
         if (!mName.isEmpty()) {
-            mSettings->remove(QLatin1String("Resource/Name"));
-            mSettings->setValue(QLatin1String("Agent/Name"), mName);
+            mSettings->remove(QStringLiteral("Resource/Name"));
+            mSettings->setValue(QStringLiteral("Agent/Name"), mName);
         }
     }
 
@@ -413,7 +413,7 @@ void AgentBasePrivate::delayedInit()
     }
     q->setOnlineInternal(mDesiredOnlineState);
 
-    DBusConnectionPool::threadConnection().registerObject(QLatin1String("/Debug"), this, QDBusConnection::ExportScriptableSlots);
+    DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Debug"), this, QDBusConnection::ExportScriptableSlots);
 }
 
 void AgentBasePrivate::setProgramName()
@@ -827,7 +827,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     }
 
     for (int i = 1; i < argc - 1; ++i) {
-        if (QLatin1String(argv[i]) == QLatin1String("--identifier")) {
+        if (QLatin1String(argv[i]) == QStringLiteral("--identifier")) {
             identifier = QLatin1String(argv[i + 1]);
         }
     }
@@ -919,7 +919,7 @@ void AgentBase::setOnline(bool state)
 {
     Q_D(AgentBase);
     d->mDesiredOnlineState = state;
-    d->mSettings->setValue(QLatin1String("Agent/DesiredOnlineState"), state);
+    d->mSettings->setValue(QStringLiteral("Agent/DesiredOnlineState"), state);
     setOnlineInternal(state);
 }
 
@@ -988,14 +988,14 @@ void AgentBase::configure(qlonglong windowId)
 
 WId AgentBase::winIdForDialogs() const
 {
-    const bool registered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String("org.freedesktop.akonaditray"));
+    const bool registered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.freedesktop.akonaditray"));
     if (!registered) {
         return 0;
     }
 
-    QDBusInterface dbus(QLatin1String("org.freedesktop.akonaditray"), QLatin1String("/Actions"),
-                        QLatin1String("org.freedesktop.Akonadi.Tray"));
-    const QDBusMessage reply = dbus.call(QLatin1String("getWinId"));
+    QDBusInterface dbus(QStringLiteral("org.freedesktop.akonaditray"), QStringLiteral("/Actions"),
+                        QStringLiteral("org.freedesktop.Akonadi.Tray"));
+    const QDBusMessage reply = dbus.call(QStringLiteral("getWinId"));
 
     if (reply.type() == QDBusMessage::ErrorMessage) {
         return 0;
@@ -1049,7 +1049,7 @@ void AgentBase::cleanup()
     /*
      * ... and remove the changes file from hd.
      */
-    QFile::remove(fileName + QLatin1String("_changes.dat"));
+    QFile::remove(fileName + QStringLiteral("_changes.dat"));
 
     /*
      * ... and also remove the agent configuration file if there is one.
@@ -1146,10 +1146,10 @@ void AgentBase::setAgentName(const QString &name)
     d->mName = name;
 
     if (d->mName.isEmpty() || d->mName == d->mId) {
-        d->mSettings->remove(QLatin1String("Resource/Name"));
-        d->mSettings->remove(QLatin1String("Agent/Name"));
+        d->mSettings->remove(QStringLiteral("Resource/Name"));
+        d->mSettings->remove(QStringLiteral("Agent/Name"));
     } else
-        d->mSettings->setValue(QLatin1String("Agent/Name"), d->mName);
+        d->mSettings->setValue(QStringLiteral("Agent/Name"), d->mName);
 
     d->mSettings->sync();
 

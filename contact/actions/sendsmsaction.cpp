@@ -70,7 +70,7 @@ void SendSmsAction::sendSms(const KABC::PhoneNumber &phoneNumber)
 
     //   we handle skype separated
     if (ContactActionsSettings::self()->sendSmsAction() == ContactActionsSettings::UseSkypeSms) {
-        QSkypeDialer dialer(QLatin1String("AkonadiContacts"));
+        QSkypeDialer dialer(QStringLiteral("AkonadiContacts"));
         if (dialer.sendSms(number, message)) {
             // I'm not sure whether here should be a notification.
             // Skype can do a notification itself if whished.
@@ -85,10 +85,10 @@ void SendSmsAction::sendSms(const KABC::PhoneNumber &phoneNumber)
      * %N the raw number
      * %n the number with all additional non-number characters removed
      */
-    command = command.replace(QLatin1String("%N"), phoneNumber.number());
-    command = command.replace(QLatin1String("%n"), strippedSmsNumber(number));
-    command = command.replace(QLatin1String("%t"), message);
+    command = command.replace(QStringLiteral("%N"), phoneNumber.number());
+    command = command.replace(QStringLiteral("%n"), strippedSmsNumber(number));
+    command = command.replace(QStringLiteral("%t"), message);
     //Bug: 293232 In KDE3 We used %F to replace text
-    command = command.replace(QLatin1String("%F"), message);
+    command = command.replace(QStringLiteral("%F"), message);
     KRun::runCommand(command, 0);
 }

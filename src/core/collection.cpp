@@ -160,10 +160,10 @@ KUrl Collection::url(UrlType type) const
 {
     KUrl url;
     url.setProtocol(QString::fromLatin1("akonadi"));
-    url.addQueryItem(QLatin1String("collection"), QString::number(id()));
+    url.addQueryItem(QStringLiteral("collection"), QString::number(id()));
 
     if (type == UrlWithName) {
-        url.addQueryItem(QLatin1String("name"), name());
+        url.addQueryItem(QStringLiteral("name"), name());
     }
 
     return url;
@@ -171,11 +171,11 @@ KUrl Collection::url(UrlType type) const
 
 Collection Collection::fromUrl(const KUrl &url)
 {
-    if (url.protocol() != QLatin1String("akonadi")) {
+    if (url.protocol() != QStringLiteral("akonadi")) {
         return Collection();
     }
 
-    const QString colStr = url.queryItem(QLatin1String("collection"));
+    const QString colStr = url.queryItem(QStringLiteral("collection"));
     bool ok = false;
     Collection::Id colId = colStr.toLongLong(&ok);
     if (!ok) {

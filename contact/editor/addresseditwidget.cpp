@@ -63,7 +63,7 @@ public:
     TabPressEater(QObject *parent)
         : QObject(parent)
     {
-        setObjectName(QLatin1String("TabPressEater"));
+        setObjectName(QStringLiteral("TabPressEater"));
     }
 
 protected:

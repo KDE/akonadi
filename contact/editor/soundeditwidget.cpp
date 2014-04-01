@@ -134,10 +134,10 @@ void SoundEditWidget::setReadOnly(bool readOnly)
 void SoundEditWidget::updateView()
 {
     if (mHasSound) {
-        setIcon(KIcon(QLatin1String("audio-volume-medium")));
+        setIcon(KIcon(QStringLiteral("audio-volume-medium")));
         setToolTip(i18n("Click to play pronunciation"));
     } else {
-        setIcon(KIcon(QLatin1String("audio-volume-muted")));
+        setIcon(KIcon(QStringLiteral("audio-volume-muted")));
         setToolTip(i18n("No pronunciation available"));
     }
 }
@@ -182,7 +182,7 @@ void SoundEditWidget::playSound()
 
 void SoundEditWidget::changeSound()
 {
-    const KUrl url = KFileDialog::getOpenUrl(QUrl(), QLatin1String("*.wav"), this);
+    const KUrl url = KFileDialog::getOpenUrl(QUrl(), QStringLiteral("*.wav"), this);
     if (url.isValid()) {
         bool ok = false;
         const QByteArray sound = soundLoader()->loadSound(url, &ok);
@@ -196,7 +196,7 @@ void SoundEditWidget::changeSound()
 
 void SoundEditWidget::saveSound()
 {
-    const QString fileName = KFileDialog::getSaveFileName(KUrl(), QLatin1String("*.wav"), this);
+    const QString fileName = KFileDialog::getSaveFileName(KUrl(), QStringLiteral("*.wav"), this);
     if (!fileName.isEmpty()) {
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly)) {

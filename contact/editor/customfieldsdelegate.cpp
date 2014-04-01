@@ -108,24 +108,24 @@ void CustomFieldsDelegate::setEditorData(QWidget *editor, const QModelIndex &ind
         }
         case CustomField::BooleanType: {
             QCheckBox *widget = qobject_cast<QCheckBox *>(editor);
-            widget->setChecked(index.data(Qt::EditRole).toString() == QLatin1String("true"));
+            widget->setChecked(index.data(Qt::EditRole).toString() == QStringLiteral("true"));
             break;
         }
         case CustomField::DateType: {
             QDateEdit *widget = qobject_cast<QDateEdit *>(editor);
-            widget->setDisplayFormat(QLatin1String("dd.MM.yyyy"));
+            widget->setDisplayFormat(QStringLiteral("dd.MM.yyyy"));
             widget->setDate(QDate::fromString(index.data(Qt::EditRole).toString(), Qt::ISODate));
             break;
         }
         case CustomField::TimeType: {
             QTimeEdit *widget = qobject_cast<QTimeEdit *>(editor);
-            widget->setDisplayFormat(QLatin1String("hh:mm"));
+            widget->setDisplayFormat(QStringLiteral("hh:mm"));
             widget->setTime(QTime::fromString(index.data(Qt::EditRole).toString(), Qt::ISODate));
             break;
         }
         case CustomField::DateTimeType: {
             QDateTimeEdit *widget = qobject_cast<QDateTimeEdit *>(editor);
-            widget->setDisplayFormat(QLatin1String("dd.MM.yyyy hh:mm"));
+            widget->setDisplayFormat(QStringLiteral("dd.MM.yyyy hh:mm"));
             widget->setDateTime(QDateTime::fromString(index.data(Qt::EditRole).toString(), Qt::ISODate));
             break;
         }
@@ -152,7 +152,7 @@ void CustomFieldsDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
         }
         case CustomField::BooleanType: {
             QCheckBox *widget = qobject_cast<QCheckBox *>(editor);
-            model->setData(index, widget->isChecked() ? QLatin1String("true") : QLatin1String("false"));
+            model->setData(index, widget->isChecked() ? QStringLiteral("true") : QStringLiteral("false"));
             break;
         }
         case CustomField::DateType: {
