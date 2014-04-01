@@ -25,7 +25,7 @@
 #include "collectiongeneralpropertiespage_p.h"
 #include "collectionmodifyjob.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <ksharedconfig.h>
 #include <ktabwidget.h>

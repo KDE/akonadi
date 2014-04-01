@@ -25,7 +25,7 @@
 
 #include <kicon.h>
 #include <kaction.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kurl.h>

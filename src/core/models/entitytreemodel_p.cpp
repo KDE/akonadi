@@ -48,7 +48,7 @@
 #include "servermanager.h"
 #include <akonadi/private/protocol_p.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 /// comment this out to track time spent on jobs created by the ETM
 // #define DBG_TRACK_JOB_TIMES

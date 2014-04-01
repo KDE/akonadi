@@ -30,7 +30,7 @@
 #include "session.h"
 #include "collectionfetchscope.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kjob.h>
 #include <kiconloader.h>
 

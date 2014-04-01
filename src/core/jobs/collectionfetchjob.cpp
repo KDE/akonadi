@@ -27,7 +27,7 @@
 #include "collectionfetchscope.h"
 #include "collectionutils_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLocalizedString>
 
 #include <QtCore/QHash>

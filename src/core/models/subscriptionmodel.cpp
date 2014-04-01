@@ -24,7 +24,7 @@
 
 #include "entityhiddenattribute.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QStringList>
 #include <QFont>

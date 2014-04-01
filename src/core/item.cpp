@@ -23,7 +23,7 @@
 #include <akonadi/private/protocol_p.h>
 
 #include <kurl.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QStringList>
 #include <QtCore/QReadWriteLock>

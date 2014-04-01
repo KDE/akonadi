@@ -24,7 +24,7 @@
 #include <akonadi/entitydisplayattribute.h>
 
 #include <qtest_kde.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 QTEST_KDEMAIN(CollectionTest, NoGUI)
 

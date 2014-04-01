@@ -23,7 +23,7 @@
 
 #include "job_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLocalizedString>
 using namespace Akonadi;
 

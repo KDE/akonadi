@@ -27,7 +27,7 @@
 #include "session.h"
 #include "session_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 
 #include <QtCore/QEventLoop>

@@ -23,7 +23,7 @@
 #include "collectionmodel_p.h"
 #include "collectionstatistics.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KGlobal>
 #include <klocale.h>
 #include <klocalizedstring.h>

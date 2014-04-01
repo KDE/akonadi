@@ -25,7 +25,7 @@
 #include "itemserializerplugin.h"
 
 // KDE core
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmimetype.h>
 
 // Qt
