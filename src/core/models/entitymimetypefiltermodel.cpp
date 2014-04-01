@@ -23,7 +23,7 @@
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmimetype.h>
 
 #include <QtCore/QString>

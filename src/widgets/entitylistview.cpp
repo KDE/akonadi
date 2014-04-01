@@ -29,7 +29,7 @@
 #include <QDragMoveEvent>
 #include <QMenu>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kxmlguiclient.h>
 #include <KXMLGUIFactory>
 

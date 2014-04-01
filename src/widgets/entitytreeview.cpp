@@ -35,7 +35,7 @@
 #include "item.h"
 #include "entitytreemodel.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kxmlguiclient.h>
 #include <KXMLGUIFactory>
 

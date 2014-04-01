@@ -27,7 +27,7 @@
 #include "protocolhelper_p.h"
 #include <akonadi/private/xdgbasedirs_p.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 
 #include <QCoreApplication>

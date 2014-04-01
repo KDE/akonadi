@@ -30,7 +30,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QVarLengthArray>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 
 using namespace Akonadi;

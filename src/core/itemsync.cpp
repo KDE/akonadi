@@ -31,7 +31,7 @@
 #include "transactionsequence.h"
 #include "itemfetchscope.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QStringList>
 

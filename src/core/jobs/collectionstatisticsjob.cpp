@@ -24,7 +24,7 @@
 #include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 using namespace Akonadi;
 

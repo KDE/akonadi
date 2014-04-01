@@ -22,7 +22,7 @@
 #include "agenttypemodel.h"
 #include "agentinstancemodel.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmimetype.h>
 
 #include <QtCore/QStringList>

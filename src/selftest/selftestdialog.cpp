@@ -541,12 +541,12 @@ QString SelfTestDialog::createReport()
 {
     QString result;
     QTextStream s(&result);
-    s << "Akonadi Server Self-Test Report" << endl;
-    s << "===============================" << endl;
+    s << "Akonadi Server Self-Test Report" ;
+    s << "===============================" ;
 
     for (int i = 0; i < mTestModel->rowCount(); ++i) {
         QStandardItem *item = mTestModel->item(i);
-        s << endl;
+        s ;
         s << "Test " << (i + 1) << ":  ";
         switch (item->data(ResultTypeRole).toInt()) {
         case Skip:
@@ -563,45 +563,45 @@ QString SelfTestDialog::createReport()
             s << "ERROR";
             break;
         }
-        s << endl << "--------" << endl;
-        s << endl;
-        s << item->data(SummaryRole).toString() << endl;
-        s << "Details: " << item->data(DetailsRole).toString() << endl;
+        s  << "--------" << endl;
+        s ;
+        s << item->data(SummaryRole).toString() ;
+        s << "Details: " << item->data(DetailsRole).toString() ;
         if (item->data(FileIncludeRole).isValid()) {
-            s << endl;
+            s ;
             const QString fileName = item->data(FileIncludeRole).toString();
             QFile f(fileName);
             if (f.open(QFile::ReadOnly)) {
-                s << "File content of '" << fileName << "':" << endl;
-                s << f.readAll() << endl;
+                s << "File content of '" << fileName << "':" ;
+                s << f.readAll() ;
             } else {
-                s << "File '" << fileName << "' could not be opened" << endl;
+                s << "File '" << fileName << "' could not be opened" ;
             }
         }
         if (item->data(ListDirectoryRole).isValid()) {
-            s << endl;
+            s ;
             const QStringList pathList = item->data(ListDirectoryRole).toStringList();
             if (pathList.isEmpty()) {
-                s << "Directory list is empty." << endl;
+                s << "Directory list is empty." ;
             }
             foreach (const QString &path, pathList) {
-                s << "Directory listing of '" << path << "':" << endl;
+                s << "Directory listing of '" << path << "':" ;
                 QDir dir(path);
                 dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
                 foreach (const QString &entry, dir.entryList()) {
-                    s << entry << endl;
+                    s << entry ;
                 }
             }
         }
         if (item->data(EnvVarRole).isValid()) {
-            s << endl;
+            s ;
             const QByteArray envVarName = item->data(EnvVarRole).toByteArray();
             const QByteArray envVarValue = qgetenv(envVarName.constData());
-            s << "Environment variable " << envVarName << " is set to '" << envVarValue << "'" << endl;
+            s << "Environment variable " << envVarName << " is set to '" << envVarValue << "'" ;
         }
     }
 
-    s << endl;
+    s ;
     s.flush();
     return result;
 }

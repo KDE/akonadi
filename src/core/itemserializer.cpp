@@ -216,7 +216,7 @@ Item ItemSerializer::convert(const Item &item, int mtid)
         int version;
         serialize(item, Item::FullPayload, buffer, version);
         buffer.seek(0);
-        qDebug() << "    -> serialized payload into" << buffer.size() << "bytes" << endl
+        qDebug() << "    -> serialized payload into" << buffer.size() << "bytes" 
                  << "  -> going to deserialize";
         Item newItem;
         if (plugin->deserialize(newItem, Item::FullPayload, buffer, version)) {

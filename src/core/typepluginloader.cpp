@@ -25,7 +25,7 @@
 #include "itemserializerplugin.h"
 
 // KDE core
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmimetype.h>
 
 // Qt
@@ -74,7 +74,7 @@ public:
         QObject *object = PluginLoader::self()->createForName(mIdentifier);
         if (!object) {
             qWarning() << "ItemSerializerPluginLoader: "
-                       << "plugin" << mIdentifier << "is not valid!" << endl;
+                       << "plugin" << mIdentifier << "is not valid!" ;
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -83,7 +83,7 @@ public:
         mPlugin = object;
         if (!qobject_cast<ItemSerializerPlugin *>(mPlugin)) {
             qWarning() << "ItemSerializerPluginLoader: "
-                       << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
+                       << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" ;
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -254,12 +254,12 @@ public:
     {
         const PluginLoader *pl = PluginLoader::self();
         if (!pl) {
-            qWarning() << "Cannot instantiate plugin loader!" << endl;
+            qWarning() << "Cannot instantiate plugin loader!" ;
             return;
         }
         const QStringList names = pl->names();
         qDebug() << "ItemSerializerPluginLoader: "
-                 << "found" << names.size() << "plugins." << endl;
+                 << "found" << names.size() << "plugins." ;
         QMap<QString, MimeTypeEntry> map;
         QRegExp rx(QStringLiteral("(.+)@(.+)"));
         Q_FOREACH (const QString &name, names) {
@@ -276,7 +276,7 @@ public:
                 }
             } else {
                 qDebug() << "ItemSerializerPluginLoader: "
-                         << "name" << name << "doesn't look like mimetype@classtype" << endl;
+                         << "name" << name << "doesn't look like mimetype@classtype" ;
             }
         }
         const QString APPLICATION_OCTETSTREAM = QLatin1String(_APPLICATION_OCTETSTREAM);

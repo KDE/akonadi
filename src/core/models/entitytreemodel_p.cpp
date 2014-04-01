@@ -48,7 +48,7 @@
 #include "servermanager.h"
 #include <akonadi/private/protocol_p.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 /// comment this out to track time spent on jobs created by the ETM
 // #define DBG_TRACK_JOB_TIMES
@@ -1293,7 +1293,7 @@ void EntityTreeModelPrivate::fetchJobDone(KJob *job)
     const Collection::Id collectionId = job->property(FetchCollectionId().constData()).value<Collection::Id>();
 
     if (job->error()) {
-        qWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
+        qWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId ;
         return; // let's be safe, otherwise emitting dataChanged will get us into loops
     }
 
