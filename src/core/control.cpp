@@ -24,7 +24,7 @@
 //#include "selftestdialog_p.h"
 //#include "erroroverlay_p.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kglobal.h>
 #include <klocalizedstring.h>
 

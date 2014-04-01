@@ -19,7 +19,7 @@
 
 #include "modelspy.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <QTest>
 
 ModelSpy::ModelSpy(QObject *parent)

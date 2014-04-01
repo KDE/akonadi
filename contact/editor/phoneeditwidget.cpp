@@ -37,7 +37,7 @@
 
 #include <kabc/phonenumber.h>
 #include <kcombobox.h>
-#include <qdebug.h>
+#include <kdebug.h>
 #include <klineedit.h>
 #include <klocalizedstring.h>
 

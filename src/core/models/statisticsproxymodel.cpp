@@ -26,7 +26,7 @@
 #include "collectionstatistics.h"
 #include "entitydisplayattribute.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kiconloader.h>
 #include <klocalizedstring.h>
 #include <kio/global.h>

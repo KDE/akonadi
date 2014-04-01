@@ -27,7 +27,7 @@
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <klocalizedstring.h>
 
 #include <QtCore/QTimer>

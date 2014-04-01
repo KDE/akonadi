@@ -43,7 +43,7 @@
 
 #include "collectionutils_p.h"
 
-#include "qdebug.h"
+#include "kdebug.h"
 #include "pastehelper_p.h"
 
 Q_DECLARE_METATYPE(QSet<QByteArray>)

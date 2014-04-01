@@ -24,7 +24,7 @@
 #include "subscriptionjob_p.h"
 #include "subscriptionmodel_p.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kglobal.h>
 #include <ksharedconfig.h>
 

@@ -25,7 +25,7 @@
 
 #include <KConfig>
 #include <kconfiggroup.h>
-#include <qdebug.h>
+#include <kdebug.h>
 #include <KProcess>
 #include <KStandardDirs>
 

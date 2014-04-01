@@ -30,7 +30,7 @@
 #include "session.h"
 #include "collectionfetchscope.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kjob.h>
 #include <kiconloader.h>
 
@@ -122,7 +122,7 @@ void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collecti
 void CollectionModelPrivate::listDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Job error: " << job->errorString() ;
+        qWarning() << "Job error: " << job->errorString() << endl;
     }
 }
 

@@ -22,7 +22,7 @@
 #include <klocalizedstring.h>
 #include <kdatetime.h>
 #include <kmime/kmime_message.h>
-#include <qdebug.h>
+#include <kdebug.h>
 
 #include <qstring.h>
 #include <quuid.h>

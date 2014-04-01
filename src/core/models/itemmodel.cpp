@@ -26,7 +26,7 @@
 #include "pastehelper_p.h"
 #include "session.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <klocalizedstring.h>
 #include <kurl.h>
 

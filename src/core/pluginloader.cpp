@@ -74,7 +74,7 @@ QStringList PluginLoader::names() const
 QObject *PluginLoader::createForName(const QString &name)
 {
     if (!mPluginInfos.contains(name)) {
-        kWarning(5300) << "plugin name \"" << name << "\" is unknown to the plugin loader." ;
+        kWarning(5300) << "plugin name \"" << name << "\" is unknown to the plugin loader." << endl;
         return 0;
     }
 
@@ -106,8 +106,8 @@ QObject *PluginLoader::createForName(const QString &name)
 
     QObject *object = loader->instance();
     if (!object) {
-        kWarning(5300) << "unable to load plugin for plugin name \"" << name << "\"." ;
-        kWarning(5300) << "Error was:\"" << loader->errorString() << "\"." ;
+        kWarning(5300) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
+        kWarning(5300) << "Error was:\"" << loader->errorString() << "\"." << endl;
         return 0;
     }
 
@@ -136,7 +136,7 @@ void PluginLoader::scan()
 
             const QString type = group.readEntry("Type").toLower();
             if (type.isEmpty()) {
-                kWarning(5300) << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" ;
+                kWarning(5300) << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
                 continue;
             }
 
@@ -145,13 +145,13 @@ void PluginLoader::scan()
             // and B>.
             const QStringList classes = group.readXdgListEntry("X-Akonadi-Class");
             if (classes.isEmpty()) {
-                kWarning(5300) << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" ;
+                kWarning(5300) << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
                 continue;
             }
 
             const QString library = group.readEntry("X-KDE-Library");
             if (library.isEmpty()) {
-                kWarning(5300) << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" ;
+                kWarning(5300) << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" << endl;
                 continue;
             }
 
@@ -159,19 +159,19 @@ void PluginLoader::scan()
 
             QString name = group2.readEntry("Name");
             if (name.isEmpty()) {
-                kWarning(5300) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" ;
+                kWarning(5300) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
                 name = i18n("Unnamed plugin");
             }
 
             QString comment = group2.readEntry("Comment");
             if (comment.isEmpty()) {
-                kWarning(5300) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" ;
+                kWarning(5300) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
                 comment = i18n("No description available");
             }
 
             QString cname      = group.readEntry("X-KDE-ClassName");
             if (cname.isEmpty()) {
-                kWarning(5300) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" ;
+                kWarning(5300) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
             }
 
             const QStringList mimeTypes = type.split(QLatin1Char(','), QString::SkipEmptyParts);
@@ -184,7 +184,7 @@ void PluginLoader::scan()
             }
 
         } else {
-            kWarning(5300) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" ;
+            kWarning(5300) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
         }
     }
 }

@@ -20,7 +20,7 @@
 #include "changerecorder.h"
 #include "changerecorder_p.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <QtCore/QSettings>
 
 using namespace Akonadi;

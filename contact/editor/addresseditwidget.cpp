@@ -37,7 +37,7 @@
 
 #include <kacceleratormanager.h>
 #include <kcombobox.h>
-#include <qdebug.h>
+#include <kdebug.h>
 #include <khbox.h>
 #include <kinputdialog.h>
 #include <klineedit.h>

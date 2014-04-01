@@ -31,7 +31,7 @@
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 
 using namespace Akonadi;
 

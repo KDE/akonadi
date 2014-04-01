@@ -30,7 +30,7 @@
 
 #include "cachepolicy.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <KLocalizedString>
 #include <QtCore/QVariant>
 

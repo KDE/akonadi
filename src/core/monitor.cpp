@@ -25,7 +25,7 @@
 #include "itemfetchjob.h"
 #include "session.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnection>

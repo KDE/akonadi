@@ -29,7 +29,7 @@
 #include "protocolhelper_p.h"
 #include "session_p.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <KLocalizedString>
 
 #include <QtCore/QStringList>

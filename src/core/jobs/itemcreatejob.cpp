@@ -30,7 +30,7 @@
 
 #include <QtCore/QDateTime>
 
-#include <qdebug.h>
+#include <kdebug.h>
 
 using namespace Akonadi;
 

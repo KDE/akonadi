@@ -22,7 +22,7 @@
 #include "collectionmodel.h"
 #include "mimetypechecker.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

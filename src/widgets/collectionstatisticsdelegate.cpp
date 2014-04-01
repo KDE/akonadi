@@ -22,7 +22,7 @@
 #include "collectionstatisticsmodel.h"
 
 #include <kcolorscheme.h>
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kio/global.h>
 
 #include <QPainter>

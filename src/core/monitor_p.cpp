@@ -30,7 +30,7 @@
 #include "changemediator_p.h"
 #include <akonadi/private/notificationmessagev2_p.h>
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kcomponentdata.h>
 
 using namespace Akonadi;
