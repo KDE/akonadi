@@ -39,23 +39,12 @@ public:
     {
     }
 
-    void selectResult(KJob *job);
-
     Q_DECLARE_PUBLIC(ItemDeleteJob)
 
     Item::List mItems;
     Collection mCollection;
+    Tag mTag;
 };
-
-void ItemDeleteJobPrivate::selectResult(KJob *job)
-{
-    if (job->error()) {
-        return; // KCompositeJob takes care of errors
-    }
-
-    const QByteArray command = newTag() + " " AKONADI_CMD_ITEMDELETE " 1:*\n";
-    writeData(command);
-}
 
 ItemDeleteJob::ItemDeleteJob(const Item &item, QObject *parent)
     : Job(new ItemDeleteJobPrivate(this), parent)
@@ -96,23 +85,11 @@ void ItemDeleteJob::doStart()
 {
     Q_D(ItemDeleteJob);
 
-    if (!d->mItems.isEmpty()) {
-        QByteArray command = d->newTag();
-        try {
-            command += ProtocolHelper::entitySetToByteArray(d->mItems, AKONADI_CMD_ITEMDELETE);
-        } catch (const std::exception &e) {
-            setError(Unknown);
-            setErrorText(QString::fromUtf8(e.what()));
-            emitResult();
-            return;
-        }
-        command += '\n';
-        d->writeData(command);
-    } else {
-        CollectionSelectJob *job = new CollectionSelectJob(d->mCollection, this);
-        connect(job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)));
-        addSubjob(job);
-    }
+    QByteArray command = d->newTag();
+    command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mItems, AKONADI_CMD_ITEMDELETE);
+    command += '\n';
+
+    d->writeData(command);
 }
 
 #include "moc_itemdeletejob.cpp"

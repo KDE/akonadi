@@ -115,6 +115,17 @@ public:
     explicit ItemDeleteJob(const Collection &collection, QObject *parent = 0);
 
     /**
+     * Creates a new item delete job that deletes all items that have assigned
+     * the tag @p tag.
+     *
+     * @param tag The tag which content should be deleted.
+     * @param parent The parent object.
+     *
+     * @since 4.14
+     */
+    explicit ItemDeleteJob(const Tag &tag, QObject *parent = 0);
+
+    /**
      * Destroys the item delete job.
      */
     ~ItemDeleteJob();
@@ -131,7 +142,6 @@ protected:
 private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(ItemDeleteJob)
-    Q_PRIVATE_SLOT(d_func(), void selectResult(KJob *))
     //@endcond
 };
 

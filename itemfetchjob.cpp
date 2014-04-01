@@ -82,9 +82,6 @@ public:
         }
     }
 
-    void startFetchJob();
-    void selectDone(KJob *job);
-
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/
     {
         if (mRequestedItems.isEmpty()) {
@@ -105,6 +102,7 @@ public:
     Q_DECLARE_PUBLIC(ItemFetchJob)
 
     Collection mCollection;
+    Tag mTag;
     Item::List mRequestedItems;
     Item::List mResultItems;
     ItemFetchScope mFetchScope;
@@ -114,43 +112,6 @@ public:
     ItemFetchJob::DeliveryOptions mDeliveryOptions;
     int mCount;
 };
-
-void ItemFetchJobPrivate::startFetchJob()
-{
-    Q_Q(ItemFetchJob);
-    QByteArray command = newTag();
-    if (mRequestedItems.isEmpty()) {
-        command += " " AKONADI_CMD_ITEMFETCH " 1:*";
-    } else {
-        try {
-            command += ProtocolHelper::entitySetToByteArray(mRequestedItems, AKONADI_CMD_ITEMFETCH);
-        } catch (const Exception &e) {
-            q->setError(Job::Unknown);
-            q->setErrorText(QString::fromUtf8(e.what()));
-            q->emitResult();
-            return;
-        }
-    }
-
-    //This is only required for 4.10
-    if (protocolVersion() < 30) {
-        if (mFetchScope.ignoreRetrievalErrors()) {
-            kDebug() << "IGNOREERRORS is not available with this akonadi protocol version";
-        }
-        mFetchScope.setIgnoreRetrievalErrors(false);
-    }
-    command += ProtocolHelper::itemFetchScopeToByteArray(mFetchScope);
-
-    writeData(command);
-}
-
-void ItemFetchJobPrivate::selectDone(KJob *job)
-{
-    if (!job->error()) {
-        // the collection is now selected, fetch the message(s)
-        startFetchJob();
-    }
-}
 
 ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
@@ -191,6 +152,16 @@ ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id> &items, QObject *paren
     }
 }
 
+ItemFetchJob::ItemFetchJob(const Tag &tag, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
+{
+    Q_D(ItemFetchJob);
+
+    d->init();
+    d->mTag = tag;
+    d->mValuePool = new ProtocolHelperValuePool;
+}
+
 ItemFetchJob::~ItemFetchJob()
 {
 }
@@ -199,19 +170,19 @@ void ItemFetchJob::doStart()
 {
     Q_D(ItemFetchJob);
 
-    if (d->mCollection == Collection::root()) {
-        if (d->mRequestedItems.isEmpty()) {   // collection content listing
-            setErrorText(i18n("Cannot list root collection."));
-            setError(Unknown);
-            emitResult();
-        } else {
-            d->startFetchJob();
+    QByteArray command = d->newTag();
+    command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mRequestedItems, AKONADI_CMD_ITEMFETCH);
+
+    // This is only required for 4.10
+    if (d->protocolVersion() < 30) {
+        if (d->mFetchScope.ignoreRetrievalErrors()) {
+            kDebug() << "IGNOREERRORS is not available with this version of Akonadi server";
         }
-    } else {
-        CollectionSelectJob *job = new CollectionSelectJob(d->mCollection, this);
-        connect(job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)));
-        addSubjob(job);
+        d->mFetchScope.setIgnoreRetrievalErrors(false);
     }
+
+    command += ProtocolHelper::itemFetchScopeToByteArray(d->mFetchScope);
+    d->writeData(command);
 }
 
 void ItemFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)

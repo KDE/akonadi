@@ -31,7 +31,7 @@ class CollectionSelectJobPrivate;
  * @internal
  *  Selects a specific collection. See RFC 3501 for select semantics.
  */
-class AKONADI_EXPORT CollectionSelectJob : public Job
+class AKONADI_DEPRECATED_EXPORT CollectionSelectJob : public Job
 {
     Q_OBJECT
 public:

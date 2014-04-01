@@ -135,6 +135,17 @@ public:
      */
     explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = 0);
 
+
+    /**
+     * Creates a new item fetch job that retrieves all items tagged with specified @p tag.
+     *
+     * @param tag The tag to fetch all items from.
+     * @param parent The parent object.
+     *
+     * @since 4.14
+     */
+    explicit ItemFetchJob(const Tag &tag, QObject *parent = 0);
+
     /**
      * Destroys the item fetch job.
      */
@@ -255,7 +266,6 @@ private:
     Q_DECLARE_PRIVATE(ItemFetchJob)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_func(), void selectDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void timeout())
     //@endcond
 };
