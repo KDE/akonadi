@@ -49,7 +49,7 @@ class ContactGroupViewer::Private
     {
       mBrowser = new TextBrowser;
 
-      static QPixmap groupPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 100 ) );
+      static QPixmap groupPixmap = QIcon::fromTheme( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 100 ) );
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "group_photo" ) ),
                                          groupPixmap );

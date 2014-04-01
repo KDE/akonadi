@@ -21,7 +21,7 @@
 
 #include <akonadi/private/imapparser_p.h>
 
-#include <KIcon>
+#include <QIcon>
 
 using namespace Akonadi;
 
@@ -59,9 +59,9 @@ void EntityDisplayAttribute::setDisplayName(const QString &name)
     d->name = name;
 }
 
-KIcon EntityDisplayAttribute::icon() const
+QIcon EntityDisplayAttribute::icon() const
 {
-    return KIcon(d->icon);
+    return QIcon::fromTheme(d->icon);
 }
 
 QString EntityDisplayAttribute::iconName() const
@@ -143,9 +143,9 @@ void EntityDisplayAttribute::setActiveIconName(const QString &name)
     d->activeIcon = name;
 }
 
-KIcon EntityDisplayAttribute::activeIcon() const
+QIcon EntityDisplayAttribute::activeIcon() const
 {
-    return KIcon(d->activeIcon);
+    return QIcon::fromTheme(d->activeIcon);
 }
 
 QString EntityDisplayAttribute::activeIconName() const

@@ -65,7 +65,7 @@ QString AgentType::iconName() const
 
 QIcon AgentType::icon() const
 {
-    return KIcon(d->mIconName);
+    return QIcon::fromTheme(d->mIconName);
 }
 
 QStringList AgentType::mimeTypes() const

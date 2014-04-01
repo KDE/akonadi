@@ -572,7 +572,7 @@ KAction* StandardContactActionManager::createAction( Type type )
   switch ( type ) {
     case CreateContact:
       action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "contact-new" ) ) );
+      action->setIcon( QIcon::fromTheme( QLatin1String( "contact-new" ) ) );
       action->setText( i18n( "New &Contact..." ) );
       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
       action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add data about a person, including addresses and phone numbers.</p>" ) );
@@ -582,7 +582,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       break;
     case CreateContactGroup:
       action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "user-group-new" ) ) );
+      action->setIcon( QIcon::fromTheme( QLatin1String( "user-group-new" ) ) );
       action->setText( i18n( "New &Group..." ) );
       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
@@ -592,7 +592,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       break;
     case EditItem:
       action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "document-edit" ) ) );
+      action->setIcon( QIcon::fromTheme( QLatin1String( "document-edit" ) ) );
       action->setText( i18n( "Edit Contact..." ) );
       action->setWhatsThis( i18n( "Edit the selected contact<p>You will be presented with a dialog where you can edit the data stored about a person, including addresses and phone numbers.</p>" ) );
       action->setEnabled( false );

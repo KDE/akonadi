@@ -57,10 +57,10 @@ PublishDialog::PublishDialog(QWidget *parent)
     setButtonWhatsThis(Help, i18n("Click the <b>Help</b> button to read "
                                   "more information about Group Scheduling."));
 
-    d->mUI.mNew->setIcon(KIcon("list-add"));
-    d->mUI.mRemove->setIcon(KIcon("list-remove"));
+    d->mUI.mNew->setIcon(QIcon::fromTheme("list-add"));
+    d->mUI.mRemove->setIcon(QIcon::fromTheme("list-remove"));
     d->mUI.mRemove->setEnabled(false);
-    d->mUI.mSelectAddressee->setIcon(KIcon("view-pim-contacts"));
+    d->mUI.mSelectAddressee->setIcon(QIcon::fromTheme("view-pim-contacts"));
 
     connect(d->mUI.mListWidget, SIGNAL(itemSelectionChanged()),
             d, SLOT(updateInput()));

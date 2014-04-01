@@ -134,10 +134,10 @@ void SoundEditWidget::setReadOnly(bool readOnly)
 void SoundEditWidget::updateView()
 {
     if (mHasSound) {
-        setIcon(KIcon(QStringLiteral("audio-volume-medium")));
+        setIcon(QIcon::fromTheme(QStringLiteral("audio-volume-medium")));
         setToolTip(i18n("Click to play pronunciation"));
     } else {
-        setIcon(KIcon(QStringLiteral("audio-volume-muted")));
+        setIcon(QIcon::fromTheme(QStringLiteral("audio-volume-muted")));
         setToolTip(i18n("No pronunciation available"));
     }
 }

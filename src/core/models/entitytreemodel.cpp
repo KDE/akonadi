@@ -193,7 +193,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
             !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
             return collection.attribute<EntityDisplayAttribute>()->icon();
         }
-        return KIcon(CollectionUtils::defaultIconName(collection));
+        return QIcon::fromTheme(CollectionUtils::defaultIconName(collection));
     default:
         break;
     }

@@ -28,7 +28,7 @@
 
 #include <KDebug>
 #include <KUrl>
-#include <KIcon>
+#include <QIcon>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -72,9 +72,9 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     setCaption(i18n("Akonadi Server Self-Test"));
     setButtons(Close | User1 | User2);
     setButtonText(User1, i18n("Save Report..."));
-    setButtonIcon(User1, KIcon(QString::fromLatin1("document-save")));
+    setButtonIcon(User1, QIcon::fromTheme(QString::fromLatin1("document-save")));
     setButtonText(User2, i18n("Copy Report to Clipboard"));
-    setButtonIcon(User2, KIcon(QString::fromLatin1("edit-copy")));
+    setButtonIcon(User2, QIcon::fromTheme(QString::fromLatin1("edit-copy")));
     showButtonSeparator(true);
     ui.setupUi(mainWidget());
 
@@ -101,17 +101,17 @@ QStandardItem *SelfTestDialog::report(ResultType type, const KLocalizedString &s
     QStandardItem *item = new QStandardItem(summary.toString());
     switch (type) {
     case Skip:
-        item->setIcon(KIcon(QString::fromLatin1("dialog-ok")));
+        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-ok")));
         break;
     case Success:
-        item->setIcon(KIcon(QString::fromLatin1("dialog-ok-apply")));
+        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-ok-apply")));
         break;
     case Warning:
-        item->setIcon(KIcon(QString::fromLatin1("dialog-warning")));
+        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-warning")));
         break;
     case Error:
     default:
-        item->setIcon(KIcon(QString::fromLatin1("dialog-error")));
+        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-error")));
     }
     item->setEditable(false);
     item->setWhatsThis(details.toString());

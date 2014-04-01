@@ -163,9 +163,9 @@ void ImageWidget::updateView()
         setIcon(QPixmap::fromImage(mPicture.data()));
     } else {
         if (mType == Photo) {
-            setIcon(KIcon(QStringLiteral("user-identity")));
+            setIcon(QIcon::fromTheme(QStringLiteral("user-identity")));
         } else {
-            setIcon(KIcon(QStringLiteral("image-x-generic")));
+            setIcon(QIcon::fromTheme(QStringLiteral("image-x-generic")));
         }
     }
 }

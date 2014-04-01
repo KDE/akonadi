@@ -88,7 +88,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
         if ( picture.isIntern() ) {
           return picture.data().scaled( QSize( d->mIconSize, d->mIconSize ), Qt::KeepAspectRatio );
         } else {
-          return KIcon( QLatin1String( "user-identity" ) );
+          return QIcon::fromTheme( QLatin1String( "user-identity" ) );
         }
       }
       return QVariant();
@@ -172,7 +172,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
 
     if ( role == Qt::DecorationRole ) {
       if ( column == 0 ) {
-        return KIcon( QLatin1String( "x-mail-distribution-list" ) );
+        return QIcon::fromTheme( QLatin1String( "x-mail-distribution-list" ) );
       } else {
         return QVariant();
       }

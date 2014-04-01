@@ -182,8 +182,8 @@ void TagEditWidget::Private::deleteTag()
                                "Do you really want to remove the tag <resource>%1</resource>?",
                                tag.name());
     const QString caption = i18nc("@title", "Delete tag");
-    const KGuiItem deleteItem(i18nc("@action:button", "Delete"), KIcon(QStringLiteral("edit-delete")));
-    const KGuiItem cancelItem(i18nc("@action:button", "Cancel"), KIcon(QStringLiteral("dialog-cancel")));
+    const KGuiItem deleteItem(i18nc("@action:button", "Delete"), QIcon::fromTheme(QStringLiteral("edit-delete")));
+    const KGuiItem cancelItem(i18nc("@action:button", "Cancel"), QIcon::fromTheme(QStringLiteral("dialog-cancel")));
     if (KMessageBox::warningYesNo(d, text, caption, deleteItem, cancelItem) == KMessageBox::Yes) {
         new Akonadi::TagDeleteJob(tag, this);
     }
@@ -241,7 +241,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     // create the delete button, which is shown when
     // hovering the items
     d->m_deleteButton = new QPushButton(d->m_tagsView->viewport());
-    d->m_deleteButton->setIcon(KIcon(QStringLiteral("edit-delete")));
+    d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();
     connect(d->m_deleteButton, SIGNAL(clicked()), d.data(), SLOT(deleteTag()));

@@ -133,7 +133,7 @@ QVariant IMModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
 
-        return KIcon(IMProtocols::self()->icon(address.protocol()));
+        return QIcon::fromTheme(IMProtocols::self()->icon(address.protocol()));
     }
 
     if (role == Qt::EditRole) {

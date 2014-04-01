@@ -216,23 +216,23 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     if (moveAllowed) {
         sequence = QKeySequence(Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        moveDropAction = popup.addAction(KIcon(QString::fromLatin1("go-jump")), i18n("&Move Here") + QLatin1Char('\t') + sequence);
+        moveDropAction = popup.addAction(QIcon::fromTheme(QString::fromLatin1("go-jump")), i18n("&Move Here") + QLatin1Char('\t') + sequence);
     }
 
     if (copyAllowed) {
         sequence = QKeySequence(Qt::ControlModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        copyDropAction = popup.addAction(KIcon(QString::fromLatin1("edit-copy")), i18n("&Copy Here") + QLatin1Char('\t') + sequence);
+        copyDropAction = popup.addAction(QIcon::fromTheme(QString::fromLatin1("edit-copy")), i18n("&Copy Here") + QLatin1Char('\t') + sequence);
     }
 
     if (linkAllowed) {
         sequence = QKeySequence(Qt::ControlModifier + Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        linkAction = popup.addAction(KIcon(QStringLiteral("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
+        linkAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
     }
 
     popup.addSeparator();
-    popup.addAction(KIcon(QString::fromLatin1("process-stop")), i18n("C&ancel") + QLatin1Char('\t') + QKeySequence(Qt::Key_Escape).toString());
+    popup.addAction(QIcon::fromTheme(QString::fromLatin1("process-stop")), i18n("C&ancel") + QLatin1Char('\t') + QKeySequence(Qt::Key_Escape).toString());
 
     QAction *activatedAction = popup.exec(QCursor::pos());
     if (!activatedAction) {
@@ -286,11 +286,11 @@ void DragDropManager::startDrag(Qt::DropActions supportedActions)
     QDrag *drag = new QDrag(m_view);
     drag->setMimeData(mimeData);
     if (indexes.size() > 1) {
-        drag->setPixmap(KIcon(QStringLiteral("document-multiple")).pixmap(QSize(22, 22)));
+        drag->setPixmap(QIcon::fromTheme(QStringLiteral("document-multiple")).pixmap(QSize(22, 22)));
     } else {
         QPixmap pixmap = indexes.first().data(Qt::DecorationRole).value<QIcon>().pixmap(QSize(22, 22));
         if (pixmap.isNull()) {
-            pixmap = KIcon(QStringLiteral("text-plain")).pixmap(QSize(22, 22));
+            pixmap = QIcon::fromTheme(QStringLiteral("text-plain")).pixmap(QSize(22, 22));
         }
         drag->setPixmap(pixmap);
     }

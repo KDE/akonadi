@@ -24,7 +24,7 @@
 #endif
 
 #include <KDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 
 #include <QtCore/QEvent>
@@ -93,9 +93,9 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     mPreviousState = mBaseWidget->isEnabled();
 
     ui->setupUi(this);
-    ui->notRunningIcon->setPixmap(KIcon(QStringLiteral("akonadi")).pixmap(64));
-    ui->brokenIcon->setPixmap(KIcon(QString::fromLatin1("dialog-error")).pixmap(64));
-    ui->progressIcon->setPixmap(KIcon(QStringLiteral("akonadi")).pixmap(32));
+    ui->notRunningIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(64));
+    ui->brokenIcon->setPixmap(QIcon::fromTheme(QString::fromLatin1("dialog-error")).pixmap(64));
+    ui->progressIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(32));
     ui->quitButton->setText(KStandardGuiItem::quit().text());
     ui->detailsQuitButton->setText(KStandardGuiItem::quit().text());
 

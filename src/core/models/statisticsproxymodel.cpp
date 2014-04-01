@@ -33,7 +33,7 @@
 
 #include <QApplication>
 #include <QPalette>
-#include <KIcon>
+#include <QIcon>
 using namespace Akonadi;
 
 /**
@@ -373,7 +373,7 @@ QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
         Collection collection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
 
         if (collection.isValid()) {
-            return KIcon(CollectionUtils::displayIconName(collection));
+            return QIcon::fromTheme(CollectionUtils::displayIconName(collection));
         } else {
             return QVariant();
         }

@@ -44,7 +44,7 @@
 #include "entitydeletedattribute.h"
 #include "recentcollectionaction_p.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KAction>
 #include <KActionCollection>
 #include <KActionMenu>
@@ -402,7 +402,7 @@ public:
          */
         if ((standardActionData[type].actionType == ActionWithAlternative) || (standardActionData[type].actionType == ActionAlternative)) {
             actions[type]->setText(i18n(standardActionData[type].label));
-            actions[type]->setIcon(KIcon(QString::fromLatin1(standardActionData[type].icon)));
+            actions[type]->setIcon(QIcon::fromTheme(QString::fromLatin1(standardActionData[type].icon)));
 
             if (pluralLabels.contains(type) && !pluralLabels.value(type).isEmpty()) {
                 actions[type]->setText(pluralLabels.value(type).subs(1).toString());
@@ -417,7 +417,7 @@ public:
             }
 
             if (standardActionData[type].icon) {
-                actions[type]->setIcon(KIcon(QString::fromLatin1(standardActionData[type].icon)));
+                actions[type]->setIcon(QIcon::fromTheme(QString::fromLatin1(standardActionData[type].icon)));
             }
 
             //actions[type]->setShortcut( standardActionData[type].shortcut );
@@ -1649,7 +1649,7 @@ KAction *StandardActionManager::createAction(Type type)
     }
 
     if (standardActionData[type].icon) {
-        action->setIcon(KIcon(QString::fromLatin1(standardActionData[type].icon)));
+        action->setIcon(QIcon::fromTheme(QString::fromLatin1(standardActionData[type].icon)));
     }
 
     action->setShortcut(standardActionData[type].shortcut);

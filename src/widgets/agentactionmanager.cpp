@@ -27,7 +27,7 @@
 #include "metatypes.h"
 
 #include <KAction>
-#include <KIcon>
+#include <QIcon>
 #include <KActionCollection>
 #include <KDebug>
 #include <KLocalizedString>
@@ -296,7 +296,7 @@ KAction *AgentActionManager::createAction(Type type)
     action->setText(i18n(agentActionData[type].label));
 
     if (agentActionData[type].icon) {
-        action->setIcon(KIcon(QString::fromLatin1(agentActionData[type].icon)));
+        action->setIcon(QIcon::fromTheme(QString::fromLatin1(agentActionData[type].icon)));
     }
 
     action->setShortcut(agentActionData[type].shortcut);

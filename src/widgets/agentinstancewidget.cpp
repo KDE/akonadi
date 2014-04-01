@@ -23,7 +23,7 @@
 #include "agentinstance.h"
 #include "agentinstancemodel.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 
 #include <QtCore/QUrl>
@@ -40,10 +40,10 @@ static void iconsEarlyCleanup();
 struct Icons
 {
     Icons()
-        : readyPixmap(KIcon(QStringLiteral("user-online")).pixmap(QSize(16, 16)))
-        , syncPixmap(KIcon(QStringLiteral("network-connect")).pixmap(QSize(16, 16)))
-        , errorPixmap(KIcon(QStringLiteral("dialog-error")).pixmap(QSize(16, 16)))
-        , offlinePixmap(KIcon(QStringLiteral("network-disconnect")).pixmap(QSize(16, 16)))
+        : readyPixmap(QIcon::fromTheme(QStringLiteral("user-online")).pixmap(QSize(16, 16)))
+        , syncPixmap(QIcon::fromTheme(QStringLiteral("network-connect")).pixmap(QSize(16, 16)))
+        , errorPixmap(QIcon::fromTheme(QStringLiteral("dialog-error")).pixmap(QSize(16, 16)))
+        , offlinePixmap(QIcon::fromTheme(QStringLiteral("network-disconnect")).pixmap(QSize(16, 16)))
     {
         qAddPostRoutine(iconsEarlyCleanup);
     }

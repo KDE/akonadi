@@ -286,18 +286,18 @@ QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
     }
 
     if ( member.loadingError ) {
-      return KIcon( QLatin1String( "emblem-important" ) );
+      return QIcon::fromTheme( QLatin1String( "emblem-important" ) );
     }
 
     if ( index.row() == ( d->mMembers.count() - 1 ) ) {
-      return KIcon( QLatin1String( "contact-new" ) );
+      return QIcon::fromTheme( QLatin1String( "contact-new" ) );
     }
 
     if ( member.isReference ) {
-      return KIcon( QLatin1String( "x-office-contact" ), KIconLoader::global(),
+      return QIcon::fromTheme( QLatin1String( "x-office-contact" ), KIconLoader::global(),
                     QStringList() << QLatin1String( "emblem-symbolic-link" ) );
     } else {
-      return KIcon( QLatin1String( "x-office-contact" ) );
+      return QIcon::fromTheme( QLatin1String( "x-office-contact" ) );
     }
   }
 

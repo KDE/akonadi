@@ -69,7 +69,7 @@ public:
     /**
      * Returns the icon that should be used for this collection or item.
      */
-    KIcon icon() const;
+    QIcon icon() const;
 
     /**
      * Returns the icon name of the icon returned by icon().
@@ -87,7 +87,7 @@ public:
      * Returns the icon that should be used for this collection or item when active.
      * @since 4.4
      */
-    KIcon activeIcon() const;
+    QIcon activeIcon() const;
 
     /**
      * Returns the icon name of an active item.

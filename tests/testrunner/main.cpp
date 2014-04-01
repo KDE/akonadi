@@ -25,7 +25,7 @@
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 
 #include <signal.h>
