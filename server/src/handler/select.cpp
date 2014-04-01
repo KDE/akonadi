@@ -27,6 +27,7 @@
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
+#include "commandcontext.h"
 
 #include "response.h"
 
@@ -43,7 +44,7 @@ Select::Select( Scope::SelectionScope scope )
 bool Select::parseStream()
 {
   // as per rfc, even if the following select fails, we need to reset
-  connection()->setSelectedCollection( 0 );
+  connection()->context()->setCollection( Collection() );
 
   QByteArray buffer = m_streamParser->readString();
 
@@ -116,6 +117,6 @@ bool Select::parseStream()
   response.setString( "Completed" );
   Q_EMIT responseAvailable( response );
 
-  connection()->setSelectedCollection( col.id() );
+  connection()->context()->setCollection( col );
   return true;
 }

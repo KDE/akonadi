@@ -292,13 +292,14 @@ void SearchTaskManager::searchLoop()
 
           mInstancesLock.lock();
           AgentSearchInstance *instance = mInstances.value( it->first );
-          mInstancesLock.unlock();
           if ( !instance ) {
+            mInstancesLock.unlock();
             // Resource disappeared in the meanwhile
             continue;
           }
 
           instance->search( task->id, task->query, it->second );
+          mInstancesLock.unlock();
 
           task->sharedLock.lock();
           it = task->queries.erase( it );

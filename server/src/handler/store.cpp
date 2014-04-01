@@ -153,7 +153,7 @@ bool Store::parseStream()
 
   // retrieve selected items
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
+  ItemQueryHelper::scopeToQuery( mScope, connection()->context(), qb );
   if ( !qb.exec() ) {
     return failureResponse( "Unable to retrieve items" );
   }

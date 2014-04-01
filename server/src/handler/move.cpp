@@ -58,7 +58,7 @@ bool Move::parseStream()
   Transaction transaction( store );
 
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
+  ItemQueryHelper::scopeToQuery( mScope, connection()->context(), qb );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::NotEquals, destination.id() );
 
   const QDateTime mtime = QDateTime::currentDateTime();

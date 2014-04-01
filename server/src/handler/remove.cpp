@@ -40,7 +40,7 @@ bool Remove::parseStream()
 {
   mScope.parseScope( m_streamParser );
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
+  ItemQueryHelper::scopeToQuery( mScope, connection()->context(), qb );
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );

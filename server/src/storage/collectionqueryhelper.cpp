@@ -48,7 +48,7 @@ void CollectionQueryHelper::scopeToQuery( const Scope &scope, Connection *connec
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     QueryHelper::setToQuery( scope.uidSet(), Collection::idFullColumnName(), qb );
   } else if ( scope.scope() == Scope::Rid ) {
-    if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() ) {
+    if ( connection->context()->collectionId() <= 0 && !connection->resourceContext().isValid() ) {
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
     }
     CollectionQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );

@@ -23,6 +23,8 @@
 #include "connection.h"
 #include "fetchhelper.h"
 #include "response.h"
+#include "storage/selectquerybuilder.h"
+#include <imapstreamparser.h>
 
 #include <libs/protocol_p.h>
 
@@ -38,6 +40,13 @@ bool Fetch::parseStream()
 {
   // sequence set
   mScope.parseScope( m_streamParser );
+
+  // context
+  connection()->context()->parseContext( m_streamParser );
+  // We require context in case we do RID or GID fetch
+  if ( connection()->context()->isEmpty() && mScope.scope() != Scope::Uid ) {
+    throw HandlerException( "No FETCH context specified" );
+  }
 
   FetchHelper fetchHelper( connection(), mScope, FetchScope( m_streamParser ) );
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),

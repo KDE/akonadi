@@ -74,8 +74,8 @@ void ItemRetriever::setItemSet( const ImapSet &set, const Collection &collection
 void ItemRetriever::setItemSet( const ImapSet &set, bool isUid )
 {
   Q_ASSERT( mConnection );
-  if ( !isUid && mConnection->selectedCollectionId() >= 0 ) {
-    setItemSet( set, mConnection->selectedCollection() );
+  if ( !isUid && mConnection->context()->collectionId() >= 0 ) {
+    setItemSet( set, mConnection->context()->collection() );
   } else {
     setItemSet( set );
   }
@@ -165,7 +165,7 @@ QSqlQuery ItemRetriever::buildQuery() const
   qb.addColumn( Part::datasizeFullColumnName() );
 
   if ( mScope.scope() != Scope::Invalid ) {
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
+    ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), qb );
   } else {
     ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
   }
@@ -295,7 +295,7 @@ void ItemRetriever::verifyCache()
   qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
   if ( mScope.scope() != Scope::Invalid ) {
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
+    ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), qb );
   } else {
     ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
   }
