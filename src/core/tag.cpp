@@ -100,7 +100,7 @@ bool Tag::operator==(const Tag &other) const
 
 Tag Tag::fromUrl(const KUrl &url)
 {
-    if (url.protocol() != QStringLiteral("akonadi")) {
+    if (url.protocol() != QLatin1String("akonadi")) {
         return Tag();
     }
 

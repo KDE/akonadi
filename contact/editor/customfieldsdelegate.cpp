@@ -108,7 +108,7 @@ void CustomFieldsDelegate::setEditorData(QWidget *editor, const QModelIndex &ind
         }
         case CustomField::BooleanType: {
             QCheckBox *widget = qobject_cast<QCheckBox *>(editor);
-            widget->setChecked(index.data(Qt::EditRole).toString() == QStringLiteral("true"));
+            widget->setChecked(index.data(Qt::EditRole).toString() == QLatin1String("true"));
             break;
         }
         case CustomField::DateType: {

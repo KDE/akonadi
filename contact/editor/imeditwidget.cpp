@@ -66,7 +66,7 @@ void IMEditWidget::loadContact(const KABC::Addressee &contact)
         splitCustomField(custom, app, name, value);
 
         if (app.startsWith(QStringLiteral("messaging/"))) {
-            if (name == QStringLiteral("All")) {
+            if (name == QLatin1String("All")) {
                 const QString protocol = app;
                 const QStringList names = value.split(QChar(0xE000), QString::SkipEmptyParts);
 

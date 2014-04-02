@@ -827,7 +827,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     }
 
     for (int i = 1; i < argc - 1; ++i) {
-        if (QLatin1String(argv[i]) == QStringLiteral("--identifier")) {
+        if (QLatin1String(argv[i]) == QLatin1String("--identifier")) {
             identifier = QLatin1String(argv[i + 1]);
         }
     }

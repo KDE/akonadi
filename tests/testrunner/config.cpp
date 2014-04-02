@@ -75,7 +75,7 @@ void Config::readConfiguration(const QString &configfile)
       } else if ( element.tagName() == "datahome" ) {
         setXdgDataHome( basePath + element.text() );
       } else if ( element.tagName() == "agent" ) {
-        insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QStringLiteral("true") );
+        insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QLatin1String("true") );
       } else if ( element.tagName() == "envvar" ) {
         const QString name = element.attribute( "name" );
         if ( name.isEmpty() ) {

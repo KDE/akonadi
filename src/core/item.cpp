@@ -362,7 +362,7 @@ KUrl Item::url(UrlType type) const
 
 Item Item::fromUrl(const KUrl &url)
 {
-    if (url.protocol() != QStringLiteral("akonadi")) {
+    if (url.protocol() != QLatin1String("akonadi")) {
         return Item();
     }
 

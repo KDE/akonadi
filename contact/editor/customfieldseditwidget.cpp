@@ -109,7 +109,7 @@ void CustomFieldsEditWidget::loadContact(const KABC::Addressee &contact)
             continue;
         }
 
-        if (app == QStringLiteral("KADDRESSBOOK")) {
+        if (app == QLatin1String("KADDRESSBOOK")) {
             static QSet<QString> blacklist;
             if (blacklist.isEmpty()) {
                 blacklist << QStringLiteral("BlogFeed")
@@ -158,7 +158,7 @@ void CustomFieldsEditWidget::loadContact(const KABC::Addressee &contact)
 
         // if not local and not global it must be external
         if (!isLocalCustomField && !isGlobalCustomField) {
-            if (app == QStringLiteral("KADDRESSBOOK")) {
+            if (app == QLatin1String("KADDRESSBOOK")) {
                 // however if it starts with our prefix it might be that this is an outdated
                 // global custom field, in this case treat it as local field of type text
                 CustomField customField(name, name, CustomField::TextType, CustomField::LocalScope);

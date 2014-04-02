@@ -136,7 +136,7 @@ void SetupTest::copyXdgDirectory(const QString& src, const QString& dst)
   const QDir srcDir( src );
   foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
     if (fi.isDir()) {
-      if ( fi.fileName() == QStringLiteral("akonadi") ) {
+      if ( fi.fileName() == QLatin1String("akonadi") ) {
         // namespace according to instance identifier
         copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + QStringLiteral("akonadi") + QDir::separator()
                        + QStringLiteral("instance") + QDir::separator() + instanceId() );

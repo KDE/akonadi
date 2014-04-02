@@ -265,7 +265,7 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
 void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged(const QString &, const QVariantMap &status)
 {
     const QString key = status.value(QStringLiteral("key")).toString();
-    if (key != QStringLiteral("collectionSyncProgress")) {
+    if (key != QLatin1String("collectionSyncProgress")) {
         return;
     }
 

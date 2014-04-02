@@ -171,7 +171,7 @@ KUrl Collection::url(UrlType type) const
 
 Collection Collection::fromUrl(const KUrl &url)
 {
-    if (url.protocol() != QStringLiteral("akonadi")) {
+    if (url.protocol() != QLatin1String("akonadi")) {
         return Collection();
     }
 

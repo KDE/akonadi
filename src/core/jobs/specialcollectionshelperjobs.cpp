@@ -340,7 +340,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
         while (it.hasNext()) {
             it.next();
 
-            if (it.key() == QStringLiteral("Name")) {
+            if (it.key() == QLatin1String("Name")) {
                 continue;
             }
 

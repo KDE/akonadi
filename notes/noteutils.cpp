@@ -188,7 +188,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
   if ( msg->from( false ) )
     from = msg->from( false )->asUnicodeString();
   creationDate = msg->date( true )->dateTime();
-  if ( msg->contentType( false ) && msg->contentType( false )->asUnicodeString() == QStringLiteral("text/html") ) {
+  if ( msg->contentType( false ) && msg->contentType( false )->asUnicodeString() == QLatin1String("text/html") ) {
     textFormat = Qt::RichText;
   }
 

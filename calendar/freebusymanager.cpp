@@ -853,7 +853,7 @@ void FreeBusyManager::publishFreeBusy(QWidget *parentWidget)
         if (CalendarSettings::self()->publishKolab()) {
             // we use Kolab
             QString server;
-            if (CalendarSettings::self()->publishKolabServer() == QStringLiteral("%SERVER%") ||
+            if (CalendarSettings::self()->publishKolabServer() == QLatin1String("%SERVER%") ||
                     CalendarSettings::self()->publishKolabServer().isEmpty()) {
                 server = emailHost;
             } else {

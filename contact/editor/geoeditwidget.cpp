@@ -170,7 +170,7 @@ static double calculateCoordinate(const QString &coordinate)
     int d = 0, m = 0, s = 0;
     QString str = coordinate;
 
-    neg = str.left(1) == QStringLiteral("-");
+    neg = str.left(1) == QLatin1String("-");
     str.remove(0, 1);
 
     switch (str.length()) {

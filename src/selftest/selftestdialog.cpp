@@ -140,7 +140,7 @@ void SelfTestDialog::runTests()
 
     const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
     testSQLDriver();
-    if (driver == QStringLiteral("QPSQL")) {
+    if (driver == QLatin1String("QPSQL")) {
         testPSQLServer();
     } else {
 #ifndef Q_OS_WIN
@@ -169,7 +169,7 @@ QVariant SelfTestDialog::serverSetting(const QString &group, const char *key, co
 bool SelfTestDialog::useStandaloneMysqlServer() const
 {
     const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
-    if (driver != QStringLiteral("QMYSQL")) {
+    if (driver != QLatin1String("QMYSQL")) {
         return false;
     }
     const bool startServer = serverSetting(driver, "StartServer", true).toBool();

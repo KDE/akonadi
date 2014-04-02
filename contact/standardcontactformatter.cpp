@@ -274,7 +274,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
               } else if ( descriptionType == QLatin1String( "datetime" ) ) {
                 const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
                 value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
-              } else if ( descriptionType == QStringLiteral("url") ) {
+              } else if ( descriptionType == QLatin1String("url") ) {
                 value = KStringHandler::tagUrls( Qt::escape(value) );
                 needToEscape = false;
               }

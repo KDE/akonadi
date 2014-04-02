@@ -846,7 +846,7 @@ public:
         //
         // FIXME: AgentManager should return a valid AgentInstance even
         // for virtual resources, which would be always online.
-        if (collection.resource() == QStringLiteral("akonadi_search_resource")) {
+        if (collection.resource() == QLatin1String("akonadi_search_resource")) {
             return true;
         }
 
