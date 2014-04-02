@@ -28,7 +28,7 @@
 
 #include "im/immodel.h"
 
-class KLineEdit;
+class QLineEdit;
 class QToolButton;
 
 /**
@@ -52,7 +52,7 @@ class IMEditWidget : public QWidget
     void edit();
 
   private:
-    KLineEdit *mIMEdit;
+    QLineEdit *mIMEdit;
     QToolButton *mEditButton;
     IMAddress::List mIMAddresses;
 };

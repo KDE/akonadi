@@ -27,7 +27,7 @@
 #include "customfieldsmodel.h"
 
 class KComboBox;
-class KLineEdit;
+class QLineEdit;
 class QCheckBox;
 
 class CustomFieldEditorDialog : public KDialog
@@ -41,10 +41,10 @@ public:
     CustomField customField() const;
 
 private:
-    KLineEdit *mTitle;
+    QLineEdit *mTitle;
     KComboBox *mType;
     QCheckBox *mScope;
-    KLineEdit *mKey;
+    QLineEdit *mKey;
     CustomField mCustomField;
 };
 

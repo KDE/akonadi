@@ -41,7 +41,7 @@
 class EmailAddressExtracter : public QObject
 {
 public:
-    EmailAddressExtracter(KLineEdit *lineEdit)
+    EmailAddressExtracter(QLineEdit *lineEdit)
         : QObject(lineEdit)
         , mLineEdit(lineEdit)
     {
@@ -60,7 +60,7 @@ public:
     }
 
 private:
-    KLineEdit *mLineEdit;
+    QLineEdit *mLineEdit;
 };
 
 class EmailItem : public QListWidgetItem
@@ -102,7 +102,7 @@ EmailEditWidget::EmailEditWidget(QWidget *parent)
     layout->setMargin(0);
     layout->setSpacing(KDialog::spacingHint());
 
-    mEmailEdit = new KLineEdit;
+    mEmailEdit = new QLineEdit;
     new EmailAddressExtracter(mEmailEdit);
     connect(mEmailEdit, SIGNAL(textChanged(QString)),
             SLOT(textChanged(QString)));

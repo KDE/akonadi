@@ -32,7 +32,7 @@
 class QCheckBox;
 class QLabel;
 
-class KLineEdit;
+class QLineEdit;
 class KTextEdit;
 
 /**
@@ -197,10 +197,10 @@ private:
     AddressTypeCombo *mTypeCombo;
     KTextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
-    KLineEdit *mRegionEdit;
-    KLineEdit *mLocalityEdit;
-    KLineEdit *mPostalCodeEdit;
-    KLineEdit *mPOBoxEdit;
+    QLineEdit *mRegionEdit;
+    QLineEdit *mLocalityEdit;
+    QLineEdit *mPostalCodeEdit;
+    QLineEdit *mPOBoxEdit;
     QCheckBox *mPreferredCheckBox;
 
     KABC::Address mAddress;

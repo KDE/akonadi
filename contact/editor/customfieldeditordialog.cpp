@@ -40,8 +40,8 @@ CustomFieldEditorDialog::CustomFieldEditorDialog(QWidget *parent)
 
     QFormLayout *layout = new QFormLayout(widget);
 
-    mKey = new KLineEdit;
-    mTitle = new KLineEdit;
+    mKey = new QLineEdit;
+    mTitle = new QLineEdit;
     mType = new KComboBox;
     mScope = new QCheckBox(i18n("Use field for all contacts"));
 

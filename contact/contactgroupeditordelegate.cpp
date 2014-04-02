@@ -63,7 +63,7 @@ class ContactsWithEmailFilterModel : public QSortFilterProxyModel
 };
 
 ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
-  : KLineEdit( parent ), mIsReference( isReference )
+  : QLineEdit( parent ), mIsReference( isReference )
 {
   setFrame( false );
 
@@ -154,7 +154,7 @@ QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyle
       comboBox->setAutoFillBackground( true );
       return comboBox;
     } else {
-      KLineEdit *lineEdit = new KLineEdit( parent );
+      QLineEdit *lineEdit = new QLineEdit( parent );
       lineEdit->setFrame( false );
       return lineEdit;
     }
@@ -165,7 +165,7 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
 {
   if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
     if ( index.column() == 0 ) {
-      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
+      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
       if ( !lineEdit ) {
         return;
       }
@@ -183,7 +183,7 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
       comboBox->setCurrentIndex( comboBox->findText( index.data( Qt::EditRole ).toString() ) );
     }
   } else {
-      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
+      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
       if ( !lineEdit ) {
         return;
       }
@@ -234,7 +234,7 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
     }
 
     if ( index.column() == 1 ) {
-      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
+      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
       if ( !lineEdit ) {
         return;
       }

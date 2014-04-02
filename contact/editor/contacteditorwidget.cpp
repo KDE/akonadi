@@ -81,13 +81,13 @@ class ContactEditorWidget::Private
     NameEditWidget *mNameWidget;
     ImageWidget *mPhotoWidget;
     DisplayNameEditWidget *mDisplayNameWidget;
-    KLineEdit *mNickNameWidget;
+    QLineEdit *mNickNameWidget;
     SoundEditWidget *mPronunciationWidget;
 
     // widgets from Internet group
     EmailEditWidget *mEmailWidget;
-    KLineEdit *mHomepageWidget;
-    KLineEdit *mBlogWidget;
+    QLineEdit *mHomepageWidget;
+    QLineEdit *mBlogWidget;
     IMEditWidget *mIMWidget;
 
     // widgets from phones group
@@ -106,13 +106,13 @@ class ContactEditorWidget::Private
 
     // widgets from general group
     ImageWidget *mLogoWidget;
-    KLineEdit *mOrganizationWidget;
-    KLineEdit *mProfessionWidget;
-    KLineEdit *mTitleWidget;
-    KLineEdit *mDepartmentWidget;
-    KLineEdit *mOfficeWidget;
-    KLineEdit *mManagerWidget;
-    KLineEdit *mAssistantWidget;
+    QLineEdit *mOrganizationWidget;
+    QLineEdit *mProfessionWidget;
+    QLineEdit *mTitleWidget;
+    QLineEdit *mDepartmentWidget;
+    QLineEdit *mOfficeWidget;
+    QLineEdit *mManagerWidget;
+    QLineEdit *mAssistantWidget;
 
     // widgets from groupware group
     FreeBusyEditWidget *mFreeBusyWidget;
@@ -125,7 +125,7 @@ class ContactEditorWidget::Private
     DateEditWidget *mAnniversaryWidget;
 
     // widgets from family group
-    KLineEdit *mPartnerWidget;
+    QLineEdit *mPartnerWidget;
 
     // widgets from custom fields group
     CustomFieldsEditWidget *mCustomFieldsWidget;
@@ -199,7 +199,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 2, 0 );
 
-  mNickNameWidget = new KLineEdit;
+  mNickNameWidget = new QLineEdit;
   label->setBuddy( mNickNameWidget );
   nameLayout->addWidget( mNickNameWidget, 2, 1 );
 
@@ -226,7 +226,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   internetLayout->addWidget( label, 1, 0 );
 
-  mHomepageWidget = new KLineEdit;
+  mHomepageWidget = new QLineEdit;
   label->setBuddy( mHomepageWidget );
   internetLayout->addWidget( mHomepageWidget, 1, 1 );
 
@@ -234,7 +234,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   internetLayout->addWidget( label, 2, 0 );
 
-  mBlogWidget = new KLineEdit;
+  mBlogWidget = new QLineEdit;
   label->setBuddy( mBlogWidget );
   internetLayout->addWidget( mBlogWidget, 2, 1 );
 
@@ -346,7 +346,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 0, 0 );
 
-  mOrganizationWidget = new KLineEdit;
+  mOrganizationWidget = new QLineEdit;
   label->setBuddy( mOrganizationWidget );
   generalLayout->addWidget( mOrganizationWidget, 0, 1 );
 
@@ -354,7 +354,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 1, 0 );
 
-  mProfessionWidget = new KLineEdit;
+  mProfessionWidget = new QLineEdit;
   label->setBuddy( mProfessionWidget );
   generalLayout->addWidget( mProfessionWidget, 1, 1 );
 
@@ -362,7 +362,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 2, 0 );
 
-  mTitleWidget = new KLineEdit;
+  mTitleWidget = new QLineEdit;
   label->setBuddy( mTitleWidget );
   generalLayout->addWidget( mTitleWidget , 2, 1 );
 
@@ -370,7 +370,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 3, 0 );
 
-  mDepartmentWidget = new KLineEdit;
+  mDepartmentWidget = new QLineEdit;
   label->setBuddy( mDepartmentWidget );
   generalLayout->addWidget( mDepartmentWidget, 3, 1 );
 
@@ -378,7 +378,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 4, 0 );
 
-  mOfficeWidget = new KLineEdit;
+  mOfficeWidget = new QLineEdit;
   label->setBuddy( mOfficeWidget );
   generalLayout->addWidget( mOfficeWidget, 4, 1 );
 
@@ -386,7 +386,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 5, 0 );
 
-  mManagerWidget = new KLineEdit;
+  mManagerWidget = new QLineEdit;
   label->setBuddy( mManagerWidget );
   generalLayout->addWidget( mManagerWidget, 5, 1 );
 
@@ -394,7 +394,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 6, 0 );
 
-  mAssistantWidget = new KLineEdit;
+  mAssistantWidget = new QLineEdit;
   label->setBuddy( mAssistantWidget );
   generalLayout->addWidget( mAssistantWidget, 6, 1 );
 
@@ -452,7 +452,7 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   familyLayout->addWidget( label, 0, 0 );
 
-  mPartnerWidget = new KLineEdit;
+  mPartnerWidget = new QLineEdit;
   label->setBuddy( mPartnerWidget );
   familyLayout->addWidget( mPartnerWidget, 0, 1 );
 

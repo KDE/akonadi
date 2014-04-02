@@ -32,7 +32,7 @@
 #include <QAbstractItemView>
 #include <QWidget>
 
-class KLineEdit;
+class QLineEdit;
 class QAbstractItemModel;
 class QTreeView;
 
@@ -96,7 +96,7 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionWidget : public QWidget
     /**
      * Returns the line edit that is used for the search line.
      */
-    KLineEdit *searchLineEdit() const;
+    QLineEdit *searchLineEdit() const;
 
     /**
      * Returns the tree view that is used to list the items.

@@ -219,8 +219,8 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 
     filterBarLayout->addWidget(new QLabel(i18n("Search:")));
 
-    KLineEdit *lineEdit = new KLineEdit(mainWidget);
-    lineEdit->setClearButtonShown(true);
+    QLineEdit *lineEdit = new QLineEdit(mainWidget);
+    lineEdit->setClearButtonEnabled(true);
     lineEdit->setFocus();
     connect(lineEdit, SIGNAL(textChanged(QString)),
             this, SLOT(slotSetPattern(QString)));

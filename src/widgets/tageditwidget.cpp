@@ -72,7 +72,7 @@ public:
     KCheckableProxyModel *m_checkableProxy;
     QModelIndex m_deleteCandidate;
     QPushButton *m_newTagButton;
-    KLineEdit *m_newTagEdit;
+    QLineEdit *m_newTagEdit;
 
     QPushButton *m_deleteButton;
     QTimer *m_deleteButtonTimer;
@@ -213,8 +213,8 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     connect(d->m_tagsView, SIGNAL(entered(QModelIndex)),
             d.data(), SLOT(slotItemEntered(QModelIndex)));
 
-    d->m_newTagEdit = new KLineEdit(this);
-    d->m_newTagEdit->setClearButtonShown(true);
+    d->m_newTagEdit = new QLineEdit(this);
+    d->m_newTagEdit->setClearButtonEnabled(true);
     connect(d->m_newTagEdit, SIGNAL(textEdited(QString)),
             d.data(), SLOT(slotTextEdited(QString)));
 

@@ -24,7 +24,7 @@
 #include "collection.h"
 
 class QLabel;
-class KLineEdit;
+class QLineEdit;
 
 class RenameFavoriteDialog : public KDialog
 {
@@ -43,7 +43,7 @@ protected Q_SLOTS:
 private:
     QString m_defaultName;
     QLabel *m_label;
-    KLineEdit *m_lineEdit;
+    QLineEdit *m_lineEdit;
 };
 
 #endif /* RENAMEFAVORITEDIALOG_H */

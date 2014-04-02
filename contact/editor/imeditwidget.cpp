@@ -39,7 +39,7 @@ IMEditWidget::IMEditWidget(QWidget *parent)
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
 
-    mIMEdit = new KLineEdit;
+    mIMEdit = new QLineEdit;
     layout->addWidget(mIMEdit);
 
     mEditButton = new QToolButton;

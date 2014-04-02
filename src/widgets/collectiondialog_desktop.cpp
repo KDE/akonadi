@@ -37,7 +37,7 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KInputDialog>
 #include <KMessageBox>
@@ -61,9 +61,9 @@ public:
         layout->addWidget(mTextLabel);
         mTextLabel->hide();
 
-        KLineEdit *filterCollectionLineEdit = new KLineEdit(widget);
-        filterCollectionLineEdit->setClearButtonShown(true);
-        filterCollectionLineEdit->setClickMessage(i18nc("@info/plain Displayed grayed-out inside the "
+        QLineEdit *filterCollectionLineEdit = new QLineEdit(widget);
+        filterCollectionLineEdit->setClearButtonEnabled(true);
+        filterCollectionLineEdit->setPlaceholderText(i18nc("@info/plain Displayed grayed-out inside the "
                                                         "textbox, verb to search", "Search"));
         layout->addWidget(filterCollectionLineEdit);
 

@@ -43,11 +43,11 @@ NameEditDialog::NameEditDialog(QWidget *parent)
     mPrefixCombo->setDuplicatesEnabled(false);
     mPrefixCombo->setEditable(true);
 
-    mGivenNameEdit = new KLineEdit(page);
+    mGivenNameEdit = new QLineEdit(page);
 
-    mAdditionalNameEdit = new KLineEdit(page);
+    mAdditionalNameEdit = new QLineEdit(page);
 
-    mFamilyNameEdit = new KLineEdit(page);
+    mFamilyNameEdit = new QLineEdit(page);
 
     mSuffixCombo = new KComboBox(page);
     mSuffixCombo->setDuplicatesEnabled(false);

@@ -24,7 +24,7 @@
 
 #include <kdialog.h>
 
-class KLineEdit;
+class QLineEdit;
 class KComboBox;
 
 class NameEditDialog : public KDialog
@@ -50,9 +50,9 @@ public:
 private:
     KComboBox *mSuffixCombo;
     KComboBox *mPrefixCombo;
-    KLineEdit *mFamilyNameEdit;
-    KLineEdit *mGivenNameEdit;
-    KLineEdit *mAdditionalNameEdit;
+    QLineEdit *mFamilyNameEdit;
+    QLineEdit *mGivenNameEdit;
+    QLineEdit *mAdditionalNameEdit;
 };
 
 #endif

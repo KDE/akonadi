@@ -29,7 +29,7 @@ namespace KABC
 class Addressee;
 }
 
-class KLineEdit;
+class QLineEdit;
 class KListWidget;
 class QToolButton;
 
@@ -57,7 +57,7 @@ private Q_SLOTS:
     void textChanged(const QString &text);
 
 private:
-    KLineEdit *mEmailEdit;
+    QLineEdit *mEmailEdit;
     QToolButton *mEditButton;
     QStringList mEmailList;
 };

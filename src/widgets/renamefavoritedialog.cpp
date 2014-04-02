@@ -19,7 +19,7 @@
 
 #include "renamefavoritedialog.h"
 #include <QLabel>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <QVBoxLayout>
 
@@ -41,8 +41,8 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString
     m_label->setWordWrap(true);
     layout->addWidget(m_label);
 
-    m_lineEdit = new KLineEdit(value, frame);
-    m_lineEdit->setClearButtonShown(true);
+    m_lineEdit = new QLineEdit(value, frame);
+    m_lineEdit->setClearButtonEnabled(true);
     layout->addWidget(m_lineEdit);
 
     m_lineEdit->setFocus();

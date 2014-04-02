@@ -58,7 +58,7 @@ public:
 
     CollectionRequester *q;
     Collection collection;
-    KLineEdit *edit;
+    QLineEdit *edit;
     KPushButton *button;
     CollectionDialog *collectionDialog;
 };
@@ -88,10 +88,10 @@ void CollectionRequester::Private::init()
 {
     q->setMargin(0);
 
-    edit = new KLineEdit(q);
+    edit = new QLineEdit(q);
     edit->setReadOnly(true);
-    edit->setClickMessage(i18n("No Folder"));
-    edit->setClearButtonShown(false);
+    edit->setPlaceholderText(i18n("No Folder"));
+    edit->setClearButtonEnabled(false);
     edit->setFocusPolicy(Qt::NoFocus);
 
     button = new KPushButton(q);

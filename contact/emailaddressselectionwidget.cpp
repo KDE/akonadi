@@ -52,13 +52,13 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class SearchLineEdit : public KLineEdit
+class SearchLineEdit : public QLineEdit
 {
   public:
     SearchLineEdit( QWidget *receiver, QWidget *parent = 0 )
-      : KLineEdit( parent ), mReceiver( receiver )
+      : QLineEdit( parent ), mReceiver( receiver )
     {
-        setClearButtonShown( true );
+        setClearButtonEnabled( true );
     }
 
   protected:
@@ -68,7 +68,7 @@ class SearchLineEdit : public KLineEdit
         QMetaObject::invokeMethod( mReceiver, "setFocus" );
       }
 
-      KLineEdit::keyPressEvent( event );
+      QLineEdit::keyPressEvent( event );
     }
 
   private:
@@ -208,7 +208,7 @@ EmailAddressSelection::List EmailAddressSelectionWidget::selectedAddresses() con
   return selections;
 }
 
-KLineEdit* EmailAddressSelectionWidget::searchLineEdit() const
+QLineEdit* EmailAddressSelectionWidget::searchLineEdit() const
 {
   return d->mSearchLine;
 }

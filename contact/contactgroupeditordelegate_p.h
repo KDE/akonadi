@@ -22,7 +22,7 @@
 #ifndef AKONADI_CONTACTGROUPEDITORDELEGATE_P_H
 #define AKONADI_CONTACTGROUPEDITORDELEGATE_P_H
 
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QStyledItemDelegate>
 
@@ -31,7 +31,7 @@
 namespace Akonadi
 {
 
-class ContactLineEdit : public KLineEdit
+class ContactLineEdit : public QLineEdit
 {
   Q_OBJECT
 

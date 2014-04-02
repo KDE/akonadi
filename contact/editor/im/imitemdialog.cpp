@@ -55,7 +55,7 @@ IMItemDialog::IMItemDialog(QWidget *parent)
                                 protocol);
     }
 
-    mNameEdit = new KLineEdit;
+    mNameEdit = new QLineEdit;
     layout->addRow(i18nc("@label:textbox IM address", "Address:"), mNameEdit);
 
     connect(mProtocolCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateButtons()));

@@ -33,7 +33,7 @@ class QModelIndex;
 
 class KJob;
 
-class ContactGroupLineEdit : public KLineEdit
+class ContactGroupLineEdit : public QLineEdit
 {
   Q_OBJECT
 

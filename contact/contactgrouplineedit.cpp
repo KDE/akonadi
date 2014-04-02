@@ -34,11 +34,11 @@
 #include <QMenu>
 
 ContactGroupLineEdit::ContactGroupLineEdit( QWidget *parent )
-  : KLineEdit( parent ),
+  : QLineEdit( parent ),
     mCompleter( 0 ),
     mContainsReference( false )
 {
-  setClearButtonShown( true );
+  setClearButtonEnabled( true );
 }
 
 void ContactGroupLineEdit::setCompletionModel( QAbstractItemModel *model )
