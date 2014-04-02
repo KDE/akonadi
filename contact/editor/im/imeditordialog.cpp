@@ -86,7 +86,7 @@ IMEditorDialog::~IMEditorDialog()
 
 void IMEditorDialog::readConfig()
 {
-    KConfigGroup group(KGlobal::config(), "IMEditorDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "IMEditorDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(400, 200));
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
@@ -95,7 +95,7 @@ void IMEditorDialog::readConfig()
 
 void IMEditorDialog::writeConfig()
 {
-    KConfigGroup group(KGlobal::config(), "IMEditorDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "IMEditorDialog");
     group.writeEntry("Size", size());
 }
 

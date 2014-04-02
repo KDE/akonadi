@@ -39,6 +39,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QMetaMethod>
 #include <QtCore/QMetaObject>
+#include <QStandardPaths>
 
 static char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
 
@@ -196,7 +197,7 @@ void Firstrun::setupNext()
     // check if there is a kresource setup for this type already
     const QString kresType = resourceTypeForMimetype(type.mimeTypes());
     if (!kresType.isEmpty()) {
-        const QString kresCfgFile = KStandardDirs::locateLocal("config", QString::fromLatin1("kresources/%1/stdrc").arg(kresType));
+        const QString kresCfgFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + QString::fromLatin1("kresources/%1/stdrc").arg(kresType);
         KConfig resCfg(kresCfgFile);
         const KConfigGroup resGroup(&resCfg, "General");
         bool legacyResourceFound = false;

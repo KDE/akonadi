@@ -45,13 +45,13 @@ public:
 
 void AgentTypeDialog::Private::writeConfig()
 {
-    KConfigGroup group(KGlobal::config(), "AgentTypeDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "AgentTypeDialog");
     group.writeEntry("Size", q->size());
 }
 
 void AgentTypeDialog::Private::readConfig()
 {
-    KConfigGroup group(KGlobal::config(), "AgentTypeDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "AgentTypeDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(460, 320));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);

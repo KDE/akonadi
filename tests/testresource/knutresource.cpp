@@ -34,12 +34,13 @@
 
 #include <kfiledialog.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
+
 
 #include <QtCore/QFile>
 #include <QFileSystemWatcher>
 #include <QtCore/QDir>
 #include <QtCore/QUuid>
+#include <QStandardPaths>
 
 using namespace Akonadi;
 
@@ -77,7 +78,7 @@ void KnutResource::load()
   }
 
   if ( !QFile::exists( fileName ) )
-    fileName = KGlobal::dirs()->findResource( "data", QLatin1String( "akonadi_knut_resource/knut-template.xml" ) );
+    fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "akonadi_knut_resource/knut-template.xml" ) );
 
   if ( !mDocument.loadFile( fileName ) ) {
     emit status( Broken, mDocument.lastError() );

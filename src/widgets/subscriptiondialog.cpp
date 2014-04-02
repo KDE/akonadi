@@ -118,13 +118,13 @@ public:
 
     void writeConfig()
     {
-        KConfigGroup group(KGlobal::config(), "SubscriptionDialog");
+        KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
         group.writeEntry("Size", q->size());
     }
 
     void readConfig()
     {
-        KConfigGroup group(KGlobal::config(), "SubscriptionDialog");
+        KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
         const QSize sizeDialog = group.readEntry("Size", QSize(300, 200));
         if (sizeDialog.isValid()) {
             q->resize(sizeDialog);

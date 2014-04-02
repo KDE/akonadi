@@ -44,13 +44,13 @@ struct TagSelectionDialog::Private {
 
 void TagSelectionDialog::Private::writeConfig()
 {
-    KConfigGroup group(KGlobal::config(), "TagSelectionDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
     group.writeEntry("Size", d->size());
 }
 
 void TagSelectionDialog::Private::readConfig()
 {
-    KConfigGroup group(KGlobal::config(), "TagSelectionDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
         d->resize(sizeDialog);

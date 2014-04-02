@@ -40,7 +40,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocalizedstring.h>
-#include <kstandarddirs.h>
+
 #include <k4aboutdata.h>
 
 #include <Solid/PowerManagement>
@@ -53,6 +53,7 @@
 
 #include <signal.h>
 #include <stdlib.h>
+#include <QStandardPaths>
 #if defined __GLIBC__
 # include <malloc.h> // for dumping memory information
 #endif
@@ -1054,7 +1055,7 @@ void AgentBase::cleanup()
     /*
      * ... and also remove the agent configuration file if there is one.
      */
-    QString configFile = KStandardDirs::locateLocal("config", config()->name());
+    QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + config()->name();
     QFile::remove(configFile);
 
     KGlobal::deref();
@@ -1182,7 +1183,7 @@ ChangeRecorder *AgentBase::changeRecorder() const
 KSharedConfigPtr AgentBase::config()
 {
     if (QCoreApplication::instance()->thread() == QThread::currentThread()) {
-        return KGlobal::config();
+        return KSharedConfig::openConfig();
     } else {
         return componentData().config();
     }

@@ -25,7 +25,8 @@
 
 #include <kglobal.h>
 #include <klocalizedstring.h>
-#include <kstandarddirs.h>
+#include <QStandardPaths>
+
 
 using namespace Akonadi;
 
@@ -45,7 +46,7 @@ RecentContactsCollectionRequestJob::RecentContactsCollectionRequestJob( QObject 
 
   QVariantMap options;
   options.insert( QLatin1String( "Name" ), displayNameMap.value( "recent-contacts" ) );
-  options.insert( QLatin1String( "Path" ), QString( KGlobal::dirs()->localxdgdatadir() + QLatin1String( "recent-contacts" ) ) );
+  options.insert( QLatin1String( "Path" ), QString( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + '/' + QLatin1String( "recent-contacts" ) ) );
 
   setDefaultResourceType( QLatin1String( "akonadi_contacts_resource" ) );
   setDefaultResourceOptions( options );

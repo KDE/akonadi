@@ -28,7 +28,7 @@
 #include <kcombobox.h>
 #include <klocale.h>
 #include <klocalizedstring.h>
-#include <kstandarddirs.h>
+
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
@@ -39,6 +39,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QStandardPaths>
 
 class GeoMapWidget : public QWidget
 {
@@ -46,7 +47,7 @@ public:
     GeoMapWidget(QWidget *parent = 0)
         : QWidget(parent)
     {
-        mWorld = QPixmap(KStandardDirs::locate("data", QStringLiteral("akonadi/contact/pics/world.jpg")));
+        mWorld = QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/contact/pics/world.jpg")));
 
         setAttribute(Qt::WA_NoSystemBackground, true);
         setFixedSize(400, 200);
@@ -466,7 +467,7 @@ void GeoDialog::loadCityList()
     mCityCombo->clear();
     mGeoDataMap.clear();
 
-    QFile file(KStandardDirs::locate("data", QStringLiteral("akonadi/contact/data/zone.tab")));
+    QFile file(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/contact/data/zone.tab")));
 
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream s(&file);

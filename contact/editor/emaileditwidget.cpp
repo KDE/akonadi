@@ -252,7 +252,7 @@ EmailEditDialog::~EmailEditDialog()
 
 void EmailEditDialog::readConfig()
 {
-    KConfigGroup group(KGlobal::config(), "EmailEditDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "EmailEditDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(400, 200));
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
@@ -261,7 +261,7 @@ void EmailEditDialog::readConfig()
 
 void EmailEditDialog::writeConfig()
 {
-    KConfigGroup group(KGlobal::config(), "EmailEditDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "EmailEditDialog");
     group.writeEntry("Size", size());
 }
 

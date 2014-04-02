@@ -33,6 +33,7 @@
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
 #include <libxml/xmlschemas.h>
+#include <QStandardPaths>
 #endif
 
 static const KCatalogLoader loader( QLatin1String( "libakonadi-xml") );
@@ -154,7 +155,7 @@ bool Akonadi::XmlDocument::loadFile(const QString& fileName)
     return false;
   }
 
-  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QStringLiteral("akonadi/akonadi-xml.xsd") );
+  const QString &schemaFileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/akonadi-xml.xsd") );
   XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit().constData(), 0, XML_PARSE_NONET ) );
   if ( !schemaDoc ) {
     d->lastError = i18n( "Schema definition could not be loaded and parsed." );

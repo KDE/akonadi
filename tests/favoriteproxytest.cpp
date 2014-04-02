@@ -144,7 +144,7 @@ void FavoriteProxyTest::testItemAdded()
 
   InspectableETM *model = createETM();
 
-  KConfigGroup configGroup( KGlobal::config(), "favoritecollectionsmodeltest" );
+  KConfigGroup configGroup( KSharedConfig::openConfig(), "favoritecollectionsmodeltest" );
 
   FavoriteCollectionsModel *favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
@@ -207,7 +207,7 @@ void FavoriteProxyTest::testLoadConfig()
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
   QVERIFY(favoriteCollection.isValid());
 
-  KConfigGroup configGroup( KGlobal::config(), "favoritecollectionsmodeltest" );
+  KConfigGroup configGroup( KSharedConfig::openConfig(), "favoritecollectionsmodeltest" );
   configGroup.writeEntry( "FavoriteCollectionIds", QList<Akonadi::Collection::Id>() << favoriteCollection.id() );
   configGroup.writeEntry( "FavoriteCollectionLabels", QStringList() << "label1" );
 
@@ -243,7 +243,7 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
   QVERIFY(favoriteCollection.isValid());
 
-  KConfigGroup configGroup( KGlobal::config(), "favoritecollectionsmodeltest2" );
+  KConfigGroup configGroup( KSharedConfig::openConfig(), "favoritecollectionsmodeltest2" );
 
   FavoriteCollectionsModel *favoriteModel = new FavoriteCollectionsModel(&filter, configGroup, this);
   //The collection is not in the model yet

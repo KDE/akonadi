@@ -33,6 +33,7 @@
 
 #include <KStandardDirs>
 #include <KLocalizedString>
+#include <QStandardPaths>
 
 
 using namespace Akonadi;
@@ -126,7 +127,7 @@ void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incid
 
 QString MailScheduler::freeBusyDir() const
 {
-    return KStandardDirs::locateLocal("data", QStringLiteral("korganizer/freebusy"));
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("korganizer/freebusy");
 }
 
 //TODO: AKONADI_PORT review following code

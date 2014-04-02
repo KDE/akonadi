@@ -39,6 +39,7 @@
 #include <KStandardDirs>
 
 #include <QQuickView>
+#include <QStandardPaths>
 
 using namespace Akonadi;
 
@@ -110,7 +111,7 @@ CollectionDialog::Private::Private(QAbstractItemModel *customModel, CollectionDi
     mView->rootContext()->setContextProperty(QStringLiteral("cancelButtonText"), KStandardGuiItem::cancel().text().remove(QLatin1Char('&')));
     mView->rootContext()->setContextProperty(QStringLiteral("createButtonText"), i18n("&New Subfolder...").remove(QLatin1Char('&')));
 
-    mView->setSource(KUrl::fromLocalFile(KStandardDirs::locate("data", QStringLiteral("akonadi-kde/qml/CollectionDialogMobile.qml"))));
+    mView->setSource(KUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi-kde/qml/CollectionDialogMobile.qml"))));
 
 #if defined (Q_WS_MAEMO_5) || defined (MEEGO_EDITION_HARMATTAN)
     mParent->setWindowState(Qt::WindowFullScreen);
