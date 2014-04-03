@@ -38,7 +38,7 @@ set(akonadicontact_actions_SRCS
 )
 
 configure_file( actions/contactactionssettings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/contactactionssettings.kcfg @ONLY)
-kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
+kconfig_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
 
 set(akonadicontact_editor_SRCS
   editor/addresseditwidget.cpp
@@ -120,7 +120,7 @@ add_definitions(-DDISABLE_EDITOR_WIDGETS)
 endif()
 
 qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
-kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
+kconfig_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
 
 include_directories(
   ${CMAKE_BINARY_DIR}/kpimutils
