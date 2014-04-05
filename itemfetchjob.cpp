@@ -171,7 +171,14 @@ void ItemFetchJob::doStart()
     Q_D(ItemFetchJob);
 
     QByteArray command = d->newTag();
-    command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mRequestedItems, AKONADI_CMD_ITEMFETCH);
+    try {
+      command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mRequestedItems, AKONADI_CMD_ITEMFETCH);
+    } catch (const Akonadi::Exception &e) {
+      setError(Job::Unknown);
+      setErrorText(QString::fromUtf8(e.what()));
+      emitResult();
+      return;
+    }
 
     // This is only required for 4.10
     if (d->protocolVersion() < 30) {
