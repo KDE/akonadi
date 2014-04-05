@@ -46,6 +46,19 @@ bool Move::parseStream()
   const Collection destination = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
   const Resource destResource = destination.resource();
 
+  Collection source;
+  qDebug() << destScope.scope() << destScope.ridSet();
+  if ( !m_streamParser->atCommandEnd() ) {
+    Scope sourceScope( mScope.scope() );
+    sourceScope.parseScope( m_streamParser );
+    source = CollectionQueryHelper::singleCollectionFromScope( sourceScope, connection() );
+  }
+
+  if ( mScope.scope() == Scope::Rid && !source.isValid() ) {
+    throw HandlerException( "RID move requires valid source collection" );
+  }
+  connection()->context()->setCollection( source );
+
   // make sure all the items we want to move are in the cache
   ItemRetriever retriever( connection() );
   retriever.setScope( mScope );
