@@ -23,6 +23,7 @@
 #include <entities.h>
 #include <imapstreamparser.h>
 #include <handlerhelper.h>
+#include <cachecleaner.h>
 #include <storage/datastore.h>
 #include <storage/itemretriever.h>
 #include <storage/itemqueryhelper.h>
@@ -45,6 +46,8 @@ bool Move::parseStream()
   destScope.parseScope( m_streamParser );
   const Collection destination = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
   const Resource destResource = destination.resource();
+
+  CacheCleanerInhibitor inhibitor;
 
   // make sure all the items we want to move are in the cache
   ItemRetriever retriever( connection() );
