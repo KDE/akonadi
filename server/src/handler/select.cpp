@@ -71,12 +71,12 @@ bool Select::parseStream()
     if ( buffer.isEmpty() ) {
       silent = true; // unselect
     } else {
-      if ( !connection()->resourceContext().isValid() ) {
+      if ( !connection()->context()->resource().isValid() ) {
         throw HandlerException( "Cannot select based on remote identifier without a resource scope" );
       }
       SelectQueryBuilder<Collection> qb;
       qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8( buffer ) );
-      qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
+      qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->context()->resource().id() );
       if ( !qb.exec() ) {
         throw HandlerException( "Failed to select collection" );
       }

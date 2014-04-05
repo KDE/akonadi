@@ -90,7 +90,7 @@ bool Move::parseStream()
       item.setAtime( mtime );
       item.setDatetime( mtime );
       // if the resource moved itself, we assume it did so because the change happend in the backend
-      if ( connection()->resourceContext().id() != destResource.id() ) {
+      if ( connection()->context()->resource().id() != destResource.id() ) {
         item.setDirty( true );
       }
 

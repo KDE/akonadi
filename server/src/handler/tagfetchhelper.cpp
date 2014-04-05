@@ -62,13 +62,13 @@ QSqlQuery TagFetchHelper::buildTagQuery()
   qb.addColumns( Tag::fullColumnNames() );
 
   // Expose tag's remote ID only to resources
-  if ( mConnection->resourceContext().isValid() ) {
+  if ( mConnection->context()->resource().isValid() ) {
     qb.addColumn( TagRemoteIdResourceRelation::remoteIdFullColumnName() );
     qb.addJoin( QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(),
                 Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName() );
     Query::Condition joinCondition;
     joinCondition.addColumnCondition( Resource::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::resourceIdFullColumnName() );
-    joinCondition.addValueCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->resourceContext().name() );
+    joinCondition.addValueCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->context()->resource().name() );
     qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), joinCondition );
   }
 
@@ -97,7 +97,7 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
     const QByteArray gid = tagQuery.value( 1 ).toByteArray();
     const qint64 parentId = tagQuery.value( 2 ).toLongLong();
     QByteArray remoteId;
-    if ( mConnection->resourceContext().isValid() ) {
+    if ( mConnection->context()->resource().isValid() ) {
       remoteId = tagQuery.value( 3 ).toByteArray();
     }
 

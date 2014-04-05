@@ -152,12 +152,12 @@ void SearchTaskManager::pushResults( const QByteArray &searchId, const QSet<qint
 {
   Q_UNUSED( searchId );
 
-  akDebug() << ids.count() << "results for search" << searchId << "pushed from" << connection->resourceContext().name();
+  akDebug() << ids.count() << "results for search" << searchId << "pushed from" << connection->context()->resource().name();
 
   QMutexLocker locker( &mLock );
-  ResourceTask *task = mRunningTasks.take( connection->resourceContext().name() );
+  ResourceTask *task = mRunningTasks.take( connection->context()->resource().name() );
   if ( !task ) {
-    akDebug() << "No running task for" << connection->resourceContext().name() << " - maybe it has timed out?";
+    akDebug() << "No running task for" << connection->context()->resource().name() << " - maybe it has timed out?";
     return;
   }
 

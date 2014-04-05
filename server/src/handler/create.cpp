@@ -78,12 +78,12 @@ bool Create::parseStream()
     if ( rid.isEmpty() ) {
       throw HandlerException( "Empty parent remote identifier" );
     }
-    if ( !connection()->resourceContext().isValid() ) {
+    if ( !connection()->context()->resource().isValid() ) {
       throw HandlerException( "Invalid resource context" );
     }
     SelectQueryBuilder<Collection> qb;
     qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, rid );
-    qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
+    qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->context()->resource().id() );
     if ( !qb.exec() ) {
       throw HandlerException( "Unable to execute collection query" );
     }

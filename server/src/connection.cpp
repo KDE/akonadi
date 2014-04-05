@@ -292,19 +292,9 @@ QByteArray Connection::sessionId() const
   return m_sessionId;
 }
 
-Resource Connection::resourceContext() const
-{
-  return m_resourceContext;
-}
-
-void Connection::setResourceContext( const Resource &res )
-{
-  m_resourceContext = res;
-}
-
 bool Connection::isOwnerResource( const PimItem &item ) const
 {
-  if ( resourceContext().isValid() && item.collection().resourceId() == resourceContext().id() ) {
+  if ( context()->resource().isValid() && item.collection().resourceId() == context()->resource().id() ) {
     return true;
   }
   // fallback for older resources
@@ -316,7 +306,7 @@ bool Connection::isOwnerResource( const PimItem &item ) const
 
 bool Connection::isOwnerResource( const Collection &collection ) const
 {
-  if ( resourceContext().isValid() && collection.resourceId() == resourceContext().id() ) {
+  if ( context()->resource().isValid() && collection.resourceId() == context()->resource().id() ) {
     return true;
   }
   if ( sessionId() == collection.resource().name().toUtf8() ) {

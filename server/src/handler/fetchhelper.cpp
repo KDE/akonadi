@@ -232,8 +232,8 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
   qb.addJoin( QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
   qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
   ItemQueryHelper::scopeToQuery( scope, mConnection->context(), qb );
-  if ( mConnection->resourceContext().isValid() ) {
-    qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals, mConnection->resourceContext().name() );
+  if ( mConnection->context()->resource().isValid() ) {
+    qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals, mConnection->context()->resource().name() );
   }
 
   if ( !qb.exec() ) {
@@ -286,10 +286,10 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
     retriever.setRetrieveFullPayload( mFetchScope.fullPayload() );
     retriever.setChangedSince( mFetchScope.changedSince() );
     if ( !retriever.exec() && !mFetchScope.ignoreErrors() ) { // There we go, retrieve the missing parts from the resource.
-      if ( mConnection->resourceContext().isValid() ) {
+      if ( mConnection->context()->resource().isValid() ) {
         throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1, resource %2) : %3" )
                 .arg( mConnection->context()->collectionId() )
-                .arg( mConnection->resourceContext().id() )
+                .arg( mConnection->context()->resource().id() )
                 .arg( QString::fromLatin1( retriever.lastError() ) ) );
       } else {
         throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1) : %2" )

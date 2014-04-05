@@ -34,7 +34,7 @@ bool ResourceSelect::parseStream()
 {
   const QString resourceName = m_streamParser->readUtf8String();
   if ( resourceName.isEmpty() ) {
-    connection()->setResourceContext( Resource() );
+    connection()->context()->setResource( Resource() );
     return successResponse( "Resource deselected" );
   }
 
@@ -43,7 +43,7 @@ bool ResourceSelect::parseStream()
     throw HandlerException( resourceName.toUtf8() + " is not a valid resource identifier" );
   }
 
-  connection()->setResourceContext( res );
+  connection()->context()->setResource( res );
 
   return successResponse( resourceName.toUtf8() + " selected" );
 }

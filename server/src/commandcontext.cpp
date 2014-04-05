@@ -107,7 +107,7 @@ void CommandContext::parseContext( ImapStreamParser *parser )
     }
     setCollection( col );
   } else if ( param == AKONADI_PARAM_COLLECTION ) {
-    if ( resource().isValid() ) {
+    if ( !resource().isValid() ) {
       throw HandlerException( "Only resources can use REMOTEID" );
     }
     parser->readString(); // Read the param

@@ -52,8 +52,6 @@ public:
 
     CommandContext *context() const;
 
-    Resource resourceContext() const;
-    void setResourceContext( const Resource &res );
     /**
       Returns @c true if this connection belongs to the owning resource of @p item.
     */
@@ -96,7 +94,6 @@ private:
     QString m_identifier;
     QByteArray m_sessionId;
     ImapStreamParser *m_streamParser;
-    Resource m_resourceContext;
     ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
