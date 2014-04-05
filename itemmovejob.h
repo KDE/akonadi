@@ -69,6 +69,17 @@ public:
     ItemMoveJob(const QList<Item> &items, const Collection &destination, QObject *parent = 0);
 
     /**
+     * Move the given items from @p sourec to @p destination.
+     *
+     * @internal If the items are identified only by RID, then you MUST use this
+     * constructor to specify the source collection, otherwise the job will fail.
+     * RID-based moves are only allowed to resources.
+     *
+     * @since 4.14
+     */
+    ItemMoveJob(const QList<Item> &items, const Collection &source, const Collection &destination, QObject *parent = 0);
+
+    /**
      * Destroys the item move job.
      */
     ~ItemMoveJob();

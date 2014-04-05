@@ -358,7 +358,7 @@ QByteArray ProtocolHelper::commandContextToByteArray(const Akonadi::Collection &
         if (collection.isValid()) {
             r += " " AKONADI_PARAM_COLLECTIONID " " + QByteArray::number(collection.id()) + ' ';
         } else if (!collection.remoteId().isEmpty()) {
-            r += " " AKONADI_PARAM_COLLECTION " " + collection.remoteId().toLatin1() + ' ';
+            r += " " AKONADI_PARAM_COLLECTION " " + ImapParser::quote(collection.remoteId().toUtf8()) + ' ';
         }
     }
 
