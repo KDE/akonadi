@@ -23,6 +23,8 @@
 
 #include "entitytreemodel.h"
 
+#include <KIconLoader>
+
 #include <QTimerEvent>
 #include <QAbstractItemView>
 
@@ -33,7 +35,7 @@ DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
     , m_view(view)
     , m_timerId(-1)
 {
-    m_pixmapSequence = KPixmapSequence(QStringLiteral("process-working"), 22);
+    m_pixmapSequence = KIconLoader::global()->loadPixmapSequence(QStringLiteral("process-working"), 22);
 }
 
 void DelegateAnimator::push(const QModelIndex &index)
