@@ -48,7 +48,6 @@ bool Move::parseStream()
   const Resource destResource = destination.resource();
 
   Collection source;
-  qDebug() << destScope.scope() << destScope.ridSet();
   if ( !m_streamParser->atCommandEnd() ) {
     Scope sourceScope( mScope.scope() );
     sourceScope.parseScope( m_streamParser );
