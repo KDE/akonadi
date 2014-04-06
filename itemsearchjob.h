@@ -223,7 +223,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * be searched. With remote search, even those emails can be included in search
      * results.
      *
-     * This feature is enabled by default.
+     * This feature is disabled by default.
      *
      * Results are streamed back to client as they are received from queried sources,
      * so this job can take some time to finish, but will deliver initial results

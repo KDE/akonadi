@@ -34,7 +34,7 @@ class Akonadi::ItemSearchJobPrivate : public JobPrivate
 {
   public:
     ItemSearchJobPrivate( ItemSearchJob *parent, const SearchQuery &query )
-      : JobPrivate( parent ), mQuery( query ), mRecursive( false ), mRemote( true ), mEmitTimer( 0 )
+      : JobPrivate( parent ), mQuery( query ), mRecursive( false ), mRemote( false ), mEmitTimer( 0 )
     {
     }
 

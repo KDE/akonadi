@@ -38,7 +38,7 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
       , mName( name )
       , mQuery( query )
       , mRecursive( false )
-      , mRemote( true )
+      , mRemote( false )
     {
     }
 

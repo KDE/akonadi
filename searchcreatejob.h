@@ -141,7 +141,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * be searched. With remote search, even those emails can be included in search
      * results.
      *
-     * This feature is enabled by default.
+     * This feature is disabled by default.
      *
      * @param enabled Whether remote search is enabled
      * @since 4.13
