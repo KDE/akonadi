@@ -317,7 +317,7 @@ protected:
      * @return Returns an invalid query when error occurs, or the last replayed
      *         query on success.
      */
-    QSqlQuery retryLastTransaction();
+    QSqlQuery retryLastTransaction( bool rollbackFirst );
 
   private Q_SLOTS:
     void sendKeepAliveQuery();

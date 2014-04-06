@@ -61,8 +61,8 @@ using namespace Akonadi::Server;
 static QMutex sTransactionMutex;
 bool DataStore::s_hasForeignKeyConstraints = false;
 
-#define TRANSACTION_MUTEX_LOCK if ( DbType::type( m_database ) == DbType::Sqlite ) sTransactionMutex.lock()
-#define TRANSACTION_MUTEX_UNLOCK if ( DbType::type( m_database ) == DbType::Sqlite ) sTransactionMutex.unlock()
+#define TRANSACTION_MUTEX_LOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.lock()
+#define TRANSACTION_MUTEX_UNLOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.unlock()
 
 /***************************************************************************
  *   DataStore                                                           *
@@ -1083,21 +1083,25 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray &dateTime )
 
 void DataStore::addQueryToTransaction( const QSqlQuery &query, bool isBatch )
 {
-  DbType::Type dbType = DbType::type( m_database );
   // This is used for replaying deadlocked transactions, so only record queries
   // for backends that support concurrent transactions.
-  if ( !inTransaction() || ( dbType != DbType::MySQL && dbType != DbType::PostgreSQL ) ) {
+  if ( !inTransaction() || DbType::isSystemSQLite( m_database ) ) {
     return;
   }
 
   m_transactionQueries.append( qMakePair( query, isBatch ) );
 }
 
-QSqlQuery DataStore::retryLastTransaction()
+QSqlQuery DataStore::retryLastTransaction( bool rollbackFirst )
 {
-  DbType::Type dbType = DbType::type( m_database );
-  if ( !inTransaction() || ( dbType != DbType::MySQL && dbType != DbType::PostgreSQL ) ) {
+  if ( !inTransaction() || DbType::isSystemSQLite( m_database ) ) {
     return QSqlQuery();
+  }
+
+  if ( rollbackFirst ) {
+    // In some cases the SQL database won't rollback the failed transaction, so
+    // we need to do it manually
+    m_database.driver()->rollbackTransaction();
   }
 
   // The database has rolled back the actual transaction, so reset the counter

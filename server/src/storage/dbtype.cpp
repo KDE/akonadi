@@ -39,3 +39,8 @@ DbType::Type DbType::typeForDriverName( const QString &driverName )
   }
   return Unknown;
 }
+
+bool DbType::isSystemSQLite( const QSqlDatabase &db )
+{
+  return db.driverName() == QLatin1String( "QSQLITE" );
+}
