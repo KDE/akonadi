@@ -21,6 +21,7 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
+#include "cachecleaner.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
@@ -97,6 +98,8 @@ bool ColCopy::parseStream()
   if ( !target.isValid() ) {
     return failureResponse( "No valid target specified" );
   }
+
+  CacheCleanerInhibitor inhibitor;
 
   // retrieve all not yet cached items of the source
   ItemRetriever retriever( connection() );

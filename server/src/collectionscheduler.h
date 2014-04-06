@@ -32,6 +32,7 @@ namespace Akonadi {
 namespace Server {
 
 class Collection;
+class PauseableTimer;
 
 class CollectionScheduler: public QThread
 {
@@ -66,6 +67,8 @@ class CollectionScheduler: public QThread
     virtual int collectionScheduleInterval( const Collection &collection ) = 0;
     virtual void collectionExpired( const Collection &collection ) = 0;
 
+    void inhibit( bool inhibit = true );
+
   protected Q_SLOTS:
     void initScheduler();
     void schedulerTimeout();
@@ -75,7 +78,7 @@ class CollectionScheduler: public QThread
   protected:
     QMutex mScheduleLock;
     QMultiMap<uint /*timestamp*/, Collection> mSchedule;
-    QTimer *mScheduler;
+    PauseableTimer *mScheduler;
     int mMinInterval;
 };
 

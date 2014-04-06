@@ -23,6 +23,7 @@
 #include <entities.h>
 #include <imapstreamparser.h>
 #include <handlerhelper.h>
+#include <cachecleaner.h>
 #include <storage/datastore.h>
 #include <storage/itemretriever.h>
 #include <storage/itemqueryhelper.h>
@@ -58,6 +59,8 @@ bool Move::parseStream()
     throw HandlerException( "RID move requires valid source collection" );
   }
   connection()->context()->setCollection( source );
+
+  CacheCleanerInhibitor inhibitor;
 
   // make sure all the items we want to move are in the cache
   ItemRetriever retriever( connection() );

@@ -21,6 +21,7 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
+#include "cachecleaner.h"
 
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
@@ -73,6 +74,8 @@ bool Copy::parseStream()
   if ( set.isEmpty() ) {
     return failureResponse( "No items specified" );
   }
+
+  CacheCleanerInhibitor inhibitor;
 
   ItemRetriever retriever( connection() );
   retriever.setItemSet( set );

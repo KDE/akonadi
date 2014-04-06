@@ -20,9 +20,85 @@
 
 #include "collectionscheduler.h"
 #include "storage/datastore.h"
+#include "akdebug.h"
 
 #include <QDateTime>
 #include <QCoreApplication>
+
+namespace Akonadi {
+namespace Server {
+
+/**
+ * @warning: QTimer's methods are not virtual, so it's necessary to always call
+ * methods on pointer to PauseableTimer!
+ */
+class PauseableTimer : public QTimer
+{
+  public:
+    PauseableTimer( QObject *parent = 0 )
+      : QTimer( parent )
+    {
+    }
+
+    void start( int interval )
+    {
+      mStarted = QDateTime::currentDateTime();
+      mPaused = QDateTime();
+      QTimer::start( interval );
+    }
+
+    void start()
+    {
+      start( interval() );
+    }
+
+    void stop()
+    {
+      mStarted = QDateTime();
+      mPaused = QDateTime();
+      QTimer::stop();
+    }
+
+    void pause()
+    {
+      if ( !isActive() ) {
+        akError() << "Cannot pause an inactive timer";
+        return;
+      }
+      if ( isPaused() ) {
+        akError() << "Cannot pause an already paused timer";
+        return;
+      }
+
+      mPaused = QDateTime::currentDateTime();
+      stop();
+    }
+
+    void resume()
+    {
+      if ( !isPaused() ) {
+        akError() << "Cannot resume a timer that is not paused.";
+        return;
+      }
+
+      start( interval() - ( mStarted.secsTo( mPaused ) * 1000 ) );
+      mPaused = QDateTime();
+      // Update mStarted so that pause() can be called repeatedly
+      mStarted = QDateTime::currentDateTime();
+    }
+
+    bool isPaused() const
+    {
+      return !mPaused.isNull();
+    }
+
+  private:
+    QDateTime mStarted;
+    QDateTime mPaused;
+};
+
+} // namespace Server
+} // namespace Akonadi
 
 using namespace Akonadi::Server;
 
@@ -33,7 +109,7 @@ CollectionScheduler::CollectionScheduler( QObject *parent )
   // make sure we are created from the main thread, ie. before all other threads start to potentially use us
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 
-  mScheduler = new QTimer( this );
+  mScheduler = new PauseableTimer( this );
   mScheduler->setSingleShot( true );
   connect( mScheduler, SIGNAL(timeout()),
            this, SLOT(schedulerTimeout()) );
@@ -51,6 +127,15 @@ void CollectionScheduler::run()
   exec();
 
   DataStore::self()->close();
+}
+
+void CollectionScheduler::inhibit( bool inhibit )
+{
+  if ( inhibit && mScheduler->isActive() && !mScheduler->isPaused() ) {
+    mScheduler->pause();
+  } else if ( !inhibit && mScheduler->isPaused() ) {
+    mScheduler->resume();
+  }
 }
 
 int CollectionScheduler::minimumInterval() const
@@ -123,6 +208,11 @@ void CollectionScheduler::collectionRemoved( qint64 collectionId )
 
 void CollectionScheduler::startScheduler()
 {
+  // Don't restart timer if we are paused.
+  if ( mScheduler->isPaused() ) {
+    return;
+  }
+
   QMutexLocker locker( &mScheduleLock );
   if ( mSchedule.isEmpty() ) {
     // Stop the timer. It will be started again once some collection is scheduled
@@ -188,6 +278,9 @@ void CollectionScheduler::initScheduler()
 
 void CollectionScheduler::schedulerTimeout()
 {
+  // Call stop() explicitly to reset the timer
+  mScheduler->stop();
+
   mScheduleLock.lock();
   const uint timestamp = mSchedule.constBegin().key();
   const QList<Collection> collections = mSchedule.values( timestamp );

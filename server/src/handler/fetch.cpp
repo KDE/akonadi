@@ -24,7 +24,8 @@
 #include "fetchhelper.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
-#include <imapstreamparser.h>
+#include "imapstreamparser.h"
+#include "cachecleaner.h"
 
 #include <libs/protocol_p.h>
 
@@ -47,6 +48,8 @@ bool Fetch::parseStream()
   if ( connection()->context()->isEmpty() && mScope.scope() != Scope::Uid ) {
     throw HandlerException( "No FETCH context specified" );
   }
+
+  CacheCleanerInhibitor inhibitor;
 
   FetchHelper fetchHelper( connection(), mScope, FetchScope( m_streamParser ) );
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),

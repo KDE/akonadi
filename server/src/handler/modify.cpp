@@ -33,6 +33,7 @@
 #include <libs/protocol_p.h>
 #include <search/searchmanager.h>
 #include <akdebug.h>
+#include <cachecleaner.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -63,6 +64,8 @@ bool Modify::parseStream()
   QByteArray line = m_streamParser->readUntilCommandEnd();
   m_streamParser->insertData( "\n" );
 
+  CacheCleanerInhibitor inhibitor( false );
+
   int p = 0;
   if ( ( p = line.indexOf( AKONADI_PARAM_PARENT ) ) > 0 ) {
     QByteArray tmp;
@@ -70,6 +73,7 @@ bool Modify::parseStream()
     const Collection newParent = HandlerHelper::collectionFromIdOrName( tmp );
     if ( newParent.isValid() && collection.parentId() != newParent.id()
          && collection.resourceId() != newParent.resourceId() ) {
+      inhibitor.inhibit();
       ItemRetriever retriever( connection() );
       retriever.setCollection( collection, true );
       retriever.setRetrieveFullPayload( true );
