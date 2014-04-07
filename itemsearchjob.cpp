@@ -37,7 +37,7 @@ public:
         : JobPrivate(parent)
         , mQuery(query)
         , mRecursive(false)
-        , mRemote(true)
+        , mRemote(false)
         , mEmitTimer(0)
     {
     }
