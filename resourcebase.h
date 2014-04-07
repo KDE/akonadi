@@ -245,6 +245,14 @@ Q_SIGNALS:
      */
     void collectionTreeSynchronized();
 
+    /**
+     * Emitted when the item synchronization processed the current batch and is ready for the new one.
+     * Use this to throttle the delivery to not overload akonadi.
+     *
+     * @since 4.14
+     */
+    void retrieveNextBatch(int);
+
 protected Q_SLOTS:
     /**
      * Retrieve the collection tree from the remote server and supply it via
@@ -281,6 +289,8 @@ protected Q_SLOTS:
      * @see itemsRetrieved( const Item::List& ), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
      */
     virtual void retrieveItems(const Akonadi::Collection &collection) = 0;
+
+    int batchSize() const;
 
     /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.

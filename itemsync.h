@@ -170,6 +170,14 @@ public:
      */
     void setTransactionMode(TransactionMode mode);
 
+    static int batchSize();
+
+Q_SIGNALS:
+    /**
+     * Signals the resource that new items can be delivered
+     */
+    void readyForNextBatch(int);
+
 protected:
     void doStart();
     void slotResult(KJob *job);
@@ -192,6 +200,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotLocalDeleteDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotLocalChangeDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotTransactionResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotItemsReceived(Akonadi::Item::List))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalFetchDone(KJob *))
     //@endcond
 };
 
