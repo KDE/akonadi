@@ -1,9 +1,0 @@
-# Code generation options for kconfig_compiler
-File=contactactionssettings.kcfg
-ClassName=ContactActionsSettings
-Singleton=true
-Mutators=true
-MemberVariables=private
-GlobalEnums=true
-ItemAccessors=true
-SetUserTexts=true

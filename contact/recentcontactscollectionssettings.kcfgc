@@ -1,7 +1,0 @@
-File=recentcontactscollections.kcfg
-ClassName=RecentContactsCollectionsSettings
-NameSpace=Akonadi
-Singleton=true
-ItemAccessors=true
-Mutators=true
-SetUserTextx=true
