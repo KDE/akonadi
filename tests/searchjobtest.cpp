@@ -55,6 +55,7 @@ void SearchJobTest::testCreateDeleteSearch()
 
   // Create collection
   SearchCreateJob *create = new SearchCreateJob( "search123456", query, this );
+  create->setRemoteSearchEnabled(false);
   AKVERIFYEXEC( create );
   const Collection created = create->createdCollection();
   QVERIFY( created.isValid() );

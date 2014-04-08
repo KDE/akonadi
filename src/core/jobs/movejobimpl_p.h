@@ -70,12 +70,20 @@ public:
         } else {
             command += ImapParser::quote(destination.remoteId().toUtf8());
         }
+
+        // Source is optional
+        if (source.isValid()) {
+            command += ' ' + QByteArray::number(source.id());
+        } else if (!source.remoteId().isEmpty()) {
+            command += ' ' + ImapParser::quote(source.remoteId().toUtf8());
+        }
         command += '\n';
         writeData(command);
     }
 
     typename T::List objectsToMove;
     Collection destination;
+    Collection source;
 };
 
 }

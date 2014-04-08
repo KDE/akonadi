@@ -23,7 +23,6 @@
 
 #include "itiphandlerhelper_p.h"
 #include "calendarsettings.h"
-#include "fetchjobcalendar.h"
 #include "utils_p.h"
 
 #include <kcalcore/calendar.h>

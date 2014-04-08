@@ -54,6 +54,16 @@ ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &destination,
     d->objectsToMove = items;
 }
 
+ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &source, const Collection &destination, QObject *parent)
+  : Job(new ItemMoveJobPrivate(this), parent)
+{
+    Q_D(ItemMoveJob);
+    d->source = source;
+    d->destination = destination;
+    d->objectsToMove = items;
+}
+
+
 ItemMoveJob::~ItemMoveJob()
 {
 }
@@ -75,3 +85,4 @@ QList<Item> ItemMoveJob::items() const
     Q_D(const ItemMoveJob);
     return d->objectsToMove;
 }
+

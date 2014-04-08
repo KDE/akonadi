@@ -643,7 +643,7 @@ public:
     void execute()
     {
         qDebug() << Q_FUNC_INFO << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
-        if (!localListDone) {
+        if (!localListDone || !deliveryDone) {
             return;
         }
 

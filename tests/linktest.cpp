@@ -75,9 +75,9 @@ class LinkTest : public QObject
       LinkJob *link = new LinkJob( col, items, this );
       AKVERIFYEXEC( link );
 
-      QTest::qWait( 1000 );
+      QTRY_COMPARE( lspy.count(), 3 );
+      QTest::qWait( 100 );
       QVERIFY( uspy.isEmpty() );
-      QCOMPARE( lspy.count(), 3 );
 
       QList<QVariant> arg = lspy.takeFirst();
       Item item = arg.at( 0 ).value<Item>();
@@ -96,9 +96,9 @@ class LinkTest : public QObject
       UnlinkJob *unlink = new UnlinkJob( col, items, this );
       AKVERIFYEXEC( unlink );
 
-      QTest::qWait( 1000 );
+      QTRY_COMPARE( uspy.count(), 3 );
+      QTest::qWait( 100 );
       QVERIFY( lspy.isEmpty() );
-      QCOMPARE( uspy.count(), 3 );
 
       fetch = new ItemFetchJob( col );
       AKVERIFYEXEC( fetch );

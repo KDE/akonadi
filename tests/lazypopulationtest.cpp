@@ -68,6 +68,15 @@ private Q_SLOTS:
    */
   void testItemAddedBeforeFetch();
 
+  /*
+   * We purge an empty collection and make sure it can be fetched later on.
+   * * reference collection to remember empty status
+   * * purge collection
+   * * add item (it should not be added since not monitored)
+   * * reference collection and make sure items are added
+   */
+  void testPurgeEmptyCollection();
+
 private:
   Collection res3;
   static const int numberOfRootCollections = 4;
@@ -78,6 +87,7 @@ const int LazyPopulationTest::bufferSize = MonitorPrivate::PurgeBuffer::buffersi
 
 void LazyPopulationTest::initTestCase()
 {
+  qRegisterMetaType<Akonadi::Collection::Id>("Akonadi::Collection::Id");
   AkonadiTest::checkTestIsIsolated();
   AkonadiTest::setAllResourcesOffline();
 
@@ -290,6 +300,66 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
   model->fetchMore(monitorIndex);
   //Wait for collection to be fetched
   QVERIFY(waitForPopulation(monitorIndex, model, 2));
+}
+
+void LazyPopulationTest::testPurgeEmptyCollection()
+{
+  const QString mainCollectionName("main3");
+  Collection monitorCol;
+  {
+    monitorCol.setParentCollection(res3);
+    monitorCol.setName(mainCollectionName);
+    CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+    AKVERIFYEXEC(create);
+    monitorCol = create->collection();
+  }
+  //Monitor without referencing so we get all signals
+  Monitor *monitor = new Monitor(this);
+  monitor->setCollectionMonitored(Collection::root());
+
+  ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+  changeRecorder->setCollectionMonitored(Collection::root());
+  InspectableETM *model = new InspectableETM( changeRecorder, this );
+  model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
+
+  //Wait for initial listing to complete
+  QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
+
+  const QModelIndex res3Index = getIndex("res3", model);
+  QVERIFY(waitForPopulation(res3Index, model, bufferSize + 1));
+
+  QModelIndex monitorIndex = getIndex(mainCollectionName, model);
+  QVERIFY(monitorIndex.isValid());
+
+  //fetch the collection so we remember the empty status
+  QSignalSpy populatedSpy(model, SIGNAL(collectionPopulated(Akonadi::Collection::Id)));
+  model->setData(monitorIndex, QVariant(), EntityTreeModel::CollectionRefRole);
+  model->fetchMore(monitorIndex);
+  //Wait for collection to be fetched
+  QTRY_VERIFY(populatedSpy.count() >= 1);
+
+  //get the collection purged
+  model->setData(monitorIndex, QVariant(), EntityTreeModel::CollectionDerefRole);
+  referenceCollections(model, bufferSize);
+
+  //create an item
+  {
+    QSignalSpy addedSpy(monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+    QVERIFY(addedSpy.isValid());
+    Item item1;
+    item1.setMimeType("application/octet-stream");
+    ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
+    AKVERIFYEXEC(append);
+    QTRY_VERIFY(addedSpy.count() >= 1);
+  }
+
+  //ensure it's not in the model
+  //fetch the collection
+  QVERIFY(model->etmPrivate()->canFetchMore(monitorIndex));
+
+  model->fetchMore(monitorIndex);
+  //Wait for collection to be fetched
+  QVERIFY(waitForPopulation(monitorIndex, model, 1));
 }
 
 

@@ -57,6 +57,7 @@ public:
         , mLocalListDone(false)
         , mDeliveryDone(false)
         , mFinished(false)
+        , mLocalListStarted( false )
     {
         // we want to fetch all data by default
         mFetchScope.fetchFullPayload();
@@ -73,6 +74,8 @@ public:
     void deleteItems(const Item::List &items);
     void slotTransactionResult(KJob *job);
     Job *subjobParent() const;
+    void fetchLocalItems();
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
 
     Q_DECLARE_PUBLIC(ItemSync)
     Collection mSyncCollection;
@@ -104,6 +107,7 @@ public:
     bool mLocalListDone;
     bool mDeliveryDone;
     bool mFinished;
+    bool mLocalListStarted;
 };
 
 void ItemSyncPrivate::createLocalItem(const Item &item)
@@ -207,14 +211,6 @@ ItemFetchScope &ItemSync::fetchScope()
 
 void ItemSync::doStart()
 {
-    Q_D(ItemSync);
-    ItemFetchJob *job = new ItemFetchJob(d->mSyncCollection, this);
-    job->setFetchScope(d->mFetchScope);
-
-    // we only can fetch parts already in the cache, otherwise this will deadlock
-    job->fetchScope().setCacheOnly(true);
-
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)));
 }
 
 bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
@@ -278,6 +274,38 @@ bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
     return false;
 }
 
+void ItemSyncPrivate::fetchLocalItems()
+{
+    Q_Q( ItemSync );
+    if (mLocalListStarted) {
+        return;
+    }
+    mLocalListStarted = true;
+    ItemFetchJob* job;
+    if ( mIncremental ) {
+        if ( mRemoteItems.isEmpty() ) {
+            // The fetch job produces an error with an empty set
+            mLocalListDone = true;
+            execute();
+            return;
+        }
+        // We need to fetch the items only to detect if they are new or modified
+        job = new ItemFetchJob( mRemoteItems, q );
+        job->setFetchScope( mFetchScope );
+        job->setCollection( mSyncCollection );
+        // We use this to check if items are available locally, so errors are inevitable
+        job->fetchScope().setIgnoreRetrievalErrors( true );
+    } else {
+        job = new ItemFetchJob( mSyncCollection, q );
+        job->setFetchScope( mFetchScope );
+    }
+
+    // we only can fetch parts already in the cache, otherwise this will deadlock
+    job->fetchScope().setCacheOnly( true );
+
+    QObject::connect( job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
+}
+
 void ItemSyncPrivate::slotLocalListDone(KJob *job)
 {
     if (!job->error()) {
@@ -296,10 +324,22 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
     execute();
 }
 
+QString ItemSyncPrivate::jobDebuggingString() const /*Q_DECL_OVERRIDE*/
+{
+  // TODO: also print out mIncremental and mTotalItemsProcessed, but they are set after the job
+  // started, so this requires passing jobDebuggingString to jobEnded().
+  return QString::fromLatin1("Collection %1 (%2)").arg(mSyncCollection.id()).arg(mSyncCollection.name());
+}
+
 void ItemSyncPrivate::execute()
 {
     Q_Q(ItemSync);
     if (!mLocalListDone) {
+        // Start fetching local items only once the delivery is done for incremental fetch,
+        // so we can fetch only the required items
+        if (mDeliveryDone || !mIncremental) {
+            fetchLocalItems();
+        }
         return;
     }
 
@@ -394,17 +434,19 @@ void ItemSyncPrivate::deleteItems(const Item::List &items)
     Item::List itemsToDelete;
     foreach (const Item &item, items) {
         Item delItem(item);
-        if (!item.isValid()) {
-            delItem = mLocalItemsByRemoteId.value(item.remoteId());
-        }
+        if (!mIncremental) {
+            if (!item.isValid()) {
+                delItem = mLocalItemsByRemoteId.value(item.remoteId());
+            }
 
-        if (!delItem.isValid()) {
+            if (!delItem.isValid()) {
 #ifndef NDEBUG
             qWarning() << "Delete item (remoteeId=" << item.remoteId()
-                       << "mimeType=" << item.mimeType()
-                       << ") does not have a valid UID and no item with that remote ID exists either";
+                        << "mimeType=" << item.mimeType()
+                        << ") does not have a valid UID and no item with that remote ID exists either";
 #endif
-            continue;
+                continue;
+            }
         }
 
         if (delItem.remoteId().isEmpty()) {

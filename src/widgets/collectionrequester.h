@@ -135,6 +135,8 @@ private:
     Private *const d;
 
     Q_PRIVATE_SLOT(d, void _k_slotOpenDialog())
+    Q_PRIVATE_SLOT(d, void _k_collectionReceived(KJob *job))
+    Q_PRIVATE_SLOT(d, void _k_collectionsNamesReceived(KJob *job));
 };
 
 } // namespace Akonadi

@@ -136,6 +136,17 @@ public:
      */
     explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = 0);
 
+
+    /**
+     * Creates a new item fetch job that retrieves all items tagged with specified @p tag.
+     *
+     * @param tag The tag to fetch all items from.
+     * @param parent The parent object.
+     *
+     * @since 4.14
+     */
+    explicit ItemFetchJob(const Tag &tag, QObject *parent = 0);
+
     /**
      * Destroys the item fetch job.
      */
@@ -143,6 +154,8 @@ public:
 
     /**
      * Returns the fetched items.
+     *
+     * This returns an empty list when not using the ItemGetter DeliveryOption.
      *
      * @note The items are invalid before the result(KJob*)
      *       signal has been emitted or if an error occurred.
@@ -227,6 +240,13 @@ public:
      */
     DeliveryOptions deliveryOptions() const;
 
+    /**
+     * Returns the total number of retrieved items.
+     * This works also without the ItemGetter DeliveryOption.
+     * @since 4.14
+     */
+    int count() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever new items have been fetched completely.
@@ -247,7 +267,6 @@ private:
     Q_DECLARE_PRIVATE(ItemFetchJob)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_func(), void selectDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void timeout())
     //@endcond
 };

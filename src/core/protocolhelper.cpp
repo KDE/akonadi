@@ -336,6 +336,36 @@ QByteArray ProtocolHelper::tagSetToByteArray( const Tag::List &_objects, const Q
   throw Exception( "Not all tags have a uid" );
 }
 
+QByteArray ProtocolHelper::commandContextToByteArray(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
+                                                     const Item::List &requestedItems, const QByteArray &command)
+{
+    QByteArray r = " ";
+    if (requestedItems.isEmpty()) {
+        r += command + " 1:*";
+    } else {
+        r += ProtocolHelper::entitySetToByteArray(requestedItems, command);
+    }
+
+    if (tag.isValid()) {
+        r += " " AKONADI_PARAM_TAGID " " + QByteArray::number(tag.id()) + " ";
+    }
+
+    if (collection == Collection::root()) {
+        if (requestedItems.isEmpty()) {   // collection content listing
+            throw Exception("Cannot perform item operations on root collection.");
+        }
+    } else {
+        if (collection.isValid()) {
+            r += " " AKONADI_PARAM_COLLECTIONID " " + QByteArray::number(collection.id()) + ' ';
+        } else if (!collection.remoteId().isEmpty()) {
+            r += " " AKONADI_PARAM_COLLECTION " " + ImapParser::quote(collection.remoteId().toUtf8()) + ' ';
+        }
+    }
+
+    return r;
+}
+
+
 QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
 {
   if ( col == Collection::root() )

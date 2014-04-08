@@ -176,6 +176,12 @@ public:
      */
     bool collectionFilteringEnabled() const;
 
+    /**
+      * Returns if the calendar already finished loading.
+      * TODO_KDE5: make virtual in base class
+      */
+    bool isLoaded() const;
+
 Q_SIGNALS:
     /**
       * This signal is emitted if a collection has been changed (properties or attributes).

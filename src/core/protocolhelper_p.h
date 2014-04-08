@@ -192,6 +192,10 @@ public:
     static QByteArray tagSetToImapSequenceSet(const Akonadi::Tag::List &_objects);
     static QByteArray tagSetToByteArray(const Akonadi::Tag::List &_objects, const QByteArray &command);
 
+
+    static QByteArray commandContextToByteArray(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
+                                                const Item::List &requestedItems, const QByteArray &command);
+
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.

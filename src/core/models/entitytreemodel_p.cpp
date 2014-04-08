@@ -214,13 +214,8 @@ void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const C
         }
     }
 
-#ifdef KDEPIM_MOBILE_UI
-    q->connect(itemFetchJob, SIGNAL(result(KJob*)),
-               q, SLOT(itemsFetched(KJob*)));
-#else
     q->connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
                q, SLOT(itemsFetched(Akonadi::Item::List)));
-#endif
     q->connect(itemFetchJob, SIGNAL(result(KJob*)),
                q, SLOT(fetchJobDone(KJob*)));
     ifDebug(qDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
@@ -508,21 +503,6 @@ void EntityTreeModelPrivate::itemsFetched(const Akonadi::Item::List &items)
 
     const Collection::Id collectionId = q->sender()->property(FetchCollectionId().constData()).value<Collection::Id>();
 
-    itemsFetched(collectionId, items);
-}
-
-void EntityTreeModelPrivate::itemsFetched(KJob *job)
-{
-    Q_ASSERT(job);
-
-    if (job->error()) {
-        return;
-    }
-
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
-    const Akonadi::Item::List items = fetchJob->items();
-
-    const Collection::Id collectionId = job->property(FetchCollectionId().constData()).value<Collection::Id>();
     itemsFetched(collectionId, items);
 }
 
@@ -1137,7 +1117,10 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
         return;
     }
 
-    m_items[item.id()].apply(item);
+    //otherwise this overwrites the copy of the real collection with one of the virtual collectoin
+    if (!item.parentCollection().isVirtual()) {
+        m_items[item.id()].apply(item);
+    }
 
     const QModelIndexList indexes = indexesForItem(item);
     foreach (const QModelIndex &index, indexes) {
@@ -1312,7 +1295,7 @@ void EntityTreeModelPrivate::fetchJobDone(KJob *job)
     }
 #endif
     if (ItemFetchJob *iJob = dynamic_cast<ItemFetchJob *>(job)) {
-        if (iJob->items().isEmpty()) {
+        if (!iJob->count()) {
             m_collectionsWithoutItems.insert(collectionId);
         } else {
             m_collectionsWithoutItems.remove(collectionId);
@@ -1697,6 +1680,9 @@ void EntityTreeModelPrivate::purgeItems(Collection::Id id)
         end = childEntities.end();
     }
     m_populatedCols.remove(id);
+    //if an empty collection is purged and we leave it in here, itemAdded will be ignored for the collection
+    //and the collection is never populated by fetchMore (but maybe by statistics changed?)
+    m_collectionsWithoutItems.remove(id);
 }
 
 void EntityTreeModelPrivate::dataChanged(const QModelIndex &top, const QModelIndex &bottom)

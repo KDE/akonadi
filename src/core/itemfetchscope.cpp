@@ -98,7 +98,7 @@ void ItemFetchScope::fetchAllAttributes(bool fetch)
 
 bool ItemFetchScope::isEmpty() const
 {
-    return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes;
+    return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes && !d->mFetchTags;
 }
 
 bool ItemFetchScope::cacheOnly() const

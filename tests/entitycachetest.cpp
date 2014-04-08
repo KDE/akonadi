@@ -48,8 +48,7 @@ class EntityCacheTest : public QObject
       QVERIFY( cache.isRequested( 1 ) );
       QVERIFY( !cache.retrieve( 1 ).isValid() );
 
-      QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 1 );
+      QTRY_COMPARE( spy.count(), 1 );
       QVERIFY( cache.isCached( 1 ) );
       QVERIFY( cache.isRequested( 1 ) );
       const T e1 = cache.retrieve( 1 );
@@ -68,8 +67,7 @@ class EntityCacheTest : public QObject
 
       cache.invalidate( 2 );
 
-      QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 2 );
+      QTRY_COMPARE( spy.count(), 2 );
       QVERIFY( cache.isCached( 2 ) );
       QVERIFY( cache.isCached( 3 ) );
 
@@ -99,8 +97,7 @@ class EntityCacheTest : public QObject
       QVERIFY( !cache.isCached( 3 ) );
       QVERIFY( cache.isRequested( 3 ) );
 
-      QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 3 );
+      QTRY_COMPARE( spy.count(), 3 );
       QVERIFY( cache.isCached( 3 ) );
       QVERIFY( cache.retrieve( 3 ).isValid() );
     }
@@ -143,8 +140,7 @@ class EntityCacheTest : public QObject
       scope.fetchFullPayload( true );
       cache.request( 1, scope );
 
-      QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 1 );
+      QTRY_COMPARE( spy.count(), 1 );
       QVERIFY( cache.isCached( 1 ) );
       QVERIFY( cache.isRequested( 1 ) );
       const Item item = cache.retrieve( 1 );
@@ -161,13 +157,11 @@ class EntityCacheTest : public QObject
       QVERIFY( spy.isValid() );
 
       cache.request( QList<Entity::Id>() << 1 << 2 << 3, scope );
-      QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 1 );
+      QTRY_COMPARE( spy.count(), 1 );
       QVERIFY( cache.isCached( QList<Entity::Id>() << 1 << 2 << 3 ) );
 
       cache.ensureCached( QList<Entity::Id>() << 1 << 2 << 3 << 4, scope );
-      QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 2 );
+      QTRY_COMPARE( spy.count(), 2 );
       QVERIFY( cache.isCached( QList<Entity::Id>() << 1 << 2 << 3 << 4 ) );
     }
 };

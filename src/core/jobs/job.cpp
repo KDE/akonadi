@@ -153,9 +153,15 @@ void JobPrivate::signalStartedToJobTracker()
     }
 }
 
+void JobPrivate::aboutToFinish()
+{
+  // Dummy
+}
+
 void JobPrivate::delayedEmitResult()
 {
     Q_Q(Job);
+    aboutToFinish();
     q->emitResult();
 }
 

@@ -20,7 +20,7 @@
 #ifndef _AKONADI_CALENDAR_CLIPBOARD_H
 #define _AKONADI_CALENDAR_CLIPBOARD_H
 
-#include "etmcalendar.h"
+#include "calendarbase.h"
 #include "akonadi-calendar_export.h"
 
 #include <kcalcore/incidence.h>

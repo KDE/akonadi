@@ -34,7 +34,7 @@ namespace Akonadi {
  * The attribute is inspired by RFC5257(IMAP ANNOTATION) and RFC5464(IMAP METADATA), but serves
  * the purpose of RFC5257.
  *
- * For a private note annoation the entry name is:
+ * For a private note annotation the entry name is:
  * /private/comment
  * for a shared note:
  * /shared/comment

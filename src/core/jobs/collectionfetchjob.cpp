@@ -53,7 +53,6 @@ public:
         mEmitTimer->setSingleShot(true);
         mEmitTimer->setInterval(100);
         q_ptr->connect(mEmitTimer, SIGNAL(timeout()), q_ptr, SLOT(timeout()));
-        q_ptr->connect(q_ptr, SIGNAL(result(KJob*)), q_ptr, SLOT(timeout()));
     }
 
     Q_DECLARE_PUBLIC(CollectionFetchJob)
@@ -67,6 +66,11 @@ public:
     QTimer *mEmitTimer;
     bool mBasePrefetch;
     Collection::List mPrefetchList;
+
+    void aboutToFinish()
+    {
+      timeout();
+    }
 
     void timeout()
     {

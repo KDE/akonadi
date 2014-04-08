@@ -20,7 +20,6 @@
 #include "etmcalendar.h"
 #include "etmcalendar_p.h"
 #include "blockalarmsattribute.h"
-#include "incidencefetchjob_p.h"
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 #include "calfilterproxymodel_p.h"
@@ -610,6 +609,22 @@ bool ETMCalendar::collectionFilteringEnabled() const
 {
     Q_D(const ETMCalendar);
     return d->mCollectionFilteringEnabled;
+}
+
+bool ETMCalendar::isLoaded() const
+{
+    Q_D(const ETMCalendar);
+
+    if (!entityTreeModel()->isCollectionTreeFetched())
+        return false;
+
+    Akonadi::Collection::List collections = d->mCollectionMap.values();
+    foreach (const Akonadi::Collection &collection, collections) {
+        if (!entityTreeModel()->isCollectionPopulated(collection.id()))
+            return false;
+    }
+
+    return true;
 }
 
 #include "moc_etmcalendar.cpp"
