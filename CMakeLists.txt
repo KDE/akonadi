@@ -33,7 +33,7 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Solid ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
 
-set(AkonadiServer_MIN_VERSION "1.70.40")
+set(AkonadiServer_MIN_VERSION "1.70.41")
 find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
