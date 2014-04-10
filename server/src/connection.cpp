@@ -49,7 +49,6 @@ Connection::Connection( quintptr socketDescriptor, QObject *parent )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
-    , m_selectedConnection( 0 )
     , m_streamParser( 0 )
     , m_verifyCacheOnRetrieval( false )
 {
@@ -195,8 +194,12 @@ void Connection::writeOut( const QByteArray &data )
     QByteArray block = data + "\r\n";
     m_socket->write( block );
     m_socket->waitForBytesWritten();
-
     Tracer::self()->connectionOutput( m_identifier, block );
+}
+
+CommandContext *Connection::context() const
+{
+    return const_cast<CommandContext*>( &m_context );
 }
 
 Handler *Connection::findHandlerForCommand( const QByteArray &command )
@@ -254,21 +257,6 @@ void Connection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-qint64 Connection::selectedCollectionId() const
-{
-    return m_selectedConnection;
-}
-
-void Connection::setSelectedCollection( qint64 collection )
-{
-    m_selectedConnection = collection;
-}
-
-const Collection Connection::selectedCollection()
-{
-  return Collection::retrieveById( selectedCollectionId() );
-}
-
 void Connection::addStatusMessage( const QByteArray &msg )
 {
     m_statusMessageQueue.append( msg );
@@ -304,19 +292,9 @@ QByteArray Connection::sessionId() const
   return m_sessionId;
 }
 
-Resource Connection::resourceContext() const
-{
-  return m_resourceContext;
-}
-
-void Connection::setResourceContext( const Resource &res )
-{
-  m_resourceContext = res;
-}
-
 bool Connection::isOwnerResource( const PimItem &item ) const
 {
-  if ( resourceContext().isValid() && item.collection().resourceId() == resourceContext().id() ) {
+  if ( context()->resource().isValid() && item.collection().resourceId() == context()->resource().id() ) {
     return true;
   }
   // fallback for older resources
@@ -328,7 +306,7 @@ bool Connection::isOwnerResource( const PimItem &item ) const
 
 bool Connection::isOwnerResource( const Collection &collection ) const
 {
-  if ( resourceContext().isValid() && collection.resourceId() == resourceContext().id() ) {
+  if ( context()->resource().isValid() && collection.resourceId() == context()->resource().id() ) {
     return true;
   }
   if ( sessionId() == collection.resource().name().toUtf8() ) {

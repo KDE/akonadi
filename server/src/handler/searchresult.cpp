@@ -20,6 +20,7 @@
  */
 
 #include "searchresult.h"
+#include "connection.h"
 #include "imapstreamparser.h"
 #include "protocol_p.h"
 #include "storage/selectquerybuilder.h"
@@ -65,7 +66,7 @@ bool SearchResult::parseStream()
   if ( mScope.scope() == Scope::Rid && !mScope.ridSet().isEmpty() ) {
     QueryBuilder qb( PimItem::tableName() );
     qb.addColumn( PimItem::idFullColumnName() );
-    ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
+    ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection()->context(), qb );
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collectionId );
 
     if ( !qb.exec() ) {

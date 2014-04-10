@@ -22,10 +22,37 @@
 
 #include "collectionscheduler.h"
 
+#include <QMutex>
+
 namespace Akonadi {
 namespace Server {
 
 class Collection;
+
+/**
+ * A RAII helper class to temporarily stop the CacheCleaner. This allows long-lasting
+ * operations to safely retrieve all data from resource and perform an operation on them
+ * (like move or copy) without risking that the cache will be cleaned in the meanwhile
+ *
+ * The inhibitor is recursive, so it's possible to create multiple instances of the
+ * CacheCleanerInhibitor and the CacheCleaner will be inhibited until all instances
+ * are destroyed again. However it's not possible to inhibit a single inhibitor
+ * multiple times.
+ */
+class CacheCleanerInhibitor
+{
+  public:
+    CacheCleanerInhibitor( bool inhibit = true );
+    ~CacheCleanerInhibitor();
+
+    void inhibit();
+    void uninhibit();
+
+  private:
+    static QMutex sLock;
+    static int sInhibitCount;
+    bool mInhibited;
+};
 
 /**
   Cache cleaner thread.
@@ -52,6 +79,9 @@ class CacheCleaner : public CollectionScheduler
 
   private:
     static CacheCleaner *sInstance;
+
+    friend class CacheCleanerInhibitor;
+
 };
 
 } // namespace Server

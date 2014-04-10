@@ -528,7 +528,7 @@ static int qGetSqliteOpenMode(QString opts)
                 return SQLITE_OPEN_READONLY;
     }
     // The SQLITE_OPEN_NOMUTEX flag causes the database connection to be in the multi-thread mode
-    return SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX;
+    return SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX | SQLITE_OPEN_SHAREDCACHE;
 }
 
 /*
@@ -543,8 +543,10 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
     if (db.isEmpty())
         return false;
 
+    sqlite3_enable_shared_cache(1);
     if (sqlite3_open_v2(db.toUtf8().constData(), &d->access, qGetSqliteOpenMode(conOpts), NULL) == SQLITE_OK) {
         sqlite3_busy_timeout(d->access, qGetSqliteTimeout(conOpts));
+        sqlite3_extended_result_codes(d->access, 1);
         setOpen(true);
         setOpenError(false);
         return true;

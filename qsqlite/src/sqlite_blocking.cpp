@@ -1,63 +1,104 @@
+/*
+    Copyright (c) 2009 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (c) 2014 Daniel Vrátil <dvratil@redhat.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
 #include "sqlite_blocking.h"
 
 #include <sqlite3.h>
-#ifndef _WIN32
-#include <unistd.h>
-#else
-#include <Windows.h>
-#define usleep(x) Sleep(x/1000)
-#endif
 
+#include <QMutex>
+#include <QWaitCondition>
 #include "qdebug.h"
 #include "qstringbuilder.h"
 #include "qthread.h"
+#include <QDateTime>
 
 QString debugString()
 {
   return QString( QLatin1Literal("[QSQLITE3: ") + QString::number( quint64( QThread::currentThreadId() ) ) + QLatin1Literal("] ") );
 }
 
-int sqlite3_blocking_step( sqlite3_stmt *pStmt )
+/* Based on example in http://www.sqlite.org/unlock_notify.html */
+
+struct UnlockNotification {
+  bool fired;
+  QWaitCondition cond;
+  QMutex mutex;
+};
+
+static void qSqlite3UnlockNotifyCb(void **apArg, int nArg)
 {
-  // NOTE: The example at http://www.sqlite.org/unlock_notify.html says to wait
-  //       for SQLITE_LOCK but for some reason I don't understand I get
-  //       SQLITE_BUSY.
-  int rc = sqlite3_step( pStmt );
+  for (int i = 0; i < nArg; ++i) {
+    UnlockNotification *ntf = static_cast<UnlockNotification*>(apArg[i]);
+    ntf->mutex.lock();
+    ntf->fired = true;
+    ntf->cond.wakeOne();
+    ntf->mutex.unlock();
+  }
+}
 
-  QThread::currentThreadId();
-  if ( rc == SQLITE_BUSY )
-    qDebug() << debugString() << "sqlite3_blocking_step: Entering while loop";
+static int qSqlite3WaitForUnlockNotify(sqlite3 *db)
+{
+  int rc;
+  UnlockNotification un;
+  un.fired = false;
 
-  while( rc == SQLITE_BUSY ) {
-    usleep(5000);
-    sqlite3_reset( pStmt );
-    rc = sqlite3_step( pStmt );
+  rc = sqlite3_unlock_notify(db, qSqlite3UnlockNotifyCb, (void *)&un);
+  Q_ASSERT(rc == SQLITE_LOCKED || rc == SQLITE_OK);
 
-    if ( rc != SQLITE_BUSY ) {
-      qDebug() << debugString() << "sqlite3_blocking_step: Leaving while loop";
+  if (rc == SQLITE_OK) {
+    un.mutex.lock();
+    if (!un.fired) {
+      un.cond.wait(&un.mutex);
     }
+    un.mutex.unlock();
   }
 
   return rc;
 }
 
-int sqlite3_blocking_prepare16_v2( sqlite3 *db,           /* Database handle. */
-                                   const void *zSql,      /* SQL statement, UTF-16 encoded */
-                                   int nSql,              /* Length of zSql in bytes. */
-                                   sqlite3_stmt **ppStmt, /* OUT: A pointer to the prepared statement */
-                                   const void **pzTail    /* OUT: Pointer to unused portion of zSql */ )
+int sqlite3_blocking_step(sqlite3_stmt *pStmt)
 {
-  int rc = sqlite3_prepare16_v2( db, zSql, nSql, ppStmt, pzTail );
+  int rc;
+  while (SQLITE_LOCKED_SHAREDCACHE == (rc = sqlite3_step(pStmt))) {
+    qDebug() << debugString() << "sqlite3_blocking_step: Waiting..."; QTime now; now.start();
+    rc = qSqlite3WaitForUnlockNotify(sqlite3_db_handle(pStmt));
+    qDebug() << debugString() << "sqlite3_blocking_step: Waited for " << now.elapsed() << "ms";
+    if (rc != SQLITE_OK) {
+      break;
+    }
+    sqlite3_reset(pStmt);
+  }
 
-  if ( rc == SQLITE_BUSY )
-    qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Entering while loop";
+  return rc;
+}
 
-  while( rc == SQLITE_BUSY ) {
-    usleep(500000);
-    rc = sqlite3_prepare16_v2( db, zSql, nSql, ppStmt, pzTail );
-
-    if ( rc != SQLITE_BUSY ) {
-      qDebug() << debugString() << "sqlite3_prepare16_v2: Leaving while loop";
+int sqlite3_blocking_prepare16_v2(sqlite3 *db, const void *zSql, int nSql,
+                                  sqlite3_stmt **ppStmt, const void **pzTail)
+{
+  int rc;
+  while (SQLITE_LOCKED_SHAREDCACHE == (rc = sqlite3_prepare16_v2(db, zSql, nSql, ppStmt, pzTail))) {
+    qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Waiting..."; QTime now; now.start();
+    rc = qSqlite3WaitForUnlockNotify(db);
+    qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Waited for " << now.elapsed() << "ms";
+    if (rc != SQLITE_OK) {
+      break;
     }
   }
 

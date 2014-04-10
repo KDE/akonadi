@@ -27,6 +27,7 @@
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
+#include "commandcontext.h"
 
 #include "response.h"
 
@@ -43,7 +44,7 @@ Select::Select( Scope::SelectionScope scope )
 bool Select::parseStream()
 {
   // as per rfc, even if the following select fails, we need to reset
-  connection()->setSelectedCollection( 0 );
+  connection()->context()->setCollection( Collection() );
 
   QByteArray buffer = m_streamParser->readString();
 
@@ -70,12 +71,12 @@ bool Select::parseStream()
     if ( buffer.isEmpty() ) {
       silent = true; // unselect
     } else {
-      if ( !connection()->resourceContext().isValid() ) {
+      if ( !connection()->context()->resource().isValid() ) {
         throw HandlerException( "Cannot select based on remote identifier without a resource scope" );
       }
       SelectQueryBuilder<Collection> qb;
       qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8( buffer ) );
-      qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
+      qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->context()->resource().id() );
       if ( !qb.exec() ) {
         throw HandlerException( "Failed to select collection" );
       }
@@ -116,6 +117,6 @@ bool Select::parseStream()
   response.setString( "Completed" );
   Q_EMIT responseAvailable( response );
 
-  connection()->setSelectedCollection( col.id() );
+  connection()->context()->setCollection( col );
   return true;
 }

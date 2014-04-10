@@ -190,8 +190,8 @@ bool List::parseStream()
                   Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
       if ( mResource.isValid() ) {
         qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, mResource.id() );
-      } else if ( connection()->resourceContext().isValid() ) {
-        qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, connection()->resourceContext().id() );
+      } else if ( connection()->context()->resource().isValid() ) {
+        qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, connection()->context()->resource().id() );
       } else {
         throw HandlerException( "Cannot retrieve collection based on remote identifier without a resource context" );
       }
@@ -204,10 +204,10 @@ bool List::parseStream()
       }
       col = results.first();
     } else if ( mScope.scope() == Scope::HierarchicalRid ) {
-      if ( !connection()->resourceContext().isValid() ) {
+      if ( !connection()->context()->resource().isValid() ) {
         throw HandlerException( "Cannot retrieve collection based on hierarchical remote identifier without a resource context" );
       }
-      col = CollectionQueryHelper::resolveHierarchicalRID( mScope.ridChain(), connection()->resourceContext().id() );
+      col = CollectionQueryHelper::resolveHierarchicalRID( mScope.ridChain(), connection()->context()->resource().id() );
     } else {
       throw HandlerException( "WTF" );
     }

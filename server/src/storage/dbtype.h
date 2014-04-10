@@ -42,6 +42,9 @@ namespace DbType
   /** Returns the type for the given driver name. */
   Type typeForDriverName( const QString &driverName );
 
+  /** Returns true when using QSQLITE driver shipped with Qt, FALSE otherwise */
+  bool isSystemSQLite( const QSqlDatabase &db );
+
 } // namespace DbType
 } // namespace Server
 } // namespace Akonadi

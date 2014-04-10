@@ -96,6 +96,7 @@
 #define AKONADI_PARAM_CHANGEDSINCE                 "CHANGEDSINCE"
 #define AKONADI_PARAM_CHARSET                      "CHARSET"
 #define AKONADI_PARAM_CHECKCACHEDPARTSONLY         "CHECKCACHEDPARTSONLY"
+#define AKONADI_PARAM_COLLECTION                   "COLLECTION"
 #define AKONADI_PARAM_COLLECTIONID                 "COLLECTIONID"
 #define AKONADI_PARAM_COLLECTIONS                  "COLLECTIONS"
 #define AKONADI_PARAM_MTIME                        "DATETIME"
@@ -136,6 +137,8 @@
 #define AKONADI_PARAM_SIZE                         "SIZE"
 #define AKONADI_PARAM_STATISTICS                   "STATISTICS"
 #define AKONADI_PARAM_SYNCONDEMAND                 "SYNCONDEMAND"
+#define AKONADI_PARAM_TAG                          "TAG"
+#define AKONADI_PARAM_TAGID                        "TAGID"
 #define AKONADI_PARAM_UID                          "UID"
 #define AKONADI_PARAM_VIRTUAL                      "VIRTUAL"
 

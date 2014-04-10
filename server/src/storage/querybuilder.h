@@ -244,7 +244,7 @@ class QueryBuilder
      */
     void sqliteAdaptUpdateJoin( Query::Condition &cond );
 
-    bool retryLastTransaction();
+    bool retryLastTransaction( bool rollback = false);
 
   private:
     QString mTable;

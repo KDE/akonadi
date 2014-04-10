@@ -28,6 +28,55 @@
 using namespace Akonadi::Server;
 
 CacheCleaner *CacheCleaner::sInstance = 0;
+QMutex CacheCleanerInhibitor::sLock;
+int CacheCleanerInhibitor::sInhibitCount = 0;
+
+CacheCleanerInhibitor::CacheCleanerInhibitor( bool doInhibit )
+  : mInhibited( false )
+{
+  if ( doInhibit ) {
+    inhibit();
+  }
+}
+
+CacheCleanerInhibitor::~CacheCleanerInhibitor()
+{
+  if ( mInhibited ) {
+    uninhibit();
+  }
+}
+
+void CacheCleanerInhibitor::inhibit()
+{
+  if ( mInhibited ) {
+    akError() << "Cannot recursively inhibit an inhibitor";
+    return;
+  }
+
+  sLock.lock();
+  if ( ++sInhibitCount == 1 ) {
+    CacheCleaner::self()->inhibit( true );
+  }
+  sLock.unlock();
+  mInhibited = true;
+}
+
+void CacheCleanerInhibitor::uninhibit()
+{
+  if ( !mInhibited ) {
+    akError() << "Cannot uninhibit an uninhibited inhibitor"; // aaaw yeah
+    return;
+  }
+  mInhibited = false;
+
+  sLock.lock();
+  Q_ASSERT( sInhibitCount > 0 );
+  if ( --sInhibitCount == 0 ) {
+    CacheCleaner::self()->inhibit( false );
+  }
+  sLock.unlock();
+}
+
 
 CacheCleaner::CacheCleaner( QObject *parent )
   : CollectionScheduler( parent )

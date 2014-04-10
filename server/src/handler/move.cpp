@@ -23,6 +23,7 @@
 #include <entities.h>
 #include <imapstreamparser.h>
 #include <handlerhelper.h>
+#include <cachecleaner.h>
 #include <storage/datastore.h>
 #include <storage/itemretriever.h>
 #include <storage/itemqueryhelper.h>
@@ -46,6 +47,20 @@ bool Move::parseStream()
   const Collection destination = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
   const Resource destResource = destination.resource();
 
+  Collection source;
+  if ( !m_streamParser->atCommandEnd() ) {
+    Scope sourceScope( mScope.scope() );
+    sourceScope.parseScope( m_streamParser );
+    source = CollectionQueryHelper::singleCollectionFromScope( sourceScope, connection() );
+  }
+
+  if ( mScope.scope() == Scope::Rid && !source.isValid() ) {
+    throw HandlerException( "RID move requires valid source collection" );
+  }
+  connection()->context()->setCollection( source );
+
+  CacheCleanerInhibitor inhibitor;
+
   // make sure all the items we want to move are in the cache
   ItemRetriever retriever( connection() );
   retriever.setScope( mScope );
@@ -58,7 +73,7 @@ bool Move::parseStream()
   Transaction transaction( store );
 
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
+  ItemQueryHelper::scopeToQuery( mScope, connection()->context(), qb );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::NotEquals, destination.id() );
 
   const QDateTime mtime = QDateTime::currentDateTime();
@@ -90,7 +105,7 @@ bool Move::parseStream()
       item.setAtime( mtime );
       item.setDatetime( mtime );
       // if the resource moved itself, we assume it did so because the change happend in the backend
-      if ( connection()->resourceContext().id() != destResource.id() ) {
+      if ( connection()->context()->resource().id() != destResource.id() ) {
         item.setDirty( true );
       }
 

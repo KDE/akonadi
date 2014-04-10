@@ -320,10 +320,10 @@ QString QueryBuilder::buildQuery()
   return statement;
 }
 
-bool QueryBuilder::retryLastTransaction()
+bool QueryBuilder::retryLastTransaction( bool rollback )
 {
 #ifndef QUERYBUILDER_UNITTEST
-  mQuery = DataStore::self()->retryLastTransaction();
+  mQuery = DataStore::self()->retryLastTransaction( rollback );
   return !mQuery.lastError().isValid();
 #else
   return true;
@@ -400,9 +400,21 @@ bool QueryBuilder::exec()
         akDebug() << mQuery.lastError().text();
         return retryLastTransaction();
       }
+    } else if ( mDatabaseType == DbType::Sqlite && !DbType::isSystemSQLite( DataStore::self()->database() ) ) {
+      const int error = mQuery.lastError().number();
+      if ( error == 6 /* SQLITE_LOCKED */ ) {
+        akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+        akDebug() << mQuery.lastError().text();
+        return retryLastTransaction();
+      } else if ( error == 5 /* SQLITE_BUSY */ ) {
+        akDebug() << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
+        akDebug() << mQuery.lastError().text();
+        return retryLastTransaction( true );
+      }
     } else if ( mDatabaseType == DbType::Sqlite ) {
-      // We can't have a transaction deadlock in SQLite, because it does not support
-      // concurrent transactions and DataStore serializes them through a global lock.
+      // We can't have a transaction deadlock in SQLite when using driver shipped
+      // with Qt, because it does not support concurrent transactions and DataStore
+      // serializes them through a global lock.
     }
 
     akError() << "DATABASE ERROR:";

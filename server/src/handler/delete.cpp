@@ -58,6 +58,8 @@ bool Delete::deleteRecursive( Collection &col )
 bool Delete::parseStream()
 {
   m_scope.parseScope( m_streamParser );
+  connection()->context()->parseContext( m_streamParser );
+
   SelectQueryBuilder<Collection> qb;
   CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
   if ( !qb.exec() ) {

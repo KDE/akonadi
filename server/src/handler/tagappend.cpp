@@ -57,7 +57,7 @@ bool TagAppend::parseStream()
     } else if ( param == AKONADI_PARAM_PARENT ) {
       parentId = m_streamParser->readNumber();
     } else if ( param == AKONADI_PARAM_REMOTEID ) {
-      if ( !connection()->resourceContext().isValid() ) {
+      if ( !connection()->context()->resource().isValid() ) {
         throw HandlerException( "Only resource can create tag with remote ID" );
       }
       remoteId = QString::fromLatin1( m_streamParser->readString() );
@@ -104,7 +104,7 @@ bool TagAppend::parseStream()
   }
 
   if ( !remoteId.isEmpty() ) {
-    Resource resource = Resource::retrieveByName( connection()->resourceContext().name() );
+    Resource resource = Resource::retrieveByName( connection()->context()->resource().name() );
     TagRemoteIdResourceRelation rel;
     rel.setTagId( tagId );
     rel.setResourceId( resource.id() );

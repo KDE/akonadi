@@ -110,7 +110,7 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
       partQuery.addCondition( cond );
     }
 
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
+    ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), partQuery );
 
     if ( !partQuery.exec() ) {
       throw HandlerException( "Unable to list item parts" );
@@ -155,7 +155,7 @@ QSqlQuery FetchHelper::buildItemQuery()
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( mScope.scope() != Scope::Invalid ) {
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+    ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), itemQuery );
   }
 
   if ( mFetchScope.changedSince().isValid() ) {
@@ -185,7 +185,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
                      Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   flagQuery.addColumn( PimItem::idFullColumnName() );
   flagQuery.addColumn( Flag::nameFullColumnName() );
-  ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), flagQuery );
   flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( !flagQuery.exec() ) {
@@ -211,7 +211,7 @@ QSqlQuery FetchHelper::buildTagQuery()
                      Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName() );
   tagQuery.addColumn( PimItem::idFullColumnName() );
   tagQuery.addColumn( Tag::idFullColumnName() );
-  ItemQueryHelper::scopeToQuery( mScope, mConnection, tagQuery );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), tagQuery );
   tagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( !tagQuery.exec() ) {
@@ -231,9 +231,9 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
   qb.addColumn( Resource::nameFullColumnName() );
   qb.addJoin( QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
   qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
-  ItemQueryHelper::scopeToQuery( scope, mConnection, qb );
-  if ( mConnection->resourceContext().isValid() ) {
-    qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals, mConnection->resourceContext().name() );
+  ItemQueryHelper::scopeToQuery( scope, mConnection->context(), qb );
+  if ( mConnection->context()->resource().isValid() ) {
+    qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals, mConnection->context()->resource().name() );
   }
 
   if ( !qb.exec() ) {
@@ -286,14 +286,14 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
     retriever.setRetrieveFullPayload( mFetchScope.fullPayload() );
     retriever.setChangedSince( mFetchScope.changedSince() );
     if ( !retriever.exec() && !mFetchScope.ignoreErrors() ) { // There we go, retrieve the missing parts from the resource.
-      if ( mConnection->resourceContext().isValid() ) {
+      if ( mConnection->context()->resource().isValid() ) {
         throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1, resource %2) : %3" )
-                .arg( mConnection->selectedCollectionId() )
-                .arg( mConnection->resourceContext().id() )
+                .arg( mConnection->context()->collectionId() )
+                .arg( mConnection->context()->resource().id() )
                 .arg( QString::fromLatin1( retriever.lastError() ) ) );
       } else {
         throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1) : %2" )
-                .arg( mConnection->selectedCollectionId() )
+                .arg( mConnection->context()->collectionId() )
                 .arg( QString::fromLatin1( retriever.lastError() ) ) );
       }
     }
@@ -520,7 +520,7 @@ void FetchHelper::updateItemAccessTime()
   Transaction transaction( mConnection->storageBackend() );
   QueryBuilder qb( PimItem::tableName(), QueryBuilder::Update );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), qb );
 
   if ( !qb.exec() ) {
     qWarning() << "Unable to update item access time";
@@ -531,11 +531,11 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mFetchScope.cacheOnly() ) {
+  if ( mScope.scope() != Scope::None || mConnection->context()->collectionId() <= 0 || mFetchScope.cacheOnly() ) {
     return;
   }
 
-  Collection collection = mConnection->selectedCollection();
+  Collection collection = mConnection->context()->collection();
 
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
   if ( mConnection->sessionId() == collection.resource().name().toLatin1() ) {

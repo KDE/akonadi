@@ -38,8 +38,8 @@ void CollectionQueryHelper::remoteIdToQuery( const QStringList &rids, Connection
     qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::In, rids );
   }
 
-  if ( connection->resourceContext().isValid() ) {
-    qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
+  if ( connection->context()->resource().isValid() ) {
+    qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->context()->resource().id() );
   }
 }
 
@@ -48,15 +48,15 @@ void CollectionQueryHelper::scopeToQuery( const Scope &scope, Connection *connec
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     QueryHelper::setToQuery( scope.uidSet(), Collection::idFullColumnName(), qb );
   } else if ( scope.scope() == Scope::Rid ) {
-    if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() ) {
+    if ( connection->context()->collectionId() <= 0 && !connection->context()->resource().isValid() ) {
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
     }
     CollectionQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
   } else if ( scope.scope() == Scope::HierarchicalRid ) {
-    if ( !connection->resourceContext().isValid() ) {
+    if ( !connection->context()->resource().isValid() ) {
       throw HandlerException( "Operations based on hierarchical remote identifiers require a resource or collection context" );
     }
-    const Collection c = CollectionQueryHelper::resolveHierarchicalRID( scope.ridChain(), connection->resourceContext().id() );
+    const Collection c = CollectionQueryHelper::resolveHierarchicalRID( scope.ridChain(), connection->context()->resource().id() );
     qb.addValueCondition( Collection::idFullColumnName(), Query::Equals, c.id() );
   } else {
     throw HandlerException( "WTF?" );

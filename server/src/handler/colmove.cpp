@@ -26,6 +26,7 @@
 #include <storage/transaction.h>
 #include <storage/collectionqueryhelper.h>
 #include <storage/selectquerybuilder.h>
+#include <cachecleaner.h>
 #include <akdebug.h>
 
 using namespace Akonadi;
@@ -60,6 +61,8 @@ bool ColMove::parseStream()
   if ( source.parentId() == target.id() ) {
     return successResponse( "COLMOVE complete - nothing to do" );
   }
+
+  CacheCleanerInhibitor inhibitor;
 
   // retrieve all not yet cached items of the source
   ItemRetriever retriever( connection() );

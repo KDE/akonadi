@@ -111,6 +111,14 @@ class StorageJanitor : public QObject
      */
     void findDirtyObjects();
 
+    /**
+     * Check whether part sizes match what's in database.
+     *
+     * If SizeTreshold has change, it will move parts from or to database
+     * where necessary.
+     */
+    void checkSizeTreshold();
+
   private:
     QDBusConnection m_connection;
     qint64 m_lostFoundCollectionId;

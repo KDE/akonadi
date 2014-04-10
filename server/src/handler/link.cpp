@@ -56,7 +56,7 @@ bool Link::parseStream()
   itemScope.parseScope( m_streamParser );
 
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( itemScope, connection(), qb );
+  ItemQueryHelper::scopeToQuery( itemScope, connection()->context(), qb );
   if ( !qb.exec() ) {
     return failureResponse( "Unable to execute item query" );
   }

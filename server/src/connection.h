@@ -26,6 +26,7 @@
 #include "entities.h"
 #include "global.h"
 #include "clientcapabilities.h"
+#include "commandcontext.h"
 
 namespace Akonadi {
 namespace Server {
@@ -48,18 +49,14 @@ public:
     void run();
 
     virtual DataStore *storageBackend();
-    qint64 selectedCollectionId() const;
-    void setSelectedCollection( qint64 collection );
 
-    Resource resourceContext() const;
-    void setResourceContext( const Resource &res );
+    CommandContext *context() const;
+
     /**
       Returns @c true if this connection belongs to the owning resource of @p item.
     */
     bool isOwnerResource( const PimItem &item ) const;
     bool isOwnerResource( const Collection &collection ) const;
-
-    const Collection selectedCollection();
 
     void addStatusMessage( const QByteArray &msg );
     void flushStatusMessageQueue();
@@ -93,14 +90,14 @@ private:
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore *m_backend;
-    qint64 m_selectedConnection;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
     ImapStreamParser *m_streamParser;
-    Resource m_resourceContext;
     ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
+    CommandContext m_context;
+
 };
 
 } // namespace Server

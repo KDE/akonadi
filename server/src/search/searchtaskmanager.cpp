@@ -152,12 +152,12 @@ void SearchTaskManager::pushResults( const QByteArray &searchId, const QSet<qint
 {
   Q_UNUSED( searchId );
 
-  akDebug() << ids.count() << "results for search" << searchId << "pushed from" << connection->resourceContext().name();
+  akDebug() << ids.count() << "results for search" << searchId << "pushed from" << connection->context()->resource().name();
 
   QMutexLocker locker( &mLock );
-  ResourceTask *task = mRunningTasks.take( connection->resourceContext().name() );
+  ResourceTask *task = mRunningTasks.take( connection->context()->resource().name() );
   if ( !task ) {
-    akDebug() << "No running task for" << connection->resourceContext().name() << " - maybe it has timed out?";
+    akDebug() << "No running task for" << connection->context()->resource().name() << " - maybe it has timed out?";
     return;
   }
 
@@ -213,10 +213,8 @@ void SearchTaskManager::searchLoop()
   QMutexLocker locker( &mLock );
 
   Q_FOREVER {
-    if ( !mShouldStop || !mTasklist.isEmpty() ) {
-        akDebug() << "Search loop is waiting, will wake again in" << timeout << "ms";
-        mWait.wait( &mLock, timeout );
-    }
+    akDebug() << "Search loop is waiting, will wake again in" << timeout << "ms";
+    mWait.wait( &mLock, timeout );
 
     if ( mShouldStop ) {
       Q_FOREACH (SearchTask *task, mTasklist ) {
@@ -292,13 +290,14 @@ void SearchTaskManager::searchLoop()
 
           mInstancesLock.lock();
           AgentSearchInstance *instance = mInstances.value( it->first );
-          mInstancesLock.unlock();
           if ( !instance ) {
+            mInstancesLock.unlock();
             // Resource disappeared in the meanwhile
             continue;
           }
 
           instance->search( task->id, task->query, it->second );
+          mInstancesLock.unlock();
 
           task->sharedLock.lock();
           it = task->queries.erase( it );
