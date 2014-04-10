@@ -29,12 +29,12 @@
 using namespace Akonadi;
 
 AgentInstance::AgentInstance()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
-AgentInstance::AgentInstance( const AgentInstance &other )
-  : d( other.d )
+AgentInstance::AgentInstance(const AgentInstance &other)
+    : d(other.d)
 {
 }
 
@@ -44,134 +44,134 @@ AgentInstance::~AgentInstance()
 
 bool AgentInstance::isValid() const
 {
-  return !d->mIdentifier.isEmpty();
+    return !d->mIdentifier.isEmpty();
 }
 
 AgentType AgentInstance::type() const
 {
-  return d->mType;
+    return d->mType;
 }
 
 QString AgentInstance::identifier() const
 {
-  return d->mIdentifier;
+    return d->mIdentifier;
 }
 
-void AgentInstance::setName( const QString &name )
+void AgentInstance::setName(const QString &name)
 {
-  AgentManager::self()->d->setName( *this, name );
+    AgentManager::self()->d->setName(*this, name);
 }
 
 QString AgentInstance::name() const
 {
-  return d->mName;
+    return d->mName;
 }
 
 AgentInstance::Status AgentInstance::status() const
 {
-  switch ( d->mStatus ) {
+    switch (d->mStatus) {
     case 0:
-      return Idle;
+        return Idle;
     case 1:
-      return Running;
+        return Running;
     case 2:
     default:
-      return Broken;
+        return Broken;
     case 3:
-      return NotConfigured;
-  }
+        return NotConfigured;
+    }
 }
 
 QString AgentInstance::statusMessage() const
 {
-  return d->mStatusMessage;
+    return d->mStatusMessage;
 }
 
 int AgentInstance::progress() const
 {
-  return d->mProgress;
+    return d->mProgress;
 }
 
 bool AgentInstance::isOnline() const
 {
-  return d->mIsOnline;
+    return d->mIsOnline;
 }
 
-void AgentInstance::setIsOnline( bool online )
+void AgentInstance::setIsOnline(bool online)
 {
-  AgentManager::self()->d->setOnline( *this, online );
+    AgentManager::self()->d->setOnline(*this, online);
 }
 
-void AgentInstance::configure( QWidget *parent )
+void AgentInstance::configure(QWidget *parent)
 {
-  AgentManager::self()->d->configure( *this, parent );
+    AgentManager::self()->d->configure(*this, parent);
 }
 
 void AgentInstance::synchronize()
 {
-  AgentManager::self()->d->synchronize( *this );
+    AgentManager::self()->d->synchronize(*this);
 }
 
 void AgentInstance::synchronizeCollectionTree()
 {
-  AgentManager::self()->d->synchronizeCollectionTree( *this );
+    AgentManager::self()->d->synchronizeCollectionTree(*this);
 }
 
-AgentInstance& AgentInstance::operator=( const AgentInstance &other )
+AgentInstance &AgentInstance::operator=(const AgentInstance &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
+    if (this != &other) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
-bool AgentInstance::operator==( const AgentInstance &other ) const
+bool AgentInstance::operator==(const AgentInstance &other) const
 {
-  return ( d->mIdentifier == other.d->mIdentifier );
+    return (d->mIdentifier == other.d->mIdentifier);
 }
 
 void AgentInstance::abortCurrentTask() const
 {
-  QDBusInterface iface( ServerManager::agentServiceName( ServerManager::Agent, identifier() ),
-                        QString::fromLatin1( "/" ),
-                        QString::fromLatin1( "org.freedesktop.Akonadi.Agent.Control" ) );
-  if ( iface.isValid() ) {
-    QDBusReply<void> reply = iface.call( QString::fromLatin1( "abort" ) );
-    if ( !reply.isValid() ) {
-      kWarning() << "Failed to place D-Bus call.";
+    QDBusInterface iface(ServerManager::agentServiceName(ServerManager::Agent, identifier()),
+                         QString::fromLatin1("/"),
+                         QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control"));
+    if (iface.isValid()) {
+        QDBusReply<void> reply = iface.call(QString::fromLatin1("abort"));
+        if (!reply.isValid()) {
+            kWarning() << "Failed to place D-Bus call.";
+        }
+    } else {
+        kWarning() << "Unable to obtain agent interface";
     }
-  } else {
-    kWarning() << "Unable to obtain agent interface";
-  }
 }
 
 void AgentInstance::reconfigure() const
 {
-  QDBusInterface iface( ServerManager::agentServiceName( ServerManager::Agent, identifier() ),
-                        QString::fromLatin1( "/" ),
-                        QString::fromLatin1( "org.freedesktop.Akonadi.Agent.Control" ) );
-  if ( iface.isValid() ) {
-    QDBusReply<void> reply = iface.call( QString::fromLatin1( "reconfigure" ) );
-    if ( !reply.isValid() ) {
-      kWarning() << "Failed to place D-Bus call.";
+    QDBusInterface iface(ServerManager::agentServiceName(ServerManager::Agent, identifier()),
+                         QString::fromLatin1("/"),
+                         QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control"));
+    if (iface.isValid()) {
+        QDBusReply<void> reply = iface.call(QString::fromLatin1("reconfigure"));
+        if (!reply.isValid()) {
+            kWarning() << "Failed to place D-Bus call.";
+        }
+    } else {
+        kWarning() << "Unable to obtain agent interface";
     }
-  } else {
-    kWarning() << "Unable to obtain agent interface";
-  }
 }
 
 void Akonadi::AgentInstance::restart() const
 {
-  QDBusInterface iface( ServerManager::serviceName( Akonadi::ServerManager::Control ),
-                        QString::fromLatin1( "/AgentManager" ),
-                        QString::fromLatin1( "org.freedesktop.Akonadi.AgentManager" ) );
-  if ( iface.isValid() ) {
-    QDBusReply<void> reply = iface.call( QString::fromLatin1( "restartAgentInstance" ), identifier() );
-    if ( !reply.isValid() ) {
-      kWarning() << "Failed to place D-Bus call.";
+    QDBusInterface iface(ServerManager::serviceName(Akonadi::ServerManager::Control),
+                         QString::fromLatin1("/AgentManager"),
+                         QString::fromLatin1("org.freedesktop.Akonadi.AgentManager"));
+    if (iface.isValid()) {
+        QDBusReply<void> reply = iface.call(QString::fromLatin1("restartAgentInstance"), identifier());
+        if (!reply.isValid()) {
+            kWarning() << "Failed to place D-Bus call.";
+        }
+    } else {
+        kWarning() << "Unable to obtain control interface" << iface.lastError().message();
     }
-  } else {
-    kWarning() << "Unable to obtain control interface" << iface.lastError().message();
-  }
 }

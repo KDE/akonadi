@@ -40,11 +40,11 @@ class CollectionFetchJobPrivate;
  * using namespace Akonadi;
  *
  * // fetching all collections containing emails recursively, starting at the root collection
- * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
- * job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
- * connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
- *          this, SLOT( myCollectionsReceived( const Akonadi::Collection::List& ) ) );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( collectionFetchResult( KJob* ) ) );
+ * CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+ * job->fetchScope().setContentMimeTypes(QStringList() << "message/rfc822");
+ * connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+ *         this, SLOT(myCollectionsReceived(Akonadi::Collection::List)));
+ * connect(job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)));
  *
  * @endcode
  *
@@ -52,47 +52,65 @@ class CollectionFetchJobPrivate;
  */
 class AKONADI_EXPORT CollectionFetchJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the type of fetch depth.
      */
     enum Type {
-      Base,       ///< Only fetch the base collection.
-      FirstLevel, ///< Only list direct sub-collections of the base collection.
-      Recursive,  ///< List all sub-collections.
-      NonOverlappingRoots  ///< List the roots of a list of fetched collections. @since 4.7
+        Base,       ///< Only fetch the base collection.
+        FirstLevel, ///< Only list direct sub-collections of the base collection.
+        Recursive,  ///< List all sub-collections.
+        NonOverlappingRoots  ///< List the roots of a list of fetched collections. @since 4.7
     };
 
     /**
      * Creates a new collection fetch job. If the given base collection
      * has a unique identifier, this is used to identify the collection in the
-     * Akonadi server. If only a remote identifier is avaiable the collection
+     * Akonadi server. If only a remote identifier is available the collection
      * is identified using that, provided that a resource search context has
-     * been specified. There are two ways of doing that: by calling
-     * setResource(), or globally using Akonadi::ResourceSelectJob.
+     * been specified by calling setResource().
+     *
+     * @internal
+     * For internal use only, if a remote identifier is set, the resource
+     * search context can be set globally using ResourceSelectJob.
+     * @endinternal
      *
      * @param collection The base collection for the listing.
      * @param type The type of fetch depth.
      * @param parent The parent object.
      */
-    explicit CollectionFetchJob( const Collection &collection, Type type = FirstLevel, QObject *parent = 0 );
+    explicit CollectionFetchJob(const Collection &collection, Type type = FirstLevel, QObject *parent = 0);
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
-     * The same rules for identifiers apply as noted in the constructor
-     * description.
+     * If a given collection has a unique identifier, this is used to identify
+     * the collection in the Akonadi server. If only a remote identifier is
+     * available the collection is identified using that, provided that a
+     * resource search context has been specified by calling setResource().
+     *
+     * @internal
+     * For internal use only, if a remote identifier is set, the resource
+     * search context can be set globally using ResourceSelectJob.
+     * @endinternal
      *
      * @param collections A list of collections to fetch. Must not be empty.
      * @param parent The parent object.
      */
-    explicit CollectionFetchJob( const Collection::List &collections, QObject *parent = 0 );
+    explicit CollectionFetchJob(const Collection::List &collections, QObject *parent = 0);
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
-     * The same rules for identifiers apply as noted in the constructor
-     * description.
+     * If a given collection has a unique identifier, this is used to identify
+     * the collection in the Akonadi server. If only a remote identifier is
+     * available the collection is identified using that, provided that a
+     * resource search context has been specified by calling setResource().
+     *
+     * @internal
+     * For internal use only, if a remote identifier is set, the resource
+     * search context can be set globally using ResourceSelectJob.
+     * @endinternal
      *
      * @param collections A list of collections to fetch. Must not be empty.
      * @param type The type of fetch depth.
@@ -100,16 +118,16 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @todo KDE5 merge with ctor above.
      * @since 4.7
      */
-    CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 );
+    CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = 0);
 
     /**
-     * Convenience ctor equivalent to CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 )
+     * Convenience ctor equivalent to CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = 0)
      * @since 4.8
      * @param collections list of collection ids
      * @param type fetch job type
      * @param parent parent object
      */
-    explicit CollectionFetchJob( const QList<Collection::Id> &collections, Type type = Base, QObject *parent = 0 );
+    explicit CollectionFetchJob(const QList<Collection::Id> &collections, Type type = Base, QObject *parent = 0);
 
     /**
      * Destroys the collection fetch job.
@@ -127,14 +145,14 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @param resource The resource identifier.
      * @deprecated Use CollectionFetchScope instead.
      */
-    AKONADI_DEPRECATED void setResource( const QString &resource );
+    AKONADI_DEPRECATED void setResource(const QString &resource);
 
     /**
      * Include also unsubscribed collections.
      * @deprecated Use CollectionFetchScope instead.
      * @param include whether to also fetch unsubscribed collections
      */
-    AKONADI_DEPRECATED void includeUnsubscribed( bool include = true );
+    AKONADI_DEPRECATED void includeUnsubscribed(bool include = true);
 
     /**
      * Include also statistics about the collections.
@@ -143,7 +161,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @deprecated Use CollectionFetchScope instead.
      * @param include whether to also fetch statistics
      */
-    AKONADI_DEPRECATED void includeStatistics( bool include = true );
+    AKONADI_DEPRECATED void includeStatistics(bool include = true);
 
     /**
      * Sets the collection fetch scope.
@@ -157,7 +175,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @see fetchScope()
      * @since 4.4
      */
-    void setFetchScope( const CollectionFetchScope &fetchScope );
+    void setFetchScope(const CollectionFetchScope &fetchScope);
 
     /**
      * Returns the collection fetch scope.
@@ -174,29 +192,29 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      */
     CollectionFetchScope &fetchScope();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the job has received collections.
      *
      * @param collections The received collections.
      */
-    void collectionsReceived( const Akonadi::Collection::List &collections );
+    void collectionsReceived(const Akonadi::Collection::List &collections);
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     //@cond PRIVATE
-    void slotResult( KJob* job );
+    void slotResult(KJob *job);
     //@endcond
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionFetchJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionFetchJob)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void timeout() )
-    Q_PRIVATE_SLOT( d_func(), void subJobCollectionReceived(const Akonadi::Collection::List &) )
+    Q_PRIVATE_SLOT(d_func(), void timeout())
+    Q_PRIVATE_SLOT(d_func(), void subJobCollectionReceived(const Akonadi::Collection::List &))
     //@endcond
 };
 

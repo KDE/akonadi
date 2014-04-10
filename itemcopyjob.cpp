@@ -27,9 +27,9 @@ using namespace Akonadi;
 
 class Akonadi::ItemCopyJobPrivate : public JobPrivate
 {
-  public:
-    ItemCopyJobPrivate( ItemCopyJob *parent )
-      : JobPrivate( parent )
+public:
+    ItemCopyJobPrivate(ItemCopyJob *parent)
+        : JobPrivate(parent)
     {
     }
 
@@ -37,22 +37,22 @@ class Akonadi::ItemCopyJobPrivate : public JobPrivate
     Collection mTarget;
 };
 
-ItemCopyJob::ItemCopyJob(const Item & item, const Collection & target, QObject * parent)
-  : Job( new ItemCopyJobPrivate( this ), parent )
+ItemCopyJob::ItemCopyJob(const Item &item, const Collection &target, QObject *parent)
+    : Job(new ItemCopyJobPrivate(this), parent)
 {
-  Q_D( ItemCopyJob );
+    Q_D(ItemCopyJob);
 
-  d->mItems << item;
-  d->mTarget = target;
+    d->mItems << item;
+    d->mTarget = target;
 }
 
-ItemCopyJob::ItemCopyJob(const Item::List & items, const Collection & target, QObject * parent)
-  : Job( new ItemCopyJobPrivate( this ), parent )
+ItemCopyJob::ItemCopyJob(const Item::List &items, const Collection &target, QObject *parent)
+    : Job(new ItemCopyJobPrivate(this), parent)
 {
-  Q_D( ItemCopyJob );
+    Q_D(ItemCopyJob);
 
-  d->mItems = items;
-  d->mTarget = target;
+    d->mItems = items;
+    d->mTarget = target;
 }
 
 ItemCopyJob::~ItemCopyJob()
@@ -61,19 +61,19 @@ ItemCopyJob::~ItemCopyJob()
 
 void ItemCopyJob::doStart()
 {
-  Q_D( ItemCopyJob );
+    Q_D(ItemCopyJob);
 
-  QVector<Item::Id> ids;
-  foreach ( const Item &item, d->mItems )
-    ids << item.id();
-  ImapSet set;
-  set.add( ids );
-  QByteArray cmd( d->newTag() );
-  cmd += " COPY ";
-  cmd += set.toImapSequenceSet();
-  cmd += ' ';
-  cmd += QByteArray::number( d->mTarget.id() );
-  cmd += '\n';
-  d->writeData( cmd );
+    QVector<Item::Id> ids;
+    foreach (const Item &item, d->mItems) {
+        ids << item.id();
+    }
+    ImapSet set;
+    set.add(ids);
+    QByteArray cmd(d->newTag());
+    cmd += " COPY ";
+    cmd += set.toImapSequenceSet();
+    cmd += ' ';
+    cmd += QByteArray::number(d->mTarget.id());
+    cmd += '\n';
+    d->writeData(cmd);
 }
-

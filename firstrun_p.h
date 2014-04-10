@@ -66,26 +66,26 @@ namespace Akonadi {
 */
 class Firstrun : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit Firstrun( QObject * parent = 0 );
+    Q_OBJECT
+public:
+    explicit Firstrun(QObject *parent = 0);
     ~Firstrun();
 
-  private:
+private:
     void findPendingDefaults();
     void setupNext();
 #ifndef KDEPIM_NO_KRESOURCES
-    void migrateKresType( const QString &resourceFamily );
+    void migrateKresType(const QString &resourceFamily);
 #endif
-    static QVariant::Type argumentType( const QMetaObject *mo, const QString &method );
+    static QVariant::Type argumentType(const QMetaObject *mo, const QString &method);
 
-  private Q_SLOTS:
-    void instanceCreated( KJob* job );
+private Q_SLOTS:
+    void instanceCreated(KJob *job);
 #ifndef KDEPIM_NO_KRESOURCES
-    void migrationFinished( int exitCode );
+    void migrationFinished(int exitCode);
 #endif
 
-  private:
+private:
     QStringList mPendingDefaults;
     KConfig *mConfig;
     KConfig *mCurrentDefault;
@@ -99,4 +99,3 @@ class Firstrun : public QObject
 }
 
 #endif
-

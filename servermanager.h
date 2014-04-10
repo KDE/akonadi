@@ -41,19 +41,19 @@ class ServerManagerPrivate;
  */
 class AKONADI_EXPORT ServerManager : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Enum for the various states the server can be in.
      * @since 4.5
      */
     enum State {
-      NotRunning, ///< Server is not running, could be no one started it yet or it failed to start.
-      Starting, ///< Server was started but is not yet running.
-      Running, ///< Server is running and operational.
-      Stopping, ///< Server is shutting down.
-      Broken, ///< Server is not operational and an error has been detected.
-      Upgrading ///< Server is performing a database upgrade as part of a new startup.
+        NotRunning, ///< Server is not running, could be no one started it yet or it failed to start.
+        Starting, ///< Server was started but is not yet running.
+        Running, ///< Server is running and operational.
+        Stopping, ///< Server is shutting down.
+        Broken, ///< Server is not operational and an error has been detected.
+        Upgrading ///< Server is performing a database upgrade as part of a new startup.
     };
 
     /**
@@ -79,7 +79,7 @@ class AKONADI_EXPORT ServerManager : public QObject
      * and reports these to the user if.
      * @param parent the parent widget for the dialog
      */
-    static void showSelfTestDialog( QWidget *parent );
+    static void showSelfTestDialog(QWidget *parent);
 
     /**
      * Checks if the server is available currently. For more detailed status information
@@ -113,10 +113,10 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @since 4.10
      */
     enum ServiceType {
-      Server,
-      Control,
-      ControlLock,
-      UpgradeIndicator
+        Server,
+        Control,
+        ControlLock,
+        UpgradeIndicator
     };
 
     /**
@@ -126,16 +126,16 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @param serviceType the service type for which to return the D-Bus name
      * @since 4.10
      */
-    static QString serviceName( ServiceType serviceType );
+    static QString serviceName(ServiceType serviceType);
 
     /**
      * Known agent types.
      * @since 4.10
      */
     enum ServiceAgentType {
-      Agent,
-      Resource,
-      Preprocessor
+        Agent,
+        Resource,
+        Preprocessor
     };
 
     /**
@@ -145,7 +145,7 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @param identifier the agent identifier to include in the D-Bus name
      * @since 4.10
      */
-    static QString agentServiceName( ServiceAgentType agentType, const QString &identifier );
+    static QString agentServiceName(ServiceAgentType agentType, const QString &identifier);
 
     /**
      * Adds the multi-instance namespace to @p string if required (with '_' as separator).
@@ -153,15 +153,15 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @param string the string to adapt
      * @since 4.10
      */
-    static QString addNamespace( const QString &string );
+    static QString addNamespace(const QString &string);
 
     /**
      * Returns the singleton instance of this class, for connecting to its
      * signals
      */
-    static ServerManager* self();
+    static ServerManager *self();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Emitted whenever the server becomes fully operational.
      */
@@ -177,21 +177,21 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @param state the new server state
      * @since 4.5
      */
-    void stateChanged( Akonadi::ServerManager::State state );
+    void stateChanged(Akonadi::ServerManager::State state);
 
-  private:
+private:
     //@cond PRIVATE
     friend class ServerManagerPrivate;
-    ServerManager( ServerManagerPrivate *dd );
-    ServerManagerPrivate* const d;
-    Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
-    Q_PRIVATE_SLOT( d, void checkStatusChanged() )
-    Q_PRIVATE_SLOT( d, void timeout() )
+    ServerManager(ServerManagerPrivate *dd);
+    ServerManagerPrivate *const d;
+    Q_PRIVATE_SLOT(d, void serviceOwnerChanged(const QString &, const QString &, const QString &))
+    Q_PRIVATE_SLOT(d, void checkStatusChanged())
+    Q_PRIVATE_SLOT(d, void timeout())
     //@endcond
 };
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::ServerManager::State )
+Q_DECLARE_METATYPE(Akonadi::ServerManager::State)
 
 #endif

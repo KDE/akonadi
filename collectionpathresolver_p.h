@@ -41,16 +41,16 @@ class CollectionPathResolverPrivate;
  */
 class AKONADI_EXPORT CollectionPathResolver : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection path resolver to convert a path into a id.
      *
      * @param path The collection path.
      * @param parent The parent object.
      */
-    explicit CollectionPathResolver( const QString &path, QObject *parent = 0 );
+    explicit CollectionPathResolver(const QString &path, QObject *parent = 0);
 
     /**
      * Creates a new collection path resolver to determine the path of
@@ -59,7 +59,7 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
      * @param collection The collection.
      * @param parent The parent object.
      */
-    explicit CollectionPathResolver( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionPathResolver(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the collection path resolver.
@@ -81,14 +81,14 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
      */
     static QString pathDelimiter();
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionPathResolver )
+private:
+    Q_DECLARE_PRIVATE(CollectionPathResolver)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void jobResult( KJob* ) )
+    Q_PRIVATE_SLOT(d_func(), void jobResult(KJob *))
     //@endcond
 };
 

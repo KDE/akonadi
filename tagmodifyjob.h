@@ -51,7 +51,7 @@ public:
 
 protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
 private:
     Q_DECLARE_PRIVATE(TagModifyJob)

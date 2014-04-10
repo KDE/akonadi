@@ -28,7 +28,7 @@ using namespace Akonadi;
 
 class EntityDeletedAttribute::EntityDeletedAttributePrivate
 {
-  public:
+public:
     EntityDeletedAttributePrivate() {};
 
     Collection restoreCollection;
@@ -36,95 +36,95 @@ class EntityDeletedAttribute::EntityDeletedAttributePrivate
 };
 
 EntityDeletedAttribute::EntityDeletedAttribute()
-    :   d_ptr( new EntityDeletedAttributePrivate() )
+    : d_ptr(new EntityDeletedAttributePrivate())
 {
 
 }
 
 EntityDeletedAttribute::~EntityDeletedAttribute()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
-void EntityDeletedAttribute::setRestoreCollection( const Akonadi::Collection &collection )
+void EntityDeletedAttribute::setRestoreCollection(const Akonadi::Collection &collection)
 {
-  Q_D( EntityDeletedAttribute );
-  if ( !collection.isValid() ) {
-    kWarning() << "invalid collection" << collection;
-  }
-  Q_ASSERT( collection.isValid() );
-  d->restoreCollection = collection;
-  if ( collection.resource().isEmpty() ) {
-    kWarning() << "no resource set";
-  }
-  d->restoreResource = collection.resource();
+    Q_D(EntityDeletedAttribute);
+    if (!collection.isValid()) {
+        kWarning() << "invalid collection" << collection;
+    }
+    Q_ASSERT(collection.isValid());
+    d->restoreCollection = collection;
+    if (collection.resource().isEmpty()) {
+        kWarning() << "no resource set";
+    }
+    d->restoreResource = collection.resource();
 }
 
 Collection EntityDeletedAttribute::restoreCollection() const
 {
-  Q_D( const EntityDeletedAttribute );
-  return d->restoreCollection;
+    Q_D(const EntityDeletedAttribute);
+    return d->restoreCollection;
 }
 
 QString EntityDeletedAttribute::restoreResource() const
 {
-  Q_D( const EntityDeletedAttribute );
-  return d->restoreResource;
+    Q_D(const EntityDeletedAttribute);
+    return d->restoreResource;
 }
 
 QByteArray Akonadi::EntityDeletedAttribute::type() const
 {
-  return "DELETED";
+    return "DELETED";
 }
 
-EntityDeletedAttribute * EntityDeletedAttribute::clone() const
+EntityDeletedAttribute *EntityDeletedAttribute::clone() const
 {
-  const Q_D( EntityDeletedAttribute );
-  EntityDeletedAttribute *attr = new EntityDeletedAttribute();
-  attr->d_ptr->restoreCollection = d->restoreCollection;
-  attr->d_ptr->restoreResource = d->restoreResource;
-  return attr;
+    const Q_D(EntityDeletedAttribute);
+    EntityDeletedAttribute *attr = new EntityDeletedAttribute();
+    attr->d_ptr->restoreCollection = d->restoreCollection;
+    attr->d_ptr->restoreResource = d->restoreResource;
+    return attr;
 }
 
 QByteArray EntityDeletedAttribute::serialized() const
 {
-  const Q_D( EntityDeletedAttribute );
+    const Q_D(EntityDeletedAttribute);
 
-  QList<QByteArray> l;
-  l << ImapParser::quote( d->restoreResource.toUtf8() );
-  QList<QByteArray> components;
-  components << QByteArray::number( d->restoreCollection.id() );
+    QList<QByteArray> l;
+    l << ImapParser::quote(d->restoreResource.toUtf8());
+    QList<QByteArray> components;
+    components << QByteArray::number(d->restoreCollection.id());
 
-  l << '(' + ImapParser::join( components, " " ) + ')';
-  return '(' + ImapParser::join( l, " " ) + ')';
+    l << '(' + ImapParser::join(components, " ") + ')';
+    return '(' + ImapParser::join(l, " ") + ')';
 }
 
-void EntityDeletedAttribute::deserialize( const QByteArray &data )
+void EntityDeletedAttribute::deserialize(const QByteArray &data)
 {
-  Q_D( EntityDeletedAttribute );
+    Q_D(EntityDeletedAttribute);
 
-  QList<QByteArray> l;
-  ImapParser::parseParenthesizedList( data, l );
-  if ( l.size() != 2 ) {
-    kWarning() << "invalid size";
-    return;
-  }
-  d->restoreResource = QString::fromUtf8( l[0] );
-
-  if ( !l[1].isEmpty() ) {
-    QList<QByteArray> componentData;
-    ImapParser::parseParenthesizedList( l[1], componentData );
-    if ( componentData.size() != 1 ) {
-      return;
-    }
-    QList<int> components;
-    bool ok;
-    for ( int i = 0; i < 1; ++i ) {
-      components << componentData.at( i ).toInt( &ok );
-      if ( !ok ) {
+    QList<QByteArray> l;
+    ImapParser::parseParenthesizedList(data, l);
+    if (l.size() != 2) {
+        kWarning() << "invalid size";
         return;
-      }
     }
-    d->restoreCollection = Collection( components.at( 0 ) );
-  }
+    d->restoreResource = QString::fromUtf8(l[0]);
+
+    if (!l[1].isEmpty()) {
+        QList<QByteArray> componentData;
+        ImapParser::parseParenthesizedList(l[1], componentData);
+        if (componentData.size() != 1) {
+            return;
+        }
+        QList<int> components;
+        bool ok;
+        for (int i = 0; i < 1; ++i) {
+            components << componentData.at(i).toInt(&ok);
+            if (!ok) {
+                return;
+            }
+        }
+        d->restoreCollection = Collection(components.at(0));
+    }
 }

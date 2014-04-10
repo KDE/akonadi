@@ -118,7 +118,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT ItemSerializerPlugin
 {
-  public:
+public:
     /**
      * Destroys the item serializer plugin.
      */
@@ -143,7 +143,7 @@ class AKONADI_EXPORT ItemSerializerPlugin
      * @return @c false if the specified part is not supported by this plugin, @c true if the part
      *            could be de-serialized successfully.
      */
-    virtual bool deserialize( Item& item, const QByteArray& label, QIODevice& data, int version ) = 0;
+    virtual bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) = 0;
 
     /**
      * Convert the payload object provided in @p item into its serialzed form into @p data.
@@ -162,7 +162,7 @@ class AKONADI_EXPORT ItemSerializerPlugin
      * @param version The version of the data format. Can be set by the user to handle different
      *                versions.
      */
-    virtual void serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version ) = 0;
+    virtual void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) = 0;
 
     /**
      * Returns a list of available parts for the given item payload.
@@ -170,7 +170,7 @@ class AKONADI_EXPORT ItemSerializerPlugin
      *
      * @param item The item.
      */
-    virtual QSet<QByteArray> parts( const Item &item ) const;
+    virtual QSet<QByteArray> parts(const Item &item) const;
 
     /**
     * Override the plugin-lookup with @p plugin.
@@ -181,7 +181,7 @@ class AKONADI_EXPORT ItemSerializerPlugin
     *
     * @since 4.12
     */
-    static void overridePluginLookup( QObject *plugin );
+    static void overridePluginLookup(QObject *plugin);
 
 };
 
@@ -192,7 +192,7 @@ class AKONADI_EXPORT ItemSerializerPlugin
  */
 class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
 {
-  public:
+public:
     /**
      * Destroys the item serializer plugin.
      */
@@ -207,7 +207,7 @@ class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
      * @param other the paylod parts to merge into @p item
      * @since 4.4
      */
-    virtual void apply( Item &item, const Item &other );
+    virtual void apply(Item &item, const Item &other);
 
     /**
      * Returns the parts available in the item @p item.
@@ -219,12 +219,12 @@ class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
      * @param item the item for which to list payload parts
      * @since 4.4
      */
-    virtual QSet<QByteArray> availableParts( const Item &item ) const;
+    virtual QSet<QByteArray> availableParts(const Item &item) const;
 };
 
 }
 
-Q_DECLARE_INTERFACE( Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0" )
-Q_DECLARE_INTERFACE( Akonadi::ItemSerializerPluginV2, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.1" )
+Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0")
+Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPluginV2, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.1")
 
 #endif

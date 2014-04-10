@@ -34,198 +34,206 @@
 
 #include <string>
 
-Q_DECLARE_METATYPE( std::string )
+Q_DECLARE_METATYPE(std::string)
 
 namespace Akonadi {
 
 DefaultItemSerializerPlugin::DefaultItemSerializerPlugin()
 {
-  Item::addToLegacyMapping<QByteArray>( QLatin1String( "application/octet-stream" ) );
+    Item::addToLegacyMapping<QByteArray>(QLatin1String("application/octet-stream"));
 }
 
-bool DefaultItemSerializerPlugin::deserialize( Item& item, const QByteArray& label, QIODevice& data, int )
+bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int)
 {
-  if ( label != Item::FullPayload )
-    return false;
+    if (label != Item::FullPayload) {
+        return false;
+    }
 
-  item.setPayload( data.readAll() );
-  return true;
+    item.setPayload(data.readAll());
+    return true;
 }
 
-void DefaultItemSerializerPlugin::serialize( const Item& item, const QByteArray& label, QIODevice& data, int& )
+void DefaultItemSerializerPlugin::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &)
 {
-  Q_ASSERT( label == Item::FullPayload );
-  Q_UNUSED( label );
-  data.write( item.payload<QByteArray>() );
+    Q_ASSERT(label == Item::FullPayload);
+    Q_UNUSED(label);
+    data.write(item.payload<QByteArray>());
 }
 
-bool StdStringItemSerializerPlugin::deserialize( Item& item, const QByteArray& label, QIODevice& data, int )
+bool StdStringItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int)
 {
-  if ( label != Item::FullPayload )
-    return false;
-  std::string str;
-  {
-    const QByteArray ba = data.readAll();
-    str.assign( ba.data(), ba.size() );
-  }
-  item.setPayload( str );
-  return true;
+    if (label != Item::FullPayload) {
+        return false;
+    }
+    std::string str;
+    {
+        const QByteArray ba = data.readAll();
+        str.assign(ba.data(), ba.size());
+    }
+    item.setPayload(str);
+    return true;
 }
 
-void StdStringItemSerializerPlugin::serialize( const Item& item, const QByteArray& label, QIODevice& data, int& )
+void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &)
 {
-  Q_ASSERT( label == Item::FullPayload );
-  Q_UNUSED( label );
-  const std::string str = item.payload<std::string>();
-  data.write( QByteArray::fromRawData( str.data(), str.size() ) );
+    Q_ASSERT(label == Item::FullPayload);
+    Q_UNUSED(label);
+    const std::string str = item.payload<std::string>();
+    data.write(QByteArray::fromRawData(str.data(), str.size()));
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version, bool external )
+void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, bool external)
 {
-  if ( external ) {
-    QString path;
-    QString fileName = QString::fromUtf8( data );
-    QFileInfo fi( fileName );
-    if ( !fi.isAbsolute() ) {
-      QString fullRelPath = QLatin1String( "akonadi" );
-      if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
-        fullRelPath += QDir::separator() + QLatin1String( "instance" ) + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
-      }
-      fullRelPath += QDir::separator() + QLatin1String( "file_db_data" );
-      fileName = XdgBaseDirs::saveDir( "data", fullRelPath ) + QDir::separator() + fileName;
-    }
+    if (external) {
+        QString path;
+        QString fileName = QString::fromUtf8(data);
+        QFileInfo fi(fileName);
+        if (!fi.isAbsolute()) {
+            QString fullRelPath = QLatin1String("akonadi");
+            if (Akonadi::ServerManager::hasInstanceIdentifier()) {
+                fullRelPath += QDir::separator() + QLatin1String("instance") + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
+            }
+            fullRelPath += QDir::separator() + QLatin1String("file_db_data");
+            fileName = XdgBaseDirs::saveDir("data", fullRelPath) + QDir::separator() + fileName;
+        }
 
-    QFile file( fileName );
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      deserialize( item, label, file, version );
-      file.close();
+        QFile file(fileName);
+        if (file.open(QIODevice::ReadOnly)) {
+            deserialize(item, label, file, version);
+            file.close();
+        } else {
+            kWarning() << "Failed to open external payload:" << fileName << file.errorString();
+        }
     } else {
-      kWarning() << "Failed to open external payload:" << fileName << file.errorString();
+        QBuffer buffer;
+        buffer.setData(data);
+        buffer.open(QIODevice::ReadOnly);
+        buffer.seek(0);
+        deserialize(item, label, buffer, version);
+        buffer.close();
     }
-  } else {
+}
+
+/*static*/
+void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
+{
+    if (!TypePluginLoader::defaultPluginForMimeType(item.mimeType())->deserialize(item, label, data, version)) {
+        kWarning() << "Unable to deserialize payload part:" << label;
+        data.seek(0);
+        kWarning() << "Payload data was: " << data.readAll();
+    }
+}
+
+/*static*/
+void ItemSerializer::serialize(const Item &item, const QByteArray &label, QByteArray &data, int &version)
+{
     QBuffer buffer;
-    buffer.setData( data );
-    buffer.open( QIODevice::ReadOnly );
-    buffer.seek( 0 );
-    deserialize( item, label, buffer, version );
+    buffer.setBuffer(&data);
+    buffer.open(QIODevice::WriteOnly);
+    buffer.seek(0);
+    serialize(item, label, buffer, version);
     buffer.close();
-  }
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data, int version )
+void ItemSerializer::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version)
 {
-  if ( !TypePluginLoader::defaultPluginForMimeType( item.mimeType() )->deserialize( item, label, data, version ) ) {
-    kWarning() << "Unable to deserialize payload part:" << label;
-    data.seek( 0 );
-    kWarning() << "Payload data was: " << data.readAll();
-  }
+    if (!item.hasPayload()) {
+        return;
+    }
+    ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
+    plugin->serialize(item, label, data, version);
 }
 
-/*static*/
-void ItemSerializer::serialize( const Item& item, const QByteArray& label, QByteArray& data, int &version )
+void ItemSerializer::apply(Item &item, const Item &other)
 {
-  QBuffer buffer;
-  buffer.setBuffer( &data );
-  buffer.open( QIODevice::WriteOnly );
-  buffer.seek( 0 );
-  serialize( item, label, buffer, version );
-  buffer.close();
+    if (!other.hasPayload()) {
+        return;
+    }
+
+    ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
+
+    ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2 *>(plugin);
+    if (pluginV2) {
+        pluginV2->apply(item, other);
+        return;
+    }
+
+    // Old-school merge:
+    foreach (const QByteArray &part, other.loadedPayloadParts()) {
+        QByteArray partData;
+        QBuffer buffer;
+        buffer.setBuffer(&partData);
+        buffer.open(QIODevice::ReadWrite);
+        buffer.seek(0);
+        int version;
+        serialize(other, part, buffer, version);
+        buffer.seek(0);
+        deserialize(item, part, buffer, version);
+    }
 }
 
-/*static*/
-void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version )
+QSet<QByteArray> ItemSerializer::parts(const Item &item)
 {
-  if ( !item.hasPayload() )
-    return;
-  ItemSerializerPlugin * plugin = TypePluginLoader::pluginForMimeTypeAndClass( item.mimeType(), item.availablePayloadMetaTypeIds() );
-  plugin->serialize( item, label, data, version );
+    if (!item.hasPayload()) {
+        return QSet<QByteArray>();
+    }
+    return TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds())->parts(item);
 }
 
-void ItemSerializer::apply( Item &item, const Item &other )
+QSet<QByteArray> ItemSerializer::availableParts(const Item &item)
 {
-  if ( !other.hasPayload() )
-    return;
+    if (!item.hasPayload()) {
+        return QSet<QByteArray>();
+    }
+    ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
+    ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2 *>(plugin);
 
-  ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass( item.mimeType(), item.availablePayloadMetaTypeIds() );
+    if (pluginV2) {
+        return pluginV2->availableParts(item);
+    }
 
-  ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
-  if ( pluginV2 ) {
-    pluginV2->apply( item, other );
-    return;
-  }
+    if (item.hasPayload()) {
+        return QSet<QByteArray>();
+    }
 
-  // Old-school merge:
-  foreach ( const QByteArray &part, other.loadedPayloadParts() ) {
-    QByteArray partData;
-    QBuffer buffer;
-    buffer.setBuffer( &partData );
-    buffer.open( QIODevice::ReadWrite );
-    buffer.seek( 0 );
-    int version;
-    serialize( other, part, buffer, version );
-    buffer.seek( 0 );
-    deserialize( item, part, buffer, version );
-  }
+    return QSet<QByteArray>() << Item::FullPayload;
 }
 
-QSet<QByteArray> ItemSerializer::parts( const Item & item )
-{
-  if ( !item.hasPayload() )
-    return QSet<QByteArray>();
-  return TypePluginLoader::pluginForMimeTypeAndClass( item.mimeType(), item.availablePayloadMetaTypeIds() )->parts( item );
-}
-
-QSet<QByteArray> ItemSerializer::availableParts( const Item & item )
-{
-  if ( !item.hasPayload() )
-    return QSet<QByteArray>();
-  ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass( item.mimeType(), item.availablePayloadMetaTypeIds() );
-  ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
-
-  if ( pluginV2 )
-    return pluginV2->availableParts( item );
-
-  if (item.hasPayload())
-    return QSet<QByteArray>();
-
-  return QSet<QByteArray>() << Item::FullPayload;
-}
-
-Item ItemSerializer::convert( const Item & item, int mtid )
+Item ItemSerializer::convert(const Item &item, int mtid)
 {
 //   kDebug() << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
-  if ( !item.hasPayload() ) {
-    kDebug() << "  -> but item has no payload!";
-    return Item();
-  }
-
-  if ( ItemSerializerPlugin * const plugin = TypePluginLoader::pluginForMimeTypeAndClass( item.mimeType(), QVector<int>( 1, mtid ), TypePluginLoader::NoDefault ) ) {
-    kDebug() << "  -> found a plugin that feels responsible, trying serialising the payload";
-    QBuffer buffer;
-    buffer.open( QIODevice::ReadWrite );
-    int version;
-    serialize( item, Item::FullPayload, buffer, version );
-    buffer.seek( 0 );
-    kDebug() << "    -> serialized payload into" << buffer.size() << "bytes" << endl
-             << "  -> going to deserialize";
-    Item newItem;
-    if ( plugin->deserialize( newItem, Item::FullPayload, buffer, version ) ) {
-      kDebug() << "    -> conversion successful";
-      return newItem;
-    } else {
-      kDebug() << "    -> conversion FAILED";
+    if (!item.hasPayload()) {
+        kDebug() << "  -> but item has no payload!";
+        return Item();
     }
-  } else {
+
+    if (ItemSerializerPlugin *const plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), QVector<int>(1, mtid), TypePluginLoader::NoDefault)) {
+        kDebug() << "  -> found a plugin that feels responsible, trying serialising the payload";
+        QBuffer buffer;
+        buffer.open(QIODevice::ReadWrite);
+        int version;
+        serialize(item, Item::FullPayload, buffer, version);
+        buffer.seek(0);
+        kDebug() << "    -> serialized payload into" << buffer.size() << "bytes" << endl
+                 << "  -> going to deserialize";
+        Item newItem;
+        if (plugin->deserialize(newItem, Item::FullPayload, buffer, version)) {
+            kDebug() << "    -> conversion successful";
+            return newItem;
+        } else {
+            kDebug() << "    -> conversion FAILED";
+        }
+    } else {
 //     kDebug() << "  -> found NO plugin that feels responsible";
-  }
-  return Item();
+    }
+    return Item();
 }
 
-void ItemSerializer::overridePluginLookup( QObject *p )
+void ItemSerializer::overridePluginLookup(QObject *p)
 {
-  TypePluginLoader::overridePluginLookup(p);
+    TypePluginLoader::overridePluginLookup(p);
 }
 
 }

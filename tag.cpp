@@ -22,11 +22,11 @@
 
 using namespace Akonadi;
 
-const char* Akonadi::Tag::PLAIN = "PLAIN";
+const char *Akonadi::Tag::PLAIN = "PLAIN";
 
 struct Akonadi::Tag::Private {
     Private()
-        :id(-1)
+        : id(-1)
     {}
 
     ~Private()
@@ -40,30 +40,30 @@ struct Akonadi::Tag::Private {
 };
 
 Tag::Tag()
-    :AttributeEntity(),
-    d(new Private)
+    : AttributeEntity()
+    , d(new Private)
 {
 
 }
 
 Tag::Tag(Tag::Id id)
-    :AttributeEntity(),
-    d(new Private)
+    : AttributeEntity()
+    , d(new Private)
 {
     d->id = id;
 }
 
-Tag::Tag(const QString& name)
-    :AttributeEntity(),
-    d(new Private)
+Tag::Tag(const QString &name)
+    : AttributeEntity()
+    , d(new Private)
 {
     d->gid = name.toUtf8();
     d->type = PLAIN;
 }
 
 Tag::Tag(const Tag &other)
-    :AttributeEntity(),
-    d(new Private)
+    : AttributeEntity()
+    , d(new Private)
 {
     operator=(other);
 }
@@ -72,7 +72,7 @@ Tag::~Tag()
 {
 }
 
-Tag& Tag::operator=(const Tag &other)
+Tag &Tag::operator=(const Tag &other)
 {
     d->id = other.d->id;
     d->gid = other.d->gid;
@@ -85,9 +85,9 @@ Tag& Tag::operator=(const Tag &other)
     return *this;
 }
 
-AttributeEntity& Tag::operator=(const AttributeEntity &other)
+AttributeEntity &Tag::operator=(const AttributeEntity &other)
 {
-  return operator=(*static_cast<const Tag*>(&other));
+    return operator=(*static_cast<const Tag *>(&other));
 }
 
 bool Tag::operator==(const Tag &other) const
@@ -98,7 +98,7 @@ bool Tag::operator==(const Tag &other) const
     return d->gid == other.d->gid;
 }
 
-Tag Tag::fromUrl(const KUrl& url)
+Tag Tag::fromUrl(const KUrl &url)
 {
     if (url.protocol() != QLatin1String("akonadi")) {
         return Tag();
@@ -117,8 +117,8 @@ Tag Tag::fromUrl(const KUrl& url)
 KUrl Tag::url() const
 {
     KUrl url;
-    url.setProtocol( QString::fromLatin1( "akonadi" ) );
-    url.addQueryItem( QLatin1String( "tag" ), QString::number( id() ) );
+    url.setProtocol(QString::fromLatin1("akonadi"));
+    url.addQueryItem(QLatin1String("tag"), QString::number(id()));
     return url;
 }
 
@@ -155,14 +155,14 @@ QByteArray Tag::remoteId() const
 void Tag::setName(const QString &name)
 {
     if (!name.isEmpty()) {
-        TagAttribute* const attr = attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+        TagAttribute *const attr = attribute<TagAttribute>(AttributeEntity::AddIfMissing);
         attr->setDisplayName(name);
     }
 }
 
 QString Tag::name() const
 {
-    const TagAttribute* const attr = attribute<TagAttribute>();
+    const TagAttribute *const attr = attribute<TagAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
     return !displayName.isEmpty() ? displayName : QString::fromLatin1(d->gid);
 }
@@ -202,13 +202,13 @@ bool Tag::isImmutable() const
     return (d->type.isEmpty() || d->type == PLAIN);
 }
 
-uint qHash( const Tag &tag )
+uint qHash(const Tag &tag)
 {
-  return qHash( tag.id() );
+    return qHash(tag.id());
 }
 
-QDebug& operator<<(QDebug& debug, const Tag& tag)
+QDebug &operator<<(QDebug &debug, const Tag &tag)
 {
-  debug << "Akonadi::Tag( ID " << tag.id() << ", GID " << tag.gid() << ", parent" << tag.parent().id() << ")";
-  return debug;
+    debug << "Akonadi::Tag( ID " << tag.id() << ", GID " << tag.gid() << ", parent" << tag.parent().id() << ")";
+    return debug;
 }

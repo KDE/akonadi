@@ -42,9 +42,9 @@ class AgentFactoryBasePrivate;
  */
 class AKONADI_EXPORT AgentFactoryBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new agent factory.
      * Executed in the main thread, performs KDE infrastructure setup.
@@ -52,21 +52,21 @@ class AKONADI_EXPORT AgentFactoryBase : public QObject
      * @param catalogName The translation catalog of this resource.
      * @param parent The parent object.
      */
-    explicit AgentFactoryBase( const char *catalogName, QObject *parent = 0 );
+    explicit AgentFactoryBase(const char *catalogName, QObject *parent = 0);
 
     virtual ~AgentFactoryBase();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Creates a new agent instace with the given identifier.
      */
-    virtual QObject* createInstance( const QString &identifier ) const = 0;
+    virtual QObject *createInstance(const QString &identifier) const = 0;
 
-  protected:
-    void createComponentData( const QString &identifier ) const;
+protected:
+    void createComponentData(const QString &identifier) const;
 
-  private:
-    AgentFactoryBasePrivate* const d;
+private:
+    AgentFactoryBasePrivate *const d;
 };
 
 /**
@@ -79,26 +79,26 @@ class AKONADI_EXPORT AgentFactoryBase : public QObject
 template <typename T>
 class AgentFactory : public AgentFactoryBase
 {
-  public:
+public:
     /** reimplemented */
-    explicit AgentFactory( const char *catalogName, QObject *parent = 0 )
-      : AgentFactoryBase( catalogName, parent )
+    explicit AgentFactory(const char *catalogName, QObject *parent = 0)
+        : AgentFactoryBase(catalogName, parent)
     {
     }
 
-    QObject* createInstance( const QString &identifier ) const
+    QObject *createInstance(const QString &identifier) const
     {
-      createComponentData( identifier );
-      T* instance = new T( identifier );
+        createComponentData(identifier);
+        T *instance = new T(identifier);
 
-      // check if T also inherits AgentBase::Observer and
-      // if it does, automatically register it on itself
-      Akonadi::AgentBase::Observer *observer = dynamic_cast<Akonadi::AgentBase::Observer*>( instance );
-      if ( observer != 0 ) {
-        instance->registerObserver( observer );
-      }
+        // check if T also inherits AgentBase::Observer and
+        // if it does, automatically register it on itself
+        Akonadi::AgentBase::Observer *observer = dynamic_cast<Akonadi::AgentBase::Observer *>(instance);
+        if (observer != 0) {
+            instance->registerObserver(observer);
+        }
 
-      return instance;
+        return instance;
     }
 };
 

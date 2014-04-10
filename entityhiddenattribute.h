@@ -59,7 +59,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
 {
-  public:
+public:
     /**
      * Creates a new entity hidden attribute.
      */
@@ -78,7 +78,7 @@ class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
     /**
      * Reimplemented from Attribute
      */
-    EntityHiddenAttribute* clone() const;
+    EntityHiddenAttribute *clone() const;
 
     /**
      * Reimplemented from Attribute
@@ -88,12 +88,12 @@ class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
     /**
      * Reimplemented from Attribute
      */
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

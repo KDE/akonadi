@@ -30,13 +30,13 @@ namespace Akonadi {
  */
 class JobPrivate
 {
-  public:
-    explicit JobPrivate( Job *parent )
-      : q_ptr( parent ),
-        mCurrentSubJob( 0 ),
-        mSession( 0 ),
-        mWriteFinished( false ),
-        mStarted( false )
+public:
+    explicit JobPrivate(Job *parent)
+        : q_ptr(parent)
+        , mCurrentSubJob(0)
+        , mSession(0)
+        , mWriteFinished(false)
+        , mStarted(false)
     {
     }
 
@@ -44,12 +44,12 @@ class JobPrivate
     {
     }
 
-    void init( QObject *parent );
+    void init(QObject *parent);
 
-    void handleResponse( const QByteArray &tag, const QByteArray &data );
+    void handleResponse(const QByteArray &tag, const QByteArray &data);
     void startQueued();
     void lostConnection();
-    void slotSubJobAboutToStart( Akonadi::Job* );
+    void slotSubJobAboutToStart(Akonadi::Job *);
     void startNext();
     void signalCreationToJobTracker();
     void signalStartedToJobTracker();
@@ -57,7 +57,9 @@ class JobPrivate
     /*
       Returns a string to display in akonadi console's job tracker. E.g. item ID.
      */
-    virtual QString jobDebuggingString() const { return QString(); }
+    virtual QString jobDebuggingString() const {
+        return QString();
+    }
     /**
       Returns a new unique command tag for communication with the backend.
     */
@@ -71,7 +73,7 @@ class JobPrivate
     /**
       Sends raw data to the backend.
     */
-    void writeData( const QByteArray &data );
+    void writeData(const QByteArray &data);
 
     /**
      * Notify following jobs about item revision changes.
@@ -80,18 +82,18 @@ class JobPrivate
      * @param oldRevision the old item revision
      * @param newRevision the new item revision
      */
-    void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
+    void itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision);
 
     /**
      * Propagate item revision changes to this job and its sub-jobs.
      */
-    void updateItemRevision( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
+    void updateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision);
 
     /**
      * Overwrite this if your job does operations with conflict detection and update
      * the item revisions if your items are affected. The default implementation does nothing.
      */
-    virtual void doUpdateItemRevision( Akonadi::Item::Id, int oldRevision, int newRevision );
+    virtual void doUpdateItemRevision(Akonadi::Item::Id, int oldRevision, int newRevision);
 
     /**
      * This method is called right before result() and finished() signals are emitted.
@@ -105,12 +107,12 @@ class JobPrivate
     int protocolVersion() const;
 
     Job *q_ptr;
-    Q_DECLARE_PUBLIC( Job )
+    Q_DECLARE_PUBLIC(Job)
 
     Job *mParentJob;
     Job *mCurrentSubJob;
     QByteArray mTag;
-    Session* mSession;
+    Session *mSession;
     bool mWriteFinished;
     bool mStarted;
 };

@@ -38,11 +38,11 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * Creates a new special collection attribute.
      */
-    explicit SpecialCollectionAttribute( const QByteArray &type = QByteArray() );
+    explicit SpecialCollectionAttribute(const QByteArray &type = QByteArray());
 
     /**
      * Destroys the special collection attribute.
@@ -52,7 +52,7 @@ class AKONADI_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
     /**
      * Sets the special collections @p type of the collection.
      */
-    void setCollectionType( const QByteArray &type );
+    void setCollectionType(const QByteArray &type);
 
     /**
      * Returns the special collections type of the collection.
@@ -60,12 +60,12 @@ class AKONADI_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
     QByteArray collectionType() const;
 
     /* reimpl */
-    virtual SpecialCollectionAttribute* clone() const;
+    virtual SpecialCollectionAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

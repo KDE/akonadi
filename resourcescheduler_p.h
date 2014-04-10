@@ -44,31 +44,36 @@ class RecursiveMover;
 */
 class ResourceScheduler : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     // If you change this enum, keep s_taskTypes in sync in resourcescheduler.cpp
     enum TaskType {
-      Invalid,
-      SyncAll,
-      SyncCollectionTree,
-      SyncCollection,
-      SyncCollectionAttributes,
-      FetchItem,
-      ChangeReplay,
-      RecursiveMoveReplay,
-      DeleteResourceCollection,
-      InvalideCacheForCollection,
-      SyncAllDone,
-      SyncCollectionTreeDone,
-      Custom
+        Invalid,
+        SyncAll,
+        SyncCollectionTree,
+        SyncCollection,
+        SyncCollectionAttributes,
+        FetchItem,
+        ChangeReplay,
+        RecursiveMoveReplay,
+        DeleteResourceCollection,
+        InvalideCacheForCollection,
+        SyncAllDone,
+        SyncCollectionTreeDone,
+        Custom
     };
 
     class Task {
-      static qint64 latestSerial;
+        static qint64 latestSerial;
 
-      public:
-        Task() : serial( ++latestSerial ), type( Invalid ), receiver( 0 ) {}
+    public:
+        Task()
+            : serial(++latestSerial)
+            , type(Invalid)
+            , receiver(0)
+        {
+        }
         qint64 serial;
         TaskType type;
         Collection collection;
@@ -79,21 +84,21 @@ class ResourceScheduler : public QObject
         QByteArray methodName;
         QVariant argument;
 
-        void sendDBusReplies( const QString &errorMsg );
+        void sendDBusReplies(const QString &errorMsg);
 
-        bool operator==( const Task &other ) const
+        bool operator==(const Task &other) const
         {
-          return type == other.type
-              && (collection == other.collection || (!collection.isValid() && !other.collection.isValid()))
-              && (item == other.item || (!item.isValid() && !other.item.isValid()))
-              && itemParts == other.itemParts
-              && receiver == other.receiver
-              && methodName == other.methodName
-              && argument == other.argument;
+            return type == other.type
+                   && (collection == other.collection || (!collection.isValid() && !other.collection.isValid()))
+                   && (item == other.item || (!item.isValid() && !other.item.isValid()))
+                   && itemParts == other.itemParts
+                   && receiver == other.receiver
+                   && methodName == other.methodName
+                   && argument == other.argument;
         }
     };
 
-    explicit ResourceScheduler( QObject *parent = 0 );
+    explicit ResourceScheduler(QObject *parent = 0);
 
     /**
       Schedules a full synchronization.
@@ -109,13 +114,13 @@ class ResourceScheduler : public QObject
       Schedules the synchronization of a single collection.
       @param col The collection to synchronize.
     */
-    void scheduleSync( const Collection &col );
+    void scheduleSync(const Collection &col);
 
     /**
       Schedules synchronizing the attributes of a single collection.
       @param collection The collection to synchronize attributes from.
     */
-    void scheduleAttributesSync( const Collection &collection );
+    void scheduleAttributesSync(const Collection &collection);
 
     /**
       Schedules fetching of a single PIM item.
@@ -123,7 +128,7 @@ class ResourceScheduler : public QObject
       @param parts List of names of the parts of the item to fetch.
       @param msg The associated D-Bus message.
     */
-    void scheduleItemFetch( const Item &item, const QSet<QByteArray> &parts, const QDBusMessage &msg );
+    void scheduleItemFetch(const Item &item, const QSet<QByteArray> &parts, const QDBusMessage &msg);
 
     /**
       Schedules deletion of the resource collection.
@@ -135,7 +140,7 @@ class ResourceScheduler : public QObject
      * Schedule cache invalidation for @p collection.
      * @see ResourceBase::invalidateCache()
      */
-    void scheduleCacheInvalidation( const Collection &collection );
+    void scheduleCacheInvalidation(const Collection &collection);
 
     /**
       Insert synchronization completion marker into the task queue.
@@ -151,12 +156,12 @@ class ResourceScheduler : public QObject
       Insert a custom task.
       @param methodName The method name, without signature, do not use the SLOT() macro
     */
-    void scheduleCustomTask( QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append );
+    void scheduleCustomTask(QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append);
 
     /**
      * Schedule a recursive move replay.
      */
-    void scheduleMoveReplay( const Collection &movedCollection, RecursiveMover *mover );
+    void scheduleMoveReplay(const Collection &movedCollection, RecursiveMover *mover);
 
     /**
       Returns true if no tasks are running or in the queue.
@@ -171,7 +176,7 @@ class ResourceScheduler : public QObject
     /**
       Sets the online state.
     */
-    void setOnline( bool state );
+    void setOnline(bool state);
 
     /**
        Print debug output showing the state of the scheduler.
@@ -196,7 +201,7 @@ class ResourceScheduler : public QObject
     */
     void cancelQueues();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Schedules replaying changes.
     */
@@ -215,28 +220,28 @@ class ResourceScheduler : public QObject
     /**
       Remove tasks that affect @p collection.
     */
-    void collectionRemoved( const Akonadi::Collection &collection );
+    void collectionRemoved(const Akonadi::Collection &collection);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void executeFullSync();
-    void executeCollectionAttributesSync( const Akonadi::Collection &col );
-    void executeCollectionSync( const Akonadi::Collection &col );
+    void executeCollectionAttributesSync(const Akonadi::Collection &col);
+    void executeCollectionSync(const Akonadi::Collection &col);
     void executeCollectionTreeSync();
-    void executeItemFetch( const Akonadi::Item &item, const QSet<QByteArray> &parts );
+    void executeItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts);
     void executeResourceCollectionDeletion();
-    void executeCacheInvalidation( const Akonadi::Collection &collection );
+    void executeCacheInvalidation(const Akonadi::Collection &collection);
     void executeChangeReplay();
-    void executeRecursiveMoveReplay( RecursiveMover *mover );
+    void executeRecursiveMoveReplay(RecursiveMover *mover);
     void collectionTreeSyncComplete();
     void fullSyncComplete();
-    void status( int status, const QString &message = QString() );
+    void status(int status, const QString &message = QString());
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void scheduleNext();
     void executeNext();
 
-  private:
-    void signalTaskToTracker( const Task &task, const QByteArray &taskType, const QString &debugString = QString() );
+private:
+    void signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString = QString());
 
     // We have a number of task queues, by order of priority.
     // * ChangeReplay must be first:
@@ -248,27 +253,27 @@ class ResourceScheduler : public QObject
     // * then ItemFetch tasks, because they are made by blocking DBus calls
     // * then everything else.
     enum QueueType {
-      PrependTaskQueue,
-      ChangeReplayQueue, // one task at most
-      AfterChangeReplayQueue, // also one task at most, currently
-      ItemFetchQueue,
-      GenericTaskQueue,
-      NQueueCount
+        PrependTaskQueue,
+        ChangeReplayQueue, // one task at most
+        AfterChangeReplayQueue, // also one task at most, currently
+        ItemFetchQueue,
+        GenericTaskQueue,
+        NQueueCount
     };
     typedef QList<Task> TaskList;
 
-    static QueueType queueTypeForTaskType( TaskType type );
-    TaskList& queueForTaskType( TaskType type );
+    static QueueType queueTypeForTaskType(TaskType type);
+    TaskList &queueForTaskType(TaskType type);
 
-    TaskList mTaskList[ NQueueCount ];
+    TaskList mTaskList[NQueueCount];
 
     Task mCurrentTask;
     int mCurrentTasksQueue; // queue mCurrentTask came from
     bool mOnline;
 };
 
-QDebug operator<<( QDebug, const ResourceScheduler::Task& task );
-QTextStream& operator<<( QTextStream&, const ResourceScheduler::Task& task );
+QDebug operator<<(QDebug, const ResourceScheduler::Task &task);
+QTextStream &operator<<(QTextStream &, const ResourceScheduler::Task &task);
 
 //@endcond
 

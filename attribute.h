@@ -137,11 +137,11 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT Attribute
 {
-  public:
+public:
     /**
      * Describes a list of attributes.
      */
-    typedef QList<Attribute*> List;
+    typedef QList<Attribute *> List;
 
     /**
      * Returns the type of the attribute.
@@ -156,7 +156,7 @@ class AKONADI_EXPORT Attribute
     /**
      * Creates a copy of this attribute.
      */
-    virtual Attribute* clone() const = 0;
+    virtual Attribute *clone() const = 0;
 
     /**
      * Returns a QByteArray representation of the attribute which will be
@@ -170,7 +170,7 @@ class AKONADI_EXPORT Attribute
      *
      * @param data The encoded attribute data.
      */
-    virtual void deserialize( const QByteArray &data ) = 0;
+    virtual void deserialize(const QByteArray &data) = 0;
 };
 
 }

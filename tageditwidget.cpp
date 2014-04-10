@@ -79,15 +79,14 @@ public:
 };
 
 TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)
-    :   QObject(),
-        d(parent),
-        m_model(model),
-        m_tagsView(0),
-        m_newTagButton(0),
-        
-        m_newTagEdit(0),
-        m_deleteButton(0),
-        m_deleteButtonTimer(0)
+    : QObject()
+    , d(parent)
+    , m_model(model)
+    , m_tagsView(0)
+    , m_newTagButton(0)
+    , m_newTagEdit(0)
+    , m_deleteButton(0)
+    , m_deleteButtonTimer(0)
 {
 
 }
@@ -191,8 +190,8 @@ void TagEditWidget::Private::deleteTag()
 }
 
 TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)
-    :   QWidget(parent),
-        d(new Private(model, this))
+    : QWidget(parent)
+    , d(new Private(model, this))
 {
     QVBoxLayout *topLayout = new QVBoxLayout(this);
 
@@ -285,6 +284,5 @@ bool TagEditWidget::eventFilter(QObject *watched, QEvent *event)
     }
     return QWidget::eventFilter(watched, event);
 }
-
 
 #include "tageditwidget.moc"

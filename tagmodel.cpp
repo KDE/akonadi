@@ -27,154 +27,153 @@
 
 using namespace Akonadi;
 
-
-TagModel::TagModel(Monitor *recorder, QObject *parent):
-  QAbstractItemModel(parent),
-  d_ptr(new TagModelPrivate(this))
+TagModel::TagModel(Monitor *recorder, QObject *parent)
+    : QAbstractItemModel(parent)
+    , d_ptr(new TagModelPrivate(this))
 {
-  Q_D(TagModel);
-  d->init(recorder);
+    Q_D(TagModel);
+    d->init(recorder);
 }
 
-TagModel::TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent):
-  QAbstractItemModel(parent),
-  d_ptr(dd)
+TagModel::TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent)
+    : QAbstractItemModel(parent)
+    , d_ptr(dd)
 {
-  Q_D(TagModel);
-  d->init(recorder);
+    Q_D(TagModel);
+    d->init(recorder);
 }
 
 TagModel::~TagModel()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
-int TagModel::columnCount( const QModelIndex &parent ) const
+int TagModel::columnCount(const QModelIndex &parent) const
 {
-  if (parent.isValid() && parent.column() != 0) {
-    return 0;
-  }
+    if (parent.isValid() && parent.column() != 0) {
+        return 0;
+    }
 
-  return 1;
+    return 1;
 }
 
 int TagModel::rowCount(const QModelIndex &parent) const
 {
-  Q_D(const TagModel);
+    Q_D(const TagModel);
 
-  Tag::Id parentTagId = 0;
-  if (parent.isValid()) {
-    parentTagId = d->mChildTags[parent.internalId()].at(parent.row()).id();
-  }
+    Tag::Id parentTagId = 0;
+    if (parent.isValid()) {
+        parentTagId = d->mChildTags[parent.internalId()].at(parent.row()).id();
+    }
 
-  return d->mChildTags[parentTagId].count();
+    return d->mChildTags[parentTagId].count();
 }
 
 QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Vertical) {
-    return QVariant();
-  }
-
-  if (role == Qt::DisplayRole) {
-    switch (section) {
-      case 0:
-        return i18n("Tag");
+    if (orientation == Qt::Vertical) {
+        return QVariant();
     }
-  }
 
-  return QAbstractItemModel::headerData(section, orientation, role);
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+        case 0:
+            return i18n("Tag");
+        }
+    }
+
+    return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 QVariant TagModel::data(const QModelIndex &index, int role) const
 {
-  Q_D(const TagModel);
+    Q_D(const TagModel);
 
-  const Tag tag = d->tagForIndex(index);
-  if (!tag.isValid()) {
-    return QVariant();
-  }
+    const Tag tag = d->tagForIndex(index);
+    if (!tag.isValid()) {
+        return QVariant();
+    }
 
-  switch (role) {
+    switch (role) {
     case Qt::DisplayRole: // fall-through
     case NameRole:
-      return tag.name();
+        return tag.name();
     case IdRole:
-      return tag.id();
+        return tag.id();
     case GIDRole:
-      return tag.gid();
+        return tag.gid();
     case ParentRole:
-      return QVariant::fromValue(tag.parent());
+        return QVariant::fromValue(tag.parent());
     case TagRole:
-      return QVariant::fromValue(tag);
+        return QVariant::fromValue(tag);
     case Qt::DecorationRole: {
-      TagAttribute *attr = tag.attribute<TagAttribute>();
-      if (attr) {
-        return QIcon::fromTheme(attr->iconName());
-      } else {
-        return QVariant();
-      }
+        TagAttribute *attr = tag.attribute<TagAttribute>();
+        if (attr) {
+            return QIcon::fromTheme(attr->iconName());
+        } else {
+                return QVariant();
+            }
+        }
     }
-  }
 
-  return QVariant();
+    return QVariant();
 }
 
 QModelIndex TagModel::index(int row, int column, const QModelIndex &parent) const
 {
-  Q_D(const TagModel);
+    Q_D(const TagModel);
 
-  qint64 parentId = 0;
-  if (parent.isValid()) {
-    const Tag parentTag = d->tagForIndex(parent);
-    parentId = parentTag.id();
-  }
+    qint64 parentId = 0;
+    if (parent.isValid()) {
+        const Tag parentTag = d->tagForIndex(parent);
+        parentId = parentTag.id();
+    }
 
-  const Tag::List &children = d->mChildTags.value(parentId);
-  if (row >= children.count()) {
-    return QModelIndex();
-  }
+    const Tag::List &children = d->mChildTags.value(parentId);
+    if (row >= children.count()) {
+        return QModelIndex();
+    }
 
-  return createIndex(row, column, (int) parentId);
+    return createIndex(row, column, (int) parentId);
 }
 
 QModelIndex TagModel::parent(const QModelIndex &child) const
 {
-  Q_D(const TagModel);
+    Q_D(const TagModel);
 
-  if (!child.isValid()) {
-    return QModelIndex();
-  }
+    if (!child.isValid()) {
+        return QModelIndex();
+    }
 
-  const qint64 parentId = child.internalId();
-  return d->indexForTag(parentId);
+    const qint64 parentId = child.internalId();
+    return d->indexForTag(parentId);
 }
 
 Qt::ItemFlags TagModel::flags(const QModelIndex &index) const
 {
-  Q_UNUSED(index);
+    Q_UNUSED(index);
 
-  return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
 }
 
-bool TagModel::insertColumns(int, int, const QModelIndex&)
+bool TagModel::insertColumns(int, int, const QModelIndex &)
 {
-  return false;
+    return false;
 }
 
-bool TagModel::insertRows(int, int, const QModelIndex&)
+bool TagModel::insertRows(int, int, const QModelIndex &)
 {
-  return false;
+    return false;
 }
 
-bool TagModel::removeColumns(int, int, const QModelIndex&)
+bool TagModel::removeColumns(int, int, const QModelIndex &)
 {
-  return false;
+    return false;
 }
 
-bool TagModel::removeRows(int, int, const QModelIndex&)
+bool TagModel::removeRows(int, int, const QModelIndex &)
 {
-  return false;
+    return false;
 }
 
 #include "moc_tagmodel.cpp"

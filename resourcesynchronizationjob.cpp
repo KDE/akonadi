@@ -34,21 +34,22 @@ namespace Akonadi
 
 class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 {
-  public:
-    ResourceSynchronizationJobPrivate( ResourceSynchronizationJob* parent ) :
-      q( parent ),
-      interface( 0 ),
-      safetyTimer( 0 ),
-      timeoutCount( 0 ),
-      collectionTreeOnly( false )
-    {}
+public:
+    ResourceSynchronizationJobPrivate(ResourceSynchronizationJob *parent)
+        : q(parent)
+        , interface(0)
+        , safetyTimer(0)
+        , timeoutCount(0)
+        , collectionTreeOnly(false)
+    {
+    }
 
     void doStart();
 
     ResourceSynchronizationJob *q;
     AgentInstance instance;
-    QDBusInterface* interface;
-    QTimer* safetyTimer;
+    QDBusInterface *interface;
+    QTimer *safetyTimer;
     int timeoutCount;
     bool collectionTreeOnly;
     static int timeoutCountLimit;
@@ -59,106 +60,110 @@ class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 
 int ResourceSynchronizationJobPrivate::timeoutCountLimit = 60;
 
-ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance& instance, QObject* parent) :
-  KJob( parent ),
-  d( new ResourceSynchronizationJobPrivate( this ) )
+ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent)
+    : KJob(parent)
+    , d(new ResourceSynchronizationJobPrivate(this))
 {
-  d->instance = instance;
-  d->safetyTimer = new QTimer( this );
-  connect( d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
-  d->safetyTimer->setInterval( 10 * 1000 );
-  d->safetyTimer->setSingleShot( false );
+    d->instance = instance;
+    d->safetyTimer = new QTimer(this);
+    connect(d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()));
+    d->safetyTimer->setInterval(10 * 1000);
+    d->safetyTimer->setSingleShot(false);
 }
 
 ResourceSynchronizationJob::~ResourceSynchronizationJob()
 {
-  delete d;
+    delete d;
 }
 
 void ResourceSynchronizationJob::start()
 {
-  d->start();
+    d->start();
 }
 
 bool ResourceSynchronizationJob::collectionTreeOnly() const
 {
-  return d->collectionTreeOnly;
+    return d->collectionTreeOnly;
 }
 
-void ResourceSynchronizationJob::setCollectionTreeOnly( bool b )
+void ResourceSynchronizationJob::setCollectionTreeOnly(bool b)
 {
-  d->collectionTreeOnly = b;
+    d->collectionTreeOnly = b;
 }
 
 void ResourceSynchronizationJobPrivate::doStart()
 {
-  if ( !instance.isValid() ) {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Invalid resource instance." ) );
-    q->emitResult();
-    return;
-  }
+    if (!instance.isValid()) {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Invalid resource instance."));
+        q->emitResult();
+        return;
+    }
 
-  interface = new QDBusInterface( ServerManager::agentServiceName( ServerManager::Resource, instance.identifier() ),
-                                  QString::fromLatin1( "/" ),
-                                  QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ),
-                                  DBusConnectionPool::threadConnection(), this );
-  if ( collectionTreeOnly )
-    connect( interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()) );
-  else
-    connect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
+    interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
+                                   QString::fromLatin1("/"),
+                                   QString::fromLatin1("org.freedesktop.Akonadi.Resource"),
+                                   DBusConnectionPool::threadConnection(), this);
+    if (collectionTreeOnly) {
+        connect(interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()));
+    } else {
+        connect(interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()));
+    }
 
-  if ( interface->isValid() ) {
-    if ( collectionTreeOnly )
-      instance.synchronizeCollectionTree();
-    else
-      instance.synchronize();
+    if (interface->isValid()) {
+        if (collectionTreeOnly) {
+            instance.synchronizeCollectionTree();
+        } else {
+            instance.synchronize();
+        }
 
-    safetyTimer->start();
-  } else {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Unable to obtain D-Bus interface for resource '%1'", instance.identifier() ) );
-    q->emitResult();
-    return;
-  }
+        safetyTimer->start();
+    } else {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Unable to obtain D-Bus interface for resource '%1'", instance.identifier()));
+        q->emitResult();
+        return;
+    }
 }
 
 void ResourceSynchronizationJobPrivate::slotSynchronized()
 {
-  if ( collectionTreeOnly )
-    q->disconnect( interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()) );
-  else
-    q->disconnect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
-  safetyTimer->stop();
-  q->emitResult();
+    if (collectionTreeOnly) {
+        q->disconnect(interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()));
+    } else {
+        q->disconnect(interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()));
+    }
+    safetyTimer->stop();
+    q->emitResult();
 }
 
 void ResourceSynchronizationJobPrivate::slotTimeout()
 {
-  instance = AgentManager::self()->instance( instance.identifier() );
-  timeoutCount++;
+    instance = AgentManager::self()->instance(instance.identifier());
+    timeoutCount++;
 
-  if ( timeoutCount > timeoutCountLimit ) {
-    safetyTimer->stop();
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Resource synchronization timed out." ) );
-    q->emitResult();
-    return;
-  }
+    if (timeoutCount > timeoutCountLimit) {
+        safetyTimer->stop();
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Resource synchronization timed out."));
+        q->emitResult();
+        return;
+    }
 
-  if ( instance.status() == AgentInstance::Idle ) {
-    // try again, we might have lost the synchronized()/synchronizedCollectionTree() signal
-    kDebug() << "trying again to sync resource" << instance.identifier();
-    if ( collectionTreeOnly )
-      instance.synchronizeCollectionTree();
-    else
-      instance.synchronize();
-  }
+    if (instance.status() == AgentInstance::Idle) {
+        // try again, we might have lost the synchronized()/synchronizedCollectionTree() signal
+        kDebug() << "trying again to sync resource" << instance.identifier();
+        if (collectionTreeOnly) {
+            instance.synchronizeCollectionTree();
+        } else {
+            instance.synchronize();
+        }
+    }
 }
 
 AgentInstance ResourceSynchronizationJob::resource() const
 {
-  return d->instance;
+    return d->instance;
 }
 
 }

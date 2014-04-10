@@ -43,7 +43,7 @@ class CollectionCreateJobPrivate;
  * collection.setContentMimeTypes( QStringList( "text/calendar" ) );
  *
  * Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( createResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(createResult(KJob*)) );
  *
  * @endcode
  *
@@ -51,8 +51,8 @@ class CollectionCreateJobPrivate;
  */
 class AKONADI_EXPORT CollectionCreateJob : public Job
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new collection create job.
      *
@@ -62,7 +62,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
      * identified by its remote identifier as well.
      * @param parent The parent object.
      */
-    explicit CollectionCreateJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionCreateJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the collection create job.
@@ -74,12 +74,12 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
      */
     Collection collection() const;
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionCreateJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionCreateJob)
 };
 
 }

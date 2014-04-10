@@ -21,69 +21,85 @@
 
 using namespace Akonadi;
 
-static const char* s_accessRightsIdentifier = "AccessRights";
+static const char *s_accessRightsIdentifier = "AccessRights";
 
-static Collection::Rights dataToRights( const QByteArray &data )
+static Collection::Rights dataToRights(const QByteArray &data)
 {
-  Collection::Rights rights = Collection::ReadOnly;
+    Collection::Rights rights = Collection::ReadOnly;
 
-  if ( data.isEmpty() ) {
-    return Collection::ReadOnly;
-  }
-
-  if ( data.at( 0 ) == 'a' ) {
-    return Collection::AllRights;
-  }
-
-  for ( int i = 0; i < data.count(); ++i ) {
-    switch ( data.at( i ) ) {
-      case 'w': rights |= Collection::CanChangeItem; break;
-      case 'c': rights |= Collection::CanCreateItem; break;
-      case 'd': rights |= Collection::CanDeleteItem; break;
-      case 'l': rights |= Collection::CanLinkItem; break;
-      case 'u': rights |= Collection::CanUnlinkItem; break;
-      case 'W': rights |= Collection::CanChangeCollection; break;
-      case 'C': rights |= Collection::CanCreateCollection; break;
-      case 'D': rights |= Collection::CanDeleteCollection; break;
+    if (data.isEmpty()) {
+        return Collection::ReadOnly;
     }
-  }
 
-  return rights;
+    if (data.at(0) == 'a') {
+        return Collection::AllRights;
+    }
+
+    for (int i = 0; i < data.count(); ++i) {
+        switch (data.at(i)) {
+        case 'w':
+            rights |= Collection::CanChangeItem;
+            break;
+        case 'c':
+            rights |= Collection::CanCreateItem;
+            break;
+        case 'd':
+            rights |= Collection::CanDeleteItem;
+            break;
+        case 'l':
+            rights |= Collection::CanLinkItem;
+            break;
+        case 'u':
+            rights |= Collection::CanUnlinkItem;
+            break;
+        case 'W':
+            rights |= Collection::CanChangeCollection;
+            break;
+        case 'C':
+            rights |= Collection::CanCreateCollection;
+            break;
+        case 'D':
+            rights |= Collection::CanDeleteCollection;
+            break;
+        }
+    }
+
+    return rights;
 }
 
-static QByteArray rightsToData( Collection::Rights &rights )
+static QByteArray rightsToData(Collection::Rights &rights)
 {
-  if ( rights == Collection::AllRights ) {
-    return QByteArray( "a" );
-  }
+    if (rights == Collection::AllRights) {
+        return QByteArray("a");
+    }
 
-  QByteArray data;
-  if ( rights & Collection::CanChangeItem ) {
-    data.append( 'w' );
-  }
-  if ( rights & Collection::CanCreateItem ) {
-    data.append( 'c' );
-  }
-  if ( rights & Collection::CanDeleteItem ) {
-    data.append( 'd' );
-  }
-  if ( rights & Collection::CanChangeCollection ) {
-    data.append( 'W' );
-  }
-  if ( rights & Collection::CanCreateCollection ) {
-    data.append( 'C' );
-  }
-  if ( rights & Collection::CanDeleteCollection ) {
-    data.append( 'D' );
-  }
-  if ( rights & Collection::CanLinkItem ) {
-    data.append( 'l' );
-  }
-  if ( rights & Collection::CanUnlinkItem ) {
-    data.append( 'u' );
-  }
+    QByteArray data;
+    if (rights & Collection::CanChangeItem) {
+        data.append('w');
+    }
+    if (rights & Collection::CanCreateItem) {
+        data.append('c');
+    }
+    if (rights & Collection::CanDeleteItem) {
+        data.append('d');
+    }
+    if (rights & Collection::CanChangeCollection) {
+        data.append('W');
+    }
+    if (rights & Collection::CanCreateCollection) {
+        data.append('C');
+    }
+    if (rights & Collection::CanDeleteCollection) {
+        data.append('D');
+    }
+    if (rights & Collection::CanLinkItem) {
+        data.append('l');
+    }
+    if (rights & Collection::CanUnlinkItem) {
+        data.append('u');
+    }
 
-  return data;
+    return data;
 }
 
 /**
@@ -91,49 +107,50 @@ static QByteArray rightsToData( Collection::Rights &rights )
  */
 class CollectionRightsAttribute::Private
 {
-  public:
+public:
     QByteArray mData;
 };
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-  : Attribute(), d( new Private )
+    : Attribute()
+    , d(new Private)
 {
 }
 
 CollectionRightsAttribute::~CollectionRightsAttribute()
 {
-  delete d;
+    delete d;
 }
 
-void CollectionRightsAttribute::setRights( Collection::Rights rights )
+void CollectionRightsAttribute::setRights(Collection::Rights rights)
 {
-  d->mData = rightsToData( rights );
+    d->mData = rightsToData(rights);
 }
 
 Collection::Rights CollectionRightsAttribute::rights() const
 {
-  return dataToRights( d->mData );
+    return dataToRights(d->mData);
 }
 
-CollectionRightsAttribute* CollectionRightsAttribute::clone() const
+CollectionRightsAttribute *CollectionRightsAttribute::clone() const
 {
-  CollectionRightsAttribute *attr = new CollectionRightsAttribute();
-  attr->d->mData = d->mData;
+    CollectionRightsAttribute *attr = new CollectionRightsAttribute();
+    attr->d->mData = d->mData;
 
-  return attr;
+    return attr;
 }
 
 QByteArray CollectionRightsAttribute::type() const
 {
-  return s_accessRightsIdentifier;
+    return s_accessRightsIdentifier;
 }
 
 QByteArray CollectionRightsAttribute::serialized() const
 {
-  return d->mData;
+    return d->mData;
 }
 
-void CollectionRightsAttribute::deserialize( const QByteArray &data )
+void CollectionRightsAttribute::deserialize(const QByteArray &data)
 {
-  d->mData = data;
+    d->mData = data;
 }

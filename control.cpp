@@ -40,22 +40,22 @@ namespace Internal {
 
 class ControlProgressIndicator : public QFrame
 {
-  public:
-    ControlProgressIndicator( QWidget *parent = 0 ) :
-      QFrame( parent )
+public:
+    ControlProgressIndicator(QWidget *parent = 0)
+        : QFrame(parent)
     {
-      setWindowModality( Qt::ApplicationModal );
-      resize( 400, 100 );
-      setWindowFlags( Qt::FramelessWindowHint | Qt::Dialog );
-      ui.setupUi( this );
+        setWindowModality(Qt::ApplicationModal);
+        resize(400, 100);
+        setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+        ui.setupUi(this);
 
-      setFrameShadow( QFrame::Plain );
-      setFrameShape( QFrame::Box );
+        setFrameShadow(QFrame::Plain);
+        setFrameShape(QFrame::Box);
     }
 
-    void setMessage( const QString &msg )
+    void setMessage(const QString &msg)
     {
-      ui.statusLabel->setText( msg );
+        ui.statusLabel->setText(msg);
     }
 
     Ui::ControlProgressIndicator ui;
@@ -63,55 +63,60 @@ class ControlProgressIndicator : public QFrame
 
 class StaticControl : public Control
 {
-  public:
-    StaticControl() : Control() {}
+public:
+    StaticControl()
+        : Control()
+    {
+    }
 };
 
 }
 
-K_GLOBAL_STATIC( Internal::StaticControl, s_instance )
+K_GLOBAL_STATIC(Internal::StaticControl, s_instance)
 
 /**
  * @internal
  */
 class Control::Private
 {
-  public:
-    Private( Control *parent )
-      : mParent( parent ), mEventLoop( 0 ),
-        mProgressIndicator( 0 ),
-        mSuccess( false ),
-        mStarting( false ), mStopping( false )
+public:
+    Private(Control *parent)
+        : mParent(parent)
+        , mEventLoop(0)
+        , mProgressIndicator(0)
+        , mSuccess(false)
+        , mStarting(false)
+        , mStopping(false)
     {
     }
 
     ~Private()
     {
-      delete mProgressIndicator;
+        delete mProgressIndicator;
     }
 
-    void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
+    void setupProgressIndicator(const QString &msg, QWidget *parent = 0)
     {
-      if ( !mProgressIndicator ) {
-        mProgressIndicator = new Internal::ControlProgressIndicator( parent );
-      }
+        if (!mProgressIndicator) {
+            mProgressIndicator = new Internal::ControlProgressIndicator(parent);
+        }
 
-      mProgressIndicator->setMessage( msg );
+        mProgressIndicator->setMessage(msg);
     }
 
     void createErrorOverlays()
     {
-      foreach ( QWidget *widget, mPendingOverlays ) {
-        if ( widget ) {
-          new ErrorOverlay( widget );
+        foreach (QWidget *widget, mPendingOverlays) {
+            if (widget) {
+                new ErrorOverlay(widget);
+            }
         }
-      }
-      mPendingOverlays.clear();
+        mPendingOverlays.clear();
     }
 
     void cleanup()
     {
-      s_instance.destroy();
+        s_instance.destroy();
     }
 
     bool exec();
@@ -129,139 +134,139 @@ class Control::Private
 
 bool Control::Private::exec()
 {
-  if ( mProgressIndicator ) {
-    mProgressIndicator->show();
-  }
-
-  kDebug() << "Starting/Stopping Akonadi (using an event loop).";
-  mEventLoop = new QEventLoop( mParent );
-  mEventLoop->exec();
-  mEventLoop->deleteLater();
-  mEventLoop = 0;
-
-  if ( !mSuccess ) {
-    kWarning() << "Could not start/stop Akonadi!";
-    if ( mProgressIndicator && mStarting ) {
-      QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
-      dlg->exec();
-      delete dlg;
-      if ( !mParent ) {
-        return false;
-      }
+    if (mProgressIndicator) {
+        mProgressIndicator->show();
     }
-  }
 
-  delete mProgressIndicator;
-  mProgressIndicator = 0;
-  mStarting = false;
-  mStopping = false;
+    kDebug() << "Starting/Stopping Akonadi (using an event loop).";
+    mEventLoop = new QEventLoop(mParent);
+    mEventLoop->exec();
+    mEventLoop->deleteLater();
+    mEventLoop = 0;
 
-  const bool rv = mSuccess;
-  mSuccess = false;
-  return rv;
+    if (!mSuccess) {
+        kWarning() << "Could not start/stop Akonadi!";
+        if (mProgressIndicator && mStarting) {
+            QPointer<SelfTestDialog> dlg = new SelfTestDialog(mProgressIndicator->parentWidget());
+            dlg->exec();
+            delete dlg;
+            if (!mParent) {
+                return false;
+            }
+        }
+    }
+
+    delete mProgressIndicator;
+    mProgressIndicator = 0;
+    mStarting = false;
+    mStopping = false;
+
+    const bool rv = mSuccess;
+    mSuccess = false;
+    return rv;
 }
 
 void Control::Private::serverStateChanged(ServerManager::State state)
 {
-  kDebug() << state;
-  if ( mEventLoop && mEventLoop->isRunning() ) {
-    // ignore transient states going into the right direction
-    if ( ( mStarting && ( state == ServerManager::Starting || state == ServerManager::Upgrading ) ) ||
-         ( mStopping && state == ServerManager::Stopping ) )
-      return;
-    mEventLoop->quit();
-    mSuccess = ( mStarting && state == ServerManager::Running ) || ( mStopping && state == ServerManager::NotRunning );
-  }
+    kDebug() << state;
+    if (mEventLoop && mEventLoop->isRunning()) {
+        // ignore transient states going into the right direction
+        if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
+            (mStopping && state == ServerManager::Stopping))
+            return;
+        mEventLoop->quit();
+        mSuccess = (mStarting && state == ServerManager::Running) || (mStopping && state == ServerManager::NotRunning);
+    }
 }
 
 Control::Control()
-  : d( new Private( this ) )
+    : d(new Private(this))
 {
-  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-           SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
-  // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
-  // Otherwise we get a crash in QCursor code with Qt-4.5
-  if ( QCoreApplication::instance() ) {
-    connect( QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(cleanup()) );
-  }
+    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+            SLOT(serverStateChanged(Akonadi::ServerManager::State)));
+    // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
+    // Otherwise we get a crash in QCursor code with Qt-4.5
+    if (QCoreApplication::instance()) {
+        connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(cleanup()));
+    }
 }
 
 Control::~Control()
 {
-  delete d;
+    delete d;
 }
 
 bool Control::start()
 {
-  if ( ServerManager::state() == ServerManager::Stopping ) {
-    kDebug() << "Server is currently being stopped, wont try to start it now";
-    return false;
-  }
-  if ( ServerManager::isRunning() || s_instance->d->mEventLoop ) {
-    kDebug() << "Server is already running";
-    return true;
-  }
-  s_instance->d->mStarting = true;
-  if ( !ServerManager::start() ) {
-    kDebug() << "ServerManager::start failed -> return false";
-    return false;
-  }
-  return s_instance->d->exec();
+    if (ServerManager::state() == ServerManager::Stopping) {
+        kDebug() << "Server is currently being stopped, wont try to start it now";
+        return false;
+    }
+    if (ServerManager::isRunning() || s_instance->d->mEventLoop) {
+        kDebug() << "Server is already running";
+        return true;
+    }
+    s_instance->d->mStarting = true;
+    if (!ServerManager::start()) {
+        kDebug() << "ServerManager::start failed -> return false";
+        return false;
+    }
+    return s_instance->d->exec();
 }
 
 bool Control::stop()
 {
-  if ( ServerManager::state() == ServerManager::Starting ) {
-    return false;
-  }
-  if ( !ServerManager::isRunning() || s_instance->d->mEventLoop ) {
-    return true;
-  }
-  s_instance->d->mStopping = true;
-  if ( !ServerManager::stop() ) {
-    return false;
-  }
-  return s_instance->d->exec();
+    if (ServerManager::state() == ServerManager::Starting) {
+        return false;
+    }
+    if (!ServerManager::isRunning() || s_instance->d->mEventLoop) {
+        return true;
+    }
+    s_instance->d->mStopping = true;
+    if (!ServerManager::stop()) {
+        return false;
+    }
+    return s_instance->d->exec();
 }
 
 bool Control::restart()
 {
-  if ( ServerManager::isRunning() ) {
-    if ( !stop() ) {
-      return false;
+    if (ServerManager::isRunning()) {
+        if (!stop()) {
+            return false;
+        }
     }
-  }
-  return start();
+    return start();
 }
 
-bool Control::start(QWidget * parent)
+bool Control::start(QWidget *parent)
 {
-  s_instance->d->setupProgressIndicator( i18n( "Starting Akonadi server..." ), parent );
-  return start();
+    s_instance->d->setupProgressIndicator(i18n("Starting Akonadi server..."), parent);
+    return start();
 }
 
-bool Control::stop(QWidget * parent)
+bool Control::stop(QWidget *parent)
 {
-  s_instance->d->setupProgressIndicator( i18n( "Stopping Akonadi server..." ), parent );
-  return stop();
+    s_instance->d->setupProgressIndicator(i18n("Stopping Akonadi server..."), parent);
+    return stop();
 }
 
-bool Control::restart(QWidget * parent)
+bool Control::restart(QWidget *parent)
 {
-  if ( ServerManager::isRunning() ) {
-    if ( !stop( parent ) ) {
-      return false;
+    if (ServerManager::isRunning()) {
+        if (!stop(parent)) {
+            return false;
+        }
     }
-  }
-  return start( parent );
+    return start(parent);
 }
 
-void Control::widgetNeedsAkonadi(QWidget * widget)
+void Control::widgetNeedsAkonadi(QWidget *widget)
 {
-  s_instance->d->mPendingOverlays.append( widget );
-  // delay the overlay creation since we rely on widget being reparented
-  // correctly already
-  QTimer::singleShot( 0, s_instance, SLOT(createErrorOverlays()) );
+    s_instance->d->mPendingOverlays.append(widget);
+    // delay the overlay creation since we rely on widget being reparented
+    // correctly already
+    QTimer::singleShot(0, s_instance, SLOT(createErrorOverlays()));
 }
 
 }

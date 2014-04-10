@@ -28,8 +28,8 @@
 #include <QtCore/QString>
 
 #define AKONADI_DEFINE_PRIVATE( Class ) \
-Class##Private* Class ::d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \
-const Class##Private* Class ::d_func() const { return reinterpret_cast<const Class##Private *>( d_ptr.data() ); }
+Class##Private *Class ::d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \
+const Class##Private *Class ::d_func() const { return reinterpret_cast<const Class##Private *>( d_ptr.data() ); }
 
 namespace Akonadi {
 
@@ -38,38 +38,38 @@ namespace Akonadi {
  */
 class EntityPrivate : public QSharedData
 {
-  public:
-    explicit EntityPrivate( Entity::Id id = -1 )
-      : mId( id ),
-      mParent( 0 )
+public:
+    explicit EntityPrivate(Entity::Id id = -1)
+        : mId(id)
+        , mParent(0)
     {
     }
 
     virtual ~EntityPrivate()
     {
-      qDeleteAll( mAttributes );
-      delete mParent;
+        qDeleteAll(mAttributes);
+        delete mParent;
     }
 
-    EntityPrivate( const EntityPrivate &other )
-      : QSharedData( other ),
-      mParent( 0 )
+    EntityPrivate(const EntityPrivate &other)
+        : QSharedData(other)
+        , mParent(0)
     {
-      mId = other.mId;
-      mRemoteId = other.mRemoteId;
-      mRemoteRevision = other.mRemoteRevision;
-      foreach ( Attribute *attr, other.mAttributes ) {
-        mAttributes.insert( attr->type(), attr->clone() );
-      }
-      mDeletedAttributes = other.mDeletedAttributes;
-      if ( other.mParent ) {
-        mParent = new Collection( *( other.mParent ) );
-      }
+        mId = other.mId;
+        mRemoteId = other.mRemoteId;
+        mRemoteRevision = other.mRemoteRevision;
+        foreach (Attribute *attr, other.mAttributes) {
+            mAttributes.insert(attr->type(), attr->clone());
+        }
+        mDeletedAttributes = other.mDeletedAttributes;
+        if (other.mParent) {
+            mParent = new Collection(*(other.mParent));
+        }
     }
 
     virtual void resetChangeLog()
     {
-      mDeletedAttributes.clear();
+        mDeletedAttributes.clear();
     }
 
     virtual EntityPrivate *clone() const = 0;
@@ -77,9 +77,9 @@ class EntityPrivate : public QSharedData
     Entity::Id mId;
     QString mRemoteId;
     QString mRemoteRevision;
-    QHash<QByteArray, Attribute*> mAttributes;
+    QHash<QByteArray, Attribute *> mAttributes;
     QSet<QByteArray> mDeletedAttributes;
-    mutable Collection* mParent;
+    mutable Collection *mParent;
 };
 
 }
@@ -92,9 +92,9 @@ class EntityPrivate : public QSharedData
  * so Akonadi::ItemPrivate and Akonadi::CollectionPrivate are copied correctly.
  */
 template <>
-Q_INLINE_TEMPLATE Akonadi::EntityPrivate* QSharedDataPointer<Akonadi::EntityPrivate>::clone()
+Q_INLINE_TEMPLATE Akonadi::EntityPrivate *QSharedDataPointer<Akonadi::EntityPrivate>::clone()
 {
-  return d->clone();
+    return d->clone();
 }
 
 #endif

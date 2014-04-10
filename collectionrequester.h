@@ -58,15 +58,15 @@ namespace Akonadi {
 class AKONADI_EXPORT CollectionRequester : public KHBox
 {
     Q_OBJECT
-    Q_DISABLE_COPY( CollectionRequester )
+    Q_DISABLE_COPY(CollectionRequester)
 
-  public:
+public:
     /**
      * Creates a collection requester.
      *
      * @param parent The parent widget.
      */
-    explicit CollectionRequester( QWidget *parent = 0 );
+    explicit CollectionRequester(QWidget *parent = 0);
 
     /**
      * Creates a collection requester with an initial @p collection.
@@ -74,7 +74,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      * @param collection The initial collection.
      * @param parent The parent widget.
      */
-    explicit CollectionRequester( const Akonadi::Collection &collection, QWidget *parent = 0 );
+    explicit CollectionRequester(const Akonadi::Collection &collection, QWidget *parent = 0);
 
     /**
      * Destroys the collection requester.
@@ -90,7 +90,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
     /**
      * Sets the mime types any of which the selected collection shall support.
      */
-    void setMimeTypeFilter( const QStringList &mimeTypes );
+    void setMimeTypeFilter(const QStringList &mimeTypes);
 
     /**
      * Returns the mime types any of which the selected collection shall support.
@@ -102,7 +102,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      * @param rights the access rights to set
      * @since 4.4
      */
-    void setAccessRightsFilter( Collection::Rights rights );
+    void setAccessRightsFilter(Collection::Rights rights);
 
     /**
      * Returns the access rights that the listed collections shall match with.
@@ -113,15 +113,15 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
     /**
      * @param options new collection dialog options
      */
-    void changeCollectionDialogOptions( CollectionDialog::CollectionDialogOptions options );
+    void changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the @p collection of the requester.
      */
-    void setCollection( const Akonadi::Collection &collection );
+    void setCollection(const Akonadi::Collection &collection);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted when the selected collection has changed.
      *
@@ -129,15 +129,15 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      *
      * @since 4.5
      */
-   void collectionChanged( const Akonadi::Collection &collection );
+    void collectionChanged(const Akonadi::Collection &collection);
 
-  private:
+private:
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void _k_slotOpenDialog() )
-    Q_PRIVATE_SLOT( d, void _k_collectionReceived( KJob *job ) )
-    Q_PRIVATE_SLOT( d, void _k_collectionsNamesReceived( KJob *job ) );
+    Q_PRIVATE_SLOT(d, void _k_slotOpenDialog())
+    Q_PRIVATE_SLOT(d, void _k_collectionReceived(KJob *job))
+    Q_PRIVATE_SLOT(d, void _k_collectionsNamesReceived(KJob *job));
 };
 
 } // namespace Akonadi

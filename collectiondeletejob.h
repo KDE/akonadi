@@ -37,7 +37,7 @@ class CollectionDeleteJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
  * @endcode
  *
@@ -62,9 +62,9 @@ class CollectionDeleteJobPrivate;
  */
 class AKONADI_EXPORT CollectionDeleteJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection delete job. The collection needs to either have a unique
      * identifier or a remote identifier set. Note that using a remote identifier only works
@@ -74,18 +74,18 @@ class AKONADI_EXPORT CollectionDeleteJob : public Job
      * @param collection The collection to delete.
      * @param parent The parent object.
      */
-    explicit CollectionDeleteJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionDeleteJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the collection delete job.
      */
     ~CollectionDeleteJob();
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionDeleteJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionDeleteJob)
 };
 
 }

@@ -27,7 +27,6 @@
 #define _AKONADI_CALENDAR_ITIP_HANDLER_H
 
 #include "akonadi-calendar_export.h"
-#include "fetchjobcalendar.h"
 #include "etmcalendar.h"
 
 #include <kcalcore/incidence.h>

@@ -30,52 +30,53 @@
 
 using namespace Akonadi;
 
-TransportResourceBasePrivate::TransportResourceBasePrivate( TransportResourceBase *qq )
-  : QObject(), q( qq )
+TransportResourceBasePrivate::TransportResourceBasePrivate(TransportResourceBase *qq)
+    : QObject()
+    , q(qq)
 {
-  new Akonadi__TransportAdaptor( this );
-  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Transport" ),
-                                                         this, QDBusConnection::ExportAdaptors );
+    new Akonadi__TransportAdaptor(this);
+    DBusConnectionPool::threadConnection().registerObject(QLatin1String("/Transport"),
+                                                          this, QDBusConnection::ExportAdaptors);
 }
 
-void TransportResourceBasePrivate::send( Item::Id id )
+void TransportResourceBasePrivate::send(Item::Id id)
 {
-  ItemFetchJob *job = new ItemFetchJob( Item( id ) );
-  job->fetchScope().fetchFullPayload();
-  job->setProperty( "id", QVariant( id ) );
-  connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
+    ItemFetchJob *job = new ItemFetchJob(Item(id));
+    job->fetchScope().fetchFullPayload();
+    job->setProperty("id", QVariant(id));
+    connect(job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)));
 }
 
-void TransportResourceBasePrivate::fetchResult( KJob *job )
+void TransportResourceBasePrivate::fetchResult(KJob *job)
 {
-  if ( job->error() ) {
-    const Item::Id id = job->property( "id" ).toLongLong();
-    emit transportResult( id, (int)TransportResourceBase::TransportFailed, job->errorText() );
-    return;
-  }
+    if (job->error()) {
+        const Item::Id id = job->property("id").toLongLong();
+        emit transportResult(id, (int)TransportResourceBase::TransportFailed, job->errorText());
+        return;
+    }
 
-  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-  Q_ASSERT( fetchJob );
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    Q_ASSERT(fetchJob);
 
-  const Item item = fetchJob->items().first();
-  q->sendItem( item );
+    const Item item = fetchJob->items().first();
+    q->sendItem(item);
 }
 
 TransportResourceBase::TransportResourceBase()
-  : d( new TransportResourceBasePrivate( this ) )
+    : d(new TransportResourceBasePrivate(this))
 {
 }
 
 TransportResourceBase::~TransportResourceBase()
 {
-  delete d;
+    delete d;
 }
 
-void TransportResourceBase::itemSent( const Item &item,
-                                      TransportResult result,
-                                      const QString &message )
+void TransportResourceBase::itemSent(const Item &item,
+                                     TransportResult result,
+                                     const QString &message)
 {
-  emit d->transportResult( item.id(), (int)result, message );
+    emit d->transportResult(item.id(), (int)result, message);
 }
 
 #include "moc_transportresourcebase_p.cpp"

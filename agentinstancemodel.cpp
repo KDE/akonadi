@@ -34,217 +34,216 @@ using namespace Akonadi;
  */
 class AgentInstanceModel::Private
 {
-  public:
-    Private( AgentInstanceModel *parent )
-      : mParent( parent )
+public:
+    Private(AgentInstanceModel *parent)
+        : mParent(parent)
     {
     }
 
     AgentInstanceModel *mParent;
     AgentInstance::List mInstances;
 
-    void instanceAdded( const AgentInstance& );
-    void instanceRemoved( const AgentInstance& );
-    void instanceChanged( const AgentInstance& );
+    void instanceAdded(const AgentInstance &);
+    void instanceRemoved(const AgentInstance &);
+    void instanceChanged(const AgentInstance &);
 };
 
-void AgentInstanceModel::Private::instanceAdded( const AgentInstance &instance )
+void AgentInstanceModel::Private::instanceAdded(const AgentInstance &instance)
 {
-  mParent->beginInsertRows( QModelIndex(), mInstances.count(), mInstances.count() );
-  mInstances.append( instance );
-  mParent->endInsertRows();
+    mParent->beginInsertRows(QModelIndex(), mInstances.count(), mInstances.count());
+    mInstances.append(instance);
+    mParent->endInsertRows();
 }
 
-void AgentInstanceModel::Private::instanceRemoved( const AgentInstance &instance )
+void AgentInstanceModel::Private::instanceRemoved(const AgentInstance &instance)
 {
-  const int index = mInstances.indexOf( instance );
-  if ( index == -1 ) {
-    return;
-  }
-
-  mParent->beginRemoveRows( QModelIndex(), index, index );
-  mInstances.removeAll( instance );
-  mParent->endRemoveRows();
-}
-
-void AgentInstanceModel::Private::instanceChanged( const AgentInstance &instance )
-{
-  const int numberOfInstance( mInstances.count() );
-  for ( int i = 0; i < numberOfInstance; ++i ) {
-    if ( mInstances[ i ] == instance ) {
-      mInstances[ i ] = instance;
-
-      const QModelIndex idx = mParent->index( i, 0 );
-      emit mParent->dataChanged( idx, idx );
-
-      return;
+    const int index = mInstances.indexOf(instance);
+    if (index == -1) {
+        return;
     }
-  }
+
+    mParent->beginRemoveRows(QModelIndex(), index, index);
+    mInstances.removeAll(instance);
+    mParent->endRemoveRows();
 }
 
-AgentInstanceModel::AgentInstanceModel( QObject *parent )
-  : QAbstractItemModel( parent ), d( new Private( this ) )
+void AgentInstanceModel::Private::instanceChanged(const AgentInstance &instance)
 {
-  d->mInstances = AgentManager::self()->instances();
+    const int numberOfInstance(mInstances.count());
+    for (int i = 0; i < numberOfInstance; ++i) {
+        if (mInstances[i] == instance) {
+            mInstances[i] = instance;
 
-  QHash<int, QByteArray> roles = roleNames();
-  roles.insert( StatusRole, "status" );
-  roles.insert( StatusMessageRole, "statusMessage" );
-  roles.insert( ProgressRole, "progress" );
-  roles.insert( OnlineRole, "online" );
-  setRoleNames( roles );
+            const QModelIndex idx = mParent->index(i, 0);
+            emit mParent->dataChanged(idx, idx);
 
-  connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
-           this, SLOT(instanceAdded(Akonadi::AgentInstance)) );
-  connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
-           this, SLOT(instanceRemoved(Akonadi::AgentInstance)) );
-  connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
-           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
-  connect( AgentManager::self(), SIGNAL(instanceProgressChanged(Akonadi::AgentInstance)),
-           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
-  connect( AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)),
-           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
-  connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
-           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
+            return;
+        }
+    }
+}
+
+AgentInstanceModel::AgentInstanceModel(QObject *parent)
+    : QAbstractItemModel(parent)
+    , d(new Private(this))
+{
+    d->mInstances = AgentManager::self()->instances();
+
+    QHash<int, QByteArray> roles = roleNames();
+    roles.insert(StatusRole, "status");
+    roles.insert(StatusMessageRole, "statusMessage");
+    roles.insert(ProgressRole, "progress");
+    roles.insert(OnlineRole, "online");
+    setRoleNames(roles);
+
+    connect(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
+            this, SLOT(instanceAdded(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
+            this, SLOT(instanceRemoved(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
+            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), SIGNAL(instanceProgressChanged(Akonadi::AgentInstance)),
+            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)),
+            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
+            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
 }
 
 AgentInstanceModel::~AgentInstanceModel()
 {
-  delete d;
+    delete d;
 }
 
-int AgentInstanceModel::columnCount( const QModelIndex& ) const
+int AgentInstanceModel::columnCount(const QModelIndex &) const
 {
-  return 1;
+    return 1;
 }
 
-int AgentInstanceModel::rowCount( const QModelIndex& ) const
+int AgentInstanceModel::rowCount(const QModelIndex &) const
 {
-  return d->mInstances.count();
+    return d->mInstances.count();
 }
 
-QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
+QVariant AgentInstanceModel::data(const QModelIndex &index, int role) const
 {
-  if ( !index.isValid() ) {
-    return QVariant();
-  }
+    if (!index.isValid()) {
+        return QVariant();
+    }
 
-  if ( index.row() < 0 || index.row() >= d->mInstances.count() ) {
-    return QVariant();
-  }
+    if (index.row() < 0 || index.row() >= d->mInstances.count()) {
+        return QVariant();
+    }
 
-  const AgentInstance &instance = d->mInstances[ index.row() ];
+    const AgentInstance &instance = d->mInstances[index.row()];
 
-  switch ( role ) {
+    switch (role) {
     case Qt::DisplayRole:
-      return instance.name();
+        return instance.name();
     case Qt::DecorationRole:
-      return instance.type().icon();
-    case InstanceRole:
-      {
+        return instance.type().icon();
+    case InstanceRole: {
         QVariant var;
-        var.setValue( instance );
+        var.setValue(instance);
         return var;
-      }
+    }
     case InstanceIdentifierRole:
-      return instance.identifier();
+        return instance.identifier();
     case Qt::ToolTipRole:
-      return QString::fromLatin1( "<qt><h4>%1</h4>%2</qt>" ).arg( instance.name(), instance.type().description() );
+        return QString::fromLatin1("<qt><h4>%1</h4>%2</qt>").arg(instance.name(), instance.type().description());
     case StatusRole:
-      return instance.status();
+        return instance.status();
     case StatusMessageRole:
-      return instance.statusMessage();
+        return instance.statusMessage();
     case ProgressRole:
-      return instance.progress();
+        return instance.progress();
     case OnlineRole:
-      return instance.isOnline();
-    case TypeRole:
-      {
+        return instance.isOnline();
+    case TypeRole: {
         QVariant var;
-        var.setValue( instance.type() );
+        var.setValue(instance.type());
         return var;
-      }
+    }
     case TypeIdentifierRole:
-      return instance.type().identifier();
+        return instance.type().identifier();
     case DescriptionRole:
-      return instance.type().description();
+        return instance.type().description();
     case CapabilitiesRole:
-      return instance.type().capabilities();
+        return instance.type().capabilities();
     case MimeTypesRole:
-      return instance.type().mimeTypes();
-  }
-  return QVariant();
+        return instance.type().mimeTypes();
+    }
+    return QVariant();
 }
 
-QVariant AgentInstanceModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant AgentInstanceModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if ( orientation == Qt::Vertical ) {
-    return QVariant();
-  }
+    if (orientation == Qt::Vertical) {
+        return QVariant();
+    }
 
-  if ( role != Qt::DisplayRole ) {
-    return QVariant();
-  }
+    if (role != Qt::DisplayRole) {
+        return QVariant();
+    }
 
-  switch ( section ) {
+    switch (section) {
     case 0:
-      return i18nc( "@title:column, name of a thing", "Name" );
-      break;
+        return i18nc("@title:column, name of a thing", "Name");
+        break;
     default:
-      return QVariant();
-      break;
-  }
+        return QVariant();
+        break;
+    }
 }
 
-QModelIndex AgentInstanceModel::index( int row, int column, const QModelIndex& ) const
+QModelIndex AgentInstanceModel::index(int row, int column, const QModelIndex &) const
 {
-  if ( row < 0 || row >= d->mInstances.count() ) {
+    if (row < 0 || row >= d->mInstances.count()) {
+        return QModelIndex();
+    }
+
+    if (column != 0) {
+        return QModelIndex();
+    }
+
+    return createIndex(row, column);
+}
+
+QModelIndex AgentInstanceModel::parent(const QModelIndex &) const
+{
     return QModelIndex();
-  }
-
-  if ( column != 0 ) {
-    return QModelIndex();
-  }
-
-  return createIndex( row, column);
 }
 
-QModelIndex AgentInstanceModel::parent( const QModelIndex& ) const
+Qt::ItemFlags AgentInstanceModel::flags(const QModelIndex &index) const
 {
-  return QModelIndex();
+    if (!index.isValid() || index.row() < 0 || index.row() >= d->mInstances.count()) {
+        return QAbstractItemModel::flags(index);
+    }
+
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-Qt::ItemFlags AgentInstanceModel::flags( const QModelIndex & index ) const
+bool AgentInstanceModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mInstances.count() ) {
-    return QAbstractItemModel::flags( index );
-  }
+    if (!index.isValid()) {
+        return false;
+    }
 
-  return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
-}
+    if (index.row() < 0 || index.row() >= d->mInstances.count()) {
+        return false;
+    }
 
-bool AgentInstanceModel::setData( const QModelIndex & index, const QVariant & value, int role )
-{
-  if ( !index.isValid() ) {
-    return false;
-  }
+    AgentInstance &instance = d->mInstances[index.row()];
 
-  if ( index.row() < 0 || index.row() >= d->mInstances.count() ) {
-    return false;
-  }
-
-  AgentInstance &instance = d->mInstances[ index.row() ];
-
-  switch ( role ) {
+    switch (role) {
     case OnlineRole:
-      instance.setIsOnline( value.toBool() );
-      emit dataChanged( index, index );
-      return true;
+        instance.setIsOnline(value.toBool());
+        emit dataChanged(index, index);
+        return true;
     default:
-      return false;
-  }
+        return false;
+    }
 
-  return false;
+    return false;
 }
 
 #include "moc_agentinstancemodel.cpp"

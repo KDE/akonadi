@@ -67,14 +67,14 @@ class CollectionFetchScopePrivate;
  */
 class AKONADI_EXPORT CollectionFetchScope
 {
-  public:
+public:
     /**
      * Describes the ancestor retrieval depth.
      */
     enum AncestorRetrieval {
-      None, ///< No ancestor retrieval at all (the default)
-      Parent, ///< Only retrieve the immediate parent collection
-      All ///< Retrieve all ancestors, up to Collection::root()
+        None, ///< No ancestor retrieval at all (the default)
+        Parent, ///< Only retrieve the immediate parent collection
+        All ///< Retrieve all ancestors, up to Collection::root()
     };
 
     /**
@@ -88,7 +88,7 @@ class AKONADI_EXPORT CollectionFetchScope
     /**
      * Creates a new collection fetch scope from an @p other.
      */
-    CollectionFetchScope( const CollectionFetchScope &other );
+    CollectionFetchScope(const CollectionFetchScope &other);
 
     /**
      * Destroys the collection fetch scope.
@@ -98,7 +98,7 @@ class AKONADI_EXPORT CollectionFetchScope
     /**
      * Assigns the @p other to this scope and returns a reference to this scope.
      */
-    CollectionFetchScope &operator=( const CollectionFetchScope &other );
+    CollectionFetchScope &operator=(const CollectionFetchScope &other);
 
     /**
      * Returns whether unsubscribed collection should be included.
@@ -120,7 +120,7 @@ class AKONADI_EXPORT CollectionFetchScope
      *
      * @param include @c true to include unsubscribed collections, @c false otherwise (the default).
      */
-    void setIncludeUnsubscribed( bool include );
+    void setIncludeUnsubscribed(bool include);
 
     /**
      * Returns whether collection statistics should be included in the retrieved results.
@@ -134,7 +134,7 @@ class AKONADI_EXPORT CollectionFetchScope
      *
      * @param include @c true to include collction statistics, @c false otherwise (the default).
      */
-    void setIncludeStatistics( bool include );
+    void setIncludeStatistics(bool include);
 
     /**
      * Returns the resource identifier that is used as filter.
@@ -149,7 +149,7 @@ class AKONADI_EXPORT CollectionFetchScope
      *
      * @param resource The resource identifier.
      */
-    void setResource( const QString &resource );
+    void setResource(const QString &resource);
 
     /**
      * Sets a content mimetypes filter, that is only collections that contain at least one of the
@@ -157,7 +157,7 @@ class AKONADI_EXPORT CollectionFetchScope
      *
      * @param mimeTypes A list of mime types
      */
-    void setContentMimeTypes( const QStringList &mimeTypes );
+    void setContentMimeTypes(const QStringList &mimeTypes);
 
     /**
      * Returns the content mimetypes filter.
@@ -175,7 +175,7 @@ class AKONADI_EXPORT CollectionFetchScope
      *
      * @param ancestorDepth The desired ancestor retrieval depth.
      */
-    void setAncestorRetrieval( AncestorRetrieval ancestorDepth );
+    void setAncestorRetrieval(AncestorRetrieval ancestorDepth);
 
     /**
      * Returns the ancestor retrieval depth.
@@ -189,7 +189,7 @@ class AKONADI_EXPORT CollectionFetchScope
      */
     bool isEmpty() const;
 
-  private:
+private:
     //@cond PRIVATE
     QSharedDataPointer<CollectionFetchScopePrivate> d;
     //@endcond

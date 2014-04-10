@@ -62,18 +62,19 @@ namespace AkonadiTest {
  * Checks that the test is running in the proper test environment
  */
 void checkTestIsIsolated() {
-  Q_ASSERT_X( !qgetenv( "TESTRUNNER_DB_ENVIRONMENT" ).isEmpty(),
-              "AkonadiTest::checkTestIsIsolated",
-              "This test must be run using ctest, in order to use the testrunner environment. Aborting, to avoid messing up your real akonadi" );
+    Q_ASSERT_X(!qgetenv("TESTRUNNER_DB_ENVIRONMENT").isEmpty(),
+               "AkonadiTest::checkTestIsIsolated",
+               "This test must be run using ctest, in order to use the testrunner environment. Aborting, to avoid messing up your real akonadi");
 }
 
 /**
  * Switch all resources offline to reduce interference from them
  */
 void setAllResourcesOffline() {
-  // switch all resources offline to reduce interference from them
-  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-    agent.setIsOnline( false );
+    // switch all resources offline to reduce interference from them
+    foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {    //krazy:exclude=foreach
+        agent.setIsOnline(false);
+    }
 }
 
 } // namespace

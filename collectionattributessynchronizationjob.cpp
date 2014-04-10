@@ -36,12 +36,12 @@ namespace Akonadi
 
 class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
 {
-  public:
-    CollectionAttributesSynchronizationJobPrivate( CollectionAttributesSynchronizationJob* parent )
-      : q( parent ),
-        interface( 0 ),
-        safetyTimer( 0 ),
-        timeoutCount( 0 )
+public:
+    CollectionAttributesSynchronizationJobPrivate(CollectionAttributesSynchronizationJob *parent)
+        : q(parent)
+        , interface(0)
+        , safetyTimer(0)
+        , timeoutCount(0)
     {
     }
 
@@ -50,106 +50,106 @@ class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
     CollectionAttributesSynchronizationJob *q;
     AgentInstance instance;
     Collection collection;
-    QDBusInterface* interface;
-    QTimer* safetyTimer;
+    QDBusInterface *interface;
+    QTimer *safetyTimer;
     int timeoutCount;
     static int timeoutCountLimit;
 
-    void slotSynchronized( qlonglong );
+    void slotSynchronized(qlonglong);
     void slotTimeout();
 };
 
 int CollectionAttributesSynchronizationJobPrivate::timeoutCountLimit = 2;
 
-CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob( const Collection &collection, QObject *parent )
-  : KJob( parent ),
-    d( new CollectionAttributesSynchronizationJobPrivate( this ) )
+CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob(const Collection &collection, QObject *parent)
+    : KJob(parent)
+    , d(new CollectionAttributesSynchronizationJobPrivate(this))
 {
-  d->instance = AgentManager::self()->instance( collection.resource() );
-  d->collection = collection;
-  d->safetyTimer = new QTimer( this );
-  connect( d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
-  d->safetyTimer->setInterval( 5 * 1000 );
-  d->safetyTimer->setSingleShot( false );
+    d->instance = AgentManager::self()->instance(collection.resource());
+    d->collection = collection;
+    d->safetyTimer = new QTimer(this);
+    connect(d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()));
+    d->safetyTimer->setInterval(5 * 1000);
+    d->safetyTimer->setSingleShot(false);
 }
 
 CollectionAttributesSynchronizationJob::~CollectionAttributesSynchronizationJob()
 {
-  delete d;
+    delete d;
 }
 
 void CollectionAttributesSynchronizationJob::start()
 {
-  d->start();
+    d->start();
 }
 
 void CollectionAttributesSynchronizationJobPrivate::doStart()
 {
-  if ( !collection.isValid() ) {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Invalid collection instance." ) );
-    q->emitResult();
-    return;
-  }
-
-  if ( !instance.isValid() ) {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Invalid resource instance." ) );
-    q->emitResult();
-    return;
-  }
-
-  interface = new QDBusInterface( ServerManager::agentServiceName( ServerManager::Resource, instance.identifier() ),
-                                  QString::fromLatin1( "/" ),
-                                  QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ),
-                                  DBusConnectionPool::threadConnection(), this );
-  connect( interface, SIGNAL(attributesSynchronized(qlonglong)),
-           q, SLOT(slotSynchronized(qlonglong)) );
-
-  if ( interface->isValid() ) {
-    const QDBusMessage reply = interface->call( QString::fromUtf8( "synchronizeCollectionAttributes" ), collection.id() );
-    if ( reply.type() == QDBusMessage::ErrorMessage ) {
-      // This means that the resource doesn't provide a synchronizeCollectionAttributes method, so we just finish the job
-      q->emitResult();
-      return;
+    if (!collection.isValid()) {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Invalid collection instance."));
+        q->emitResult();
+        return;
     }
-    safetyTimer->start();
-  } else {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Unable to obtain D-Bus interface for resource '%1'", instance.identifier() ) );
-    q->emitResult();
-    return;
-  }
+
+    if (!instance.isValid()) {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Invalid resource instance."));
+        q->emitResult();
+        return;
+    }
+
+    interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
+                                   QString::fromLatin1("/"),
+                                   QString::fromLatin1("org.freedesktop.Akonadi.Resource"),
+                                   DBusConnectionPool::threadConnection(), this);
+    connect(interface, SIGNAL(attributesSynchronized(qlonglong)),
+            q, SLOT(slotSynchronized(qlonglong)));
+
+    if (interface->isValid()) {
+        const QDBusMessage reply = interface->call(QString::fromUtf8("synchronizeCollectionAttributes"), collection.id());
+        if (reply.type() == QDBusMessage::ErrorMessage) {
+            // This means that the resource doesn't provide a synchronizeCollectionAttributes method, so we just finish the job
+            q->emitResult();
+            return;
+        }
+        safetyTimer->start();
+    } else {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Unable to obtain D-Bus interface for resource '%1'", instance.identifier()));
+        q->emitResult();
+        return;
+    }
 }
 
-void CollectionAttributesSynchronizationJobPrivate::slotSynchronized( qlonglong id )
+void CollectionAttributesSynchronizationJobPrivate::slotSynchronized(qlonglong id)
 {
-  if ( id == collection.id() ) {
-    q->disconnect( interface, SIGNAL(attributesSynchronized(qlonglong)),
-                   q, SLOT(slotSynchronized(qlonglong)) );
-    safetyTimer->stop();
-    q->emitResult();
-  }
+    if (id == collection.id()) {
+        q->disconnect(interface, SIGNAL(attributesSynchronized(qlonglong)),
+                      q, SLOT(slotSynchronized(qlonglong)));
+        safetyTimer->stop();
+        q->emitResult();
+    }
 }
 
 void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
 {
-  instance = AgentManager::self()->instance( instance.identifier() );
-  timeoutCount++;
+    instance = AgentManager::self()->instance(instance.identifier());
+    timeoutCount++;
 
-  if ( timeoutCount > timeoutCountLimit ) {
-    safetyTimer->stop();
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Collection attributes synchronization timed out." ) );
-    q->emitResult();
-    return;
-  }
+    if (timeoutCount > timeoutCountLimit) {
+        safetyTimer->stop();
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Collection attributes synchronization timed out."));
+        q->emitResult();
+        return;
+    }
 
-  if ( instance.status() == AgentInstance::Idle ) {
-    // try again, we might have lost the synchronized() signal
-    kDebug() << "trying again to sync collection attributes" << collection.id() << instance.identifier();
-    interface->call( QString::fromUtf8( "synchronizeCollectionAttributes" ), collection.id() );
-  }
+    if (instance.status() == AgentInstance::Idle) {
+        // try again, we might have lost the synchronized() signal
+        kDebug() << "trying again to sync collection attributes" << collection.id() << instance.identifier();
+        interface->call(QString::fromUtf8("synchronizeCollectionAttributes"), collection.id());
+    }
 }
 
 }

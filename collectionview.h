@@ -62,15 +62,15 @@ class Collection;
  */
 class AKONADI_EXPORT CollectionView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection view.
      *
      * @param parent The parent widget.
      */
-    explicit CollectionView( QWidget *parent = 0 );
+    explicit CollectionView(QWidget *parent = 0);
 
     /**
      * Creates a new collection view.
@@ -80,7 +80,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit AKONADI_DEPRECATED CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+    explicit AKONADI_DEPRECATED CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
 
     /**
      * Creates a new collection view.
@@ -90,7 +90,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit CollectionView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
 
     /**
      * Destroys the collection view.
@@ -103,7 +103,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *
      * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
      */
-     AKONADI_DEPRECATED void setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow );
+    AKONADI_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
 
     /**
      * Sets the KXMLGUIClient which the view is used in.
@@ -112,18 +112,18 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      * @param xmlGuiClient The KXMLGUIClient the view is used in.
      * @since 4.3
      */
-     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
+    void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
-    virtual void setModel ( QAbstractItemModel * model );
+    virtual void setModel(QAbstractItemModel *model);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
      * a collection in the view.
      *
      * @param collection The clicked collection.
      */
-    void clicked( const Akonadi::Collection &collection );
+    void clicked(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the current collection
@@ -131,23 +131,23 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *
      * @param collection The new current collection.
      */
-    void currentChanged( const Akonadi::Collection &collection );
+    void currentChanged(const Akonadi::Collection &collection);
 
-  protected:
+protected:
     using QTreeView::currentChanged;
-    virtual void dragMoveEvent( QDragMoveEvent *event );
-    virtual void dragLeaveEvent( QDragLeaveEvent *event );
-    virtual void dropEvent( QDropEvent *event );
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+    virtual void dragMoveEvent(QDragMoveEvent *event);
+    virtual void dragLeaveEvent(QDragLeaveEvent *event);
+    virtual void dropEvent(QDropEvent *event);
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void dragExpand() )
-    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
+    Q_PRIVATE_SLOT(d, void dragExpand())
+    Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
     //@endcond
 };
 

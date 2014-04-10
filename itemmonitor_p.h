@@ -32,52 +32,54 @@ namespace Akonadi {
  */
 class ItemMonitor::Private : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Private( ItemMonitor *parent )
-      : QObject( 0 ),
-        mParent( parent ), mMonitor( new Monitor() )
+public:
+    Private(ItemMonitor *parent)
+        : QObject(0)
+        , mParent(parent)
+        , mMonitor(new Monitor())
     {
-      connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-               SLOT( slotItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-      connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-               SLOT( slotItemRemoved( const Akonadi::Item& ) ) );
+        connect(mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+                SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
+        connect(mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
+                SLOT(slotItemRemoved(Akonadi::Item)));
     }
 
     ~Private()
     {
-      delete mMonitor;
+        delete mMonitor;
     }
 
     ItemMonitor *mParent;
     Item mItem;
     Monitor *mMonitor;
 
-  private Q_SLOTS:
-    void slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
+private Q_SLOTS:
+    void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &)
     {
-      mItem.apply( item );
-      mParent->itemChanged( item );
+        mItem.apply(item);
+        mParent->itemChanged(item);
     }
 
-    void slotItemRemoved( const Akonadi::Item& )
+    void slotItemRemoved(const Akonadi::Item &)
     {
-      mItem = Item();
-      mParent->itemRemoved();
+        mItem = Item();
+        mParent->itemRemoved();
     }
 
-    void initialFetchDone( KJob *job )
+    void initialFetchDone(KJob *job)
     {
-      if ( job->error() )
-        return;
+        if (job->error()) {
+            return;
+        }
 
-      ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+        ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
-      if ( !fetchJob->items().isEmpty() ) {
-        mItem = fetchJob->items().first();
-        mParent->itemChanged( mItem );
-      }
+        if (!fetchJob->items().isEmpty()) {
+            mItem = fetchJob->items().first();
+            mParent->itemChanged(mItem);
+        }
     }
 };
 

@@ -70,15 +70,15 @@ class Item;
  */
 class AKONADI_EXPORT EntityTreeView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new entity tree view.
      *
      * @param parent The parent widget.
      */
-    explicit EntityTreeView( QWidget *parent = 0 );
+    explicit EntityTreeView(QWidget *parent = 0);
 
     /**
      * Creates a new entity tree view.
@@ -88,7 +88,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit EntityTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit EntityTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
 
     /**
      * Destroys the entity tree view.
@@ -102,7 +102,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @param xmlGuiClient The KXMLGUIClient the view is used in.
      */
-    void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
+    void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
     /**
      * Return the XML GUI client which the view is used in.
@@ -114,7 +114,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      * @reimp
      * @param model the model to set
      */
-    virtual void setModel( QAbstractItemModel * model );
+    virtual void setModel(QAbstractItemModel *model);
 
     /**
      * Sets whether the drop action menu is @p enabled and will
@@ -122,7 +122,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      * @param enabled enables drop action menu if set as @c true
      * @since 4.5
      */
-    void setDropActionMenuEnabled( bool enabled );
+    void setDropActionMenuEnabled(bool enabled);
 
     /**
      * Returns whether the drop action menu is enabled and will
@@ -165,16 +165,16 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      * collection popup menu, "akonadi_collectionview_contextmenu".
      * @see KXMLGUIClient, KXMLGUIFactory::container()
      */
-    void setDefaultPopupMenu( const QString &name );
+    void setDefaultPopupMenu(const QString &name);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
      * a collection in the view.
      *
      * @param collection The clicked collection.
      */
-    void clicked( const Akonadi::Collection &collection );
+    void clicked(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the user has clicked
@@ -182,7 +182,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @param item The clicked item.
      */
-    void clicked( const Akonadi::Item &item );
+    void clicked(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the user has double clicked
@@ -190,7 +190,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @param collection The double clicked collection.
      */
-    void doubleClicked( const Akonadi::Collection &collection );
+    void doubleClicked(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the user has double clicked
@@ -198,7 +198,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @param item The double clicked item.
      */
-    void doubleClicked( const Akonadi::Item &item );
+    void doubleClicked(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the current collection
@@ -206,7 +206,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @param collection The new current collection.
      */
-    void currentChanged( const Akonadi::Collection &collection );
+    void currentChanged(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever the current item
@@ -214,29 +214,29 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @param item The new current item.
      */
-    void currentChanged( const Akonadi::Item &item );
+    void currentChanged(const Akonadi::Item &item);
 
-  protected:
+protected:
     using QTreeView::currentChanged;
 #ifndef QT_NO_DRAGANDDROP
-    virtual void startDrag( Qt::DropActions supportedActions );
-    virtual void dragMoveEvent( QDragMoveEvent *event );
-    virtual void dropEvent( QDropEvent *event );
+    virtual void startDrag(Qt::DropActions supportedActions);
+    virtual void dragMoveEvent(QDragMoveEvent *event);
+    virtual void dropEvent(QDropEvent *event);
 #endif
-    virtual void timerEvent( QTimerEvent *event );
+    virtual void timerEvent(QTimerEvent *event);
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 #endif
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemDoubleClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void slotSelectionChanged( const QItemSelection &, const QItemSelection & ) )
+    Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemDoubleClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged(const QItemSelection &, const QItemSelection &))
     //@endcond
 };
 

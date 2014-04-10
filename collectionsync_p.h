@@ -52,15 +52,15 @@ namespace Akonadi {
 */
 class CollectionSync : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new collection synchronzier.
       @param resourceId The identifier of the resource we are syncing.
       @param parent The parent object.
     */
-    explicit CollectionSync( const QString &resourceId, QObject *parent = 0 );
+    explicit CollectionSync(const QString &resourceId, QObject *parent = 0);
 
     /**
       Destroys this job.
@@ -73,15 +73,15 @@ class CollectionSync : public Job
       Important: All of these need a unique remote identifier and parent remote
       identifier.
     */
-    void setRemoteCollections( const Collection::List &remoteCollections );
+    void setRemoteCollections(const Collection::List &remoteCollections);
 
     /**
       Sets the result of an incremental remote collection listing.
       @param changedCollections A list of remotely added or changed collections.
       @param removedCollections A list of remotely deleted collections.
     */
-    void setRemoteCollections( const Collection::List &changedCollections,
-                               const Collection::List &removedCollections );
+    void setRemoteCollections(const Collection::List &changedCollections,
+                              const Collection::List &removedCollections);
 
     /**
       Enables streaming, that is not all collections are delivered at once.
@@ -90,7 +90,7 @@ class CollectionSync : public Job
       Must be called before the first call to setRemoteCollections().
       @param streaming enables streaming if set as @c true
     */
-    void setStreamingEnabled( bool streaming );
+    void setStreamingEnabled(bool streaming);
 
     /**
       Indicate that all collections have been retrieved in streaming mode.
@@ -103,26 +103,26 @@ class CollectionSync : public Job
       Must be called before the first call to setRemoteCollections().
       @param hierarchical @c true if collection remote IDs are relative to their parents' remote IDs
     */
-    void setHierarchicalRemoteIds( bool hierarchical );
+    void setHierarchicalRemoteIds(bool hierarchical);
 
     /**
       Do a rollback operation if needed. In read only cases this is a noop.
     */
     void rollback();
 
-  protected:
+protected:
     void doStart();
 
-  private:
+private:
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void localCollectionsReceived( const Akonadi::Collection::List &localCols ) )
-    Q_PRIVATE_SLOT( d, void localCollectionFetchResult( KJob* job ) )
-    Q_PRIVATE_SLOT( d, void updateLocalCollectionResult(KJob* job) )
-    Q_PRIVATE_SLOT( d, void createLocalCollectionResult(KJob* job) )
-    Q_PRIVATE_SLOT( d, void deleteLocalCollectionsResult(KJob* job) )
-    Q_PRIVATE_SLOT( d, void transactionSequenceResult(KJob* job) )
+    Q_PRIVATE_SLOT(d, void localCollectionsReceived(const Akonadi::Collection::List &localCols))
+    Q_PRIVATE_SLOT(d, void localCollectionFetchResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void updateLocalCollectionResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void createLocalCollectionResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void deleteLocalCollectionsResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void transactionSequenceResult(KJob *job))
 };
 
 }

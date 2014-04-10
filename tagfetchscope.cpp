@@ -28,7 +28,7 @@ struct Akonadi::TagFetchScope::Private
 };
 
 TagFetchScope::TagFetchScope()
-    :d(new Private)
+    : d(new Private)
 {
 
 }
@@ -38,7 +38,7 @@ TagFetchScope::~TagFetchScope()
 }
 
 TagFetchScope::TagFetchScope(const TagFetchScope &other)
-  : d(new Private)
+    : d(new Private)
 {
     operator=(other);
 }
@@ -54,7 +54,7 @@ QSet<QByteArray> TagFetchScope::attributes() const
     return d->mAttributes;
 }
 
-void TagFetchScope::fetchAttribute(const QByteArray & type, bool fetch)
+void TagFetchScope::fetchAttribute(const QByteArray &type, bool fetch)
 {
     if (fetch) {
         d->mAttributes.insert(type);

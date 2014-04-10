@@ -53,9 +53,9 @@ void MoveCommand::slotMoveResult(KJob *job)
         // handle errors
         Util::showJobError(job);
         emitResult(Failed);
-    }
-    else
+    } else {
         emitResult(OK);
+    }
 }
 
 #include "moc_movecommand_p.cpp"

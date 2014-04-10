@@ -44,7 +44,7 @@ class ItemModifyJobPrivate;
  *
  * // Fetch item with unique id 125
  * Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( 125 ) );
- * connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( fetchFinished( KJob* ) ) );
+ * connect( fetchJob, SIGNAL(result(KJob*)), SLOT(fetchFinished(KJob*)) );
  *
  * ...
  *
@@ -62,7 +62,7 @@ class ItemModifyJobPrivate;
  *
  *   // Store back modified item
  *   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item );
- *   connect( modifyJob, SIGNAL( result( KJob* ) ), SLOT( modifyFinished( KJob* ) ) );
+ *   connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
  * }
  *
  * MyClass::modifyFinished( KJob *job )
@@ -96,18 +96,18 @@ class ItemModifyJobPrivate;
  */
 class AKONADI_EXPORT ItemModifyJob : public Job
 {
-  friend class ResourceBase;
+    friend class ResourceBase;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item modify job.
      *
      * @param item The modified item object to store.
      * @param parent The parent object.
      */
-    explicit ItemModifyJob( const Item &item, QObject *parent = 0 );
+    explicit ItemModifyJob(const Item &item, QObject *parent = 0);
 
     /**
      * Creates a new item modify job for bulk modifications.
@@ -125,7 +125,7 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      * @param items The list of items to modify, must not be empty.
      * @since 4.6
      */
-    explicit ItemModifyJob( const Item::List &items, QObject *parent = 0 );
+    explicit ItemModifyJob(const Item::List &items, QObject *parent = 0);
 
     /**
      * Destroys the item modify job.
@@ -139,7 +139,7 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      * performance reasons.
      * @param ignore ignores payload if set as @c true
      */
-    void setIgnorePayload( bool ignore );
+    void setIgnorePayload(bool ignore);
 
     /**
      * Returns whether the payload of the modified item shall be
@@ -157,7 +157,7 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      * @note If disabled the GID will not be updated, but still be used for identification of the item.
      * @since 4.12
      */
-    void setUpdateGid( bool update );
+    void setUpdateGid(bool update);
 
     /**
      * Returns wheter the GID should be updated.
@@ -198,16 +198,16 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      */
     void disableAutomaticConflictHandling();
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( ItemModifyJob )
+    Q_DECLARE_PRIVATE(ItemModifyJob)
 
-    Q_PRIVATE_SLOT( d_func(), void conflictResolved() )
-    Q_PRIVATE_SLOT( d_func(), void conflictResolveError( const QString& ) )
+    Q_PRIVATE_SLOT(d_func(), void conflictResolved())
+    Q_PRIVATE_SLOT(d_func(), void conflictResolveError(const QString &))
     //@endcond
 };
 

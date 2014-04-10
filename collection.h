@@ -49,7 +49,7 @@ class CollectionStatistics;
  *
  * // fetching all collections recursive, starting at the root collection
  * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(fetchFinished(KJob*)) );
  *
  * ...
  *
@@ -74,7 +74,7 @@ class CollectionStatistics;
  */
 class AKONADI_EXPORT Collection : public Entity
 {
-  public:
+public:
     /**
      * Describes a list of collections.
      */
@@ -84,19 +84,19 @@ class AKONADI_EXPORT Collection : public Entity
      * Describes rights of a collection.
      */
     enum Right {
-      ReadOnly = 0x0,                   ///< Can only read items or subcollection of this collection
-      CanChangeItem = 0x1,              ///< Can change items in this collection
-      CanCreateItem = 0x2,              ///< Can create new items in this collection
-      CanDeleteItem = 0x4,              ///< Can delete items in this collection
-      CanChangeCollection = 0x8,        ///< Can change this collection
-      CanCreateCollection = 0x10,       ///< Can create new subcollections in this collection
-      CanDeleteCollection = 0x20,       ///< Can delete this collection
-      CanLinkItem = 0x40,               ///< Can create links to existing items in this virtual collection @since 4.4
-      CanUnlinkItem = 0x80,             ///< Can remove links to items in this virtual collection @since 4.4
-      AllRights = ( CanChangeItem | CanCreateItem | CanDeleteItem |
-                   CanChangeCollection | CanCreateCollection | CanDeleteCollection ) ///< Has all rights on this storage collection
+        ReadOnly = 0x0,                   ///< Can only read items or subcollection of this collection
+        CanChangeItem = 0x1,              ///< Can change items in this collection
+        CanCreateItem = 0x2,              ///< Can create new items in this collection
+        CanDeleteItem = 0x4,              ///< Can delete items in this collection
+        CanChangeCollection = 0x8,        ///< Can change this collection
+        CanCreateCollection = 0x10,       ///< Can create new subcollections in this collection
+        CanDeleteCollection = 0x20,       ///< Can delete this collection
+        CanLinkItem = 0x40,               ///< Can create links to existing items in this virtual collection @since 4.4
+        CanUnlinkItem = 0x80,             ///< Can remove links to items in this virtual collection @since 4.4
+        AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
+                     CanChangeCollection | CanCreateCollection | CanDeleteCollection)  ///< Has all rights on this storage collection
     };
-    Q_DECLARE_FLAGS( Rights, Right )
+    Q_DECLARE_FLAGS(Rights, Right)
 
     /**
      * Creates an invalid collection.
@@ -108,7 +108,7 @@ class AKONADI_EXPORT Collection : public Entity
      *
      * @param id The unique identifier of the collection.
      */
-    explicit Collection( Id id );
+    explicit Collection(Id id);
 
     /**
      * Destroys the collection.
@@ -118,12 +118,12 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Creates a collection from an @p other collection.
      */
-    Collection( const Collection &other );
+    Collection(const Collection &other);
 
     /**
      * Creates a collection from the given @p url.
      */
-    static Collection fromUrl( const KUrl &url );
+    static Collection fromUrl(const KUrl &url);
 
     /**
      * Returns the i18n'ed name of the collection.
@@ -144,7 +144,7 @@ class AKONADI_EXPORT Collection : public Entity
      *
      * @param name The new collection name.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
      * Returns the rights the user has on the collection.
@@ -154,7 +154,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Sets the @p rights the user has on the collection.
      */
-    void setRights( Rights rights );
+    void setRights(Rights rights);
 
     /**
      * Returns a list of possible content mimetypes,
@@ -166,7 +166,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Sets the list of possible content mime @p types.
      */
-    void setContentMimeTypes( const QStringList &types );
+    void setContentMimeTypes(const QStringList &types);
 
     /**
      * Returns the identifier of the parent collection.
@@ -179,14 +179,14 @@ class AKONADI_EXPORT Collection : public Entity
      * @param parent the parent identifier to set
      * @deprecated Use setParentCollection()
      */
-    AKONADI_DEPRECATED void setParent( Id parent );
+    AKONADI_DEPRECATED void setParent(Id parent);
 
     /**
      * Sets the parent @p collection.
      * @param collection the parent collection to set
      * @deprecated Use setParentCollection()
      */
-    AKONADI_DEPRECATED void setParent( const Collection &collection );
+    AKONADI_DEPRECATED void setParent(const Collection &collection);
 
     /**
      * Returns the parent remote identifier.
@@ -200,7 +200,7 @@ class AKONADI_EXPORT Collection : public Entity
      * @param identifier the parent's remote identifier to set
      * @deprecated Use setParentCollection()
      */
-    AKONADI_DEPRECATED void setParentRemoteId( const QString &identifier );
+    AKONADI_DEPRECATED void setParentRemoteId(const QString &identifier);
 
     /**
      * Returns the root collection.
@@ -227,7 +227,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Sets the @p identifier of the resource owning the collection.
      */
-    void setResource( const QString &identifier );
+    void setResource(const QString &identifier);
 
     /**
      * Returns the cache policy of the collection.
@@ -237,7 +237,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Sets the cache @p policy of the collection.
      */
-    void setCachePolicy( const CachePolicy &policy );
+    void setCachePolicy(const CachePolicy &policy);
 
     /**
      * Returns the collection statistics of the collection.
@@ -247,7 +247,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Sets the collection @p statistics for the collection.
      */
-    void setStatistics( const CollectionStatistics &statistics );
+    void setStatistics(const CollectionStatistics &statistics);
 
     /**
      * Returns the url of the collection.
@@ -262,8 +262,8 @@ class AKONADI_EXPORT Collection : public Entity
      * @since 4.7
      */
     enum UrlType {
-      UrlShort = 0,     ///< A short url which contains the identifier only (equivalent to url())
-      UrlWithName = 1   ///< A url with identifier and name
+        UrlShort = 0,     ///< A short url which contains the identifier only (equivalent to url())
+        UrlWithName = 1   ///< A url with identifier and name
     };
 
     /**
@@ -271,7 +271,7 @@ class AKONADI_EXPORT Collection : public Entity
      * @param type the type of url
      * @since 4.7
      */
-    KUrl url( UrlType type ) const;
+    KUrl url(UrlType type) const;
 
     /**
      * Returns whether the collection is virtual, for example a search collection.
@@ -288,22 +288,22 @@ class AKONADI_EXPORT Collection : public Entity
      */
     void setVirtual(bool isVirtual);
 
-  private:
-    AKONADI_DECLARE_PRIVATE( Collection )
+private:
+    AKONADI_DECLARE_PRIVATE(Collection)
     friend class CollectionFetchJob;
     friend class CollectionModifyJob;
 };
 
 }
 
-AKONADI_EXPORT uint qHash( const Akonadi::Collection &collection );
+AKONADI_EXPORT uint qHash(const Akonadi::Collection &collection);
 /**
  * Allows to output a collection for debugging purposes.
  */
-AKONADI_EXPORT QDebug operator<<( QDebug d, const Akonadi::Collection &collection );
+AKONADI_EXPORT QDebug operator<<(QDebug d, const Akonadi::Collection &collection);
 
 Q_DECLARE_METATYPE(Akonadi::Collection)
 Q_DECLARE_METATYPE(Akonadi::Collection::List)
-Q_DECLARE_OPERATORS_FOR_FLAGS( Akonadi::Collection::Rights )
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Collection::Rights)
 
 #endif

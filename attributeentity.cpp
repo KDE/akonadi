@@ -29,7 +29,7 @@ struct Akonadi::AttributeEntity::Private
 
     ~Private()
     {
-        qDeleteAll( mAttributes );
+        qDeleteAll(mAttributes);
     }
 
     Private(const Private &other)
@@ -40,18 +40,18 @@ struct Akonadi::AttributeEntity::Private
         mDeletedAttributes = other.mDeletedAttributes;
     }
 
-    QHash<QByteArray, Attribute*> mAttributes;
+    QHash<QByteArray, Attribute *> mAttributes;
     QSet<QByteArray> mDeletedAttributes;
 };
 
 AttributeEntity::AttributeEntity()
-    :d_ptr(new Private)
+    : d_ptr(new Private)
 {
 
 }
 
 AttributeEntity::AttributeEntity(const AttributeEntity &other)
-    :d_ptr(new Private)
+    : d_ptr(new Private)
 {
     operator=(other);
 }
@@ -61,9 +61,9 @@ AttributeEntity::~AttributeEntity()
 
 }
 
-Akonadi::AttributeEntity& Akonadi::AttributeEntity::operator=(const Akonadi::AttributeEntity &other)
+Akonadi::AttributeEntity &Akonadi::AttributeEntity::operator=(const Akonadi::AttributeEntity &other)
 {
-    QHash<QByteArray, Attribute*>::const_iterator it = other.d_ptr->mAttributes.constBegin();
+    QHash<QByteArray, Attribute *>::const_iterator it = other.d_ptr->mAttributes.constBegin();
     for (; it != other.d_ptr->mAttributes.constEnd(); it++) {
         d_ptr->mAttributes.insert(it.key(), it.value()->clone());
     }
@@ -71,7 +71,7 @@ Akonadi::AttributeEntity& Akonadi::AttributeEntity::operator=(const Akonadi::Att
     return *this;
 }
 
-void AttributeEntity::addAttribute(Attribute * attr)
+void AttributeEntity::addAttribute(Attribute *attr)
 {
     if (d_ptr->mAttributes.contains(attr->type())) {
         Attribute *existing = d_ptr->mAttributes.value(attr->type());
@@ -91,7 +91,7 @@ void AttributeEntity::removeAttribute(const QByteArray &type)
     delete d_ptr->mAttributes.take(type);
 }
 
-bool AttributeEntity::hasAttribute(const QByteArray & type) const
+bool AttributeEntity::hasAttribute(const QByteArray &type) const
 {
     return d_ptr->mAttributes.contains(type);
 }
@@ -103,14 +103,14 @@ Attribute::List AttributeEntity::attributes() const
 
 void Akonadi::AttributeEntity::clearAttributes()
 {
-    Q_FOREACH ( Attribute *attr, d_ptr->mAttributes ) {
-        d_ptr->mDeletedAttributes.insert( attr->type() );
+    Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
+        d_ptr->mDeletedAttributes.insert(attr->type());
         delete attr;
     }
     d_ptr->mAttributes.clear();
 }
 
-Attribute *AttributeEntity::attribute(const QByteArray & type) const
+Attribute *AttributeEntity::attribute(const QByteArray &type) const
 {
     if (d_ptr->mAttributes.contains(type)) {
         return d_ptr->mAttributes.value(type);
@@ -118,8 +118,7 @@ Attribute *AttributeEntity::attribute(const QByteArray & type) const
     return 0;
 }
 
-QSet<QByteArray>& AttributeEntity::removedAttributes() const
+QSet<QByteArray> &AttributeEntity::removedAttributes() const
 {
     return d_ptr->mDeletedAttributes;
 }
-

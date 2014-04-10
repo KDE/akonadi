@@ -29,26 +29,27 @@ using namespace Akonadi;
 
 class Akonadi::ResourceSelectJobPrivate : public JobPrivate
 {
-  public:
-    ResourceSelectJobPrivate( ResourceSelectJob *parent ) :
-      JobPrivate( parent )
-    {}
+public:
+    ResourceSelectJobPrivate(ResourceSelectJob *parent)
+        : JobPrivate(parent)
+    {
+    }
 
     QString resourceId;
 };
 
-ResourceSelectJob::ResourceSelectJob(const QString& identifier, QObject* parent)
-  : Job( new ResourceSelectJobPrivate( this ), parent )
+ResourceSelectJob::ResourceSelectJob(const QString &identifier, QObject *parent)
+    : Job(new ResourceSelectJobPrivate(this), parent)
 {
-  Q_D( ResourceSelectJob );
-  d->resourceId = identifier;
+    Q_D(ResourceSelectJob);
+    d->resourceId = identifier;
 }
 
 void ResourceSelectJob::doStart()
 {
-  Q_D( ResourceSelectJob );
-  d->writeData( d->newTag() + " " AKONADI_CMD_RESOURCESELECT " " + ImapParser::quote( d->resourceId.toUtf8() ) + '\n' );
-  emitWriteFinished();
+    Q_D(ResourceSelectJob);
+    d->writeData(d->newTag() + " " AKONADI_CMD_RESOURCESELECT " " + ImapParser::quote(d->resourceId.toUtf8()) + '\n');
+    emitWriteFinished();
 }
 
 #include "moc_resourceselectjob_p.cpp"

@@ -81,7 +81,7 @@ class ItemFetchScope;
  */
 class AKONADI_EXPORT ItemMonitor
 {
-  public:
+public:
     /**
      * Creates a new item monitor.
      */
@@ -95,20 +95,20 @@ class AKONADI_EXPORT ItemMonitor
     /**
      * Sets the @p item that shall be monitored.
      */
-    void setItem( const Item &item );
+    void setItem(const Item &item);
 
     /**
      * Returns the currently monitored item.
      */
-     Item item() const;
+    Item item() const;
 
-  protected:
+protected:
     /**
      * This method is called whenever the monitored item has changed.
      *
      * @param item The changed item.
      */
-    virtual void itemChanged( const Item &item );
+    virtual void itemChanged(const Item &item);
 
     /**
      * This method is called whenever the monitored item has been removed.
@@ -125,7 +125,7 @@ class AKONADI_EXPORT ItemMonitor
      *
      * @see fetchScope()
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -141,13 +141,13 @@ class AKONADI_EXPORT ItemMonitor
      */
     ItemFetchScope &fetchScope();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 
-    Q_DISABLE_COPY( ItemMonitor )
+    Q_DISABLE_COPY(ItemMonitor)
 };
 
 }

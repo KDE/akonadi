@@ -46,12 +46,12 @@ class ChangeRecorderPrivate;
  */
 class AKONADI_EXPORT ChangeRecorder : public Monitor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new change recorder.
      */
-    explicit ChangeRecorder( QObject *parent = 0 );
+    explicit ChangeRecorder(QObject *parent = 0);
 
     /**
      * Destroys the change recorder.
@@ -62,7 +62,7 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
     /**
      * Sets the QSettings object used for persistent recorded changes.
      */
-    void setConfig( QSettings *settings );
+    void setConfig(QSettings *settings);
 
     /**
      * Returns whether there are recorded changes.
@@ -80,20 +80,20 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
      * Change recording is enabled by default.
      * @param enable @c false to disable change recording. @c true by default
      */
-    void setChangeRecordingEnabled( bool enable );
+    void setChangeRecordingEnabled(bool enable);
 
     /**
      * Debugging: dump current list of notifications, as saved on disk.
      */
     QString dumpNotificationListToString() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Replay the next change notification and erase the previous one from the record.
      */
     void replayNext();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Emitted when new changes are recorded.
      */
@@ -107,14 +107,14 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
      */
     void nothingToReplay();
 
-  protected:
+protected:
     //@cond PRIVATE
-    explicit ChangeRecorder( ChangeRecorderPrivate *d, QObject *parent = 0  );
+    explicit ChangeRecorder(ChangeRecorderPrivate *d, QObject *parent = 0);
     //@endcond
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( ChangeRecorder )
+    Q_DECLARE_PRIVATE(ChangeRecorder)
     //@endcond
 };
 

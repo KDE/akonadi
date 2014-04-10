@@ -62,6 +62,7 @@ public:
     /**
       * Returns if the calendar already finished loading.
       * This is an alternative to listening for the loadFinished() signal.
+      * TODO_KDE5: make virtual in base class
       */
     bool isLoaded() const;
 

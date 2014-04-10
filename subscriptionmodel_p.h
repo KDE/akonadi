@@ -33,27 +33,27 @@ namespace Akonadi {
  */
 class SubscriptionModel : public CollectionModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /** Additional roles. */
     enum Roles {
-      SubscriptionChangedRole = CollectionModel::UserRole + 1 ///< Indicate the subscription status has been changed.
+        SubscriptionChangedRole = CollectionModel::UserRole + 1 ///< Indicate the subscription status has been changed.
     };
 
     /**
       Create a new subscription model.
       @param parent The parent object.
     */
-    explicit SubscriptionModel( QObject *parent = 0 );
+    explicit SubscriptionModel(QObject *parent = 0);
 
     /**
       Destructor.
     */
     ~SubscriptionModel();
 
-    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    Qt::ItemFlags flags( const QModelIndex &index ) const;
-    bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
     Collection::List subscribed() const;
     Collection::List unsubscribed() const;
@@ -64,16 +64,16 @@ class SubscriptionModel : public CollectionModel
      */
     void showHiddenCollection(bool showHidden);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       Emitted when the collection model is fully loaded.
     */
     void loaded();
 
-  private:
+private:
     class Private;
-    Private* const d;
-    Q_PRIVATE_SLOT( d, void listResult(KJob*) )
+    Private *const d;
+    Q_PRIVATE_SLOT(d, void listResult(KJob *))
 };
 
 }

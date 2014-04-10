@@ -32,45 +32,58 @@ namespace Akonadi {
 /** Shared implementation details between item and collection move jobs. */
 template <typename T, typename MoveJob> class MoveJobImpl : public JobPrivate
 {
-  public:
-    MoveJobImpl( Job *parent ) : JobPrivate( parent ) {}
-
-    inline void sendCommand( const char* asapCommand )
+public:
+    MoveJobImpl(Job *parent)
+        : JobPrivate(parent)
     {
-      MoveJob *q = static_cast<MoveJob*>( q_func() ); // Job would be enough already, but then we don't have access to the non-public stuff...
-      if ( objectsToMove.isEmpty() ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( i18n( "No objects specified for moving" ) );
-        q->emitResult();
-        return;
-      }
-      if ( !destination.isValid() && destination.remoteId().isEmpty() ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( i18n( "No valid destination specified" ) );
-        q->emitResult();
-        return;
-      }
+    }
 
-      QByteArray command = newTag();
-      try {
-        command += ProtocolHelper::entitySetToByteArray( objectsToMove, asapCommand );
-      } catch ( const std::exception &e ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( QString::fromUtf8( e.what() ) );
-        q->emitResult();
-        return;
-      }
-      command += ' ';
-      if ( objectsToMove.first().isValid() ) // with all the checks done before this indicates now whether this is a UID or RID based operation
-        command += QByteArray::number( destination.id() );
-      else
-        command += ImapParser::quote( destination.remoteId().toUtf8() );
-      command += '\n';
-      writeData( command );
+    inline void sendCommand(const char *asapCommand)
+    {
+        MoveJob *q = static_cast<MoveJob *>(q_func());  // Job would be enough already, but then we don't have access to the non-public stuff...
+        if (objectsToMove.isEmpty()) {
+            q->setError(Job::Unknown);
+            q->setErrorText(i18n("No objects specified for moving"));
+            q->emitResult();
+            return;
+        }
+        if (!destination.isValid() && destination.remoteId().isEmpty()) {
+            q->setError(Job::Unknown);
+            q->setErrorText(i18n("No valid destination specified"));
+            q->emitResult();
+            return;
+        }
+
+        QByteArray command = newTag();
+        try {
+            command += ProtocolHelper::entitySetToByteArray(objectsToMove, asapCommand);
+        } catch (const std::exception &e) {
+            q->setError(Job::Unknown);
+            q->setErrorText(QString::fromUtf8(e.what()));
+            q->emitResult();
+            return;
+        }
+        command += ' ';
+        // with all the checks done before this indicates now whether this is a UID or RID based operation
+        if (objectsToMove.first().isValid()) {
+            command += QByteArray::number(destination.id());
+        } else {
+            command += ImapParser::quote(destination.remoteId().toUtf8());
+        }
+
+        // Source is optional
+        if (source.isValid()) {
+            command += ' ' + QByteArray::number(source.id());
+        } else if (!source.remoteId().isEmpty()) {
+            command += ' ' + ImapParser::quote(source.remoteId().toUtf8());
+        }
+        command += '\n';
+        writeData(command);
     }
 
     typename T::List objectsToMove;
     Collection destination;
+    Collection source;
 };
 
 }

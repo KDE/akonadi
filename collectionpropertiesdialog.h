@@ -53,16 +53,16 @@ class Collection;
  */
 class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Enumerates the registered default pages which can be displayed.
      *
      * @since 4.7
      */
     enum DefaultPage {
-      GeneralPage,      //!< General properties page
-      CachePage         //!< Cache properties page
+        GeneralPage,      //!< General properties page
+        CachePage         //!< Cache properties page
     };
 
     /**
@@ -71,7 +71,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      * @param collection The collection which properties should be shown.
      * @param parent The parent widget.
      */
-    explicit CollectionPropertiesDialog( const Collection &collection, QWidget *parent = 0 );
+    explicit CollectionPropertiesDialog(const Collection &collection, QWidget *parent = 0);
 
     /**
      * Creates a new collection properties dialog.
@@ -88,7 +88,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      *
      * @since 4.6
      */
-    CollectionPropertiesDialog( const Collection &collection, const QStringList &pages, QWidget *parent = 0 );
+    CollectionPropertiesDialog(const Collection &collection, const QStringList &pages, QWidget *parent = 0);
 
     /**
      * Destroys the collection properties dialog.
@@ -105,7 +105,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      *
      * @see Akonadi::CollectionPropertiesPageFactory
      */
-    static void registerPage( CollectionPropertiesPageFactory *factory );
+    static void registerPage(CollectionPropertiesPageFactory *factory);
 
     /**
      * Sets whether to @p use default page or not.
@@ -113,7 +113,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      * @since 4.4
      * @param use mode of default page's usage
      */
-    static void useDefaultPage( bool use );
+    static void useDefaultPage(bool use);
 
     /**
      * Returns the object name of one of the dialog's registered default pages.
@@ -125,7 +125,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      *
      * @since 4.7
      */
-    static QString defaultPageObjectName( DefaultPage page );
+    static QString defaultPageObjectName(DefaultPage page);
 
     /**
      * Sets the page to be shown in the tab widget.
@@ -134,15 +134,15 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      *
      * @since 4.10
      */
-    void setCurrentPage( const QString &name );
+    void setCurrentPage(const QString &name);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void save() )
-    Q_PRIVATE_SLOT( d, void saveResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void save())
+    Q_PRIVATE_SLOT(d, void saveResult(KJob *))
     //@endcond
 };
 

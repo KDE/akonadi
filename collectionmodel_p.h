@@ -43,11 +43,15 @@ class Session;
  */
 class CollectionModelPrivate
 {
-  public:
-    Q_DECLARE_PUBLIC( CollectionModel )
-    explicit CollectionModelPrivate( CollectionModel *parent )
-      : q_ptr( parent ), monitor( 0 ), session( 0 ), fetchStatistics( false ), unsubscribed( false ),
-        headerContent( i18nc( "@title:column, name of a thing", "Name" ) )
+public:
+    Q_DECLARE_PUBLIC(CollectionModel)
+    explicit CollectionModelPrivate(CollectionModel *parent)
+        : q_ptr(parent)
+        , monitor(0)
+        , session(0)
+        , fetchStatistics(false)
+        , unsubscribed(false)
+        , headerContent(i18nc("@title:column, name of a thing", "Name"))
     {
     }
 
@@ -69,32 +73,32 @@ class CollectionModelPrivate
 
     void init();
     void startFirstListJob();
-    void collectionRemoved( const Akonadi::Collection& );
-    void collectionChanged( const Akonadi::Collection& );
-    void updateDone( KJob* );
-    void collectionStatisticsChanged( Collection::Id, const Akonadi::CollectionStatistics& );
-    void listDone( KJob* );
-    void editDone( KJob* );
-    void dropResult( KJob* );
-    void collectionsChanged( const Akonadi::Collection::List &cols );
+    void collectionRemoved(const Akonadi::Collection &);
+    void collectionChanged(const Akonadi::Collection &);
+    void updateDone(KJob *);
+    void collectionStatisticsChanged(Collection::Id, const Akonadi::CollectionStatistics &);
+    void listDone(KJob *);
+    void editDone(KJob *);
+    void dropResult(KJob *);
+    void collectionsChanged(const Akonadi::Collection::List &cols);
 
-    QModelIndex indexForId( Collection::Id id, int column = 0 ) const;
-    bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
-    bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
+    QModelIndex indexForId(Collection::Id id, int column = 0) const;
+    bool removeRowFromModel(int row, const QModelIndex &parent = QModelIndex());
+    bool supportsContentType(const QModelIndex &index, const QStringList &contentTypes);
 
-  private:
-    void updateSupportedMimeTypes( Collection col )
+private:
+    void updateSupportedMimeTypes(Collection col)
     {
-      const QStringList l = col.contentMimeTypes();
-      QStringList::ConstIterator constEnd(l.constEnd());
-      for ( QStringList::ConstIterator it = l.constBegin(); it != constEnd; ++it ) {
-        if ( ( *it ) == Collection::mimeType() ) {
-          continue;
+        const QStringList l = col.contentMimeTypes();
+        QStringList::ConstIterator constEnd(l.constEnd());
+        for (QStringList::ConstIterator it = l.constBegin(); it != constEnd; ++it) {
+            if ((*it) == Collection::mimeType()) {
+                continue;
+            }
+            if (!mimeTypes.contains(*it)) {
+                mimeTypes << *it;
+            }
         }
-        if ( !mimeTypes.contains( *it  ) ) {
-          mimeTypes << *it;
-        }
-      }
     }
 };
 

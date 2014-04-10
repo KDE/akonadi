@@ -28,65 +28,67 @@ using namespace Akonadi;
 
 class TrashFilterProxyModel::TrashFilterProxyModelPrivate
 {
-  public:
-    TrashFilterProxyModelPrivate() : mTrashIsShown( false ) {};
-    bool showEntity( const Entity & ) const;
+public:
+    TrashFilterProxyModelPrivate()
+        : mTrashIsShown(false)
+    {
+    };
+    bool showEntity(const Entity &) const;
     bool mTrashIsShown;
 };
 
-bool TrashFilterProxyModel::TrashFilterProxyModelPrivate::showEntity( const Akonadi::Entity &entity ) const
+bool TrashFilterProxyModel::TrashFilterProxyModelPrivate::showEntity(const Akonadi::Entity &entity) const
 {
-  if ( entity.hasAttribute<EntityDeletedAttribute>() ) {
-    return true;
-  }
-  if ( entity.id() == Collection::root().id() ) {
-    return false;
-  }
-  return showEntity( entity.parentCollection() );
+    if (entity.hasAttribute<EntityDeletedAttribute>()) {
+        return true;
+    }
+    if (entity.id() == Collection::root().id()) {
+        return false;
+    }
+    return showEntity(entity.parentCollection());
 }
 
-TrashFilterProxyModel::TrashFilterProxyModel( QObject* parent )
-    : KRecursiveFilterProxyModel( parent ),
-    d_ptr( new TrashFilterProxyModelPrivate() )
+TrashFilterProxyModel::TrashFilterProxyModel(QObject *parent)
+    : KRecursiveFilterProxyModel(parent)
+    , d_ptr(new TrashFilterProxyModelPrivate())
 {
 
 }
 
 TrashFilterProxyModel::~TrashFilterProxyModel()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
-void TrashFilterProxyModel::showTrash( bool enable )
+void TrashFilterProxyModel::showTrash(bool enable)
 {
-  Q_D( TrashFilterProxyModel );
-  d->mTrashIsShown = enable;
-  invalidateFilter();
+    Q_D(TrashFilterProxyModel);
+    d->mTrashIsShown = enable;
+    invalidateFilter();
 }
 
 bool TrashFilterProxyModel::trashIsShown() const
 {
-  Q_D( const TrashFilterProxyModel );
-  return d->mTrashIsShown;
+    Q_D(const TrashFilterProxyModel);
+    return d->mTrashIsShown;
 }
 
-bool TrashFilterProxyModel::acceptRow( int sourceRow, const QModelIndex& sourceParent ) const
+bool TrashFilterProxyModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-  Q_D( const TrashFilterProxyModel );
-  const QModelIndex &index = sourceModel()->index( sourceRow, 0, sourceParent );
-  const Item &item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-  //kDebug() << item.id();
-  if ( item.isValid() ) {
-    if ( item.hasAttribute<EntityDeletedAttribute>()/* d->showEntity(item)*/ ) {
-      return d->mTrashIsShown;
+    Q_D(const TrashFilterProxyModel);
+    const QModelIndex &index = sourceModel()->index(sourceRow, 0, sourceParent);
+    const Item &item = index.data(EntityTreeModel::ItemRole).value<Item>();
+    //kDebug() << item.id();
+    if (item.isValid()) {
+        if (item.hasAttribute<EntityDeletedAttribute>()/* d->showEntity(item)*/) {
+            return d->mTrashIsShown;
+        }
     }
-  }
-  const Collection &collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( collection.isValid() ) {
-    if ( collection.hasAttribute<EntityDeletedAttribute>()/*d->showEntity(collection) */ ) {
-      return d->mTrashIsShown;
+    const Collection &collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (collection.isValid()) {
+        if (collection.hasAttribute<EntityDeletedAttribute>()/*d->showEntity(collection) */) {
+            return d->mTrashIsShown;
+        }
     }
-  }
-  return !d->mTrashIsShown;
+    return !d->mTrashIsShown;
 }
-

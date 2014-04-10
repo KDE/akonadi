@@ -47,7 +47,7 @@ class PartFetcherPrivate;
  * const QModelIndex index = view->selectionModel()->currentIndex();
  *
  * PartFetcher *fetcher = new PartFetcher( index, Akonadi::MessagePart::Envelope );
- * connect( fetcher, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+ * connect( fetcher, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
  * fetcher->start();
  *
  * ...
@@ -72,9 +72,9 @@ class PartFetcherPrivate;
  */
 class AKONADI_EXPORT PartFetcher : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new part fetcher.
      *
@@ -82,7 +82,7 @@ class AKONADI_EXPORT PartFetcher : public KJob
      * @param partName The name of the payload part to fetch.
      * @param parent The parent object.
      */
-    PartFetcher( const QModelIndex &index, const QByteArray &partName, QObject *parent = 0 );
+    PartFetcher(const QModelIndex &index, const QByteArray &partName, QObject *parent = 0);
 
     /**
      * Destroys the part fetcher.
@@ -109,12 +109,12 @@ class AKONADI_EXPORT PartFetcher : public KJob
      */
     Item item() const;
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( Akonadi::PartFetcher )
+    Q_DECLARE_PRIVATE(Akonadi::PartFetcher)
     PartFetcherPrivate *const d_ptr;
 
-    Q_PRIVATE_SLOT( d_func(), void fetchJobDone( KJob *job ) )
+    Q_PRIVATE_SLOT(d_func(), void fetchJobDone(KJob *job))
     //@endcond
 };
 

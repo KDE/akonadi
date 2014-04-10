@@ -23,67 +23,68 @@
 
 using namespace Akonadi;
 
-AsyncSelectionHandler::AsyncSelectionHandler( QAbstractItemModel *model, QObject *parent )
-  : QObject( parent ), mModel( model )
+AsyncSelectionHandler::AsyncSelectionHandler(QAbstractItemModel *model, QObject *parent)
+    : QObject(parent)
+    , mModel(model)
 {
-  Q_ASSERT( mModel );
+    Q_ASSERT(mModel);
 
-  connect( mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-           this, SLOT(rowsInserted(QModelIndex,int,int)) );
+    connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(rowsInserted(QModelIndex,int,int)));
 }
 
 AsyncSelectionHandler::~AsyncSelectionHandler()
 {
 }
 
-bool AsyncSelectionHandler::scanSubTree( const QModelIndex &index, bool searchForItem )
+bool AsyncSelectionHandler::scanSubTree(const QModelIndex &index, bool searchForItem)
 {
-  if ( searchForItem ) {
-    const Item::Id id = index.data( EntityTreeModel::ItemIdRole ).toLongLong();
+    if (searchForItem) {
+        const Item::Id id = index.data(EntityTreeModel::ItemIdRole).toLongLong();
 
-    if ( mItem.id() == id ) {
-      emit itemAvailable( index );
-      return true;
+        if (mItem.id() == id) {
+            emit itemAvailable(index);
+            return true;
+        }
+    } else {
+        const Collection::Id id = index.data(EntityTreeModel::CollectionIdRole).toLongLong();
+
+        if (mCollection.id() == id) {
+            emit collectionAvailable(index);
+            return true;
+        }
     }
-  } else {
-    const Collection::Id id = index.data( EntityTreeModel::CollectionIdRole ).toLongLong();
 
-    if ( mCollection.id() == id ) {
-      emit collectionAvailable( index );
-      return true;
+    for (int row = 0; row < mModel->rowCount(index); ++row) {
+        const QModelIndex childIndex = mModel->index(row, 0, index);
+        if (scanSubTree(childIndex, searchForItem)) {
+            return true;
+        }
     }
-  }
 
-  for ( int row = 0; row < mModel->rowCount( index ); ++row ) {
-    const QModelIndex childIndex = mModel->index( row, 0, index );
-    if ( scanSubTree( childIndex, searchForItem ) ) {
-      return true;
-    }
-  }
-
-  return false;
+    return false;
 }
 
-void AsyncSelectionHandler::waitForCollection( const Collection &collection )
+void AsyncSelectionHandler::waitForCollection(const Collection &collection)
 {
-  mCollection = collection;
+    mCollection = collection;
 
-  scanSubTree( QModelIndex(), false );
+    scanSubTree(QModelIndex(), false);
 }
 
-void AsyncSelectionHandler::waitForItem( const Item &item )
+void AsyncSelectionHandler::waitForItem(const Item &item)
 {
-  mItem = item;
+    mItem = item;
 
-  scanSubTree( QModelIndex(), true );
+    scanSubTree(QModelIndex(), true);
 }
 
-void AsyncSelectionHandler::rowsInserted( const QModelIndex &parent, int start, int end )
+void AsyncSelectionHandler::rowsInserted(const QModelIndex &parent, int start, int end)
 {
-  for ( int i = start; i <= end; ++i ) {
-    scanSubTree( mModel->index( i, 0, parent ), false );
-    scanSubTree( mModel->index( i, 0, parent ), true );
-  }
+    for (int i = start; i <= end; ++i) {
+        scanSubTree(mModel->index(i, 0, parent), false);
+        scanSubTree(mModel->index(i, 0, parent), true);
+    }
 }
 
 #include "moc_asyncselectionhandler_p.cpp"

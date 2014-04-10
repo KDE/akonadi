@@ -27,23 +27,23 @@ using namespace Akonadi;
  */
 class CachePolicy::Private : public QSharedData
 {
-  public:
-    Private() :
-      QSharedData(),
-      inherit( true ),
-      timeout( -1 ),
-      interval( -1 ),
-      syncOnDemand( false )
+public:
+    Private()
+        : QSharedData()
+        , inherit(true)
+        , timeout(-1)
+        , interval(-1)
+        , syncOnDemand(false)
     {}
 
-    Private( const Private &other ) :
-      QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      inherit = other.inherit;
-      localParts = other.localParts;
-      timeout = other.timeout;
-      interval = other.interval;
-      syncOnDemand = other.syncOnDemand;
+        inherit = other.inherit;
+        localParts = other.localParts;
+        timeout = other.timeout;
+        interval = other.interval;
+        syncOnDemand = other.syncOnDemand;
     }
 
     bool inherit;
@@ -53,13 +53,13 @@ class CachePolicy::Private : public QSharedData
     bool syncOnDemand;
 };
 
-CachePolicy::CachePolicy() :
-    d( new Private )
+CachePolicy::CachePolicy()
+    : d(new Private)
 {
 }
 
-CachePolicy::CachePolicy(const CachePolicy & other) :
-    d( other.d )
+CachePolicy::CachePolicy(const CachePolicy &other)
+    : d(other.d)
 {
 }
 
@@ -67,79 +67,79 @@ CachePolicy::~ CachePolicy()
 {
 }
 
-CachePolicy & CachePolicy::operator =(const CachePolicy & other)
+CachePolicy &CachePolicy::operator =(const CachePolicy &other)
 {
-  d = other.d;
-  return *this;
+    d = other.d;
+    return *this;
 }
 
-bool Akonadi::CachePolicy::operator ==(const CachePolicy & other) const
+bool Akonadi::CachePolicy::operator ==(const CachePolicy &other) const
 {
-  if ( !d->inherit && !other.d->inherit ) {
-    return d->localParts == other.d->localParts
-        && d->timeout == other.d->timeout
-        && d->interval == other.d->interval
-        && d->syncOnDemand == other.d->syncOnDemand;
-  }
-  return d->inherit == other.d->inherit;
+    if (!d->inherit && !other.d->inherit) {
+        return d->localParts == other.d->localParts
+               && d->timeout == other.d->timeout
+               && d->interval == other.d->interval
+               && d->syncOnDemand == other.d->syncOnDemand;
+    }
+    return d->inherit == other.d->inherit;
 }
 
 bool CachePolicy::inheritFromParent() const
 {
-  return d->inherit;
+    return d->inherit;
 }
 
 void CachePolicy::setInheritFromParent(bool inherit)
 {
-  d->inherit = inherit;
+    d->inherit = inherit;
 }
 
 QStringList CachePolicy::localParts() const
 {
-  return d->localParts;
+    return d->localParts;
 }
 
-void CachePolicy::setLocalParts(const QStringList & parts)
+void CachePolicy::setLocalParts(const QStringList &parts)
 {
-  d->localParts = parts;
+    d->localParts = parts;
 }
 
 int CachePolicy::cacheTimeout() const
 {
-  return d->timeout;
+    return d->timeout;
 }
 
 void CachePolicy::setCacheTimeout(int timeout)
 {
-  d->timeout = timeout;
+    d->timeout = timeout;
 }
 
 int CachePolicy::intervalCheckTime() const
 {
-  return d->interval;
+    return d->interval;
 }
 
 void CachePolicy::setIntervalCheckTime(int time)
 {
-  d->interval = time;
+    d->interval = time;
 }
 
 bool CachePolicy::syncOnDemand() const
 {
-  return d->syncOnDemand;
+    return d->syncOnDemand;
 }
 
 void CachePolicy::setSyncOnDemand(bool enable)
 {
-  d->syncOnDemand = enable;
+    d->syncOnDemand = enable;
 }
 
-QDebug operator<<( QDebug d, const CachePolicy& c )
+QDebug operator<<(QDebug d, const CachePolicy &c)
 {
     return d << "CachePolicy: " << endl
-            << "   inherit:" << c.inheritFromParent() << endl
-            << "   interval:" << c.intervalCheckTime() << endl
-            << "   timeout:" << c.cacheTimeout() << endl
-            << "   sync on demand:" << c.syncOnDemand() << endl
-            << "   local parts:" << c.localParts();
+           << "   inherit:" << c.inheritFromParent() << endl
+           << "   interval:" << c.intervalCheckTime() << endl
+           << "   timeout:" << c.cacheTimeout() << endl
+           << "   sync on demand:" << c.syncOnDemand() << endl
+           << "   local parts:" << c.localParts();
 }

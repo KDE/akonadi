@@ -56,7 +56,7 @@ namespace Akonadi
  * const Akonadi::Item::List items = ...
  *
  * TrashJob *job = new TrashJob( items );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
  * @endcode
  *
@@ -67,7 +67,7 @@ class AKONADI_EXPORT TrashJob : public Job
 {
     Q_OBJECT
 
-  public:
+public:
 
     /**
      * Creates a new trash job that marks @p item as trash, and moves it to the configured trash collection.
@@ -77,7 +77,7 @@ class AKONADI_EXPORT TrashJob : public Job
      * @param item The item to mark as trash.
      * @param parent The parent object.
      */
-    explicit TrashJob( const Item &item, QObject *parent = 0 );
+    explicit TrashJob(const Item &item, QObject *parent = 0);
 
     /**
      * Creates a new trash job that marks all items in the list
@@ -89,7 +89,7 @@ class AKONADI_EXPORT TrashJob : public Job
      * @param items The items to mark as trash.
      * @param parent The parent object.
      */
-    explicit TrashJob( const Item::List &items, QObject *parent = 0 );
+    explicit TrashJob(const Item::List &items, QObject *parent = 0);
 
     /**
      * Creates a new trash job that marks @p collection as trash, and moves it to the configured trash collection.
@@ -100,41 +100,41 @@ class AKONADI_EXPORT TrashJob : public Job
      * @param collection The collection to mark as trash.
      * @param parent The parent object.
      */
-    explicit TrashJob( const Collection &collection, QObject *parent = 0 );
+    explicit TrashJob(const Collection &collection, QObject *parent = 0);
 
     ~TrashJob();
 
     /**
      * Ignore configured Trash collections and keep all items local
      */
-    void keepTrashInCollection( bool enable );
+    void keepTrashInCollection(bool enable);
 
     /**
      * Moves all entities to the give collection
      */
-    void setTrashCollection( const Collection &trashcollection );
+    void setTrashCollection(const Collection &trashcollection);
 
     /**
      * Delete Items which are already in trash, instead of ignoring them
      */
-    void deleteIfInTrash( bool enable );
+    void deleteIfInTrash(bool enable);
 
     Item::List items() const;
 
-  protected:
+protected:
     virtual void doStart();
 
-  private:
+private:
     //@cond PRIVATE
     class TrashJobPrivate;
-    Q_DECLARE_PRIVATE( TrashJob )
-    Q_PRIVATE_SLOT( d_func(), void selectResult( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void setAttribute( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void setAttribute( const Akonadi::Item::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void setAttribute( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionsReceived( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void itemsReceived( const Akonadi::Item::List & ) )
-    Q_PRIVATE_SLOT( d_func(), void parentCollectionReceived( const Akonadi::Collection::List & ) )
+    Q_DECLARE_PRIVATE(TrashJob)
+    Q_PRIVATE_SLOT(d_func(), void selectResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void setAttribute(const Akonadi::Collection::List &))
+    Q_PRIVATE_SLOT(d_func(), void setAttribute(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d_func(), void setAttribute(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void collectionsReceived(const Akonadi::Collection::List &))
+    Q_PRIVATE_SLOT(d_func(), void itemsReceived(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d_func(), void parentCollectionReceived(const Akonadi::Collection::List &))
     //@endcond
 };
 

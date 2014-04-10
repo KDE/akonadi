@@ -28,79 +28,83 @@ using namespace Akonadi;
 
 class Exception::Private
 {
-  public:
+public:
     QByteArray what;
     QByteArray assembledWhat;
 };
 
-Exception::Exception(const char* what) throw() :
-  d( 0 )
+Exception::Exception(const char *what) throw()
+    : d(0)
 {
-  try {
-    std::auto_ptr<Private> nd( new Private );
-    nd->what = what;
-    d = nd.release();
-  } catch ( ... ) {}
+    try {
+        std::auto_ptr<Private> nd(new Private);
+        nd->what = what;
+        d = nd.release();
+    } catch (...) {}
 }
 
-Exception::Exception(const QByteArray& what) throw() :
-  d( 0 )
+Exception::Exception(const QByteArray &what) throw()
+    : d(0)
 {
-  try {
-    std::auto_ptr<Private> nd( new Private );
-    nd->what = what;
-    d = nd.release();
-  } catch ( ... ) {}
+    try {
+        std::auto_ptr<Private> nd(new Private);
+        nd->what = what;
+        d = nd.release();
+    } catch (...) {}
 }
 
-Exception::Exception(const QString& what) throw() :
-  d( 0 )
+Exception::Exception(const QString &what) throw()
+    : d(0)
 {
-  try {
-    std::auto_ptr<Private> nd( new Private );
-    nd->what = what.toUtf8();
-    d = nd.release();
-  } catch ( ... ) {}
+    try {
+        std::auto_ptr<Private> nd(new Private);
+        nd->what = what.toUtf8();
+        d = nd.release();
+    } catch (...) {}
 }
 
-Exception::Exception(const Akonadi::Exception& other) throw() :
-  std::exception( other ), d( 0 )
+Exception::Exception(const Akonadi::Exception &other) throw()
+    : std::exception(other)
+    , d(0)
 {
-  if ( !other.d )
-    return;
-  try {
-    std::auto_ptr<Private> nd( new Private( *other.d ) );
-    d = nd.release();
-  } catch ( ... ) {}
+    if (!other.d) {
+        return;
+    }
+    try {
+        std::auto_ptr<Private> nd(new Private(*other.d));
+        d = nd.release();
+    } catch (...) {}
 }
 
 Exception::~Exception() throw()
 {
-  delete d;
+    delete d;
 }
 
 QByteArray Exception::type() const throw()
 {
-  static const char mytype[] = "Akonadi::Exception";
-  try {
-    return QByteArray::fromRawData( "Akonadi::Exception", sizeof(mytype) - 1 );
-  } catch ( ... ) {
-    return QByteArray();
-  }
+    static const char mytype[] = "Akonadi::Exception";
+    try {
+        return QByteArray::fromRawData("Akonadi::Exception", sizeof (mytype) - 1);
+    } catch (...) {
+        return QByteArray();
+    }
 }
 
-const char* Exception::what() const throw()
+const char *Exception::what() const throw()
 {
-  static const char fallback[] = "<some exception was thrown during construction: message lost>";
-  if ( !d )
-    return fallback;
-  if ( d->assembledWhat.isEmpty() )
-    try {
-      d->assembledWhat = QByteArray( type() + ": " + d->what );
-    } catch ( ... ) {
-      return "caught some exception while assembling Akonadi::Exception::what() return value";
+    static const char fallback[] = "<some exception was thrown during construction: message lost>";
+    if (!d) {
+        return fallback;
     }
-  return d->assembledWhat.constData();
+    if (d->assembledWhat.isEmpty()) {
+        try {
+            d->assembledWhat = QByteArray(type() + ": " + d->what);
+        } catch (...) {
+            return "caught some exception while assembling Akonadi::Exception::what() return value";
+        }
+    }
+    return d->assembledWhat.constData();
 }
 
 #define AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( classname )       \
@@ -108,12 +112,12 @@ const char* Exception::what() const throw()
     QByteArray Akonadi::classname::type() const throw() {               \
         static const char mytype[] = "Akonadi::" #classname ;           \
         try {                                                           \
-            return QByteArray::fromRawData( mytype, sizeof(mytype)-1 ); \
+            return QByteArray::fromRawData( mytype, sizeof (mytype)-1 ); \
         } catch ( ... ) {                                               \
             return QByteArray();                                        \
         }                                                               \
     }
 
-AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( PayloadException )
+AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE(PayloadException)
 
 #undef AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE

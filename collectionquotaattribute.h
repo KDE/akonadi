@@ -49,7 +49,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * Creates a new collection quota attribute.
      */
@@ -61,7 +61,7 @@ class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
      * @param currentValue The current quota value in bytes.
      * @param maxValue The maximum quota value in bytes.
      */
-    CollectionQuotaAttribute( qint64 currentValue, qint64 maxValue );
+    CollectionQuotaAttribute(qint64 currentValue, qint64 maxValue);
 
     /**
      * Destroys the collection quota attribute.
@@ -73,14 +73,14 @@ class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
      *
      * @param value The current quota value in bytes.
      */
-    void setCurrentValue( qint64 value );
+    void setCurrentValue(qint64 value);
 
     /**
      * Sets the maximum quota @p value for the collection.
      *
      * @param value The maximum quota value in bytes.
      */
-    void setMaximumValue( qint64 value );
+    void setMaximumValue(qint64 value);
 
     /**
      * Returns the current quota value in bytes.
@@ -95,12 +95,12 @@ class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
     virtual QByteArray type() const;
     virtual Attribute *clone() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

@@ -32,17 +32,17 @@ QT_END_NAMESPACE
 namespace Akonadi {
 
 class KDSignalBlocker {
-    Q_DISABLE_COPY( KDSignalBlocker )
+    Q_DISABLE_COPY(KDSignalBlocker)
 public:
-    explicit KDSignalBlocker( QObject * o );
-    explicit KDSignalBlocker( QObject & o );
+    explicit KDSignalBlocker(QObject *o);
+    explicit KDSignalBlocker(QObject &o);
     ~KDSignalBlocker();
 
     void unblock();
     void reblock();
 private:
     const bool wasBlocked;
-    QObject * const object;
+    QObject *const object;
 };
 
 }

@@ -42,7 +42,7 @@ class CollectionStatisticsJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
  *
  * ...
  *
@@ -65,16 +65,16 @@ class CollectionStatisticsJobPrivate;
  */
 class AKONADI_EXPORT CollectionStatisticsJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection statistics job.
      *
      * @param collection The collection to fetch the statistics from.
      * @param parent The parent object.
      */
-    explicit CollectionStatisticsJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionStatisticsJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the collection statistics job.
@@ -92,12 +92,12 @@ class AKONADI_EXPORT CollectionStatisticsJob : public Job
      */
     Collection collection() const;
 
-  protected:
+protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionStatisticsJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionStatisticsJob)
 };
 
 }

@@ -29,7 +29,10 @@
 using namespace Akonadi;
 
 struct TagManagementDialog::Private {
-    Private(KDialog *parent): d(parent){};
+    Private(KDialog *parent)
+        : d(parent)
+    {
+    };
     void writeConfig();
     void readConfig();
     KDialog *d;
@@ -38,22 +41,21 @@ struct TagManagementDialog::Private {
 void TagManagementDialog::Private::writeConfig()
 {
     KConfigGroup group(KGlobal::config(), "TagManagementDialog");
-    group.writeEntry( "Size", d->size() );
+    group.writeEntry("Size", d->size());
 }
 
 void TagManagementDialog::Private::readConfig()
 {
     KConfigGroup group(KGlobal::config(), "TagManagementDialog");
-    const QSize sizeDialog = group.readEntry("Size", QSize(500,400));
+    const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
-        d->resize( sizeDialog );
+        d->resize(sizeDialog);
     }
 }
 
-
-TagManagementDialog::TagManagementDialog(QWidget* parent)
-:   KDialog(parent),
-    d(new Private(this))
+TagManagementDialog::TagManagementDialog(QWidget *parent)
+    : KDialog(parent)
+    , d(new Private(this))
 {
     setCaption(i18nc("@title:window", "Manage Tags"));
     setButtons(KDialog::Ok | KDialog::Cancel);

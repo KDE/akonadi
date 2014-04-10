@@ -28,30 +28,29 @@
 
 #include <akonadi/private/protocol_p.h>
 
-
 using namespace Akonadi;
 
 class Akonadi::CollectionModifyJobPrivate : public JobPrivate
 {
-  public:
-    CollectionModifyJobPrivate( CollectionModifyJob *parent )
-      : JobPrivate( parent )
+public:
+    CollectionModifyJobPrivate(CollectionModifyJob *parent)
+        : JobPrivate(parent)
     {
     }
 
     virtual QString jobDebuggingString() const
     {
-      return QString::fromLatin1( "Collection Id %1" ).arg( mCollection.id() );
+        return QString::fromLatin1("Collection Id %1").arg(mCollection.id());
     }
 
     Collection mCollection;
 };
 
-CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject * parent )
-  : Job( new CollectionModifyJobPrivate( this ), parent )
+CollectionModifyJob::CollectionModifyJob(const Collection &collection, QObject *parent)
+    : Job(new CollectionModifyJobPrivate(this), parent)
 {
-  Q_D( CollectionModifyJob );
-  d->mCollection = collection;
+    Q_D(CollectionModifyJob);
+    d->mCollection = collection;
 }
 
 CollectionModifyJob::~CollectionModifyJob()
@@ -60,59 +59,58 @@ CollectionModifyJob::~CollectionModifyJob()
 
 void CollectionModifyJob::doStart()
 {
-  Q_D( CollectionModifyJob );
-  QByteArray command = d->newTag();
-  try {
-    command += ProtocolHelper::entityIdToByteArray( d->mCollection, AKONADI_CMD_COLLECTIONMODIFY );
-  } catch ( const std::exception &e ) {
-    setError( Job::Unknown );
-    setErrorText( QString::fromUtf8( e.what() ) );
-    emitResult();
-    return;
-  }
-
-  QByteArray changes;
-  if ( d->mCollection.d_func()->contentTypesChanged ) {
-    QList<QByteArray> bList;
-    foreach ( const QString &s, d->mCollection.contentMimeTypes() ) {
-      bList << s.toLatin1();
+    Q_D(CollectionModifyJob);
+    QByteArray command = d->newTag();
+    try {
+        command += ProtocolHelper::entityIdToByteArray(d->mCollection, AKONADI_CMD_COLLECTIONMODIFY);
+    } catch (const std::exception &e) {
+        setError(Job::Unknown);
+        setErrorText(QString::fromUtf8(e.what()));
+        emitResult();
+        return;
     }
-    changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
-  }
-  if ( d->mCollection.parentCollection().id() >= 0 ) {
-    changes += " PARENT " + QByteArray::number( d->mCollection.parentCollection().id() );
-  }
-  if ( !d->mCollection.name().isEmpty() ) {
-    changes += " NAME " + ImapParser::quote( d->mCollection.name().toUtf8() );
-  }
-  if ( !d->mCollection.remoteId().isNull() ) {
-    changes += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
-  }
-  if ( !d->mCollection.remoteRevision().isNull() ) {
-    changes += " REMOTEREVISION " + ImapParser::quote( d->mCollection.remoteRevision().toUtf8() );
-  }
-  if ( d->mCollection.d_func()->cachePolicyChanged ) {
-    changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
-  }
-  if ( d->mCollection.attributes().count() > 0 ) {
-    changes += ' ' + ProtocolHelper::attributesToByteArray( d->mCollection );
-  }
-  foreach ( const QByteArray &b, d->mCollection.d_func()->mDeletedAttributes ) {
-    changes += " -" + b;
-  }
-  if ( changes.isEmpty() ) {
-    emitResult();
-    return;
-  }
-  command += changes + '\n';
-  d->writeData( command );
 
-  ChangeMediator::invalidateCollection( d->mCollection );
+    QByteArray changes;
+    if (d->mCollection.d_func()->contentTypesChanged) {
+        QList<QByteArray> bList;
+        foreach (const QString &s, d->mCollection.contentMimeTypes()) {
+            bList << s.toLatin1();
+        }
+        changes += " MIMETYPE (" + ImapParser::join(bList, " ") + ')';
+    }
+    if (d->mCollection.parentCollection().id() >= 0) {
+        changes += " PARENT " + QByteArray::number(d->mCollection.parentCollection().id());
+    }
+    if (!d->mCollection.name().isEmpty()) {
+        changes += " NAME " + ImapParser::quote(d->mCollection.name().toUtf8());
+    }
+    if (!d->mCollection.remoteId().isNull()) {
+        changes += " REMOTEID " + ImapParser::quote(d->mCollection.remoteId().toUtf8());
+    }
+    if (!d->mCollection.remoteRevision().isNull()) {
+        changes += " REMOTEREVISION " + ImapParser::quote(d->mCollection.remoteRevision().toUtf8());
+    }
+    if (d->mCollection.d_func()->cachePolicyChanged) {
+        changes += ' ' + ProtocolHelper::cachePolicyToByteArray(d->mCollection.cachePolicy());
+    }
+    if (d->mCollection.attributes().count() > 0) {
+        changes += ' ' + ProtocolHelper::attributesToByteArray(d->mCollection);
+    }
+    foreach (const QByteArray &b, d->mCollection.d_func()->mDeletedAttributes) {
+        changes += " -" + b;
+    }
+    if (changes.isEmpty()) {
+        emitResult();
+        return;
+    }
+    command += changes + '\n';
+    d->writeData(command);
+
+    ChangeMediator::invalidateCollection(d->mCollection);
 }
 
 Collection CollectionModifyJob::collection() const
 {
-  const Q_D( CollectionModifyJob );
-  return d->mCollection;
+    const Q_D(CollectionModifyJob);
+    return d->mCollection;
 }
-

@@ -59,15 +59,15 @@ class EntityRightsFilterModelPrivate;
  */
 class AKONADI_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new entity rights filter model.
      *
      * @param parent The parent object.
      */
-    explicit EntityRightsFilterModel( QObject *parent = 0 );
+    explicit EntityRightsFilterModel(QObject *parent = 0);
 
     /**
      * Destroys the entity rights filter model.
@@ -80,31 +80,31 @@ class AKONADI_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
      * is assumed.
      * @param rights the access rights filter values
      */
-    void setAccessRights( Collection::Rights rights );
+    void setAccessRights(Collection::Rights rights);
 
     /**
      * Returns the access rights that are used for filtering.
      */
-     Collection::Rights accessRights() const;
+    Collection::Rights accessRights() const;
 
     /**
      * @reimp
      */
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
     /**
      * @reimp
      */
-    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
 
-  protected:
-    virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
+protected:
+    virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
-  private:
+private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( EntityRightsFilterModel )
-    EntityRightsFilterModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(EntityRightsFilterModel)
+    EntityRightsFilterModelPrivate *const d_ptr;
     //@endcond
 };
 

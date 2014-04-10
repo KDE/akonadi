@@ -42,7 +42,7 @@ class CollectionAttributesSynchronizationJobPrivate;
  * const Collection collection = ...;
  *
  * CollectionAttributesSynchronizationJob *job = new CollectionAttributesSynchronizationJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( synchronizationFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(synchronizationFinished(KJob*)) );
  *
  * @endcode
  *
@@ -53,15 +53,15 @@ class CollectionAttributesSynchronizationJobPrivate;
  */
 class AKONADI_EXPORT CollectionAttributesSynchronizationJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new synchronization job for the given collection.
      *
      * @param collection The collection to synchronize.
      */
-    explicit CollectionAttributesSynchronizationJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionAttributesSynchronizationJob(const Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the synchronization job.
@@ -71,13 +71,13 @@ class AKONADI_EXPORT CollectionAttributesSynchronizationJob : public KJob
     /* reimpl */
     void start();
 
-  private:
+private:
     //@cond PRIVATE
-    CollectionAttributesSynchronizationJobPrivate* const d;
+    CollectionAttributesSynchronizationJobPrivate *const d;
     friend class CollectionAttributesSynchronizationJobPrivate;
 
-    Q_PRIVATE_SLOT( d, void slotSynchronized(qlonglong) )
-    Q_PRIVATE_SLOT( d, void slotTimeout() )
+    Q_PRIVATE_SLOT(d, void slotSynchronized(qlonglong))
+    Q_PRIVATE_SLOT(d, void slotTimeout())
     //@endcond
 };
 

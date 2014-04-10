@@ -43,7 +43,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
 {
-  public:
+public:
     /**
      * Creates a new collection rights attribute.
      */
@@ -57,7 +57,7 @@ class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
     /**
      * Sets the @p rights of the collection.
      */
-    void setRights( Collection::Rights rights );
+    void setRights(Collection::Rights rights);
 
     /**
      * Returns the rights of the collection.
@@ -66,16 +66,16 @@ class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
 
     virtual QByteArray type() const;
 
-    virtual CollectionRightsAttribute* clone() const;
+    virtual CollectionRightsAttribute *clone() const;
 
     virtual QByteArray serialized() const;
 
-    virtual void deserialize( const QByteArray& );
+    virtual void deserialize(const QByteArray &);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

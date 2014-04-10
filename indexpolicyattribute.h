@@ -34,7 +34,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT IndexPolicyAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * Creates a new index policy attribute.
      */
@@ -54,19 +54,19 @@ class AKONADI_EXPORT IndexPolicyAttribute : public Akonadi::Attribute
      * Sets whether this collection should be indexed at all.
      * @param enable @c true to enable indexing, @c false to exclude this collection from indexing
      */
-    void setIndexingEnabled( bool enable );
+    void setIndexingEnabled(bool enable);
 
     //@cond PRIVATE
     virtual QByteArray type() const;
     virtual Attribute *clone() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
     //@endcond
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

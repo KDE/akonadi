@@ -28,12 +28,10 @@
 #include <kglobal.h>
 #include <ksharedconfig.h>
 
-
 #include <klocalizedstring.h>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-
 
 #ifndef KDEPIM_MOBILE_UI
 #include <klineedit.h>
@@ -51,15 +49,18 @@
 class CheckableFilterProxyModel : public QSortFilterProxyModel
 {
 public:
-  CheckableFilterProxyModel( QObject *parent = 0 )
-    : QSortFilterProxyModel( parent ) { }
+    CheckableFilterProxyModel(QObject *parent = 0)
+        : QSortFilterProxyModel(parent)
+    {
+    }
 
 protected:
-  /*reimp*/ bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const
-  {
-    QModelIndex sourceIndex = sourceModel()->index( sourceRow, 0, sourceParent );
-    return sourceModel()->flags( sourceIndex ) & Qt::ItemIsUserCheckable;
-  }
+    /*reimp*/
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+    {
+        QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+        return sourceModel()->flags(sourceIndex) &Qt::ItemIsUserCheckable;
+    }
 };
 #endif
 
@@ -70,65 +71,70 @@ using namespace Akonadi;
  */
 class SubscriptionDialog::Private
 {
-  public:
-    Private( SubscriptionDialog *parent ) : q( parent ) {}
+public:
+    Private(SubscriptionDialog *parent)
+        : q(parent)
+    {
+    }
 
     void done()
     {
-      SubscriptionJob *job = new SubscriptionJob( q );
-      job->subscribe( model->subscribed() );
-      job->unsubscribe( model->unsubscribed() );
-      connect( job, SIGNAL(result(KJob*)), q, SLOT(subscriptionResult(KJob*)) );
+        SubscriptionJob *job = new SubscriptionJob(q);
+        job->subscribe(model->subscribed());
+        job->unsubscribe(model->unsubscribed());
+        connect(job, SIGNAL(result(KJob*)), q, SLOT(subscriptionResult(KJob*)));
     }
 
-    void subscriptionResult( KJob *job )
+    void subscriptionResult(KJob *job)
     {
-      if ( job->error() ) {
-        // TODO
-        kWarning() << job->errorString();
-      }
-      q->deleteLater();
+        if (job->error()) {
+            // TODO
+            kWarning() << job->errorString();
+        }
+        q->deleteLater();
     }
 
     void modelLoaded()
     {
-      collectionView->setEnabled( true );
+        collectionView->setEnabled(true);
 #ifndef KDEPIM_MOBILE_UI
-      collectionView->expandAll();
+        collectionView->expandAll();
 #endif
-      q->enableButtonOk( true );
+        q->enableButtonOk(true);
     }
+
     void slotSetPattern(const QString &text)
     {
-      filterRecursiveCollectionFilter->setSearchPattern( text );
+        filterRecursiveCollectionFilter->setSearchPattern(text);
 #ifndef KDEPIM_MOBILE_UI
-      collectionView->expandAll();
+        collectionView->expandAll();
 #endif
     }
+
     void slotSetIncludeCheckedOnly(bool checked)
     {
-      filterRecursiveCollectionFilter->setIncludeCheckedOnly( checked );
+        filterRecursiveCollectionFilter->setIncludeCheckedOnly(checked);
     }
 
     void writeConfig()
     {
-      KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
-      group.writeEntry( "Size", q->size() );
+        KConfigGroup group(KGlobal::config(), "SubscriptionDialog");
+        group.writeEntry("Size", q->size());
     }
 
     void readConfig()
     {
-      KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
-      const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
-      if ( sizeDialog.isValid() ) {
-         q->resize( sizeDialog );
-      }
+        KConfigGroup group(KGlobal::config(), "SubscriptionDialog");
+        const QSize sizeDialog = group.readEntry("Size", QSize(300, 200));
+        if (sizeDialog.isValid()) {
+            q->resize(sizeDialog);
+        }
     }
 
     void slotUnSubscribe();
     void slotSubscribe();
 
-    SubscriptionDialog* q;
+    SubscriptionDialog *q;
 #ifndef KDEPIM_MOBILE_UI
     QTreeView *collectionView;
     KPushButton *subscribe;
@@ -136,7 +142,7 @@ class SubscriptionDialog::Private
 #else
     QListView *collectionView;
 #endif
-    SubscriptionModel* model;
+    SubscriptionModel *model;
     RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
 
 };
@@ -144,11 +150,11 @@ class SubscriptionDialog::Private
 void SubscriptionDialog::Private::slotSubscribe()
 {
 #ifndef KDEPIM_MOBILE_UI
-  QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
-  foreach (const QModelIndex& index, list) {
-      model->setData(index, Qt::Checked, Qt::CheckStateRole);
-  }
-  collectionView->setFocus();
+    QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
+    foreach (const QModelIndex &index, list) {
+        model->setData(index, Qt::Checked, Qt::CheckStateRole);
+    }
+    collectionView->setFocus();
 #endif
 }
 
@@ -156,126 +162,127 @@ void SubscriptionDialog::Private::slotUnSubscribe()
 {
 #ifndef KDEPIM_MOBILE_UI
     QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
-    foreach (const QModelIndex& index, list) {
-       model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
+    foreach (const QModelIndex &index, list) {
+        model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
     }
     collectionView->setFocus();
 #endif
 }
 
-SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
-    KDialog( parent ),
-    d( new Private( this ) )
+SubscriptionDialog::SubscriptionDialog(QWidget *parent)
+    : KDialog(parent)
+    , d(new Private(this))
 {
-  init( QStringList() );
+    init(QStringList());
 }
 
-SubscriptionDialog::SubscriptionDialog(const QStringList& mimetypes, QWidget * parent) :
-    KDialog( parent ),
-    d( new Private( this ) )
+SubscriptionDialog::SubscriptionDialog(const QStringList &mimetypes, QWidget *parent)
+    : KDialog(parent)
+    , d(new Private(this))
 {
-  init( mimetypes );
+    init(mimetypes);
 }
 
 void SubscriptionDialog::showHiddenCollection(bool showHidden)
 {
-  d->model->showHiddenCollection(showHidden);
+    d->model->showHiddenCollection(showHidden);
 }
 
-void SubscriptionDialog::init( const QStringList &mimetypes )
+void SubscriptionDialog::init(const QStringList &mimetypes)
 {
-  enableButtonOk( false );
-  setCaption( i18n( "Local Subscriptions" ) );
-  QWidget *mainWidget = new QWidget( this );
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  mainWidget->setLayout( mainLayout );
-  setMainWidget( mainWidget );
+    enableButtonOk(false);
+    setCaption(i18n("Local Subscriptions"));
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainWidget->setLayout(mainLayout);
+    setMainWidget(mainWidget);
 
-  d->model = new SubscriptionModel( this );
+    d->model = new SubscriptionModel(this);
 
 #ifndef KDEPIM_MOBILE_UI
-  d->filterRecursiveCollectionFilter
-      = new Akonadi::RecursiveCollectionFilterProxyModel( this );
-  d->filterRecursiveCollectionFilter->setDynamicSortFilter( true );
-  d->filterRecursiveCollectionFilter->setSourceModel( d->model );
-  d->filterRecursiveCollectionFilter->setFilterCaseSensitivity( Qt::CaseInsensitive );
-  if ( !mimetypes.isEmpty() ) {
-    d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
-  }
+    d->filterRecursiveCollectionFilter
+        = new Akonadi::RecursiveCollectionFilterProxyModel(this);
+    d->filterRecursiveCollectionFilter->setDynamicSortFilter(true);
+    d->filterRecursiveCollectionFilter->setSourceModel(d->model);
+    d->filterRecursiveCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    if (!mimetypes.isEmpty()) {
+        d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters(mimetypes);
+    }
 
-  d->collectionView = new QTreeView( mainWidget );
-  d->collectionView->setEditTriggers( QAbstractItemView::NoEditTriggers );
-  d->collectionView->header()->hide();
-  d->collectionView->setModel( d->filterRecursiveCollectionFilter );
-  d->collectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    d->collectionView = new QTreeView(mainWidget);
+    d->collectionView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    d->collectionView->header()->hide();
+    d->collectionView->setModel(d->filterRecursiveCollectionFilter);
+    d->collectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-  QHBoxLayout *filterBarLayout = new QHBoxLayout;
+    QHBoxLayout *filterBarLayout = new QHBoxLayout;
 
-  filterBarLayout->addWidget( new QLabel( i18n( "Search:" ) ) );
+    filterBarLayout->addWidget(new QLabel(i18n("Search:")));
 
-  KLineEdit *lineEdit = new KLineEdit( mainWidget );
-  lineEdit->setClearButtonShown(true);
-  lineEdit->setFocus();
-  connect( lineEdit, SIGNAL(textChanged(QString)),
-           this, SLOT(slotSetPattern(QString)) );
-  filterBarLayout->addWidget( lineEdit );
-  QCheckBox *checkBox = new QCheckBox( i18n("Subscribed only"), mainWidget );
-  connect( checkBox, SIGNAL(clicked(bool)),
-           this, SLOT(slotSetIncludeCheckedOnly(bool)) );
-  filterBarLayout->addWidget( checkBox );
+    KLineEdit *lineEdit = new KLineEdit(mainWidget);
+    lineEdit->setClearButtonShown(true);
+    lineEdit->setFocus();
+    connect(lineEdit, SIGNAL(textChanged(QString)),
+            this, SLOT(slotSetPattern(QString)));
+    filterBarLayout->addWidget(lineEdit);
+    QCheckBox *checkBox = new QCheckBox(i18n("Subscribed only"), mainWidget);
+    connect(checkBox, SIGNAL(clicked(bool)),
+            this, SLOT(slotSetIncludeCheckedOnly(bool)));
+    filterBarLayout->addWidget(checkBox);
 
-  QHBoxLayout *hboxLayout = new QHBoxLayout;
-  hboxLayout->addWidget( d->collectionView );
+    QHBoxLayout *hboxLayout = new QHBoxLayout;
+    hboxLayout->addWidget(d->collectionView);
 
-  QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
-  d->subscribe = new KPushButton(i18n("Subscribe"));
-  subscribeButtonLayout->addWidget(d->subscribe);
-  connect(d->subscribe,SIGNAL(clicked()),this,SLOT(slotSubscribe()));
+    QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
+    d->subscribe = new KPushButton(i18n("Subscribe"));
+    subscribeButtonLayout->addWidget(d->subscribe);
+    connect(d->subscribe, SIGNAL(clicked()), this, SLOT(slotSubscribe()));
 
-  d->unSubscribe = new KPushButton(i18n("Unsubscribe"));
-  subscribeButtonLayout->addWidget(d->unSubscribe);
-  connect(d->unSubscribe,SIGNAL(clicked()),this,SLOT(slotUnSubscribe()));
-  subscribeButtonLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding ) );
+    d->unSubscribe = new KPushButton(i18n("Unsubscribe"));
+    subscribeButtonLayout->addWidget(d->unSubscribe);
+    connect(d->unSubscribe, SIGNAL(clicked()), this, SLOT(slotUnSubscribe()));
+    subscribeButtonLayout->addItem(new QSpacerItem(5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-  hboxLayout->addLayout(subscribeButtonLayout);
+    hboxLayout->addLayout(subscribeButtonLayout);
 
-  mainLayout->addLayout(filterBarLayout);
-  mainLayout->addLayout(hboxLayout);
+    mainLayout->addLayout(filterBarLayout);
+    mainLayout->addLayout(hboxLayout);
 
 #else
 
-  d->filterRecursiveCollectionFilter
-      = new Akonadi::RecursiveCollectionFilterProxyModel( this );
-  if ( !mimetypes.isEmpty() )
-    d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
+    d->filterRecursiveCollectionFilter
+        = new Akonadi::RecursiveCollectionFilterProxyModel(this);
+    if (!mimetypes.isEmpty()) {
+        d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters(mimetypes);
+    }
 
-  d->filterRecursiveCollectionFilter->setSourceModel( d->model );
+    d->filterRecursiveCollectionFilter->setSourceModel(d->model);
 
-  KDescendantsProxyModel *flatModel = new KDescendantsProxyModel( this );
-  flatModel->setDisplayAncestorData( true );
-  flatModel->setAncestorSeparator( QLatin1String( "/" ) );
-  flatModel->setSourceModel( d->filterRecursiveCollectionFilter );
+    KDescendantsProxyModel *flatModel = new KDescendantsProxyModel(this);
+    flatModel->setDisplayAncestorData(true);
+    flatModel->setAncestorSeparator(QLatin1String("/"));
+    flatModel->setSourceModel(d->filterRecursiveCollectionFilter);
 
-  CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel( this );
-  checkableModel->setSourceModel( flatModel );
+    CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel(this);
+    checkableModel->setSourceModel(flatModel);
 
-  d->collectionView = new QListView( mainWidget );
+    d->collectionView = new QListView(mainWidget);
 
-  d->collectionView->setModel( checkableModel );
-  mainLayout->addWidget( d->collectionView );
+    d->collectionView->setModel(checkableModel);
+    mainLayout->addWidget(d->collectionView);
 #endif
 
-  connect( d->model, SIGNAL(loaded()), SLOT(modelLoaded()) );
-  connect( this, SIGNAL(okClicked()), SLOT(done()) );
-  connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
-  Control::widgetNeedsAkonadi( mainWidget );
-  d->readConfig();
+    connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
+    connect(this, SIGNAL(okClicked()), SLOT(done()));
+    connect(this, SIGNAL(cancelClicked()), SLOT(deleteLater()));
+    Control::widgetNeedsAkonadi(mainWidget);
+    d->readConfig();
 }
 
 SubscriptionDialog::~SubscriptionDialog()
 {
-  d->writeConfig();
-  delete d;
+    d->writeConfig();
+    delete d;
 }
 
 #include "moc_subscriptiondialog_p.cpp"

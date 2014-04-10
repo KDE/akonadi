@@ -67,15 +67,15 @@ class ItemFetchScopePrivate;
  */
 class AKONADI_EXPORT ItemFetchScope
 {
-  public:
+public:
     /**
      * Describes the ancestor retrieval depth.
      * @since 4.4
      */
     enum AncestorRetrieval {
-      None, ///< No ancestor retrieval at all (the default)
-      Parent, ///< Only retrieve the immediate parent collection
-      All ///< Retrieve all ancestors, up to Collection::root()
+        None, ///< No ancestor retrieval at all (the default)
+        Parent, ///< Only retrieve the immediate parent collection
+        All ///< Retrieve all ancestors, up to Collection::root()
     };
 
     /**
@@ -89,7 +89,7 @@ class AKONADI_EXPORT ItemFetchScope
     /**
      * Creates a new item fetch scope from an @p other.
      */
-    ItemFetchScope( const ItemFetchScope &other );
+    ItemFetchScope(const ItemFetchScope &other);
 
     /**
      * Destroys the item fetch scope.
@@ -99,7 +99,7 @@ class AKONADI_EXPORT ItemFetchScope
     /**
      * Assigns the @p other to this scope and returns a reference to this scope.
      */
-    ItemFetchScope &operator=( const ItemFetchScope &other );
+    ItemFetchScope &operator=(const ItemFetchScope &other);
 
     /**
      * Returns the payload parts that should be fetched.
@@ -115,7 +115,7 @@ class AKONADI_EXPORT ItemFetchScope
      *             Valid values depend on the item type.
      * @param fetch @c true to fetch this part, @c false otherwise.
      */
-    void fetchPayloadPart( const QByteArray &part, bool fetch = true );
+    void fetchPayloadPart(const QByteArray &part, bool fetch = true);
 
     /**
      * Returns whether the full payload should be fetched.
@@ -130,7 +130,7 @@ class AKONADI_EXPORT ItemFetchScope
      *
      * @param fetch @c true if the full payload should be fetched, @c false otherwise.
      */
-    void fetchFullPayload( bool fetch = true );
+    void fetchFullPayload(bool fetch = true);
 
     /**
      * Returns all explicitly fetched attributes.
@@ -147,17 +147,17 @@ class AKONADI_EXPORT ItemFetchScope
      * @param type The attribute type to fetch.
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    void fetchAttribute( const QByteArray &type, bool fetch = true );
+    void fetchAttribute(const QByteArray &type, bool fetch = true);
 
     /**
      * Sets whether the attribute of the requested type should be fetched.
      *
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    template <typename T> inline void fetchAttribute( bool fetch = true )
+    template <typename T> inline void fetchAttribute(bool fetch = true)
     {
-      T dummy;
-      fetchAttribute( dummy.type(), fetch );
+        T dummy;
+        fetchAttribute(dummy.type(), fetch);
     }
 
     /**
@@ -173,7 +173,7 @@ class AKONADI_EXPORT ItemFetchScope
      *
      * @param fetch @c true if all available attributes should be fetched, @c false otherwise.
      */
-    void fetchAllAttributes( bool fetch = true );
+    void fetchAllAttributes(bool fetch = true);
 
     /**
      * Returns whether payload data should be requested from remote sources or just
@@ -190,7 +190,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param cacheOnly @c true if no remote data should be requested,
      * @c false otherwise (the default).
      */
-    void setCacheOnly( bool cacheOnly );
+    void setCacheOnly(bool cacheOnly);
 
     /**
      * Sets whether payload will be fetched or there will be only a test performed if the
@@ -199,7 +199,7 @@ class AKONADI_EXPORT ItemFetchScope
      *
      * @since 4.11
      */
-    void setCheckForCachedPayloadPartsOnly( bool check = true );
+    void setCheckForCachedPayloadPartsOnly(bool check = true);
 
     /**
      * Returns whether payload data should be fetched or only checked for presence in the cache.
@@ -217,7 +217,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param ancestorDepth The desired ancestor retrieval depth.
      * @since 4.4
      */
-    void setAncestorRetrieval( AncestorRetrieval ancestorDepth );
+    void setAncestorRetrieval(AncestorRetrieval ancestorDepth);
 
     /**
      * Returns the ancestor retrieval depth.
@@ -234,7 +234,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param retrieveMtime @c true to retrieve the modification time, @c false otherwise
      * @since 4.6
      */
-    void setFetchModificationTime( bool retrieveMtime );
+    void setFetchModificationTime(bool retrieveMtime);
 
     /**
      * Returns whether item modification time should be retrieved.
@@ -251,7 +251,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param retrieveGID @c true to retrieve the GID, @c false otherwise
      * @since 4.12
      */
-    void setFetchGid( bool retrieveGID );
+    void setFetchGid(bool retrieveGID);
 
     /**
      * Returns whether item GID should be retrieved.
@@ -272,7 +272,7 @@ class AKONADI_EXPORT ItemFetchScope
      *
      * @since 4.10
      */
-    void setIgnoreRetrievalErrors( bool enabled );
+    void setIgnoreRetrievalErrors(bool enabled);
 
     /**
      * Returns whether retrieval errors should be ignored.
@@ -297,7 +297,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param changedSince The timestamp of oldest modified item to fetch
      * @since 4.11
      */
-    void setFetchChangedSince( const KDateTime &changedSince );
+    void setFetchChangedSince(const KDateTime &changedSince);
 
     /**
      * Returns timestamp of the oldest item to fetch.
@@ -315,7 +315,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param retrieveRid whether or not to load remote identification.
      * @since 4.12
      */
-    void setFetchRemoteIdentification( bool retrieveRid );
+    void setFetchRemoteIdentification(bool retrieveRid);
 
     /**
      * Returns whether item remote identification should be retrieved.
@@ -335,7 +335,7 @@ class AKONADI_EXPORT ItemFetchScope
      * @param fetchTags whether or not to load tags.
      * @since 4.13
      */
-    void setFetchTags( bool fetchTags );
+    void setFetchTags(bool fetchTags);
 
     /**
      * Returns whether tags should be retrieved.
@@ -345,7 +345,7 @@ class AKONADI_EXPORT ItemFetchScope
      */
     bool fetchTags() const;
 
-  private:
+private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;
     //@endcond

@@ -143,12 +143,12 @@ class ResourceBasePrivate;
  *
  * @todo Convenience base class for collection-less resources
  */
- // FIXME_API: API dox need to be updated for Observer approach (kevin)
+// FIXME_API: API dox need to be updated for Observer approach (kevin)
 class AKONADI_EXPORT ResourceBase : public AgentBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Use this method in the main function of your resource
      * application to initialize your resource subclass.
@@ -177,25 +177,26 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param argv string arguments
      */
     template <typename T>
-    static int init( int argc, char **argv )
+    static int init(int argc, char **argv)
     {
-      const QString id = parseArguments( argc, argv );
-      KApplication app;
-      T* r = new T( id );
+        const QString id = parseArguments(argc, argv);
+        KApplication app;
+        T *r = new T(id);
 
-      // check if T also inherits AgentBase::Observer and
-      // if it does, automatically register it on itself
-      Observer *observer = dynamic_cast<Observer*>( r );
-      if ( observer != 0 )
-        r->registerObserver( observer );
+        // check if T also inherits AgentBase::Observer and
+        // if it does, automatically register it on itself
+        Observer *observer = dynamic_cast<Observer *>(r);
+        if (observer != 0) {
+            r->registerObserver(observer);
+        }
 
-      return init( r );
+        return init(r);
     }
 
     /**
      * This method is used to set the name of the resource.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
      * Returns the name of the resource.
@@ -214,15 +215,15 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param enabled Whether or not automatic emission of the signals is enabled.
      * @since 4.7
      */
-    void setAutomaticProgressReporting( bool enabled );
+    void setAutomaticProgressReporting(bool enabled);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the resource has changed.
      *
      * @param name The new name of the resource.
      */
-    void nameChanged( const QString &name );
+    void nameChanged(const QString &name);
 
     /**
      * Emitted when a full synchronization has been completed.
@@ -235,7 +236,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param collectionId The identifier of the collection whose attributes got synchronized.
      * @since 4.6
      */
-    void attributesSynchronized( qlonglong collectionId );
+    void attributesSynchronized(qlonglong collectionId);
 
     /**
      * Emitted when a collection tree synchronization has been completed.
@@ -244,7 +245,15 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void collectionTreeSynchronized();
 
-  protected Q_SLOTS:
+    /**
+     * Emitted when the item synchronization processed the current batch and is ready for the new one.
+     * Use this to throttle the delivery to not overload akonadi.
+     *
+     * @since 4.14
+     */
+    void retrieveNextBatch(int);
+
+protected Q_SLOTS:
     /**
      * Retrieve the collection tree from the remote server and supply it via
      * collectionsRetrieved() or collectionsRetrievedIncremental().
@@ -264,7 +273,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
     //       in order to simulate polymorphism
-    void retrieveCollectionAttributes( const Akonadi::Collection &collection );
+    void retrieveCollectionAttributes(const Akonadi::Collection &collection);
 
     /**
      * Retrieve all (new/changed) items in collection @p collection.
@@ -279,7 +288,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param collection The collection whose items to retrieve.
      * @see itemsRetrieved( const Item::List& ), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
      */
-    virtual void retrieveItems( const Akonadi::Collection &collection ) = 0;
+    virtual void retrieveItems(const Akonadi::Collection &collection) = 0;
+
+    int batchSize() const;
 
     /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
@@ -290,7 +301,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @return false if there is an immediate error when retrieving the item.
      * @see itemRetrieved()
      */
-    virtual bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts ) = 0;
+    virtual bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) = 0;
 
     /**
      * Abort any activity in progress in the backend. By default this method does nothing.
@@ -312,13 +323,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
         return QString();
     }
 
-  protected:
+protected:
     /**
      * Creates a base resource.
      *
      * @param id The instance id of the resource.
      */
-    ResourceBase( const QString & id );
+    ResourceBase(const QString &id);
 
     /**
      * Destroys the base resource.
@@ -330,7 +341,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * @param item The retrieved item.
      */
-    void itemRetrieved( const Item &item );
+    void itemRetrieved(const Item &item);
 
     /**
      * Call this method from retrieveCollectionAttributes() once the result is available.
@@ -338,7 +349,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param collection The collection whose attributes got retrieved.
      * @since 4.6
      */
-    void collectionAttributesRetrieved( const Collection &collection );
+    void collectionAttributesRetrieved(const Collection &collection);
 
     /**
      * Resets the dirty flag of the given item and updates the remote id.
@@ -347,7 +358,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * This implicitly calls changeProcessed().
      * @param item The changed item.
      */
-    void changeCommitted( const Item &item );
+    void changeCommitted(const Item &item);
 
     /**
      * Resets the dirty flag of all given items and updates remote ids.
@@ -358,7 +369,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * @since 4.11
      */
-    void changesCommitted( const Item::List &items );
+    void changesCommitted(const Item::List &items);
 
     /**
      * Resets the dirty flag of the given tag and updates the remote id.
@@ -369,7 +380,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * @since 4.13
      */
-    void changeCommitted( const Tag &tag );
+    void changeCommitted(const Tag &tag);
 
     /**
      * Call whenever you have successfully handled or ignored a collection
@@ -380,7 +391,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * This implicitly calls changeProcessed().
      * @param collection The collection which changes have been handled.
     */
-    void changeCommitted( const Collection &collection );
+    void changeCommitted(const Collection &collection);
 
     /**
      * Call this to supply the full folder tree retrieved from the remote server.
@@ -388,7 +399,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param collections A list of collections.
      * @see collectionsRetrievedIncremental()
     */
-    void collectionsRetrieved( const Collection::List &collections );
+    void collectionsRetrieved(const Collection::List &collections);
 
     /**
      * Call this to supply incrementally retrieved collections from the remote server.
@@ -397,8 +408,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param removedCollections Collections that have been deleted.
      * @see collectionsRetrieved()
      */
-    void collectionsRetrievedIncremental( const Collection::List &changedCollections,
-                                          const Collection::List &removedCollections );
+    void collectionsRetrievedIncremental(const Collection::List &changedCollections,
+                                         const Collection::List &removedCollections);
 
     /**
      * Enable collection streaming, that is collections don't have to be delivered at once
@@ -407,7 +418,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * have been retrieved, call collectionsRetrievalDone().
      * @param enable @c true if collection streaming should be enabled, @c false by default
      */
-    void setCollectionStreamingEnabled( bool enable );
+    void setCollectionStreamingEnabled(bool enable);
 
     /**
      * Call this method to indicate you finished synchronizing the collection tree.
@@ -428,7 +439,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param items A list of items.
      * @see itemsRetrievedIncremental().
      */
-    void itemsRetrieved( const Item::List &items );
+    void itemsRetrieved(const Item::List &items);
 
     /**
      * Call this method when you want to use the itemsRetrieved() method
@@ -438,14 +449,14 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * + itemsRetrieved() instead.
      * @param amount number of items that will arrive in streaming mode
      */
-    void setTotalItems( int amount );
+    void setTotalItems(int amount);
 
     /**
      * Enable item streaming.
      * Item streaming is disabled by default.
      * @param enable @c true if items are delivered in chunks rather in one big block.
      */
-    void setItemStreamingEnabled( bool enable );
+    void setItemStreamingEnabled(bool enable);
 
     /**
      * Set transaction mode for item sync'ing.
@@ -453,7 +464,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @see Akonadi::ItemSync::TransactionMode
      * @since 4.6
      */
-    void setItemTransactionMode( ItemSync::TransactionMode mode );
+    void setItemTransactionMode(ItemSync::TransactionMode mode);
 
     /**
      * Set the fetch scope applied for item synchronization.
@@ -466,7 +477,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @see Akonadi::ItemSync
      * @since 4.6
      */
-    void setItemSynchronizationFetchScope( const ItemFetchScope &fetchScope );
+    void setItemSynchronizationFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Call this method to supply incrementally retrieved items from the remote server.
@@ -474,8 +485,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param changedItems Items changed in the backend.
      * @param removedItems Items removed from the backend.
      */
-    void itemsRetrievedIncremental( const Item::List &changedItems,
-                                    const Item::List &removedItems );
+    void itemsRetrievedIncremental(const Item::List &changedItems,
+                                   const Item::List &removedItems);
 
     /**
      * Call this method to indicate you finished synchronizing the current collection.
@@ -508,7 +519,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param collection parent of the content to be invalidated in cache
      * @since 4.8
      */
-    void invalidateCache( const Collection &collection );
+    void invalidateCache(const Collection &collection);
 
     /**
      * Returns the collection that is currently synchronized.
@@ -533,14 +544,14 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * This method is called whenever the collection with the given @p id
      * shall be synchronized.
      */
-    void synchronizeCollection( qint64 id );
+    void synchronizeCollection(qint64 id);
 
     /**
      * This method is called whenever the collection with the given @p id
      * shall be synchronized.
      * @param recursive if true, a recursive synchronization is done
      */
-    void synchronizeCollection( qint64 id, bool recursive );
+    void synchronizeCollection(qint64 id, bool recursive);
 
     /**
      * This method is called whenever the collection with the given @p id
@@ -549,7 +560,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param id The id of the collection to synchronize
      * @since 4.6
      */
-    void synchronizeCollectionAttributes( qint64 id );
+    void synchronizeCollectionAttributes(qint64 id);
 
     /**
      * Refetches the Collections.
@@ -566,7 +577,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Additionally an error message is emitted.
      * @param error additional error message to be emitted
      */
-    void cancelTask( const QString &error );
+    void cancelTask(const QString &error);
 
     /**
      * Stops the execution of the current task and continues with the next one.
@@ -585,7 +596,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Inherited from AgentBase.
      */
-    void doSetOnline( bool online );
+    void doSetOnline(bool online);
 
     /**
      * Indicate the use of hierarchical remote identifiers.
@@ -598,7 +609,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param enable whether to enable use of hierarchical remote identifiers
      * @since 4.4
      */
-    void setHierarchicalRemoteIdentifiersEnabled( bool enable );
+    void setHierarchicalRemoteIdentifiersEnabled(bool enable);
 
     friend class ResourceScheduler;
     friend class ::ResourceState;
@@ -611,9 +622,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @since 4.4
      */
     enum SchedulePriority {
-      Prepend,            ///< The task will be executed as soon as the current task has finished.
-      AfterChangeReplay,  ///< The task is scheduled after the last ChangeReplay task in the queue
-      Append              ///< The task will be executed after all tasks currently in the queue are finished
+        Prepend,            ///< The task will be executed as soon as the current task has finished.
+        AfterChangeReplay,  ///< The task is scheduled after the last ChangeReplay task in the queue
+        Append              ///< The task will be executed after all tasks currently in the queue are finished
     };
 
     /**
@@ -631,7 +642,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * the execution queue.
      * @since 4.4
      */
-    void scheduleCustomTask( QObject* receiver, const char* method, const QVariant &argument, SchedulePriority priority = Append );
+    void scheduleCustomTask(QObject *receiver, const char *method, const QVariant &argument, SchedulePriority priority = Append);
 
     /**
      * Indicate that the current task is finished. Use this method from the slot called via scheduleCustomTaks().
@@ -671,42 +682,42 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     QString dumpSchedulerToString() const;
 
-  private:
-    static QString parseArguments( int, char** );
-    static int init( ResourceBase *r );
+private:
+    static QString parseArguments(int, char **);
+    static int init(ResourceBase *r);
 
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
 
-    bool requestItemDelivery( qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts );
+    bool requestItemDelivery(qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts);
 
-    QString requestItemDeliveryV2( qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts );
+    QString requestItemDeliveryV2(qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts);
 
-  private:
-    Q_DECLARE_PRIVATE( ResourceBase )
+private:
+    Q_DECLARE_PRIVATE(ResourceBase)
 
-    Q_PRIVATE_SLOT( d_func(), void slotAbortRequested() )
-    Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollection() )
-    Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollectionDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotCollectionDeletionDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotInvalidateCache( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollectionAttributes( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d_func(), void slotCollectionListForAttributesDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotCollectionAttributesSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotItemSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotPercent( KJob*, unsigned long ) )
-    Q_PRIVATE_SLOT( d_func(), void slotDelayedEmitProgress() )
-    Q_PRIVATE_SLOT( d_func(), void slotPrepareItemRetrieval( const Akonadi::Item& item ) )
-    Q_PRIVATE_SLOT( d_func(), void slotPrepareItemRetrievalResult( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void changeCommittedResult( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotSessionReconnected() )
-    Q_PRIVATE_SLOT( d_func(), void slotRecursiveMoveReplay( RecursiveMover* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotRecursiveMoveReplayResult( KJob* ) )
+    Q_PRIVATE_SLOT(d_func(), void slotAbortRequested())
+    Q_PRIVATE_SLOT(d_func(), void slotDeliveryDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotCollectionSyncDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotDeleteResourceCollection())
+    Q_PRIVATE_SLOT(d_func(), void slotDeleteResourceCollectionDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotCollectionDeletionDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotInvalidateCache(const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalListDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotSynchronizeCollection(const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void slotCollectionListDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotSynchronizeCollectionAttributes(const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void slotCollectionListForAttributesDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotCollectionAttributesSyncDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotItemSyncDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotPercent(KJob *, unsigned long))
+    Q_PRIVATE_SLOT(d_func(), void slotDelayedEmitProgress())
+    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrieval(const Akonadi::Item &item))
+    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrievalResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void changeCommittedResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())
+    Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))
+    Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplayResult(KJob *))
 };
 
 }
@@ -716,8 +727,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
  * Convenience Macro for the most common main() function for Akonadi resources.
  */
 #define AKONADI_RESOURCE_MAIN( resourceClass )                       \
-  int main( int argc, char **argv )                            \
-  {                                                            \
+  int main( int argc, char **argv )                                  \
+  {                                                                  \
     return Akonadi::ResourceBase::init<resourceClass>( argc, argv ); \
   }
 #endif

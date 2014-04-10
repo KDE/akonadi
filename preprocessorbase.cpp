@@ -27,8 +27,8 @@
 
 using namespace Akonadi;
 
-PreprocessorBase::PreprocessorBase( const QString &id )
-  : AgentBase( new PreprocessorBasePrivate( this ), id )
+PreprocessorBase::PreprocessorBase(const QString &id)
+    : AgentBase(new PreprocessorBasePrivate(this), id)
 {
 }
 
@@ -36,28 +36,28 @@ PreprocessorBase::~PreprocessorBase()
 {
 }
 
-void PreprocessorBase::finishProcessing( ProcessingResult result )
+void PreprocessorBase::finishProcessing(ProcessingResult result)
 {
-  Q_D( PreprocessorBase );
+    Q_D(PreprocessorBase);
 
-  Q_ASSERT_X( result != ProcessingDelayed, "PreprocessorBase::terminateProcessing", "You should never pass ProcessingDelayed to this function" );
-  Q_ASSERT_X( d->mInDelayedProcessing, "PreprocessorBase::terminateProcessing", "terminateProcessing() called while not in delayed processing mode" );
-  Q_UNUSED( result );
+    Q_ASSERT_X(result != ProcessingDelayed, "PreprocessorBase::terminateProcessing", "You should never pass ProcessingDelayed to this function");
+    Q_ASSERT_X(d->mInDelayedProcessing, "PreprocessorBase::terminateProcessing", "terminateProcessing() called while not in delayed processing mode");
+    Q_UNUSED(result);
 
-  d->mInDelayedProcessing = false;
-  emit d->itemProcessed( d->mDelayedProcessingItemId );
+    d->mInDelayedProcessing = false;
+    emit d->itemProcessed(d->mDelayedProcessingItemId);
 }
 
-void PreprocessorBase::setFetchScope( const ItemFetchScope &fetchScope )
+void PreprocessorBase::setFetchScope(const ItemFetchScope &fetchScope)
 {
-  Q_D( PreprocessorBase );
+    Q_D(PreprocessorBase);
 
-  d->mFetchScope = fetchScope;
+    d->mFetchScope = fetchScope;
 }
 
 ItemFetchScope &PreprocessorBase::fetchScope()
 {
-  Q_D( PreprocessorBase );
+    Q_D(PreprocessorBase);
 
-  return d->mFetchScope;
+    return d->mFetchScope;
 }

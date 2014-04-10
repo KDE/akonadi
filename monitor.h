@@ -36,7 +36,6 @@ class MonitorPrivate;
 class Session;
 class TagFetchScope;
 
-
 /**
  * @short Monitors an item or collection for changes.
  *
@@ -74,16 +73,16 @@ class TagFetchScope;
  */
 class AKONADI_EXPORT Monitor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Type {
-      /**
-       * @internal This must be kept in sync with Akonadi::NotificationMessageV2::Type
-       */
-      Collections = 1,
-      Items,
-      Tags
+        /**
+         * @internal This must be kept in sync with Akonadi::NotificationMessageV2::Type
+         */
+        Collections = 1,
+        Items,
+        Tags
     };
 
     /**
@@ -91,7 +90,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param parent The parent object.
      */
-    explicit Monitor( QObject *parent = 0 );
+    explicit Monitor(QObject *parent = 0);
 
     /**
      * Destroys the monitor.
@@ -113,7 +112,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *                   in the Akonadi storage will be monitored.
      * @param monitored Whether to monitor the collection.
      */
-    void setCollectionMonitored( const Collection &collection, bool monitored = true );
+    void setCollectionMonitored(const Collection &collection, bool monitored = true);
 
     /**
      * Sets whether the specified item shall be monitored for changes.
@@ -124,7 +123,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param item The item to monitor.
      * @param monitored Whether to monitor the item.
      */
-    void setItemMonitored( const Item &item, bool monitored = true );
+    void setItemMonitored(const Item &item, bool monitored = true);
 
     /**
      * Sets whether the specified resource shall be monitored for changes. If
@@ -137,7 +136,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param resource The resource identifier.
      * @param monitored Whether to monitor the resource.
      */
-    void setResourceMonitored( const QByteArray &resource, bool monitored = true );
+    void setResourceMonitored(const QByteArray &resource, bool monitored = true);
 
     /**
      * Sets whether items of the specified mime type shall be monitored for changes.
@@ -152,7 +151,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param mimetype The mime type to monitor.
      * @param monitored Whether to monitor the mime type.
      */
-    void setMimeTypeMonitored( const QString &mimetype, bool monitored = true );
+    void setMimeTypeMonitored(const QString &mimetype, bool monitored = true);
 
     /**
      * Sets whether the specified tag shall be monitored for changes.
@@ -163,7 +162,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param monitored Whether to monitor the tag.
      * @since 4.13
      */
-    void setTagMonitored( const Tag &tag, bool monitored = true );
+    void setTagMonitored(const Tag &tag, bool monitored = true);
 
     /**
      * Sets whether given type (Collection, Item, Tag should be monitored).
@@ -175,7 +174,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param monitored Whether to monitor the type
      * @since 4.13
      */
-    void setTypeMonitored( Type type, bool monitored = true );
+    void setTypeMonitored(Type type, bool monitored = true);
 
     /**
      * Sets whether all items shall be monitored.
@@ -183,7 +182,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * Note that if a session is being ignored, this takes precedence over
      * setAllMonitored() on that session.
      */
-    void setAllMonitored( bool monitored = true );
+    void setAllMonitored(bool monitored = true);
 
     /**
      * Ignores all change notifications caused by the given session. This
@@ -191,14 +190,14 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param session The session you want to ignore.
      */
-    void ignoreSession( Session *session );
+    void ignoreSession(Session *session);
 
     /**
      * Enables automatic fetching of changed collections from the Akonadi storage.
      *
      * @param enable @c true enables automatic fetching, @c false disables automatic fetching.
      */
-    void fetchCollection( bool enable );
+    void fetchCollection(bool enable);
 
     /**
      * Enables automatic fetching of changed collection statistics information from
@@ -206,7 +205,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param enable @c true to enables automatic fetching, @c false disables automatic fetching.
      */
-    void fetchCollectionStatistics( bool enable );
+    void fetchCollectionStatistics(bool enable);
 
     /**
      * Sets the item fetch scope.
@@ -218,7 +217,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @see itemFetchScope()
      */
-    void setItemFetchScope( const ItemFetchScope &fetchScope );
+    void setItemFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Instructs the monitor to fetch only those parts that were changed and
@@ -244,7 +243,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * that was requested will be fetched.
      * @return void
      */
-    void fetchChangedOnly( bool enable );
+    void fetchChangedOnly(bool enable);
 
     /**
      * Returns the item fetch scope.
@@ -271,7 +270,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @see collectionFetchScope()
      * @since 4.4
      */
-    void setCollectionFetchScope( const CollectionFetchScope &fetchScope );
+    void setCollectionFetchScope(const CollectionFetchScope &fetchScope);
 
     /**
      * Returns the collection fetch scope.
@@ -297,7 +296,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @see tagFetchScope()
      */
-    void setTagFetchScope( const TagFetchScope &fetchScope );
+    void setTagFetchScope(const TagFetchScope &fetchScope);
 
     /**
      * Returns the tag fetch scope.
@@ -378,14 +377,14 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param session the session to be set
      * @since 4.4
      */
-    void setSession( Akonadi::Session *session );
+    void setSession(Akonadi::Session *session);
 
     /**
      * Returns the Session used by the monitor to communicate with Akonadi.
      *
      * @since 4.4
      */
-    Session* session() const;
+    Session *session() const;
 
     /**
      * Allows to enable/disable collection move translation. If enabled (the default), move
@@ -394,16 +393,16 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param enabled enables collection move translation if set as @c true
      * @since 4.9
      */
-    void setCollectionMoveTranslationEnabled( bool enabled );
+    void setCollectionMoveTranslationEnabled(bool enabled);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted if a monitored item has changed, e.g. item parts have been modified.
      *
      * @param item The changed item.
      * @param partIdentifiers The identifiers of the item parts that has been changed.
      */
-    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
+    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers);
 
     /**
      * This signal is emitted if flags of monitored items have changed.
@@ -413,8 +412,8 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param removedFlags Flags that have been removed from each item in @p items
      * @since 4.11
      */
-    void itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
-                                                              const QSet<QByteArray> &removedFlags );
+    void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
+                           const QSet<QByteArray> &removedFlags);
 
     /**
      * This signal is emitted if tags of monitored items have changed.
@@ -424,8 +423,8 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param removedTags Tags that have been removed from each item in @p items
      * @since 4.13
      */
-    void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags,
-                                                             const QSet<Akonadi::Tag> &removedTags );
+    void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags,
+                          const QSet<Akonadi::Tag> &removedTags);
 
     /**
      * This signal is emitted if a monitored item has been moved between two collections
@@ -434,8 +433,8 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param collectionSource The collection the item has been moved from.
      * @param collectionDestination The collection the item has been moved to.
      */
-    void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
-                                               const Akonadi::Collection &collectionDestination );
+    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
+                   const Akonadi::Collection &collectionDestination);
 
     /**
      * This is signal is emitted when multiple monitored items have been moved between two collections
@@ -446,8 +445,8 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.11
      */
-    void itemsMoved( const Akonadi::Item::List &items, const Akonadi::Collection &collectionSource,
-                                                       const Akonadi::Collection &collectionDestination );
+    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &collectionSource,
+                    const Akonadi::Collection &collectionDestination);
 
     /**
      * This signal is emitted if an item has been added to a monitored collection in the Akonadi storage.
@@ -455,7 +454,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param item The new item.
      * @param collection The collection the item has been added to.
      */
-    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if
@@ -465,7 +464,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param item The removed item.
      */
-    void itemRemoved( const Akonadi::Item &item );
+    void itemRemoved(const Akonadi::Item &item);
 
     /**
      * This signal is emitted if monitored items have been removed from Akonadi
@@ -475,7 +474,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.11
      */
-    void itemsRemoved( const Akonadi::Item::List &items );
+    void itemsRemoved(const Akonadi::Item::List &items);
 
     /**
      * This signal is emitted if a reference to an item is added to a virtual collection.
@@ -484,7 +483,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.2
      */
-    void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if a reference to multiple items is added to a virtual collection
@@ -494,7 +493,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.11
      */
-    void itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+    void itemsLinked(const Akonadi::Item::List &items, const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if a reference to an item is removed from a virtual collection.
@@ -503,7 +502,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.2
      */
-    void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if a refernece to items is removed from a virtual collection
@@ -513,7 +512,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.11
      */
-    void itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+    void itemsUnlinked(const Akonadi::Item::List &items, const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if a new collection has been added to a monitored collection in the Akonadi storage.
@@ -521,14 +520,14 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param collection The new collection.
      * @param parent The parent collection.
      */
-    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+    void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
 
     /**
      * This signal is emitted if a monitored collection has been changed (properties or content).
      *
      * @param collection The changed collection.
      */
-    void collectionChanged( const Akonadi::Collection &collection );
+    void collectionChanged(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if a monitored collection has been changed (properties or attributes).
@@ -538,7 +537,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.4
      */
-    void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &attributeNames );
+    void collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &attributeNames);
 
     /**
      * This signals is emitted if a monitored collection has been moved.
@@ -549,14 +548,14 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.4
      */
-    void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+    void collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination);
 
     /**
      * This signal is emitted if a monitored collection has been removed from the Akonadi storage.
      *
      * @param collection The removed collection.
      */
-    void collectionRemoved( const Akonadi::Collection &collection );
+    void collectionRemoved(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if a collection has been subscribed to by the user.
@@ -568,7 +567,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.6
      */
-    void collectionSubscribed( const Akonadi::Collection& collection, const Akonadi::Collection &parent  );
+    void collectionSubscribed(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
 
     /**
      * This signal is emitted if a user unsubscribes from a collection.
@@ -577,7 +576,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.6
      */
-    void collectionUnsubscribed( const Akonadi::Collection& collection );
+    void collectionUnsubscribed(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted if the statistics information of a monitored collection
@@ -587,9 +586,8 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param statistics The updated collection statistics, invalid if automatic
      *                   fetching of statistics changes is disabled.
      */
-    void collectionStatisticsChanged( Akonadi::Collection::Id id,
-                                      const Akonadi::CollectionStatistics &statistics );
-
+    void collectionStatisticsChanged(Akonadi::Collection::Id id,
+                                     const Akonadi::CollectionStatistics &statistics);
 
     /**
      * This signal is emitted if a tag has been added to Akonadi storage.
@@ -597,7 +595,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param tag The added tag
      * @since 4.13
      */
-    void tagAdded( const Akonadi::Tag &tag );
+    void tagAdded(const Akonadi::Tag &tag);
 
     /**
      * This signal is emitted if a monitored tag is changed on the server.
@@ -605,7 +603,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param tag The changed tag.
      * @since 4.13
      */
-    void tagChanged( const Akonadi::Tag &tag );
+    void tagChanged(const Akonadi::Tag &tag);
 
     /**
      * This signal is emitted if a monitored tag is removed from the server storage.
@@ -616,7 +614,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param tag The removed tag.
      * @since 4.13
      */
-    void tagRemoved( const Akonadi::Tag &tag );
+    void tagRemoved(const Akonadi::Tag &tag);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p collection explicitly.
@@ -625,7 +623,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void collectionMonitored( const Akonadi::Collection &collection, bool monitored );
+    void collectionMonitored(const Akonadi::Collection &collection, bool monitored);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p item explicitly.
@@ -634,7 +632,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void itemMonitored( const Akonadi::Item &item, bool monitored );
+    void itemMonitored(const Akonadi::Item &item, bool monitored);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring the resource with the identifier @p identifier explicitly.
@@ -643,7 +641,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void resourceMonitored( const QByteArray &identifier, bool monitored );
+    void resourceMonitored(const QByteArray &identifier, bool monitored);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p mimeType explicitly.
@@ -652,7 +650,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void mimeTypeMonitored( const QString &mimeType, bool monitored );
+    void mimeTypeMonitored(const QString &mimeType, bool monitored);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring everything.
@@ -660,7 +658,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void allMonitored( bool monitored );
+    void allMonitored(bool monitored);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p tag explicitly.
@@ -668,7 +666,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param monitored Whether the tag is now being monitored or not.
      * @since 4.13
      */
-    void tagMonitored( const Akonadi::Tag &tag, bool monitored );
+    void tagMonitored(const Akonadi::Tag &tag, bool monitored);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p type explicitly
@@ -676,29 +674,29 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param monitored Whether the type is now being monitored or not.
      * @since 4.13
      */
-    void typeMonitored( const Akonadi::Monitor::Type type, bool monitored );
+    void typeMonitored(const Akonadi::Monitor::Type type, bool monitored);
 
-  protected:
+protected:
     //@cond PRIVATE
     friend class EntityTreeModel;
     friend class EntityTreeModelPrivate;
     MonitorPrivate *d_ptr;
-    explicit Monitor( MonitorPrivate *d, QObject *parent = 0 );
+    explicit Monitor(MonitorPrivate *d, QObject *parent = 0);
     //@endcond
 
-  private:
-    Q_DECLARE_PRIVATE( Monitor )
+private:
+    Q_DECLARE_PRIVATE(Monitor)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject* ) )
-    Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
-    Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
-    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV3::List& ) )
-    Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
-    Q_PRIVATE_SLOT( d_ptr, void serverStateChanged( Akonadi::ServerManager::State ) )
-    Q_PRIVATE_SLOT( d_ptr, void invalidateCollectionCache( qint64 ) )
-    Q_PRIVATE_SLOT( d_ptr, void invalidateItemCache( qint64 ) )
-    Q_PRIVATE_SLOT( d_ptr, void invalidateTagCache( qint64 ) )
+    Q_PRIVATE_SLOT(d_ptr, void slotSessionDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_ptr, void slotStatisticsChangedFinished(KJob *))
+    Q_PRIVATE_SLOT(d_ptr, void slotFlushRecentlyChangedCollections())
+    Q_PRIVATE_SLOT(d_ptr, void slotNotify(const Akonadi::NotificationMessageV3::List &))
+    Q_PRIVATE_SLOT(d_ptr, void dataAvailable())
+    Q_PRIVATE_SLOT(d_ptr, void serverStateChanged(Akonadi::ServerManager::State))
+    Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))
+    Q_PRIVATE_SLOT(d_ptr, void invalidateItemCache(qint64))
+    Q_PRIVATE_SLOT(d_ptr, void invalidateTagCache(qint64))
 
     friend class ResourceBasePrivate;
     //@endcond

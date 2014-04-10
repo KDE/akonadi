@@ -31,132 +31,132 @@ using namespace Akonadi;
  */
 class AgentTypeModel::Private
 {
-  public:
-    Private( AgentTypeModel *parent )
-      : mParent( parent )
+public:
+    Private(AgentTypeModel *parent)
+        : mParent(parent)
     {
-      mTypes = AgentManager::self()->types();
+        mTypes = AgentManager::self()->types();
     }
 
     AgentTypeModel *mParent;
     AgentType::List mTypes;
 
-    void typeAdded( const AgentType &agentType );
-    void typeRemoved( const AgentType &agentType );
+    void typeAdded(const AgentType &agentType);
+    void typeRemoved(const AgentType &agentType);
 };
 
-void AgentTypeModel::Private::typeAdded( const AgentType &agentType )
+void AgentTypeModel::Private::typeAdded(const AgentType &agentType)
 {
-  mTypes.append( agentType );
+    mTypes.append(agentType);
 
-  emit mParent->layoutChanged();
+    emit mParent->layoutChanged();
 }
 
-void AgentTypeModel::Private::typeRemoved( const AgentType &agentType )
+void AgentTypeModel::Private::typeRemoved(const AgentType &agentType)
 {
-  mTypes.removeAll( agentType );
+    mTypes.removeAll(agentType);
 
-  emit mParent->layoutChanged();
+    emit mParent->layoutChanged();
 }
 
-AgentTypeModel::AgentTypeModel( QObject *parent )
-  : QAbstractItemModel( parent ), d( new Private( this ) )
+AgentTypeModel::AgentTypeModel(QObject *parent)
+    : QAbstractItemModel(parent)
+    , d(new Private(this))
 {
-  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)),
-           this, SLOT(typeAdded(Akonadi::AgentType)) );
-  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)),
-           this, SLOT(typeRemoved(Akonadi::AgentType)) );
+    connect(AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)),
+            this, SLOT(typeAdded(Akonadi::AgentType)));
+    connect(AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)),
+            this, SLOT(typeRemoved(Akonadi::AgentType)));
 }
 
 AgentTypeModel::~AgentTypeModel()
 {
-  delete d;
+    delete d;
 }
 
-int AgentTypeModel::columnCount( const QModelIndex& ) const
+int AgentTypeModel::columnCount(const QModelIndex &) const
 {
-  return 1;
+    return 1;
 }
 
-int AgentTypeModel::rowCount( const QModelIndex& ) const
+int AgentTypeModel::rowCount(const QModelIndex &) const
 {
-  return d->mTypes.count();
+    return d->mTypes.count();
 }
 
-QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
+QVariant AgentTypeModel::data(const QModelIndex &index, int role) const
 {
-  if ( !index.isValid() ) {
-    return QVariant();
-  }
+    if (!index.isValid()) {
+        return QVariant();
+    }
 
-  if ( index.row() < 0 || index.row() >= d->mTypes.count() ) {
-    return QVariant();
-  }
+    if (index.row() < 0 || index.row() >= d->mTypes.count()) {
+        return QVariant();
+    }
 
-  const AgentType &type = d->mTypes[ index.row() ];
+    const AgentType &type = d->mTypes[index.row()];
 
-  switch ( role ) {
+    switch (role) {
     case Qt::DisplayRole:
-      return type.name();
-      break;
+        return type.name();
+        break;
     case Qt::DecorationRole:
-      return type.icon();
-      break;
-    case TypeRole:
-      {
+        return type.icon();
+        break;
+    case TypeRole: {
         QVariant var;
-        var.setValue( type );
+        var.setValue(type);
         return var;
-      }
-      break;
+        break;
+    }
     case IdentifierRole:
-      return type.identifier();
-      break;
+        return type.identifier();
+        break;
     case DescriptionRole:
-      return type.description();
-      break;
+        return type.description();
+        break;
     case MimeTypesRole:
-      return type.mimeTypes();
-      break;
+        return type.mimeTypes();
+        break;
     case CapabilitiesRole:
-      return type.capabilities();
-      break;
+        return type.capabilities();
+        break;
     default:
-      break;
-  }
-  return QVariant();
+        break;
+    }
+    return QVariant();
 }
 
-QModelIndex AgentTypeModel::index( int row, int column, const QModelIndex& ) const
+QModelIndex AgentTypeModel::index(int row, int column, const QModelIndex &) const
 {
-  if ( row < 0 || row >= d->mTypes.count() ) {
+    if (row < 0 || row >= d->mTypes.count()) {
+        return QModelIndex();
+    }
+
+    if (column != 0) {
+        return QModelIndex();
+    }
+
+    return createIndex(row, column);
+}
+
+QModelIndex AgentTypeModel::parent(const QModelIndex &) const
+{
     return QModelIndex();
-  }
-
-  if ( column != 0 ) {
-    return QModelIndex();
-  }
-
-  return createIndex( row, column);
 }
 
-QModelIndex AgentTypeModel::parent( const QModelIndex& ) const
+Qt::ItemFlags AgentTypeModel::flags(const QModelIndex &index) const
 {
-  return QModelIndex();
-}
+    if (!index.isValid() || index.row() < 0 || index.row() >= d->mTypes.count()) {
+        return QAbstractItemModel::flags(index);
+    }
 
-Qt::ItemFlags AgentTypeModel::flags(const QModelIndex& index) const
-{
-  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mTypes.count() ) {
-    return QAbstractItemModel::flags( index );
-  }
-
-  const AgentType &type = d->mTypes[ index.row() ];
-  if ( type.capabilities().contains( QLatin1String( "Unique" ) ) &&
-       AgentManager::self()->instance( type.identifier() ).isValid() ) {
-    return QAbstractItemModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
-  }
-  return QAbstractItemModel::flags( index );
+    const AgentType &type = d->mTypes[index.row()];
+    if (type.capabilities().contains(QLatin1String("Unique")) &&
+        AgentManager::self()->instance(type.identifier()).isValid()) {
+        return QAbstractItemModel::flags(index) &~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    }
+    return QAbstractItemModel::flags(index);
 }
 
 #include "moc_agenttypemodel.cpp"

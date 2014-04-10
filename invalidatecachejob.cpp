@@ -31,82 +31,89 @@ namespace Akonadi {
 
 class InvalidateCacheJobPrivate : JobPrivate
 {
-  public:
-    InvalidateCacheJobPrivate( InvalidateCacheJob* qq ) : JobPrivate( qq ) {}
+public:
+    InvalidateCacheJobPrivate(InvalidateCacheJob *qq)
+        : JobPrivate(qq)
+    {
+    }
     Collection collection;
 
-    void collectionFetchResult( KJob *job );
-    void itemFetchResult( KJob *job );
-    void itemStoreResult( KJob *job );
+    void collectionFetchResult(KJob *job);
+    void itemFetchResult(KJob *job);
+    void itemStoreResult(KJob *job);
 
-    Q_DECLARE_PUBLIC( InvalidateCacheJob )
+    Q_DECLARE_PUBLIC(InvalidateCacheJob)
 };
 
 }
 
-void InvalidateCacheJobPrivate::collectionFetchResult(KJob* job)
+void InvalidateCacheJobPrivate::collectionFetchResult(KJob *job)
 {
-  Q_Q( InvalidateCacheJob );
-  if ( job->error() )
-    return; // handled by KCompositeJob
+    Q_Q(InvalidateCacheJob);
+    if (job->error()) {
+        return; // handled by KCompositeJob
+    }
 
-  CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
-  Q_ASSERT( fetchJob );
-  if ( fetchJob->collections().size() == 1 )
-    collection = fetchJob->collections().first();
+    CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    Q_ASSERT(fetchJob);
+    if (fetchJob->collections().size() == 1) {
+        collection = fetchJob->collections().first();
+    }
 
-  if ( !collection.isValid() ) {
-    q->setError( Job::Unknown );
-    q->setErrorText( i18n( "Invalid collection." ) );
+    if (!collection.isValid()) {
+        q->setError(Job::Unknown);
+        q->setErrorText(i18n("Invalid collection."));
+        q->emitResult();
+        return;
+    }
+
+    ItemFetchJob *itemFetch = new ItemFetchJob(collection, q);
+    QObject::connect(itemFetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)));
+}
+
+void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
+{
+    Q_Q(InvalidateCacheJob);
+    if (job->error()) {
+        return;
+    }
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    Q_ASSERT(fetchJob);
+    if (fetchJob->items().size() == 0) {
+        q->emitResult();
+        return;
+    }
+
+    ItemModifyJob *modJob = 0;
+    foreach (Item item, fetchJob->items()) {    //krazy:exclude=foreach, item cannot be const
+        item.clearPayload();
+        modJob = new ItemModifyJob(item, q);
+    }
+    QObject::connect(modJob, SIGNAL(result(KJob*)), q, SLOT(itemStoreResult(KJob*)));
+}
+
+void InvalidateCacheJobPrivate::itemStoreResult(KJob *job)
+{
+    Q_Q(InvalidateCacheJob);
+    if (job->error()) {
+        return;
+    }
     q->emitResult();
-    return;
-  }
-
-  ItemFetchJob *itemFetch = new ItemFetchJob( collection, q );
-  QObject::connect( itemFetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)) );
 }
 
-void InvalidateCacheJobPrivate::itemFetchResult(KJob* job)
+InvalidateCacheJob::InvalidateCacheJob(const Collection &collection, QObject *parent)
+    : Job(new InvalidateCacheJobPrivate(this), parent)
 {
-  Q_Q( InvalidateCacheJob );
-  if ( job->error() )
-    return;
-  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-  Q_ASSERT( fetchJob );
-  if ( fetchJob->items().size() == 0 ) {
-    q->emitResult();
-    return;
-  }
-
-  ItemModifyJob *modJob = 0;
-  foreach ( Item item, fetchJob->items() ) { //krazy:exclude=foreach, item cannot be const
-    item.clearPayload();
-    modJob = new ItemModifyJob( item, q );
-  }
-  QObject::connect( modJob, SIGNAL(result(KJob*)), q, SLOT(itemStoreResult(KJob*)) );
-}
-
-void InvalidateCacheJobPrivate::itemStoreResult(KJob* job)
-{
-  Q_Q( InvalidateCacheJob );
-  if ( job->error() )
-    return;
-  q->emitResult();
-}
-
-InvalidateCacheJob::InvalidateCacheJob( const Collection &collection, QObject *parent ) :
-  Job( new InvalidateCacheJobPrivate( this ), parent )
-{
-  Q_D( InvalidateCacheJob );
-  d->collection = collection;
+    Q_D(InvalidateCacheJob);
+    d->collection = collection;
 }
 
 void InvalidateCacheJob::doStart()
 {
-  Q_D( InvalidateCacheJob );
-  // resolve RID-only collections
-  CollectionFetchJob *job = new CollectionFetchJob( d->collection, Akonadi::CollectionFetchJob::Base, this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
+    Q_D(InvalidateCacheJob);
+    // resolve RID-only collections
+    CollectionFetchJob *job = new CollectionFetchJob(d->collection, Akonadi::CollectionFetchJob::Base, this);
+    connect(job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)));
 }
 
 #include "moc_invalidatecachejob_p.cpp"

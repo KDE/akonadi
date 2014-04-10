@@ -63,7 +63,7 @@ class ItemFetchScope;
  *
  * Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( contactsCollection, mimeTypes );
  * job->fetchScope().fetchFullPayload();
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)) );
  *
  * job->start();
  *
@@ -83,9 +83,9 @@ class ItemFetchScope;
  */
 class AKONADI_EXPORT RecursiveItemFetchJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new recursive item fetch job.
      *
@@ -93,9 +93,9 @@ class AKONADI_EXPORT RecursiveItemFetchJob : public KJob
      * @param mimeTypes The list of mime types that will be used for filtering.
      * @param parent The parent object.
      */
-    explicit RecursiveItemFetchJob( const Akonadi::Collection &collection,
-                                    const QStringList &mimeTypes,
-                                    QObject *parent = 0 );
+    explicit RecursiveItemFetchJob(const Akonadi::Collection &collection,
+                                   const QStringList &mimeTypes,
+                                   QObject *parent = 0);
 
     /**
      * Destroys the recursive item fetch job.
@@ -113,7 +113,7 @@ class AKONADI_EXPORT RecursiveItemFetchJob : public KJob
      *
      * @see fetchScope()
      */
-    void setFetchScope( const Akonadi::ItemFetchScope &fetchScope );
+    void setFetchScope(const Akonadi::ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -139,13 +139,13 @@ class AKONADI_EXPORT RecursiveItemFetchJob : public KJob
      */
     virtual void start();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void collectionFetchResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void itemFetchResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
+    Q_PRIVATE_SLOT(d, void itemFetchResult(KJob *))
     //@endcond
 };
 

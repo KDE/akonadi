@@ -35,50 +35,50 @@ class AKONADI_EXPORT TagModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-  public:
+public:
     enum Roles {
-      IdRole = Qt::UserRole + 1,
-      NameRole,
-      TypeRole,
-      GIDRole,
-      ParentRole,
-      TagRole,
+        IdRole = Qt::UserRole + 1,
+        NameRole,
+        TypeRole,
+        GIDRole,
+        ParentRole,
+        TagRole,
 
-      UserRole = Qt::UserRole + 500,
-      TerminalUserRole = 2000,
-      EndRole = 65535
+        UserRole = Qt::UserRole + 500,
+        TerminalUserRole = 2000,
+        EndRole = 65535
     };
 
-    explicit TagModel( Monitor *recorder, QObject *parent );
+    explicit TagModel(Monitor *recorder, QObject *parent);
     virtual ~TagModel();
 
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual QVariant data( const QModelIndex &index, int role ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     /*
     virtual Qt::DropActions supportedDropActions() const;
     virtual QMimeData* mimeData( const QModelIndexList &indexes ) const;
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
     */
 
-    virtual QModelIndex parent( const QModelIndex &child ) const;
-    virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
+    virtual QModelIndex parent(const QModelIndex &child) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-  protected:
-    Q_DECLARE_PRIVATE( TagModel )
-    TagModelPrivate * d_ptr;
+protected:
+    Q_DECLARE_PRIVATE(TagModel)
+    TagModelPrivate *d_ptr;
 
-    TagModel( Monitor *recorder, TagModelPrivate *dd, QObject *parent = 0 );
+    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = 0);
 
-  private:
-    virtual bool insertRows(int, int, const QModelIndex & = QModelIndex());
-    virtual bool insertColumns(int, int, const QModelIndex & = QModelIndex());
-    virtual bool removeColumns(int, int, const QModelIndex & = QModelIndex());
-    virtual bool removeRows(int, int, const QModelIndex & = QModelIndex());
+private:
+    virtual bool insertRows(int, int, const QModelIndex& = QModelIndex());
+    virtual bool insertColumns(int, int, const QModelIndex& = QModelIndex());
+    virtual bool removeColumns(int, int, const QModelIndex& = QModelIndex());
+    virtual bool removeRows(int, int, const QModelIndex& = QModelIndex());
 
     Q_PRIVATE_SLOT(d_func(), void tagsFetched(const Akonadi::Tag::List &tags))
     Q_PRIVATE_SLOT(d_func(), void tagsFetchDone(KJob *job))

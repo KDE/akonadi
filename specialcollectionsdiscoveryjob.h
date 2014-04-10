@@ -43,9 +43,9 @@ class SpecialCollectionsDiscoveryJobPrivate;
 */
 class AKONADI_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     /**
      * Destroys the special collections request job.
@@ -54,19 +54,19 @@ class AKONADI_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
 
     virtual void start();
 
-  protected:
+protected:
     /**
      * Creates a new special collections request job.
      *
      * @param collections The SpecialCollections object that shall be used.
      * @param parent The parent object.
      */
-    explicit SpecialCollectionsDiscoveryJob( SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = 0 );
+    explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = 0);
 
     /* reimpl */
-    virtual void slotResult( KJob *job );
+    virtual void slotResult(KJob *job);
 
-  private:
+private:
     //@cond PRIVATE
     SpecialCollectionsDiscoveryJobPrivate *const d;
     //@endcond

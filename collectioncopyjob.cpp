@@ -26,9 +26,9 @@ using namespace Akonadi;
 
 class Akonadi::CollectionCopyJobPrivate : public JobPrivate
 {
-  public:
-    CollectionCopyJobPrivate( CollectionCopyJob *parent )
-      : JobPrivate( parent )
+public:
+    CollectionCopyJobPrivate(CollectionCopyJob *parent)
+        : JobPrivate(parent)
     {
     }
 
@@ -36,13 +36,13 @@ class Akonadi::CollectionCopyJobPrivate : public JobPrivate
     Collection mTarget;
 };
 
-CollectionCopyJob::CollectionCopyJob(const Collection & source, const Collection & target, QObject * parent)
-  : Job( new CollectionCopyJobPrivate( this ), parent )
+CollectionCopyJob::CollectionCopyJob(const Collection &source, const Collection &target, QObject *parent)
+    : Job(new CollectionCopyJobPrivate(this), parent)
 {
-  Q_D( CollectionCopyJob );
+    Q_D(CollectionCopyJob);
 
-  d->mSource = source;
-  d->mTarget = target;
+    d->mSource = source;
+    d->mTarget = target;
 }
 
 CollectionCopyJob::~CollectionCopyJob()
@@ -51,14 +51,13 @@ CollectionCopyJob::~CollectionCopyJob()
 
 void CollectionCopyJob::doStart()
 {
-  Q_D( CollectionCopyJob );
+    Q_D(CollectionCopyJob);
 
-  QByteArray command = d->newTag();
-  command += " COLCOPY ";
-  command += QByteArray::number( d->mSource.id() );
-  command += ' ';
-  command += QByteArray::number( d->mTarget.id() );
-  command += '\n';
-  d->writeData( command );
+    QByteArray command = d->newTag();
+    command += " COLCOPY ";
+    command += QByteArray::number(d->mSource.id());
+    command += ' ';
+    command += QByteArray::number(d->mTarget.id());
+    command += '\n';
+    d->writeData(command);
 }
-

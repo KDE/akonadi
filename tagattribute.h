@@ -37,7 +37,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT TagAttribute : public Attribute
 {
-  public:
+public:
     TagAttribute();
 
     ~TagAttribute();
@@ -45,7 +45,7 @@ class AKONADI_EXPORT TagAttribute : public Attribute
     /**
      * Sets the @p name that should be used for display.
      */
-    void setDisplayName( const QString &name );
+    void setDisplayName(const QString &name);
 
     /**
      * Returns the name that should be used for display.
@@ -56,19 +56,18 @@ class AKONADI_EXPORT TagAttribute : public Attribute
     /**
      * Sets the icon @p name for the default icon.
      */
-    void setIconName( const QString &name );
+    void setIconName(const QString &name);
 
     /**
      * Returns the icon name of the icon returned by icon().
      */
     QString iconName() const;
 
-
-    void setBackgroundColor( const QColor &color );
+    void setBackgroundColor(const QColor &color);
     QColor backgroundColor() const;
-    void setTextColor( const QColor &color );
+    void setTextColor(const QColor &color);
     QColor textColor() const;
-    void setFont( const QString &fontKey );
+    void setFont(const QString &fontKey);
     QString font() const;
     void setInToolbar(bool);
     bool inToolbar() const;
@@ -91,16 +90,16 @@ class AKONADI_EXPORT TagAttribute : public Attribute
 
     /* reimpl */
     QByteArray type() const;
-    TagAttribute* clone() const;
+    TagAttribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-  private:
+private:
     TagAttribute(const TagAttribute &);
     TagAttribute &operator=(const TagAttribute &);
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

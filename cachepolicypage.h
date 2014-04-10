@@ -41,15 +41,15 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the mode of the cache policy page.
      */
     enum GuiMode {
-      UserMode,     ///< A simplified UI for end-users will be provided.
-      AdvancedMode  ///< An advanced UI for debugging will be provided.
+        UserMode,     ///< A simplified UI for end-users will be provided.
+        AdvancedMode  ///< An advanced UI for debugging will be provided.
     };
 
     /**
@@ -58,7 +58,7 @@ class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
      * @param parent The parent widget.
      * @param mode The UI mode that will be used for the page.
      */
-    explicit CachePolicyPage( QWidget *parent, GuiMode mode = UserMode );
+    explicit CachePolicyPage(QWidget *parent, GuiMode mode = UserMode);
 
     /**
      * Destroys the cache policy page.
@@ -68,31 +68,31 @@ class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
     /**
      * Checks if the cache policy page can actually handle the given @p collection.
      */
-    bool canHandle( const Collection &collection ) const;
+    bool canHandle(const Collection &collection) const;
 
     /**
      * Loads the page content from the given @p collection.
      */
-    void load( const Collection &collection );
+    void load(const Collection &collection);
 
     /**
      * Saves page content to the given @p collection.
      */
-    void save( Collection &collection );
+    void save(Collection &collection);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotIntervalValueChanged( int ) )
-    Q_PRIVATE_SLOT( d, void slotCacheValueChanged( int ) )
-    Q_PRIVATE_SLOT( d, void slotRetrievalOptionsGroupBoxDisabled( bool ) )
+    Q_PRIVATE_SLOT(d, void slotIntervalValueChanged(int))
+    Q_PRIVATE_SLOT(d, void slotCacheValueChanged(int))
+    Q_PRIVATE_SLOT(d, void slotRetrievalOptionsGroupBoxDisabled(bool))
 
     //@endcond
 };
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CachePolicyPageFactory, CachePolicyPage )
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CachePolicyPageFactory, CachePolicyPage)
 
 }
 

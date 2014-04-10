@@ -25,35 +25,35 @@ using namespace Akonadi;
 
 class Akonadi::TransactionBeginJobPrivate : public JobPrivate
 {
-  public:
-    TransactionBeginJobPrivate( TransactionBeginJob *parent )
-      : JobPrivate( parent )
+public:
+    TransactionBeginJobPrivate(TransactionBeginJob *parent)
+        : JobPrivate(parent)
     {
     }
 };
 
 class Akonadi::TransactionRollbackJobPrivate : public JobPrivate
 {
-  public:
-    TransactionRollbackJobPrivate( TransactionRollbackJob *parent )
-      : JobPrivate( parent )
+public:
+    TransactionRollbackJobPrivate(TransactionRollbackJob *parent)
+        : JobPrivate(parent)
     {
     }
 };
 
 class Akonadi::TransactionCommitJobPrivate : public JobPrivate
 {
-  public:
-    TransactionCommitJobPrivate( TransactionCommitJob *parent )
-      : JobPrivate( parent )
+public:
+    TransactionCommitJobPrivate(TransactionCommitJob *parent)
+        : JobPrivate(parent)
     {
     }
 };
 
-TransactionBeginJob::TransactionBeginJob(QObject * parent)
-  : Job( new TransactionBeginJobPrivate( this ), parent )
+TransactionBeginJob::TransactionBeginJob(QObject *parent)
+    : Job(new TransactionBeginJobPrivate(this), parent)
 {
-  Q_ASSERT( parent );
+    Q_ASSERT(parent);
 }
 
 TransactionBeginJob::~TransactionBeginJob()
@@ -62,13 +62,13 @@ TransactionBeginJob::~TransactionBeginJob()
 
 void TransactionBeginJob::doStart()
 {
-  d_ptr->writeData( d_ptr->newTag() + " BEGIN\n" );
+    d_ptr->writeData(d_ptr->newTag() + " BEGIN\n");
 }
 
-TransactionRollbackJob::TransactionRollbackJob(QObject * parent)
-  : Job( new TransactionRollbackJobPrivate( this ), parent )
+TransactionRollbackJob::TransactionRollbackJob(QObject *parent)
+    : Job(new TransactionRollbackJobPrivate(this), parent)
 {
-  Q_ASSERT( parent );
+    Q_ASSERT(parent);
 }
 
 TransactionRollbackJob::~TransactionRollbackJob()
@@ -77,13 +77,13 @@ TransactionRollbackJob::~TransactionRollbackJob()
 
 void TransactionRollbackJob::doStart()
 {
-  d_ptr->writeData( d_ptr->newTag() + " ROLLBACK\n" );
+    d_ptr->writeData(d_ptr->newTag() + " ROLLBACK\n");
 }
 
-TransactionCommitJob::TransactionCommitJob(QObject * parent)
-  : Job( new TransactionCommitJobPrivate( this ), parent )
+TransactionCommitJob::TransactionCommitJob(QObject *parent)
+    : Job(new TransactionCommitJobPrivate(this), parent)
 {
-  Q_ASSERT( parent );
+    Q_ASSERT(parent);
 }
 
 TransactionCommitJob::~TransactionCommitJob()
@@ -92,6 +92,5 @@ TransactionCommitJob::~TransactionCommitJob()
 
 void TransactionCommitJob::doStart()
 {
-  d_ptr->writeData( d_ptr->newTag() + " COMMIT\n" );
+    d_ptr->writeData(d_ptr->newTag() + " COMMIT\n");
 }
-

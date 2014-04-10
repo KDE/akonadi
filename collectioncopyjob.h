@@ -38,7 +38,7 @@ class CollectionCopyJobPrivate;
  * Akonadi::Collection target = ...
  *
  * Akonadi::CollectionCopyJob *job = new Akonadi::CollectionCopyJob( source, target );
- * connect( job, SIGNAL( result( KJob* ) ), SLOT( copyFinished( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), SLOT(copyFinished(KJob*)) );
  *
  * ...
  *
@@ -56,9 +56,9 @@ class CollectionCopyJobPrivate;
  */
 class AKONADI_EXPORT CollectionCopyJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection copy job to copy the given @p source collection into @p target.
      *
@@ -66,18 +66,18 @@ class AKONADI_EXPORT CollectionCopyJob : public Job
      * @param target The target collection.
      * @param parent The parent object.
      */
-    CollectionCopyJob( const Collection &source, const Collection &target, QObject *parent = 0 );
+    CollectionCopyJob(const Collection &source, const Collection &target, QObject *parent = 0);
 
     /**
      * Destroys the collection copy job.
      */
     ~CollectionCopyJob();
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( CollectionCopyJob )
+private:
+    Q_DECLARE_PRIVATE(CollectionCopyJob)
 };
 
 }

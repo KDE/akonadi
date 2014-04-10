@@ -59,15 +59,15 @@ class Item;
  */
 class AKONADI_EXPORT ItemView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new item view.
      *
      * @param parent The parent widget.
      */
-    explicit ItemView( QWidget *parent = 0 );
+    explicit ItemView(QWidget *parent = 0);
 
     /**
      * Creates a new item view.
@@ -77,7 +77,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit AKONADI_DEPRECATED ItemView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+    explicit AKONADI_DEPRECATED ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
 
     /**
      * Creates a new item view.
@@ -88,7 +88,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
      * @param parent The parent widget.
      * @since 4.3
      */
-    explicit ItemView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
 
     /**
      * Destroys the item view.
@@ -101,7 +101,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
      *
      * @param xmlGuiWindow The KXmlGuiWindow this view is used in.
      */
-    AKONADI_DEPRECATED void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+    AKONADI_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
 
     /**
      * Sets the KXMLGUIFactory which this view is used in.
@@ -109,18 +109,18 @@ class AKONADI_EXPORT ItemView : public QTreeView
      *
      * @param xmlGuiClient The KXMLGUIClient this view is used in.
      */
-     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
+    void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
-    virtual void setModel( QAbstractItemModel * model );
+    virtual void setModel(QAbstractItemModel *model);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has activated
      * an item in the view.
      *
      * @param item The activated item.
      */
-    void activated( const Akonadi::Item &item );
+    void activated(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the current item
@@ -128,7 +128,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
      *
      * @param item The current item.
      */
-    void currentChanged( const Akonadi::Item &item );
+    void currentChanged(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the user clicked on an item
@@ -137,7 +137,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
      * @param item The item the user clicked on.
      * @since 4.3
      */
-    void clicked( const Akonadi::Item &item );
+    void clicked(const Akonadi::Item &item);
 
     /**
      * This signal is emitted whenever the user double clicked on an item
@@ -146,21 +146,21 @@ class AKONADI_EXPORT ItemView : public QTreeView
      * @param item The item the user double clicked on.
      * @since 4.3
      */
-    void doubleClicked( const Akonadi::Item &item );
+    void doubleClicked(const Akonadi::Item &item);
 
-  protected:
+protected:
     using QTreeView::currentChanged;
-    void contextMenuEvent( QContextMenuEvent *event );
+    void contextMenuEvent(QContextMenuEvent *event);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private * const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemDoubleClicked( const QModelIndex& ) )
+    Q_PRIVATE_SLOT(d, void itemActivated(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
+    Q_PRIVATE_SLOT(d, void itemDoubleClicked(const QModelIndex &))
     //@endcond
 };
 

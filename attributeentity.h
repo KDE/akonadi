@@ -57,18 +57,18 @@ public:
      *
      * @note The entity takes the ownership of the attribute.
      */
-    void addAttribute( Attribute *attribute );
+    void addAttribute(Attribute *attribute);
 
     /**
      * Removes and deletes the attribute of the given type @p name.
      */
-    void removeAttribute( const QByteArray &name );
+    void removeAttribute(const QByteArray &name);
 
     /**
      * Returns @c true if the entity has an attribute of the given type @p name,
      * false otherwise.
      */
-    bool hasAttribute( const QByteArray &name ) const;
+    bool hasAttribute(const QByteArray &name) const;
 
     /**
      * Returns a list of all attributes of the entity.
@@ -83,13 +83,13 @@ public:
     /**
      * Returns the attribute of the given type @p name if available, 0 otherwise.
      */
-    Attribute* attribute( const QByteArray &name ) const;
+    Attribute *attribute(const QByteArray &name) const;
 
     /**
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-      AddIfMissing    ///< Creates the attribute if it is missing
+        AddIfMissing    ///< Creates the attribute if it is missing
     };
 
     /**
@@ -99,40 +99,41 @@ public:
      *
      * @param option The create options.
      */
-    template <typename T> inline T* attribute( CreateOption option )
+    template <typename T> inline T *attribute(CreateOption option)
     {
-      Q_UNUSED( option );
+        Q_UNUSED(option);
 
-      const T dummy;
-      if ( hasAttribute( dummy.type() ) ) {
-        T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
-        if ( attr ) {
-          return attr;
+        const T dummy;
+        if (hasAttribute(dummy.type())) {
+            T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+            if (attr) {
+                return attr;
+            }
+            kWarning(5250) << "Found attribute of unknown type" << dummy.type()
+                           << ". Did you forget to call AttributeFactory::registerAttribute()?";
         }
-        kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
-          << ". Did you forget to call AttributeFactory::registerAttribute()?";
-      }
 
-      T* attr = new T();
-      addAttribute( attr );
-      return attr;
+        T *attr = new T();
+        addAttribute(attr);
+        return attr;
     }
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
-    template <typename T> inline T* attribute() const
+    template <typename T> inline T *attribute() const
     {
-      const T dummy;
-      if ( hasAttribute( dummy.type() ) ) {
-        T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
-        if ( attr )
-          return attr;
-        kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
-          << ". Did you forget to call AttributeFactory::registerAttribute()?";
-      }
+        const T dummy;
+        if (hasAttribute(dummy.type())) {
+            T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+            if (attr) {
+                return attr;
+            }
+            kWarning(5250) << "Found attribute of unknown type" << dummy.type()
+                           << ". Did you forget to call AttributeFactory::registerAttribute()?";
+        }
 
-      return 0;
+        return 0;
     }
 
     /**
@@ -140,8 +141,8 @@ public:
      */
     template <typename T> inline void removeAttribute()
     {
-      const T dummy;
-      removeAttribute( dummy.type() );
+        const T dummy;
+        removeAttribute(dummy.type());
     }
 
     /**
@@ -149,8 +150,8 @@ public:
      */
     template <typename T> inline bool hasAttribute() const
     {
-      const T dummy;
-      return hasAttribute( dummy.type() );
+        const T dummy;
+        return hasAttribute(dummy.type());
     }
 private:
     friend class TagModifyJob;

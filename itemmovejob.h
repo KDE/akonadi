@@ -39,7 +39,7 @@ class ItemMoveJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( item, collection );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( moveResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(moveResult(KJob*)) );
  *
  * @endcode
  *
@@ -47,9 +47,9 @@ class ItemMoveJobPrivate;
  */
 class AKONADI_EXPORT ItemMoveJob : public Job
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Move the given item into the given collection.
      *
@@ -57,7 +57,7 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      * @param destination The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob( const Item &item, const Collection &destination, QObject *parent = 0 );
+    ItemMoveJob(const Item &item, const Collection &destination, QObject *parent = 0);
 
     /**
      * Move the given items into @p destination.
@@ -66,7 +66,18 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      * @param destination The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob( const QList<Item> &items, const Collection &destination, QObject *parent = 0 );
+    ItemMoveJob(const QList<Item> &items, const Collection &destination, QObject *parent = 0);
+
+    /**
+     * Move the given items from @p sourec to @p destination.
+     *
+     * @internal If the items are identified only by RID, then you MUST use this
+     * constructor to specify the source collection, otherwise the job will fail.
+     * RID-based moves are only allowed to resources.
+     *
+     * @since 4.14
+     */
+    ItemMoveJob(const QList<Item> &items, const Collection &source, const Collection &destination, QObject *parent = 0);
 
     /**
      * Destroys the item move job.
@@ -87,11 +98,11 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      */
     QList<Item> items() const;
 
-  protected:
+protected:
     void doStart();
 
-  private:
-    Q_DECLARE_PRIVATE( ItemMoveJob )
+private:
+    Q_DECLARE_PRIVATE(ItemMoveJob)
     template <typename T, typename MoveJob> friend class MoveJobImpl;
 };
 

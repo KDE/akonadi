@@ -49,45 +49,45 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the roles of this model.
      */
     enum Roles {
-      TypeRole = Qt::UserRole + 1,            ///< The agent type itself
-      IdentifierRole,                         ///< The identifier of the agent type
-      DescriptionRole,                        ///< A description of the agent type
-      MimeTypesRole,                          ///< A list of supported mimetypes
-      CapabilitiesRole,                       ///< A list of supported capabilities
-      UserRole  = Qt::UserRole + 42           ///< Role for user extensions
+        TypeRole = Qt::UserRole + 1,            ///< The agent type itself
+        IdentifierRole,                         ///< The identifier of the agent type
+        DescriptionRole,                        ///< A description of the agent type
+        MimeTypesRole,                          ///< A list of supported mimetypes
+        CapabilitiesRole,                       ///< A list of supported capabilities
+        UserRole  = Qt::UserRole + 42           ///< Role for user extensions
     };
 
     /**
      * Creates a new agent type model.
      */
-    explicit AgentTypeModel( QObject *parent = 0 );
+    explicit AgentTypeModel(QObject *parent = 0);
 
     /**
      * Destroys the agent type model.
      */
     virtual ~AgentTypeModel();
 
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex &index ) const;
-    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void typeAdded( const Akonadi::AgentType& ) )
-    Q_PRIVATE_SLOT( d, void typeRemoved( const Akonadi::AgentType& ) )
+    Q_PRIVATE_SLOT(d, void typeAdded(const Akonadi::AgentType &))
+    Q_PRIVATE_SLOT(d, void typeRemoved(const Akonadi::AgentType &))
     //@endcond
 };
 

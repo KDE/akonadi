@@ -28,73 +28,73 @@
 
 using namespace Akonadi;
 
-PreprocessorBasePrivate::PreprocessorBasePrivate( PreprocessorBase *parent )
-  : AgentBasePrivate( parent ),
-    mInDelayedProcessing( false ),
-    mDelayedProcessingItemId( 0 )
+PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
+    : AgentBasePrivate(parent)
+    , mInDelayedProcessing(false)
+    , mDelayedProcessingItemId(0)
 {
-  Q_Q( PreprocessorBase );
+    Q_Q(PreprocessorBase);
 
-  new Akonadi__PreprocessorAdaptor( this );
+    new Akonadi__PreprocessorAdaptor(this);
 
-  if ( !DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Preprocessor" ), this, QDBusConnection::ExportAdaptors ) ) {
-    q->error( i18n( "Unable to register object at dbus: %1", DBusConnectionPool::threadConnection().lastError().message() ) );
-  }
+    if (!DBusConnectionPool::threadConnection().registerObject(QLatin1String("/Preprocessor"), this, QDBusConnection::ExportAdaptors)) {
+        q->error(i18n("Unable to register object at dbus: %1", DBusConnectionPool::threadConnection().lastError().message()));
+    }
 
 }
 
 void PreprocessorBasePrivate::delayedInit()
 {
-  if ( !DBusConnectionPool::threadConnection().registerService( ServerManager::agentServiceName( ServerManager::Preprocessor, mId ) ) )
-    kFatal() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
-  AgentBasePrivate::delayedInit();
+    if (!DBusConnectionPool::threadConnection().registerService(ServerManager::agentServiceName(ServerManager::Preprocessor, mId))) {
+        kFatal() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
+    }
+    AgentBasePrivate::delayedInit();
 }
 
-void PreprocessorBasePrivate::beginProcessItem( qlonglong itemId, qlonglong collectionId, const QString &mimeType )
+void PreprocessorBasePrivate::beginProcessItem(qlonglong itemId, qlonglong collectionId, const QString &mimeType)
 {
-  kDebug() << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " with mimeType " << mimeType;
+    kDebug() << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " with mimeType " << mimeType;
 
-  ItemFetchJob *fetchJob = new ItemFetchJob( Item( itemId ), this );
-  fetchJob->setFetchScope( mFetchScope );
-  connect( fetchJob, SIGNAL(result(KJob*)), SLOT(itemFetched(KJob*)) );
+    ItemFetchJob *fetchJob = new ItemFetchJob(Item(itemId), this);
+    fetchJob->setFetchScope(mFetchScope);
+    connect(fetchJob, SIGNAL(result(KJob*)), SLOT(itemFetched(KJob*)));
 }
 
-void PreprocessorBasePrivate::itemFetched( KJob *job )
+void PreprocessorBasePrivate::itemFetched(KJob *job)
 {
-  Q_Q( PreprocessorBase );
+    Q_Q(PreprocessorBase);
 
-  if ( job->error() ) {
-    emit itemProcessed( PreprocessorBase::ProcessingFailed );
-    return;
-  }
+    if (job->error()) {
+        emit itemProcessed(PreprocessorBase::ProcessingFailed);
+        return;
+    }
 
-  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
-  if ( fetchJob->items().isEmpty() ) {
-    emit itemProcessed( PreprocessorBase::ProcessingFailed );
-    return;
-  }
+    if (fetchJob->items().isEmpty()) {
+        emit itemProcessed(PreprocessorBase::ProcessingFailed);
+        return;
+    }
 
-  const Item item = fetchJob->items().first();
+    const Item item = fetchJob->items().first();
 
-  switch ( q->processItem( item ) ) {
+    switch (q->processItem(item)) {
     case PreprocessorBase::ProcessingFailed:
     case PreprocessorBase::ProcessingRefused:
     case PreprocessorBase::ProcessingCompleted:
-      kDebug() << "PreprocessorBase: item processed, emitting signal (" << item.id() << ")";
+        kDebug() << "PreprocessorBase: item processed, emitting signal (" << item.id() << ")";
 
-      // TODO: Handle the different status codes appropriately
+        // TODO: Handle the different status codes appropriately
 
-      emit itemProcessed( item.id() );
+        emit itemProcessed(item.id());
 
-      kDebug() << "PreprocessorBase: item processed, signal emitted (" << item.id() << ")";
-    break;
+        kDebug() << "PreprocessorBase: item processed, signal emitted (" << item.id() << ")";
+        break;
     case PreprocessorBase::ProcessingDelayed:
-      kDebug() << "PreprocessorBase: item processing delayed (" << item.id() << ")";
+        kDebug() << "PreprocessorBase: item processing delayed (" << item.id() << ")";
 
-      mInDelayedProcessing = true;
-      mDelayedProcessingItemId = item.id();
-    break;
-  }
+        mInDelayedProcessing = true;
+        mDelayedProcessingItemId = item.id();
+        break;
+    }
 }
-

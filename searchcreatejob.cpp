@@ -32,13 +32,13 @@ using namespace Akonadi;
 
 class Akonadi::SearchCreateJobPrivate : public JobPrivate
 {
-  public:
-    SearchCreateJobPrivate( const QString &name, const SearchQuery &query, SearchCreateJob *parent )
-      : JobPrivate( parent )
-      , mName( name )
-      , mQuery( query )
-      , mRecursive( false )
-      , mRemote( false )
+public:
+    SearchCreateJobPrivate(const QString &name, const SearchQuery &query, SearchCreateJob *parent)
+        : JobPrivate(parent)
+        , mName(name)
+        , mQuery(query)
+        , mRecursive(false)
+        , mRemote(true)
     {
     }
 
@@ -51,119 +51,117 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
     Collection mCreatedCollection;
 };
 
-SearchCreateJob::SearchCreateJob( const QString &name, const QString &query, QObject *parent )
-  : Job( new SearchCreateJobPrivate( name, SearchQuery::fromJSON( query.toLatin1() ), this ), parent )
+SearchCreateJob::SearchCreateJob(const QString &name, const QString &query, QObject *parent)
+    : Job(new SearchCreateJobPrivate(name, SearchQuery::fromJSON(query.toLatin1()), this), parent)
 {
 }
 
-SearchCreateJob::SearchCreateJob( const QString &name, const SearchQuery &searchQuery, QObject *parent)
-  : Job( new SearchCreateJobPrivate( name, searchQuery, this ), parent )
+SearchCreateJob::SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent)
+    : Job(new SearchCreateJobPrivate(name, searchQuery, this), parent)
 {
 }
-
 
 SearchCreateJob::~SearchCreateJob()
 {
 }
 
-void SearchCreateJob::setQueryLanguage( const QString &queryLanguage )
+void SearchCreateJob::setQueryLanguage(const QString &queryLanguage)
 {
-  Q_UNUSED( queryLanguage );
+    Q_UNUSED(queryLanguage);
 }
 
-void SearchCreateJob::setSearchCollections( const Collection::List &collections )
+void SearchCreateJob::setSearchCollections(const Collection::List &collections)
 {
-  Q_D( SearchCreateJob );
+    Q_D(SearchCreateJob);
 
-  d->mCollections = collections;
+    d->mCollections = collections;
 }
 
 Collection::List SearchCreateJob::searchCollections() const
 {
-  return d_func()->mCollections;
+    return d_func()->mCollections;
 }
 
-void SearchCreateJob::setSearchMimeTypes( const QStringList &mimeTypes )
+void SearchCreateJob::setSearchMimeTypes(const QStringList &mimeTypes)
 {
-  Q_D( SearchCreateJob );
+    Q_D(SearchCreateJob);
 
-  d->mMimeTypes = mimeTypes;
+    d->mMimeTypes = mimeTypes;
 }
 
 QStringList SearchCreateJob::searchMimeTypes() const
 {
-  return d_func()->mMimeTypes;
+    return d_func()->mMimeTypes;
 }
 
-void SearchCreateJob::setRecursive( bool recursive )
+void SearchCreateJob::setRecursive(bool recursive)
 {
-  Q_D( SearchCreateJob );
+    Q_D(SearchCreateJob);
 
-  d->mRecursive = recursive;
+    d->mRecursive = recursive;
 }
 
 bool SearchCreateJob::isRecursive() const
 {
-  return d_func()->mRecursive;
+    return d_func()->mRecursive;
 }
 
-void SearchCreateJob::setRemoteSearchEnabled( bool enabled )
+void SearchCreateJob::setRemoteSearchEnabled(bool enabled)
 {
-  Q_D( SearchCreateJob );
+    Q_D(SearchCreateJob);
 
-  d->mRemote = enabled;
+    d->mRemote = enabled;
 }
 
 bool SearchCreateJob::isRemoteSearchEnabled() const
 {
-  return d_func()->mRemote;
+    return d_func()->mRemote;
 }
 
 void SearchCreateJob::doStart()
 {
-  Q_D( SearchCreateJob );
+    Q_D(SearchCreateJob);
 
-  QByteArray command = d->newTag() + " SEARCH_STORE ";
-  command += ImapParser::quote( d->mName.toUtf8() );
-  command += ' ';
-  command += ImapParser::quote( d->mQuery.toJSON() );
-  command += " (";
-  command += QByteArray( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) + " \"ASQL\" "; // Akonadi Search Query Language ;-)
-  if ( !d->mCollections.isEmpty() ) {
-    command += QByteArray( AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) + " (";
-    QList<QByteArray> ids;
-    Q_FOREACH ( const Collection &col, d->mCollections ) {
-      ids << QByteArray::number( col.id() );
+    QByteArray command = d->newTag() + " SEARCH_STORE ";
+    command += ImapParser::quote(d->mName.toUtf8());
+    command += ' ';
+    command += ImapParser::quote(d->mQuery.toJSON());
+    command += " (";
+    command += QByteArray(AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG) + " \"ASQL\" ";   // Akonadi Search Query Language ;-)
+    if (!d->mCollections.isEmpty()) {
+        command += QByteArray(AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS) + " (";
+        QList<QByteArray> ids;
+        Q_FOREACH (const Collection &col, d->mCollections) {
+            ids << QByteArray::number(col.id());
+        }
+        command += ImapParser::join(ids, " ");
+        command += ") ";
     }
-    command += ImapParser::join( ids, " " );
-    command += ") ";
-  }
-  if ( d->mRecursive ) {
-    command += QByteArray( AKONADI_PARAM_RECURSIVE ) + " ";
-  }
-  if ( d->mRemote ) {
-    command += QByteArray( AKONADI_PARAM_REMOTE ) + " ";
-  }
-  command += QByteArray( AKONADI_PARAM_MIMETYPE ) + " (";
-  command += d->mMimeTypes.join( QLatin1String( " " ) ).toLatin1();
-  command += ") )";
-  command += '\n';
-  d->writeData( command );
+    if (d->mRecursive) {
+        command += QByteArray(AKONADI_PARAM_RECURSIVE) + " ";
+    }
+    if (d->mRemote) {
+        command += QByteArray(AKONADI_PARAM_REMOTE) + " ";
+    }
+    command += QByteArray(AKONADI_PARAM_MIMETYPE) + " (";
+    command += d->mMimeTypes.join(QLatin1String(" ")).toLatin1();
+    command += ") )";
+    command += '\n';
+    d->writeData(command);
 }
 
 Akonadi::Collection SearchCreateJob::createdCollection() const
 {
-  Q_D( const SearchCreateJob );
-  return d->mCreatedCollection;
+    Q_D(const SearchCreateJob);
+    return d->mCreatedCollection;
 }
 
-void SearchCreateJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
+void SearchCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
 {
-  Q_D( SearchCreateJob );
-  if ( tag == "*" ) {
-   ProtocolHelper::parseCollection( data, d->mCreatedCollection );
-   return;
-  }
-  kDebug() << "Unhandled response: " << tag << data;
+    Q_D(SearchCreateJob);
+    if (tag == "*") {
+        ProtocolHelper::parseCollection(data, d->mCreatedCollection);
+        return;
+    }
+    kDebug() << "Unhandled response: " << tag << data;
 }
-

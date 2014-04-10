@@ -29,8 +29,8 @@ EntityAnnotationsAttribute::EntityAnnotationsAttribute()
 {
 }
 
-EntityAnnotationsAttribute::EntityAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations )
-    :mAnnotations(annotations)
+EntityAnnotationsAttribute::EntityAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations)
+    : mAnnotations(annotations)
 {
 }
 
@@ -61,12 +61,12 @@ bool EntityAnnotationsAttribute::contains(const QByteArray &key) const
 
 QByteArray EntityAnnotationsAttribute::type() const
 {
-  return "entityannotations";
+    return "entityannotations";
 }
 
 Akonadi::Attribute *EntityAnnotationsAttribute::clone() const
 {
-  return new EntityAnnotationsAttribute(mAnnotations);
+    return new EntityAnnotationsAttribute(mAnnotations);
 }
 
 QByteArray EntityAnnotationsAttribute::serialized() const
@@ -79,31 +79,31 @@ QByteArray EntityAnnotationsAttribute::serialized() const
         result += mAnnotations[key];
         result += " % "; // We use this separator as '%' is not allowed in keys or values
     }
-    result.chop( 3 );
+    result.chop(3);
 
     return result;
 }
 
-void EntityAnnotationsAttribute::deserialize( const QByteArray &data )
+void EntityAnnotationsAttribute::deserialize(const QByteArray &data)
 {
     mAnnotations.clear();
     const QList<QByteArray> lines = data.split('%');
 
     for (int i = 0; i < lines.size(); ++i) {
         QByteArray line = lines[i];
-        if (i != 0 && line.startsWith( ' ' )) {
-            line = line.mid( 1 );
+        if (i != 0 && line.startsWith(' ')) {
+            line = line.mid(1);
         }
         if (i != lines.size() - 1 && line.endsWith(' ')) {
-            line.chop( 1 );
+            line.chop(1);
         }
         if (line.trimmed().isEmpty()) {
             continue;
         }
         int wsIndex = line.indexOf(' ');
-        if ( wsIndex > 0 ) {
+        if (wsIndex > 0) {
             const QByteArray key = line.mid(0, wsIndex);
-            const QByteArray value = line.mid(wsIndex+1);
+            const QByteArray value = line.mid(wsIndex + 1);
             mAnnotations[key] = value;
         } else {
             mAnnotations.insert(line, QByteArray());

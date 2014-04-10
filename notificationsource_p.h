@@ -30,27 +30,27 @@
 namespace Akonadi
 {
 
-class AKONADI_TESTS_EXPORT NotificationSource: public QObject
+class AKONADI_TESTS_EXPORT NotificationSource : public QObject
 {
     Q_OBJECT
 
-  public:
-    NotificationSource( QObject *source );
+public:
+    NotificationSource(QObject *source);
     ~NotificationSource();
 
-    void setAllMonitored( bool allMonitored );
-    void setMonitoredCollection( Entity::Id id, bool monitored );
-    void setMonitoredItem( Entity::Id id, bool monitored );
-    void setMonitoredResource( const QByteArray &resource, bool monitored );
-    void setMonitoredMimeType( const QString &mimeType, bool monitored );
-    void setMonitoredTag( Tag::Id id, bool monitored );
-    void setMonitoredType( NotificationMessageV2::Type type, bool monitored );
-    void setIgnoredSession( const QByteArray &session, bool monitored );
+    void setAllMonitored(bool allMonitored);
+    void setMonitoredCollection(Entity::Id id, bool monitored);
+    void setMonitoredItem(Entity::Id id, bool monitored);
+    void setMonitoredResource(const QByteArray &resource, bool monitored);
+    void setMonitoredMimeType(const QString &mimeType, bool monitored);
+    void setMonitoredTag(Tag::Id id, bool monitored);
+    void setMonitoredType(NotificationMessageV2::Type type, bool monitored);
+    void setIgnoredSession(const QByteArray &session, bool monitored);
 
-    QObject* source() const;
+    QObject *source() const;
 
-  Q_SIGNALS:
-    void notifyV3( const Akonadi::NotificationMessageV3::List &msgs );
+Q_SIGNALS:
+    void notifyV3(const Akonadi::NotificationMessageV3::List &msgs);
 };
 
 }

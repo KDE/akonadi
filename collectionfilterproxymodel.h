@@ -53,15 +53,15 @@ class CollectionModel;
  */
 class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection proxy filter model.
      *
      * @param parent The parent object.
      */
-    explicit CollectionFilterProxyModel( QObject *parent = 0 );
+    explicit CollectionFilterProxyModel(QObject *parent = 0);
 
     /**
      * Destroys the collection proxy filter model.
@@ -73,14 +73,14 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      *
      * @param mimeTypes A list of mime types to be shown.
      */
-    void addMimeTypeFilters( const QStringList &mimeTypes );
+    void addMimeTypeFilters(const QStringList &mimeTypes);
 
     /**
      * Adds a mime type to be shown by the filter.
      *
      * @param mimeType A mime type to be shown.
      */
-    void addMimeTypeFilter( const QString &mimeType );
+    void addMimeTypeFilter(const QString &mimeType);
 
     /**
      * Returns the list of mime type filters.
@@ -95,7 +95,7 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      *
      * @since 4.7
      */
-    void setExcludeVirtualCollections( bool exclude );
+    void setExcludeVirtualCollections(bool exclude);
     /*
      * @since 4.12
      */
@@ -106,15 +106,15 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      */
     void clearFilters();
 
-    virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-  protected:
-    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
+protected:
+    virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

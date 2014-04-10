@@ -54,7 +54,7 @@ class TransportResourceBasePrivate;
  */
 class AKONADI_EXPORT TransportResourceBase
 {
-  public:
+public:
     /**
      * Creates a new transport resource base.
      */
@@ -68,10 +68,9 @@ class AKONADI_EXPORT TransportResourceBase
     /**
      * Describes the result of the transport process.
      */
-    enum TransportResult
-    {
-      TransportSucceeded, ///< The transport process succeeded.
-      TransportFailed     ///< The transport process failed.
+    enum TransportResult {
+        TransportSucceeded, ///< The transport process succeeded.
+        TransportFailed     ///< The transport process failed.
     };
 
     /**
@@ -82,7 +81,7 @@ class AKONADI_EXPORT TransportResourceBase
      * @param item The message item to be send.
      * @see itemSent().
      */
-    virtual void sendItem( const Akonadi::Item &item ) = 0;
+    virtual void sendItem(const Akonadi::Item &item) = 0;
 
     /**
      * This method marks the sending of the passed @p item
@@ -94,10 +93,10 @@ class AKONADI_EXPORT TransportResourceBase
      * @param message An optional text explanation of the result.
      * @see Transport.
      */
-    void itemSent( const Akonadi::Item &item, TransportResult result,
-                   const QString &message = QString() );
+    void itemSent(const Akonadi::Item &item, TransportResult result,
+                  const QString &message = QString());
 
-  private:
+private:
     //@cond PRIVATE
     TransportResourceBasePrivate *const d;
     //@endcond

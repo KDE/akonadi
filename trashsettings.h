@@ -25,8 +25,7 @@
 
 class QString;
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
   * @short Global Trash-related Settings
@@ -39,14 +38,14 @@ namespace Akonadi
 //TODO setting for time before items are deleted by janitor agent
 namespace TrashSettings
 {
-    /**
-     * Set the trash collection for the given @p resource which is then used by the TrashJob
-     */
-    AKONADI_EXPORT void setTrashCollection( const QString &resource, const Collection &collection );
-    /**
-     * Get the trash collection for the given @p resource
-     */
-    AKONADI_EXPORT Collection getTrashCollection( const QString &resource );
+/**
+ * Set the trash collection for the given @p resource which is then used by the TrashJob
+ */
+AKONADI_EXPORT void setTrashCollection(const QString &resource, const Collection &collection);
+/**
+ * Get the trash collection for the given @p resource
+ */
+AKONADI_EXPORT Collection getTrashCollection(const QString &resource);
 }
 
 }

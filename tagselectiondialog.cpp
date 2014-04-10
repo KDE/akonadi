@@ -29,8 +29,11 @@
 using namespace Akonadi;
 
 struct TagSelectionDialog::Private {
-    Private(KDialog *parent): d(parent), mTagWidget(0)
-    {}
+    Private(KDialog *parent)
+        : d(parent)
+        , mTagWidget(0)
+    {
+    }
     void writeConfig();
     void readConfig();
     KDialog *d;
@@ -40,22 +43,21 @@ struct TagSelectionDialog::Private {
 void TagSelectionDialog::Private::writeConfig()
 {
     KConfigGroup group(KGlobal::config(), "TagSelectionDialog");
-    group.writeEntry( "Size", d->size() );
+    group.writeEntry("Size", d->size());
 }
 
 void TagSelectionDialog::Private::readConfig()
 {
     KConfigGroup group(KGlobal::config(), "TagSelectionDialog");
-    const QSize sizeDialog = group.readEntry("Size", QSize(500,400));
+    const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
-        d->resize( sizeDialog );
+        d->resize(sizeDialog);
     }
 }
 
-
-TagSelectionDialog::TagSelectionDialog(QWidget* parent)
-:   KDialog(parent),
-    d(new Private(this))
+TagSelectionDialog::TagSelectionDialog(QWidget *parent)
+    : KDialog(parent)
+    , d(new Private(this))
 {
     setCaption(i18nc("@title:window", "Manage Tags"));
     setButtons(KDialog::Ok | KDialog::Cancel);
@@ -81,7 +83,7 @@ Tag::List TagSelectionDialog::selection() const
     return d->mTagWidget->selection();
 }
 
-void TagSelectionDialog::setSelection(const Tag::List& tags)
+void TagSelectionDialog::setSelection(const Tag::List &tags)
 {
     d->mTagWidget->setSelection(tags);
 }

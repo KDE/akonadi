@@ -117,6 +117,7 @@ void ETMCalendarTest:: initTestCase()
     fetchCollection();
 
     mCalendar = new ETMCalendar();
+    QVERIFY(!mCalendar->isLoaded());
     connect(mCalendar, SIGNAL(collectionsAdded(Akonadi::Collection::List)),
             SLOT(handleCollectionsAdded(Akonadi::Collection::List)));
 
@@ -142,6 +143,7 @@ void ETMCalendarTest:: initTestCase()
     // Wait for incidences
     QTestEventLoop::instance().enterLoop(10);
     QVERIFY(!QTestEventLoop::instance().timeout());
+    QVERIFY(mCalendar->isLoaded());
 }
 
 void ETMCalendarTest::cleanupTestCase()
@@ -274,6 +276,7 @@ void ETMCalendarTest::calendarIncidenceAdded(const Incidence::Ptr &incidence)
 
 void ETMCalendarTest::handleCollectionsAdded(const Akonadi::Collection::List &)
 {
+    QVERIFY(!mCalendar->isLoaded());
     QTestEventLoop::instance().exitLoop();
 }
 

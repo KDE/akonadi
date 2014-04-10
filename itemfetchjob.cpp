@@ -39,149 +39,127 @@ using namespace Akonadi;
 
 class Akonadi::ItemFetchJobPrivate : public JobPrivate
 {
-  public:
-    ItemFetchJobPrivate( ItemFetchJob *parent )
-      : JobPrivate( parent ),
-        mEmitTimer( 0 ),
-        mValuePool( 0 )
+public:
+    ItemFetchJobPrivate(ItemFetchJob *parent)
+        : JobPrivate(parent)
+        , mEmitTimer(0)
+        , mValuePool(0)
+        , mCount(0)
     {
-      mCollection = Collection::root();
-      mDeliveryOptions = ItemFetchJob::Default;
+        mCollection = Collection::root();
+        mDeliveryOptions = ItemFetchJob::Default;
     }
 
     ~ItemFetchJobPrivate()
     {
-      delete mValuePool;
+        delete mValuePool;
     }
 
     void init()
     {
-      Q_Q( ItemFetchJob );
-      mEmitTimer = new QTimer( q );
-      mEmitTimer->setSingleShot( true );
-      mEmitTimer->setInterval( 100 );
-      q->connect( mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
+        Q_Q(ItemFetchJob);
+        mEmitTimer = new QTimer(q);
+        mEmitTimer->setSingleShot(true);
+        mEmitTimer->setInterval(100);
+        q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
     }
 
     void aboutToFinish()
     {
-      timeout();
+        timeout();
     }
 
     void timeout()
     {
-      Q_Q( ItemFetchJob );
+        Q_Q(ItemFetchJob);
 
-      mEmitTimer->stop(); // in case we are called by aboutToFinish()
-      if ( !mPendingItems.isEmpty() ) {
-        if ( !q->error() )
-          emit q->itemsReceived( mPendingItems );
-        mPendingItems.clear();
-      }
-    }
-
-    void startFetchJob();
-    void selectDone( KJob * job );
-
-    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
-      if ( mRequestedItems.isEmpty() ) {
-        QString str = QString::fromLatin1( "All items from collection %1" ).arg( mCollection.id() );
-        if ( mFetchScope.fetchChangedSince().isValid() )
-          str += QString::fromLatin1( " changed since %1" ).arg( mFetchScope.fetchChangedSince().toString() );
-        return str;
-      } else {
-        try {
-          return QString::fromLatin1( ProtocolHelper::entitySetToByteArray( mRequestedItems, AKONADI_CMD_ITEMFETCH ) );
-        } catch ( const Exception &e ) {
-          return QString::fromUtf8( e.what() );
+        mEmitTimer->stop(); // in case we are called by result()
+        if (!mPendingItems.isEmpty()) {
+            if (!q->error()) {
+                emit q->itemsReceived(mPendingItems);
+            }
+            mPendingItems.clear();
         }
-      }
     }
 
-    Q_DECLARE_PUBLIC( ItemFetchJob )
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/
+    {
+        if (mRequestedItems.isEmpty()) {
+           QString str = QString::fromLatin1( "All items from collection %1" ).arg( mCollection.id() );
+           if ( mFetchScope.fetchChangedSince().isValid() )
+             str += QString::fromLatin1( " changed since %1" ).arg( mFetchScope.fetchChangedSince().toString() );
+           return str;
+
+        } else {
+            try {
+                return QString::fromLatin1(ProtocolHelper::entitySetToByteArray(mRequestedItems, AKONADI_CMD_ITEMFETCH));
+            } catch (const Exception &e) {
+                return QString::fromUtf8(e.what());
+            }
+        }
+    }
+
+    Q_DECLARE_PUBLIC(ItemFetchJob)
 
     Collection mCollection;
+    Tag mTag;
     Item::List mRequestedItems;
     Item::List mResultItems;
     ItemFetchScope mFetchScope;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
-    QTimer* mEmitTimer;
+    QTimer *mEmitTimer;
     ProtocolHelperValuePool *mValuePool;
     ItemFetchJob::DeliveryOptions mDeliveryOptions;
+    int mCount;
 };
 
-void ItemFetchJobPrivate::startFetchJob()
+ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
 {
-  Q_Q( ItemFetchJob );
-  QByteArray command = newTag();
-  if ( mRequestedItems.isEmpty() ) {
-    command += " " AKONADI_CMD_ITEMFETCH " 1:*";
-  } else {
-    try {
-      command += ProtocolHelper::entitySetToByteArray( mRequestedItems, AKONADI_CMD_ITEMFETCH );
-    } catch ( const Exception &e ) {
-      q->setError( Job::Unknown );
-      q->setErrorText( QString::fromUtf8( e.what() ) );
-      q->emitResult();
-      return;
+    Q_D(ItemFetchJob);
+
+    d->init();
+    d->mCollection = collection;
+    d->mValuePool = new ProtocolHelperValuePool; // only worth it for lots of results
+}
+
+ItemFetchJob::ItemFetchJob(const Item &item, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
+{
+    Q_D(ItemFetchJob);
+
+    d->init();
+    d->mRequestedItems.append(item);
+}
+
+ItemFetchJob::ItemFetchJob(const Akonadi::Item::List &items, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
+{
+    Q_D(ItemFetchJob);
+
+    d->init();
+    d->mRequestedItems = items;
+}
+
+ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id> &items, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
+{
+    Q_D(ItemFetchJob);
+
+    d->init();
+    foreach (Item::Id id, items) {
+        d->mRequestedItems.append(Item(id));
     }
-  }
-
-  //This is only required for 4.10
-  if ( protocolVersion() < 30 ) {
-    if ( mFetchScope.ignoreRetrievalErrors() ) {
-      kDebug() << "IGNOREERRORS is not available with this akonadi protocol version";
-    }
-    mFetchScope.setIgnoreRetrievalErrors( false );
-  }
-  command += ProtocolHelper::itemFetchScopeToByteArray( mFetchScope );
-
-  writeData( command );
 }
 
-void ItemFetchJobPrivate::selectDone( KJob * job )
+ItemFetchJob::ItemFetchJob(const Tag &tag, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
 {
-  if ( !job->error() )
-    // the collection is now selected, fetch the message(s)
-    startFetchJob();
-}
+    Q_D(ItemFetchJob);
 
-ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
-  : Job( new ItemFetchJobPrivate( this ), parent )
-{
-  Q_D( ItemFetchJob );
-
-  d->init();
-  d->mCollection = collection;
-  d->mValuePool = new ProtocolHelperValuePool; // only worth it for lots of results
-}
-
-ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent)
-  : Job( new ItemFetchJobPrivate( this ), parent )
-{
-  Q_D( ItemFetchJob );
-
-  d->init();
-  d->mRequestedItems.append( item );
-}
-
-ItemFetchJob::ItemFetchJob(const Akonadi::Item::List& items, QObject* parent)
-  : Job( new ItemFetchJobPrivate( this ), parent )
-{
-  Q_D( ItemFetchJob );
-
-  d->init();
-  d->mRequestedItems = items;
-}
-
-ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id>& items, QObject* parent)
-  : Job( new ItemFetchJobPrivate( this ), parent )
-{
-  Q_D( ItemFetchJob );
-
-  d->init();
-  foreach(Item::Id id, items)
-    d->mRequestedItems.append(Item(id));
+    d->init();
+    d->mTag = tag;
+    d->mValuePool = new ProtocolHelperValuePool;
 }
 
 ItemFetchJob::~ItemFetchJob()
@@ -190,113 +168,128 @@ ItemFetchJob::~ItemFetchJob()
 
 void ItemFetchJob::doStart()
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  if ( d->mCollection == Collection::root() ) {
-    if ( d->mRequestedItems.isEmpty() ) { // collection content listing
-      setErrorText( i18n( "Cannot list root collection." ) );
-      setError( Unknown );
+    QByteArray command = d->newTag();
+    try {
+      command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mRequestedItems, AKONADI_CMD_ITEMFETCH);
+    } catch (const Akonadi::Exception &e) {
+      setError(Job::Unknown);
+      setErrorText(QString::fromUtf8(e.what()));
       emitResult();
-    } else {
-      d->startFetchJob();
-    }
-  } else {
-    CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
-    addSubjob( job );
-  }
-}
-
-void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
-{
-  Q_D( ItemFetchJob );
-
-  if ( tag == "*" ) {
-    int begin = data.indexOf( "FETCH" );
-    if ( begin >= 0 ) {
-
-      // split fetch response into key/value pairs
-      QList<QByteArray> fetchResponse;
-      ImapParser::parseParenthesizedList( data, fetchResponse, begin + 6 );
-
-      Item item;
-      ProtocolHelper::parseItemFetchResult( fetchResponse, item, d->mValuePool );
-      if ( !item.isValid() )
-        return;
-
-      if ( d->mDeliveryOptions & ItemGetter ) {
-        d->mResultItems.append( item );
-      }
-
-      if ( d->mDeliveryOptions & EmitItemsInBatches ) {
-        d->mPendingItems.append( item );
-        if ( !d->mEmitTimer->isActive() )
-          d->mEmitTimer->start();
-      }
-      else if ( d->mDeliveryOptions & EmitItemsIndividually ) {
-        emit itemsReceived( Item::List() << item );
-      }
       return;
     }
-  }
-  kDebug() << "Unhandled response: " << tag << data;
+
+    // This is only required for 4.10
+    if (d->protocolVersion() < 30) {
+        if (d->mFetchScope.ignoreRetrievalErrors()) {
+            kDebug() << "IGNOREERRORS is not available with this version of Akonadi server";
+        }
+        d->mFetchScope.setIgnoreRetrievalErrors(false);
+    }
+
+    command += ProtocolHelper::itemFetchScopeToByteArray(d->mFetchScope);
+    d->writeData(command);
+}
+
+void ItemFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+{
+    Q_D(ItemFetchJob);
+
+    if (tag == "*") {
+        int begin = data.indexOf("FETCH");
+        if (begin >= 0) {
+
+            // split fetch response into key/value pairs
+            QList<QByteArray> fetchResponse;
+            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 6);
+
+            Item item;
+            ProtocolHelper::parseItemFetchResult(fetchResponse, item, d->mValuePool);
+            if (!item.isValid()) {
+                return;
+            }
+
+            d->mCount++;
+
+            if (d->mDeliveryOptions & ItemGetter) {
+                d->mResultItems.append(item);
+            }
+
+            if (d->mDeliveryOptions & EmitItemsInBatches) {
+                d->mPendingItems.append(item);
+                if (!d->mEmitTimer->isActive()) {
+                    d->mEmitTimer->start();
+                }
+            } else if (d->mDeliveryOptions & EmitItemsIndividually) {
+                emit itemsReceived(Item::List() << item);
+            }
+            return;
+        }
+    }
+    kDebug() << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemFetchJob::items() const
 {
-  Q_D( const ItemFetchJob );
+    Q_D(const ItemFetchJob);
 
-  return d->mResultItems;
+    return d->mResultItems;
 }
 
 void ItemFetchJob::clearItems()
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  d->mResultItems.clear();
+    d->mResultItems.clear();
 }
 
-void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )
+void ItemFetchJob::setFetchScope(ItemFetchScope &fetchScope)
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  d->mFetchScope = fetchScope;
+    d->mFetchScope = fetchScope;
 }
 
-void ItemFetchJob::setFetchScope( const ItemFetchScope &fetchScope )
+void ItemFetchJob::setFetchScope(const ItemFetchScope &fetchScope)
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  d->mFetchScope = fetchScope;
+    d->mFetchScope = fetchScope;
 }
 
 ItemFetchScope &ItemFetchJob::fetchScope()
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  return d->mFetchScope;
+    return d->mFetchScope;
 }
 
-void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
+void ItemFetchJob::setCollection(const Akonadi::Collection &collection)
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  d->mCollection = collection;
+    d->mCollection = collection;
 }
 
 void ItemFetchJob::setDeliveryOption(DeliveryOptions options)
 {
-  Q_D( ItemFetchJob );
+    Q_D(ItemFetchJob);
 
-  d->mDeliveryOptions = options;
+    d->mDeliveryOptions = options;
 }
 
 ItemFetchJob::DeliveryOptions ItemFetchJob::deliveryOptions() const
 {
-  Q_D( const ItemFetchJob );
+    Q_D(const ItemFetchJob);
 
-  return d->mDeliveryOptions;
+    return d->mDeliveryOptions;
 }
 
+int ItemFetchJob::count() const
+{
+    Q_D(const ItemFetchJob);
 
+    return d->mCount;
+}
 #include "moc_itemfetchjob.cpp"

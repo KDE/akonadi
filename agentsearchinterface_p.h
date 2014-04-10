@@ -25,7 +25,6 @@
 
 #include <akonadi/collection.h>
 
-
 class KJob;
 
 namespace Akonadi {
@@ -34,23 +33,23 @@ class ImapSet;
 
 class AgentSearchInterfacePrivate : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit AgentSearchInterfacePrivate( AgentSearchInterface* qq );
+    Q_OBJECT
+public:
+    explicit AgentSearchInterfacePrivate(AgentSearchInterface *qq);
 
-    void search( const QByteArray &searchId, const QString &query, quint64 collectionId );
-    void addSearch( const QString &query, const QString &queryLanguage, quint64 resultCollectionId );
-    void removeSearch( quint64 resultCollectionId );
+    void search(const QByteArray &searchId, const QString &query, quint64 collectionId);
+    void addSearch(const QString &query, const QString &queryLanguage, quint64 resultCollectionId);
+    void removeSearch(quint64 resultCollectionId);
 
     QByteArray mSearchId;
     qint64 mCollectionId;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void delayedInit();
-    void collectionReceived( KJob *job );
+    void collectionReceived(KJob *job);
 
-  private:
-    AgentSearchInterface* q;
+private:
+    AgentSearchInterface *q;
 };
 
 }

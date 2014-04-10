@@ -36,9 +36,9 @@ using namespace Akonadi;
 
 class Akonadi::ItemCreateJobPrivate : public JobPrivate
 {
-  public:
-    ItemCreateJobPrivate( ItemCreateJob *parent )
-      : JobPrivate( parent )
+public:
+    ItemCreateJobPrivate(ItemCreateJob *parent)
+        : JobPrivate(parent)
     {
     }
 
@@ -54,40 +54,41 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 
 QByteArray ItemCreateJobPrivate::nextPartHeader()
 {
-  QByteArray command;
-  if ( !mParts.isEmpty() ) {
-    QSetIterator<QByteArray> it( mParts );
-    const QByteArray label = it.next();
-    mParts.remove( label );
+    QByteArray command;
+    if (!mParts.isEmpty()) {
+        QSetIterator<QByteArray> it(mParts);
+        const QByteArray label = it.next();
+        mParts.remove(label);
 
-    mPendingData.clear();
-    int version = 0;
-    ItemSerializer::serialize( mItem, label, mPendingData, version );
-    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, label, version );
-    if ( mPendingData.size() > 0 ) {
-      command += " {" + QByteArray::number( mPendingData.size() ) + "}\n";
+        mPendingData.clear();
+        int version = 0;
+        ItemSerializer::serialize(mItem, label, mPendingData, version);
+        command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, label, version);
+        if (mPendingData.size() > 0) {
+            command += " {" + QByteArray::number(mPendingData.size()) + "}\n";
+        } else {
+            if (mPendingData.isNull()) {
+                command += " NIL";
+            } else {
+                command += " \"\"";
+            }
+            command += nextPartHeader();
+        }
     } else {
-      if ( mPendingData.isNull() )
-        command += " NIL";
-      else
-        command += " \"\"";
-      command += nextPartHeader();
+        command += ")\n";
     }
-  } else {
-    command += ")\n";
-  }
-  return command;
+    return command;
 }
 
-ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QObject * parent )
-  : Job( new ItemCreateJobPrivate( this ), parent )
+ItemCreateJob::ItemCreateJob(const Item &item, const Collection &collection, QObject *parent)
+    : Job(new ItemCreateJobPrivate(this), parent)
 {
-  Q_D( ItemCreateJob );
+    Q_D(ItemCreateJob);
 
-  Q_ASSERT( !item.mimeType().isEmpty() );
-  d->mItem = item;
-  d->mParts = d->mItem.loadedPayloadParts();
-  d->mCollection = collection;
+    Q_ASSERT(!item.mimeType().isEmpty());
+    d->mItem = item;
+    d->mParts = d->mItem.loadedPayloadParts();
+    d->mCollection = collection;
 }
 
 ItemCreateJob::~ItemCreateJob()
@@ -96,80 +97,82 @@ ItemCreateJob::~ItemCreateJob()
 
 void ItemCreateJob::doStart()
 {
-  Q_D( ItemCreateJob );
+    Q_D(ItemCreateJob);
 
-  QByteArray remoteId;
+    QByteArray remoteId;
 
-  QList<QByteArray> flags;
-  flags.append( "\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' );
-  const QString gid = GidExtractor::getGid( d->mItem );
-  if ( !gid.isNull() ) {
-    flags.append( ImapParser::quote( "\\Gid[" + gid.toUtf8() + ']' ) );
-  }
-  if ( !d->mItem.remoteId().isEmpty() )
-    flags.append( ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' ) );
-  if ( !d->mItem.remoteRevision().isEmpty() )
-    flags.append( ImapParser::quote( "\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']' ) );
-  flags += d->mItem.flags().toList();
+    QList<QByteArray> flags;
+    flags.append("\\MimeType[" + d->mItem.mimeType().toLatin1() + ']');
+    const QString gid = GidExtractor::getGid(d->mItem);
+    if (!gid.isNull()) {
+        flags.append(ImapParser::quote("\\Gid[" + gid.toUtf8() + ']'));
+    }
+    if (!d->mItem.remoteId().isEmpty()) {
+        flags.append(ImapParser::quote("\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']'));
+    }
+    if (!d->mItem.remoteRevision().isEmpty()) {
+        flags.append(ImapParser::quote("\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']'));
+    }
+    flags += d->mItem.flags().toList();
 
-  QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
-      + ' ' + QByteArray::number( d->mItem.size() )
-      + " (" + ImapParser::join( flags, " " ) + ")"
-      + " ("; // list of parts
-  const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem, true );
-  if ( !attrs.isEmpty() ) {
-    command += attrs;
-  }
+    QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number(d->mCollection.id())
+                         + ' ' + QByteArray::number(d->mItem.size())
+                         + " (" + ImapParser::join(flags, " ") + ")"
+                         + " ("; // list of parts
+    const QByteArray attrs = ProtocolHelper::attributesToByteArray(d->mItem, true);
+    if (!attrs.isEmpty()) {
+        command += attrs;
+    }
 
-  command += d->nextPartHeader();
+    command += d->nextPartHeader();
 
-  d->writeData( command );
+    d->writeData(command);
 }
 
-void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
 {
-  Q_D( ItemCreateJob );
+    Q_D(ItemCreateJob);
 
-  if ( tag == "+" ) { // ready for literal data
-    d->writeData( d->mPendingData );
-    d->writeData( d->nextPartHeader() );
-    return;
-  }
-  if ( tag == d->tag() ) {
-    int uidNextPos = data.indexOf( "UIDNEXT" );
-    if ( uidNextPos != -1 ) {
-      bool ok = false;
-      ImapParser::parseNumber( data, d->mUid, &ok, uidNextPos + 7 );
-      if ( !ok ) {
-        kDebug() << "Invalid UIDNEXT response to APPEND command: "
-                 << tag << data;
-      }
+    if (tag == "+") {   // ready for literal data
+        d->writeData(d->mPendingData);
+        d->writeData(d->nextPartHeader());
+        return;
     }
-    int dateTimePos = data.indexOf( "DATETIME" );
-    if ( dateTimePos != -1 ) {
-      int resultPos = ImapParser::parseDateTime( data, d->mDatetime, dateTimePos + 8 );
-      if ( resultPos == (dateTimePos + 8) ) {
-        kDebug() << "Invalid DATETIME response to APPEND command: "
-                 << tag << data;
-      }
+    if (tag == d->tag()) {
+        int uidNextPos = data.indexOf("UIDNEXT");
+        if (uidNextPos != -1) {
+            bool ok = false;
+            ImapParser::parseNumber(data, d->mUid, &ok, uidNextPos + 7);
+            if (!ok) {
+                kDebug() << "Invalid UIDNEXT response to APPEND command: "
+                         << tag << data;
+            }
+        }
+        int dateTimePos = data.indexOf("DATETIME");
+        if (dateTimePos != -1) {
+            int resultPos = ImapParser::parseDateTime(data, d->mDatetime, dateTimePos + 8);
+            if (resultPos == (dateTimePos + 8)) {
+                kDebug() << "Invalid DATETIME response to APPEND command: "
+                         << tag << data;
+            }
+        }
     }
-  }
 }
 
 Item ItemCreateJob::item() const
 {
-  Q_D( const ItemCreateJob );
+    Q_D(const ItemCreateJob);
 
-  if ( d->mUid == 0 )
-    return Item();
+    if (d->mUid == 0) {
+        return Item();
+    }
 
-  Item item( d->mItem );
-  item.setId( d->mUid );
-  item.setRevision( 0 );
-  item.setModificationTime( d->mDatetime );
-  item.setParentCollection( d->mCollection );
-  item.setStorageCollectionId( d->mCollection.id() );
+    Item item(d->mItem);
+    item.setId(d->mUid);
+    item.setRevision(0);
+    item.setModificationTime(d->mDatetime);
+    item.setParentCollection(d->mCollection);
+    item.setStorageCollectionId(d->mCollection.id());
 
-  return item;
+    return item;
 }
-

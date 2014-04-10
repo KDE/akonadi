@@ -42,81 +42,81 @@
 
 using namespace Akonadi;
 
-CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options )
-  : QObject( parent ),
-    mParent( parent ),
-    mSelectionMode( QAbstractItemView::SingleSelection ),
-    mOkButtonEnabled( false ),
-    mCancelButtonEnabled( true ),
-    mCreateButtonEnabled( false )
+CollectionDialog::Private::Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options)
+    : QObject(parent)
+    , mParent(parent)
+    , mSelectionMode(QAbstractItemView::SingleSelection)
+    , mOkButtonEnabled(false)
+    , mCancelButtonEnabled(true)
+    , mCreateButtonEnabled(false)
 {
-  // setup GUI
-  mView = new QDeclarativeView( mParent );
-  mView->setResizeMode( QDeclarativeView::SizeRootObjectToView );
+    // setup GUI
+    mView = new QDeclarativeView(mParent);
+    mView->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
-  mParent->setMainWidget( mView );
-  mParent->setButtons( KDialog::None );
+    mParent->setMainWidget(mView);
+    mParent->setButtons(KDialog::None);
 
-  changeCollectionDialogOptions( options );
+    changeCollectionDialogOptions(options);
 
-  QAbstractItemModel *baseModel;
+    QAbstractItemModel *baseModel;
 
-  if ( customModel ) {
-    baseModel = customModel;
-  } else {
-    mMonitor = new Akonadi::ChangeRecorder( mParent );
-    mMonitor->fetchCollection( true );
-    mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
+    if (customModel) {
+        baseModel = customModel;
+    } else {
+        mMonitor = new Akonadi::ChangeRecorder(mParent);
+        mMonitor->fetchCollection(true);
+        mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 
-    mModel = new EntityTreeModel( mMonitor, mParent );
-    mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
+        mModel = new EntityTreeModel(mMonitor, mParent);
+        mModel->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
 
-    baseModel = mModel;
-  }
+        baseModel = mModel;
+    }
 
-  KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
-  proxyModel->setDisplayAncestorData( true );
-  proxyModel->setSourceModel( baseModel );
+    KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel(parent);
+    proxyModel->setDisplayAncestorData(true);
+    proxyModel->setSourceModel(baseModel);
 
-  mMimeTypeFilterModel = new CollectionFilterProxyModel( parent );
-  mMimeTypeFilterModel->setSourceModel( proxyModel );
+    mMimeTypeFilterModel = new CollectionFilterProxyModel(parent);
+    mMimeTypeFilterModel->setSourceModel(proxyModel);
 
-  mRightsFilterModel = new EntityRightsFilterModel( parent );
-  mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
+    mRightsFilterModel = new EntityRightsFilterModel(parent);
+    mRightsFilterModel->setSourceModel(mMimeTypeFilterModel);
 
-  mFilterModel = new QSortFilterProxyModel( parent );
-  mFilterModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
-  mFilterModel->setSourceModel( mRightsFilterModel );
+    mFilterModel = new QSortFilterProxyModel(parent);
+    mFilterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    mFilterModel->setSourceModel(mRightsFilterModel);
 
-  mSelectionModel = new QItemSelectionModel( mFilterModel );
-  mParent->connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                    SLOT(slotSelectionChanged()) );
-  mParent->connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                    this, SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+    mSelectionModel = new QItemSelectionModel(mFilterModel);
+    mParent->connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                     SLOT(slotSelectionChanged()));
+    mParent->connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                     this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
 
-  mSelectionHandler = new AsyncSelectionHandler( mFilterModel, mParent );
-  mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
-                    SLOT(slotCollectionAvailable(QModelIndex)) );
+    mSelectionHandler = new AsyncSelectionHandler(mFilterModel, mParent);
+    mParent->connect(mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                     SLOT(slotCollectionAvailable(QModelIndex)));
 
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String( "imports" ) ) ) {
-    mView->engine()->addImportPath( importPath );
-  }
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", QLatin1String("imports"))) {
+        mView->engine()->addImportPath(importPath);
+    }
 
-  mView->rootContext()->setContextProperty( QLatin1String( "dialogController" ), this );
-  mView->rootContext()->setContextProperty( QLatin1String( "collectionModel" ), mFilterModel );
+    mView->rootContext()->setContextProperty(QLatin1String("dialogController"), this);
+    mView->rootContext()->setContextProperty(QLatin1String("collectionModel"), mFilterModel);
 
-  // QUICKHACK: since we have no KDE integration plugin available in kdelibs, we have to do the translation in C++ space
-  mView->rootContext()->setContextProperty( QLatin1String( "okButtonText" ), KStandardGuiItem::ok().text().remove( QLatin1Char( '&' ) ) );
-  mView->rootContext()->setContextProperty( QLatin1String( "cancelButtonText" ), KStandardGuiItem::cancel().text().remove( QLatin1Char( '&' ) ) );
-  mView->rootContext()->setContextProperty( QLatin1String( "createButtonText" ), i18n( "&New Subfolder..." ).remove( QLatin1Char( '&' ) ) );
+    // QUICKHACK: since we have no KDE integration plugin available in kdelibs, we have to do the translation in C++ space
+    mView->rootContext()->setContextProperty(QLatin1String("okButtonText"), KStandardGuiItem::ok().text().remove(QLatin1Char('&')));
+    mView->rootContext()->setContextProperty(QLatin1String("cancelButtonText"), KStandardGuiItem::cancel().text().remove(QLatin1Char('&')));
+    mView->rootContext()->setContextProperty(QLatin1String("createButtonText"), i18n("&New Subfolder...").remove(QLatin1Char('&')));
 
-  mView->setSource( KUrl::fromLocalFile( KStandardDirs::locate( "data", QLatin1String( "akonadi-kde/qml/CollectionDialogMobile.qml" ) ) ) );
+    mView->setSource(KUrl::fromLocalFile(KStandardDirs::locate("data", QLatin1String("akonadi-kde/qml/CollectionDialogMobile.qml"))));
 
 #if defined (Q_WS_MAEMO_5) || defined (MEEGO_EDITION_HARMATTAN)
-  mParent->setWindowState( Qt::WindowFullScreen );
+    mParent->setWindowState(Qt::WindowFullScreen);
 #else
-  // on the desktop start with a nice size
-  mParent->resize( 800, 480 );
+    // on the desktop start with a nice size
+    mParent->resize(800, 480);
 #endif
 }
 
@@ -124,166 +124,166 @@ CollectionDialog::Private::~Private()
 {
 }
 
-void CollectionDialog::Private::slotCollectionAvailable( const QModelIndex &index )
+void CollectionDialog::Private::slotCollectionAvailable(const QModelIndex &index)
 {
-  mSelectionModel->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect );
+    mSelectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
 }
 
-void CollectionDialog::Private::slotFilterFixedString( const QString &filter)
+void CollectionDialog::Private::slotFilterFixedString(const QString &filter)
 {
 }
 
 void CollectionDialog::Private::slotSelectionChanged()
 {
-  mOkButtonEnabled = mSelectionModel->hasSelection();
-  if ( mAllowToCreateNewChildCollection ) {
-    const Akonadi::Collection parentCollection = mParent->selectedCollection();
-    const bool canCreateChildCollections = canCreateCollection( parentCollection );
-    const bool isVirtual = parentCollection.isVirtual();
+    mOkButtonEnabled = mSelectionModel->hasSelection();
+    if (mAllowToCreateNewChildCollection) {
+        const Akonadi::Collection parentCollection = mParent->selectedCollection();
+        const bool canCreateChildCollections = canCreateCollection(parentCollection);
+        const bool isVirtual = parentCollection.isVirtual();
 
-    mCreateButtonEnabled = ( canCreateChildCollections && !isVirtual );
-    if ( parentCollection.isValid() ) {
-      const bool canCreateItems = ( parentCollection.rights() & Akonadi::Collection::CanCreateItem );
-      mOkButtonEnabled = canCreateItems;
+        mCreateButtonEnabled = (canCreateChildCollections && !isVirtual);
+        if (parentCollection.isValid()) {
+            const bool canCreateItems = (parentCollection.rights() & Akonadi::Collection::CanCreateItem);
+            mOkButtonEnabled = canCreateItems;
+        }
     }
-  }
 
-  emit buttonStatusChanged();
+    emit buttonStatusChanged();
 }
 
-void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogOptions options )
+void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOptions options)
 {
-  mAllowToCreateNewChildCollection = ( options & AllowToCreateNewChildCollection );
-  emit buttonStatusChanged();
+    mAllowToCreateNewChildCollection = (options & AllowToCreateNewChildCollection);
+    emit buttonStatusChanged();
 }
 
-bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &parentCollection ) const
+bool CollectionDialog::Private::canCreateCollection(const Akonadi::Collection &parentCollection) const
 {
-  if ( !parentCollection.isValid() ) {
-    return false;
-  }
+    if (!parentCollection.isValid()) {
+        return false;
+    }
 
-  if ( ( parentCollection.rights() & Akonadi::Collection::CanCreateCollection ) ) {
-    const QStringList dialogMimeTypeFilter = mParent->mimeTypeFilter();
-    const QStringList parentCollectionMimeTypes = parentCollection.contentMimeTypes();
-    Q_FOREACH ( const QString& mimetype, dialogMimeTypeFilter ) {
-      if ( parentCollectionMimeTypes.contains( mimetype ) ) {
+    if ((parentCollection.rights() & Akonadi::Collection::CanCreateCollection)) {
+        const QStringList dialogMimeTypeFilter = mParent->mimeTypeFilter();
+        const QStringList parentCollectionMimeTypes = parentCollection.contentMimeTypes();
+        Q_FOREACH (const QString &mimetype, dialogMimeTypeFilter) {
+            if (parentCollectionMimeTypes.contains(mimetype)) {
+                return true;
+            }
+        }
         return true;
-      }
     }
-    return true;
-  }
-  return false;
+    return false;
 }
 
 void CollectionDialog::Private::slotAddChildCollection()
 {
-  const Akonadi::Collection parentCollection = mParent->selectedCollection();
-  if ( canCreateCollection( parentCollection ) ) {
-    const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder" ),
-                                                i18nc( "@label:textbox, name of a thing", "Name" ),
-                                                QString(), 0, mParent );
-    if ( name.isEmpty() ) {
-      return;
+    const Akonadi::Collection parentCollection = mParent->selectedCollection();
+    if (canCreateCollection(parentCollection)) {
+        const QString name = KInputDialog::getText(i18nc("@title:window", "New Folder"),
+                                                   i18nc("@label:textbox, name of a thing", "Name"),
+                                                   QString(), 0, mParent);
+        if (name.isEmpty()) {
+            return;
+        }
+
+        Akonadi::Collection collection;
+        collection.setName(name);
+        collection.setParentCollection(parentCollection);
+        Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob(collection);
+        connect(job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)));
     }
-
-    Akonadi::Collection collection;
-    collection.setName( name );
-    collection.setParentCollection( parentCollection );
-    Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
-    connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)) );
-  }
 }
 
-void CollectionDialog::Private::slotCollectionCreationResult( KJob* job )
+void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
 {
-  if ( job->error() ) {
-    KMessageBox::error( mParent, i18n( "Could not create folder: %1", job->errorString() ),
-                        i18n( "Folder creation failed" ) );
-  }
+    if (job->error()) {
+        KMessageBox::error(mParent, i18n("Could not create folder: %1", job->errorString()),
+                           i18n("Folder creation failed"));
+    }
 }
 
-void CollectionDialog::Private::setDescriptionText( const QString &text )
+void CollectionDialog::Private::setDescriptionText(const QString &text)
 {
-  mDescriptionText = text;
-  emit descriptionTextChanged();
+    mDescriptionText = text;
+    emit descriptionTextChanged();
 }
 
 QString CollectionDialog::Private::descriptionText() const
 {
-  return mDescriptionText;
+    return mDescriptionText;
 }
 
 bool CollectionDialog::Private::okButtonEnabled() const
 {
-  return mOkButtonEnabled;
+    return mOkButtonEnabled;
 }
 
 bool CollectionDialog::Private::cancelButtonEnabled() const
 {
-  return mCancelButtonEnabled;
+    return mCancelButtonEnabled;
 }
 
 bool CollectionDialog::Private::createButtonEnabled() const
 {
-  return mCreateButtonEnabled;
+    return mCreateButtonEnabled;
 }
 
 bool CollectionDialog::Private::createButtonVisible() const
 {
-  return mAllowToCreateNewChildCollection;
+    return mAllowToCreateNewChildCollection;
 }
 
 void CollectionDialog::Private::okClicked()
 {
-  mParent->accept();
+    mParent->accept();
 }
 
 void CollectionDialog::Private::cancelClicked()
 {
-  mParent->reject();
+    mParent->reject();
 }
 
 void CollectionDialog::Private::createClicked()
 {
-  slotAddChildCollection();
+    slotAddChildCollection();
 }
 
-void CollectionDialog::Private::setCurrentIndex( int row )
+void CollectionDialog::Private::setCurrentIndex(int row)
 {
-  const QModelIndex index = mSelectionModel->model()->index( row, 0 );
-  mSelectionModel->select( index, QItemSelectionModel::ClearAndSelect );
+    const QModelIndex index = mSelectionModel->model()->index(row, 0);
+    mSelectionModel->select(index, QItemSelectionModel::ClearAndSelect);
 }
 
-void CollectionDialog::Private::setFilterText( const QString &text )
+void CollectionDialog::Private::setFilterText(const QString &text)
 {
-  mFilterModel->setFilterFixedString( text );
+    mFilterModel->setFilterFixedString(text);
 }
 
-void CollectionDialog::Private::selectionChanged( const QItemSelection &selection, const QItemSelection& )
+void CollectionDialog::Private::selectionChanged(const QItemSelection &selection, const QItemSelection &)
 {
-  if ( selection.isEmpty() ) {
-    return;
-  }
+    if (selection.isEmpty()) {
+        return;
+    }
 
-  emit selectionChanged( selection.indexes().first().row() );
+    emit selectionChanged(selection.indexes().first().row());
 }
 
-CollectionDialog::CollectionDialog( QWidget *parent )
-  : KDialog( parent, Qt::Window ),
-    d( new Private( 0, this, CollectionDialog::None ) )
-{
-}
-
-CollectionDialog::CollectionDialog( QAbstractItemModel *model, QWidget *parent )
-  : KDialog( parent, Qt::Window ),
-    d( new Private( model, this, CollectionDialog::None ) )
+CollectionDialog::CollectionDialog(QWidget *parent)
+    : KDialog(parent, Qt::Window)
+    , d(new Private(0, this, CollectionDialog::None))
 {
 }
 
-CollectionDialog::CollectionDialog( CollectionDialogOptions options, QAbstractItemModel *model, QWidget *parent )
-  : KDialog( parent, Qt::Window ),
-    d( new Private( model, this, options ) )
+CollectionDialog::CollectionDialog(QAbstractItemModel *model, QWidget *parent)
+    : KDialog(parent, Qt::Window)
+    , d(new Private(model, this, CollectionDialog::None))
+{
+}
+
+CollectionDialog::CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model, QWidget *parent)
+    : KDialog(parent, Qt::Window)
+    , d(new Private(model, this, options))
 {
 }
 
@@ -293,66 +293,66 @@ CollectionDialog::~CollectionDialog()
 
 Akonadi::Collection CollectionDialog::selectedCollection() const
 {
-  if ( !d->mSelectionModel->hasSelection() ) {
-    return Akonadi::Collection();
-  }
+    if (!d->mSelectionModel->hasSelection()) {
+        return Akonadi::Collection();
+    }
 
-  return d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    return d->mSelectionModel->selectedRows().first().data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
 
 Akonadi::Collection::List CollectionDialog::selectedCollections() const
 {
-  if ( !d->mSelectionModel->hasSelection() ) {
-    return Akonadi::Collection::List();
-  }
+    if (!d->mSelectionModel->hasSelection()) {
+        return Akonadi::Collection::List();
+    }
 
-  return ( Akonadi::Collection::List() << d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>() );
+    return (Akonadi::Collection::List() << d->mSelectionModel->selectedRows().first().data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>());
 }
 
-void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
+void CollectionDialog::setMimeTypeFilter(const QStringList &mimeTypes)
 {
-  d->mMimeTypeFilterModel->clearFilters();
-  d->mMimeTypeFilterModel->addMimeTypeFilters( mimeTypes );
+    d->mMimeTypeFilterModel->clearFilters();
+    d->mMimeTypeFilterModel->addMimeTypeFilters(mimeTypes);
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const
 {
-  return d->mMimeTypeFilterModel->mimeTypes();
+    return d->mMimeTypeFilterModel->mimeTypes();
 }
 
-void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
+void CollectionDialog::setAccessRightsFilter(Collection::Rights rights)
 {
-  d->mRightsFilterModel->setAccessRights( rights );
+    d->mRightsFilterModel->setAccessRights(rights);
 }
 
 Akonadi::Collection::Rights CollectionDialog::accessRightsFilter() const
 {
-  return d->mRightsFilterModel->accessRights();
+    return d->mRightsFilterModel->accessRights();
 }
 
-void CollectionDialog::setDescription( const QString &text )
+void CollectionDialog::setDescription(const QString &text)
 {
-  d->setDescriptionText( text );
+    d->setDescriptionText(text);
 }
 
-void CollectionDialog::setDefaultCollection( const Collection &collection )
+void CollectionDialog::setDefaultCollection(const Collection &collection)
 {
-  d->mSelectionHandler->waitForCollection( collection );
+    d->mSelectionHandler->waitForCollection(collection);
 }
 
-void CollectionDialog::setSelectionMode( QAbstractItemView::SelectionMode mode )
+void CollectionDialog::setSelectionMode(QAbstractItemView::SelectionMode mode)
 {
-  d->mSelectionMode = mode;
+    d->mSelectionMode = mode;
 }
 
 QAbstractItemView::SelectionMode CollectionDialog::selectionMode() const
 {
-  return d->mSelectionMode;
+    return d->mSelectionMode;
 }
 
-void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions options )
+void CollectionDialog::changeCollectionDialogOptions(CollectionDialogOptions options)
 {
-  d->changeCollectionDialogOptions( options );
+    d->changeCollectionDialogOptions(options);
 }
 
 #include "moc_collectiondialog.cpp"
