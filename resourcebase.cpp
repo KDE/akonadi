@@ -79,6 +79,7 @@ public:
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
+        , mItemSyncBatchSize(10)
     {
         Internal::setClientType(Internal::Resource);
         mStatusMessage = defaultReadyMessage();
@@ -171,12 +172,14 @@ public:
         if (!mItemSyncer) {
             mItemSyncer = new ItemSync(q->currentCollection());
             mItemSyncer->setTransactionMode(mItemTransactionMode);
+            mItemSyncer->setBatchSize(mItemSyncBatchSize);
             if (mItemSyncFetchScope) {
                 mItemSyncer->setFetchScope(*mItemSyncFetchScope);
             }
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
             connect(mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)));
             connect(mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)));
+            connect(mItemSyncer, SIGNAL(readyForNextBatch(int)), q, SIGNAL(retrieveNextItemSyncBatch(int)));
         }
         Q_ASSERT(mItemSyncer);
     }
@@ -436,6 +439,7 @@ public:
     QMap<Akonadi::Collection::Id, QVariantMap> mUnemittedAdvancedStatus;
     bool mAutomaticProgressReporting;
     QPointer<RecursiveMover> m_recursiveMover;
+    int mItemSyncBatchSize;
 };
 
 ResourceBase::ResourceBase(const QString &id)
@@ -870,6 +874,18 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
         return;
     }
     scheduler->taskDone();
+}
+
+int ResourceBase::itemSyncBatchSize() const
+{
+    Q_D(const ResourceBase);
+    return d->mItemSyncBatchSize;
+}
+
+void ResourceBase::setItemSyncBatchSize(int batchSize)
+{
+    Q_D(ResourceBase);
+    d->mItemSyncBatchSize = batchSize;
 }
 
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
