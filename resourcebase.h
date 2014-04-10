@@ -245,6 +245,23 @@ Q_SIGNALS:
      */
     void collectionTreeSynchronized();
 
+    /**
+     * Emitted when the item synchronization processed the current batch and is ready for a new one.
+     * Use this to throttle the delivery to not overload Akonadi.
+     *
+     * Throttling can be used during item retrieval (retrieveItems(Akonadi::Collection)) in streaming mode.
+     * To throttle only deliver itemSyncBatchSize() items, and wait for this signal, then again deliver
+     * @param remainingBatchSize items.
+     *
+     * By always only providing the number of items required to process the batch, the items don't pile
+     * up in memory and items are only provided as fast as Akonadi can process them.
+     *
+     * @see batchSize()
+     *
+     * @since 4.14
+     */
+    void retrieveNextItemSyncBatch(int remainingBatchSize);
+
 protected Q_SLOTS:
     /**
      * Retrieve the collection tree from the remote server and supply it via
@@ -278,9 +295,28 @@ protected Q_SLOTS:
      * In case you don't want to use the built-in item syncing code, store the retrieved
      * items manually and call itemsRetrieved() once you are done.
      * @param collection The collection whose items to retrieve.
-     * @see itemsRetrieved( const Item::List& ), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
+     * @see itemsRetrieved( const Item::List& ), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection(), batchSize()
      */
     virtual void retrieveItems(const Akonadi::Collection &collection) = 0;
+
+    /**
+     * Returns the batch size used during the item sync.
+     *
+     * This can be used to throttle the item delivery.
+     *
+     * @see retrieveNextItemSyncBatch(int), retrieveItems(Akonadi::Collection)
+     * @since 4.14
+     */
+    int itemSyncBatchSize() const;
+
+    /**
+     * Set the batch size used during the item sync.
+     * The default is 10.
+     *
+     * @see retrieveNextItemSyncBatch(int)
+     * @since 4.14
+     */
+    void setItemSyncBatchSize(int batchSize);
 
     /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
