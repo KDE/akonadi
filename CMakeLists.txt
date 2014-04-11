@@ -31,7 +31,11 @@ find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Solid ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${KPimIdentities_SOURCE_DIR}")
+  ind_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
+endif()
+
 
 set(AkonadiServer_MIN_VERSION "1.70.41")
 find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)

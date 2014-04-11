@@ -101,7 +101,7 @@ target_link_libraries(KF5AkonadiWidgets
     KF5::AkonadiCore
     KF5::ItemModels
     KF5::ItemViews ## This is only for KFilterProxySearchLine
-    KF5::KDE4Support
+    KF5::KDELibs4Support
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES

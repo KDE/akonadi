@@ -55,7 +55,7 @@ target_link_libraries(KF5AkonadiAgentBase
     KF5::AkonadiCore
     KF5::Solid
     KF5::ConfigCore
-    KF5::KDE4Support
+    KF5::KDELibs4Support
 )
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
