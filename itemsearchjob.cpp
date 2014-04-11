@@ -60,6 +60,22 @@ class Akonadi::ItemSearchJobPrivate : public JobPrivate
       }
     }
 
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
+      QStringList flags;
+      if ( mRecursive ) {
+        flags.append( QLatin1String( "recursive" ) );
+      }
+      if ( mRemote ) {
+        flags.append( QLatin1String( "remote" ) );
+      }
+      if ( mCollections.isEmpty() ) {
+        flags.append( QLatin1String( "all collections" ) );
+      } else {
+        flags.append( QString::fromLatin1( "%1 collections" ).arg( mCollections.count() ) );
+      }
+      return QString::fromLatin1( "%1,json=%2" ).arg( flags.join(QLatin1String(","))).arg(QString::fromUtf8(mQuery.toJSON()));
+    }
+
     Q_DECLARE_PUBLIC( ItemSearchJob )
 
     SearchQuery mQuery;
