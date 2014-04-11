@@ -20,8 +20,7 @@
 #ifndef ITEMPAYLOADINTERNALS_P_H
 #define ITEMPAYLOADINTERNALS_P_H
 
-// FIXME KF5: Move supertrait to Akonadi framework
-#include "kpimutils/supertrait.h"
+#include "supertrait.h"
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QSharedPointer>
@@ -144,7 +143,7 @@ struct get_hierarchy_root_recurse<T, T>
 
 template <typename T>
 struct get_hierarchy_root
-    : get_hierarchy_root_recurse< T, typename ::KPIMUtils::SuperClass<T>::Type >
+    : get_hierarchy_root_recurse< T, typename ::Akonadi::SuperClass<T>::Type >
 {
 };
 
@@ -178,13 +177,13 @@ template <typename T> struct PayloadTrait
     }
     /// type of the base class of the payload object inside a shared pointer,
     /// same as ElementType if there is no super class
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperElementType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
     /// type of this payload object
     typedef T Type;
     /// type of the payload to store a base class of this payload
     /// (eg. a shared pointer containing a pointer to SuperElementType)
     /// same as Type if there is not super class
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperType;
     /// indicates if this payload is polymorphic, that is is a shared pointer
     /// and has a known super class
     static const bool isPolymorphic = false;
@@ -230,7 +229,7 @@ template <typename T> struct PayloadTrait<boost::shared_ptr<T> >
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperElementType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
     typedef boost::shared_ptr<ElementType> Type;
     typedef boost::shared_ptr<SuperElementType> SuperType;
     static const bool isPolymorphic = !boost::is_same<ElementType, SuperElementType>::value;
@@ -278,7 +277,7 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> >
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperElementType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
     typedef QSharedPointer<T> Type;
     typedef QSharedPointer<SuperElementType> SuperType;
     static const bool isPolymorphic = !boost::is_same<ElementType, SuperElementType>::value;

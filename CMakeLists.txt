@@ -32,9 +32,6 @@ find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Solid ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${KPimIdentities_SOURCE_DIR}")
-  ind_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
-endif()
 
 
 set(AkonadiServer_MIN_VERSION "1.70.41")
@@ -62,10 +59,6 @@ set_package_properties(LibXml2 PROPERTIES
     URL "http://xmlsoft.org"
     TYPE REQUIRED
 )
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi_SOURCE_DIR})
-  find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED) # for kpimutils/supertrait.h
-endif()
 
 ########### Targets ###########
 

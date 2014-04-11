@@ -103,6 +103,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Session
     SpecialCollections
     SpecialCollectionAttribute
+    Supertrait
     Tag
     TagAttribute
     TagFetchScope
@@ -282,7 +283,7 @@ set_target_properties(KF5AkonadiCore PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiCore
     LIB_NAME KF5AkonadiCore
-    DEPS "ItemModels KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME
+    DEPS "ItemModels KIOCore KDELibs4Support" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

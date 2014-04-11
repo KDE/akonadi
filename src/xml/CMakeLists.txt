@@ -52,7 +52,7 @@ set_target_properties(KF5AkonadiXml PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiXml
     LIB_NAME KF5AkonadiXml
-    DEPS "AkonadiCore Kio KDE4Support QtXml LibXML2" FILENAME_VAR PRI_FILENAME
+    DEPS "AkonadiCore Kio KDELibs4Support QtXml LibXML2" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

@@ -66,7 +66,7 @@ set_target_properties(KF5AkonadiAgentBase PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
     LIB_NAME KF5AkonadiAgentBase
-    DEPS "KIOCore KDE4Support" FILENAME_VAR PRI_FILENAME
+    DEPS "KIOCore KDELibs4Support" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
