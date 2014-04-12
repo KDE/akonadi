@@ -1626,7 +1626,7 @@ KAction *StandardActionManager::createAction(Type type)
         }
         return d->actions[type];
 #if 0
-  Qt5: Port
+  //Qt5: Port
     case MenuAction:
         action = new KActionMenu(d->parentWidget);
         break;
