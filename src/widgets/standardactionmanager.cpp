@@ -45,7 +45,7 @@
 #include "recentcollectionaction_p.h"
 
 #include <QIcon>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
 #include <KDebug>

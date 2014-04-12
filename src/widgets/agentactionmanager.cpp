@@ -26,7 +26,7 @@
 #include "agenttypedialog.h"
 #include "metatypes.h"
 
-#include <KAction>
+#include <QAction>
 #include <QIcon>
 #include <KActionCollection>
 #include <KDebug>
@@ -244,7 +244,7 @@ public:
     KActionCollection *mActionCollection;
     QWidget *mParentWidget;
     QItemSelectionModel *mSelectionModel;
-    QVector<KAction *> mActions;
+    QVector<QAction *> mActions;
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
 
@@ -284,7 +284,7 @@ void AgentActionManager::setCapabilityFilter(const QStringList &capabilities)
     d->mCapabilityFilter = capabilities;
 }
 
-KAction *AgentActionManager::createAction(Type type)
+QAction *AgentActionManager::createAction(Type type)
 {
     Q_ASSERT(type >= 0 && type < LastType);
     Q_ASSERT(agentActionData[type].name);
@@ -292,7 +292,7 @@ KAction *AgentActionManager::createAction(Type type)
         return d->mActions[type];
     }
 
-    KAction *action = new KAction(d->mParentWidget);
+    QAction *action = new QAction(d->mParentWidget);
     action->setText(i18n(agentActionData[type].label));
 
     if (agentActionData[type].icon) {
@@ -319,7 +319,7 @@ void AgentActionManager::createAllActions()
     }
 }
 
-KAction *AgentActionManager::action(Type type) const
+QAction *AgentActionManager::action(Type type) const
 {
     Q_ASSERT(type >= 0 && type < LastType);
     return d->mActions[type];
@@ -329,7 +329,7 @@ void AgentActionManager::interceptAction(Type type, bool intercept)
 {
     Q_ASSERT(type >= 0 && type < LastType);
 
-    const KAction *action = d->mActions[type];
+    const QAction *action = d->mActions[type];
 
     if (!action) {
         return;
