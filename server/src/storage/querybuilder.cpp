@@ -326,6 +326,7 @@ bool QueryBuilder::retryLastTransaction( bool rollback )
   mQuery = DataStore::self()->retryLastTransaction( rollback );
   return !mQuery.lastError().isValid();
 #else
+  Q_UNUSED(rollback);
   return true;
 #endif
 }
