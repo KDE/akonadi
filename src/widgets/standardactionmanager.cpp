@@ -319,23 +319,20 @@ public:
         // Update the action menu
         KActionMenu *actionMenu = qobject_cast<KActionMenu *>(actions[type]);
         if (actionMenu) {
-#if 0
-  Qt5: Port
             //get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
-            KMenu *menu = actionMenu->menu();
+            QMenu *menu = actionMenu->menu();
             //Not necessary to delete and recreate menu when it was not created
             if (menu->property("actionType").isValid() && menu->isEmpty()) {
                 return;
             }
             mRecentCollectionsMenu.remove(type);
             delete menu;
-            menu = new KMenu();
+            menu = new QMenu();
 
             menu->setProperty("actionType", static_cast<int>(type));
             q->connect(menu, SIGNAL(aboutToShow()), SLOT(aboutToShowMenu()));
             q->connect(menu, SIGNAL(triggered(QAction*)), standardActionData[type].slot);
             actionMenu->setMenu(menu);
-#endif
         }
     }
 
@@ -1535,7 +1532,7 @@ public:
     FavoriteCollectionsModel *favoritesModel;
     QItemSelectionModel *favoriteSelectionModel;
     bool insideSelectionSlot;
-    QVector<KAction *> actions;
+    QVector<QAction *> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;
 
@@ -1606,17 +1603,17 @@ void StandardActionManager::setFavoriteSelectionModel(QItemSelectionModel *selec
     d->checkModelsConsistency();
 }
 
-KAction *StandardActionManager::createAction(Type type)
+QAction *StandardActionManager::createAction(Type type)
 {
     Q_ASSERT(type < LastType);
     if (d->actions[type]) {
         return d->actions[type];
     }
-    KAction *action = 0;
+    QAction *action = 0;
     switch (standardActionData[type].actionType) {
     case NormalAction:
     case ActionWithAlternative:
-        action = new KAction(d->parentWidget);
+        action = new QAction(d->parentWidget);
         break;
     case ActionAlternative:
         d->actions[type] = d->actions[type - 1];
@@ -1625,15 +1622,12 @@ KAction *StandardActionManager::createAction(Type type)
             createAction(static_cast<Type>(type + 1)); //ensure that alternative actions are initialized when not created by createAllActions
         }
         return d->actions[type];
-#if 0
-  //Qt5: Port
     case MenuAction:
         action = new KActionMenu(d->parentWidget);
         break;
     case ToggleAction:
         action = new KToggleAction(d->parentWidget);
         break;
-#endif
     }
 
     if (d->pluralLabels.contains(type) && !d->pluralLabels.value(type).isEmpty()) {
@@ -1700,7 +1694,7 @@ void StandardActionManager::createAllActions()
     }
 }
 
-KAction *StandardActionManager::action(Type type) const
+QAction *StandardActionManager::action(Type type) const
 {
     Q_ASSERT(type < LastType);
     return d->actions[type];
@@ -1717,7 +1711,7 @@ void StandardActionManager::interceptAction(Type type, bool intercept)
 {
     Q_ASSERT(type < LastType);
 
-    const KAction *action = d->actions[type];
+    const QAction *action = d->actions[type];
 
     if (!action) {
         return;

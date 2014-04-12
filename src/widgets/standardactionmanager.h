@@ -27,7 +27,7 @@
 #include "collection.h"
 #include "item.h"
 
-class KAction;
+class QAction;
 class KActionCollection;
 class KLocalizedString;
 class QItemSelectionModel;
@@ -241,7 +241,7 @@ public:
      *
      * @param type action to be created
      */
-    KAction *createAction(Type type);
+    QAction *createAction(Type type);
 
     /**
      * Convenience method to create all standard actions.
@@ -253,7 +253,7 @@ public:
      * Returns the action of the given type, 0 if it has not been created (yet).
      * @param type action type
      */
-    KAction *action(Type type) const;
+    QAction *action(Type type) const;
 
     /**
      * Sets the label of the action @p type to @p text, which is used during
