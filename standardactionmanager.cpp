@@ -341,7 +341,7 @@ class StandardActionManager::Private
       const Akonadi::Collection::List selectedCollectionsList = selectedCollections();
       const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
 
-      QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
+      QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( type, selectedCollectionsList,collectionSelectionModel->model(), menu );
       mRecentCollectionsMenu.insert( type, recentCollection );
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
       fillFoldersMenu( selectedCollectionsList,
@@ -360,7 +360,7 @@ class StandardActionManager::Private
            type ==MoveCollectionToMenu )
       {
 
-        new RecentCollectionAction( collectionSelectionModel->model(), menu );
+        new RecentCollectionAction( type, Akonadi::Collection::List(), collectionSelectionModel->model(), menu );
         Collection::List selectedCollectionsList = selectedCollections();
         const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
         fillFoldersMenu( selectedCollectionsList,
