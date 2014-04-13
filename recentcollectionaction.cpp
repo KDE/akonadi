@@ -61,7 +61,7 @@ bool RecentCollectionAction::clear()
 
 void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList)
 {
-  if (clear)
+  if (clear())
      return;
 
   QMenu* popup = new QMenu;
