@@ -19,7 +19,7 @@
 
 #include "exception.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <QString>
 
 #include <memory>

@@ -22,7 +22,7 @@
 #include <QtPlugin>
 #include <QSettings>
 #include <QDir>
-#include <KDebug>
+#include <QDebug>
 
 #include "searchquery.h"
 

@@ -29,7 +29,7 @@
 #include <QAction>
 #include <QIcon>
 #include <KActionCollection>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 

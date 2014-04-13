@@ -28,7 +28,7 @@
 #include "collectioncreatejob.h"
 #include "entitydisplayattribute.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QtCore/QVariant>
 

@@ -17,7 +17,7 @@
 
 #include "config.h" //krazy:exclude=includes
 
-#include <KDE/KDebug>
+#include <KDE/QDebug>
 
 
 #include <QtCore/QDir>

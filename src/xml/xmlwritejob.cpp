@@ -27,7 +27,7 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QDomElement>
 #include <QFile>

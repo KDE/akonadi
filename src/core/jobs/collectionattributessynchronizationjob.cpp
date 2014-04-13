@@ -24,7 +24,7 @@
 #include "agentmanager.h"
 #include "collection.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QDBusConnection>

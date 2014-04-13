@@ -28,7 +28,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KProcess>
 #include <KStandardDirs>

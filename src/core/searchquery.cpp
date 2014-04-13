@@ -21,7 +21,7 @@
 
 #include <QtCore/QVariant>
 
-#include <KDebug>
+#include <QDebug>
 
 #if 0
 #include <qjson/parser.h>

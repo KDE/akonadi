@@ -23,7 +23,7 @@
 #include "selftestdialog_p.h"
 #endif
 
-#include <KDebug>
+#include <QDebug>
 #include <QIcon>
 #include <KLocalizedString>
 

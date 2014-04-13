@@ -31,7 +31,7 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Entity &);
 
 #include "attribute.h"
 
-#include <KDE/KDebug>
+#include <KDebug>
 
 #include <QtCore/QHash>
 #include <QtCore/QSharedDataPointer>

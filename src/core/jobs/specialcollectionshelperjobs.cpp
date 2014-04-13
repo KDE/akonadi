@@ -33,7 +33,7 @@
 #include "entitydisplayattribute.h"
 #include "resourcesynchronizationjob.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <kcoreconfigskeleton.h>
 

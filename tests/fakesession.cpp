@@ -21,7 +21,7 @@
 #include "session_p.h"
 #include "job.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <QCoreApplication>
 
 class FakeSessionPrivate : public SessionPrivate

@@ -17,7 +17,7 @@
 
 #include "testrunner.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KProcess>
 
 #include <QtCore/QCoreApplication>

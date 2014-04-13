@@ -26,7 +26,7 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 #include <QIcon>
 #include <KFileDialog>

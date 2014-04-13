@@ -24,7 +24,7 @@
 #include "agentmanager_p.h"
 #include "servermanager.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 

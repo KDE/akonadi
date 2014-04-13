@@ -19,7 +19,7 @@
 
 #include "config.h" //krazy:exclude=includes
 
-#include <KDebug>
+#include <QDebug>
 #include <QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QHashIterator>

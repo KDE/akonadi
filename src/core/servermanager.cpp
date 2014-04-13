@@ -26,7 +26,7 @@
 #include "session_p.h"
 #include "firstrun_p.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 
 #include <akonadi/private/protocol_p.h>

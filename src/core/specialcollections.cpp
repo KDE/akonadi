@@ -29,7 +29,7 @@
 #include "monitor.h"
 #include "collectionfetchscope.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <kcoreconfigskeleton.h>
 
 #include <QtCore/QHash>

@@ -22,7 +22,7 @@
 #include "agentinstance.h"
 #include "agentmanager.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QDBusInterface>

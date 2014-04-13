@@ -24,7 +24,7 @@
 #include "item.h"
 
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 
 #include <QScrollBar>
 #include <QTimer>

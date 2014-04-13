@@ -19,7 +19,7 @@
 
 #include "agenttypewidget.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QApplication>
 #include <QHBoxLayout>

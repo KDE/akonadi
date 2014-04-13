@@ -21,7 +21,7 @@
 #include "format_p.h"
 #include "xmlreader.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KStandardDirs>

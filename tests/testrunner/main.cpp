@@ -24,7 +24,7 @@
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
-#include <KDebug>
+#include <QDebug>
 #include <QIcon>
 #include <KLocalizedString>
 
