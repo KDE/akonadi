@@ -369,7 +369,7 @@ public:
             type == MoveCollectionToMenu)
         {
 
-            QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction(collectionSelectionModel->model(), menu);
+            new RecentCollectionAction(collectionSelectionModel->model(), menu);
             Collection::List selectedCollectionsList = selectedCollections();
             const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
             fillFoldersMenu(selectedCollectionsList,
