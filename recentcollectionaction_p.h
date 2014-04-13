@@ -22,7 +22,7 @@
 #include <QModelIndex>
 #include <akonadi/collection.h>
 #include <ksharedconfig.h>
-
+#include <akonadi/standardactionmanager.h>
 class QMenu;
 class QAbstractItemModel;
 class QAction;
@@ -41,7 +41,7 @@ public:
     /**
      * Creates a new collection recent action
      */
-    explicit RecentCollectionAction(const QAbstractItemModel *model, QMenu *menu);
+    explicit RecentCollectionAction(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList, const QAbstractItemModel *model, QMenu *menu);
     /**
      * Destroys the collection recent action.
      */
@@ -56,7 +56,7 @@ public:
 
 private:
     void writeConfig();
-    void fillRecentCollection();
+    void fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList);
     QString actionName(QModelIndex index);
 
 private:

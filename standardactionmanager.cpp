@@ -350,7 +350,7 @@ public:
         const Akonadi::Collection::List selectedCollectionsList = selectedCollections();
         const StandardActionManager::Type type = static_cast<StandardActionManager::Type>(menu->property("actionType").toInt());
 
-        QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction(collectionSelectionModel->model(), menu);
+        QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction(type, selectedCollectionsList, collectionSelectionModel->model(), menu);
         mRecentCollectionsMenu.insert(type, recentCollection);
         const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
         fillFoldersMenu(selectedCollectionsList,
@@ -368,8 +368,7 @@ public:
             type == MoveItemToMenu ||
             type == MoveCollectionToMenu)
         {
-
-            new RecentCollectionAction(collectionSelectionModel->model(), menu);
+            new RecentCollectionAction(type, Akonadi::Collection::List(), collectionSelectionModel->model(), menu);
             Collection::List selectedCollectionsList = selectedCollections();
             const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
             fillFoldersMenu(selectedCollectionsList,
@@ -1389,8 +1388,11 @@ public:
                 continue;
             }
 
-            const bool readOnly = !isWritableTargetCollectionForMimeTypes(collection, mimeTypes, type);
-            const bool collectionIsSelected = selectedCollectionsList.contains(collection);
+            const bool readOnly = !isWritableTargetCollectionForMimeTypes( collection, mimeTypes, type );
+            const bool collectionIsSelected = selectedCollectionsList.contains( collection );
+            if (type == MoveCollectionToMenu && collectionIsSelected) {
+                continue;
+            }
 
             QString label = model->data(index).toString();
             label.replace(QLatin1String("&"), QLatin1String("&&"));
@@ -1407,12 +1409,14 @@ public:
 
                 fillFoldersMenu(selectedCollectionsList, mimeTypes, type, popup, model, index);
 
-                if (!readOnly) {
-                    popup->addSeparator();
+                if (!(type == CopyCollectionToMenu && collectionIsSelected)) {
+                    if ( !readOnly ) {
+                        popup->addSeparator();
 
-                    QAction *action = popup->addAction(moveAction ? i18n("Move to This Folder") : i18n("Copy to This Folder"));
-                    action->setData(QVariant::fromValue<QModelIndex>(index));
-                }
+                        QAction *action = popup->addAction( moveAction ? i18n( "Move to This Folder" ) : i18n( "Copy to This Folder" ) );
+                        action->setData( QVariant::fromValue<QModelIndex>( index ) );
+                    }
+               }
 
                 menu->addMenu(popup);
 
