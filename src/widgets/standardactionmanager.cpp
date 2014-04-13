@@ -48,10 +48,10 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KDebug>
+#include <QDebug>
 #include <KInputDialog>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KToggleAction>
 
