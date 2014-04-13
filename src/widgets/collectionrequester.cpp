@@ -61,7 +61,7 @@ public:
     CollectionRequester *q;
     Collection collection;
     QLineEdit *edit;
-    KPushButton *button;
+    QPushButton *button;
     CollectionDialog *collectionDialog;
 };
 
@@ -124,7 +124,7 @@ void CollectionRequester::Private::init()
     edit->setClearButtonEnabled(false);
     edit->setFocusPolicy(Qt::NoFocus);
 
-    button = new KPushButton(q);
+    button = new QPushButton(q);
     button->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     const int buttonSize = edit->sizeHint().height();
     button->setFixedSize(buttonSize, buttonSize);

@@ -35,7 +35,7 @@
 
 #ifndef KDEPIM_MOBILE_UI
 #include <klineedit.h>
-#include <KPushButton>
+#include <QPushButton>
 #include <krecursivefilterproxymodel.h>
 #include <QHeaderView>
 #include <QLabel>
@@ -137,8 +137,8 @@ public:
     SubscriptionDialog *q;
 #ifndef KDEPIM_MOBILE_UI
     QTreeView *collectionView;
-    KPushButton *subscribe;
-    KPushButton *unSubscribe;
+    QPushButton *subscribe;
+    QPushButton *unSubscribe;
 #else
     QListView *collectionView;
 #endif
@@ -234,11 +234,11 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     hboxLayout->addWidget(d->collectionView);
 
     QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
-    d->subscribe = new KPushButton(i18n("Subscribe"));
+    d->subscribe = new QPushButton(i18n("Subscribe"));
     subscribeButtonLayout->addWidget(d->subscribe);
     connect(d->subscribe, SIGNAL(clicked()), this, SLOT(slotSubscribe()));
 
-    d->unSubscribe = new KPushButton(i18n("Unsubscribe"));
+    d->unSubscribe = new QPushButton(i18n("Unsubscribe"));
     subscribeButtonLayout->addWidget(d->unSubscribe);
     connect(d->unSubscribe, SIGNAL(clicked()), this, SLOT(slotUnSubscribe()));
     subscribeButtonLayout->addItem(new QSpacerItem(5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding));
