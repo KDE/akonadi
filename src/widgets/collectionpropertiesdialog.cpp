@@ -28,7 +28,7 @@
 #include <qdebug.h>
 #include <kglobal.h>
 #include <ksharedconfig.h>
-#include <ktabwidget.h>
+#include <qtabwidget.h>
 
 #include <QBoxLayout>
 
@@ -80,7 +80,7 @@ public:
     CollectionPropertiesDialog *q;
     Collection mCollection;
     QStringList mPageNames;
-    KTabWidget *mTabWidget;
+    QTabWidget *mTabWidget;
 };
 
 typedef QList<CollectionPropertiesPageFactory *> CollectionPropertiesPageFactoryList;
@@ -118,7 +118,7 @@ void CollectionPropertiesDialog::Private::init()
 {
     QBoxLayout *layout = new QHBoxLayout(q->mainWidget());
     layout->setMargin(0);
-    mTabWidget = new KTabWidget(q->mainWidget());
+    mTabWidget = new QTabWidget(q->mainWidget());
     layout->addWidget(mTabWidget);
 
     if (mPageNames.isEmpty()) {   // default loading
