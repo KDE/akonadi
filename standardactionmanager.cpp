@@ -1325,6 +1325,9 @@ class StandardActionManager::Private
 
         const bool readOnly = !isWritableTargetCollectionForMimeTypes( collection, mimeTypes, type );
         const bool collectionIsSelected = selectedCollectionsList.contains( collection );
+        if (type == MoveCollectionToMenu && collectionIsSelected) {
+          continue;
+        }
 
         QString label = model->data( index ).toString();
         label.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
@@ -1341,11 +1344,13 @@ class StandardActionManager::Private
 
           fillFoldersMenu( selectedCollectionsList, mimeTypes, type, popup, model, index );
 
-          if ( !readOnly ) {
-            popup->addSeparator();
+          if (!(type == CopyCollectionToMenu && collectionIsSelected)) {
+            if ( !readOnly ) {
+              popup->addSeparator();
 
-            QAction *action = popup->addAction( moveAction ? i18n( "Move to This Folder" ) : i18n( "Copy to This Folder" ) );
-            action->setData( QVariant::fromValue<QModelIndex>( index ) );
+              QAction *action = popup->addAction( moveAction ? i18n( "Move to This Folder" ) : i18n( "Copy to This Folder" ) );
+              action->setData( QVariant::fromValue<QModelIndex>( index ) );
+            }
           }
 
           menu->addMenu( popup );
