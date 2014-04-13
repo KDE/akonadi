@@ -21,7 +21,7 @@ option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
 option(QT5_BUILD "Build Akonadi using the Qt5 framework" FALSE)
-option(WITH_SOPRANO "Build with Soprano support. Needed for Nepomuk search integration." TRUE)
+option(WITH_SOPRANO "Build with Soprano support. Needed for Nepomuk search integration." FALSE)
 
 if(NOT DEFINED DATABASE_BACKEND)
   set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
