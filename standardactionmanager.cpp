@@ -1251,7 +1251,7 @@ public:
         while (item.hasNext()) {
             item.next();
             if (item.value().data()) {
-                item.value().data()->addRecentCollection(id);
+                item.value().data()->addRecentCollection(item.key(),id);
             }
         }
     }

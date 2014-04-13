@@ -50,7 +50,7 @@ public:
     /**
      * Add new collection. Will create a new item.
      */
-    void addRecentCollection(Akonadi::Collection::Id id);
+    void addRecentCollection(StandardActionManager::Type type, Akonadi::Collection::Id id);
 
     void cleanRecentCollection();
 
@@ -58,6 +58,7 @@ private:
     void writeConfig();
     void fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList);
     QString actionName(QModelIndex index);
+    bool clear();
 
 private:
     QStringList mListRecentCollection;

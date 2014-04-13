@@ -49,13 +49,20 @@ RecentCollectionAction::~RecentCollectionAction()
 {
 }
 
+bool RecentCollectionAction::clear()
+{
+     delete mRecentAction->menu();
+     if (mListRecentCollection.isEmpty()) {
+         mRecentAction->setEnabled(false);
+         return true;
+     }
+     return false;
+}
+
 void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList)
 {
-    delete mRecentAction->menu();
-    if (mListRecentCollection.isEmpty()) {
-        mRecentAction->setEnabled(false);
+     if (clear())
         return;
-    }
 
     QMenu *popup = new QMenu;
     mRecentAction->setMenu(popup);
@@ -66,7 +73,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
         const Akonadi::Collection collection = mModel->data(index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
         if (index.isValid()) {
             const bool collectionIsSelected = selectedCollectionsList.contains(collection);
-            if (type == MoveCollectionToMenu && collectionIsSelected) {
+            if (type == Akonadi::StandardActionManager::MoveCollectionToMenu && collectionIsSelected) {
                continue;
             }
 
@@ -99,7 +106,7 @@ QString RecentCollectionAction::actionName(QModelIndex index)
     }
 }
 
-void RecentCollectionAction::addRecentCollection(Akonadi::Collection::Id id)
+void RecentCollectionAction::addRecentCollection(Akonadi::StandardActionManager::Type type, Akonadi::Collection::Id id)
 {
     const QString newCollectionID = QString::number(id);
     if (mListRecentCollection.isEmpty() ||
@@ -109,7 +116,7 @@ void RecentCollectionAction::addRecentCollection(Akonadi::Collection::Id id)
         }
         mListRecentCollection.append(newCollectionID);
         writeConfig();
-        fillRecentCollection();
+        fillRecentCollection(type, Akonadi::Collection::List());
     }
 }
 
@@ -124,7 +131,7 @@ void RecentCollectionAction::cleanRecentCollection()
 {
     mListRecentCollection.clear();
     writeConfig();
-    fillRecentCollection();
+    clear();
 }
 
 #include "moc_recentcollectionaction_p.cpp"
