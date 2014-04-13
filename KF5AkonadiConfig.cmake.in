@@ -1,7 +1,5 @@
 @PACKAGE_INIT@
 
-# Any changes in this ".cmake" file will be overwritten by CMake, the source is the ".cmake.in" file.
-
 find_dependency(KF5Bookmarks "@KF5_VERSION@")
 find_dependency(KF5Completion "@KF5_VERSION@")
 find_dependency(KF5JobWidgets "@KF5_VERSION@")
