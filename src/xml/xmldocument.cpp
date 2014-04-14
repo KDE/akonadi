@@ -224,11 +224,6 @@ QDomDocument& XmlDocument::document() const
   return d->document;
 }
 
-QDomElement XmlDocument::collectionElementByRemoteId(const QString& rid) const
-{
-  return d->findElementByRid( rid, Format::Tag::collection() );
-}
-
 QDomElement XmlDocument::collectionElement( const Collection &collection ) const
 {
   if ( collection == Collection::root() )
@@ -258,7 +253,7 @@ QDomElement XmlDocument::itemElementByRemoteId(const QString& rid) const
 
 Collection XmlDocument::collectionByRemoteId(const QString& rid) const
 {
-  const QDomElement elem = collectionElementByRemoteId( rid );
+  const QDomElement elem = d->findElementByRid( rid, Format::Tag::collection() );
   return XmlReader::elementToCollection( elem );
 }
 
@@ -270,13 +265,6 @@ Item XmlDocument::itemByRemoteId(const QString& rid, bool includePayload) const
 Collection::List XmlDocument::collections() const
 {
   return XmlReader::readCollections( d->document.documentElement() );
-}
-
-Collection::List XmlDocument::childCollections(const QString& parentCollectionRid) const
-{
-  Collection c;
-  c.setRemoteId( parentCollectionRid );
-  return childCollections( c );
 }
 
 Collection::List XmlDocument::childCollections( const Collection &parentCollection ) const

@@ -83,12 +83,6 @@ class AKONADI_XML_EXPORT XmlDocument
     QDomDocument& document() const;
 
     /**
-      Returns the DOM element representing the collection with the given remote id
-      @deprecated Not HRID aware, use collectionElement() instead
-    */
-    KDE_DEPRECATED QDomElement collectionElementByRemoteId( const QString &rid ) const;
-
-    /**
       Returns the DOM element representing @p collection.
     */
     QDomElement collectionElement( const Collection &collection ) const;
@@ -112,12 +106,6 @@ class AKONADI_XML_EXPORT XmlDocument
       Returns the collections defined in this document.
     */
     Collection::List collections() const;
-
-    /**
-      Returns immediate child collections of the specified parent collection.
-      @deprecated Not HRID aware, use childCollections( Akonadi::Collection ) instead
-    */
-    KDE_DEPRECATED Collection::List childCollections( const QString &parentCollectionRid ) const;
 
     /**
       Returns the immediate child collections of @p parentCollection.
