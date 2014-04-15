@@ -25,7 +25,6 @@
 
 #include <QColor>
 
-class KIcon;
 
 namespace Akonadi {
 

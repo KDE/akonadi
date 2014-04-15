@@ -27,8 +27,6 @@
 #include <QColor>
 #include <QFont>
 
-class KIcon;
-
 namespace Akonadi {
 
 /**
