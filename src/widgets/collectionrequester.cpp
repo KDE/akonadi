@@ -25,12 +25,12 @@
 
 #include <klineedit.h>
 #include <klocalizedstring.h>
-#include <kpushbutton.h>
 #include <kicon.h>
 #include <kstandardshortcut.h>
 
 #include <QtCore/QEvent>
 #include <QAction>
+#include <QPushButton>
 
 using namespace Akonadi;
 

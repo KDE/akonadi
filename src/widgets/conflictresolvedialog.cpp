@@ -26,12 +26,12 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 
 #include <kcolorscheme.h>
 #include <klocale.h>
 #include <klocalizedstring.h>
 #include <kglobal.h>
-#include <kpushbutton.h>
 #include <ktextbrowser.h>
 
 using namespace Akonadi;
