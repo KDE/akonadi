@@ -20,7 +20,7 @@
 */
 #include "tageditwidget_p.h"
 
-#include <kicon.h>
+
 #include <klineedit.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>

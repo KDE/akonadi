@@ -20,7 +20,7 @@
 #include "agenttype.h"
 #include "agenttype_p.h"
 
-#include <kicon.h>
+#include <QIcon>
 
 using namespace Akonadi;
 

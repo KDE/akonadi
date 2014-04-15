@@ -28,8 +28,9 @@
 #include "session.h"
 
 #include <qdebug.h>
+#include <QIcon>
 #include <kurl.h>
-#include <kicon.h>
+
 
 #include <QtCore/QMimeData>
 
