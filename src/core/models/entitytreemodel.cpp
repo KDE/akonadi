@@ -27,7 +27,6 @@
 #include <QtCore/QTimer>
 #include <QAbstractProxyModel>
 
-#include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 #include <KDE/KMessageBox>
 #include <KDE/KUrl>
