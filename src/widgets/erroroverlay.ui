@@ -75,14 +75,14 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="KPushButton" name="startButton">
+            <widget class="QPushButton" name="startButton">
              <property name="text">
               <string comment="@action:button Start the Akonadi server">Start</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="KPushButton" name="quitButton"/>
+            <widget class="QPushButton" name="quitButton"/>
            </item>
           </layout>
          </item>
@@ -176,7 +176,7 @@ Click on &quot;Details...&quot; to obtain detailed information on this problem.<
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="KPushButton" name="selfTestButton">
+            <widget class="QPushButton" name="selfTestButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -189,7 +189,7 @@ Click on &quot;Details...&quot; to obtain detailed information on this problem.<
             </widget>
            </item>
            <item>
-            <widget class="KPushButton" name="detailsQuitButton"/>
+            <widget class="QPushButton" name="detailsQuitButton"/>
            </item>
           </layout>
          </item>
@@ -320,13 +320,6 @@ Click on &quot;Details...&quot; to obtain detailed information on this problem.<
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

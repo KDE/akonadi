@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QIcon>
 #include <KLocalizedString>
+#include <KStandardGuiItem>
 
 #include <QtCore/QEvent>
 #include <QPalette>
