@@ -26,7 +26,6 @@
 #include <QMenu>
 #include <QDrag>
 
-#include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 #include <KDE/KUrl>
 
