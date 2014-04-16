@@ -177,7 +177,6 @@ public:
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
             connect(mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)));
             connect(mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)));
-            connect(mItemSyncer, SIGNAL(readyForNextBatch(int)), q, SIGNAL(retrieveNextBatch(int)));
         }
         Q_ASSERT(mItemSyncer);
     }
@@ -872,12 +871,6 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
     }
     scheduler->taskDone();
 }
-
-int ResourceBase::batchSize() const
-{
-    return ItemSync::batchSize();
-}
-
 
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
 {
