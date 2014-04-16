@@ -30,7 +30,7 @@ using namespace Akonadi;
 
 static int s_maximumRecentCollection = 10;
 
-RecentCollectionAction::RecentCollectionAction(const QAbstractItemModel *model, QMenu *menu)
+RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList, const QAbstractItemModel *model, QMenu *menu)
     : QObject(menu)
     , mMenu(menu)
     , mModel(model)
@@ -42,20 +42,27 @@ RecentCollectionAction::RecentCollectionAction(const QAbstractItemModel *model, 
     mListRecentCollection = group.readEntry("Collections", QStringList());
     mRecentAction = mMenu->addAction(i18n("Recent Folder"));
     mMenu->addSeparator();
-    fillRecentCollection();
+    fillRecentCollection(type, selectedCollectionsList);
 }
 
 RecentCollectionAction::~RecentCollectionAction()
 {
 }
 
-void RecentCollectionAction::fillRecentCollection()
+bool RecentCollectionAction::clear()
 {
-    delete mRecentAction->menu();
-    if (mListRecentCollection.isEmpty()) {
-        mRecentAction->setEnabled(false);
+     delete mRecentAction->menu();
+     if (mListRecentCollection.isEmpty()) {
+         mRecentAction->setEnabled(false);
+         return true;
+     }
+     return false;
+}
+
+void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList)
+{
+    if (clear())
         return;
-    }
 
     QMenu *popup = new QMenu;
     mRecentAction->setMenu(popup);
@@ -65,6 +72,11 @@ void RecentCollectionAction::fillRecentCollection()
         const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection(mModel, Akonadi::Collection(mListRecentCollection.at(i).toLongLong()));
         const Akonadi::Collection collection = mModel->data(index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
         if (index.isValid()) {
+            const bool collectionIsSelected = selectedCollectionsList.contains(collection);
+            if (type == Akonadi::StandardActionManager::MoveCollectionToMenu && collectionIsSelected) {
+               continue;
+            }
+
             const bool canCreateNewItems = (collection.rights() &Collection::CanCreateItem);
             QAction *action = popup->addAction(actionName(index));
             const QIcon icon = mModel->data(index, Qt::DecorationRole).value<QIcon>();
@@ -94,7 +106,7 @@ QString RecentCollectionAction::actionName(QModelIndex index)
     }
 }
 
-void RecentCollectionAction::addRecentCollection(Akonadi::Collection::Id id)
+void RecentCollectionAction::addRecentCollection(Akonadi::StandardActionManager::Type type, Akonadi::Collection::Id id)
 {
     const QString newCollectionID = QString::number(id);
     if (mListRecentCollection.isEmpty() ||
@@ -104,7 +116,7 @@ void RecentCollectionAction::addRecentCollection(Akonadi::Collection::Id id)
         }
         mListRecentCollection.append(newCollectionID);
         writeConfig();
-        fillRecentCollection();
+        fillRecentCollection(type, Akonadi::Collection::List());
     }
 }
 
@@ -119,7 +131,7 @@ void RecentCollectionAction::cleanRecentCollection()
 {
     mListRecentCollection.clear();
     writeConfig();
-    fillRecentCollection();
+    clear();
 }
 
 #include "moc_recentcollectionaction_p.cpp"
