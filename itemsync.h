@@ -199,6 +199,14 @@ Q_SIGNALS:
      */
     void readyForNextBatch(int remainingBatchSize);
 
+    /**
+     * @internal
+     * Emitted whenever a transaction is committed. This is for testing only.
+     *
+     * @since 4.14
+     */
+    void transactionCommitted();
+
 protected:
     void doStart();
     void slotResult(KJob *job);
