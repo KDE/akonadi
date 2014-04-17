@@ -24,7 +24,6 @@
 #include <QDebug>
 #include <KGlobal>
 #include <KLocalizedString>
-#include <KStandardDirs>
 
 #include <qdom.h>
 #include <qfile.h>
