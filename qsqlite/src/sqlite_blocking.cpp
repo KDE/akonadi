@@ -77,9 +77,9 @@ int sqlite3_blocking_step(sqlite3_stmt *pStmt)
 {
   int rc;
   while (SQLITE_LOCKED_SHAREDCACHE == (rc = sqlite3_step(pStmt))) {
-    qDebug() << debugString() << "sqlite3_blocking_step: Waiting..."; QTime now; now.start();
+    //qDebug() << debugString() << "sqlite3_blocking_step: Waiting..."; QTime now; now.start();
     rc = qSqlite3WaitForUnlockNotify(sqlite3_db_handle(pStmt));
-    qDebug() << debugString() << "sqlite3_blocking_step: Waited for " << now.elapsed() << "ms";
+    //qDebug() << debugString() << "sqlite3_blocking_step: Waited for " << now.elapsed() << "ms";
     if (rc != SQLITE_OK) {
       break;
     }
@@ -94,9 +94,9 @@ int sqlite3_blocking_prepare16_v2(sqlite3 *db, const void *zSql, int nSql,
 {
   int rc;
   while (SQLITE_LOCKED_SHAREDCACHE == (rc = sqlite3_prepare16_v2(db, zSql, nSql, ppStmt, pzTail))) {
-    qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Waiting..."; QTime now; now.start();
+    //qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Waiting..."; QTime now; now.start();
     rc = qSqlite3WaitForUnlockNotify(db);
-    qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Waited for " << now.elapsed() << "ms";
+    //qDebug() << debugString() << "sqlite3_blocking_prepare16_v2: Waited for " << now.elapsed() << "ms";
     if (rc != SQLITE_OK) {
       break;
     }
