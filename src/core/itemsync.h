@@ -169,6 +169,35 @@ public:
      */
     void setTransactionMode(TransactionMode mode);
 
+    /**
+     * Minimum number of items required to start processing in streaming mode.
+     * When MultipleTransactions is used, one transaction per batch will be created.
+     *
+     * @see setBatchSize()
+     * @since 4.14
+     */
+    int batchSize() const;
+
+    /**
+     * Set the batch size.
+     *
+     * The default is 10.
+     *
+     * @note You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * @see batchSize()
+     * @since 4.14
+     */
+    void setBatchSize(int);
+
+Q_SIGNALS:
+    /**
+     * Signals the resource that new items can be delivered.
+     * @param remainingBatchSize the number of items required to complete the batch (typically the same as batchSize())
+     *
+     * @since 4.14
+     */
+    void readyForNextBatch(int remainingBatchSize);
+
 protected:
     void doStart();
     void slotResult(KJob *job);
@@ -191,6 +220,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotLocalDeleteDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotLocalChangeDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotTransactionResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotItemsReceived(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalFetchDone(KJob *))
     //@endcond
 };
 
