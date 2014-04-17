@@ -23,7 +23,7 @@
 #include "akonadiwidgets_export.h"
 #include "collection.h"
 #include "collectiondialog.h"
-#include <khbox.h>
+#include <QWidget>
 
 namespace Akonadi {
 
@@ -54,7 +54,7 @@ namespace Akonadi {
  * @author Ingo Klöcker <kloecker@kde.org>
  * @since 4.3
  */
-class AKONADIWIDGETS_EXPORT CollectionRequester : public KHBox
+class AKONADIWIDGETS_EXPORT CollectionRequester : public QWidget
 {
     Q_OBJECT
     Q_DISABLE_COPY(CollectionRequester)

@@ -32,7 +32,7 @@
 #include <klocale.h>
 #include <klocalizedstring.h>
 #include <kglobal.h>
-#include <ktextbrowser.h>
+#include <qtextbrowser.h>
 
 using namespace Akonadi;
 
@@ -207,7 +207,7 @@ ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
     QLabel *label = new QLabel( i18nc( "@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply." ), mainWidget );
     layout->addWidget( label );
 
-    mView = new KTextBrowser;
+    mView = new QTextBrowser;
 
     layout->addWidget( mView );
 

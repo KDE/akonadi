@@ -25,7 +25,7 @@
 
 #include "conflicthandler_p.h"
 
-class KTextBrowser;
+class QTextBrowser;
 
 namespace Akonadi {
 
@@ -72,7 +72,7 @@ class ConflictResolveDialog : public KDialog
     Akonadi::Item mLocalItem;
     Akonadi::Item mOtherItem;
 
-    KTextBrowser *mView;
+    QTextBrowser *mView;
 };
 
 }

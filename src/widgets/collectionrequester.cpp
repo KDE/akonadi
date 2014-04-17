@@ -30,6 +30,7 @@
 #include <QtCore/QEvent>
 #include <QAction>
 #include <QPushButton>
+#include <QHBoxLayout>
 
 using namespace Akonadi;
 
@@ -115,21 +116,25 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
 
 void CollectionRequester::Private::init()
 {
-    q->setMargin(0);
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    q->setLayout(hbox);
 
     edit = new QLineEdit(q);
     edit->setReadOnly(true);
     edit->setPlaceholderText(i18n("No Folder"));
     edit->setClearButtonEnabled(false);
     edit->setFocusPolicy(Qt::NoFocus);
+    hbox->addWidget(edit);
 
     button = new QPushButton(q);
     button->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     const int buttonSize = edit->sizeHint().height();
     button->setFixedSize(buttonSize, buttonSize);
     button->setToolTip(i18n("Open collection dialog"));
+    hbox->addWidget(button);
 
-    q->setSpacing(-1);
+    hbox->setSpacing(-1);
 
     edit->installEventFilter(q);
     q->setFocusProxy(button);
@@ -162,14 +167,14 @@ void CollectionRequester::Private::_k_slotOpenDialog()
 }
 
 CollectionRequester::CollectionRequester(QWidget *parent)
-    : KHBox(parent)
+    : QWidget(parent)
     , d(new Private(this))
 {
     d->init();
 }
 
 CollectionRequester::CollectionRequester(const Akonadi::Collection &collection, QWidget *parent)
-    : KHBox(parent)
+    : QWidget(parent)
     , d(new Private(this))
 {
     d->init();
