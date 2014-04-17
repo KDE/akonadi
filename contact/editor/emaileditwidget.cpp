@@ -234,7 +234,8 @@ EmailEditDialog::EmailEditDialog(const QStringList &list, QWidget *parent)
 
     QStringList::ConstIterator it;
     bool preferred = true;
-    for (it = items.constBegin(); it != items.constEnd(); ++it) {
+    QStringList::ConstIterator end(items.constEnd());
+    for (it = items.constBegin(); it != end; ++it) {
         new EmailItem(*it, mEmailListBox, preferred);
         preferred = false;
     }
