@@ -21,6 +21,7 @@
 #include "agentsearchinterface.h"
 #include "searchtaskmanager.h"
 #include "akdbus.h"
+#include "dbusconnectionpool.h"
 
 using namespace Akonadi::Server;
 
@@ -43,7 +44,7 @@ bool AgentSearchInstance::init()
   mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
       AkDBus::agentServiceName( mId, AkDBus::Agent ),
       QLatin1String( "/Search" ),
-      QDBusConnection::sessionBus() );
+      DBusConnectionPool::threadConnection() );
 
   if ( !mInterface || !mInterface->isValid() ) {
     delete mInterface;
@@ -52,7 +53,7 @@ bool AgentSearchInstance::init()
   }
 
   mServiceWatcher = new QDBusServiceWatcher( AkDBus::agentServiceName( mId, AkDBus::Agent ),
-                                             QDBusConnection::sessionBus(),
+                                             DBusConnectionPool::threadConnection(),
                                              QDBusServiceWatcher::WatchForOwnerChange,
                                              this );
   connect( mServiceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),

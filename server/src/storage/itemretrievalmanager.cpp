@@ -20,6 +20,7 @@
 #include "itemretrievalmanager.h"
 #include "itemretrievalrequest.h"
 #include "itemretrievaljob.h"
+#include "dbusconnectionpool.h"
 
 #include "resourceinterface.h"
 
@@ -40,10 +41,7 @@ ItemRetrievalManager *ItemRetrievalManager::sInstance = 0;
 
 ItemRetrievalManager::ItemRetrievalManager( QObject *parent )
   : QObject( parent ),
-    mDBusConnection(
-      QDBusConnection::connectToBus(
-          QDBusConnection::SessionBus,
-          QString::fromLatin1( "AkonadiServerItemRetrievalManager" ) ) )
+    mDBusConnection( DBusConnectionPool::threadConnection() )
 {
   // make sure we are created from the retrieval thread and only once
   Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );

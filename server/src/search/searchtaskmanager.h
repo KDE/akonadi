@@ -97,8 +97,6 @@ class SearchTaskManager : public QObject
     TasksMap::Iterator cancelRunningTask( TasksMap::Iterator &iter );
     bool allResourceTasksCompleted( SearchTask* ) const;
 
-    org::freedesktop::Akonadi::AgentManager mAgentManager;
-
     QMap<QString, AgentSearchInstance* > mInstances;
     QMutex mInstancesLock;
 

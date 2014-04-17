@@ -27,6 +27,7 @@
 #include "storage/dbconfig.h"
 #include "resourcemanager.h"
 #include "entities.h"
+#include "dbusconnectionpool.h"
 
 #include <akdbus.h>
 #include <akdebug.h>
@@ -64,7 +65,7 @@ void StorageJanitorThread::run()
 
 StorageJanitor::StorageJanitor( QObject *parent )
   : QObject( parent )
-  , m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String( staticMetaObject.className() ) ) )
+  , m_connection( DBusConnectionPool::threadConnection() )
   , m_lostFoundCollectionId( -1 )
 {
   DataStore::self();
