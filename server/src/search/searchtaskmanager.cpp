@@ -23,6 +23,7 @@
 #include "akdbus.h"
 #include "connection.h"
 #include "storage/selectquerybuilder.h"
+#include "dbusconnectionpool.h"
 #include <entities.h>
 
 #include <QSqlError>
@@ -36,9 +37,6 @@ SearchTaskManager *SearchTaskManager::sInstance = 0;
 SearchTaskManager::SearchTaskManager()
   : QObject()
   , mShouldStop( false )
-  , mAgentManager( AkDBus::serviceName( AkDBus::Control ), QLatin1String( "/AgentManager" ),
-                   QDBusConnection::sessionBus() )
-
 {
   sInstance = this;
 
@@ -125,13 +123,16 @@ void SearchTaskManager::addTask( SearchTask *task )
   }
 
   mInstancesLock.lock();
+
+  org::freedesktop::Akonadi::AgentManager agentManager( AkDBus::serviceName( AkDBus::Control ), QLatin1String( "/AgentManager" ),
+                                                        DBusConnectionPool::threadConnection() );
   do {
     const QString resourceId = query.value( 1 ).toString();
     if ( !mInstances.contains( resourceId ) ) {
       akDebug() << "Resource" << resourceId << "does not implement Search interface, skipping";
-    } else if ( !mAgentManager.agentInstanceOnline( resourceId ) ) {
+    } else if ( !agentManager.agentInstanceOnline( resourceId ) ) {
       akDebug() << "Agent" << resourceId << "is offline, skipping";
-    } else if ( mAgentManager.agentInstanceStatus( resourceId ) > 2 ) { // 2 == Broken, 3 == Not Configured
+    } else if ( agentManager.agentInstanceStatus( resourceId ) > 2 ) { // 2 == Broken, 3 == Not Configured
       akDebug() << "Agent" << resourceId << "is broken or not configured";
     } else {
       const qint64 collectionId = query.value( 0 ).toLongLong();

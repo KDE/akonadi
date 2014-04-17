@@ -1,7 +1,5 @@
 /*
- * This file is part of the Nepomuk KDE project.
  * Copyright (C) 2010 Sebastian Trueg <trueg@kde.org>
- * Copyright (C) 2010 David Faure <faure@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,6 +18,8 @@
  */
 
 #include "dbusconnectionpool.h"
+#include <QCoreApplication>
+#include <QThread>
 #include <QThreadStorage>
 
 namespace {
@@ -31,7 +31,7 @@ public:
     DBusConnectionPoolPrivate()
         : m_connection( QDBusConnection::connectToBus(
                             QDBusConnection::SessionBus,
-                            QString::fromLatin1( "NepomukQueryServiceConnection%1" ).arg( newNumber() ) ) )
+                            QString::fromLatin1("AkonadiServer-%1").arg(newNumber()) ) )
     {
     }
     ~DBusConnectionPoolPrivate() {
@@ -50,8 +50,11 @@ private:
 
 QThreadStorage<DBusConnectionPoolPrivate *> s_perThreadConnection;
 
-QDBusConnection DBusConnectionPool::threadConnection()
+QDBusConnection Akonadi::Server::DBusConnectionPool::threadConnection()
 {
+    if ( !QCoreApplication::instance() || QCoreApplication::instance()->thread() == QThread::currentThread() ) {
+        return QDBusConnection::sessionBus(); // main thread, use the default session bus
+    }
     if ( !s_perThreadConnection.hasLocalData() ) {
         s_perThreadConnection.setLocalData( new DBusConnectionPoolPrivate );
     }

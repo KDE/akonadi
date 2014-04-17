@@ -1,5 +1,4 @@
 /*
- * This file is part of the Nepomuk KDE project.
  * Copyright (C) 2010 Sebastian Trueg <trueg@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -18,21 +17,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _DBUS_CONNECTION_POOL_H_
-#define _DBUS_CONNECTION_POOL_H_
+#ifndef DBUSCONNECTIONPOOL_H
+#define DBUSCONNECTIONPOOL_H
 
-#include <QtDBus/QDBusConnection>
+#include <QDBusConnection>
 
-namespace DBusConnectionPool
-{
+namespace Akonadi {
+namespace Server {
+namespace DBusConnectionPool {
+
 /**
- * The DBusConnectionPool works around the problem
- * of QDBusConnection not being thread-safe. As soon as that
- * has been fixed (either directly in libdbus or with a work-
- * around in Qt) this method can be dropped in favor of
- * QDBusConnection::sessionBus().
+ * Returns a new QDBusConnection for each thread, because QDBusConnection is
+ * not thread-safe in Qt 4.
+ *
+ * FIXME: Remove in KF5
  */
 QDBusConnection threadConnection();
+
+}
+}
 }
 
 #endif

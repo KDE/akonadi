@@ -38,6 +38,7 @@
 #include "utils.h"
 #include "intervalcheck.h"
 #include "agentmanagerinterface.h"
+#include "dbusconnectionpool.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -252,16 +253,12 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
 
   query.next();
   const QString resourceName = query.value( 0 ).toString();
-  // Workaround for QDBusConnectionPrivate not being thread-safe in Qt 4, fixed in Qt 5.2
-  // TODO: Remove in KF5
-  const QDBusConnection connection = QDBusConnection::connectToBus( QDBusConnection::SessionBus,
-                                                                    QString::fromLatin1( mConnection->sessionId() ) );
+
   org::freedesktop::Akonadi::AgentManager manager( AkDBus::serviceName( AkDBus::Control ),
                                                    QLatin1String( "/AgentManager" ),
-                                                   connection );
+                                                   DBusConnectionPool::threadConnection() );
   const QString typeIdentifier = manager.agentInstanceType( resourceName );
   const QVariantMap properties = manager.agentCustomProperties( typeIdentifier );
-  QDBusConnection::disconnectFromBus( QString::fromLatin1( mConnection->sessionId() ) );
   return properties.value( QLatin1String( "HasLocalStorage" ), false ).toBool();
 }
 

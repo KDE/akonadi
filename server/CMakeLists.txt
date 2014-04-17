@@ -106,6 +106,7 @@ set(libakonadiprivate_SRCS
   src/collectionscheduler.cpp
   src/clientcapabilities.cpp
   src/clientcapabilityaggregator.cpp
+  src/dbusconnectionpool.cpp
   src/handler.cpp
   src/handlerhelper.cpp
   src/intervalcheck.cpp
@@ -206,7 +207,6 @@ if (Soprano_FOUND)
     src/search/nepomuksearchengine.cpp
     src/nepomuk/dbusoperators.cpp
     src/nepomuk/queryserviceclient.cpp
-    src/nepomuk/dbusconnectionpool.cpp
     src/nepomuk/result.cpp
   )
 

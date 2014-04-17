@@ -26,6 +26,7 @@
 #include "agentsearchengine.h"
 #include "nepomuksearchengine.h"
 #include "notificationmanager.h"
+#include "dbusconnectionpool.h"
 #include "searchrequest.h"
 #include "searchtaskmanager.h"
 #include "storage/datastore.h"
@@ -98,7 +99,7 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
 
   new SearchManagerAdaptor( this );
 
-  QDBusConnection::sessionBus().registerObject(
+  DBusConnectionPool::threadConnection().registerObject(
       QLatin1String( "/SearchManager" ),
       this,
       QDBusConnection::ExportAdaptors );

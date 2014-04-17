@@ -24,7 +24,7 @@
 #include "result.h"
 #include "queryserviceinterface.h"
 #include "queryinterface.h"
-#include <dbusconnectionpool.h>
+#include "dbusconnectionpool.h"
 
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnection>
@@ -40,7 +40,7 @@ public:
     Private()
         : queryServiceInterface( 0 ),
           queryInterface( 0 ),
-          dbusConnection( DBusConnectionPool::threadConnection() ),
+          dbusConnection( Akonadi::Server::DBusConnectionPool::threadConnection() ),
           m_queryActive( false ),
           loop( 0 ) {
     }
