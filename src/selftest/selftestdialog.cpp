@@ -636,7 +636,7 @@ void SelfTestDialog::copyReport()
 
 void SelfTestDialog::linkActivated(const QString &link)
 {
-    KRun::runUrl(KUrl::fromPath(link), QStringLiteral("text/plain"), this);
+    KRun::runUrl(QUrl::fromLocalFile(link), QStringLiteral("text/plain"), this);
 }
 
 // @endcond
