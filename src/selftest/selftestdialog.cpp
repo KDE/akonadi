@@ -33,7 +33,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KRun>
-#include <KStandardDirs>
+#include <QStandardPaths>
 #include <KUser>
 #include <KUrl>
 
@@ -384,7 +384,7 @@ void SelfTestDialog::testPSQLServer()
 
 void SelfTestDialog::testAkonadiCtl()
 {
-    const QString path = KStandardDirs::findExe(QStringLiteral("akonadictl"));
+    const QString path = QStandardPaths::findExecutable(QStringLiteral("akonadictl"));
     if (path.isEmpty()) {
         report(Error, ki18n("akonadictl not found"),
                ki18n("The program 'akonadictl' needs to be accessible in $PATH. "
