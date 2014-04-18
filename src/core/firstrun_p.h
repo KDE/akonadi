@@ -74,26 +74,16 @@ public:
 private:
     void findPendingDefaults();
     void setupNext();
-#ifndef KDEPIM_NO_KRESOURCES
-    void migrateKresType(const QString &resourceFamily);
-#endif
     static QVariant::Type argumentType(const QMetaObject *mo, const QString &method);
 
 private Q_SLOTS:
     void instanceCreated(KJob *job);
-#ifndef KDEPIM_NO_KRESOURCES
-    void migrationFinished(int exitCode);
-#endif
 
 private:
     QStringList mPendingDefaults;
     KConfig *mConfig;
     KConfig *mCurrentDefault;
     KProcess *mProcess;
-#ifndef KDEPIM_NO_KRESOURCES
-    QStringList mPendingKres;
-    QString mResourceFamily;
-#endif
 };
 
 }

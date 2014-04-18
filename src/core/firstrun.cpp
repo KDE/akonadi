@@ -95,76 +95,7 @@ void Firstrun::findPendingDefaults()
         }
     }
 
-#ifndef KDEPIM_NO_KRESOURCES
-    // always check legacy kres for migration, their migrator might have changed again
-    mPendingKres << QLatin1String("contact") << QLatin1String("calendar");
-#endif
 }
-
-#ifndef KDEPIM_NO_KRESOURCES
-static QString resourceTypeForMimetype(const QStringList &mimeTypes)
-{
-    if (mimeTypes.contains(QLatin1String("text/directory"))) {
-        return QString::fromLatin1("contact");
-    }
-    if (mimeTypes.contains(QLatin1String("text/calendar"))) {
-        return QString::fromLatin1("calendar");
-    }
-    // TODO notes
-    return QString();
-}
-
-void Firstrun::migrateKresType(const QString &resourceFamily)
-{
-    mResourceFamily = resourceFamily;
-    KConfig config(QLatin1String("kres-migratorrc"));
-    KConfigGroup migrationCfg(&config, "Migration");
-    const bool enabled = migrationCfg.readEntry("Enabled", false);
-    const bool setupClientBridge = migrationCfg.readEntry("SetupClientBridge", true);
-    const int currentVersion = migrationCfg.readEntry(QString::fromLatin1("Version-%1").arg(resourceFamily), 0);
-    const int targetVersion = migrationCfg.readEntry("TargetVersion", 0);
-    if (enabled && currentVersion < targetVersion) {
-        qDebug() << "Performing migration of legacy KResource settings. Good luck!";
-        mProcess = new KProcess(this);
-        connect(mProcess, SIGNAL(finished(int)), SLOT(migrationFinished(int)));
-        QStringList args = QStringList() << QLatin1String("--interactive-on-change")
-                           << QLatin1String("--type") << resourceFamily;
-        if (!setupClientBridge) {
-            args << QLatin1String("--omit-client-bridge");
-        }
-        mProcess->setProgram(QLatin1String("kres-migrator"), args);
-        mProcess->start();
-        if (!mProcess->waitForStarted()) {
-            migrationFinished(-1);
-        }
-    } else {
-        // nothing to do
-        setupNext();
-    }
-}
-
-void Firstrun::migrationFinished(int exitCode)
-{
-    Q_ASSERT(mProcess);
-    if (exitCode == 0) {
-        qDebug() << "KResource -> Akonadi migration has been successful";
-        KConfig config(QLatin1String("kres-migratorrc"));
-        KConfigGroup migrationCfg(&config, "Migration");
-        const int targetVersion = migrationCfg.readEntry("TargetVersion", 0);
-        migrationCfg.writeEntry(QString::fromLatin1("Version-%1").arg(mResourceFamily), targetVersion);
-        migrationCfg.sync();
-    } else if (exitCode != 1) {
-        // exit code 1 means it is already running, so we are probably called by a migrator instance
-        qCritical() << "KResource -> Akonadi migration failed!";
-        qCritical() << "command was: " << mProcess->program();
-        qCritical() << "exit code: " << mProcess->exitCode();
-        qCritical() << "stdout: " << mProcess->readAllStandardOutput();
-        qCritical() << "stderr: " << mProcess->readAllStandardError();
-    }
-
-    setupNext();
-}
-#endif
 
 void Firstrun::setupNext()
 {
@@ -172,12 +103,6 @@ void Firstrun::setupNext()
     mCurrentDefault = 0;
 
     if (mPendingDefaults.isEmpty()) {
-#ifndef KDEPIM_NO_KRESOURCES
-        if (!mPendingKres.isEmpty()) {
-            migrateKresType(mPendingKres.takeFirst());
-            return;
-        }
-#endif
         deleteLater();
         return;
     }
@@ -191,35 +116,6 @@ void Firstrun::setupNext()
         setupNext();
         return;
     }
-
-#ifndef KDEPIM_NO_KRESOURCES
-    // KDE5: remove me
-    // check if there is a kresource setup for this type already
-    const QString kresType = resourceTypeForMimetype(type.mimeTypes());
-    if (!kresType.isEmpty()) {
-        const QString kresCfgFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + QString::fromLatin1("kresources/%1/stdrc").arg(kresType);
-        KConfig resCfg(kresCfgFile);
-        const KConfigGroup resGroup(&resCfg, "General");
-        bool legacyResourceFound = false;
-        const QStringList kresResources = resGroup.readEntry("ResourceKeys", QStringList())
-                                          + resGroup.readEntry("PassiveResourceKeys", QStringList());
-        foreach (const QString &kresResource, kresResources) {
-            const KConfigGroup cfg(&resCfg, QString::fromLatin1("Resource_%1").arg(kresResource));
-            if (cfg.readEntry("ResourceType", QString()) != QLatin1String("akonadi")) {       // not a bridge
-                legacyResourceFound = true;
-                break;
-            }
-        }
-        if (legacyResourceFound) {
-            qDebug() << "ignoring " << mCurrentDefault->name() << " as there is a KResource setup for its type already.";
-            KConfigGroup cfg(mConfig, "ProcessedDefaults");
-            cfg.writeEntry(agentCfg.readEntry("Id", QString()), QString::fromLatin1("kres"));
-            cfg.sync();
-            setupNext();
-            return;
-        }
-    }
-#endif
 
     AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type);
     connect(job, SIGNAL(result(KJob*)), SLOT(instanceCreated(KJob*)));
