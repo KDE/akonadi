@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef Akonadi_SUPERTRAIT_H
-#define Akonadi_SUPERTRAIT_H
+#ifndef KPIMUTILS_SUPERTRAIT_H
+#define KPIMUTILS_SUPERTRAIT_H
 
-namespace Akonadi {
+namespace KPIMUtils {
 
   /**
     @internal
