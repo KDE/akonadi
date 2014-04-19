@@ -144,14 +144,6 @@ endif()
 configure_file(akonadi-contactprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h")
 
 
-
-if (KDE4_BUILD_TESTS)
-   set(AKONADI_CONTACT_TESTS_EXPORT AKONADI_CONTACT_EXPORT)
-endif()
-configure_file(akonadi-contactprivate_export.h.in
-  "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h"
-)
-
 target_link_libraries(akonadi-contact akonadi-kde
                                       kabc
                                       kcalcore
