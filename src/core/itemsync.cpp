@@ -195,11 +195,15 @@ void ItemSyncPrivate::checkDone()
 
     if (mTransactionJobs > 0) {
         //Commit the current transaction if we're in batch processing mode or done
-        if ((mTransactionMode == ItemSync::MultipleTransactions || mDeliveryDone) && mCurrentTransaction) {
-            mCurrentTransaction->commit();
-            mCurrentTransaction = 0;
+        //and wait until the transaction is committed to process the next batch
+        if (mTransactionMode == ItemSync::MultipleTransactions || (mDeliveryDone && mRemoteItemQueue.isEmpty())) {
+            if (mCurrentTransaction) {
+                q->emit transactionCommitted();
+                mCurrentTransaction->commit();
+                mCurrentTransaction = 0;
+            }
+            return;
         }
-        return;
     }
     mProcessingBatch = false;
     if (!mRemoteItemQueue.isEmpty()) {
@@ -383,7 +387,7 @@ void ItemSyncPrivate::fetchLocalItems()
             return;
         }
         // We need to fetch the items only to detect if they are new or modified
-        job = new ItemFetchJob(itemsToFetch, q);
+        job = new ItemFetchJob(itemsToFetch, subjobParent());
         job->fetchScope().setFetchRemoteIdentification(true);
         job->fetchScope().setFetchModificationTime(false);
         job->setCollection(mSyncCollection);
@@ -398,7 +402,7 @@ void ItemSyncPrivate::fetchLocalItems()
         }
         //Otherwise we'll remove the created items again during the second run
         mFullListingDone = true;
-        job = new ItemFetchJob(mSyncCollection, q);
+        job = new ItemFetchJob(mSyncCollection, subjobParent());
         job->fetchScope().setFetchRemoteIdentification(true);
         job->fetchScope().setFetchModificationTime(false);
         job->setDeliveryOption(ItemFetchJob::EmitItemsIndividually);
@@ -409,6 +413,7 @@ void ItemSyncPrivate::fetchLocalItems()
     job->fetchScope().setCacheOnly(true);
 
     QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)));
+    mPendingJobs++;
 }
 
 void ItemSyncPrivate::slotItemsReceived(const Item::List &items)
@@ -431,6 +436,7 @@ void ItemSyncPrivate::slotItemsReceived(const Item::List &items)
 
 void ItemSyncPrivate::slotLocalListDone(KJob *job)
 {
+    mPendingJobs--;
     if (job->error()) {
         kWarning() << job->errorString();
     }
@@ -451,10 +457,6 @@ void ItemSyncPrivate::execute()
     if (mFinished) {
         kWarning() << "Call to execute() on finished job.";
         Q_ASSERT(false);
-        return;
-    }
-    if (mTransactionJobs > 0) {
-        kWarning() << "transaction still in progress " << mProcessingBatch;
         return;
     }
     //not doing anything, start processing
