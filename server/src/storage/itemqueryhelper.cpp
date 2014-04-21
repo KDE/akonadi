@@ -28,6 +28,7 @@
 #include "storage/queryhelper.h"
 #include "collectionqueryhelper.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 void ItemQueryHelper::itemSetToQuery( const ImapSet &set, QueryBuilder &qb, const Collection &collection )
