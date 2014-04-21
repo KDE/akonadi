@@ -79,6 +79,7 @@ public:
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
+        , mDisableAutomaticItemDeliveryDone(false)
         , mItemSyncBatchSize(10)
     {
         Internal::setClientType(Internal::Resource);
@@ -176,6 +177,7 @@ public:
             if (mItemSyncFetchScope) {
                 mItemSyncer->setFetchScope(*mItemSyncFetchScope);
             }
+            mItemSyncer->setDisableAutomaticDeliveryDone(mDisableAutomaticItemDeliveryDone);
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
             connect(mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)));
             connect(mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)));
@@ -438,6 +440,7 @@ public:
     int mUnemittedProgress;
     QMap<Akonadi::Collection::Id, QVariantMap> mUnemittedAdvancedStatus;
     bool mAutomaticProgressReporting;
+    bool mDisableAutomaticItemDeliveryDone;
     QPointer<RecursiveMover> m_recursiveMover;
     int mItemSyncBatchSize;
 };
@@ -1109,6 +1112,12 @@ void ResourceBase::setTotalItems(int amount)
     if (d->mItemSyncer) {
         d->mItemSyncer->setTotalItems(amount);
     }
+}
+
+void ResourceBase::setDisableAutomaticItemDeliveryDone(bool disable)
+{
+    Q_D(ResourceBase);
+    d->mDisableAutomaticItemDeliveryDone = disable;
 }
 
 void ResourceBase::setItemStreamingEnabled(bool enable)

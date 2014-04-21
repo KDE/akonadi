@@ -59,6 +59,7 @@ public:
         , mFinished(false)
         , mFullListingDone(false)
         , mProcessingBatch(false)
+        , mDisableAutomaticDeliveryDone(false)
         , mBatchSize(10)
     {
         // we want to fetch all data by default
@@ -114,6 +115,7 @@ public:
     bool mFinished;
     bool mFullListingDone;
     bool mProcessingBatch;
+    bool mDisableAutomaticDeliveryDone;
 
     int mBatchSize;
 };
@@ -252,7 +254,7 @@ void ItemSync::setFullSyncItems(const Item::List &items)
     d->mRemoteItemQueue += items;
     d->mTotalItemsProcessed += items.count();
     kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
-    if (d->mTotalItemsProcessed == d->mTotalItems) {
+    if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
     d->execute();
@@ -267,10 +269,16 @@ void ItemSync::setTotalItems(int amount)
     kDebug() << amount;
     d->mTotalItems = amount;
     setTotalAmount(KJob::Bytes, amount);
-    if (d->mTotalItems == 0) {
+    if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItems == 0)) {
         d->mDeliveryDone = true;
         d->execute();
     }
+}
+
+void ItemSync::setDisableAutomaticDeliveryDone(bool disable)
+{
+    Q_D(ItemSync);
+    d->mDisableAutomaticDeliveryDone = disable;
 }
 
 void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Item::List &removedItems)
@@ -291,7 +299,7 @@ void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Ite
     d->mRemovedRemoteItemQueue += removedItems;
     d->mTotalItemsProcessed += changedItems.count() + removedItems.count();
     kDebug() << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
-    if (d->mTotalItemsProcessed == d->mTotalItems) {
+    if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
     d->execute();
