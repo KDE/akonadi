@@ -30,7 +30,6 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
-#include <unistd.h>
 
 using namespace Akonadi::Server;
 
