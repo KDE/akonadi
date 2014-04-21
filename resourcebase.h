@@ -471,11 +471,33 @@ protected:
      * Call this method when you want to use the itemsRetrieved() method
      * in streaming mode and indicate the amount of items that will arrive
      * that way.
-     * @deprecated Use setItemStreamingEnabled( true ) + itemsRetrieved[Incremental]()
-     * + itemsRetrieved() instead.
+     *
+     * @warning By default this will end the item sync automatically once
+     * sufficient items were delivered. To disable this and only make use
+     * of the progress reporting, use setDisableAutomaticItemDeliveryDone()
+     *
+     * @note Use setItemStreamingEnabled( true ) + itemsRetrieved[Incremental]()
+     * + itemsRetrieved() and avoid the automatic delivery based on the total
+     * number of items.
+     *
      * @param amount number of items that will arrive in streaming mode
      */
     void setTotalItems(int amount);
+
+    /**
+     * Disables the automatic completion of the item sync,
+     * based on the number of delivered items.
+     *
+     * This ensures that the item sync only finishes once itemsRetrieved()
+     * is called, while still making it possible to use the automatic progress
+     * reporting based on setTotalItems().
+     *
+     * @note This needs to be called once, before the item sync started.
+     *
+     * @see setTotalItems(int)
+     * @since 4.14
+     */
+    void setDisableAutomaticItemDeliveryDone(bool disable);
 
     /**
      * Enable item streaming.
