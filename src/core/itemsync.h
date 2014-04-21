@@ -82,8 +82,13 @@ public:
 
     /**
      * Set the amount of items which you are going to return in total
-     * by using the setFullSyncItems() method.
+     * by using the setFullSyncItems()/setIncrementalSyncItems() methods.
      *
+     * @warning By default the item sync will automatically end once
+     * sufficient items have been provided.
+     * To disable this use setDisableAutomaticDeliveryDone
+     *
+     * @see setDisableAutomaticDeliveryDone
      * @param amount The amount of items in total.
      */
     void setTotalItems(int amount);
@@ -188,6 +193,20 @@ public:
      * @since 4.14
      */
     void setBatchSize(int);
+
+    /**
+     * Disables the automatic completion of the item sync,
+     * based on the number of delivered items.
+     *
+     * This ensures that the item sync only finishes once deliveryDone()
+     * is called, while still making it possible to use the progress
+     * reporting of the ItemSync.
+     *
+     * @note You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * @see setTotalItems
+     * @since 4.14
+     */
+    void setDisableAutomaticDeliveryDone(bool disable);
 
 Q_SIGNALS:
     /**
