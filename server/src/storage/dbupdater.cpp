@@ -261,6 +261,15 @@ bool DbUpdater::complexUpdate_25()
     }
   }
 
+  {
+    // It appears that more users than expected have the invalid "GID" part in their
+    // PartTable, which breaks the migration below (see BKO#331867), so we apply this
+    // wanna-be fix to remove the invalid part before we start the actual migration.
+    QueryBuilder qb( QLatin1String( "PartTable" ), QueryBuilder::Delete );
+    qb.addValueCondition( QLatin1String( "PartTable.name" ), Query::Equals, QLatin1String( "GID" ) );
+    qb.exec();
+  }
+
   akDebug() << "Creating a PartTable_new";
   {
     TableDescription description;
