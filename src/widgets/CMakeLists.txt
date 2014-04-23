@@ -50,6 +50,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     CollectionComboBox
     CollectionDialog
     CollectionPropertiesDialog
+    CollectionPropertiesPage
     CollectionRequester
     CollectionStatisticsDelegate
     CollectionView
