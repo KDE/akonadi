@@ -30,7 +30,7 @@
 #include "entitytreeview.h"
 #include "session.h"
 #include "collectioncreatejob.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include <QHeaderView>
 #include <QLabel>

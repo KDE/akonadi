@@ -79,6 +79,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CollectionFetchScope
     CollectionQuotaAttribute
     CollectionStatistics
+    CollectionUtils
     Control
     DBusConnectionPool
     Entity

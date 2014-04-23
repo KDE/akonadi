@@ -20,7 +20,7 @@
 #include "collectionmodel.h"
 #include "collectionmodel_p.h"
 
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "collectionmodifyjob.h"
 #include "entitydisplayattribute.h"
 #include "monitor.h"

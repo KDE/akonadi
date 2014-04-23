@@ -20,7 +20,7 @@
 #include "actionstatemanager_p.h"
 
 #include "agentmanager.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute.h"
 #include "standardactionmanager.h"

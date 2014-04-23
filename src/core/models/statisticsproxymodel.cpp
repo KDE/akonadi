@@ -20,7 +20,7 @@
 #include "statisticsproxymodel.h"
 
 #include "entitytreemodel.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include "collectionquotaattribute.h"
 #include "collectionstatistics.h"

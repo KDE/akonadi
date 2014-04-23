@@ -25,7 +25,7 @@
 #include "protocolhelper_p.h"
 #include "entity_p.h"
 #include "collectionfetchscope.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include <qdebug.h>
 #include <KLocalizedString>

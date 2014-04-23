@@ -21,7 +21,7 @@
 
 #include "collectionmodel_p.h"
 #include "collectionmodel.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include "collectionfetchjob.h"
 #include "collectionstatistics.h"

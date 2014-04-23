@@ -28,7 +28,7 @@
 #include "collectiondeletejob.h"
 #include "collectiondialog.h"
 #include "collectionmodel.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"

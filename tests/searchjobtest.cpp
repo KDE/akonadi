@@ -28,7 +28,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/searchquery.h>
 
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include <qtest_akonadi.h>
 

@@ -31,7 +31,7 @@
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
 #include "session.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include <kdescendantsproxymodel.h>
 

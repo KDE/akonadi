@@ -19,7 +19,7 @@
 
 #include "subscriptionmodel_p.h"
 #include "collectionfetchjob.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "specialcollectionattribute.h"
 
 #include "entityhiddenattribute.h"

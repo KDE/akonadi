@@ -40,7 +40,7 @@
 #include "session.h"
 #include "collectionfetchscope.h"
 
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include "qdebug.h"
 #include "pastehelper_p.h"

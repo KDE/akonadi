@@ -38,7 +38,7 @@
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
 #include "collectionpathresolver_p.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "control.h"
 #include "item.h"
 #include "kmime/messageparts.h"

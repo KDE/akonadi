@@ -28,7 +28,7 @@
 #include "changerecorder.h"
 #include "collectioncreatejob.h"
 #include "collectionfilterproxymodel.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
 

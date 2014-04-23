@@ -22,7 +22,7 @@
 
 #include "cachepolicy.h"
 #include "collection.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "item.h"
 #include "itemfetchscope.h"
 #include "sharedvaluepool_p.h"

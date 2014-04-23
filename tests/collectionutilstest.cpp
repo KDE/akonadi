@@ -19,7 +19,7 @@
 
 #include <qtest_akonadi.h>
 #include <akonadi/collection.h>
-#include "../collectionutils_p.h"
+#include "../collectionutils.h"
 
 using namespace Akonadi;
 

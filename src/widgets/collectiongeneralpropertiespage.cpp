@@ -22,7 +22,7 @@
 #include "collection.h"
 #include "entitydisplayattribute.h"
 #include "collectionstatistics.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include <klocale.h>
 #include <klocalizedstring.h>

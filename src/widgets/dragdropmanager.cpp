@@ -19,7 +19,7 @@
 
 #include "dragdropmanager_p.h"
 #include "specialcollectionattribute.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 
 #include <QApplication>
 #include <QDropEvent>
