@@ -25,6 +25,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
+#include <akonadi/entitydisplayattribute.h>
 
 #include "../akonadi/collectionsync.cpp"
 
@@ -250,6 +251,52 @@ class CollectionSyncTest : public QObject
 
       Collection::List resultCols = fetchCollections( resource );
       QCOMPARE( resultCols.count(), origCols.count() );
+    }
+
+    void testAttributeChanges_data()
+    {
+      QTest::addColumn<bool>("keepLocalChanges");
+      QTest::newRow("keep local changes" ) << true;
+      QTest::newRow("overwrite local changes" ) << false;
+    }
+
+    void testAttributeChanges()
+    {
+      QFETCH(bool, keepLocalChanges);
+      const QString resource("akonadi_knut_resource_0");
+      Collection col = fetchCollections( resource ).first();
+      col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName("foo");
+      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << "foo");
+      {
+        CollectionModifyJob *job = new CollectionModifyJob(col);
+        AKVERIFYEXEC(job);
+      }
+
+      col.attribute<EntityDisplayAttribute>()->setDisplayName("default");
+      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << "default");
+
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      if (keepLocalChanges) {
+          syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY" << "CONTENTMIMETYPES");
+      } else {
+          syncer->setKeepLocalChanges(QSet<QByteArray>());
+      }
+
+      syncer->setRemoteCollections( Collection::List() << col, Collection::List() );
+      AKVERIFYEXEC( syncer );
+
+      {
+        CollectionFetchJob *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
+        AKVERIFYEXEC(job);
+        Collection resultCol = job->collections().first();
+        if (keepLocalChanges) {
+          QCOMPARE( resultCol.displayName(), QString::fromLatin1("foo") );
+          QVERIFY(resultCol.contentMimeTypes().contains("foo"));
+        } else {
+          QCOMPARE( resultCol.displayName(), QString::fromLatin1("default") );
+          QVERIFY(resultCol.contentMimeTypes().contains("default"));
+        }
+      }
     }
 };
 
