@@ -27,7 +27,7 @@
 
 #include <QVector>
 #include <QSharedPointer>
-#include <KDebug>
+#include <QDebug>
 
 namespace Akonadi {
 
@@ -112,7 +112,8 @@ public:
             if (attr) {
                 return attr;
             }
-            kWarning(5250) << "Found attribute of unknown type" << dummy.type()
+            //reuse 5250
+            qWarning() << "Found attribute of unknown type" << dummy.type()
                            << ". Did you forget to call AttributeFactory::registerAttribute()?";
         }
 
@@ -132,7 +133,8 @@ public:
             if (attr) {
                 return attr;
             }
-            kWarning(5250) << "Found attribute of unknown type" << dummy.type()
+            //Reuse 5250
+            qWarning() << "Found attribute of unknown type" << dummy.type()
                            << ". Did you forget to call AttributeFactory::registerAttribute()?";
         }
 

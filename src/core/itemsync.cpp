@@ -33,7 +33,7 @@
 #include "itemfetchscope.h"
 
 #include <qdebug.h>
-
+#include <KDebug>
 #include <QtCore/QStringList>
 
 using namespace Akonadi;

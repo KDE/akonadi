@@ -25,6 +25,7 @@
 #include "servermanager.h"
 
 #include "itemfetchjob.h"
+#include <KDebug>
 
 using namespace Akonadi;
 

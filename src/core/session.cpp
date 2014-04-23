@@ -28,6 +28,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <qdebug.h>
+#include <KDebug>
 #include <klocalizedstring.h>
 
 #include <QCoreApplication>
