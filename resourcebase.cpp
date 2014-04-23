@@ -865,16 +865,19 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
 {
     Q_Q(ResourceBase);
     currentCollection = col;
-    // check if this collection actually can contain anything
-    QStringList contentTypes = currentCollection.contentMimeTypes();
-    contentTypes.removeAll(Collection::mimeType());
-    contentTypes.removeAll(Collection::virtualMimeType());
-    if (!contentTypes.isEmpty() || col.isVirtual()) {
-        if (mAutomaticProgressReporting) {
-            emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
+    // This can happen due to FetchHelper::triggerOnDemandFetch() in the akonadi server (not an error).
+    if (!col.remoteId().isEmpty()) {
+        // check if this collection actually can contain anything
+        QStringList contentTypes = currentCollection.contentMimeTypes();
+        contentTypes.removeAll(Collection::mimeType());
+        contentTypes.removeAll(Collection::virtualMimeType());
+        if (!contentTypes.isEmpty() || col.isVirtual()) {
+            if (mAutomaticProgressReporting) {
+                emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
+            }
+            q->retrieveItems(currentCollection);
+            return;
         }
-        q->retrieveItems(currentCollection);
-        return;
     }
     scheduler->taskDone();
 }
