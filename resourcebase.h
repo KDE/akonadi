@@ -457,6 +457,21 @@ protected:
     void collectionsRetrievalDone();
 
     /**
+     * Allows to keep locally changed collection parts during the collection sync.
+     *
+     * This is useful for resources to be able to provide default values during the collection
+     * sync, while preserving eventual more up-to date values.
+     *
+     * Valid values are attribute types and "CONTENTMIMETYPE" for the collections content mimetypes.
+     *
+     * By default this is enabled for the EntityDisplayAttribute.
+     *
+     * @param parts A set parts for which local changes should be preserved.
+     * @since 4.14
+    */
+    void setKeepLocalCollectionChanges(const QSet<QByteArray> &parts);
+
+    /**
      * Call this method to supply the full collection listing from the remote server. Items not present in the list
      * will be dropped from the Akonadi database.
      *

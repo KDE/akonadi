@@ -26,7 +26,6 @@
 #include "collectionmodifyjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmovejob.h"
-#include "entitydisplayattribute.h"
 
 #include "cachepolicy.h"
 
@@ -82,6 +81,8 @@ struct RemoteNode
 
 Q_DECLARE_METATYPE(RemoteNode *)
 static const char REMOTE_NODE[] = "RemoteNode";
+
+static const char CONTENTMIMETYPES[] = "CONTENTMIMETYPES";
 
 /**
  * @internal
@@ -383,13 +384,15 @@ public:
         const Collection &localCollection = localNode->collection;
         const Collection &remoteCollection = remoteNode->collection;
 
-        if (localCollection.contentMimeTypes().size() != remoteCollection.contentMimeTypes().size()) {
-            return true;
-        } else {
-            for (int i = 0; i < remoteCollection.contentMimeTypes().size(); i++) {
-                const QString &m = remoteCollection.contentMimeTypes().at(i);
-                if (!localCollection.contentMimeTypes().contains(m)) {
-                    return true;
+        if (!keepLocalChanges.contains(CONTENTMIMETYPES)) {
+            if (localCollection.contentMimeTypes().size() != remoteCollection.contentMimeTypes().size()) {
+                return true;
+            } else {
+                for (int i = 0; i < remoteCollection.contentMimeTypes().size(); i++) {
+                    const QString &m = remoteCollection.contentMimeTypes().at(i);
+                    if (!localCollection.contentMimeTypes().contains(m)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -413,6 +416,9 @@ public:
         // CollectionModifyJob adds the remote attributes to the local collection
         foreach (const Attribute *attr, remoteCollection.attributes()) {
             const Attribute *localAttr = localCollection.attribute(attr->type());
+            if (localAttr && keepLocalChanges.contains(attr->type())) {
+                continue;
+            }
             // The attribute must both exist and have equal contents
             if (!localAttr || localAttr->serialized() != attr->serialized()) {
                 return true;
@@ -431,9 +437,16 @@ public:
         Q_ASSERT(!upd.remoteId().isEmpty());
         Q_ASSERT(currentTransaction);
         upd.setId(localNode->collection.id());
-        if (localNode->collection.attribute<EntityDisplayAttribute>()) {
-            upd.removeAttribute<EntityDisplayAttribute>();
-            upd.addAttribute(localNode->collection.attribute<EntityDisplayAttribute>()->clone());
+        if (keepLocalChanges.contains(CONTENTMIMETYPES)) {
+            upd.setContentMimeTypes(localNode->collection.contentMimeTypes());
+        }
+        foreach (Attribute *remoteAttr, upd.attributes()) {
+            if (keepLocalChanges.contains(remoteAttr->type()) && localNode->collection.hasAttribute(remoteAttr->type())) {
+                //We don't want to overwrite the attribute changes with the defaults provided by the resource.
+                Attribute *localAttr = localNode->collection.attribute(remoteAttr->type());
+                upd.removeAttribute(localAttr->type());
+                upd.addAttribute(localAttr->clone());
+            }
         }
 
         {
@@ -752,6 +765,9 @@ public:
 
     bool localListDone;
     bool deliveryDone;
+
+    // List of parts where local changes should not be overwritten
+    QSet<QByteArray> keepLocalChanges;
 };
 
 CollectionSync::CollectionSync(const QString &resourceId, QObject *parent)
@@ -829,6 +845,11 @@ void CollectionSync::rollback()
     if (d->currentTransaction) {
         d->currentTransaction->rollback();
     }
+}
+
+void CollectionSync::setKeepLocalChanges(const QSet<QByteArray> &parts)
+{
+    d->keepLocalChanges = parts;
 }
 
 #include "moc_collectionsync_p.cpp"
