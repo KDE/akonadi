@@ -50,7 +50,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_CURRENT_BIN
 
 set(AKONADI_VERSION_MAJOR "1")
 set(AKONADI_VERSION_MINOR "12")
-set(AKONADI_VERSION_PATCH "42")
+set(AKONADI_VERSION_PATCH "43")
 
 # Raise the minor version if we're building Akonadi using Qt5
 if(QT5_BUILD)

@@ -87,6 +87,11 @@ namespace PartTypeHelper
    */
   QPair<QString, QString> parseFqName( const QString &fqName );
 
+  /**
+   * Returns full part name
+   */
+  QString fullName( const PartType &type );
+
 } // namespace PartTypeHelper
 
 } // namespace Server
