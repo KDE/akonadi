@@ -101,3 +101,8 @@ Query::Condition PartTypeHelper::conditionFromFqNames(const QList< QByteArray >&
   }
   return c;
 }
+
+QString PartTypeHelper::fullName( const PartType &type )
+{
+  return type.ns() + QLatin1String( ":" ) + type.name();
+}

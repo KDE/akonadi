@@ -51,11 +51,45 @@ AkAppend::~AkAppend()
 {
 }
 
-bool AkAppend::buildPimItem( PimItem &item, const QByteArray &mailbox, qint64 size, const QList<QByteArray> &flags, const QDateTime &dateTime, QList<QByteArray> &itemFlags )
+bool AkAppend::buildPimItem( PimItem &item, Collection &col, QList<QByteArray> &itemFlags )
 {
+      // Arguments:  mailbox name
+      //        OPTIONAL flag parenthesized list
+      //        OPTIONAL date/time string
+      //        (partname literal)+
+      //
+      // Syntax:
+      // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
+    const QByteArray mailbox = m_streamParser->readString();
+
+    const qint64 size = m_streamParser->readNumber();
+    // parse optional flag parenthesized list
+    // Syntax:
+    // flag-list      = "(" [flag *(SP flag)] ")"
+    // flag           = "\ANSWERED" / "\FLAGGED" / "\DELETED" / "\SEEN" /
+    //                  "\DRAFT" / flag-keyword / flag-extension
+    //                    ; Does not include "\Recent"
+    // flag-extension = "\" atom
+    // flag-keyword   = atom
+    QList<QByteArray> flags;
+    if ( m_streamParser->hasList() ) {
+      flags = m_streamParser->readParenthesizedList();
+    }
+
+    // parse optional date/time string
+    QDateTime dateTime;
+    if ( m_streamParser->hasDateTime() ) {
+      dateTime = m_streamParser->readDateTime().toUTC();
+      // FIXME Should we return an error if m_dateTime is invalid?
+    } else {
+      // if date/time is not given then it will be set to the current date/time
+      // converted to UTC.
+      dateTime = QDateTime::currentDateTime().toUTC();
+    }
+
     Response response;
 
-    const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
+    col = HandlerHelper::collectionFromIdOrName( mailbox );
     if ( !col.isValid() ) {
       throw HandlerException( QByteArray( "Unknown collection for '" ) + mailbox + QByteArray( "'." ) );
     }
@@ -190,66 +224,17 @@ bool AkAppend::readParts( PimItem &pimItem )
   return true;
 }
 
-bool AkAppend::parseStream()
+bool AkAppend::insertItem( PimItem &item, const Collection &parentCol, const QList<QByteArray> &itemFlags )
 {
-    // Arguments:  mailbox name
-    //        OPTIONAL flag parenthesized list
-    //        OPTIONAL date/time string
-    //        (partname literal)+
-    //
-    // Syntax:
-    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
-
-  const QByteArray mailbox = m_streamParser->readString();
-
-  const qint64 size = m_streamParser->readNumber();
-
-  // parse optional flag parenthesized list
-  // Syntax:
-  // flag-list      = "(" [flag *(SP flag)] ")"
-  // flag           = "\ANSWERED" / "\FLAGGED" / "\DELETED" / "\SEEN" /
-  //                  "\DRAFT" / flag-keyword / flag-extension
-  //                    ; Does not include "\Recent"
-  // flag-extension = "\" atom
-  // flag-keyword   = atom
-  QList<QByteArray> flags;
-  if ( m_streamParser->hasList() ) {
-    flags = m_streamParser->readParenthesizedList();
-  }
-
-  // parse optional date/time string
-  QDateTime dateTime;
-  if ( m_streamParser->hasDateTime() ) {
-    dateTime = m_streamParser->readDateTime().toUTC();
-    // FIXME Should we return an error if m_dateTime is invalid?
-  } else {
-    // if date/time is not given then it will be set to the current date/time
-    // converted to UTC.
-    dateTime = QDateTime::currentDateTime().toUTC();
-  }
-
-  // FIXME: The streaming/reading of all item parts can hold the transaction for
-  // unnecessary long time -> should we wrap the PimItem into one transaction
-  // and try to insert Parts independently? In case we fail to insert a part,
-  // it's not a problem as it can be re-fetched at any time, except for attributes.
-  DataStore *db = DataStore::self();
-  Transaction transaction( db );
-
-  QList<QByteArray> itemFlags;
-  PimItem item;
-  if ( !buildPimItem( item, mailbox, size, flags, dateTime, itemFlags ) ) {
-    return false;
-  }
   if ( !item.insert() ) {
     return failureResponse( "Failed to append item" );
   }
 
   // set message flags
   // This will hit an entry in cache inserted there in buildPimItem()
-  const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
   const Flag::List flagList = HandlerHelper::resolveFlags( itemFlags );
   bool flagsChanged = false;
-  if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col, true ) ) {
+  if ( !DataStore::self()->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, parentCol, true ) ) {
     return failureResponse( "Unable to append item flags." );
   }
 
@@ -283,8 +268,7 @@ bool AkAppend::parseStream()
   }
 
   // Preprocessing
-  const bool doPreprocessing = PreprocessorManager::instance()->isActive();
-  if ( doPreprocessing ) {
+  if ( PreprocessorManager::instance()->isActive() ) {
     Part hiddenAttribute;
     hiddenAttribute.setPimItemId( item.id() );
     hiddenAttribute.setPartType( PartTypeHelper::fromFqName( QString::fromLatin1( AKONADI_ATTRIBUTE_HIDDEN ) ) );
@@ -293,16 +277,16 @@ bool AkAppend::parseStream()
     PartHelper::insert( &hiddenAttribute );
   }
 
-  // All SQL is done, let's commit!
-  if ( !transaction.commit() ) {
-    return failureResponse( "Failed to commit transaction" );
-  }
+  return true;
+}
 
-  DataStore::self()->notificationCollector()->itemAdded( item, col );
+bool AkAppend::notify( const PimItem &item, const Collection &collection )
+{
+  DataStore::self()->notificationCollector()->itemAdded( item, collection );
 
-  if ( doPreprocessing ) {
+  if ( PreprocessorManager::instance()->isActive() ) {
     // enqueue the item for preprocessing
-    PreprocessorManager::instance()->beginHandleItem( item, db );
+    PreprocessorManager::instance()->beginHandleItem( item, DataStore::self() );
   }
 
   // Date time is always stored in UTC time zone by the server.
@@ -319,4 +303,35 @@ bool AkAppend::parseStream()
   response.setString( "Append completed" );
   Q_EMIT responseAvailable( response );
   return true;
+}
+
+
+
+bool AkAppend::parseStream()
+{
+  // FIXME: The streaming/reading of all item parts can hold the transaction for
+  // unnecessary long time -> should we wrap the PimItem into one transaction
+  // and try to insert Parts independently? In case we fail to insert a part,
+  // it's not a problem as it can be re-fetched at any time, except for attributes.
+  DataStore *db = DataStore::self();
+  Transaction transaction( db );
+
+  QList<QByteArray> itemFlags;
+  Collection parentCol;
+  PimItem item;
+  if ( !buildPimItem( item, parentCol, itemFlags ) ) {
+    return false;
+  }
+
+  if ( !insertItem( item, parentCol, itemFlags ) ) {
+    return false;
+  }
+
+  // All SQL is done, let's commit!
+  if ( !transaction.commit() ) {
+    return failureResponse( "Failed to commit transaction" );
+  }
+
+  return notify( item, parentCol );
+
 }

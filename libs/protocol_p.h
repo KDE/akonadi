@@ -60,6 +60,7 @@
 #define AKONADI_CMD_LOGIN            "LOGIN"
 #define AKONADI_CMD_LOGOUT           "LOGOUT"
 #define AKONADI_CMD_LSUB             "LSUB"
+#define AKONADI_CMD_MERGE            "MERGE"
 #define AKONADI_CMD_COLLECTIONMODIFY "MODIFY"
 #define AKONADI_CMD_ITEMMOVE         "MOVE"
 #define AKONADI_CMD_ITEMDELETE       "REMOVE"

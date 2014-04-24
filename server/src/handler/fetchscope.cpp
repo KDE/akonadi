@@ -215,9 +215,20 @@ ImapStreamParser *FetchScope::streamParser() const
   return d->mStreamParser;
 }
 
+
+void FetchScope::setRequestedParts( const QVector<QByteArray> &requestedParts )
+{
+  d->mRequestedParts = requestedParts;
+}
+
 QVector<QByteArray> FetchScope::requestedParts() const
 {
   return d->mRequestedParts;
+}
+
+void FetchScope::setRequestedPayloads( const QStringList &payloads )
+{
+  d->mRequestedPayloads = payloads;
 }
 
 QStringList FetchScope::requestedPayloads() const
@@ -225,9 +236,19 @@ QStringList FetchScope::requestedPayloads() const
   return d->mRequestedPayloads;
 }
 
+void FetchScope::setChangedSince( const QDateTime &dt )
+{
+  d->mChangedSince = dt;
+}
+
 QDateTime FetchScope::changedSince() const
 {
   return d->mChangedSince;
+}
+
+void FetchScope::setAncestorDepth( int depth )
+{
+  d->mAncestorDepth = depth;
 }
 
 int FetchScope::ancestorDepth() const
@@ -235,9 +256,19 @@ int FetchScope::ancestorDepth() const
   return d->mAncestorDepth;
 }
 
+void FetchScope::setCacheOnly( bool cacheOnly )
+{
+  d->mCacheOnly = cacheOnly;
+}
+
 bool FetchScope::cacheOnly() const
 {
   return d->mCacheOnly;
+}
+
+void FetchScope::setCheckCachedPayloadPartsOnly( bool checkCachedPayloadPartsOnly )
+{
+  d->mCheckCachedPayloadPartsOnly = checkCachedPayloadPartsOnly;
 }
 
 bool FetchScope::checkCachedPayloadPartsOnly() const
@@ -245,9 +276,19 @@ bool FetchScope::checkCachedPayloadPartsOnly() const
   return d->mCheckCachedPayloadPartsOnly;
 }
 
+void FetchScope::setFullPayload( bool fullPayload )
+{
+  d->mFullPayload = fullPayload;
+}
+
 bool FetchScope::fullPayload() const
 {
   return d->mFullPayload;
+}
+
+void FetchScope::setAllAttributes( bool allAttributes )
+{
+  d->mAllAttrs = allAttributes;
 }
 
 bool FetchScope::allAttributes() const
@@ -255,9 +296,19 @@ bool FetchScope::allAttributes() const
   return d->mAllAttrs;
 }
 
+void FetchScope::setSizeRequested( bool sizeRequested )
+{
+  d->mSizeRequested = sizeRequested;
+}
+
 bool FetchScope::sizeRequested() const
 {
   return d->mSizeRequested;
+}
+
+void FetchScope::setMTimeRequested( bool mTimeRequested )
+{
+  d->mMTimeRequested = mTimeRequested;
 }
 
 bool FetchScope::mTimeRequested() const
@@ -265,9 +316,19 @@ bool FetchScope::mTimeRequested() const
   return d->mMTimeRequested;
 }
 
+void FetchScope::setExternalPayloadSupported( bool externalPayloadSupported )
+{
+  d->mExternalPayloadSupported = externalPayloadSupported;
+}
+
 bool FetchScope::externalPayloadSupported() const
 {
   return d->mExternalPayloadSupported;
+}
+
+void FetchScope::setRemoteRevisionRequested( bool remoteRevisionRequested )
+{
+  d->mRemoteRevisionRequested = remoteRevisionRequested;
 }
 
 bool FetchScope::remoteRevisionRequested() const
@@ -275,9 +336,19 @@ bool FetchScope::remoteRevisionRequested() const
   return d->mRemoteRevisionRequested;
 }
 
+void FetchScope::setIgnoreErrors( bool ignoreErrors )
+{
+  d->mIgnoreErrors = ignoreErrors;
+}
+
 bool FetchScope::ignoreErrors() const
 {
   return d->mIgnoreErrors;
+}
+
+void FetchScope::setFlagsRequested( bool flagsRequested )
+{
+  d->mFlagsRequested = flagsRequested;
 }
 
 bool FetchScope::flagsRequested() const
@@ -285,14 +356,29 @@ bool FetchScope::flagsRequested() const
   return d->mFlagsRequested;
 }
 
+void FetchScope::setRemoteIdRequested( bool remoteIdRequested )
+{
+  d->mRemoteIdRequested = remoteIdRequested;
+}
+
 bool FetchScope::remoteIdRequested() const
 {
   return d->mRemoteIdRequested;
 }
 
+void FetchScope::setGidRequested( bool gidRequested )
+{
+  d->mGidRequested = gidRequested;
+}
+
 bool FetchScope::gidRequested() const
 {
   return d->mGidRequested;
+}
+
+void FetchScope::setTagsRequested( bool tagsRequested )
+{
+  d->mTagsRequested = tagsRequested;
 }
 
 bool FetchScope::tagsRequested() const

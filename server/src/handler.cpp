@@ -41,6 +41,7 @@
 #include "handler/list.h"
 #include "handler/login.h"
 #include "handler/logout.h"
+#include "handler/merge.h"
 #include "handler/modify.h"
 #include "handler/move.h"
 #include "handler/remove.h"
@@ -211,6 +212,9 @@ Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command
     }
     if ( command == AKONADI_CMD_TAGSTORE ) {
       return new TagStore();
+    }
+    if ( command == AKONADI_CMD_MERGE ) {
+      return new Merge();
     }
 
     return 0;

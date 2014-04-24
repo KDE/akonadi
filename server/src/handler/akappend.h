@@ -42,19 +42,22 @@ class AkAppend : public Handler
 public:
     AkAppend();
 
-    ~AkAppend();
+    virtual ~AkAppend();
 
-    bool parseStream();
+    virtual bool parseStream();
 
 protected:
     bool buildPimItem( PimItem &item,
-                       const QByteArray &mailbox, qint64 size,
-                       const QList<QByteArray> &flags,
-                       const QDateTime &dateTime,
+                       Collection &parentCollection,
                        QList<QByteArray> &itemFlags );
+
+    bool insertItem( PimItem &item,
+                     const Collection &parentCollection,
+                     const QList<QByteArray> &itemFlags );
 
     bool readParts( PimItem &item );
 
+    virtual bool notify( const PimItem &item, const Collection &collection );
 };
 
 } // namespace Server
