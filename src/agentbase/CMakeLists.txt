@@ -83,6 +83,7 @@ install(FILES
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiagentbase_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/resourcebasesettings.h
     ${AkonadiAgentBase_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiAgentBase COMPONENT Devel
 )
