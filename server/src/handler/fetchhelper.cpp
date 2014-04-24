@@ -367,7 +367,7 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
       }
     }
     if ( mFetchScope.gidRequested() ) {
-      const QByteArray gid = Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemGidColumn ) );
+      const QByteArray gid = Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryPimItemGidColumn ) );
       if ( !gid.isEmpty() ) {
         attributes.append( AKONADI_PARAM_GID " " + ImapParser::quote( gid ) );
       }
