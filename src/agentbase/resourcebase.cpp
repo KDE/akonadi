@@ -86,6 +86,8 @@ public:
         mStatusMessage = defaultReadyMessage();
         mProgressEmissionCompressor.setInterval(1000);
         mProgressEmissionCompressor.setSingleShot(true);
+        // HACK: skip local changes of the EntityDisplayAttribute by default. Remove this for KDE5 and adjust resource implementations accordingly.
+        mKeepLocalCollectionChanges << "ENTITYDISPLAY";
     }
 
     ~ResourceBasePrivate()
@@ -443,6 +445,7 @@ public:
     bool mDisableAutomaticItemDeliveryDone;
     QPointer<RecursiveMover> m_recursiveMover;
     int mItemSyncBatchSize;
+    QSet<QByteArray> mKeepLocalCollectionChanges;
 };
 
 ResourceBase::ResourceBase(const QString &id)
@@ -769,6 +772,7 @@ void ResourceBase::collectionsRetrieved(const Collection::List &collections)
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
+        d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
         connect(d->mCollectionSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
         connect(d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)));
     }
@@ -786,6 +790,7 @@ void ResourceBase::collectionsRetrievedIncremental(const Collection::List &chang
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
+        d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
         connect(d->mCollectionSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
         connect(d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)));
     }
@@ -823,6 +828,12 @@ void ResourceBase::collectionsRetrievalDone()
         // FIXME: we need the same special case for SyncAll as in slotCollectionSyncDone here!
         d->scheduler->taskDone();
     }
+}
+
+void ResourceBase::setKeepLocalCollectionChanges(const QSet<QByteArray> &parts)
+{
+    Q_D(ResourceBase);
+    d->mKeepLocalCollectionChanges = parts;
 }
 
 void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
@@ -866,16 +877,19 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
 {
     Q_Q(ResourceBase);
     currentCollection = col;
-    // check if this collection actually can contain anything
-    QStringList contentTypes = currentCollection.contentMimeTypes();
-    contentTypes.removeAll(Collection::mimeType());
-    contentTypes.removeAll(Collection::virtualMimeType());
-    if (!contentTypes.isEmpty() || col.isVirtual()) {
-        if (mAutomaticProgressReporting) {
-            emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
+    // This can happen due to FetchHelper::triggerOnDemandFetch() in the akonadi server (not an error).
+    if (!col.remoteId().isEmpty()) {
+        // check if this collection actually can contain anything
+        QStringList contentTypes = currentCollection.contentMimeTypes();
+        contentTypes.removeAll(Collection::mimeType());
+        contentTypes.removeAll(Collection::virtualMimeType());
+        if (!contentTypes.isEmpty() || col.isVirtual()) {
+            if (mAutomaticProgressReporting) {
+                emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
+            }
+            q->retrieveItems(currentCollection);
+            return;
         }
-        q->retrieveItems(currentCollection);
-        return;
     }
     scheduler->taskDone();
 }

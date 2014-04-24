@@ -111,6 +111,18 @@ public:
     */
     void rollback();
 
+    /**
+     * Allows to specify parts of the collection that should not be changed if locally available.
+     *
+     * This is useful for resources to provide default values during the collection sync, while
+     * preserving more up-to date values if available.
+     *
+     * Use CONTENTMIMETYPES as identifier to not overwrite the content mimetypes.
+     *
+     * @since 4.14
+     */
+    void setKeepLocalChanges(const QSet<QByteArray> &parts);
+
 protected:
     void doStart();
 
