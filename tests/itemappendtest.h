@@ -37,6 +37,8 @@ class ItemAppendTest : public QObject
     void testInvalidMultipartAppend();
     void testItemSize_data();
     void testItemSize();
+    void testItemMerge_data();
+    void testItemMerge();
 };
 
 #endif
