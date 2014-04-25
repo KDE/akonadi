@@ -54,7 +54,7 @@ set(AKONADI_VERSION_PATCH "43")
 
 # Raise the minor version if we're building Akonadi using Qt5
 if(QT5_BUILD)
-  set(AKONADI_VERSION_MINOR "71")
+  set(AKONADI_VERSION_MINOR "72")
 endif()
 
 set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
