@@ -119,10 +119,16 @@ namespace PartHelper
    * @param partName Returns name of the processed part
    * @param partSizes Returns size of the part
    * @param error Returns error string, if any error occurs
+   * @param changed Returns whether the part has changed. Is set to true when a new
+   *                part is created or when stored data differ from previous content
+   *                of the part. Implies checkExists.
    */
   bool storeStreamedParts( const QByteArray &command, ImapStreamParser* streamParser,
                            const PimItem &item, bool checkExists,
-                           QByteArray &partName, qint64 &partSize, QByteArray &error );
+                           QByteArray &partName, qint64 &partSize, QByteArray &error,
+                           bool *changed = 0
+                         );
+
 } // namespace PartHelper
 
 } // namespace Server

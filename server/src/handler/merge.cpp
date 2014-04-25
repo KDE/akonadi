@@ -86,14 +86,17 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       QByteArray error, partName;
       qint64 partSize;
       const QByteArray command = m_streamParser->readString();
+      bool changed = false;
       if ( command.isEmpty() ) {
         throw HandlerException( "Syntax error" );
       }
-      if ( !PartHelper::storeStreamedParts( command, m_streamParser, currentItem, true, partName, partSize, error ) ) {
+      if ( !PartHelper::storeStreamedParts( command, m_streamParser, currentItem, true, partName, partSize, error, &changed ) ) {
         return failureResponse( error );
       }
-      mChangedParts << partName;
-      partsSizes.insert( partName, partSize );
+      if ( changed ) {
+        mChangedParts << partName;
+        partsSizes.insert( partName, partSize );
+      }
     }
 
     qint64 size = std::accumulate( partsSizes.begin(), partsSizes.end(), 0);
@@ -109,7 +112,9 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
 
 bool Merge::notify( const PimItem &item, const Collection &collection )
 {
-    DataStore::self()->notificationCollector()->itemChanged( item, mChangedParts, collection );
+    if ( !mChangedParts.isEmpty() ) {
+      DataStore::self()->notificationCollector()->itemChanged( item, mChangedParts, collection );
+    }
 
     ImapSet set;
     set.add( QVector<qint64>() << item.id() );
