@@ -144,7 +144,7 @@ ecm_generate_headers(AkonadiCore_models_HEADERS
     CollectionFilterProxyModel
     CollectionModel
     CollectionStatisticsModel
-    EntityMimeTypefilterModel
+    EntityMimeTypeFilterModel
     EntityOrderProxyModel
     EntityRightsFilterModel
     EntityTreeModel
