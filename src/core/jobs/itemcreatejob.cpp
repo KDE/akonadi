@@ -39,6 +39,7 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 public:
     ItemCreateJobPrivate(ItemCreateJob *parent)
         : JobPrivate(parent)
+        , mMerge(false)
     {
     }
 
@@ -50,6 +51,7 @@ public:
     Item::Id mUid;
     QDateTime mDatetime;
     QByteArray mPendingData;
+    bool mMerge;
 };
 
 QByteArray ItemCreateJobPrivate::nextPartHeader()
@@ -104,6 +106,7 @@ void ItemCreateJob::doStart()
     QList<QByteArray> flags;
     flags.append("\\MimeType[" + d->mItem.mimeType().toLatin1() + ']');
     const QString gid = GidExtractor::getGid(d->mItem);
+    const bool merge = d->mMerge && !d->mItem.gid().isNull();
     if (!gid.isNull()) {
         flags.append(ImapParser::quote("\\Gid[" + gid.toUtf8() + ']'));
     }
@@ -115,10 +118,21 @@ void ItemCreateJob::doStart()
     }
     flags += d->mItem.flags().toList();
 
-    QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number(d->mCollection.id())
-                         + ' ' + QByteArray::number(d->mItem.size())
-                         + " (" + ImapParser::join(flags, " ") + ")"
-                         + " ("; // list of parts
+    QByteArray command = d->newTag();
+    if (merge) {
+      command += " MERGE (GID";
+      if (!d->mItem.remoteId().isEmpty()) {
+        command += " REMOTEID";
+      }
+      command += ") ";
+    } else {
+      command += " X-AKAPPEND ";
+    }
+
+    command += QByteArray::number(d->mCollection.id())
+            + ' ' + QByteArray::number(d->mItem.size())
+            + " (" + ImapParser::join(flags, " ") + ")"
+            + " ("; // list of parts
     const QByteArray attrs = ProtocolHelper::attributesToByteArray(d->mItem, true);
     if (!attrs.isEmpty()) {
         command += attrs;
@@ -136,6 +150,22 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
     if (tag == "+") {   // ready for literal data
         d->writeData(d->mPendingData);
         d->writeData(d->nextPartHeader());
+        return;
+    }
+    if (tag == "*") {
+        int begin = data.indexOf("FETCH");
+        if (begin >= 0) {
+          QList<QByteArray> fetchResponse;
+          ImapParser::parseParenthesizedList(data, fetchResponse, begin + 6);
+
+          Item item;
+          ProtocolHelper::parseItemFetchResult(fetchResponse, item);
+          if (!item.isValid()) {
+            // Error, maybe?
+            return;
+          }
+          d->mItem = item;
+        }
         return;
     }
     if (tag == d->tag()) {
@@ -157,6 +187,13 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
             }
         }
     }
+}
+
+void ItemCreateJob::setMergeIfExists(bool merge)
+{
+  Q_D(ItemCreateJob);
+
+  d->mMerge = merge;
 }
 
 Item ItemCreateJob::item() const

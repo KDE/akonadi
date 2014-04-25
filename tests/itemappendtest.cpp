@@ -265,3 +265,55 @@ void ItemAppendTest::testItemSize()
   QCOMPARE( fetch->items().first().size(), size );
 }
 
+void ItemAppendTest::testItemMerge_data()
+{
+  QTest::addColumn<Akonadi::Item>( "item1" );
+  QTest::addColumn<Akonadi::Item>( "item2" );
+  QTest::addColumn<Akonadi::Item>( "mergedItem" );
+
+  Item i1( "application/octet-stream" );
+  i1.setPayload( QByteArray( "ABCD" ) );
+  i1.setSize( 4 );
+  i1.setRemoteId( "XYZ" );
+  i1.setGid( "XYZ" );
+  i1.setFlag( "TestFlag1" );
+  i1.setRemoteRevision( "5" );
+
+  Item i2( "application/octet-stream" );
+  i2.setPayload( QByteArray( "DEFGH" ) );
+  i2.setSize( 5 );
+  i2.setRemoteId(( "XYZ" ) );
+  i2.setGid( "XYZ" );
+  i2.setFlag( "TestFlag2" );
+  i2.setRemoteRevision( "6" );
+
+  Item mergedItem( i2 );
+  mergedItem.setFlag( "TestFlag1" );
+
+  QTest::newRow( "ok merge" ) << i1 << i2 << mergedItem;
+}
+
+void ItemAppendTest::testItemMerge()
+{
+  QFETCH( Akonadi::Item, item1 );
+  QFETCH( Akonadi::Item, item2 );
+  QFETCH( Akonadi::Item, mergedItem );
+
+  const Collection col( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( col.isValid() );
+
+  ItemCreateJob *create = new ItemCreateJob( item1, col, this );
+  AKVERIFYEXEC( create );
+
+  ItemCreateJob *merge = new ItemCreateJob( item2, col, this );
+  merge->setMergeIfExists( true );
+  AKVERIFYEXEC( merge );
+
+  QCOMPARE( mergedItem.gid(), merge->item().gid() );
+  QCOMPARE( mergedItem.remoteId(), merge->item().remoteId() );
+  QCOMPARE( mergedItem.remoteRevision(), merge->item().remoteRevision() );
+  QCOMPARE( mergedItem.payloadData(), merge->item().payloadData() );
+  QCOMPARE( mergedItem.size(), merge->item().size() );
+  QCOMPARE( mergedItem.flags(), merge->item().flags() );
+}
+
