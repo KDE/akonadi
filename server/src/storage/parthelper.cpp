@@ -307,9 +307,10 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
                                      ImapStreamParser* streamParser,
                                      const PimItem &item, bool checkExists,
                                      QByteArray &partName, qint64 &partSize,
-                                     QByteArray &error )
+                                     QByteArray &error, bool *changed )
 {
   int partVersion = 0;
+  bool dataChanged = false;
   partSize = 0;
   ImapParser::splitVersionedKey( command, partName, partVersion );
 
@@ -317,7 +318,12 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
 
   Part part;
 
-  if ( checkExists ) {
+  // In case of error, nothing has changed
+  if ( changed != 0 ) {
+    *changed = false;
+  }
+
+  if ( checkExists || changed != 0 ) {
     SelectQueryBuilder<Part> qb;
     qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, item.id() );
     qb.addValueCondition( Part::partTypeIdColumn(), Query::Equals, partType.id() );
@@ -332,6 +338,11 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
     }
   }
 
+  // Shortcut: newly created parts are always "changed"
+  if ( !part.isValid() ) {
+    dataChanged = true;
+  }
+
   part.setPartType( partType );
   part.setVersion( partVersion );
   part.setPimItemId( item.id() );
@@ -341,10 +352,20 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
     const qint64 dataSize = streamParser->remainingLiteralSize();
     if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
       partSize = dataSize;
+      // Shortcut: if sizes differ, we don't need to compare data later no in order
+      // to detect whether the part has changed
+      if ( !dataChanged ) {
+        dataChanged = ( partSize != part.datasize() );
+      }
     }
     const bool storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
     //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
     if ( storeInFile ) {
+      QByteArray origData;
+      if ( !dataChanged && changed != 0 ) {
+        origData = PartHelper::translateData( part );
+      }
+
       // use first part as value for the initial insert into / update to the database.
       // this will give us a proper filename to stream the rest of the parts contents into
       // NOTE: we have to set the correct size (== dataSize) directly
@@ -372,6 +393,15 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
         error = e.what();
         return false;
       }
+
+      if ( changed != 0 ) {
+        if ( !dataChanged ) {
+          // This is invoked only when part already exists, data sizes match and
+          // caller wants to know whether parts really differ
+          dataChanged = ( origData != PartHelper::translateData( part ) );
+        }
+        *changed = dataChanged;
+      }
       return true;
     } else { // not store in file
       //don't write in streaming way as the data goes to the database
@@ -384,11 +414,23 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
     if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
       partSize = value.size();
     }
+    if ( !dataChanged ) {
+      dataChanged = ( partSize != part.datasize() );
+    }
   }
 
   // only relevant for non-literals or non-external literals
-  const QByteArray origData = PartHelper::translateData( part );
-  if ( origData != value ) {
+
+  // only fallback to data comparision if part already exists and sizes match
+  if ( !dataChanged ) {
+    dataChanged = ( value != PartHelper::translateData( part ) );
+  }
+
+  if ( changed != 0 ) {
+    *changed = dataChanged;
+  }
+
+  if ( dataChanged ) {
     if ( part.isValid() ) {
       PartHelper::update( &part, value, value.size() );
     } else {
