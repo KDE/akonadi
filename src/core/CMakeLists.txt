@@ -207,7 +207,7 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     CollectionAttributesSynchronizationJob
     CollectionCopyJob
     CollectionCreateJob
-    CollectionDeletEJob
+    CollectionDeleteJob
     CollectionFetchJob
     CollectionModifyJob
     CollectionMoveJob
