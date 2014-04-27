@@ -58,6 +58,7 @@ Tag::Tag(const QString &name)
     , d(new Private)
 {
     d->gid = name.toUtf8();
+    setName(name);
     d->type = PLAIN;
 }
 
@@ -164,7 +165,7 @@ QString Tag::name() const
 {
     const TagAttribute *const attr = attribute<TagAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
-    return !displayName.isEmpty() ? displayName : QString::fromLatin1(d->gid);
+    return !displayName.isEmpty() ? displayName : QString::fromUtf8(d->gid);
 }
 
 void Tag::setParent(const Tag &parent)
