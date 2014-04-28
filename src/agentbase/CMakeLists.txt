@@ -76,12 +76,6 @@ install(TARGETS
 )
 
 install(FILES
-    ${AkonadiAgentBase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiAgentBase
-    COMPONENT Devel
-)
-
-install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiagentbase_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/resourcebasesettings.h
     ${AkonadiAgentBase_HEADERS}

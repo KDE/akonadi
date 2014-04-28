@@ -122,12 +122,6 @@ install(TARGETS
 )
 
 install(FILES
-    ${AkonadiWidgets_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets
-    COMPONENT Devel
-)
-
-install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets_export.h
     ${AkonadiWidgets_HEADERS}
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets COMPONENT Devel

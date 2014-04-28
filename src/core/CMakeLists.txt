@@ -292,15 +292,10 @@ install(TARGETS
 )
 
 install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_base_HEADERS}
     ${AkonadiCore_models_HEADERS}
     ${AkonadiCore_jobs_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore
-    COMPONENT Devel
-)
-
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_HEADERS}
     itempayloadinternals_p.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel

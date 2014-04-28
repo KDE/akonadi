@@ -65,12 +65,6 @@ install(TARGETS
 )
 
 install(FILES
-    ${AkonadiXml_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiXml
-    COMPONENT Devel
-)
-
-install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-xml_export.h
     ${AkonadiXml_HEADERS}
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiXml COMPONENT Devel
