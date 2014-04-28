@@ -415,7 +415,7 @@ bool PartHelper::storeStreamedParts( const QByteArray &command,
       partSize = value.size();
     }
     if ( !dataChanged ) {
-      dataChanged = ( partSize != part.datasize() );
+      dataChanged = ( value.size() != part.datasize() );
     }
   }
 
