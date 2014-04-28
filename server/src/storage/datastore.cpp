@@ -309,14 +309,21 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
       }
 
       QSqlQuery query = qb.query();
-      if ( query.size() == items.count() ) {
-        continue;
+      if ( query.driver()->hasFeature( QSqlDriver::QuerySize ) ) {
+        //The query size feature is not suppoerted by the sqllite driver
+        if ( query.size() == items.count() ) {
+          continue;
+        }
+        flagsChanged = true;
       }
-
-      flagsChanged = true;
 
       while ( query.next() ) {
         existing << query.value( 0 ).value<PimItem::Id>();
+      }
+      if ( !query.driver()->hasFeature( QSqlDriver::QuerySize ) ) {
+        if ( existing.size() != items.count() ) {
+          flagsChanged = true;
+        }
       }
     }
 
