@@ -96,7 +96,7 @@ generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
-target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiWidgets;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiWidgets
     KF5::AkonadiCore
@@ -123,14 +123,14 @@ install(TARGETS
 
 install(FILES
     ${AkonadiWidgets_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiWidgets
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets
     COMPONENT Devel
 )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets_export.h
     ${AkonadiWidgets_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiWidgets COMPONENT Devel
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets COMPONENT Devel
 )
 
 if (KDEPIM_MOBILE_UI)

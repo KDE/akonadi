@@ -263,7 +263,7 @@ add_library(KF5AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiCore;${Boost_INCLUDE_DIR};${AKONADI_INCLUDE_DIR};${AKONADI_INCLUDE_DIR}/akonadi/private>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore;${Boost_INCLUDE_DIR};${AKONADI_INCLUDE_DIR};${AKONADI_INCLUDE_DIR}/akonadi/private>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AKONADI_INCLUDE_DIR}>")
@@ -295,7 +295,7 @@ install(FILES
     ${AkonadiCore_base_HEADERS}
     ${AkonadiCore_models_HEADERS}
     ${AkonadiCore_jobs_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiCore
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore
     COMPONENT Devel
 )
 
@@ -303,7 +303,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_HEADERS}
     itempayloadinternals_p.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
 )
 
 install(FILES

@@ -49,7 +49,7 @@ generate_export_header(KF5AkonadiAgentBase BASE_NAME akonadiagentbase)
 
 add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
 
-target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiAgentBase;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiAgentBase;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiAgentBase
     KF5::AkonadiCore
@@ -77,7 +77,7 @@ install(TARGETS
 
 install(FILES
     ${AkonadiAgentBase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiAgentBase
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiAgentBase
     COMPONENT Devel
 )
 
@@ -85,7 +85,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiagentbase_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/resourcebasesettings.h
     ${AkonadiAgentBase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/AkonadiAgentBase COMPONENT Devel
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiAgentBase COMPONENT Devel
 )
 
 install(FILES

@@ -27,5 +27,5 @@ install(TARGETS akonadi-kabc EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_D
 install( FILES
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kabc_export.h
   contactparts.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kabc COMPONENT Devel
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kabc COMPONENT Devel
 )
