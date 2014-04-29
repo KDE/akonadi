@@ -120,7 +120,7 @@ class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
       setObjectName(QLatin1String(# catalogName) );\
     } \
 }; \
-Q_EXPORT_PLUGIN2( catalogName, agentClass ## Factory )
+// QT5 Q_EXPORT_PLUGIN2( catalogName, agentClass ## Factory )
 
 #endif
 
