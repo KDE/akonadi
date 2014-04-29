@@ -70,6 +70,14 @@ ItemDeleteJob::ItemDeleteJob(const Collection &collection, QObject *parent)
     d->mCollection = collection;
 }
 
+ItemDeleteJob::ItemDeleteJob(const Tag &tag, QObject *parent)
+    : Job(new ItemDeleteJobPrivate(this), parent)
+{
+    Q_D(ItemDeleteJob);
+
+    d->mTag = tag;
+}
+
 ItemDeleteJob::~ItemDeleteJob()
 {
 }
