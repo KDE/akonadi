@@ -25,6 +25,8 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/transactionjobs.h>
+#include <akonadi/tagcreatejob.h>
+#include <akonadi/itemmodifyjob.h>
 #include "test_utils.h"
 
 #include <QtCore/QObject>
@@ -115,6 +117,42 @@ class ItemDeleteTest : public QObject
 
       fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
+      QVERIFY( !fjob->exec() );
+    }
+
+    void testTagDelete()
+    {
+      // Create tag
+      Tag tag;
+      tag.setName( QLatin1String( "Tag1" ) );
+      tag.setRemoteId( "Tag1" );
+      tag.setGid( "Tag1" );
+      TagCreateJob *tjob = new TagCreateJob( tag, this );
+      AKVERIFYEXEC( tjob );
+      tag = tjob->tag();
+
+      const Collection col( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+
+      Item i;
+      i.setRemoteId( "D" );
+
+      ItemFetchJob *fjob = new ItemFetchJob( i, this );
+      fjob->setCollection( col );
+      AKVERIFYEXEC( fjob );
+      QCOMPARE( fjob->items().count(), 1 );
+
+      i = fjob->items().first();
+      i.setTag(tag);
+      ItemModifyJob *mjob = new ItemModifyJob( i, this );
+      AKVERIFYEXEC( mjob );
+
+      // Delete the tagged item
+      ItemDeleteJob *djob = new ItemDeleteJob( tag, this );
+      AKVERIFYEXEC( djob );
+
+      // Try to fetch the item again, there should be none
+      fjob = new ItemFetchJob( i, this );
       QVERIFY( !fjob->exec() );
     }
 
