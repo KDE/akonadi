@@ -19,5 +19,5 @@ target_link_libraries(akonadiselftest
 
 install(TARGETS
     akonadiselftest
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )

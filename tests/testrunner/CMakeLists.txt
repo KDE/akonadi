@@ -29,7 +29,7 @@ target_link_libraries(akonaditest
   ${QT_QTDBUS_LIBRARY}
 )
 
-install(TARGETS akonaditest ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonaditest ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # Set the akonaditest path (needed by AkonadiMacros.cmake when invoked in kdepimlibs)
 set(_akonaditest_DIR ${EXECUTABLE_OUTPUT_PATH} CACHE PATH "akonaditest path")

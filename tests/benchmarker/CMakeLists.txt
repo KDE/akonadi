@@ -42,4 +42,4 @@ target_link_libraries(akonadi_benchmarker
   ${QT_QTTEST_LIBRARY}
 )
 
-install(TARGETS akonadi_benchmarker ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi_benchmarker ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})

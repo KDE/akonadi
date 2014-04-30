@@ -72,7 +72,7 @@ ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
 install(TARGETS
     KF5AkonadiAgentBase
     EXPORT KF5AkonadiTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
