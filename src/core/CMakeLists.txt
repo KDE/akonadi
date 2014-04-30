@@ -67,6 +67,7 @@ set(akonadicore_base_SRCS
 
 ecm_generate_headers(AkonadiCore_base_HEADERS
     HEADER_NAMES
+    AbstractDifferencesReporter
     AgentInstance
     AgentManager
     AgentType
@@ -82,12 +83,14 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CollectionUtils
     Control
     DBusConnectionPool
+    DifferencesAlgorithmInterface
     Entity
     EntityAnnotationsAttribute
     EntityDeletedAttribute
     EntityDisplayAttribute
     EntityHiddenAttribute
     Exception
+    GidExtractorInterface
     IndexPolicyAttribute
     Item
     ItemFetchScope
