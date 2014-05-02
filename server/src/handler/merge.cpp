@@ -33,6 +33,8 @@
 #include <libs/imapparser_p.h>
 #include <libs/protocol_p.h>
 
+#include <numeric>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
