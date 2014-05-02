@@ -86,7 +86,7 @@ if(EXISTS ${SQLITE_INCLUDE_DIR}/sqlite3.h)
 
 endif()
 
-if (DEFINED SQLITE_INCLUDE_DIR AND DEFINED SQLITE_LIBRARIES AND ${SQLITE_VERSION_OK})
+if (DEFINED SQLITE_INCLUDE_DIR AND DEFINED SQLITE_LIBRARIES AND "${SQLITE_VERSION_OK}")
   file(WRITE ${CMAKE_BINARY_DIR}/sqlite_unlock_notify.cpp
        "#include <sqlite3.h>
         int main(int argc, char **argv) {
