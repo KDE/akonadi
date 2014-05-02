@@ -122,7 +122,9 @@ void ItemAppendTest::testContent()
 
   Item item;
   item.setMimeType( "application/octet-stream" );
-  item.setPayload( data );
+  if ( !data.isNull() ) {
+    item.setPayload( data );
+  }
 
   ItemCreateJob* job = new ItemCreateJob( item, testFolder1, this );
   AKVERIFYEXEC( job );
@@ -134,8 +136,7 @@ void ItemAppendTest::testContent()
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
-  //akonadi does not distinguish empty and no payload
-  QCOMPARE( item2.hasPayload(), !data.isEmpty() );
+  QCOMPARE( item2.hasPayload(), !data.isNull() );
   if( item2.hasPayload() ) {
     QCOMPARE( item2.payload<QByteArray>(), data );
   }
