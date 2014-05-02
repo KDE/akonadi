@@ -11,6 +11,7 @@
 #
 # Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
 # Copyright (c) 2010, Christophe Giboudeaux, <cgiboudeaux@gmail.com>
+# Copyright (c) 2014, Daniel Vrátil <dvratil@redhat.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -83,6 +84,26 @@ if(EXISTS ${SQLITE_INCLUDE_DIR}/sqlite3.h)
 
   endif(SQLITE_VERSION_MATCH)
 
+endif()
+
+if (DEFINED SQLITE_INCLUDE_DIR AND DEFINED SQLITE_LIBRARIES AND ${SQLITE_VERSION_OK})
+  file(WRITE ${CMAKE_BINARY_DIR}/sqlite_unlock_notify.cpp
+       "#include <sqlite3.h>
+        int main(int argc, char **argv) {
+          return sqlite3_unlock_notify(0, 0, 0);
+        }")
+  try_compile(SQLITE_HAS_UNLOCK_NOTIFY
+              ${CMAKE_BINARY_DIR}/sqlite_unlock_notify
+              ${CMAKE_BINARY_DIR}/sqlite_unlock_notify.cpp
+              LINK_LIBRARIES ${SQLITE_LIBRARIES}
+              CMAKE_FLAGS INCLUDE_DIRECTORIES ${SQLITE_INCLUDE_DIR}
+              OUTPUT_VARIABLE var)
+  if (NOT ${SQLITE_HAS_UNLOCK_NOTIFY})
+    message("WARNING: Sqlite3 is built without SQLITE_ENABLE_UNLOCK_NOTIFY")
+    unset(SQLITE_LIBRARIES)
+    unset(SQLITE_INCLUDE_DIR)
+    unset(SQLITE_VERSION_OK)
+  endif()
 endif()
 
 include(FindPackageHandleStandardArgs)
