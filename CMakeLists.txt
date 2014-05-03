@@ -103,5 +103,5 @@ endif()
 
 install( FILES
     kcfg2dbus.xsl
-    DESTINATION ${DATA_INSTALL_DIR}/akonadi
+    DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi
 )

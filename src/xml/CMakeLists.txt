@@ -77,5 +77,5 @@ install(FILES
 
 install(FILES
     akonadi-xml.xsd
-    DESTINATION ${DATA_INSTALL_DIR}/akonadi/
+    DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi/
 )

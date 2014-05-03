@@ -130,7 +130,7 @@ install(FILES
 if (KDEPIM_MOBILE_UI)
     install(FILES
         CollectionDialogMobile.qml
-        DESTINATION ${DATA_INSTALL_DIR}/akonadi/qml
+        DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi/qml
     )
 endif()
 
