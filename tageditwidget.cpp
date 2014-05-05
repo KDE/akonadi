@@ -107,7 +107,7 @@ void TagEditWidget::Private::select(const QModelIndex &parent, int start, int en
 
 void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start, int end)
 {
-    select(parent, start, end, QItemSelectionModel::QItemSelectionModel::Select);
+    select(parent, start, end, QItemSelectionModel::Select);
 }
 
 void TagEditWidget::Private::slotCreateTag()

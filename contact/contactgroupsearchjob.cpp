@@ -68,7 +68,7 @@ static Akonadi::SearchTerm::Condition matchType( ContactGroupSearchJob::Match ma
     case ContactGroupSearchJob::ContainsMatch:
       return Akonadi::SearchTerm::CondContains;
   }
-  return Akonadi::SearchTerm::SearchTerm::CondEqual;
+  return Akonadi::SearchTerm::CondEqual;
 }
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
