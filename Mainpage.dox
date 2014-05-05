@@ -17,11 +17,11 @@ from within KDE, you almost certainly want the
 This API reference is more useful to people implementing client libraries or
 working on the Akonadi server itself.
 
-For additional information, see the <a href="http://www.akonadi-project.org/">Akonadi website</a>.
+For additional information, see the <a href="http://community.kde.org/KDE_PIM/Akonadi">Akonadi website</a>.
 
 \section akonadi_server_architecture Architecture
 
-<img src="http://pim.kde.org/akonadi/architecture.png"/>
+<img src="http://community.kde.org/images.community/8/8e/Akonadi_Architecture.png"/>
 
 The Akonadi framework uses a client/server architecture. The Akonadi server has the following primary tasks:
 \li Abstract access to data from arbitrary sources, using toolkit-agnostic protocols and data formats
@@ -106,6 +106,13 @@ envelope, the body and possible one or more attachments. Item parts are identifi
 by an identifier string. There are a few special pre-defined part identifiers (ALL,
 ENVELOPE, etc.), but in general the part identifiers are defined by the type specific
 extensions (ie. resource, serializer plugin, type specific client library).
+
+\subsubsection akonadi_server_objects_items_attributes Item Tags
+
+%Tags are self-contained entities stored in separate database table. A tag is a
+relation between multiple items. Tags can have different types (PLAIN, ...) and applications
+can define their own type to describe application-specific relations. Tags can also have
+attributes to store additional metadata about the relation the tag describes.
 
 \subsubsection akonadi_server_objects_items_serializer Payload Data Serialization
 
@@ -195,6 +202,16 @@ backend (e.g., a groupware server).
 
 The remote identifier can be changed by the owning resource agent only.
 
+Special case applies for Tags, where each tag can have multiple remote IDs. This fact is
+however opaque to resources as each resource is shown only the remote ID that it had
+provided when inserting the tag into Akonadi.
+
+\subsubsection akonadi_server_objects_identification_gid Global Identifier
+
+Every item can has also so called GID, an identifier specific to the content (payload)
+of the item. The GID is extracted from the payload by client serializer when storing the
+item in Akonadi. For example, contacts have vCard "UID" field as their GID, emails can
+use value of "Message-Id" header.
 
 \section akonadi_server_protocols Communication Protocols
 
@@ -219,7 +236,10 @@ and providing convenient high-level APIs for %Akonadi operations.
 Currently, the most complete implementation is the
 <a href="http://api.kde.org/4.x-api/kdepimlibs-apidocs/akonadi/html/index.html">KDE %Akonadi client library</a>.
 
+<!--
+// Afaik there are no "other ones"? -- dvratil
 \todo add links to the other ones
+//-->
 
 \subsection akonadi_server_interaction_agents Akonadi Agents
 
@@ -247,7 +267,7 @@ More details on the SQL database layout can be found here: \ref akonadi_server_d
 The following SQL databases are supported by the Akonadi server:
 \li \em MySQL using the default QtSQL driver shipped with Qt
 \li \em Sqlite using the improved QtSQL driver shipped with the Akonadi server
-\li [Experimental] \em PostgreSQL using the default QtSQL driver shipped with Qt
+\li \em PostgreSQL using the default QtSQL driver shipped with Qt
 
 For details on how to configure the various backends, see Akonadi::DataStore.
 
