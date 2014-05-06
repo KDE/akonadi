@@ -166,6 +166,43 @@ void DbConfigPostgresql::startInternalServer()
     QDir().mkpath( socketDir );
   }
 
+// TODO Windows support
+#ifndef Q_WS_WIN
+  // If postmaster.pid exists, check whether the postgres process still exists too,
+  // because normally we shouldn't be able to get this far if Akonadi is already
+  // running. If postgres is not running, then the pidfile was left after a system
+  // crash or something similar and we can remove it (otherwise pg_ctl won't start)
+  QFile postmaster( QString::fromLatin1( "%1/postmaster.pid" ).arg( mPgData ) );
+  if ( postmaster.exists() && postmaster.open( QIODevice::ReadOnly ) ) {
+    qDebug() << "Found a postmaster.pid pidfile, checking whether the server is still running...";
+    QByteArray pid = postmaster.readLine();
+    // Remvoe newline character
+    pid.truncate(pid.size() - 1);
+    QFile proc( QString::fromLatin1( "/proc/" + pid + "/stat" ) );
+    // Check whether the process with the PID from pidfile still exists and whether
+    // it's actually still postgres or, whether the PID has been recycled in the
+    // meanwhile.
+    if ( proc.open( QIODevice::ReadOnly ) ) {
+      const QByteArray stat = proc.readAll();
+      const QList<QByteArray> stats = stat.split( ' ' );
+      if ( stats.count() > 1 ) {
+        // Make sure the PID actually belongs to postgres process
+        if ( stats[1] == "(postgres)" ) {
+          // Yup, our PostgreSQL is actually running, so pretend we started the server
+          // and try to connect to it
+          qWarning() << "PostgreSQL for Akonadi is already running, trying to connect to it.";
+          return;
+        }
+      }
+      proc.close();
+    }
+
+    qDebug() << "No postgres process with specified PID is running. Removing the pidfile and starting a new Postgres instance...";
+    postmaster.close();
+    postmaster.remove();
+  }
+#endif
+
   if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( mPgData ) ) ) {
     // postgres data directory not initialized yet, so call initdb on it
 
