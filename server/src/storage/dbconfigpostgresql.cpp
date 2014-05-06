@@ -222,7 +222,7 @@ void DbConfigPostgresql::startInternalServer()
             << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
             // set the directory for unix domain socket communication
             // -o will pass the switch to postgres
-            << QString::fromLatin1( "-o \"-k %1\"" ).arg( socketDir );
+            << QString::fromLatin1( "-o \"-k%1\"" ).arg( socketDir );
 
   QProcess pgCtl;
   pgCtl.start( mServerPath, arguments );
