@@ -29,6 +29,7 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
+#include <unistd.h>
 
 
 using namespace Akonadi::Server;
@@ -89,13 +90,29 @@ bool DbConfigPostgresql::init( QSettings &settings )
   // read settings for current driver
   settings.beginGroup( driverName() );
   mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDatabaseName() ).toString();
+  if ( mDatabaseName.isEmpty() ) {
+    mDatabaseName = defaultDatabaseName();
+  }
   mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
+  if ( mHostName.isEmpty() ) {
+    mHostName = defaultHostName;
+  }
+  // User, password and Options can be empty and still valid, so don't override them
   mUserName = settings.value( QLatin1String( "User" ) ).toString();
   mPassword = settings.value( QLatin1String( "Password" ) ).toString();
   mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
   mServerPath = settings.value( QLatin1String( "ServerPath" ), defaultServerPath ).toString();
+  if ( mInternalServer && mServerPath.isEmpty() ) {
+    mServerPath = defaultServerPath;
+  }
   mInitDbPath = settings.value( QLatin1String( "InitDbPath" ), defaultInitDbPath ).toString();
+  if ( mInternalServer && mInitDbPath.isEmpty() ) {
+    mInitDbPath = defaultInitDbPath;
+  }
   mPgData = settings.value( QLatin1String( "PgData" ), defaultPgData ).toString();
+  if ( mPgData.isEmpty() ) {
+    mPgData = defaultPgData;
+  }
   settings.endGroup();
 
   // store back the default values
@@ -103,12 +120,8 @@ bool DbConfigPostgresql::init( QSettings &settings )
   settings.setValue( QLatin1String( "Name" ), mDatabaseName );
   settings.setValue( QLatin1String( "Host" ), mHostName );
   settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
-  if ( !mServerPath.isEmpty() ) {
-    settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
-  }
-  if ( !mInitDbPath.isEmpty() ) {
-    settings.setValue( QLatin1String( "InitDbPath" ), mInitDbPath );
-  }
+  settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
+  settings.setValue( QLatin1String( "InitDbPath" ), mInitDbPath );
   settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
   settings.endGroup();
   settings.sync();
@@ -151,6 +164,43 @@ void DbConfigPostgresql::startInternalServer()
   if ( !QFile::exists( socketDir ) ) {
     QDir().mkpath( socketDir );
   }
+
+// TODO Windows support
+#ifndef Q_WS_WIN
+  // If postmaster.pid exists, check whether the postgres process still exists too,
+  // because normally we shouldn't be able to get this far if Akonadi is already
+  // running. If postgres is not running, then the pidfile was left after a system
+  // crash or something similar and we can remove it (otherwise pg_ctl won't start)
+  QFile postmaster( QString::fromLatin1( "%1/postmaster.pid" ).arg( mPgData ) );
+  if ( postmaster.exists() && postmaster.open( QIODevice::ReadOnly ) ) {
+    qDebug() << "Found a postmaster.pid pidfile, checking whether the server is still running...";
+    QByteArray pid = postmaster.readLine();
+    // Remvoe newline character
+    pid.truncate(pid.size() - 1);
+    QFile proc( QString::fromLatin1( "/proc/" + pid + "/stat" ) );
+    // Check whether the process with the PID from pidfile still exists and whether
+    // it's actually still postgres or, whether the PID has been recycled in the
+    // meanwhile.
+    if ( proc.open( QIODevice::ReadOnly ) ) {
+      const QByteArray stat = proc.readAll();
+      const QList<QByteArray> stats = stat.split( ' ' );
+      if ( stats.count() > 1 ) {
+        // Make sure the PID actually belongs to postgres process
+        if ( stats[1] == "(postgres)" ) {
+          // Yup, our PostgreSQL is actually running, so pretend we started the server
+          // and try to connect to it
+          qWarning() << "PostgreSQL for Akonadi is already running, trying to connect to it.";
+          return;
+        }
+      }
+      proc.close();
+    }
+
+    qDebug() << "No postgres process with specified PID is running. Removing the pidfile and starting a new Postgres instance...";
+    postmaster.close();
+    postmaster.remove();
+  }
+#endif
 
   if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( mPgData ) ) ) {
     // postgres data directory not initialized yet, so call initdb on it
@@ -202,7 +252,7 @@ void DbConfigPostgresql::startInternalServer()
         break;
       }
 
-      if ( pgCtl.waitForFinished( 500 ) ) {
+      if ( pgCtl.waitForFinished( 500 ) && pgCtl.exitCode() ) {
         akError() << "Database process exited unexpectedly during initial connection!";
         akError() << "executable:" << mServerPath;
         akError() << "arguments:" << arguments;
