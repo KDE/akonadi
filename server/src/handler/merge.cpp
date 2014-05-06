@@ -25,7 +25,7 @@
 #include "storage/transaction.h"
 #include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
-#include <storage/itemretriever.h>
+#include "storage/itemretriever.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include <response.h>
@@ -48,7 +48,8 @@ Merge::~Merge()
 }
 
 bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
-                       const QList<QByteArray> &newFlags )
+                       const ChangedAttributes &itemFlags,
+                       const ChangedAttributes &itemTags )
 {
     currentItem.setRev( newItem.rev() );
     if ( currentItem.remoteId() != newItem.remoteId() ) {
@@ -68,13 +69,51 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
     // Only mark dirty when merged from application
     currentItem.setDirty( !connection()->context()->resource().isValid() );
 
-    const Flag::List flags = HandlerHelper::resolveFlags( newFlags );
     const Collection col = Collection::retrieveById( newItem.collectionId() );
-    bool flagsChanged = false;
-    DataStore::self()->appendItemsFlags( PimItem::List() << currentItem, flags,
-                                         flagsChanged, true, col, true );
-    if ( flagsChanged ) {
+    if ( itemFlags.incremental ) {
+      bool flagsAdded = false, flagsRemoved = false;
+      if ( !itemFlags.added.isEmpty() ) {
+        const Flag::List addedFlags = HandlerHelper::resolveFlags( itemFlags.added );
+        DataStore::self()->appendItemsFlags( PimItem::List() << currentItem, addedFlags,
+                                             flagsAdded, true, col, true );
+      }
+
+      if ( !itemFlags.removed.isEmpty() ) {
+        const Flag::List removedFlags = HandlerHelper::resolveFlags( itemFlags.removed );
+        DataStore::self()->removeItemsFlags( PimItem::List() << currentItem, removedFlags,
+                                             flagsRemoved, true );
+      }
+
+      if ( flagsAdded || flagsRemoved ) {
+        mChangedParts << AKONADI_PARAM_FLAGS;
+      }
+    } else if ( !itemFlags.added.isEmpty() ) {
+      const Flag::List flags = HandlerHelper::resolveFlags( itemFlags.added );
+      DataStore::self()->setItemsFlags( PimItem::List() << currentItem, flags, true );
       mChangedParts << AKONADI_PARAM_FLAGS;
+    }
+
+    if ( itemTags.incremental ) {
+      bool tagsAdded = false, tagsRemoved = false;
+      if ( !itemTags.added.isEmpty() ) {
+        const Tag::List addedTags = HandlerHelper::resolveTags( itemTags.added, connection()->context() );
+        DataStore::self()->appendItemsTags( PimItem::List() << currentItem, addedTags,
+                                            tagsAdded, true, col, true );
+      }
+
+      if ( !itemTags.removed.isEmpty() ) {
+        const Tag::List removedTags = HandlerHelper::resolveTags( itemTags.removed, connection()->context() );
+        DataStore::self()->removeItemsTags( PimItem::List() << currentItem, removedTags,
+                                            tagsRemoved, true );
+      }
+
+      if ( tagsAdded || tagsRemoved ) {
+        mChangedParts << AKONADI_PARAM_TAGS;
+      }
+    } else if ( !itemTags.added.isEmpty() ) {
+      const Tag::List tags = HandlerHelper::resolveTags( itemTags.added, connection()->context() );
+      DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags, true );
+      mChangedParts << AKONADI_PARAM_TAGS;
     }
 
     Part::List existingParts = Part::retrieveFiltered( Part::pimItemIdColumn(), currentItem.id() );
@@ -87,11 +126,27 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
     while ( !m_streamParser->atListEnd() ) {
       QByteArray error, partName;
       qint64 partSize;
-      const QByteArray command = m_streamParser->readString();
+      QByteArray command = m_streamParser->readString();
       bool changed = false;
       if ( command.isEmpty() ) {
         throw HandlerException( "Syntax error" );
       }
+
+      if ( command.startsWith( '-' ) ) {
+        command = command.mid( 1 );
+        Q_FOREACH ( const Part &part, existingParts ) {
+          if ( part.partType().name() == QString::fromUtf8( command ) ) {
+            DataStore::self()->removeItemParts( currentItem, QList<QByteArray>() << command );
+            mChangedParts << command;
+            partsSizes.remove( command );
+            break;
+          }
+        }
+        break;
+      } else if ( command.startsWith( '+' ) ) {
+        command = command.mid( 1 );
+      }
+
       if ( !PartHelper::storeStreamedParts( command, m_streamParser, currentItem, true, partName, partSize, error, &changed ) ) {
         return failureResponse( error );
       }
@@ -118,6 +173,11 @@ bool Merge::notify( const PimItem &item, const Collection &collection )
       DataStore::self()->notificationCollector()->itemChanged( item, mChangedParts, collection );
     }
 
+    return true;
+}
+
+bool Merge::sendResponse( const QByteArray &responseStr, const PimItem &item )
+{
     ImapSet set;
     set.add( QVector<qint64>() << item.id() );
     Scope scope( Scope::Uid );
@@ -148,7 +208,7 @@ bool Merge::notify( const PimItem &item, const Collection &collection )
     Response response;
     response.setTag( tag() );
     response.setSuccess();
-    response.setString( "Merge completed" );
+    response.setString( responseStr );
     Q_EMIT responseAvailable( response );
     return true;
 }
@@ -161,12 +221,15 @@ bool Merge::parseStream()
     Transaction transaction( db );
 
     Collection parentCol;
-    QList<QByteArray> itemFlags;
+    ChangedAttributes itemFlags;
+    ChangedAttributes itemTags;
     PimItem item;
     // Parse the rest of the command, assuming X-AKAPPEND syntax
-    if ( !buildPimItem( item, parentCol, itemFlags ) ) {
+    if ( !buildPimItem( item, parentCol, itemFlags, itemTags ) ) {
       return false;
     }
+
+    bool silent = false;
 
     // Merging is always restricted to the same collection and mimetype
     SelectQueryBuilder<PimItem> qb;
@@ -177,6 +240,8 @@ bool Merge::parseStream()
         qb.addValueCondition( PimItem::gidColumn(), Query::Equals, item.gid() );
       } else if ( part == AKONADI_PARAM_REMOTEID ) {
         qb.addValueCondition( PimItem::remoteIdColumn(), Query::Equals, item.remoteId() );
+      } else if ( part == AKONADI_PARAM_SILENT ) {
+        silent = true;
       } else {
         throw HandlerException( "Only merging by RID or GID is allowed" );
       }
@@ -190,27 +255,37 @@ bool Merge::parseStream()
     if ( result.count() == 0 ) {
       // No item with such GID/RID exists, so call AkAppend::insert() and behave
       // like if this was a new item
-      if ( !insertItem( item, parentCol, itemFlags ) ) {
+      if ( !insertItem( item, parentCol, itemFlags.added, itemTags.added ) ) {
         return false;
       }
       if ( !transaction.commit() ) {
         return failureResponse( "Failed to commit transaction" );
       }
-      return AkAppend::notify( item, parentCol );
+      AkAppend::notify( item, parentCol );
+      return AkAppend::sendResponse( "Append completed", item );
 
     } else if ( result.count() == 1 ) {
       // Item with matching GID/RID combination exists, so merge this item into it
       // and send itemChanged()
       PimItem existingItem = result.first();
-      if ( !mergeItem( item, existingItem, itemFlags ) ) {
+      if ( !mergeItem( item, existingItem, itemFlags, itemTags ) ) {
         return false;
       }
       if ( !transaction.commit() ) {
         return failureResponse( "Failed to commit transaction" );
       }
-      return notify( existingItem, parentCol );
+
+      notify( existingItem, parentCol );
+      if ( silent ) {
+          return AkAppend::sendResponse( "Merge completed", existingItem );
+      } else {
+          return sendResponse( "Merge completed", existingItem );
+      }
 
     } else {
+      Q_FOREACH (const PimItem &item, result) {
+          qDebug() << item.id() << item.remoteId() << item.gid();
+      }
       // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
       // something we don't want
       return failureResponse( "Multiple merge candidates, aborting" );

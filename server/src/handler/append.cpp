@@ -92,7 +92,7 @@ bool Append::commit()
     QString remote_id;
     QString remote_revision;
     QString gid;
-    QList<QByteArray> flags;
+    QVector<QByteArray> flags;
     Q_FOREACH ( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
         int pos1 = flag.indexOf( '[' );

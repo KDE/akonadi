@@ -51,7 +51,16 @@ AkAppend::~AkAppend()
 {
 }
 
-bool AkAppend::buildPimItem( PimItem &item, Collection &col, QList<QByteArray> &itemFlags )
+QByteArray AkAppend::parseFlag( const QByteArray &flag ) const
+{
+    const int pos1 = flag.indexOf( '[' );
+    const int pos2 = flag.lastIndexOf( ']' );
+    return flag.mid( pos1 + 1, pos2 - pos1 - 1 );
+}
+
+bool AkAppend::buildPimItem( PimItem &item, Collection &col,
+                             ChangedAttributes &itemFlags,
+                             ChangedAttributes &itemTags )
 {
       // Arguments:  mailbox name
       //        OPTIONAL flag parenthesized list
@@ -100,23 +109,31 @@ bool AkAppend::buildPimItem( PimItem &item, Collection &col, QList<QByteArray> &
     QString gid;
     Q_FOREACH ( const QByteArray &flag, flags ) {
       if ( flag.startsWith( AKONADI_FLAG_MIMETYPE ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.indexOf( ']', pos1 );
-        mt = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
+        mt = parseFlag( flag );
       } else if ( flag.startsWith( AKONADI_FLAG_REMOTEID ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.lastIndexOf( ']' );
-        remote_id = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
+        remote_id = QString::fromUtf8( parseFlag( flag ) );
       } else if ( flag.startsWith( AKONADI_FLAG_REMOTEREVISION ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.lastIndexOf( ']' );
-        remote_revision = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
+        remote_revision = QString::fromUtf8( parseFlag( flag ) );
       } else if ( flag.startsWith( AKONADI_FLAG_GID ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.lastIndexOf( ']' );
-        gid = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
+        gid = QString::fromUtf8( parseFlag( flag ) );
+      } else if ( flag.startsWith( "+" AKONADI_FLAG_TAG ) ) {
+        itemTags.incremental = true;
+        itemTags.added.append( flag.mid( 4 ) );
+      } else if ( flag.startsWith( "-" AKONADI_FLAG_TAG ) ) {
+        itemTags.incremental = true;
+        itemTags.removed.append( flag.mid( 4 ) );
+      } else if ( flag.startsWith( AKONADI_FLAG_TAG ) ) {
+        itemTags.incremental = false;
+        itemTags.added.append( flag.mid( 3 ) );
+      } else if ( flag.startsWith( '+' ) ) {
+        itemFlags.incremental = true;
+        itemFlags.added.append( flag.mid( 1 ) );
+      } else if ( flag.startsWith( '-' ) ) {
+        itemFlags.incremental = true;
+        itemFlags.removed.append( flag.mid( 1 ) );
       } else {
-        itemFlags << flag;
+        itemFlags.incremental = false;
+        itemFlags.added.append( flag );
       }
     }
     // standard imap does not know this attribute, so that's mail
@@ -224,7 +241,9 @@ bool AkAppend::readParts( PimItem &pimItem )
   return true;
 }
 
-bool AkAppend::insertItem( PimItem &item, const Collection &parentCol, const QList<QByteArray> &itemFlags )
+bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
+                           const QVector<QByteArray> &itemFlags,
+                           const QVector<QByteArray> &itemTags )
 {
   if ( !item.insert() ) {
     return failureResponse( "Failed to append item" );
@@ -236,6 +255,12 @@ bool AkAppend::insertItem( PimItem &item, const Collection &parentCol, const QLi
   bool flagsChanged = false;
   if ( !DataStore::self()->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, parentCol, true ) ) {
     return failureResponse( "Unable to append item flags." );
+  }
+
+  const Tag::List tagList = HandlerHelper::resolveTags( itemTags, connection()->context() );
+  bool tagsChanged;
+  if ( !DataStore::self()->appendItemsTags( PimItem::List() << item, tagList, tagsChanged, false, parentCol ) ) {
+    return failureResponse( "Unable to append item tags." );
   }
 
   // Handle individual parts
@@ -288,11 +313,14 @@ bool AkAppend::notify( const PimItem &item, const Collection &collection )
     // enqueue the item for preprocessing
     PreprocessorManager::instance()->beginHandleItem( item, DataStore::self() );
   }
+  return true;
+}
 
+bool AkAppend::sendResponse( const QByteArray &responseStr, const PimItem &item )
+{
   // Date time is always stored in UTC time zone by the server.
   const QString datetime = QLocale::c().toString( item.datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
-  // ...aaaaaand done.
   Response response;
   response.setTag( tag() );
   response.setUserDefined();
@@ -300,11 +328,10 @@ bool AkAppend::notify( const PimItem &item, const Collection &collection )
   Q_EMIT responseAvailable( response );
 
   response.setSuccess();
-  response.setString( "Append completed" );
+  response.setString( responseStr );
   Q_EMIT responseAvailable( response );
   return true;
 }
-
 
 
 bool AkAppend::parseStream()
@@ -316,14 +343,22 @@ bool AkAppend::parseStream()
   DataStore *db = DataStore::self();
   Transaction transaction( db );
 
-  QList<QByteArray> itemFlags;
+  ChangedAttributes itemFlags;
+  ChangedAttributes itemTags;
   Collection parentCol;
   PimItem item;
-  if ( !buildPimItem( item, parentCol, itemFlags ) ) {
+  if ( !buildPimItem( item, parentCol, itemFlags, itemTags ) ) {
     return false;
   }
 
-  if ( !insertItem( item, parentCol, itemFlags ) ) {
+  if ( itemFlags.incremental ) {
+    throw HandlerException( "Incremental flags changes are not allowed in AK-APPEND" );
+  }
+  if ( itemTags.incremental ) {
+    throw HandlerException( "Incremental tags changes are not allowed in AK-APPEND" );
+  }
+
+  if ( !insertItem( item, parentCol, itemFlags.added, itemTags.added ) ) {
     return false;
   }
 
@@ -332,6 +367,6 @@ bool AkAppend::parseStream()
     return failureResponse( "Failed to commit transaction" );
   }
 
-  return notify( item, parentCol );
-
+  notify( item, parentCol );
+  return sendResponse( "Append completed", item );
 }

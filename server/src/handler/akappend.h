@@ -23,6 +23,7 @@
 #include <entities.h>
 
 #include <QtCore/QDateTime>
+#include <QtCore/QVector>
 
 class QTemporaryFile;
 namespace Akonadi {
@@ -47,17 +48,39 @@ public:
     virtual bool parseStream();
 
 protected:
+    class ChangedAttributes
+    {
+    public:
+        ChangedAttributes()
+            : incremental(false)
+        {
+        }
+
+        bool incremental;
+        QVector<QByteArray> added;
+        QVector<QByteArray> removed;
+    };
+
     bool buildPimItem( PimItem &item,
                        Collection &parentCollection,
-                       QList<QByteArray> &itemFlags );
+                       ChangedAttributes &flags,
+                       ChangedAttributes &tags );
+
 
     bool insertItem( PimItem &item,
                      const Collection &parentCollection,
-                     const QList<QByteArray> &itemFlags );
+                     const QVector<QByteArray> &itemFlags,
+                     const QVector<QByteArray> &itemTags );
 
     bool readParts( PimItem &item );
 
     virtual bool notify( const PimItem &item, const Collection &collection );
+    virtual bool sendResponse( const QByteArray &response, const PimItem &item );
+
+
+private:
+    QByteArray parseFlag( const QByteArray &flag ) const;
+
 };
 
 } // namespace Server

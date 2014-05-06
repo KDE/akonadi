@@ -31,6 +31,8 @@
 namespace Akonadi {
 namespace Server {
 
+class CommandContext;
+
 class ImapStreamParser;
 
 /**
@@ -107,13 +109,15 @@ class HandlerHelper
       Converts a bytearray list of flag names into flag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Flag::List resolveFlags( const QList<QByteArray> &flagNames );
+    static Flag::List resolveFlags( const QVector<QByteArray> &flagNames );
 
     /**
       Converts a imap set of tags into tag records.
       @throws HandlerException on errors during datbase operations
     */
     static Tag::List resolveTags( const ImapSet &tags );
+
+    static Tag::List resolveTags( const QVector<QByteArray> &flagNames, CommandContext *context );
 };
 
 } // namespace Server

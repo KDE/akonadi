@@ -25,6 +25,7 @@
 #include "storage/queryhelper.h"
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
+#include "commandcontext.h"
 #include "handler.h"
 
 #include <QtSql/QSqlError>
@@ -304,7 +305,7 @@ int HandlerHelper::parseDepth( const QByteArray &depth )
   return result;
 }
 
-Flag::List HandlerHelper::resolveFlags( const QList< QByteArray > &flagNames )
+Flag::List HandlerHelper::resolveFlags( const QVector<QByteArray> &flagNames )
 {
   Flag::List flagList;
   Q_FOREACH ( const QByteArray &flagName, flagNames ) {
@@ -333,3 +334,26 @@ Tag::List HandlerHelper::resolveTags( const ImapSet &tags )
   }
   return result;
 }
+
+Tag::List HandlerHelper::resolveTags( const QVector< QByteArray > &tagNames, CommandContext *context )
+{
+  if (tagNames.isEmpty()) {
+    return Tag::List();
+  }
+  SelectQueryBuilder<Tag> qb;
+  Query::Condition cond;
+  cond.addColumnCondition( Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName() );
+  cond.addValueCondition( TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id() );
+  qb.addJoin( QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond );
+  qb.addValueCondition( TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::In, QVariant::fromValue( tagNames ) );
+  if  ( !qb.exec() ) {
+    throw HandlerException( "Unable to resolve tags" );
+  }
+
+  const Tag::List result = qb.result();
+  if ( result.isEmpty() ) {
+    throw HandlerException( "No tags found" );
+  }
+  return result;
+}
+
