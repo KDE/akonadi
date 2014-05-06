@@ -604,6 +604,8 @@ void ProtocolHelper::parseTagFetchResult( const QList<QByteArray> &lineTokens, T
       tag.setRemoteId(value);
     } else if (key == "PARENT") {
       tag.setParent(Tag(value.toLongLong()));
+    } else if ( key == "MIMETYPE" ) {
+      tag.setType(value);
     } else {
       Attribute *attr = AttributeFactory::createAttribute(key);
       if (!attr) {

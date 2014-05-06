@@ -73,8 +73,12 @@ void TagCreateJob::doStart()
         list << "MERGE";
     }
 
+    if (!d->mTag.type().isEmpty()) {
+        list << "MIMETYPE";
+        list << ImapParser::quote(d->mTag.type());
+    }
     if (!d->mTag.remoteId().isEmpty()) {
-        list << "RID";
+        list << "REMOTEID";
         list << ImapParser::quote(d->mTag.remoteId());
     }
     if (d->mTag.parent().isValid()) {
