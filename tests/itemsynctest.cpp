@@ -27,6 +27,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemsync.h>
+#include <akonadi/itemcreatejob.h>
 
 #include <krandom.h>
 
@@ -64,6 +65,14 @@ class ItemsyncTest : public QObject
       AkonadiTest::setAllResourcesOffline();
       qRegisterMetaType<KJob*>();
       qRegisterMetaType<ItemSync::TransactionMode>();
+    }
+
+    static Item modifyItem(Item item)
+    {
+      static int counter = 0;
+      item.setFlag(QByteArray("\\READ")+ QByteArray::number(counter));
+      counter++;
+      return item;
     }
 
     void testFullSync()
@@ -146,7 +155,8 @@ class ItemsyncTest : public QObject
 
       for ( int i = 0; i < origItems.count(); ++i ) {
         Item::List l;
-        l << origItems[i];
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
         syncer->setFullSyncItems( l );
         if (goToEventLoopAfterAddingItems) {
           QTest::qWait(0);
@@ -174,7 +184,7 @@ class ItemsyncTest : public QObject
       QTest::qWait(100);
       QTRY_COMPARE(deletedSpy.count(), 0);
       QTRY_COMPARE(addedSpy.count(), 0);
-      QTRY_COMPARE(changedSpy.count(), 0);
+      QTRY_COMPARE(changedSpy.count(), origItems.count());
     }
 
     void testIncrementalSync()
@@ -207,7 +217,7 @@ class ItemsyncTest : public QObject
       QTest::qWait(100);
       QTRY_COMPARE(deletedSpy.count(), 0);
       QCOMPARE(addedSpy.count(), 0);
-      QTRY_COMPARE(changedSpy.count(), origItems.count());
+      QTRY_COMPARE(changedSpy.count(), 0);
       deletedSpy.clear();
       addedSpy.clear();
       changedSpy.clear();
@@ -243,7 +253,7 @@ class ItemsyncTest : public QObject
       QTest::qWait(100);
       QTRY_COMPARE(deletedSpy.count(), 2);
       QCOMPARE(addedSpy.count(), 0);
-      QTRY_COMPARE(changedSpy.count(), resultItems.count());
+      QTRY_COMPARE(changedSpy.count(), 0);
     }
 
     void testIncrementalStreamingSync()
@@ -274,7 +284,8 @@ class ItemsyncTest : public QObject
 
       for ( int i = 0; i < origItems.count(); ++i ) {
         Item::List l;
-        l << origItems[i];
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
         syncer->setIncrementalSyncItems( l, Item::List() );
         if ( i < origItems.count() - 1 ) {
           QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
@@ -296,7 +307,7 @@ class ItemsyncTest : public QObject
       QTest::qWait(100);
       QCOMPARE(deletedSpy.count(), 0);
       QCOMPARE(addedSpy.count(), 0);
-      QTRY_COMPARE(changedSpy.count(), origItems.count());
+      QTRY_COMPARE(changedSpy.count(), origItems.size());
     }
 
     void testEmptyIncrementalSync()
@@ -359,7 +370,8 @@ class ItemsyncTest : public QObject
 
       for ( int i = 0; i < syncer->batchSize(); ++i ) {
         Item::List l;
-        l << origItems[i];
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
         syncer->setIncrementalSyncItems( l, Item::List() );
         if ( i < (syncer->batchSize() - 1) ) {
           QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
@@ -373,7 +385,8 @@ class ItemsyncTest : public QObject
 
       for ( int i = syncer->batchSize(); i < origItems.count(); ++i ) {
         Item::List l;
-        l << origItems[i];
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
         syncer->setIncrementalSyncItems( l, Item::List() );
         if ( i < origItems.count() - 1 ) {
           QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
@@ -393,6 +406,46 @@ class ItemsyncTest : public QObject
       QCOMPARE(deletedSpy.count(), 0);
       QCOMPARE(addedSpy.count(), 0);
       QTRY_COMPARE(changedSpy.count(), resultItems.count());
+    }
+
+    void testGidMerge()
+    {
+       Collection col(collectionIdFromPath("res3"));
+       {
+          Item item("application/octet-stream");
+          item.setRemoteId("rid1");
+          item.setGid("gid1");
+          item.setPayload<QByteArray>("payload1");
+          ItemCreateJob *job = new ItemCreateJob(item, col);
+          AKVERIFYEXEC(job);
+       }
+       {
+          Item item("application/octet-stream");
+          item.setRemoteId("rid2");
+          item.setGid("gid2");
+          item.setPayload<QByteArray>("payload1");
+          ItemCreateJob *job = new ItemCreateJob(item, col);
+          AKVERIFYEXEC(job);
+       }
+       Item modifiedItem("application/octet-stream");
+       modifiedItem.setRemoteId("rid3");
+       modifiedItem.setGid("gid2");
+       modifiedItem.setPayload<QByteArray>("payload2");
+
+       ItemSync* syncer = new ItemSync(col);
+       syncer->setTransactionMode(ItemSync::MultipleTransactions);
+       syncer->setIncrementalSyncItems(Item::List() << modifiedItem, Item::List());
+       AKVERIFYEXEC(syncer);
+
+       Item::List resultItems = fetchItems(col);
+       QCOMPARE(resultItems.count(), 2);
+
+       ItemFetchJob *fetchJob = new ItemFetchJob(modifiedItem);
+       fetchJob->fetchScope().fetchFullPayload();
+       AKVERIFYEXEC(fetchJob);
+       QCOMPARE(fetchJob->items().size(), 1);
+       QCOMPARE(fetchJob->items().first().payload<QByteArray>(), QByteArray("payload2"));
+       QCOMPARE(fetchJob->items().first().remoteId(), QString::fromLatin1("rid3"));
     }
 
 };

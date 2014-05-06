@@ -236,8 +236,10 @@ protected:
      * @param newItem the item as it should be
      * You can update the @p newItem according to the @p storedItem before
      * it gets committed.
+     *
+     * @deprecated This method is disabled internally.
      */
-    virtual bool updateItem(const Item &storedItem, Item &newItem);
+    AKONADI_DEPRECATED virtual bool updateItem(const Item &storedItem, Item &newItem);
 
 private:
     //@cond PRIVATE
@@ -249,7 +251,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotLocalChangeDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotTransactionResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotItemsReceived(const Akonadi::Item::List &))
-    Q_PRIVATE_SLOT(d_func(), void slotLocalFetchDone(KJob *))
     //@endcond
 };
 
