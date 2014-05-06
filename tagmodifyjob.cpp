@@ -48,8 +48,12 @@ void TagModifyJob::doStart()
 
     QList<QByteArray> list;
     if (!d->mTag.remoteId().isEmpty()) {
-        list << "RID";
+        list << "REMOTEID";
         list << ImapParser::quote(d->mTag.remoteId());
+    }
+    if (!d->mTag.type().isEmpty()) {
+        list << "MIMETYPE";
+        list << ImapParser::quote(d->mTag.type());
     }
     if (d->mTag.parent().isValid() && !d->mTag.isImmutable()) {
         list << "PARENT";
@@ -92,8 +96,6 @@ void TagModifyJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
 
     if (data.startsWith("OK")) {     //krazy:exclude=strings
         ChangeMediator::invalidateTag(d->mTag);
+        emitResult();
     }
-
-    emitResult();
-    return;
 }
