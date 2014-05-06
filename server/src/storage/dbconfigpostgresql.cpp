@@ -29,6 +29,7 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
+#include <unistd.h>
 
 #include <unistd.h>
 
@@ -90,13 +91,29 @@ bool DbConfigPostgresql::init( QSettings &settings )
   // read settings for current driver
   settings.beginGroup( driverName() );
   mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDatabaseName() ).toString();
+  if ( mDatabaseName.isEmpty() ) {
+    mDatabaseName = defaultDatabaseName();
+  }
   mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
+  if ( mHostName.isEmpty() ) {
+    mHostName = defaultHostName;
+  }
+  // User, password and Options can be empty and still valid, so don't override them
   mUserName = settings.value( QLatin1String( "User" ) ).toString();
   mPassword = settings.value( QLatin1String( "Password" ) ).toString();
   mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
   mServerPath = settings.value( QLatin1String( "ServerPath" ), defaultServerPath ).toString();
+  if ( mInternalServer && mServerPath.isEmpty() ) {
+    mServerPath = defaultServerPath;
+  }
   mInitDbPath = settings.value( QLatin1String( "InitDbPath" ), defaultInitDbPath ).toString();
+  if ( mInternalServer && mInitDbPath.isEmpty() ) {
+    mInitDbPath = defaultInitDbPath;
+  }
   mPgData = settings.value( QLatin1String( "PgData" ), defaultPgData ).toString();
+  if ( mPgData.isEmpty() ) {
+    mPgData = defaultPgData;
+  }
   settings.endGroup();
 
   // store back the default values
@@ -104,12 +121,8 @@ bool DbConfigPostgresql::init( QSettings &settings )
   settings.setValue( QLatin1String( "Name" ), mDatabaseName );
   settings.setValue( QLatin1String( "Host" ), mHostName );
   settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
-  if ( !mServerPath.isEmpty() ) {
-    settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
-  }
-  if ( !mInitDbPath.isEmpty() ) {
-    settings.setValue( QLatin1String( "InitDbPath" ), mInitDbPath );
-  }
+  settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
+  settings.setValue( QLatin1String( "InitDbPath" ), mInitDbPath );
   settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
   settings.endGroup();
   settings.sync();
@@ -203,7 +216,7 @@ void DbConfigPostgresql::startInternalServer()
         break;
       }
 
-      if ( pgCtl.waitForFinished( 500 ) ) {
+      if ( pgCtl.waitForFinished( 500 ) && pgCtl.exitCode() ) {
         akError() << "Database process exited unexpectedly during initial connection!";
         akError() << "executable:" << mServerPath;
         akError() << "arguments:" << arguments;
