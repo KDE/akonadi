@@ -168,10 +168,17 @@
     <index name="collectionIndex" columns="collectionId" unique="false"/>
   </table>
 
+  <table name="TagType">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
+    <data columns="id,name" values="1,'PLAIN'"/>
+  </table>
+
   <table name="Tag">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="gid" type="QString" allowNull="false"/>
     <column name="parentId" type="qint64" refTable="Tag" refColumn="id" allowNull="true" methodName="parent"/>
+    <column name="typeId" type="qint64" refTable="TagType" refColumn="id" onDelete="Restrict" default="1"/>
   </table>
 
   <table name="TagAttribute">

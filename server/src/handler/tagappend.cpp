@@ -47,6 +47,7 @@ bool TagAppend::parseStream()
   QString remoteId;
   bool merge = false;
   QString gid;
+  QByteArray type;
   qint64 parentId = -1;
 
   while ( !m_streamParser->atListEnd() ) {
@@ -63,8 +64,22 @@ bool TagAppend::parseStream()
       remoteId = QString::fromLatin1( m_streamParser->readString() );
     } else if ( param == AKONADI_PARAM_MERGE ) {
       merge = true;
+    } else if ( param == AKONADI_PARAM_MIMETYPE ) {
+      type = m_streamParser->readString();
     } else {
       attributes << qMakePair( param, m_streamParser->readString() );
+    }
+  }
+
+  TagType tagType;
+  if ( !type.isEmpty() ) {
+    tagType= TagType::retrieveByName( QString::fromLatin1( type ) );
+    if ( !tagType.isValid() ) {
+      TagType t( QString::fromLatin1( type ) );
+      if ( !t.insert() ) {
+        return failureResponse( QByteArray( "Unable to create tagtype '" ) + type + QByteArray( "'." ) );
+      }
+      tagType = t;
     }
   }
 
@@ -85,6 +100,9 @@ bool TagAppend::parseStream()
     insertedTag.setGid( gid );
     if ( parentId >= 0 ) {
       insertedTag.setParentId( parentId );
+    }
+    if ( tagType.isValid() ) {
+      insertedTag.setTypeId( tagType.id() );
     }
     if  ( !insertedTag.insert( &tagId ) ) {
       throw HandlerException( "Failed to store tag" );

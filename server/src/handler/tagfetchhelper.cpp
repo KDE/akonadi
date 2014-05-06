@@ -61,6 +61,10 @@ QSqlQuery TagFetchHelper::buildTagQuery()
   QueryBuilder qb( Tag::tableName() );
   qb.addColumns( Tag::fullColumnNames() );
 
+  qb.addJoin( QueryBuilder::InnerJoin, TagType::tableName(),
+                     Tag::typeIdFullColumnName(), TagType::idFullColumnName() );
+  qb.addColumn( TagType::nameFullColumnName() );
+
   // Expose tag's remote ID only to resources
   if ( mConnection->context()->resource().isValid() ) {
     qb.addColumn( TagRemoteIdResourceRelation::remoteIdFullColumnName() );
@@ -96,15 +100,18 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
     const qint64 tagId = tagQuery.value( 0 ).toLongLong();
     const QByteArray gid = tagQuery.value( 1 ).toByteArray();
     const qint64 parentId = tagQuery.value( 2 ).toLongLong();
+    //we're ignoring the type id
+    const QByteArray type = tagQuery.value( 4 ).toByteArray();
     QByteArray remoteId;
     if ( mConnection->context()->resource().isValid() ) {
-      remoteId = tagQuery.value( 3 ).toByteArray();
+      remoteId = tagQuery.value( 5 ).toByteArray();
     }
 
     QList<QByteArray> attributes;
     attributes << AKONADI_PARAM_UID << QByteArray::number( tagId );
     attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
     attributes << AKONADI_PARAM_PARENT << QByteArray::number( parentId );
+    attributes << AKONADI_PARAM_MIMETYPE " " + ImapParser::quote( type );
     if ( !remoteId.isEmpty() ) {
       attributes << AKONADI_PARAM_REMOTEID << remoteId;
     }
