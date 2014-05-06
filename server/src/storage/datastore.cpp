@@ -187,7 +187,7 @@ DataStore *DataStore::self()
 
 /* --- ItemFlags ----------------------------------------------------- */
 
-bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
+bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool silent )
 {
   QSet<QByteArray> removedFlags;
   QSet<QByteArray> addedFlags;
@@ -233,12 +233,9 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
     }
   }
 
-  if ( addedFlags.empty() && removedFlags.empty() ) {
-    // no changes done, notification not needed
-    return true;
+  if ( !silent && ( !addedFlags.isEmpty() || !removedFlags.isEmpty() ) ) {
+    mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
   }
-
-  mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
 
   return true;
 }
@@ -335,7 +332,8 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
   return true;
 }
 
-bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
+bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
+                                  bool &flagsChanged, bool silent )
 {
   QSet<QByteArray> removedFlags;
   QVariantList itemsIds;
@@ -361,13 +359,17 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
     return false;
   }
 
-  mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
+  flagsChanged = ( qb.query().numRowsAffected() != 0 ); // consider -1 (error) a change too
+  if ( flagsChanged && !silent ) {
+    mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
+  }
+
   return true;
 }
 
 /* --- ItemTags ----------------------------------------------------- */
 
-bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags )
+bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags, bool silent )
 {
   QSet<qint64> removedTags;
   QSet<qint64> addedTags;
@@ -415,18 +417,16 @@ bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags 
     }
   }
 
-  if ( addedTags.empty() && removedTags.empty() ) {
-    // no changes done, notification not needed
-    return true;
+  if ( !silent && ( !addedTags.empty() || !removedTags.empty() ) ) {
+    mNotificationCollector->itemsTagsChanged( items, addedTags, removedTags );
   }
-
-  mNotificationCollector->itemsTagsChanged( items, addedTags, removedTags );
 
   return true;
 }
 
 bool DataStore::doAppendItemsTag( const PimItem::List &items, const Tag &tag,
-                                   const QSet<Entity::Id> &existing, const Collection &col )
+                                  const QSet<Entity::Id> &existing, const Collection &col,
+                                  bool silent )
 {
   QVariantList tagIds;
   QVariantList appendIds;
@@ -454,15 +454,17 @@ bool DataStore::doAppendItemsTag( const PimItem::List &items, const Tag &tag,
     return false;
   }
 
-  mNotificationCollector->itemsTagsChanged( appendItems, QSet<qint64>() << tag.id(),
-                                             QSet<qint64>(), col );
+  if ( !silent ) {
+    mNotificationCollector->itemsTagsChanged( appendItems, QSet<qint64>() << tag.id(),
+                                               QSet<qint64>(), col );
+  }
 
   return true;
 }
 
 bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &tags,
                                   bool &tagsChanged, bool checkIfExists,
-                                  const Collection &col )
+                                  const Collection &col, bool silent )
 {
   QSet<QByteArray> added;
 
@@ -498,7 +500,7 @@ bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &ta
         existing << query.value( 0 ).value<PimItem::Id>();
       } }
 
-    if ( !doAppendItemsTag( items, tag, existing, col ) ) {
+    if ( !doAppendItemsTag( items, tag, existing, col, silent ) ) {
       return false;
     }
   }
@@ -506,7 +508,8 @@ bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &ta
   return true;
 }
 
-bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &tags )
+bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &tags,
+                                 bool &tagsChanged, bool silent )
 {
   QSet<qint64> removedTags;
   QVariantList itemsIds;
@@ -532,7 +535,10 @@ bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &ta
     return false;
   }
 
-  mNotificationCollector->itemsTagsChanged( items, QSet<qint64>(), removedTags );
+  tagsChanged = qb.query().numRowsAffected() != 0;
+  if ( !silent && tagsChanged ) {
+    mNotificationCollector->itemsTagsChanged( items, QSet<qint64>(), removedTags );
+  }
   return true;
 }
 

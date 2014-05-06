@@ -68,7 +68,7 @@ Store::Store( Scope::SelectionScope scope )
 {
 }
 
-bool Store::replaceFlags( const PimItem::List &item, const QList<QByteArray> &flags )
+bool Store::replaceFlags( const PimItem::List &item, const QVector<QByteArray> &flags )
 {
   Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
@@ -80,7 +80,7 @@ bool Store::replaceFlags( const PimItem::List &item, const QList<QByteArray> &fl
   return true;
 }
 
-bool Store::addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool &flagsChanged )
+bool Store::addFlags( const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged )
 {
   const Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
@@ -92,7 +92,7 @@ bool Store::addFlags( const PimItem::List &items, const QList<QByteArray> &flags
   return true;
 }
 
-bool Store::deleteFlags( const PimItem::List &items, const QList<QByteArray> &flags )
+bool Store::deleteFlags( const PimItem::List &items, const QVector<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
 
@@ -107,7 +107,8 @@ bool Store::deleteFlags( const PimItem::List &items, const QList<QByteArray> &fl
     flagList.append( flag );
   }
 
-  if ( !store->removeItemsFlags( items, flagList ) ) {
+  bool changed; // unused
+  if ( !store->removeItemsFlags( items, flagList, changed ) ) {
     akDebug() << "Store::deleteFlags: Unable to remove item flags";
     return false;
   }
@@ -136,7 +137,8 @@ bool Store::addTags( const PimItem::List &items, const ImapSet &tags, bool &tags
 bool Store::deleteTags( const PimItem::List &items, const ImapSet &tags )
 {
   const Tag::List tagList = HandlerHelper::resolveTags( tags );
-  if ( !connection()->storageBackend()->removeItemsTags( items, tagList ) ) {
+  bool changed; // unused
+  if ( !connection()->storageBackend()->removeItemsTags( items, tagList, changed ) ) {
     akDebug() << "Store::deleteTags: Unable to remove item tags";
     return false;
   }
@@ -213,7 +215,7 @@ bool Store::parseStream()
     // handle commands that can be applied to more than one item
     if ( command == AKONADI_PARAM_FLAGS ) {
       bool flagsChanged = true;
-      const QList<QByteArray> flags = m_streamParser->readParenthesizedList();
+      const QVector<QByteArray> flags = m_streamParser->readParenthesizedList().toVector();
       if ( op == Replace ) {
         flagsChanged = replaceFlags( pimItems, flags );
       } else if ( op == Add ) {

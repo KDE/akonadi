@@ -118,16 +118,16 @@ class DataStore : public QObject
     static DataStore *self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
+    bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool silent = false );
     bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged,
                            bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
+    bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged, bool silent = false );
 
     /* --- ItemTags ----------------------------------------------------- */
-    bool setItemsTags( const PimItem::List &items, const Tag::List &tags );
+    bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool silent = false );
     bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged,
-                           bool checkIfExists = true, const Collection &col = Collection() );
-    bool removeItemsTags( const PimItem::List &items, const Tag::List &tags );
+                           bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
+    bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged, bool silent = false );
 
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
@@ -276,7 +276,8 @@ protected:
                             bool silent );
 
     bool doAppendItemsTag( const PimItem::List &items, const Tag &tag,
-                          const QSet<Entity::Id> &existing, const Collection &col );
+                          const QSet<Entity::Id> &existing, const Collection &col,
+                          bool silent );
 
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
