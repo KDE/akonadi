@@ -220,9 +220,10 @@ void DbConfigPostgresql::startInternalServer()
             << QString::fromLatin1( "-w" )
             << QString::fromLatin1( "--timeout=10" ) // default is 60 seconds.
             << QString::fromLatin1( "--pgdata=%1" ).arg( mPgData )
-            // set the directory for unix domain socket communication
-            // -o will pass the switch to postgres
-            << QString::fromLatin1( "-o \"-k%1\"" ).arg( socketDir );
+            // These options are passed to postgres
+            //  -k - directory for unix domain socket communication
+            //  -h - disable listening for TCP/IP
+            << QString::fromLatin1( "-o \"-k%1\" -h ''" ).arg( socketDir );
 
   QProcess pgCtl;
   pgCtl.start( mServerPath, arguments );
