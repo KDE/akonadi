@@ -13,5 +13,5 @@ macro(add_libakonadixml_test _source)
                         ${KDE4_KDEUI_LIBS} akonadi-kde)
 endmacro()
 
-add_libakonadixml_test(collection.cpp)
-add_libakonadixml_test(xmldocumenttest.cpp)
+#add_libakonadixml_test(collection.cpp)
+#add_libakonadixml_test(xmldocumenttest.cpp)
