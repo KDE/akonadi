@@ -96,23 +96,33 @@ public:
      */
     Item item() const;
 
+    enum MergeOption {
+      NoMerge = 0, ///< Don't merge
+      RID     = 1, ///< Merge by remote id
+      GID     = 2, ///< Merge by GID
+      Silent  = 4  ///< Only return the id of the merged/created item.
+    };
+    Q_DECLARE_FLAGS(MergeOptions, MergeOption)
+
     /**
-     * Merge this item into an existing one
+     * Merge this item into an existing one if available.
      *
-     * If an item with same GID and remote ID as the created item exists in
-     * specified collection, the new item will be merged into the existing one
-     * and the merged item will be returned.
+     * If an item with same GID and/or remote ID as the created item exists in
+     * specified collection (depending on the provided options), the new item will
+     * be merged into the existing one and the merged item will be returned
+     * (unless the Silent option is used).
      *
-     * If the new item does not have remote ID specified, only GID-based merging
-     * will be performed. If the item does not have GID, this option will be
+     * If no matching item is found a new item is created.
+     *
+     * If the item does not have a GID or RID, this option will be
      * ignored and a new item will be created.
      *
      * By default, merging is disabled.
      *
-     * @param merge Whether to enable or disable merging
+     * @param options Merge options.
      * @since 4.14
      */
-    void setMergeIfExists(bool merge);
+    void setMerge(MergeOptions options);
 
 protected:
     virtual void doStart();
@@ -121,6 +131,8 @@ protected:
 private:
     Q_DECLARE_PRIVATE(ItemCreateJob)
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(ItemCreateJob::MergeOptions)
 
 }
 

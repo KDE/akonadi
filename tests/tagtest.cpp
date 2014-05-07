@@ -28,6 +28,7 @@
 #include <akonadi/tagattribute.h>
 #include <akonadi/tagfetchscope.h>
 #include <tagmodifyjob.h>
+#include <resourceselectjob_p.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
@@ -47,6 +48,7 @@ private Q_SLOTS:
     void initTestCase();
 
     void testCreateFetch();
+    void testRID();
     void testDelete();
     void testModify();
     void testCreateMerge();
@@ -69,6 +71,7 @@ void TagTest::testCreateFetch()
 {
     Tag tag;
     tag.setGid("gid");
+    tag.setType("mytype");
     TagCreateJob *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
     QVERIFY(createjob->tag().isValid());
@@ -78,7 +81,7 @@ void TagTest::testCreateFetch()
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
-        qDebug() << fetchJob->tags().first().id();
+        QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
 
         TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
         AKVERIFYEXEC(deleteJob);
@@ -88,6 +91,37 @@ void TagTest::testCreateFetch()
         TagFetchJob *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 0);
+    }
+}
+
+void TagTest::testRID()
+{
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        AKVERIFYEXEC(select);
+    }
+    Tag tag;
+    tag.setGid("gid");
+    tag.setType("mytype");
+    tag.setRemoteId("rid");
+    TagCreateJob *createjob = new TagCreateJob(tag, this);
+    AKVERIFYEXEC(createjob);
+    QVERIFY(createjob->tag().isValid());
+
+    {
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
+        QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
+        QCOMPARE(fetchJob->tags().first().remoteId(), QByteArray("rid"));
+
+        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
+        AKVERIFYEXEC(deleteJob);
+    }
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("");
+        AKVERIFYEXEC(select);
     }
 }
 

@@ -271,27 +271,53 @@ void ItemAppendTest::testItemMerge_data()
   QTest::addColumn<Akonadi::Item>( "item1" );
   QTest::addColumn<Akonadi::Item>( "item2" );
   QTest::addColumn<Akonadi::Item>( "mergedItem" );
+  QTest::addColumn<bool>( "silent" );
 
-  Item i1( "application/octet-stream" );
-  i1.setPayload( QByteArray( "ABCD" ) );
-  i1.setSize( 4 );
-  i1.setRemoteId( "XYZ" );
-  i1.setGid( "XYZ" );
-  i1.setFlag( "TestFlag1" );
-  i1.setRemoteRevision( "5" );
+  {
+    Item i1( "application/octet-stream" );
+    i1.setPayload( QByteArray( "ABCD" ) );
+    i1.setSize( 4 );
+    i1.setRemoteId( "XYZ" );
+    i1.setGid( "XYZ" );
+    i1.setFlag( "TestFlag1" );
+    i1.setRemoteRevision( "5" );
 
-  Item i2( "application/octet-stream" );
-  i2.setPayload( QByteArray( "DEFGH" ) );
-  i2.setSize( 5 );
-  i2.setRemoteId(( "XYZ" ) );
-  i2.setGid( "XYZ" );
-  i2.setFlag( "TestFlag2" );
-  i2.setRemoteRevision( "6" );
+    Item i2( "application/octet-stream" );
+    i2.setPayload( QByteArray( "DEFGH" ) );
+    i2.setSize( 5 );
+    i2.setRemoteId(( "XYZ" ) );
+    i2.setGid( "XYZ" );
+    i2.setFlag( "TestFlag2" );
+    i2.setRemoteRevision( "6" );
 
-  Item mergedItem( i2 );
-  mergedItem.setFlag( "TestFlag1" );
+    Item mergedItem( i2 );
+    mergedItem.setFlag( "TestFlag1" );
 
-  QTest::newRow( "ok merge" ) << i1 << i2 << mergedItem;
+    QTest::newRow( "merge" ) << i1 << i2 << mergedItem << false;
+    QTest::newRow( "merge (silent)" ) << i1 << i2 << mergedItem << true;
+  }
+  {
+    Item i1( "application/octet-stream" );
+    i1.setPayload( QByteArray( "ABCD" ) );
+    i1.setSize( 4 );
+    i1.setRemoteId( "RID2" );
+    i1.setGid( "GID2" );
+    i1.setFlag( "TestFlag1" );
+    i1.setRemoteRevision( "5" );
+
+    Item i2( "application/octet-stream" );
+    i2.setRemoteId(( "RID2" ) );
+    i2.setGid( "GID2" );
+    i2.setFlags( Item::Flags() << "TestFlag2" );
+    i2.setRemoteRevision( "6" );
+
+    Item mergedItem( i1 );
+    mergedItem.setFlags( i2.flags() );
+    mergedItem.setRemoteRevision( i2.remoteRevision() );
+
+    QTest::newRow( "overwrite flags, and don't remove existing payload" ) << i1 << i2 << mergedItem << false;
+    QTest::newRow( "overwrite flags, and don't remove existing payload (silent)" ) << i1 << i2 << mergedItem << true;
+  }
 }
 
 void ItemAppendTest::testItemMerge()
@@ -299,22 +325,38 @@ void ItemAppendTest::testItemMerge()
   QFETCH( Akonadi::Item, item1 );
   QFETCH( Akonadi::Item, item2 );
   QFETCH( Akonadi::Item, mergedItem );
+  QFETCH( bool, silent );
 
   const Collection col( collectionIdFromPath( "res2/space folder" ) );
   QVERIFY( col.isValid() );
 
   ItemCreateJob *create = new ItemCreateJob( item1, col, this );
   AKVERIFYEXEC( create );
+  const Item createdItem = create->item();
 
   ItemCreateJob *merge = new ItemCreateJob( item2, col, this );
-  merge->setMergeIfExists( true );
+  ItemCreateJob::MergeOptions options = ItemCreateJob::GID | ItemCreateJob::RID;
+  if ( silent ) {
+    options |= ItemCreateJob::Silent;
+  }
+  merge->setMerge( options );
   AKVERIFYEXEC( merge );
 
-  QCOMPARE( mergedItem.gid(), merge->item().gid() );
-  QCOMPARE( mergedItem.remoteId(), merge->item().remoteId() );
-  QCOMPARE( mergedItem.remoteRevision(), merge->item().remoteRevision() );
-  QCOMPARE( mergedItem.payloadData(), merge->item().payloadData() );
-  QCOMPARE( mergedItem.size(), merge->item().size() );
-  QCOMPARE( mergedItem.flags(), merge->item().flags() );
+  QCOMPARE( merge->item().id(), createdItem.id() );
+  if ( !silent ) {
+    QCOMPARE( merge->item().gid(), mergedItem.gid() );
+    QCOMPARE( merge->item().remoteId(), mergedItem.remoteId() );
+    QCOMPARE( merge->item().remoteRevision(), mergedItem.remoteRevision() );
+    QCOMPARE( merge->item().payloadData(), mergedItem.payloadData() );
+    QCOMPARE( merge->item().size(), mergedItem.size() );
+    QCOMPARE( merge->item().flags(), mergedItem.flags() );
+  }
+
+  if ( merge->item().id() != createdItem.id() ) {
+    ItemDeleteJob *del = new ItemDeleteJob( merge->item(), this );
+    AKVERIFYEXEC( del );
+  }
+  ItemDeleteJob *del = new ItemDeleteJob( createdItem, this );
+  AKVERIFYEXEC( del );
 }
 
