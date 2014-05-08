@@ -63,7 +63,7 @@ public:
      */
     explicit Tag(const QString &name);
 
-    Tag(const Tag &);
+    Tag(const Tag &other);
 
     ~Tag();
 
@@ -89,19 +89,19 @@ public:
      */
     Id id() const;
 
-    void setGid(const QByteArray &) const;
+    void setGid(const QByteArray &gid) const;
     QByteArray gid() const;
 
-    void setRemoteId(const QByteArray &) const;
+    void setRemoteId(const QByteArray &remoteId) const;
     QByteArray remoteId() const;
 
-    void setType(const QByteArray &) const;
+    void setType(const QByteArray &type) const;
     QByteArray type() const;
 
-    void setName(const QString &);
+    void setName(const QString &name);
     QString name() const;
 
-    void setParent(const Tag &);
+    void setParent(const Tag &parent);
     Tag parent() const;
 
     bool isValid() const;

@@ -50,9 +50,9 @@ public:
     void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
     QMap<QByteArray, QByteArray> annotations() const;
 
-    void insert(const QByteArray &, const QString &);
-    QString value(const QByteArray &);
-    bool contains(const QByteArray &) const;
+    void insert(const QByteArray &key, const QString &value);
+    QString value(const QByteArray &key);
+    bool contains(const QByteArray &key) const;
 
     QByteArray type() const;
     Attribute *clone() const;
