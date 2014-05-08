@@ -43,7 +43,7 @@ public:
     TagFetchJob(const Tag::List &tags, QObject *parent = 0);
     TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = 0);
 
-    void setFetchScope(const TagFetchScope &);
+    void setFetchScope(const TagFetchScope &fetchScope);
 
     TagFetchScope &fetchScope();
 
