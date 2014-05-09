@@ -229,17 +229,6 @@ protected:
     void doStart();
     void slotResult(KJob *job);
 
-    /**
-     * Reimplement this method to customize the synchronization algorithm.
-     * @param storedItem the item as it is now
-     * @param newItem the item as it should be
-     * You can update the @p newItem according to the @p storedItem before
-     * it gets committed.
-     *
-     * @deprecated This method is disabled internally.
-     */
-    AKONADI_DEPRECATED virtual bool updateItem(const Item &storedItem, Item &newItem);
-
 private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(ItemSync)
