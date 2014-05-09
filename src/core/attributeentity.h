@@ -44,11 +44,11 @@ class AKONADICORE_EXPORT AttributeEntity {
 public:
     AttributeEntity();
 
-    AttributeEntity(const AttributeEntity &);
+    AttributeEntity(const AttributeEntity &other);
     virtual ~AttributeEntity();
 
     //Each subclass must override this to avoid slicing
-    virtual AttributeEntity &operator=(const AttributeEntity &);
+    virtual AttributeEntity &operator=(const AttributeEntity &other);
 
     /**
      * Adds an attribute to the entity.

@@ -67,12 +67,10 @@ public:
         mFetchScope.fetchAllAttributes();
     }
 
-    void createLocalItem(const Item &item);
-    void modifyLocalItem(const Item &remoteItem, Akonadi::Item::Id localId);
+    void createOrMerge(const Item &item);
     void checkDone();
     void slotItemsReceived(const Item::List &items);
     void slotLocalListDone(KJob *job);
-    void slotLocalFetchDone(KJob *job);
     void slotLocalDeleteDone(KJob *);
     void slotLocalChangeDone(KJob *job);
     void execute();
@@ -82,14 +80,13 @@ public:
     void slotTransactionResult(KJob *job);
     void requestTransaction();
     Job *subjobParent() const;
-    void fetchLocalItems();
+    void fetchLocalItemsToDelete();
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
     bool allProcessed() const;
 
     Q_DECLARE_PUBLIC(ItemSync)
     Collection mSyncCollection;
-    QSet<Akonadi::Item::Id> mUnprocessedLocalIds;
-    QHash<QString, Akonadi::Item::Id> mLocalIdByRid;
+    QSet<QString> mListedItems;
 
     ItemSync::TransactionMode mTransactionMode;
     TransactionSequence *mCurrentTransaction;
@@ -102,6 +99,7 @@ public:
     Akonadi::Item::List mRemovedRemoteItemQueue;
     Akonadi::Item::List mCurrentBatchRemoteItems;
     Akonadi::Item::List mCurrentBatchRemovedRemoteItems;
+    Akonadi::Item::List mItemsToDelete;
 
     // create counter
     int mPendingJobs;
@@ -120,7 +118,7 @@ public:
     int mBatchSize;
 };
 
-void ItemSyncPrivate::createLocalItem(const Item &item)
+void ItemSyncPrivate::createOrMerge(const Item &item)
 {
     Q_Q(ItemSync);
     // don't try to do anything in error state
@@ -129,57 +127,12 @@ void ItemSyncPrivate::createLocalItem(const Item &item)
     }
     mPendingJobs++;
     ItemCreateJob *create = new ItemCreateJob(item, mSyncCollection, subjobParent());
-    q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
-}
-
-void ItemSyncPrivate::modifyLocalItem(const Item &remoteItem, Akonadi::Item::Id localId)
-{
-    Q_Q(ItemSync);
-    // don't try to do anything in error state
-    if (q->error()) {
-        return;
-    }
-
-    //we fetch the local item to check if a modification is required and to make sure we have all parts
-    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(Akonadi::Item(localId), subjobParent());
-    fetchJob->setFetchScope(mFetchScope);
-    fetchJob->fetchScope().setCacheOnly(true);
-    fetchJob->setDeliveryOption(ItemFetchJob::ItemGetter);
-    q->connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(slotLocalFetchDone(KJob*)));
-    fetchJob->setProperty("remoteItem", QVariant::fromValue(remoteItem));
-    mPendingJobs++;
-}
-
-void ItemSyncPrivate::slotLocalFetchDone(KJob *job)
-{
-    Q_Q(ItemSync);
-    mPendingJobs--;
-    if (job->error()) {
-        kWarning() << job->errorString();
-        checkDone();
-        return;
-    }
-    Akonadi::ItemFetchJob *fetchJob = static_cast<Akonadi::ItemFetchJob*>(job);
-    Akonadi::Item remoteItem = fetchJob->property("remoteItem").value<Akonadi::Item>();
-    if (fetchJob->items().isEmpty()) {
-        kWarning() << "Failed to fetch local item: " << remoteItem.remoteId() << remoteItem.gid();
-        checkDone();
-        return;
-    }
-    const Akonadi::Item localItem = fetchJob->items().first();
-    if (q->updateItem(localItem, remoteItem)) {
-        remoteItem.setId(localItem.id());
-        remoteItem.setRevision(localItem.revision());
-        remoteItem.setSize(localItem.size());
-        remoteItem.setRemoteId(localItem.remoteId());    // in case someone clears remoteId by accident
-        ItemModifyJob *mod = new ItemModifyJob(remoteItem, subjobParent());
-        mod->disableRevisionCheck();
-        q->connect(mod, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
-        mPendingJobs++;
+    if (!item.gid().isEmpty()) {
+        create->setMerge(ItemCreateJob::GID|ItemCreateJob::Silent);
     } else {
-        mProgress++;
+        create->setMerge(ItemCreateJob::RID|ItemCreateJob::Silent);
     }
-    checkDone();
+    q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
 }
 
 bool ItemSyncPrivate::allProcessed() const
@@ -323,6 +276,7 @@ void ItemSync::doStart()
 
 bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
 {
+<<<<<<< HEAD:akonadi/src/core/itemsync.cpp
     Q_D(ItemSync);
     // we are in error state, better not change anything at all anymore
     if (error()) {
@@ -379,47 +333,28 @@ bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
         }
     }
 
+=======
+    Q_UNUSED(storedItem);
+    Q_UNUSED(newItem);
+>>>>>>> origin/master:akonadi/itemsync.cpp
     return false;
 }
 
-void ItemSyncPrivate::fetchLocalItems()
+void ItemSyncPrivate::fetchLocalItemsToDelete()
 {
-    Q_Q( ItemSync );
-    ItemFetchJob* job;
+    Q_Q(ItemSync);
     if (mIncremental) {
-        //Try fetching the items so we have their id and know if they're available
-        const Akonadi::Item::List itemsToFetch = mCurrentBatchRemoteItems + mCurrentBatchRemovedRemoteItems;
-        if (itemsToFetch.isEmpty()) {
-            // The fetch job produces an error with an empty set
-            processBatch();
-            return;
-        }
-        // We need to fetch the items only to detect if they are new or modified
-        job = new ItemFetchJob(itemsToFetch, subjobParent());
-        job->fetchScope().setFetchRemoteIdentification(true);
-        job->fetchScope().setFetchModificationTime(false);
-        job->setCollection(mSyncCollection);
-        job->setDeliveryOption(ItemFetchJob::EmitItemsIndividually);
-        // We use this to check if items are available locally, so errors are inevitable
-        job->fetchScope().setIgnoreRetrievalErrors(true);
-        QObject::connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)), q, SLOT(slotItemsReceived(Akonadi::Item::List)));
-    } else {
-        if (mFullListingDone) {
-            processBatch();
-            return;
-        }
-        //Otherwise we'll remove the created items again during the second run
-        mFullListingDone = true;
-        job = new ItemFetchJob(mSyncCollection, subjobParent());
-        job->fetchScope().setFetchRemoteIdentification(true);
-        job->fetchScope().setFetchModificationTime(false);
-        job->setDeliveryOption(ItemFetchJob::EmitItemsIndividually);
-        QObject::connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)), q, SLOT(slotItemsReceived(Akonadi::Item::List)));
+        kFatal() << "This must not be called while in incremental mode";
+        return;
     }
-
+    ItemFetchJob *job = new ItemFetchJob(mSyncCollection, subjobParent());
+    job->fetchScope().setFetchRemoteIdentification(true);
+    job->fetchScope().setFetchModificationTime(false);
+    job->setDeliveryOption(ItemFetchJob::EmitItemsIndividually);
     // we only can fetch parts already in the cache, otherwise this will deadlock
     job->fetchScope().setCacheOnly(true);
 
+    QObject::connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)), q, SLOT(slotItemsReceived(Akonadi::Item::List)));
     QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)));
     mPendingJobs++;
 }
@@ -431,13 +366,8 @@ void ItemSyncPrivate::slotItemsReceived(const Item::List &items)
         if (item.remoteId().isEmpty()) {
             continue;
         }
-        if (mLocalIdByRid.contains(item.remoteId())) {
-            kWarning() << "Found multiple items with the same rid : " << item.remoteId() << item.id();
-        } else {
-            mLocalIdByRid.insert(item.remoteId(), item.id());
-        }
-        if (!mIncremental) {
-            mUnprocessedLocalIds << item.id();
+        if (!mListedItems.contains(item.remoteId())) {
+            mItemsToDelete << Item(item.id());
         }
     }
 }
@@ -448,7 +378,8 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
     if (job->error()) {
         kWarning() << job->errorString();
     }
-    processBatch();
+    deleteItems(mItemsToDelete);
+    checkDone();
 }
 
 QString ItemSyncPrivate::jobDebuggingString() const /*Q_DECL_OVERRIDE*/
@@ -482,7 +413,7 @@ void ItemSyncPrivate::execute()
             return;
         }
         mProcessingBatch = true;
-        fetchLocalItems();
+        processBatch();
         return;
     }
     checkDone();
@@ -502,29 +433,14 @@ void ItemSyncPrivate::processBatch()
     processItems();
 
     // removed
-    Akonadi::Item::List itemsToDelete;
     if (!mIncremental && allProcessed()) {
         //the full listing is done and we know which items to remove
-        foreach (Akonadi::Item::Id id, mUnprocessedLocalIds) {
-            itemsToDelete << Akonadi::Item(id);
-        }
-        mUnprocessedLocalIds.clear();
+        fetchLocalItemsToDelete();
     } else {
-        foreach (const Akonadi::Item &removedItem, mCurrentBatchRemovedRemoteItems) {
-            if (!mLocalIdByRid.contains(removedItem.remoteId())) {
-                kWarning() << "cannot remove item because it's not available locally. RID: " << removedItem.remoteId();
-                continue;
-            }
-            itemsToDelete << Akonadi::Item(mLocalIdByRid.value(removedItem.remoteId()));
-        }
+        deleteItems(mCurrentBatchRemovedRemoteItems);
         mCurrentBatchRemovedRemoteItems.clear();
     }
-    deleteItems(itemsToDelete);
 
-    if (mIncremental) {
-        //no longer required, we processed all items of the current batch
-        mLocalIdByRid.clear();
-    }
     checkDone();
 }
 
@@ -537,18 +453,10 @@ void ItemSyncPrivate::processItems()
             qWarning() << "Item " << remoteItem.id() << " does not have a remote identifier";
             continue;
         }
-
-        //TODO also check by id and gid
-        //Locally available
-        if (mLocalIdByRid.contains(remoteItem.remoteId())) {
-            const Akonadi::Item::Id localId = mLocalIdByRid.value(remoteItem.remoteId());
-            if (!mIncremental) {
-                mUnprocessedLocalIds.remove(localId);
-            }
-            modifyLocalItem(remoteItem, localId);
-        } else {
-            createLocalItem(remoteItem);
+        if (!mIncremental) {
+            mListedItems << remoteItem.remoteId();
         }
+        createOrMerge(remoteItem);
     }
     mCurrentBatchRemoteItems.clear();
 }
