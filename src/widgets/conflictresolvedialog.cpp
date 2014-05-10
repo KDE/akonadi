@@ -33,6 +33,7 @@
 #include <klocalizedstring.h>
 #include <kglobal.h>
 #include <qtextbrowser.h>
+#include <KLocale>
 
 using namespace Akonadi;
 
@@ -129,8 +130,8 @@ static void compareItems( AbstractDifferencesReporter *reporter, const Akonadi::
 {
     if ( localItem.modificationTime() != otherItem.modificationTime() ) {
         reporter->addProperty( AbstractDifferencesReporter::ConflictMode, i18n( "Modification Time" ),
-                               KGlobal::locale()->formatDateTime( localItem.modificationTime(), KLocale::ShortDate, true ),
-                               KGlobal::locale()->formatDateTime( otherItem.modificationTime(), KLocale::ShortDate, true ) );
+                               KLocale::global()->formatDateTime( localItem.modificationTime(), KLocale::ShortDate, true ),
+                               KLocale::global()->formatDateTime( otherItem.modificationTime(), KLocale::ShortDate, true ) );
     }
 
     if ( localItem.flags() != otherItem.flags() ) {
