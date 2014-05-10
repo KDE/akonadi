@@ -7,15 +7,32 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
-akonadi_generate_schema(${CMAKE_CURRENT_SOURCE_DIR}/dbinitializertest_data/unittest_schema.xml UnitTestSchema unittestschema)
+akonadi_generate_schema(${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/unittest_schema.xml UnitTestSchema unittestschema)
 
-add_library(akonadi_unittest_common STATIC unittestschema.cpp)
+set(AKONADI_DB_DATA ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/dbdata.xml)
+
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
+  COMMAND ${XSLTPROC_EXECUTABLE}
+          --output ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/dbpopulator.xsl
+          ${AKONADI_DB_DATA}
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/dbpopulator.xsl
+          ${AKONADI_DB_DATA}
+)
+
+set(common_SRCS
+    unittestschema.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
+)
+
+add_library(akonadi_unittest_common STATIC ${common_SRCS})
 target_link_libraries(akonadi_unittest_common akonadiprivate)
 
 macro(add_server_test _source _libs)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  qt4_add_resources(_test dbinitializertest_data/dbinitializertestdata.qrc)
+  qt4_add_resources(_test dbtest_data/dbtest_data.qrc)
   add_executable(${_name} ${_test})
   add_test(akonadi-${_name} ${_name})
   target_link_libraries(${_name} akonadi_shared akonadi_unittest_common ${_libs} ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARIES} ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY})
