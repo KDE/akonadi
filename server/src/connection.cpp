@@ -42,9 +42,9 @@
 
 using namespace Akonadi::Server;
 
-Connection::Connection( quintptr socketDescriptor, QObject *parent )
-    : QThread( parent )
-    , m_socketDescriptor( socketDescriptor )
+Connection::Connection( QObject *parent )
+    : QObject( parent )
+    , m_socketDescriptor( 0 )
     , m_socket( 0 )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
@@ -52,11 +52,55 @@ Connection::Connection( quintptr socketDescriptor, QObject *parent )
     , m_streamParser( 0 )
     , m_verifyCacheOnRetrieval( false )
 {
+}
+
+
+Connection::Connection( quintptr socketDescriptor, QObject *parent )
+    : Connection( parent )
+{
+    m_socketDescriptor = socketDescriptor;
     m_identifier.sprintf( "%p", static_cast<void *>( this ) );
     ClientCapabilityAggregator::addSession( m_clientCapabilities );
 
     const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
     m_verifyCacheOnRetrieval = settings.value( QLatin1String( "Cache/VerifyOnRetrieval" ), m_verifyCacheOnRetrieval ).toBool();
+
+    QLocalSocket *socket = new QLocalSocket();
+    m_socket = socket;
+
+    if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
+        qWarning() << "Connection(" << m_identifier
+                   << ")::run: failed to set socket descriptor: "
+                   << m_socket->error() << "(" << m_socket->errorString() << ")";
+        delete m_socket;
+        m_socket = 0;
+        return;
+    }
+
+    /* Whenever a full command has been read, it is delegated to the responsible
+     * handler and processed by that. If that command needs to do something
+     * asynchronous such as ask the db for data, it returns and the input
+     * queue can continue to be processed. Whenever there is something to
+     * be sent back to the user it is queued in the form of a Response object.
+     * All this is meant to make it possible to process large incoming or
+     * outgoing data transfers in a streaming manner, without having to
+     * hold them in memory 'en gros'. */
+
+    connect( socket, SIGNAL(readyRead()),
+             this, SLOT(slotNewData()) );
+    connect( socket, SIGNAL(disconnected()),
+             this, SIGNAL(disconnected()) );
+
+    m_streamParser = new ImapStreamParser( m_socket );
+    m_streamParser->setTracerIdentifier( m_identifier );
+
+    Response greeting;
+    greeting.setUntagged();
+    greeting.setString( "OK Akonadi Almost IMAP Server [PROTOCOL " AKONADI_PROTOCOL_VERSION "]" );
+    // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
+    QMetaObject::invokeMethod( this, "slotResponseAvailable",
+                               Qt::QueuedConnection,
+                               Q_ARG( Akonadi::Server::Response, greeting ) );
 }
 
 DataStore *Connection::storageBackend()
@@ -69,61 +113,13 @@ DataStore *Connection::storageBackend()
 
 Connection::~Connection()
 {
-    ClientCapabilityAggregator::removeSession( m_clientCapabilities );
-    Tracer::self()->endConnection( m_identifier, QString() );
-}
-
-void Connection::run()
-{
-    m_socket = new QLocalSocket();
-
-    if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
-        qWarning() << "Connection(" << m_identifier
-                   << ")::run: failed to set socket descriptor: "
-                   << m_socket->error() << "(" << m_socket->errorString() << ")";
-        delete m_socket;
-        m_socket = 0;
-        return;
-    }
-
-    /* Start a local event loop and start processing incoming data. Whenever
-     * a full command has been read, it is delegated to the responsible
-     * handler and processed by that. If that command needs to do something
-     * asynchronous such as ask the db for data, it returns and the input
-     * queue can continue to be processed. Whenever there is something to
-     * be sent back to the user it is queued in the form of a Response object.
-     * All this is meant to make it possible to process large incoming or
-     * outgoing data transfers in a streaming manner, without having to
-     * hold them in memory 'en gros'. */
-
-    connect( m_socket, SIGNAL(readyRead()),
-             this, SLOT(slotNewData()), Qt::DirectConnection );
-    connect( m_socket, SIGNAL(disconnected()),
-             this, SLOT(slotDisconnected()), Qt::DirectConnection );
-
-    m_streamParser = new ImapStreamParser( m_socket );
-    m_streamParser->setTracerIdentifier( m_identifier );
-
-    Response greeting;
-    greeting.setUntagged();
-    greeting.setString( "OK Akonadi Almost IMAP Server [PROTOCOL " AKONADI_PROTOCOL_VERSION "]" );
-    // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
-    // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
-    // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
-    QMetaObject::invokeMethod( this, "slotResponseAvailable",
-                               Qt::DirectConnection,
-                               Q_ARG( Akonadi::Server::Response, greeting ) );
-
-    exec();
     delete m_socket;
     m_socket = 0;
     delete m_streamParser;
     m_streamParser = 0;
-}
 
-void Connection::slotDisconnected()
-{
-    quit();
+    ClientCapabilityAggregator::removeSession( m_clientCapabilities );
+    Tracer::self()->endConnection( m_identifier, QString() );
 }
 
 void Connection::slotNewData()
@@ -156,6 +152,7 @@ void Connection::slotNewData()
       connect( m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
               this, SLOT(slotConnectionStateChange(ConnectionState)),
               Qt::DirectConnection );
+      m_currentHandler->setConnection( this );
       m_currentHandler->setTag( tag );
       m_currentHandler->setStreamParser( m_streamParser );
       if ( !m_currentHandler->parseStream() ) {
@@ -210,7 +207,6 @@ Handler *Connection::findHandlerForCommand( const QByteArray &command )
 {
     Handler *handler = Handler::findHandlerForCommandAlwaysAllowed( command );
     if ( handler ) {
-      handler->setConnection( this );
       return handler;
     }
 
@@ -230,7 +226,6 @@ Handler *Connection::findHandlerForCommand( const QByteArray &command )
     if ( !handler ) {
         handler = new UnknownCommandHandler( command );
     }
-    handler->setConnection( this );
     return handler;
 }
 
