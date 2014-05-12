@@ -96,8 +96,14 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 
     NotificationMessageV2 &operator=( const NotificationMessageV2 &other );
     bool operator==( const NotificationMessageV2 &other ) const;
+    bool operator!=( const NotificationMessageV2 &other ) const
+    {
+        return !operator==(other);
+    }
 
     static void registerDBusTypes();
+
+    bool isValid() const;
 
     NotificationMessageV2::Type type() const;
     void setType( NotificationMessageV2::Type type );
@@ -113,6 +119,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     QMap<Id, NotificationMessageV2::Entity> entities() const;
     NotificationMessageV2::Entity entity( Id id ) const;
     QList<Id> uids() const;
+    void clearEntities();
 
     QByteArray resource() const;
     void setResource( const QByteArray &resource );
@@ -154,6 +161,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 };
 
 } // namespace Akonadi
+
+AKONADIPROTOCOLINTERNALS_EXPORT QDebug operator<<( QDebug debug, const Akonadi::NotificationMessageV2::Entity &entity );
 
 const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg );
 QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );

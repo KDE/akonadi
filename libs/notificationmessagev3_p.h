@@ -24,6 +24,7 @@
 
 #include "notificationmessagev2_p.h"
 #include <QDBusArgument>
+#include <QDebug>
 
 namespace Akonadi
 {
@@ -46,6 +47,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV3 : public Akonadi::No
 };
 
 }
+
+AKONADIPROTOCOLINTERNALS_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::NotificationMessageV3 &msg);
 
 const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV3 &msg );
 QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV3 &msg );
