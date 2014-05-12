@@ -335,6 +335,8 @@ void NotificationCollector::dispatchNotification( const NotificationMessageV3 &m
 
 void NotificationCollector::dispatchNotifications()
 {
-  Q_EMIT notify( mNotifications );
-  clear();
+  if ( !mNotifications.isEmpty() ) {
+    Q_EMIT notify( mNotifications );
+    clear();
+  }
 }
