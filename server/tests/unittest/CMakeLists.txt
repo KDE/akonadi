@@ -23,6 +23,9 @@ add_custom_command(
 
 set(common_SRCS
     unittestschema.cpp
+    fakeconnection.cpp
+    fakedatastore.cpp
+    fakeakonadiserver.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
 
@@ -39,6 +42,10 @@ macro(add_server_test _source _libs)
   if(AKONADI_STATIC_SQLITE)
     target_link_libraries(${_name} qsqlite3)
   endif()
+endmacro()
+
+macro(add_handler_test _source)
+  add_server_test(${_source} akonadiprivate)
 endmacro()
 
 add_server_test(imapstreamparsertest.cpp akonadiprivate)
