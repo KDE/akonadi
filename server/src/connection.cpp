@@ -66,16 +66,16 @@ Connection::Connection( quintptr socketDescriptor, QObject *parent )
     m_verifyCacheOnRetrieval = settings.value( QLatin1String( "Cache/VerifyOnRetrieval" ), m_verifyCacheOnRetrieval ).toBool();
 
     QLocalSocket *socket = new QLocalSocket();
-    m_socket = socket;
 
-    if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
+    if ( !socket->setSocketDescriptor( m_socketDescriptor ) ) {
         qWarning() << "Connection(" << m_identifier
                    << ")::run: failed to set socket descriptor: "
-                   << m_socket->error() << "(" << m_socket->errorString() << ")";
-        delete m_socket;
-        m_socket = 0;
+                   << socket->error() << "(" << socket->errorString() << ")";
+        delete socket;
         return;
     }
+
+    m_socket = socket;
 
     /* Whenever a full command has been read, it is delegated to the responsible
      * handler and processed by that. If that command needs to do something
@@ -194,7 +194,8 @@ void Connection::writeOut( const QByteArray &data )
 {
     QByteArray block = data + "\r\n";
     m_socket->write( block );
-    m_socket->waitForBytesWritten();
+    m_socket->waitForBytesWritten( 30 * 1000 );
+
     Tracer::self()->connectionOutput( m_identifier, block );
 }
 
@@ -251,7 +252,9 @@ void Connection::slotConnectionStateChange( ConnectionState state )
     case Selected:
         break;
     case LoggingOut:
-        m_socket->disconnectFromServer();
+        if (dynamic_cast<QLocalSocket*>( m_socket ) ) {
+          dynamic_cast<QLocalSocket*>( m_socket )->disconnectFromServer();
+        }
         break;
     }
 }

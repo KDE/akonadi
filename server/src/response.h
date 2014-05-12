@@ -31,6 +31,7 @@ namespace Server {
     back to the client.
  */
 class Response{
+public:
     enum ResultCode {
         OK = 0,
         NO = 1,
@@ -38,10 +39,12 @@ class Response{
         BYE = 3, // not strictly a result code, but easier to handle this way
         USER = 4
     };
-public:
+
     Response();
 
     ~Response();
+
+    ResultCode resultCode() const;
 
     /** The response string to be sent to the client. */
     QByteArray asString() const;

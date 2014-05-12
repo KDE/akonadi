@@ -61,6 +61,8 @@ using namespace Akonadi::Server;
 static QMutex sTransactionMutex;
 bool DataStore::s_hasForeignKeyConstraints = false;
 
+QThreadStorage<DataStore*> DataStore::sInstances;
+
 #define TRANSACTION_MUTEX_LOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.lock()
 #define TRANSACTION_MUTEX_UNLOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.unlock()
 
@@ -71,12 +73,11 @@ DataStore::DataStore()
   : QObject()
   , m_dbOpened( false )
   , m_transactionLevel( 0 )
-  , mNotificationCollector( new NotificationCollector( this ) )
+  , mNotificationCollector( 0 )
   , m_keepAliveTimer( 0 )
 {
   open();
-
-  NotificationManager::self()->connectNotificationCollector( mNotificationCollector );
+  notificationCollector();
 
   if ( DbConfig::configuredDatabase()->driverName() == QLatin1String( "QMYSQL" ) ) {
     // Send a dummy query to MySQL every 1 hour to keep the connection alive,
@@ -156,9 +157,13 @@ bool DataStore::init()
   }
   s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
 
-  DbUpdater updater( m_database, QLatin1String( ":dbupdate.xml" ) );
-  if ( !updater.run() ) {
-    return false;
+  if ( QFile::exists( QLatin1String( ":dbupdate.xml" ) ) ) {
+    DbUpdater updater( m_database, QLatin1String( ":dbupdate.xml" ) );
+    if ( !updater.run() ) {
+      return false;
+    }
+  } else {
+    qWarning() << "Warning: dbupdate.xml not found, skipping updates";
   }
 
   if ( !initializer->updateIndexesAndConstraints() ) {
@@ -175,14 +180,22 @@ bool DataStore::init()
   return true;
 }
 
-QThreadStorage<DataStore *> instances;
+NotificationCollector *DataStore::notificationCollector()
+{
+  if ( mNotificationCollector == 0 ) {
+    mNotificationCollector = new NotificationCollector( this );
+    NotificationManager::self()->connectNotificationCollector( notificationCollector() );
+  }
+
+  return mNotificationCollector;
+}
 
 DataStore *DataStore::self()
 {
-  if ( !instances.hasLocalData() ) {
-    instances.setLocalData( new DataStore() );
+  if ( !sInstances.hasLocalData() ) {
+    sInstances.setLocalData( new DataStore() );
   }
-  return instances.localData();
+  return sInstances.localData();
 }
 
 /* --- ItemFlags ----------------------------------------------------- */

@@ -14,8 +14,9 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+
 #ifndef AKONADI_CONNECTION_H
 #define AKONADI_CONNECTION_H
 
@@ -46,7 +47,6 @@ class Connection : public QObject
 public:
     Connection( quintptr socketDescriptor, QObject *parent = 0 );
     virtual ~Connection();
-    void run();
 
     virtual DataStore *storageBackend();
 
@@ -78,18 +78,19 @@ protected Q_SLOTS:
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotResponseAvailable( const Akonadi::Server::Response &response );
     void slotConnectionStateChange( ConnectionState );
+
+    virtual void slotResponseAvailable( const Akonadi::Server::Response &response );
 
 protected:
     Connection(QObject *parent = 0); // used for testing
 
     void writeOut( const QByteArray &data );
-    Handler *findHandlerForCommand( const QByteArray &command );
+    virtual Handler *findHandlerForCommand( const QByteArray &command );
 
-private:
+protected:
     quintptr m_socketDescriptor;
-    QLocalSocket *m_socket;
+    QIODevice *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore *m_backend;
