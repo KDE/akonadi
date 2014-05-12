@@ -64,9 +64,11 @@ class SearchManager : public QObject
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.SearchManager" )
 
+  friend class SearchManagerThread;
+
   public:
     /** Create a new search manager with the given @p searchEngines. */
-    explicit SearchManager( const QStringList &searchEngines, QObject *parent = 0 );
+    explicit SearchManager( QObject *parent = 0 );
     ~SearchManager();
 
     /**
@@ -78,31 +80,31 @@ class SearchManager : public QObject
      * This is called via D-Bus from AgentManager to register an agent with
      * search interface.
      */
-    void registerInstance( const QString &id );
+    virtual void registerInstance( const QString &id );
 
     /**
      * This is called via D-Bus from AgentManager to unregister an agent with
      * search interface.
      */
-    void unregisterInstance( const QString &id );
+    virtual void unregisterInstance( const QString &id );
 
     /**
      * Updates the search query asynchronously. Returns immediately
      */
-    void updateSearchAsync( const Collection &collection );
+    virtual void updateSearchAsync( const Collection &collection );
 
     /**
      * Updates the search query synchronously.
      */
-    void updateSearch( const Collection &collection );
+    virtual void updateSearch( const Collection &collection );
 
     /**
      * Returns currently available search plugins.
      */
-    QVector<AbstractSearchPlugin *> searchPlugins() const;
+    virtual QVector<AbstractSearchPlugin *> searchPlugins() const;
 
   public Q_SLOTS:
-    void scheduleSearchUpdate();
+    virtual void scheduleSearchUpdate();
 
   private Q_SLOTS:
     void searchUpdateTimeout();
@@ -118,6 +120,9 @@ class SearchManager : public QObject
      */
     void updateSearchImpl( const Collection &collection, QWaitCondition *cond );
 
+  protected:
+    void init( const QStringList &searchEngines );
+
   private:
     void loadSearchPlugins();
 
@@ -130,6 +135,7 @@ class SearchManager : public QObject
 
     QMutex mLock;
     QSet<qint64> mUpdatingCollections;
+
 };
 
 } // namespace Server

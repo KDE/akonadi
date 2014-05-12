@@ -30,6 +30,8 @@
 namespace Akonadi {
 namespace Server {
 
+class FakeSearchManager;
+
 class FakeAkonadiServer
 {
 public:
@@ -54,6 +56,7 @@ private:
 
     FakeConnection *mConnection;
     FakeDataStore *mDataStore;
+    FakeSearchManager *mSearchManager;
 };
 
 }
