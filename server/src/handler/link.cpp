@@ -51,6 +51,12 @@ bool Link::parseStream()
   Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray( m_streamParser->peekString() );
   if ( itemSelectionScope != Scope::None ) {
     m_streamParser->readString();
+    // Unset Resource context if destination collection is specified using HRID/RID,
+    // because otherwise the Resource context is relative to the destination collection
+    // instead of the source collection (collection context)
+    if ( ( mDestinationScope.scope() == Scope::HierarchicalRid || mDestinationScope.scope() == Scope::Rid ) && itemSelectionScope == Scope::Rid ) {
+        connection()->context()->setResource(Resource());
+    }
   }
   Scope itemScope( itemSelectionScope );
   itemScope.parseScope( m_streamParser );
