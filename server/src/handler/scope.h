@@ -43,6 +43,13 @@ class Scope
       Gid
     };
 
+    /**
+     * Constructs an invalid scope.
+     *
+     * This exists only so that we can register Scope as a metatype
+     */
+    Scope();
+
     Scope( SelectionScope scope );
     /**
       Parse the object set dependent on the set selection scope.
