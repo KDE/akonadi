@@ -27,6 +27,11 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+Scope::Scope()
+  : mScope( Scope::Invalid )
+{
+}
+
 Scope::Scope( SelectionScope scope )
   : mScope( scope )
 {
