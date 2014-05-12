@@ -19,6 +19,7 @@
 
 #include "fakeakonadiserver.h"
 #include "fakedatastore.h"
+#include "fakesearchmanager.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -26,10 +27,12 @@
 #include <QDir>
 #include <QFileInfo>
 
-#include <shared/akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
+#include <shared/akstandarddirs.h>
 #include <storage/dbconfig.h>
 #include <storage/datastore.h>
+#include <preprocessormanager.h>
+#include <search/searchmanager.h>
 
 
 using namespace Akonadi;
@@ -121,6 +124,10 @@ bool FakeAkonadiServer::start()
       return abortSetup(QLatin1String("Failed to initialize datastore"));
     }
 
+    PreprocessorManager::init();
+    PreprocessorManager::instance()->setEnabled(false);
+    mSearchManager = new FakeSearchManager();
+
     qDebug() << "==== Fake Akonadi Server started ====";
     return true;
 }
@@ -156,6 +163,15 @@ bool FakeAkonadiServer::cleanup()
     deleteDirectory(basePath());
     qDebug() << "Cleaned up" << basePath();
 
+    PreprocessorManager::done();
+    SearchManager::instance();
+
+    if (mDataStore) {
+        mDataStore->close();
+    }
+    if (mConnection) {
+        delete mConnection;
+    }
 
     qDebug() << "==== Fake Akonadi Server shut down ====";
     return true;

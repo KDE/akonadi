@@ -67,12 +67,13 @@ SearchManagerThread::~SearchManagerThread()
 
 void SearchManagerThread::run()
 {
-  SearchManager *manager = new SearchManager( mSearchEngines );
+  SearchManager *manager = new SearchManager();
+  manager->init( mSearchEngines );
   exec();
   delete manager;
 }
 
-SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent )
+SearchManager::SearchManager( QObject *parent )
   : QObject( parent )
 {
   qRegisterMetaType< QSet<qint64> >();
@@ -82,6 +83,11 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
   Q_ASSERT( sInstance == 0 );
   sInstance = this;
 
+  DataStore::self();
+}
+
+void SearchManager::init(const QStringList& searchEngines)
+{
   mEngines.reserve( searchEngines.size() );
   Q_FOREACH ( const QString &engineName, searchEngines ) {
     if ( engineName == QLatin1String( "Nepomuk" ) ) {
@@ -111,8 +117,6 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
   mSearchUpdateTimer->setSingleShot( true );
   connect( mSearchUpdateTimer, SIGNAL(timeout()),
            this, SLOT(searchUpdateTimeout()) );
-
-  DataStore::self();
 }
 
 SearchManager::~SearchManager()

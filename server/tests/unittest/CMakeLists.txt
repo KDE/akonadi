@@ -26,6 +26,7 @@ set(common_SRCS
     fakeconnection.cpp
     fakedatastore.cpp
     fakeakonadiserver.cpp
+    fakesearchmanager.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
 
