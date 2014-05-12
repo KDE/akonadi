@@ -119,6 +119,13 @@ void NotificationMessageV2::registerDBusTypes()
   qDBusRegisterMetaType<QVector<qint64> >();
 }
 
+bool NotificationMessageV2::isValid() const
+{
+  return d->operation != Akonadi::NotificationMessageV2::InvalidOp
+         && d->type != Akonadi::NotificationMessageV2::InvalidType
+         && !d->items.isEmpty();
+}
+
 void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType )
 {
   NotificationMessageV2::Entity item;
@@ -132,10 +139,15 @@ void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QSt
 
 void NotificationMessageV2::setEntities( const QList<NotificationMessageV2::Entity> &items )
 {
-  d->items.clear();
+  clearEntities();
   Q_FOREACH ( const NotificationMessageV2::Entity &item, items ) {
     d->items.insert( item.id, item );
   }
+}
+
+void NotificationMessageV2::clearEntities()
+{
+  d->items.clear();
 }
 
 QMap<NotificationMessageV2::Id, NotificationMessageV2::Entity> NotificationMessageV2::entities() const
@@ -556,3 +568,18 @@ bool NotificationMessageV2::appendAndCompress( QList<NotificationMessageV2> &lis
   return NotificationMessageHelpers::appendAndCompressImpl<QList<NotificationMessageV2>, NotificationMessageV2>( list, msg );
 }
 
+QDebug operator<<( QDebug dbg, const NotificationMessageV2::Entity &entity)
+{
+  dbg.nospace() << "(ID: " << entity.id;
+  if (!entity.remoteId.isEmpty()) {
+    dbg.nospace() << " RID: " << entity.remoteId;
+  }
+  if (!entity.remoteRevision.isEmpty()) {
+     dbg.nospace() << " RREV: " << entity.remoteRevision;
+  }
+  if (!entity.mimeType.isEmpty()) {
+     dbg.nospace() << " MimeType: " << entity.mimeType;
+  }
+  dbg.nospace() << ")";
+  return dbg;
+}
