@@ -38,13 +38,13 @@ class Collection;
 class ImapStreamParser;
 
 /**
-    An AkonadiConnection represents one connection of a client to the server.
+    An Connection represents one connection of a client to the server.
 */
-class Connection : public QThread
+class Connection : public QObject
 {
     Q_OBJECT
 public:
-    Connection( quintptr socketDescriptor, QObject *parent );
+    Connection( quintptr socketDescriptor, QObject *parent = 0 );
     virtual ~Connection();
     void run();
 
@@ -70,8 +70,10 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
+Q_SIGNALS:
+    void disconnected();
+
 protected Q_SLOTS:
-    void slotDisconnected();
     /**
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
@@ -80,7 +82,8 @@ protected Q_SLOTS:
     void slotConnectionStateChange( ConnectionState );
 
 protected:
-    Connection() {} // used for testing
+    Connection(QObject *parent = 0); // used for testing
+
     void writeOut( const QByteArray &data );
     Handler *findHandlerForCommand( const QByteArray &command );
 

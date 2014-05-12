@@ -104,6 +104,7 @@ set(libakonadiprivate_SRCS
   src/akonadi.cpp
   src/commandcontext.cpp
   src/connection.cpp
+  src/connectionthread.cpp
   src/collectionscheduler.cpp
   src/clientcapabilities.cpp
   src/clientcapabilityaggregator.cpp
