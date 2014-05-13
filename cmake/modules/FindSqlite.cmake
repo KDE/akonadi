@@ -84,25 +84,20 @@ if(EXISTS ${SQLITE_INCLUDE_DIR}/sqlite3.h)
 
   endif(SQLITE_VERSION_MATCH)
 
-endif()
-
-if (DEFINED SQLITE_INCLUDE_DIR AND DEFINED SQLITE_LIBRARIES AND "${SQLITE_VERSION_OK}")
-  file(WRITE ${CMAKE_BINARY_DIR}/sqlite_unlock_notify.cpp
-       "#include <sqlite3.h>
-        int main(int argc, char **argv) {
-          return sqlite3_unlock_notify(0, 0, 0);
-        }")
-  try_compile(SQLITE_HAS_UNLOCK_NOTIFY
-              ${CMAKE_BINARY_DIR}/sqlite_unlock_notify
-              ${CMAKE_BINARY_DIR}/sqlite_unlock_notify.cpp
-              LINK_LIBRARIES ${SQLITE_LIBRARIES}
-              CMAKE_FLAGS INCLUDE_DIRECTORIES ${SQLITE_INCLUDE_DIR}
-              OUTPUT_VARIABLE var)
-  if (NOT ${SQLITE_HAS_UNLOCK_NOTIFY})
-    message("WARNING: Sqlite3 is built without SQLITE_ENABLE_UNLOCK_NOTIFY")
-    unset(SQLITE_LIBRARIES)
-    unset(SQLITE_INCLUDE_DIR)
-    unset(SQLITE_VERSION_OK)
+  if (SQLITE_VERSION_OK)
+    file(WRITE ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify.cpp
+         "#include <sqlite3.h>
+          int main(int argc, char **argv) {
+            return sqlite3_unlock_notify(0, 0, 0);
+          }")
+    try_compile(SQLITE_HAS_UNLOCK_NOTIFY
+                ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify
+                ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify.cpp
+                LINK_LIBRARIES ${SQLITE_LIBRARIES}
+                CMAKE_FLAGS INCLUDE_DIRECTORIES ${SQLITE_INCLUDE_DIR})
+    if (NOT SQLITE_HAS_UNLOCK_NOTIFY)
+        message(STATUS "Sqlite ${SQLITE_VERSION} was found, but it is not compiled with -DSQLITE_ENABLE_UNLOCK_NOTIFY")
+    endif()
   endif()
 endif()
 
@@ -110,7 +105,8 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args( Sqlite DEFAULT_MSG
                                    SQLITE_INCLUDE_DIR
                                    SQLITE_LIBRARIES
-                                   SQLITE_VERSION_OK )
+                                   SQLITE_VERSION_OK
+                                   SQLITE_HAS_UNLOCK_NOTIFY)
 
 # show the SQLITE_INCLUDE_DIR and SQLITE_LIBRARIES variables only in the advanced view
 mark_as_advanced( SQLITE_INCLUDE_DIR SQLITE_LIBRARIES )
