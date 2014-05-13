@@ -190,6 +190,12 @@ void TagModelPrivate::monitoredTagChanged(const Tag &tag)
         newSiblings.append(tag);
         q->endMoveRows();
     } else {
+        Tag::List &children = mChildTags[oldParent];
+        const int sourcePos = children.indexOf(oldTag);
+        if (sourcePos != -1) {
+            children[sourcePos] = tag;
+        }
+
         const QModelIndex index = indexForTag(tag.id());
         q->dataChanged(index, index);
     }
