@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
                    i18n("Akonadi Self Test"),
                    QStringLiteral("1.0"),
                    i18n("Checks and reports state of Akonadi server"),
-                   KAboutData::License_GPL_V2,
+                   KAboutLicense::GPL_V2,
                    i18n("(c) 2008 Volker Krause <vkrause@kde.org>"));
   about.setupCommandLine(&parser);
 
