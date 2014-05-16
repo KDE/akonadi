@@ -245,13 +245,6 @@ void ItemFetchJob::clearItems()
     d->mResultItems.clear();
 }
 
-void ItemFetchJob::setFetchScope(ItemFetchScope &fetchScope)
-{
-    Q_D(ItemFetchJob);
-
-    d->mFetchScope = fetchScope;
-}
-
 void ItemFetchJob::setFetchScope(const ItemFetchScope &fetchScope)
 {
     Q_D(ItemFetchJob);
