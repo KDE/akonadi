@@ -249,13 +249,6 @@ public:
     void setStatistics(const CollectionStatistics &statistics);
 
     /**
-     * Returns the url of the collection.
-     *
-     * @todo KDE5 remove in favor of url( UrlType type = UrlShort ).
-     */
-    KUrl url() const;
-
-    /**
      * Describes the type of url which is returned in url().
      *
      * @since 4.7
@@ -270,7 +263,7 @@ public:
      * @param type the type of url
      * @since 4.7
      */
-    KUrl url(UrlType type) const;
+    KUrl url(UrlType type = UrlShort) const;
 
     /**
      * Returns whether the collection is virtual, for example a search collection.

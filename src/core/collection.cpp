@@ -151,11 +151,6 @@ void Collection::setParentRemoteId(const QString &remoteParent)
     parentCollection().setRemoteId(remoteParent);
 }
 
-KUrl Collection::url() const
-{
-    return url(UrlShort);
-}
-
 KUrl Collection::url(UrlType type) const
 {
     KUrl url;
