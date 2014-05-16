@@ -406,7 +406,7 @@ bool QueryBuilder::exec()
       if ( error == 6 /* SQLITE_LOCKED */ ) {
         akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
         akDebug() << mQuery.lastError().text();
-        return retryLastTransaction();
+        return retryLastTransaction( true );
       } else if ( error == 5 /* SQLITE_BUSY */ ) {
         akDebug() << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
         akDebug() << mQuery.lastError().text();
