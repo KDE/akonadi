@@ -352,11 +352,11 @@ void ResourceScheduler::executeNext()
         success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName.constData() );
 
       if ( !success )
-        kError() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
+        qCritical() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
       break;
     }
     default: {
-      kError() << "Unhandled task type" << mCurrentTask.type;
+      qCritical() << "Unhandled task type" << mCurrentTask.type;
       dump();
       Q_ASSERT( false );
     }
@@ -431,7 +431,7 @@ void ResourceScheduler::collectionRemoved( const Akonadi::Collection &collection
   for ( QList<Task>::iterator it = queue.begin(); it != queue.end(); ) {
     if ( (*it).type == SyncCollection && (*it).collection == collection ) {
       it = queue.erase( it );
-      kDebug() << " erasing";
+      qDebug() << " erasing";
     } else
       ++it;
   }
@@ -476,7 +476,7 @@ ResourceScheduler::TaskList& ResourceScheduler::queueForTaskType( TaskType type 
 
 void ResourceScheduler::dump()
 {
-  kDebug() << dumpToString();
+  qDebug() << dumpToString();
 }
 
 QString ResourceScheduler::dumpToString() const
@@ -501,7 +501,7 @@ QString ResourceScheduler::dumpToString() const
 
 void ResourceScheduler::clear()
 {
-  kDebug() << "Clearing ResourceScheduler queues:";
+  qDebug() << "Clearing ResourceScheduler queues:";
   for ( int i = 0; i < NQueueCount; ++i ) {
     TaskList& queue = mTaskList[i];
     queue.clear();

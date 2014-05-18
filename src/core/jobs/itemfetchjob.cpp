@@ -184,7 +184,7 @@ void ItemFetchJob::doStart()
     // This is only required for 4.10
     if (d->protocolVersion() < 30) {
         if (d->mFetchScope.ignoreRetrievalErrors()) {
-            kDebug() << "IGNOREERRORS is not available with this version of Akonadi server";
+            qDebug() << "IGNOREERRORS is not available with this version of Akonadi server";
         }
         d->mFetchScope.setIgnoreRetrievalErrors(false);
     }

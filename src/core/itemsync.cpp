@@ -251,7 +251,7 @@ void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Ite
     d->mRemoteItemQueue += changedItems;
     d->mRemovedRemoteItemQueue += removedItems;
     d->mTotalItemsProcessed += changedItems.count() + removedItems.count();
-    kDebug() << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+    qDebug() << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
@@ -278,7 +278,7 @@ void ItemSyncPrivate::fetchLocalItemsToDelete()
 {
     Q_Q(ItemSync);
     if (mIncremental) {
-        kFatal() << "This must not be called while in incremental mode";
+        qFatal("This must not be called while in incremental mode");
         return;
     }
     ItemFetchJob *job = new ItemFetchJob(mSyncCollection, subjobParent());
@@ -310,7 +310,7 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
 {
     mPendingJobs--;
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
     }
     deleteItems(mItemsToDelete);
     checkDone();
@@ -328,7 +328,7 @@ void ItemSyncPrivate::execute()
     Q_Q(ItemSync);
     //shouldn't happen
     if (mFinished) {
-        kWarning() << "Call to execute() on finished job.";
+        qWarning() << "Call to execute() on finished job.";
         Q_ASSERT(false);
         return;
     }
