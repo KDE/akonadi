@@ -749,13 +749,18 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
       throw ImapParserException( "Unable to read more data" );
     }
     if ( !inQuotedString && m_data[i] == '{' ) {
-      m_position = i;
+      m_position = i - 1;
       hasLiteral(); //init literal size
-      result.append( m_data.mid( i - 1, m_position - i ) );
+      result.append( m_data.mid( i - 1, m_position - i + 1 ) );
       while ( !atLiteralEnd() ) {
         result.append( readLiteralPart() );
       }
+      // Read the last character part and possible crlf
       i = m_position;
+      do {
+        result.append( m_data[i] );
+        ++i;
+      } while (m_data[i] == ' ' || m_data[i] == '\n' || m_data[i] == '\r');
     }
 
     if ( !inQuotedString && m_data[i] == '(' ) {
@@ -773,6 +778,11 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
     }
 
     if ( ( i == m_data.length() && paranthesisBalance == 0 ) || m_data[i] == '\n'  || m_data[i] == '\r' ) {
+      // Make sure we return \r\n and not just \r
+      if (m_data[i] == '\r' && m_data[i + 1] == '\n') {
+        ++i;
+        result.append( '\n' );
+      }
       break; //command end
     }
     ++i;
