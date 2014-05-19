@@ -52,6 +52,9 @@ class AkApplication : public QObject
     /** Returns @c true if we run in multi-instance mode. */
     static bool hasInstanceIdentifier();
 
+    /** Returns the AkApplication instance */
+    static AkApplication *instance();
+
     /** Forward to Q[Core]Application for convenience. */
     int exec();
 

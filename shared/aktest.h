@@ -41,9 +41,25 @@ int main( int argc, char **argv ) \
 int main(int argc, char **argv) \
 { \
   AkCoreApplication app(argc, argv); \
+  boost::program_options::options_description testOptions( "Unit Test" ); \
+  testOptions.add_options() \
+      ( "no-cleanup", "Don't clean up the temporary runtime environment" ); \
+  app.addCommandLineOptions(testOptions); \
   app.parseCommandLine(); \
+  /* HACK: Supernasty hack to remove AkCoreApplication options from argv before \
+     it's passed to QTest, which will abort on custom-defined options */ \
+  QList<char*> options; \
+  for (int i = 0; i < argc; ++i) { \
+      if (qstrcmp(argv[i], "--no-cleanup") > 0) { \
+            options << argv[i]; \
+      } \
+  } \
   TestObject tc; \
-  return QTest::qExec(&tc, argc, argv); \
+  char **fakeArgv = (char **) malloc(options.count()); \
+  for (int i = 0; i < options.count(); ++i) { \
+      fakeArgv[i] = options[i]; \
+  } \
+  return QTest::qExec(&tc, options.count(), fakeArgv); \
 }
 
 // Takes from Qt 5
