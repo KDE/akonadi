@@ -28,15 +28,14 @@
 
 #include "fakeakonadiserver.h"
 #include "aktest.h"
+#include "akdebug.h"
+#include "entities.h"
 
 #include <QtTest/QTest>
 #include <QSignalSpy>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
-
-Q_DECLARE_METATYPE(Scope)
-Q_DECLARE_METATYPE(CommandContext);
 
 class LinkHandlerTest : public QObject
 {
@@ -50,8 +49,12 @@ public:
     {
         qRegisterMetaType<Akonadi::Server::Response>();
 
-        Q_ASSERT_X(mServer.start(), "LinkHandlerTest",
-                   "Fake Akonadi Server failed to start up, aborting test");
+        try {
+            mServer.initialize();
+        } catch (const FakeAkonadiServerException &e) {
+            akError() << "Server exception: " << e.what();
+            akFatal() << "Fake Akonadi Server failed to start up, aborting test";
+        }
     }
 
     ~LinkHandlerTest()
@@ -62,19 +65,17 @@ public:
 private Q_SLOTS:
     void testLink_data()
     {
-        QTest::addColumn<Scope>("scope");
-        QTest::addColumn<QByteArray>("command");
+        QTest::addColumn<QList<QByteArray> >("scenario");
         QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
-        QTest::addColumn<CommandContext>("context");
         QTest::addColumn<bool>("expectFail");
 
-        Scope scope(Scope::Uid);
-        QByteArray command;
-        CommandContext context;
+        QList<QByteArray> scenario;
         NotificationMessageV3 notification;
 
-        command = "1 UID LINK 3 1:3\n";
-        QTest::newRow("non-virtual collection") << scope << command << NotificationMessageV3() << context << true;
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID LINK 3 1:3"
+                 << "S: 2 NO Can't link items to non-virtual collections";
+        QTest::newRow("non-virtual collection") << scenario << NotificationMessageV3() << true;
 
         notification.setType(NotificationMessageV2::Items);
         notification.setOperation(NotificationMessageV2::Link);
@@ -83,85 +84,78 @@ private Q_SLOTS:
         notification.addEntity(3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream"));
         notification.setParentCollection(6);
         notification.setResource("akonadi_fake_resource_with_virtual_collections_0");
-        command = "1 UID LINK 6 1:3\n";
-        QTest::newRow("normal") << scope << command << notification << context << false;
+        notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID LINK 6 1:3"
+                 << "S: 2 OK LINK complete";
+        QTest::newRow("normal") << scenario << notification << false;
 
         notification.clearEntities();
         notification.addEntity(4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream"));
-        command = "1 UID LINK 6 4 2048\n";
-        QTest::newRow("existent and non-existent item") << scope << command << notification << context << false;
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID LINK 6 4 123456"
+                 << "S: 2 OK LINK complete";
+        QTest::newRow("existent and non-existent item") << scenario << notification << false;
 
-        command = "1 UID LINK 6 4096\n";
-        QTest::newRow("non-existent item only") << scope << command << NotificationMessageV3() << context << false;
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID LINK 6 123456"
+                 << "S: 2 OK LINK complete";
+        QTest::newRow("non-existent item only") << scenario << NotificationMessageV3() << false;
 
-        context.setCollection(Collection::retrieveByName(QLatin1String("Collection B")));
-        QVERIFY(context.collection().isValid());
-        command = "1 UID LINK 6 RID (\"F\" \"G\")\n";
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << FakeAkonadiServer::selectCollectionScenario(QLatin1String("Collection B"))
+                 << "C: 3 UID LINK 6 RID (\"F\" \"G\")\n"
+                 << "S: 3 OK LINK complete";
         notification.clearEntities();
         notification.clearEntities();
         notification.addEntity(6, QLatin1String("F"), QString(), QLatin1String("application/octet-stream"));
         notification.addEntity(7, QLatin1String("G"), QString(), QLatin1String("application/octet-stream"));
-        QTest::newRow("RID items") << scope << command << notification << context << false;
+        QTest::newRow("RID items") << scenario << notification << false;
 
-        scope = Scope(Scope::HierarchicalRid);
-        context.setCollection(Collection());
-        context.setResource(Resource::retrieveByName(QLatin1String("akonadi_fake_resource_with_virtual_collections_0")));
-        QVERIFY(context.resource().isValid());
-        command = "1 HRID LINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) UID 5\n";
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_with_virtual_collections_0"))
+                 << "C: 4 HRID LINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) UID 5"
+                 << "S: 4 OK LINK complete";
         notification.setParentCollection(7);
         notification.clearEntities();
         notification.addEntity(5, QLatin1String("E"), QString(), QLatin1String("application/octet-stream"));
-        QTest::newRow("HRID collection") << scope << command << notification << context << false;
+        QTest::newRow("HRID collection") << scenario << notification << false;
 
-        command= "1 HRID LINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) RID \"H\"\n";
-        context.setCollection(Collection::retrieveByName(QLatin1String("Collection B")));
-        QVERIFY(context.collection().isValid());
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_with_virtual_collections_0"))
+                 << FakeAkonadiServer::selectCollectionScenario(QLatin1String("Collection B"))
+                 << "C: 4 HRID LINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) RID \"H\""
+                 << "S: 4 OK LINK complete";
         notification.clearEntities();
         notification.addEntity(8, QLatin1String("H"), QString(), QLatin1String("application/octet-stream"));
-        QTest::newRow("HRID collection, RID items") << scope << command << notification << context << false;
+        QTest::newRow("HRID collection, RID items") << scenario << notification << false;
     }
 
     void testLink()
     {
-        QFETCH(Scope, scope);
-        QFETCH(QByteArray, command);
+        QFETCH(QList<QByteArray>, scenario);
         QFETCH(NotificationMessageV3, notification);
-        QFETCH(CommandContext, context);
         QFETCH(bool, expectFail);
 
-        // Will be deleted by Connection after test is finished
-        Link *handler = new Link(scope.scope(), true);
+        mServer.setScenario(scenario);
+        mServer.runTest();
 
-        FakeConnection *fakeConnection = mServer.connection(handler, command, context);
-
-        NotificationCollector *collector = fakeConnection->storageBackend()->notificationCollector();
-        QSignalSpy responseSpy(fakeConnection, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-        QSignalSpy notificationSpy(collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)));
-
-        // Run the actual test
-        fakeConnection->run();
-
-        QCOMPARE(responseSpy.count(), 1);
-        const Response response = responseSpy.takeFirst().first().value<Response>();
-        if (expectFail) {
-            QVERIFY(response.resultCode() != Response::OK);
-            QCOMPARE(notificationSpy.count(), 0);
+        QSignalSpy *notificationSpy = mServer.notificationSpy();
+        if (notification.isValid()) {
+            QCOMPARE(notificationSpy->count(), 1);
+            const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
+            QCOMPARE(notifications.count(), 1);
+            QCOMPARE(notifications.first(), notification);
         } else {
-            if (!response.resultCode() == Response::OK) {
-                qDebug() << "Result code: " << response.resultCode();
-                qDebug() << "Response: " << response.asString();
-                QFAIL("Incorrect result code, expected OK");
-            }
-            if (notification.isValid()) {
-                QCOMPARE(notificationSpy.count(), 1);
-                const NotificationMessageV3::List notifications = notificationSpy.takeFirst().first().value<NotificationMessageV3::List>();
-                QCOMPARE(notifications.count(), 1);
-                QCOMPARE(notifications.first(), notification);
-            } else {
-                QVERIFY(notificationSpy.isEmpty() || notificationSpy.takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
-            }
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
         }
-
 
         Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
             if (expectFail) {
@@ -174,19 +168,17 @@ private Q_SLOTS:
 
     void testUnlink_data()
     {
-        QTest::addColumn<Scope>("scope");
-        QTest::addColumn<QByteArray>("command");
+        QTest::addColumn<QList<QByteArray> >("scenario");
         QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
-        QTest::addColumn<CommandContext>("context");
         QTest::addColumn<bool>("expectFail");
 
-        Scope scope(Scope::Uid);
-        QByteArray command;
-        CommandContext context;
+        QList<QByteArray> scenario;
         NotificationMessageV3 notification;
 
-        command = "1 UID UNLINK 3 1:3\n";
-        QTest::newRow("non-virtual collection") << scope << command << NotificationMessageV3() << context << true;
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 1 UID UNLINK 3 1:3"
+                 << "S: 1 NO Can't link items to non-virtual collections";
+        QTest::newRow("non-virtual collection") << scenario << NotificationMessageV3() << true;
 
         notification.setType(NotificationMessageV2::Items);
         notification.setOperation(NotificationMessageV2::Unlink);
@@ -195,86 +187,78 @@ private Q_SLOTS:
         notification.addEntity(3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream"));
         notification.setParentCollection(6);
         notification.setResource("akonadi_fake_resource_with_virtual_collections_0");
-        command = "1 UID UNLINK 6 1:3\n";
-        QTest::newRow("normal") << scope << command << notification << context << false;
+        notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID UNLINK 6 1:3"
+                 << "S: 2 OK LINK complete";
+        QTest::newRow("normal") << scenario << notification << false;
 
         notification.clearEntities();
         notification.addEntity(4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream"));
-        command = "1 UID UNLINK 6 4 2048\n";
-        QTest::newRow("existent and non-existent item") << scope << command << notification << context << false;
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID UNLINK 6 4 2048"
+                 << "S: 2 OK LINK complete";
+        QTest::newRow("existent and non-existent item") << scenario << notification << false;
 
-        command = "1 UID UNLINK 6 4096\n";
-        QTest::newRow("non-existent item only") << scope << command << NotificationMessageV3() << context << false;
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << "C: 2 UID UNLINK 6 4096"
+                 << "S: 2 OK LINK complete";
+        QTest::newRow("non-existent item only") << scenario << NotificationMessageV3() << false;
 
-        context.setCollection(Collection::retrieveByName(QLatin1String("Collection B")));
-        QVERIFY(context.collection().isValid());
-        command = "1 UID UNLINK 6 RID (\"F\" \"G\")\n";
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << FakeAkonadiServer::selectCollectionScenario(QLatin1String("Collection B"))
+                 << "C: 4 UID UNLINK 6 RID (\"F\" \"G\")"
+                 << "S: 4 OK LINK complete";
         notification.clearEntities();
         notification.clearEntities();
         notification.addEntity(6, QLatin1String("F"), QString(), QLatin1String("application/octet-stream"));
         notification.addEntity(7, QLatin1String("G"), QString(), QLatin1String("application/octet-stream"));
-        QTest::newRow("RID items") << scope << command << notification << context << false;
+        QTest::newRow("RID items") << scenario << notification << false;
 
-        scope = Scope(Scope::HierarchicalRid);
-        context.setCollection(Collection());
-        context.setResource(Resource::retrieveByName(QLatin1String("akonadi_fake_resource_with_virtual_collections_0")));
-        QVERIFY(context.resource().isValid());
-        command = "1 HRID UNLINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) UID 5\n";
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_with_virtual_collections_0"))
+                 << "C: 4 HRID UNLINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) UID 5"
+                 << "S: 4 OK LINK complete";
         notification.setParentCollection(7);
         notification.clearEntities();
         notification.addEntity(5, QLatin1String("E"), QString(), QLatin1String("application/octet-stream"));
-        QTest::newRow("HRID collection") << scope << command << notification << context << false;
+        QTest::newRow("HRID collection") << scenario << notification << false;
 
-        command= "1 HRID UNLINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) RID \"H\"\n";
-        context.setCollection(Collection::retrieveByName(QLatin1String("Collection B")));
-        QVERIFY(context.collection().isValid());
+        scenario.clear();
+        scenario << FakeAkonadiServer::defaultScenario()
+                 << FakeAkonadiServer::selectCollectionScenario(QLatin1String("Collection B"))
+                 << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_with_virtual_collections_0"))
+                 << "C: 4 HRID UNLINK ((-1, \"virtual2\") (-1, \"virtual\") (-1, \"\")) RID \"H\""
+                 << "S: 4 OK LINK complete";
         notification.clearEntities();
         notification.addEntity(8, QLatin1String("H"), QString(), QLatin1String("application/octet-stream"));
-        QTest::newRow("HRID collection, RID items") << scope << command << notification << context << false;
+        QTest::newRow("HRID collection, RID items") << scenario << notification << false;
     }
 
 
     void testUnlink()
     {
-        QFETCH(Scope, scope);
-        QFETCH(QByteArray, command);
+        QFETCH(QList<QByteArray>, scenario);
         QFETCH(NotificationMessageV3, notification);
-        QFETCH(CommandContext, context);
         QFETCH(bool, expectFail);
 
-        // Will be deleted by Connection after test is finished
-        Link *handler = new Link(scope.scope(), false);
+        mServer.setScenario(scenario);
+        mServer.runTest();
 
-        FakeConnection *fakeConnection = mServer.connection(handler, command, context);
-
-        NotificationCollector *collector = fakeConnection->storageBackend()->notificationCollector();
-        QSignalSpy responseSpy(fakeConnection, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-        QSignalSpy notificationSpy(collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)));
-
-        // Run the actual test
-        fakeConnection->run();
-
-        QCOMPARE(responseSpy.count(), 1);
-        const Response response = responseSpy.takeFirst().first().value<Response>();
-        if (expectFail) {
-            QVERIFY(response.resultCode() != Response::OK);
-            QCOMPARE(notificationSpy.count(), 0);
+        QSignalSpy *notificationSpy = mServer.notificationSpy();
+        if (notification.isValid()) {
+            QCOMPARE(notificationSpy->count(), 1);
+            const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
+            QCOMPARE(notifications.count(), 1);
+            QCOMPARE(notifications.first(), notification);
         } else {
-            if (!response.resultCode() == Response::OK) {
-                qDebug() << "Result code: " << response.resultCode();
-                qDebug() << "Response: " << response.asString();
-                QFAIL("Incorrect result code, expected OK");
-            }
-            if (notification.isValid()) {
-                QCOMPARE(notificationSpy.count(), 1);
-                const NotificationMessageV3::List notifications = notificationSpy.takeFirst().first().value<NotificationMessageV3::List>();
-                QCOMPARE(notifications.count(), 1);
-                QCOMPARE(notifications.first(), notification);
-            } else {
-                QVERIFY(notificationSpy.isEmpty() || notificationSpy.takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
-            }
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
         }
-
 
         Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
             if (expectFail) {
