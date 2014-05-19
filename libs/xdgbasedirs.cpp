@@ -140,6 +140,7 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
         dataDirs << prefixDataDir;
       }
 
+#if QT_VERSION < 0x050000
       // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
       QProcess proc;
       // ### should probably rather be --path xdg-something
@@ -154,6 +155,7 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
           }
         }
       }
+#endif
 
       instance()->mDataDirs = dataDirs;
     }
