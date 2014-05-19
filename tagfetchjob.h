@@ -48,7 +48,7 @@ public:
      *
      * @param parent The parent object.
      */
-    TagFetchJob(QObject *parent = 0);
+    explicit TagFetchJob(QObject *parent = 0);
 
     /**
      * Constructs a new tag fetch job that retrieves the specified tag.
@@ -60,7 +60,7 @@ public:
      * @param tag The tag to fetch.
      * @param parent The parent object.
      */
-    TagFetchJob(const Tag &tag, QObject *parent = 0);
+    explicit TagFetchJob(const Tag &tag, QObject *parent = 0);
 
     /**
      * Constructs a new tag fetch job that retrieves specified tags.
@@ -72,7 +72,7 @@ public:
      * @param tags Tags to fetch.
      * @param parent The parent object.
      */
-    TagFetchJob(const Tag::List &tags, QObject *parent = 0);
+    explicit TagFetchJob(const Tag::List &tags, QObject *parent = 0);
 
     /**
      * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = 0)
@@ -80,7 +80,7 @@ public:
      * @param ids UIDs of tags to fetch.
      * @param parent The parent object.
      */
-    TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = 0);
+    explicit TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = 0);
 
     /**
      * Sets the tag fetch scope.
