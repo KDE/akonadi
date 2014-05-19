@@ -95,6 +95,12 @@ do { \
 
 #endif
 
+#define QCOMPARE_RETFALSE(actual, expected) \
+do {\
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+        return false;\
+} while (0)
+
 
 
 inline void akTestSetInstanceIdentifier( const QString &instanceId )
@@ -103,6 +109,7 @@ inline void akTestSetInstanceIdentifier( const QString &instanceId )
 }
 
 #include <libs/notificationmessagev3_p.h>
+#include <server/src/response.h>
 
 namespace QTest {
   template<>
@@ -116,6 +123,93 @@ namespace QTest {
     dbg.nospace() << msg;
     buf.close();
     return qstrdup(ba.constData());
+  }
+
+  template<>
+  char *toString(const Akonadi::Server::Response::ResultCode &response)
+  {
+    switch (response) {
+      case Akonadi::Server::Response::OK:
+        return qstrdup("Response::OK");
+      case Akonadi::Server::Response::BAD:
+        return qstrdup("Response::BAD");
+      case Akonadi::Server::Response::BYE:
+        return qstrdup("Response::BYE");
+      case Akonadi::Server::Response::NO:
+        return qstrdup("Response::NO");
+      case Akonadi::Server::Response::USER:
+        return qstrdup("Response::USER");
+    }
+    Q_ASSERT(false);
+    return nullptr;
+  }
+}
+
+namespace AkTest {
+  enum NtfField {
+      NtfType                   = (1 << 0),
+      NtfOperation              = (1 << 1),
+      NtfSession                = (1 << 2),
+      NtfEntities               = (1 << 3),
+      NtfResource               = (1 << 5),
+      NtfCollection             = (1 << 6),
+      NtfDestResource           = (1 << 7),
+      NtfDestCollection         = (1 << 8),
+      NtfAddedFlags             = (1 << 9),
+      NtfRemovedFlags           = (1 << 10),
+      NtfAddedTags              = (1 << 11),
+      NtfRemovedTags            = (1 << 12),
+
+      NtfFlags                  = NtfAddedFlags | NtfRemovedTags,
+      NtfTags                   = NtfAddedTags | NtfRemovedTags,
+      NtfAll                    = NtfType | NtfOperation | NtfSession | NtfEntities |
+                                  NtfResource | NtfCollection | NtfDestResource |
+                                  NtfDestCollection | NtfFlags | NtfTags
+  };
+  typedef QFlags<NtfField> NtfFields;
+
+  bool compareNotifications(const Akonadi::NotificationMessageV3 &actual,
+                            const Akonadi::NotificationMessageV3 &expected,
+                            const NtfFields fields = NtfAll)
+  {
+      if (fields & NtfType) {
+          QCOMPARE_RETFALSE(actual.type(), expected.type());
+      }
+      if (fields & NtfOperation) {
+          QCOMPARE_RETFALSE(actual.operation(), expected.operation());
+      }
+      if (fields & NtfSession) {
+          QCOMPARE_RETFALSE(actual.sessionId(), expected.sessionId());
+      }
+      if (fields & NtfEntities) {
+          QCOMPARE_RETFALSE(actual.entities(), expected.entities());
+      }
+      if (fields & NtfResource) {
+          QCOMPARE_RETFALSE(actual.resource(), expected.resource());
+      }
+      if (fields & NtfCollection) {
+          QCOMPARE_RETFALSE(actual.parentCollection(), expected.parentCollection());
+      }
+      if (fields & NtfDestResource) {
+          QCOMPARE_RETFALSE(actual.destinationResource(), expected.destinationResource());
+      }
+      if (fields & NtfDestCollection) {
+          QCOMPARE_RETFALSE(actual.parentDestCollection(), expected.parentDestCollection());
+      }
+      if (fields & NtfAddedFlags) {
+          QCOMPARE_RETFALSE(actual.addedFlags(), expected.addedFlags());
+      }
+      if (fields & NtfRemovedFlags) {
+          QCOMPARE_RETFALSE(actual.removedFlags(), expected.removedFlags());
+      }
+      if (fields & NtfAddedTags) {
+          QCOMPARE_RETFALSE(actual.addedTags(), expected.addedTags());
+      }
+      if (fields & NtfRemovedTags) {
+          QCOMPARE_RETFALSE(actual.removedTags(), expected.removedTags());
+      }
+
+      return true;
   }
 }
 
