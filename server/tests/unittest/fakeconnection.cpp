@@ -21,15 +21,16 @@
 #include "imapstreamparser.h"
 #include "response.h"
 #include "fakedatastore.h"
+#include "fakeakonadiserver.h"
 #include "handler/scope.h"
 
 #include <QBuffer>
 
 using namespace Akonadi::Server;
 
-FakeConnection::FakeConnection()
-  : Connection()
-  , mHandler(0)
+
+FakeConnection::FakeConnection(quintptr socketDescriptor, QObject *parent)
+  : Connection(socketDescriptor, parent)
 {
 }
 
@@ -47,45 +48,7 @@ DataStore* FakeConnection::storageBackend()
     return m_backend;
 }
 
-void FakeConnection::setCommand(const QByteArray &command)
+NotificationCollector* FakeConnection::notificationCollector()
 {
-    mData = command;
-    QBuffer *buffer = new QBuffer(&mData);
-    buffer->open(QIODevice::ReadOnly);
-    m_socket = buffer;
-    m_streamParser = new ImapStreamParser(m_socket);
-}
-
-void FakeConnection::setHandler(Handler* handler)
-{
-    mHandler = handler;
-}
-
-void FakeConnection::setContext(const CommandContext& context)
-{
-    m_context = context;
-}
-
-Handler* FakeConnection::findHandlerForCommand(const QByteArray& command)
-{
-    Q_ASSERT_X(mHandler, "FakeConnection::findHandlerForCommand",
-               "No handler set");
-
-    // Position m_streamParser after the actual command if there was a scope
-    Scope::SelectionScope scope = Scope::selectionScopeFromByteArray(command);
-    if ( scope != Scope::None ) {
-        m_streamParser->readString();
-    }
-
-    return mHandler;
-}
-
-void FakeConnection::slotResponseAvailable(const Response &response)
-{
-    Q_EMIT responseAvailable(response);
-}
-
-void FakeConnection::run()
-{
-    slotNewData();
+    return storageBackend()->notificationCollector();
 }

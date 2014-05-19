@@ -25,31 +25,18 @@
 namespace Akonadi {
 namespace Server {
 
+class NotificationCollector;
+
 class FakeConnection: public Connection
 {
     Q_OBJECT
 
   public:
-    FakeConnection();
+    FakeConnection(quintptr socketDescriptor, QObject *parent = 0);
     virtual ~FakeConnection();
 
     DataStore *storageBackend();
-    void setCommand(const QByteArray &command);
-    void setHandler(Handler *handler);
-    void setContext(const CommandContext &context);
-
-    void run();
-
-  Q_SIGNALS:
-    void responseAvailable(const Akonadi::Server::Response &response);
-
-  protected:
-    void slotResponseAvailable(const Response &response);
-    Handler* findHandlerForCommand(const QByteArray &command);
-
-  private:
-    Handler *mHandler;
-    QByteArray mData;
+    NotificationCollector *notificationCollector();
 
 };
 

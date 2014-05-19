@@ -20,43 +20,101 @@
 #ifndef FAKEAKONADISERVER_H
 #define FAKEAKONADISERVER_H
 
-#include <QByteArray>
+#include <QLocalServer>
+#include <QSignalSpy>
 
-// FakeAkonadiServer is included from all Handler tests, so include all other fake
-// classes from here to make it easier to use
-#include "fakedatastore.h"
-#include "fakeconnection.h"
+#include "exception.h"
+
+class QLocalServer;
+class QEventLoop;
+
+Q_DECLARE_METATYPE(QList<QByteArray>)
 
 namespace Akonadi {
 namespace Server {
 
+class FakeClient;
 class FakeSearchManager;
+class FakeDataStore;
+class FakeConnection;
 
-class FakeAkonadiServer
+/**
+ * A fake server used for testing. Losely based on KIMAP::FakeServer
+ */
+class FakeAkonadiServer: public QLocalServer
 {
+    Q_OBJECT
+
 public:
-    explicit FakeAkonadiServer();
+    explicit FakeAkonadiServer( QObject *parent = 0 );
     ~FakeAkonadiServer();
+    bool initialize();
 
-    FakeDataStore *dataStore();
-    FakeConnection *connection(Handler *handler, const QByteArray &command,
-                               const CommandContext &context = CommandContext());
+    FakeDataStore *dataStore() const;
 
-    bool start();
+    static QString basePath();
+    static QString socketFile();
+    static QString instanceName();
+    static QList<QByteArray> loginScenario();
+    static QList<QByteArray> defaultScenario();
+    static QList<QByteArray> customCapabilitiesScenario(const QList<QByteArray> &capabilities);
+    static QList<QByteArray> selectCollectionScenario(const QString &name);
+    static QList<QByteArray> selectResourceScenario(const QString &name);
+
+    void setScenario(const QList<QByteArray> &scenario);
+
+    void runTest();
+
+    QSignalSpy *notificationSpy() const;
+
 
 private:
-    QString basePath() const;
-    QString instanceName() const;
+    void incomingConnection(quintptr socketDescriptor);
 
     bool deleteDirectory(const QString &path);
-
     bool cleanup();
-    bool abortSetup(const QString &msg);
 
-
-    FakeConnection *mConnection;
     FakeDataStore *mDataStore;
     FakeSearchManager *mSearchManager;
+    FakeConnection* mConnection;
+    FakeClient *mClient;
+
+    QEventLoop *mServerLoop;
+
+    QSignalSpy *mNotificationSpy;
+};
+
+class FakeAkonadiServerException: public Exception
+{
+public:
+    FakeAkonadiServerException (const QString &what)
+        : Exception(what)
+    {
+    }
+
+    FakeAkonadiServerException (const QByteArray &what)
+        : Exception(what)
+    {
+    }
+
+    FakeAkonadiServerException (const Exception &other)
+        : Exception(other)
+    {
+    }
+
+    FakeAkonadiServerException (const char* what)
+        : Exception(what)
+    {
+    }
+
+    ~FakeAkonadiServerException()
+    {
+    }
+
+    const char* type() const throw ()
+    {
+        return "FakeAkonadiServerException";
+    }
 };
 
 }

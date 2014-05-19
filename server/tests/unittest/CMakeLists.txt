@@ -25,6 +25,7 @@ set(common_SRCS
     unittestschema.cpp
     fakeconnection.cpp
     fakedatastore.cpp
+    fakeclient.cpp
     fakeakonadiserver.cpp
     fakesearchmanager.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp

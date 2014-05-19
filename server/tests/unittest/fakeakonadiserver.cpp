@@ -18,56 +18,110 @@
  */
 
 #include "fakeakonadiserver.h"
+#include "fakeconnection.h"
 #include "fakedatastore.h"
 #include "fakesearchmanager.h"
+#include "fakeclient.h"
 
 #include <QSettings>
 #include <QCoreApplication>
 #include <QSqlQuery>
 #include <QDir>
 #include <QFileInfo>
+#include <QLocalServer>
+#include <QTest>
 
 #include <libs/xdgbasedirs_p.h>
+#include <imapparser_p.h>
 #include <shared/akstandarddirs.h>
+#include <akapplication.h>
 #include <storage/dbconfig.h>
 #include <storage/datastore.h>
 #include <preprocessormanager.h>
 #include <search/searchmanager.h>
-
+#include <utils.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-FakeAkonadiServer::FakeAkonadiServer()
-    : mConnection(0)
+FakeAkonadiServer::FakeAkonadiServer( QObject *parent )
+    : QLocalServer( parent )
     , mDataStore(0)
+    , mServerLoop(0)
+    , mNotificationSpy(0)
 {
+    mClient = new FakeClient;
 }
 
 FakeAkonadiServer::~FakeAkonadiServer()
 {
+    close();
     cleanup();
+
+    delete mClient;
 }
 
-bool FakeAkonadiServer::abortSetup(const QString &msg)
-{
-    qWarning() << msg.toUtf8().constData();
-    qWarning() << "Aborting setup...";
-    return false;
-}
-
-
-QString FakeAkonadiServer::basePath() const
+QString FakeAkonadiServer::basePath()
 {
     return QString::fromLatin1("/tmp/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
-QString FakeAkonadiServer::instanceName() const
+QString FakeAkonadiServer::socketFile()
+{
+    return basePath() % QLatin1String("/local/share/akonadi/akonadiserver.socket");
+}
+
+QString FakeAkonadiServer::instanceName()
 {
     return QString::fromLatin1("akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
-bool FakeAkonadiServer::start()
+QList<QByteArray> FakeAkonadiServer::loginScenario()
+{
+    QList<QByteArray> scenario;
+    // FIXME: Use real protocol version
+    scenario << "S: * OK Akonadi Almost IMAP Server [PROTOCOL 39]";
+    scenario << "C: 0 LOGIN " + instanceName().toLatin1();
+    scenario << "S: 0 OK User logged in";
+    return scenario;
+}
+
+QList<QByteArray> FakeAkonadiServer::defaultScenario()
+{
+    QList<QByteArray> caps;
+    caps << "NOTIFY 2";
+    caps << "NOPAYLOADPATH";
+    caps << "AKAPPENDSTREAMING";
+    return customCapabilitiesScenario(caps);
+}
+
+QList<QByteArray> FakeAkonadiServer::customCapabilitiesScenario(const QList<QByteArray> &capabilities)
+{
+    QList<QByteArray> scenario = loginScenario();
+    scenario << "C: 1 CAPABILITY (" + ImapParser::join(capabilities, " ") + ")";
+    scenario << "S: 1 OK CAPABILITY completed";
+    return scenario;
+}
+
+QList<QByteArray> FakeAkonadiServer::selectCollectionScenario(const QString &name)
+{
+    QList<QByteArray> scenario;
+    const Collection collection = Collection::retrieveByName(name);
+    scenario << "C: 3 UID SELECT SILENT " + QByteArray::number(collection.id());
+    scenario << "S: 3 OK Completed";
+    return scenario;
+}
+
+QList<QByteArray> FakeAkonadiServer::selectResourceScenario(const QString &name)
+{
+    QList<QByteArray> scenario;
+    const Resource resource = Resource::retrieveByName(name);
+    scenario << "C: 2 RESSELECT " + resource.name().toLatin1();
+    scenario << "S: 2 OK " + resource.name().toLatin1() + " selected";
+    return scenario;
+}
+
+bool FakeAkonadiServer::initialize()
 {
     qDebug() << "==== Fake Akonadi Server starting up ====";
 
@@ -86,7 +140,7 @@ bool FakeAkonadiServer::start()
 
     DbConfig *dbConfig = DbConfig::configuredDatabase();
     if (dbConfig->driverName() != QLatin1String("QSQLITE3")) {
-      return abortSetup(QLatin1String("Unexpected driver specified. Expected QSQLITE3, got ") + dbConfig->driverName());
+      throw FakeAkonadiServerException(QLatin1String("Unexpected driver specified. Expected QSQLITE3, got ") + dbConfig->driverName());
     }
 
     const QLatin1String initCon("initConnection");
@@ -94,10 +148,10 @@ bool FakeAkonadiServer::start()
     DbConfig::configuredDatabase()->apply(db);
     db.setDatabaseName(DbConfig::configuredDatabase()->databaseName());
     if (!db.isDriverAvailable(DbConfig::configuredDatabase()->driverName())) {
-        return abortSetup(QString::fromLatin1("SQL driver %s not available").arg(db.driverName()));
+        throw FakeAkonadiServerException(QString::fromLatin1("SQL driver %s not available").arg(db.driverName()));
     }
     if (!db.isValid()) {
-        return abortSetup(QLatin1String("Got invalid database"));
+        throw FakeAkonadiServerException("Got invalid database");
     }
     if (db.open()) {
         qWarning() << "Database" << dbConfig->configuredDatabase()->databaseName() << "already exists, the test is not running in a clean environment!";
@@ -109,7 +163,7 @@ bool FakeAkonadiServer::start()
             {
                 QSqlQuery query(db);
                 if (!query.exec(QString::fromLatin1("CREATE DATABASE %1").arg(DbConfig::configuredDatabase()->databaseName()))) {
-                    return abortSetup(QLatin1String("Failed to create new database"));
+                    throw FakeAkonadiServerException("Failed to create new database");
                 }
             }
             db.close();
@@ -121,12 +175,14 @@ bool FakeAkonadiServer::start()
 
     mDataStore = static_cast<FakeDataStore*>(FakeDataStore::self());
     if (!mDataStore->init()) {
-      return abortSetup(QLatin1String("Failed to initialize datastore"));
+        throw FakeAkonadiServerException("Failed to initialize datastore");
     }
 
     PreprocessorManager::init();
     PreprocessorManager::instance()->setEnabled(false);
     mSearchManager = new FakeSearchManager();
+
+    const QString socketFile = basePath() + QLatin1String("/local/share/akonadi/akonadiserver.socket");
 
     qDebug() << "==== Fake Akonadi Server started ====";
     return true;
@@ -160,8 +216,13 @@ bool FakeAkonadiServer::cleanup()
 {
     qDebug() << "==== Fake Akonadi Server shutting down ====";
 
-    deleteDirectory(basePath());
-    qDebug() << "Cleaned up" << basePath();
+    const boost::program_options::variables_map options = AkApplication::instance()->commandLineArguments();
+    if (!options.count("no-cleanup")) {
+        deleteDirectory(basePath());
+        qDebug() << "Cleaned up" << basePath();
+    } else {
+        qDebug() << "Skipping clean up of" << basePath();
+    }
 
     PreprocessorManager::done();
     SearchManager::instance();
@@ -169,29 +230,58 @@ bool FakeAkonadiServer::cleanup()
     if (mDataStore) {
         mDataStore->close();
     }
-    if (mConnection) {
-        delete mConnection;
-    }
 
     qDebug() << "==== Fake Akonadi Server shut down ====";
     return true;
 }
 
-FakeConnection* FakeAkonadiServer::connection(Handler *handler, const QByteArray &command,
-                                              const CommandContext &context)
+void FakeAkonadiServer::setScenario(const QList<QByteArray> &scenario)
 {
-    mConnection = new FakeConnection();
-    mConnection->setHandler(handler);
-    mConnection->setCommand(command);
-    mConnection->setContext(context);
-
-    return mConnection;
+    mClient->setScenario(scenario);
 }
 
-FakeDataStore* FakeAkonadiServer::dataStore()
+void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
+{
+    QThread *thread = new QThread();
+    FakeConnection *connection = new FakeConnection(socketDescriptor, thread);
+    thread->start();
+
+    connect(connection, SIGNAL(disconnected()), thread, SLOT(quit()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), connection, SLOT(deleteLater()));
+
+    mNotificationSpy = new QSignalSpy(connection->notificationCollector(),
+                                      SIGNAL(notify(Akonadi::NotificationMessageV3::List)));
+}
+
+void FakeAkonadiServer::runTest()
+{
+    QVERIFY(listen(socketFile()));
+
+    mServerLoop = new QEventLoop(this);
+    connect(mClient, SIGNAL(finished()), mServerLoop, SLOT(quit()));
+
+    // Start the client: the client will connect to the server and will
+    // start playing the scenario
+    mClient->start();
+
+    // Wait until the client disconnects, i.e. until the scenario is completed.
+    mServerLoop->exec();
+
+    mServerLoop->deleteLater();
+    mServerLoop = 0;
+
+    close();
+}
+
+FakeDataStore* FakeAkonadiServer::dataStore() const
 {
     Q_ASSERT_X(mDataStore, "FakeAkonadiServer::connection()",
                "You have to call FakeAkonadiServer::start() first");
     return mDataStore;
 }
 
+QSignalSpy* FakeAkonadiServer::notificationSpy() const
+{
+    return mNotificationSpy;
+}
