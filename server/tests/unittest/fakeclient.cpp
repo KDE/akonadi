@@ -26,6 +26,21 @@
 #include <QMutexLocker>
 #include <QLocalSocket>
 
+#define CLIENT_COMPARE(actual, expected)\
+do {\
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) {\
+        quit();\
+        return;\
+    }\
+} while (0)
+
+#define CLIENT_VERIFY(statement)\
+do {\
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) {\
+        quit();\
+        return;\
+    }\
+} while (0)
 
 using namespace Akonadi::Server;
 
@@ -55,7 +70,7 @@ void FakeClient::dataAvailable()
 {
     QMutexLocker locker(&mMutex);
 
-    QVERIFY(!mScenario.isEmpty());
+    CLIENT_VERIFY(!mScenario.isEmpty());
 
     readServerPart();
     writeClientPart();
@@ -66,13 +81,12 @@ void FakeClient::readServerPart()
     while (!mScenario.isEmpty() && mScenario.first().startsWith("S: ")) {
         const QByteArray received = "S: " + mStreamParser->readUntilCommandEnd();
         const QByteArray expected = mScenario.takeFirst() + "\r\n";
-
-        QCOMPARE(QString::fromUtf8(received), QString::fromUtf8(expected));
-        QCOMPARE(received, expected);
+        CLIENT_COMPARE(QString::fromUtf8(received), QString::fromUtf8(expected));
+        CLIENT_COMPARE(received, expected);
     }
 
     if (!mScenario.isEmpty()) {
-        QVERIFY(mScenario.first().startsWith("C: "));
+        CLIENT_VERIFY(mScenario.first().startsWith("C: "));
     } else {
         // Server replied and there's nothing else to send, then quit
         quit();
@@ -98,7 +112,7 @@ void FakeClient::writeClientPart()
     }
 
     if (!mScenario.isEmpty()) {
-        QVERIFY(mScenario.first().startsWith("S: "));
+        CLIENT_VERIFY(mScenario.first().startsWith("S: "));
     }
 }
 
@@ -120,12 +134,13 @@ void FakeClient::run()
     mSocket->close();
     delete mSocket;
     mSocket = 0;
+    akDebug() << "Client finished";
 }
 
 void FakeClient::connectionLost()
 {
     // Otherwise this is an error on server-side, we expected more talking
-    QVERIFY(isScenarioDone());
+    CLIENT_VERIFY(isScenarioDone());
 
     quit();
 }
