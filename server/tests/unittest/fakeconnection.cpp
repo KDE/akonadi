@@ -32,6 +32,7 @@ using namespace Akonadi::Server;
 FakeConnection::FakeConnection(quintptr socketDescriptor, QObject *parent)
   : Connection(socketDescriptor, parent)
 {
+    m_streamParser->setWaitTimeout( 500 );
 }
 
 FakeConnection::~FakeConnection()
