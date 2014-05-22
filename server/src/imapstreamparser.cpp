@@ -36,11 +36,17 @@ ImapStreamParser::ImapStreamParser( QIODevice *socket )
   , m_position( 0 )
   , m_literalSize( 0 )
   , m_peeking( false )
+  , m_timeout( 30 * 1000 )
 {
 }
 
 ImapStreamParser::~ImapStreamParser()
 {
+}
+
+void ImapStreamParser::setWaitTimeout(int msecs)
+{
+  m_timeout = msecs;
 }
 
 QString ImapStreamParser::readUtf8String()
@@ -693,7 +699,7 @@ bool ImapStreamParser::waitForMoreData( bool wait )
 {
    if ( wait ) {
      if ( m_socket->bytesAvailable() > 0 ||
-          m_socket->waitForReadyRead( 30000 ) ) {
+          m_socket->waitForReadyRead( m_timeout ) ) {
         m_data.append( m_socket->readAll() );
      } else {
        return false;
@@ -822,7 +828,7 @@ void ImapStreamParser::sendContinuationResponse( qint64 size )
   const QByteArray block = "+ Ready for literal data (expecting "
                    + QByteArray::number( size ) + " bytes)\r\n";
   m_socket->write( block );
-  m_socket->waitForBytesWritten( 30000 );
+  m_socket->waitForBytesWritten( m_timeout );
 
   Tracer::self()->connectionOutput( m_tracerId, block );
 }

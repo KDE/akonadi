@@ -60,6 +60,15 @@ class ImapStreamParser
     ~ImapStreamParser();
 
     /**
+     * Sets how long the parser should wait for socket to provide more data before
+     * aborting with error.
+     *
+     * Default value is 30 seconds. This method is used mainly to speed up
+     * unittests.
+     */
+    void setWaitTimeout(int msecs);
+
+    /**
      * Get a string from the message. If the upcoming data is not a quoted string, unquoted string or a literal,
      * the behavior is undefined. Use @ref hasString to be sure a string comes. This call might block.
      * @return the next string from the message as an utf8 string
@@ -267,6 +276,7 @@ class ImapStreamParser
     int m_position;
     qint64 m_literalSize;
     bool m_peeking;
+    int m_timeout;
 };
 
 } // namespace Server
