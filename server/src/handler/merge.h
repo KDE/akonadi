@@ -39,7 +39,8 @@ public:
 protected:
     bool mergeItem( PimItem &newItem, PimItem &currentItem,
                     const ChangedAttributes &itemFlags,
-                    const ChangedAttributes &itemTags );
+                    const ChangedAttributes &itemTagsRID,
+                    const ChangedAttributes &itemTagsGID );
 
     bool notify( const PimItem &item, const Collection &collection );
     bool sendResponse( const QByteArray &response, const PimItem &item );

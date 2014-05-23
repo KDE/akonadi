@@ -60,7 +60,8 @@ QByteArray AkAppend::parseFlag( const QByteArray &flag ) const
 
 bool AkAppend::buildPimItem( PimItem &item, Collection &col,
                              ChangedAttributes &itemFlags,
-                             ChangedAttributes &itemTags )
+                             ChangedAttributes &itemTagsRID,
+                             ChangedAttributes &itemTagsGID )
 {
       // Arguments:  mailbox name
       //        OPTIONAL flag parenthesized list
@@ -102,6 +103,9 @@ bool AkAppend::buildPimItem( PimItem &item, Collection &col,
     if ( !col.isValid() ) {
       throw HandlerException( QByteArray( "Unknown collection for '" ) + mailbox + QByteArray( "'." ) );
     }
+    if ( col.isVirtual() ) {
+      throw HandlerException( "Cannot append item into virtual collection" );
+    }
 
     QByteArray mt;
     QString remote_id;
@@ -117,14 +121,23 @@ bool AkAppend::buildPimItem( PimItem &item, Collection &col,
       } else if ( flag.startsWith( AKONADI_FLAG_GID ) ) {
         gid = QString::fromUtf8( parseFlag( flag ) );
       } else if ( flag.startsWith( "+" AKONADI_FLAG_TAG ) ) {
-        itemTags.incremental = true;
-        itemTags.added.append( flag.mid( 4 ) );
+        itemTagsGID.incremental = true;
+        itemTagsGID.added.append( parseFlag( flag ) );
       } else if ( flag.startsWith( "-" AKONADI_FLAG_TAG ) ) {
-        itemTags.incremental = true;
-        itemTags.removed.append( flag.mid( 4 ) );
+        itemTagsGID.incremental = true;
+        itemTagsGID.removed.append( parseFlag( flag ) );
       } else if ( flag.startsWith( AKONADI_FLAG_TAG ) ) {
-        itemTags.incremental = false;
-        itemTags.added.append( flag.mid( 3 ) );
+        itemTagsGID.incremental = false;
+        itemTagsGID.added.append( parseFlag( flag ) );
+      } else if ( flag.startsWith( "+" AKONADI_FLAG_RTAG ) ) {
+        itemTagsRID.incremental = true;
+        itemTagsRID.added.append( parseFlag( flag ) );
+      } else if ( flag.startsWith( "-" AKONADI_FLAG_RTAG ) ) {
+        itemTagsRID.incremental = true;
+        itemTagsRID.removed.append( parseFlag( flag ) );
+      } else if ( flag.startsWith( AKONADI_FLAG_RTAG ) ) {
+        itemTagsRID.incremental = false;
+        itemTagsRID.added.append( parseFlag( flag ) );
       } else if ( flag.startsWith( '+' ) ) {
         itemFlags.incremental = true;
         itemFlags.added.append( flag.mid( 1 ) );
@@ -243,7 +256,8 @@ bool AkAppend::readParts( PimItem &pimItem )
 
 bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
                            const QVector<QByteArray> &itemFlags,
-                           const QVector<QByteArray> &itemTags )
+                           const QVector<QByteArray> &itemTagsRID,
+                           const QVector<QByteArray> &itemTagsGID )
 {
   if ( !item.insert() ) {
     return failureResponse( "Failed to append item" );
@@ -257,9 +271,15 @@ bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
     return failureResponse( "Unable to append item flags." );
   }
 
-  const Tag::List tagList = HandlerHelper::resolveTags( itemTags, connection()->context() );
+  Tag::List tagList;
+  if ( !itemTagsGID.isEmpty() ) {
+    tagList << HandlerHelper::resolveTagsByGID( itemTagsGID );
+  }
+  if ( !itemTagsRID.isEmpty() ) {
+    tagList << HandlerHelper::resolveTagsByRID( itemTagsRID, connection()->context() );
+  }
   bool tagsChanged;
-  if ( !DataStore::self()->appendItemsTags( PimItem::List() << item, tagList, tagsChanged, false, parentCol ) ) {
+  if ( !DataStore::self()->appendItemsTags( PimItem::List() << item, tagList, tagsChanged, false, parentCol, true ) ) {
     return failureResponse( "Unable to append item tags." );
   }
 
@@ -343,22 +363,21 @@ bool AkAppend::parseStream()
   DataStore *db = DataStore::self();
   Transaction transaction( db );
 
-  ChangedAttributes itemFlags;
-  ChangedAttributes itemTags;
+  ChangedAttributes itemFlags, itemTagsRID, itemTagsGID;
   Collection parentCol;
   PimItem item;
-  if ( !buildPimItem( item, parentCol, itemFlags, itemTags ) ) {
+  if ( !buildPimItem( item, parentCol, itemFlags, itemTagsRID, itemTagsGID ) ) {
     return false;
   }
 
   if ( itemFlags.incremental ) {
     throw HandlerException( "Incremental flags changes are not allowed in AK-APPEND" );
   }
-  if ( itemTags.incremental ) {
+  if ( itemTagsRID.incremental || itemTagsRID.incremental ) {
     throw HandlerException( "Incremental tags changes are not allowed in AK-APPEND" );
   }
 
-  if ( !insertItem( item, parentCol, itemFlags.added, itemTags.added ) ) {
+  if ( !insertItem( item, parentCol, itemFlags.added, itemTagsRID.added, itemTagsGID.added ) ) {
     return false;
   }
 
