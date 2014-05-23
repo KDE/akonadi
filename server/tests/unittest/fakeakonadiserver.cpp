@@ -51,6 +51,10 @@ FakeAkonadiServer::FakeAkonadiServer( QObject *parent )
     , mNotificationSpy(0)
 {
     mClient = new FakeClient;
+
+    qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
+    qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
+    qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
 }
 
 FakeAkonadiServer::~FakeAkonadiServer()
