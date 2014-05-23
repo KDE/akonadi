@@ -37,6 +37,7 @@ int main( int argc, char **argv ) \
   return QTest::qExec( &tc, argc, argv ); \
 }
 
+
 #define AKTEST_FAKESERVER_MAIN(TestObject) \
 int main(int argc, char **argv) \
 { \
@@ -95,13 +96,17 @@ do { \
 
 #endif
 
-#define QCOMPARE_RETFALSE(actual, expected) \
+#define AKCOMPARE(actual, expected) \
 do {\
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
         return false;\
 } while (0)
 
-
+#define AKVERIFY(statement) \
+do {\
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+        return false;\
+} while (0)
 
 inline void akTestSetInstanceIdentifier( const QString &instanceId )
 {
@@ -173,40 +178,40 @@ namespace AkTest {
                             const NtfFields fields = NtfAll)
   {
       if (fields & NtfType) {
-          QCOMPARE_RETFALSE(actual.type(), expected.type());
+          AKCOMPARE(actual.type(), expected.type());
       }
       if (fields & NtfOperation) {
-          QCOMPARE_RETFALSE(actual.operation(), expected.operation());
+          AKCOMPARE(actual.operation(), expected.operation());
       }
       if (fields & NtfSession) {
-          QCOMPARE_RETFALSE(actual.sessionId(), expected.sessionId());
+          AKCOMPARE(actual.sessionId(), expected.sessionId());
       }
       if (fields & NtfEntities) {
-          QCOMPARE_RETFALSE(actual.entities(), expected.entities());
+          AKCOMPARE(actual.entities(), expected.entities());
       }
       if (fields & NtfResource) {
-          QCOMPARE_RETFALSE(actual.resource(), expected.resource());
+          AKCOMPARE(actual.resource(), expected.resource());
       }
       if (fields & NtfCollection) {
-          QCOMPARE_RETFALSE(actual.parentCollection(), expected.parentCollection());
+          AKCOMPARE(actual.parentCollection(), expected.parentCollection());
       }
       if (fields & NtfDestResource) {
-          QCOMPARE_RETFALSE(actual.destinationResource(), expected.destinationResource());
+          AKCOMPARE(actual.destinationResource(), expected.destinationResource());
       }
       if (fields & NtfDestCollection) {
-          QCOMPARE_RETFALSE(actual.parentDestCollection(), expected.parentDestCollection());
+          AKCOMPARE(actual.parentDestCollection(), expected.parentDestCollection());
       }
       if (fields & NtfAddedFlags) {
-          QCOMPARE_RETFALSE(actual.addedFlags(), expected.addedFlags());
+          AKCOMPARE(actual.addedFlags(), expected.addedFlags());
       }
       if (fields & NtfRemovedFlags) {
-          QCOMPARE_RETFALSE(actual.removedFlags(), expected.removedFlags());
+          AKCOMPARE(actual.removedFlags(), expected.removedFlags());
       }
       if (fields & NtfAddedTags) {
-          QCOMPARE_RETFALSE(actual.addedTags(), expected.addedTags());
+          AKCOMPARE(actual.addedTags(), expected.addedTags());
       }
       if (fields & NtfRemovedTags) {
-          QCOMPARE_RETFALSE(actual.removedTags(), expected.removedTags());
+          AKCOMPARE(actual.removedTags(), expected.removedTags());
       }
 
       return true;
