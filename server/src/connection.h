@@ -14,8 +14,9 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+
 #ifndef AKONADI_CONNECTION_H
 #define AKONADI_CONNECTION_H
 
@@ -38,15 +39,14 @@ class Collection;
 class ImapStreamParser;
 
 /**
-    An AkonadiConnection represents one connection of a client to the server.
+    An Connection represents one connection of a client to the server.
 */
-class Connection : public QThread
+class Connection : public QObject
 {
     Q_OBJECT
 public:
-    Connection( quintptr socketDescriptor, QObject *parent );
+    Connection( quintptr socketDescriptor, QObject *parent = 0 );
     virtual ~Connection();
-    void run();
 
     virtual DataStore *storageBackend();
 
@@ -70,23 +70,27 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
+Q_SIGNALS:
+    void disconnected();
+
 protected Q_SLOTS:
-    void slotDisconnected();
     /**
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotResponseAvailable( const Akonadi::Server::Response &response );
     void slotConnectionStateChange( ConnectionState );
 
-protected:
-    Connection() {} // used for testing
-    void writeOut( const QByteArray &data );
-    Handler *findHandlerForCommand( const QByteArray &command );
+    virtual void slotResponseAvailable( const Akonadi::Server::Response &response );
 
-private:
+protected:
+    Connection(QObject *parent = 0); // used for testing
+
+    void writeOut( const QByteArray &data );
+    virtual Handler *findHandlerForCommand( const QByteArray &command );
+
+protected:
     quintptr m_socketDescriptor;
-    QLocalSocket *m_socket;
+    QIODevice *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore *m_backend;

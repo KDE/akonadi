@@ -36,11 +36,17 @@ ImapStreamParser::ImapStreamParser( QIODevice *socket )
   , m_position( 0 )
   , m_literalSize( 0 )
   , m_peeking( false )
+  , m_timeout( 30 * 1000 )
 {
 }
 
 ImapStreamParser::~ImapStreamParser()
 {
+}
+
+void ImapStreamParser::setWaitTimeout(int msecs)
+{
+  m_timeout = msecs;
 }
 
 QString ImapStreamParser::readUtf8String()
@@ -693,7 +699,7 @@ bool ImapStreamParser::waitForMoreData( bool wait )
 {
    if ( wait ) {
      if ( m_socket->bytesAvailable() > 0 ||
-          m_socket->waitForReadyRead( 30000 ) ) {
+          m_socket->waitForReadyRead( m_timeout ) ) {
         m_data.append( m_socket->readAll() );
      } else {
        return false;
@@ -749,13 +755,18 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
       throw ImapParserException( "Unable to read more data" );
     }
     if ( !inQuotedString && m_data[i] == '{' ) {
-      m_position = i;
+      m_position = i - 1;
       hasLiteral(); //init literal size
-      result.append( m_data.mid( i - 1, m_position - i ) );
+      result.append( m_data.mid( i - 1, m_position - i + 1 ) );
       while ( !atLiteralEnd() ) {
         result.append( readLiteralPart() );
       }
+      // Read the last character part and possible crlf
       i = m_position;
+      do {
+        result.append( m_data[i] );
+        ++i;
+      } while (m_data[i] == ' ' || m_data[i] == '\n' || m_data[i] == '\r');
     }
 
     if ( !inQuotedString && m_data[i] == '(' ) {
@@ -773,6 +784,11 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
     }
 
     if ( ( i == m_data.length() && paranthesisBalance == 0 ) || m_data[i] == '\n'  || m_data[i] == '\r' ) {
+      // Make sure we return \r\n and not just \r
+      if (m_data[i] == '\r' && m_data[i + 1] == '\n') {
+        ++i;
+        result.append( '\n' );
+      }
       break; //command end
     }
     ++i;
@@ -812,7 +828,7 @@ void ImapStreamParser::sendContinuationResponse( qint64 size )
   const QByteArray block = "+ Ready for literal data (expecting "
                    + QByteArray::number( size ) + " bytes)\r\n";
   m_socket->write( block );
-  m_socket->waitForBytesWritten( 30000 );
+  m_socket->waitForBytesWritten( m_timeout );
 
   Tracer::self()->connectionOutput( m_tracerId, block );
 }

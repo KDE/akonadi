@@ -142,6 +142,12 @@ void DbConfigSqlite::setup()
     return;
   }
 
+  QFileInfo finfo( mDatabaseName );
+  if ( !finfo.dir().exists() ) {
+    QDir dir;
+    dir.mkpath(finfo.path());
+  }
+
   db.setDatabaseName( mDatabaseName );
   if ( !db.open() ) {
     akDebug() << "Could not open sqlite database "

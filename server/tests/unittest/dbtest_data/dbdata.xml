@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (C) 2014 Daniel Vrátil <dvratil@redhat.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+
+-->
+<data>
+  <Resource name="akonadi_fake_resource_0">
+    <Collection remoteId="ColA" name="Collection A">
+      <MimeType name="inode/directory"/>
+      <Collection remoteId="ColB" name="Collection B">
+        <MimeType name="application/octet-stream"/>
+        <MimeType name="inode/directory"/>
+        <PimItem remoteId="A" gid="A" mimeType="application/octet-stream" size="5">
+          <Part partType="PLD:DATA" datasize="5" data="ABCDE"/>
+          <Flag name="\\SEEN" />
+          <Tag gid="Tag1" />
+        </PimItem>
+        <PimItem remoteId="B" gid="B" mimeType="application/octet-stream" size="1">
+          <Part partType="PLD:DATA" datasize="1" data="A"/>
+          <Part partType="PLD:PLDTEST" datasize="4" data="TEST"/>
+        </PimItem>
+        <PimItem remoteId="C" gid="C" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataB"/>
+        </PimItem>
+        <PimItem remoteId="D" gid="D" mimeType="application/octet-stream" size="12">
+          <Part partType="PLD:DATA" datasize="9" data="testDataC"/>
+          <Part partType="ATR:TEST" datasize="3" data="atr"/>
+        </PimItem>
+        <PimItem remoteId="E" gid="E" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataD"/>
+        </PimItem>
+        <PimItem remoteId="F" gid="F" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataE"/>
+        </PimItem>
+        <PimItem remoteId="G" gid="G" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataF"/>
+        </PimItem>
+        <PimItem remoteId="H" gid="H" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataG"/>
+        </PimItem>
+        <PimItem remoteId="I" gid="I" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataH"/>
+        </PimItem>
+        <PimItem remoteId="J" gid="J" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataI"/>
+        </PimItem>
+        <PimItem remoteId="K" gid="K" mimeType="application/octet-stream" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataJ"/>
+        </PimItem>
+        <PimItem remoteId="L" gid="L" mimeType="application/octet-stream2" size="9">
+          <Part partType="PLD:DATA" datasize="9" data="testDataK"/>
+        </PimItem>
+        <Collection remoteId="ColC" name="Collection C">
+          <MimeType name="inode/directory"/>
+          <Collection remoteId="ColD" name="Collection D">
+            <!-- TODO: Add some more items //-->
+          </Collection>
+        </Collection>
+      </Collection>
+    </Collection>
+  </Resource>
+
+  <Resource name="akonadi_fake_resource_with_virtual_collections_0">
+    <Collection remoteId="virtual" name="Virtual Collection" isVirtual="true">
+      <Collection remoteId="virtual2" name="Virtual Subcollection" isVirtual="true" />
+    </Collection>
+  </Resource>
+</data>

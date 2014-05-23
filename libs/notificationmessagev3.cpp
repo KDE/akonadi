@@ -141,3 +141,75 @@ QDBusArgument &operator<<( QDBusArgument &arg, const NotificationMessageV3 &msg 
   arg.endStructure();
   return arg;
 }
+
+QDebug operator<<( QDebug dbg, const NotificationMessageV3 &msg )
+{
+  dbg.nospace() << "NotificationMessageV3 {\n";
+  dbg.nospace() << "\tType: ";
+  switch (msg.type()) {
+  case NotificationMessageV2::InvalidType:
+    dbg.nospace() << QLatin1String("Invalid");
+    break;
+  case NotificationMessageV2::Items:
+    dbg.nospace() << QLatin1String("Items");
+    break;
+  case NotificationMessageV2::Collections:
+    dbg.nospace() << QLatin1String("Collections");
+    break;
+  case NotificationMessageV2::Tags:
+    dbg.nospace() << QLatin1String("Tags");
+    break;
+  }
+  dbg.nospace() << '\n';
+
+  dbg.nospace() << "\tOperation: ";
+  switch( msg.operation()) {
+  case NotificationMessageV2::InvalidOp:
+    dbg.nospace() << QLatin1String("Invalid");
+    break;
+  case NotificationMessageV2::Add:
+    dbg.nospace() << QLatin1String("Add");
+    break;
+  case NotificationMessageV2::Modify:
+    dbg.nospace() << QLatin1String("Modify");
+    break;
+  case NotificationMessageV2::Move:
+    dbg.nospace() << QLatin1String("Move");
+    break;
+  case NotificationMessageV2::Remove:
+    dbg.nospace() << QLatin1String("Remove");
+    break;
+  case NotificationMessageV2::Link:
+    dbg.nospace() << QLatin1String("Link");
+    break;
+  case NotificationMessageV2::Unlink:
+    dbg.nospace() << QLatin1String("Unlink");
+    break;
+  case NotificationMessageV2::Subscribe:
+    dbg.nospace() << QLatin1String("Subscribe");
+    break;
+  case NotificationMessageV2::Unsubscribe:
+    dbg.nospace() << QLatin1String("Unsubscribe");
+    break;
+  case NotificationMessageV2::ModifyFlags:
+    dbg.nospace() << QLatin1String("ModifyFlags");
+    break;
+  case NotificationMessageV2::ModifyTags:
+    dbg.nospace() << QLatin1String("ModifyTags");
+    break;
+  }
+  dbg.nospace() << "\n";
+  dbg.nospace() << "\tSession: " << msg.sessionId() << "\n";
+  dbg.nospace() << "\tEntities: " << msg.entities().values() << "\n";
+  dbg.nospace() << "\tResource: " << msg.resource() << "\n";
+  dbg.nospace() << "\tCollection: " << msg.parentCollection() << "\n";
+  dbg.nospace() << "\tDestination resource: " << msg.destinationResource() << "\n";
+  dbg.nospace() << "\tDestination collection: " << msg.parentDestCollection() << "\n";
+  dbg.nospace() << "\tParts: " << msg.itemParts() << "\n";
+  dbg.nospace() << "\tAdded flags: " << msg.addedFlags() << "\n";
+  dbg.nospace() << "\tRemoved flags: " << msg.removedFlags() << "\n";
+  dbg.nospace() << "\tAdded tags: " << msg.addedTags() << "\n";
+  dbg.nospace() << "\tRemoved tags: " << msg.removedTags() << "\n";
+  dbg.nospace() << "}" << "\n";
+  return dbg;
+}

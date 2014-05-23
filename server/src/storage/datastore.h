@@ -25,6 +25,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QVector>
 #include <QtCore/QWaitCondition>
+#include <QtCore/QThreadStorage>
 #include <QtSql/QSqlDatabase>
 
 class QSqlQuery;
@@ -100,17 +101,17 @@ class DataStore : public QObject
     /**
       Opens the database connection.
     */
-    void open();
+    virtual void open();
 
     /**
       Closes the databse connection.
     */
-    void close();
+    virtual void close();
 
     /**
       Initializes the database. Should be called during startup by the main thread.
     */
-    bool init();
+    virtual bool init();
 
     /**
       Per thread singleton.
@@ -118,35 +119,35 @@ class DataStore : public QObject
     static DataStore *self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool silent = false );
-    bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged,
-                           bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged, bool silent = false );
+    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool silent = false );
+    virtual bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged,
+                                   bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
+    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &tagsChanged, bool silent = false );
 
     /* --- ItemTags ----------------------------------------------------- */
-    bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool silent = false );
-    bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged,
-                           bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged, bool silent = false );
+    virtual bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool silent = false );
+    virtual bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged,
+                                  bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
+    virtual bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged, bool silent = false );
 
     /* --- ItemParts ----------------------------------------------------- */
-    bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
+    virtual bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 
     // removes all payload parts for this item.
-    bool invalidateItemCache( const PimItem &item );
+    virtual bool invalidateItemCache( const PimItem &item );
 
     /* --- Collection ------------------------------------------------------ */
-    bool appendCollection( Collection &collection );
+    virtual bool appendCollection( Collection &collection );
 
     /// removes the given collection and all its content
-    bool cleanupCollection( Collection &collection );
+    virtual bool cleanupCollection( Collection &collection );
     /// same as the above but for database backends without working referential actions on foreign keys
-    bool cleanupCollection_slow( Collection &collection );
+    virtual bool cleanupCollection_slow( Collection &collection );
 
     /// moves the collection @p collection to @p newParent.
-    bool moveCollection( Collection &collection, const Collection &newParent );
+    virtual bool moveCollection( Collection &collection, const Collection &newParent );
 
-    bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
+    virtual bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
 
     static QString collectionDelimiter() { return QLatin1String( "/" ); }
 
@@ -154,7 +155,7 @@ class DataStore : public QObject
       Determines the active cache policy for this Collection.
       The active cache policy is set in the corresponding Collection fields.
     */
-    void activeCachePolicy( Collection &col );
+    virtual void activeCachePolicy( Collection &col );
 
     /// Returns all virtual collections the @p item is linked to
     QVector<Collection> virtualCollections( const PimItem &item );
@@ -162,22 +163,22 @@ class DataStore : public QObject
     QMap<Entity::Id /* collection */, PimItem> virtualCollections( const PimItem::List &items );
 
     /* --- MimeType ------------------------------------------------------ */
-    bool appendMimeType( const QString &mimetype, qint64 *insertId = 0 );
+    virtual bool appendMimeType( const QString &mimetype, qint64 *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
-    bool appendPimItem( QVector<Part> &parts,
-                        const MimeType &mimetype,
-                        const Collection &collection,
-                        const QDateTime &dateTime,
-                        const QString &remote_id,
-                        const QString &remoteRevision,
-                        const QString &gid,
-                        PimItem &pimItem );
+    virtual bool appendPimItem( QVector<Part> &parts,
+                                const MimeType &mimetype,
+                                const Collection &collection,
+                                const QDateTime &dateTime,
+                                const QString &remote_id,
+                                const QString &remoteRevision,
+                                const QString &gid,
+                                PimItem &pimItem );
 
     /**
      * Removes the pim item and all referenced data ( e.g. flags )
      */
-    bool cleanupPimItems( const PimItem::List &items );
+    virtual bool cleanupPimItems( const PimItem::List &items );
 
     /**
      * Unhides the specified PimItem. Emits the itemAdded() notification as
@@ -189,7 +190,7 @@ class DataStore : public QObject
      * This function does NOT verify if the item was *really* hidden: this is
      * responsibility of the caller.
      */
-    bool unhidePimItem( PimItem &pimItem );
+    virtual bool unhidePimItem( PimItem &pimItem );
 
     /**
      * Unhides all the items which have the "hidden" flag set.
@@ -198,16 +199,16 @@ class DataStore : public QObject
      * The most notable call to this function is at server startup
      * when we attempt to restore a clean state of the database.
      */
-    bool unhideAllPimItems();
+    virtual bool unhideAllPimItems();
 
     /* --- Collection attributes ------------------------------------------ */
-    bool addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value );
+    virtual bool addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value );
     /**
      * Removes the given collection attribute for @p col.
      * @throws HandlerException on database errors
      * @returns @c true if the attribute existed, @c false otherwise
      */
-    bool removeCollectionAttribute( const Collection &col, const QByteArray &key );
+    virtual bool removeCollectionAttribute( const Collection &col, const QByteArray &key );
 
     /* --- Helper functions ---------------------------------------------- */
 
@@ -216,30 +217,30 @@ class DataStore : public QObject
       no notification signal will be emitted unless you call commitTransaction().
       @return @c true if successful.
     */
-    bool beginTransaction();
+    virtual bool beginTransaction();
 
     /**
       Reverts all changes within the current transaction.
     */
-    bool rollbackTransaction();
+    virtual bool rollbackTransaction();
 
     /**
       Commits all changes within the current transaction and emits all
       collected notfication signals. If committing fails, the transaction
       will be rolled back.
     */
-    bool commitTransaction();
+    virtual bool commitTransaction();
 
     /**
       Returns true if there is a transaction in progress.
     */
-    bool inTransaction() const;
+    virtual bool inTransaction() const;
 
     /**
       Returns the notification collector of this DataStore object.
       Use this to listen to change notification signals.
     */
-    NotificationCollector *notificationCollector() const { return mNotificationCollector; }
+    virtual NotificationCollector *notificationCollector();
 
     /**
       Returns the QSqlDatabase object. Use this for generating queries yourself.
@@ -323,7 +324,9 @@ protected:
   private Q_SLOTS:
     void sendKeepAliveQuery();
 
-private:
+protected:
+    static QThreadStorage<DataStore*> sInstances;
+
     QString m_connectionName;
     QSqlDatabase m_database;
     bool m_dbOpened;

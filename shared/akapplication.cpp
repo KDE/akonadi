@@ -44,6 +44,12 @@ AkApplication::~AkApplication()
 {
 }
 
+AkApplication* AkApplication::instance()
+{
+  Q_ASSERT( sInstance );
+  return sInstance;
+}
+
 void AkApplication::init()
 {
   akInit( QString::fromLatin1( mArgv[0] ) );

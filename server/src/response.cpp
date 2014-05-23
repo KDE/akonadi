@@ -48,6 +48,11 @@ QByteArray Response::asString() const
     return b;
 }
 
+Response::ResultCode Response::resultCode() const
+{
+  return m_resultCode;
+}
+
 void Response::setSuccess()
 {
     m_resultCode = Response::OK;
