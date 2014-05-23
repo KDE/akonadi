@@ -38,8 +38,8 @@ class AKONADICORE_EXPORT TagDeleteJob : public Job
     Q_OBJECT
 
 public:
-    TagDeleteJob(const Tag &tag, QObject *parent = 0);
-    TagDeleteJob(const Tag::List &tag, QObject *parent = 0);
+    explicit TagDeleteJob(const Tag &tag, QObject *parent = 0);
+    explicit TagDeleteJob(const Tag::List &tag, QObject *parent = 0);
 
     /**
      * Returns the tags passed to the constructor.

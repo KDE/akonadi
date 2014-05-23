@@ -134,14 +134,26 @@ void ItemCreateJob::doStart()
     }
     if (d->mItem.d_func()->mTagsOverwritten || !merge) {
         Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
-            flags += "TAG " + tag.remoteId();
+            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
+                flags += "\\RTag[" + tag.remoteId() + ']';
+            } else if (!tag.gid().isEmpty()) {
+                flags += "\\Tag[" + tag.gid() + ']';
+            }
         }
     } else {
         Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
-            flags += "+TAG " + tag.remoteId();
+            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
+                flags += "+\\RTag[" + tag.remoteId() + ']';
+            } else if (!tag.gid().isEmpty()) {
+                flags += "+\\Tag[" + tag.gid() + ']';
+            }
         }
         Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mDeletedTags) {
-            flags += "-TAG " + tag.remoteId();
+            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
+                flags += "-\\RTag[" + tag.remoteId() + ']';
+            } else if (!tag.gid().isEmpty()) {
+                flags += "-\\Tag[" + tag.gid() + ']';
+            }
         }
     }
 
