@@ -150,6 +150,7 @@
 #define AKONADI_FLAG_REMOTEID                      "\\RemoteId"
 #define AKONADI_FLAG_REMOTEREVISION                "\\RemoteRevision"
 #define AKONADI_FLAG_TAG                           "\\Tag"
+#define AKONADI_FLAG_RTAG                          "\\RTag"
 #define AKONADI_FLAG_SEEN                          "\\SEEN"
 
 // Attributes

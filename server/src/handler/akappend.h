@@ -64,13 +64,15 @@ protected:
     bool buildPimItem( PimItem &item,
                        Collection &parentCollection,
                        ChangedAttributes &flags,
-                       ChangedAttributes &tags );
+                       ChangedAttributes &tagsRID,
+                       ChangedAttributes &tagsGID );
 
 
     bool insertItem( PimItem &item,
                      const Collection &parentCollection,
                      const QVector<QByteArray> &itemFlags,
-                     const QVector<QByteArray> &itemTags );
+                     const QVector<QByteArray> &itemTagsRID,
+                     const QVector<QByteArray> &itemTagsGID );
 
     bool readParts( PimItem &item );
 

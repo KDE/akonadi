@@ -335,25 +335,90 @@ Tag::List HandlerHelper::resolveTags( const ImapSet &tags )
   return result;
 }
 
-Tag::List HandlerHelper::resolveTags( const QVector< QByteArray > &tagNames, CommandContext *context )
+Tag::List HandlerHelper::resolveTagsByGID(const QVector<QByteArray> &tagsGIDs)
 {
-  if (tagNames.isEmpty()) {
-    return Tag::List();
-  }
-  SelectQueryBuilder<Tag> qb;
-  Query::Condition cond;
-  cond.addColumnCondition( Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName() );
-  cond.addValueCondition( TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id() );
-  qb.addJoin( QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond );
-  qb.addValueCondition( TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::In, QVariant::fromValue( tagNames ) );
-  if  ( !qb.exec() ) {
-    throw HandlerException( "Unable to resolve tags" );
-  }
+    Tag::List tagList;
+    if (tagsGIDs.isEmpty()) {
+        return tagList;
+    }
 
-  const Tag::List result = qb.result();
-  if ( result.isEmpty() ) {
-    throw HandlerException( "No tags found" );
-  }
-  return result;
+    Q_FOREACH (const QByteArray &tagGID, tagsGIDs) {
+        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), tagGID);
+        Tag tag;
+        if (tags.isEmpty()) {
+            tag.setGid(QString::fromUtf8(tagGID));
+            tag.setParentId(0);
+
+            TagType type = TagType::retrieveByName(QLatin1String("PLAIN"));
+            if (!type.isValid()) {
+                type.setName(QLatin1String("PLAIN"));
+                if (!type.insert()) {
+                    throw HandlerException("Unable to create tag type");
+                }
+            }
+            tag.setTagType(type);
+            if (!tag.insert()) {
+                throw HandlerException("Unable to create tag");
+            }
+        } else if (tags.count() == 1) {
+            tag = tags[0];
+        } else {
+            // Should not happen
+            throw HandlerException("Tag GID is not unique");
+        }
+
+        tagList.append(tag);
+    }
+
+    return tagList;
 }
 
+Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray >& tagsRIDs, CommandContext* context)
+{
+    Tag::List tags;
+    if (tagsRIDs.isEmpty()) {
+        return tags;
+    }
+
+    if (!context->resource().isValid()) {
+        throw HandlerException("Tags can be resolved by their RID only in resource context");
+    }
+
+    Q_FOREACH (const QByteArray &tagRID, tagsRIDs) {
+        SelectQueryBuilder<Tag> qb;
+        Query::Condition cond;
+        cond.addColumnCondition(Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName());
+        cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+        qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond);
+        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
+        if (!qb.exec()) {
+            throw HandlerException("Unable to resolve tags");
+        }
+
+        Tag tag;
+        Tag::List results = qb.result();
+        if (results.isEmpty()) {
+            // If the tag does not exist, we create a new one with GID matching RID
+            Tag::List tags = resolveTagsByGID(QVector<QByteArray>() << tagRID);
+            if (tags.count() != 1) {
+                throw HandlerException("Unable to resolve tag");
+            }
+            tag = tags[0];
+            TagRemoteIdResourceRelation rel;
+            rel.setRemoteId(QString::fromUtf8(tagRID));
+            rel.setTagId(tag.id());
+            rel.setResourceId(context->resource().id());
+            if (!rel.insert()) {
+                throw HandlerException("Unable to create tag");
+            }
+        } else if (results.count() == 1) {
+            tag = results[0];
+        } else {
+            throw HandlerException("Tag RID is not unique within this resource context");
+        }
+
+        tags.append(tag);
+    }
+
+    return tags;
+}

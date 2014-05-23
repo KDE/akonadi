@@ -117,7 +117,9 @@ class HandlerHelper
     */
     static Tag::List resolveTags( const ImapSet &tags );
 
-    static Tag::List resolveTags( const QVector<QByteArray> &flagNames, CommandContext *context );
+    static Tag::List resolveTagsByGID( const QVector<QByteArray> &tagsGIDs );
+
+    static Tag::List resolveTagsByRID( const QVector<QByteArray> &tagsRIDs, CommandContext *context );
 };
 
 } // namespace Server

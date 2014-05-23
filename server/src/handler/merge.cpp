@@ -49,7 +49,8 @@ Merge::~Merge()
 
 bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
                        const ChangedAttributes &itemFlags,
-                       const ChangedAttributes &itemTags )
+                       const ChangedAttributes &itemTagsRID,
+                       const ChangedAttributes &itemTagsGID )
 {
     currentItem.setRev( newItem.rev() );
     if ( currentItem.remoteId() != newItem.remoteId() ) {
@@ -93,16 +94,16 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       mChangedParts << AKONADI_PARAM_FLAGS;
     }
 
-    if ( itemTags.incremental ) {
+    if ( itemTagsRID.incremental ) {
       bool tagsAdded = false, tagsRemoved = false;
-      if ( !itemTags.added.isEmpty() ) {
-        const Tag::List addedTags = HandlerHelper::resolveTags( itemTags.added, connection()->context() );
+      if ( !itemTagsRID.added.isEmpty() ) {
+        const Tag::List addedTags = HandlerHelper::resolveTagsByRID( itemTagsRID.added, connection()->context() );
         DataStore::self()->appendItemsTags( PimItem::List() << currentItem, addedTags,
                                             tagsAdded, true, col, true );
       }
 
-      if ( !itemTags.removed.isEmpty() ) {
-        const Tag::List removedTags = HandlerHelper::resolveTags( itemTags.removed, connection()->context() );
+      if ( !itemTagsRID.removed.isEmpty() ) {
+        const Tag::List removedTags = HandlerHelper::resolveTagsByRID( itemTagsRID.removed, connection()->context() );
         DataStore::self()->removeItemsTags( PimItem::List() << currentItem, removedTags,
                                             tagsRemoved, true );
       }
@@ -110,11 +111,35 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       if ( tagsAdded || tagsRemoved ) {
         mChangedParts << AKONADI_PARAM_TAGS;
       }
-    } else if ( !itemTags.added.isEmpty() ) {
-      const Tag::List tags = HandlerHelper::resolveTags( itemTags.added, connection()->context() );
+    } else if ( !itemTagsRID.added.isEmpty() ) {
+      const Tag::List tags = HandlerHelper::resolveTagsByRID( itemTagsRID.added, connection()->context() );
       DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags, true );
       mChangedParts << AKONADI_PARAM_TAGS;
     }
+
+    if ( itemTagsGID.incremental ) {
+      bool tagsAdded = false, tagsRemoved = false;
+      if ( !itemTagsGID.added.isEmpty() ) {
+        const Tag::List addedTags = HandlerHelper::resolveTagsByGID( itemTagsGID.added );
+        DataStore::self()->appendItemsTags( PimItem::List() << currentItem, addedTags,
+                                            tagsAdded, true, col, true );
+      }
+
+      if ( !itemTagsGID.removed.isEmpty() ) {
+        const Tag::List removedTags = HandlerHelper::resolveTagsByGID( itemTagsGID.removed );
+        DataStore::self()->removeItemsTags( PimItem::List() << currentItem, removedTags,
+                                            tagsRemoved, true );
+      }
+
+      if ( tagsAdded || tagsRemoved ) {
+        mChangedParts << AKONADI_PARAM_TAGS;
+      }
+    } else if ( !itemTagsGID.added.isEmpty() ) {
+      const Tag::List tags = HandlerHelper::resolveTagsByGID( itemTagsGID.added );
+      DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags, true );
+      mChangedParts << AKONADI_PARAM_TAGS;
+    }
+
 
     Part::List existingParts = Part::retrieveFiltered( Part::pimItemIdColumn(), currentItem.id() );
     QMap<QByteArray, qint64> partsSizes;
@@ -221,11 +246,10 @@ bool Merge::parseStream()
     Transaction transaction( db );
 
     Collection parentCol;
-    ChangedAttributes itemFlags;
-    ChangedAttributes itemTags;
+    ChangedAttributes itemFlags, itemTagsRID, itemTagsGID;
     PimItem item;
     // Parse the rest of the command, assuming X-AKAPPEND syntax
-    if ( !buildPimItem( item, parentCol, itemFlags, itemTags ) ) {
+    if ( !buildPimItem( item, parentCol, itemFlags, itemTagsRID, itemTagsGID ) ) {
       return false;
     }
 
@@ -255,7 +279,7 @@ bool Merge::parseStream()
     if ( result.count() == 0 ) {
       // No item with such GID/RID exists, so call AkAppend::insert() and behave
       // like if this was a new item
-      if ( !insertItem( item, parentCol, itemFlags.added, itemTags.added ) ) {
+      if ( !insertItem( item, parentCol, itemFlags.added, itemTagsRID.added, itemTagsGID.added ) ) {
         return false;
       }
       if ( !transaction.commit() ) {
@@ -268,7 +292,7 @@ bool Merge::parseStream()
       // Item with matching GID/RID combination exists, so merge this item into it
       // and send itemChanged()
       PimItem existingItem = result.first();
-      if ( !mergeItem( item, existingItem, itemFlags, itemTags ) ) {
+      if ( !mergeItem( item, existingItem, itemFlags, itemTagsRID, itemTagsGID ) ) {
         return false;
       }
       if ( !transaction.commit() ) {
