@@ -134,7 +134,6 @@ void FakeClient::run()
     mSocket->close();
     delete mSocket;
     mSocket = 0;
-    akDebug() << "Client finished";
 }
 
 void FakeClient::connectionLost()

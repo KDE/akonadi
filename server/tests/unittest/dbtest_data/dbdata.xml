@@ -32,6 +32,7 @@
         </PimItem>
         <PimItem remoteId="B" gid="B" mimeType="application/octet-stream" size="1">
           <Part partType="PLD:DATA" datasize="1" data="A"/>
+          <Part partType="PLD:PLDTEST" datasize="4" data="TEST"/>
         </PimItem>
         <PimItem remoteId="C" gid="C" mimeType="application/octet-stream" size="9">
           <Part partType="PLD:DATA" datasize="9" data="testDataB"/>
