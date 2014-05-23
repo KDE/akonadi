@@ -80,7 +80,7 @@ QList<QByteArray> FakeAkonadiServer::loginScenario()
 {
     QList<QByteArray> scenario;
     // FIXME: Use real protocol version
-    scenario << "S: * OK Akonadi Almost IMAP Server [PROTOCOL 39]";
+    scenario << "S: * OK Akonadi Almost IMAP Server [PROTOCOL " + QByteArray::number(Connection::protocolVersion()) + "]";
     scenario << "C: 0 LOGIN " + instanceName().toLatin1();
     scenario << "S: 0 OK User logged in";
     return scenario;

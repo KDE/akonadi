@@ -38,7 +38,7 @@
 
 #include <assert.h>
 
-#define AKONADI_PROTOCOL_VERSION "40"
+#define AKONADI_PROTOCOL_VERSION 40
 
 using namespace Akonadi::Server;
 
@@ -96,12 +96,18 @@ Connection::Connection( quintptr socketDescriptor, QObject *parent )
 
     Response greeting;
     greeting.setUntagged();
-    greeting.setString( "OK Akonadi Almost IMAP Server [PROTOCOL " AKONADI_PROTOCOL_VERSION "]" );
+    greeting.setString( "OK Akonadi Almost IMAP Server [PROTOCOL " + QByteArray::number(AKONADI_PROTOCOL_VERSION) + "]" );
     // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
     QMetaObject::invokeMethod( this, "slotResponseAvailable",
                                Qt::QueuedConnection,
                                Q_ARG( Akonadi::Server::Response, greeting ) );
 }
+
+int Connection::protocolVersion()
+{
+    return (int) AKONADI_PROTOCOL_VERSION;
+}
+
 
 DataStore *Connection::storageBackend()
 {
