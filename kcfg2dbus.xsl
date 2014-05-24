@@ -28,7 +28,7 @@
 <interface>
   <xsl:attribute name="name"><xsl:value-of select="$interfaceName"/></xsl:attribute>
   <method>
-    <xsl:attribute name="name">writeConfig</xsl:attribute>
+    <xsl:attribute name="name">save</xsl:attribute>
   </method>
   <xsl:for-each select="kcfg:kcfg/kcfg:group/kcfg:entry">
     <xsl:variable name="annotation"><xsl:call-template name="typeAnnotation"/></xsl:variable>
