@@ -44,17 +44,31 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-FakeAkonadiServer::FakeAkonadiServer( QObject *parent )
-    : QLocalServer( parent )
+FakeAkonadiServer *FakeAkonadiServer::sInstance = 0;
+
+FakeAkonadiServer *FakeAkonadiServer::instance()
+{
+    if (!sInstance) {
+        sInstance = new FakeAkonadiServer;
+    }
+
+    return sInstance;
+}
+
+
+FakeAkonadiServer::FakeAkonadiServer()
+    : QLocalServer()
     , mDataStore(0)
     , mServerLoop(0)
     , mNotificationSpy(0)
 {
-    mClient = new FakeClient;
-
+    qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
     qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
-    qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
+    qputenv("HOME", qPrintable(basePath()));
+    qputenv("KDEHOME", qPrintable(basePath() + QLatin1String("/kdehome")));
+
+    mClient = new FakeClient;
 }
 
 FakeAkonadiServer::~FakeAkonadiServer()

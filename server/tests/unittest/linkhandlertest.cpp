@@ -41,16 +41,13 @@ class LinkHandlerTest : public QObject
 {
     Q_OBJECT
 
-private:
-    FakeAkonadiServer mServer;
-
 public:
     LinkHandlerTest()
     {
         qRegisterMetaType<Akonadi::Server::Response>();
 
         try {
-            mServer.initialize();
+            FakeAkonadiServer::instance()->initialize();
         } catch (const FakeAkonadiServerException &e) {
             akError() << "Server exception: " << e.what();
             akFatal() << "Fake Akonadi Server failed to start up, aborting test";
@@ -144,10 +141,10 @@ private Q_SLOTS:
         QFETCH(NotificationMessageV3, notification);
         QFETCH(bool, expectFail);
 
-        mServer.setScenario(scenario);
-        mServer.runTest();
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = mServer.notificationSpy();
+        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
             const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
@@ -247,10 +244,10 @@ private Q_SLOTS:
         QFETCH(NotificationMessageV3, notification);
         QFETCH(bool, expectFail);
 
-        mServer.setScenario(scenario);
-        mServer.runTest();
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = mServer.notificationSpy();
+        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
             const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();

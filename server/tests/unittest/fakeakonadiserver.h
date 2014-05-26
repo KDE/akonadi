@@ -46,9 +46,11 @@ class FakeAkonadiServer: public QLocalServer
     Q_OBJECT
 
 public:
-    explicit FakeAkonadiServer( QObject *parent = 0 );
+    static FakeAkonadiServer *instance();
+
     ~FakeAkonadiServer();
     bool initialize();
+
 
     FakeDataStore *dataStore() const;
 
@@ -69,6 +71,8 @@ public:
 
 
 private:
+    explicit FakeAkonadiServer();
+
     void incomingConnection(quintptr socketDescriptor);
 
     bool deleteDirectory(const QString &path);
@@ -82,6 +86,8 @@ private:
     QEventLoop *mServerLoop;
 
     QSignalSpy *mNotificationSpy;
+
+    static FakeAkonadiServer *sInstance;
 };
 
 class FakeAkonadiServerException: public Exception
