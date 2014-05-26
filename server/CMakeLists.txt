@@ -187,6 +187,7 @@ set(libakonadiprivate_SRCS
   src/storage/schematypes.cpp
   src/storage/transaction.cpp
   src/storage/parthelper.cpp
+  src/storage/partstreamer.cpp
   src/storage/storagedebugger.cpp
   src/tracer.cpp
   src/utils.cpp

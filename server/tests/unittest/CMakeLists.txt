@@ -69,5 +69,7 @@ add_server_test(itemretrievertest.cpp akonadiprivate)
 add_server_test(notificationmanagertest.cpp akonadiprivate)
 add_server_test(parttypehelpertest.cpp akonadiprivate)
 
+add_server_test(partstreamertest.cpp akonadiprivate)
+
 add_server_test(akappendhandlertest.cpp akonadiprivate)
 add_server_test(linkhandlertest.cpp akonadiprivate)
