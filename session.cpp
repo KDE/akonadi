@@ -58,7 +58,8 @@ static const QList<QByteArray> sCapabilities = QList<QByteArray>()
                                                << "NOTIFY 3"
                                                << "NOPAYLOADPATH"
                                                << "AKAPPENDSTREAMING"
-                                               << "SERVERSEARCH";
+                                               << "SERVERSEARCH"
+                                               << "DIRECTSTREAMING";
 
 void SessionPrivate::startNext()
 {

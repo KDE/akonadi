@@ -229,6 +229,10 @@ public:
     static void parseItemFetchResult(const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0);
     static void parseTagFetchResult(const QList<QByteArray> &lineTokens, Tag &tag);
 
+    static QString akonadiStoragePath();
+    static QString absolutePayloadFilePath(const QString &fileName);
+
+    static bool streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error);
 };
 
 }
