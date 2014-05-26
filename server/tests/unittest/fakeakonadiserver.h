@@ -90,38 +90,7 @@ private:
     static FakeAkonadiServer *sInstance;
 };
 
-class FakeAkonadiServerException: public Exception
-{
-public:
-    FakeAkonadiServerException (const QString &what)
-        : Exception(what)
-    {
-    }
-
-    FakeAkonadiServerException (const QByteArray &what)
-        : Exception(what)
-    {
-    }
-
-    FakeAkonadiServerException (const Exception &other)
-        : Exception(other)
-    {
-    }
-
-    FakeAkonadiServerException (const char* what)
-        : Exception(what)
-    {
-    }
-
-    ~FakeAkonadiServerException()
-    {
-    }
-
-    const char* type() const throw ()
-    {
-        return "FakeAkonadiServerException";
-    }
-};
+AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);
 
 }
 }
