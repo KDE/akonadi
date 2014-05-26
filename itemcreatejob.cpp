@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007        Robert Zwerus <arzie@dds.nl>
+    Copyright (c) 2014        Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -30,6 +31,7 @@
 #include "gid/gidextractor_p.h"
 
 #include <QtCore/QDateTime>
+#include <QtCore/QFile>
 
 #include <kdebug.h>
 
@@ -193,7 +195,15 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
     Q_D(ItemCreateJob);
 
     if (tag == "+") {   // ready for literal data
-        d->writeData(d->mPendingData);
+        if (data.startsWith("STREAM")) {
+            QByteArray error;
+            if (!ProtocolHelper::streamPayloadToFile(data, d->mPendingData, error)) {
+                d->writeData("* NO " + error);
+                return;
+            }
+        } else {
+            d->writeData(d->mPendingData);
+        }
         d->writeData(d->nextPartHeader());
         return;
     }
