@@ -50,9 +50,6 @@ class AkAppendHandlerTest : public QObject
 {
     Q_OBJECT
 
-private:
-    FakeAkonadiServer mServer;
-
 public:
     AkAppendHandlerTest()
     {
@@ -65,7 +62,7 @@ public:
         settings.setValue(QLatin1String("General/SizeThreshold"), std::numeric_limits<qint64>::max());
 
         try {
-            mServer.initialize();
+            FakeAkonadiServer::instance()->initialize();
         } catch (FakeAkonadiServerException &e) {
             akError() << e.what();
             akFatal() << "Fake Akonadi Server failed to start up, aborting test";
@@ -545,10 +542,10 @@ private Q_SLOTS:
         QFETCH(qint64, uidnext);
         QFETCH(bool, expectFail);
 
-        mServer.setScenario(scenario);
-        mServer.runTest();
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = mServer.notificationSpy();
+        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
 
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);

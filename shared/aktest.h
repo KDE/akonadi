@@ -41,6 +41,7 @@ int main( int argc, char **argv ) \
 #define AKTEST_FAKESERVER_MAIN(TestObject) \
 int main(int argc, char **argv) \
 { \
+  FakeAkonadiServer::instance(); \
   AkCoreApplication app(argc, argv); \
   boost::program_options::options_description testOptions( "Unit Test" ); \
   testOptions.add_options() \
