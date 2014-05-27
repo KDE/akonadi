@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 Tobias Koenig <tokoe@kde.org>
+ * Copyright (C) 2014 Daniel Vrátil <dvratil@redhat.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,6 +21,7 @@
 
 #include "utils.h"
 
+#include <akdebug.h>
 #include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
 
@@ -39,6 +41,13 @@
 static QString akonadiSocketDirectory();
 static bool checkSocketDirectory( const QString &path );
 static bool createSocketDirectory( const QString &link, const QString &tmpl );
+#endif
+
+#ifdef Q_OS_LINUX
+#include <stdio.h>
+#include <mntent.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
 #endif
 
 using namespace Akonadi;
@@ -160,3 +169,76 @@ static bool createSocketDirectory( const QString &link, const QString &tmpl )
   return true;
 }
 #endif
+
+QString Utils::getDirectoryFileSystem(const QString &directory)
+{
+#ifndef Q_OS_LINUX
+    return QString();
+#else
+    QString bestMatchPath;
+    QString bestMatchFS;
+
+    FILE *mtab = setmntent("/etc/mtab", "r");
+    while (mntent *mnt = getmntent(mtab)) {
+        if (qstrcmp(mnt->mnt_type, MNTTYPE_IGNORE) == 0) {
+            continue;
+        }
+
+        const QString dir = QString::fromLocal8Bit(mnt->mnt_dir);
+        if (!directory.startsWith(dir) || dir.length() < bestMatchPath.length()) {
+            continue;
+        }
+
+        bestMatchPath = dir;
+        bestMatchFS = QString::fromLocal8Bit(mnt->mnt_type);
+    }
+
+    endmntent(mtab);
+
+    return bestMatchFS;
+#endif
+}
+
+void Utils::disableCoW(const QString& path)
+{
+#ifndef Q_OS_LINUX
+    Q_UNUSED(path);
+#else
+    qDebug() << "Detected Btrfs, disabling copy-on-write on database files";
+
+    // from linux/fs.h, so that Akonadi does not depend on Linux header files
+    #ifndef FS_IOC_GETFLAGS
+    #define FS_IOC_GETFLAGS     _IOR('f', 1, long)
+    #endif
+    #ifndef FS_IOC_SETFLAGS
+    #define FS_IOC_SETFLAGS     _IOW('f', 2, long)
+    #endif
+
+    // Disable COW on file
+    #ifndef FS_NOCOW_FL
+    #define FS_NOCOW_FL         0x00800000
+    #endif
+
+    ulong flags = 0;
+    const int fd = open(qPrintable(path), O_RDONLY);
+    if (fd == -1) {
+        qWarning() << "Failed to open" << path << "to modify flags (" << errno << ")";
+        return;
+    }
+
+    if (ioctl(fd, FS_IOC_GETFLAGS, &flags) == -1) {
+        qWarning() << "ioctl error: failed to get file flags (" << errno << ")";
+        close(fd);
+        return;
+    }
+    if (!(flags & FS_NOCOW_FL)) {
+        flags |= FS_NOCOW_FL;
+        if (ioctl(fd, FS_IOC_SETFLAGS, &flags) == -1) {
+            qWarning() << "ioctl error: failed to set file flags (" << errno << ")";
+            close(fd);
+            return;
+        }
+    }
+    close(fd);
+#endif
+}

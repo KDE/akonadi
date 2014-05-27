@@ -195,6 +195,18 @@ void DbConfigMysql::startInternalServer()
     akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
   }
 
+#ifdef Q_OS_LINUX
+  // It is recommended to disable CoW feature when running on Btrfs to improve
+  // database performance. Disabling CoW only has effect on empty directory (since
+  // it affects only new files), so we check whether MySQL has not yet been initialized.
+  QDir dir(dataDir + QDir::separator() + QLatin1String("mysql"));
+  if (!dir.exists()) {
+    if (Utils::getDirectoryFileSystem(dataDir) == QLatin1String("btrfs")) {
+        Utils::disableCoW(dataDir);
+    }
+  }
+#endif
+
   bool confUpdate = false;
   QFile actualFile ( actualConfig );
   // update conf only if either global (or local) is newer than actual

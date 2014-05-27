@@ -18,6 +18,7 @@
 */
 
 #include "dbconfigsqlite.h"
+#include "utils.h"
 
 #include <libs/xdgbasedirs_p.h>
 #include <akdebug.h>
@@ -147,6 +148,18 @@ void DbConfigSqlite::setup()
     QDir dir;
     dir.mkpath(finfo.path());
   }
+
+#ifdef Q_OS_LINUX
+  QFile dbFile(mDatabaseName);
+  // It is recommended to disable CoW feature when running on Btrfs to improve
+  // database performance. It does not have any effect on non-empty files, so
+  // we check, whether the database has not yet been initialized.
+  if (dbFile.size() == 0) {
+    if (Utils::getDirectoryFileSystem(mDatabaseName) == QLatin1String("btrfs")) {
+        Utils::disableCoW(mDatabaseName);
+    }
+  }
+#endif
 
   db.setDatabaseName( mDatabaseName );
   if ( !db.open() ) {
