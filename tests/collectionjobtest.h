@@ -29,6 +29,7 @@ class CollectionJobTest : public QObject
     void initTestCase();
     void testTopLevelList();
     void testFolderList();
+    void testSignalOrder();
     void testNonRecursiveFolderList();
     void testEmptyFolderList();
     void testSearchFolderList();
@@ -44,6 +45,8 @@ class CollectionJobTest : public QObject
     void testUtf8CollectionName_data();
     void testUtf8CollectionName();
     void testMultiList();
+    void testRecursiveMultiList();
+    void testNonOverlappingRootList();
     void testSelect();
     void testRidFetch();
     void testRidCreateDelete_data();
