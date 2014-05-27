@@ -160,6 +160,39 @@ void CollectionJobTest::testFolderList( )
   QVERIFY( findCol( list, "bla" ).isValid() );
 }
 
+class ResultSignalTester : public QObject
+{
+  Q_OBJECT
+public:
+  QStringList receivedSignals;
+public Q_SLOTS:
+  void onCollectionsReceived( const Akonadi::Collection::List & )
+  {
+    receivedSignals << QLatin1String( "collectionsReceived" );
+  }
+
+  void onCollectionRetrievalDone( KJob* )
+  {
+    receivedSignals << QLatin1String( "result" );
+  }
+};
+
+void CollectionJobTest::testSignalOrder()
+{
+  Akonadi::Collection::List toFetch;
+  toFetch << Collection( res1ColId );
+  toFetch << Collection( res2ColId );
+  CollectionFetchJob *job = new CollectionFetchJob( toFetch, CollectionFetchJob::Recursive );
+  ResultSignalTester spy;
+  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), &spy, SLOT(onCollectionsReceived(Akonadi::Collection::List)) );
+  connect( job, SIGNAL(result(KJob*)), &spy, SLOT(onCollectionRetrievalDone(KJob*)) );
+  AKVERIFYEXEC( job );
+
+  QCOMPARE( spy.receivedSignals.size(), 2 );
+  QCOMPARE( spy.receivedSignals.at( 0 ), QLatin1String( "collectionsReceived" ) );
+  QCOMPARE( spy.receivedSignals.at( 1 ), QLatin1String( "result" ) );
+}
+
 void CollectionJobTest::testNonRecursiveFolderList( )
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Base );
@@ -570,6 +603,67 @@ void CollectionJobTest::testMultiList()
   compareLists( res, req );
 }
 
+void CollectionJobTest::testRecursiveMultiList()
+{
+  Akonadi::Collection::List toFetch;
+  toFetch << Collection( res1ColId );
+  toFetch << Collection( res2ColId );
+  CollectionFetchJob *job = new CollectionFetchJob( toFetch, CollectionFetchJob::Recursive );
+  QSignalSpy spy( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)) );
+  QVERIFY( spy.isValid() );
+  AKVERIFYEXEC( job );
+
+  Collection::List list = job->collections();
+
+  int count = 0;
+  for ( int i = 0; i < spy.count(); ++i ) {
+    Collection::List l = spy[i][0].value<Akonadi::Collection::List>();
+    for ( int j = 0; j < l.count(); ++j ) {
+      QVERIFY( list.count() > count + j );
+      QCOMPARE( list[count + j].id(), l[j].id() );
+    }
+    count += l.count();
+  }
+  QCOMPARE( count, list.count() );
+
+  // check if everything is there
+  QCOMPARE( list.count(), 4 + 2 );
+  QVERIFY( findCol( list, "foo" ).isValid() );
+  QVERIFY( findCol( list, "bar" ).isValid() );
+  QVERIFY( findCol( list, "bla" ).isValid() ); //There are two bla folders, but we only check for one.
+  QVERIFY( findCol( list, "foo2" ).isValid() );
+  QVERIFY( findCol( list, "space folder" ).isValid() );
+}
+
+void CollectionJobTest::testNonOverlappingRootList()
+{
+  Akonadi::Collection::List toFetch;
+  toFetch << Collection( res1ColId );
+  toFetch << Collection( res2ColId );
+  CollectionFetchJob *job = new CollectionFetchJob( toFetch, CollectionFetchJob::NonOverlappingRoots );
+  QSignalSpy spy( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)) );
+  QVERIFY( spy.isValid() );
+  AKVERIFYEXEC( job );
+
+  Collection::List list = job->collections();
+
+  int count = 0;
+  for ( int i = 0; i < spy.count(); ++i ) {
+    Collection::List l = spy[i][0].value<Akonadi::Collection::List>();
+    for ( int j = 0; j < l.count(); ++j ) {
+      QVERIFY( list.count() > count + j );
+      QCOMPARE( list[count + j].id(), l[j].id() );
+    }
+    count += l.count();
+  }
+  QCOMPARE( count, list.count() );
+
+  // check if everything is there
+  QCOMPARE( list.count(), 2 );
+  QVERIFY( findCol( list, "res1" ).isValid() );
+  QVERIFY( findCol( list, "res2" ).isValid() );
+}
+
 void CollectionJobTest::testSelect()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
@@ -672,3 +766,4 @@ void CollectionJobTest::testAncestorRetrieval()
   QCOMPARE( col, col2 );
 }
 
+#include "collectionjobtest.moc"
