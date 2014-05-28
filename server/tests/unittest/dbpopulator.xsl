@@ -162,6 +162,16 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
+        <xsl:when test="@type = 'Tristate'">
+          <xsl:choose>
+            <xsl:when test="$columnValue = 'NULL'">
+              <xsl:text>Tristate::Undefined</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$columnValue" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
         <xsl:when test="@type = 'QString'">
           <xsl:choose>
             <xsl:when test="$columnValue = 'NULL'">

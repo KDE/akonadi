@@ -45,7 +45,7 @@ namespace Server {
   command = "LIST" | "LSUB" | "RID LIST" | "RID LSUB"
   depth = number | "INF"
   filter-list = *(filter-key " " filter-value)
-  filter-key = "RESOURCE" | "MIMETYPE"
+  filter-key = "RESOURCE" | "MIMETYPE" | "ENABLED" | "SYNC" | "DISPLAY" | "INDEX"
   option-list = *(option-key " " option-value)
   option-key = "STATISTICS"
   @endverbatim
@@ -94,6 +94,7 @@ class List : public Handler
   private:
     bool listCollection( const Collection &root, int depth, const QStack<Collection> &ancestors );
     QStack<Collection> ancestorsForCollection( const Collection &col );
+    Collection::List retrieveChildren(const QVariant &value);
 
   private:
     Resource mResource;
@@ -102,6 +103,10 @@ class List : public Handler
     int mAncestorDepth;
     bool mOnlySubscribed;
     bool mIncludeStatistics;
+    bool mEnabledCollections;
+    bool mCollectionsToDisplay;
+    bool mCollectionsToSynchronize;
+    bool mCollectionsToIndex;
 
 };
 

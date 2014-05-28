@@ -66,7 +66,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="27"/>
+    <data columns="version" values="28"/>
   </table>
 
   <table name="Resource">
@@ -85,6 +85,11 @@
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
     <column name="subscribed" type="bool" default="true" allowNull="false"/>
+    <!--    TODO migrate subscribed to enabled and drop subscribed   -->
+    <column name="enabled" type="bool" default="true" allowNull="false"/>
+    <column name="syncPref" type="Tristate" default="Tristate::Undefined"/>
+    <column name="displayPref" type="Tristate" default="Tristate::Undefined"/>
+    <column name="indexPref" type="Tristate" default="Tristate::Undefined"/>
     <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
     <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicyCacheTimeout" type="int" default="-1" allowNull="false"/>

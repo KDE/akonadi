@@ -32,6 +32,13 @@ class QSqlDatabase;
 namespace Akonadi {
 namespace Server {
 
+
+enum Tristate {
+  False = 0,
+  True = 1,
+  Undefined = 2
+};
+
 /**
   Base class for classes representing database records. It also contains
   low-level data access and manipulation template methods.
@@ -184,5 +191,7 @@ namespace _detail {
 
 } // namespace Server
 } // namespace Akonadi
+
+Q_DECLARE_METATYPE(Akonadi::Server::Tristate);
 
 #endif

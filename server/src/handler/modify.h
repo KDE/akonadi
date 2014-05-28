@@ -40,7 +40,7 @@ namespace Server {
   @verbatim
   request = tag " [ "RID " ] MODIFY " collection-ids " " attribute-list
   attribute-list = *([-]attribute-name [" " attribute-value])
-  attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "REMOTEREVISION" | "CACHEPOLICY" | "PARENT" | [-]custom-attr-name
+  attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "REMOTEREVISION" | "CACHEPOLICY" | "PARENT" | "ENABLED" | "SYNC" | "DISPLAY" | "INDEX" | [-]custom-attr-name
   @endverbatim
 
   @c collection-ids is either a UID set or a RID list, depending on the command prefix.

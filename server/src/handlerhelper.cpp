@@ -201,6 +201,16 @@ QByteArray HandlerHelper::cachePolicyToByteArray( const Collection &col )
   return rv;
 }
 
+QByteArray HandlerHelper::tristateToByteArray( const Tristate &tristate )
+{
+  if ( tristate == Tristate::True ) {
+    return "TRUE";
+  } else if ( tristate == Tristate::False ) {
+    return "FALSE";
+  }
+  return "DEFAULT";
+}
+
 QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hidden, bool includeStatistics,
                                                  int ancestorDepth, const QStack<Collection> &ancestors )
 {
@@ -246,6 +256,16 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   if ( ancestorDepth > 0 ) {
     b += HandlerHelper::ancestorsToByteArray( ancestorDepth, ancestors ) + ' ';
   }
+
+  b += AKONADI_PARAM_ENABLED " ";
+  if ( col.enabled() ) {
+    b += "TRUE ";
+  } else {
+    b += "FALSE ";
+  }
+  b += AKONADI_PARAM_DISPLAY " " + tristateToByteArray( col.displayPref() ) + ' ';
+  b += AKONADI_PARAM_SYNC " " + tristateToByteArray( col.syncPref() ) + ' ';
+  b += AKONADI_PARAM_INDEX " " + tristateToByteArray( col.indexPref() ) + ' ';
 
   const CollectionAttribute::List attrs = col.attributes();
   for ( int i = 0; i < attrs.size(); ++i ) {

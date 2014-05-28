@@ -42,6 +42,16 @@ Create::Create( Scope::SelectionScope scope )
 {
 }
 
+static Tristate getTristateValue( const QByteArray &value )
+{
+  if ( value == "TRUE" ){
+    return Tristate::True;
+  } else if ( value == "FALSE" ){
+    return Tristate::False;
+  }
+  return Tristate::Undefined;
+}
+
 bool Create::parseStream()
 {
   QString name = m_streamParser->readUtf8String();
@@ -165,6 +175,14 @@ bool Create::parseStream()
       HandlerHelper::parseCachePolicy( value, collection );
     } else if ( key == AKONADI_PARAM_VIRTUAL ) {
       collection.setIsVirtual( value.toUInt() != 0 );
+    } else if ( key == AKONADI_PARAM_ENABLED ) {
+      collection.setEnabled( getTristateValue( value ) == Server::True );
+    } else if ( key == AKONADI_PARAM_SYNC ) {
+      collection.setSyncPref( getTristateValue( value ) );
+    } else if ( key == AKONADI_PARAM_DISPLAY ) {
+      collection.setDisplayPref( getTristateValue( value ) );
+    } else if ( key == AKONADI_PARAM_INDEX ) {
+      collection.setIndexPref( getTristateValue( value ) );
     } else {
       userDefAttrs << qMakePair( key, value );
     }

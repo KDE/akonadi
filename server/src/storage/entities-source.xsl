@@ -55,6 +55,9 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     <xsl:for-each select="column[@type = 'bool']">
       , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
+    <xsl:for-each select="column[@type = 'Tristate']">
+      , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>Tristate::Undefined</xsl:otherwise></xsl:choose> )
+    </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
       , <xsl:value-of select="@name"/>_changed( false )
     </xsl:for-each>
@@ -84,6 +87,9 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     </xsl:for-each>
     <xsl:for-each select="column[@type = 'bool']">
     bool <xsl:value-of select="@name"/> : 1;
+    </xsl:for-each>
+    <xsl:for-each select="column[@type = 'Tristate']">
+    Tristate <xsl:value-of select="@name"/>;
     </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
     bool <xsl:value-of select="@name"/>_changed : 1;
@@ -291,6 +297,9 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
           <xsl:choose>
             <xsl:when test="starts-with(@type,'QString')">
           Utils::variantToString( query.value( <xsl:value-of select="position() - 1"/> ) )
+            </xsl:when>
+            <xsl:when test="starts-with(@type, 'Tristate')">
+          static_cast&lt;Tristate&gt;(query.value( <xsl:value-of select="position() - 1"/> ).value&lt;int&gt;())
             </xsl:when>
             <xsl:otherwise>
           query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()

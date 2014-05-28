@@ -24,6 +24,7 @@
 #include "dbexception.h"
 #include "shared/akdebug.h"
 #include "schema.h"
+#include "entity.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -312,6 +313,9 @@ QString DbInitializer::sqlType( const QString &type, int size ) const
   if ( type == QLatin1String( "bool" ) ) {
     return QLatin1String( "BOOL" );
   }
+  if ( type == QLatin1String( "Tristate" ) ) {
+    return QLatin1String( "TINYINT" );
+  }
 
   akDebug() << "Invalid type" << type;
   Q_ASSERT( false );
@@ -322,6 +326,14 @@ QString DbInitializer::sqlValue( const QString &type, const QString &value ) con
 {
   if ( type == QLatin1String( "QDateTime" ) && value == QLatin1String( "QDateTime::currentDateTime()" ) ) {
     return QLatin1String( "CURRENT_TIMESTAMP" );
+  } else if ( type == QLatin1String( "Tristate" ) ) {
+    if ( value == QLatin1String( "False" ) ) {
+      return QString::number( Akonadi::Server::Tristate::False );
+    } else if ( value == QLatin1String( "True" ) ) {
+      return QString::number( Akonadi::Server::Tristate::True );
+    } else {
+      return QString::number( Akonadi::Server::Tristate::Undefined );
+    }
   }
 
   return value;
