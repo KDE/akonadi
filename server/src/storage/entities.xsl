@@ -201,6 +201,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
         <xsl:when test="starts-with(@type,'QString')">
       Utils::variantToString( qb.query().value( <xsl:value-of select="position() - 1"/> ) )
         </xsl:when>
+        <xsl:when test="starts-with(@type, 'Tristate')">
+      static_cast&lt;Tristate&gt;(qb.query().value( <xsl:value-of select="position() - 1"/> ).value&lt;int&gt;())
+        </xsl:when>
         <xsl:otherwise>
       qb.query().value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
         </xsl:otherwise>

@@ -73,3 +73,6 @@ add_server_test(partstreamertest.cpp akonadiprivate)
 
 add_server_test(akappendhandlertest.cpp akonadiprivate)
 add_server_test(linkhandlertest.cpp akonadiprivate)
+add_server_test(listhandlertest.cpp akonadiprivate)
+add_server_test(modifyhandlertest.cpp akonadiprivate)
+add_server_test(createhandlertest.cpp akonadiprivate)

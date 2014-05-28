@@ -43,6 +43,18 @@ Modify::Modify( Scope::SelectionScope scope )
 {
 }
 
+static Tristate getTristateValue( const QByteArray &line,  int &pos )
+{
+  QByteArray tmp;
+  pos = ImapParser::parseString( line, tmp, pos );
+  if ( tmp == "TRUE" ){
+    return Tristate::True;
+  } else if ( tmp == "FALSE" ){
+    return Tristate::False;
+  }
+  return Tristate::Undefined;
+}
+
 bool Modify::parseStream()
 {
   m_scope.parseScope( m_streamParser );
@@ -217,6 +229,20 @@ bool Modify::parseStream()
 
         changes.append( AKONADI_PARAM_PERSISTENTSEARCH );
       }
+    } else if ( type == AKONADI_PARAM_ENABLED ) {
+      //Not actually a tristate
+      collection.setEnabled( getTristateValue( line, pos ) == Server::True );
+      changes.append( AKONADI_PARAM_ENABLED );
+      //FIXME subscribed notification?
+    } else if ( type == AKONADI_PARAM_SYNC ) {
+      collection.setSyncPref ( getTristateValue( line, pos ) );
+      changes.append( AKONADI_PARAM_SYNC );
+    } else if ( type == AKONADI_PARAM_DISPLAY ) {
+      collection.setDisplayPref ( getTristateValue( line, pos ) );
+      changes.append( AKONADI_PARAM_DISPLAY );
+    } else if ( type == AKONADI_PARAM_INDEX ) {
+      collection.setIndexPref ( getTristateValue( line, pos ) );
+      changes.append( AKONADI_PARAM_INDEX );
     } else if ( type.isEmpty() ) {
       break; // input end
     } else {

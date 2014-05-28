@@ -87,6 +87,8 @@ class HandlerHelper
     */
     static QByteArray cachePolicyToByteArray( const Collection &col );
 
+    static QByteArray tristateToByteArray( const Tristate &tristate );
+
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
