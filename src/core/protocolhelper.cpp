@@ -645,29 +645,29 @@ bool ProtocolHelper::streamPayloadToFile(const QByteArray &command, const QByteA
 {
     const int fnStart = command.indexOf("[FILE ") + 6;
     if (fnStart == -1) {
-        kDebug() << "Unexpected response";
+        qDebug() << "Unexpected response";
         return false;
     }
     const int fnEnd = command.indexOf("]", fnStart);
     const QByteArray fn = command.mid(fnStart, fnEnd - fnStart);
     const QString fileName = ProtocolHelper::absolutePayloadFilePath(QString::fromLatin1(fn));
     if (!fileName.startsWith(akonadiStoragePath())) {
-        kWarning() << "Invalid file path" << fileName;
+        qWarning() << "Invalid file path" << fileName;
         error = "Invalid file path";
         return false;
     }
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        kWarning() << "Failed to open destination payload file" << file.errorString();
+        qWarning() << "Failed to open destination payload file" << file.errorString();
         error = "Failed to store payload into file";
         return false;
     }
     if (file.write(data) != data.size()) {
-        kWarning() << "Failed to write all payload data to file";
+        qWarning() << "Failed to write all payload data to file";
         error = "Failed to store payload into file";
         return false;
     }
-    kDebug() << "Wrote" << data.size() << "bytes to " << file.fileName();
+    qDebug() << "Wrote" << data.size() << "bytes to " << file.fileName();
 
     // Make sure stuff is written to disk
     file.close();
