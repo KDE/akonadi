@@ -93,18 +93,6 @@ public:
         }
     }
 
-    void flushIterativeResult()
-    {
-        Q_Q(CollectionFetchJob);
-
-        if (mPendingCollections.isEmpty()) {
-            return;
-        }
-
-        emit q->collectionsReceived(mPendingCollections);
-        mPendingCollections.clear();
-    }
-
     QString jobDebuggingString() const
     {
         if (mBase.isValid()) {
@@ -402,20 +390,13 @@ void CollectionFetchJob::slotResult(KJob *job)
             const Collection::List result = filterDescendants(d->mPrefetchList);
             d->mPendingCollections += result;
             d->mCollections = result;
-            d->flushIterativeResult();
-            emitResult();
+            d->delayedEmitResult();
         }
     } else {
-        // We need to tell the subjob to emit its collectionsReceived signal before
-        // the result signal is emitted. That will populate my mPendingCollections
-        // which will be flushed by calling emitResult which will cause
-        // CollectionFetchJobPrivate::timeout to be called.
-        list->d_func()->flushIterativeResult();
         d->mCollections += list->collections();
-        // Pending collections should have already been emitted by listening to (and flushing) the job.
         Job::slotResult(job);
         if (!job->error() && !hasSubjobs()) {
-            emitResult();
+            d->delayedEmitResult();
         }
     }
 }

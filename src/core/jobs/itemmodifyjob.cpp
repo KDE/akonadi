@@ -285,7 +285,15 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray &d
     Q_D(ItemModifyJob);
 
     if (_tag == "+") {   // ready for literal data
-        d->writeData(d->mPendingData);
+        if (data.startsWith("STREAM")) {
+            QByteArray error;
+            if (!ProtocolHelper::streamPayloadToFile(data, d->mPendingData, error)) {
+                d->writeData("* NO " + error);
+                return;
+            }
+        } else {
+            d->writeData(d->mPendingData);
+        }
         d->writeData(d->nextPartHeader());
         return;
     }

@@ -25,10 +25,14 @@
 #include "exception.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
+#include "servermanager.h"
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 #include <QtCore/QVarLengthArray>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 
 #include <qdebug.h>
 #include <klocalizedstring.h>
@@ -616,4 +620,56 @@ void ProtocolHelper::parseTagFetchResult( const QList<QByteArray> &lineTokens, T
       tag.addAttribute(attr);
     }
   }
+}
+
+QString ProtocolHelper::akonadiStoragePath()
+{
+    QString fullRelPath = QLatin1String("akonadi");
+    if (Akonadi::ServerManager::hasInstanceIdentifier()) {
+        fullRelPath += QDir::separator() + QLatin1String("instance") + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
+    }
+    return XdgBaseDirs::saveDir("data", fullRelPath);
+}
+
+QString ProtocolHelper::absolutePayloadFilePath(const QString &fileName)
+{
+    QFileInfo fi(fileName);
+    if (!fi.isAbsolute()) {
+        return akonadiStoragePath() + QDir::separator() + QLatin1String("file_db_data") + QDir::separator() + fileName;
+    }
+
+    return fileName;
+}
+
+bool ProtocolHelper::streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error)
+{
+    const int fnStart = command.indexOf("[FILE ") + 6;
+    if (fnStart == -1) {
+        kDebug() << "Unexpected response";
+        return false;
+    }
+    const int fnEnd = command.indexOf("]", fnStart);
+    const QByteArray fn = command.mid(fnStart, fnEnd - fnStart);
+    const QString fileName = ProtocolHelper::absolutePayloadFilePath(QString::fromLatin1(fn));
+    if (!fileName.startsWith(akonadiStoragePath())) {
+        kWarning() << "Invalid file path" << fileName;
+        error = "Invalid file path";
+        return false;
+    }
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        kWarning() << "Failed to open destination payload file" << file.errorString();
+        error = "Failed to store payload into file";
+        return false;
+    }
+    if (file.write(data) != data.size()) {
+        kWarning() << "Failed to write all payload data to file";
+        error = "Failed to store payload into file";
+        return false;
+    }
+    kDebug() << "Wrote" << data.size() << "bytes to " << file.fileName();
+
+    // Make sure stuff is written to disk
+    file.close();
+    return true;
 }
