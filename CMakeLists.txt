@@ -8,7 +8,10 @@ if(CMAKE_COMPILE_GCOV)
 endif()
 
 if (KDE4_BUILD_TESTS)
-add_subdirectory( tests )
+  add_subdirectory( tests )
+else()
+  add_subdirectory( tests/testrunner )
+  add_subdirectory( tests/testresource )
 endif()
 
 add_definitions( ${AKONADI_DEFINITIONS} )
