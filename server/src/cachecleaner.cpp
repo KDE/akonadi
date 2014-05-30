@@ -23,11 +23,11 @@
 #include "storage/parthelper.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
+#include "akonadi.h"
 #include "libs/protocol_p.h"
 
 using namespace Akonadi::Server;
 
-CacheCleaner *CacheCleaner::sInstance = 0;
 QMutex CacheCleanerInhibitor::sLock;
 int CacheCleanerInhibitor::sInhibitCount = 0;
 
@@ -55,7 +55,9 @@ void CacheCleanerInhibitor::inhibit()
 
   sLock.lock();
   if ( ++sInhibitCount == 1 ) {
-    CacheCleaner::self()->inhibit( true );
+    if ( AkonadiServer::instance()->cacheCleaner() ) {
+      AkonadiServer::instance()->cacheCleaner()->inhibit( true );
+    }
   }
   sLock.unlock();
   mInhibited = true;
@@ -72,7 +74,9 @@ void CacheCleanerInhibitor::uninhibit()
   sLock.lock();
   Q_ASSERT( sInhibitCount > 0 );
   if ( --sInhibitCount == 0 ) {
-    CacheCleaner::self()->inhibit( false );
+    if ( AkonadiServer::instance()->cacheCleaner() ) {
+      AkonadiServer::instance()->cacheCleaner()->inhibit( false );
+    }
   }
   sLock.unlock();
 }
@@ -81,20 +85,11 @@ void CacheCleanerInhibitor::uninhibit()
 CacheCleaner::CacheCleaner( QObject *parent )
   : CollectionScheduler( parent )
 {
-  Q_ASSERT( !sInstance );
-  sInstance = this;
-
   setMinimumInterval( 5 );
 }
 
 CacheCleaner::~CacheCleaner()
 {
-}
-
-CacheCleaner *CacheCleaner::self()
-{
-  Q_ASSERT( sInstance );
-  return sInstance;
 }
 
 int CacheCleaner::collectionScheduleInterval( const Collection &collection )

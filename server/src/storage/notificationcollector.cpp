@@ -24,6 +24,7 @@
 #include "cachecleaner.h"
 #include "intervalcheck.h"
 #include "search/searchmanager.h"
+#include "akonadi.h"
 #include <search.h>
 
 #include <QtCore/QDebug>
@@ -113,8 +114,12 @@ void NotificationCollector::itemsUnlinked( const PimItem::List &items, const Col
 void NotificationCollector::collectionAdded( const Collection &collection,
                                              const QByteArray &resource )
 {
-  CacheCleaner::self()->collectionAdded( collection.id() );
-  IntervalCheck::self()->collectionAdded( collection.id() );
+  if ( AkonadiServer::instance()->cacheCleaner() ) {
+    AkonadiServer::instance()->cacheCleaner()->collectionAdded( collection.id() );
+  }
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->collectionAdded( collection.id() );
+  }
   collectionNotification( NotificationMessageV2::Add, collection, collection.parentId(), -1, resource );
 }
 
@@ -122,8 +127,12 @@ void NotificationCollector::collectionChanged( const Collection &collection,
                                                const QList<QByteArray> &changes,
                                                const QByteArray &resource )
 {
-  CacheCleaner::self()->collectionChanged( collection.id() );
-  IntervalCheck::self()->collectionChanged( collection.id() );
+  if ( AkonadiServer::instance()->cacheCleaner() ) {
+    AkonadiServer::instance()->cacheCleaner()->collectionAdded( collection.id() );
+  }
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->collectionAdded( collection.id() );
+  }
   collectionNotification( NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
 }
 
@@ -132,32 +141,48 @@ void NotificationCollector::collectionMoved( const Collection &collection,
                                              const QByteArray &resource,
                                              const QByteArray &destResource )
 {
-  CacheCleaner::self()->collectionChanged( collection.id() );
-  IntervalCheck::self()->collectionChanged( collection.id() );
+  if ( AkonadiServer::instance()->cacheCleaner() ) {
+    AkonadiServer::instance()->cacheCleaner()->collectionChanged( collection.id() );
+  }
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->collectionChanged( collection.id() );
+  }
   collectionNotification( NotificationMessageV2::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource );
 }
 
 void NotificationCollector::collectionRemoved( const Collection &collection,
                                                const QByteArray &resource )
 {
-  CacheCleaner::self()->collectionRemoved( collection.id() );
-  IntervalCheck::self()->collectionRemoved( collection.id() );
+  if ( AkonadiServer::instance()->cacheCleaner() ) {
+    AkonadiServer::instance()->cacheCleaner()->collectionRemoved( collection.id() );
+  }
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
+  }
   collectionNotification( NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource );
 }
 
 void NotificationCollector::collectionSubscribed( const Collection &collection,
                                                   const QByteArray &resource )
 {
-  CacheCleaner::self()->collectionAdded( collection.id() );
-  IntervalCheck::self()->collectionAdded( collection.id() );
+  if ( AkonadiServer::instance()->cacheCleaner() ) {
+    AkonadiServer::instance()->cacheCleaner()->collectionAdded( collection.id() );
+  }
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->collectionAdded( collection.id() );
+  }
   collectionNotification( NotificationMessageV2::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
 
 void NotificationCollector::collectionUnsubscribed( const Collection &collection,
                                                     const QByteArray &resource )
 {
-  CacheCleaner::self()->collectionRemoved( collection.id() );
-  IntervalCheck::self()->collectionRemoved( collection.id() );
+  if ( AkonadiServer::instance()->cacheCleaner() ) {
+    AkonadiServer::instance()->cacheCleaner()->collectionRemoved( collection.id() );
+  }
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
+  }
   collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
 
