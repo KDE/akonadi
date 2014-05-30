@@ -385,3 +385,14 @@ void AkonadiServer::serviceOwnerChanged( const QString &, const QString &oldOwne
         quit();
     }
 }
+
+CacheCleaner* AkonadiServer::cacheCleaner()
+{
+    return mCacheCleaner;
+}
+
+IntervalCheck* AkonadiServer::intervalChecker()
+{
+    return mIntervalChecker;
+}
+

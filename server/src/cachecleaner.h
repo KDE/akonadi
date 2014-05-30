@@ -69,8 +69,6 @@ class CacheCleaner : public CollectionScheduler
     CacheCleaner( QObject *parent = 0 );
     ~CacheCleaner();
 
-    static CacheCleaner *self();
-
   protected:
     void collectionExpired( const Collection &collection );
     int collectionScheduleInterval( const Collection &collection );

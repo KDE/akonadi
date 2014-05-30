@@ -21,6 +21,7 @@
 
 #include "akdebug.h"
 #include "akdbus.h"
+#include "akonadi.h"
 #include "connection.h"
 #include "handler.h"
 #include "handlerhelper.h"
@@ -545,7 +546,9 @@ void FetchHelper::triggerOnDemandFetch()
     return;
   }
 
-  IntervalCheck::self()->requestCollectionSync( collection );
+  if ( AkonadiServer::instance()->intervalChecker() ) {
+    AkonadiServer::instance()->intervalChecker()->requestCollectionSync( collection );
+  }
 }
 
 QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )

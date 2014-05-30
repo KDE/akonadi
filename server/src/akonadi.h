@@ -45,6 +45,16 @@ class AkonadiServer : public QLocalServer
   public:
     static AkonadiServer *instance();
 
+    /**
+     * Can return a nullptr
+     */
+    CacheCleaner *cacheCleaner();
+
+    /**
+     * Can return a nullptr
+     */
+    IntervalCheck *intervalChecker();
+
     AkonadiServer( QObject *parent = 0 );
     ~AkonadiServer();
 

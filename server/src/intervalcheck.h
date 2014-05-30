@@ -39,8 +39,6 @@ class IntervalCheck : public CollectionScheduler
     IntervalCheck( QObject *parent = 0 );
     ~IntervalCheck();
 
-    static IntervalCheck *self();
-
     /**
      * Requests the given collection to be synced.
      * Executed from any thread, forwards to triggerCollectionXSync() in the

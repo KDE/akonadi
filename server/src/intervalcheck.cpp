@@ -27,23 +27,13 @@ using namespace Akonadi::Server;
 static int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
 static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 
-IntervalCheck *IntervalCheck::s_instance = 0;
-
 IntervalCheck::IntervalCheck( QObject *parent )
   : CollectionScheduler( parent )
 {
-  Q_ASSERT( s_instance == 0 );
-  s_instance = this;
 }
 
 IntervalCheck::~ IntervalCheck()
 {
-}
-
-IntervalCheck *IntervalCheck::self()
-{
-  Q_ASSERT( s_instance );
-  return s_instance;
 }
 
 void IntervalCheck::requestCollectionSync( const Collection &collection )
