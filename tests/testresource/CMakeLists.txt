@@ -1,4 +1,31 @@
+include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${AKONADI_INCLUDE_DIR}
+  ${AKONADI_INCLUDE_DIR}/akonadi/private
+  ${Boost_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/kmime
+)
+
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
+find_package(LibXslt)
+set_package_properties(LibXslt PROPERTIES DESCRIPTION "xsltproc" URL "http://xmlsoft.org/XSLT/" TYPE REQUIRED PURPOSE "Needed to generate D-Bus interface specifications")
+
+# generates a D-Bus interface description from a KConfigXT file
+macro(kcfg_generate_dbus_interface _kcfg _name)
+  add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+    COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
+    ${CMAKE_SOURCE_DIR}/akonadi/kcfg2dbus.xsl
+    ${_kcfg}
+    > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+    DEPENDS ${CMAKE_SOURCE_DIR}/akonadi/kcfg2dbus.xsl
+    ${_kcfg}
+    )
+endmacro()
 
 # Disabled for now, resourcetester remained in kdepim-runtime
 #add_subdirectory( tests )
