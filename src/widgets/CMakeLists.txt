@@ -88,7 +88,7 @@ else()
     )
 endif()
 
-qt5_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
+ki18n_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
 
 add_library(KF5AkonadiWidgets ${akonadiwidgets_SRCS})
 
