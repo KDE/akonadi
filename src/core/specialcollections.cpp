@@ -63,7 +63,7 @@ SpecialCollectionsPrivate::~SpecialCollectionsPrivate()
 QString SpecialCollectionsPrivate::defaultResourceId() const
 {
     if (mDefaultResourceId.isEmpty()) {
-        mSettings->readConfig();
+        mSettings->load();
         const KConfigSkeletonItem *item = mSettings->findItem(QStringLiteral("DefaultResourceId"));
         Q_ASSERT(item);
 
