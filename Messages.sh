@@ -1,3 +1,3 @@
 #! /bin/sh
-$EXTRACTRC *.ui >> rc.cpp
-$XGETTEXT *.cpp *.h conflicthandling/*.cpp -o $podir/libakonadi.pot
+$EXTRACTRC `find . src -name "*.ui"` >> rc.cpp
+$XGETTEXT `find . src -name "*.cpp" -o -name "*.h"` -o $podir/libakonadi.pot
