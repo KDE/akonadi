@@ -61,7 +61,7 @@ set_package_properties(LibXml2 PROPERTIES
 )
 
 ########### Targets ###########
-add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi\")
+add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
 
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
 
