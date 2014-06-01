@@ -48,7 +48,7 @@ class ItemsyncTest : public QObject
   private:
     Item::List fetchItems( const Collection &col )
     {
-      kDebug() << col.remoteId();
+      qDebug() << col.remoteId();
       ItemFetchJob *fetch = new ItemFetchJob( col, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().fetchAllAttributes();
