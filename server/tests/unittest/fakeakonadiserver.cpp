@@ -44,20 +44,19 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-FakeAkonadiServer *FakeAkonadiServer::sInstance = 0;
-
 FakeAkonadiServer *FakeAkonadiServer::instance()
 {
-    if (!sInstance) {
-        sInstance = new FakeAkonadiServer;
+    if (!AkonadiServer::s_instance) {
+        AkonadiServer::s_instance = new FakeAkonadiServer;
     }
 
-    return sInstance;
+    Q_ASSERT(qobject_cast<FakeAkonadiServer*>(AkonadiServer::s_instance));
+    return qobject_cast<FakeAkonadiServer*>(AkonadiServer::s_instance);
 }
 
 
 FakeAkonadiServer::FakeAkonadiServer()
-    : QLocalServer()
+    : AkonadiServer()
     , mDataStore(0)
     , mServerLoop(0)
     , mNotificationSpy(0)
@@ -73,9 +72,6 @@ FakeAkonadiServer::FakeAkonadiServer()
 
 FakeAkonadiServer::~FakeAkonadiServer()
 {
-    close();
-    cleanup();
-
     delete mClient;
 }
 
@@ -139,7 +135,7 @@ QList<QByteArray> FakeAkonadiServer::selectResourceScenario(const QString &name)
     return scenario;
 }
 
-bool FakeAkonadiServer::initialize()
+bool FakeAkonadiServer::init()
 {
     qDebug() << "==== Fake Akonadi Server starting up ====";
 
@@ -230,9 +226,12 @@ bool FakeAkonadiServer::deleteDirectory(const QString &path)
 }
 
 
-bool FakeAkonadiServer::cleanup()
+bool FakeAkonadiServer::quit()
 {
     qDebug() << "==== Fake Akonadi Server shutting down ====";
+
+    // Stop listening for connections
+    close();
 
     const boost::program_options::variables_map options = AkApplication::instance()->commandLineArguments();
     if (!options.count("no-cleanup")) {

@@ -43,6 +43,7 @@ class AkonadiServer : public QLocalServer
     Q_OBJECT
 
   public:
+    ~AkonadiServer();
     static AkonadiServer *instance();
 
     /**
@@ -55,28 +56,30 @@ class AkonadiServer : public QLocalServer
      */
     IntervalCheck *intervalChecker();
 
-    AkonadiServer( QObject *parent = 0 );
-    ~AkonadiServer();
 
   public Q_SLOTS:
     /**
      * Triggers a clean server shutdown.
      */
-    void quit();
+    virtual bool quit();
+
+    virtual bool init();
 
   private Q_SLOTS:
-    void init();
     void doQuit();
     void serviceOwnerChanged ( const QString &name, const QString &oldOwner, const QString &newOwner );
 
   protected:
     /** reimpl */
-    void incomingConnection( quintptr socketDescriptor );
+    virtual void incomingConnection( quintptr socketDescriptor );
 
   private:
     void startDatabaseProcess();
     void createDatabase();
     void stopDatabaseProcess();
+
+  protected:
+    AkonadiServer( QObject *parent = 0 );
 
     CacheCleaner *mCacheCleaner;
     IntervalCheck *mIntervalChecker;
@@ -87,6 +90,8 @@ class AkonadiServer : public QLocalServer
     QVector< QPointer<ConnectionThread> > mConnections;
     SearchManagerThread *mSearchManager;
     bool mAlreadyShutdown;
+
+    static AkonadiServer *s_instance;
 };
 
 } // namespace Server

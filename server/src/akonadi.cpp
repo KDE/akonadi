@@ -66,7 +66,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-static AkonadiServer *s_instance = 0;
+AkonadiServer* AkonadiServer::s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject *parent )
     : QLocalServer( parent )
@@ -77,12 +77,9 @@ AkonadiServer::AkonadiServer( QObject *parent )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
 {
-    // Make sure we do initialization from eventloop, otherwise
-    // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
-    QTimer::singleShot( 0, this, SLOT(init()) );
 }
 
-void AkonadiServer::init()
+bool AkonadiServer::init()
 {
     qRegisterMetaType<Akonadi::Server::Response>();
 
@@ -230,6 +227,8 @@ void AkonadiServer::init()
     if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::Server ) ) ) {
         akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
     }
+
+    return true;
 }
 
 AkonadiServer::~AkonadiServer()
@@ -247,10 +246,10 @@ template <typename T> static void quitThread( T &thread )
     thread = 0;
 }
 
-void AkonadiServer::quit()
+bool AkonadiServer::quit()
 {
     if ( mAlreadyShutdown ) {
-        return;
+        return true;
     }
     mAlreadyShutdown = true;
 
@@ -295,6 +294,8 @@ void AkonadiServer::quit()
     }
 
     QTimer::singleShot( 0, this, SLOT(doQuit()) );
+
+    return true;
 }
 
 void AkonadiServer::doQuit()
