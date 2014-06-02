@@ -142,36 +142,11 @@ install(FILES
 ######### Build and install QtDesigner plugin #############
 
 if (Qt5Designer_FOUND)
-    include_directories(${Qt5Designer_INCLUDE_DIRS})
-
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets.cpp
-        COMMAND kgendesignerplugin -o ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/akonadi.widgets
-        MAIN_DEPENDENCY akonadi.widgets)
-
-    set(akonadiwidgets_SRCS
-        ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets.moc
-    )
-
-    qt5_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets.moc
-    )
-
-    add_library(akonadiwidgets MODULE ${akonadiwidgets_SRCS})
+    kf5designerplugin_add_plugin(akonadiwidgets akonadi.widgets)
     target_link_libraries(akonadiwidgets
         KF5::AkonadiCore
         KF5::AkonadiWidgets
     )
-
-    if(NOT WIN32)
-        set_target_properties(akonadiwidgets PROPERTIES
-            INSTALL_RPATH_USE_LINK_PATH TRUE
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-            INSTALL_RPATH ${LIB_INSTALL_DIR}
-        )
-    endif()
-
     install(TARGETS
         akonadiwidgets
         DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
