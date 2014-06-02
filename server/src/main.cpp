@@ -29,6 +29,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusError>
+#include <QTimer>
 
 #include <cstdlib>
 
@@ -70,7 +71,9 @@ int main( int argc, char ** argv )
      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
    }
 
-    Akonadi::Server::AkonadiServer::instance(); // trigger singleton creation
+    // Make sure we do initialization from eventloop, otherwise
+    // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
+    QTimer::singleShot(0, Akonadi::Server::AkonadiServer::instance(), SLOT(init()));
     AkonadiCrash::setShutdownMethod( shutdownHandler );
 
     const int result = app.exec();

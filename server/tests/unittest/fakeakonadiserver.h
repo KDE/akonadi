@@ -20,10 +20,11 @@
 #ifndef FAKEAKONADISERVER_H
 #define FAKEAKONADISERVER_H
 
-#include <QLocalServer>
+#include "akonadi.h"
+#include "exception.h"
+
 #include <QSignalSpy>
 
-#include "exception.h"
 
 class QLocalServer;
 class QEventLoop;
@@ -41,7 +42,7 @@ class FakeConnection;
 /**
  * A fake server used for testing. Losely based on KIMAP::FakeServer
  */
-class FakeAkonadiServer: public QLocalServer
+class FakeAkonadiServer: public AkonadiServer
 {
     Q_OBJECT
 
@@ -49,8 +50,13 @@ public:
     static FakeAkonadiServer *instance();
 
     ~FakeAkonadiServer();
-    bool initialize();
 
+
+    /* Reimpl */
+    bool init();
+
+    /* Reimpl */
+    bool quit();
 
     FakeDataStore *dataStore() const;
 
@@ -69,14 +75,14 @@ public:
 
     QSignalSpy *notificationSpy() const;
 
+protected:
+    /* Reimpl */
+    void incomingConnection(quintptr socketDescriptor);
 
 private:
     explicit FakeAkonadiServer();
 
-    void incomingConnection(quintptr socketDescriptor);
-
     bool deleteDirectory(const QString &path);
-    bool cleanup();
 
     FakeDataStore *mDataStore;
     FakeSearchManager *mSearchManager;

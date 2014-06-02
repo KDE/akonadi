@@ -60,7 +60,7 @@ public:
         qRegisterMetaType<Akonadi::Server::Response>();
 
         try {
-            FakeAkonadiServer::instance()->initialize();
+            FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {
             akError() << "Server exception: " << e.what();
             akFatal() << "Fake Akonadi Server failed to start up, aborting test";
@@ -69,6 +69,7 @@ public:
 
     ~ListHandlerTest()
     {
+        FakeAkonadiServer::instance()->quit();
     }
 
 

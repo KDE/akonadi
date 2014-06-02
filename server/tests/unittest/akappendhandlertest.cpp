@@ -62,7 +62,7 @@ public:
         settings.setValue(QLatin1String("General/SizeThreshold"), std::numeric_limits<qint64>::max());
 
         try {
-            FakeAkonadiServer::instance()->initialize();
+            FakeAkonadiServer::instance()->init();
         } catch (FakeAkonadiServerException &e) {
             akError() << e.what();
             akFatal() << "Fake Akonadi Server failed to start up, aborting test";
@@ -71,6 +71,7 @@ public:
 
     ~AkAppendHandlerTest()
     {
+        FakeAkonadiServer::instance()->quit();
     }
 
     void updatePimItem(PimItem &pimItem, const QString &remoteId, const qint64 size)
