@@ -231,18 +231,29 @@ bool Modify::parseStream()
       }
     } else if ( type == AKONADI_PARAM_ENABLED ) {
       //Not actually a tristate
-      collection.setEnabled( getTristateValue( line, pos ) == Server::True );
-      changes.append( AKONADI_PARAM_ENABLED );
-      //FIXME subscribed notification?
+      const bool enabled = ( getTristateValue( line, pos ) == Tristate::True );
+      if ( enabled != collection.enabled() ) {
+        collection.setEnabled( enabled );
+        changes.append( AKONADI_PARAM_ENABLED );
+      }
     } else if ( type == AKONADI_PARAM_SYNC ) {
-      collection.setSyncPref ( getTristateValue( line, pos ) );
-      changes.append( AKONADI_PARAM_SYNC );
+      const Tristate tristate = getTristateValue( line, pos );
+      if ( tristate != collection.syncPref() ) {
+        collection.setSyncPref ( tristate );
+        changes.append( AKONADI_PARAM_SYNC );
+      }
     } else if ( type == AKONADI_PARAM_DISPLAY ) {
-      collection.setDisplayPref ( getTristateValue( line, pos ) );
-      changes.append( AKONADI_PARAM_DISPLAY );
+      const Tristate tristate = getTristateValue( line, pos );
+      if ( tristate != collection.displayPref() ) {
+        collection.setDisplayPref ( tristate );
+        changes.append( AKONADI_PARAM_DISPLAY );
+      }
     } else if ( type == AKONADI_PARAM_INDEX ) {
-      collection.setIndexPref ( getTristateValue( line, pos ) );
-      changes.append( AKONADI_PARAM_INDEX );
+      const Tristate tristate = getTristateValue( line, pos );
+      if ( tristate != collection.indexPref() ) {
+        collection.setIndexPref ( tristate );
+        changes.append( AKONADI_PARAM_INDEX );
+      }
     } else if ( type.isEmpty() ) {
       break; // input end
     } else {
@@ -295,6 +306,14 @@ bool Modify::parseStream()
       return failureResponse( "Unable to update collection" );
     }
     db->notificationCollector()->collectionChanged( collection, changes );
+    //For backwards compatibility. Must be after the changed notification (otherwise the compression removes it).
+    if ( changes.contains( AKONADI_PARAM_ENABLED ) ) {
+      if ( collection.enabled() ) {
+        db->notificationCollector()->collectionSubscribed( collection );
+      } else {
+        db->notificationCollector()->collectionUnsubscribed( collection );
+      }
+    }
     if ( !transaction.commit() ) {
       return failureResponse( "Unable to commit transaction" );
     }

@@ -48,14 +48,15 @@ bool Subscribe::parseStream()
     if ( !col.isValid() ) {
       return failureResponse( "Invalid collection" );
     }
-    if ( col.subscribed() == mSubscribe ) {
+    if ( col.enabled() == mSubscribe ) {
       continue;
     }
     // TODO do all changes in one db operation
-    col.setSubscribed( mSubscribe );
+    col.setEnabled( mSubscribe );
     if ( !col.update() ) {
       return failureResponse( "Unable to change subscription" );
     }
+    store->notificationCollector()->collectionChanged( col, QList<QByteArray>() << AKONADI_PARAM_ENABLED );
     if ( mSubscribe ) {
       store->notificationCollector()->collectionSubscribed( col );
     } else {

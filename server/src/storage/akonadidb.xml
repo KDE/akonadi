@@ -84,8 +84,6 @@
     <column name="name" type="QString" allowNull="false"/>
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
-    <column name="subscribed" type="bool" default="true" allowNull="false"/>
-    <!--    TODO migrate subscribed to enabled and drop subscribed   -->
     <column name="enabled" type="bool" default="true" allowNull="false"/>
     <column name="syncPref" type="Tristate" default="Tristate::Undefined"/>
     <column name="displayPref" type="Tristate" default="Tristate::Undefined"/>
@@ -100,6 +98,10 @@
     <column name="queryCollections" type="QString"/>
     <column name="isVirtual" type="bool" default="false"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
+    <index name="enabledIndex" columns="enabled" unique="false"/>
+    <index name="syncPrefIndex" columns="syncPref" unique="false"/>
+    <index name="displayPrefIndex" columns="displayPref" unique="false"/>
+    <index name="indexPrefIndex" columns="indexPref" unique="false"/>
     <reference name="children" table="Collection" key="parentId"/>
     <reference name="items" table="PimItem" key="collectionId"/>
     <reference name="attributes" table="CollectionAttribute" key="collectionId"/>

@@ -60,7 +60,6 @@ private Q_SLOTS:
     {
         QTest::addColumn<QList<QByteArray> >("scenario");
         QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
-        QTest::addColumn<bool>("expectFail");
 
         Akonadi::NotificationMessageV3 notificationTemplate;
         notificationTemplate.setType(NotificationMessageV2::Collections);
@@ -79,7 +78,7 @@ private Q_SLOTS:
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.addEntity(8, QLatin1String(""), QLatin1String(""));
 
-            QTest::newRow("create collection") << scenario <<  notification << false;
+            QTest::newRow("create collection") << scenario <<  notification;
         }
         {
             QList<QByteArray> scenario;
@@ -91,7 +90,7 @@ private Q_SLOTS:
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.addEntity(9, QLatin1String(""), QLatin1String(""));
 
-            QTest::newRow("create collection with local override") << scenario <<  notification << false;
+            QTest::newRow("create collection with local override") << scenario <<  notification;
         }
     }
 
@@ -99,7 +98,6 @@ private Q_SLOTS:
     {
         QFETCH(QList<QByteArray>, scenario);
         QFETCH(NotificationMessageV3, notification);
-        QFETCH(bool, expectFail);
 
         FakeAkonadiServer::instance()->setScenario(scenario);
         FakeAkonadiServer::instance()->runTest();

@@ -90,11 +90,8 @@ bool List::listCollection( const Collection &root, int depth, const QStack<Colle
     }
   }
 
-  const bool isUnsubscribed = mOnlySubscribed && !root.subscribed();
-
   // filter if this node isn't needed by it's children
   const bool hidden = ( mResource.isValid() && root.resourceId() != mResource.id() )
-      || isUnsubscribed
       || ( !mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes() ) );
 
   if ( !childrenFound && hidden ) {
@@ -105,7 +102,7 @@ bool List::listCollection( const Collection &root, int depth, const QStack<Colle
   Collection dummy = root;
   DataStore *db = connection()->storageBackend();
   db->activeCachePolicy( dummy );
-  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, isUnsubscribed, mIncludeStatistics, mAncestorDepth, ancestors );
+  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors );
 
   Response response;
   response.setUntagged();
@@ -206,6 +203,9 @@ bool List::parseStream()
       mCollectionsToIndex = true;
     }
   }
+
+  //For backwards compatibilty with the subscription mechanism
+  mEnabledCollections = mEnabledCollections || mOnlySubscribed;
 
   if ( m_streamParser->hasList() ) { // We got extra options
     m_streamParser->beginList();

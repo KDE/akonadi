@@ -32,6 +32,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+Q_DECLARE_METATYPE(QList<Akonadi::NotificationMessageV3>)
+
 class ModifyHandlerTest : public QObject
 {
     Q_OBJECT
@@ -59,8 +61,7 @@ private Q_SLOTS:
     void testModify_data()
     {
         QTest::addColumn<QList<QByteArray> >("scenario");
-        QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
-        QTest::addColumn<bool>("expectFail");
+        QTest::addColumn<QList<Akonadi::NotificationMessageV3> >("expectedNotifications");
         QTest::addColumn<QVariant>("newValue");
 
         Akonadi::NotificationMessageV3 notificationTemplate;
@@ -80,18 +81,7 @@ private Q_SLOTS:
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "NAME");
 
-            QTest::newRow("modify collection") << scenario <<  notification << false << QVariant::fromValue(QString::fromLatin1("New Name"));
-        }
-        {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY 5 ENABLED TRUE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
-                    << "S: 2 OK MODIFY done";
-
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
-
-            QTest::newRow("enable collection") << scenario <<  notification << false << QVariant::fromValue(true);
+            QTest::newRow("modify collection") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification) << QVariant::fromValue(QString::fromLatin1("New Name"));
         }
         {
             QList<QByteArray> scenario;
@@ -100,9 +90,24 @@ private Q_SLOTS:
                     << "S: 2 OK MODIFY done";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
+            notification.setItemParts(QSet<QByteArray>() << "ENABLED");
+            Akonadi::NotificationMessageV3 unsubscribeNotification = notificationTemplate;
+            unsubscribeNotification.setOperation(NotificationMessageV2::Unsubscribe);
 
-            QTest::newRow("disable collection") << scenario <<  notification << false << QVariant::fromValue(false);
+            QTest::newRow("disable collection") << scenario <<  (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(false);
+        }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 MODIFY 5 ENABLED TRUE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
+                    << "S: 2 OK MODIFY done";
+
+            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            notification.setItemParts(QSet<QByteArray>() << "ENABLED");
+            Akonadi::NotificationMessageV3 subscribeNotification = notificationTemplate;
+            subscribeNotification.setOperation(NotificationMessageV2::Subscribe);
+
+            QTest::newRow("enable collection") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << subscribeNotification) << QVariant::fromValue(true);
         }
         {
             QList<QByteArray> scenario;
@@ -112,8 +117,10 @@ private Q_SLOTS:
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
+            Akonadi::NotificationMessageV3 unsubscribeNotification = notificationTemplate;
+            unsubscribeNotification.setOperation(NotificationMessageV2::Unsubscribe);
 
-            QTest::newRow("local override enable") << scenario <<  notification << false << QVariant::fromValue(true);
+            QTest::newRow("local override enable") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(true);
         }
         {
             QList<QByteArray> scenario;
@@ -123,44 +130,50 @@ private Q_SLOTS:
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
+            Akonadi::NotificationMessageV3 subscribeNotification = notificationTemplate;
+            subscribeNotification.setOperation(NotificationMessageV2::Subscribe);
 
-            QTest::newRow("local override disable") << scenario <<  notification << false << QVariant::fromValue(false);
+            QTest::newRow("local override disable") << scenario <<  (QList<Akonadi::NotificationMessageV3>() << notification << subscribeNotification) << QVariant::fromValue(false);
         }
     }
 
     void testModify()
     {
         QFETCH(QList<QByteArray>, scenario);
-        QFETCH(NotificationMessageV3, notification);
-        QFETCH(bool, expectFail);
+        QFETCH(QList<NotificationMessageV3>, expectedNotifications);
         QFETCH(QVariant, newValue);
 
         FakeAkonadiServer::instance()->setScenario(scenario);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
-        if (notification.isValid()) {
-            QCOMPARE(notificationSpy->count(), 1);
-            const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
-            QCOMPARE(notifications.count(), 1);
-            QCOMPARE(notifications.first(), notification);
-        } else {
+        if (expectedNotifications.isEmpty()) {
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
+            return;
         }
+        QCOMPARE(notificationSpy->count(), 1);
+        //Only one notify call
+        QCOMPARE(notificationSpy->first().count(), 1);
+        const NotificationMessageV3::List receivedNotifications = notificationSpy->first().first().value<NotificationMessageV3::List>();
+        QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
 
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
-            if (notification.itemParts().contains("NAME")) {
-                Collection col = Collection::retrieveById( entity.id );
-                QCOMPARE(col.name(), newValue.toString());
-            }
-            if (notification.itemParts().contains("ENABLED") || notification.itemParts().contains("SYNC") || notification.itemParts().contains("DISPLAY") || notification.itemParts().contains("INDEX")) {
-                Collection col = Collection::retrieveById( entity.id );
-                const bool sync = col.syncPref() == Tristate::Undefined ? col.enabled() : col.syncPref() == Tristate::True;
-                QCOMPARE(sync, newValue.toBool());
-                const bool display = col.displayPref() == Tristate::Undefined ? col.enabled() : col.displayPref() == Tristate::True;
-                QCOMPARE(display, newValue.toBool());
-                const bool index = col.indexPref() == Tristate::Undefined ? col.enabled() : col.indexPref() == Tristate::True;
-                QCOMPARE(index, newValue.toBool());
+        for (int i = 0; i < expectedNotifications.size(); i++) {
+            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            NotificationMessageV3 notification = receivedNotifications.at(i);
+            Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+                if (notification.itemParts().contains("NAME")) {
+                    Collection col = Collection::retrieveById( entity.id );
+                    QCOMPARE(col.name(), newValue.toString());
+                }
+                if (notification.itemParts().contains("ENABLED") || notification.itemParts().contains("SYNC") || notification.itemParts().contains("DISPLAY") || notification.itemParts().contains("INDEX")) {
+                    Collection col = Collection::retrieveById( entity.id );
+                    const bool sync = col.syncPref() == Tristate::Undefined ? col.enabled() : col.syncPref() == Tristate::True;
+                    QCOMPARE(sync, newValue.toBool());
+                    const bool display = col.displayPref() == Tristate::Undefined ? col.enabled() : col.displayPref() == Tristate::True;
+                    QCOMPARE(display, newValue.toBool());
+                    const bool index = col.indexPref() == Tristate::Undefined ? col.enabled() : col.indexPref() == Tristate::True;
+                    QCOMPARE(index, newValue.toBool());
+                }
             }
         }
     }
