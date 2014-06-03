@@ -23,6 +23,7 @@
 #include "storage/parthelper.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/entity.h"
 #include "akonadi.h"
 #include "libs/protocol_p.h"
 
@@ -108,7 +109,7 @@ bool CacheCleaner::shouldScheduleCollection( const Collection &collection )
 {
   return collection.cachePolicyLocalParts() != QLatin1String( "ALL" )
         && collection.cachePolicyCacheTimeout() >= 0
-        && collection.subscribed()
+        && ( collection.enabled() || ( collection.displayPref() == Tristate::True ) || ( collection.syncPref() == Tristate::True ) || ( collection.indexPref() == Tristate::True ) )
         && collection.resourceId() > 0;
 }
 

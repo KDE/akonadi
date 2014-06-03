@@ -52,7 +52,6 @@ int IntervalCheck::collectionScheduleInterval( const Collection &collection )
 bool IntervalCheck::hasChanged( const Collection &collection, const Collection &changed )
 {
   return collection.cachePolicyCheckInterval() != changed.cachePolicyCheckInterval()
-        || collection.subscribed() != changed.subscribed()
         || collection.enabled() != changed.enabled()
         || collection.syncPref() != changed.syncPref();
 }
@@ -60,7 +59,7 @@ bool IntervalCheck::hasChanged( const Collection &collection, const Collection &
 bool IntervalCheck::shouldScheduleCollection( const Collection &collection )
 {
   return collection.cachePolicyCheckInterval() > 0
-        && ( collection.subscribed() || ( collection.syncPref() == Tristate::True ) || ( ( collection.syncPref() == Tristate::Undefined ) && collection.enabled() ) );
+        && ( ( collection.syncPref() == Tristate::True ) || ( ( collection.syncPref() == Tristate::Undefined ) && collection.enabled() ) );
 }
 
 void IntervalCheck::collectionExpired( const Collection &collection )

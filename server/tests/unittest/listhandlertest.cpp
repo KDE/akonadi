@@ -78,7 +78,6 @@ private Q_SLOTS:
     void testList_data()
     {
         QTest::addColumn<QList<QByteArray> >("scenario");
-        QTest::addColumn<bool>("expectFail");
 
         {
             QList<QByteArray> scenario;
@@ -92,7 +91,7 @@ private Q_SLOTS:
                     << colVirtualSubResponse
                     << colVirtualResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list") << scenario << false;
+            QTest::newRow("recursive list") << scenario;
         }
         {
             QList<QByteArray> scenario;
@@ -100,14 +99,14 @@ private Q_SLOTS:
                     << "C: 2 LIST 2 0 () ()"
                     << colAResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("base list") << scenario << false;
+            QTest::newRow("base list") << scenario;
         }        {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
                     << "C: 2 LIST 2 1 () ()"
                     << colBResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("first level list") << scenario << false;
+            QTest::newRow("first level list") << scenario;
         }
         {
             QList<QByteArray> scenario;
@@ -119,7 +118,7 @@ private Q_SLOTS:
                     << colVirtualSubResponse
                     << colVirtualResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to display including local override") << scenario << false;
+            QTest::newRow("recursive list to display including local override") << scenario;
         }
         {
             QList<QByteArray> scenario;
@@ -131,7 +130,7 @@ private Q_SLOTS:
                     << colVirtualSubResponse
                     << colVirtualResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to sync including local override") << scenario << false;
+            QTest::newRow("recursive list to sync including local override") << scenario;
         }
         {
             QList<QByteArray> scenario;
@@ -143,25 +142,24 @@ private Q_SLOTS:
                     << colVirtualSubResponse
                     << colVirtualResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to sync including local override") << scenario << false;
+            QTest::newRow("recursive list to index including local override") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
                     << "C: 2 LIST 0 INF (ENABLED  ) ()"
-                    << colAResponse
                     << colSearchResponse
+                    << colAResponse
                     << colVirtualSubResponse
                     << colVirtualResponse
                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to sync including local override") << scenario << false;
+            QTest::newRow("recursive list of enabled") << scenario;
         }
     }
 
     void testList()
     {
         QFETCH(QList<QByteArray>, scenario);
-        QFETCH(bool, expectFail);
 
         FakeAkonadiServer::instance()->setScenario(scenario);
         FakeAkonadiServer::instance()->runTest();

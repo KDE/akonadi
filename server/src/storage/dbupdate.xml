@@ -199,4 +199,9 @@
     <raw-sql backends="mysql,psql">ALTER TABLE CollectionTable DROP COLUMN queryLanguage;</raw-sql>
   </update>
 
+  <update version="28" abortOnFailure="false">
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET enabled = subscribed;</raw-sql>
+    <raw-sql backends="mysql,psql">ALTER TABLE CollectionTable DROP COLUMN subscribed;</raw-sql>
+  </update>
+
 </updates>
