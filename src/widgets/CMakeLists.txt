@@ -147,6 +147,20 @@ if (Qt5Designer_FOUND)
         KF5::AkonadiCore
         KF5::AkonadiWidgets
     )
+    set_target_properties(akonadiwidgets PROPERTIES
+        OUTPUT_NAME akonadi5widgets
+    )
+
+    if(NOT WIN32)
+        # Since there are no libraries provided by this module,
+        # there is no point including the build tree in RPath,
+        # and then having to edit it at install time.
+        set_target_properties(akonadiwidgets PROPERTIES
+            SKIP_BUILD_RPATH TRUE
+            BUILD_WITH_INSTALL_RPATH TRUE
+        )
+    endif()
+
     install(TARGETS
         akonadiwidgets
         DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
