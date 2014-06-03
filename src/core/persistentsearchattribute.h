@@ -85,22 +85,6 @@ public:
     ~PersistentSearchAttribute();
 
     /**
-     * Returns the query language used for this search.
-     *
-     * @deprecated Deprecated as of 4.13. This method returns "SPARQL" for
-     * compatibility reasons and should not be used with new code.
-     */
-    AKONADICORE_DEPRECATED QString queryLanguage() const;
-
-    /**
-     * Sets the query language used for this search.
-     * @param language the query language
-     *
-     * @deprecated Deprecated as of 4.13. This method has no effect.
-     */
-    AKONADICORE_DEPRECATED void setQueryLanguage(const QString &language);
-
-    /**
      * Returns the query string used for this search.
      */
     QString queryString() const;

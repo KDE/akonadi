@@ -81,11 +81,6 @@ bool CollectionFetchScope::isEmpty() const
     return d->resource.isEmpty() && d->contentMimeTypes.isEmpty() && !d->statistics && !d->unsubscribed && d->ancestorDepth == None;
 }
 
-bool CollectionFetchScope::includeUnubscribed() const
-{
-    return includeUnsubscribed();
-}
-
 bool CollectionFetchScope::includeUnsubscribed() const
 {
     return d->unsubscribed;

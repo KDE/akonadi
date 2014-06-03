@@ -52,16 +52,6 @@ PersistentSearchAttribute::~PersistentSearchAttribute()
     delete d;
 }
 
-QString PersistentSearchAttribute::queryLanguage() const
-{
-    return QStringLiteral("SPARQL");
-}
-
-void PersistentSearchAttribute::setQueryLanguage(const QString &language)
-{
-    Q_UNUSED(language);
-}
-
 QString PersistentSearchAttribute::queryString() const
 {
     return d->queryString;

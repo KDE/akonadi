@@ -318,13 +318,6 @@ void CollectionFetchJob::doHandleResponse(const QByteArray &tag, const QByteArra
     qDebug() << "Unhandled server response" << tag << data;
 }
 
-void CollectionFetchJob::setResource(const QString &resource)
-{
-    Q_D(CollectionFetchJob);
-
-    d->mScope.setResource(resource);
-}
-
 static Collection::List filterDescendants(const Collection::List &list)
 {
     Collection::List result;
@@ -399,20 +392,6 @@ void CollectionFetchJob::slotResult(KJob *job)
             d->delayedEmitResult();
         }
     }
-}
-
-void CollectionFetchJob::includeUnsubscribed(bool include)
-{
-    Q_D(CollectionFetchJob);
-
-    d->mScope.setIncludeUnsubscribed(include);
-}
-
-void CollectionFetchJob::includeStatistics(bool include)
-{
-    Q_D(CollectionFetchJob);
-
-    d->mScope.setIncludeStatistics(include);
 }
 
 void CollectionFetchJob::setFetchScope(const CollectionFetchScope &scope)

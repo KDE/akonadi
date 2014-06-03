@@ -103,13 +103,6 @@ public:
     /**
      * Returns whether unsubscribed collection should be included.
      *
-     * @deprecated Use includeUnsubscribed()
-     */
-    AKONADICORE_DEPRECATED bool includeUnubscribed() const;
-
-    /**
-     * Returns whether unsubscribed collection should be included.
-     *
      * @see setIncludeUnsubscribed()
      * @since 4.5
      */

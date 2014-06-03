@@ -140,30 +140,6 @@ public:
     Collection::List collections() const;
 
     /**
-     * Sets a resource identifier to limit collection listing to one resource.
-     *
-     * @param resource The resource identifier.
-     * @deprecated Use CollectionFetchScope instead.
-     */
-    AKONADICORE_DEPRECATED void setResource(const QString &resource);
-
-    /**
-     * Include also unsubscribed collections.
-     * @deprecated Use CollectionFetchScope instead.
-     * @param include whether to also fetch unsubscribed collections
-     */
-    AKONADICORE_DEPRECATED void includeUnsubscribed(bool include = true);
-
-    /**
-     * Include also statistics about the collections.
-     *
-     * @since 4.3
-     * @deprecated Use CollectionFetchScope instead.
-     * @param include whether to also fetch statistics
-     */
-    AKONADICORE_DEPRECATED void includeStatistics(bool include = true);
-
-    /**
      * Sets the collection fetch scope.
      *
      * The CollectionFetchScope controls how much of a collection's data is

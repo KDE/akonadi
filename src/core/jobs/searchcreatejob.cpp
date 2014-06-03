@@ -51,11 +51,6 @@ public:
     Collection mCreatedCollection;
 };
 
-SearchCreateJob::SearchCreateJob(const QString &name, const QString &query, QObject *parent)
-    : Job(new SearchCreateJobPrivate(name, SearchQuery::fromJSON(query.toLatin1()), this), parent)
-{
-}
-
 SearchCreateJob::SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent)
     : Job(new SearchCreateJobPrivate(name, searchQuery, this), parent)
 {
@@ -63,11 +58,6 @@ SearchCreateJob::SearchCreateJob(const QString &name, const SearchQuery &searchQ
 
 SearchCreateJob::~SearchCreateJob()
 {
-}
-
-void SearchCreateJob::setQueryLanguage(const QString &queryLanguage)
-{
-    Q_UNUSED(queryLanguage);
 }
 
 void SearchCreateJob::setSearchCollections(const Collection::List &collections)

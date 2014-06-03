@@ -66,16 +66,6 @@ class AKONADICORE_EXPORT SearchCreateJob : public Job
 
 public:
     /**
-     * Creates a search create job.
-     *
-     * @param name The name of the search collection.
-     * @param query The search query (format not defined yet).
-     * @param parent The parent object.
-     * @deprecated Deprecated as of 4.13, use Akonadi::SearchQuery instead
-     */
-    AKONADICORE_DEPRECATED SearchCreateJob(const QString &name, const QString &query, QObject *parent = 0);
-
-    /**
      * Creates a search create job
      *
      * @param name The name of the search collection.
@@ -84,15 +74,6 @@ public:
      * @since 4.13
      */
     SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent = 0);
-
-    /**
-     * Sets the query language.
-     * @param queryLanguage The query language used.
-     * @since 4.6
-     * @deprecated This method is deprecated as of 4.13 and has no effect.
-     *
-     */
-    AKONADICORE_DEPRECATED void setQueryLanguage(const QString &queryLanguage);
 
     /**
      * Sets list of mime types of items that search results can contain
