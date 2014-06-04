@@ -30,8 +30,8 @@ class CollectionFetchScopePrivate : public QSharedData
 public:
     CollectionFetchScopePrivate()
         : ancestorDepth(CollectionFetchScope::None)
-        , unsubscribed(false)
         , statistics(false)
+        , listFilter(CollectionFetchScope::Enabled)
     {
     }
 
@@ -41,7 +41,6 @@ public:
         resource = other.resource;
         contentMimeTypes = other.contentMimeTypes;
         ancestorDepth = other.ancestorDepth;
-        unsubscribed = other.unsubscribed;
         statistics = other.statistics;
     }
 
@@ -49,8 +48,8 @@ public:
     QString resource;
     QStringList contentMimeTypes;
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
-    bool unsubscribed;
     bool statistics;
+    CollectionFetchScope::ListFilter listFilter;
 };
 
 CollectionFetchScope::CollectionFetchScope()
@@ -78,7 +77,7 @@ CollectionFetchScope &CollectionFetchScope::operator=(const CollectionFetchScope
 
 bool CollectionFetchScope::isEmpty() const
 {
-    return d->resource.isEmpty() && d->contentMimeTypes.isEmpty() && !d->statistics && !d->unsubscribed && d->ancestorDepth == None;
+    return d->resource.isEmpty() && d->contentMimeTypes.isEmpty() && !d->statistics && d->ancestorDepth == None && d->listFilter == Enabled;
 }
 
 bool CollectionFetchScope::includeUnubscribed() const
@@ -88,12 +87,16 @@ bool CollectionFetchScope::includeUnubscribed() const
 
 bool CollectionFetchScope::includeUnsubscribed() const
 {
-    return d->unsubscribed;
+    return (d->listFilter == NoFilter);
 }
 
 void CollectionFetchScope::setIncludeUnsubscribed(bool include)
 {
-    d->unsubscribed = include;
+    if (include) {
+        d->listFilter = NoFilter;
+    } else {
+        d->listFilter = Enabled;
+    }
 }
 
 bool CollectionFetchScope::includeStatistics() const
@@ -135,5 +138,16 @@ void CollectionFetchScope::setAncestorRetrieval(AncestorRetrieval ancestorDepth)
 {
     d->ancestorDepth = ancestorDepth;
 }
+
+CollectionFetchScope::ListFilter CollectionFetchScope::listFilter() const
+{
+    return d->listFilter;
+}
+
+void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFilter)
+{
+    d->listFilter = listFilter;
+}
+
 
 }

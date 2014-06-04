@@ -233,6 +233,9 @@ public:
     static QString absolutePayloadFilePath(const QString &fileName);
 
     static bool streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error);
+
+    static QByteArray listPreference(Collection::ListPurpose purpose, Collection::ListPreference preference);
+    static QByteArray enabled(bool);
 };
 
 }

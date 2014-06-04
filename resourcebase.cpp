@@ -848,6 +848,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
             CollectionFetchJob *list = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
             list->setFetchScope(q->changeRecorder()->collectionFetchScope());
             list->fetchScope().setResource(mId);
+            list->fetchScope().setListFilter(CollectionFetchScope::Sync);
             q->connect(list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)));
             return;
         } else if (scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree) {
@@ -1077,25 +1078,23 @@ void ResourceBase::synchronizeCollection(qint64 collectionId, bool recursive)
     CollectionFetchJob *job = new CollectionFetchJob(Collection(collectionId), recursive ? CollectionFetchJob::Recursive : CollectionFetchJob::Base);
     job->setFetchScope(changeRecorder()->collectionFetchScope());
     job->fetchScope().setResource(identifier());
-    job->setProperty("recursive", recursive);
+    job->fetchScope().setListFilter(CollectionFetchScope::Sync);
     connect(job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)));
 }
 
 void ResourceBasePrivate::slotCollectionListDone(KJob *job)
 {
     if (!job->error()) {
-        Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
-        if (!list.isEmpty()) {
-            if (job->property("recursive").toBool()) {
-                Q_FOREACH (const Collection &collection, list) {
-                    scheduler->scheduleSync(collection);
-                }
-            } else {
-                scheduler->scheduleSync(list.first());
+        const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
+        Q_FOREACH (const Collection &collection, list) {
+            //We also get collections that should not be synced but are part of the tree.
+            if (collection.shouldList(Collection::ListSync)) {
+                scheduler->scheduleSync(collection);
             }
         }
+    } else {
+        kWarning() << "Failed to fetch collection for collection sync: " << job->errorString();
     }
-    // TODO: error handling
 }
 
 void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
