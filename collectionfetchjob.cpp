@@ -220,11 +220,7 @@ void CollectionFetchJob::doStart()
             command += " " AKONADI_CMD_RID;
         }
     }
-    if (d->mScope.includeUnsubscribed()) {
-        command += " LIST ";
-    } else {
-        command += " LSUB ";
-    }
+    command += " LIST ";
 
     if (d->mBase.isValid()) {
         command += QByteArray::number(d->mBase.id());
@@ -264,6 +260,25 @@ void CollectionFetchJob::doStart()
             mts.append(mt.toUtf8());
         }
         filter.append('(' + ImapParser::join(mts, " ") + ')');
+    }
+
+    switch (d->mScope.listFilter()) {
+    case CollectionFetchScope::Display:
+        filter.append("DISPLAY TRUE");
+        break;
+    case CollectionFetchScope::Sync:
+        filter.append("SYNC TRUE");
+        break;
+    case CollectionFetchScope::Index:
+        filter.append("INDEX TRUE");
+        break;
+    case CollectionFetchScope::Enabled:
+        filter.append("ENABLED TRUE");
+        break;
+    case CollectionFetchScope::NoFilter:
+        break;
+    default:
+        Q_ASSERT(false);
     }
 
     QList<QByteArray> options;

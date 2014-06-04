@@ -52,6 +52,7 @@ class CollectionJobTest : public QObject
     void testRidCreateDelete_data();
     void testRidCreateDelete();
     void testAncestorRetrieval();
+    void testListPreference();
 };
 
 #endif

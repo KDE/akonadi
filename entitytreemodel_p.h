@@ -91,9 +91,6 @@ public:
     void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &);
     void monitoredCollectionMoved(const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection &);
 
-    void collectionSubscribed(const Akonadi::Collection &, const Akonadi::Collection &);
-    void monitoredCollectionUnsubscribed(const Akonadi::Collection &);
-
     void monitoredItemAdded(const Akonadi::Item &, const Akonadi::Collection &);
     void monitoredItemRemoved(const Akonadi::Item &);
     void monitoredItemChanged(const Akonadi::Item &, const QSet<QByteArray> &);
@@ -156,7 +153,7 @@ public:
     MimeTypeChecker m_mimeChecker;
     EntityTreeModel::CollectionFetchStrategy m_collectionFetchStrategy;
     EntityTreeModel::ItemPopulationStrategy m_itemPopulation;
-    bool m_includeUnsubscribed;
+    CollectionFetchScope::ListFilter m_listFilter;
     bool m_includeStatistics;
     bool m_showRootCollection;
     bool m_collectionTreeFetched;

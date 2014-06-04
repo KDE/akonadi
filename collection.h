@@ -288,6 +288,78 @@ public:
      */
     void setVirtual(bool isVirtual);
 
+    /**
+     * Sets the collection's enabled state.
+     *
+     * Use this mechanism to set if a collection should be available
+     * to the user or not.
+     *
+     * This can be used in conjunction with the local list preference for finer grained control
+     * to define if a collection should be included depending on the purpose.
+     *
+     * @since 4.14
+     * @see setLocalListPreference
+     */
+    void setEnabled(bool enabled);
+
+    /**
+     * Returns the collection's enabled state.
+     * @since 4.14
+     * @see localListPreference
+     */
+    bool enabled() const;
+
+    /**
+     * Describes the list preference value
+     *
+     * @since 4.14
+     */
+    enum ListPreference {
+        ListEnabled,  ///< Enable collection for specified purpose
+        ListDisabled, ///< Disable collectoin for specified purpose
+        ListDefault   ///< Fallback to enabled state
+    };
+
+    /**
+     * Describes the purpose of the listing
+     *
+     * @since 4.14
+     */
+    enum ListPurpose {
+        ListSync,     ///< Listing for synchronization
+        ListDisplay,  ///< Listing for display to the user
+        ListIndex     ///< Listing for indexing the content
+    };
+
+    /**
+     * Sets the local list preference for the specified purpose.
+     *
+     * The local list preference overrides the enabled state unless set to ListDefault.
+     * In case of ListDefault the enabled state should be taken as fallback (shouldList() implements this logic).
+     *
+     * The default value is ListDefault.
+     *
+     * @since 4.14
+     * @see shouldList, setEnabled
+     */
+    void setLocalListPreference(ListPurpose purpose, ListPreference preference);
+
+    /**
+     * Returns the local list preference for the specified purpose.
+     * @since 4.14
+     * @see setLocalListPreference
+     */
+    ListPreference localListPreference(ListPurpose purpose) const;
+
+    /**
+     * Returns wether the collection should be listed or not for the specified purpose
+     * Takes enabled state and local preference into account.
+     *
+     * @since 4.14
+     * @see setLocalListPreference, setEnabled
+     */
+    bool shouldList(ListPurpose purpose) const;
+
 private:
     AKONADI_DECLARE_PRIVATE(Collection)
     friend class CollectionFetchJob;
