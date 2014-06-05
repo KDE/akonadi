@@ -274,7 +274,7 @@ void Collection::setEnabled(bool enabled)
 {
     Q_D(Collection);
 
-    d->enabledChanged = true;
+    d->enabledChanged = (enabled != d->enabled);
     d->enabled = enabled;
 }
 

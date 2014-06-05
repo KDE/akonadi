@@ -738,19 +738,19 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
         return false;
     }
 
-    if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Enabled) {
+    if (m_listFilter == CollectionFetchScope::Enabled) {
         if (!collection.enabled()) {
             return false;
         }
-    } else if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Display) {
+    } else if (m_listFilter == CollectionFetchScope::Display) {
         if (!collection.shouldList(Collection::ListDisplay)) {
             return false;
         }
-    } else if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Sync) {
+    } else if (m_listFilter == CollectionFetchScope::Sync) {
         if (!collection.shouldList(Collection::ListSync)) {
             return false;
         }
-    } else if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Index) {
+    } else if (m_listFilter == CollectionFetchScope::Index) {
         if (!collection.shouldList(Collection::ListIndex)) {
             return false;
         }

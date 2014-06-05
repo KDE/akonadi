@@ -140,7 +140,7 @@ public:
     /**
      * Sets a filter for the collections to be listed.
      *
-     * Note that collections that are required to complete the tree, but are not part of the collection are still included in the listing.
+     * Note that collections that do not match the filter are included if required to complete the tree.
      *
      * @since 4.14
      */
