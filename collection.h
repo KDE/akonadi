@@ -297,6 +297,13 @@ public:
      * This can be used in conjunction with the local list preference for finer grained control
      * to define if a collection should be included depending on the purpose.
      *
+     * For example: A collection is by default enabled, meaning it is displayed to the user, synchronized by the resource,
+     * and indexed by the indexer. A disabled collection on the other hand is not displayed, sychronized or indexed.
+     * The local list preference allows to locally override that default value for each purpose individually.
+     *
+     * The enabled state can be synchronized by backends.
+     * E.g. an imap resource may synchronize this with the subscription state.
+     *
      * @since 4.14
      * @see setLocalListPreference
      */
@@ -352,7 +359,7 @@ public:
     ListPreference localListPreference(ListPurpose purpose) const;
 
     /**
-     * Returns wether the collection should be listed or not for the specified purpose
+     * Returns whether the collection should be listed or not for the specified purpose
      * Takes enabled state and local preference into account.
      *
      * @since 4.14
