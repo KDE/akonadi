@@ -130,6 +130,17 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
   }
 }
 
+static Collection::ListPreference parsePreference( const QByteArray &value )
+{
+  if ( value == "TRUE" ) {
+    return Collection::ListEnabled;
+  }
+  if ( value == "FALSE" ) {
+    return Collection::ListDisabled;
+  }
+  return Collection::ListDefault;
+}
+
 int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collection, int start)
 {
   int pos = start;
@@ -196,6 +207,14 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       collection.setCachePolicy( policy );
     } else if ( key == "ANCESTORS" ) {
       parseAncestors( value, &collection );
+    } else if ( key == "ENABLED" ) {
+      collection.setEnabled( value == "TRUE" );
+    } else if ( key == "DISPLAY" ) {
+      collection.setLocalListPreference( Collection::ListDisplay, parsePreference( value ) );
+    } else if ( key == "SYNC" ) {
+      collection.setLocalListPreference( Collection::ListSync, parsePreference( value ) );
+    } else if ( key == "INDEX" ) {
+      collection.setLocalListPreference( Collection::ListIndex, parsePreference( value ) );
     } else {
       Attribute* attr = AttributeFactory::createAttribute( key );
       Q_ASSERT( attr );
@@ -672,4 +691,41 @@ bool ProtocolHelper::streamPayloadToFile(const QByteArray &command, const QByteA
     // Make sure stuff is written to disk
     file.close();
     return true;
+}
+
+
+QByteArray ProtocolHelper::listPreference(Collection::ListPurpose purpose, Collection::ListPreference preference)
+{
+    QByteArray command;
+    switch(purpose) {
+    case Collection::ListDisplay:
+        command += "DISPLAY ";
+        break;
+    case Collection::ListSync:
+        command += "SYNC ";
+        break;
+    case Collection::ListIndex:
+        command += "INDEX ";
+        break;
+    }
+    switch(preference) {
+    case Collection::ListEnabled:
+        command += "TRUE";
+        break;
+    case Collection::ListDisabled:
+        command += "FALSE";
+        break;
+    case Collection::ListDefault:
+        command += "DEFAULT";
+        break;
+    }
+    return command;
+}
+
+QByteArray ProtocolHelper::enabled(bool state)
+{
+    if (state) {
+      return "ENABLED TRUE";
+    }
+    return "ENABLED FALSE";
 }

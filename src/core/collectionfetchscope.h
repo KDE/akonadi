@@ -105,15 +105,47 @@ public:
      *
      * @see setIncludeUnsubscribed()
      * @since 4.5
+     * @deprecated use listFilter() instead
      */
-    bool includeUnsubscribed() const;
+    AKONADI_DEPRECATED bool includeUnsubscribed() const;
 
     /**
      * Sets whether unsubscribed collections should be included in the collection listing.
      *
      * @param include @c true to include unsubscribed collections, @c false otherwise (the default).
+     * @deprecated use setListFilter() instead
      */
-    void setIncludeUnsubscribed(bool include);
+    AKONADI_DEPRECATED void setIncludeUnsubscribed(bool include);
+
+    /**
+     * Describes the list filter
+     *
+     * @since 4.14
+     */
+    enum ListFilter {
+        NoFilter, ///< No filtering, retrieve all collections
+        Display,  ///< Only retrieve collections for display, taking the local preference and enabled into account.
+        Sync,     ///< Only retrieve collections for synchronization, taking the local preference and enabled into account.
+        Index,    ///< Only retrieve collections for indxing, taking the local preference and enabled into account.
+        Enabled   ///< Only retrieve enabled collections, ignoring the local preference. This is the same as setIncludeUnsubscribed(false).
+    };
+
+    /**
+     * Sets a filter for the collections to be listed.
+     *
+     * Note that collections that are required to complete the tree, but are not part of the collection are still included in the listing.
+     *
+     * @since 4.14
+     */
+    void setListFilter(ListFilter);
+
+    /**
+     * Returns the list filter.
+     *
+     * @see setListFilter()
+     * @since 4.14
+     */
+    ListFilter listFilter() const;
 
     /**
      * Returns whether collection statistics should be included in the retrieved results.

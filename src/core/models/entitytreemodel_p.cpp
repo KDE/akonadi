@@ -67,7 +67,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     , m_rootNode(0)
     , m_collectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive)
     , m_itemPopulation(EntityTreeModel::ImmediatePopulation)
-    , m_includeUnsubscribed(true)
+    , m_listFilter(CollectionFetchScope::NoFilter)
     , m_includeStatistics(false)
     , m_showRootCollection(false)
     , m_collectionTreeFetched(false)
@@ -128,10 +128,6 @@ void EntityTreeModelPrivate::init(ChangeRecorder *monitor)
                SLOT(monitoredCollectionAdded(Akonadi::Collection,Akonadi::Collection)));
     q->connect(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
                SLOT(monitoredCollectionRemoved(Akonadi::Collection)));
-    q->connect(monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)),
-               SLOT(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)));
-    q->connect(monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)),
-               SLOT(monitoredCollectionUnsubscribed(Akonadi::Collection)));
     q->connect(monitor,
                SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
                SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
@@ -300,7 +296,7 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
 
     job->setProperty(FetchCollectionId().constData(), QVariant(collection.id()));
 
-    job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
+    job->fetchScope().setListFilter(m_listFilter);
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
 
     if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
@@ -648,7 +644,7 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     if (!ancestors.isEmpty()) {
         // Fetch the real ancestors
         CollectionFetchJob *job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
-        job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
+        job->fetchScope().setListFilter(m_listFilter);
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    q, SLOT(ancestorsFetched(Akonadi::Collection::List)));
@@ -741,6 +737,25 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
         !m_mimeChecker.isWantedCollection(collection)) {
         return false;
     }
+
+    if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Enabled) {
+        if (!collection.enabled()) {
+            return false;
+        }
+    } else if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Display) {
+        if (!collection.shouldList(Collection::ListDisplay)) {
+            return false;
+        }
+    } else if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Sync) {
+        if (!collection.shouldList(Collection::ListSync)) {
+            return false;
+        }
+    } else if (m_listFilter == CollectionFetchScope::CollectionFetchScope::Index) {
+        if (!collection.shouldList(Collection::ListIndex)) {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -840,34 +855,6 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved(const Akonadi::Collectio
     if (!shouldBePartOfModel(parentCollection)) {
         monitoredCollectionRemoved(parentCollection);
     }
-}
-
-void EntityTreeModelPrivate::collectionSubscribed(const Akonadi::Collection &col, const Akonadi::Collection &parent)
-{
-    // If we are including unsubscribed, we don't need to deal with subscribed / unsubscribed signals.
-    //  We shouldn't even be getting them as Monitor should only send them if we are watching subscribed-only,
-    //  but this is just in case.
-    if (m_includeUnsubscribed || m_collections.contains(col.id())) {
-        return;
-    }
-
-    // Otherwise, it's a valid subscription notice. Let's add it to the collection.
-    monitoredCollectionAdded(col, parent);
-}
-
-void EntityTreeModelPrivate::monitoredCollectionUnsubscribed(const Akonadi::Collection &col)
-{
-    // If we are including unsubscribed, we don't need to deal with subscribed / unsubscribed signals.
-    //  We shouldn't even be getting them as Monitor should only send them if we are watching subscribed-only,
-    //  but this is just in case.
-    //
-    // We don't want to remove a collection if we are including all of them.
-    if (m_includeUnsubscribed || !m_collections.contains(col.id())) {
-        return;
-    }
-
-    // Otherwise, it's a valid unsubscription notice.
-    monitoredCollectionRemoved(col);
 }
 
 void EntityTreeModelPrivate::removeChildEntities(Collection::Id collectionId)
@@ -1538,7 +1525,8 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
 
             Q_ASSERT(collection.isValid());
             CollectionFetchJob *job = new CollectionFetchJob(collection, CollectionFetchJob::Recursive, m_session);
-            job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
+            job->fetchScope().setListFilter(m_listFilter);
+
             job->fetchScope().setIncludeStatistics(m_includeStatistics);
             job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
             q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),

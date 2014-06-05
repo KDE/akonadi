@@ -93,6 +93,14 @@ void CollectionModifyJob::doStart()
     if (d->mCollection.d_func()->cachePolicyChanged) {
         changes += ' ' + ProtocolHelper::cachePolicyToByteArray(d->mCollection.cachePolicy());
     }
+    if (d->mCollection.d_func()->enabledChanged) {
+        changes += ' ' + ProtocolHelper::enabled(d->mCollection.enabled());
+    }
+    if (d->mCollection.d_func()->listPreferenceChanged) {
+        changes += ' ' + ProtocolHelper::listPreference(Collection::ListDisplay, d->mCollection.localListPreference(Collection::ListDisplay));
+        changes += ' ' + ProtocolHelper::listPreference(Collection::ListSync, d->mCollection.localListPreference(Collection::ListSync));
+        changes += ' ' + ProtocolHelper::listPreference(Collection::ListIndex, d->mCollection.localListPreference(Collection::ListIndex));
+    }
     if (d->mCollection.attributes().count() > 0) {
         changes += ' ' + ProtocolHelper::attributesToByteArray(d->mCollection);
     }

@@ -40,6 +40,12 @@ public:
         , contentTypesChanged(false)
         , cachePolicyChanged(false)
         , isVirtual(false)
+        , enabled(true)
+        , enabledChanged(false)
+        , displayPreference(Collection::ListDefault)
+        , syncPreference(Collection::ListDefault)
+        , indexPreference(Collection::ListDefault)
+        , listPreferenceChanged(false)
     {}
 
     CollectionPrivate(const CollectionPrivate &other)
@@ -53,6 +59,12 @@ public:
         contentTypesChanged = other.contentTypesChanged;
         cachePolicyChanged = other.cachePolicyChanged;
         isVirtual = other.isVirtual;
+        enabled = other.enabled;
+        enabledChanged = other.enabledChanged;
+        displayPreference = other.displayPreference;
+        syncPreference = other.syncPreference;
+        indexPreference = other.indexPreference;
+        listPreferenceChanged = other.listPreferenceChanged;
     }
 
     ~CollectionPrivate()
@@ -68,6 +80,8 @@ public:
     {
         contentTypesChanged = false;
         cachePolicyChanged = false;
+        enabledChanged = false;
+        listPreferenceChanged = false;
         EntityPrivate::resetChangeLog();
     }
 
@@ -89,6 +103,12 @@ public:
     bool contentTypesChanged: 1;
     bool cachePolicyChanged: 1;
     bool isVirtual: 1;
+    bool enabled;
+    bool enabledChanged;
+    Collection::ListPreference displayPreference;
+    Collection::ListPreference syncPreference;
+    Collection::ListPreference indexPreference;
+    bool listPreferenceChanged;
 };
 
 #endif

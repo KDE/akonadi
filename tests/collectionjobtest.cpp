@@ -766,4 +766,99 @@ void CollectionJobTest::testAncestorRetrieval()
   QCOMPARE( col, col2 );
 }
 
+void CollectionJobTest::testListPreference()
+{
+  Akonadi::Collection baseCol;
+  {
+    baseCol.setParentCollection(Akonadi::Collection(res1ColId));
+    baseCol.setName("base");
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
+    AKVERIFYEXEC(create);
+    baseCol = create->collection();
+  }
+  {
+    Akonadi::Collection col;
+    col.setParentCollection(baseCol);
+    col.setEnabled(true);
+    col.setName("enabled");
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
+    AKVERIFYEXEC(create);
+
+    CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+    AKVERIFYEXEC(job);
+    Akonadi::Collection result = job->collections().first();
+    QCOMPARE(result.enabled(), true);
+    QCOMPARE(result.localListPreference(Collection::ListDisplay), Collection::ListDefault);
+    QCOMPARE(result.localListPreference(Collection::ListSync), Collection::ListDefault);
+    QCOMPARE(result.localListPreference(Collection::ListIndex), Collection::ListDefault);
+  }
+  {
+    Akonadi::Collection col;
+    col.setParentCollection(baseCol);
+    col.setName("disabledPref");
+    col.setEnabled(true);
+    col.setLocalListPreference(Collection::ListDisplay, Collection::ListDisabled);
+    col.setLocalListPreference(Collection::ListSync, Collection::ListDisabled);
+    col.setLocalListPreference(Collection::ListIndex, Collection::ListDisabled);
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
+    AKVERIFYEXEC(create);
+    CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+    AKVERIFYEXEC(job);
+    Akonadi::Collection result = job->collections().first();
+    QCOMPARE(result.enabled(), true);
+    QCOMPARE(result.localListPreference(Collection::ListDisplay), Collection::ListDisabled);
+    QCOMPARE(result.localListPreference(Collection::ListSync), Collection::ListDisabled);
+    QCOMPARE(result.localListPreference(Collection::ListIndex), Collection::ListDisabled);
+  }
+  {
+    Akonadi::Collection col;
+    col.setParentCollection(baseCol);
+    col.setName("enabledPref");
+    col.setEnabled(false);
+    col.setLocalListPreference(Collection::ListDisplay, Collection::ListEnabled);
+    col.setLocalListPreference(Collection::ListSync, Collection::ListEnabled);
+    col.setLocalListPreference(Collection::ListIndex, Collection::ListEnabled);
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
+    AKVERIFYEXEC(create);
+    CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+    AKVERIFYEXEC(job);
+    Akonadi::Collection result = job->collections().first();
+    QCOMPARE(result.enabled(), false);
+    QCOMPARE(result.localListPreference(Collection::ListDisplay), Collection::ListEnabled);
+    QCOMPARE(result.localListPreference(Collection::ListSync), Collection::ListEnabled);
+    QCOMPARE(result.localListPreference(Collection::ListIndex), Collection::ListEnabled);
+  }
+
+  //Check list filter
+  {
+    CollectionFetchJob *job = new CollectionFetchJob(baseCol, CollectionFetchJob::FirstLevel);
+    job->fetchScope().setListFilter(CollectionFetchScope::Display);
+    AKVERIFYEXEC(job);
+    QCOMPARE(job->collections().size(), 2);
+  }
+  {
+    CollectionFetchJob *job = new CollectionFetchJob(baseCol, CollectionFetchJob::FirstLevel);
+    job->fetchScope().setListFilter(CollectionFetchScope::Sync);
+    AKVERIFYEXEC(job);
+    QCOMPARE(job->collections().size(), 2);
+  }
+  {
+    CollectionFetchJob *job = new CollectionFetchJob(baseCol, CollectionFetchJob::FirstLevel);
+    job->fetchScope().setListFilter(CollectionFetchScope::Index);
+    AKVERIFYEXEC(job);
+    QCOMPARE(job->collections().size(), 2);
+  }
+  {
+    CollectionFetchJob *job = new CollectionFetchJob(baseCol, CollectionFetchJob::FirstLevel);
+    job->fetchScope().setListFilter(CollectionFetchScope::Enabled);
+    AKVERIFYEXEC(job);
+    QCOMPARE(job->collections().size(), 2);
+  }
+
+  //Cleanup
+  CollectionDeleteJob *deleteJob = new CollectionDeleteJob(baseCol);
+  AKVERIFYEXEC(deleteJob);
+}
+
+
 #include "collectionjobtest.moc"

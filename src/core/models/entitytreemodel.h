@@ -21,8 +21,9 @@
 #define AKONADI_ENTITYTREEMODEL_H
 
 #include "akonadicore_export.h"
-#include "collection.h"
-#include "item.h"
+#include <akonadiCore/collection.h>
+#include <akonadiCore/collectionfetchscope.h>
+#include <akonadiCore/item.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
@@ -426,8 +427,9 @@ public:
      * Returns whether unsubscribed entities will be included in the listing.
      *
      * @since 4.5
+     * @deprecated use listFilter instead
      */
-    bool includeUnsubscribed() const;
+    AKONADI_DEPRECATED bool includeUnsubscribed() const;
 
     /**
      * Sets whether unsubscribed entities will be included in the listing.
@@ -438,8 +440,23 @@ public:
      *  this method for turning on/off listing of subscribed folders.
      *
      * @since 4.5
+     * @deprecated use setListFilter instead
      */
-    void setIncludeUnsubscribed(bool show);
+    AKONADI_DEPRECATED void setIncludeUnsubscribed(bool show);
+
+    /**
+     * Returns the currently used listfilter.
+     *
+     * @since 4.14
+     */
+    Akonadi::CollectionFetchScope::ListFilter listFilter() const;
+
+    /**
+     * Sets the currently used listfilter.
+     *
+     * @since 4.14
+     */
+    void setListFilter(Akonadi::CollectionFetchScope::ListFilter filter);
 
     /**
      * Sets the item population @p strategy of the model.
@@ -690,8 +707,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionChanged(const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionMoved(const Akonadi::Collection &, const Akonadi::Collection &,
                                                            const Akonadi::Collection &))
-    Q_PRIVATE_SLOT(d_func(), void collectionSubscribed(const Akonadi::Collection &, const Akonadi::Collection &))
-    Q_PRIVATE_SLOT(d_func(), void monitoredCollectionUnsubscribed(const Akonadi::Collection &))
 
     Q_PRIVATE_SLOT(d_func(), void monitoredItemAdded(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemRemoved(const Akonadi::Item &))
