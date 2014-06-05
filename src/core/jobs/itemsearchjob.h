@@ -94,13 +94,6 @@ public:
     ~ItemSearchJob();
 
     /**
-     * Sets the search @p query in Akonadi search metalanguage format (JSON)
-     *
-     * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
-     */
-    void AKONADICORE_DEPRECATED setQuery(const QString &query);
-
-    /**
      * Sets the search @p query.
      *
      * @since 4.13

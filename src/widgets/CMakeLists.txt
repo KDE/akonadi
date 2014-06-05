@@ -99,10 +99,12 @@ add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiWidgets
+PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
-    KF5::ItemViews ## This is only for KFilterProxySearchLine
     KF5::KDELibs4Support
+PRIVATE
+   KF5::ItemViews
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES

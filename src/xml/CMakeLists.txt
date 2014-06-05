@@ -39,8 +39,10 @@ add_library(KF5::AkonadiXml ALIAS KF5AkonadiXml)
 target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiXml>")
 
 target_link_libraries(KF5AkonadiXml
+PUBLIC
     KF5::AkonadiCore
     Qt5::Xml
+PRIVATE
     ${LIBXML2_LIBRARIES}
 )
 
@@ -52,7 +54,7 @@ set_target_properties(KF5AkonadiXml PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiXml
     LIB_NAME KF5AkonadiXml
-    DEPS "AkonadiCore Kio KDELibs4Support QtXml LibXML2" FILENAME_VAR PRI_FILENAME
+    DEPS "AkonadiCore KDELibs4Support QtXml" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

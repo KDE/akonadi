@@ -52,10 +52,12 @@ add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
 target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiAgentBase;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiAgentBase
+PUBLIC
     KF5::AkonadiCore
-    KF5::Solid
     KF5::ConfigCore
     KF5::KDELibs4Support
+PRIVATE
+    KF5::Solid
 )
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES

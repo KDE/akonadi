@@ -272,6 +272,7 @@ target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BI
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AKONADI_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiCore
+PUBLIC
     KF5::ItemModels
     KF5::KIOCore
     KF5::KDELibs4Support

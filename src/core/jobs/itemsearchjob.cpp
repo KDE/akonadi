@@ -135,13 +135,6 @@ ItemSearchJob::~ItemSearchJob()
 {
 }
 
-void ItemSearchJob::setQuery(const QString &query)
-{
-    Q_D(ItemSearchJob);
-
-    d->mQuery = SearchQuery::fromJSON(query.toUtf8());
-}
-
 void ItemSearchJob::setQuery(const SearchQuery &query)
 {
     Q_D(ItemSearchJob);
