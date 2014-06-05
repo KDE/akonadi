@@ -1094,7 +1094,7 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
             }
         }
     } else {
-        kWarning() << "Failed to fetch collection for collection sync: " << job->errorString();
+        qWarning() << "Failed to fetch collection for collection sync: " << job->errorString();
     }
 }
 

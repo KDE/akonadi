@@ -107,7 +107,7 @@ public:
      * @since 4.5
      * @deprecated use listFilter() instead
      */
-    AKONADI_DEPRECATED bool includeUnsubscribed() const;
+    AKONADICORE_DEPRECATED bool includeUnsubscribed() const;
 
     /**
      * Sets whether unsubscribed collections should be included in the collection listing.
@@ -115,7 +115,7 @@ public:
      * @param include @c true to include unsubscribed collections, @c false otherwise (the default).
      * @deprecated use setListFilter() instead
      */
-    AKONADI_DEPRECATED void setIncludeUnsubscribed(bool include);
+    AKONADICORE_DEPRECATED void setIncludeUnsubscribed(bool include);
 
     /**
      * Describes the list filter

@@ -21,9 +21,9 @@
 #define AKONADI_ENTITYTREEMODEL_H
 
 #include "akonadicore_export.h"
-#include <akonadiCore/collection.h>
-#include <akonadiCore/collectionfetchscope.h>
-#include <akonadiCore/item.h>
+#include "collection.h"
+#include "collectionfetchscope.h"
+#include "item.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
@@ -429,7 +429,7 @@ public:
      * @since 4.5
      * @deprecated use listFilter instead
      */
-    AKONADI_DEPRECATED bool includeUnsubscribed() const;
+    AKONADICORE_DEPRECATED bool includeUnsubscribed() const;
 
     /**
      * Sets whether unsubscribed entities will be included in the listing.
@@ -442,7 +442,7 @@ public:
      * @since 4.5
      * @deprecated use setListFilter instead
      */
-    AKONADI_DEPRECATED void setIncludeUnsubscribed(bool show);
+    AKONADICORE_DEPRECATED void setIncludeUnsubscribed(bool show);
 
     /**
      * Returns the currently used listfilter.
