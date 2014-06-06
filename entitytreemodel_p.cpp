@@ -719,6 +719,16 @@ void EntityTreeModelPrivate::insertCollection(const Akonadi::Collection &collect
     q->endInsertRows();
 }
 
+bool EntityTreeModelPrivate::hasChildCollection(const Collection &collection) const
+{
+    foreach (Node *node, m_childEntities[collection.id()]) {
+        if (node->type == Node::Collection) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) const
 {
     if (isHidden(collection)) {
@@ -727,7 +737,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
 
     // We want a parent collection if it has at least one child that matches the
     // wanted mimetype
-    if (m_childEntities.contains(collection.id())) {
+    if (hasChildCollection(collection)) {
         return true;
     }
 
