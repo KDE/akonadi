@@ -303,6 +303,7 @@ public:
      * * content mime types
      */
     bool shouldBePartOfModel(const Collection &collection) const;
+    bool hasChildCollection(const Collection &collection) const;
 };
 
 }
