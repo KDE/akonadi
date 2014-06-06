@@ -64,6 +64,11 @@ static const QString serverContent1 =
     "- - - I message/rfc822                 'Item 14'"
     "- - - I message/rfc822                 'Item 15'";
 
+/**
+ * This test verifies that the ETM reacts as expected to signals from the monitor.
+ * 
+ * The tested ETM is only talking to fake components so the reaction of the ETM to each signal can be tested.
+ */
 class EntityTreeModelTest : public QObject
 {
   Q_OBJECT
@@ -211,7 +216,7 @@ void EntityTreeModelTest::testInitialFetch()
   m_modelSpy->setExpectedSignals( expectedSignals );
 
   // Give the model a chance to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   // We get all the signals we expected.
   QVERIFY(m_modelSpy->expectedSignals().isEmpty());
@@ -271,7 +276,7 @@ void EntityTreeModelTest::testCollectionMove()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -315,7 +320,7 @@ void EntityTreeModelTest::testCollectionAdded()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -364,7 +369,7 @@ void EntityTreeModelTest::testCollectionRemoved()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -416,7 +421,7 @@ void EntityTreeModelTest::testCollectionChanged()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(100);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -475,7 +480,7 @@ void EntityTreeModelTest::testItemMove()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -524,7 +529,7 @@ void EntityTreeModelTest::testItemAdded()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -580,7 +585,7 @@ void EntityTreeModelTest::testItemRemoved()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -635,7 +640,7 @@ void EntityTreeModelTest::testItemChanged()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
