@@ -462,7 +462,8 @@ ResourceScheduler::QueueType ResourceScheduler::queueTypeForTaskType( TaskType t
   case RecursiveMoveReplay:
     return ChangeReplayQueue;
   case FetchItem:
-    return ItemFetchQueue;
+  case SyncCollectionAttributes:
+    return UserActionQueue;
   default:
     return GenericTaskQueue;
   }
