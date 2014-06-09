@@ -328,5 +328,21 @@ bool Collection::shouldList(Collection::ListPurpose purpose) const
     return (localListPreference(purpose) == ListEnabled);
 }
 
+void Collection::setReferenced(bool referenced)
+{
+    Q_D(Collection);
+
+    if (d->referenced != referenced) {
+        d->referencedChanged = true;
+    }
+    d->referenced = referenced;
+}
+
+bool Collection::referenced() const
+{
+    Q_D(const Collection);
+
+    return d->referenced;
+}
 
 AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

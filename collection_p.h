@@ -46,6 +46,8 @@ public:
         , syncPreference(Collection::ListDefault)
         , indexPreference(Collection::ListDefault)
         , listPreferenceChanged(false)
+        , referenced(false)
+        , referencedChanged(false)
     {}
 
     CollectionPrivate(const CollectionPrivate &other)
@@ -65,6 +67,8 @@ public:
         syncPreference = other.syncPreference;
         indexPreference = other.indexPreference;
         listPreferenceChanged = other.listPreferenceChanged;
+        referenced = other.referenced;
+        referencedChanged = other.referencedChanged;
     }
 
     ~CollectionPrivate()
@@ -82,6 +86,7 @@ public:
         cachePolicyChanged = false;
         enabledChanged = false;
         listPreferenceChanged = false;
+        referencedChanged = false;
         EntityPrivate::resetChangeLog();
     }
 
@@ -109,6 +114,8 @@ public:
     Collection::ListPreference syncPreference;
     Collection::ListPreference indexPreference;
     bool listPreferenceChanged;
+    bool referenced;
+    bool referencedChanged;
 };
 
 #endif
