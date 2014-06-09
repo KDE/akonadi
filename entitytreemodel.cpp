@@ -111,6 +111,25 @@ void EntityTreeModel::setListFilter(CollectionFetchScope::ListFilter filter)
     d->endResetModel();
 }
 
+void EntityTreeModel::setCollectionsMonitored(const Collection::List &collections)
+{
+    Q_D(EntityTreeModel);
+    d->beginResetModel();
+    foreach(const Akonadi::Collection &col, d->m_monitor->collectionsMonitored()) {
+        d->m_monitor->setCollectionMonitored(col, false);
+    }
+    foreach(const Akonadi::Collection &col, collections) {
+        d->m_monitor->setCollectionMonitored(col, true);
+    }
+    d->endResetModel();
+}
+
+void EntityTreeModel::setCollectionMonitored(const Collection &col, bool monitored)
+{
+    Q_D(EntityTreeModel);
+    d->m_monitor->setCollectionMonitored(col, monitored);
+}
+
 bool EntityTreeModel::systemEntitiesShown() const
 {
     Q_D(const EntityTreeModel);
