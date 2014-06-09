@@ -367,6 +367,24 @@ public:
      */
     bool shouldList(ListPurpose purpose) const;
 
+    /**
+     * Sets a collection to be referenced.
+     *
+     * A referenced collection is temporarily shown and synchronized even when disabled.
+     * A reference is only valid for the duration of a session, and is automatically removed afterwards.
+     *
+     * Referenced collections are only visible if explicitly monitored in the ETM.
+     *
+     * @since 4.14
+     */
+    void setReferenced(bool referenced);
+
+    /**
+     * Returns the referenced state of the collection.
+     * @since 4.14
+     */
+    bool referenced() const;
+
 private:
     AKONADI_DECLARE_PRIVATE(Collection)
     friend class CollectionFetchJob;
