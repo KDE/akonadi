@@ -29,6 +29,7 @@
 #include <akonadi/changerecorder_p.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectiondeletejob.h>
 #include <akonadi/itemcreatejob.h>
 
 using namespace Akonadi;
@@ -50,11 +51,12 @@ QModelIndex getIndex(const QString &string, EntityTreeModel *model)
     return list.first();
 }
 
-Akonadi::Collection createCollection(const QString &name, const Akonadi::Collection &parent)
+Akonadi::Collection createCollection(const QString &name, const Akonadi::Collection &parent, bool enabled = true)
 {
     Akonadi::Collection col;
     col.setParentCollection(parent);
     col.setName(name);
+    col.setEnabled(enabled);
     CollectionCreateJob *create = new CollectionCreateJob(col);
     create->exec();
     Q_ASSERT(!create->error());
@@ -74,6 +76,7 @@ private Q_SLOTS:
     void testFullPopulation();
     void testAddMonitoringCollections();
     void testRemoveMonitoringCollections();
+    void testReferenceCollection();
 
 private:
     Collection res;
@@ -210,6 +213,40 @@ void EtmPopulationTest::testRemoveMonitoringCollections()
     QTRY_VERIFY(!getIndex("col4", model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
 
+void EtmPopulationTest::testReferenceCollection()
+{
+    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false);
+
+    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
+    model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
+    model->setListFilter(Akonadi::CollectionFetchScope::Display);
+
+    QTRY_VERIFY(model->isCollectionTreeFetched());
+    QVERIFY(!getIndex("col5", model).isValid());
+    //Check that this random other collection is actually available
+    QVERIFY(getIndex("col1", model).isValid());
+
+    //Reference the collection and it should appear in the model
+    model->setCollectionReferenced(col5, true);
+
+    QTRY_VERIFY(getIndex("col5", model).isValid());
+    QTRY_VERIFY(getIndex("col5", model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    //Check that this random other collection is still available
+    QVERIFY(getIndex("col1", model).isValid());
+
+    //Dereference the collection and it should dissapear again
+    model->setCollectionReferenced(col5, false);
+    QTRY_VERIFY(!getIndex("col5", model).isValid());
+    //Check that this random other collection is still available
+    QVERIFY(getIndex("col1", model).isValid());
+
+    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
+    AKVERIFYEXEC(deleteJob);
+}
+
 #include "etmpopulationtest.moc"
 
 QTEST_AKONADIMAIN(EtmPopulationTest, NoGUI)
+

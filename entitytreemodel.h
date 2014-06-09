@@ -476,6 +476,15 @@ public:
     void setCollectionMonitored(const Akonadi::Collection &col, bool monitored = true);
 
     /**
+     * References a collection and starts to monitor it.
+     *
+     * Use this to temporarily include a collection that is not enabled.
+     *
+     * @since 4.14
+     */
+    void setCollectionReferenced(const Akonadi::Collection &col, bool referenced = true);
+
+    /**
      * Sets the item population @p strategy of the model.
      */
     void setItemPopulationStrategy(ItemPopulationStrategy strategy);
