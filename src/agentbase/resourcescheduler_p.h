@@ -244,19 +244,21 @@ private:
     void signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString = QString());
 
     // We have a number of task queues, by order of priority.
+    // * PrependTaskQueue is for deferring the current task
     // * ChangeReplay must be first:
     //    change replays have to happen before we pull changes from the backend, otherwise
     //    we will overwrite our still unsaved local changes if the backend can't do
     //    incremental retrieval
     //
     // * then the stuff that is "immediately after change replay", like writeFile calls.
-    // * then ItemFetch tasks, because they are made by blocking DBus calls
-    // * then everything else.
+    // * then tasks which the user is waiting for, like ItemFetch (clicking on a mail) or
+    //        SyncCollectionAttributes (folder properties dialog in kmail)
+    // * then everything else (which includes the background email checking, which can take quite some time).
     enum QueueType {
         PrependTaskQueue,
         ChangeReplayQueue, // one task at most
         AfterChangeReplayQueue, // also one task at most, currently
-        ItemFetchQueue,
+        UserActionQueue,
         GenericTaskQueue,
         NQueueCount
     };
