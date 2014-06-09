@@ -76,6 +76,7 @@ private Q_SLOTS:
     void testFullPopulation();
     void testAddMonitoringCollections();
     void testRemoveMonitoringCollections();
+    void testDisplayFilter();
     void testReferenceCollection();
 
 private:
@@ -211,6 +212,28 @@ void EtmPopulationTest::testRemoveMonitoringCollections()
     QTRY_VERIFY(!getIndex("col2", model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(!getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(!getIndex("col4", model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+}
+
+void EtmPopulationTest::testDisplayFilter()
+{
+    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false);
+
+    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
+    model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
+    model->setListFilter(Akonadi::CollectionFetchScope::Display);
+
+    QTRY_VERIFY(model->isCollectionTreeFetched());
+    QVERIFY(getIndex(mainCollectionName, model).isValid());
+    QVERIFY(getIndex("col1", model).isValid());
+    QVERIFY(getIndex("col2", model).isValid());
+    QVERIFY(getIndex("col3", model).isValid());
+    QVERIFY(getIndex("col4", model).isValid());
+    QVERIFY(!getIndex("col5", model).isValid());
+
+    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
+    AKVERIFYEXEC(deleteJob);
 }
 
 void EtmPopulationTest::testReferenceCollection()
