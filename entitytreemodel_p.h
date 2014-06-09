@@ -77,9 +77,10 @@ public:
     void init(ChangeRecorder *monitor);
 
     void fetchCollections(const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel, ListingOrder = NotFirstListing);
+    void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel, ListingOrder = NotFirstListing);
+    void fetchCollections(Akonadi::CollectionFetchJob *job, ListingOrder = NotFirstListing);
     void fetchItems(const Collection &collection);
     void collectionsFetched(const Akonadi::Collection::List &);
-    void allCollectionsFetched(const Akonadi::Collection::List &);
     void firstCollectionsFetched(const Akonadi::Collection::List &);
     void collectionListFetched(const Akonadi::Collection::List &);
     void itemsFetched(const Akonadi::Item::List &items);
@@ -115,7 +116,7 @@ public:
     /**
      * Fetch parent collections and insert this @p collection and its parents into the node tree
      */
-    void retrieveAncestors(const Akonadi::Collection &collection);
+    void retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection = true);
     void ancestorsFetched(const Akonadi::Collection::List &collectionList);
     void insertCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
     void insertPendingCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parent, QMutableListIterator<Collection> &it);
@@ -177,6 +178,7 @@ public:
     void firstFetchJobDone(KJob *job);
     void rootFetchJobDone(KJob *job);
     void fetchJobDone(KJob *job);
+    void finalCollectionFetchJobDone(KJob *job);
     void updateJobDone(KJob *job);
     void pasteJobDone(KJob *job);
 

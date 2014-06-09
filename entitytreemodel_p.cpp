@@ -288,13 +288,9 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
     runItemFetchJob(itemJob, parent);
 }
 
-void EntityTreeModelPrivate::fetchCollections(const Collection &collection, CollectionFetchJob::Type type, const ListingOrder listing)
+void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job, EntityTreeModelPrivate::ListingOrder listing)
 {
     Q_Q(EntityTreeModel);
-    Q_ASSERT(collection.isValid());
-    CollectionFetchJob *job = new CollectionFetchJob(collection, type, m_session);
-
-    job->setProperty(FetchCollectionId(), QVariant(collection.id()));
 
     job->fetchScope().setListFilter(m_listFilter);
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
@@ -307,9 +303,11 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
         if (listing != FirstListing) {
             q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                       q, SLOT(allCollectionsFetched(Akonadi::Collection::List)));
+                       q, SLOT(collectionsFetched(Akonadi::Collection::List)));
             q->connect(job, SIGNAL(result(KJob*)),
                        q, SLOT(fetchJobDone(KJob*)));
+            q->connect(job, SIGNAL(result(KJob*)),
+                       q, SLOT(finalCollectionFetchJobDone(KJob*)));
         } else {
             q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                        q, SLOT(firstCollectionsFetched(Akonadi::Collection::List)));
@@ -318,6 +316,23 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
         }
     }
     ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
+}
+
+void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type, const ListingOrder listing)
+{
+    Q_Q(EntityTreeModel);
+    CollectionFetchJob *job = new CollectionFetchJob(collections, type, m_session);
+    fetchCollections(job, listing);
+}
+
+void EntityTreeModelPrivate::fetchCollections(const Collection &collection, CollectionFetchJob::Type type, const ListingOrder listing)
+{
+    kDebug() << collection.id() << type << listing;
+    Q_Q(EntityTreeModel);
+    Q_ASSERT(collection.isValid());
+    CollectionFetchJob *job = new CollectionFetchJob(collection, type, m_session);
+    job->setProperty(FetchCollectionId(), QVariant(collection.id()));
+    fetchCollections(job, listing);
 }
 
 // Specialization needs to be in the same namespace as the definition
@@ -596,8 +611,13 @@ void EntityTreeModelPrivate::monitoredCollectionsChanged(const Akonadi::Collecti
 {
     Q_UNUSED(collection)
     Q_UNUSED(monitored)
-    beginResetModel();
-    endResetModel();
+    if (monitored) {
+        m_collectionTreeFetched = false;
+        //TODO m_collectionFetchStrategy;
+        fetchCollections(collection, CollectionFetchJob::Base, EntityTreeModelPrivate::FirstListing);
+    } else {
+        monitoredCollectionRemoved(collection);
+    }
 }
 
 void EntityTreeModelPrivate::monitoredItemsChanged(const Akonadi::Item &item, bool monitored)
@@ -616,7 +636,7 @@ void EntityTreeModelPrivate::monitoredResourcesChanged(const QByteArray &resourc
     endResetModel();
 }
 
-void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collection)
+void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection)
 {
     Q_Q(EntityTreeModel);
 
@@ -662,13 +682,15 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     // about the top-level one. The rest will be found auotmatically by the view.
     q->beginInsertRows(parent, row, row);
 
-    m_collections.insert(collection.id(), collection);
-    Node *node = new Node;
-    node->id = collection.id();
-    // Can't just use parentCollection because that doesn't necessarily refer to collection.
-    node->parent = collection.parentCollection().id();
-    node->type = Node::Collection;
-    m_childEntities[node->parent].prepend(node);
+    if (insertBaseCollection) {
+        m_collections.insert(collection.id(), collection);
+        Node *node = new Node;
+        node->id = collection.id();
+        // Can't just use parentCollection because that doesn't necessarily refer to collection.
+        node->parent = collection.parentCollection().id();
+        node->type = Node::Collection;
+        m_childEntities[node->parent].prepend(node);
+    }
 
     Collection::List::const_iterator it = ancestors.constBegin();
     const Collection::List::const_iterator end = ancestors.constEnd();
@@ -738,6 +760,11 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
     // We want a parent collection if it has at least one child that matches the
     // wanted mimetype
     if (hasChildCollection(collection)) {
+        return true;
+    }
+
+    //Explicitly monitored collection
+    if (m_monitor->collectionsMonitored().contains(collection)) {
         return true;
     }
 
@@ -1270,6 +1297,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
 void EntityTreeModelPrivate::fetchJobDone(KJob *job)
 {
+    //This id is only valid for single collection fetchJobs
     const Collection::Id collectionId = job->property(FetchCollectionId()).value<Collection::Id>();
 
     if (job->error()) {
@@ -1300,27 +1328,23 @@ void EntityTreeModelPrivate::fetchJobDone(KJob *job)
 
         m_populatedCols.insert(collectionId);
         emit q_ptr->collectionPopulated(collectionId);
+        m_pendingCollectionRetrieveJobs.remove(collectionId);
     } else {
-        if (!m_showRootCollection &&
-            collectionId == m_rootCollection.id()) {
-            return;
-        }
-        // If collections are not in the model, there will be no valid index for them.
-        if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
-            const QModelIndex index = indexForCollection(Collection(collectionId));
-            Q_ASSERT(index.isValid());
-            emit dataChanged(index, index);
+        CollectionFetchJob *collectionFetchJob = static_cast<CollectionFetchJob*>(job);
+        Q_FOREACH (const Akonadi::Collection &col, collectionFetchJob->collections()) {
+            if (!m_showRootCollection &&
+                collectionId == m_rootCollection.id()) {
+                continue;
+            }
+            // If collections are not in the model, there will be no valid index for them.
+            if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
+                (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
+                const QModelIndex index = indexForCollection(col);
+                Q_ASSERT(index.isValid());
+                emit dataChanged(index, index);
+            }
         }
     }
-
-    if (!m_showRootCollection &&
-        collectionId == m_rootCollection.id()) {
-        return;
-    }
-
-    m_pendingCollectionRetrieveJobs.remove(collectionId);
-
 }
 
 void EntityTreeModelPrivate::pasteJobDone(KJob *job)
@@ -1422,7 +1446,14 @@ void EntityTreeModelPrivate::startFirstListJob()
 
     const bool noMimetypes = m_mimeChecker.wantedMimeTypes().isEmpty();
     const bool noResources = m_monitor->resourcesMonitored().isEmpty();
+    const bool multipleCollections = m_monitor->collectionsMonitored().size() > 1;
     const bool generalPopulation = !noMimetypes || (noMimetypes && noResources);
+
+    //Collections can only be monitored if no resources and no mimetypes are monitored
+    if (multipleCollections && noMimetypes && noResources) {
+        fetchCollections(m_monitor->collectionsMonitored(), CollectionFetchJob::Base, Akonadi::EntityTreeModelPrivate::FirstListing);
+        return;
+    }
 
     kDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
     // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
@@ -1467,15 +1498,26 @@ void EntityTreeModelPrivate::startFirstListJob()
     }
 }
 
-void EntityTreeModelPrivate::allCollectionsFetched(const Akonadi::Collection::List &collections)
+void EntityTreeModelPrivate::finalCollectionFetchJobDone(KJob *job)
 {
-    collectionsFetched(collections);
+    if (job->error()) {
+        kWarning() << job->errorString();
+        return;
+    }
+
+    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
     m_collectionTreeFetched = true;
-    emit q_ptr->collectionTreeFetched(collections);
+    emit q_ptr->collectionTreeFetched(fetchJob->collections());
 }
 
 void EntityTreeModelPrivate::firstCollectionsFetched(const Akonadi::Collection::List &collections)
 {
+    Q_FOREACH (const Akonadi::Collection &collection, collections) {
+        //If we're monitoring collections somewhere in the tree we need to retrieve their ancestors now
+        if (collection.parentCollection() != m_rootCollection) {
+            retrieveAncestors(collection, false);
+        }
+    }
     collectionsFetched(collections);
 }
 
@@ -1486,9 +1528,14 @@ void EntityTreeModelPrivate::firstFetchJobDone(KJob *job)
         return;
     }
 
-    // It is quicker to recursively list from the root again than to do
-    // individual listings for each top level item from the first fetch.
-    fetchCollections(m_rootCollection, CollectionFetchJob::Recursive);
+    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
+    //Fetch the remainder of the monitored tree
+    if (!fetchJob->collections().isEmpty()) {
+        fetchCollections(fetchJob->collections(), CollectionFetchJob::Recursive);
+    } else {
+        m_collectionTreeFetched = true;
+        emit q_ptr->collectionTreeFetched(fetchJob->collections());
+    }
 }
 
 void EntityTreeModelPrivate::fetchTopLevelCollections() const

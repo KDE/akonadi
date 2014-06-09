@@ -460,6 +460,22 @@ public:
     void setListFilter(Akonadi::CollectionFetchScope::ListFilter filter);
 
     /**
+     * Monitors the specified collections and resets the model.
+     *
+     * @since 4.14
+     */
+    void setCollectionsMonitored(const Akonadi::Collection::List &collections);
+
+    /**
+     * Adds or removes a specific collection from the monitored set without resetting the model.
+     * Only call this if you're monitoring specific collections (not mimetype/resources/items).
+     *
+     * @since 4.14
+     * @see setCollectionsMonitored()
+     */
+    void setCollectionMonitored(const Akonadi::Collection &col, bool monitored = true);
+
+    /**
      * Sets the item population @p strategy of the model.
      */
     void setItemPopulationStrategy(ItemPopulationStrategy strategy);
@@ -689,10 +705,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void firstFetchJobDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void finalCollectionFetchJobDone(KJob *job))
 
     Q_PRIVATE_SLOT(d_func(), void itemsFetched(Akonadi::Item::List))
     Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))
-    Q_PRIVATE_SLOT(d_func(), void allCollectionsFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void firstCollectionsFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void collectionListFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void topLevelCollectionsFetched(Akonadi::Collection::List))
