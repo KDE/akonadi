@@ -29,6 +29,7 @@
 
 #include <libs/imapparser_p.h>
 #include <libs/protocol_p.h>
+#include <shared/akstandarddirs.h>
 
 #include <unistd.h>
 
@@ -45,6 +46,8 @@ PartStreamer::PartStreamer(Connection *connection, ImapStreamParser *parser,
     , mStreamParser(parser)
     , mItem(pimItem)
 {
+    // Make sure the file_db_data path exists
+    AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) );
 }
 
 PartStreamer::~PartStreamer()
