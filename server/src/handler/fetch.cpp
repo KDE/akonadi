@@ -44,8 +44,8 @@ bool Fetch::parseStream()
 
   // context
   connection()->context()->parseContext( m_streamParser );
-  // We require context in case we do RID or GID fetch
-  if ( connection()->context()->isEmpty() && mScope.scope() != Scope::Uid ) {
+  // We require context in case we do RID fetch
+  if ( connection()->context()->isEmpty() && mScope.scope() == Scope::Rid ) {
     throw HandlerException( "No FETCH context specified" );
   }
 
