@@ -69,19 +69,13 @@ public:
         Recursive
     };
 
-    enum ListingOrder {
-        NotFirstListing,
-        FirstListing
-    };
-
     void init(ChangeRecorder *monitor);
 
-    void fetchCollections(const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel, ListingOrder = NotFirstListing);
-    void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel, ListingOrder = NotFirstListing);
-    void fetchCollections(Akonadi::CollectionFetchJob *job, ListingOrder = NotFirstListing);
+    void fetchCollections(const Collection &collection, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
+    void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
+    void fetchCollections(Akonadi::CollectionFetchJob *job);
     void fetchItems(const Collection &collection);
     void collectionsFetched(const Akonadi::Collection::List &);
-    void firstCollectionsFetched(const Akonadi::Collection::List &);
     void collectionListFetched(const Akonadi::Collection::List &);
     void itemsFetched(const Akonadi::Item::List &items);
     void itemsFetched(const Collection::Id collectionId, const Akonadi::Item::List &items);
@@ -175,7 +169,6 @@ public:
     void serverStarted();
 
     void monitoredItemsRetrieved(KJob *job);
-    void firstFetchJobDone(KJob *job);
     void rootFetchJobDone(KJob *job);
     void fetchJobDone(KJob *job);
     void finalCollectionFetchJobDone(KJob *job);
