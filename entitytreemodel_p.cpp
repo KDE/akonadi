@@ -62,6 +62,20 @@ QMap<KJob *, QTime> jobTimeTracker;
 
 using namespace Akonadi;
 
+static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStrategy strategy)
+{
+    switch(strategy) {
+        case EntityTreeModel::FetchFirstLevelChildCollections:
+            return CollectionFetchJob::FirstLevel;
+        case EntityTreeModel::InvisibleCollectionFetch:
+        case EntityTreeModel::FetchCollectionsRecursive:
+        default:
+            break;
+    }
+    return CollectionFetchJob::Recursive;
+}
+
+
 EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     : q_ptr(parent)
     , m_rootNode(0)
@@ -288,7 +302,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
     runItemFetchJob(itemJob, parent);
 }
 
-void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job, EntityTreeModelPrivate::ListingOrder listing)
+void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
 {
     Q_Q(EntityTreeModel);
 
@@ -301,38 +315,27 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job, 
     } else {
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
-        if (listing != FirstListing) {
-            q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                       q, SLOT(collectionsFetched(Akonadi::Collection::List)));
-            q->connect(job, SIGNAL(result(KJob*)),
-                       q, SLOT(fetchJobDone(KJob*)));
-            q->connect(job, SIGNAL(result(KJob*)),
-                       q, SLOT(finalCollectionFetchJobDone(KJob*)));
-        } else {
-            q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                       q, SLOT(firstCollectionsFetched(Akonadi::Collection::List)));
-            q->connect(job, SIGNAL(result(KJob*)),
-                       q, SLOT(firstFetchJobDone(KJob*)));
-        }
+        q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                    q, SLOT(collectionsFetched(Akonadi::Collection::List)));
+        q->connect(job, SIGNAL(result(KJob*)),
+                    q, SLOT(fetchJobDone(KJob*)));
+        q->connect(job, SIGNAL(result(KJob*)),
+                    q, SLOT(finalCollectionFetchJobDone(KJob*)));
     }
     ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
-void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type, const ListingOrder listing)
+void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type)
 {
-    Q_Q(EntityTreeModel);
-    CollectionFetchJob *job = new CollectionFetchJob(collections, type, m_session);
-    fetchCollections(job, listing);
+    fetchCollections(new CollectionFetchJob(collections, type, m_session));
 }
 
-void EntityTreeModelPrivate::fetchCollections(const Collection &collection, CollectionFetchJob::Type type, const ListingOrder listing)
+void EntityTreeModelPrivate::fetchCollections(const Collection &collection, CollectionFetchJob::Type type)
 {
-    kDebug() << collection.id() << type << listing;
-    Q_Q(EntityTreeModel);
     Q_ASSERT(collection.isValid());
     CollectionFetchJob *job = new CollectionFetchJob(collection, type, m_session);
     job->setProperty(FetchCollectionId(), QVariant(collection.id()));
-    fetchCollections(job, listing);
+    fetchCollections(job);
 }
 
 // Specialization needs to be in the same namespace as the definition
@@ -439,6 +442,11 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
             dataChanged(collectionIndex, collectionIndex);
             emit q->collectionFetched(collectionId);
             continue;
+        }
+
+        //If we're monitoring collections somewhere in the tree we need to retrieve their ancestors now
+        if (collection.parentCollection() != m_rootCollection && m_monitor->collectionsMonitored().contains(collection)) {
+            retrieveAncestors(collection, false);
         }
 
         Collection parent = collection;
@@ -613,8 +621,10 @@ void EntityTreeModelPrivate::monitoredCollectionsChanged(const Akonadi::Collecti
     Q_UNUSED(monitored)
     if (monitored) {
         m_collectionTreeFetched = false;
-        //TODO m_collectionFetchStrategy;
-        fetchCollections(collection, CollectionFetchJob::Base, EntityTreeModelPrivate::FirstListing);
+
+        const CollectionFetchJob::Type fetchType = getFetchType(m_collectionFetchStrategy);
+        fetchCollections(collection, CollectionFetchJob::Base);
+        fetchCollections(collection, fetchType);
     } else {
         monitoredCollectionRemoved(collection);
     }
@@ -1449,33 +1459,18 @@ void EntityTreeModelPrivate::startFirstListJob()
     const bool multipleCollections = m_monitor->collectionsMonitored().size() > 1;
     const bool generalPopulation = !noMimetypes || (noMimetypes && noResources);
 
+    const CollectionFetchJob::Type fetchType = getFetchType(m_collectionFetchStrategy);
+
     //Collections can only be monitored if no resources and no mimetypes are monitored
     if (multipleCollections && noMimetypes && noResources) {
-        fetchCollections(m_monitor->collectionsMonitored(), CollectionFetchJob::Base, Akonadi::EntityTreeModelPrivate::FirstListing);
+        fetchCollections(m_monitor->collectionsMonitored(), CollectionFetchJob::Base);
+        fetchCollections(m_monitor->collectionsMonitored(), fetchType);
         return;
     }
 
     kDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
-    // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
-    // necessary.
-    // HACK: fix this for recursive listing if we filter on mimetypes that only exist deeper
-    // in the hierarchy
-    if ((m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections &&
-         generalPopulation)
-        /*|| ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )*/) {
-        fetchCollections(m_rootCollection, CollectionFetchJob::FirstLevel);
-    }
-
-    // On start we first fetch the top-level collections to give a more convincing
-    // illusion of speed. That's what the FirstListing stuff is for.
-    if ((m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive) &&
-        generalPopulation) {
-        fetchCollections(m_rootCollection, CollectionFetchJob::FirstLevel, FirstListing);
-    }
-
-    if ((m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) &&
-        generalPopulation) {
-        fetchCollections(m_rootCollection, CollectionFetchJob::Recursive, FirstListing);
+    if (generalPopulation) {
+        fetchCollections(m_rootCollection, fetchType);
     }
 
     // If the root collection is not collection::root, then it could have items, and they will need to be
@@ -1506,33 +1501,8 @@ void EntityTreeModelPrivate::finalCollectionFetchJobDone(KJob *job)
     }
 
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
-    m_collectionTreeFetched = true;
-    emit q_ptr->collectionTreeFetched(fetchJob->collections());
-}
-
-void EntityTreeModelPrivate::firstCollectionsFetched(const Akonadi::Collection::List &collections)
-{
-    Q_FOREACH (const Akonadi::Collection &collection, collections) {
-        //If we're monitoring collections somewhere in the tree we need to retrieve their ancestors now
-        if (collection.parentCollection() != m_rootCollection) {
-            retrieveAncestors(collection, false);
-        }
-    }
-    collectionsFetched(collections);
-}
-
-void EntityTreeModelPrivate::firstFetchJobDone(KJob *job)
-{
-    if (job->error()) {
-        kWarning() << job->errorString();
-        return;
-    }
-
-    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
-    //Fetch the remainder of the monitored tree
-    if (!fetchJob->collections().isEmpty()) {
-        fetchCollections(fetchJob->collections(), CollectionFetchJob::Recursive);
-    } else {
+    //Can happen when monitoring resources
+    if (!m_collectionTreeFetched) {
         m_collectionTreeFetched = true;
         emit q_ptr->collectionTreeFetched(fetchJob->collections());
     }
@@ -1581,16 +1551,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
             }
 
             Q_ASSERT(collection.isValid());
-            CollectionFetchJob *job = new CollectionFetchJob(collection, CollectionFetchJob::Recursive, m_session);
-            job->fetchScope().setListFilter(m_listFilter);
-
-            job->fetchScope().setIncludeStatistics(m_includeStatistics);
-            job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
-            q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                       q, SLOT(collectionsFetched(Akonadi::Collection::List)));
-            q->connect(job, SIGNAL(result(KJob*)),
-                       q, SLOT(fetchJobDone(KJob*)));
-            ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
+            fetchCollections(collection, CollectionFetchJob::Recursive);
         }
     }
 }
