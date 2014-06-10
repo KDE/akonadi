@@ -104,11 +104,11 @@ void SearchManager::init(const QStringList& searchEngines)
   loadSearchPlugins();
 
   new SearchManagerAdaptor( this );
-
-  DBusConnectionPool::threadConnection().registerObject(
+  QDBusConnection::sessionBus().registerObject(
       QLatin1String( "/SearchManager" ),
       this,
       QDBusConnection::ExportAdaptors );
+
 
   // The timer will tick 15 seconds after last change notification. If a new notification
   // is delivered in the meantime, the timer is reset
