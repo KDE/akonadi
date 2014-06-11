@@ -34,6 +34,55 @@
 
 using namespace Akonadi;
 
+class ModelSignalSpy : public QObject {
+    Q_OBJECT
+public:
+    explicit ModelSignalSpy(QAbstractItemModel &model) {
+        connect(&model, SIGNAL(rowsInserted(QModelIndex, int, int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
+        connect(&model, SIGNAL(rowsRemoved(QModelIndex, int, int)), this, SLOT(onRowsRemoved(QModelIndex,int,int)));
+        connect(&model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), this, SLOT(onRowsMoved(QModelIndex,int,int, QModelIndex, int)));
+        connect(&model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onDataChanged(QModelIndex,QModelIndex)));
+        connect(&model, SIGNAL(layoutChanged()), this, SLOT(onLayoutChanged()));
+        connect(&model, SIGNAL(modelReset()), this, SLOT(onModelReset()));
+    }
+
+    QStringList mSignals;
+    QModelIndex parent;
+    int start;
+    int end;
+
+public Q_SLOTS:
+    void onRowsInserted(QModelIndex p, int s, int e) {
+        kDebug() << p << s << e;
+        kDebug() << p.data().toString();
+        mSignals << QLatin1String("rowsInserted");
+        parent = p;
+        start = s;
+        end = e;
+    }
+    void onRowsRemoved(QModelIndex p, int s, int e) {
+        mSignals << QLatin1String("rowsRemoved");
+        parent = p;
+        start = s;
+        end = e;
+    }
+    void onRowsMoved(QModelIndex,int,int,QModelIndex,int) {
+        mSignals << QLatin1String("rowsMoved");
+    }
+    void onDataChanged(QModelIndex s, QModelIndex e) {
+        kDebug() << s << e;
+        kDebug() << s.data().toString();
+        kDebug() << e.data().toString();
+        mSignals << QLatin1String("dataChanged");
+    }
+    void onLayoutChanged() {
+        mSignals << QLatin1String("layoutChanged");
+    }
+    void onModelReset() {
+        mSignals << QLatin1String("modelReset");
+    }
+};
+
 class InspectableETM: public EntityTreeModel
 {
 public:
@@ -270,6 +319,10 @@ void EtmPopulationTest::testReferenceCollection()
     //Check that this random other collection is actually available
     QVERIFY(getIndex("col1", model).isValid());
 
+    QTest::qWait(0);
+
+    ModelSignalSpy spy(*model);
+
     //Reference the collection and it should appear in the model
     model->setCollectionReferenced(col5, true);
 
@@ -277,6 +330,12 @@ void EtmPopulationTest::testReferenceCollection()
     QTRY_VERIFY(getIndex("col5", model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     //Check that this random other collection is still available
     QVERIFY(getIndex("col1", model).isValid());
+
+    //Ensure all signals have been delivered to the spy
+    QTest::qWait(0);
+    QCOMPARE(spy.mSignals.count("rowsInserted"), 1);
+    //Changes twice why?
+    QCOMPARE(spy.mSignals.count("dataChanged"), 2);
 
     //Dereference the collection and it should dissapear again
     model->setCollectionReferenced(col5, false);
