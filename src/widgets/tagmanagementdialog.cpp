@@ -38,7 +38,7 @@ struct TagManagementDialog::Private {
     Private(QDialog *parent)
         : d(parent)
     {
-    };
+    }
     void writeConfig();
     void readConfig();
     QDialog *d;

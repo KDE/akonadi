@@ -332,21 +332,21 @@ void ResourceSchedulerTest::testPriorities()
   scheduler.taskDone();
 
   QTest::qWait( 1 );
-  QCOMPARE( collectionTreeSyncSpy.count(), 1 );
+  QCOMPARE( collectionTreeSyncSpy.count(), 0 );
   QCOMPARE( changeReplaySpy.count(), 1 );
   QCOMPARE( syncSpy.count(), 0 );
   QCOMPARE( fullSyncSpy.count(), 0 );
   QCOMPARE( fetchSpy.count(), 1 );
-  QCOMPARE( attributesSyncSpy.count(), 0 );
+  QCOMPARE( attributesSyncSpy.count(), 1 );
   scheduler.taskDone();
 
   QTest::qWait( 1 );
   QCOMPARE( collectionTreeSyncSpy.count(), 1 );
   QCOMPARE( changeReplaySpy.count(), 1 );
-  QCOMPARE( syncSpy.count(), 1 );
+  QCOMPARE( syncSpy.count(), 0 );
   QCOMPARE( fullSyncSpy.count(), 0 );
   QCOMPARE( fetchSpy.count(), 1 );
-  QCOMPARE( attributesSyncSpy.count(), 0 );
+  QCOMPARE( attributesSyncSpy.count(), 1 );
   scheduler.taskDone();
 
   QTest::qWait( 1 );

@@ -125,7 +125,6 @@ class ItemDeleteTest : public QObject
       // Create tag
       Tag tag;
       tag.setName( QLatin1String( "Tag1" ) );
-      tag.setRemoteId( "Tag1" );
       tag.setGid( "Tag1" );
       TagCreateJob *tjob = new TagCreateJob( tag, this );
       AKVERIFYEXEC( tjob );
