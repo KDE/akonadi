@@ -167,7 +167,8 @@ public:
 
     void monitoredItemsRetrieved(KJob *job);
     void rootFetchJobDone(KJob *job);
-    void fetchJobDone(KJob *job);
+    void collectionFetchJobDone(KJob *job);
+    void itemFetchJobDone(KJob *job);
     void finalCollectionFetchJobDone(KJob *job);
     void updateJobDone(KJob *job);
     void pasteJobDone(KJob *job);
