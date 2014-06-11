@@ -508,6 +508,11 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 {
     Q_Q(EntityTreeModel);
 
+    if (!m_collections.contains(collectionId)) {
+        kWarning() << "Collection has been removed while fetching items";
+        return;
+    }
+
     Item::List itemsToInsert;
 
     const Collection collection = m_collections.value(collectionId);
@@ -1317,6 +1322,10 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
 
     if (job->error()) {
         kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
+        return;
+    }
+    if (!m_collections.contains(collectionId)) {
+        kWarning() << "Collection has been removed while fetching items";
         return;
     }
     ItemFetchJob *iJob = static_cast<ItemFetchJob *>(job);
