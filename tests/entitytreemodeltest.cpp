@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 #include <QTimer>
 
@@ -66,8 +66,12 @@ static const QString serverContent1 =
 
 /**
  * This test verifies that the ETM reacts as expected to signals from the monitor.
- * 
+ *
  * The tested ETM is only talking to fake components so the reaction of the ETM to each signal can be tested.
+ *
+ * WARNING: This test does no handle jobs issued by the model. It simply shortcuts (calls emitResult) them, and the connected
+ * slots are never executed (because the eventloop is not run after emitResult is called).
+ * This test therefore only tests the reaction of the model to signals of the monitor and not the overall behaviour.
  */
 class EntityTreeModelTest : public QObject
 {
@@ -212,18 +216,25 @@ void EntityTreeModelTest::testInitialFetch()
   expectedSignals << getExpectedSignal( RowsInserted, 0, 1, "Col 6" );
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, "Col 7" );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 3, "Col 7" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 1" );
+  expectedSignals << getExpectedSignal( DataChanged, 3, 3, QVariantList() << "Col 3" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 4" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 5" );
+  expectedSignals << getExpectedSignal( DataChanged, 2, 2, QVariantList() << "Col 2" );
+  expectedSignals << getExpectedSignal( DataChanged, 1, 1, QVariantList() << "Col 6" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 7" );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
   // Give the model a chance to run the event loop to process the signals.
-  QTest::qWait(0);
+  QTest::qWait(10);
 
   // We get all the signals we expected.
-  QVERIFY(m_modelSpy->expectedSignals().isEmpty());
+  QTRY_VERIFY(m_modelSpy->expectedSignals().isEmpty());
 
+  QTest::qWait(10);
   // We didn't get signals we didn't expect.
-  // TODO: Currently we get data changed signals about fetch completed etc which are not handled by the test currently.
-//   QVERIFY( m_modelSpy->isEmpty() );
+  QVERIFY( m_modelSpy->isEmpty() );
 }
 
 void EntityTreeModelTest::testCollectionMove_data()
@@ -304,7 +315,6 @@ void EntityTreeModelTest::testCollectionAdded()
 
   QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
   FakeServerData *serverData = testDrivers.first;
-  Akonadi::EntityTreeModel *model = testDrivers.second;
 
   FakeCollectionAddedCommand *addCommand = new FakeCollectionAddedCommand( addedCollection, parentCollection, serverData );
 
