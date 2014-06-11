@@ -1706,7 +1706,7 @@ void EntityTreeModelPrivate::dataChanged(const QModelIndex &top, const QModelInd
 
     QModelIndex rightIndex;
 
-    Node *node = reinterpret_cast<Node *>(bottom.internalPointer());
+    Node *node = static_cast<Node *>(bottom.internalPointer());
 
     if (!node) {
         return;
@@ -1740,7 +1740,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
 
     if ((collection == m_rootCollection)) {
         if (m_showRootCollection) {
-            return q->createIndex(0, 0, reinterpret_cast<void *>(m_rootNode));
+            return q->createIndex(0, 0, static_cast<void *>(m_rootNode));
         }
         return QModelIndex();
     }
@@ -1759,7 +1759,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
             }
 
             Node *node = it.value().at(row);
-            return q->createIndex(row, 0, reinterpret_cast<void *>(node));
+            return q->createIndex(row, 0, static_cast<void *>(node));
         }
         return QModelIndex();
     }
@@ -1772,7 +1772,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
 
     Node *node = m_childEntities.value(parentId).at(row);
 
-    return q->createIndex(row, 0, reinterpret_cast<void *>(node));
+    return q->createIndex(row, 0, static_cast<void *>(node));
 }
 
 QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
@@ -1788,7 +1788,7 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
         Q_ASSERT(row < nodeList.size());
         Node *node = nodeList.at(row);
 
-        indexes << q->createIndex(row, 0, reinterpret_cast<void *>(node));
+        indexes << q->createIndex(row, 0, static_cast<void *>(node));
         return indexes;
     }
 
@@ -1802,7 +1802,7 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
         Q_ASSERT(row < nodeList.size());
         Node *node = nodeList.at(row);
 
-        indexes << q->createIndex(row, 0, reinterpret_cast<void *>(node));
+        indexes << q->createIndex(row, 0, static_cast<void *>(node));
     }
 
     return indexes;
