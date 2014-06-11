@@ -494,10 +494,15 @@ void LocalFoldersTest::testResourceScan()
     AKVERIFYEXEC(djob);
     djob = new CollectionDeleteJob(intruder, this);
     AKVERIFYEXEC(djob);
+
+    SpecialMailCollections::self()->destroy();
 }
 
 void LocalFoldersTest::testDefaultResourceJob()
 {
+    SpecialMailCollectionsTesting *scmt = SpecialMailCollectionsTesting::_t_self();
+    scmt->_t_setDefaultResourceId(QLatin1String("akonadi_maildir_resource"));
+
     // Initially the defaut maildir does not exist.
     QVERIFY(!QFile::exists(KGlobal::dirs()->localxdgdatadir() + QLatin1String("local-mail")));
 
