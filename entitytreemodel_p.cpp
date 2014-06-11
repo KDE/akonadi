@@ -185,52 +185,6 @@ void EntityTreeModelPrivate::serverStarted()
     endResetModel();
 }
 
-ItemFetchJob *EntityTreeModelPrivate::getItemFetchJob(const Collection &parent, const ItemFetchScope &scope) const
-{
-    Q_ASSERT(parent.isValid());
-    ItemFetchJob *itemJob = new Akonadi::ItemFetchJob(parent, m_session);
-    itemJob->setFetchScope(scope);
-    itemJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
-    itemJob->fetchScope().setIgnoreRetrievalErrors(true);
-    itemJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
-    return itemJob;
-}
-
-ItemFetchJob *EntityTreeModelPrivate::getItemFetchJob(const Item &item, const ItemFetchScope &scope) const
-{
-    ItemFetchJob *itemJob = new Akonadi::ItemFetchJob(item, m_session);
-    itemJob->setFetchScope(scope);
-    itemJob->fetchScope().setIgnoreRetrievalErrors(true);
-    return itemJob;
-}
-
-void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const Collection &parent) const
-{
-    Q_Q(const EntityTreeModel);
-    itemFetchJob->setProperty(FetchCollectionId(), QVariant(parent.id()));
-
-    if (m_showRootCollection || parent != m_rootCollection) {
-        m_pendingCollectionRetrieveJobs.insert(parent.id());
-
-        // If collections are not in the model, there will be no valid index for them.
-        if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
-            // We need to invoke this delayed because we would otherwise be emitting a sequence like
-            // - beginInsertRows
-            // - dataChanged
-            // - endInsertRows
-            // which would confuse proxies.
-            QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
-        }
-    }
-
-    q->connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
-               q, SLOT(itemsFetched(Akonadi::Item::List)));
-    q->connect(itemFetchJob, SIGNAL(result(KJob*)),
-               q, SLOT(fetchJobDone(KJob*)));
-    ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
-}
-
 void EntityTreeModelPrivate::changeFetchState(const Collection &parent)
 {
     Q_Q(EntityTreeModel);
@@ -294,12 +248,38 @@ void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged(const QString &,
 
 void EntityTreeModelPrivate::fetchItems(const Collection &parent)
 {
+    Q_Q(const EntityTreeModel);
     Q_ASSERT(parent.isValid());
     Q_ASSERT(m_collections.contains(parent.id()));
     // TODO: Use a more specific fetch scope to get only the envelope for mails etc.
-    ItemFetchJob *itemJob = getItemFetchJob(parent, m_monitor->itemFetchScope());
+    ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob(parent, m_session);
+    itemFetchJob->setFetchScope(m_monitor->itemFetchScope());
+    itemFetchJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
+    itemFetchJob->fetchScope().setIgnoreRetrievalErrors(true);
+    itemFetchJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
 
-    runItemFetchJob(itemJob, parent);
+    itemFetchJob->setProperty(FetchCollectionId(), QVariant(parent.id()));
+
+    if (m_showRootCollection || parent != m_rootCollection) {
+        m_pendingCollectionRetrieveJobs.insert(parent.id());
+
+        // If collections are not in the model, there will be no valid index for them.
+        if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
+            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
+            // We need to invoke this delayed because we would otherwise be emitting a sequence like
+            // - beginInsertRows
+            // - dataChanged
+            // - endInsertRows
+            // which would confuse proxies.
+            QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
+        }
+    }
+
+    q->connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+               q, SLOT(itemsFetched(Akonadi::Item::List)));
+    q->connect(itemFetchJob, SIGNAL(result(KJob*)),
+               q, SLOT(fetchJobDone(KJob*)));
+    ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
 }
 
 void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
