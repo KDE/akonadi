@@ -1386,6 +1386,7 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
         kWarning() << "Job error:" << job->errorString();
     } else {
 
+        //FIXME: This seems pretty pointless since we'll get an update through the monitor anyways
         ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob *>(job);
         if (!modifyJob) {
             return;
@@ -1401,11 +1402,6 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
         foreach (const QModelIndex &index, list) {
             dataChanged(index, index);
         }
-
-        // TODO: Is this trying to do the job of collectionstatisticschanged?
-//     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
-//     Collection result = csjob->collection();
-//     collectionStatisticsChanged( result.id(), csjob->statistics() );
     }
 }
 
