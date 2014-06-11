@@ -32,7 +32,7 @@ struct TagManagementDialog::Private {
     Private(KDialog *parent)
         : d(parent)
     {
-    };
+    }
     void writeConfig();
     void readConfig();
     KDialog *d;
