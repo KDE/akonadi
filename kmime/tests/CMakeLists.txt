@@ -54,9 +54,8 @@ macro(add_akonadi_isolated_test _source)
 endmacro()
 
 
-
-
-add_akonadi_isolated_test( localfolderstest.cpp )
-add_akonadi_isolated_test( localfoldersrequestjobtest.cpp )
-add_akonadi_isolated_test( racetest.cpp )
-
+if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
+  add_akonadi_isolated_test( localfolderstest.cpp )
+  add_akonadi_isolated_test( localfoldersrequestjobtest.cpp )
+  add_akonadi_isolated_test( racetest.cpp )
+endif()
