@@ -38,6 +38,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/control.h>
+#include <akonadi/servermanager.h>
 #include <akonadi/qtest_akonadi.h>
 #include "../../specialcollectionattribute_p.h"
 #include "../../specialcollections_p.h"
@@ -87,7 +88,11 @@ void LocalFoldersTest::initTestCase()
 
 void LocalFoldersTest::testLock()
 {
-    const QString dbusName = QString::fromLatin1("org.kde.pim.SpecialCollections");
+    QString dbusName = QString::fromLatin1("org.kde.pim.SpecialCollections");
+    if (ServerManager::hasInstanceIdentifier()) {
+      dbusName += Akonadi::ServerManager::instanceIdentifier();
+    }
+
 
     // Initially not locked.
     QVERIFY(!DBusConnectionPool::threadConnection().interface()->isServiceRegistered(dbusName));
