@@ -29,6 +29,9 @@ class ItemTest : public QObject
     void testMultipart();
     void testInheritance();
     void testParentCollection();
+
+    void testComparision_data();
+    void testComparision();
 };
 
 #endif

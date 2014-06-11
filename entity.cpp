@@ -101,12 +101,13 @@ bool Entity::isValid() const
 
 bool Entity::operator==(const Entity &other) const
 {
-    return (d_ptr->mId == other.d_ptr->mId);
+    // Invalid items are the same, no matter what their internal ID is
+    return (!isValid() && !other.isValid()) || (d_ptr->mId == other.d_ptr->mId);
 }
 
 bool Akonadi::Entity::operator!=(const Entity &other) const
 {
-    return d_ptr->mId != other.d_ptr->mId;
+    return (isValid() || other.isValid()) && (d_ptr->mId != other.d_ptr->mId);
 }
 
 Entity &Entity ::operator=(const Entity &other)
