@@ -38,7 +38,8 @@ SpecialMailCollectionsTesting *SpecialMailCollectionsTesting::_t_self()
 
 void SpecialMailCollectionsTesting::_t_setDefaultResourceId(const QString &resourceId)
 {
-    Settings::setDefaultResourceId(resourceId);
+    Settings::self()->defaultResourceIdItem()->setValue(resourceId);
+    Settings::self()->writeConfig();
 }
 
 void SpecialMailCollectionsTesting::_t_forgetFoldersForResource(const QString &resourceId)
