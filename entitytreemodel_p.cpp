@@ -278,7 +278,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
     q->connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
                q, SLOT(itemsFetched(Akonadi::Item::List)));
     q->connect(itemFetchJob, SIGNAL(result(KJob*)),
-               q, SLOT(fetchJobDone(KJob*)));
+               q, SLOT(itemFetchJobDone(KJob*)));
     ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
 }
 
@@ -298,10 +298,10 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                     q, SLOT(collectionsFetched(Akonadi::Collection::List)));
         q->connect(job, SIGNAL(result(KJob*)),
-                    q, SLOT(fetchJobDone(KJob*)));
-        q->connect(job, SIGNAL(result(KJob*)),
                     q, SLOT(finalCollectionFetchJobDone(KJob*)));
     }
+    q->connect(job, SIGNAL(result(KJob*)),
+                q, SLOT(collectionFetchJobDone(KJob*)));
     ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
@@ -314,7 +314,6 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
 {
     Q_ASSERT(collection.isValid());
     CollectionFetchJob *job = new CollectionFetchJob(collection, type, m_session);
-    job->setProperty(FetchCollectionId(), QVariant(collection.id()));
     fetchCollections(job);
 }
 
@@ -659,7 +658,7 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    q, SLOT(ancestorsFetched(Akonadi::Collection::List)));
         q->connect(job, SIGNAL(result(KJob*)),
-                   q, SLOT(fetchJobDone(KJob*)));
+                   q, SLOT(collectionFetchJobDone(KJob*)));
     }
 
 //  Q_ASSERT( parentCollection != m_rootCollection );
@@ -1294,55 +1293,58 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     q->endRemoveRows();
 }
 
-void EntityTreeModelPrivate::fetchJobDone(KJob *job)
+void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 {
-    //This id is only valid for single collection fetchJobs
-    const Collection::Id collectionId = job->property(FetchCollectionId()).value<Collection::Id>();
-
+    CollectionFetchJob *cJob = static_cast<CollectionFetchJob *>(job);
     if (job->error()) {
-        kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
-        return; // let's be safe, otherwise emitting dataChanged will get us into loops
+        kWarning() << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
+        return;
     }
 
 #ifdef DBG_TRACK_JOB_TIMES
     kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    if (CollectionFetchJob *cJob = dynamic_cast<CollectionFetchJob *>(job)) {
-        kDebug() << "was collection fetch job: collections:" << cJob->collections().size();
-        if (!cJob->collections().isEmpty()) {
-            kDebug() << "first fetched collection:" << cJob->collections().first().name();
-        }
-    } else if (ItemFetchJob *iJob = dynamic_cast<ItemFetchJob *>(job)) {
-        kDebug() << "was item fetch job: items:" << iJob->items().size();
-        if (!iJob->items().isEmpty()) {
-            kDebug() << "first item collection:" << iJob->items().first().parentCollection().name();
-        }
+    kDebug() << "was collection fetch job: collections:" << cJob->collections().size();
+    if (!cJob->collections().isEmpty()) {
+        kDebug() << "first fetched collection:" << cJob->collections().first().name();
     }
 #endif
-    if (ItemFetchJob *iJob = dynamic_cast<ItemFetchJob *>(job)) {
-        if (!iJob->count()) {
-            m_collectionsWithoutItems.insert(collectionId);
-        } else {
-            m_collectionsWithoutItems.remove(collectionId);
-        }
+}
 
-        m_populatedCols.insert(collectionId);
-        emit q_ptr->collectionPopulated(collectionId);
-        m_pendingCollectionRetrieveJobs.remove(collectionId);
+void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
+{
+    const Collection::Id collectionId = job->property(FetchCollectionId()).value<Collection::Id>();
+    m_pendingCollectionRetrieveJobs.remove(collectionId);
+
+    if (job->error()) {
+        kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
+        return;
+    }
+    ItemFetchJob *iJob = static_cast<ItemFetchJob *>(job);
+
+#ifdef DBG_TRACK_JOB_TIMES
+    kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
+    kDebug() << "was item fetch job: items:" << iJob->items().size();
+    if (!iJob->items().isEmpty()) {
+        kDebug() << "first item collection:" << iJob->items().first().parentCollection().name();
+    }
+#endif
+
+    if (!iJob->count()) {
+        m_collectionsWithoutItems.insert(collectionId);
     } else {
-        CollectionFetchJob *collectionFetchJob = static_cast<CollectionFetchJob*>(job);
-        Q_FOREACH (const Akonadi::Collection &col, collectionFetchJob->collections()) {
-            if (!m_showRootCollection &&
-                collectionId == m_rootCollection.id()) {
-                continue;
-            }
-            // If collections are not in the model, there will be no valid index for them.
-            if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-                (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
-                const QModelIndex index = indexForCollection(col);
-                Q_ASSERT(index.isValid());
-                emit dataChanged(index, index);
-            }
-        }
+        m_collectionsWithoutItems.remove(collectionId);
+    }
+
+    m_populatedCols.insert(collectionId);
+    emit q_ptr->collectionPopulated(collectionId);
+
+    // If collections are not in the model, there will be no valid index for them.
+    if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
+        (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
+        const QModelIndex index = indexForCollection(Collection(collectionId));
+        Q_ASSERT(index.isValid());
+        //To notify about the changed fetch and population state
+        emit dataChanged(index, index);
     }
 }
 
@@ -1504,7 +1506,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
     q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
     q->connect(job, SIGNAL(result(KJob*)),
-               q, SLOT(fetchJobDone(KJob*)));
+               q, SLOT(collectionFetchJobDone(KJob*)));
     ifDebug(kDebug() << ""; jobTimeTracker[job].start();)
 }
 

@@ -709,7 +709,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
     Q_PRIVATE_SLOT(d_func(), void serverStarted())
 
-    Q_PRIVATE_SLOT(d_func(), void fetchJobDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void itemFetchJobDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void collectionFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void rootFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
