@@ -24,20 +24,24 @@
 #include "monitor.h"
 #include "tageditwidget_p.h"
 
+#include <KConfigGroup>
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace Akonadi;
 
 struct TagSelectionDialog::Private {
-    Private(KDialog *parent)
+    Private(QDialog *parent)
         : d(parent)
         , mTagWidget(0)
     {
     }
     void writeConfig();
     void readConfig();
-    KDialog *d;
+    QDialog *d;
     Akonadi::TagEditWidget *mTagWidget;
 };
 
@@ -57,19 +61,24 @@ void TagSelectionDialog::Private::readConfig()
 }
 
 TagSelectionDialog::TagSelectionDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(this))
 {
-    setCaption(i18nc("@title:window", "Manage Tags"));
-    setButtons(KDialog::Ok | KDialog::Cancel);
-    setDefaultButton(KDialog::Ok);
+    setWindowTitle(i18nc("@title:window", "Manage Tags"));
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
 
     Monitor *monitor = new Monitor(this);
     monitor->setTypeMonitored(Monitor::Tags);
 
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
     d->mTagWidget = new Akonadi::TagEditWidget(model, this, true);
-    setMainWidget(d->mTagWidget);
+
+    vbox->addWidget(d->mTagWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
+    vbox->addWidget(buttonBox);
 
     d->readConfig();
 }

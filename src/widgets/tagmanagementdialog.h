@@ -24,7 +24,7 @@
 
 #include "akonadiwidgets_export.h"
 
-#include <KDialog>
+#include <QDialog>
 #include "tag.h"
 
 namespace Akonadi {
@@ -34,7 +34,7 @@ namespace Akonadi {
  *
  * @since 4.13
  */
-class AKONADIWIDGETS_EXPORT TagManagementDialog : public KDialog
+class AKONADIWIDGETS_EXPORT TagManagementDialog : public QDialog
 {
     Q_OBJECT
 public:

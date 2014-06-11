@@ -24,7 +24,7 @@
 
 #include "akonadiwidgets_export.h"
 
-#include <KDialog>
+#include <QDialog>
 
 #include "tag.h"
 
@@ -36,7 +36,7 @@ namespace Akonadi {
  * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
  * @since 4.13
  */
-class AKONADIWIDGETS_EXPORT TagSelectionDialog : public KDialog
+class AKONADIWIDGETS_EXPORT TagSelectionDialog : public QDialog
 {
     Q_OBJECT
 public:
