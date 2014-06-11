@@ -24,7 +24,6 @@
 #include "monitor.h"
 #include "tageditwidget_p.h"
 
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KSharedConfig>
 

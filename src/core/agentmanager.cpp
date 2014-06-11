@@ -30,7 +30,6 @@
 #include <QtDBus/QDBusServiceWatcher>
 #include <QWidget>
 
-#include <KGlobal>
 #include <KLocale>
 #include <KLocalizedString>
 

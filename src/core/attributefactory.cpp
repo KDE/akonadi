@@ -29,8 +29,6 @@
 #include "tagattribute.h"
 #include "entityannotationsattribute.h"
 
-#include <KGlobal>
-
 #include <QtCore/QHash>
 
 using namespace Akonadi;
