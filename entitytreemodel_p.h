@@ -123,9 +123,6 @@ public:
      */
     void fillModel();
 
-    ItemFetchJob *getItemFetchJob(const Collection &parent, const ItemFetchScope &scope) const;
-    ItemFetchJob *getItemFetchJob(const Item &item, const ItemFetchScope &scope) const;
-    void runItemFetchJob(ItemFetchJob *itemFetchJob, const Collection &parent) const;
     void changeFetchState(const Collection &parent);
     void agentInstanceAdvancedStatusChanged(const QString &, const QVariantMap &);
     void agentInstanceRemoved(const Akonadi::AgentInstance &instace);
