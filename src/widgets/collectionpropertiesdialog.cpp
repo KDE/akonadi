@@ -26,7 +26,7 @@
 #include "collectionmodifyjob.h"
 
 #include <qdebug.h>
-#include <kglobal.h>
+
 #include <ksharedconfig.h>
 #include <qtabwidget.h>
 

@@ -26,7 +26,7 @@
 
 #include <klocale.h>
 #include <klocalizedstring.h>
-#include <kglobal.h>
+
 #include <KLocale>
 
 using namespace Akonadi;

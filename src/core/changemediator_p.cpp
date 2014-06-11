@@ -30,7 +30,7 @@
 #include "collection.h"
 #include "item.h"
 
-#include <kglobal.h>
+
 
 //static const char mediatorSessionId[] = "MediatorSession"; TODO: remove?
 
