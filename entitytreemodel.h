@@ -579,6 +579,17 @@ public:
     bool isCollectionPopulated(Akonadi::Collection::Id) const;
 
     /**
+     * Returns whether the model is fully populated.
+     *
+     * Returns true once the collection tree has been fetched and all collections have been populated.
+     *
+     * @see isCollectionPopulated
+     * @see isCollectionTreeFetched
+     * @since 4.14
+     */
+    bool isFullyPopulated() const;
+
+    /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
     virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;

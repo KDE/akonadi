@@ -962,6 +962,12 @@ bool EntityTreeModel::isCollectionPopulated(Collection::Id id) const
     return d->m_populatedCols.contains(id);
 }
 
+bool EntityTreeModel::isFullyPopulated() const
+{
+    Q_D(const EntityTreeModel);
+    return d->m_collectionTreeFetched && d->m_pendingCollectionRetrieveJobs.isEmpty();
+}
+
 bool EntityTreeModel::entityMatch(const Item &item, const QVariant &value, Qt::MatchFlags flags) const
 {
     Q_UNUSED(item);
