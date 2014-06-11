@@ -314,12 +314,10 @@ void EtmPopulationTest::testReferenceCollection()
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
     model->setListFilter(Akonadi::CollectionFetchScope::Display);
 
-    QTRY_VERIFY(model->isCollectionTreeFetched());
+    QTRY_VERIFY(model->isFullyPopulated());
     QVERIFY(!getIndex("col5", model).isValid());
     //Check that this random other collection is actually available
     QVERIFY(getIndex("col1", model).isValid());
-
-    QTest::qWait(0);
 
     ModelSignalSpy spy(*model);
 
@@ -330,12 +328,14 @@ void EtmPopulationTest::testReferenceCollection()
     QTRY_VERIFY(getIndex("col5", model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     //Check that this random other collection is still available
     QVERIFY(getIndex("col1", model).isValid());
+    //Verify the etms collection has been updated accordingly
+    QTRY_VERIFY(getIndex("col5", model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
 
     //Ensure all signals have been delivered to the spy
     QTest::qWait(0);
     QCOMPARE(spy.mSignals.count("rowsInserted"), 1);
-    //Changes twice why?
-    QCOMPARE(spy.mSignals.count("dataChanged"), 2);
+    //Signals for item fetch state and a data-changed signal from the referencing
+    QCOMPARE(spy.mSignals.count("dataChanged"), 3);
 
     //Dereference the collection and it should dissapear again
     model->setCollectionReferenced(col5, false);
