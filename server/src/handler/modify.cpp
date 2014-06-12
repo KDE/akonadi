@@ -34,6 +34,9 @@
 #include <search/searchmanager.h>
 #include <akdebug.h>
 #include <cachecleaner.h>
+#include <collectionreferencemanager.h>
+#include <akonadi.h>
+#include <intervalcheck.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -253,6 +256,18 @@ bool Modify::parseStream()
       if ( tristate != collection.indexPref() ) {
         collection.setIndexPref ( tristate );
         changes.append( AKONADI_PARAM_INDEX );
+      }
+    } else if ( type == AKONADI_PARAM_REFERENCED ) {
+      //Not actually a tristate
+      const bool reference = ( getTristateValue( line, pos ) == Tristate::True );
+      connection()->collectionReferenceManager()->referenceCollection(connection()->sessionId(), collection, reference);
+      const bool referenced = connection()->collectionReferenceManager()->isReferenced(collection.id());
+      if ( referenced != collection.referenced() ) {
+        collection.setReferenced( referenced );
+        if ( AkonadiServer::instance()->intervalChecker() && referenced ) {
+          AkonadiServer::instance()->intervalChecker()->requestCollectionSync( collection );
+        }
+        changes.append( AKONADI_PARAM_REFERENCED );
       }
     } else if ( type.isEmpty() ) {
       break; // input end

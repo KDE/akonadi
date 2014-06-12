@@ -164,6 +164,12 @@ void NotificationManager::emitPendingNotifications()
 QDBusObjectPath NotificationManager::subscribeV2( const QString &identifier, bool serverSideMonitor )
 {
   akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
+  return subscribeV3( identifier, serverSideMonitor, false );
+}
+
+QDBusObjectPath NotificationManager::subscribeV3( const QString &identifier, bool serverSideMonitor, bool exclusive )
+{
+  akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor << exclusive;
 
   NotificationSource *source = mNotificationSources.value( identifier );
   if ( source ) {
@@ -175,6 +181,7 @@ QDBusObjectPath NotificationManager::subscribeV2( const QString &identifier, boo
 
   registerSource( source );
   source->setServerSideMonitorEnabled( serverSideMonitor );
+  source->setExclusive( exclusive );
 
   // The path is /subscriber/escaped_identifier. We want to extract
   // the escaped_identifier and emit it in subscribed() instead of the original

@@ -131,6 +131,7 @@
 #define AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING "QUERYSTRING"
 #define AKONADI_PARAM_QUERY                        "QUERY"
 #define AKONADI_PARAM_RECURSIVE                    "RECURSIVE"
+#define AKONADI_PARAM_REFERENCED                   "REFERENCED"
 #define AKONADI_PARAM_REMOTE                       "REMOTE"
 #define AKONADI_PARAM_REMOTEID                     "REMOTEID"
 #define AKONADI_PARAM_REMOTEREVISION               "REMOTEREVISION"

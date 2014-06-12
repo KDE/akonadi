@@ -95,7 +95,7 @@ class HandlerHelper
       the effective cache policy
     */
     static QByteArray collectionToByteArray( const Collection &col, bool hidden = false, bool includeStatistics = false,
-                                             int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>() );
+                                             int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), bool isReferenced = false );
 
     /**
       Returns the protocol representation of a collection ancestor chain.

@@ -37,6 +37,7 @@ class Response;
 class DataStore;
 class Collection;
 class ImapStreamParser;
+class CollectionReferenceManager;
 
 /**
     An Connection represents one connection of a client to the server.
@@ -51,6 +52,8 @@ public:
     static int protocolVersion();
 
     virtual DataStore *storageBackend();
+
+    CollectionReferenceManager *collectionReferenceManager();
 
     CommandContext *context() const;
 

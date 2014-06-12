@@ -212,7 +212,7 @@ QByteArray HandlerHelper::tristateToByteArray( const Tristate &tristate )
 }
 
 QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hidden, bool includeStatistics,
-                                                 int ancestorDepth, const QStack<Collection> &ancestors )
+                                                 int ancestorDepth, const QStack<Collection> &ancestors, bool isReferenced )
 {
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
@@ -257,6 +257,9 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
     b += HandlerHelper::ancestorsToByteArray( ancestorDepth, ancestors ) + ' ';
   }
 
+  if ( isReferenced ) {
+    b += AKONADI_PARAM_REFERENCED " TRUE ";
+  }
   b += AKONADI_PARAM_ENABLED " ";
   if ( col.enabled() ) {
     b += "TRUE ";

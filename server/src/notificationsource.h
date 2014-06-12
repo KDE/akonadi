@@ -95,6 +95,9 @@ class NotificationSource : public QObject
     void setServerSideMonitorEnabled( bool enabled );
     bool isServerSideMonitorEnabled() const;
 
+    void setExclusive( bool exclusive );
+    bool isExclusive() const;
+
     bool acceptsNotification( const NotificationMessageV3 &notification );
 
   public Q_SLOTS:
@@ -153,6 +156,7 @@ class NotificationSource : public QObject
 
     bool mServerSideMonitorEnabled;
     bool mAllMonitored;
+    bool mExclusive;
     QSet<Entity::Id> mMonitoredCollections;
     QSet<Entity::Id> mMonitoredItems;
     QSet<Entity::Id> mMonitoredTags;
