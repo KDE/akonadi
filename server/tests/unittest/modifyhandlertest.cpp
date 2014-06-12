@@ -122,19 +122,6 @@ private Q_SLOTS:
 
             QTest::newRow("local override enable") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(true);
         }
-        {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY 5 ENABLED TRUE SYNC FALSE DISPLAY FALSE INDEX FALSE"
-                    << "S: 2 OK MODIFY done";
-
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
-            Akonadi::NotificationMessageV3 subscribeNotification = notificationTemplate;
-            subscribeNotification.setOperation(NotificationMessageV2::Subscribe);
-
-            QTest::newRow("local override disable") << scenario <<  (QList<Akonadi::NotificationMessageV3>() << notification << subscribeNotification) << QVariant::fromValue(false);
-        }
     }
 
     void testModify()
