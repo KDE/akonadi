@@ -22,6 +22,7 @@
 
 #include "notificationsourceadaptor.h"
 #include "notificationmanager.h"
+#include "collectionreferencemanager.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -46,6 +47,7 @@ NotificationSource::NotificationSource( const QString &identifier, const QString
   , mClientWatcher( 0 )
   , mServerSideMonitorEnabled( false )
   , mAllMonitored( false )
+  , mExclusive( false )
 {
   new NotificationSourceAdaptor( this );
 
@@ -108,6 +110,16 @@ bool NotificationSource::isServerSideMonitorEnabled() const
 void NotificationSource::setServerSideMonitorEnabled( bool enabled )
 {
   mServerSideMonitorEnabled = enabled;
+}
+
+bool NotificationSource::isExclusive() const
+{
+  return mExclusive;
+}
+
+void NotificationSource::setExclusive( bool enabled )
+{
+  mExclusive = enabled;
 }
 
 void NotificationSource::addClientServiceName( const QString &clientServiceName )
@@ -326,6 +338,19 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
 
   if ( notification.entities().count() == 0 ) {
     return false;
+  }
+
+  //Only emit notifications for referenced collections if the subscriber is exclusive or monitors the collection
+  if ( notification.type() == NotificationMessageV2::Collections ) {
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+      if ( CollectionReferenceManager::instance()->isReferenced( entity.id ) ) {
+        return ( mExclusive || isCollectionMonitored( entity.id ) );
+      }
+    }
+  } else if ( notification.type() == NotificationMessageV2::Items ) {
+      if ( CollectionReferenceManager::instance()->isReferenced( notification.parentCollection() ) ) {
+        return ( mExclusive || isCollectionMonitored( notification.parentCollection() ) || isMoveDestinationResourceMonitored( notification ) );
+      }
   }
 
   // user requested everything

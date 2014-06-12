@@ -28,6 +28,7 @@
 #include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
 #include "tracer.h"
+#include "collectionreferencemanager.h"
 
 #include "preprocessormanageradaptor.h"
 
@@ -231,8 +232,8 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
   Q_ASSERT_X( item.hidden(), "PreprocessorManager::beginHandleItem()", "The item you pass to this function should be hidden!" );
 #endif
 
-  if ( mPreprocessorChain.isEmpty() ) {
-    // No preprocessors at all: immediately end handling the item.
+  if ( mPreprocessorChain.isEmpty() || CollectionReferenceManager::instance()->isReferenced( item.collectionId() ) ) {
+    // No preprocessors at all or referenced collection: immediately end handling the item.
     lockedEndHandleItem( item.id() );
     return;
   }

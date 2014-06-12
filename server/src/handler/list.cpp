@@ -29,6 +29,7 @@
 #include "response.h"
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
+#include "collectionreferencemanager.h"
 
 #include <libs/protocol_p.h>
 #include <storage/collectionqueryhelper.h>
@@ -90,6 +91,32 @@ bool List::listCollection( const Collection &root, int depth, const QStack<Colle
     }
   }
 
+  const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced( root.id(), connection()->sessionId() );
+  //The collection is referenced, but not from this session.
+  if ( root.referenced() && !isReferencedFromSession ) {
+    //Don't include the collection when only looking for enabled collections
+    if ( mEnabledCollections && !root.enabled() ) {
+      return false;
+    }
+    //Don't include the collection when only looking for collections to display/index/sync
+    if ( mCollectionsToDisplay &&
+            ( ( ( root.displayPref() == Tristate::Undefined ) && !root.enabled() ) ||
+              ( root.displayPref() == Tristate::False ) ) ) {
+      return false;
+    }
+    if ( mCollectionsToIndex &&
+            ( ( ( root.indexPref() == Tristate::Undefined ) && !root.enabled() ) ||
+              ( root.indexPref() == Tristate::False ) ) ) {
+      return false;
+    }
+    //Single collection sync will still work since that is using a base fetch
+    if ( mCollectionsToSynchronize &&
+            ( ( ( root.syncPref() == Tristate::Undefined ) && !root.enabled() ) ||
+              ( root.syncPref() == Tristate::False ) ) ) {
+      return false;
+    }
+  }
+
   // filter if this node isn't needed by it's children
   const bool hidden = ( mResource.isValid() && root.resourceId() != mResource.id() )
       || ( !mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes() ) );
@@ -102,7 +129,7 @@ bool List::listCollection( const Collection &root, int depth, const QStack<Colle
   Collection dummy = root;
   DataStore *db = connection()->storageBackend();
   db->activeCachePolicy( dummy );
-  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors );
+  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors, isReferencedFromSession );
 
   Response response;
   response.setUntagged();
@@ -120,6 +147,7 @@ static Query::Condition filterCondition( const QString &column )
   andCondition.addValueCondition( column, Query::Equals, Akonadi::Server::Tristate::Undefined );
   andCondition.addValueCondition( Collection::enabledFullColumnName(), Query::Equals, true );
   orCondition.addCondition( andCondition );
+  orCondition.addValueCondition( Collection::referencedFullColumnName(), Query::Equals, true );
   return orCondition;
 }
 
@@ -133,7 +161,10 @@ Collection::List List::retrieveChildren( const QVariant &value )
   }
 
   if ( mEnabledCollections ) {
-    qb.addValueCondition( Collection::enabledFullColumnName(), Query::Equals, true );
+    Query::Condition orCondition( Query::Or );
+    orCondition.addValueCondition( Collection::enabledFullColumnName(), Query::Equals, true );
+    orCondition.addValueCondition( Collection::referencedFullColumnName(), Query::Equals, true );
+    qb.addCondition(orCondition);
   } else if ( mCollectionsToSynchronize ) {
     qb.addCondition( filterCondition( Collection::syncPrefFullColumnName() ) );
   } else if ( mCollectionsToDisplay ) {

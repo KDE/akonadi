@@ -39,6 +39,7 @@
 #include "search/searchmanager.h"
 #include "search/searchtaskmanagerthread.h"
 #include "response.h"
+#include "collectionreferencemanager.h"
 
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
@@ -221,6 +222,9 @@ bool AkonadiServer::init()
     // for the items as we don't actually know at which stage the
     // operation was interrupted...
     db->unhideAllPimItems();
+
+    // Cleanup referenced collections from the last run
+    CollectionReferenceManager::cleanup();
 
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin

@@ -1,0 +1,286 @@
+/*
+    Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+#include <QObject>
+#include <handler/modify.h>
+#include <imapstreamparser.h>
+#include <response.h>
+#include <storage/entity.h>
+
+#include "fakeakonadiserver.h"
+#include "fakedatastore.h"
+#include "aktest.h"
+#include "akdebug.h"
+#include "entities.h"
+#include "collectionreferencemanager.h"
+
+#include <QtTest/QTest>
+
+using namespace Akonadi;
+using namespace Akonadi::Server;
+
+Q_DECLARE_METATYPE(QList<Akonadi::NotificationMessageV3>)
+Q_DECLARE_METATYPE(Collection::List)
+
+class DbInitializer {
+public:
+
+    Resource createResource(const char *name)
+    {
+        Resource res;
+        res.setId(1);
+        res.setName(QLatin1String(name));
+        Q_ASSERT(res.insert());
+        mResource = res;
+        return res;
+    }
+
+    Collection createCollection(const char *name, const Collection &parent = Collection())
+    {
+        Collection col;
+        col.setParent(parent);
+        col.setName(QLatin1String(name));
+        col.setRemoteId(QLatin1String(name));
+        col.setResource(mResource);
+        Q_ASSERT(col.insert());
+        return col;
+    }
+
+    QByteArray toByteArray(bool enabled)
+    {
+        if (enabled) {
+            return "TRUE";
+        }
+        return "FALSE";
+    }
+
+    QByteArray listResponse(const Collection &col) {
+        QByteArray s;
+        s = "S: * " + QByteArray::number(col.id()) + " " + QByteArray::number(col.parentId()) + " (NAME \"" + col.name().toLatin1() +
+            "\" MIMETYPE () REMOTEID \"" + col.remoteId().toLatin1() +
+            "\" REMOTEREVISION \"\" RESOURCE \"" + mResource.name().toLatin1() +
+            "\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL))";
+            if (col.referenced()) {
+                s += " REFERENCED TRUE";
+            }
+            s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )";
+            return s;
+    }
+
+    Collection collection(const char *name) {
+        return Collection::retrieveByName(QLatin1String(name));
+    }
+
+private:
+    Resource mResource;
+};
+
+class CollectionReferenceTest : public QObject
+{
+    Q_OBJECT
+
+    DbInitializer initializer;
+
+public:
+    CollectionReferenceTest()
+    {
+        qRegisterMetaType<Akonadi::Server::Response>();
+
+        try {
+            FakeAkonadiServer::instance()->setPopulateDb(false);
+            FakeAkonadiServer::instance()->init();
+        } catch (const FakeAkonadiServerException &e) {
+            akError() << "Server exception: " << e.what();
+            akFatal() << "Fake Akonadi Server failed to start up, aborting test";
+        }
+
+        initializer.createResource("testresource");
+        initializer.createCollection("col1");
+        Collection col2 = initializer.createCollection("col2");
+        col2.setEnabled(false);
+        col2.update();
+    }
+
+    ~CollectionReferenceTest()
+    {
+        FakeAkonadiServer::instance()->quit();
+    }
+
+
+private Q_SLOTS:
+    void testModify_data()
+    {
+        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<QList<Akonadi::NotificationMessageV3> >("expectedNotifications");
+        QTest::addColumn<Collection::List>("expectedCollections");
+
+        Akonadi::NotificationMessageV3 notificationTemplate;
+        notificationTemplate.setType(NotificationMessageV2::Collections);
+        notificationTemplate.setOperation(NotificationMessageV2::Modify);
+        notificationTemplate.addEntity(initializer.collection("col2").id(), QLatin1String("col2"), QLatin1String(""));
+        notificationTemplate.setParentCollection(0);
+        notificationTemplate.setResource("testresource");
+        notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 LIST 0 1 (RESOURCE \"testresource\" ENABLED TRUE) ()"
+                    << initializer.listResponse(initializer.collection("col1"))
+                    << "S: 2 OK List completed";
+            QTest::newRow("list before referenced first level") << scenario << QList<Akonadi::NotificationMessageV3>() << Collection::List();
+        }
+
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED TRUE"
+                    << "S: 2 OK MODIFY done";
+
+            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
+
+            Collection col = initializer.collection("col2");
+            col.setReferenced(true);
+
+            QTest::newRow("reference") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification) << (Collection::List() << col);
+        }
+        {
+            Collection col2 = initializer.collection("col2");
+            col2.setReferenced(true);
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 (ENABLED TRUE) ()"
+                    << initializer.listResponse(col2)
+                    << "S: 2 OK List completed";
+
+            QTest::newRow("list referenced base") << scenario << QList<Akonadi::NotificationMessageV3>() << Collection::List();
+        }
+        {
+            Collection col2 = initializer.collection("col2");
+            col2.setReferenced(true);
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 LIST 0 1 (RESOURCE \"testresource\" ENABLED TRUE) ()"
+                    << initializer.listResponse(initializer.collection("col1"))
+                    << initializer.listResponse(col2)
+                    << "S: 2 OK List completed";
+            QTest::newRow("list referenced first level") << scenario << QList<Akonadi::NotificationMessageV3>() << Collection::List();
+        }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED FALSE"
+                    << "S: 2 OK MODIFY done";
+
+            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
+
+            Collection col = initializer.collection("col2");
+            col.setReferenced(false);
+
+            QTest::newRow("dereference") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification) << (Collection::List() << col);
+        }
+    }
+
+    void testModify()
+    {
+        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(QList<NotificationMessageV3>, expectedNotifications);
+        QFETCH(Collection::List, expectedCollections);
+
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
+
+        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        if (expectedNotifications.isEmpty()) {
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
+        } else {
+            QCOMPARE(notificationSpy->count(), 1);
+            //Only one notify call
+            QCOMPARE(notificationSpy->first().count(), 1);
+            const NotificationMessageV3::List receivedNotifications = notificationSpy->first().first().value<NotificationMessageV3::List>();
+            QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
+
+            for (int i = 0; i < expectedNotifications.size(); i++) {
+                QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            }
+        }
+
+        Q_FOREACH (const Collection &expected, expectedCollections) {
+            const Collection actual = Collection::retrieveByName(expected.name());
+            QCOMPARE(actual.referenced(), expected.referenced());
+            QCOMPARE(CollectionReferenceManager::instance()->isReferenced(actual.id()), expected.referenced());
+        }
+    }
+
+    void testReferenceCollection()
+    {
+        Collection col = initializer.createCollection("testReferenceCollection");
+
+        CollectionReferenceManager::instance()->referenceCollection("testReferenceCollectionSession", col, true);
+        QVERIFY(CollectionReferenceManager::instance()->isReferenced(col.id()));
+        QVERIFY(CollectionReferenceManager::instance()->isReferenced(col.id(), "testReferenceCollectionSession"));
+
+        CollectionReferenceManager::instance()->referenceCollection("foobar", col, false);
+        QVERIFY(CollectionReferenceManager::instance()->isReferenced(col.id()));
+        QVERIFY(CollectionReferenceManager::instance()->isReferenced(col.id(), "testReferenceCollectionSession"));
+
+        CollectionReferenceManager::instance()->referenceCollection("testReferenceCollectionSession", col, false);
+        QVERIFY(!CollectionReferenceManager::instance()->isReferenced(col.id()));
+        QVERIFY(!CollectionReferenceManager::instance()->isReferenced(col.id(), "testReferenceCollectionSession"));
+        QVERIFY(col.remove());
+    }
+
+    void testSessionClosed()
+    {
+        Collection col = initializer.createCollection("testSessionCollection");
+        col.setReferenced(true);
+        QVERIFY(col.update());
+        CollectionReferenceManager::instance()->referenceCollection("testSessionClosedSession", col, true);
+        CollectionReferenceManager::instance()->referenceCollection("testSessionClosedSession2", col, true);
+
+        //Remove first session
+        CollectionReferenceManager::instance()->removeSession("testSessionClosedSession2");
+        QVERIFY(Collection::retrieveById(col.id()).referenced());
+        QVERIFY(!CollectionReferenceManager::instance()->isReferenced(col.id(), "testSessionClosedSession2"));
+        QVERIFY(CollectionReferenceManager::instance()->isReferenced(col.id(), "testSessionClosedSession"));
+
+        CollectionReferenceManager::instance()->removeSession("testSessionClosedSession");
+        QVERIFY(!Collection::retrieveById(col.id()).referenced());
+        QVERIFY(!CollectionReferenceManager::instance()->isReferenced(col.id(), "testSessionClosedSession"));
+
+        QVERIFY(col.remove());
+    }
+
+    void testCleanup()
+    {
+        Collection col = initializer.createCollection("testCleanupCollection");
+        col.setReferenced(true);
+        QVERIFY(col.update());
+
+        CollectionReferenceManager::cleanup();
+        QVERIFY(!Collection::retrieveById(col.id()).referenced());
+
+        QVERIFY(col.remove());
+    }
+
+};
+
+AKTEST_FAKESERVER_MAIN(CollectionReferenceTest)
+
+#include "collectionreferencetest.moc"

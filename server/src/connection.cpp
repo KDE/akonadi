@@ -29,6 +29,7 @@
 #include "response.h"
 #include "tracer.h"
 #include "clientcapabilityaggregator.h"
+#include "collectionreferencemanager.h"
 
 #include "imapstreamparser.h"
 #include "shared/akdebug.h"
@@ -38,7 +39,7 @@
 
 #include <assert.h>
 
-#define AKONADI_PROTOCOL_VERSION 42
+#define AKONADI_PROTOCOL_VERSION 43
 
 using namespace Akonadi::Server;
 
@@ -117,6 +118,11 @@ DataStore *Connection::storageBackend()
     return m_backend;
 }
 
+CollectionReferenceManager *Connection::collectionReferenceManager()
+{
+    return CollectionReferenceManager::instance();
+}
+
 Connection::~Connection()
 {
     delete m_socket;
@@ -126,6 +132,7 @@ Connection::~Connection()
 
     ClientCapabilityAggregator::removeSession( m_clientCapabilities );
     Tracer::self()->endConnection( m_identifier, QString() );
+    collectionReferenceManager()->removeSession( m_identifier.toLatin1() );
 }
 
 void Connection::slotNewData()

@@ -73,6 +73,16 @@ class NotificationManager : public QObject, protected QDBusContext
     Q_SCRIPTABLE QDBusObjectPath subscribeV2( const QString &identifier, bool serverSideMonitor );
 
     /**
+     * Subscribe to notifications emitted by this manager.
+     *
+     * @param identifier Identifier to use for our subscription.
+     * @param serverSideMonitor Whether client supports server-side monitoring
+     * @param exclusive Exclusive subscribers also receive notifications on referenced collections
+     * @return The path we got assigned. Contains identifier.
+     */
+    Q_SCRIPTABLE QDBusObjectPath subscribeV3( const QString &identifier, bool serverSideMonitor, bool exclusive );
+
+    /**
      * Unsubscribe from this manager.
      *
      * This method is for your inconvenience only. It's advisable to use the unsubscribe method
