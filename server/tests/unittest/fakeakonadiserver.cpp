@@ -60,6 +60,7 @@ FakeAkonadiServer::FakeAkonadiServer()
     , mDataStore(0)
     , mServerLoop(0)
     , mNotificationSpy(0)
+    , mPopulateDb(true)
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
@@ -188,6 +189,7 @@ bool FakeAkonadiServer::init()
     dbConfig->setup();
 
     mDataStore = static_cast<FakeDataStore*>(FakeDataStore::self());
+    mDataStore->setPopulateDb(mPopulateDb);
     if (!mDataStore->init()) {
         throw FakeAkonadiServerException("Failed to initialize datastore");
     }
@@ -301,4 +303,9 @@ FakeDataStore* FakeAkonadiServer::dataStore() const
 QSignalSpy* FakeAkonadiServer::notificationSpy() const
 {
     return mNotificationSpy;
+}
+
+void FakeAkonadiServer::setPopulateDb(bool populate)
+{
+    mPopulateDb = populate;
 }

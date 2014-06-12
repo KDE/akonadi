@@ -43,6 +43,7 @@ Q_DECLARE_METATYPE( QList<QByteArray> )
 
 Akonadi::Server::FakeDataStore::FakeDataStore()
   : DataStore()
+  , mPopulateDb(true)
 {
   notificationCollector();
 }
@@ -75,10 +76,12 @@ bool FakeDataStore::init()
         return false;
     }
 
-    DbPopulator dbPopulator;
-    if ( !dbPopulator.run() ) {
-      akError() << "Failed to populate database";
-      return false;
+    if ( mPopulateDb ) {
+        DbPopulator dbPopulator;
+        if ( !dbPopulator.run() ) {
+            akError() << "Failed to populate database";
+            return false;
+        }
     }
 
     return true;
@@ -310,4 +313,9 @@ bool FakeDataStore::rollbackTransaction()
 {
   mChanges.insert( QLatin1String( "rollbackTransaction" ), QVariantList() );
   return DataStore::rollbackTransaction();
+}
+
+void FakeDataStore::setPopulateDb(bool populate)
+{
+    mPopulateDb = populate;
 }

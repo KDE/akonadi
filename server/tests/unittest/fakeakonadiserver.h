@@ -75,6 +75,8 @@ public:
 
     QSignalSpy *notificationSpy() const;
 
+    void setPopulateDb(bool populate);
+
 protected:
     /* Reimpl */
     void incomingConnection(quintptr socketDescriptor);
@@ -92,6 +94,8 @@ private:
     QEventLoop *mServerLoop;
 
     QSignalSpy *mNotificationSpy;
+
+    bool mPopulateDb;
 
     static FakeAkonadiServer *sInstance;
 };
