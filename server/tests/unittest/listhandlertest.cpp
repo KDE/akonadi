@@ -100,7 +100,8 @@ private Q_SLOTS:
                     << colAResponse
                     << "S: 2 OK List completed";
             QTest::newRow("base list") << scenario;
-        }        {
+        }
+        {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
                     << "C: 2 LIST 2 1 () ()"
@@ -148,8 +149,8 @@ private Q_SLOTS:
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
                     << "C: 2 LIST 0 INF (ENABLED  ) ()"
-                    << colSearchResponse
                     << colAResponse
+                    << colSearchResponse
                     << colVirtualSubResponse
                     << colVirtualResponse
                     << "S: 2 OK List completed";
