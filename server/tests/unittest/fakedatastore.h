@@ -108,6 +108,8 @@ class FakeDataStore: public DataStore
 
     virtual NotificationCollector *notificationCollector();
 
+    void setPopulateDb(bool populate);
+
   protected:
     FakeDataStore();
 
@@ -115,6 +117,7 @@ class FakeDataStore: public DataStore
 
   private:
     bool populateDatabase();
+    bool mPopulateDb;
 
 };
 
