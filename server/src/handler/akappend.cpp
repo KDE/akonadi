@@ -324,6 +324,7 @@ bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
     hiddenAttribute.setPimItemId( item.id() );
     hiddenAttribute.setPartType( PartTypeHelper::fromFqName( QString::fromLatin1( AKONADI_ATTRIBUTE_HIDDEN ) ) );
     hiddenAttribute.setData( QByteArray() );
+    hiddenAttribute.setDatasize( 0 );
     // TODO: Handle errors? Technically, this is not a critical issue as no data are lost
     PartHelper::insert( &hiddenAttribute );
   }
