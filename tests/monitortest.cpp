@@ -57,9 +57,10 @@ void MonitorTest::initTestCase()
 {
   AkonadiTest::checkTestIsIsolated();
   Control::start();
-  AkonadiTest::setAllResourcesOffline();
 
   res3 = Collection( collectionIdFromPath( "res3" ) );
+
+  AkonadiTest::setAllResourcesOffline();
 }
 
 void MonitorTest::testMonitor_data()
@@ -106,7 +107,7 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<Akonadi::CollectionStatistics>();
   qRegisterMetaType<QSet<QByteArray> >();
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(Akonadi::Collection)) );
+  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
   QSignalSpy cmvspy( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)) );
   QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
