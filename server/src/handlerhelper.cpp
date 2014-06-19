@@ -84,7 +84,7 @@ bool HandlerHelper::itemStatistics( const Collection &col, qint64 &count, qint64
   qb.addAggregation( PimItem::idColumn(), QLatin1String( "count" ) );
   qb.addAggregation( PimItem::sizeColumn(), QLatin1String( "sum" ) );
 
-  if ( col.resource().isVirtual() ) {
+  if ( col.isVirtual() ) {
     qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
                 CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
     qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
