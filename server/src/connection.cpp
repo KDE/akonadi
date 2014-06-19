@@ -39,7 +39,7 @@
 
 #include <assert.h>
 
-#define AKONADI_PROTOCOL_VERSION 43
+#define AKONADI_PROTOCOL_VERSION 44
 
 using namespace Akonadi::Server;
 

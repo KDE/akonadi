@@ -225,6 +225,32 @@ QSqlQuery FetchHelper::buildTagQuery()
   return tagQuery.query();
 }
 
+enum VRefQueryColumns {
+  VRefQueryCollectionIdColumn,
+  VRefQueryItemIdColumn
+};
+
+QSqlQuery FetchHelper::buildVRefQuery()
+{
+  QueryBuilder vRefQuery( PimItem::tableName() );
+  vRefQuery.addJoin( QueryBuilder::LeftJoin, CollectionPimItemRelation::tableName(),
+                     CollectionPimItemRelation::rightFullColumnName(),
+                     PimItem::idFullColumnName() );
+  vRefQuery.addColumn( CollectionPimItemRelation::leftFullColumnName() );
+  vRefQuery.addColumn( CollectionPimItemRelation::rightFullColumnName() );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), vRefQuery );
+  vRefQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
+
+  if (!vRefQuery.exec() ) {
+    throw HandlerException( "Unable to retrieve virtual references" );
+  }
+
+  vRefQuery.query().next();
+
+  return vRefQuery.query();
+}
+
+
 bool FetchHelper::isScopeLocal( const Scope &scope )
 {
   // Get list of all resources that own all items in the scope
@@ -334,6 +360,11 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
     tagQuery = buildTagQuery();
   }
 
+  QSqlQuery vRefQuery;
+  if ( mFetchScope.virtualReferencesRequested() ) {
+    vRefQuery = buildVRefQuery();
+  }
+
   // build responses
   Response response;
   response.setUntagged();
@@ -406,6 +437,25 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
       }
       if ( !tags.isEmpty() ) {
         attributes.append( AKONADI_PARAM_TAGS " " + tags.toImapSequenceSet() );
+      }
+    }
+
+    if ( mFetchScope.virtualReferencesRequested() ) {
+      ImapSet cols;
+      while ( vRefQuery.isValid() ) {
+          const qint64 id = vRefQuery.value( VRefQueryItemIdColumn ).toLongLong();
+          if ( id > pimItemId ) {
+            vRefQuery.next();
+            continue;
+          } else if ( id < pimItemId ) {
+            break;
+          }
+          const qint64 collectionId = vRefQuery.value( VRefQueryCollectionIdColumn ).toLongLong();
+          cols.add( QVector<qint64>() << collectionId );
+          vRefQuery.next();
+      }
+      if ( !cols.isEmpty() ) {
+        attributes.append( AKONADI_PARAM_VIRTREF " " + cols.toImapSequenceSet() );
       }
     }
 

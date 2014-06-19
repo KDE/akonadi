@@ -54,6 +54,7 @@ class FetchScope::Private : public QSharedData
     uint mRemoteIdRequested : 1;
     uint mGidRequested : 1;
     uint mTagsRequested : 1;
+    uint mVirtRefRequested: 1;
 };
 
 FetchScope::Private::Private()
@@ -73,6 +74,7 @@ FetchScope::Private::Private()
   , mRemoteIdRequested( false )
   , mGidRequested( false )
   , mTagsRequested( false )
+  , mVirtRefRequested( false )
 {
 }
 
@@ -96,6 +98,7 @@ FetchScope::Private::Private( const Private &other )
   , mRemoteIdRequested( other.mRemoteIdRequested )
   , mGidRequested( other.mGidRequested )
   , mTagsRequested( other.mTagsRequested )
+  , mVirtRefRequested( other.mVirtRefRequested )
 {
 }
 
@@ -166,6 +169,8 @@ void FetchScope::Private::parsePartList()
       mTagsRequested = true;
     } else if ( b == AKONADI_PARAM_COLLECTIONID ) {
       // we always return collection IDs anyway
+    } else if ( b == AKONADI_PARAM_VIRTREF ) {
+      mVirtRefRequested = true;
     } else {
       mRequestedParts.push_back( b );
       if ( b.startsWith( AKONADI_PARAM_PLD ) ) {
@@ -384,4 +389,14 @@ void FetchScope::setTagsRequested( bool tagsRequested )
 bool FetchScope::tagsRequested() const
 {
   return d->mTagsRequested;
+}
+
+void FetchScope::setVirtualReferencesRequested( bool vRefRequested )
+{
+  d->mVirtRefRequested = vRefRequested;
+}
+
+bool FetchScope::virtualReferencesRequested() const
+{
+  return d->mVirtRefRequested;
 }

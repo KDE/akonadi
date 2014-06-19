@@ -147,6 +147,7 @@
 #define AKONADI_PARAM_TAG                          "TAG"
 #define AKONADI_PARAM_TAGID                        "TAGID"
 #define AKONADI_PARAM_UID                          "UID"
+#define AKONADI_PARAM_VIRTREF                      "VIRTREF"
 #define AKONADI_PARAM_VIRTUAL                      "VIRTUAL"
 
 // Flags
