@@ -345,6 +345,22 @@ public:
      */
     bool fetchTags() const;
 
+    /**
+     * Returns whether to fetch list of virtual collections the item is linked to
+     *
+     * @param fetchVRefs whether or not to fetch virtualc references
+     * @since 4.14
+     */
+    void setFetchVirtualReferences(bool fetchVRefs);
+
+    /**
+     * Returns whether virtual references should be retrieved.
+     *
+     * @see setFetchVirtualReferences()
+     * @since 4.14
+     */
+    bool fetchVirtualReferences() const;
+
 private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;

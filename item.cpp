@@ -342,6 +342,16 @@ QString Item::gid() const
     return d_func()->mGid;
 }
 
+void Item::setVirtualReferences(const Collection::List &collections)
+{
+    d_func()->mVirtualReferences = collections;
+}
+
+Collection::List Item::virtualReferences() const
+{
+    return d_func()->mVirtualReferences;
+}
+
 bool Item::hasPayload() const
 {
     return d_func()->hasMetaTypeId(-1);
