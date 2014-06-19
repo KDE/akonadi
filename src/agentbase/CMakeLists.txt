@@ -54,9 +54,9 @@ target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
     KF5::AkonadiCore
-    KF5::ConfigCore
     KF5::KDELibs4Support
 PRIVATE
+    KF5::ConfigCore
     KF5::Solid
 )
 
