@@ -185,52 +185,6 @@ void EntityTreeModelPrivate::serverStarted()
     endResetModel();
 }
 
-ItemFetchJob *EntityTreeModelPrivate::getItemFetchJob(const Collection &parent, const ItemFetchScope &scope) const
-{
-    Q_ASSERT(parent.isValid());
-    ItemFetchJob *itemJob = new Akonadi::ItemFetchJob(parent, m_session);
-    itemJob->setFetchScope(scope);
-    itemJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
-    itemJob->fetchScope().setIgnoreRetrievalErrors(true);
-    itemJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
-    return itemJob;
-}
-
-ItemFetchJob *EntityTreeModelPrivate::getItemFetchJob(const Item &item, const ItemFetchScope &scope) const
-{
-    ItemFetchJob *itemJob = new Akonadi::ItemFetchJob(item, m_session);
-    itemJob->setFetchScope(scope);
-    itemJob->fetchScope().setIgnoreRetrievalErrors(true);
-    return itemJob;
-}
-
-void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const Collection &parent) const
-{
-    Q_Q(const EntityTreeModel);
-    itemFetchJob->setProperty(FetchCollectionId().constData(), QVariant(parent.id()));
-
-    if (m_showRootCollection || parent != m_rootCollection) {
-        m_pendingCollectionRetrieveJobs.insert(parent.id());
-
-        // If collections are not in the model, there will be no valid index for them.
-        if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
-            // We need to invoke this delayed because we would otherwise be emitting a sequence like
-            // - beginInsertRows
-            // - dataChanged
-            // - endInsertRows
-            // which would confuse proxies.
-            QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
-        }
-    }
-
-    q->connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
-               q, SLOT(itemsFetched(Akonadi::Item::List)));
-    q->connect(itemFetchJob, SIGNAL(result(KJob*)),
-               q, SLOT(fetchJobDone(KJob*)));
-    ifDebug(qDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
-}
-
 void EntityTreeModelPrivate::changeFetchState(const Collection &parent)
 {
     Q_Q(EntityTreeModel);
@@ -304,7 +258,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
     itemFetchJob->fetchScope().setIgnoreRetrievalErrors(true);
     itemFetchJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
 
-    itemFetchJob->setProperty(FetchCollectionId(), QVariant(parent.id()));
+    itemFetchJob->setProperty(FetchCollectionId().constData(), QVariant(parent.id()));
 
     if (m_showRootCollection || parent != m_rootCollection) {
         m_pendingCollectionRetrieveJobs.insert(parent.id());
@@ -555,7 +509,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
     Q_Q(EntityTreeModel);
 
     if (!m_collections.contains(collectionId)) {
-        kWarning() << "Collection has been removed while fetching items";
+        qWarning() << "Collection has been removed while fetching items";
         return;
     }
 
@@ -1348,7 +1302,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 {
     CollectionFetchJob *cJob = static_cast<CollectionFetchJob *>(job);
     if (job->error()) {
-        kWarning() << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
+        qWarning() << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
         return;
     }
 
@@ -1356,7 +1310,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
     kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     kDebug() << "was collection fetch job: collections:" << cJob->collections().size();
     if (!cJob->collections().isEmpty()) {
-        kDebug() << "first fetched collection:" << cJob->collections().first().name();
+        qDebug() << "first fetched collection:" << cJob->collections().first().name();
     }
 #endif
 }
@@ -1371,7 +1325,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
         return;
     }
     if (!m_collections.contains(collectionId)) {
-        kWarning() << "Collection has been removed while fetching items";
+        qWarning() << "Collection has been removed while fetching items";
         return;
     }
     ItemFetchJob *iJob = static_cast<ItemFetchJob *>(job);
@@ -1510,7 +1464,7 @@ void EntityTreeModelPrivate::startFirstListJob()
         return;
     }
 
-    kDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
+    qDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
     if (generalPopulation) {
         fetchCollections(m_rootCollection, fetchType);
     }
