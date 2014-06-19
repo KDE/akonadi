@@ -93,3 +93,31 @@ void ItemTest::testParentCollection ()
   b = g;
   QCOMPARE( b.parentCollection(), col );
 }
+
+void ItemTest::testComparision_data()
+{
+    QTest::addColumn<Akonadi::Item>("itemA");
+    QTest::addColumn<Akonadi::Item>("itemB");
+    QTest::addColumn<bool>("match");
+
+    QTest::newRow("both invalid, same invalid IDs") << Item(-10) << Item(-10) << true;
+    QTest::newRow("both invalid, different invalid IDs") << Item(-11) << Item(-12) << true;
+    QTest::newRow("one valid") << Item(1) << Item() << false;
+    QTest::newRow("both valid, same IDs") << Item(2) << Item(2) << true;
+    QTest::newRow("both valid, different IDs") << Item(3) << Item(4) << false;
+}
+
+void ItemTest::testComparision()
+{
+    QFETCH(Akonadi::Item, itemA);
+    QFETCH(Akonadi::Item, itemB);
+    QFETCH(bool, match);
+
+    if (match) {
+        QVERIFY(itemA == itemB);
+        QVERIFY(!(itemA != itemB));
+    } else {
+        QVERIFY(itemA != itemB);
+        QVERIFY(!(itemA == itemB));
+    }
+}

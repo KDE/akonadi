@@ -269,7 +269,9 @@ void Collection::setEnabled(bool enabled)
 {
     Q_D(Collection);
 
-    d->enabledChanged = (enabled != d->enabled);
+    if (enabled != d->enabled) {
+        d->enabledChanged = true;
+    }
     d->enabled = enabled;
 }
 
@@ -321,5 +323,30 @@ bool Collection::shouldList(Collection::ListPurpose purpose) const
     return (localListPreference(purpose) == ListEnabled);
 }
 
+void Collection::setShouldList(ListPurpose purpose, bool list)
+{
+    if (localListPreference(purpose) == ListDefault) {
+        setEnabled(list);
+    } else {
+        setLocalListPreference(purpose, list ? ListEnabled : ListDisabled);
+    }
+}
+
+void Collection::setReferenced(bool referenced)
+{
+    Q_D(Collection);
+
+    if (d->referenced != referenced) {
+        d->referencedChanged = true;
+    }
+    d->referenced = referenced;
+}
+
+bool Collection::referenced() const
+{
+    Q_D(const Collection);
+
+    return d->referenced;
+}
 
 AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

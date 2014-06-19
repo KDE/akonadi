@@ -303,6 +303,10 @@ void FakeCollectionRemovedCommand::doCommand()
 
 void FakeCollectionChangedCommand::doCommand()
 {
+  if ( m_collection.isValid() ) {
+    emit_monitoredCollectionChanged( m_collection );
+    return;
+  }
   Collection collection = getCollectionByDisplayName( m_collectionName );
   Collection parent = getCollectionByDisplayName( m_parentName );
 

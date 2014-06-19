@@ -157,11 +157,18 @@ public:
 
   }
 
+  FakeCollectionChangedCommand( const Akonadi::Collection &collection, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_collection( collection )
+  {
+
+  }
+
   virtual ~FakeCollectionChangedCommand() {}
 
   /* reimp */ void doCommand();
 
 private:
+  Akonadi::Collection m_collection;
   QString m_collectionName;
   QString m_parentName;
 };

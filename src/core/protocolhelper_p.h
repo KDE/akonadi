@@ -236,6 +236,7 @@ public:
 
     static QByteArray listPreference(Collection::ListPurpose purpose, Collection::ListPreference preference);
     static QByteArray enabled(bool);
+    static QByteArray referenced(bool);
 };
 
 }

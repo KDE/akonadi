@@ -297,7 +297,7 @@ public:
      * E.g. an imap resource may synchronize this with the subscription state.
      *
      * @since 4.14
-     * @see setLocalListPreference
+     * @see setLocalListPreference, setShouldList
      */
     void setEnabled(bool enabled);
 
@@ -358,6 +358,36 @@ public:
      * @see setLocalListPreference, setEnabled
      */
     bool shouldList(ListPurpose purpose) const;
+
+    /**
+     * Sets wether the collection should be listed or not for the specified purpose.
+     * Takes enabled state and local preference into account.
+     *
+     * Use this instead of sestEnabled and setLocalListPreference to automatically set
+     * the right setting.
+     *
+     * @since 4.14
+     * @see setLocalListPreference, setEnabled
+     */
+    void setShouldList(ListPurpose purpose, bool shouldList);
+
+    /**
+     * Sets a collection to be referenced.
+     *
+     * A referenced collection is temporarily shown and synchronized even when disabled.
+     * A reference is only valid for the duration of a session, and is automatically removed afterwards.
+     *
+     * Referenced collections are only visible if explicitly monitored in the ETM.
+     *
+     * @since 4.14
+     */
+    void setReferenced(bool referenced);
+
+    /**
+     * Returns the referenced state of the collection.
+     * @since 4.14
+     */
+    bool referenced() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(Collection)

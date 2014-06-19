@@ -101,6 +101,9 @@ void CollectionModifyJob::doStart()
         changes += ' ' + ProtocolHelper::listPreference(Collection::ListSync, d->mCollection.localListPreference(Collection::ListSync));
         changes += ' ' + ProtocolHelper::listPreference(Collection::ListIndex, d->mCollection.localListPreference(Collection::ListIndex));
     }
+    if (d->mCollection.d_func()->referencedChanged) {
+        changes += ' ' + ProtocolHelper::referenced(d->mCollection.referenced());
+    }
     if (d->mCollection.attributes().count() > 0) {
         changes += ' ' + ProtocolHelper::attributesToByteArray(d->mCollection);
     }

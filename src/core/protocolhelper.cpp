@@ -215,6 +215,8 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       collection.setLocalListPreference( Collection::ListSync, parsePreference( value ) );
     } else if ( key == "INDEX" ) {
       collection.setLocalListPreference( Collection::ListIndex, parsePreference( value ) );
+    } else if ( key == "REFERENCED" ) {
+      collection.setReferenced( value == "TRUE" );
     } else {
       Attribute* attr = AttributeFactory::createAttribute( key );
       Q_ASSERT( attr );
@@ -728,4 +730,12 @@ QByteArray ProtocolHelper::enabled(bool state)
       return "ENABLED TRUE";
     }
     return "ENABLED FALSE";
+}
+
+QByteArray ProtocolHelper::referenced(bool state)
+{
+    if (state) {
+      return "REFERENCED TRUE";
+    }
+    return "REFERENCED FALSE";
 }

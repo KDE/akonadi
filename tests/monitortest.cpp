@@ -57,9 +57,10 @@ void MonitorTest::initTestCase()
 {
   AkonadiTest::checkTestIsIsolated();
   Control::start();
-  AkonadiTest::setAllResourcesOffline();
 
   res3 = Collection( collectionIdFromPath( "res3" ) );
+
+  AkonadiTest::setAllResourcesOffline();
 }
 
 void MonitorTest::testMonitor_data()
@@ -80,12 +81,33 @@ void MonitorTest::testMonitor()
 
   // monitor signals
   qRegisterMetaType<Akonadi::Collection>();
-  qRegisterMetaType<Akonadi::Collection::Id>();
+  /*
+     qRegisterMetaType<Akonadi::Collection::Id>() registers the type with a
+     name of "qlonglong".  Doing
+     qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" )
+     doesn't help. (works now , see QTBUG-937 and QTBUG-6833, -- dvratil)
+
+     The problem here is that Akonadi::Collection::Id is a typedef to qlonglong,
+     and qlonglong is already a registered meta type.  So the signal spy will
+     give us a QVariant of type Akonadi::Collection::Id, but calling
+     .value<Akonadi::Collection::Id>() on that variant will in fact end up
+     calling qvariant_cast<qlonglong>.  From the point of view of QMetaType,
+     Akonadi::Collection::Id and qlonglong are different types, so QVariant
+     can't convert, and returns a default-constructed qlonglong, zero.
+
+     When connecting to a real slot (without QSignalSpy), this problem is
+     avoided, because the casting is done differently (via a lot of void
+     pointers).
+
+     The docs say nothing about qRegisterMetaType -ing a typedef, so I'm not
+     sure if this is a bug or not. (cberzan)
+   */
+  qRegisterMetaType<Akonadi::Collection::Id>("Akonadi::Collection::Id");
   qRegisterMetaType<Akonadi::Item>();
   qRegisterMetaType<Akonadi::CollectionStatistics>();
   qRegisterMetaType<QSet<QByteArray> >();
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(Akonadi::Collection)) );
+  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
   QSignalSpy cmvspy( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)) );
   QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
@@ -149,30 +171,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( cstatspy.count(), 1 );
   arg = cstatspy.takeFirst();
-  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Akonadi::Collection::Id>(), monitorCol.id() );
-
-  /*
-     qRegisterMetaType<Akonadi::Collection::Id>() registers the type with a
-     name of "qlonglong".  Doing
-     qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" )
-     doesn't help.
-
-     The problem here is that Akonadi::Collection::Id is a typedef to qlonglong,
-     and qlonglong is already a registered meta type.  So the signal spy will
-     give us a QVariant of type Akonadi::Collection::Id, but calling
-     .value<Akonadi::Collection::Id>() on that variant will in fact end up
-     calling qvariant_cast<qlonglong>.  From the point of view of QMetaType,
-     Akonadi::Collection::Id and qlonglong are different types, so QVariant
-     can't convert, and returns a default-constructed qlonglong, zero.
-
-     When connecting to a real slot (without QSignalSpy), this problem is
-     avoided, because the casting is done differently (via a lot of void
-     pointers).
-
-     The docs say nothing about qRegisterMetaType -ing a typedef, so I'm not
-     sure if this is a bug or not. (cberzan)
-   */
 
   QCOMPARE( iaddspy.count(), 1 );
   arg = iaddspy.takeFirst();
@@ -200,7 +199,6 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( cstatspy.count(), 1 );
   arg = cstatspy.takeFirst();
-  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
 
   QCOMPARE( imodspy.count(), 1 );
@@ -226,15 +224,11 @@ void MonitorTest::testMonitor()
   ItemMoveJob *move = new ItemMoveJob( item, res3 );
   AKVERIFYEXEC( move );
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
-
   QCOMPARE( cstatspy.count(), 2 );
-  arg = cstatspy.takeFirst();
-  ///TODO: maybe the order is random, i.e. first res3 then monitorCol - fix it once the MetaType issue is resolved
-  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
-  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
-  arg = cstatspy.takeLast();
-  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
+  arg = cstatspy.takeFirst();       // the destination collection
   QCOMPARE( arg.at(0).value<Collection::Id>(), res3.id() );
+  arg = cstatspy.takeLast();        // the source collection
+  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
 
   QCOMPARE( imvspy.count(), 1 );
   arg = imvspy.takeFirst();
@@ -262,8 +256,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( cstatspy.count(), 1 );
   arg = cstatspy.takeFirst();
-  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
-  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), res3.id() );
   cmodspy.clear();
 
   QCOMPARE( irmspy.count(), 1 );
@@ -291,7 +284,13 @@ void MonitorTest::testMonitor()
   SubscriptionJob *subscribeJob = new SubscriptionJob( this );
   subscribeJob->unsubscribe( Collection::List() << subCollection );
   AKVERIFYEXEC( subscribeJob );
+  // Wait for unsubscribed signal, it goes after changed, so we can check for both
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000 ) );
+  QCOMPARE( cmodspy.size(), 1 );
+  arg = cmodspy.takeFirst();
+  col = arg.at( 0 ).value<Collection>();
+  QCOMPARE( col.id(), subCollection.id() );
+
   QVERIFY( cSubscribedSpy.isEmpty() );
   QCOMPARE( cUnsubscribedSpy.size(), 1 );
   arg = cUnsubscribedSpy.takeFirst();
@@ -301,7 +300,13 @@ void MonitorTest::testMonitor()
   subscribeJob = new SubscriptionJob( this );
   subscribeJob->subscribe( Collection::List() << subCollection );
   AKVERIFYEXEC( subscribeJob );
+  // Wait for subscribed signal, it goes after changed, so we can check for both
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+  QCOMPARE( cmodspy.size(), 1 );
+  arg = cmodspy.takeFirst();
+  col = arg.at( 0 ).value<Collection>();
+  QCOMPARE( col.id(), subCollection.id() );
+
   QVERIFY( cUnsubscribedSpy.isEmpty() );
   QCOMPARE( cSubscribedSpy.size(), 1 );
   arg = cSubscribedSpy.takeFirst();

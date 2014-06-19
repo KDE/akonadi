@@ -860,5 +860,54 @@ void CollectionJobTest::testListPreference()
   AKVERIFYEXEC(deleteJob);
 }
 
+void CollectionJobTest::testReference()
+{
+  Akonadi::Collection baseCol;
+  {
+    baseCol.setParentCollection(Akonadi::Collection(res1ColId));
+    baseCol.setName("base");
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
+    AKVERIFYEXEC(create);
+    baseCol = create->collection();
+  }
+
+  {
+    Akonadi::Collection col;
+    col.setParentCollection(baseCol);
+    col.setName("referenced");
+    col.setEnabled(false);
+    {
+      Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
+      AKVERIFYEXEC(create);
+      CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+      AKVERIFYEXEC(job);
+      col = job->collections().first();
+    }
+    {
+      col.setReferenced(true);
+      Akonadi::CollectionModifyJob *modify = new Akonadi::CollectionModifyJob(col);
+      AKVERIFYEXEC(modify);
+      CollectionFetchJob *job = new CollectionFetchJob(col, CollectionFetchJob::Base);
+      AKVERIFYEXEC(job);
+      Akonadi::Collection result = job->collections().first();
+      QCOMPARE(result.enabled(), false);
+      QCOMPARE(result.referenced(), true);
+    }
+    {
+      col.setReferenced(false);
+      Akonadi::CollectionModifyJob *modify = new Akonadi::CollectionModifyJob(col);
+      AKVERIFYEXEC(modify);
+      CollectionFetchJob *job = new CollectionFetchJob(col, CollectionFetchJob::Base);
+      AKVERIFYEXEC(job);
+      Akonadi::Collection result = job->collections().first();
+      QCOMPARE(result.enabled(), false);
+      QCOMPARE(result.referenced(), false);
+    }
+  }
+
+  //Cleanup
+  CollectionDeleteJob *deleteJob = new CollectionDeleteJob(baseCol);
+  AKVERIFYEXEC(deleteJob);
+}
 
 #include "collectionjobtest.moc"

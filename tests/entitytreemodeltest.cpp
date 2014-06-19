@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 #include <QTimer>
 
@@ -64,6 +64,15 @@ static const QString serverContent1 =
     "- - - I message/rfc822                 'Item 14'"
     "- - - I message/rfc822                 'Item 15'";
 
+/**
+ * This test verifies that the ETM reacts as expected to signals from the monitor.
+ *
+ * The tested ETM is only talking to fake components so the reaction of the ETM to each signal can be tested.
+ *
+ * WARNING: This test does no handle jobs issued by the model. It simply shortcuts (calls emitResult) them, and the connected
+ * slots are never executed (because the eventloop is not run after emitResult is called).
+ * This test therefore only tests the reaction of the model to signals of the monitor and not the overall behaviour.
+ */
 class EntityTreeModelTest : public QObject
 {
   Q_OBJECT
@@ -88,6 +97,7 @@ private Q_SLOTS:
   void testItemRemoved();
   void testItemChanged_data();
   void testItemChanged();
+  void testRemoveCollectionOnChanged();
 
 private:
   ExpectedSignal getExpectedSignal( SignalType type, int start, int end, const QVariantList newData)
@@ -206,6 +216,13 @@ void EntityTreeModelTest::testInitialFetch()
   expectedSignals << getExpectedSignal( RowsInserted, 0, 1, "Col 6" );
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, "Col 7" );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 3, "Col 7" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 1" );
+  expectedSignals << getExpectedSignal( DataChanged, 3, 3, QVariantList() << "Col 3" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 4" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 5" );
+  expectedSignals << getExpectedSignal( DataChanged, 2, 2, QVariantList() << "Col 2" );
+  expectedSignals << getExpectedSignal( DataChanged, 1, 1, QVariantList() << "Col 6" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 7" );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
@@ -213,11 +230,11 @@ void EntityTreeModelTest::testInitialFetch()
   QTest::qWait(10);
 
   // We get all the signals we expected.
-  QVERIFY(m_modelSpy->expectedSignals().isEmpty());
+  QTRY_VERIFY(m_modelSpy->expectedSignals().isEmpty());
 
+  QTest::qWait(10);
   // We didn't get signals we didn't expect.
-  // TODO: Currently we get data changed signals about fetch completed etc which are not handled by the test currently.
-//   QVERIFY( m_modelSpy->isEmpty() );
+  QVERIFY( m_modelSpy->isEmpty() );
 }
 
 void EntityTreeModelTest::testCollectionMove_data()
@@ -270,7 +287,7 @@ void EntityTreeModelTest::testCollectionMove()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -298,7 +315,6 @@ void EntityTreeModelTest::testCollectionAdded()
 
   QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
   FakeServerData *serverData = testDrivers.first;
-  Akonadi::EntityTreeModel *model = testDrivers.second;
 
   FakeCollectionAddedCommand *addCommand = new FakeCollectionAddedCommand( addedCollection, parentCollection, serverData );
 
@@ -314,7 +330,7 @@ void EntityTreeModelTest::testCollectionAdded()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -363,7 +379,7 @@ void EntityTreeModelTest::testCollectionRemoved()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -415,7 +431,7 @@ void EntityTreeModelTest::testCollectionChanged()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(100);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -474,7 +490,7 @@ void EntityTreeModelTest::testItemMove()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -523,7 +539,7 @@ void EntityTreeModelTest::testItemAdded()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -579,7 +595,7 @@ void EntityTreeModelTest::testItemRemoved()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -634,7 +650,45 @@ void EntityTreeModelTest::testItemChanged()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(10);
+  QTest::qWait(0);
+
+  QVERIFY( m_modelSpy->isEmpty() );
+}
+
+void EntityTreeModelTest::testRemoveCollectionOnChanged()
+{
+  const QString serverContent =
+    "- C (inode/directory, text/directory)  'Col 1'     1"
+    "- - C (text/directory)                 'Col 2'     2"
+    "- - - I text/directory                 'Item 1'";
+  const QString collectionName = "Col 2";
+  const QString monitoredMimeType = QString::fromLatin1("text/directory");
+
+  QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent, monitoredMimeType );
+  FakeServerData *serverData = testDrivers.first;
+  Akonadi::EntityTreeModel *model = testDrivers.second;
+
+  QModelIndexList list = model->match( model->index( 0, 0 ), Qt::DisplayRole, collectionName, 1, Qt::MatchRecursive );
+  Q_ASSERT( !list.isEmpty() );
+  QModelIndex changedIndex = list.first();
+  Akonadi::Collection changedCol = changedIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+  changedCol.setContentMimeTypes(QStringList() << "foobar");
+  QString parentCollection = changedIndex.parent().data().toString();
+
+  FakeCollectionChangedCommand *changeCommand = new FakeCollectionChangedCommand( changedCol, serverData );
+
+  m_modelSpy->startSpying();
+  serverData->setCommands( QList<FakeAkonadiServerCommand*>() << changeCommand );
+
+  QList<ExpectedSignal> expectedSignals;
+  expectedSignals << getExpectedSignal( RowsAboutToBeRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList() << collectionName );
+  expectedSignals << getExpectedSignal( RowsRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList() << collectionName );
+
+  m_modelSpy->setExpectedSignals( expectedSignals );
+  serverData->processNotifications();
+
+  // Give the model a chance to run the event loop to process the signals.
+  QTest::qWait(0);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }

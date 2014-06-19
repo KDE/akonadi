@@ -110,6 +110,35 @@ void EntityTreeModel::setListFilter(CollectionFetchScope::ListFilter filter)
     d->endResetModel();
 }
 
+void EntityTreeModel::setCollectionsMonitored(const Collection::List &collections)
+{
+    Q_D(EntityTreeModel);
+    d->beginResetModel();
+    foreach(const Akonadi::Collection &col, d->m_monitor->collectionsMonitored()) {
+        d->m_monitor->setCollectionMonitored(col, false);
+    }
+    foreach(const Akonadi::Collection &col, collections) {
+        d->m_monitor->setCollectionMonitored(col, true);
+    }
+    d->endResetModel();
+}
+
+void EntityTreeModel::setCollectionMonitored(const Collection &col, bool monitored)
+{
+    Q_D(EntityTreeModel);
+    d->m_monitor->setCollectionMonitored(col, monitored);
+}
+
+void EntityTreeModel::setCollectionReferenced(const Akonadi::Collection &col, bool referenced)
+{
+    Q_D(EntityTreeModel);
+    d->m_monitor->setCollectionMonitored(col, referenced);
+    Akonadi::Collection referencedCollection = col;
+    referencedCollection.setReferenced(referenced);
+    //We have to use the same session as the monitor, so the monitor can fetch the collection afterwards
+    new Akonadi::CollectionModifyJob(referencedCollection, d->m_monitor->session());
+}
+
 bool EntityTreeModel::systemEntitiesShown() const
 {
     Q_D(const EntityTreeModel);
@@ -930,6 +959,12 @@ bool EntityTreeModel::isCollectionPopulated(Collection::Id id) const
 {
     Q_D(const EntityTreeModel);
     return d->m_populatedCols.contains(id);
+}
+
+bool EntityTreeModel::isFullyPopulated() const
+{
+    Q_D(const EntityTreeModel);
+    return d->m_collectionTreeFetched && d->m_pendingCollectionRetrieveJobs.isEmpty();
 }
 
 bool EntityTreeModel::entityMatch(const Item &item, const QVariant &value, Qt::MatchFlags flags) const

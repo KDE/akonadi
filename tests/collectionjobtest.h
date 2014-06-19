@@ -53,6 +53,7 @@ class CollectionJobTest : public QObject
     void testRidCreateDelete();
     void testAncestorRetrieval();
     void testListPreference();
+    void testReference();
 };
 
 #endif

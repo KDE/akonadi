@@ -459,6 +459,31 @@ public:
     void setListFilter(Akonadi::CollectionFetchScope::ListFilter filter);
 
     /**
+     * Monitors the specified collections and resets the model.
+     *
+     * @since 4.14
+     */
+    void setCollectionsMonitored(const Akonadi::Collection::List &collections);
+
+    /**
+     * Adds or removes a specific collection from the monitored set without resetting the model.
+     * Only call this if you're monitoring specific collections (not mimetype/resources/items).
+     *
+     * @since 4.14
+     * @see setCollectionsMonitored()
+     */
+    void setCollectionMonitored(const Akonadi::Collection &col, bool monitored = true);
+
+    /**
+     * References a collection and starts to monitor it.
+     *
+     * Use this to temporarily include a collection that is not enabled.
+     *
+     * @since 4.14
+     */
+    void setCollectionReferenced(const Akonadi::Collection &col, bool referenced = true);
+
+    /**
      * Sets the item population @p strategy of the model.
      */
     void setItemPopulationStrategy(ItemPopulationStrategy strategy);
@@ -551,6 +576,17 @@ public:
      * @since 4.12
      */
     bool isCollectionPopulated(Akonadi::Collection::Id) const;
+
+    /**
+     * Returns whether the model is fully populated.
+     *
+     * Returns true once the collection tree has been fetched and all collections have been populated.
+     *
+     * @see isCollectionPopulated
+     * @see isCollectionTreeFetched
+     * @since 4.14
+     */
+    bool isFullyPopulated() const;
 
     /**
      * Reimplemented to handle the AmazingCompletionRole.
@@ -683,16 +719,15 @@ private:
     Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
     Q_PRIVATE_SLOT(d_func(), void serverStarted())
 
-    Q_PRIVATE_SLOT(d_func(), void fetchJobDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void itemFetchJobDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void collectionFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void rootFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void firstFetchJobDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void finalCollectionFetchJobDone(KJob *job))
 
     Q_PRIVATE_SLOT(d_func(), void itemsFetched(Akonadi::Item::List))
     Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))
-    Q_PRIVATE_SLOT(d_func(), void allCollectionsFetched(Akonadi::Collection::List))
-    Q_PRIVATE_SLOT(d_func(), void firstCollectionsFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void collectionListFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void topLevelCollectionsFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void ancestorsFetched(Akonadi::Collection::List))
