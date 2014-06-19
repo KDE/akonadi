@@ -48,6 +48,7 @@ bool Link::parseStream()
     return failureResponse( "Can't link items to non-virtual collections" );
   }
 
+  Resource originalContext;
   Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray( m_streamParser->peekString() );
   if ( itemSelectionScope != Scope::None ) {
     m_streamParser->readString();
@@ -55,6 +56,7 @@ bool Link::parseStream()
     // because otherwise the Resource context is relative to the destination collection
     // instead of the source collection (collection context)
     if ( ( mDestinationScope.scope() == Scope::HierarchicalRid || mDestinationScope.scope() == Scope::Rid ) && itemSelectionScope == Scope::Rid ) {
+        originalContext = connection()->context()->resource();
         connection()->context()->setResource(Resource());
     }
   }
@@ -63,6 +65,12 @@ bool Link::parseStream()
 
   SelectQueryBuilder<PimItem> qb;
   ItemQueryHelper::scopeToQuery( itemScope, connection()->context(), qb );
+
+  // Restore resource context if necessary
+  if (originalContext.isValid()) {
+    connection()->context()->setResource(originalContext);
+  }
+
   if ( !qb.exec() ) {
     return failureResponse( "Unable to execute item query" );
   }
