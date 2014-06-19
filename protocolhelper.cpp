@@ -447,6 +447,8 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " GID";
   if ( fetchScope.fetchTags() )
     command += " TAGS";
+  if ( fetchScope.fetchVirtualReferences() )
+    command += " VIRTREF";
   if ( fetchScope.fetchModificationTime() )
     command += " DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
@@ -546,6 +548,18 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         }
       }
       item.setTags( tags );
+    } else if ( key == "VIRTREF" ) {
+      ImapSet set;
+      ImapParser::parseSequenceSet( lineTokens[i + 1], set );
+      Collection::List collections;
+      Q_FOREACH ( const ImapInterval &interval, set.intervals() ) {
+        Q_ASSERT( interval.hasDefinedBegin() );
+        Q_ASSERT( interval.hasDefinedEnd() );
+        for ( qint64 i = interval.begin(); i <= interval.end(); i++ ) {
+          collections << Collection(i);
+        }
+      }
+      item.setVirtualReferences(collections);
     } else if ( key == "CACHEDPARTS" ) {
       QSet<QByteArray> partsSet;
       QList<QByteArray> parts;
