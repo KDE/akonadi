@@ -21,10 +21,12 @@
 #ifndef AKONADI_ITEM_H
 #define AKONADI_ITEM_H
 
+<<<<<<< HEAD:akonadi/src/core/item.h
 #include "akonadicore_export.h"
 #include "entity.h"
 #include "exception.h"
 #include "tag.h"
+#include "collection.h"
 #include "itempayloadinternals_p.h"
 
 #include <QtCore/QByteArray>
@@ -320,6 +322,28 @@ public:
      * @since 4.12
      */
     QString gid() const;
+
+    /**
+     * Sets the virtual @p collections that this item is linked into.
+     *
+     * @note Note that changing this value makes no effect on what collections
+     * this item is linked to. To link or unlink an item to/from a virtual
+     * collection, use LinkJob and UnlinkJob.
+     *
+     * @since 4.14
+     */
+    void setVirtualReferences(const Collection::List &collections);
+
+    /**
+     * Lists virtual collections that this item is linked to.
+     *
+     * @note This value is populated only when this item was retrieved by
+     * ItemFetchJob with fetchVirtualReferences set to true in ItemFetchScope,
+     * otherwise this list is always empty.
+     *
+     * @since 4.14
+     */
+    Collection::List virtualReferences() const;
 
     /**
      * Returns a list of metatype-ids, describing the different

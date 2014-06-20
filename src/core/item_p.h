@@ -415,6 +415,7 @@ public:
     Item::Flags mFlags;
     Tag::List mTags;
     Entity::Id mCollectionId;
+    Collection::List mVirtualReferences;
     qint64 mSize;
     QDateTime mModificationTime;
     QString mMimeType;

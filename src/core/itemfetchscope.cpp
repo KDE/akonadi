@@ -98,7 +98,7 @@ void ItemFetchScope::fetchAllAttributes(bool fetch)
 
 bool ItemFetchScope::isEmpty() const
 {
-    return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes && !d->mFetchTags;
+    return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes && !d->mFetchTags && !d->mFetchVRefs;
 }
 
 bool ItemFetchScope::cacheOnly() const
@@ -192,4 +192,14 @@ void ItemFetchScope::setFetchTags(bool fetchTags)
 bool ItemFetchScope::fetchTags() const
 {
     return d->mFetchTags;
+}
+
+void ItemFetchScope::setFetchVirtualReferences(bool fetchVRefs)
+{
+    d->mFetchVRefs = fetchVRefs;
+}
+
+bool ItemFetchScope::fetchVirtualReferences() const
+{
+    return d->mFetchVRefs;
 }

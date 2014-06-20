@@ -241,10 +241,9 @@ void EtmPopulationTest::testAddMonitoringCollections()
 
     model->setCollectionMonitored(col3, true);
 
-    QTRY_VERIFY(model->isCollectionTreeFetched());
     QVERIFY(getIndex("col1", model).isValid());
     QVERIFY(getIndex("col2", model).isValid());
-    QVERIFY(getIndex("col3", model).isValid());
+    QTRY_VERIFY(getIndex("col3", model).isValid());
     QVERIFY(getIndex("col4", model).isValid());
     QVERIFY(getIndex(mainCollectionName, model).isValid());
 

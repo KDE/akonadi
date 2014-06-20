@@ -116,7 +116,7 @@ public:
 
     static int minimumProtocolVersion()
     {
-        return 39;
+        return 44;
     }
 
     /**

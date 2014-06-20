@@ -604,8 +604,6 @@ void EntityTreeModelPrivate::monitoredCollectionsChanged(const Akonadi::Collecti
     Q_UNUSED(collection)
     Q_UNUSED(monitored)
     if (monitored) {
-        m_collectionTreeFetched = false;
-
         const CollectionFetchJob::Type fetchType = getFetchType(m_collectionFetchStrategy);
         fetchCollections(collection, CollectionFetchJob::Base);
         fetchCollections(collection, fetchType);

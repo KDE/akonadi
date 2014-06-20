@@ -48,10 +48,26 @@ public:
     /**
      * Creates a new collection path resolver to convert a path into a id.
      *
+     * Equivalent to calling CollectionPathResolver(path, Collection:root(), parent)
+     *
      * @param path The collection path.
      * @param parent The parent object.
      */
     explicit CollectionPathResolver(const QString &path, QObject *parent = 0);
+
+    /**
+     * Create a new collection path resolver to convert a path into an id.
+     *
+     * The @p path is resolved relatively to @p parentCollection. This can be
+     * useful for resource, which now the root collection.
+     *
+     * @param path The collection path.
+     * @param parentCollection Collection relatively to which the path will be resolved.
+     * @param parent The parent object.
+     *
+     * @since 4.14
+     */
+    explicit CollectionPathResolver(const QString &path, const Collection &parentCollection, QObject *parent = 0);
 
     /**
      * Creates a new collection path resolver to determine the path of

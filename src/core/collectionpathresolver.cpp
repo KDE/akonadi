@@ -35,7 +35,25 @@ class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 public:
     CollectionPathResolverPrivate(CollectionPathResolver *parent)
         : JobPrivate(parent)
+        , mColId(-1)
     {
+    }
+
+    void init(const QString &path, const Collection &rootCollection)
+    {
+        Q_Q(CollectionPathResolver);
+
+        mPathToId = true;
+        mPath = path;
+        if (mPath.startsWith(q->pathDelimiter())) {
+            mPath = mPath.right(mPath.length() - q->pathDelimiter().length());
+        }
+        if (mPath.endsWith(q->pathDelimiter())) {
+            mPath = mPath.left(mPath.length() - q->pathDelimiter().length());
+        }
+
+        mPathParts = splitPath(mPath);
+        mCurrentNode = rootCollection;
     }
 
     void jobResult(KJob *);
@@ -87,6 +105,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
     CollectionFetchJob *nextJob = 0;
     const Collection::List cols = list->collections();
     if (cols.isEmpty()) {
+        mColId = -1;
         q->setError(CollectionPathResolver::Unknown);
         q->setErrorText(i18n("No such collection."));
         q->emitResult();
@@ -104,6 +123,8 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
             }
         }
         if (!found) {
+            kWarning() <<  "No such collection" << currentPart << "with parent" << mCurrentNode.id();
+            mColId = -1;
             q->setError(CollectionPathResolver::Unknown);
             q->setErrorText(i18n("No such collection."));
             q->emitResult();
@@ -132,18 +153,14 @@ CollectionPathResolver::CollectionPathResolver(const QString &path, QObject *par
     : Job(new CollectionPathResolverPrivate(this), parent)
 {
     Q_D(CollectionPathResolver);
+    d->init(path, Collection::root());
+}
 
-    d->mPathToId = true;
-    d->mPath = path;
-    if (d->mPath.startsWith(pathDelimiter())) {
-        d->mPath = d->mPath.right(d->mPath.length() - pathDelimiter().length());
-    }
-    if (d->mPath.endsWith(pathDelimiter())) {
-        d->mPath = d->mPath.left(d->mPath.length() - pathDelimiter().length());
-    }
-
-    d->mPathParts = d->splitPath(d->mPath);
-    d->mCurrentNode = Collection::root();
+CollectionPathResolver::CollectionPathResolver(const QString &path, const Collection &parentCollection, QObject *parent)
+    : Job(new CollectionPathResolverPrivate(this), parent)
+{
+    Q_D(CollectionPathResolver);
+    d->init(path, parentCollection);
 }
 
 CollectionPathResolver::CollectionPathResolver(const Collection &collection, QObject *parent)

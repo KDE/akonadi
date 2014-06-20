@@ -44,6 +44,7 @@ public:
         , mFetchRid(true)
         , mFetchGid(false)
         , mFetchTags(false)
+        , mFetchVRefs(false)
     {
     }
 
@@ -63,6 +64,7 @@ public:
         mFetchRid = other.mFetchRid;
         mFetchGid = other.mFetchGid;
         mFetchTags = other.mFetchTags;
+        mFetchVRefs = other.mFetchVRefs;
     }
 
 public:
@@ -79,6 +81,7 @@ public:
     bool mFetchRid;
     bool mFetchGid;
     bool mFetchTags;
+    bool mFetchVRefs;
 };
 
 }
