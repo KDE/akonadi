@@ -601,8 +601,6 @@ void EntityTreeModelPrivate::monitoredMimeTypeChanged(const QString &mimeType, b
 
 void EntityTreeModelPrivate::monitoredCollectionsChanged(const Akonadi::Collection &collection, bool monitored)
 {
-    Q_UNUSED(collection)
-    Q_UNUSED(monitored)
     if (monitored) {
         const CollectionFetchJob::Type fetchType = getFetchType(m_collectionFetchStrategy);
         fetchCollections(collection, CollectionFetchJob::Base);
