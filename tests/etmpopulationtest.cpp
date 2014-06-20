@@ -110,6 +110,9 @@ Akonadi::Collection createCollection(const QString &name, const Akonadi::Collect
 
     CollectionCreateJob *create = new CollectionCreateJob(col);
     create->exec();
+    if (create->error()) {
+        kWarning() << create->errorString();
+    }
     Q_ASSERT(!create->error());
     return create->collection();
 }
@@ -131,6 +134,7 @@ private Q_SLOTS:
     void testDisplayFilter();
     void testReferenceCollection();
     void testLoadingOfHiddenCollection();
+    void testSwitchFromReferenceToEnabled();
 
 private:
     Collection res;
@@ -361,6 +365,32 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
     QVERIFY(getIndex("col5", model).isValid());
+
+    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
+    AKVERIFYEXEC(deleteJob);
+}
+
+void EtmPopulationTest::testSwitchFromReferenceToEnabled()
+{
+    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false, QStringList() << QLatin1String("application/test") << Collection::mimeType());
+    Collection col6 = createCollection(QLatin1String("col6"), col5, true, QStringList() << QLatin1String("application/test"));
+
+    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
+    model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
+    model->setListFilter(Akonadi::CollectionFetchScope::Display);
+    QTRY_VERIFY(model->isFullyPopulated());
+    model->setCollectionReferenced(col5, true);
+    QTRY_VERIFY(getIndex("col5", model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
+
+    //Dereference and enable the collection
+    col5.setEnabled(true);
+    model->setCollectionReferenced(col5, false);
+
+    //Index and child should stay in model since both are enabled
+    QVERIFY(getIndex("col5", model).isValid());
+    QVERIFY(getIndex("col6", model).isValid());
 
     Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);
