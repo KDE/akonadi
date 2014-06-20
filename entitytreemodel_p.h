@@ -297,6 +297,7 @@ public:
      */
     bool shouldBePartOfModel(const Collection &collection) const;
     bool hasChildCollection(const Collection &collection) const;
+    bool isAncestorMonitored(const Collection &collection) const;
 };
 
 }

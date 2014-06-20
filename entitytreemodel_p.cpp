@@ -608,7 +608,10 @@ void EntityTreeModelPrivate::monitoredCollectionsChanged(const Akonadi::Collecti
         fetchCollections(collection, CollectionFetchJob::Base);
         fetchCollections(collection, fetchType);
     } else {
-        monitoredCollectionRemoved(collection);
+        //If a collection is derefernced and no longer explicitly monitored it might still match other filters
+        if (!shouldBePartOfModel(collection)) {
+            monitoredCollectionRemoved(collection);
+        }
     }
 }
 
@@ -746,8 +749,23 @@ bool EntityTreeModelPrivate::hasChildCollection(const Collection &collection) co
 {
     foreach (Node *node, m_childEntities[collection.id()]) {
         if (node->type == Node::Collection) {
+            const Collection subcol = m_collections[node->id];
+            if (shouldBePartOfModel(subcol)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool EntityTreeModelPrivate::isAncestorMonitored(const Collection &collection) const
+{
+    Akonadi::Collection parent = collection.parentCollection();
+    while (parent.isValid()) {
+        if (m_monitor->collectionsMonitored().contains(parent)) {
             return true;
         }
+        parent = parent.parentCollection();
     }
     return false;
 }
@@ -767,6 +785,15 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
     //Explicitly monitored collection
     if (m_monitor->collectionsMonitored().contains(collection)) {
         return true;
+    }
+
+    //We're explicitly monitoring collections, but didn't match the filter
+    if (m_mimeChecker.wantedMimeTypes().isEmpty() && !m_monitor->collectionsMonitored().isEmpty()) {
+        //The collection should be included if one of the parents is monitored
+        if (isAncestorMonitored(collection)) {
+            return true;
+        }
+        return false;
     }
 
     // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
