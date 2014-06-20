@@ -123,7 +123,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
             }
         }
         if (!found) {
-            kWarning() <<  "No such collection" << currentPart << "with parent" << mCurrentNode.id();
+            qWarning() <<  "No such collection" << currentPart << "with parent" << mCurrentNode.id();
             mColId = -1;
             q->setError(CollectionPathResolver::Unknown);
             q->setErrorText(i18n("No such collection."));

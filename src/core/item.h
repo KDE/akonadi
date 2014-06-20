@@ -21,7 +21,6 @@
 #ifndef AKONADI_ITEM_H
 #define AKONADI_ITEM_H
 
-<<<<<<< HEAD:akonadi/src/core/item.h
 #include "akonadicore_export.h"
 #include "entity.h"
 #include "exception.h"
