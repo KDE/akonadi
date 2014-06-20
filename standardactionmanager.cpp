@@ -649,6 +649,12 @@ public:
                 collection.setContentMimeTypes(mts);
             }
         }
+        if (parentCollection.contentMimeTypes().contains(Collection::virtualMimeType())) {
+            collection.setVirtual(true);
+            collection.setContentMimeTypes(collection.contentMimeTypes()
+                                           << Collection::virtualMimeType());
+        }
+
         CollectionCreateJob *job = new CollectionCreateJob(collection);
         q->connect(job, SIGNAL(result(KJob*)), q, SLOT(collectionCreationResult(KJob*)));
     }
