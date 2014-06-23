@@ -31,11 +31,7 @@ template<typename T>
 QVector<T> setToVector( const QSet<T> &set )
 {
   QVector<T> v( set.size() );
-  typename QSet<T>::const_iterator i = set.constBegin();
-  while ( i != set.constEnd() ) {
-    v.append( *i );
-    ++i;
-  }
+  std::copy( set.constBegin(), set.constEnd(), v.begin() );
   return v;
 }
 
