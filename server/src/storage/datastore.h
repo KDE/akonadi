@@ -160,7 +160,7 @@ class DataStore : public QObject
     /// Returns all virtual collections the @p item is linked to
     QVector<Collection> virtualCollections( const PimItem &item );
 
-    QMap<Entity::Id /* collection */, PimItem> virtualCollections( const PimItem::List &items );
+    QMap< Server::Entity::Id, QList< PimItem > > virtualCollections( const Akonadi::Server::PimItem::List &items );
 
     /* --- MimeType ------------------------------------------------------ */
     virtual bool appendMimeType( const QString &mimetype, qint64 *insertId = 0 );
