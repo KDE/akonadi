@@ -838,12 +838,9 @@ void DataStore::activeCachePolicy( Collection &col )
 
 QVector<Collection> DataStore::virtualCollections( const PimItem &item )
 {
-  QueryBuilder qb( CollectionPimItemRelation::tableName(), QueryBuilder::Select );
+  SelectQueryBuilder<Collection> qb;
   qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
               Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName() );
-  Q_FOREACH ( const QString &columnName, Collection::fullColumnNames() ) {
-    qb.addColumn( columnName );
-  }
   qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals, item.id() );
 
   if ( !qb.exec() ) {
@@ -852,10 +849,10 @@ QVector<Collection> DataStore::virtualCollections( const PimItem &item )
     return QVector<Collection>();
   }
 
-  return Collection::extractResult( qb.query() );
+  return qb.result();
 }
 
-QMap<Entity::Id,PimItem> DataStore::virtualCollections( const PimItem::List &items )
+QMap<Entity::Id,QList<PimItem> > DataStore::virtualCollections( const PimItem::List &items )
 {
   QueryBuilder qb( CollectionPimItemRelation::tableName(), QueryBuilder::Select );
   qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
@@ -865,29 +862,42 @@ QMap<Entity::Id,PimItem> DataStore::virtualCollections( const PimItem::List &ite
   qb.addColumn( Collection::idFullColumnName() );
   qb.addColumns( QStringList() << PimItem::idFullColumnName()
                                << PimItem::remoteIdFullColumnName()
-                               << PimItem::remoteRevisionFullColumnName() );
+                               << PimItem::remoteRevisionFullColumnName()
+                               << PimItem::mimeTypeIdFullColumnName() );
+  qb.addSortColumn( Collection::idFullColumnName(), Query::Ascending );
 
-  Query::Condition condition( Query::Or );
-  QStringList ids;
-  Q_FOREACH ( const PimItem &item, items ) {
-    ids << QString::number( item.id() );
+  if ( items.count() == 1) {
+    qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals, items.first().id() );
+  } else {
+    QVariantList ids;
+    ids.reserve(items.count());
+    Q_FOREACH ( const PimItem &item, items ) {
+      ids << item.id();
+    }
+    qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::In, ids );
   }
-  qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::In, ids );
 
   if ( !qb.exec() ) {
     akDebug() << "Error during selection of records from table CollectionPimItemRelation"
               << qb.query().lastError().text();
-    return QMap<Entity::Id,PimItem>();
+    return QMap<Entity::Id, QList<PimItem> >();
   }
 
   QSqlQuery query = qb.query();
-  QMap<Entity::Id,PimItem> map;
-  while ( query.next() ) {
-    PimItem item;
-    item.setId( query.value( 1 ).toLongLong() );
-    item.setRemoteId( query.value( 2 ).toString() );
-    item.setRemoteRevision( query.value( 3 ).toString() );
-    map.insertMulti( query.value( 0 ).toLongLong(), item );
+  QMap<Entity::Id, QList<PimItem> > map;
+  QList<PimItem> pimItems;
+  query.next();
+  while ( query.isValid() ) {
+    const qlonglong collectionId = query.value(0).toLongLong();
+    QList<PimItem> &pimItems = map[collectionId];
+    do {
+      PimItem item;
+      item.setId( query.value( 1 ).toLongLong() );
+      item.setRemoteId( query.value( 2 ).toString() );
+      item.setRemoteRevision( query.value( 3 ).toString() );
+      item.setMimeTypeId( query.value( 4 ).toLongLong() );
+      pimItems << item;
+    } while (query.next() && query.value(0).toLongLong() > collectionId);
   }
 
   return map;

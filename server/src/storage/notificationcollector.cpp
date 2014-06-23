@@ -245,7 +245,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
                                               const QSet<qint64> &removedTags )
 {
   Collection notificationDestCollection;
-  QMap<Entity::Id, PimItem> vCollections;
+  QMap<Entity::Id, QList<PimItem> > vCollections;
 
   if ( ( op == NotificationMessageV2::Modify ) ||
        ( op == NotificationMessageV2::ModifyFlags ) ||
@@ -273,13 +273,13 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   msg.setParentDestCollection( collectionDest.id() );
 
   /* Notify all virtual collections the items are linked to. */
-  Q_FOREACH ( const Entity::Id &colId, vCollections.uniqueKeys() ) {
+  for (auto iter = vCollections.constBegin(); iter != vCollections.constEnd(); ++iter) {
     NotificationMessageV3 copy = msg;
 
-    Q_FOREACH ( const PimItem &item, vCollections.values( colId ) ) {
+    Q_FOREACH ( const PimItem &item, iter.value() ) {
       copy.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
     }
-    copy.setParentCollection( colId );
+    copy.setParentCollection( iter.key() );
     copy.setResource( resource );
 
     dispatchNotification( copy );
