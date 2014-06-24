@@ -119,16 +119,16 @@ class DataStore : public QObject
     static DataStore *self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool silent = false );
-    virtual bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &flagsChanged,
+    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0, bool silent = false );
+    virtual bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0,
                                    bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool &tagsChanged, bool silent = false );
+    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0, bool silent = false );
 
     /* --- ItemTags ----------------------------------------------------- */
-    virtual bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool silent = false );
-    virtual bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged,
+    virtual bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );
+    virtual bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0,
                                   bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    virtual bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged, bool silent = false );
+    virtual bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );
 
     /* --- ItemParts ----------------------------------------------------- */
     virtual bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );

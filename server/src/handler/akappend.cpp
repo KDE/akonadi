@@ -268,7 +268,7 @@ bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
   // This will hit an entry in cache inserted there in buildPimItem()
   const Flag::List flagList = HandlerHelper::resolveFlags( itemFlags );
   bool flagsChanged = false;
-  if ( !DataStore::self()->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, parentCol, true ) ) {
+  if ( !DataStore::self()->appendItemsFlags( PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true ) ) {
     return failureResponse( "Unable to append item flags." );
   }
 
@@ -280,7 +280,7 @@ bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
     tagList << HandlerHelper::resolveTagsByRID( itemTagsRID, connection()->context() );
   }
   bool tagsChanged;
-  if ( !DataStore::self()->appendItemsTags( PimItem::List() << item, tagList, tagsChanged, false, parentCol, true ) ) {
+  if ( !DataStore::self()->appendItemsTags( PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true ) ) {
     return failureResponse( "Unable to append item tags." );
   }
 

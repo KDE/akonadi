@@ -66,6 +66,13 @@ QThreadStorage<DataStore*> DataStore::sInstances;
 #define TRANSACTION_MUTEX_LOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.lock()
 #define TRANSACTION_MUTEX_UNLOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.unlock()
 
+#define setBoolPtr(ptr, val) \
+{ \
+  if ((ptr)) { \
+      *(ptr) = (val); \
+  } \
+}
+
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
@@ -200,13 +207,16 @@ DataStore *DataStore::self()
 
 /* --- ItemFlags ----------------------------------------------------- */
 
-bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool silent )
+bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
+                               bool *flagsChanged, bool silent )
 {
   QSet<QByteArray> removedFlags;
   QSet<QByteArray> addedFlags;
   QVariantList insIds;
   QVariantList insFlags;
   Query::Condition delConds( Query::Or );
+
+  setBoolPtr( flagsChanged, false );
 
   Q_FOREACH ( const PimItem &item, items ) {
     Q_FOREACH ( const Flag &flag, item.flags() ) {
@@ -250,6 +260,8 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
     mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
   }
 
+  setBoolPtr( flagsChanged, ( addedFlags != removedFlags ) );
+
   return true;
 }
 
@@ -292,7 +304,7 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
 }
 
 bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
-                                  bool &flagsChanged, bool checkIfExists,
+                                  bool *flagsChanged, bool checkIfExists,
                                   const Collection &col, bool silent )
 {
   QSet<QByteArray> added;
@@ -302,7 +314,8 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
     itemsIds.append( item.id() );
   }
 
-  flagsChanged = false;
+  setBoolPtr( flagsChanged, false );
+
   Q_FOREACH ( const Flag &flag, flags ) {
     QSet<PimItem::Id> existing;
     if ( checkIfExists ) {
@@ -324,7 +337,8 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
         if ( query.size() == items.count() ) {
           continue;
         }
-        flagsChanged = true;
+        setBoolPtr( flagsChanged, true );
+
       }
 
       while ( query.next() ) {
@@ -332,7 +346,7 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
       }
       if ( !query.driver()->hasFeature( QSqlDriver::QuerySize ) ) {
         if ( existing.size() != items.count() ) {
-          flagsChanged = true;
+          setBoolPtr( flagsChanged, true );
         }
       }
     }
@@ -346,11 +360,14 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
 }
 
 bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
-                                  bool &flagsChanged, bool silent )
+                                  bool *flagsChanged, bool silent )
 {
   QSet<QByteArray> removedFlags;
   QVariantList itemsIds;
   QVariantList flagsIds;
+
+  setBoolPtr( flagsChanged, false );
+
   Q_FOREACH ( const PimItem &item, items ) {
     itemsIds << item.id();
     for ( int i = 0; i < flags.count(); ++i ) {
@@ -372,9 +389,11 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
     return false;
   }
 
-  flagsChanged = ( qb.query().numRowsAffected() != 0 ); // consider -1 (error) a change too
-  if ( flagsChanged && !silent ) {
-    mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
+  if ( qb.query().numRowsAffected() != 0 ) {
+    setBoolPtr( flagsChanged, true );
+    if ( !silent ) {
+      mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
+    }
   }
 
   return true;
@@ -382,13 +401,16 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
 
 /* --- ItemTags ----------------------------------------------------- */
 
-bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags, bool silent )
+bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags,
+                              bool *tagsChanged, bool silent )
 {
   QSet<qint64> removedTags;
   QSet<qint64> addedTags;
   QVariantList insIds;
   QVariantList insTags;
   Query::Condition delConds( Query::Or );
+
+  setBoolPtr( tagsChanged, false );
 
   Q_FOREACH ( const PimItem &item, items ) {
     Q_FOREACH ( const Tag &tag, item.tags() ) {
@@ -434,6 +456,8 @@ bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags,
     mNotificationCollector->itemsTagsChanged( items, addedTags, removedTags );
   }
 
+  setBoolPtr( tagsChanged, ( addedTags != removedTags ) );
+
   return true;
 }
 
@@ -476,7 +500,7 @@ bool DataStore::doAppendItemsTag( const PimItem::List &items, const Tag &tag,
 }
 
 bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &tags,
-                                  bool &tagsChanged, bool checkIfExists,
+                                  bool *tagsChanged, bool checkIfExists,
                                   const Collection &col, bool silent )
 {
   QSet<QByteArray> added;
@@ -486,7 +510,8 @@ bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &ta
     itemsIds.append( item.id() );
   }
 
-  tagsChanged = false;
+  setBoolPtr( tagsChanged, false );
+
   Q_FOREACH ( const Tag &tag, tags ) {
     QSet<PimItem::Id> existing;
     if ( checkIfExists ) {
@@ -507,7 +532,7 @@ bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &ta
         continue;
       }
 
-      tagsChanged = true;
+      setBoolPtr( tagsChanged, true );
 
       while ( query.next() ) {
         existing << query.value( 0 ).value<PimItem::Id>();
@@ -522,11 +547,14 @@ bool DataStore::appendItemsTags( const PimItem::List &items, const Tag::List &ta
 }
 
 bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &tags,
-                                 bool &tagsChanged, bool silent )
+                                 bool *tagsChanged, bool silent )
 {
   QSet<qint64> removedTags;
   QVariantList itemsIds;
   QVariantList tagsIds;
+
+  setBoolPtr( tagsChanged, false );
+
   Q_FOREACH ( const PimItem &item, items ) {
     itemsIds << item.id();
     for ( int i = 0; i < tags.count(); ++i ) {
@@ -548,10 +576,13 @@ bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &ta
     return false;
   }
 
-  tagsChanged = qb.query().numRowsAffected() != 0;
-  if ( !silent && tagsChanged ) {
-    mNotificationCollector->itemsTagsChanged( items, QSet<qint64>(), removedTags );
+  if ( qb.query().numRowsAffected() != 0 ) {
+    setBoolPtr( tagsChanged, true );
+    if ( !silent ) {
+      mNotificationCollector->itemsTagsChanged( items, QSet<qint64>(), removedTags );
+    }
   }
+
   return true;
 }
 

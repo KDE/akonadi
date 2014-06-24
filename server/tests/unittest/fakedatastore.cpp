@@ -90,18 +90,19 @@ bool FakeDataStore::init()
 
 bool FakeDataStore::setItemsFlags( const PimItem::List &items,
                                    const QVector<Flag> &flags,
+                                   bool *flagsChanged,
                                    bool silent )
 {
   mChanges.insert( QLatin1String( "setItemsFlags" ),
                    QVariantList() << QVariant::fromValue( items )
                                   << QVariant::fromValue( flags )
                                   << silent );
-  return DataStore::setItemsFlags( items, flags, silent );
+  return DataStore::setItemsFlags( items, flags, flagsChanged, silent );
 }
 
 bool FakeDataStore::appendItemsFlags( const PimItem::List &items,
                                       const QVector<Flag> &flags,
-                                      bool &flagsChanged,
+                                      bool *flagsChanged,
                                       bool checkIfExists,
                                       const Collection &col,
                                       bool silent )
@@ -117,7 +118,7 @@ bool FakeDataStore::appendItemsFlags( const PimItem::List &items,
 
 bool FakeDataStore::removeItemsFlags( const PimItem::List &items,
                                       const QVector<Flag> &flags,
-                                      bool &flagsChanged,
+                                      bool *flagsChanged,
                                       bool silent )
 {
   mChanges.insert( QLatin1String( "removeItemsFlags" ),
@@ -130,19 +131,20 @@ bool FakeDataStore::removeItemsFlags( const PimItem::List &items,
 
 bool FakeDataStore::setItemsTags( const PimItem::List &items,
                                   const Tag::List &tags,
+                                  bool *tagsChanged,
                                   bool silent )
 {
   mChanges.insert( QLatin1String( "setItemsTags" ),
                    QVariantList() << QVariant::fromValue( items )
                                   << QVariant::fromValue( tags )
                                   << silent );
-  return DataStore::setItemsTags( items, tags, silent );
+  return DataStore::setItemsTags( items, tags, tagsChanged, silent );
 }
 
 
 bool FakeDataStore::appendItemsTags( const PimItem::List &items,
                                      const Tag::List &tags,
-                                     bool &tagsChanged,
+                                     bool *tagsChanged,
                                      bool checkIfExists,
                                      const Collection &col,
                                      bool silent )
@@ -159,7 +161,7 @@ bool FakeDataStore::appendItemsTags( const PimItem::List &items,
 
 bool FakeDataStore::removeItemsTags( const PimItem::List &items,
                                      const Tag::List &tags,
-                                     bool &tagsChanged,
+                                     bool *tagsChanged,
                                      bool silent )
 {
   mChanges.insert( QLatin1String( "removeItemsTags" ),
