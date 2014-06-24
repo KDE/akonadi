@@ -86,7 +86,7 @@ bool Store::addFlags( const PimItem::List &items, const QVector<QByteArray> &fla
   const Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
 
-  if ( !store->appendItemsFlags( items, flagList, flagsChanged ) ) {
+  if ( !store->appendItemsFlags( items, flagList, &flagsChanged ) ) {
     akDebug() << "Store::addFlags: Unable to add new item flags";
     return false;
   }
@@ -108,8 +108,7 @@ bool Store::deleteFlags( const PimItem::List &items, const QVector<QByteArray> &
     flagList.append( flag );
   }
 
-  bool changed; // unused
-  if ( !store->removeItemsFlags( items, flagList, changed ) ) {
+  if ( !store->removeItemsFlags( items, flagList ) ) {
     akDebug() << "Store::deleteFlags: Unable to remove item flags";
     return false;
   }
@@ -128,7 +127,7 @@ bool Store::replaceTags( const PimItem::List &item, const ImapSet &tags )
 bool Store::addTags( const PimItem::List &items, const ImapSet &tags, bool &tagsChanged )
 {
   const Tag::List tagList = HandlerHelper::resolveTags( tags );
-  if ( !connection()->storageBackend()->appendItemsTags( items, tagList, tagsChanged ) ) {
+  if ( !connection()->storageBackend()->appendItemsTags( items, tagList, &tagsChanged ) ) {
     akDebug() << "Store::addTags: Unable to add new item tags";
     return false;
   }
@@ -138,8 +137,7 @@ bool Store::addTags( const PimItem::List &items, const ImapSet &tags, bool &tags
 bool Store::deleteTags( const PimItem::List &items, const ImapSet &tags )
 {
   const Tag::List tagList = HandlerHelper::resolveTags( tags );
-  bool changed; // unused
-  if ( !connection()->storageBackend()->removeItemsTags( items, tagList, changed ) ) {
+  if ( !connection()->storageBackend()->removeItemsTags( items, tagList ) ) {
     akDebug() << "Store::deleteTags: Unable to remove item tags";
     return false;
   }

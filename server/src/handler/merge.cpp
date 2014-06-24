@@ -53,21 +53,26 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
                        const ChangedAttributes &itemTagsRID,
                        const ChangedAttributes &itemTagsGID )
 {
-    currentItem.setRev( newItem.rev() );
-    if ( currentItem.remoteId() != newItem.remoteId() ) {
+    if ( !newItem.rev() > 0 ) {
+        currentItem.setRev( newItem.rev() );
+    }
+    if ( !newItem.remoteId().isEmpty() && currentItem.remoteId() != newItem.remoteId() ) {
       currentItem.setRemoteId( newItem.remoteId() );
       mChangedParts << AKONADI_PARAM_REMOTEID;
     }
-    if ( currentItem.remoteRevision() != newItem.remoteRevision() ) {
+    if ( !newItem.remoteRevision().isEmpty() && currentItem.remoteRevision() != newItem.remoteRevision() ) {
       currentItem.setRemoteRevision( newItem.remoteRevision() );
       mChangedParts << AKONADI_PARAM_REMOTEREVISION;
     }
-    if ( currentItem.gid() != newItem.gid() ) {
+    if ( !newItem.gid().isEmpty() && currentItem.gid() != newItem.gid() ) {
       currentItem.setGid( newItem.gid() );
       mChangedParts << AKONADI_PARAM_GID;
     }
-    currentItem.setDatetime( newItem.datetime() );
+    if ( newItem.datetime().isValid() ) {
+        currentItem.setDatetime( newItem.datetime() );
+    }
     currentItem.setAtime( QDateTime::currentDateTime() );
+
     // Only mark dirty when merged from application
     currentItem.setDirty( !connection()->context()->resource().isValid() );
 
@@ -77,22 +82,26 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       if ( !itemFlags.added.isEmpty() ) {
         const Flag::List addedFlags = HandlerHelper::resolveFlags( itemFlags.added );
         DataStore::self()->appendItemsFlags( PimItem::List() << currentItem, addedFlags,
-                                             flagsAdded, true, col, true );
+                                             &flagsAdded, true, col, true );
       }
 
       if ( !itemFlags.removed.isEmpty() ) {
         const Flag::List removedFlags = HandlerHelper::resolveFlags( itemFlags.removed );
         DataStore::self()->removeItemsFlags( PimItem::List() << currentItem, removedFlags,
-                                             flagsRemoved, true );
+                                             &flagsRemoved, true );
       }
 
       if ( flagsAdded || flagsRemoved ) {
         mChangedParts << AKONADI_PARAM_FLAGS;
       }
     } else if ( !itemFlags.added.isEmpty() ) {
+      bool flagsChanged = false;
       const Flag::List flags = HandlerHelper::resolveFlags( itemFlags.added );
-      DataStore::self()->setItemsFlags( PimItem::List() << currentItem, flags, true );
-      mChangedParts << AKONADI_PARAM_FLAGS;
+      DataStore::self()->setItemsFlags( PimItem::List() << currentItem, flags,
+                                        &flagsChanged, true );
+      if ( flagsChanged ) {
+        mChangedParts << AKONADI_PARAM_FLAGS;
+      }
     }
 
     if ( itemTagsRID.incremental ) {
@@ -100,22 +109,26 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       if ( !itemTagsRID.added.isEmpty() ) {
         const Tag::List addedTags = HandlerHelper::resolveTagsByRID( itemTagsRID.added, connection()->context() );
         DataStore::self()->appendItemsTags( PimItem::List() << currentItem, addedTags,
-                                            tagsAdded, true, col, true );
+                                            &tagsAdded, true, col, true );
       }
 
       if ( !itemTagsRID.removed.isEmpty() ) {
         const Tag::List removedTags = HandlerHelper::resolveTagsByRID( itemTagsRID.removed, connection()->context() );
         DataStore::self()->removeItemsTags( PimItem::List() << currentItem, removedTags,
-                                            tagsRemoved, true );
+                                            &tagsRemoved, true );
       }
 
       if ( tagsAdded || tagsRemoved ) {
         mChangedParts << AKONADI_PARAM_TAGS;
       }
     } else if ( !itemTagsRID.added.isEmpty() ) {
+      bool tagsChanged = false;
       const Tag::List tags = HandlerHelper::resolveTagsByRID( itemTagsRID.added, connection()->context() );
-      DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags, true );
-      mChangedParts << AKONADI_PARAM_TAGS;
+      DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags,
+                                       &tagsChanged, true );
+      if ( tagsChanged ) {
+        mChangedParts << AKONADI_PARAM_TAGS;
+      }
     }
 
     if ( itemTagsGID.incremental ) {
@@ -123,22 +136,26 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       if ( !itemTagsGID.added.isEmpty() ) {
         const Tag::List addedTags = HandlerHelper::resolveTagsByGID( itemTagsGID.added );
         DataStore::self()->appendItemsTags( PimItem::List() << currentItem, addedTags,
-                                            tagsAdded, true, col, true );
+                                            &tagsAdded, true, col, true );
       }
 
       if ( !itemTagsGID.removed.isEmpty() ) {
         const Tag::List removedTags = HandlerHelper::resolveTagsByGID( itemTagsGID.removed );
         DataStore::self()->removeItemsTags( PimItem::List() << currentItem, removedTags,
-                                            tagsRemoved, true );
+                                            &tagsRemoved, true );
       }
 
       if ( tagsAdded || tagsRemoved ) {
         mChangedParts << AKONADI_PARAM_TAGS;
       }
     } else if ( !itemTagsGID.added.isEmpty() ) {
+      bool tagsChanged = false;
       const Tag::List tags = HandlerHelper::resolveTagsByGID( itemTagsGID.added );
-      DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags, true );
-      mChangedParts << AKONADI_PARAM_TAGS;
+      DataStore::self()->setItemsTags( PimItem::List() << currentItem, tags,
+                                       &tagsChanged, true );
+      if ( tagsChanged ) {
+        mChangedParts << AKONADI_PARAM_TAGS;
+      }
     }
 
 
