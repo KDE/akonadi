@@ -18,6 +18,7 @@
     <payload>testmailbody1</payload>
     <attribute type="HEAD">From: &lt;test1@user.tst&gt;</attribute>
     <flag>\FLAGGED</flag>
+    <tag>tagrid</tag>
    </item>
    <item rid="C" mimetype="application/octet-stream">
     <payload>testmailbody2</payload>
@@ -73,4 +74,5 @@
    </item>
   </collection>
  </collection>
+ <tag name="name" type="type" gid="taggid" rid="tagrid"></tag>
 </knut>
