@@ -19,7 +19,6 @@
 
 #include "exception.h"
 
-#include <QDebug>
 #include <QString>
 
 #include <memory>

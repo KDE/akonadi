@@ -25,7 +25,6 @@
 #include "job.h"
 #include "attribute.h"
 
-#include <QVector>
 #include <QSharedPointer>
 #include <QDebug>
 

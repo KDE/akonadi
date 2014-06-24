@@ -23,7 +23,6 @@
 #include <akonadi/private/notificationmessagev2_p.h>
 #include <qtest_kde.h>
 #include <qtest_akonadi.h>
-#include <QtTest>
 
 using namespace Akonadi;
 

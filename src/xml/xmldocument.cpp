@@ -21,8 +21,6 @@
 #include "format_p.h"
 #include "xmlreader.h"
 
-#include <QDebug>
-#include <KGlobal>
 #include <KLocalizedString>
 
 #include <qdom.h>
@@ -35,7 +33,7 @@
 #include <QStandardPaths>
 #endif
 
-static const KCatalogLoader loader( QLatin1String( "libakonadi-xml") );
+//QT5 static const KCatalogLoader loader( QLatin1String( "libakonadi-xml") );
 
 using namespace Akonadi;
 

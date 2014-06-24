@@ -40,7 +40,6 @@
 #include <akonadi/subscriptionjob_p.h>
 
 #include <QtCore/QVariant>
-#include <QApplication>
 #include <QtTest/QSignalSpy>
 #include <qtest_akonadi.h>
 

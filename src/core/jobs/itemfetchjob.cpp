@@ -31,7 +31,6 @@
 
 #include <qdebug.h>
 #include <KDebug>
-#include <KLocalizedString>
 
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>

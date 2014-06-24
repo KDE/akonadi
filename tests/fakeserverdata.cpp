@@ -18,9 +18,6 @@
 
 #include "fakeserverdata.h"
 
-#include <QLocalServer>
-#include <KStandardDirs>
-#include <QDir>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/collectionfetchjob.h>
 

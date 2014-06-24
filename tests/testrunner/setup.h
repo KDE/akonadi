@@ -21,8 +21,6 @@
 #include <akonadi/servermanager.h>
 
 #include <QtCore/QObject>
-#include <QStringList>
-#include <QDBusConnection>
 #include <QVector>
 #include <QPair>
 

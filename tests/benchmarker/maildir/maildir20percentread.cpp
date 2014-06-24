@@ -22,7 +22,6 @@
 #include "maildir.h"
 
 #include <QDebug>
-#include <QTest>
 
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>

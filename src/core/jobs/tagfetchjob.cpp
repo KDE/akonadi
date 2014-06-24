@@ -24,7 +24,6 @@
 #include "tagfetchscope.h"
 #include "attributefactory.h"
 #include <QTimer>
-#include <QFile>
 
 using namespace Akonadi;
 

@@ -30,8 +30,6 @@
 #include <kmime/kmime_message.h>
 #include "kmime/messageparts.h"
 
-#include <QDebug>
-#include <QTest>
 
 #include <boost/shared_ptr.hpp>
 

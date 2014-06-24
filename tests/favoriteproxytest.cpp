@@ -21,7 +21,6 @@
 
 #include "test_utils.h"
 
-#include <KStandardDirs>
 #include <KConfigGroup>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/control.h>

@@ -26,7 +26,6 @@
 
 #include <QtCore/QDebug>
 #include <QApplication>
-#include <QBuffer>
 #include <QTimer>
 
 #include <kmime/kmime_message.h>

@@ -23,7 +23,6 @@
 
 #include "attributefactory.h"
 
-#include <QStringList>
 
 using namespace Akonadi;
 

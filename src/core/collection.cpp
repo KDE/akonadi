@@ -33,7 +33,6 @@
 #include <QtCore/QStringList>
 
 #include <KUrl>
-#include <KGlobal>
 
 using namespace Akonadi;
 

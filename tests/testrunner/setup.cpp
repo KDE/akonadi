@@ -27,7 +27,6 @@
 #include <kconfiggroup.h>
 #include <qdebug.h>
 #include <KProcess>
-#include <KStandardDirs>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>

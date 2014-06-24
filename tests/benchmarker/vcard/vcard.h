@@ -20,7 +20,6 @@
 #ifndef VCARD_H
 #define VCARD_H
 
-#include <QTest>
 
 #include "../maketest.h"
 

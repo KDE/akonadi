@@ -20,7 +20,6 @@
 #include "specialcollectionattribute.h"
 #include "attributefactory.h"
 
-#include <QDebug>
 
 using namespace Akonadi;
 

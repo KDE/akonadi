@@ -29,7 +29,6 @@
 #include <akonadi/transactionjobs.h>
 
 #include <QtCore/QVariant>
-#include <QApplication>
 #include <QtTest/QSignalSpy>
 #include <qtest_akonadi.h>
 

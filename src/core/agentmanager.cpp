@@ -31,7 +31,6 @@
 #include <QWidget>
 
 #include <KLocale>
-#include <KLocalizedString>
 
 using namespace Akonadi;
 

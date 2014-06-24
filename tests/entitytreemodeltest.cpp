@@ -19,7 +19,6 @@
 
 #include <qtest_akonadi.h>
 
-#include <QTimer>
 
 #include "fakeserverdata.h"
 #include "fakesession.h"
@@ -30,7 +29,6 @@
 
 #include "entitytreemodel.h"
 #include <entitydisplayattribute.h>
-#include <KStandardDirs>
 #include <entitytreemodel_p.h>
 
 static const QString serverContent1 =

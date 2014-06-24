@@ -23,7 +23,6 @@
 #include "selftestdialog_p.h"
 #endif
 
-#include <QDebug>
 #include <QIcon>
 #include <KLocalizedString>
 #include <KStandardGuiItem>

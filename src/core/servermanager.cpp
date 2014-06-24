@@ -27,13 +27,11 @@
 #include "firstrun_p.h"
 
 #include <QDebug>
-#include <KGlobal>
 
 #include <akonadi/private/protocol_p.h>
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtDBus>
-#include <QPointer>
 #include <QTimer>
 
 #include <boost/scoped_ptr.hpp>

@@ -20,11 +20,11 @@
 #include "agentfilterproxymodel.h"
 
 #include <QVBoxLayout>
-#include <KGlobal>
 #include <KConfig>
 
 #include <kfilterproxysearchline.h>
 #include <klineedit.h>
+#include <KSharedConfig>
 
 using namespace Akonadi;
 

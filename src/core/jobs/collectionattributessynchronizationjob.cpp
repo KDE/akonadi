@@ -27,7 +27,6 @@
 #include <QDebug>
 #include <KLocalizedString>
 
-#include <QDBusConnection>
 #include <QDBusInterface>
 #include <QTimer>
 

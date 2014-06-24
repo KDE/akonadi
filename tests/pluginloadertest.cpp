@@ -22,7 +22,6 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QApplication>
 #include <QStringList>
 
 #include <kapplication.h>

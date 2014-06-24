@@ -19,7 +19,6 @@
 
 #include <qtest_kde.h>
 
-#include <QTimer>
 
 #include <krecursivefilterproxymodel.h>
 #include <QStandardItemModel>

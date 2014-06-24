@@ -21,7 +21,6 @@
 
 #include <akonadi/private/imapparser_p.h>
 
-#include <QIcon>
 
 using namespace Akonadi;
 

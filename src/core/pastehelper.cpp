@@ -30,7 +30,6 @@
 #include "transactionsequence.h"
 #include "session.h"
 
-#include <QDebug>
 #include <KUrl>
 
 #include <QtCore/QByteArray>

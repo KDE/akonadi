@@ -48,7 +48,6 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <QDebug>
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <QMenu>

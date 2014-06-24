@@ -25,7 +25,6 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-#include <QDomDocument>
 
 #include <xml/xmldocument.h>
 #include <agentsearchinterface.h>

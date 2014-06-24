@@ -30,7 +30,6 @@
 #include <KConfigGroup>
 #include <QDebug>
 #include <KGlobal>
-#include <KProcess>
 #include <KStandardDirs>
 
 #include <QtDBus/QDBusConnection>

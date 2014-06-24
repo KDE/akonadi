@@ -30,7 +30,6 @@ class Tag;
 AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 
 #include "attributeentity.h"
-#include <QVector>
 #include <QSharedPointer>
 #include <KUrl>
 #include <QDebug>

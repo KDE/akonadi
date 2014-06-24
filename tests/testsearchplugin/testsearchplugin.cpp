@@ -19,9 +19,6 @@
 
 #include "testsearchplugin.h"
 
-#include <QtPlugin>
-#include <QSettings>
-#include <QDir>
 #include <QDebug>
 
 #include "searchquery.h"

@@ -30,7 +30,6 @@
 #include <QDebug>
 
 #include <QDomElement>
-#include <QFile>
 #include <QStack>
 
 using namespace Akonadi;
