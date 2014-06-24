@@ -28,6 +28,7 @@
 #include <klocale.h>
 #include <klocalizedstring.h>
 #include <KLocale>
+#include <KFormat>
 
 using namespace Akonadi;
 
@@ -156,7 +157,7 @@ QVariant CollectionStatisticsModel::data(const QModelIndex &index, int role) con
         } else if (value == 0) {
             return QStringLiteral("-");
         } else if (index.column() == 3) {
-            return KLocale::global()->formatByteSize(value);
+            return KFormat().formatByteSize(value);
         } else {
             return QString::number(value);
         }

@@ -28,6 +28,7 @@
 #include <klocalizedstring.h>
 
 #include <KLocale>
+#include <KFormat>
 
 using namespace Akonadi;
 
@@ -69,7 +70,7 @@ void CollectionGeneralPropertiesPage::load(const Collection &collection)
     if (collection.statistics().count() >= 0) {
         ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects",
                                       collection.statistics().count()));
-        ui.sizeLabel->setText(KLocale::global()->formatByteSize(collection.statistics().size()));
+        ui.sizeLabel->setText(KFormat().formatByteSize(collection.statistics().size()));
     } else {
         ui.statsBox->hide();
     }
