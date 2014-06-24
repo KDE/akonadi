@@ -31,6 +31,7 @@
 #include <akonadi/dbusconnectionpool.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/tagcreatejob.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
@@ -131,6 +132,11 @@ void KnutResource::retrieveCollections()
 {
   const Collection::List collections = mDocument.collections();
   collectionsRetrieved( collections );
+  const Tag::List tags = mDocument.tags();
+  Q_FOREACH ( const Tag &tag, tags ) {
+      TagCreateJob *createjob = new TagCreateJob(tag);
+      createjob->setMergeIfExisting(true);
+  }
 }
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )
