@@ -25,6 +25,10 @@
 #include <kfilterproxysearchline.h>
 #include <klineedit.h>
 #include <KSharedConfig>
+#include <KConfigGroup>
+
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace Akonadi;
 
@@ -59,23 +63,25 @@ void AgentTypeDialog::Private::readConfig()
 }
 
 AgentTypeDialog::AgentTypeDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(this))
 {
-    setButtons(Ok | Cancel);
-    QVBoxLayout *layout = new QVBoxLayout(mainWidget());
-    layout->setMargin(0);
+    QVBoxLayout *layout = new QVBoxLayout;
+    setLayout(layout);
 
-    d->Widget = new Akonadi::AgentTypeWidget(mainWidget());
+    d->Widget = new Akonadi::AgentTypeWidget;
     connect(d->Widget, SIGNAL(activated()), this, SLOT(accept()));
 
-    KFilterProxySearchLine *searchLine = new KFilterProxySearchLine(mainWidget());
+    KFilterProxySearchLine *searchLine = new KFilterProxySearchLine;
     layout->addWidget(searchLine);
     searchLine->setProxy(d->Widget->agentFilterProxyModel());
 
     layout->addWidget(d->Widget);
 
-    connect(this, SIGNAL(okClicked()), this, SLOT(accept()));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
 
     d->readConfig();
 
@@ -96,7 +102,7 @@ void AgentTypeDialog::done(int result)
         d->agentType = AgentType();
     }
 
-    KDialog::done(result);
+    QDialog::done(result);
 }
 
 AgentType AgentTypeDialog::agentType() const

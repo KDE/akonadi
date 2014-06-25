@@ -22,7 +22,7 @@
 #include "agenttypewidget.h"
 #include "agenttype.h"
 
-#include <KDE/KDialog>
+#include <QDialog>
 
 namespace Akonadi {
 
@@ -50,7 +50,7 @@ namespace Akonadi {
  * @author Tom Albers <tomalbers@kde.nl>
  * @since 4.2
  */
-class AKONADIWIDGETS_EXPORT AgentTypeDialog : public KDialog
+class AKONADIWIDGETS_EXPORT AgentTypeDialog : public QDialog
 {
     Q_OBJECT
 

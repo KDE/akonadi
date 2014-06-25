@@ -48,7 +48,6 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KInputDialog>
 #include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
@@ -60,7 +59,7 @@
 #include <QItemSelectionModel>
 #include <QPointer>
 #include <QWeakPointer>
-
+#include <QInputDialog>
 #include <boost/static_assert.hpp>
 
 using namespace Akonadi;
@@ -618,9 +617,8 @@ public:
             return;
         }
 
-        QString name = KInputDialog::getText(contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle),
-                                             contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText),
-                                             QString(), 0, parentWidget);
+        QString name = QInputDialog::getText(parentWidget, contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle),
+                                             contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText));
         name = name.trimmed();
         if (name.isEmpty()) {
             return;
@@ -1129,7 +1127,7 @@ public:
     void slotCreateResource()
     {
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(parentWidget));
-        dlg->setCaption(contextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle));
+        dlg->setWindowTitle(contextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle));
 
         foreach (const QString &mimeType, mMimeTypeFilter) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);

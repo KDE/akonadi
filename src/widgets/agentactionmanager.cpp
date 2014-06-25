@@ -152,7 +152,7 @@ public:
     void slotCreateAgentInstance()
     {
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(mParentWidget));
-        dlg->setCaption(contextText(AgentActionManager::CreateAgentInstance,
+        dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance,
                                     AgentActionManager::DialogTitle));
 
         foreach (const QString &mimeType, mMimeTypeFilter) {
