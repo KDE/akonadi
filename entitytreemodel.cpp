@@ -770,7 +770,10 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
         if (Node::Collection == node->type) {
             urls << d->m_collections.value(node->id).url(Collection::UrlWithName);
         } else if (Node::Item == node->type) {
-            urls << d->m_items.value(node->id).url(Item::UrlWithMimeType);
+            KUrl url = d->m_items.value(node->id).url(Item::Item::UrlWithMimeType);
+            // Encode the "virtual" parent
+            url.addQueryItem(QLatin1String("parent"), QString::number(node->parent));
+            urls << url;
         } else { // if that happens something went horrible wrong
             Q_ASSERT(false);
         }
