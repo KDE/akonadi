@@ -47,6 +47,10 @@ bool Move::parseStream()
   const Collection destination = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
   const Resource destResource = destination.resource();
 
+  if ( destination.isVirtual() ) {
+      return failureResponse( "Moving items into virtual collection is not allowed" );
+  }
+
   Collection source;
   if ( !m_streamParser->atCommandEnd() ) {
     Scope sourceScope( mScope.scope() );

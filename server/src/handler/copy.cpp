@@ -89,6 +89,9 @@ bool Copy::parseStream()
   if ( !targetCollection.isValid() ) {
     return failureResponse( "No valid target specified" );
   }
+  if ( targetCollection.isVirtual() ) {
+    return failureResponse( "Copying items into virtual collections is not allowed" );
+  }
 
   SelectQueryBuilder<PimItem> qb;
   ItemQueryHelper::itemSetToQuery( set, qb );
