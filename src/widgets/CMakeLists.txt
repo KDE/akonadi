@@ -1,6 +1,3 @@
-# Turn exceptions on
-kde_enable_exceptions()
-
 set(akonadiwidgets_SRCS
     actionstatemanager.cpp
     agentactionmanager.cpp

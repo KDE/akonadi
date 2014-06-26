@@ -1,6 +1,3 @@
-# Turn exceptions on
-kde_enable_exceptions()
-
 set(akonadiagentbase_SRCS
     agentbase.cpp
     agentfactory.cpp
