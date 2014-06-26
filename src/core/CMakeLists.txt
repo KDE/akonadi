@@ -1,5 +1,3 @@
-# Turn exceptions on
-kde_enable_exceptions()
 
 set(akonadicore_base_SRCS
     agentinstance.cpp
@@ -63,7 +61,6 @@ set(akonadicore_base_SRCS
     trashsettings.cpp
     typepluginloader.cpp
 )
-
 
 ecm_generate_headers(AkonadiCore_base_HEADERS
     HEADER_NAMES
@@ -270,6 +267,8 @@ target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KF5_I
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AKONADI_INCLUDE_DIR}>")
+
+kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
 
 target_link_libraries(KF5AkonadiCore
 PUBLIC
