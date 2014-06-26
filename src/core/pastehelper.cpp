@@ -21,6 +21,7 @@
 
 #include "collectioncopyjob.h"
 #include "collectionmovejob.h"
+#include "collectionfetchjob.h"
 #include "item.h"
 #include "itemcreatejob.h"
 #include "itemcopyjob.h"
@@ -29,14 +30,194 @@
 #include "linkjob.h"
 #include "transactionsequence.h"
 #include "session.h"
+#include "unlinkjob.h"
 
 #include <KUrl>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMimeData>
 #include <QtCore/QStringList>
+#include <QtCore/QMutexLocker>
+
+#include <boost/bind.hpp>
 
 using namespace Akonadi;
+
+class PasteHelperJob: public Akonadi::TransactionSequence
+{
+    Q_OBJECT
+
+public:
+    explicit PasteHelperJob(Qt::DropAction action, const Akonadi::Item::List &items,
+                            const Akonadi::Collection::List &collections,
+                            const Akonadi::Collection &destination,
+                            QObject *parent = 0);
+    virtual ~PasteHelperJob();
+
+private Q_SLOTS:
+    void onDragSourceCollectionFetched(KJob *job);
+
+private:
+    void runActions();
+    void runItemsActions();
+    void runCollectionsActions();
+
+private:
+    Qt::DropAction mAction;
+    Akonadi::Item::List mItems;
+    Akonadi::Collection::List mCollections;
+    Akonadi::Collection mDestCollection;
+};
+
+PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
+                               const Collection::List &collections,
+                               const Collection &destination,
+                               QObject *parent)
+    : TransactionSequence(parent)
+    , mAction(action)
+    , mItems(items)
+    , mCollections(collections)
+    , mDestCollection(destination)
+{
+    //FIXME: The below code disables transactions in otder to avoid data loss due to nested
+    //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
+    //Remove once this is fixed properly, see the other FIXME comments.
+    setProperty("transactionsDisabled", true);
+
+    Collection dragSourceCollection;
+    if (!items.isEmpty() && items.first().parentCollection().isValid()) {
+        // Check if all items have the same parent collection ID
+        const Collection parent = items.first().parentCollection();
+        if (std::find_if(items.constBegin(), items.constEnd(),
+                         boost::bind(&Entity::operator!=, boost::bind(static_cast<Collection (Item::*)() const>(&Item::parentCollection), _1), parent))
+             == items.constEnd())
+        {
+            dragSourceCollection = parent;
+        }
+    }
+
+    kDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
+
+    if (dragSourceCollection.isValid()) {
+        // Disable autocommitting, because starting a Link/Unlink/Copy/Move job
+        // after the transaction has ended leaves the job hanging
+        setAutomaticCommittingEnabled(false);
+
+        CollectionFetchJob *fetch = new CollectionFetchJob(dragSourceCollection,
+                                                           CollectionFetchJob::Base,
+                                                           this);
+        QObject::connect(fetch, SIGNAL(finished(KJob*)),
+                         this, SLOT(onDragSourceCollectionFetched(KJob*)));
+    } else {
+        runActions();
+    }
+}
+
+PasteHelperJob::~PasteHelperJob()
+{
+}
+
+void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
+{
+    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
+    kDebug() << fetch->error() << fetch->collections().count();
+    if (fetch->error() || fetch->collections().count() != 1) {
+        runActions();
+        commit();
+        return;
+    }
+
+
+    // If the source collection is virtual, treat copy and move actions differently
+    const Collection sourceCollection = fetch->collections().first();
+    kDebug() << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
+    kDebug() << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
+    kDebug() << "ACTN:" << mAction;
+    if (sourceCollection.isVirtual()) {
+        switch (mAction) {
+        case Qt::CopyAction:
+            if (mDestCollection.isVirtual()) {
+                new LinkJob(mDestCollection, mItems, this);
+            } else {
+                new ItemCopyJob(mItems, mDestCollection, this);
+            }
+            break;
+        case Qt::MoveAction:
+            new UnlinkJob(sourceCollection, mItems, this);
+            if (mDestCollection.isVirtual()) {
+                new LinkJob(mDestCollection, mItems, this);
+            } else {
+                new ItemCopyJob(mItems, mDestCollection, this);
+            }
+            break;
+        case Qt::LinkAction:
+            new LinkJob(mDestCollection, mItems, this);
+            break;
+        default:
+            Q_ASSERT(false);
+        }
+        runCollectionsActions();
+        commit();
+    } else {
+      runActions();
+    }
+
+    commit();
+}
+
+void PasteHelperJob::runActions()
+{
+    runItemsActions();
+    runCollectionsActions();
+}
+
+void PasteHelperJob::runItemsActions()
+{
+    if (mItems.isEmpty()) {
+        return;
+    }
+
+    switch (mAction) {
+    case Qt::CopyAction:
+        new ItemCopyJob(mItems, mDestCollection, this);
+        break;
+    case Qt::MoveAction:
+        new ItemMoveJob(mItems, mDestCollection, this);
+        break;
+    case Qt::LinkAction:
+        new LinkJob(mDestCollection, mItems, this);
+        break;
+    default:
+        Q_ASSERT(false); // WTF?!
+    }
+}
+
+void PasteHelperJob::runCollectionsActions()
+{
+    if (mCollections.isEmpty()) {
+        return;
+    }
+
+    switch (mAction) {
+    case Qt::CopyAction:
+        foreach (const Collection &col, mCollections) {   // FIXME: remove once we have a batch job for collections as well
+            new CollectionCopyJob(col, mDestCollection, this);
+        }
+        break;
+    case Qt::MoveAction:
+        foreach (const Collection &col, mCollections) {   // FIXME: remove once we have a batch job for collections as well
+            new CollectionMoveJob(col, mDestCollection, this);
+        }
+        break;
+    case Qt::LinkAction:
+        // Not supported for collections
+        break;
+    default:
+        Q_ASSERT(false); // WTF?!
+    }
+}
+
+
 
 bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection)
 {
@@ -140,43 +321,22 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         if (collection.isValid()) {
             collections.append(collection);
         }
-        const Item item = Item::fromUrl(url);
+        Item item = Item::fromUrl(url);
+        if (url.hasQueryItem(QLatin1String("parent"))) {
+            item.setParentCollection(Collection(url.queryItem(QLatin1String("parent")).toLongLong()));
+        }
         if (item.isValid()) {
             items.append(item);
         }
         // TODO: handle non Akonadi URLs?
     }
 
-    TransactionSequence *transaction = new TransactionSequence(session);
 
-    //FIXME: The below code disables transactions in otder to avoid data loss due to nested
-    //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
-    //Remove once this is fixed properly, see the other FIXME comments.
-    transaction->setProperty("transactionsDisabled", true);
+    PasteHelperJob *job = new PasteHelperJob(action, items,
+                                             collections, destination,
+                                             session);
 
-    switch (action) {
-    case Qt::CopyAction:
-        if (!items.isEmpty()) {
-            new ItemCopyJob(items, destination, transaction);
-        }
-        foreach (const Collection &col, collections) {   // FIXME: remove once we have a batch job for collections as well
-            new CollectionCopyJob(col, destination, transaction);
-        }
-        break;
-    case Qt::MoveAction:
-        if (!items.isEmpty()) {
-            new ItemMoveJob(items, destination, transaction);
-        }
-        foreach (const Collection &col, collections) {   // FIXME: remove once we have a batch job for collections as well
-            new CollectionMoveJob(col, destination, transaction);
-        }
-        break;
-    case Qt::LinkAction:
-        new LinkJob(destination, items, transaction);
-        break;
-    default:
-        Q_ASSERT(false); // WTF?!
-        return 0;
-    }
-    return transaction;
+    return job;
 }
+
+#include "pastehelper.moc"
