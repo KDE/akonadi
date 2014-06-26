@@ -96,7 +96,7 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         }
     }
 
-    kDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
+    qDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
 
     if (dragSourceCollection.isValid()) {
         // Disable autocommitting, because starting a Link/Unlink/Copy/Move job
@@ -120,7 +120,7 @@ PasteHelperJob::~PasteHelperJob()
 void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
 {
     CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
-    kDebug() << fetch->error() << fetch->collections().count();
+    qDebug() << fetch->error() << fetch->collections().count();
     if (fetch->error() || fetch->collections().count() != 1) {
         runActions();
         commit();
@@ -130,9 +130,9 @@ void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
 
     // If the source collection is virtual, treat copy and move actions differently
     const Collection sourceCollection = fetch->collections().first();
-    kDebug() << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
-    kDebug() << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
-    kDebug() << "ACTN:" << mAction;
+    qDebug() << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
+    qDebug() << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
+    qDebug() << "ACTN:" << mAction;
     if (sourceCollection.isVirtual()) {
         switch (mAction) {
         case Qt::CopyAction:
