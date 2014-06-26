@@ -20,7 +20,7 @@
 #include "xmlwritejob.h"
 
 #include "collection.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 
 #include <k4aboutdata.h>
 #include <KApplication>
