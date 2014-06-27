@@ -42,6 +42,7 @@ public:
         contentMimeTypes = other.contentMimeTypes;
         ancestorDepth = other.ancestorDepth;
         statistics = other.statistics;
+        listFilter = other.listFilter;
     }
 
 public:
