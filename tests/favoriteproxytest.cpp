@@ -31,7 +31,7 @@
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/itemcreatejob.h>
 #include <favoritecollectionsmodel.h>
-#include <QtGui/QItemSelectionRange>
+#include <QItemSelectionRange>
 #include <QSortFilterProxyModel>
 
 using namespace Akonadi;
