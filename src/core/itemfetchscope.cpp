@@ -164,12 +164,12 @@ bool ItemFetchScope::ignoreRetrievalErrors() const
     return d->mIgnoreRetrievalErrors;
 }
 
-void ItemFetchScope::setFetchChangedSince(const KDateTime &changedSince)
+void ItemFetchScope::setFetchChangedSince(const QDateTime &changedSince)
 {
     d->mChangedSince = changedSince;
 }
 
-KDateTime ItemFetchScope::fetchChangedSince() const
+QDateTime ItemFetchScope::fetchChangedSince() const
 {
     return d->mChangedSince;
 }

@@ -22,7 +22,7 @@
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
-#include <KDE/KDateTime>
+#include <QDateTime>
 #include "itemfetchscope.h"
 
 namespace Akonadi {
@@ -77,7 +77,7 @@ public:
     bool mCheckCachedPayloadPartsOnly;
     bool mFetchMtime;
     bool mIgnoreRetrievalErrors;
-    KDateTime mChangedSince;
+    QDateTime mChangedSince;
     bool mFetchRid;
     bool mFetchGid;
     bool mFetchTags;

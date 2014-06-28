@@ -23,7 +23,7 @@
 #include "akonadicore_export.h"
 
 #include <QtCore/QSharedDataPointer>
-#include <KDE/KDateTime>
+#include <QDateTime>
 
 class QStringList;
 template <typename T> class QSet;
@@ -297,12 +297,12 @@ public:
      * @param changedSince The timestamp of oldest modified item to fetch
      * @since 4.11
      */
-    void setFetchChangedSince(const KDateTime &changedSince);
+    void setFetchChangedSince(const QDateTime &changedSince);
 
     /**
      * Returns timestamp of the oldest item to fetch.
      */
-    KDateTime fetchChangedSince() const;
+    QDateTime fetchChangedSince() const;
 
     /**
      * Fetch remote identification for items.
