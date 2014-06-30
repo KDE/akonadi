@@ -89,7 +89,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
         namesFetch->setProperty("OriginalCollectionId", job->property("OriginalCollectionId"));
         namesFetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
         connect(namesFetch, SIGNAL(finished(KJob*)),
-                q, SLOT(_k_collectionsNamesReceived(KJob *)));
+                q, SLOT(_k_collectionsNamesReceived(KJob*)));
     } else {
         _k_collectionsNamesReceived(job);
   }
