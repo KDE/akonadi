@@ -48,16 +48,20 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_CURRENT_BIN
 
 ############### The Akonadi version (used in AkonadiConfig.cmake) ###############
 
-set(AKONADI_VERSION_MAJOR "1")
-set(AKONADI_VERSION_MINOR "12")
 set(AKONADI_VERSION_PATCH "49")
 
 # Raise the minor version if we're building Akonadi using Qt5
 if(QT5_BUILD)
+  set(AKONADI_VERSION_MAJOR "2")
   set(AKONADI_VERSION_MINOR "78")
+  set(AKONADI_VERSION_MAJOR_STRING "1")
+else ()
+ set(AKONADI_VERSION_MAJOR "1")
+ set(AKONADI_VERSION_MINOR "12") 
+ set(AKONADI_VERSION_MAJOR_STRING "1")
 endif()
 
-set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
+set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR_STRING}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
 set(AKONADI_VERSION_STRING "${AKONADI_VERSION}")
 
 # If Git is installed and a '.git' directory is found,
