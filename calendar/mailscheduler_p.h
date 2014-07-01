@@ -47,7 +47,7 @@ public:
     /**
      * @param calendar Must be a valid and loaded calendar.
      */
-    explicit MailScheduler(QObject *parent = 0);
+    explicit MailScheduler(ITIPHandlerComponentFactory *factory, QObject *parent = 0);
     ~MailScheduler();
 
     /** reimp */
@@ -62,6 +62,7 @@ public:
     void performTransaction(const KCalCore::IncidenceBase::Ptr &incidence,
                             KCalCore::iTIPMethod method,
                             const QString &recipients);
+
 
     /** Returns the directory where the free-busy information is stored */
     /** reimp*/ QString freeBusyDir() const;

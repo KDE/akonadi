@@ -38,6 +38,7 @@
 #include <kcalutils/stringify.h>
 
 #include <kpimidentities/identitymanager.h>
+#include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportmanager.h>
 
 #include <KMessageBox>
@@ -59,8 +60,31 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
 
+ITIPHandlerComponentFactory::ITIPHandlerComponentFactory(QObject *parent)
+  : QObject(parent)
+{
+}
+
+ITIPHandlerComponentFactory::~ITIPHandlerComponentFactory()
+{
+}
+
+MailTransport::MessageQueueJob *ITIPHandlerComponentFactory::createMessageQueueJob(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity, QObject *parent)
+{
+    Q_UNUSED(incidence);
+    Q_UNUSED(identity);
+    return new MailTransport::MessageQueueJob(parent);
+}
+
 ITIPHandler::ITIPHandler(QObject *parent) : QObject(parent)
-    , d(new Private(this))
+    , d(new Private(/*factory=*/0, this))
+{
+    qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
+}
+
+
+ITIPHandler::ITIPHandler(ITIPHandlerComponentFactory *factory, QObject *parent) : QObject(parent)
+    , d(new Private(factory, this))
 {
     qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
 }
@@ -347,7 +371,7 @@ void ITIPHandler::sendAsICalendar(const KCalCore::Incidence::Ptr &originalIncide
         const QString from = Akonadi::CalendarUtils::email();
         const bool bccMe = Akonadi::CalendarSettings::self()->bcc();
         const QString messageText = format.createScheduleMessage(incidence, KCalCore::iTIPRequest);
-        MailClient *mailer = new MailClient();
+        MailClient *mailer = new MailClient(d->m_factory);
         d->m_queuedInvitation.incidence = incidence;
         connect(mailer, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
                 d, SLOT(finishSendAsICalendar(Akonadi::MailScheduler::Result,QString)));

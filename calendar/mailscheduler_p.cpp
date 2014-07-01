@@ -44,12 +44,12 @@ public:
     MailClient *m_mailer;
 };
 
-MailScheduler::MailScheduler(QObject *parent) : Scheduler(parent)
+MailScheduler::MailScheduler(ITIPHandlerComponentFactory *factory, QObject *parent) : Scheduler(parent)
     , d(new Private())
-
 {
     d->m_identityManager = new IdentityManager(/*ro=*/true, this);
-    d->m_mailer = new MailClient();
+    d->m_mailer = new MailClient(factory, parent);
+
     connect(d->m_mailer, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
             SLOT(onMailerFinished(Akonadi::MailClient::Result,QString)));
 }

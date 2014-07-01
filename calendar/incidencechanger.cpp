@@ -132,10 +132,11 @@ ConflictPreventer* ConflictPreventer::self()
     return &sConflictPreventerPrivate->instance;
 }
 
-IncidenceChanger::Private::Private(bool enableHistory, IncidenceChanger *qq) : q(qq)
+IncidenceChanger::Private::Private(bool enableHistory, ITIPHandlerComponentFactory *factory, IncidenceChanger *qq) : q(qq)
 {
     mLatestChangeId = 0;
     mShowDialogsOnError = true;
+    mFactory = factory ? factory : new ITIPHandlerComponentFactory(this);
     mHistory = enableHistory ? new History(this) : 0;
     mUseHistory = enableHistory;
     mDestinationPolicy = DestinationPolicyDefault;
@@ -423,7 +424,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
 {
     bool result = true;
     if (mGroupwareCommunication) {
-        ITIPHandlerHelper handler(change->parentWidget);    // TODO make async
+        ITIPHandlerHelper handler(mFactory, change->parentWidget); // TODO make async
 
         if (m_invitationPolicy == InvitationPolicySend) {
             handler.setDefaultAction(ITIPHandlerHelper::ActionSendMessage);
@@ -510,7 +511,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
 bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &change)
 {
     if (change->useGroupwareCommunication) {
-        ITIPHandlerHelper handler(change->parentWidget);   // TODO make async
+        ITIPHandlerHelper handler(mFactory, change->parentWidget);   // TODO make async
 
         const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
         const bool neverSend = m_invitationPolicy == InvitationPolicyDontSend;
@@ -571,7 +572,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
                     }
 
                     if (notifyOrganizer) {
-                        MailScheduler scheduler; // TODO make async
+                        MailScheduler scheduler(mFactory, change->parentWidget); // TODO make async
                         scheduler.performTransaction(incidence, KCalCore::iTIPReply);
                     }
                 }
@@ -633,12 +634,18 @@ bool IncidenceChanger::Private::myAttendeeStatusChanged(const Incidence::Ptr &ne
 }
 
 IncidenceChanger::IncidenceChanger(QObject *parent) : QObject(parent)
-    , d(new Private(/**history=*/true, this))
+    , d(new Private(/**history=*/true, /*factory=*/0, this))
+{
+}
+
+
+IncidenceChanger::IncidenceChanger(ITIPHandlerComponentFactory *factory, QObject *parent) : QObject(parent)
+    , d(new Private(/**history=*/true, factory, this))
 {
 }
 
 IncidenceChanger::IncidenceChanger(bool enableHistory, QObject *parent) : QObject(parent)
-    , d(new Private(enableHistory, this))
+    , d(new Private(enableHistory, /*factory=*/0, this))
 {
 }
 
@@ -1030,7 +1037,7 @@ void IncidenceChanger::setHistoryEnabled(bool enable)
     if (d->mUseHistory != enable) {
         d->mUseHistory = enable;
         if (enable && !d->mHistory)
-            d->mHistory = new History(this);
+            d->mHistory = new History(d);
     }
 }
 

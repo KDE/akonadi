@@ -23,6 +23,7 @@
 #define AKONADI_MAILCLIENT_P_H
 
 #include "akonadi-calendar_export.h"
+#include "itiphandler.h"
 #include <kcalcore/incidencebase.h>
 #include <kmime/kmime_message.h>
 #include <QObject>
@@ -45,19 +46,19 @@ class Identity;
 class KJob;
 
 namespace Akonadi {
-
 #ifdef PLEASE_TEST_INVITATIONS
 #define EXPORT_MAILCLIENT AKONADI_CALENDAR_EXPORT
 #else
 #define EXPORT_MAILCLIENT
 #endif
 
+class ITIPHandlerComponentFactory;
+
 class EXPORT_MAILCLIENT MailClient : public QObject
 
 {
     Q_OBJECT
 public:
-
     enum Result {
         ResultSuccess,
         ResultNoAttendees,
@@ -67,29 +68,30 @@ public:
         ResultQueueJobError
     };
 
-    explicit MailClient(QObject *parent = 0);
+    explicit MailClient(ITIPHandlerComponentFactory *factory, QObject *parent = 0);
     ~MailClient();
 
-    void mailAttendees(const KCalCore::IncidenceBase::Ptr &,
+    void mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
                        const KPIMIdentities::Identity &identity,
                        bool bccMe, const QString &attachment=QString(),
                        const QString &mailTransport = QString());
 
-    void mailOrganizer(const KCalCore::IncidenceBase::Ptr &,
+    void mailOrganizer(const KCalCore::IncidenceBase::Ptr &incidence,
                        const KPIMIdentities::Identity &identity,
                        const QString &from, bool bccMe,
                        const QString &attachment=QString(),
                        const QString &sub=QString(),
                        const QString &mailTransport = QString());
 
-    void mailTo(const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
+    void mailTo(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity,
                 const QString &from, bool bccMe, const QString &recipients,
-                const QString &attachment=QString(), const QString &mailTransport = QString());
+                const QString &attachment = QString(), const QString &mailTransport = QString());
 
     /**
       Sends mail with specified from, to and subject field and body as text.
       If bcc is set, send a blind carbon copy to the sender
 
+      @param incidence is the incidence, that is sended
       @param identity is the Identity of the sender
       @param from is the address of the sender of the message
       @param to a list of addresses to receive the message
@@ -103,7 +105,7 @@ public:
       @param mailTransport defines the mail transport method. See here the
       kdepimlibs/mailtransport library.
     */
-    void send(const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
+    void send(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
               const QString &cc, const QString &subject, const QString &body,
               bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
               const QString &mailTransport = QString());
@@ -116,8 +118,7 @@ Q_SIGNALS:
 
 public:
     // For unit-test usage, since we can't depend on kdepim-runtime on jenkins
-    static UnitTestResult::List sUnitTestResults;
-    static bool sRunningUnitTests;
+    ITIPHandlerComponentFactory *mFactory;
 };
 
 }

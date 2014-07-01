@@ -25,15 +25,17 @@
 
 using namespace Akonadi;
 
-ITIPHandler::Private::Private(ITIPHandler *qq) : m_calendarLoadError(false)
-    , m_scheduler(new MailScheduler(qq))
+ITIPHandler::Private::Private(ITIPHandlerComponentFactory *factory, ITIPHandler *qq) : m_calendarLoadError(false)
+    , m_factory(factory ? factory : new ITIPHandlerComponentFactory(this))
+    , m_scheduler(new MailScheduler(m_factory, qq))
     , m_method(KCalCore::iTIPNoMethod)
-    , m_helper(new ITIPHandlerHelper())   //TODO parent
+    , m_helper(new ITIPHandlerHelper(m_factory))
     , m_currentOperation(OperationNone)
     , m_uiDelegate(0)
     , m_showDialogsOnError(true)
     , q(qq)
 {
+    m_helper->setParent(this);
     connect(m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),
             SLOT(onSchedulerFinished(Akonadi::Scheduler::Result,QString)));
 

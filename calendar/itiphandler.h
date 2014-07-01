@@ -35,6 +35,14 @@
 #include <QString>
 #include <QWidget>
 
+namespace MailTransport {
+    class MessageQueueJob;
+}
+
+namespace KPIMIdentities {
+    class Identity;
+}
+
 namespace Akonadi {
 
 /**
@@ -49,6 +57,33 @@ public:
 
     virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar) = 0;
     virtual void createCalendar() = 0;
+};
+
+/**
+ * @short Factory to create MailTransport::MessageQueueJob jobs.
+ * @since 4.15
+ */
+class AKONADI_CALENDAR_EXPORT ITIPHandlerComponentFactory : public QObject
+{
+    Q_OBJECT
+public:
+    /*
+     * Created a new ITIPHandlerComponentFactory object.
+     */
+    explicit ITIPHandlerComponentFactory(QObject *parent = 0);
+
+    /*
+     * deletes the object.
+     */
+    virtual ~ITIPHandlerComponentFactory();
+
+    /*
+     * @return A new MailTransport::MessageQueueJob object
+     * @param incidence related to the mail
+     * @param identity that is the mail sender
+     * @param parent of the MailTransport::MessageQueueJob object
+     */
+    virtual MailTransport::MessageQueueJob* createMessageQueueJob(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity, QObject *parent = 0);
 };
 
 /**
@@ -67,9 +102,16 @@ public:
 
     /**
      * Creates a new ITIPHandler instance.
+     * creates a default ITIPHandlerComponentFactory object.
      */
     explicit ITIPHandler(QObject *parent = 0);
 
+    /**
+     * Create a new ITIPHandler instance.
+     * @param factory is set to 0 a new factory is created.
+     * @since 4.15
+     */
+    explicit ITIPHandler(ITIPHandlerComponentFactory *factory, QObject *parent);
     /**
      * Destroys this instance.
      */

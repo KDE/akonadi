@@ -30,6 +30,7 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
+#include <mailtransport/messagequeuejob.h>
 
 #include <kcalcore/event.h>
 
@@ -47,15 +48,61 @@ Q_DECLARE_METATYPE(QList<int>)
 static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
 static const char *s_outEmail2 = "identity2@kde.org";
 
+class FakeMessageQueueJob : public MailTransport::MessageQueueJob
+{
+public:
+    explicit FakeMessageQueueJob(QObject *parent = 0) : MailTransport::MessageQueueJob(parent)
+    {
+    }
+
+    virtual void start()
+    {
+        UnitTestResult unitTestResult;
+        unitTestResult.message     = message();
+        unitTestResult.from        = addressAttribute().from();
+        unitTestResult.to          = addressAttribute().to();
+        unitTestResult.cc          = addressAttribute().cc();
+        unitTestResult.bcc         = addressAttribute().bcc();
+        unitTestResult.transportId = transportAttribute().transportId();
+        FakeMessageQueueJob::sUnitTestResults << unitTestResult;
+
+        setError(Akonadi::MailClient::ResultSuccess);
+        setErrorText(QString());
+
+        emitResult();
+    }
+
+    static UnitTestResult::List sUnitTestResults;
+};
+
+
+UnitTestResult::List FakeMessageQueueJob::sUnitTestResults;
+
+class FakeITIPHandlerComponentFactory : public ITIPHandlerComponentFactory
+{
+public:
+    FakeITIPHandlerComponentFactory(QObject *parent = 0) : ITIPHandlerComponentFactory(parent)
+    {
+    }
+
+    virtual MailTransport::MessageQueueJob *createMessageQueueJob(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity, QObject *parent = 0)
+    {
+        Q_UNUSED(incidence);
+        Q_UNUSED(identity);
+        return new FakeMessageQueueJob(parent);
+    }
+};
+
+
+
 void ITIPHandlerTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
     m_pendingItipMessageSignal = 0;
     m_pendingIncidenceChangerSignal = 0;
-    MailClient::sRunningUnitTests = true;
     m_itipHandler = 0;
     m_cancelExpected = false;
-    m_changer = new IncidenceChanger(this);
+    m_changer = new IncidenceChanger(new FakeITIPHandlerComponentFactory(this), this);
     m_changer->setHistoryEnabled(false);
     m_changer->setGroupwareCommunication(true);
     m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicySend); // don't show dialogs
@@ -190,7 +237,7 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(int, expectedNumIncidences);
     QFETCH(KCalCore::Attendee::PartStat, expectedPartStat);
 
-    MailClient::sUnitTestResults.clear();
+    FakeMessageQueueJob::sUnitTestResults.clear();
     createITIPHandler();
 
     m_expectedResult = expectedResult;
@@ -262,7 +309,7 @@ void ITIPHandlerTest::testProcessITIPMessages()
 
     const QString receiver = QLatin1String(s_ourEmail);
 
-    MailClient::sUnitTestResults.clear();
+    FakeMessageQueueJob::sUnitTestResults.clear();
     createITIPHandler();
 
     m_expectedResult = Akonadi::ITIPHandler::ResultSuccess;
@@ -319,7 +366,7 @@ void ITIPHandlerTest::testProcessITIPMessageCancel()
     QFETCH(QString, incidenceUid);
 
     const QString receiver = QLatin1String(s_ourEmail);
-    MailClient::sUnitTestResults.clear();
+    FakeMessageQueueJob::sUnitTestResults.clear();
     createITIPHandler();
 
     m_expectedResult = Akonadi::ITIPHandler::ResultSuccess;
@@ -476,7 +523,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
 
     m_pendingIncidenceChangerSignal = 1;
-    MailClient::sUnitTestResults.clear();
+    FakeMessageQueueJob::sUnitTestResults.clear();
     m_changer->setInvitationPolicy(invitationPolicy);
 
     m_cancelExpected = userCancels;
@@ -485,7 +532,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
     case IncidenceChanger::ChangeTypeCreate:
         m_changer->createIncidence(incidence, mCollection);
         waitForIt();
-        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
+        QCOMPARE(FakeMessageQueueJob::sUnitTestResults.count(), expectedEmailCount);
         break;
     case IncidenceChanger::ChangeTypeModify: {
         // Create if first, so we have something to modify
@@ -493,7 +540,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
         m_changer->createIncidence(incidence, mCollection);
         waitForIt();
         m_changer->setGroupwareCommunication(true);
-        QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+        QCOMPARE(FakeMessageQueueJob::sUnitTestResults.count(), 0);
         QVERIFY(mLastInsertedItem.isValid());
 
         m_pendingIncidenceChangerSignal = 1;
@@ -502,7 +549,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
         int changeId = m_changer->modifyIncidence(mLastInsertedItem, oldIncidence);
         QVERIFY(changeId != 1);
         waitForIt();
-        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
+        QCOMPARE(FakeMessageQueueJob::sUnitTestResults.count(), expectedEmailCount);
     }
     break;
     case IncidenceChanger::ChangeTypeDelete:
@@ -511,13 +558,13 @@ void ITIPHandlerTest::testOutgoingInvitations()
         m_changer->createIncidence(incidence, mCollection);
         waitForIt();
         m_changer->setGroupwareCommunication(true);
-        QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+        QCOMPARE(FakeMessageQueueJob::sUnitTestResults.count(), 0);
 
         QVERIFY(mLastInsertedItem.isValid());
         m_pendingIncidenceChangerSignal = 1;
         m_changer->deleteIncidence(mLastInsertedItem);
         waitForIt();
-        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
+        QCOMPARE(FakeMessageQueueJob::sUnitTestResults.count(), expectedEmailCount);
         break;
     default:
         Q_ASSERT(false);
@@ -571,7 +618,7 @@ void ITIPHandlerTest::cleanup()
 
 void ITIPHandlerTest::createITIPHandler()
 {
-    m_itipHandler = new Akonadi::ITIPHandler();
+    m_itipHandler = new Akonadi::ITIPHandler(new FakeITIPHandlerComponentFactory(this), this);
     m_itipHandler->setShowDialogsOnError(false);
     connect(m_itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
             SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)));
@@ -594,7 +641,7 @@ void ITIPHandlerTest::processItip(const QString &icaldata, const QString &receiv
 
     // 0 e-mails are sent because the status update e-mail is sent by
     // kmail's text_calendar.cpp.
-    QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+    QCOMPARE(FakeMessageQueueJob::sUnitTestResults.count(), 0);
 
     items = calendarItems();
 
@@ -676,7 +723,6 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
     if (m_pendingIncidenceChangerSignal == 0) {
         stopWaiting();
     }
-    kDebug() << "Got result " << resultCode << m_cancelExpected;
     QCOMPARE(resultCode, m_cancelExpected ? IncidenceChanger::ResultCodeUserCanceled
              : IncidenceChanger::ResultCodeSuccess);
 }

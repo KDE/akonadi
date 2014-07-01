@@ -148,10 +148,10 @@ bool ITIPHandlerHelper::weNeedToSendMailFor(const KCalCore::Incidence::Ptr &inci
         incidence->attendees().first()->email() != incidence->organizer()->email();
 }
 
-ITIPHandlerHelper::ITIPHandlerHelper(QWidget *parent)
+ITIPHandlerHelper::ITIPHandlerHelper(ITIPHandlerComponentFactory *factory, QWidget *parent)
     : mDefaultAction(ITIPHandlerHelper::ActionAsk)
     , mParent(parent)
-    , m_scheduler(new MailScheduler(parent))
+    , m_scheduler(new MailScheduler(factory, parent))
     , m_status(StatusNone)
 {
     connect(m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),

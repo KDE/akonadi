@@ -250,7 +250,7 @@ class IncidenceChanger::Private : public QObject
 {
     Q_OBJECT
 public:
-    explicit Private(bool enableHistory, IncidenceChanger *mIncidenceChanger);
+    explicit Private(bool enableHistory, ITIPHandlerComponentFactory *factory, IncidenceChanger *mIncidenceChanger);
     ~Private();
 
     void loadCollections();  // async-loading of list of writable collections
@@ -350,6 +350,7 @@ public:
 
     IncidenceChanger::InvitationPolicy m_invitationPolicy;
 
+    ITIPHandlerComponentFactory *mFactory;
 private:
     IncidenceChanger *q;
 };
