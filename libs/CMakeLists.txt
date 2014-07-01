@@ -17,7 +17,7 @@ add_library(akonadiprotocolinternals ${LIBRARY_TYPE} ${akonadiprotocolinternals_
 target_link_libraries(akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 set_target_properties(akonadiprotocolinternals PROPERTIES
                         VERSION ${AKONADI_VERSION}
-                        SOVERSION ${AKONADI_VERSION_MAJOR}
+                        SOVERSION ${AKONADI_SOVERSION}
                         DEFINE_SYMBOL MAKE_AKONADIPROTOCOLINTERNALS_LIB
                       )
 
