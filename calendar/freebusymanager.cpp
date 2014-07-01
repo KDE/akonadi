@@ -913,7 +913,7 @@ void FreeBusyManager::mailFreeBusy(int daysToPublish, QWidget *parentWidget)
     QPointer<PublishDialog> publishdlg = new PublishDialog();
     if (publishdlg->exec() == QDialog::Accepted) {
         // Send the mail
-        MailScheduler *scheduler = new MailScheduler();
+        MailScheduler *scheduler = new MailScheduler(/*factory=*/0, this);
         connect(scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString))
                 , d, SLOT(processMailSchedulerResult(Akonadi::Scheduler::Result,QString)));
         d->mParentWidgetForMailling = parentWidget;

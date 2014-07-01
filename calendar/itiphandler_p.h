@@ -58,7 +58,7 @@ class ITIPHandler::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private(ITIPHandler *q);
+    Private(ITIPHandlerComponentFactory *factory, ITIPHandler *q);
 
     void finishProcessiTIPMessage(Akonadi::MailScheduler::Result, const QString &errorMessage);
     void finishSendiTIPMessage(Akonadi::MailScheduler::Result, const QString &errorMessage);
@@ -74,6 +74,7 @@ public:
     Invitation m_queuedInvitation;
     bool m_calendarLoadError;
     CalendarBase::Ptr m_calendar;
+    ITIPHandlerComponentFactory *m_factory;
     MailScheduler *m_scheduler;
     KCalCore::Incidence::Ptr m_incidence;
     KCalCore::iTIPMethod m_method; // METHOD field of ical rfc of incoming invitation
