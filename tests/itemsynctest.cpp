@@ -89,9 +89,9 @@ class ItemsyncTest : public QObject
       monitor.setCollectionMonitored(col);
       QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
       QVERIFY(deletedSpy.isValid());
-      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
       QVERIFY(addedSpy.isValid());
-      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)));
+      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
       QVERIFY(changedSpy.isValid());
 
       ItemSync* syncer = new ItemSync( col );
@@ -135,9 +135,9 @@ class ItemsyncTest : public QObject
       monitor.setCollectionMonitored(col);
       QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
       QVERIFY(deletedSpy.isValid());
-      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
       QVERIFY(addedSpy.isValid());
-      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)));
+      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
       QVERIFY(changedSpy.isValid());
 
       ItemSync* syncer = new ItemSync( col );
@@ -199,9 +199,9 @@ class ItemsyncTest : public QObject
       monitor.setCollectionMonitored(col);
       QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
       QVERIFY(deletedSpy.isValid());
-      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
       QVERIFY(addedSpy.isValid());
-      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)));
+      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
       QVERIFY(changedSpy.isValid());
 
       {
@@ -266,9 +266,9 @@ class ItemsyncTest : public QObject
       monitor.setCollectionMonitored(col);
       QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
       QVERIFY(deletedSpy.isValid());
-      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
       QVERIFY(addedSpy.isValid());
-      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)));
+      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
       QVERIFY(changedSpy.isValid());
 
       ItemSync* syncer = new ItemSync( col );
@@ -320,9 +320,9 @@ class ItemsyncTest : public QObject
       monitor.setCollectionMonitored(col);
       QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
       QVERIFY(deletedSpy.isValid());
-      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
       QVERIFY(addedSpy.isValid());
-      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)));
+      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
       QVERIFY(changedSpy.isValid());
 
       ItemSync* syncer = new ItemSync( col );
@@ -353,9 +353,9 @@ class ItemsyncTest : public QObject
       monitor.setCollectionMonitored(col);
       QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
       QVERIFY(deletedSpy.isValid());
-      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)));
+      QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
       QVERIFY(addedSpy.isValid());
-      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)));
+      QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
       QVERIFY(changedSpy.isValid());
 
       ItemSync* syncer = new ItemSync( col );
