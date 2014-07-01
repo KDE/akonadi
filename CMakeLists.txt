@@ -20,7 +20,7 @@ include(KDEFrameworkCompilerSettings)
 set(KF5_VERSION "5.0.0")
 set(KDEPIMLIBS_VERSION "4.70.0")
 
-ecm_setup_version(${KF5_VERSION}
+ecm_setup_version(${KDEPIMLIBS_VERSION}
     VARIABLE_PREFIX AKONADILIBRARIES
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
