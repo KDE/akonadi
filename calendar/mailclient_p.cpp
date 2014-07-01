@@ -45,10 +45,9 @@
 
 using namespace Akonadi;
 
-bool Akonadi::MailClient::sRunningUnitTests = false;
-UnitTestResult::List MailClient::sUnitTestResults;
 
-MailClient::MailClient(QObject *parent) : QObject(parent)
+MailClient::MailClient(ITIPHandlerComponentFactory *factory, QObject *parent) : QObject(parent)
+    , mFactory(factory ? factory : new ITIPHandlerComponentFactory(this))
 {
 }
 
@@ -132,7 +131,7 @@ void MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
     const QString body = KCalUtils::IncidenceFormatter::mailBodyStr(incidence,
                          KSystemTimeZones::local());
 
-    send(identity, from, to, cc, subject, body, false, bccMe, attachment, mailTransport);
+    send(incidence, identity, from, to, cc, subject, body, false, bccMe, attachment, mailTransport);
 }
 
 void MailClient::mailOrganizer(const KCalCore::IncidenceBase::Ptr &incidence,
@@ -156,7 +155,7 @@ void MailClient::mailOrganizer(const KCalCore::IncidenceBase::Ptr &incidence,
     const QString body = KCalUtils::IncidenceFormatter::mailBodyStr(incidence,
                          KSystemTimeZones::local());
 
-    send(identity, from, to, QString(), subject, body, false, bccMe, attachment, mailTransport);
+    send(incidence, identity, from, to, QString(), subject, body, false, bccMe, attachment, mailTransport);
 }
 
 void MailClient::mailTo(const KCalCore::IncidenceBase::Ptr &incidence,
@@ -177,7 +176,7 @@ void MailClient::mailTo(const KCalCore::IncidenceBase::Ptr &incidence,
     const QString body = KCalUtils::IncidenceFormatter::mailBodyStr(incidence,
                          KSystemTimeZones::local());
 
-    send(identity, from, recipients, QString(), subject, body, false,
+    send(incidence, identity, from, recipients, QString(), subject, body, false,
          bccMe, attachment, mailTransport);
 }
 
@@ -192,13 +191,13 @@ static QStringList extractEmailAndNormalize(const QString &email)
     return normalizedEmail;
 }
 
-void MailClient::send(const KPIMIdentities::Identity &identity,
+void MailClient::send(const KCalCore::IncidenceBase::Ptr &incidence,
+                      const KPIMIdentities::Identity &identity,
                       const QString &from, const QString &_to,
                       const QString &cc, const QString &subject,
                       const QString &body, bool hidden, bool bccMe,
                       const QString &attachment, const QString &mailTransport)
 {
-    Q_UNUSED(identity);
     Q_UNUSED(hidden);
 
     UnitTestResult unitTestResult;
@@ -222,9 +221,6 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
              << "\nSubject:" << subject << "\nBody: \n" << body
              << "\nAttachment:\n" << attachment
              << "\nmailTransport: " << mailTransport;
-
-    QTime timer;
-    timer.start();
 
     MailTransport::Transport *transport =
         MailTransport::TransportManager::self()->transportByName(mailTransport);
@@ -335,7 +331,7 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
     message->assemble();
 
     // Put the newly created item in the MessageQueueJob.
-    MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob(this);
+    MailTransport::MessageQueueJob *qjob = mFactory->createMessageQueueJob(incidence, identity, this);
     qjob->transportAttribute().setTransportId(transportId);
     qjob->sentBehaviourAttribute().setSentBehaviour(
         MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection);
@@ -367,25 +363,9 @@ void MailClient::send(const KPIMIdentities::Identity &identity,
         qjob->addressAttribute().setBcc(bccStringList);
     }
 
-    if (sRunningUnitTests) {
-        unitTestResult.message     = message;
-        unitTestResult.from        = finalFrom;
-        unitTestResult.to          = toStringList;
-        unitTestResult.cc          = ccStringList;
-        unitTestResult.bcc         = bccStringList;
-        unitTestResult.transportId = transportId;
-        sUnitTestResults << unitTestResult;
-        qjob->deleteLater();
-
-        QMetaObject::invokeMethod(this, "finished", Qt::QueuedConnection,
-                                  Q_ARG(Akonadi::MailClient::Result, ResultSuccess),
-                                  Q_ARG(QString, QString()));
-
-    } else {
-        qjob->setMessage(message);
-        connect(qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)));
-        qjob->start();
-    }
+    qjob->setMessage(message);
+    connect(qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)));
+    qjob->start();
 }
 
 void MailClient::handleQueueJobFinished(KJob *job)
@@ -395,7 +375,6 @@ void MailClient::handleQueueJobFinished(KJob *job)
         emit finished(ResultQueueJobError, i18n("Error queuing message in outbox: %1",
                                                 job->errorText()));
     } else {
-        kDebug() << "Mail queued";
         emit finished(ResultSuccess, QString());
     }
 }

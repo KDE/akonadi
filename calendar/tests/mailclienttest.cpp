@@ -38,6 +38,50 @@ using namespace Akonadi;
 Q_DECLARE_METATYPE(KPIMIdentities::Identity)
 Q_DECLARE_METATYPE(KCalCore::Incidence::Ptr)
 
+class FakeMessageQueueJob : public MailTransport::MessageQueueJob
+{
+public:
+    explicit FakeMessageQueueJob(QObject *parent = 0) : MailTransport::MessageQueueJob(parent)
+    {
+    }
+
+    virtual void start()
+    {
+        UnitTestResult unitTestResult;
+        unitTestResult.message     = message();
+        unitTestResult.from        = addressAttribute().from();
+        unitTestResult.to          = addressAttribute().to();
+        unitTestResult.cc          = addressAttribute().cc();
+        unitTestResult.bcc         = addressAttribute().bcc();
+        unitTestResult.transportId = transportAttribute().transportId();
+        FakeMessageQueueJob::sUnitTestResults << unitTestResult;
+
+        setError(Akonadi::MailClient::ResultSuccess);
+        setErrorText(QString());
+
+        emitResult();
+    }
+
+    static UnitTestResult::List sUnitTestResults;
+};
+
+UnitTestResult::List FakeMessageQueueJob::sUnitTestResults;
+
+class FakeITIPHandlerComponentFactory : public ITIPHandlerComponentFactory
+{
+public:
+    explicit FakeITIPHandlerComponentFactory(QObject *parent = 0) : ITIPHandlerComponentFactory(parent)
+    {
+    }
+
+    virtual MailTransport::MessageQueueJob *createMessageQueueJob(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity, QObject *parent = 0)
+    {
+        Q_UNUSED(incidence);
+        Q_UNUSED(identity);
+        return new FakeMessageQueueJob(parent);
+    }
+};
+
 class MailClientTest : public QObject
 {
     Q_OBJECT
@@ -55,8 +99,7 @@ private Q_SLOTS:
         AkonadiTest::checkTestIsIsolated();
 
         mPendingSignals = 0;
-        mMailClient = new MailClient(this);
-        mMailClient->sRunningUnitTests = true;
+        mMailClient = new MailClient(new FakeITIPHandlerComponentFactory(this), this);
         mLastResult = MailClient::ResultSuccess;
         connect(mMailClient, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
                 SLOT(handleFinished(Akonadi::MailClient::Result,QString)));
@@ -193,7 +236,8 @@ private Q_SLOTS:
         QFETCH(QStringList, expectedToList);
         QFETCH(QStringList, expectedCcList);
         QFETCH(QStringList, expectedBccList);
-        mMailClient->sUnitTestResults.clear();
+
+        FakeMessageQueueJob::sUnitTestResults.clear();
 
         mPendingSignals = 1;
         mMailClient->mailAttendees(incidence, identity, bccMe, attachment, transport);
@@ -206,10 +250,10 @@ private Q_SLOTS:
         }
 
         UnitTestResult unitTestResult;
-        if (mMailClient->sUnitTestResults.isEmpty()) {
+        if (FakeMessageQueueJob::sUnitTestResults.isEmpty()) {
             qDebug() << "mail results are empty";
         } else {
-            unitTestResult = mMailClient->sUnitTestResults.first();
+            unitTestResult = FakeMessageQueueJob::sUnitTestResults.first();
         }
 
         if (expectedTransportId != -1 && unitTestResult.transportId != expectedTransportId) {
@@ -287,14 +331,14 @@ private Q_SLOTS:
         QFETCH(QStringList, expectedToList);
         QFETCH(QStringList, expectedBccList);
         QFETCH(QString, expectedSubject);
-        mMailClient->sUnitTestResults.clear();
+        FakeMessageQueueJob::sUnitTestResults.clear();
 
         mPendingSignals = 1;
         mMailClient->mailOrganizer(incidence, identity, from, bccMe, attachment, subject, transport);
         waitForSignals();
         QCOMPARE(mLastResult, expectedResult);
 
-        UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
+        UnitTestResult unitTestResult = FakeMessageQueueJob::sUnitTestResults.first();
         if (expectedTransportId != -1)
             QCOMPARE(unitTestResult.transportId, expectedTransportId);
 
@@ -354,13 +398,13 @@ private Q_SLOTS:
         QFETCH(QString, expectedFrom);
         QFETCH(QStringList, expectedToList);
         QFETCH(QStringList, expectedBccList);
-        mMailClient->sUnitTestResults.clear();
+        FakeMessageQueueJob::sUnitTestResults.clear();
 
         mPendingSignals = 1;
         mMailClient->mailTo(incidence, identity, from, bccMe, recipients, attachment, transport);
         waitForSignals();
         QCOMPARE(mLastResult, expectedResult);
-        UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
+        UnitTestResult unitTestResult = FakeMessageQueueJob::sUnitTestResults.first();
         if (expectedTransportId != -1)
             QCOMPARE(unitTestResult.transportId, expectedTransportId);
 
