@@ -24,7 +24,7 @@
 #include "control.h"
 
 
-#include <kaction.h>
+#include <QAction>
 #include <qdebug.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
