@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Akonadi)
 
 # ECM setup
-find_package(ECM 0.0.15 CONFIG REQUIRED)
+find_package(ECM 1.0.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
