@@ -115,6 +115,7 @@ public:
 #define AKONADI_AGENT_FACTORY( agentClass, catalogName ) \
 class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
 { \
+  Q_PLUGIN_METADATA(IID "org.kde.akonadi." # agentClass ) \
   public: \
     explicit agentClass ## Factory( QObject * parent = 0 ) : Akonadi::AgentFactory< agentClass >( # catalogName, parent ) {\
       setObjectName(QLatin1String(# catalogName) );\
