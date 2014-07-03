@@ -9,7 +9,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kmime
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 find_package(LibXslt)
 set_package_properties(LibXslt PROPERTIES DESCRIPTION "xsltproc" URL "http://xmlsoft.org/XSLT/" TYPE REQUIRED PURPOSE "Needed to generate D-Bus interface specifications")
@@ -30,17 +30,17 @@ endmacro()
 # Disabled for now, resourcetester remained in kdepim-runtime
 #add_subdirectory( tests )
 
-set( knutresource_SRCS knutresource.cpp )
+set( knutresource_SRCS knutresource.cpp knutresourcefactory.cpp)
 
-kde4_add_kcfg_files(knutresource_SRCS settings.kcfgc)
+kconfig_add_kcfg_files(knutresource_SRCS settings.kcfgc)
 
 kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/knutresource.kcfg org.kde.Akonadi.Knut.Settings)
 
-qt4_add_dbus_adaptor(knutresource_SRCS
+qt5_add_dbus_adaptor(knutresource_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h KnutSettings
 )
 
-kde4_add_plugin(akonadi_knut_resource ${knutresource_SRCS})
+add_library(akonadi_knut_resource MODULE ${knutresource_SRCS})
 
 if (Q_WS_MAC)
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
@@ -51,7 +51,7 @@ endif ()
 target_link_libraries(akonadi_knut_resource
   akonadi-xml
   akonadi-kde
-  ${KDE4_KIO_LIBS}
+  KF5::KIOCore
   ${QT_QTXML_LIBRARY}
 )
 

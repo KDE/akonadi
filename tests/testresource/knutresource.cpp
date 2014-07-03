@@ -307,6 +307,4 @@ void KnutResource::removeSearch(const Collection& resultCollection)
 }
 
 
-AKONADI_AGENT_FACTORY( KnutResource, akonadi_knut_resource )
-
 #include "knutresource.moc"

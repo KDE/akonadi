@@ -104,27 +104,4 @@ public:
 
 }
 
-#ifndef AKONADI_AGENT_FACTORY
-/**
- * Macro to create an agent factory for in-process agents.
- *
- * @param agentClass class name of the agent type this factory should create.
- * @param catalogName name of the translation catalog of this agent type.
- * @since 4.6
- */
-#define AKONADI_AGENT_FACTORY( agentClass, catalogName ) \
-class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
-{ \
-  Q_OBJECT \
-  Q_PLUGIN_METADATA(IID "org.kde.akonadi." # agentClass ) \
-  Q_INTERFACES( agentClass ## Factory ) \
-  public: \
-    explicit agentClass ## Factory( QObject * parent = 0 ) : Akonadi::AgentFactory< agentClass >( # catalogName, parent ) {\
-      setObjectName(QLatin1String(# catalogName) );\
-    } \
-}; \
-// QT5 Q_EXPORT_PLUGIN2( catalogName, agentClass ## Factory )
-
-#endif
-
 #endif
