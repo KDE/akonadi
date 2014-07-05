@@ -1,3 +1,4 @@
+
 # Turn exceptions on
 if (LIBXML2_FOUND)
     add_definitions(-DHAVE_LIBXML2)
