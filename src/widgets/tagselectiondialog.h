@@ -28,6 +28,7 @@
 
 #include "tag.h"
 
+class QDialogButtonBox;
 namespace Akonadi {
 
 /**
@@ -45,6 +46,8 @@ public:
 
     void setSelection(const Akonadi::Tag::List &tags);
     Akonadi::Tag::List selection() const;
+
+    QDialogButtonBox *buttons() const;
 
 Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);

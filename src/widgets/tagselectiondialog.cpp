@@ -37,12 +37,14 @@ struct TagSelectionDialog::Private {
     Private(QDialog *parent)
         : d(parent)
         , mTagWidget(0)
+        , mButtonBox(0)
     {
     }
     void writeConfig();
     void readConfig();
     QDialog *d;
     Akonadi::TagEditWidget *mTagWidget;
+    QDialogButtonBox *mButtonBox;
 };
 
 void TagSelectionDialog::Private::writeConfig()
@@ -76,11 +78,11 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
 
     vbox->addWidget(d->mTagWidget);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = d->mButtonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    vbox->addWidget(buttonBox);
+    vbox->addWidget(d->mButtonBox);
 
     d->readConfig();
 }
@@ -88,6 +90,11 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
 TagSelectionDialog::~TagSelectionDialog()
 {
     d->writeConfig();
+}
+
+QDialogButtonBox *TagSelectionDialog::buttons() const
+{
+    return d->mButtonBox;
 }
 
 Tag::List TagSelectionDialog::selection() const
