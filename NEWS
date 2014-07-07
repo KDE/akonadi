@@ -1,3 +1,16 @@
+1.12.90                           07-July-2014
+----------------------------------------------
+- MERGE command for faster synchronization
+- Optimizations in various commands handlers
+- SELECT command is obsolete now
+- Performance and concurrency improvements in QSQLITE3 driver
+- Introduced Collection sync preferences as an improvement over the IMAP-based subscription model
+- Disable filesystem copy-on-write for DB files when running on Btrfs
+- Introduced direct streaming of external parts
+- Fixed SearchManager DBus interface not being registered to DBus
+- Fixed handling of tags in AK-APPEND and MERGE commands
+- Various fixes in virtual collections handling
+
 1.12.1                           07-April-2014
 ----------------------------------------------
 - Fixed deadlock in SearchManager
