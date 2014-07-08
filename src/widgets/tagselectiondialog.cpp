@@ -82,6 +82,9 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
     QPushButton *okButton = d->mButtonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(d->mButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(d->mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
     vbox->addWidget(d->mButtonBox);
 
     d->readConfig();
