@@ -290,7 +290,11 @@ if("${_isSystemLibDir}" STREQUAL "-1")
 endif()
 
 if(NOT DEFINED AKONADI_BUNDLE_PATH)
-  set(AKONADI_BUNDLE_PATH "/Applications/KDE4")
+  if (QT5_BUILD)
+    set(AKONADI_BUNDLE_PATH "/Applications/KDE4")
+  else()
+    set(AKONADI_BUNDLE_PATH "/Applications/KF5")
+  endif()
 endif()
 
 if(APPLE)
