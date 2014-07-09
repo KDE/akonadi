@@ -21,7 +21,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace Akonadi;
 
@@ -41,7 +41,7 @@ class XmlDocumentTest : public QObject
       QCOMPARE( col.attributes().count(), 1 );
       QCOMPARE( col.parentRemoteId(), QString::fromLatin1( "c1" ) );
 
-      QCOMPARE( doc.childCollections( col.remoteId() ).count(), 2 );
+      QCOMPARE( doc.childCollections( col ).count(), 2 );
 
       Item item = doc.itemByRemoteId( QLatin1String( "contact1" ) );
       QCOMPARE( item.mimeType(), QString::fromLatin1( "text/directory" ) );
@@ -56,6 +56,6 @@ class XmlDocumentTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( XmlDocumentTest, NoGUI )
+QTEST_MAIN( XmlDocumentTest )
 
 #include "xmldocumenttest.moc"

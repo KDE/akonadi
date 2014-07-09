@@ -20,14 +20,13 @@
 #define COLLECTIONTEST_H
 
 #include <QtCore/QObject>
-#include <akonadi/collection.h>
+#include "AkonadiCore/collection.h"
 
-using namespace Akonadi;
 
 class CollectionTest : public QObject {
   Q_OBJECT
   private:
-    void verifyCollection( const Collection::List &colist, int listPosition,
+    void verifyCollection( const Akonadi::Collection::List &colist, int listPosition,
                            const QString &remoteId, const QString &name,
                            const QStringList &mimeType );
   private Q_SLOTS:

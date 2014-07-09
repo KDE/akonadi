@@ -18,15 +18,15 @@
 */
 
 #include "collection.h"
-#include <xml/xmlreader.h>
-#include <xml/xmlwriter.h>
+#include <xmlreader.h>
+#include <xmlwriter.h>
 
-#include <akonadi/entitydisplayattribute.h>
+#include <AkonadiCore/entitydisplayattribute.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qdebug.h>
-
-QTEST_KDEMAIN(CollectionTest, NoGUI)
+using namespace Akonadi;
+QTEST_MAIN(CollectionTest)
 
 QByteArray collection1(
 "<test>\n"

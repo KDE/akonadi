@@ -23,7 +23,7 @@
 #include "akonadi-xml_export.h"
 
 #include "collection.h"
-#include "item.h"
+#include <item.h>
 
 #include <QtXml/QDomDocument>
 
