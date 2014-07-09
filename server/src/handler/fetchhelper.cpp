@@ -253,6 +253,11 @@ QSqlQuery FetchHelper::buildVRefQuery()
 
 bool FetchHelper::isScopeLocal( const Scope &scope )
 {
+  // The only agent allowed to override local scope is the Baloo Indexer
+  if ( !mConnection->sessionId().startsWith( "akonadi_baloo_indexer" ) ) {
+    return false;
+  }
+
   // Get list of all resources that own all items in the scope
   QueryBuilder qb( PimItem::tableName(), QueryBuilder::Select );
   qb.setDistinct( true );
