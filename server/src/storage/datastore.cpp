@@ -1241,8 +1241,14 @@ bool DataStore::beginTransaction()
 
   if ( m_transactionLevel == 0 ) {
     TRANSACTION_MUTEX_LOCK;
-    QSqlDriver *driver = m_database.driver();
-    if ( !driver->beginTransaction() ) {
+    if ( DbType::type( m_database ) == DbType::Sqlite ) {
+      m_database.exec( QLatin1String( "BEGIN IMMEDIATE TRANSACTION" ) );
+      if ( m_database.lastError().isValid() ) {
+        debugLastDbError( "DataStore::beginTransaction (SQLITE)" );
+        TRANSACTION_MUTEX_UNLOCK;
+        return false;
+      }
+    } else if ( !m_database.driver()->beginTransaction() ) {
       debugLastDbError( "DataStore::beginTransaction" );
       TRANSACTION_MUTEX_UNLOCK;
       return false;
