@@ -10,14 +10,13 @@ file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 option(KDEPIMLIBS_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
 option(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as backend" TRUE)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
-  ${QJSON_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi/kmime
@@ -39,8 +38,8 @@ add_subdirectory(benchmarker)
 macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_executable(${_name} TEST ${_test})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
+  add_executable(${_name} TEST ${_test})
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime    )
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -48,7 +47,7 @@ macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
 endmacro()
 
 include(../AkonadiMacros.cmake)
@@ -56,11 +55,11 @@ include(../AkonadiMacros.cmake)
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
-qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationmanagerinterface )
+qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationmanagerinterface )
 
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
-qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
+qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 add_library(akonaditestfake STATIC
   ${akonaditestfake_srcs}
@@ -84,8 +83,8 @@ add_akonadi_demo(pluginloadertest.cpp)
 add_akonadi_demo(selftester.cpp)
 add_akonadi_demo(collectiondialog.cpp)
 
-kde4_add_executable( akonadi-firstrun TEST ../firstrun.cpp firstrunner.cpp )
-target_link_libraries( akonadi-firstrun akonadi-kde ${KDE4_KDEUI_LIBS} )
+add_executable( akonadi-firstrun TEST ../firstrun.cpp firstrunner.cpp )
+target_link_libraries( akonadi-firstrun akonadi-kde  )
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
@@ -107,7 +106,7 @@ add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
-target_link_libraries(resourceschedulertest akonadi-kde ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
+target_link_libraries(resourceschedulertest akonadi-kde Qt5::Test    ${AKONADI_COMMON_LIBRARIES})
 
 
 # testrunner tests
