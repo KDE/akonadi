@@ -20,13 +20,10 @@
 #include "searchquery.h"
 
 #include <QtCore/QVariant>
-
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QDebug>
-
-#if 0
-#include <qjson/parser.h>
-#include <qjson/serializer.h>
-#endif
 
 using namespace Akonadi;
 
@@ -112,7 +109,7 @@ public:
         return termJSON;
     }
 
-    static SearchTerm JSONToTerm(const QVariantMap &json)
+    static SearchTerm JSONToTerm(const QJsonObject &json)
     {
         if (json.contains(QStringLiteral("key"))) {
             SearchTerm term(json[QStringLiteral("key")].toString(),
@@ -123,9 +120,9 @@ public:
         } else if (json.contains(QStringLiteral("rel"))) {
             SearchTerm term(static_cast<SearchTerm::Relation>(json[QStringLiteral("rel")].toInt()));
             term.setIsNegated(json[QStringLiteral("negated")].toBool());
-            const QVariantList subTermsJSON = json[QStringLiteral("subTerms")].toList();
-            Q_FOREACH (const QVariant &subTermJSON, subTermsJSON) {
-                term.addSubTerm(JSONToTerm(subTermJSON.toMap()));
+            const QJsonArray subTermsJSON = json[QStringLiteral("subTerms")].toArray();
+            Q_FOREACH (const QJsonValue &subTermJSON, subTermsJSON) {
+                term.addSubTerm(JSONToTerm(subTermJSON.toObject()));
             }
             return term;
         } else {
@@ -294,24 +291,19 @@ QByteArray SearchQuery::toJSON() const
 
 SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
 {
-#warning KF5 Port me!
-#if 0
-    QJson::Parser parser;
-    bool ok = false;
-    const QVariant json = parser.parse(jsonData, &ok);
-    if (!ok || json.isNull()) {
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(jsonData, &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
         return SearchQuery();
     }
 
-    const QVariantMap map = json.toMap();
     SearchQuery query;
-    query.d->rootTerm = Private::JSONToTerm(map);
-    if (map.contains(QStringLiteral("limit"))) {
-        query.d->limit = map.value(QStringLiteral("limit")).toInt();
+    const QJsonObject obj = json.object();
+    query.d->rootTerm = Private::JSONToTerm(obj);
+    if (obj.contains(QStringLiteral("limit"))) {
+        query.d->limit = obj.value(QStringLiteral("limit")).toInt();
     }
     return query;
-#endif
-    return SearchQuery();
 }
 
 QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
