@@ -44,6 +44,7 @@ class PauseableTimer : public QTimer
     {
       mStarted = QDateTime::currentDateTime();
       mPaused = QDateTime();
+      setInterval( interval );
       QTimer::start( interval );
     }
 
@@ -71,7 +72,7 @@ class PauseableTimer : public QTimer
       }
 
       mPaused = QDateTime::currentDateTime();
-      stop();
+      QTimer::stop();
     }
 
     void resume()
@@ -89,7 +90,7 @@ class PauseableTimer : public QTimer
 
     bool isPaused() const
     {
-      return !mPaused.isNull();
+      return mPaused.isValid();
     }
 
   private:
