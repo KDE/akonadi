@@ -114,18 +114,15 @@ bool PartStreamer::streamLiteral(Part& part, qint64& partSize, QByteArray& value
         while (!mStreamParser->atLiteralEnd()) {
             value += mStreamParser->readLiteralPart();
         }
-        PartHelper::update(&part, value, value.size());
-    }
-
-    if (part.isValid()) {
-        if (!part.update()) {
-            mError = "Failed to update part in database";
-            return false;
-        }
-    } else {
-        if (!part.insert()) {
-            mError = "Failed to insert part to database";
-            return false;
+        if (part.isValid()) {
+            PartHelper::update(&part, value, value.size());
+        } else {
+            part.setData(value);
+            part.setDatasize(value.size());
+            if (!part.insert()) {
+              mError = "Failed to insert part to database";
+              return false;
+            }
         }
     }
 
