@@ -27,7 +27,7 @@
 #include "akonadiagentbase_export.h"
 #include "item.h"
 
-#include <KDE/KApplication>
+#include <KApplication>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusContext>

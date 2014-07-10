@@ -27,9 +27,9 @@
 #include <QtCore/QTimer>
 #include <QAbstractProxyModel>
 
-#include <KDE/KLocalizedString>
-#include <KDE/KMessageBox>
-#include <KDE/KUrl>
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KUrl>
 
 #include "attributefactory.h"
 #include "changerecorder.h"

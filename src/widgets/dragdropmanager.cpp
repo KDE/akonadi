@@ -26,8 +26,8 @@
 #include <QMenu>
 #include <QDrag>
 
-#include <KDE/KLocalizedString>
-#include <KDE/KUrl>
+#include <KLocalizedString>
+#include <KUrl>
 
 #include "collection.h"
 #include "entitytreemodel.h"

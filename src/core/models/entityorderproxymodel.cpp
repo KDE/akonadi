@@ -23,7 +23,7 @@
 
 #include <QMimeData>
 
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 #include <KUrl>
 
 #include "collection.h"

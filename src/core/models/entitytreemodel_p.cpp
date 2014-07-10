@@ -25,9 +25,9 @@
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
 
-#include <KDE/KLocalizedString>
-#include <KDE/KMessageBox>
-#include <KDE/KUrl>
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KUrl>
 
 #include "agentmanager.h"
 #include "agenttype.h"
