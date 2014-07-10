@@ -431,7 +431,7 @@ private Q_SLOTS:
 
         updatePimItem(pimItem, QLatin1String("TEST-14"), 0);
         updateParts(parts, {});
-        updateFlags(flags, { QLatin1String("\\SEEN"), QLatin1String("\\RANDOM") });
+        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("\\RANDOM") );
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenario.clear();
@@ -504,7 +504,7 @@ private Q_SLOTS:
 
 
         updatePimItem(pimItem, QLatin1String("TEST-19"), 0);
-        updateFlags(flags, { QLatin1String("\\SEEN"), QLatin1String("$FLAG") } );
+        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("$FLAG") );
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-1") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
         updateNotifcationEntity(notification, pimItem);
