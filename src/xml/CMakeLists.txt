@@ -38,6 +38,7 @@ generate_export_header(KF5AkonadiXml BASE_NAME akonadi-xml)
 add_library(KF5::AkonadiXml ALIAS KF5AkonadiXml)
 
 target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiXml>")
+target_include_directories(KF5AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 
 target_link_libraries(KF5AkonadiXml
 PUBLIC
