@@ -53,7 +53,7 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
                        const ChangedAttributes &itemTagsRID,
                        const ChangedAttributes &itemTagsGID )
 {
-    if ( !newItem.rev() > 0 ) {
+    if ( newItem.rev() > 0 ) {
         currentItem.setRev( newItem.rev() );
     }
     if ( !newItem.remoteId().isEmpty() && currentItem.remoteId() != newItem.remoteId() ) {
