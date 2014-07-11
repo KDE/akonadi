@@ -20,13 +20,14 @@
 #ifndef RENAMEFAVORITEDIALOG_H
 #define RENAMEFAVORITEDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "collection.h"
 
 class QLabel;
 class QLineEdit;
+class QPushButton;
 
-class RenameFavoriteDialog : public KDialog
+class RenameFavoriteDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -44,6 +45,7 @@ private:
     QString m_defaultName;
     QLabel *m_label;
     QLineEdit *m_lineEdit;
+    QPushButton *mOkButton;
 };
 
 #endif /* RENAMEFAVORITEDIALOG_H */

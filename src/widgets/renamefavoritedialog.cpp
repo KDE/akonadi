@@ -22,18 +22,21 @@
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString &text, const QString &value, const QString &defaultName, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , m_defaultName(defaultName)
 {
-    setCaption(caption);
-    setButtons(Ok | Cancel | User1);
-    setButtonGuiItem(User1, KGuiItem(i18n("Default Name")));
-    setDefaultButton(Ok);
+    setWindowTitle(caption);
     setModal(true);
 
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+
     QWidget *frame = new QWidget(this);
+    mainLayout->addWidget(frame);
     QVBoxLayout *layout = new QVBoxLayout(frame);
     layout->setMargin(0);
 
@@ -52,12 +55,22 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString
 
     connect(m_lineEdit, SIGNAL(textChanged(QString)),
             SLOT(slotEditTextChanged(QString)));
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDefaultName()));
 
-    setMainWidget(frame);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    QPushButton *defaultButtonName = new QPushButton(i18n("Default Name"));
+    buttonBox->addButton(defaultButtonName, QDialogButtonBox::ActionRole);
+    connect(defaultButtonName, SIGNAL(clicked()), this, SLOT(slotDefaultName()));
+
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+
     slotEditTextChanged(value);
     setMinimumWidth(350);
-
 }
 
 RenameFavoriteDialog::~RenameFavoriteDialog()
@@ -71,7 +84,7 @@ void RenameFavoriteDialog::slotDefaultName()
 
 void RenameFavoriteDialog::slotEditTextChanged(const QString &text)
 {
-    enableButton(Ok, !text.trimmed().isEmpty());
+    mOkButton->setEnabled(!text.trimmed().isEmpty());
 }
 
 QString RenameFavoriteDialog::newName() const
