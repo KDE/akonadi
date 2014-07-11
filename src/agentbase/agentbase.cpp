@@ -857,8 +857,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
 int AgentBase::init(AgentBase *r)
 {
     QApplication::setQuitOnLastWindowClosed(false);
-#warning Port this to the new way of doing this
-//   KLocalizedString::insertCatalog( QLatin1String( "libakonadi" ) );
+    KLocalizedString::setApplicationDomain( "libakonadi5" );
     int rv = kapp->exec();
     delete r;
     return rv;
