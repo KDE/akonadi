@@ -49,6 +49,7 @@ public:
 
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
     QByteArray fullCommand() const;
+    QByteArray tagsToCommandParameter(const Tag::List &tags) const;
 
     void setSilent( bool silent );
 
