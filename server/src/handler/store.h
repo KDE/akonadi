@@ -115,11 +115,13 @@ class Store : public Handler
     bool replaceFlags( const PimItem::List &items, const QVector<QByteArray> &flags );
     bool addFlags( const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged );
     bool deleteFlags( const PimItem::List &items, const QVector<QByteArray> &flags );
-    bool replaceTags( const PimItem::List &items, const ImapSet &tags );
-    bool addTags( const PimItem::List &items, const ImapSet &tags, bool &tagsChanged );
-    bool deleteTags( const PimItem::List &items, const ImapSet &tags );
+    bool replaceTags( const PimItem::List &items, const Tag::List &tags );
+    bool addTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged );
+    bool deleteTags( const PimItem::List &items, const Tag::List &tags );
     bool setGid( const PimItem &item, const QString &gid );
     void sendPimItemResponse( const PimItem &pimItem );
+
+    bool processTagsChange(Store::Operation operation, const PimItem::List &items, const Tag::List &tags, QSet<QByteArray> &changes);
 
   private:
     Scope mScope;
