@@ -49,9 +49,7 @@ AgentFactoryBase::AgentFactoryBase(const char *catalogName, QObject *parent)
     if (!KGlobal::hasMainComponent()) {
         new KComponentData("AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent);
     }
-
-#warning Port this to the new way of doing things
-//   KLocalizedString::insertCatalog( d->catalogName );
+    KLocalizedString::setApplicationDomain( catalogName ); 
 
     Internal::setClientType(Internal::Agent);
     ServerManager::self(); // make sure it's created in the main thread
