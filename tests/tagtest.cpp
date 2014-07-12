@@ -54,6 +54,8 @@ private Q_SLOTS:
     void testCreateMerge();
     void testAttributes();
     void testTagItem();
+    void testModifyItemWithTagByGID();
+    void testModifyItemWithTagByRID();
     void testMonitor();
 };
 
@@ -334,6 +336,77 @@ void TagTest::testTagItem()
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
+}
+
+void TagTest::testModifyItemWithTagByGID()
+{
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    {
+        Tag tag;
+        tag.setGid("gid2");
+        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+    }
+
+    Tag tag;
+    tag.setGid("gid2");
+    item1.setTag(tag);
+
+    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    AKVERIFYEXEC(modJob);
+
+    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().first().tags().size(), 1);
+}
+
+void TagTest::testModifyItemWithTagByRID()
+{
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        AKVERIFYEXEC(select);
+    }
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    {
+        Tag tag;
+        tag.setGid("gid3");
+        tag.setRemoteId("rid3");
+        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+    }
+
+    Tag tag;
+    tag.setRemoteId("rid2");
+    item1.setTag(tag);
+
+    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    AKVERIFYEXEC(modJob);
+
+    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().first().tags().size(), 1);
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("");
+        AKVERIFYEXEC(select);
+    }
 }
 
 void TagTest::testMonitor()

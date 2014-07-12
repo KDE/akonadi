@@ -116,6 +116,45 @@ void ItemModifyJobPrivate::setSilent( bool silent )
   mSilent = silent;
 }
 
+QByteArray ItemModifyJobPrivate::tagsToCommandParameter(const Tag::List &tags) const
+{
+    QByteArray c;
+    if (tags.first().id() >= 0) {
+        c += "TAGS";
+        c += ' ' + ProtocolHelper::tagSetToImapSequenceSet(tags);
+    } else if (std::find_if(tags.constBegin(), tags.constEnd(),
+                        boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::remoteId, _1)))
+        == tags.constEnd()) {
+        //All items have a remoteId
+        c += "RTAGS";
+        QList<QByteArray> rids;
+        Q_FOREACH (const Tag &object, tags) {
+            rids << ImapParser::quote(object.remoteId());
+        }
+
+        c += '(';
+        c += ImapParser::join(rids, " ");
+        c += ')';
+
+    } else if (std::find_if(tags.constBegin(), tags.constEnd(),
+                        boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::gid, _1)))
+        == tags.constEnd()) {
+        //All items have a gid
+        c += "GTAGS";
+        QList<QByteArray> gids;
+        Q_FOREACH (const Tag &object, tags) {
+            gids << ImapParser::quote(object.gid());
+        }
+
+        c += '(';
+        c += ImapParser::join(gids, " ");
+        c += ')';
+    } else {
+        throw Exception("Cannot identify all tags");
+    }
+    return c;
+}
+
 ItemModifyJob::ItemModifyJob(const Item &item, QObject *parent)
     : Job(new ItemModifyJobPrivate(this), parent)
 {
@@ -205,16 +244,13 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
     }
 
     if (item.d_func()->mTagsOverwritten) {
-        changes << "TAGS";
-        changes << ' ' + ProtocolHelper::tagSetToImapSequenceSet(item.tags());
+        changes << tagsToCommandParameter(item.tags());
     } else {
         if (!item.d_func()->mAddedTags.isEmpty()) {
-            changes << "+TAGS";
-            changes << ' ' + ProtocolHelper::tagSetToImapSequenceSet(item.d_func()->mAddedTags);
+            changes << "+" + tagsToCommandParameter(item.d_func()->mAddedTags);
         }
         if (!item.d_func()->mDeletedTags.isEmpty()) {
-            changes << "-TAGS";
-            changes << ' ' + ProtocolHelper::tagSetToImapSequenceSet(item.d_func()->mDeletedTags);
+            changes << "-" + tagsToCommandParameter(item.d_func()->mDeletedTags);
         }
     }
 
