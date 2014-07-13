@@ -20,7 +20,7 @@
 #define COLLECTIONTEST_H
 
 #include <QtCore/QObject>
-#include "akonadi/collection.h"
+#include "collection.h"
 
 
 class CollectionTest : public QObject {

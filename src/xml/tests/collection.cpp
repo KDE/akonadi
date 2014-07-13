@@ -21,7 +21,7 @@
 #include <xmlreader.h>
 #include <xmlwriter.h>
 
-#include <AkonadiCore/entitydisplayattribute.h>
+#include <entitydisplayattribute.h>
 
 #include <qtest.h>
 #include <qdebug.h>
