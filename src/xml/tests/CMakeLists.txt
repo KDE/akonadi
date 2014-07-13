@@ -2,12 +2,6 @@
 set(QT_REQUIRED_VERSION "5.2.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED COMPONENTS Test)
 
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}/..
-    ${CMAKE_CURRENT_SOURCE_DIR}/..
-)
-
-
 macro(add_libakonadixml_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
