@@ -17,14 +17,15 @@
     02110-1301, USA.
 */
 
-#include "collection.h"
+#include "collectiontest.h"
 #include <xmlreader.h>
 #include <xmlwriter.h>
 
-#include <entitydisplayattribute.h>
+#include "entitydisplayattribute.h"
 
 #include <qtest.h>
 #include <qdebug.h>
+#include <QStringList>
 using namespace Akonadi;
 QTEST_MAIN(CollectionTest)
 
