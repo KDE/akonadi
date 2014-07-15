@@ -22,6 +22,7 @@
 #include "format_p.h"
 
 #include "attributefactory.h"
+#include <tag.h>
 
 
 using namespace Akonadi;
@@ -84,6 +85,45 @@ Collection::List XmlReader::readCollections(const QDomElement& elem)
   return rv;
 }
 
+Tag XmlReader::elementToTag(const QDomElement& elem)
+{
+  if ( elem.isNull() || elem.tagName() != Format::Tag::tag() )
+    return Tag();
+
+  Tag t;
+  t.setRemoteId( elem.attribute( Format::Attr::remoteId() ).toUtf8() );
+  t.setName( elem.attribute( Format::Attr::name() ) );
+  t.setGid( elem.attribute( Format::Attr::gid() ).toUtf8() );
+  t.setType( elem.attribute( Format::Attr::type() ).toUtf8() );
+
+  //TODO Implement rid parent support in TagCreateJob first
+  // const QDomElement parentElem = elem.parentNode().toElement();
+  // if ( !parentElem.isNull() && parentElem.tagName() == Format::Tag::tag() ) {
+  //   Tag parent;
+  //   parent.setRemoteId( parentElem.attribute( Format::Attr::remoteId() ).toLatin1() );
+  //   t.setParent( parent );
+  // }
+
+  return t;
+}
+
+Tag::List XmlReader::readTags(const QDomElement& elem)
+{
+  Tag::List rv;
+  if ( elem.isNull() )
+    return rv;
+  if ( elem.tagName() == Format::Tag::tag() )
+    rv += elementToTag( elem );
+  const QDomNodeList children = elem.childNodes();
+  for ( int i = 0; i < children.count(); i++ ) {
+    const QDomElement child = children.at( i ).toElement();
+    if ( child.isNull() || child.tagName() != Format::Tag::tag() )
+      continue;
+    rv += readTags( child );
+  }
+  return rv;
+}
+
 Item XmlReader::elementToItem(const QDomElement& elem, bool includePayload)
 {
   Item item( elem.attribute( Format::Attr::itemMimeType(), QStringLiteral("application/octet-stream") ) );
@@ -97,6 +137,10 @@ Item XmlReader::elementToItem(const QDomElement& elem, bool includePayload)
       continue;
     if ( subElem.tagName() == Format::Tag::flag() ) {
       item.setFlag( subElem.text().toUtf8() );
+    } else if ( subElem.tagName() == Format::Tag::tag() ) {
+      Tag tag;
+      tag.setRemoteId( subElem.text().toUtf8() );
+      item.setTag( tag );
     } else if ( includePayload && subElem.tagName() == Format::Tag::payload() ) {
       const QByteArray payloadData = subElem.text().toUtf8();
       item.setPayloadFromData( payloadData );

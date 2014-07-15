@@ -26,6 +26,7 @@
      <xsd:sequence>
        <xsd:element name="collection" type="collectionType" minOccurs="0" maxOccurs="unbounded"/>
        <xsd:element name="item"       type="itemType"       minOccurs="0" maxOccurs="unbounded"/>
+       <xsd:element name="tag"        type="tagType"        minOccurs="0" maxOccurs="unbounded"/>
      </xsd:sequence>
    </xsd:complexType>
   </xsd:element>
@@ -46,9 +47,20 @@
       <xsd:element name="payload"    type="payloadType"   minOccurs="0" maxOccurs="1"/>
       <xsd:element name="attribute"  type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="flag"       type="flagType"      minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="tag"        type="tagRIDRefType"    minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="rid"        type="xsd:string" use="required"/>
     <xsd:attribute name="mimetype"   type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="tagType">
+    <xsd:sequence>
+      <xsd:element name="tag"        type="tagType"       minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="rid"        type="xsd:string" use="required"/>
+    <xsd:attribute name="type"       type="xsd:string" use="required"/>
+    <xsd:attribute name="gid"        type="xsd:string" use="required"/>
+    <xsd:attribute name="name"       type="xsd:string" use="required"/>
   </xsd:complexType>
 
   <xsd:complexType name="payloadType">
@@ -66,6 +78,12 @@
   </xsd:complexType>
 
   <xsd:complexType name="flagType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="tagRIDRefType">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string"/>
     </xsd:simpleContent>
