@@ -63,6 +63,7 @@ set_package_properties(LibXml2 PROPERTIES
 
 ########### Targets ###########
 add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
 
