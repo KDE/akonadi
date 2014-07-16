@@ -99,7 +99,6 @@ target_link_libraries(KF5AkonadiWidgets
 PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
-    KF5::KDELibs4Support
 PRIVATE
    KF5::ItemViews
 )
@@ -112,7 +111,7 @@ set_target_properties(KF5AkonadiWidgets PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiWidgets
     LIB_NAME KF5AkonadiWidgets
-    DEPS "AkonadiCore KDELibs4Support" FILENAME_VAR PRI_FILENAME
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

@@ -51,7 +51,7 @@ target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
     KF5::AkonadiCore
-    KF5::KDELibs4Support
+    #KF5::KDELibs4Support
 PRIVATE
     KF5::ConfigCore
     KF5::Solid
@@ -65,7 +65,7 @@ set_target_properties(KF5AkonadiAgentBase PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
     LIB_NAME KF5AkonadiAgentBase
-    DEPS "KIOCore KDELibs4Support" FILENAME_VAR PRI_FILENAME
+    DEPS "KIOCore" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
