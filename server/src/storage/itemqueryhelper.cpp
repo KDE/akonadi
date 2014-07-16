@@ -122,6 +122,7 @@ void ItemQueryHelper::scopeToQuery( const Scope &scope, CommandContext *context,
     const QString itemRid = ridChain.takeFirst();
     const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID( ridChain, context->resource().id() );
     const Collection oldSelection = context->collection();
+    context->setCollection( parentCol );
     remoteIdToQuery( QStringList() << itemRid, context, qb );
     context->setCollection( oldSelection );
     return;
