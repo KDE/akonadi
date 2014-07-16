@@ -132,7 +132,7 @@ Connection::~Connection()
 
     ClientCapabilityAggregator::removeSession( m_clientCapabilities );
     Tracer::self()->endConnection( m_identifier, QString() );
-    collectionReferenceManager()->removeSession( m_identifier.toLatin1() );
+    collectionReferenceManager()->removeSession( m_sessionId );
 }
 
 void Connection::slotNewData()
