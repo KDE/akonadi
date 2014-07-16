@@ -22,8 +22,8 @@
 
 #include <qtest_kde.h>
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
 #include <klocale.h>
 
 /**
