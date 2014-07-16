@@ -178,7 +178,7 @@ void TagEditWidget::Private::deleteTag()
 {
     Q_ASSERT(m_deleteCandidate.isValid());
     const Akonadi::Tag tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
-    const QString text = i18nc("@info",
+    const QString text = xi18nc("@info",
                                "Do you really want to remove the tag <resource>%1</resource>?",
                                tag.name());
     const QString caption = i18nc("@title", "Delete tag");

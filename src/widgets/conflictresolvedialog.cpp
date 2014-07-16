@@ -205,7 +205,7 @@ ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
     QWidget *mainWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
-    QLabel *label = new QLabel( i18nc( "@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply." ), mainWidget );
+    QLabel *label = new QLabel( xi18nc( "@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply." ), mainWidget );
     layout->addWidget( label );
 
     mView = new QTextBrowser;
