@@ -5,16 +5,16 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${Boost_INCLUDE_DIR}
     ${AKONADI_INCLUDE_DIR}
-    ${KDE4_INCLUDES}
+    
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
-kde4_add_plugin(akonadi_test_searchplugin testsearchplugin.cpp)
+add_library(akonadi_test_searchplugin MODULE testsearchplugin.cpp)
 
 target_link_libraries(akonadi_test_searchplugin
   akonadi-kde
-  ${KDE4_KDEUI_LIBS}
+  
   ${KDE4_AKONADI_LIBS}
 )
 

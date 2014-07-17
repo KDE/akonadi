@@ -52,7 +52,7 @@ target_link_libraries(akonadi_knut_resource
   akonadi-xml
   akonadi-kde
   KF5::KIOCore
-  ${QT_QTXML_LIBRARY}
+  Qt5::Xml
 )
 
 install( TARGETS akonadi_knut_resource DESTINATION ${PLUGIN_INSTALL_DIR}/ )
