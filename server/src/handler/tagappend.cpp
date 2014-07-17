@@ -24,6 +24,7 @@
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
+#include "storage/countquerybuilder.h"
 #include "entities.h"
 #include "libs/protocol_p.h"
 
@@ -122,12 +123,33 @@ bool TagAppend::parseStream()
   }
 
   if ( !remoteId.isEmpty() ) {
-    Resource resource = Resource::retrieveByName( connection()->context()->resource().name() );
-    TagRemoteIdResourceRelation rel;
-    rel.setTagId( tagId );
-    rel.setResourceId( resource.id() );
-    rel.setRemoteId( remoteId );
-    if ( !rel.insert() ) {
+    const qint64 resourceId = connection()->context()->resource().id();
+
+    CountQueryBuilder qb( TagRemoteIdResourceRelation::tableName() );
+    qb.addValueCondition( TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId );
+    qb.addValueCondition( TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId );
+    if ( !qb.exec() ) {
+      throw HandlerException( "Failed to query for existing TagRemoteIdResourceRelation entries" );
+    }
+    const bool exists = ( qb.result() > 0 );
+
+    //If the relation is already existing simply update it (can happen if a resource simply creates the tag again while enabling merge)
+    bool ret = false;
+    if ( exists ) {
+      //Simply using update() doesn't work since TagRemoteIdResourceRelation only takes the tagId for identification of the column
+      QueryBuilder qb( TagRemoteIdResourceRelation::tableName(), QueryBuilder::Update );
+      qb.addValueCondition( TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId );
+      qb.addValueCondition( TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId );
+      qb.setColumnValue( TagRemoteIdResourceRelation::remoteIdColumn(), remoteId );
+      ret = qb.exec();
+    } else {
+      TagRemoteIdResourceRelation rel;
+      rel.setTagId( tagId );
+      rel.setResourceId( resourceId );
+      rel.setRemoteId( remoteId );
+      ret = rel.insert();
+    }
+    if ( !ret ) {
       throw HandlerException( "Failed to store tag remote ID" );
     }
   }
