@@ -115,6 +115,9 @@ public:
      */
     void changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options);
 
+protected:
+    void changeEvent(QEvent * event);
+
 public Q_SLOTS:
     /**
      * Sets the @p collection of the requester.
