@@ -243,4 +243,18 @@ void CollectionRequester::changeCollectionDialogOptions(CollectionDialog::Collec
     }
 }
 
+void CollectionRequester::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowTitleChange) {
+        if (d->collectionDialog) {
+            d->collectionDialog->setCaption(windowTitle());
+        }
+    } else if (event->type() == QEvent::EnabledChange) {
+        if (d->collectionDialog) {
+            d->collectionDialog->setEnabled(true);
+        }
+    }
+    KHBox::changeEvent(event);
+}
+
 #include "moc_collectionrequester.cpp"
