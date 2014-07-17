@@ -254,7 +254,7 @@ void CollectionRequester::changeEvent(QEvent *event)
             d->collectionDialog->setEnabled(true);
         }
     }
-    KHBox::changeEvent(event);
+    QWidget::changeEvent(event);
 }
 
 #include "moc_collectionrequester.cpp"
