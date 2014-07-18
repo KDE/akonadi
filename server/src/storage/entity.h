@@ -192,6 +192,6 @@ namespace _detail {
 } // namespace Server
 } // namespace Akonadi
 
-Q_DECLARE_METATYPE(Akonadi::Server::Tristate);
+Q_DECLARE_METATYPE(Akonadi::Server::Tristate)
 
 #endif
