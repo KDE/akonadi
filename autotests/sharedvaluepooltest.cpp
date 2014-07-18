@@ -18,7 +18,7 @@
 */
 
 #include "../sharedvaluepool_p.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <QVector>
 #include <QSet>
@@ -84,6 +84,6 @@ class SharedValuePoolTest : public QObject
     }*/
 };
 
-QTEST_KDEMAIN( SharedValuePoolTest, NoGUI )
+QTEST_MAIN( SharedValuePoolTest )
 
 #include "sharedvaluepooltest.moc"

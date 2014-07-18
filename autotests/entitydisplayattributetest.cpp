@@ -21,7 +21,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace Akonadi;
 
@@ -66,7 +66,7 @@ class EntityDisplayAttributeTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( EntityDisplayAttributeTest, NoGUI )
+QTEST_MAIN( EntityDisplayAttributeTest )
 
 #include "entitydisplayattributetest.moc"
 

@@ -22,10 +22,10 @@
 
 #include <akonadi/item.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <collection.h>
 
-QTEST_KDEMAIN( ItemTest, NoGUI )
+QTEST_MAIN( ItemTest )
 
 using namespace Akonadi;
 

@@ -23,11 +23,11 @@
 #include <akonadi/item.h>
 #include <akonadi/itemserializer_p.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( ItemSerializerTest, NoGUI )
+QTEST_MAIN( ItemSerializerTest )
 
 void ItemSerializerTest::testEmptyPayload()
 {

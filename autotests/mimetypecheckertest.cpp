@@ -27,9 +27,9 @@
 
 #include "krandom.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( MimeTypeCheckerTest, NoGUI )
+QTEST_MAIN( MimeTypeCheckerTest )
 
 using namespace Akonadi;
 

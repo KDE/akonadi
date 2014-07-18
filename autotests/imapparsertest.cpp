@@ -19,7 +19,7 @@
 
 #include "imapparsertest.h"
 #include <akonadi/private/imapparser_p.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
@@ -29,7 +29,7 @@ Q_DECLARE_METATYPE( QList<int> )
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( ImapParserTest, NoGUI )
+QTEST_MAIN( ImapParserTest )
 
 void ImapParserTest::testStripLeadingSpaces( )
 {

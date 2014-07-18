@@ -693,5 +693,5 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
 
 #include "entitytreemodeltest.moc"
 
-QTEST_KDEMAIN(EntityTreeModelTest, NoGUI)
+QTEST_MAIN(EntityTreeModelTest)
 

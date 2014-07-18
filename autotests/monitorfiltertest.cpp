@@ -21,7 +21,7 @@
 
 #include "monitor_p.h"
 #include <akonadi/private/notificationmessagev2_p.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;
@@ -335,6 +335,6 @@ class MonitorFilterTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( MonitorFilterTest, NoGUI )
+QTEST_MAIN( MonitorFilterTest )
 
 #include "monitorfiltertest.moc"

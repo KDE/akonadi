@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 
 #include <krecursivefilterproxymodel.h>
@@ -123,5 +123,5 @@ void ProxyModelsTest::testMatch()
 
 #include "proxymodelstest.moc"
 
-QTEST_KDEMAIN(ProxyModelsTest, NoGUI)
+QTEST_MAIN(ProxyModelsTest)
 

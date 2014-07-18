@@ -221,6 +221,6 @@ class ProtocolHelperTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( ProtocolHelperTest, NoGUI )
+QTEST_MAIN( ProtocolHelperTest )
 
 #include "protocolhelpertest.moc"

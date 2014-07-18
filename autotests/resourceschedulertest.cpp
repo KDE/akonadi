@@ -20,11 +20,11 @@
 
 #include "../resourcescheduler_p.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( ResourceSchedulerTest, NoGUI )
+QTEST_MAIN( ResourceSchedulerTest )
 
 Q_DECLARE_METATYPE(QSet<QByteArray>)
 

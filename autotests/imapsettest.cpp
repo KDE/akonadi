@@ -20,9 +20,9 @@
 #include "imapsettest.h"
 #include <akonadi/private/imapset_p.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( ImapSetTest, NoGUI )
+QTEST_MAIN( ImapSetTest )
 
 Q_DECLARE_METATYPE( QList<qint64> )
 

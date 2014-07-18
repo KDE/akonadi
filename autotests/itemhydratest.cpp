@@ -21,7 +21,7 @@
 
 #include <memory>
 #include <akonadi/item.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QDebug>
 #include <QSharedPointer>
 #include <boost/shared_ptr.hpp>
@@ -75,7 +75,7 @@ namespace KPIMUtils
   template <> struct SuperClass<Gerd> : public SuperClassTrait<Volker>{};
 }
 
-QTEST_KDEMAIN( ItemHydra, NoGUI )
+QTEST_MAIN( ItemHydra )
 
 ItemHydra::ItemHydra()
 {
