@@ -38,8 +38,8 @@ add_subdirectory(benchmarker)
 macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable(${_name} TEST ${_test})
-  target_link_libraries(${_name}  akonadi-kmime    )
+  add_executable(${_name} ${_test})
+  target_link_libraries(${_name}  Akonadi::KMime    )
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests

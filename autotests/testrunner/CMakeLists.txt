@@ -1,5 +1,3 @@
-project (akonaditest)
-
 include_directories(
     ${CMAKE_SOURCE_DIR}/akonadi
     ${CMAKE_BINARY_DIR}/akonadi
