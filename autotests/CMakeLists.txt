@@ -39,7 +39,7 @@ macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable(${_name} TEST ${_test})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime    )
+  target_link_libraries(${_name}  akonadi-kmime    )
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -49,7 +49,7 @@ macro(add_akonadi_test _source)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
+  target_link_libraries(${_name}  akonadi-kmime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
 endmacro()
 
 include(../AkonadiMacros.cmake)
@@ -86,7 +86,7 @@ add_akonadi_demo(selftester.cpp)
 add_akonadi_demo(collectiondialog.cpp)
 
 add_executable( akonadi-firstrun TEST ../firstrun.cpp firstrunner.cpp )
-target_link_libraries( akonadi-firstrun akonadi-kde  )
+target_link_libraries( akonadi-firstrun   )
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
@@ -106,9 +106,9 @@ add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
 add_akonadi_test(searchquerytest.cpp)
 
-# qtestlib tests that need non-exported stuff from akonadi-kde
+# qtestlib tests that need non-exported stuff from 
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
-target_link_libraries(resourceschedulertest akonadi-kde Qt5::Test    ${AKONADI_COMMON_LIBRARIES})
+target_link_libraries(resourceschedulertest  Qt5::Test    ${AKONADI_COMMON_LIBRARIES})
 
 
 # testrunner tests

@@ -21,7 +21,7 @@ set(akonaditest_SRCS
 add_executable(akonaditest NOGUI ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
-  akonadi-kde
+  
   ${KDE4_AKONADI_LIBS}
   Qt5::Xml
 )

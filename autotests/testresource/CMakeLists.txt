@@ -50,7 +50,7 @@ endif ()
 
 target_link_libraries(akonadi_knut_resource
   akonadi-xml
-  akonadi-kde
+  
   KF5::KIOCore
   Qt5::Xml
 )

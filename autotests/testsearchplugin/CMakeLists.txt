@@ -13,7 +13,7 @@ kde_enable_exceptions()
 add_library(akonadi_test_searchplugin MODULE testsearchplugin.cpp)
 
 target_link_libraries(akonadi_test_searchplugin
-  akonadi-kde
+  
   
   ${KDE4_AKONADI_LIBS}
 )
