@@ -21,34 +21,31 @@
 macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibraries)
   # These are not defined when using within kdepimlibs
   if ( NOT KDEPIMLIBS_AKONADI_CALENDAR_LIBS )
-    set( KDEPIMLIBS_AKONADI_CALENDAR_LIBS "akonadi-calendar" )
+    set( KDEPIMLIBS_AKONADI_CALENDAR_LIBS "KF5::AkonadiCalendar" )
   endif ()
   if ( NOT KDEPIMLIBS_AKONADI_KMIME_LIBS )
-    set( KDEPIMLIBS_AKONADI_KMIME_LIBS "akonadi-kmime" )
+    set( KDEPIMLIBS_AKONADI_KMIME_LIBS "KF5::AkonadiMime" )
   endif ()
   if ( NOT KDEPIMLIBS_AKONADI_LIBS )
     set( KDEPIMLIBS_AKONADI_LIBS "akonadi-kde" )
   endif ()
   if ( NOT KDEPIMLIBS_KCALCORE_LIBS )
-    set( KDEPIMLIBS_KCALCORE_LIBS "kcalcore" )
+    set( KDEPIMLIBS_KCALCORE_LIBS "KF5::CalendarCore" )
   endif ()
   if ( NOT KDEPIMLIBS_KCALUTILS_LIBS )
-    set( KDEPIMLIBS_KCALUTILS_LIBS "kcalutils" )
+    set( KDEPIMLIBS_KCALUTILS_LIBS "KF5::CalendarUtils" )
   endif ()
   if ( NOT KDEPIMLIBS_KMIME_LIBS )
-    set( KDEPIMLIBS_KMIME_LIBS "kmime" )
+    set( KDEPIMLIBS_KMIME_LIBS "KF5::KMime" )
   endif ()
   if ( NOT KDEPIMLIBS_KPIMIDENTITIES_LIBS )
-    set( KDEPIMLIBS_KPIMIDENTITIES_LIBS "kpimidentities" )
+    set( KDEPIMLIBS_KPIMIDENTITIES_LIBS "KF5::PimIdentities" )
   endif ()
   if ( NOT KDEPIMLIBS_KPIMUTILS_LIBS )
-    set( KDEPIMLIBS_KPIMUTILS_LIBS "kpimutils" )
-  endif ()
-  if ( NOT KDEPIMLIBS_KRESOURCES_LIBS )
-    set( KDEPIMLIBS_KRESOURCES_LIBS "kresources" )
+    set( KDEPIMLIBS_KPIMUTILS_LIBS "KF5::PimUtils" )
   endif ()
   if ( NOT KDEPIMLIBS_MAILTRANSPORT_LIBS )
-    set( KDEPIMLIBS_MAILTRANSPORT_LIBS "mailtransport" )
+    set( KDEPIMLIBS_MAILTRANSPORT_LIBS "KF5::MailTransport" )
   endif ()
 
   set(_test ${_source})
@@ -63,9 +60,8 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                         ${KDEPIMLIBS_KMIME_LIBS}
                         ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
                         ${KDEPIMLIBS_KPIMUTILS_LIBS}
-                        ${KDEPIMLIBS_KRESOURCES_LIBS}
                         ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-                        ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES}
+                        Qt5::Test Qt5::Gui KF5::KIOCore
                         ${_linklibraries})
 
   # Set the akonaditest path when the macro is used in kdepimlibs
