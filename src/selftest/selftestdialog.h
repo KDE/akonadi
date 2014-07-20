@@ -22,7 +22,7 @@
 
 #include "ui_selftestdialog.h"
 
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 
 class QStandardItem;
@@ -38,7 +38,7 @@ class QStandardItemModel;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class SelfTestDialog : public KDialog
+class SelfTestDialog : public QDialog
 {
     Q_OBJECT
 public:

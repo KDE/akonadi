@@ -47,6 +47,10 @@
 #include <QStandardItemModel>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 // @cond PRIVATE
 
@@ -67,16 +71,26 @@ enum SelfTestRole {
 };
 
 SelfTestDialog::SelfTestDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Akonadi Server Self-Test"));
-    setButtons(Close | User1 | User2);
-    setButtonText(User1, i18n("Save Report..."));
-    setButtonIcon(User1, QIcon::fromTheme(QString::fromLatin1("document-save")));
-    setButtonText(User2, i18n("Copy Report to Clipboard"));
-    setButtonIcon(User2, QIcon::fromTheme(QString::fromLatin1("edit-copy")));
-    showButtonSeparator(true);
-    ui.setupUi(mainWidget());
+    setWindowTitle(i18n("Akonadi Server Self-Test"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    QPushButton *user2Button = new QPushButton;
+    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    user1Button->setText(i18n("Save Report..."));
+    user1Button->setIcon(QIcon::fromTheme(QString::fromLatin1("document-save")));
+    user2Button->setText(i18n("Copy Report to Clipboard"));
+    user2Button->setIcon(QIcon::fromTheme(QString::fromLatin1("edit-copy")));
+    ui.setupUi(mainWidget);
 
     mTestModel = new QStandardItemModel(this);
     ui.testView->setModel(mTestModel);
@@ -84,8 +98,8 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
             SLOT(selectionChanged(QModelIndex)));
     connect(ui.detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)));
 
-    connect(this, SIGNAL(user1Clicked()), SLOT(saveReport()));
-    connect(this, SIGNAL(user2Clicked()), SLOT(copyReport()));
+    connect(user1Button, SIGNAL(clicked()), SLOT(saveReport()));
+    connect(user2Button, SIGNAL(clicked()), SLOT(copyReport()));
 
     connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(runTests()));
     runTests();
