@@ -34,6 +34,8 @@
 #include <kglobal.h>
 #include <qtextbrowser.h>
 #include <KLocale>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 using namespace Akonadi;
 
@@ -188,31 +190,41 @@ static void compareItems( AbstractDifferencesReporter *reporter, const Akonadi::
 }
 
 ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
-    : KDialog( parent ), mResolveStrategy( ConflictHandler::UseBothItems )
+    : QDialog( parent ), mResolveStrategy( ConflictHandler::UseBothItems )
 {
-    setCaption( i18nc( "@title:window", "Conflict Resolution" ) );
-    setButtons( User1 | User2 | User3 );
-    setDefaultButton( User3 );
+    setWindowTitle( i18nc( "@title:window", "Conflict Resolution" ) );
+    //PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.
+    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    QPushButton *user2Button = new QPushButton;
+    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+    QPushButton *user3Button = new QPushButton;
+    buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    user3Button->setDefault(true);
 
-    button( User3 )->setText( i18n( "Take left one" ) );
-    button( User2 )->setText( i18n( "Take right one" ) );
-    button( User1 )->setText( i18n( "Keep both" ) );
+    user3Button->setText( i18n( "Take left one" ) );
+    user2Button->setText( i18n( "Take right one" ) );
+    user1Button->setText( i18n( "Keep both" ) );
 
-    connect( this, SIGNAL(user1Clicked()), SLOT(slotUseBothItemsChoosen()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(slotUseOtherItemChoosen()) );
-    connect( this, SIGNAL(user3Clicked()), SLOT(slotUseLocalItemChoosen()) );
-
-    QWidget *mainWidget = new QWidget;
-    QVBoxLayout *layout = new QVBoxLayout( mainWidget );
+    connect(user1Button, SIGNAL(clicked()), SLOT(slotUseBothItemsChoosen()) );
+    connect(user2Button, SIGNAL(clicked()), SLOT(slotUseOtherItemChoosen()) );
+    connect(user3Button, SIGNAL(clicked()), SLOT(slotUseLocalItemChoosen()) );
 
     QLabel *label = new QLabel( xi18nc( "@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply." ), mainWidget );
-    layout->addWidget( label );
+    mainLayout->addWidget( label );
 
     mView = new QTextBrowser;
 
-    layout->addWidget( mView );
+    mainLayout->addWidget( mView );
+    mainLayout->addWidget(buttonBox);
 
-    setMainWidget( mainWidget );
 }
 
 void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem, const Akonadi::Item &otherItem )

@@ -21,7 +21,7 @@
 #ifndef AKONADI_CONFLICTRESOLVEDIALOG_P_H
 #define AKONADI_CONFLICTRESOLVEDIALOG_P_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include "conflicthandler_p.h"
 
@@ -34,7 +34,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class ConflictResolveDialog : public KDialog
+class ConflictResolveDialog : public QDialog
 {
   Q_OBJECT
 
