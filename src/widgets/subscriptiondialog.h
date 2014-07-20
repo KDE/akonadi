@@ -22,14 +22,14 @@
 
 #include "akonadiwidgets_export.h"
 
-#include <kdialog.h>
+#include <QDialog>
 
 namespace Akonadi {
 
 /**
  * Local subscription dialog.
  */
-class AKONADIWIDGETS_EXPORT SubscriptionDialog : public KDialog
+class AKONADIWIDGETS_EXPORT SubscriptionDialog : public QDialog
 {
     Q_OBJECT
 public:

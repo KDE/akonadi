@@ -29,10 +29,11 @@
 #include <ksharedconfig.h>
 
 #include <klocalizedstring.h>
+#include <KConfigGroup>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-
+#include <QDialogButtonBox>
 #ifndef KDEPIM_MOBILE_UI
 #include <klineedit.h>
 #include <QPushButton>
@@ -100,7 +101,7 @@ public:
 #ifndef KDEPIM_MOBILE_UI
         collectionView->expandAll();
 #endif
-        q->enableButtonOk(true);
+        mOkButton->setEnabled(true);
     }
 
     void slotSetPattern(const QString &text)
@@ -144,6 +145,7 @@ public:
 #endif
     SubscriptionModel *model;
     RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
+    QPushButton *mOkButton;
 
 };
 
@@ -170,14 +172,14 @@ void SubscriptionDialog::Private::slotUnSubscribe()
 }
 
 SubscriptionDialog::SubscriptionDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(this))
 {
     init(QStringList());
 }
 
 SubscriptionDialog::SubscriptionDialog(const QStringList &mimetypes, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(this))
 {
     init(mimetypes);
@@ -190,12 +192,11 @@ void SubscriptionDialog::showHiddenCollection(bool showHidden)
 
 void SubscriptionDialog::init(const QStringList &mimetypes)
 {
-    enableButtonOk(false);
-    setCaption(i18n("Local Subscriptions"));
+    setWindowTitle(i18n("Local Subscriptions"));
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainWidget->setLayout(mainLayout);
-    setMainWidget(mainWidget);
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
 
     d->model = new SubscriptionModel(this);
 
@@ -210,6 +211,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     }
 
     d->collectionView = new QTreeView(mainWidget);
+    mainLayout->addWidget(d->collectionView);
     d->collectionView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     d->collectionView->header()->hide();
     d->collectionView->setModel(d->filterRecursiveCollectionFilter);
@@ -220,12 +222,14 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     filterBarLayout->addWidget(new QLabel(i18n("Search:")));
 
     QLineEdit *lineEdit = new QLineEdit(mainWidget);
+    mainLayout->addWidget(lineEdit);
     lineEdit->setClearButtonEnabled(true);
     lineEdit->setFocus();
     connect(lineEdit, SIGNAL(textChanged(QString)),
             this, SLOT(slotSetPattern(QString)));
     filterBarLayout->addWidget(lineEdit);
     QCheckBox *checkBox = new QCheckBox(i18n("Subscribed only"), mainWidget);
+    mainLayout->addWidget(checkBox);
     connect(checkBox, SIGNAL(clicked(bool)),
             this, SLOT(slotSetIncludeCheckedOnly(bool)));
     filterBarLayout->addWidget(checkBox);
@@ -267,14 +271,23 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     checkableModel->setSourceModel(flatModel);
 
     d->collectionView = new QListView(mainWidget);
+    mainLayout->addWidget(collectionView);
 
     d->collectionView->setModel(checkableModel);
     mainLayout->addWidget(d->collectionView);
 #endif
 
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+
+    d->mOkButton->setEnabled(false);
+    mainLayout->addWidget(mainWidget);
+
     connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
-    connect(this, SIGNAL(okClicked()), SLOT(done()));
-    connect(this, SIGNAL(cancelClicked()), SLOT(deleteLater()));
+    connect(d->mOkButton, SIGNAL(clicked()), SLOT(done()));
+    connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(deleteLater()));
     Control::widgetNeedsAkonadi(mainWidget);
     d->readConfig();
 }
