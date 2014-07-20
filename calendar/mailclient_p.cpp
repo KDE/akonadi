@@ -90,20 +90,12 @@ void MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
             continue;
         }
 
-        // Build a nice address for this attendee including the CN.
-        QString tname, temail;
-        const QString username = KPIMUtils::quoteNameIfNecessary(a->name());
-        // ignore the return value from extractEmailAddressAndName() because
-        // it will always be false since tusername does not contain "@domain".
-        KPIMUtils::extractEmailAddressAndName(username, temail/*byref*/, tname/*byref*/);
-        tname += QLatin1String(" <") + email + QLatin1Char('>');
-
         // Optional Participants and Non-Participants are copied on the email
         if (a->role() == KCalCore::Attendee::OptParticipant ||
                 a->role() == KCalCore::Attendee::NonParticipant) {
-            ccList << tname;
+            ccList << a->fullName();
         } else {
-            toList << tname;
+            toList << a->fullName();
         }
     }
     if (toList.isEmpty() && ccList.isEmpty()) {
