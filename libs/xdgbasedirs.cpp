@@ -304,8 +304,11 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
 QStringList XdgBaseDirs::findPluginDirs()
 {
   if ( instance()->mPluginDirs.isEmpty() ) {
+#if QT_VERSION < 0x050000
     QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/" );
-
+#else
+    QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt5/plugins/:" AKONADILIB "/kf5/:" AKONADILIB "/kf5/plugins/:/usr/lib/qt5/plugins/" );
+#endif
     if ( QCoreApplication::instance() != 0 ) {
       Q_FOREACH ( const QString &libraryPath, QCoreApplication::instance()->libraryPaths() ) {
         if ( !pluginDirs.contains( libraryPath ) ) {
@@ -313,7 +316,7 @@ QStringList XdgBaseDirs::findPluginDirs()
         }
       }
     }
-
+#if QT_VERSION < 0x050000
     // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
     QProcess proc;
     // ### should probably rather be --path xdg-something
@@ -327,7 +330,7 @@ QStringList XdgBaseDirs::findPluginDirs()
         }
       }
     }
-
+#endif
     qWarning() << "search paths: " << pluginDirs;
     instance()->mPluginDirs = pluginDirs;
   }
