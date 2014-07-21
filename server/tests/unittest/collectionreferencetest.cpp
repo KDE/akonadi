@@ -28,6 +28,7 @@
 #include "akdebug.h"
 #include "entities.h"
 #include "collectionreferencemanager.h"
+#include "dbinitializer.h"
 
 #include <QtTest/QTest>
 
@@ -36,59 +37,6 @@ using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(QList<Akonadi::NotificationMessageV3>)
 Q_DECLARE_METATYPE(Collection::List)
-
-class DbInitializer {
-public:
-
-    Resource createResource(const char *name)
-    {
-        Resource res;
-        res.setId(1);
-        res.setName(QLatin1String(name));
-        Q_ASSERT(res.insert());
-        mResource = res;
-        return res;
-    }
-
-    Collection createCollection(const char *name, const Collection &parent = Collection())
-    {
-        Collection col;
-        col.setParent(parent);
-        col.setName(QLatin1String(name));
-        col.setRemoteId(QLatin1String(name));
-        col.setResource(mResource);
-        Q_ASSERT(col.insert());
-        return col;
-    }
-
-    QByteArray toByteArray(bool enabled)
-    {
-        if (enabled) {
-            return "TRUE";
-        }
-        return "FALSE";
-    }
-
-    QByteArray listResponse(const Collection &col) {
-        QByteArray s;
-        s = "S: * " + QByteArray::number(col.id()) + " " + QByteArray::number(col.parentId()) + " (NAME \"" + col.name().toLatin1() +
-            "\" MIMETYPE () REMOTEID \"" + col.remoteId().toLatin1() +
-            "\" REMOTEREVISION \"\" RESOURCE \"" + mResource.name().toLatin1() +
-            "\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL))";
-            if (col.referenced()) {
-                s += " REFERENCED TRUE";
-            }
-            s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )";
-            return s;
-    }
-
-    Collection collection(const char *name) {
-        return Collection::retrieveByName(QLatin1String(name));
-    }
-
-private:
-    Resource mResource;
-};
 
 class CollectionReferenceTest : public QObject
 {
