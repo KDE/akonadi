@@ -22,34 +22,43 @@
 #include "collection.h"
 #include "collectionpathresolver.h"
 
-#include <k4aboutdata.h>
-#include <KApplication>
-#include <KCmdLineArgs>
 #include <QDebug>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 
 int main( int argc, char *argv[] )
 {
-  K4AboutData aboutdata( "akonadi2xml", 0,
-                        ki18n( "Akonadi To XML converter" ),
-                        "1.0",
-                        ki18n( "Converts an Akonadi collection subtree into a XML file." ),
-                        K4AboutData::License_GPL,
-                        ki18n( "(c) 2009 Volker Krause <vkrause@kde.org>" ) );
+  KAboutData aboutData( QStringLiteral("akonadi2xml"),
+                        i18n( "Akonadi To XML converter" ),
+                        QStringLiteral("1.0"),
+                        i18n( "Converts an Akonadi collection subtree into a XML file." ),
+                        KAboutLicense::GPL,
+                        i18n( "(c) 2009 Volker Krause <vkrause@kde.org>" ) );
 
-  KCmdLineArgs::init( argc, argv, &aboutdata );
-  KCmdLineOptions options;
-  options.add( "c" ).add( "collection <root>", ki18n( "Root collection id or path" ) );
-  options.add( "o" ).add( "output <file>", ki18n( "Output file" ) );
-  KCmdLineArgs::addCmdLineOptions( options );
+  QCommandLineParser parser;
+  QApplication app(argc, argv);
+  KAboutData::setApplicationData(aboutData);
 
-  KApplication app;
-  const KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  app.setApplicationName(aboutData.componentName());
+  app.setApplicationDisplayName(aboutData.displayName());
+  app.setOrganizationDomain(aboutData.organizationDomain());
+  app.setApplicationVersion(aboutData.version());
+
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
+
 
   Collection root;
-  if ( args->isSet( "collection" ) ) {
-    const QString path = args->getOption( "collection" );
+  if ( parser.isSet( QLatin1String("collection") ) ) {
+    const QString path = parser.value( QLatin1String("collection") );
     CollectionPathResolver resolver( path );
     if ( !resolver.exec() ) {
       qCritical() << resolver.errorString();
@@ -59,9 +68,10 @@ int main( int argc, char *argv[] )
   } else
     return -1;
 
-  XmlWriteJob writer( root, args->getOption( "output" ) );
+  XmlWriteJob writer( root, parser.value( QLatin1String("output") ) );
   if ( !writer.exec() ) {
     qCritical() << writer.exec();
     return -1;
   }
 }
+
