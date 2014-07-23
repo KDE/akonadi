@@ -17,10 +17,6 @@ include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}/akonadi
-  ${CMAKE_BINARY_DIR}/akonadi
-  ${CMAKE_BINARY_DIR}/akonadi/kmime
-  ${CMAKE_BINARY_DIR}/kmime
 )
 
 # add testrunner (application for managing a self-contained test
@@ -39,7 +35,7 @@ macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable(${_name} ${_test})
-  target_link_libraries(${_name}  Akonadi::KMime    )
+  target_link_libraries(${_name}  KF5AkonadiMime )
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -49,7 +45,7 @@ macro(add_akonadi_test _source)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
-  target_link_libraries(${_name}  akonadi-kmime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
+  target_link_libraries(${_name}  KF5AkonadiMime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
 endmacro()
 
 include(../AkonadiMacros.cmake)
