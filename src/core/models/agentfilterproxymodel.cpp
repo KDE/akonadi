@@ -106,7 +106,7 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
                 found = true;
             } else {
                 KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-                if (!mimeTypePtr.isNull()) {
+                if (mimeTypePtr) {
                     foreach (const QString &type, d->mimeTypes) {
                         if (mimeTypePtr->is(type)) {
                             found = true;
