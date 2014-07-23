@@ -25,6 +25,13 @@
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
 
+#ifdef QT5_BUILD
+#include <QAtomicInteger>
+#else
+#include <QAtomicInt>
+#endif
+
+
 class QSqlQuery;
 
 namespace Akonadi {
@@ -44,7 +51,7 @@ class StorageDebugger : public QObject
 
     void queryExecuted( const QSqlQuery &query, int duration );
 
-    void incSequence() { ++mSequence; }
+    void incSequence() { mSequence.ref(); }
 
   Q_SIGNALS:
     void queryExecuted( double sequence, uint duration, const QString &query,
@@ -60,7 +67,11 @@ class StorageDebugger : public QObject
     static QMutex mMutex;
 
     bool mEnabled;
-    double mSequence;
+#ifdef Q_ATOMC_INT64_IS_SUPPORTED
+    QAtomicInteger<qint64> mSequence;
+#else
+    QAtomicInt mSequence;
+#endif
 
 };
 
