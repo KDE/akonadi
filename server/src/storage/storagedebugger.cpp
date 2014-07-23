@@ -66,14 +66,14 @@ void StorageDebugger::enableSQLDebugging( bool enable )
 
 void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
 {
-  mSequence++;
+  const qint64 seq = mSequence.fetchAndAddOrdered(1);
 
   if ( !mEnabled ) {
     return;
   }
 
   if ( query.lastError().isValid() ) {
-    Q_EMIT queryExecuted( mSequence, duration, query.executedQuery(), query.boundValues(),
+    Q_EMIT queryExecuted( seq, duration, query.executedQuery(), query.boundValues(),
                           0, QList< QList<QVariant> >(), query.lastError().text() );
     return;
   }
@@ -107,7 +107,7 @@ void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
     querySize = query.numRowsAffected();
   }
 
-  Q_EMIT queryExecuted( mSequence, duration, query.executedQuery(),
+  Q_EMIT queryExecuted( seq, duration, query.executedQuery(),
                         query.boundValues(), querySize, result, QString() );
 
   // Reset the query
