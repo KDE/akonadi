@@ -50,8 +50,9 @@ public:
     QString defaultResourceId() const;
     void emitChanged(const QString &resourceId);
     void collectionRemoved(const Collection &collection);   // slot
-    void collectionFetchJobFinished(KJob *);  // slot
-    void collectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &);  // slot
+    void collectionFetchJobFinished(KJob *job);  // slot
+    void collectionStatisticsChanged(Akonadi::Collection::Id collectionId,
+                                     const Akonadi::CollectionStatistics &statistics);  // slot
 
     /**
       Forgets all folders owned by the given resource.

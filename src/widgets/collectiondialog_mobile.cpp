@@ -260,13 +260,14 @@ void CollectionDialog::Private::setFilterText(const QString &text)
     mFilterModel->setFilterFixedString(text);
 }
 
-void CollectionDialog::Private::selectionChanged(const QItemSelection &selection, const QItemSelection &)
+void CollectionDialog::Private::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    if (selection.isEmpty()) {
+    Q_UNUSED(deselected)
+    if (selected.isEmpty()) {
         return;
     }
 
-    emit selectionChanged(selection.indexes().first().row());
+    emit selectionChanged(selected.indexes().first().row());
 }
 
 CollectionDialog::CollectionDialog(QWidget *parent)

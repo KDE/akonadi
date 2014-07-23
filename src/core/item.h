@@ -508,7 +508,7 @@ private:
     tryToClone(T *ret, const int * /*disambiguate*/ = 0) const;
     template <typename T>
     typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
-    tryToClone(T *) const;
+    tryToClone(T *ret) const;
 
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
@@ -594,7 +594,7 @@ Item::payloadImpl() const
 
 template <typename T>
 typename boost::enable_if<Internal::is_shared_pointer<T>, bool>::type
-Item::tryToClone(T *ret, const int *) const
+Item::tryToClone(T *ret, const int *ptr) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
@@ -627,7 +627,7 @@ Item::tryToClone(T *ret, const int *) const
 
 template <typename T>
 typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
-Item::tryToClone(T *) const
+Item::tryToClone(T *ret) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
@@ -644,7 +644,7 @@ bool Item::hasPayload() const
 
 template <typename T>
 typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
-Item::hasPayloadImpl(const int *) const
+Item::hasPayloadImpl(const int *ptr) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
@@ -656,7 +656,8 @@ Item::hasPayloadImpl(const int *) const
     try {
         return hasPayloadImpl<Root_T>()
                && PayloadType::canCastFrom(payload<Root_T>());
-    } catch (const Akonadi::PayloadException &) {
+    } catch (const Akonadi::PayloadException &e) {
+        Q_UNUSED(e)
         return false;
     }
 }

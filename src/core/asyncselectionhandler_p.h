@@ -29,8 +29,7 @@
 class QAbstractItemModel;
 class QModelIndex;
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
  * @internal
@@ -59,7 +58,7 @@ Q_SIGNALS:
     void itemAvailable(const QModelIndex &index);
 
 private Q_SLOTS:
-    void rowsInserted(const QModelIndex &, int, int);
+    void rowsInserted(const QModelIndex &parent, int start, int end);
 
 private:
     bool scanSubTree(const QModelIndex &index, bool searchForItem);

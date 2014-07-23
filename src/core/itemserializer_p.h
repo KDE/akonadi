@@ -105,8 +105,8 @@ class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 public:
     DefaultItemSerializerPlugin();
 
-    bool deserialize(Item &, const QByteArray &, QIODevice &, int);
-    void serialize(const Item &, const QByteArray &, QIODevice &, int &);
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
+    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
 };
 
 /**
@@ -120,8 +120,8 @@ class StdStringItemSerializerPlugin : public QObject, public ItemSerializerPlugi
 public:
     StdStringItemSerializerPlugin();
 
-    bool deserialize(Item &, const QByteArray &, QIODevice &, int);
-    void serialize(const Item &, const QByteArray &, QIODevice &, int &);
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
+    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
 };
 
 }

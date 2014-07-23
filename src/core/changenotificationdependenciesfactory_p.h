@@ -34,7 +34,9 @@ class NotificationSource;
 class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
 {
 public:
-    virtual ~ChangeNotificationDependenciesFactory() {}
+    virtual ~ChangeNotificationDependenciesFactory()
+    {
+    }
     virtual NotificationSource *createNotificationSource(QObject *parent);
     virtual QObject *createChangeMediator(QObject *parent);
 

@@ -67,9 +67,9 @@ public:
     QColor textColor() const;
     void setFont(const QString &fontKey);
     QString font() const;
-    void setInToolbar(bool);
+    void setInToolbar(bool inToolbar);
     bool inToolbar() const;
-    void setShortcut(const QString &);
+    void setShortcut(const QString &shortcut);
     QString shortcut() const;
 
     /**
@@ -93,8 +93,8 @@ public:
     void deserialize(const QByteArray &data);
 
 private:
-    TagAttribute(const TagAttribute &);
-    TagAttribute &operator=(const TagAttribute &);
+    TagAttribute(const TagAttribute &other);
+    TagAttribute &operator=(const TagAttribute &other);
     //@cond PRIVATE
     class Private;
     Private *const d;

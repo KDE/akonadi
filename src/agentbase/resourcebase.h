@@ -745,7 +745,7 @@ protected:
     QString dumpSchedulerToString() const;
 
 private:
-    static QString parseArguments(int, char **);
+    static QString parseArguments(int argc, char **argv);
     static int init(ResourceBase *r);
 
     // dbus resource interface

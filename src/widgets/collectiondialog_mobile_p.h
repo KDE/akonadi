@@ -70,7 +70,7 @@ public Q_SLOTS:
     void createClicked();
     void setCurrentIndex(int index);
     void setFilterText(const QString &text);
-    void selectionChanged(const QItemSelection &, const QItemSelection &);
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 Q_SIGNALS:
     void descriptionTextChanged();

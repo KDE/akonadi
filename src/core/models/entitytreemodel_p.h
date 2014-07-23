@@ -31,8 +31,7 @@
 
 #include "akonadiprivate_export.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 class ItemFetchJob;
 class ChangeRecorder;
 class AgentInstance;
@@ -51,8 +50,7 @@ struct Node
     int type;
 };
 
-namespace Akonadi
-{
+namespace Akonadi {
 /**
  * @internal
  */
@@ -75,24 +73,26 @@ public:
     void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
     void fetchCollections(Akonadi::CollectionFetchJob *job);
     void fetchItems(const Collection &collection);
-    void collectionsFetched(const Akonadi::Collection::List &);
-    void collectionListFetched(const Akonadi::Collection::List &);
+    void collectionsFetched(const Akonadi::Collection::List &collections);
+    void collectionListFetched(const Akonadi::Collection::List &collections);
     void itemsFetched(const Akonadi::Item::List &items);
     void itemsFetched(const Collection::Id collectionId, const Akonadi::Item::List &items);
 
-    void monitoredCollectionAdded(const Akonadi::Collection &, const Akonadi::Collection &);
-    void monitoredCollectionRemoved(const Akonadi::Collection &);
-    void monitoredCollectionChanged(const Akonadi::Collection &);
-    void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &);
-    void monitoredCollectionMoved(const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection &);
+    void monitoredCollectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
+    void monitoredCollectionRemoved(const Akonadi::Collection &collection);
+    void monitoredCollectionChanged(const Akonadi::Collection &collection);
+    void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &statistics);
+    void monitoredCollectionMoved(const Akonadi::Collection &collection,
+                                  const Akonadi::Collection &sourceCollection,
+                                  const Akonadi::Collection &destCollection);
 
-    void monitoredItemAdded(const Akonadi::Item &, const Akonadi::Collection &);
-    void monitoredItemRemoved(const Akonadi::Item &);
-    void monitoredItemChanged(const Akonadi::Item &, const QSet<QByteArray> &);
-    void monitoredItemMoved(const Akonadi::Item &, const Akonadi::Collection &, const Akonadi::Collection &);
+    void monitoredItemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
+    void monitoredItemRemoved(const Akonadi::Item &item);
+    void monitoredItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &);
+    void monitoredItemMoved(const Akonadi::Item &item, const Akonadi::Collection &, const Akonadi::Collection &);
 
-    void monitoredItemLinked(const Akonadi::Item &, const Akonadi::Collection &);
-    void monitoredItemUnlinked(const Akonadi::Item &, const Akonadi::Collection &);
+    void monitoredItemLinked(const Akonadi::Item &item, const Akonadi::Collection &);
+    void monitoredItemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &);
 
     void monitoredMimeTypeChanged(const QString &mimeType, bool monitored);
     void monitoredCollectionsChanged(const Akonadi::Collection &collection, bool monitored);

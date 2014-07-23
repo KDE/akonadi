@@ -50,16 +50,16 @@ public:
      */
     AgentInstance createInstance(const AgentType &type);
 
-    void agentTypeAdded(const QString &);
-    void agentTypeRemoved(const QString &);
-    void agentInstanceAdded(const QString &);
-    void agentInstanceRemoved(const QString &);
-    void agentInstanceStatusChanged(const QString &, int, const QString &);
-    void agentInstanceProgressChanged(const QString &, uint, const QString &);
-    void agentInstanceNameChanged(const QString &, const QString &);
-    void agentInstanceWarning(const QString &, const QString &);
-    void agentInstanceError(const QString &, const QString &);
-    void agentInstanceOnlineChanged(const QString &, bool);
+    void agentTypeAdded(const QString &identifier);
+    void agentTypeRemoved(const QString &identifier);
+    void agentInstanceAdded(const QString &identifier);
+    void agentInstanceRemoved(const QString &identifier);
+    void agentInstanceStatusChanged(const QString &identifier, int status, const QString &msg);
+    void agentInstanceProgressChanged(const QString &identifier, uint progress, const QString &msg);
+    void agentInstanceNameChanged(const QString &identifier, const QString &name);
+    void agentInstanceWarning(const QString &identifier, const QString &msg);
+    void agentInstanceError(const QString &identifier, const QString &msg);
+    void agentInstanceOnlineChanged(const QString &identifier, bool state);
 
     /**
      * Reads the information about all known agent types from the serverside
@@ -77,11 +77,11 @@ public:
      */
     void readAgentInstances();
 
-    void setName(const AgentInstance &, const QString &);
-    void setOnline(const AgentInstance &, bool);
-    void configure(const AgentInstance &, QWidget *);
-    void synchronize(const AgentInstance &);
-    void synchronizeCollectionTree(const AgentInstance &);
+    void setName(const AgentInstance &instance, const QString &name);
+    void setOnline(const AgentInstance &instance, bool state);
+    void configure(const AgentInstance &instance, QWidget *parent);
+    void synchronize(const AgentInstance &instance);
+    void synchronizeCollectionTree(const AgentInstance &instance);
 
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void createDBusInterface();

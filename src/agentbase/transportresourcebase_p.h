@@ -51,7 +51,7 @@ Q_SIGNALS:
     void transportResult(qlonglong item, int result, const QString &message);   // D-Bus signal
 
 private Q_SLOTS:
-    void fetchResult(KJob *);
+    void fetchResult(KJob *job);
 
 private:
     friend class TransportResourceBase;

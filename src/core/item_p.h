@@ -49,10 +49,12 @@ public:
     }
     explicit clone_ptr(T *t)
         : t(t)
-    {}
+    {
+    }
     clone_ptr(const clone_ptr &other)
         : t(other.t ? other.t->clone() : 0)
-    {}
+    {
+    }
     ~clone_ptr()
     {
         delete t;
@@ -264,7 +266,9 @@ typedef std::vector<_detail::TypedPayload> PayloadContainer;
 
 // disable Q_FOREACH on PayloadContainer (b/c it likes to take copies and clone_ptr doesn't like that)
 template <>
-class QForeachContainer<Akonadi::PayloadContainer> {};
+class QForeachContainer<Akonadi::PayloadContainer>
+{
+};
 
 namespace Akonadi {
 

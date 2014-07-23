@@ -39,7 +39,7 @@ public:
 protected:
 
 protected Q_SLOTS:
-    void slotEditTextChanged(const QString &);
+    void slotEditTextChanged(const QString &text);
     void slotDefaultName();
 private:
     QString m_defaultName;

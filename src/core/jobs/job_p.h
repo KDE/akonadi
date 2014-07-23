@@ -49,7 +49,7 @@ public:
     void handleResponse(const QByteArray &tag, const QByteArray &data);
     void startQueued();
     void lostConnection();
-    void slotSubJobAboutToStart(Akonadi::Job *);
+    void slotSubJobAboutToStart(Akonadi::Job *job);
     void startNext();
     void signalCreationToJobTracker();
     void signalStartedToJobTracker();

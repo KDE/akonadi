@@ -28,8 +28,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class ChangeRecorder;
 class CollectionStatistics;
@@ -708,10 +707,10 @@ protected:
 private:
     //@cond PRIVATE
     // Make these private, they shouldn't be called by applications
-    virtual bool insertRows(int , int, const QModelIndex& = QModelIndex());
-    virtual bool insertColumns(int, int, const QModelIndex& = QModelIndex());
-    virtual bool removeColumns(int, int, const QModelIndex& = QModelIndex());
-    virtual bool removeRows(int, int, const QModelIndex& = QModelIndex());
+    virtual bool insertRows(int row, int count, const QModelIndex &index = QModelIndex());
+    virtual bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex());
+    virtual bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &index = QModelIndex());
 
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id,
                                                                        const Akonadi::CollectionStatistics &))

@@ -56,13 +56,13 @@ public:
     Monitor *mMonitor;
 
 private Q_SLOTS:
-    void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &)
+    void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &aSet)
     {
         mItem.apply(item);
         mParent->itemChanged(item);
     }
 
-    void slotItemRemoved(const Akonadi::Item &)
+    void slotItemRemoved(const Akonadi::Item &item)
     {
         mItem = Item();
         mParent->itemRemoved();

@@ -48,7 +48,8 @@ public:
         , listPreferenceChanged(false)
         , referenced(false)
         , referencedChanged(false)
-    {}
+    {
+    }
 
     CollectionPrivate(const CollectionPrivate &other)
         : EntityPrivate(other)

@@ -88,7 +88,9 @@ struct clone_traits_helper<T, true>
 };
 
 template <typename T>
-struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value> {};
+struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value>
+{
+};
 
 template <typename T>
 struct shared_pointer_traits
@@ -347,12 +349,12 @@ struct Payload : public PayloadBase
 
     PayloadBase *clone() const
     {
-        return new Payload<T>(const_cast<Payload<T>* >(this)->payload);
+        return new Payload<T>(const_cast<Payload<T> *>(this)->payload);
     }
 
     const char *typeName() const
     {
-        return typeid (const_cast<Payload<T>*>(this)).name();
+        return typeid (const_cast<Payload<T> *>(this)).name();
     }
 
     T payload;
@@ -375,7 +377,7 @@ namespace Internal {
 */
 template <typename T> inline Payload<T> *payload_cast(PayloadBase *payloadBase)
 {
-    Payload<T> *p = dynamic_cast<Payload<T>*>(payloadBase);
+    Payload<T> *p = dynamic_cast<Payload<T> *>(payloadBase);
     // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
     if (!p && payloadBase && strcmp(payloadBase->typeName(), typeid (p).name()) == 0) {
         p = static_cast<Payload<T>*>(payloadBase);

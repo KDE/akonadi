@@ -120,7 +120,7 @@ public:
 
     virtual void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
     virtual void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers);
-    virtual void itemMoved(const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination);
+    virtual void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination);
     virtual void itemRemoved(const Akonadi::Item &item);
     void itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
     void itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection);

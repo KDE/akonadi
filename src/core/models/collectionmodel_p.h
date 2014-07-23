@@ -55,7 +55,9 @@ public:
     {
     }
 
-    virtual ~CollectionModelPrivate() {}
+    virtual ~CollectionModelPrivate()
+    {
+    }
 
     CollectionModel *q_ptr;
     QHash<Collection::Id, Collection> collections;
@@ -73,13 +75,13 @@ public:
 
     void init();
     void startFirstListJob();
-    void collectionRemoved(const Akonadi::Collection &);
-    void collectionChanged(const Akonadi::Collection &);
-    void updateDone(KJob *);
-    void collectionStatisticsChanged(Collection::Id, const Akonadi::CollectionStatistics &);
-    void listDone(KJob *);
-    void editDone(KJob *);
-    void dropResult(KJob *);
+    void collectionRemoved(const Akonadi::Collection &collection);
+    void collectionChanged(const Akonadi::Collection &collection);
+    void updateDone(KJob *job);
+    void collectionStatisticsChanged(Collection::Id, const Akonadi::CollectionStatistics &statistics);
+    void listDone(KJob *job);
+    void editDone(KJob *job);
+    void dropResult(KJob *job);
     void collectionsChanged(const Akonadi::Collection::List &cols);
 
     QModelIndex indexForId(Collection::Id id, int column = 0) const;

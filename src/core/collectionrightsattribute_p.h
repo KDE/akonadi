@@ -70,7 +70,7 @@ public:
 
     virtual QByteArray serialized() const;
 
-    virtual void deserialize(const QByteArray &);
+    virtual void deserialize(const QByteArray &data);
 
 private:
     //@cond PRIVATE

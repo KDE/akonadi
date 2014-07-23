@@ -75,10 +75,10 @@ protected:
     TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = 0);
 
 private:
-    virtual bool insertRows(int, int, const QModelIndex& = QModelIndex());
-    virtual bool insertColumns(int, int, const QModelIndex& = QModelIndex());
-    virtual bool removeColumns(int, int, const QModelIndex& = QModelIndex());
-    virtual bool removeRows(int, int, const QModelIndex& = QModelIndex());
+    virtual bool insertRows(int row, int count, const QModelIndex &index = QModelIndex());
+    virtual bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex());
+    virtual bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &index = QModelIndex());
 
     Q_PRIVATE_SLOT(d_func(), void tagsFetched(const Akonadi::Tag::List &tags))
     Q_PRIVATE_SLOT(d_func(), void tagsFetchDone(KJob *job))

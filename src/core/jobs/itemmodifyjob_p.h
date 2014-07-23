@@ -44,7 +44,7 @@ public:
     QByteArray nextPartHeader();
 
     void conflictResolved();
-    void conflictResolveError(const QString &);
+    void conflictResolveError(const QString &message);
 
     void doUpdateItemRevision(Entity::Id, int oldRevision, int newRevision);
 
@@ -52,7 +52,7 @@ public:
     QByteArray fullCommand() const;
     QByteArray tagsToCommandParameter(const Tag::List &tags) const;
 
-    void setSilent( bool silent );
+    void setSilent(bool silent);
 
     Q_DECLARE_PUBLIC(ItemModifyJob)
 
