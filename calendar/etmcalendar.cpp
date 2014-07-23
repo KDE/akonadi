@@ -346,10 +346,8 @@ void ETMCalendarPrivate::onDataChanged(const QModelIndex &topLeft,
     // We only update collections, because items are handled in the filtered model
     Q_ASSERT(topLeft.row() <= bottomRight.row());
     const int endRow = bottomRight.row();
-    QModelIndex i(topLeft);
-    int row = i.row();
-    while (row <= endRow) {
-        const Akonadi::Collection col = collectionFromIndex(i);
+    for (int row = topLeft.row(); row <= endRow; row++) {
+        const Akonadi::Collection col = collectionFromIndex(topLeft.sibling(row, 0));
         if (col.isValid()) {
             // Attributes might have changed, store the new collection and discard the old one
             mCollectionMap.insert(col.id(), col);
