@@ -73,6 +73,7 @@ void ETMCalendarPrivate::init()
         monitor->setCollectionMonitored(Akonadi::Collection::root());
         monitor->fetchCollection(true);
         monitor->setItemFetchScope(scope);
+        monitor->setAllMonitored(true);
 
         QStringList allMimeTypes;
         allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
@@ -84,6 +85,7 @@ void ETMCalendarPrivate::init()
 
         mETM = CalendarModel::create(monitor);
         mETM->setObjectName("ETM");
+        mETM->setListFilter(Akonadi::CollectionFetchScope::Display);
     }
 
     setupFilteredETM();
