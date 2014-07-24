@@ -30,6 +30,16 @@
 
 using namespace Akonadi;
 
+void Change::emitUserDialogClosedAfterChange(Akonadi::ITIPHandlerHelper::SendResult status)
+{
+    emit dialogClosedAfterChange(id, status);
+}
+
+void Change::emitUserDialogClosedBeforeChange(Akonadi::ITIPHandlerHelper::SendResult status)
+{
+    emit dialogClosedBeforeChange(id , status);
+}
+
 void IncidenceChanger::Private::loadCollections()
 {
     if (isLoadingCollections()) {

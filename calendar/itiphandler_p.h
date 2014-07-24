@@ -92,6 +92,8 @@ private Q_SLOTS:
     void onHelperFinished(Akonadi::ITIPHandlerHelper::SendResult result,
                           const QString &errorMessage);
 
+    void onHelperModifyDialogClosed(ITIPHandlerHelper::SendResult result, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+
     void onCounterProposalDelegateFinished(bool success, const QString &errorMessage);
 };
 
