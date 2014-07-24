@@ -32,6 +32,10 @@
 #include <kcalcore/incidence.h>
 #include <kcalcore/schedulemessage.h>
 
+#include <KGuiItem>
+#include <KLocalizedString>
+
+#include <QObject>
 #include <QString>
 #include <QWidget>
 
@@ -60,7 +64,130 @@ public:
 };
 
 /**
- * @short Factory to create MailTransport::MessageQueueJob jobs.
+ * @short Ui delegate for dialogs raised by the ITIPHandler and IncidenceChanger.
+ * @since 4.15
+ */
+class AKONADI_CALENDAR_EXPORT ITIPHandlerDialogDelegate : public QObject {
+    Q_OBJECT
+public:
+    // Posible default actions
+    enum Action {
+        ActionAsk,              /**< Ask the user for a descision */
+        ActionSendMessage,      /**< Answer with Yes */
+        ActionDontSendMessage   /**< Answer with No */
+    };
+
+    // How will reveive the mail afterwards
+    enum Recipient {
+        Organizer,              /**< the organizer of the incidence */
+        Attendees               /**< the attendees of the incidence */
+    };
+
+    /**
+     * Creates a new AskDelegator
+     */
+    explicit ITIPHandlerDialogDelegate(const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method, QWidget *parent = 0);
+
+    /*
+     * Opens a Dialog, when an incidence is created
+     * The function must emit a dialogClosed signal with the user's answer
+     *
+     * @param recipient: to who the mail will be sent afterwards
+     * @param question: dialog's question
+     * @param action: Should the dialog been shown or should a default answer be returned
+     * @param buttonYes: dialog's yes answer
+     * @param buttonNo: dialog's no answer
+     */
+    virtual void openDialogIncidenceCreated(Recipient recipient,
+                                    const QString &question,
+                                    Action action = ActionAsk,
+                                    const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                    const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
+
+    /*
+     * Opens a Dialog, when an incidence is modified
+     * The function must emit a dialogClosed signal with the user's answer
+     *
+     * @param attendeeStatusChanged: Only the status of the own attendeeStatus is changed
+     * @param recipient: to who the mail will be sent afterwards
+     * @param question: dialog's question
+     * @param action: Should the dialog been shown or should a default answer be returned
+     * @param buttonYes: dialog's yes answer
+     * @param buttonNo: dialog's no answer
+     */
+    virtual void openDialogIncidenceModified(bool attendeeStatusChanged,
+                                     Recipient recipient,
+                                     const QString &question,
+                                     Action action = ActionAsk,
+                                     const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                     const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
+
+    /*
+     * Opens a Dialog, when an incidence is deleted
+     * The function must emit a dialogClosed signal with the user's answer
+     *
+     * @param recipient: to who the mail will be sent afterwards
+     * @param question: dialog's question
+     * @param action: Should the dialog been shown or should a default answer be returned
+     * @param buttonYes: dialog's yes answer
+     * @param buttonNo: dialog's no answer
+     */
+    virtual void openDialogIncidenceDeleted(Recipient recipient,
+                                    const QString &question,
+                                    Action action = ActionAsk,
+                                    const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                    const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
+    /*
+     * Opens a Dialog, when mail was sended
+     * The function must emit a dialogClosed signal with the user's answer
+     *
+     * @param question: dialog's question
+     * @param action: Should the dialog been shown or should a default answer be returned
+     * @param buttonYes: dialog's yes answer
+     * @param buttonNo: dialog's no answer
+     */
+    virtual void openDialogSchedulerFinished(const QString &question,
+                                     Action action = ActionAsk,
+                                     const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                     const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
+
+Q_SIGNALS:
+    /*
+     * Signal is emited, when the user has answered the dialog or the defaultAction is used
+     * @param answer: answer should be part of KMessageBox:ButtonCode, keep in mind that it is a YesNoDialog so normally it should be KMessageBox::Yes or KMessageBox::No
+     * @param method: itip method
+     * @param incidence: purpose of the dialog
+     */
+    void dialogClosed(int answer, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+
+protected:
+    /*
+     * Opens a KMessageBox::questionYesNo with the question
+     *
+     * @return KMessageBox::Yes or KMessageBox::No
+     *
+     * @param question: dialog's question
+     * @param action: Should the dialog been shown or should a default answer be returned
+     * @param buttonYes: dialog's yes answer
+     * @param buttonNo: dialog's no answer
+     */
+    int askUserIfNeeded(const QString &question,
+                        Action action,
+                        const KGuiItem &buttonYes,
+                        const KGuiItem &buttonNo) const;
+
+    // parent of the dialog
+    QWidget *mParent;
+
+    // Incidence related to the dialog
+    KCalCore::Incidence::Ptr mIncidence;
+
+    // ITIPMethod related to the dialog
+    KCalCore::iTIPMethod mMethod;
+};
+
+/**
+ * @short Factory to create MailTransport::MessageQueueJob jobs or ITIPHandlerDialogDelegate objects.
  * @since 4.15
  */
 class AKONADI_CALENDAR_EXPORT ITIPHandlerComponentFactory : public QObject
@@ -84,6 +211,15 @@ public:
      * @param parent of the MailTransport::MessageQueueJob object
      */
     virtual MailTransport::MessageQueueJob* createMessageQueueJob(const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity, QObject *parent = 0);
+
+    /*
+     * @return A new ITIPHandlerDialogDelegate object
+     * @param incidence the purpose of the dialogs
+     * @param method the ITIPMethod
+     * @parent parent of the AskDelegator
+     *
+     */
+    virtual ITIPHandlerDialogDelegate* createITIPHanderDialogDelegate(const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method, QWidget *parent = 0);
 };
 
 /**

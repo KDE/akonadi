@@ -65,26 +65,63 @@ QString proposalComment(const KCalCore::Incidence::Ptr &incidence)
     return comment;
 }
 
-int ITIPHandlerHelper::askUserIfNeeded(const QString &question,
-                                       bool ignoreDefaultAction,
-                                       const KGuiItem &buttonYes,
-                                       const KGuiItem &buttonNo) const
+ITIPHandlerDialogDelegate::ITIPHandlerDialogDelegate(const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method, QWidget *parent)
+    : mParent(parent)
+    , mIncidence(incidence)
+    , mMethod(method)
+{
+}
+
+
+int ITIPHandlerDialogDelegate::askUserIfNeeded(const QString &question, Action action,
+                                  const KGuiItem &buttonYes, const KGuiItem &buttonNo) const
 {
     Q_ASSERT_X(!question.isEmpty(), "ITIPHandlerHelper::askUser", "ask what?");
 
-    if (ignoreDefaultAction || mDefaultAction == ITIPHandlerHelper::ActionAsk)
-        return KMessageBox::questionYesNo(mParent, question, i18n("Group Scheduling Email"),
-                                          buttonYes, buttonNo);
-
-    switch (mDefaultAction) {
-    case ITIPHandlerHelper::ActionSendMessage:
+    switch (action) {
+    case ActionSendMessage:
         return KMessageBox::Yes;
-    case ITIPHandlerHelper::ActionDontSendMessage:
+    case ActionDontSendMessage:
         return KMessageBox::No;
     default:
-        Q_ASSERT(false);
-        return 0;
+        return KMessageBox::questionYesNo(mParent, question, i18n("Group Scheduling Email"),
+                                          buttonYes, buttonNo);
     }
+}
+
+void ITIPHandlerDialogDelegate::openDialogIncidenceCreated(Recipient recipient,
+                                              const QString &question, Action action,
+                                              const KGuiItem &buttonYes, const KGuiItem &buttonNo)
+{
+    Q_UNUSED(recipient);
+    const int messageBoxReturnCode = askUserIfNeeded(question, action, buttonYes, buttonNo);
+    emit dialogClosed(messageBoxReturnCode, mMethod, mIncidence);
+}
+
+void ITIPHandlerDialogDelegate::openDialogIncidenceModified(bool attendeeStatusChanged, Recipient recipient,
+                                               const QString &question, Action action,
+                                               const KGuiItem &buttonYes, const KGuiItem &buttonNo)
+{
+    Q_UNUSED(attendeeStatusChanged);
+    Q_UNUSED(recipient);
+    const int messageBoxReturnCode = askUserIfNeeded(question, action, buttonYes, buttonNo);
+    emit dialogClosed(messageBoxReturnCode, mMethod, mIncidence);
+}
+
+void ITIPHandlerDialogDelegate::openDialogIncidenceDeleted(Recipient recipient,
+                                              const QString &question, Action action,
+                                              const KGuiItem &buttonYes, const KGuiItem &buttonNo)
+{
+    Q_UNUSED(recipient);
+    const int messageBoxReturnCode = askUserIfNeeded(question, action, buttonYes, buttonNo);
+    emit dialogClosed(messageBoxReturnCode, mMethod, mIncidence);
+}
+
+void ITIPHandlerDialogDelegate::openDialogSchedulerFinished(const QString &question, Action action,
+                                               const KGuiItem &buttonYes, const KGuiItem &buttonNo)
+{
+    const int messageBoxReturnCode = askUserIfNeeded(question, action, buttonYes, buttonNo);
+    emit dialogClosed(messageBoxReturnCode, mMethod, mIncidence);
 }
 
 ITIPHandlerHelper::SendResult
@@ -114,9 +151,11 @@ ITIPHandlerHelper::sentInvitation(int messageBoxReturnCode,
         return ITIPHandlerHelper::ResultSuccess;
 
     } else if (messageBoxReturnCode == KMessageBox::No) {
+        emit finished(ITIPHandlerHelper::ResultCanceled, QString());
         return ITIPHandlerHelper::ResultCanceled;
     } else {
         Q_ASSERT(false);   // TODO: Figure out if/how this can happen (by closing the dialog with x??)
+        emit finished(ITIPHandlerHelper::ResultCanceled, QString());
         return ITIPHandlerHelper::ResultCanceled;
     }
 }
@@ -149,9 +188,11 @@ bool ITIPHandlerHelper::weNeedToSendMailFor(const KCalCore::Incidence::Ptr &inci
 }
 
 ITIPHandlerHelper::ITIPHandlerHelper(ITIPHandlerComponentFactory *factory, QWidget *parent)
-    : mDefaultAction(ITIPHandlerHelper::ActionAsk)
+    : QObject(parent)
+    , mDefaultAction(ITIPHandlerDialogDelegate::ActionAsk)
     , mParent(parent)
-    , m_scheduler(new MailScheduler(factory, parent))
+    , m_factory(factory ? factory : new ITIPHandlerComponentFactory(this))
+    , m_scheduler(new MailScheduler(m_factory, this))
     , m_status(StatusNone)
 {
     connect(m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),
@@ -167,13 +208,12 @@ void ITIPHandlerHelper::setDialogParent(QWidget *parent)
     mParent = parent;
 }
 
-void ITIPHandlerHelper::setDefaultAction(Action action)
+void ITIPHandlerHelper::setDefaultAction(ITIPHandlerDialogDelegate::Action action)
 {
     mDefaultAction = action;
 }
 
-ITIPHandlerHelper::SendResult
-ITIPHandlerHelper::sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
+void ITIPHandlerHelper::sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
         const KCalCore::Incidence::Ptr &incidence)
 {
     /// When we created the incidence, we *must* be the organizer.
@@ -182,11 +222,15 @@ ITIPHandlerHelper::sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
         kWarning() << "Creating incidence which has another organizer! Will skip sending invitations."
                  << "; email= "       << incidence->organizer()->email()
                  << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe(incidence->organizer()->email());
-        return ITIPHandlerHelper::ResultFailAbortUpdate;
+        emit sendIncidenceCreatedMessageFinished(ITIPHandlerHelper::ResultFailAbortUpdate, method, incidence);
+        emit finished(ITIPHandlerHelper::ResultFailAbortUpdate, QString());
+        return;
     }
 
     if (!weNeedToSendMailFor(incidence)) {
-        return ITIPHandlerHelper::ResultNoSendingNeeded;
+        emit sendIncidenceCreatedMessageFinished(ITIPHandlerHelper::ResultNoSendingNeeded, method, incidence);
+        emit finished(ITIPHandlerHelper::ResultNoSendingNeeded, QString());
+        return;
     }
 
     QString question;
@@ -203,8 +247,16 @@ ITIPHandlerHelper::sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
                         "Should an email be sent to the attendees?");
     }
 
-    const int messageBoxReturnCode = askUserIfNeeded(question, false);
-    return sentInvitation(messageBoxReturnCode, incidence, method);
+    ITIPHandlerDialogDelegate *askDelegator = m_factory->createITIPHanderDialogDelegate(incidence, method, mParent);
+    connect(askDelegator, SIGNAL(dialogClosed(int, KCalCore::iTIPMethod, KCalCore::Incidence::Ptr)),
+            SLOT(slotIncidenceCreatedDialogClosed(int, KCalCore::iTIPMethod, KCalCore::Incidence::Ptr)));
+    askDelegator->openDialogIncidenceCreated(ITIPHandlerDialogDelegate::Attendees, question, mDefaultAction);
+}
+
+void ITIPHandlerHelper::slotIncidenceCreatedDialogClosed(int messageBoxReturnCode, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence)
+{
+    ITIPHandlerHelper::SendResult status = sentInvitation(messageBoxReturnCode, incidence, method);
+    emit sendIncidenceCreatedMessageFinished(status, method, incidence);
 }
 
 bool ITIPHandlerHelper::handleIncidenceAboutToBeModified(const KCalCore::Incidence::Ptr &incidence)
@@ -238,11 +290,14 @@ bool ITIPHandlerHelper::handleIncidenceAboutToBeModified(const KCalCore::Inciden
     }
 }
 
-ITIPHandlerHelper::SendResult
-ITIPHandlerHelper::sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
+void ITIPHandlerHelper::sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
         const KCalCore::Incidence::Ptr &incidence,
         bool attendeeStatusChanged)
 {
+    ITIPHandlerDialogDelegate *askDelegator = m_factory->createITIPHanderDialogDelegate(incidence, method, mParent);
+
+    connect(askDelegator, SIGNAL(dialogClosed(int,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)),
+            SLOT(slotIncidenceModifiedDialogClosed(int,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)));
     // For a modified incidence, either we are the organizer or someone else.
     if (weAreOrganizerOf(incidence)) {
         if (weNeedToSendMailFor(incidence)) {
@@ -250,10 +305,13 @@ ITIPHandlerHelper::sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
                                           "Do you want to email the attendees an update message?",
                                           incidence->summary());
 
-            const int messageBoxReturnCode = askUserIfNeeded(question, false, KGuiItem(i18n("Send Update")));
-            return sentInvitation(messageBoxReturnCode, incidence, method);
+            askDelegator->openDialogIncidenceModified(attendeeStatusChanged, ITIPHandlerDialogDelegate::Attendees, question, mDefaultAction, KGuiItem(i18n("Send Update")));
+            return;
         } else {
-            return ResultNoSendingNeeded;
+            emit sendIncidenceModifiedMessageFinished(ITIPHandlerHelper::ResultNoSendingNeeded, method, incidence);
+            emit finished(ITIPHandlerHelper::ResultNoSendingNeeded, QString());
+            delete askDelegator;
+            return;
         }
 
     } else if (incidence->type() == KCalCore::Incidence::TypeTodo) {
@@ -265,8 +323,8 @@ ITIPHandlerHelper::sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
 
         const QString question = i18n("Do you want to send a status update to the "
                                       "organizer of this task?");
-        const int messageBoxReturnCode = askUserIfNeeded(question, false, KGuiItem(i18n("Send Update")));
-        return sentInvitation(messageBoxReturnCode, incidence, method);
+        askDelegator->openDialogIncidenceModified(attendeeStatusChanged, ITIPHandlerDialogDelegate::Organizer, question, mDefaultAction, KGuiItem(i18n("Send Update")));
+        return;
 
     } else if (incidence->type() == KCalCore::Incidence::TypeEvent) {
         if (attendeeStatusChanged && method == KCalCore::iTIPRequest) {
@@ -274,21 +332,37 @@ ITIPHandlerHelper::sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
             const QString question =
                 i18n("Your status as an attendee of this event changed. "
                      "Do you want to send a status update to the event organizer?");
-            const int messageBoxReturnCode = askUserIfNeeded(question, false, KGuiItem(i18n("Send Update")));
-            return sentInvitation(messageBoxReturnCode, incidence, method);
+
+                askDelegator->openDialogIncidenceModified(attendeeStatusChanged, ITIPHandlerDialogDelegate::Organizer, question, mDefaultAction, KGuiItem(i18n("Send Update")));
+            return;
         } else {
-            return sentInvitation(KMessageBox::Yes, incidence, method);
+            slotIncidenceModifiedDialogClosed(KMessageBox::Yes, method, incidence);
+            delete askDelegator;
+            return;
         }
     }
     Q_ASSERT(false);   // Shouldn't happen.
-    return ResultNoSendingNeeded;
+    emit sendIncidenceModifiedMessageFinished(ITIPHandlerHelper::ResultNoSendingNeeded, method, incidence);
+    emit finished(ITIPHandlerHelper::ResultNoSendingNeeded, QString());
+    delete askDelegator;
 }
 
-ITIPHandlerHelper::SendResult
-ITIPHandlerHelper::sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
+void ITIPHandlerHelper::slotIncidenceModifiedDialogClosed(int messageBoxReturnCode, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence)
+{
+    ITIPHandlerHelper::SendResult status = sentInvitation(messageBoxReturnCode, incidence, method);
+    emit sendIncidenceModifiedMessageFinished(status, method, incidence);
+}
+
+void ITIPHandlerHelper::sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
         const KCalCore::Incidence::Ptr &incidence)
 {
     Q_ASSERT(incidence);
+
+    ITIPHandlerDialogDelegate *askDelegator = m_factory->createITIPHanderDialogDelegate(incidence, method, mParent);
+
+    connect(askDelegator, SIGNAL(dialogClosed(int,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)),
+            SLOT(slotIncidenceDeletedDialogClosed(int,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)));
+
     // For a modified incidence, either we are the organizer or someone else.
     if (weAreOrganizerOf(incidence)) {
         if (weNeedToSendMailFor(incidence)) {
@@ -306,11 +380,13 @@ ITIPHandlerHelper::sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
                                 "Do you want to email the attendees that the journal is canceled?",
                                 incidence->summary());
             }
-
-            const int messageBoxReturnCode = askUserIfNeeded(question, false);
-            return sentInvitation(messageBoxReturnCode, incidence, method);
+            askDelegator->openDialogIncidenceDeleted(ITIPHandlerDialogDelegate::Attendees, question, mDefaultAction);
+            return;
         } else {
-            return ResultNoSendingNeeded;
+            emit sendIncidenceDeletedMessageFinished(ITIPHandlerHelper::ResultNoSendingNeeded, method, incidence);
+            emit finished(ITIPHandlerHelper::ResultNoSendingNeeded, QString());
+            delete askDelegator;
+            return;
         }
 
     } else if (incidence->type() != KCalCore::Incidence::TypeEvent) {
@@ -325,9 +401,9 @@ ITIPHandlerHelper::sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
                                       "organizer of this task?") :
                                  i18n("Do you want to send a status update to the "
                                       "organizer of this journal?");
-
-        const int messageBoxReturnCode = askUserIfNeeded(question, false, KGuiItem(i18n("Send Update")));
-        return sentInvitation(messageBoxReturnCode, incidence, method);
+        askDelegator->openDialogIncidenceDeleted(ITIPHandlerDialogDelegate::Organizer, question, mDefaultAction,
+                                                  KGuiItem(i18nc("@action:button dialog positive answer","Send Update")));
+        return;
     } else if (incidence->type() == KCalCore::Incidence::TypeEvent) {
 
         const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
@@ -346,17 +422,29 @@ ITIPHandlerHelper::sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
             QString question = i18n("You had previously accepted an invitation to this event. "
                                     "Do you want to send an updated response to the organizer "
                                     "declining the invitation?");
-            int messageBoxReturnCode = askUserIfNeeded(question, false, KGuiItem(i18n("Send Update")));
-            return sentInvitation(messageBoxReturnCode, incidence, method);
+            askDelegator->openDialogIncidenceDeleted(ITIPHandlerDialogDelegate::Organizer, question, mDefaultAction,
+                                                     KGuiItem(i18nc("@action:button dialog positive answer","Send Update")));
+            return;
         } else {
             // We did not accept the event before and delete it from our calendar agian,
             // so there is no need to notify people.
-            return ITIPHandlerHelper::ResultNoSendingNeeded;
+            emit sendIncidenceDeletedMessageFinished(ITIPHandlerHelper::ResultNoSendingNeeded, method, incidence);
+            emit finished(ITIPHandlerHelper::ResultNoSendingNeeded, QString());
+            delete askDelegator;
+            return;
         }
     }
 
     Q_ASSERT(false);   // Shouldn't happen.
-    return ResultNoSendingNeeded;
+    emit sendIncidenceDeletedMessageFinished(ITIPHandlerHelper::ResultNoSendingNeeded, method, incidence);
+    emit finished(ITIPHandlerHelper::ResultNoSendingNeeded, QString());
+    delete askDelegator;
+}
+
+void ITIPHandlerHelper::slotIncidenceDeletedDialogClosed(const int messageBoxReturnCode, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence)
+{
+    ITIPHandlerHelper::SendResult status = sentInvitation(messageBoxReturnCode, incidence, method);
+    emit sendIncidenceDeletedMessageFinished(status, method, incidence);
 }
 
 ITIPHandlerHelper::SendResult
@@ -390,12 +478,13 @@ void ITIPHandlerHelper::onSchedulerFinished(Akonadi::Scheduler::Result result,
         m_status = StatusNone;
         if (!success) {
             const QString question(i18n("Sending group scheduling email failed."));
-            const int code = askUserIfNeeded(question, true, KGuiItem(i18n("Abort Update")));
-            if (code == KMessageBox::Yes) {
-                emit finished(ResultFailAbortUpdate, QString());
-            } else {
-                emit finished(ResultFailKeepUpdate, QString());
-            }
+
+            ITIPHandlerDialogDelegate *askDelegator = m_factory->createITIPHanderDialogDelegate(KCalCore::Incidence::Ptr(), KCalCore::iTIPNoMethod, mParent);
+
+            connect(askDelegator, SIGNAL(dialogClosed(int,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)),
+                    SLOT(slotSchedulerFinishDialog(int,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)));
+            askDelegator->openDialogSchedulerFinished(question,  ITIPHandlerDialogDelegate::ActionAsk,
+                                                      KGuiItem(i18nc("@action:button dialog positive answer to abort question","Abort Update")));
             return;
         } else {
             //fall through
@@ -404,5 +493,16 @@ void ITIPHandlerHelper::onSchedulerFinished(Akonadi::Scheduler::Result result,
 
     emit finished(success ? ResultSuccess : ResultError,
                   success ? QString() : i18n("Error: %1", errorMsg));
+}
+
+void ITIPHandlerHelper::slotSchedulerFinishDialog(const int result, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence)
+{
+    Q_UNUSED(method);
+    Q_UNUSED(incidence);
+    if (result == KMessageBox::Yes) {
+        emit finished(ResultFailAbortUpdate, QString());
+    } else {
+        emit finished(ResultFailKeepUpdate, QString());
+    }
 }
 

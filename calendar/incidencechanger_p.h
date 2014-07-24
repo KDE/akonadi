@@ -45,8 +45,8 @@ namespace Akonadi {
 class TransactionSequence;
 class CollectionFetchJob;
 
-class Change {
-
+class Change : public QObject {
+    Q_OBJECT
 public:
     typedef QSharedPointer<Change> Ptr;
     typedef QList<Ptr> List;
@@ -97,6 +97,15 @@ public:
     bool completed;
     bool queuedModification;
     bool useGroupwareCommunication;
+
+signals:
+    void dialogClosedBeforeChange(int id, ITIPHandlerHelper::SendResult status);
+    void dialogClosedAfterChange(int id, ITIPHandlerHelper::SendResult status);
+
+public slots:
+    void emitUserDialogClosedAfterChange(Akonadi::ITIPHandlerHelper::SendResult status);
+    void emitUserDialogClosedBeforeChange(Akonadi::ITIPHandlerHelper::SendResult status);
+
 protected:
     IncidenceChanger *const changer;
 };
@@ -285,8 +294,8 @@ public:
     void cleanupTransaction();
     bool allowAtomicOperation(int atomicOperationId, const Change::Ptr &change) const;
 
-    bool handleInvitationsBeforeChange(const Change::Ptr &change);
-    bool handleInvitationsAfterChange(const Change::Ptr &change);
+    void handleInvitationsBeforeChange(const Change::Ptr &change);
+    void handleInvitationsAfterChange(const Change::Ptr &change);
     static bool myAttendeeStatusChanged(const KCalCore::Incidence::Ptr &newIncidence,
                                         const KCalCore::Incidence::Ptr &oldIncidence,
                                         const QStringList &myEmails);
@@ -298,6 +307,12 @@ public Q_SLOTS:
     void handleTransactionJobResult(KJob*);
     void performNextModification(Akonadi::Item::Id id);
     void onCollectionsLoaded(KJob*);
+
+    void handleCreateJobResult2(int changeId, ITIPHandlerHelper::SendResult);
+    void handleDeleteJobResult2(int changeId, ITIPHandlerHelper::SendResult);
+    void handleModifyJobResult2(int changeId, ITIPHandlerHelper::SendResult);
+    void performModification2(int changeId, ITIPHandlerHelper::SendResult);
+    void deleteIncidences2(int changeId, ITIPHandlerHelper::SendResult);
 
 public:
     int mLatestChangeId;
