@@ -27,7 +27,7 @@ ResourceSettings *ResourceSettings::self()
 {
     if (!mSelf) {
         mSelf = new ResourceSettings();
-        mSelf->readConfig();
+        mSelf->load();
     }
 
     return mSelf;

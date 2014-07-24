@@ -251,7 +251,7 @@ DefaultResourceJobPrivate::DefaultResourceJobPrivate(KCoreConfigSkeleton *settin
 void DefaultResourceJobPrivate::tryFetchResource()
 {
     // Get the resourceId from config. Another instance might have changed it in the meantime.
-    mSettings->readConfig();
+    mSettings->load();
 
     const QString resourceId = defaultResourceId(mSettings);
 
@@ -278,7 +278,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
                 if (resource.name() == mDefaultResourceOptions.value(QStringLiteral("Name")).toString()) {
                     // found a matching one...
                     setDefaultResourceId(mSettings, resource.identifier());
-                    mSettings->writeConfig();
+                    mSettings->save();
                     mResourceWasPreexisting = true;
                     qDebug() << "Found resource" << resource.identifier();
                     q->setResourceId(resource.identifier());
@@ -482,7 +482,7 @@ void DefaultResourceJobPrivate::collectionModifyResult(KJob *job)
     if (mPendingModifyJobs == 0) {
         // Write the updated config.
         qDebug() << "Writing defaultResourceId" << defaultResourceId(mSettings) << "to config.";
-        mSettings->writeConfig();
+        mSettings->save();
 
         // Scan the resource.
         q->setResourceId(defaultResourceId(mSettings));
