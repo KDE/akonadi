@@ -44,7 +44,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KIntNumInput" name="checkInterval" native="true">
+      <widget class="QSpinBox" name="checkInterval" native="true">
        <property name="value" stdset="0">
         <number>-1</number>
        </property>
@@ -133,7 +133,7 @@
              </widget>
             </item>
             <item>
-             <widget class="KIntNumInput" name="localCacheTimeout" native="true">
+             <widget class="QSpinBox" name="localCacheTimeout" native="true">
               <property name="value" stdset="0">
                <number>-1</number>
               </property>
@@ -177,11 +177,6 @@
    <class>KEditListWidget</class>
    <extends>QWidget</extends>
    <header>keditlistwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KIntNumInput</class>
-   <extends>QWidget</extends>
-   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
