@@ -28,6 +28,7 @@
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/collectionrightsattribute_p.h>
 #include <akonadi/control.h>
+#include <akonadi/collectionidentificationattribute.h>
 
 #include <qtest_akonadi.h>
 
@@ -190,4 +191,20 @@ void CollectionAttributeTest::testCollectionRightsAttribute()
     attribute.deserialize( data );
     QCOMPARE( attribute.rights(), rights );
   }
+}
+
+void CollectionAttributeTest::testCollectionIdentifcationAttribute()
+{
+  QByteArray id("identifier");
+  QByteArray ns("namespace");
+  CollectionIdentificationAttribute attribute(id, ns);
+  QCOMPARE(attribute.identifier(), id);
+  QCOMPARE(attribute.collectionNamespace(), ns);
+
+  QByteArray result = attribute.serialized();
+  CollectionIdentificationAttribute parsed;
+  parsed.deserialize(result);
+  kDebug() << parsed.identifier() << parsed.collectionNamespace() << result;;
+  QCOMPARE(parsed.identifier(), id);
+  QCOMPARE(parsed.collectionNamespace(), ns);
 }
