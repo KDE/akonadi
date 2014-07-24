@@ -21,6 +21,7 @@ set(akonadicore_base_SRCS
     collectionstatistics.cpp
     collectionsync.cpp
     conflicthandler.cpp
+    collectionidentificationattribute.cpp
     control.cpp
     dbusconnectionpool.cpp
     entity.cpp
@@ -78,6 +79,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CollectionQuotaAttribute
     CollectionStatistics
     CollectionUtils
+    CollectionIdentificationAttribute
     Control
     DBusConnectionPool
     DifferencesAlgorithmInterface

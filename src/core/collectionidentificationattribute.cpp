@@ -19,7 +19,7 @@
 
 #include "collectionidentificationattribute.h"
 
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 
 #include <QByteArray>
 #include <QList>

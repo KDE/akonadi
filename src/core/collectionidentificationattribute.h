@@ -20,7 +20,7 @@
 #ifndef COLLECTIONIDENTIFICATIONATTRIBUTE_H
 #define COLLECTIONIDENTIFICATIONATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include <attribute.h>
 #include <QByteArray>
 
 /**
@@ -31,7 +31,7 @@
  * @author Christian Mollekopf <mollekopf@kolabsys.com>
  * @since 4.15
  */
-class AKONADI_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute
+class AKONADICORE_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute
 {
 public:
     explicit CollectionIdentificationAttribute(const QByteArray &identifier = QByteArray(), const QByteArray &folderNamespace = QByteArray());
