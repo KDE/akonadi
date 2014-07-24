@@ -928,7 +928,7 @@ QMap<Entity::Id,QList<PimItem> > DataStore::virtualCollections( const PimItem::L
       item.setRemoteRevision( query.value( 3 ).toString() );
       item.setMimeTypeId( query.value( 4 ).toLongLong() );
       pimItems << item;
-    } while (query.next() && query.value(0).toLongLong() > collectionId);
+    } while (query.next() && query.value(0).toLongLong() == collectionId);
   }
 
   return map;
