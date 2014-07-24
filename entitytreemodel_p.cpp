@@ -1167,8 +1167,15 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
         return;
     }
 
-    //otherwise this overwrites the copy of the real collection with one of the virtual collectoin
-    if (!item.parentCollection().isVirtual()) {
+    // Notifications about itemChange are always dispatched for real collection
+    // and also all virtual collections the item belongs to. In order to preserve
+    // the original storage collection when we need to have special handling for
+    // notifications for virtual collections
+    if (item.parentCollection().isVirtual()) {
+        const Collection originalParent = m_items[item.id()].parentCollection();
+        m_items[item.id()].apply(item);
+        m_items[item.id()].setParentCollection(originalParent);
+    } else {
         m_items[item.id()].apply(item);
     }
 
