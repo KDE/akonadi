@@ -110,9 +110,9 @@ void KnutResource::configure( WId windowId )
   const QString oldFile = mSettings->dataFile();
   KUrl url;
   if ( !oldFile.isEmpty() )
-    url = KUrl::fromPath( oldFile );
+    url = QUrl::fromLocalFile( oldFile );
   else
-    url = KUrl::fromPath( QDir::homePath() );
+    url = QUrl::fromLocalFile( QDir::homePath() );
 
   const QString newFile =
       KFileDialog::getSaveFileNameWId( url,
