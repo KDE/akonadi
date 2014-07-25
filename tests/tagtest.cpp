@@ -69,6 +69,13 @@ void TagTest::initTestCase()
     qRegisterMetaType<Akonadi::Tag>();
     qRegisterMetaType<QSet<Akonadi::Tag> >();
     qRegisterMetaType<Akonadi::Item::List>();
+
+    // Delete the default Knut tag - it's interfering with this test
+    TagFetchJob *fetchJob = new TagFetchJob(this);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->tags().size(), 1);
+    TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
+    AKVERIFYEXEC(deleteJob);
 }
 
 void TagTest::testCreateFetch()
