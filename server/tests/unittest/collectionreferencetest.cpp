@@ -127,7 +127,6 @@ private Q_SLOTS:
     {
         QTest::addColumn<QList<QByteArray> >("scenario");
         QTest::addColumn<QList<Akonadi::NotificationMessageV3> >("expectedNotifications");
-        QTest::addColumn<Collection::List>("expectedCollections");
 
         Akonadi::NotificationMessageV3 notificationTemplate;
         notificationTemplate.setType(NotificationMessageV2::Collections);
@@ -139,10 +138,10 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 1 (RESOURCE \"testresource\" ENABLED TRUE) ()"
+                    << "C: 2 LIST 0 INF (RESOURCE \"testresource\" ENABLED TRUE) ()"
                     << initializer.listResponse(initializer.collection("col1"))
                     << "S: 2 OK List completed";
-            QTest::newRow("list before referenced first level") << scenario << QList<Akonadi::NotificationMessageV3>() << Collection::List();
+            QTest::newRow("list before referenced first level") << scenario << QList<Akonadi::NotificationMessageV3>();
         }
 
         {
@@ -154,46 +153,54 @@ private Q_SLOTS:
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
 
-            Collection col = initializer.collection("col2");
-            col.setReferenced(true);
-
-            QTest::newRow("reference") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification) << (Collection::List() << col);
+            QTest::newRow("reference") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification);
         }
+
         {
             Collection col2 = initializer.collection("col2");
             col2.setReferenced(true);
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 (ENABLED TRUE) ()"
+                    << "C: 2 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED TRUE"
+                    << "S: 2 OK MODIFY done"
+                    << "C: 3 LIST " + QByteArray::number(col2.id()) + " 0 (ENABLED TRUE) ()"
                     << initializer.listResponse(col2)
-                    << "S: 2 OK List completed";
-
-            QTest::newRow("list referenced base") << scenario << QList<Akonadi::NotificationMessageV3>() << Collection::List();
-        }
-        {
-            Collection col2 = initializer.collection("col2");
-            col2.setReferenced(true);
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 1 (RESOURCE \"testresource\" ENABLED TRUE) ()"
-                    << initializer.listResponse(initializer.collection("col1"))
-                    << initializer.listResponse(col2)
-                    << "S: 2 OK List completed";
-            QTest::newRow("list referenced first level") << scenario << QList<Akonadi::NotificationMessageV3>() << Collection::List();
-        }
-        {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED FALSE"
-                    << "S: 2 OK MODIFY done";
+                    << "S: 3 OK List completed";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
 
-            Collection col = initializer.collection("col2");
-            col.setReferenced(false);
+            QTest::newRow("list referenced base") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification);
+        }
+        {
+            Collection col2 = initializer.collection("col2");
+            col2.setReferenced(true);
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED TRUE"
+                    << "S: 2 OK MODIFY done"
+                    << "C: 3 LIST 0 1 (RESOURCE \"testresource\" ENABLED TRUE) ()"
+                    << initializer.listResponse(initializer.collection("col1"))
+                    << initializer.listResponse(col2)
+                    << "S: 3 OK List completed";
 
-            QTest::newRow("dereference") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification) << (Collection::List() << col);
+            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
+
+            QTest::newRow("list referenced first level") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification);
+        }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED TRUE"
+                    << "S: 2 OK MODIFY done"
+                    << "C: 3 MODIFY " + QByteArray::number(initializer.collection("col2").id()) + " REFERENCED FALSE"
+                    << "S: 3 OK MODIFY done";
+
+            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
+
+            QTest::newRow("dereference") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << notification);
         }
     }
 
@@ -201,7 +208,6 @@ private Q_SLOTS:
     {
         QFETCH(QList<QByteArray>, scenario);
         QFETCH(QList<NotificationMessageV3>, expectedNotifications);
-        QFETCH(Collection::List, expectedCollections);
 
         FakeAkonadiServer::instance()->setScenario(scenario);
         FakeAkonadiServer::instance()->runTest();
@@ -210,21 +216,19 @@ private Q_SLOTS:
         if (expectedNotifications.isEmpty()) {
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
         } else {
-            QCOMPARE(notificationSpy->count(), 1);
-            //Only one notify call
-            QCOMPARE(notificationSpy->first().count(), 1);
-            const NotificationMessageV3::List receivedNotifications = notificationSpy->first().first().value<NotificationMessageV3::List>();
+            NotificationMessageV3::List receivedNotifications;
+            for (int q = 0; q < notificationSpy->size(); q++) {
+                //Only one notify call
+                QCOMPARE(notificationSpy->first().count(), 1);
+                const NotificationMessageV3::List n = notificationSpy->first().first().value<NotificationMessageV3::List>();
+                for (int i = 0; i < n.size(); i++) {
+                    receivedNotifications.append(n.at(i));
+                }
+            }
             QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
-
             for (int i = 0; i < expectedNotifications.size(); i++) {
                 QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
             }
-        }
-
-        Q_FOREACH (const Collection &expected, expectedCollections) {
-            const Collection actual = Collection::retrieveByName(expected.name());
-            QCOMPARE(actual.referenced(), expected.referenced());
-            QCOMPARE(CollectionReferenceManager::instance()->isReferenced(actual.id()), expected.referenced());
         }
     }
 
