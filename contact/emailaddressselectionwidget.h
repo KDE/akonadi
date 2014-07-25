@@ -84,6 +84,14 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionWidget : public QWidget
     explicit EmailAddressSelectionWidget( QAbstractItemModel *model, QWidget *parent = 0 );
 
     /**
+     * @brief Creates a new email address selection widget.
+     * @param showOnlyContactWithEmail Allow to specify if you want to see only contact with email (by default yes in other constructor)
+     * @param model A custom ContactsTreeModel based model to use.
+     * @param parent The parent widget.
+     */
+    explicit EmailAddressSelectionWidget( bool showOnlyContactWithEmail, QAbstractItemModel *model = 0, QWidget *parent = 0 );
+
+    /**
      * Destroys the email address selection widget.
      */
     ~EmailAddressSelectionWidget();
