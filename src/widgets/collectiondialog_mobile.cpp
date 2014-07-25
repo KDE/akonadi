@@ -113,7 +113,7 @@ CollectionDialog::Private::Private(QAbstractItemModel *customModel, CollectionDi
 
     mView->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi-kde/qml/CollectionDialogMobile.qml"))));
 
-#if defined (Q_WS_MAEMO_5) || defined (MEEGO_EDITION_HARMATTAN)
+#if defined (Q_OS_MAEMO_5) || defined (MEEGO_EDITION_HARMATTAN)
     mParent->setWindowState(Qt::WindowFullScreen);
 #else
     // on the desktop start with a nice size

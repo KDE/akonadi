@@ -63,6 +63,7 @@ public:
         : mIdentifier(identifier)
         , mPlugin(plugin)
     {
+        qDebug()<<" PLUGIN : identifier"<<identifier;
     }
 
     QObject *plugin() const
