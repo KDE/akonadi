@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testCreateMerge();
     void testAttributes();
     void testTagItem();
+    void testRIDIsolation();
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
     void testMonitor();
@@ -129,6 +130,65 @@ void TagTest::testRID()
         TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
         AKVERIFYEXEC(deleteJob);
     }
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("");
+        AKVERIFYEXEC(select);
+    }
+}
+
+void TagTest::testRIDIsolation()
+{
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        AKVERIFYEXEC(select);
+    }
+
+    Tag tag;
+    tag.setGid("gid");
+    tag.setType("mytype");
+    tag.setRemoteId("rid_0");
+
+    TagCreateJob *createJob = new TagCreateJob(tag, this);
+    AKVERIFYEXEC(createJob);
+    QVERIFY(createJob->tag().isValid());
+
+    qint64 tagId;
+    {
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().count(), 1);
+        QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
+        QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
+        QCOMPARE(fetchJob->tags().first().remoteId(), QByteArray("rid_0"));
+        tagId = fetchJob->tags().first().id();
+    }
+
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_1");
+        AKVERIFYEXEC(select);
+    }
+
+    tag.setRemoteId("rid_1");
+    createJob = new TagCreateJob(tag, this);
+    createJob->setMergeIfExisting(true);
+    AKVERIFYEXEC(createJob);
+    QVERIFY(createJob->tag().isValid());
+
+    {
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().count(), 1);
+        QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
+        QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
+        QCOMPARE(fetchJob->tags().first().remoteId(), QByteArray("rid_1"));
+
+        QCOMPARE(fetchJob->tags().first().id(), tagId);
+
+    }
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(Tag(tagId), this);
+    AKVERIFYEXEC(deleteJob);
+
     {
         ResourceSelectJob *select = new ResourceSelectJob("");
         AKVERIFYEXEC(select);
@@ -344,6 +404,9 @@ void TagTest::testTagItem()
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
 }
 
 void TagTest::testModifyItemWithTagByGID()
@@ -375,6 +438,10 @@ void TagTest::testModifyItemWithTagByGID()
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
+
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), this);
+    AKVERIFYEXEC(deleteJob);
 }
 
 void TagTest::testModifyItemWithTagByRID()
@@ -411,6 +478,10 @@ void TagTest::testModifyItemWithTagByRID()
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), this);
+    AKVERIFYEXEC(deleteJob);
+
     {
         ResourceSelectJob *select = new ResourceSelectJob("");
         AKVERIFYEXEC(select);
