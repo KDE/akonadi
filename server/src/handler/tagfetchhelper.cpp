@@ -38,7 +38,7 @@ TagFetchHelper::TagFetchHelper( Connection *connection, const ImapSet &set )
 {
 }
 
-QSqlQuery TagFetchHelper::buildAttributeQuery()
+QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id)
 {
   QueryBuilder qb( TagAttribute::tableName() );
   qb.addColumn( TagAttribute::tagIdColumn() );
@@ -46,7 +46,7 @@ QSqlQuery TagFetchHelper::buildAttributeQuery()
   qb.addColumn( TagAttribute::valueColumn() );
   qb.addSortColumn( TagAttribute::tagIdColumn(), Query::Descending );
 
-  QueryHelper::setToQuery( mSet, TagAttribute::tagIdColumn(), qb );
+  qb.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, id);
 
   if ( !qb.exec() ) {
     throw HandlerException( "Unable to list tag attributes" );
@@ -87,26 +87,8 @@ QSqlQuery TagFetchHelper::buildTagQuery()
   return qb.query();
 }
 
-
-bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
+QByteArray TagFetchHelper::tagToByteArray(qint64 tagId, const QByteArray &gid, qint64 parentId, const QByteArray &type, const QByteArray &remoteId)
 {
-
-  QSqlQuery tagQuery = buildTagQuery();
-  QSqlQuery attributeQuery = buildAttributeQuery();
-
-  Response response;
-  response.setUntagged();
-  while ( tagQuery.isValid() ) {
-    const qint64 tagId = tagQuery.value( 0 ).toLongLong();
-    const QByteArray gid = tagQuery.value( 1 ).toByteArray();
-    const qint64 parentId = tagQuery.value( 2 ).toLongLong();
-    //we're ignoring the type id
-    const QByteArray type = tagQuery.value( 4 ).toByteArray();
-    QByteArray remoteId;
-    if ( mConnection->context()->resource().isValid() ) {
-      remoteId = tagQuery.value( 5 ).toByteArray();
-    }
-
     QList<QByteArray> attributes;
     attributes << AKONADI_PARAM_UID << QByteArray::number( tagId );
     attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
@@ -116,6 +98,7 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
       attributes << AKONADI_PARAM_REMOTEID << remoteId;
     }
 
+    QSqlQuery attributeQuery = buildAttributeQuery(tagId);
     while ( attributeQuery.isValid() ) {
       const qint64 id = attributeQuery.value( 0 ).toLongLong();
       if ( id > tagId ) {
@@ -132,8 +115,31 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
       attributeQuery.next();
     }
 
+    return ImapParser::join( attributes, " " );
+}
+
+
+bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
+{
+
+  QSqlQuery tagQuery = buildTagQuery();
+  // QSqlQuery attributeQuery = buildAttributeQuery();
+
+  Response response;
+  response.setUntagged();
+  while ( tagQuery.isValid() ) {
+    const qint64 tagId = tagQuery.value( 0 ).toLongLong();
+    const QByteArray gid = tagQuery.value( 1 ).toByteArray();
+    const qint64 parentId = tagQuery.value( 2 ).toLongLong();
+    //we're ignoring the type id
+    const QByteArray type = tagQuery.value( 4 ).toByteArray();
+    QByteArray remoteId;
+    if ( mConnection->context()->resource().isValid() ) {
+      remoteId = tagQuery.value( 5 ).toByteArray();
+    }
+
     QByteArray tagReply = QByteArray::number( tagId ) + ' ' + responseIdentifier + " (";
-    tagReply += ImapParser::join( attributes, " " ) + ')';
+    tagReply += tagToByteArray(tagId, gid, parentId, type, remoteId) + ')';
     response.setUntagged();
     response.setString( tagReply );
     Q_EMIT responseAvailable( response );

@@ -44,13 +44,14 @@ class TagFetchHelper : public QObject
     TagFetchHelper( Connection *connection, const ImapSet &set );
 
     bool fetchTags( const QByteArray &responseIdentifier );
+    static QByteArray tagToByteArray(qint64 tagId, const QByteArray &gid, qint64 parentId, const QByteArray &type, const QByteArray &remoteId);
 
   Q_SIGNALS:
     void responseAvailable( const Akonadi::Server::Response &response );
 
   private:
     QSqlQuery buildTagQuery();
-    QSqlQuery buildAttributeQuery();
+    static QSqlQuery buildAttributeQuery(qint64);
 
   private:
     ImapStreamParser *mStreamParser;
