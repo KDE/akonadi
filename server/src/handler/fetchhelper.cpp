@@ -40,6 +40,7 @@
 #include "intervalcheck.h"
 #include "agentmanagerinterface.h"
 #include "dbusconnectionpool.h"
+#include "tagfetchhelper.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -213,6 +214,7 @@ QSqlQuery FetchHelper::buildTagQuery()
                      Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName() );
   tagQuery.addColumn( PimItem::idFullColumnName() );
   tagQuery.addColumn( Tag::idFullColumnName() );
+
   ItemQueryHelper::scopeToQuery( mScope, mConnection->context(), tagQuery );
   tagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
@@ -292,6 +294,23 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
   const QString typeIdentifier = manager.agentInstanceType( resourceName );
   const QVariantMap properties = manager.agentCustomProperties( typeIdentifier );
   return properties.value( QLatin1String( "HasLocalStorage" ), false ).toBool();
+}
+
+QByteArray FetchHelper::tagsToByteArray( const Tag::List &tags )
+{
+  QByteArray b;
+  QList<QByteArray> attributes;
+  b += "(";
+  Q_FOREACH ( const Tag &tag, tags ) {
+    b += "(" + TagFetchHelper::tagToByteArray( tag.id(),
+                                               tag.gid().toLatin1(),
+                                               tag.parentId(),
+                                               tag.tagType().name().toLatin1(),
+                                               QByteArray(),
+                                               TagFetchHelper::fetchTagAttributes( tag.id() ) ) + ") ";
+  }
+  b += ")";
+  return b;
 }
 
 bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
@@ -428,6 +447,9 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
 
     if ( mFetchScope.tagsRequested() ) {
       ImapSet tags;
+      QVector<qint64> tagIds;
+      //We don't take the fetch scope into account yet. It's either id only or the full tag.
+      const bool fullTagsRequested = !mFetchScope.tagFetchScope().isEmpty();
       while ( tagQuery.isValid() ) {
         const qint64 id = tagQuery.value( TagQueryItemIdColumn ).toLongLong();
         if ( id > pimItemId ) {
@@ -438,10 +460,20 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
         }
         const qint64 tagId = tagQuery.value( TagQueryTagIdColumn ).toLongLong();
         tags.add( QVector<qint64>() << tagId );
+
+        tagIds << tagId;
         tagQuery.next();
       }
-      if ( !tags.isEmpty() ) {
-        attributes.append( AKONADI_PARAM_TAGS " " + tags.toImapSequenceSet() );
+      if ( !fullTagsRequested ) {
+        if ( !tags.isEmpty() ) {
+          attributes.append( AKONADI_PARAM_TAGS " " + tags.toImapSequenceSet() );
+        }
+      } else {
+        Tag::List tagList;
+        Q_FOREACH ( qint64 t, tagIds ) {
+          tagList << Tag::retrieveById( t );
+        }
+        attributes.append( AKONADI_PARAM_TAGS " " + tagsToByteArray( tagList ) );
       }
     }
 
