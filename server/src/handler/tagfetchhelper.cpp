@@ -38,7 +38,7 @@ TagFetchHelper::TagFetchHelper( Connection *connection, const ImapSet &set )
 {
 }
 
-QSqlQuery TagFetchHelper::buildAttributeQuery()
+QSqlQuery TagFetchHelper::buildAttributeQuery() const
 {
   QueryBuilder qb( TagAttribute::tableName() );
   qb.addColumn( TagAttribute::tagIdColumn() );
@@ -47,6 +47,24 @@ QSqlQuery TagFetchHelper::buildAttributeQuery()
   qb.addSortColumn( TagAttribute::tagIdColumn(), Query::Descending );
 
   QueryHelper::setToQuery( mSet, TagAttribute::tagIdColumn(), qb );
+
+  if ( !qb.exec() ) {
+    throw HandlerException( "Unable to list tag attributes" );
+  }
+
+  qb.query().next();
+  return qb.query();
+}
+
+QSqlQuery TagFetchHelper::buildAttributeQuery( qint64 id )
+{
+  QueryBuilder qb( TagAttribute::tableName() );
+  qb.addColumn( TagAttribute::tagIdColumn() );
+  qb.addColumn( TagAttribute::typeColumn() );
+  qb.addColumn( TagAttribute::valueColumn() );
+  qb.addSortColumn( TagAttribute::tagIdColumn(), Query::Descending );
+
+  qb.addValueCondition( TagAttribute::tagIdColumn(), Query::Equals, id );
 
   if ( !qb.exec() ) {
     throw HandlerException( "Unable to list tag attributes" );
@@ -86,6 +104,36 @@ QSqlQuery TagFetchHelper::buildTagQuery()
   return qb.query();
 }
 
+QList<QByteArray> TagFetchHelper::fetchTagAttributes( qint64 tagId )
+{
+  QList<QByteArray> attributes;
+
+  QSqlQuery attributeQuery = buildAttributeQuery( tagId );
+  while ( attributeQuery.isValid() ) {
+    const QByteArray attrName = attributeQuery.value( 1 ).toByteArray();
+    const QByteArray attrValue = attributeQuery.value( 2 ).toByteArray();
+
+    attributes << attrName << ImapParser::quote( attrValue );
+    attributeQuery.next();
+  }
+  return attributes;
+}
+
+QByteArray TagFetchHelper::tagToByteArray(qint64 tagId, const QByteArray &gid, qint64 parentId, const QByteArray &type, const QByteArray &remoteId, const QList<QByteArray> &tagAttributes)
+{
+  QList<QByteArray> attributes;
+  attributes << AKONADI_PARAM_UID << QByteArray::number( tagId );
+  attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
+  attributes << AKONADI_PARAM_PARENT << QByteArray::number( parentId );
+  attributes << AKONADI_PARAM_MIMETYPE " " + ImapParser::quote( type );
+  if ( !remoteId.isEmpty() ) {
+    attributes << AKONADI_PARAM_REMOTEID << remoteId;
+  }
+
+  attributes << tagAttributes;
+
+  return ImapParser::join( attributes, " " );
+}
 
 bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
 {
@@ -106,15 +154,7 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
       remoteId = tagQuery.value( 5 ).toByteArray();
     }
 
-    QList<QByteArray> attributes;
-    attributes << AKONADI_PARAM_UID << QByteArray::number( tagId );
-    attributes << AKONADI_PARAM_GID << ImapParser::quote( gid );
-    attributes << AKONADI_PARAM_PARENT << QByteArray::number( parentId );
-    attributes << AKONADI_PARAM_MIMETYPE " " + ImapParser::quote( type );
-    if ( !remoteId.isEmpty() ) {
-      attributes << AKONADI_PARAM_REMOTEID << remoteId;
-    }
-
+    QList<QByteArray> tagAttributes;
     while ( attributeQuery.isValid() ) {
       const qint64 id = attributeQuery.value( 0 ).toLongLong();
       if ( id > tagId ) {
@@ -127,12 +167,11 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
       const QByteArray attrName = attributeQuery.value( 1 ).toByteArray();
       const QByteArray attrValue = attributeQuery.value( 2 ).toByteArray();
 
-      attributes << attrName << ImapParser::quote( attrValue );
+      tagAttributes << attrName << ImapParser::quote( attrValue );
       attributeQuery.next();
     }
-
     QByteArray tagReply = QByteArray::number( tagId ) + ' ' + responseIdentifier + " (";
-    tagReply += ImapParser::join( attributes, " " ) + ')';
+    tagReply += tagToByteArray(tagId, gid, parentId, type, remoteId, tagAttributes) + ')';
     response.setUntagged();
     response.setString( tagReply );
     Q_EMIT responseAvailable( response );
