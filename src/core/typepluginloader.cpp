@@ -336,8 +336,7 @@ private:
     {
         KMimeType::Ptr mimeType = KMimeType::mimeType(type, KMimeType::ResolveAliases);
         if (mimeType.isNull()) {
-            //QT5 port: KMimeType::mimeType doesn't work here. Need to investigate or port to QMimeType
-            //return mDefaultPlugin.plugin();
+            return mDefaultPlugin.plugin();
         }
 
         // step 1: find all plugins that match at all
