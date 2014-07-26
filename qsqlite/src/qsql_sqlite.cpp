@@ -97,13 +97,16 @@ static QVariant::Type qGetColumnType(const QString &tpName)
         return QVariant::Int;
     if (typeName == QLatin1String("double")
         || typeName == QLatin1String("float")
+        || typeName == QLatin1String("real")
         || typeName.startsWith(QLatin1String("numeric")))
         return QVariant::Double;
     if (typeName == QLatin1String("blob"))
         return QVariant::ByteArray;
+#ifdef QT5_BUILD
     if (typeName == QLatin1String("boolean")
         || typeName == QLatin1String("bool"))
         return QVariant::Bool;
+#endif
     return QVariant::String;
 }
 
@@ -469,7 +472,9 @@ bool QSQLiteResult::exec()
                                             ba->size(), SQLITE_STATIC);
                     break; }
                 case QVariant::Int:
+#ifdef QT5_BUILD
                 case QVariant::Bool:
+#endif
                     res = sqlite3_bind_int(d->stmt, i + 1, value.toInt());
                     break;
                 case QVariant::Double:
