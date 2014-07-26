@@ -6,7 +6,7 @@ CREATE TABLE ResourceTable (id SERIAL PRIMARY KEY,
                             name TEXT UNIQUE NOT NULL,
                             isVirtual BOOL DEFAULT false)
 
-INSERT INTO ResourceTable (name,isVirtual) VALUES ('akonadi_search_resource',true)
+INSERT INTO ResourceTable (isVirtual,name) VALUES (true,'akonadi_search_resource')
 
 CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
                               remoteId TEXT,
@@ -23,7 +23,7 @@ CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
                               queryString TEXT,
                               queryLanguage TEXT)
 
-INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
+INSERT INTO CollectionTable (name,parentId,resourceId) VALUES ('Search',NULL,1)
 
 CREATE TABLE MimeTypeTable (id SERIAL PRIMARY KEY,
                             name TEXT UNIQUE NOT NULL)

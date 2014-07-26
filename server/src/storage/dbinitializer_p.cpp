@@ -100,8 +100,8 @@ QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &colum
 
 QString DbInitializerMySql::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
 {
-  QHash<QString, QString> data = dataDescription.data;
-  QMutableHashIterator<QString, QString> it( data );
+  QMap<QString, QString> data = dataDescription.data;
+  QMutableMapIterator<QString, QString> it( data );
   while ( it.hasNext() ) {
     it.next();
     it.value().replace( QLatin1String( "\\" ), QLatin1String( "\\\\" ) );
@@ -186,8 +186,8 @@ QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &colu
 
 QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
 {
-  QHash<QString, QString> data = dataDescription.data;
-  QMutableHashIterator<QString, QString> it( data );
+  QMap<QString, QString> data = dataDescription.data;
+  QMutableMapIterator<QString, QString> it( data );
   while ( it.hasNext() ) {
     it.next();
     it.value().replace( QLatin1String( "true" ), QLatin1String( "1" ) );
@@ -272,7 +272,7 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
 
 QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
 {
-  QHash<QString, QString> data = dataDescription.data;
+  QMap<QString, QString> data = dataDescription.data;
 
   return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
                             .arg( tableDescription.name )

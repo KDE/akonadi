@@ -8,7 +8,7 @@ CREATE TABLE ResourceTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             isVirtual BOOL DEFAULT false)
                             COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-INSERT INTO ResourceTable (name,isVirtual) VALUES ('akonadi_search_resource',true)
+INSERT INTO ResourceTable (isVirtual,name) VALUES (true,'akonadi_search_resource')
 
 CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               remoteId VARBINARY(255),
@@ -28,7 +28,7 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                               COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
+INSERT INTO CollectionTable (name,parentId,resourceId) VALUES ('Search',NULL,1)
 
 CREATE TABLE MimeTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             name VARBINARY(255) NOT NULL UNIQUE)

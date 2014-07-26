@@ -21,7 +21,7 @@
 #ifndef SCHEMATYPES_H
 #define SCHEMATYPES_H
 
-#include <QHash>
+#include <QMap>
 #include <QString>
 #include <QStringList>
 #include <QVector>
@@ -82,7 +82,7 @@ class DataDescription
     /**
       * Key contains the column name, value the data.
       */
-    QHash<QString, QString> data;
+    QMap<QString, QString> data;
 };
 
 /**
