@@ -178,7 +178,7 @@ private Q_SLOTS:
         QList<QByteArray> scenario;
         NotificationMessageV3 notification;
         qint64 uidnext = 0;
-        QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00), Qt::UTC);
+        QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00));
         PimItem pimItem;
         QVector<FakePart> parts;
         QVector<Flag> flags;
