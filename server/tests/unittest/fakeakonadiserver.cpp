@@ -170,20 +170,8 @@ bool FakeAkonadiServer::init()
     }
     if (db.open()) {
         qWarning() << "Database" << dbConfig->configuredDatabase()->databaseName() << "already exists, the test is not running in a clean environment!";
-        db.close();
-    } else {
-        db.close();
-        db.setDatabaseName(QString());
-        if (db.open()) {
-            {
-                QSqlQuery query(db);
-                if (!query.exec(QString::fromLatin1("CREATE DATABASE %1").arg(DbConfig::configuredDatabase()->databaseName()))) {
-                    throw FakeAkonadiServerException("Failed to create new database");
-                }
-            }
-            db.close();
-        }
     }
+
     QSqlDatabase::removeDatabase(initCon);
 
     dbConfig->setup();
