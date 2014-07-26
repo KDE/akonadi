@@ -336,7 +336,8 @@ private:
     {
         KMimeType::Ptr mimeType = KMimeType::mimeType(type, KMimeType::ResolveAliases);
         if (mimeType.isNull()) {
-            return mDefaultPlugin.plugin();
+            //PORT QT5
+            //return mDefaultPlugin.plugin();
         }
 
         // step 1: find all plugins that match at all
