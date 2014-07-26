@@ -68,17 +68,16 @@ QSqlQuery TagFetchHelper::buildTagQuery()
   // Expose tag's remote ID only to resources
   if ( mConnection->context()->resource().isValid() ) {
     qb.addColumn( TagRemoteIdResourceRelation::remoteIdFullColumnName() );
-    qb.addJoin( QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(),
-                Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName() );
     Query::Condition joinCondition;
-    joinCondition.addColumnCondition( Resource::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::resourceIdFullColumnName() );
-    joinCondition.addValueCondition( Resource::nameFullColumnName(), Query::Equals, mConnection->context()->resource().name() );
-    qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), joinCondition );
+    joinCondition.addValueCondition( TagRemoteIdResourceRelation::resourceIdFullColumnName(),
+                                     Query::Equals, mConnection->context()->resource().id() );
+    joinCondition.addColumnCondition( TagRemoteIdResourceRelation::tagIdFullColumnName(),
+                                     Query::Equals, Tag::idFullColumnName() );
+    qb.addJoin( QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), joinCondition );
   }
 
   qb.addSortColumn( Tag::idFullColumnName(), Query::Descending );
   QueryHelper::setToQuery( mSet, Tag::idFullColumnName(), qb );
-
   if ( !qb.exec() ) {
     throw HandlerException( "Unable to list tags" );
   }
