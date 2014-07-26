@@ -126,6 +126,8 @@ if(QT5_BUILD)
   endif()
 
   set(QT_QTTEST_LIBRARIES Qt5::Test)
+
+  add_definitions(-DQT5_BUILD)
 else()
   set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
   set(QT_MIN_VERSION 4.8.0)         # Qt 4 only
@@ -346,12 +348,12 @@ add_subdirectory(rds)
 if(NOT WIN32)
   add_subdirectory(asapcat)
 endif()
-if (NOT QT5_BUILD)
+#if (NOT QT5_BUILD)
   if(SQLITE_FOUND)
     option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
     add_subdirectory(qsqlite)
   endif()
-endif()
+#endif()
 
 ############### install stuff ###############
 

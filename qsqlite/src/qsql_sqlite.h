@@ -61,30 +61,6 @@ class QSQLiteDriverPrivate;
 class QSQLiteResultPrivate;
 class QSQLiteDriver;
 
-class QSQLiteResult : public QSqlCachedResult
-{
-    friend class QSQLiteDriver;
-    friend class QSQLiteResultPrivate;
-public:
-    explicit QSQLiteResult(const QSQLiteDriver* db);
-    ~QSQLiteResult();
-    QVariant handle() const;
-
-protected:
-    bool gotoNext(QSqlCachedResult::ValueCache& row, int idx);
-    bool reset(const QString &query);
-    bool prepare(const QString &query);
-    bool exec();
-    int size();
-    int numRowsAffected();
-    QVariant lastInsertId() const;
-    QSqlRecord record() const;
-    void virtual_hook(int id, void *data);
-
-private:
-    QSQLiteResultPrivate* d;
-};
-
 class Q_EXPORT_SQLDRIVER_SQLITE QSQLiteDriver : public QSqlDriver
 {
     Q_OBJECT
@@ -113,7 +89,10 @@ public:
     QString escapeIdentifier(const QString &identifier, IdentifierType) const;
 
 private:
-    QSQLiteDriverPrivate* d;
+#ifndef QT5_BUILD
+    QSQLiteDriverPrivate* d_ptr;
+#endif
+    Q_DECLARE_PRIVATE(QSQLiteDriver)
 };
 
 QT_END_NAMESPACE

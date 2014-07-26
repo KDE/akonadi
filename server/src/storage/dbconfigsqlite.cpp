@@ -81,9 +81,7 @@ QString DbConfigSqlite::databaseName() const
 bool DbConfigSqlite::init( QSettings &settings )
 {
   // determine default settings depending on the driver
-  QString defaultDbName;
-
-  defaultDbName = sqliteDataFile();
+  const QString defaultDbName = sqliteDataFile();
 
   // read settings for current driver
   settings.beginGroup( driverName() );
@@ -118,6 +116,9 @@ void DbConfigSqlite::apply( QSqlDatabase &database )
     database.setPassword( mPassword );
   }
 
+  if (driverName() == QLatin1String("QSQLITE3") && !mConnectionOptions.contains(QLatin1String("SQLITE_ENABLE_SHARED_CACHE"))) {
+      mConnectionOptions += QLatin1String(";QSQLITE_ENABLE_SHARED_CACHE");
+  }
   database.setConnectOptions( mConnectionOptions );
 
   // can we check that during init() already?
