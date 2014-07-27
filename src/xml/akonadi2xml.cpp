@@ -44,11 +44,6 @@ int main( int argc, char *argv[] )
   QApplication app(argc, argv);
   KAboutData::setApplicationData(aboutData);
 
-  app.setApplicationName(aboutData.componentName());
-  app.setApplicationDisplayName(aboutData.displayName());
-  app.setOrganizationDomain(aboutData.organizationDomain());
-  app.setApplicationVersion(aboutData.version());
-
   parser.addVersionOption();
   parser.addHelpOption();
   aboutData.setupCommandLine(&parser);
