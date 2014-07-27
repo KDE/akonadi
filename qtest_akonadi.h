@@ -24,7 +24,7 @@
 
 #include <agentinstance.h>
 #include <agentmanager.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) \
 { \
   setenv( "LC_ALL", "C", 1); \
   unsetenv( "KDE_COLOR_DEBUG" ); \
-  KAboutData aboutData( QByteArray( "qttest" ), QByteArray(), ki18n( "KDE Test Program" ), QByteArray( "version" ) );  \
+  KAboutData aboutData( QLatin1String( "qttest" ), i18n( "KDE Test Program" ), QLatin1String( "version" ) );  \
   KDEMainFlags mainFlags = flags;                         \
   KComponentData cData(&aboutData); \
   QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
@@ -86,38 +86,5 @@ void setAllResourcesOffline() {
  */
 #define AKVERIFYEXEC( job ) \
   QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
-
-// Taken from Qt 5:
-#if QT_VERSION < 0x050000
-
-// Will try to wait for the expression to become true while allowing event processing
-#define QTRY_VERIFY(__expr) \
-do { \
-  const int __step = 50; \
-  const int __timeout = 5000; \
-  if ( !( __expr ) ) { \
-    QTest::qWait( 0 ); \
-  } \
-  for ( int __i = 0; __i < __timeout && !( __expr ); __i += __step ) { \
-    QTest::qWait( __step ); \
-  } \
-  QVERIFY( __expr ); \
-} while ( 0 )
-
-// Will try to wait for the comparison to become successful while allowing event processing
-#define QTRY_COMPARE(__expr, __expected) \
-do { \
-  const int __step = 50; \
-  const int __timeout = 5000; \
-  if ( ( __expr ) != ( __expected ) ) { \
-    QTest::qWait( 0 ); \
-  } \
-  for ( int __i = 0; __i < __timeout && ( ( __expr ) != ( __expected ) ); __i += __step ) { \
-    QTest::qWait( __step ); \
-  } \
-  QCOMPARE( __expr, __expected ); \
-} while ( 0 )
-
-#endif
 
 #endif
