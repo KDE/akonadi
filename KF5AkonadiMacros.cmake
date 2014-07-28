@@ -50,7 +50,9 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
 
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_executable(${_name} TEST ${_test} ${_additionalsources})
+  add_executable( ${_name} ${_test} ${_additionalsources})
+  add_test( ${_name} ${_name} )
+  ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
                         ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
                         ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
