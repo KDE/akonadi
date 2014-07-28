@@ -22,21 +22,13 @@ include_directories(
 # add testrunner (application for managing a self-contained test
 # environment)
 
-add_subdirectory(etm_test_app)
-add_subdirectory(testrunner)
-add_subdirectory(testresource)
+#add_subdirectory(etm_test_app)
+#add_subdirectory(testrunner)
+#add_subdirectory(testresource)
 add_subdirectory(testsearchplugin)
 
 # add benchmarker
-add_subdirectory(benchmarker)
-
-# convenience macro to add akonadi demo application
-macro(add_akonadi_demo _source)
-  set(_test ${_source})
-  get_filename_component(_name ${_source} NAME_WE)
-  add_executable(${_name} ${_test})
-  target_link_libraries(${_name}  KF5AkonadiMime )
-endmacro()
+#add_subdirectory(benchmarker)
 
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
@@ -48,7 +40,7 @@ macro(add_akonadi_test _source)
   target_link_libraries(${_name}  KF5AkonadiMime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
 endmacro()
 
-include(../AkonadiMacros.cmake)
+include(../KF5AkonadiMacros.cmake)
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
@@ -70,9 +62,6 @@ add_library(akonaditestfake STATIC
   inspectablemonitor.cpp
   inspectablechangerecorder.cpp
 )
-
-# demo applications
-add_akonadi_demo(headfetcher.cpp)
 
 add_executable( akonadi-firstrun ../firstrun.cpp firstrunner.cpp )
 target_link_libraries( akonadi-firstrun  Qt5::Test )
@@ -96,8 +85,10 @@ add_akonadi_test(jobtest.cpp)
 add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from 
-kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
-target_link_libraries(resourceschedulertest  Qt5::Test    ${AKONADI_COMMON_LIBRARIES})
+add_executable( resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp )
+add_test( resourceschedulertest resourceschedulertest )
+ecm_mark_as_test(akonadi-resourceschedulertest)
+target_link_libraries(resourceschedulertest  Qt5::Test KF5::AkonadiCore)
 
 
 # testrunner tests
