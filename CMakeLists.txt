@@ -69,7 +69,7 @@ configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadipr
 
 add_subdirectory(src)
 #add_subdirectory(autotests)
-
+add_subdirectory(tests)
 
 ########### CMake Config Files ###########
 

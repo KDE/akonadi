@@ -21,7 +21,7 @@
 #ifndef ITEMDUMPER_H
 #define ITEMDUMPER_H
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <QTime>
 

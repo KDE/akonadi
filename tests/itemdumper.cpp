@@ -19,20 +19,20 @@
 */
 
 #include "itemdumper.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QFile>
+#include <QDebug>
+#include <QFile>
 #include <QApplication>
 
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#include <akonadi/transactionjobs.h>
-#include <akonadi/itemcreatejob.h>
+#include <AkonadiCore/transactionjobs.h>
+#include <AkonadiCore/itemcreatejob.h>
 
 #define GLOBAL_TRANSACTION 1
 

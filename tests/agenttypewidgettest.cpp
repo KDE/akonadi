@@ -20,7 +20,7 @@
 #include "agenttypewidgettest.h"
 
 #include "agenttype.h"
-#include <akonadi/agentfilterproxymodel.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
 
 #include <kcombobox.h>
 #include <kcomponentdata.h>
@@ -38,10 +38,10 @@ Dialog::Dialog( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   mFilter = new KComboBox( this );
-  mFilter->addItem( "None" );
-  mFilter->addItem( "text/calendar" );
-  mFilter->addItem( "text/directory" );
-  mFilter->addItem( "message/rfc822" );
+  mFilter->addItem( QLatin1String("None") );
+  mFilter->addItem( QLatin1String("text/calendar") );
+  mFilter->addItem( QLatin1String("text/directory") );
+  mFilter->addItem( QLatin1String("message/rfc822") );
   connect( mFilter, SIGNAL(activated(int)),
            this, SLOT(filterChanged(int)) );
 

@@ -72,17 +72,10 @@ add_library(akonaditestfake STATIC
 )
 
 # demo applications
-add_akonadi_demo(itemdumper.cpp)
-add_akonadi_demo(subscriber.cpp)
 add_akonadi_demo(headfetcher.cpp)
-add_akonadi_demo(agentinstancewidgettest.cpp)
-add_akonadi_demo(agenttypewidgettest.cpp)
-add_akonadi_demo(pluginloadertest.cpp)
-add_akonadi_demo(selftester.cpp)
-add_akonadi_demo(collectiondialog.cpp)
 
-add_executable( akonadi-firstrun TEST ../firstrun.cpp firstrunner.cpp )
-target_link_libraries( akonadi-firstrun   )
+add_executable( akonadi-firstrun ../firstrun.cpp firstrunner.cpp )
+target_link_libraries( akonadi-firstrun  Qt5::Test )
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)

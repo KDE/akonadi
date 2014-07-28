@@ -40,7 +40,7 @@ int main()
   for ( int i = 0; i < types.count(); ++i )
     qDebug( "%s", qPrintable( types.at( i ) ) );
 
-  QObject *object = loader->createForName( "text/vcard@KABC::Addressee" );
+  QObject *object = loader->createForName( QLatin1String("text/vcard@KABC::Addressee") );
   if ( qobject_cast<ItemSerializerPlugin*>( object ) != 0 )
     qDebug( "Loaded plugin for mimetype 'text/vcard@KABC::Addressee' successfully" );
   else
