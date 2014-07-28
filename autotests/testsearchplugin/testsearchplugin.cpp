@@ -20,7 +20,7 @@
 #include "testsearchplugin.h"
 
 #include <QDebug>
-
+#include <QStringList>
 #include "searchquery.h"
 
 QSet<qint64> TestSearchPlugin::search( const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes )
@@ -41,4 +41,4 @@ QSet<qint64> TestSearchPlugin::parseQuery(const QString &queryString)
     return resultSet;
 }
 
-Q_EXPORT_PLUGIN2(testsearchplugin, TestSearchPlugin)
+//QT5 Q_EXPORT_PLUGIN2(testsearchplugin, TestSearchPlugin)

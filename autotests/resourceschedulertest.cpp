@@ -18,7 +18,7 @@
 */
 #include "resourceschedulertest.h"
 
-#include "../resourcescheduler_p.h"
+#include "../src/agentbase/resourcescheduler_p.h"
 
 #include <qtest.h>
 
