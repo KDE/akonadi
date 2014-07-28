@@ -186,6 +186,7 @@ QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &colu
 
 QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
 {
+
   QMap<QString, QString> data = dataDescription.data;
   QMutableMapIterator<QString, QString> it( data );
   while ( it.hasNext() ) {
@@ -199,6 +200,22 @@ QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription 
                             .arg( QStringList( data.keys() ).join( QLatin1String( "," ) ) )
                             .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
 }
+
+QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value) const
+{
+    if (type == QLatin1String("bool")) {
+        if (value == QLatin1String("false")) {
+            return QLatin1String("0");
+        }
+        if (value == QLatin1String("true")) {
+            return QLatin1String("1");
+        }
+        return value;
+    }
+
+    return Akonadi::Server::DbInitializer::sqlValue(type, value);
+}
+
 
 //END Sqlite
 

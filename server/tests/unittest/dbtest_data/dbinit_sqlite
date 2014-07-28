@@ -4,7 +4,7 @@ INSERT INTO SchemaVersionTable (version) VALUES (22)
 
 CREATE TABLE ResourceTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                             name TEXT UNIQUE NOT NULL,
-                            isVirtual BOOL DEFAULT false)
+                            isVirtual BOOL DEFAULT 0)
 
 INSERT INTO ResourceTable (isVirtual,name) VALUES (1,'akonadi_search_resource')
 
@@ -14,11 +14,11 @@ CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                               name TEXT NOT NULL,
                               parentId BIGINT,
                               resourceId BIGINT NOT NULL,
-                              subscribed BOOL NOT NULL DEFAULT true,
-                              cachePolicyInherit BOOL NOT NULL DEFAULT true,
+                              subscribed BOOL NOT NULL DEFAULT 1,
+                              cachePolicyInherit BOOL NOT NULL DEFAULT 1,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
                               cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
-                              cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
+                              cachePolicySyncOnDemand BOOL NOT NULL DEFAULT 0,
                               cachePolicyLocalParts TEXT,
                               queryString TEXT,
                               queryLanguage TEXT)
@@ -74,7 +74,7 @@ CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         data LONGBLOB,
                         datasize BIGINT NOT NULL,
                         version INTEGER DEFAULT 0,
-                        external BOOL DEFAULT false)
+                        external BOOL DEFAULT 0)
 
 CREATE TABLE CollectionAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                                        collectionId BIGINT NOT NULL,

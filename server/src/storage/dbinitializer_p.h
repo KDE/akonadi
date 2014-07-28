@@ -48,6 +48,7 @@ class DbInitializerSqlite : public DbInitializer
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
+    virtual QString sqlValue(const QString &type, const QString &value) const;
 };
 
 class DbInitializerPostgreSql : public DbInitializer
