@@ -32,9 +32,6 @@ include_directories(
 #add_subdirectory(testresource)
 add_subdirectory(testsearchplugin)
 
-# add benchmarker
-#add_subdirectory(benchmarker)
-
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
   set(_test ${_source})
