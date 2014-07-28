@@ -17,28 +17,34 @@
     02110-1301, USA.
 */
 
-#include <KApplication>
+#include <QApplication>
 #include <KLocalizedString>
 #include <KAboutData>
-#include <KCmdLineArgs>
+#include <QCommandLineParser>
 
 #include "mainwindow.h"
 
 int main(int argc, char* argv[])
 {
-  KAboutData aboutData( "etm_test_app", 0,
-                        ki18n( "ETM Test application" ),
-                        "0.99",
-                        ki18n( "Test app for EntityTreeModel" ),
-                        KAboutData::License_GPL,
-                        ki18n( "" ),
-                        KLocalizedString(),
-                        "http://pim.kde.org/akonadi/" );
-  aboutData.setProgramIconName( "akonadi" );
-  aboutData.addAuthor( ki18n( "Stephen Kelly" ), ki18n( "Author" ), "steveire@gmail.com" );
+  QApplication app(argc, argv);
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  KAboutData aboutData( QLatin1String("etm_test_app"),
+                        i18n( "ETM Test application" ),
+                        QLatin1String("0.99"),
+                        i18n( "Test app for EntityTreeModel" ),
+                        KAboutLicense::GPL,
+                        QLatin1String("http://pim.kde.org/akonadi/") );
+  aboutData.setProgramIconName( QLatin1String("akonadi") );
+  aboutData.addAuthor( i18n( "Stephen Kelly" ), i18n( "Author" ), QLatin1String("steveire@gmail.com") );
+  KAboutData::setApplicationData(aboutData);
+
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
+
 
   MainWindow mw;
   mw.show();

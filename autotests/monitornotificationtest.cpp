@@ -18,12 +18,14 @@
 */
 
 
-#include <akonadi/monitor.h>
+#include "monitor.h"
 
 #include "fakeserverdata.h"
 #include "fakesession.h"
 #include "inspectablemonitor.h"
 #include "inspectablechangerecorder.h"
+#include <QTest>
+#include <QSignalSpy>
 
 using namespace Akonadi;
 

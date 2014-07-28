@@ -35,6 +35,10 @@ find_package(KF5Solid ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 
+set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
+configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
+
+
 set(AkonadiServer_MIN_VERSION "1.72.43")
 find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 

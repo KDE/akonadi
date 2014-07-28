@@ -19,12 +19,12 @@
 
 #include "mainwindow.h"
 
-#include <akonadi/control.h>
+#include "control.h"
 
 #include "fakeserverdata.h"
 #include "fakesession.h"
 #include "fakemonitor.h"
-#include <akonadi/entitytreeview.h>
+#include "entitytreeview.h"
 #include <QTimer>
 
 using namespace Akonadi;
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   m_model = new EntityTreeModel( monitor, this );
   m_serverData = new FakeServerData( m_model, session, monitor );
 
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( m_serverData,
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( m_serverData, QLatin1String(
     "- C (inode/directory) 'Col 1' 4"
     "- - C (text/directory, message/rfc822) 'Col 2' 3"
     // Items just have the mimetype they contain in the payload.
@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
     "- - - I text/directory"
     "- - - I text/directory"
     "- - - I message/rfc822"
-    "- - - I message/rfc822"
+    "- - - I message/rfc822")
   );
   m_serverData->setCommands( initialFetchResponse );
 
@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 void MainWindow::moveCollection()
 {
   // Move Col 3 from Col 4 to Col 7
-  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( "Col 4", "Col 3", "Col 7", m_serverData );
+  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( QLatin1String("Col 4"), QLatin1String("Col 3"), QLatin1String("Col 7"), m_serverData );
 
   m_serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
   m_serverData->processNotifications();

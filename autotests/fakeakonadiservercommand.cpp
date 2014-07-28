@@ -22,7 +22,7 @@
 #include <QMetaMethod>
 
 #include "fakeserverdata.h"
-#include <akonadi/entitydisplayattribute.h>
+#include "entitydisplayattribute.h"
 
 using namespace Akonadi;
 
@@ -37,9 +37,9 @@ void FakeAkonadiServerCommand::connectForwardingSignals()
   for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex)
   {
     QMetaMethod mm = metaObject()->method(methodIndex);
-    if (mm.methodType() == QMetaMethod::Signal && QString(mm.methodSignature()).startsWith("emit_"))
+    if (mm.methodType() == QMetaMethod::Signal && QString::fromLatin1(mm.methodSignature()).startsWith(QLatin1String("emit_")))
     {
-      int modelSlotIndex = m_model->metaObject()->indexOfSlot( QString ( mm.methodSignature() ).remove( 0, 5 ).toLatin1().data() );
+      int modelSlotIndex = m_model->metaObject()->indexOfSlot( QString::fromLatin1( mm.methodSignature() ).remove( 0, 5 ).toLatin1().data() );
       Q_ASSERT( modelSlotIndex >= 0 );
       metaObject()->connect( this, methodIndex, m_model, modelSlotIndex );
     }
@@ -77,7 +77,7 @@ void FakeJobResponse::doCommand()
 
 QList<FakeJobResponse::Token> FakeJobResponse::tokenize(const QString& treeString)
 {
-  QStringList parts = treeString.split('-');
+  QStringList parts = treeString.split(QLatin1Char('-'));
 
   QList<Token> tokens;
   const QStringList::const_iterator begin = parts.constBegin();
@@ -142,28 +142,28 @@ QList<FakeJobResponse *> FakeJobResponse::parseTreeString( FakeServerData *fakeS
 void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionResponseList, QHash<Collection::Id, FakeJobResponse *> &itemResponseMap, Collection::List &recentCollections, FakeServerData *fakeServerData, const QString& _entityString, int depth )
 {
   QString entityString = _entityString;
-  if ( entityString.startsWith( 'C' ) )
+  if ( entityString.startsWith( QLatin1Char('C') ) )
   {
     Collection collection;
     entityString.remove( 0, 2 );
-    Q_ASSERT( entityString.startsWith( '(' ) );
+    Q_ASSERT( entityString.startsWith( QLatin1Char('(') ) );
     entityString.remove( 0, 1 );
-    QStringList parts = entityString.split( ')' );
+    QStringList parts = entityString.split( QLatin1Char(')') );
 
     if ( !parts.first().isEmpty() )
     {
       QString typesString = parts.takeFirst();
 
-      QStringList types = typesString.split(',');
-      types.replaceInStrings(" ", "");
+      QStringList types = typesString.split(QLatin1Char(','));
+      types.replaceInStrings(QLatin1String(" "), QLatin1String(""));
       collection.setContentMimeTypes( types );
     } else {
       parts.removeFirst();
     }
 
     collection.setId( fakeServerData->nextCollectionId() );
-    collection.setName( QString("Collection %1").arg( collection.id() ) );
-    collection.setRemoteId( QString( "remoteId %1" ).arg( collection.id() ) );
+    collection.setName( QString::fromLatin1("Collection %1").arg( collection.id() ) );
+    collection.setRemoteId( QString::fromLatin1( "remoteId %1" ).arg( collection.id() ) );
 
     if ( depth == 0 )
       collection.setParentCollection( Collection::root() );
@@ -208,7 +208,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     }
     collectionResponseList[ order - 1 ]->appendCollection( collection );
   }
-  if ( entityString.startsWith( 'I' ) )
+  if ( entityString.startsWith( QLatin1Char('I') ) )
   {
     Item item;
     entityString.remove( 0, 2 );
@@ -244,7 +244,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
 
     item.setMimeType( type );
     item.setId( fakeServerData->nextItemId() );
-    item.setRemoteId( QString( "RId_%1 %2" ).arg( item.id() ).arg(type) );
+    item.setRemoteId( QString::fromLatin1( "RId_%1 %2" ).arg( item.id() ).arg(type) );
     item.setParentCollection( recentCollections.at( depth ) );
 
     Collection::Id colId = recentCollections[ depth ].id();
@@ -281,8 +281,8 @@ void FakeCollectionAddedCommand::doCommand()
 
   Collection collection;
   collection.setId( m_serverData->nextCollectionId() );
-  collection.setName( QString("Collection %1").arg( collection.id() ) );
-  collection.setRemoteId( QString( "remoteId %1" ).arg( collection.id() ) );
+  collection.setName( QString::fromLatin1("Collection %1").arg( collection.id() ) );
+  collection.setRemoteId( QString::fromLatin1( "remoteId %1" ).arg( collection.id() ) );
   collection.setParentCollection( parent );
 
   EntityDisplayAttribute *eda = new EntityDisplayAttribute();
@@ -338,7 +338,7 @@ void FakeItemAddedCommand::doCommand()
 
   Item item;
   item.setId( m_serverData->nextItemId() );
-  item.setRemoteId( QString( "remoteId %1" ).arg( item.id() ) );
+  item.setRemoteId( QString::fromLatin1( "remoteId %1" ).arg( item.id() ) );
   item.setParentCollection( parent );
 
   EntityDisplayAttribute *eda = new EntityDisplayAttribute();

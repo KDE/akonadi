@@ -31,7 +31,7 @@ public:
     bool acceptRow( int sourceRow, const QModelIndex& sourceParent ) const
     {
         const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
-        return !modelIndex.data().toString().contains("three");
+        return !modelIndex.data().toString().contains(QLatin1String("three"));
     }
 
 };
@@ -61,17 +61,17 @@ void ProxyModelsTest::init()
 {
   m_model.setRowCount( 5 );
   m_model.setColumnCount( 1  );
-  m_model.setData( m_model.index( 0, 0, QModelIndex() ), "one" );
+  m_model.setData( m_model.index( 0, 0, QModelIndex() ), QLatin1String("one") );
   QModelIndex idx = m_model.index( 1, 0, QModelIndex() );
-  m_model.setData( idx, "two" );
+  m_model.setData( idx, QLatin1String("two") );
   m_model.insertRows( 0, 1, idx );
   m_model.insertColumns( 0, 1, idx );
-  m_model.setData( m_model.index( 0, 0, idx ), "three" );
-  m_model.setData( m_model.index( 2, 0, QModelIndex() ), "three" );
-  m_model.setData( m_model.index( 3, 0, QModelIndex() ), "four" );
-  m_model.setData( m_model.index( 4, 0, QModelIndex() ), "five" );
+  m_model.setData( m_model.index( 0, 0, idx ), QLatin1String("three") );
+  m_model.setData( m_model.index( 2, 0, QModelIndex() ), QLatin1String("three" ));
+  m_model.setData( m_model.index( 3, 0, QModelIndex() ), QLatin1String("four") );
+  m_model.setData( m_model.index( 4, 0, QModelIndex() ), QLatin1String("five") );
 
-  m_model.setData( m_model.index( 4, 0, QModelIndex() ), "mystuff", Qt::UserRole+42 );
+  m_model.setData( m_model.index( 4, 0, QModelIndex() ), QLatin1String("mystuff"), Qt::UserRole+42 );
 
   m_krfp = new KRecursiveFilterProxyModel(this);
   m_krfp->setSourceModel(&m_model);
@@ -92,32 +92,32 @@ void ProxyModelsTest::init()
 
 void ProxyModelsTest::testMatch()
 {
-    QModelIndexList results = m_model.match( m_model.index( 0, 0 ), Qt::DisplayRole, "three" );
+    QModelIndexList results = m_model.match( m_model.index( 0, 0 ), Qt::DisplayRole, QLatin1String("three") );
     QCOMPARE( results.size(), 1 );
-    results = m_model.match( m_model.index( 0,0 ), Qt::DisplayRole, "fourtytwo" );
+    results = m_model.match( m_model.index( 0,0 ), Qt::DisplayRole, QLatin1String("fourtytwo") );
     QCOMPARE( results.size(), 0 );
-    results = m_model.match( m_model.index( 0,0 ), Qt::UserRole+42, "mystuff" );
+    results = m_model.match( m_model.index( 0,0 ), Qt::UserRole+42, QLatin1String("mystuff") );
     QCOMPARE( results.size(), 1 );
 
-    results = m_krfp->match( m_krfp->index( 0, 0 ), Qt::DisplayRole, "three" );
+    results = m_krfp->match( m_krfp->index( 0, 0 ), Qt::DisplayRole, QLatin1String("three") );
     QCOMPARE( results.size(), 1 );
-    results = m_krfp->match( m_krfp->index( 0,0 ), Qt::UserRole+42, "mystuff" );
-    QCOMPARE( results.size(), 1 );
-
-    results = m_krfptest->match( m_krfptest->index( 0, 0 ), Qt::DisplayRole, "three" );
-    QCOMPARE( results.size(), 0 );
-    results = m_krfptest->match( m_krfptest->index( 0,0 ), Qt::UserRole+42, "mystuff" );
+    results = m_krfp->match( m_krfp->index( 0,0 ), Qt::UserRole+42, QLatin1String("mystuff") );
     QCOMPARE( results.size(), 1 );
 
-    results = m_model.match( QModelIndex(), Qt::DisplayRole, "three" );
+    results = m_krfptest->match( m_krfptest->index( 0, 0 ), Qt::DisplayRole, QLatin1String("three") );
     QCOMPARE( results.size(), 0 );
-    results = m_krfp->match( QModelIndex(), Qt::DisplayRole, "three" );
+    results = m_krfptest->match( m_krfptest->index( 0,0 ), Qt::UserRole+42, QLatin1String("mystuff") );
+    QCOMPARE( results.size(), 1 );
+
+    results = m_model.match( QModelIndex(), Qt::DisplayRole, QLatin1String("three") );
     QCOMPARE( results.size(), 0 );
-    results = m_krfptest->match( QModelIndex(), Qt::DisplayRole, "three" );
+    results = m_krfp->match( QModelIndex(), Qt::DisplayRole, QLatin1String("three") );
+    QCOMPARE( results.size(), 0 );
+    results = m_krfptest->match( QModelIndex(), Qt::DisplayRole, QLatin1String("three") );
     QCOMPARE( results.size(), 0 );
 
     const QModelIndex index = m_model.index( 0, 0, QModelIndex() );
-    results = m_model.match( index, Qt::DisplayRole, "three", -1, Qt::MatchRecursive | Qt::MatchStartsWith | Qt::MatchWrap );
+    results = m_model.match( index, Qt::DisplayRole, QLatin1String("three"), -1, Qt::MatchRecursive | Qt::MatchStartsWith | Qt::MatchWrap );
     QCOMPARE( results.size(), 2 );
 }
 

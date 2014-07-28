@@ -18,16 +18,16 @@
 */
 
 #include <qtest_akonadi.h>
-#include <akonadi/collection.h>
+#include "collection.h"
 
-#include "../actionstatemanager_p.h"
-#include "../standardactionmanager.h"
+#include "../src/widgets/actionstatemanager_p.h"
+#include "../src/widgets/standardactionmanager.h"
 
 #define QT_NO_CLIPBOARD // allow running without GUI
 #include "../actionstatemanager.cpp"
 #undef QT_NO_CLIPBOARD
 
-#include "../pastehelper.cpp"
+#include "../src/core/pastehelper.cpp"
 
 typedef QHash<Akonadi::StandardActionManager::Type, bool> StateMap;
 Q_DECLARE_METATYPE( StateMap )

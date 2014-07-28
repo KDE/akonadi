@@ -19,9 +19,9 @@
 
 #include "itemserializertest.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/item.h>
-#include <akonadi/itemserializer_p.h>
+#include "attributefactory.h"
+#include "item.h"
+#include "itemserializer_p.h"
 
 #include <qtest.h>
 
@@ -52,7 +52,7 @@ void ItemSerializerTest::testDefaultSerializer()
 {
   QFETCH( QByteArray, serialized );
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   ItemSerializer::deserialize( item, Item::FullPayload, serialized, 0, false );
 
   QVERIFY( item.hasPayload<QByteArray>() );

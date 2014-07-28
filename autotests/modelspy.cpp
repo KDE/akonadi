@@ -20,6 +20,7 @@
 #include "modelspy.h"
 
 #include <qdebug.h>
+#include <QTest>
 
 ModelSpy::ModelSpy(QObject *parent)
     : QObject(parent), QList<QVariantList>(), m_isSpying(false)

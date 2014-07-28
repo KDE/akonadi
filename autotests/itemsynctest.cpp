@@ -19,15 +19,15 @@
 
 #include "test_utils.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/control.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemsync.h>
-#include <akonadi/itemcreatejob.h>
+#include <agentmanager.h>
+#include <agentinstance.h>
+#include <control.h>
+#include <collection.h>
+#include <item.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemsync.h>
+#include <itemcreatejob.h>
 
 #include <krandom.h>
 

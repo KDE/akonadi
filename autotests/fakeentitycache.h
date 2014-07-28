@@ -23,8 +23,8 @@
 #include "monitor_p.h"
 #include "notificationsource_p.h"
 
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchscope.h>
+#include "collectionfetchscope.h"
+#include "itemfetchscope.h"
 
 template<typename T, typename Cache>
 class FakeEntityCache : public Cache

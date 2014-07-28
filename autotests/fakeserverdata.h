@@ -22,16 +22,17 @@
 #include <QSharedPointer>
 #include <QQueue>
 
-#include <akonadi/job.h>
-#include <akonadi/entitytreemodel.h>
+#include "job.h"
+#include "entitytreemodel.h"
 
 #include "fakesession.h"
 #include "fakemonitor.h"
 #include "fakeakonadiservercommand.h"
+#include "akonaditestfake_export.h"
 
 using namespace Akonadi;
 
-class FakeServerData : public QObject
+class AKONADITESTFAKE_EXPORT FakeServerData : public QObject
 {
   Q_OBJECT
 public:

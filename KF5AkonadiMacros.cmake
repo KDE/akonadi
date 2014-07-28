@@ -19,47 +19,13 @@
 #       linklibraries: additional libraries to link the test executable against
 #
 macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibraries)
-  # These are not defined when using within kdepimlibs
-  if ( NOT KDEPIMLIBS_AKONADI_CALENDAR_LIBS )
-    set( KDEPIMLIBS_AKONADI_CALENDAR_LIBS "KF5::AkonadiCalendar" )
-  endif ()
-  if ( NOT KDEPIMLIBS_AKONADI_KMIME_LIBS )
-    set( KDEPIMLIBS_AKONADI_KMIME_LIBS "KF5::AkonadiMime" )
-  endif ()
-  if ( NOT KDEPIMLIBS_KCALCORE_LIBS )
-    set( KDEPIMLIBS_KCALCORE_LIBS "KF5::CalendarCore" )
-  endif ()
-  if ( NOT KDEPIMLIBS_KCALUTILS_LIBS )
-    set( KDEPIMLIBS_KCALUTILS_LIBS "KF5::CalendarUtils" )
-  endif ()
-  if ( NOT KDEPIMLIBS_KMIME_LIBS )
-    set( KDEPIMLIBS_KMIME_LIBS "KF5::Mime" )
-  endif ()
-  if ( NOT KDEPIMLIBS_KPIMIDENTITIES_LIBS )
-    set( KDEPIMLIBS_KPIMIDENTITIES_LIBS "KF5::PimIdentities" )
-  endif ()
-  if ( NOT KDEPIMLIBS_KPIMUTILS_LIBS )
-    set( KDEPIMLIBS_KPIMUTILS_LIBS "KF5::PimUtils" )
-  endif ()
-  if ( NOT KDEPIMLIBS_MAILTRANSPORT_LIBS )
-    set( KDEPIMLIBS_MAILTRANSPORT_LIBS "KF5::MailTransport" )
-  endif ()
-
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} ${_additionalsources})
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
-                        ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
-                        ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-                        ${KDEPIMLIBS_KCALCORE_LIBS}
-                        ${KDEPIMLIBS_KCALUTILS_LIBS}
-                        ${KDEPIMLIBS_KMIME_LIBS}
-                        ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-                        ${KDEPIMLIBS_KPIMUTILS_LIBS}
-                        ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-                        Qt5::Test Qt5::Gui KF5::KIOCore
+                        Qt5::Test Qt5::Gui KF5::KIOCore KF5::AkonadiCore
                         ${_linklibraries})
 
   # Set the akonaditest path when the macro is used in kdepimlibs

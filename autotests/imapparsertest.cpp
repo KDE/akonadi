@@ -23,6 +23,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
+#include <QBuffer>
 
 Q_DECLARE_METATYPE( QList<QByteArray> )
 Q_DECLARE_METATYPE( QList<int> )

@@ -20,7 +20,7 @@
 #ifndef AKONADI_TEST_UTILS_H
 #define AKONADI_TEST_UTILS_H
 
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 #include "dbusconnectionpool.h"
 #include "servermanager.h"
 #include "qtest_akonadi.h"
@@ -54,11 +54,11 @@ bool restartAkonadiServer()
                                     QLatin1String( "org.kde.Akonadi.Testrunner" ),
                                     Akonadi::DBusConnectionPool::threadConnection() );
     if ( !testrunnerIface.isValid() )
-        kWarning() << "Unable to get a dbus interface to the testrunner!";
+        qWarning() << "Unable to get a dbus interface to the testrunner!";
 
-    QDBusReply<void> reply = testrunnerIface.call( "restartAkonadiServer" );
+    QDBusReply<void> reply = testrunnerIface.call( QLatin1String("restartAkonadiServer") );
     if ( !reply.isValid() ) {
-        kWarning() << reply.error();
+        qWarning() << reply.error();
         return false;
     } else if ( Akonadi::ServerManager::isRunning() ) {
         return true;
@@ -74,11 +74,11 @@ bool trackAkonadiProcess( bool track )
                                     QLatin1String( "org.kde.Akonadi.Testrunner" ),
                                     Akonadi::DBusConnectionPool::threadConnection() );
     if ( !testrunnerIface.isValid() )
-        kWarning() << "Unable to get a dbus interface to the testrunner!";
+        qWarning() << "Unable to get a dbus interface to the testrunner!";
 
-    QDBusReply<void> reply = testrunnerIface.call( "trackAkonadiProcess", track );
+    QDBusReply<void> reply = testrunnerIface.call( QLatin1String("trackAkonadiProcess"), track );
     if ( !reply.isValid() ) {
-        kWarning() << reply.error();
+        qWarning() << reply.error();
         return false;
     } else {
         return true;

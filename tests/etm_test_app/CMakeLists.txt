@@ -15,7 +15,7 @@ set(etmtestapp_SRCS
 add_executable(akonadi_etm_test_app ${etmtestapp_SRCS})
 
 target_link_libraries(akonadi_etm_test_app
-  #KF5::AkonadiMime
+  KF5::AkonadiWidgets
   akonaditestfake
   Qt5::Test
 )

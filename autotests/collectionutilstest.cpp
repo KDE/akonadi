@@ -18,7 +18,7 @@
 */
 
 #include <qtest_akonadi.h>
-#include <akonadi/collection.h>
+#include "collection.h"
 #include "../collectionutils.h"
 
 using namespace Akonadi;
@@ -37,12 +37,12 @@ class CollectionUtilsTest : public QObject
       Collection c;
       c.setParentCollection( Collection::root() );
       QTest::newRow( "one level not ok" ) << c << false;
-      c.setRemoteId( "r1" );
+      c.setRemoteId( QLatin1String("r1") );
       QTest::newRow( "one level ok" ) << c << true;
       Collection c2;
       c2.setParentCollection( c );
       QTest::newRow( "two level not ok" ) << c2 << false;
-      c2.setRemoteId( "r2" );
+      c2.setRemoteId( QLatin1String("r2") );
       QTest::newRow( "two level ok" ) << c2 << true;
       c2.parentCollection().setRemoteId( QString() );
       QTest::newRow( "mid RID missing" ) << c2 << false;
@@ -74,6 +74,6 @@ class CollectionUtilsTest : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( CollectionUtilsTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionUtilsTest )
 
 #include "collectionutilstest.moc"

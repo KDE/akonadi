@@ -18,8 +18,8 @@
 
 #include "fakeserverdata.h"
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/collectionfetchjob.h>
+#include "itemfetchjob.h"
+#include "collectionfetchjob.h"
 
 FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent )
   : QObject(parent),

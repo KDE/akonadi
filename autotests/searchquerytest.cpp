@@ -19,7 +19,7 @@
 
 #include <qtest_akonadi.h>
 
-#include <akonadi/searchquery.h>
+#include "searchquery.h"
 #include <qjson/serializer.h>
 #include <qjson/parser.h>
 #include <boost/concept_check.hpp>

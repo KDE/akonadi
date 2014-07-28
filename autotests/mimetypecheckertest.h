@@ -20,7 +20,7 @@
 #ifndef AKONADI_MIMETYPECHECKERTEST_H
 #define AKONADI_MIMETYPECHECKERTEST_H
 
-#include "akonadi/mimetypechecker.h"
+#include "mimetypechecker.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

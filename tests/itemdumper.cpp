@@ -21,7 +21,7 @@
 #include "itemdumper.h"
 #include "collectionpathresolver.h"
 
-#include <AkonadiCore/item.h>
+#include "item.h"
 
 #include <QDebug>
 #include <QFile>
@@ -31,8 +31,8 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#include <AkonadiCore/transactionjobs.h>
-#include <AkonadiCore/itemcreatejob.h>
+#include "transactionjobs.h"
+#include "itemcreatejob.h"
 
 #define GLOBAL_TRANSACTION 1
 

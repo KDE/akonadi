@@ -19,12 +19,12 @@
 
 #include "test_utils.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/collectionselectjob_p.h>
-#include <akonadi/control.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemmovejob.h>
-#include <akonadi/itemfetchscope.h>
+#include "collection.h"
+#include "collectionselectjob_p.h"
+#include "control.h"
+#include "itemfetchjob.h"
+#include "itemmovejob.h"
+#include "itemfetchscope.h"
 
 #include <QtCore/QObject>
 
@@ -50,16 +50,16 @@ class ItemMoveTest: public QObject
       QTest::addColumn<Collection>( "destination" );
       QTest::addColumn<Collection>( "source" );
 
-      const Collection destination( collectionIdFromPath( "res3" ) );
+      const Collection destination( collectionIdFromPath( QLatin1String("res3") ) );
       QVERIFY( destination.isValid() );
 
       QTest::newRow( "single uid" ) << (Item::List() << Item( 1 )) << destination << Collection();
       QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 )) << destination << Collection();
-      Item r1; r1.setRemoteId( "D" );
+      Item r1; r1.setRemoteId( QLatin1String("D") );
       Collection ridDest;
-      ridDest.setRemoteId( "3" );
+      ridDest.setRemoteId( QLatin1String("3") );
       Collection ridSource;
-      ridSource.setRemoteId( "10" );
+      ridSource.setRemoteId( QLatin1String("10") );
       QTest::newRow( "single rid" ) << (Item::List() << r1) << ridDest << ridSource;
     }
 
@@ -72,7 +72,7 @@ class ItemMoveTest: public QObject
       //Collection source( collectionIdFromPath( "res1/foo" ) );
       //QVERIFY( source.isValid() );
 
-      ResourceSelectJob *select = new ResourceSelectJob( "akonadi_knut_resource_0" );
+      ResourceSelectJob *select = new ResourceSelectJob( QLatin1String("akonadi_knut_resource_0") );
       AKVERIFYEXEC( select ); // for rid based moves
 
       ItemFetchJob *prefetchjob = new ItemFetchJob( destination, this );
@@ -94,7 +94,7 @@ class ItemMoveTest: public QObject
 
     void testIllegalMove()
     {
-      Collection col( collectionIdFromPath( "res2" ) );
+      Collection col( collectionIdFromPath( QLatin1String("res2") ) );
       QVERIFY( col.isValid() );
 
       ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
@@ -113,6 +113,6 @@ class ItemMoveTest: public QObject
     }
 };
 
-QTEST_AKONADIMAIN( ItemMoveTest, NoGUI )
+QTEST_AKONADIMAIN( ItemMoveTest )
 
 #include "itemmovetest.moc"

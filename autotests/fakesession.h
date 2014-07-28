@@ -22,10 +22,11 @@
 
 #include "session.h"
 #include "collection.h"
+#include "akonaditestfake_export.h"
 
 using namespace Akonadi;
 
-class FakeSession : public Session
+class AKONADITESTFAKE_EXPORT FakeSession : public Session
 {
   Q_OBJECT
 public:

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "../dbusconnectionpool.h"
+#include "dbusconnectionpool.h"
 
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/servermanager.h>

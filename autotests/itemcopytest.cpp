@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/control.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
+#include <collection.h>
+#include <collectionstatistics.h>
+#include <control.h>
+#include <itemcopyjob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
 
 #include <QtCore/QObject>
 
@@ -43,14 +43,14 @@ class ItemCopyTest : public QObject
       Control::start();
       // switch target resources offline to reduce interference from them
       foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
-        if ( agent.identifier() == "akonadi_knut_resource_2" )
+        if ( agent.identifier() == QLatin1String("akonadi_knut_resource_2") )
           agent.setIsOnline( false );
       }
     }
 
     void testCopy()
     {
-      const Collection target( collectionIdFromPath( "res3" ) );
+      const Collection target( collectionIdFromPath( QLatin1String("res3") ) );
       QVERIFY( target.isValid() );
 
       ItemCopyJob *copy = new ItemCopyJob( Item( 1 ), target );
@@ -96,6 +96,6 @@ class ItemCopyTest : public QObject
 
 };
 
-QTEST_AKONADIMAIN( ItemCopyTest, NoGUI )
+QTEST_AKONADIMAIN( ItemCopyTest )
 
 #include "itemcopytest.moc"

@@ -20,8 +20,8 @@
 #include "mimetypecheckertest.h"
 #include "testattribute.h"
 
-#include "akonadi/collection.h"
-#include "akonadi/item.h"
+#include "collection.h"
+#include "item.h"
 
 #include <kmimetype.h>
 
@@ -36,13 +36,13 @@ using namespace Akonadi;
 MimeTypeCheckerTest::MimeTypeCheckerTest( QObject *parent )
   : QObject( parent )
 {
-  mCalendarSubTypes << "application/x-vnd.akonadi.calendar.event"
-                    << "application/x-vnd.akonadi.calendar.todo";
+  mCalendarSubTypes << QLatin1String("application/x-vnd.akonadi.calendar.event")
+                    << QLatin1String("application/x-vnd.akonadi.calendar.todo");
 }
 
 void MimeTypeCheckerTest::initTestCase()
 {
-  QVERIFY( KMimeType::mimeType( "application/x-vnd.akonadi.calendar.event" ) );
+  QVERIFY( KMimeType::mimeType( QLatin1String("application/x-vnd.akonadi.calendar.event") ) );
 
   MimeTypeChecker emptyChecker;
   MimeTypeChecker calendarChecker;

@@ -21,13 +21,14 @@
 
 #include <QString>
 
-#include <akonadi/collection.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
+#include "collection.h"
+#include "entitytreemodel.h"
+#include "item.h"
+#include "akonaditestfake_export.h"
 
 class FakeServerData;
 
-class FakeAkonadiServerCommand : public QObject
+class AKONADITESTFAKE_EXPORT FakeAkonadiServerCommand : public QObject
 {
   Q_OBJECT
 public:
@@ -82,7 +83,7 @@ private:
   void connectForwardingSignals();
 };
 
-class FakeMonitorCommand : public FakeAkonadiServerCommand
+class AKONADITESTFAKE_EXPORT FakeMonitorCommand : public FakeAkonadiServerCommand
 {
 public:
   explicit FakeMonitorCommand( FakeServerData *serverData )
@@ -93,7 +94,7 @@ public:
   virtual ~FakeMonitorCommand() {}
 };
 
-class FakeCollectionMovedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeCollectionMovedCommand : public FakeMonitorCommand
 {
 public:
   FakeCollectionMovedCommand( const QString &collection, const QString &source, const QString &target, FakeServerData *serverData )
@@ -112,7 +113,7 @@ private:
   QString m_targetName;
 };
 
-class FakeCollectionAddedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeCollectionAddedCommand : public FakeMonitorCommand
 {
 public:
   FakeCollectionAddedCommand( const QString &collection, const QString &parent, FakeServerData *serverData )
@@ -130,7 +131,7 @@ private:
   QString m_parentName;
 };
 
-class FakeCollectionRemovedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeCollectionRemovedCommand : public FakeMonitorCommand
 {
 public:
   FakeCollectionRemovedCommand( const QString &collection, const QString &source, FakeServerData *serverData )
@@ -148,7 +149,7 @@ private:
   QString m_parentName;
 };
 
-class FakeCollectionChangedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeCollectionChangedCommand : public FakeMonitorCommand
 {
 public:
   FakeCollectionChangedCommand( const QString &collection, const QString &parent, FakeServerData *serverData )
@@ -173,7 +174,7 @@ private:
   QString m_parentName;
 };
 
-class FakeItemMovedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeItemMovedCommand : public FakeMonitorCommand
 {
 public:
   FakeItemMovedCommand( const QString &item, const QString &source, const QString &target, FakeServerData *serverData )
@@ -192,7 +193,7 @@ private:
   QString m_targetName;
 };
 
-class FakeItemAddedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeItemAddedCommand : public FakeMonitorCommand
 {
 public:
   FakeItemAddedCommand( const QString &item, const QString &parent, FakeServerData *serverData )
@@ -210,7 +211,7 @@ private:
   QString m_parentName;
 };
 
-class FakeItemRemovedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeItemRemovedCommand : public FakeMonitorCommand
 {
 public:
   FakeItemRemovedCommand( const QString &item, const QString &parent, FakeServerData *serverData )
@@ -229,7 +230,7 @@ private:
   FakeServerData *m_serverData;
 };
 
-class FakeItemChangedCommand : public FakeMonitorCommand
+class AKONADITESTFAKE_EXPORT FakeItemChangedCommand : public FakeMonitorCommand
 {
 public:
   FakeItemChangedCommand( const QString &item, const QString &parent, FakeServerData *serverData )
@@ -247,7 +248,7 @@ private:
   QString m_parentName;
 };
 
-class FakeJobResponse : public FakeAkonadiServerCommand
+class AKONADITESTFAKE_EXPORT FakeJobResponse : public FakeAkonadiServerCommand
 {
   struct Token
   {

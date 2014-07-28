@@ -51,10 +51,10 @@ class CacheTest : public QObject
     }
     void testRetrievalErrorBurst() // caused rare server crashs with old item retrieval code
     {
-      Collection col( collectionIdFromPath( "res1/foo" ) );
+      Collection col( collectionIdFromPath( QLatin1String("res1/foo") ) );
       QVERIFY( col.isValid() );
 
-      enableAgent( "akonadi_knut_resource_0", false );
+      enableAgent( QLatin1String("akonadi_knut_resource_0"), false );
 
       ItemFetchJob *fetch = new ItemFetchJob( col, this );
       fetch->fetchScope().fetchFullPayload( true );
@@ -84,7 +84,7 @@ class CacheTest : public QObject
       QVERIFY( item.isValid() );
       QVERIFY( !item.hasPayload() );
 
-      enableAgent( "akonadi_knut_resource_0", resourceEnabled );
+      enableAgent( QLatin1String("akonadi_knut_resource_0"), resourceEnabled );
 
       fetch = new ItemFetchJob( item, this );
       fetch->fetchScope().fetchFullPayload();
@@ -130,9 +130,9 @@ class CacheTest : public QObject
       QVERIFY( item.isValid() );
       QVERIFY( !item.hasPayload() );
 
-      enableAgent( "akonadi_knut_resource_0", resourceEnabled );
+      enableAgent( QLatin1String("akonadi_knut_resource_0"), resourceEnabled );
 
-      Collection dest( collectionIdFromPath( "res3" ) );
+      Collection dest( collectionIdFromPath( QLatin1String("res3") ) );
       QVERIFY( dest.isValid() );
 
       ItemCopyJob *copy = new ItemCopyJob( item, dest, this );
@@ -150,6 +150,6 @@ class CacheTest : public QObject
 
 };
 
-QTEST_AKONADIMAIN( CacheTest, NoGUI )
+QTEST_AKONADIMAIN( CacheTest )
 
 #include "cachetest.moc"

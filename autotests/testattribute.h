@@ -20,7 +20,7 @@
 #ifndef TESTATTRIBUTE_H
 #define TESTATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include "attribute.h"
 
 #include <QByteArray>
 

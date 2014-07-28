@@ -19,15 +19,15 @@
 
 #include "test_utils.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/control.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <agentmanager.h>
+#include <agentinstance.h>
+#include <control.h>
+#include <collection.h>
+#include <collectionfetchjob.h>
+#include <collectionfetchscope.h>
+#include <entitydisplayattribute.h>
 
-#include "../akonadi/collectionsync.cpp"
+#include "../akonadi/src/core/collectionsync.cpp"
 
 #include <krandom.h>
 

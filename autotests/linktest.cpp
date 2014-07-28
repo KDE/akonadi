@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#include <akonadi/collection.h>
-#include <akonadi/control.h>
-#include <akonadi/linkjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/unlinkjob.h>
-#include <akonadi/monitor.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/searchcreatejob.h>
+#include <collection.h>
+#include <control.h>
+#include <linkjob.h>
+#include <itemfetchjob.h>
+#include <unlinkjob.h>
+#include <monitor.h>
+#include <collectionfetchjob.h>
+#include <itemfetchscope.h>
+#include <searchcreatejob.h>
 
 #include <QtCore/QObject>
 
@@ -107,6 +107,6 @@ class LinkTest : public QObject
 
 };
 
-QTEST_AKONADIMAIN( LinkTest, NoGUI )
+QTEST_AKONADIMAIN( LinkTest )
 
 #include "linktest.moc"

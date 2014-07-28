@@ -1,3 +1,6 @@
+set(QT_REQUIRED_VERSION "5.2.0")
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+
 if(${EXECUTABLE_OUTPUT_PATH})
     set( PREVIOUS_EXEC_OUTPUT_PATH ${EXECUTABLE_OUTPUT_PATH} )
 else()
@@ -37,3 +40,5 @@ add_akonadi_demo(agenttypewidgettest.cpp)
 ##REACTIVATE
 #add_akonadi_demo(selftester.cpp)
 add_akonadi_demo(collectiondialog.cpp)
+
+add_subdirectory(etm_test_app)

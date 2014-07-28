@@ -20,7 +20,7 @@
 #include "agenttypewidgettest.h"
 
 #include "agenttype.h"
-#include <AkonadiCore/agentfilterproxymodel.h>
+#include "agentfilterproxymodel.h"
 
 #include <kcombobox.h>
 #include <kcomponentdata.h>

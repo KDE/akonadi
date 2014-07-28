@@ -20,7 +20,7 @@
 #include "itemtest.h"
 #include "testattribute.h"
 
-#include <akonadi/item.h>
+#include "item.h"
 
 #include <qtest.h>
 #include <collection.h>
@@ -32,7 +32,7 @@ using namespace Akonadi;
 void ItemTest::testMultipart()
 {
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
 
   QSet<QByteArray> parts;
   QCOMPARE( item.loadedPayloadParts(), parts );
@@ -56,12 +56,12 @@ void ItemTest::testInheritance()
 {
   Item a;
 
-  a.setRemoteId( "Hello World" );
+  a.setRemoteId( QLatin1String("Hello World") );
   a.setSize( 10 );
 
   Item b( a );
   b.setFlag( "\\send" );
-  QCOMPARE( b.remoteId(), QString( "Hello World" ) );
+  QCOMPARE( b.remoteId(), QLatin1String( "Hello World" ) );
   QCOMPARE( b.size(), (qint64)10 );
 }
 
@@ -76,10 +76,10 @@ void ItemTest::testParentCollection ()
   QCOMPARE( b.parentCollection(), Collection::root() );
 
   Item c;
-  c.parentCollection().setRemoteId( "foo" );
-  QCOMPARE( c.parentCollection().remoteId(), QString( "foo" ) );
+  c.parentCollection().setRemoteId( QLatin1String("foo") );
+  QCOMPARE( c.parentCollection().remoteId(), QLatin1String( "foo" ) );
   const Item d = c;
-  QCOMPARE( d.parentCollection().remoteId(), QString( "foo" ) );
+  QCOMPARE( d.parentCollection().remoteId(), QLatin1String( "foo" ) );
 
   const Item e;
   QVERIFY( !e.parentCollection().isValid() );

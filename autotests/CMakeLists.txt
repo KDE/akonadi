@@ -1,5 +1,6 @@
 set(QT_REQUIRED_VERSION "5.2.0")
 find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5DBus ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 
 if(${EXECUTABLE_OUTPUT_PATH})
@@ -27,7 +28,6 @@ include_directories(
 # add testrunner (application for managing a self-contained test
 # environment)
 
-#add_subdirectory(etm_test_app)
 #add_subdirectory(testrunner)
 #add_subdirectory(testresource)
 add_subdirectory(testsearchplugin)
@@ -39,54 +39,58 @@ macro(add_akonadi_test _source)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
-  target_link_libraries(${_name}  KF5AkonadiMime akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
+  target_link_libraries(${_name}  akonaditestfake Qt5::Test     ${AKONADI_COMMON_LIBRARIES} )
 endmacro()
 
 include(../KF5AkonadiMacros.cmake)
 
 # akonadi test fake library
-#set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-#set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
-#qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
+set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
+qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
-#add_library(akonaditestfake STATIC
-#  ${akonaditestfake_srcs}
-#  fakeakonadiservercommand.cpp
-#  fakesession.cpp
-#  fakemonitor.cpp
-#  fakeserverdata.cpp
-#  modelspy.cpp
-#  fakeentitycache.cpp
-#  inspectablemonitor.cpp
-#  inspectablechangerecorder.cpp
-#)
+add_library(akonaditestfake SHARED
+  ${akonaditestfake_srcs}
+  fakeakonadiservercommand.cpp
+  fakesession.cpp
+  fakemonitor.cpp
+  fakeserverdata.cpp
+  modelspy.cpp
+  fakeentitycache.cpp
+  inspectablemonitor.cpp
+  inspectablechangerecorder.cpp
+)
+
+generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
+
+target_link_libraries(akonaditestfake Qt5::DBus KF5::AkonadiCore Qt5::Test)
 
 add_executable( akonadi-firstrun ../src/core/firstrun.cpp firstrunner.cpp )
 target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore)
 
 # qtestlib unit tests
-#add_akonadi_test(imapparsertest.cpp)
-#add_akonadi_test(imapsettest.cpp)
-#add_akonadi_test(itemhydratest.cpp)
-#add_akonadi_test(itemtest.cpp)
-#add_akonadi_test(itemserializertest.cpp)
-#add_akonadi_test(mimetypecheckertest.cpp)
-#add_akonadi_test(protocolhelpertest.cpp)
+add_akonadi_test(imapparsertest.cpp)
+# FIX NAME add_akonadi_test(imapsettest.cpp)
+add_akonadi_test(itemhydratest.cpp)
+add_akonadi_test(itemtest.cpp)
+add_akonadi_test(itemserializertest.cpp)
+add_akonadi_test(mimetypecheckertest.cpp)
+add_akonadi_test(protocolhelpertest.cpp)
 #add_akonadi_test(entitytreemodeltest.cpp)
 #add_akonadi_test(monitornotificationtest.cpp)
-#add_akonadi_test(collectionutilstest.cpp)
-#add_akonadi_test(entitydisplayattributetest.cpp)
-#add_akonadi_test(proxymodelstest.cpp)
+add_akonadi_test(collectionutilstest.cpp)
+add_akonadi_test(entitydisplayattributetest.cpp)
+add_akonadi_test(proxymodelstest.cpp)
 #add_akonadi_test(actionstatemanagertest.cpp)
-#add_akonadi_test(sharedvaluepooltest.cpp)
+add_akonadi_test(sharedvaluepooltest.cpp)
 #add_akonadi_test(jobtest.cpp)
-#add_akonadi_test(searchquerytest.cpp)
+# PORT FROM QJSON add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from 
 #add_executable( resourceschedulertest resourceschedulertest.cpp ../src/agentbase/resourcescheduler.cpp )
 #add_test( resourceschedulertest resourceschedulertest )
 #ecm_mark_as_test(akonadi-resourceschedulertest)
-#target_link_libraries(resourceschedulertest  Qt5::Test KF5::AkonadiCore)
+#target_link_libraries(resourceschedulertest  Qt5::Test KF5::AkonadiAgentBase)
 
 
 # testrunner tests
@@ -108,14 +112,14 @@ target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore)
 #add_akonadi_isolated_test(resourcetest.cpp)
 #add_akonadi_isolated_test(subscriptiontest.cpp)
 #add_akonadi_isolated_test(transactiontest.cpp)
-#add_akonadi_isolated_test(itemcopytest.cpp)
-#add_akonadi_isolated_test(itemmovetest.cpp)
-#add_akonadi_isolated_test(collectioncopytest.cpp)
-#add_akonadi_isolated_test(collectionmovetest.cpp)
+add_akonadi_isolated_test(itemcopytest.cpp)
+add_akonadi_isolated_test(itemmovetest.cpp)
+add_akonadi_isolated_test(collectioncopytest.cpp)
+add_akonadi_isolated_test(collectionmovetest.cpp)
 #add_akonadi_isolated_test(collectionsynctest.cpp)
 #add_akonadi_isolated_test(itemsynctest.cpp)
 #add_akonadi_isolated_test(linktest.cpp)
-#add_akonadi_isolated_test(cachetest.cpp)
+add_akonadi_isolated_test(cachetest.cpp)
 # starting/stopping the server in the testenvironment doesn't seem to work, 
 # and the test is not very critical (we'll notice if we can't start the server), so we disable it for now.
 #add_akonadi_isolated_test(servermanagertest.cpp)

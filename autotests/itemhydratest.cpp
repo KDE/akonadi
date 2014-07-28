@@ -20,7 +20,7 @@
 #include "itemhydratest.h"
 
 #include <memory>
-#include <akonadi/item.h>
+#include "item.h"
 #include <qtest.h>
 #include <QDebug>
 #include <QSharedPointer>
@@ -45,7 +45,7 @@ typedef QSharedPointer<Volker> VolkerQPtr;
 
 struct Rudi: public Volker
 {
-    Rudi() { who = "Rudi"; }
+    Rudi() { who = QLatin1String("Rudi"); }
     virtual ~Rudi() { }
     /* reimp */ Rudi * clone() const { return new Rudi( *this ); }
 };
@@ -55,7 +55,7 @@ typedef QSharedPointer<Rudi> RudiQPtr;
 
 struct Gerd: public Volker
 {
-    Gerd() { who = "Gerd"; }
+    Gerd() { who = QLatin1String("Gerd"); }
     /* reimp */ Gerd * clone() const { return new Gerd( *this ); }
 };
 
@@ -223,13 +223,13 @@ void ItemHydra::testPolymorphicPayload()
       {
         RudiPtr p2 = boost::dynamic_pointer_cast<Rudi, Volker>( i1.payload< VolkerPtr >() );
         QCOMPARE( p.use_count(), (long)3 );
-        QCOMPARE( p2->who, QString("Rudi") );
+        QCOMPARE( p2->who, QLatin1String("Rudi") );
       }
 
       {
         RudiPtr p2 = i1.payload< RudiPtr >();
         QCOMPARE( p.use_count(), (long)3 );
-        QCOMPARE( p2->who, QString("Rudi") );
+        QCOMPARE( p2->who, QLatin1String("Rudi") );
       }
 
       bool caughtException = false;
@@ -270,12 +270,12 @@ void ItemHydra::testQSharedPointerPayload()
 
   {
     VolkerQPtr p2 = i.payload< VolkerQPtr >();
-    QCOMPARE( p2->who, QString("Rudi") );
+    QCOMPARE( p2->who, QLatin1String("Rudi") );
   }
 
   {
     RudiQPtr p2 = i.payload< RudiQPtr >();
-    QCOMPARE( p2->who, QString("Rudi") );
+    QCOMPARE( p2->who, QLatin1String("Rudi") );
   }
 
   bool caughtException = false;

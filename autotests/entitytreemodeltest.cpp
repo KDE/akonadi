@@ -31,7 +31,7 @@
 #include <entitydisplayattribute.h>
 #include <entitytreemodel_p.h>
 
-static const QString serverContent1 =
+static const QString serverContent1 = QLatin1String(
     // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
     // The dashes show the depth in the heirarchy
     // Collections have a list of mimetypes they can contain, followed by an optional
@@ -60,7 +60,7 @@ static const QString serverContent1 =
     "- - - I text/directory                 'Item 12'"
     "- - - I text/directory                 'Item 13'"
     "- - - I message/rfc822                 'Item 14'"
-    "- - - I message/rfc822                 'Item 15'";
+    "- - - I message/rfc822                 'Item 15'");
 
 /**
  * This test verifies that the ETM reacts as expected to signals from the monitor.
@@ -191,10 +191,10 @@ void EntityTreeModelTest::testInitialFetch()
 
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0 );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 0 );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 4" );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 3" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 4") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 3") );
   // New collections are prepended
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, QLatin1String("Collection 1") );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 2" );
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 6" );

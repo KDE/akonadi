@@ -21,12 +21,13 @@
 #define FAKEMONITOR_H
 
 #include "changerecorder.h"
+#include "akonaditestfake_export.h"
 
 using namespace Akonadi;
 
 class FakeMonitorPrivate;
 
-class FakeMonitor : public Akonadi::ChangeRecorder
+class AKONADITESTFAKE_EXPORT FakeMonitor : public Akonadi::ChangeRecorder
 {
   Q_OBJECT
 public:

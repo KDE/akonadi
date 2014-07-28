@@ -20,7 +20,7 @@
 #include <qtest_akonadi.h>
 
 #include "fakesession.h"
-#include <akonadi/job.h>
+#include "job.h"
 
 Q_DECLARE_METATYPE( KJob* );
 Q_DECLARE_METATYPE( Akonadi::Job* )
@@ -177,6 +177,6 @@ class JobTest : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( JobTest, NoGUI )
+QTEST_AKONADIMAIN( JobTest )
 
 #include "jobtest.moc"
