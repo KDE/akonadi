@@ -21,7 +21,7 @@
 #define TESTSEARCHPLUGIN_H
 
 #include <akonadi/abstractsearchplugin.h>
-#include <AkonadiCore/searchquery.h>
+#include <searchquery.h>
 #include <QStringList>
 
 class TestSearchPlugin : public QObject, public Akonadi::AbstractSearchPlugin
