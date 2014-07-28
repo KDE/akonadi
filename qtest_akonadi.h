@@ -31,25 +31,22 @@
 *
 * This macro should be used for classes that run inside the Akonadi Testrunner.
 * So instead of writing QTEST_MAIN( TestClass ) you write
-* QTEST_AKONADIMAIN( TestClass, GUI ).
+* QTEST_AKONADIMAIN( TestClass ).
 *
 * \param TestObject The class you use for testing.
-* \param flags one of KDEMainFlag. This is passed to the QApplication constructor.
 *
-* \see KDEMainFlag
 * \see QTestLib
 * \see QTEST_KDEMAIN
 */
-#define QTEST_AKONADIMAIN(TestObject, flags) \
+#define QTEST_AKONADIMAIN(TestObject) \
 int main(int argc, char *argv[]) \
 { \
   setenv( "LC_ALL", "C", 1); \
   unsetenv( "KDE_COLOR_DEBUG" ); \
   KAboutData aboutData( QLatin1String( "qttest" ), i18n( "KDE Test Program" ), QLatin1String( "version" ) );  \
   KDEMainFlags mainFlags = flags;                         \
-  KComponentData cData(&aboutData); \
-  QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
-  app.setApplicationName( QLatin1String( "qttest" ) ); \
+  QApplication app( argc, argv ); \
+  KAboutData::setApplicationData(aboutData); \
   qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
   qRegisterMetaType<KUrl::List>(); \
   TestObject tc; \
