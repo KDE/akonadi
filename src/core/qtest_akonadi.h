@@ -44,7 +44,6 @@ int main(int argc, char *argv[]) \
   setenv( "LC_ALL", "C", 1); \
   unsetenv( "KDE_COLOR_DEBUG" ); \
   KAboutData aboutData( QLatin1String( "qttest" ), i18n( "KDE Test Program" ), QLatin1String( "version" ) );  \
-  KDEMainFlags mainFlags = flags;                         \
   QApplication app( argc, argv ); \
   KAboutData::setApplicationData(aboutData); \
   qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
