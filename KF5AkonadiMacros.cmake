@@ -26,9 +26,6 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   if ( NOT KDEPIMLIBS_AKONADI_KMIME_LIBS )
     set( KDEPIMLIBS_AKONADI_KMIME_LIBS "KF5::AkonadiMime" )
   endif ()
-  if ( NOT KDEPIMLIBS_AKONADI_LIBS )
-    set( KDEPIMLIBS_AKONADI_LIBS "akonadi-kde" )
-  endif ()
   if ( NOT KDEPIMLIBS_KCALCORE_LIBS )
     set( KDEPIMLIBS_KCALCORE_LIBS "KF5::CalendarCore" )
   endif ()
@@ -36,7 +33,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     set( KDEPIMLIBS_KCALUTILS_LIBS "KF5::CalendarUtils" )
   endif ()
   if ( NOT KDEPIMLIBS_KMIME_LIBS )
-    set( KDEPIMLIBS_KMIME_LIBS "KF5::KMime" )
+    set( KDEPIMLIBS_KMIME_LIBS "KF5::Mime" )
   endif ()
   if ( NOT KDEPIMLIBS_KPIMIDENTITIES_LIBS )
     set( KDEPIMLIBS_KPIMIDENTITIES_LIBS "KF5::PimIdentities" )
@@ -56,7 +53,6 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   target_link_libraries(${_name}
                         ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
                         ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-                        ${KDEPIMLIBS_AKONADI_LIBS}
                         ${KDEPIMLIBS_KCALCORE_LIBS}
                         ${KDEPIMLIBS_KCALUTILS_LIBS}
                         ${KDEPIMLIBS_KMIME_LIBS}
