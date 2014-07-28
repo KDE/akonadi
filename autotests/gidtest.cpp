@@ -21,19 +21,19 @@
 
 #include "control.h"
 #include "testattribute.h"
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
+#include <agentmanager.h>
+#include <agentinstance.h>
+#include <collectionfetchjob.h>
+#include <itemcreatejob.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
 #include <qtest_akonadi.h>
 #include "test_utils.h"
-#include <akonadi/gid/gidextractorinterface.h>
-#include <akonadi/itemserializer_p.h>
-#include <akonadi/itemserializerplugin.h>
+#include <gid/gidextractorinterface.h>
+#include <itemserializer_p.h>
+#include <itemserializerplugin.h>
 
 using namespace Akonadi;
 

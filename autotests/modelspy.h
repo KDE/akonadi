@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QVariantList>
 #include <QModelIndex>
+#include "akonaditestfake_export.h"
 
 enum SignalType
 {
@@ -49,7 +50,7 @@ struct ExpectedSignal
 
 Q_DECLARE_METATYPE( QModelIndex )
 
-class ModelSpy : public QObject, public QList<QVariantList>
+class AKONADITESTFAKE_EXPORT ModelSpy : public QObject, public QList<QVariantList>
 {
   Q_OBJECT
 public:

@@ -19,11 +19,11 @@
 
 #include "testattribute.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/agentmanager.h>
+#include <changerecorder.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
+#include <itemdeletejob.h>
+#include <agentmanager.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -46,7 +46,7 @@ class ChangeRecorderTest : public QObject
       AkonadiTest::checkTestIsIsolated();
       AkonadiTest::setAllResourcesOffline();
 
-      settings = new QSettings( "kde.org", "akonadi-changerecordertest", this );
+      settings = new QSettings( QLatin1String("kde.org"), QLatin1String("akonadi-changerecordertest"), this );
     }
 
     // After each test
@@ -60,12 +60,12 @@ class ChangeRecorderTest : public QObject
     {
       QTest::addColumn<QStringList>( "actions" );
 
-      QTest::newRow("nothingToReplay") << (QStringList() << "rn");
-      QTest::newRow("nothingOneNothing") << (QStringList() << "rn" << "c2" << "r2" << "rn");
-      QTest::newRow("multipleItems") << (QStringList() << "c1" << "c2" << "c3" << "r1" << "c4" << "r2" << "r3" << "r4" << "rn");
-      QTest::newRow("reload") << (QStringList() << "c1" << "c1" << "c3" << "reload" << "r1" << "r3" << "rn");
-      QTest::newRow("more") << (QStringList() << "c1" << "c2" << "c3" << "reload" << "r1" << "reload" << "c4" << "reload" << "r2" << "reload" << "r3" << "r4" << "rn");
-      QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
+      QTest::newRow("nothingToReplay") << (QStringList() << QLatin1String("rn"));
+      QTest::newRow("nothingOneNothing") << (QStringList() << QLatin1String("rn") << QLatin1String("c2") <<QLatin1String("r2") << QLatin1String("rn"));
+      QTest::newRow("multipleItems") << (QStringList() << QLatin1String("c1") << QLatin1String("c2") << QLatin1String("c3") << QLatin1String("r1") << QLatin1String("c4") << QLatin1String("r2") << QLatin1String("r3") << QLatin1String("r4") << QLatin1String("rn"));
+      QTest::newRow("reload") << (QStringList() << QLatin1String("c1") << QLatin1String("c1") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("r3") << QLatin1String("rn"));
+      QTest::newRow("more") << (QStringList() << QLatin1String("c1") << QLatin1String("c2") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("reload") << QLatin1String("c4") << QLatin1String("reload") << QLatin1String("r2") << QLatin1String("reload") << QLatin1String("r3") << QLatin1String("r4") << QLatin1String("rn"));
+      QTest::newRow("modifyThenDelete") << (QStringList() << QLatin1String("c1") << QLatin1String("d1") << QLatin1String("r1") << QLatin1String("rn"));
     }
 
     void testChangeRecorder()
@@ -77,13 +77,13 @@ class ChangeRecorderTest : public QObject
       QVERIFY( rec->isEmpty() );
       Q_FOREACH( const QString& action, actions ) {
         qDebug() << action;
-        if ( action == "rn" ) {
+        if ( action == QLatin1String("rn") ) {
           replayNextAndExpectNothing( rec );
-        } else if ( action == "reload" ) {
+        } else if ( action == QLatin1String("reload") ) {
           // Check saving and loading from disk
           delete rec;
           rec = createChangeRecorder();
-        } else if ( action.at(0) == 'c' ) {
+        } else if ( action.at(0) == QLatin1Char('c') ) {
           // c1 = "trigger change on item 1"
           const int id = action.mid(1).toInt();
           Q_ASSERT(id);
@@ -92,19 +92,19 @@ class ChangeRecorderTest : public QObject
             // enter event loop and wait for change notifications from the server
             QVERIFY( QTest::kWaitForSignal( rec, SIGNAL(changesAdded()), 1000 ) );
           }
-        } else if ( action.at(0) == 'd' ) {
+        } else if ( action.at(0) == QLatin1Char('d') ) {
           // d1 = "delete item 1"
           const int id = action.mid(1).toInt();
           Q_ASSERT(id);
           triggerDelete( id );
           QTest::qWait(500);
-        } else if ( action.at(0) == 'r' ) {
+        } else if ( action.at(0) == QLatin1Char('r') ) {
           // r1 = "replayNext and expect to get itemChanged(1)"
           const int id = action.mid(1).toInt();
           Q_ASSERT(id);
           replayNextAndProcess( rec, id );
         } else {
-          QVERIFY2( false, qPrintable("Unsupported: " + action) );
+          QVERIFY2( false, qPrintable(QLatin1String("Unsupported: ") + action) );
         }
         lastAction = action;
       }
@@ -186,6 +186,6 @@ class ChangeRecorderTest : public QObject
 
 };
 
-QTEST_AKONADIMAIN( ChangeRecorderTest, NoGUI )
+QTEST_AKONADIMAIN( ChangeRecorderTest )
 
 #include "changerecordertest.moc"

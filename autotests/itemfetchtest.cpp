@@ -18,21 +18,21 @@
 */
 
 #include "itemfetchtest.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 #include "testattribute.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/resourceselectjob_p.h>
+#include <attributefactory.h>
+#include <itemcreatejob.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <resourceselectjob_p.h>
 
 using namespace Akonadi;
 
 #include <qtest_akonadi.h>
 
-QTEST_AKONADIMAIN( ItemFetchTest, NoGUI )
+QTEST_AKONADIMAIN( ItemFetchTest )
 
 void ItemFetchTest::initTestCase()
 {
@@ -43,7 +43,7 @@ void ItemFetchTest::initTestCase()
 
 void ItemFetchTest::testFetch()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res1", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res1"), this );
   AKVERIFYEXEC( resolver );
   int colId = resolver->collection();
 
@@ -52,7 +52,7 @@ void ItemFetchTest::testFetch()
   AKVERIFYEXEC( job );
   QVERIFY( job->items().isEmpty() );
 
-  resolver = new CollectionPathResolver( "res1/foo", this );
+  resolver = new CollectionPathResolver( QLatin1String("res1/foo"), this );
   AKVERIFYEXEC( resolver );
   int colId2 = resolver->collection();
 
@@ -78,7 +78,7 @@ void ItemFetchTest::testFetch()
   // check if the fetch response is parsed correctly (note: order is undefined)
   Item item;
   foreach ( const Item &it, items ) {
-    if ( it.remoteId() == "A" )
+    if ( it.remoteId() == QLatin1String("A") )
       item = it;
   }
   QVERIFY( item.isValid() );
@@ -90,7 +90,7 @@ void ItemFetchTest::testFetch()
 
   item = Item();
   foreach ( const Item &it, items ) {
-    if ( it.remoteId() == "B" )
+    if ( it.remoteId() == QLatin1String("B") )
       item = it;
   }
   QVERIFY( item.isValid() );
@@ -99,7 +99,7 @@ void ItemFetchTest::testFetch()
 
   item = Item();
   foreach ( const Item &it, items ) {
-    if ( it.remoteId() == "C" )
+    if ( it.remoteId() == QLatin1String("C") )
       item = it;
   }
   QVERIFY( item.isValid() );
@@ -183,12 +183,12 @@ void ItemFetchTest::testMultipartFetch()
   QFETCH( bool, fetchSinglePayload );
   QFETCH( bool, fetchSingleAttr );
 
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res1/foo"), this );
   AKVERIFYEXEC( resolver );
   int colId = resolver->collection();
 
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload<QByteArray>( "body data" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   ItemCreateJob *job = new ItemCreateJob( item, Collection( colId ), this );
@@ -234,11 +234,11 @@ void ItemFetchTest::testMultipartFetch()
 void ItemFetchTest::testRidFetch()
 {
   Item item;
-  item.setRemoteId( "A" );
+  item.setRemoteId( QLatin1String("A") );
   Collection col;
-  col.setRemoteId( "10" );
+  col.setRemoteId( QLatin1String("10") );
 
-  ResourceSelectJob *select = new ResourceSelectJob( "akonadi_knut_resource_0", this );
+  ResourceSelectJob *select = new ResourceSelectJob( QLatin1String("akonadi_knut_resource_0"), this );
   AKVERIFYEXEC( select );
 
   ItemFetchJob *job = new ItemFetchJob( item, this );
@@ -262,9 +262,9 @@ void ItemFetchTest::testAncestorRetrieval()
   QCOMPARE( item.remoteId(), QString::fromLatin1( "A" ) );
   QCOMPARE( item.mimeType(), QString::fromLatin1( "application/octet-stream" ) );
   const Collection c = item.parentCollection();
-  QCOMPARE( c.remoteId(), QString( "10" ) );
+  QCOMPARE( c.remoteId(), QLatin1String( "10" ) );
   const Collection c2 = c.parentCollection();
-  QCOMPARE( c2.remoteId(), QString( "6" ) );
+  QCOMPARE( c2.remoteId(), QLatin1String( "6" ) );
   const Collection c3 = c2.parentCollection();
   QCOMPARE( c3, Collection::root() );
 

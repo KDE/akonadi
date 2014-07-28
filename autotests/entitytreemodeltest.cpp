@@ -195,32 +195,32 @@ void EntityTreeModelTest::testInitialFetch()
   expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 3") );
   // New collections are prepended
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, QLatin1String("Collection 1") );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 2" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 6" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 7" );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 1" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, QLatin1String("Collection 1"), QVariantList() << QLatin1String("Col 2") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, QLatin1String("Collection 1") );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, QLatin1String("Collection 1"), QVariantList() << QLatin1String("Col 6") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, QLatin1String("Collection 1") );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, QLatin1String("Collection 1"), QVariantList() << QLatin1String("Col 7") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 1") );
   // The items in the collections are appended.
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, "Col 2" );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 3, "Col 2" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 1, "Col 5" );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 1, "Col 5" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 1, 1, "Col 4" );
-  expectedSignals << getExpectedSignal( RowsInserted, 1, 1, "Col 4" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 1, 2, "Col 3" );
-  expectedSignals << getExpectedSignal( RowsInserted, 1, 2, "Col 3" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 1, "Col 6" );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 1, "Col 6" );
-  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, "Col 7" );
-  expectedSignals << getExpectedSignal( RowsInserted, 0, 3, "Col 7" );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 1" );
-  expectedSignals << getExpectedSignal( DataChanged, 3, 3, QVariantList() << "Col 3" );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 4" );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 5" );
-  expectedSignals << getExpectedSignal( DataChanged, 2, 2, QVariantList() << "Col 2" );
-  expectedSignals << getExpectedSignal( DataChanged, 1, 1, QVariantList() << "Col 6" );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 7" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, QLatin1String("Col 2") );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 3, QLatin1String("Col 2") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 1, QLatin1String("Col 5") );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 1, QLatin1String("Col 5") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 1, 1, QLatin1String("Col 4") );
+  expectedSignals << getExpectedSignal( RowsInserted, 1, 1, QLatin1String("Col 4") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 1, 2, QLatin1String("Col 3") );
+  expectedSignals << getExpectedSignal( RowsInserted, 1, 2, QLatin1String("Col 3") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 1, QLatin1String("Col 6") );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 1, QLatin1String("Col 6") );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, QLatin1String("Col 7") );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 3, QLatin1String("Col 7") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 1") );
+  expectedSignals << getExpectedSignal( DataChanged, 3, 3, QVariantList() << QLatin1String("Col 3") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 4") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 5") );
+  expectedSignals << getExpectedSignal( DataChanged, 2, 2, QVariantList() << QLatin1String("Col 2") );
+  expectedSignals << getExpectedSignal( DataChanged, 1, 1, QVariantList() << QLatin1String("Col 6") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 7") );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
@@ -655,11 +655,11 @@ void EntityTreeModelTest::testItemChanged()
 
 void EntityTreeModelTest::testRemoveCollectionOnChanged()
 {
-  const QString serverContent =
+  const QString serverContent = QLatin1String(
     "- C (inode/directory, text/directory)  'Col 1'     1"
     "- - C (text/directory)                 'Col 2'     2"
-    "- - - I text/directory                 'Item 1'";
-  const QString collectionName = "Col 2";
+    "- - - I text/directory                 'Item 1'");
+  const QString collectionName = QLatin1String("Col 2");
   const QString monitoredMimeType = QString::fromLatin1("text/directory");
 
   QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent, monitoredMimeType );
@@ -670,7 +670,7 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
   Q_ASSERT( !list.isEmpty() );
   QModelIndex changedIndex = list.first();
   Akonadi::Collection changedCol = changedIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-  changedCol.setContentMimeTypes(QStringList() << "foobar");
+  changedCol.setContentMimeTypes(QStringList() << QLatin1String("foobar"));
   QString parentCollection = changedIndex.parent().data().toString();
 
   FakeCollectionChangedCommand *changeCommand = new FakeCollectionChangedCommand( changedCol, serverData );

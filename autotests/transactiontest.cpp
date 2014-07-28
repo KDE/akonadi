@@ -19,14 +19,14 @@
 
 #include "transactiontest.h"
 
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/control.h>
-#include <akonadi/session.h>
-#include <akonadi/transactionjobs.h>
+#include <itemcreatejob.h>
+#include <itemfetchjob.h>
+#include <collectioncreatejob.h>
+#include <collectiondeletejob.h>
+#include <collectionfetchjob.h>
+#include <control.h>
+#include <session.h>
+#include <transactionjobs.h>
 
 #include <QtCore/QVariant>
 #include <QtTest/QSignalSpy>
@@ -34,7 +34,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( TransactionTest, NoGUI )
+QTEST_AKONADIMAIN( TransactionTest )
 
 void TransactionTest::initTestCase()
 {
@@ -50,13 +50,13 @@ void TransactionTest::testTransaction()
   AKVERIFYEXEC( listJob );
   Collection::List list = listJob->collections();
   foreach ( const Collection &col, list )
-    if ( col.name() == "res3" )
+    if ( col.name() == QLatin1String("res3") )
       basisCollection = col;
 
   Collection testCollection;
   testCollection.setParentCollection( basisCollection );
-  testCollection.setName( "transactionTest" );
-  testCollection.setRemoteId( "transactionTestRemoteId" );
+  testCollection.setName( QLatin1String("transactionTest") );
+  testCollection.setRemoteId( QLatin1String("transactionTestRemoteId") );
   CollectionCreateJob *job = new CollectionCreateJob( testCollection, Session::defaultSession() );
 
   AKVERIFYEXEC( job );
@@ -82,7 +82,7 @@ void TransactionTest::testTransaction()
   AKVERIFYEXEC( beginTransaction3 );
 
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload<QByteArray>( "body data" );
   ItemCreateJob *appendJob = new ItemCreateJob( item, testCollection, Session::defaultSession() );
   AKVERIFYEXEC( appendJob );

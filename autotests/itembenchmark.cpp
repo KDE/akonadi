@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
+#include <item.h>
+#include <itemcreatejob.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
 
 #include "qtest_akonadi.h"
 #include "test_utils.h"
@@ -83,10 +83,10 @@ class ItemBenchmark : public QObject
       QFETCH( int, count );
       QFETCH( int, size );
 
-      const Collection parent( collectionIdFromPath( "res1/foo" ) );
+      const Collection parent( collectionIdFromPath( QLatin1String("res1/foo") ) );
       QVERIFY( parent.isValid() );
 
-      Item item( "application/octet-stream" );
+      Item item(QLatin1String( "application/octet-stream") );
       item.setPayload( QByteArray( size, 'X' ) );
       item.setSize( size );
 
@@ -174,6 +174,6 @@ class ItemBenchmark : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( ItemBenchmark, NoGUI )
+QTEST_AKONADIMAIN( ItemBenchmark )
 
 #include "itembenchmark.moc"

@@ -303,6 +303,7 @@ install(FILES
     ${AkonadiCore_models_HEADERS}
     ${AkonadiCore_jobs_HEADERS}
     ${AkonadiCore_HEADERS}
+    qtest_akonadi.h
     itempayloadinternals_p.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
 )

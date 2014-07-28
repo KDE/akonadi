@@ -166,6 +166,6 @@ class EntityCacheTest : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( EntityCacheTest, NoGUI )
+QTEST_AKONADIMAIN( EntityCacheTest )
 
 #include "entitycachetest.moc"

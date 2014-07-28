@@ -20,7 +20,7 @@
 #include "agentinstance.h"
 #include "agentmanager.h"
 #include "collectioncreatejob.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 #include "transactionjobs.h"
 
 #include "qtest_akonadi.h"
@@ -49,7 +49,7 @@ class CollectionCreator : public QObject
       QList<bool> transactions = QList<bool>() << false << true;
       foreach( int count, counts ) {
         foreach( bool transaction, transactions ) { //krazy:exclude=foreach
-          QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( transaction ? "trans" : "notrans" ).toLatin1().constData() )
+          QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( transaction ? QLatin1String("trans") : QLatin1String("notrans") ).toLatin1().constData() )
             << count << transaction;
         }
       }
@@ -60,7 +60,7 @@ class CollectionCreator : public QObject
       QFETCH( int, count );
       QFETCH( bool, useTransaction );
 
-      const Collection parent( collectionIdFromPath( "res3" ) );
+      const Collection parent( collectionIdFromPath( QLatin1String("res3") ) );
       QVERIFY( parent.isValid() );
 
       static int index = 0;
@@ -84,6 +84,6 @@ class CollectionCreator : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( CollectionCreator, NoGUI )
+QTEST_AKONADIMAIN( CollectionCreator )
 
 #include "collectioncreator.moc"

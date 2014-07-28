@@ -20,13 +20,13 @@
 
 #include "searchjobtest.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/searchcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/monitor.h>
-#include <akonadi/searchquery.h>
+#include <collection.h>
+#include <collectiondeletejob.h>
+#include <collectionfetchjob.h>
+#include <searchcreatejob.h>
+#include <itemfetchjob.h>
+#include <monitor.h>
+#include <searchquery.h>
 
 #include "collectionutils.h"
 

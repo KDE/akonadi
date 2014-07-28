@@ -24,7 +24,7 @@
 #include "../src/widgets/standardactionmanager.h"
 
 #define QT_NO_CLIPBOARD // allow running without GUI
-#include "../actionstatemanager.cpp"
+#include "../src/widgets/actionstatemanager.cpp"
 #undef QT_NO_CLIPBOARD
 
 #include "../src/core/pastehelper.cpp"
@@ -56,46 +56,46 @@ class ActionStateManagerTest : public QObject
     ActionStateManagerTest()
     {
       rootCollection = Collection::root();
-      const QString dummyMimeType( "text/dummy" );
+      const QString dummyMimeType( QLatin1String("text/dummy") );
 
       resourceCollectionOne.setId( 1 );
-      resourceCollectionOne.setName( "resourceCollectionOne" );
+      resourceCollectionOne.setName( QLatin1String("resourceCollectionOne") );
       resourceCollectionOne.setRights( Collection::ReadOnly );
       resourceCollectionOne.setParentCollection( rootCollection );
       resourceCollectionOne.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionOne.setId( 10 );
-      folderCollectionOne.setName( "folderCollectionOne" );
+      folderCollectionOne.setName( QLatin1String("folderCollectionOne") );
       folderCollectionOne.setRights( Collection::ReadOnly );
       folderCollectionOne.setParentCollection( resourceCollectionOne );
       folderCollectionOne.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       resourceCollectionTwo.setId( 2 );
-      resourceCollectionTwo.setName( "resourceCollectionTwo" );
+      resourceCollectionTwo.setName( QLatin1String("resourceCollectionTwo" ));
       resourceCollectionTwo.setRights( Collection::AllRights );
       resourceCollectionTwo.setParentCollection( rootCollection );
       resourceCollectionTwo.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionTwo.setId( 20 );
-      folderCollectionTwo.setName( "folderCollectionTwo" );
+      folderCollectionTwo.setName( QLatin1String("folderCollectionTwo") );
       folderCollectionTwo.setRights( Collection::AllRights );
       folderCollectionTwo.setParentCollection( resourceCollectionTwo );
       folderCollectionTwo.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       resourceCollectionThree.setId( 3 );
-      resourceCollectionThree.setName( "resourceCollectionThree" );
+      resourceCollectionThree.setName( QLatin1String("resourceCollectionThree") );
       resourceCollectionThree.setRights( Collection::AllRights );
       resourceCollectionThree.setParentCollection( rootCollection );
       resourceCollectionThree.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionThree.setId( 30 );
-      folderCollectionThree.setName( "folderCollectionThree" );
+      folderCollectionThree.setName( QLatin1String("folderCollectionThree") );
       folderCollectionThree.setRights( Collection::AllRights );
       folderCollectionThree.setParentCollection( resourceCollectionThree );
       folderCollectionThree.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionThree.setId( 31 );
-      folderCollectionThree.setName( "folderCollectionThreeOne" );
+      folderCollectionThree.setName( QLatin1String("folderCollectionThreeOne") );
       folderCollectionThree.setRights( Collection::AllRights );
       folderCollectionThree.setParentCollection( resourceCollectionThree );
 
@@ -617,6 +617,6 @@ bool UnitActionStateManager::hasResourceCapability( const Collection &collection
   return mReceiver->hasResourceCapability( collection, capability );
 }
 
-QTEST_AKONADIMAIN( ActionStateManagerTest, NoGUI )
+QTEST_AKONADIMAIN( ActionStateManagerTest )
 
 #include "actionstatemanagertest.moc"

@@ -22,14 +22,14 @@
 #include "test_utils.h"
 
 #include <KConfigGroup>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/control.h>
-#include <akonadi/entitytreemodel_p.h>
-#include <akonadi/monitor_p.h>
-#include <akonadi/changerecorder_p.h>
-#include <akonadi/qtest_akonadi.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/itemcreatejob.h>
+#include <entitytreemodel.h>
+#include <control.h>
+#include <entitytreemodel_p.h>
+#include <monitor_p.h>
+#include <changerecorder_p.h>
+#include <qtest_akonadi.h>
+#include <collectioncreatejob.h>
+#include <itemcreatejob.h>
 #include <favoritecollectionsmodel.h>
 #include <QItemSelectionRange>
 #include <QSortFilterProxyModel>
@@ -41,7 +41,7 @@ class InspectableETM: public EntityTreeModel
 public:
   explicit InspectableETM(ChangeRecorder* monitor, QObject* parent = 0)
   :EntityTreeModel(monitor, parent) {}
-  EntityTreeModelPrivate *etmPrivate() { return d_ptr; };
+  EntityTreeModelPrivate *etmPrivate() { return d_ptr; }
   void reset() { EntityTreeModel::reset(); }
 };
 
@@ -104,7 +104,7 @@ InspectableETM *FavoriteProxyTest::createETM()
  */
 void FavoriteProxyTest::testItemAdded()
 {
-  Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+  Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
 
   InspectableETM *model = createETM();
 
@@ -116,7 +116,7 @@ void FavoriteProxyTest::testItemAdded()
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
-  const QModelIndex res3Index = getIndex("res3", model);
+  const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
   QVERIFY(res3Index.isValid());
 
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
@@ -166,14 +166,14 @@ void FavoriteProxyTest::testLoadConfig()
   const int numberOfRootCollections = 4;
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
-  const QModelIndex res3Index = getIndex("res3", model);
+  const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
   QVERIFY(res3Index.isValid());
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
   QVERIFY(favoriteCollection.isValid());
 
   KConfigGroup configGroup( KSharedConfig::openConfig(), "favoritecollectionsmodeltest" );
   configGroup.writeEntry( "FavoriteCollectionIds", QList<Akonadi::Collection::Id>() << favoriteCollection.id() );
-  configGroup.writeEntry( "FavoriteCollectionLabels", QStringList() << "label1" );
+  configGroup.writeEntry( "FavoriteCollectionLabels", QStringList() << QLatin1String("label1") );
 
   FavoriteCollectionsModel *favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
@@ -202,7 +202,7 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
   const int numberOfRootCollections = 4;
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
-  const QModelIndex res3Index = getIndex("res3", model);
+  const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
   QVERIFY(res3Index.isValid());
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
   QVERIFY(favoriteCollection.isValid());
@@ -225,4 +225,4 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
 
 #include "favoriteproxytest.moc"
 
-QTEST_AKONADIMAIN(FavoriteProxyTest, NoGUI)
+QTEST_AKONADIMAIN(FavoriteProxyTest)

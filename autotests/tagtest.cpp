@@ -21,22 +21,22 @@
 
 #include "test_utils.h"
 
-#include <akonadi/control.h>
-#include <akonadi/tagcreatejob.h>
-#include <akonadi/tagfetchjob.h>
-#include <akonadi/tagdeletejob.h>
-#include <akonadi/tagattribute.h>
-#include <akonadi/tagfetchscope.h>
+#include <control.h>
+#include <tagcreatejob.h>
+#include <tagfetchjob.h>
+#include <tagdeletejob.h>
+#include <tagattribute.h>
+#include <tagfetchscope.h>
 #include <tagmodifyjob.h>
 #include <resourceselectjob_p.h>
-#include <akonadi/qtest_akonadi.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
-#include <akonadi/attributefactory.h>
+#include <qtest_akonadi.h>
+#include <item.h>
+#include <itemcreatejob.h>
+#include <itemmodifyjob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <monitor.h>
+#include <attributefactory.h>
 
 using namespace Akonadi;
 
@@ -106,7 +106,7 @@ void TagTest::testCreateFetch()
 void TagTest::testRID()
 {
     {
-        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
     Tag tag;
@@ -129,7 +129,7 @@ void TagTest::testRID()
         AKVERIFYEXEC(deleteJob);
     }
     {
-        ResourceSelectJob *select = new ResourceSelectJob("");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
         AKVERIFYEXEC(select);
     }
 }
@@ -183,7 +183,7 @@ void TagTest::testModify()
     //We can add an attribute
     {
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
-        attr->setDisplayName("display name");
+        attr->setDisplayName(QLatin1String("display name"));
         tag.addAttribute(attr);
         tag.setParent(Tag(0));
         tag.setType("mytype");
@@ -199,7 +199,7 @@ void TagTest::testModify()
     //We can update an attribute
     {
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
-        attr->setDisplayName("display name2");
+        attr->setDisplayName(QLatin1String("display name2"));
         TagModifyJob *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
@@ -257,7 +257,7 @@ void TagTest::testAttributes()
     {
       tag.setGid("gid2");
       TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-      attr->setDisplayName("name");
+      attr->setDisplayName(QLatin1String("name"));
       attr->setInToolbar(true);
       tag.addAttribute(attr);
       TagCreateJob *createjob = new TagCreateJob(tag, this);
@@ -284,7 +284,7 @@ void TagTest::testAttributes()
     {
       tag2.setGid("gid22");
       TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-      attr->setDisplayName("name2");
+      attr->setDisplayName(QLatin1String("name2"));
       attr->setInToolbar(true);
       tag2.addAttribute(attr);
       TagCreateJob *createjob = new TagCreateJob(tag2, this);
@@ -311,17 +311,17 @@ void TagTest::testTagItem()
     Akonadi::Monitor monitor;
     monitor.itemFetchScope().setFetchTags(true);
     monitor.setAllMonitored(true);
-    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
     Tag tag;
     {
-        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        TagCreateJob *createjob = new TagCreateJob(Tag(QLatin1String("gid1")), this);
         AKVERIFYEXEC(createjob);
         tag = createjob->tag();
     }
 
     Item item1;
     {
-        item1.setMimeType( "application/octet-stream" );
+        item1.setMimeType( QLatin1String("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -347,7 +347,7 @@ void TagTest::testTagItem()
 
 void TagTest::testModifyItemWithTagByGID()
 {
-    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
     {
         Tag tag;
         tag.setGid("gid2");
@@ -357,7 +357,7 @@ void TagTest::testModifyItemWithTagByGID()
 
     Item item1;
     {
-        item1.setMimeType( "application/octet-stream" );
+        item1.setMimeType( QLatin1String("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -379,10 +379,10 @@ void TagTest::testModifyItemWithTagByGID()
 void TagTest::testModifyItemWithTagByRID()
 {
     {
-        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
-    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
     {
         Tag tag;
         tag.setGid("gid3");
@@ -393,7 +393,7 @@ void TagTest::testModifyItemWithTagByRID()
 
     Item item1;
     {
-        item1.setMimeType( "application/octet-stream" );
+        item1.setMimeType( QLatin1String("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -411,7 +411,7 @@ void TagTest::testModifyItemWithTagByRID()
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
     {
-        ResourceSelectJob *select = new ResourceSelectJob("");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
         AKVERIFYEXEC(select);
     }
 }
@@ -426,7 +426,7 @@ void TagTest::testMonitor()
   {
     QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
     QVERIFY(addedSpy.isValid());
-    Tag tag("gid2");
+    Tag tag(QLatin1String("gid2"));
     tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
     QVERIFY(tag.hasAttribute<Akonadi::TagAttribute>());
     TagCreateJob *createjob = new TagCreateJob(tag, this);
@@ -450,4 +450,4 @@ void TagTest::testMonitor()
 
 #include "tagtest.moc"
 
-QTEST_AKONADIMAIN(TagTest, NoGUI)
+QTEST_AKONADIMAIN(TagTest)

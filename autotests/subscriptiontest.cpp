@@ -19,11 +19,11 @@
 
 #include "test_utils.h"
 
-#include <akonadi/control.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/subscriptionjob_p.h>
+#include <control.h>
+#include <collection.h>
+#include <collectionfetchjob.h>
+#include <collectionfetchscope.h>
+#include <subscriptionjob_p.h>
 
 #include <QtCore/QObject>
 
@@ -44,13 +44,13 @@ class SubscriptionTest : public QObject
     void testSubscribe()
     {
       Collection::List l;
-      l << Collection( collectionIdFromPath( "res2/foo2" ) );
+      l << Collection( collectionIdFromPath( QLatin1String("res2/foo2") ) );
       QVERIFY( l.first().isValid() );
       SubscriptionJob *sjob = new SubscriptionJob( this );
       sjob->unsubscribe( l );
       AKVERIFYEXEC( sjob );
 
-      const Collection res2Col = Collection( collectionIdFromPath( "res2" ) );
+      const Collection res2Col = Collection( collectionIdFromPath( QLatin1String("res2") ) );
       QVERIFY( res2Col.isValid() );
       CollectionFetchJob *ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
       AKVERIFYEXEC( ljob );
@@ -89,6 +89,6 @@ class SubscriptionTest : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( SubscriptionTest, NoGUI )
+QTEST_AKONADIMAIN( SubscriptionTest )
 
 #include "subscriptiontest.moc"

@@ -18,29 +18,29 @@
 */
 
 #include "collectionattributetest.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/attributefactory.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/collectionrightsattribute_p.h>
-#include <akonadi/control.h>
-#include <akonadi/collectionidentificationattribute.h>
+#include <collection.h>
+#include <attributefactory.h>
+#include <collectioncreatejob.h>
+#include <collectiondeletejob.h>
+#include <collectionfetchjob.h>
+#include <collectionmodifyjob.h>
+#include <collectionrightsattribute_p.h>
+#include <control.h>
+#include <collectionidentificationattribute.h>
 
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( CollectionAttributeTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionAttributeTest )
 
 class TestAttribute : public Attribute
 {
   public:
     TestAttribute() : Attribute() {}
-    TestAttribute( const QByteArray &data ) : mData( data ) {};
+    TestAttribute( const QByteArray &data ) : mData( data ) {}
     TestAttribute* clone() const { return new TestAttribute( mData ); }
     QByteArray type() const { return "TESTATTRIBUTE"; }
     QByteArray serialized() const { return mData; }
@@ -57,7 +57,7 @@ void CollectionAttributeTest::initTestCase()
   Control::start();
   AttributeFactory::registerAttribute<TestAttribute>();
 
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res3"), this );
   AKVERIFYEXEC( resolver );
   parentColId = resolver->collection();
   QVERIFY( parentColId > 0 );
@@ -89,7 +89,7 @@ void CollectionAttributeTest::testAttributes()
   TestAttribute *attr = new TestAttribute();
   attr->deserialize( attr1 );
   Collection col;
-  col.setName( "attribute test" );
+  col.setName( QLatin1String("attribute test") );
   col.setParentCollection( Collection( parentColId ) );
   col.addAttribute( attr );
   CollectionCreateJob *create = new CollectionCreateJob( col, this );
@@ -204,7 +204,7 @@ void CollectionAttributeTest::testCollectionIdentifcationAttribute()
   QByteArray result = attribute.serialized();
   CollectionIdentificationAttribute parsed;
   parsed.deserialize(result);
-  kDebug() << parsed.identifier() << parsed.collectionNamespace() << result;;
+  qDebug() << parsed.identifier() << parsed.collectionNamespace() << result;;
   QCOMPARE(parsed.identifier(), id);
   QCOMPARE(parsed.collectionNamespace(), ns);
 }

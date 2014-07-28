@@ -18,15 +18,15 @@
 */
 
 #include "collectionpathresolvertest.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 
-#include <akonadi/control.h>
+#include <control.h>
 
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( CollectionPathResolverTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionPathResolverTest )
 
 void CollectionPathResolverTest::initTestCase()
 {
@@ -36,14 +36,14 @@ void CollectionPathResolverTest::initTestCase()
 
 void CollectionPathResolverTest::testPathResolver()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( "/res1/foo/bar/bla", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("/res1/foo/bar/bla"), this );
   AKVERIFYEXEC( resolver );
   int col = resolver->collection();
   QVERIFY( col > 0 );
 
   resolver = new CollectionPathResolver( Collection( col ), this );
   AKVERIFYEXEC( resolver );
-  QCOMPARE( resolver->path(), QString( "res1/foo/bar/bla" ) );
+  QCOMPARE( resolver->path(), QLatin1String( "res1/foo/bar/bla" ) );
 }
 
 void CollectionPathResolverTest::testRoot()
@@ -59,7 +59,7 @@ void CollectionPathResolverTest::testRoot()
 
 void CollectionPathResolverTest::testFailure()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( "/I/do not/exist", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("/I/do not/exist"), this );
   QVERIFY( !resolver->exec() );
 
   resolver = new CollectionPathResolver( Collection( INT_MAX ), this );

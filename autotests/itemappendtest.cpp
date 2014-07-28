@@ -23,20 +23,20 @@
 #include "testattribute.h"
 #include "test_utils.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/attributefactory.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemdeletejob.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
+#include <attributefactory.h>
+#include <collectionfetchjob.h>
+#include <itemcreatejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemdeletejob.h>
 
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( ItemAppendTest, NoGUI )
+QTEST_AKONADIMAIN( ItemAppendTest )
 
 void ItemAppendTest::initTestCase()
 {
@@ -51,15 +51,15 @@ void ItemAppendTest::testItemAppend_data()
   QTest::addColumn<QString>( "remoteId" );
 
   QTest::newRow( "empty" ) << QString();
-  QTest::newRow( "non empty" ) << QString( "remote-id" );
-  QTest::newRow( "whitespace" ) << QString( "remote id" );
-  QTest::newRow( "quotes" ) << QString ( "\"remote\" id" );
-  QTest::newRow( "brackets" ) << QString( "[remote id]" );
+  QTest::newRow( "non empty" ) << QString::fromLatin1( "remote-id" );
+  QTest::newRow( "whitespace" ) << QString::fromLatin1( "remote id" );
+  QTest::newRow( "quotes" ) << QString::fromLatin1 ( "\"remote\" id" );
+  QTest::newRow( "brackets" ) << QString::fromLatin1( "[remote id]" );
 }
 
 void ItemAppendTest::testItemAppend()
 {
-  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  const Collection testFolder1( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( testFolder1.isValid() );
 
   QFETCH( QString, remoteId );
@@ -67,7 +67,7 @@ void ItemAppendTest::testItemAppend()
 
   Item item( -1 );
   item.setRemoteId( remoteId );
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setFlag( "TestFlag" );
   item.setSize( 3456 );
   ItemCreateJob *job = new ItemCreateJob( item, testFolder1, this );
@@ -115,13 +115,13 @@ void ItemAppendTest::testContent_data()
 
 void ItemAppendTest::testContent()
 {
-  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  const Collection testFolder1( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( testFolder1.isValid() );
 
   QFETCH( QByteArray, data );
 
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   if ( !data.isNull() ) {
     item.setPayload( data );
   }
@@ -147,11 +147,11 @@ void ItemAppendTest::testContent()
 
 void ItemAppendTest::testNewMimetype()
 {
-  const Collection col( collectionIdFromPath( "res2/space folder" ) );
+  const Collection col( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( col.isValid() );
 
   Item item;
-  item.setMimeType( "application/new-type" );
+  item.setMimeType( QLatin1String("application/new-type") );
   ItemCreateJob *job = new ItemCreateJob( item, col, this );
   AKVERIFYEXEC( job );
 
@@ -166,18 +166,18 @@ void ItemAppendTest::testNewMimetype()
 
 void ItemAppendTest::testIllegalAppend()
 {
-  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  const Collection testFolder1( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( testFolder1.isValid() );
 
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
 
   // adding item to non-existing collection
   ItemCreateJob *job = new ItemCreateJob( item, Collection( INT_MAX ), this );
   QVERIFY( !job->exec() );
 
   // adding item into a collection which can't handle items of this type
-  const Collection col( collectionIdFromPath( "res1/foo/bla" ) );
+  const Collection col( collectionIdFromPath( QLatin1String("res1/foo/bla") ) );
   QVERIFY( col.isValid() );
   job = new ItemCreateJob( item, col, this );
   QEXPECT_FAIL( "", "Test not yet implemented in the server.", Continue );
@@ -186,11 +186,11 @@ void ItemAppendTest::testIllegalAppend()
 
 void ItemAppendTest::testMultipartAppend()
 {
-  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  const Collection testFolder1( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( testFolder1.isValid() );
 
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload<QByteArray>( "body data" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   item.setFlag( "TestFlag" );
@@ -216,7 +216,7 @@ void ItemAppendTest::testMultipartAppend()
 void ItemAppendTest::testInvalidMultipartAppend()
 {
   Item item;
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload<QByteArray>( "body data" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   item.setFlag( "TestFlag" );
@@ -224,7 +224,7 @@ void ItemAppendTest::testInvalidMultipartAppend()
   QVERIFY( !job->exec() );
 
   Item item2;
-  item2.setMimeType( "application/octet-stream" );
+  item2.setMimeType( QLatin1String("application/octet-stream") );
   item2.setPayload<QByteArray>( "more body data" );
   item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "even more extra data";
   item2.setFlag( "TestFlag" );
@@ -237,7 +237,7 @@ void ItemAppendTest::testItemSize_data()
   QTest::addColumn<Akonadi::Item>( "item" );
   QTest::addColumn<qint64>( "size" );
 
-  Item i( "application/octet-stream" );
+  Item i( QLatin1String("application/octet-stream") );
   i.setPayload( QByteArray( "ABCD" ) );
 
   QTest::newRow( "auto size" ) << i << 4ll;
@@ -252,7 +252,7 @@ void ItemAppendTest::testItemSize()
   QFETCH( Akonadi::Item, item );
   QFETCH( qint64, size );
 
-  const Collection col( collectionIdFromPath( "res2/space folder" ) );
+  const Collection col( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( col.isValid() );
 
   ItemCreateJob *create = new ItemCreateJob( item, col, this );
@@ -274,21 +274,21 @@ void ItemAppendTest::testItemMerge_data()
   QTest::addColumn<bool>( "silent" );
 
   {
-    Item i1( "application/octet-stream" );
+    Item i1( QLatin1String("application/octet-stream") );
     i1.setPayload( QByteArray( "ABCD" ) );
     i1.setSize( 4 );
-    i1.setRemoteId( "XYZ" );
-    i1.setGid( "XYZ" );
+    i1.setRemoteId( QLatin1String("XYZ") );
+    i1.setGid( QLatin1String("XYZ") );
     i1.setFlag( "TestFlag1" );
-    i1.setRemoteRevision( "5" );
+    i1.setRemoteRevision( QLatin1String("5") );
 
-    Item i2( "application/octet-stream" );
+    Item i2( QLatin1String("application/octet-stream") );
     i2.setPayload( QByteArray( "DEFGH" ) );
     i2.setSize( 5 );
-    i2.setRemoteId(( "XYZ" ) );
-    i2.setGid( "XYZ" );
+    i2.setRemoteId(QLatin1String( "XYZ" ) );
+    i2.setGid( QLatin1String("XYZ") );
     i2.setFlag( "TestFlag2" );
-    i2.setRemoteRevision( "6" );
+    i2.setRemoteRevision( QLatin1String("6") );
 
     Item mergedItem( i2 );
     mergedItem.setFlag( "TestFlag1" );
@@ -297,19 +297,19 @@ void ItemAppendTest::testItemMerge_data()
     QTest::newRow( "merge (silent)" ) << i1 << i2 << mergedItem << true;
   }
   {
-    Item i1( "application/octet-stream" );
+    Item i1( QLatin1String("application/octet-stream") );
     i1.setPayload( QByteArray( "ABCD" ) );
     i1.setSize( 4 );
-    i1.setRemoteId( "RID2" );
-    i1.setGid( "GID2" );
+    i1.setRemoteId( QLatin1String("RID2") );
+    i1.setGid( QLatin1String("GID2") );
     i1.setFlag( "TestFlag1" );
-    i1.setRemoteRevision( "5" );
+    i1.setRemoteRevision( QLatin1String("5") );
 
-    Item i2( "application/octet-stream" );
-    i2.setRemoteId(( "RID2" ) );
-    i2.setGid( "GID2" );
+    Item i2( QLatin1String("application/octet-stream") );
+    i2.setRemoteId(QLatin1String( "RID2" ) );
+    i2.setGid( QLatin1String("GID2") );
     i2.setFlags( Item::Flags() << "TestFlag2" );
-    i2.setRemoteRevision( "6" );
+    i2.setRemoteRevision( QLatin1String("6") );
 
     Item mergedItem( i1 );
     mergedItem.setFlags( i2.flags() );
@@ -327,7 +327,7 @@ void ItemAppendTest::testItemMerge()
   QFETCH( Akonadi::Item, mergedItem );
   QFETCH( bool, silent );
 
-  const Collection col( collectionIdFromPath( "res2/space folder" ) );
+  const Collection col( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( col.isValid() );
 
   ItemCreateJob *create = new ItemCreateJob( item1, col, this );

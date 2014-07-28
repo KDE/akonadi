@@ -49,7 +49,7 @@ private Q_SLOTS:
     {
         AkonadiTest::checkTestIsIsolated();
         AkonadiTest::setAllResourcesOffline();
-        Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance("akonadi_knut_resource_0");
+        Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance(QLatin1String("akonadi_knut_resource_0"));
         QVERIFY(agent.isValid());
         agent.setIsOnline(true);
     }
@@ -63,21 +63,21 @@ private Q_SLOTS:
         {
             QSet<qint64> resultSet;
             resultSet << 1 << 2 << 3;
-            QTest::newRow("plugin search") << false << createQuery("plugin", resultSet) << resultSet;
+            QTest::newRow("plugin search") << false << createQuery(QLatin1String("plugin"), resultSet) << resultSet;
         }
         {
             QSet<qint64> resultSet;
             resultSet << 1 << 2 << 3;
-            QTest::newRow("resource search") << true << createQuery("resource", resultSet) << resultSet;
+            QTest::newRow("resource search") << true << createQuery(QLatin1String("resource"), resultSet) << resultSet;
         }
         {
             QSet<qint64> resultSet;
             resultSet << 1 << 2 << 3 << 4;
             Akonadi::SearchQuery query;
-            query.addTerm(Akonadi::SearchTerm("plugin", 1));
-            query.addTerm(Akonadi::SearchTerm("resource", 2));
-            query.addTerm(Akonadi::SearchTerm("plugin", 3));
-            query.addTerm(Akonadi::SearchTerm("resource", 4));
+            query.addTerm(Akonadi::SearchTerm(QLatin1String("plugin"), 1));
+            query.addTerm(Akonadi::SearchTerm(QLatin1String("resource"), 2));
+            query.addTerm(Akonadi::SearchTerm(QLatin1String("plugin"), 3));
+            query.addTerm(Akonadi::SearchTerm(QLatin1String("resource"), 4));
             QTest::newRow("mixed search: results are merged") << true << query << resultSet;
         }
     }
@@ -103,6 +103,6 @@ private Q_SLOTS:
 
 };
 
-QTEST_AKONADIMAIN( ItemSearchJobTest, NoGUI )
+QTEST_AKONADIMAIN( ItemSearchJobTest )
 
 #include "itemsearchjobtest.moc"

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include <akonadi/control.h>
-#include <akonadi/servermanager.h>
+#include <control.h>
+#include <servermanager.h>
 
 #include <QtCore/QObject>
 
@@ -91,6 +91,6 @@ class ServerManagerTest : public QObject
 
 };
 
-QTEST_AKONADIMAIN( ServerManagerTest, NoGUI )
+QTEST_AKONADIMAIN( ServerManagerTest )
 
 #include "servermanagertest.moc"
