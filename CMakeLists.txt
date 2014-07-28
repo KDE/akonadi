@@ -104,7 +104,3 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
 
-install( FILES
-    kcfg2dbus.xsl
-    DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi
-)

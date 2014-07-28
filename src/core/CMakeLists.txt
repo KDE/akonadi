@@ -311,3 +311,8 @@ install(FILES
     ${PRI_FILENAME}
     DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
+
+install( FILES
+    kcfg2dbus.xsl
+    DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi
+)
