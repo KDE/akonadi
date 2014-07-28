@@ -32,7 +32,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( AutoIncrementTest, NoGUI )
+QTEST_AKONADIMAIN( AutoIncrementTest )
 
 static bool isMySQLEnvironment()
 {
@@ -45,10 +45,10 @@ void AutoIncrementTest::initTestCase()
   Control::start();
   AkonadiTest::setAllResourcesOffline();
 
-  itemTargetCollection = Collection( collectionIdFromPath( "res2/space folder" ) );
+  itemTargetCollection = Collection( collectionIdFromPath( QLatin1String("res2/space folder") ) );
   QVERIFY( itemTargetCollection.isValid() );
 
-  collectionTargetCollection = Collection( collectionIdFromPath( "res3" ) );
+  collectionTargetCollection = Collection( collectionIdFromPath( QLatin1String("res3") ) );
   QVERIFY( collectionTargetCollection.isValid() );
 }
 
@@ -56,7 +56,7 @@ Akonadi::ItemCreateJob* AutoIncrementTest::createItemCreateJob()
 {
   QByteArray payload( "Hello world" );
   Item item( -1 );
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload( payload );
   return new ItemCreateJob( item, itemTargetCollection );
 }
@@ -65,7 +65,7 @@ Akonadi::CollectionCreateJob* AutoIncrementTest::createCollectionCreateJob( int 
 {
   Collection collection;
   collection.setParentCollection( collectionTargetCollection );
-  collection.setName( "testCollection" + QString::number( number) );
+  collection.setName( QLatin1String("testCollection") + QString::number( number) );
   return new CollectionCreateJob( collection );
 }
 

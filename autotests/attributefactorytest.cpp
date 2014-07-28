@@ -18,27 +18,27 @@
 */
 
 #include "attributefactorytest.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 #include "testattribute.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/collection.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/resourceselectjob_p.h>
+#include <attributefactory.h>
+#include <collection.h>
+#include <itemcreatejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <resourceselectjob_p.h>
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( AttributeFactoryTest, NoGUI )
+QTEST_AKONADIMAIN( AttributeFactoryTest )
 
 static Collection res1;
 
 void AttributeFactoryTest::initTestCase()
 {
   AkonadiTest::checkTestIsIsolated();
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res1", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res1"), this );
   AKVERIFYEXEC( resolver );
   res1 = Collection( resolver->collection() );
 }
@@ -47,7 +47,7 @@ void AttributeFactoryTest::testUnknownAttribute()
 {
   // The attribute is currently not registered.
   Item item;
-  item.setMimeType( "text/directory" );
+  item.setMimeType( QLatin1String("text/directory") );
   item.setPayload<QByteArray>( "payload" );
   TestAttribute *ta = new TestAttribute;
   QVERIFY( AttributeFactory::createAttribute( ta->type() ) ); // DefaultAttribute
@@ -73,7 +73,7 @@ void AttributeFactoryTest::testRegisteredAttribute()
   AttributeFactory::registerAttribute<TestAttribute>();
 
   Item item;
-  item.setMimeType( "text/directory" );
+  item.setMimeType( QLatin1String("text/directory") );
   item.setPayload<QByteArray>( "payload" );
   TestAttribute *ta = new TestAttribute;
   QVERIFY( AttributeFactory::createAttribute( ta->type() ) != 0 );

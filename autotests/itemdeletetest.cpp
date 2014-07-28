@@ -18,15 +18,15 @@
 */
 
 #include <qtest_akonadi.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionpathresolver_p.h>
-#include <akonadi/collectionselectjob_p.h>
-#include <akonadi/control.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/transactionjobs.h>
-#include <akonadi/tagcreatejob.h>
-#include <akonadi/itemmodifyjob.h>
+#include <collection.h>
+#include <collectionpathresolver.h>
+#include <collectionselectjob_p.h>
+#include <control.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
+#include <transactionjobs.h>
+#include <tagcreatejob.h>
+#include <itemmodifyjob.h>
 #include "test_utils.h"
 
 #include <QtCore/QObject>
@@ -98,14 +98,14 @@ class ItemDeleteTest : public QObject
 
     void testRidDelete()
     {
-      const Collection col ( collectionIdFromPath( "res1/foo" ) );
+      const Collection col ( collectionIdFromPath( QLatin1String("res1/foo") ) );
       QVERIFY( col.isValid() );
 
       CollectionSelectJob *sel = new CollectionSelectJob( col );
       AKVERIFYEXEC( sel );
 
       Item i;
-      i.setRemoteId( "C" );
+      i.setRemoteId( QLatin1String("C") );
 
       ItemFetchJob *fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
@@ -130,11 +130,11 @@ class ItemDeleteTest : public QObject
       AKVERIFYEXEC( tjob );
       tag = tjob->tag();
 
-      const Collection col( collectionIdFromPath( "res1/foo" ) );
+      const Collection col( collectionIdFromPath( QLatin1String("res1/foo") ) );
       QVERIFY( col.isValid() );
 
       Item i;
-      i.setRemoteId( "D" );
+      i.setRemoteId( QLatin1String("D") );
 
       ItemFetchJob *fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
@@ -157,7 +157,7 @@ class ItemDeleteTest : public QObject
 
     void testCollectionDelete()
     {
-      const Collection col( collectionIdFromPath( "res1/foo" ) );
+      const Collection col( collectionIdFromPath( QLatin1String("res1/foo") ) );
       ItemFetchJob *fjob = new ItemFetchJob( col, this );
       AKVERIFYEXEC( fjob );
       QVERIFY( fjob->items().count() > 0 );
@@ -181,6 +181,6 @@ class ItemDeleteTest : public QObject
 
 };
 
-QTEST_AKONADIMAIN( ItemDeleteTest, NoGUI )
+QTEST_AKONADIMAIN( ItemDeleteTest )
 
 #include "itemdeletetest.moc"

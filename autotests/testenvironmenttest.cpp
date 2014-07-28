@@ -19,8 +19,8 @@
 
 #include "dbusconnectionpool.h"
 
-#include <akonadi/qtest_akonadi.h>
-#include <akonadi/servermanager.h>
+#include <qtest_akonadi.h>
+#include <servermanager.h>
 
 #include <QDir>
 #include <QObject>
@@ -43,8 +43,8 @@ class TestEnvironmentTest : public QObject
     }
     void testEnvironment()
     {
-      const QString kdehome = qgetenv( "KDEHOME" );
-      QVERIFY( kdehome.startsWith( QDir::tempPath().toLocal8Bit() )
+      const QString kdehome = QString::fromUtf8(qgetenv( "KDEHOME" ));
+      QVERIFY( kdehome.startsWith( QDir::tempPath() )
               || kdehome.startsWith( QStringLiteral("/tmp") ) );
     }
 
@@ -61,14 +61,14 @@ class TestEnvironmentTest : public QObject
     void testResources()
     {
       QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, "akonadi_knut_resource_0" ) ) );
+        ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_0") ) ) );
       QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, "akonadi_knut_resource_1" ) ) );
+        ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_1") ) ) );
       QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, "akonadi_knut_resource_2" ) ) );
+        ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_2") ) ) );
     }
 };
 
-QTEST_AKONADIMAIN( TestEnvironmentTest, NoGUI )
+QTEST_AKONADIMAIN( TestEnvironmentTest )
 
 #include "testenvironmenttest.moc"

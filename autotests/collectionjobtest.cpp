@@ -37,7 +37,7 @@
 #include "collectionselectjob_p.h"
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
-#include "collectionpathresolver_p.h"
+#include "collectionpathresolver.h"
 #include "collectionutils.h"
 #include "control.h"
 #include "item.h"
@@ -47,7 +47,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( CollectionJobTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionJobTest )
 
 void CollectionJobTest::initTestCase()
 {

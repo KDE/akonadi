@@ -22,8 +22,9 @@
 
 #include <qtest_akonadi.h>
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <agentmanager.h>
+#include <agentinstancecreatejob.h>
+#include <QStringList>
 
 using namespace Akonadi;
 
@@ -43,10 +44,12 @@ class ResourceTest : public QObject
       QSignalSpy spyRemoveInstance( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)) );
       QVERIFY( spyRemoveInstance.isValid() );
 
-      AgentType type = AgentManager::self()->type( "akonadi_knut_resource" );
+      AgentType type = AgentManager::self()->type( QLatin1String("akonadi_knut_resource") );
       QVERIFY( type.isValid() );
 
-      QCOMPARE( type.capabilities(), QStringList( "Resource" ) );
+      QStringList lst;
+      lst << QLatin1String( "Resource" );
+      QCOMPARE( type.capabilities(), lst );
 
       AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
       AKVERIFYEXEC( job );
@@ -73,7 +76,7 @@ class ResourceTest : public QObject
 
     void testIllegalResourceManagement()
     {
-      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( AgentManager::self()->type( "non_existing_resource" ) );
+      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( AgentManager::self()->type( QLatin1String("non_existing_resource") ) );
       QVERIFY( !job->exec() );
 
       // unique agent
@@ -91,6 +94,6 @@ class ResourceTest : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( ResourceTest, NoGUI )
+QTEST_AKONADIMAIN( ResourceTest )
 
 #include "resourcetest.moc"

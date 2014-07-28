@@ -22,24 +22,24 @@
 
 #include "control.h"
 #include "testattribute.h"
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/attributefactory.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionselectjob_p.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemmodifyjob_p.h>
-#include <akonadi/resourceselectjob_p.h>
+#include <agentmanager.h>
+#include <agentinstance.h>
+#include <attributefactory.h>
+#include <collectionfetchjob.h>
+#include <collectionselectjob_p.h>
+#include <itemcreatejob.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
+#include <itemmodifyjob_p.h>
+#include <resourceselectjob_p.h>
 #include <qtest_akonadi.h>
 #include "test_utils.h"
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( ItemStoreTest, NoGUI )
+QTEST_AKONADIMAIN( ItemStoreTest )
 
 static Collection res1_foo;
 static Collection res2;
@@ -52,11 +52,11 @@ void ItemStoreTest::initTestCase()
   AttributeFactory::registerAttribute<TestAttribute>();
 
   // get the collections we run the tests on
-  res1_foo = Collection( collectionIdFromPath( "res1/foo" ) );
+  res1_foo = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
   QVERIFY( res1_foo.isValid() );
-  res2 = Collection( collectionIdFromPath( "res2" ) );
+  res2 = Collection( collectionIdFromPath( QLatin1String("res2") ) );
   QVERIFY( res2.isValid() );
-  res3 = Collection( collectionIdFromPath( "res3" ) );
+  res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
   QVERIFY( res3.isValid() );
 
   AkonadiTest::setAllResourcesOffline();
@@ -141,7 +141,7 @@ void ItemStoreTest::testDataChange()
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   AKVERIFYEXEC( prefetchjob );
   item = prefetchjob->items()[0];
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload( data );
   QCOMPARE( item.payload<QByteArray>(), data );
 
@@ -167,11 +167,11 @@ void ItemStoreTest::testRemoteId_data()
   QTest::addColumn<QString>( "rid" );
   QTest::addColumn<QString>( "exprid" );
 
-  QTest::newRow( "set" ) << QString( "A" ) << QString( "A" );
-  QTest::newRow( "no-change" ) << QString() << QString( "A" );
-  QTest::newRow( "clear" ) << QString( "" ) << QString( "" );
-  QTest::newRow( "reset" ) << QString( "A" ) << QString( "A" );
-  QTest::newRow( "utf8" ) << QString( "ä ö ü @" ) << QString( "ä ö ü @" );
+  QTest::newRow( "set" ) << QString::fromLatin1( "A" ) << QString::fromLatin1( "A" );
+  QTest::newRow( "no-change" ) << QString() << QString::fromLatin1( "A" );
+  QTest::newRow( "clear" ) << QString::fromLatin1( "" ) << QString::fromLatin1( "" );
+  QTest::newRow( "reset" ) << QString::fromLatin1( "A" ) << QString::fromLatin1( "A" );
+  QTest::newRow( "utf8" ) << QString::fromUtf8( "ä ö ü @" ) << QString::fromUtf8( "ä ö ü @" );
 }
 
 void ItemStoreTest::testRemoteId()
@@ -180,7 +180,7 @@ void ItemStoreTest::testRemoteId()
   QFETCH( QString, exprid );
 
   // pretend to be a resource, we cannot change remote identifiers otherwise
-  ResourceSelectJob *rsel = new ResourceSelectJob( "akonadi_knut_resource_0", this );
+  ResourceSelectJob *rsel = new ResourceSelectJob( QLatin1String("akonadi_knut_resource_0"), this );
   AKVERIFYEXEC( rsel );
 
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
@@ -210,7 +210,7 @@ void ItemStoreTest::testMultiPart()
   AKVERIFYEXEC( prefetchjob );
   QCOMPARE( prefetchjob->items().count(), 1 );
   Item item = prefetchjob->items()[0];
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.setPayload<QByteArray>( "testmailbody" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
@@ -240,7 +240,7 @@ void ItemStoreTest::testPartRemove()
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 2 ) );
   AKVERIFYEXEC( prefetchjob );
   Item item = prefetchjob->items()[0];
-  item.setMimeType( "application/octet-stream" );
+  item.setMimeType( QLatin1String("application/octet-stream") );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
   // store item
@@ -323,7 +323,7 @@ void ItemStoreTest::testRevisionCheck()
 void ItemStoreTest::testModificationTime()
 {
   Item item;
-  item.setMimeType( "text/directory" );
+  item.setMimeType( QLatin1String("text/directory") );
   QVERIFY( item.modificationTime().isNull() );
 
   ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
@@ -373,7 +373,7 @@ void ItemStoreTest::testRemoteIdRace()
 {
   // Create an item and store it
   Item item;
-  item.setMimeType( "text/directory" );
+  item.setMimeType( QLatin1String("text/directory") );
   ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
   AKVERIFYEXEC( job );
 
