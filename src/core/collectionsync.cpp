@@ -503,6 +503,13 @@ public:
             create->setProperty(LOCAL_NODE, QVariant::fromValue(localParent));
             create->setProperty(REMOTE_NODE, QVariant::fromValue(remoteNode));
             connect(create, SIGNAL(result(KJob*)), q, SLOT(createLocalCollectionResult(KJob*)));
+
+            // Commit transaction after every 100 collections are created,
+            // otherwise it overlads database journal and things get veeery slow
+            if (pendingJobs % 100 == 0) {
+                currentTransaction->commit();
+                createTransaction();
+            }
         }
     }
 
@@ -618,6 +625,14 @@ public:
         checkDone();
     }
 
+    void createTransaction()
+    {
+        currentTransaction = new TransactionSequence(q);
+        currentTransaction->setAutomaticCommittingEnabled(false);
+        q->connect(currentTransaction, SIGNAL(finished(KJob*)),
+                   q, SLOT(transactionSequenceResult(KJob*)));
+    }
+
     /**
       Check update necessity.
     */
@@ -632,9 +647,7 @@ public:
 
         // Since there are differences with the remote collections we need to sync. Start a transaction here.
         Q_ASSERT(!currentTransaction);
-        currentTransaction = new TransactionSequence(q);
-        currentTransaction->setAutomaticCommittingEnabled(false);
-        q->connect(currentTransaction, SIGNAL(result(KJob*)), SLOT(transactionSequenceResult(KJob*)));
+        createTransaction();
 
         // Now that a transaction is started we need to fetch local collections again and do the update
         q->doStart();
@@ -647,7 +660,11 @@ public:
             return; // handled by the base class
         }
 
-        q->emitResult();
+        // If this was the last transaction, then finish, otherwise there's
+        // a new transaction in the queue already
+        if (job == currentTransaction) {
+            q->emitResult();
+        }
     }
 
     /**
@@ -814,6 +831,7 @@ void CollectionSync::setRemoteCollections(const Collection::List &changedCollect
 void CollectionSync::doStart()
 {
     d->resetNodeTree();
+    d->knownLocalCollections = 0;
     Job *parent = (d->currentTransaction ? static_cast<Job *>(d->currentTransaction) : static_cast<Job *>(this));
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, parent);
     job->fetchScope().setResource(d->resourceId);
