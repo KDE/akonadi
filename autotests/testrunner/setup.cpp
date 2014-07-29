@@ -209,30 +209,9 @@ void SetupTest::createTempEnvironment()
   setEnvironmentVariable( "TMPDIR", basePath() + testRunnerTmpDir );
 }
 
-// TODO Qt5: use QDir::removeRecursively
-void SetupTest::deleteDirectory( const QString &dirName )
-{
-  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) || dirName.startsWith(QStringLiteral("/tmp") ) ); // just to be sure we don't run amok anywhere
-  QDir dir( dirName );
-  dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden );
-
-  const QFileInfoList list = dir.entryInfoList();
-  for ( int i = 0; i < list.size(); ++i ) {
-    if ( list.at( i ).isDir() && !list.at( i ).isSymLink() ) {
-      deleteDirectory( list.at( i ).absoluteFilePath() );
-      const QDir tmpDir( list.at( i ).absoluteDir() );
-      tmpDir.rmdir( list.at( i ).fileName() );
-    } else {
-      QFile::remove( list.at( i ).absoluteFilePath() );
-    }
-  }
-  dir.cdUp();
-  dir.rmdir( dirName );
-}
-
 void SetupTest::cleanTempEnvironment()
 {
-  deleteDirectory( basePath() );
+  QDir( basePath() ).removeRecursively();
 }
 
 SetupTest::SetupTest() :

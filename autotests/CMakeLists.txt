@@ -130,7 +130,7 @@ add_akonadi_isolated_test(collectioncopytest.cpp)
 add_akonadi_isolated_test(collectionmovetest.cpp)
 add_akonadi_isolated_test(collectionsynctest.cpp)
 add_akonadi_isolated_test(itemsynctest.cpp)
-# PORT QT5 add_akonadi_isolated_test(linktest.cpp)
+add_akonadi_isolated_test(linktest.cpp)
 add_akonadi_isolated_test(cachetest.cpp)
 # starting/stopping the server in the testenvironment doesn't seem to work, 
 # and the test is not very critical (we'll notice if we can't start the server), so we disable it for now.
@@ -142,7 +142,7 @@ add_akonadi_isolated_test(collectioncreator.cpp)
 # benchmark takes over 40 seconds and does not have any real value to us atm. Major
 # performance regressions would be spotted by devs anyway, so disabling for now.
 add_akonadi_isolated_test(itembenchmark.cpp)
-#add_akonadi_isolated_test(gidtest.cpp)
+add_akonadi_isolated_test(gidtest.cpp)
 add_akonadi_isolated_test(lazypopulationtest.cpp)
 add_akonadi_isolated_test(favoriteproxytest.cpp)
 add_akonadi_isolated_test_advanced(itemsearchjobtest.cpp testsearchplugin/testsearchplugin.cpp "")

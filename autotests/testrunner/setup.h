@@ -80,7 +80,6 @@ class SetupTest : public QObject
     void copyKdeHomeDirectory( const QString &src, const QString &dst );
     void copyDirectory( const QString &src, const QString &dst );
     void createTempEnvironment();
-    void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
     bool isSetupDone() const;
     void setupFailed();

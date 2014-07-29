@@ -34,9 +34,9 @@ class GidTest : public QObject
     void testFetchScope();
 };
 
-#include <akonadi/gid/gidextractorinterface.h>
-#include <akonadi/itemserializer_p.h>
-#include <akonadi/itemserializerplugin.h>
+#include <../src/core/gidextractorinterface.h>
+#include <itemserializer_p.h>
+#include <itemserializerplugin.h>
 
 class TestSerializer: public QObject,
                       public Akonadi::ItemSerializerPlugin,
