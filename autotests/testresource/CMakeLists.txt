@@ -14,15 +14,17 @@ kde_enable_exceptions()
 find_package(LibXslt)
 set_package_properties(LibXslt PROPERTIES DESCRIPTION "xsltproc" URL "http://xmlsoft.org/XSLT/" TYPE REQUIRED PURPOSE "Needed to generate D-Bus interface specifications")
 
+find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to the xsltproc executable")
+
 # generates a D-Bus interface description from a KConfigXT file
 macro(kcfg_generate_dbus_interface _kcfg _name)
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
     COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
-    ${CMAKE_SOURCE_DIR}/akonadi/kcfg2dbus.xsl
+    ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl
     ${_kcfg}
     > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
-    DEPENDS ${CMAKE_SOURCE_DIR}/akonadi/kcfg2dbus.xsl
+    DEPENDS ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl
     ${_kcfg}
     )
 endmacro()
@@ -49,9 +51,10 @@ if (Q_WS_MAC)
 endif ()
 
 target_link_libraries(akonadi_knut_resource
-  akonadi-xml
-  
+  KF5::AkonadiXml
+  KF5::AkonadiCore  
   KF5::KIOCore
+  KF5::AkonadiAgentBase
   Qt5::Xml
 )
 

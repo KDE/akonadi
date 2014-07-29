@@ -21,12 +21,12 @@
 #ifndef KNUTRESOURCE_H
 #define KNUTRESOURCE_H
 
-#include <akonadi/resourcebase.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <resourcebase.h>
+#include <collection.h>
+#include <item.h>
 
 
-#include <xml/xmldocument.h>
+#include <xmldocument.h>
 #include <agentsearchinterface.h>
 #include <searchquery.h>
 

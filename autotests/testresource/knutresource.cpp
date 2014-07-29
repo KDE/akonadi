@@ -21,17 +21,17 @@
 #include "knutresource.h"
 #include "settings.h"
 #include "settingsadaptor.h"
-#include "xml/xmlwriter.h"
-#include "xml/xmlreader.h"
+#include "xmlwriter.h"
+#include "xmlreader.h"
 #include <searchquery.h>
 
-#include <akonadi/agentfactory.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/collection.h>
-#include <akonadi/dbusconnectionpool.h>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/tagcreatejob.h>
+#include <agentfactory.h>
+#include <changerecorder.h>
+#include <collection.h>
+#include <dbusconnectionpool.h>
+#include <item.h>
+#include <itemfetchscope.h>
+#include <tagcreatejob.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
@@ -123,7 +123,7 @@ void KnutResource::configure( WId windowId )
     return;
 
   mSettings->setDataFile( newFile );
-  mSettings->writeConfig();
+  mSettings->save();
   load();
 
   emit configurationDialogAccepted();
@@ -131,6 +131,7 @@ void KnutResource::configure( WId windowId )
 
 void KnutResource::retrieveCollections()
 {
+#if 0 //PORT QT5
   const Collection::List collections = mDocument.collections();
   collectionsRetrieved( collections );
   const Tag::List tags = mDocument.tags();
@@ -138,6 +139,7 @@ void KnutResource::retrieveCollections()
       TagCreateJob *createjob = new TagCreateJob(tag);
       createjob->setMergeIfExisting(true);
   }
+#endif
 }
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )
@@ -171,6 +173,7 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
 
 void KnutResource::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
+#if 0 //PORT QT5
   QDomElement parentElem = mDocument.collectionElementByRemoteId( parent.remoteId() );
   if ( parentElem.isNull() ) {
     emit error( i18n( "Parent collection not found in DOM tree." ) );
@@ -187,10 +190,12 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
     save();
     changeCommitted( c );
   }
+#endif
 }
 
 void KnutResource::collectionChanged( const Akonadi::Collection &collection )
 {
+#if 0 //PORT QT5
   QDomElement oldElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( oldElem.isNull() ) {
     emit error( i18n( "Modified collection not found in DOM tree." ) );
@@ -217,10 +222,12 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
   oldElem.parentNode().replaceChild( newElem, oldElem );
   save();
   changeCommitted( c );
+#endif
 }
 
 void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 {
+#if 0 //PORT QT5
   const QDomElement colElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( colElem.isNull() ) {
     emit error( i18n( "Deleted collection not found in DOM tree." ) );
@@ -231,11 +238,13 @@ void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
   colElem.parentNode().removeChild( colElem );
   save();
   changeProcessed();
+#endif
 }
 
 
 void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
+#if 0 //PORT QT5
   QDomElement parentElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( parentElem.isNull() ) {
     emit error( i18n( "Parent collection '%1' not found in DOM tree." , collection.remoteId() ) );
@@ -252,6 +261,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
     save();
     changeCommitted( i );
   }
+#endif
 }
 
 void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )

@@ -29,7 +29,7 @@ include_directories(
 # environment)
 
 add_subdirectory(testrunner)
-#add_subdirectory(testresource)
+add_subdirectory(testresource)
 add_subdirectory(testsearchplugin)
 
 # convenience macro to add akonadi qtestlib unit-tests
