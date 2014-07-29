@@ -59,25 +59,25 @@ void Config::readConfiguration(const QString &configfile)
     qFatal( "unable to parse config file: %s", qPrintable( errorMsg ) );
 
   const QDomElement root = doc.documentElement();
-  if ( root.tagName() != "config" )
+  if ( root.tagName() != QLatin1String("config") )
     qFatal( "could not file root tag" );
 
-  const QString basePath = QFileInfo( configfile ).absolutePath() + '/';
+  const QString basePath = QFileInfo( configfile ).absolutePath() + QLatin1Char('/');
 
   QDomNode node = root.firstChild();
   while ( !node.isNull() ) {
     const QDomElement element = node.toElement();
     if ( !element.isNull() ) {
-      if ( element.tagName() == "kdehome" ) {
+      if ( element.tagName() == QLatin1String("kdehome") ) {
         setKdeHome( basePath + element.text() );
-      } else if ( element.tagName() == "confighome" ) {
+      } else if ( element.tagName() == QLatin1String("confighome") ) {
         setXdgConfigHome( basePath + element.text() );
-      } else if ( element.tagName() == "datahome" ) {
+      } else if ( element.tagName() == QLatin1String("datahome") ) {
         setXdgDataHome( basePath + element.text() );
-      } else if ( element.tagName() == "agent" ) {
-        insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QLatin1String("true") );
-      } else if ( element.tagName() == "envvar" ) {
-        const QString name = element.attribute( "name" );
+      } else if ( element.tagName() == QLatin1String("agent") ) {
+        insertAgent( element.text(), element.attribute( QLatin1String("synchronize"), QLatin1String("false") ) == QLatin1String("true") );
+      } else if ( element.tagName() == QLatin1String("envvar") ) {
+        const QString name = element.attribute( QLatin1String("name") );
         if ( name.isEmpty() ) {
           qWarning() << "Given envvar with no name.";
         } else {

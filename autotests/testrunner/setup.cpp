@@ -19,9 +19,9 @@
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/resourcesynchronizationjob.h>
+#include <agentinstance.h>
+#include <agentinstancecreatejob.h>
+#include <resourcesynchronizationjob.h>
 
 #include <KConfig>
 #include <kconfiggroup.h>
@@ -33,6 +33,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
+#include <QDBusConnection>
 
 #include <unistd.h>
 
@@ -247,7 +248,7 @@ SetupTest::SetupTest() :
   createTempEnvironment();
 
   // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
-  setEnvironmentVariable( "AKONADI_DISABLE_AGENT_AUTOSTART", "true" );
+  setEnvironmentVariable( "AKONADI_DISABLE_AGENT_AUTOSTART", QLatin1String("true") );
   setEnvironmentVariable( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
   QHashIterator<QString, QString> iter( Config::instance()->envVars() );
@@ -258,7 +259,7 @@ SetupTest::SetupTest() :
   }
 
   // No kres-migrator please
-  KConfig migratorConfig( basePath() + "kdehome/share/config/kres-migratorrc" );
+  KConfig migratorConfig( basePath() + QLatin1String("kdehome/share/config/kres-migratorrc") );
   KConfigGroup migrationCfg( &migratorConfig, "Migration" );
   migrationCfg.writeEntry( "Enabled", false );
 
@@ -382,7 +383,7 @@ void SetupTest::setupFailed()
 void SetupTest::setEnvironmentVariable(const QByteArray& name, const QString& value)
 {
   mEnvVars.push_back( qMakePair(name, value.toLocal8Bit()) );
-  setenv( name, qPrintable(value), 1 );
+  setenv( name.constData(), qPrintable(value), 1 );
 }
 
 QVector< SetupTest::EnvVar > SetupTest::environmentVariables() const

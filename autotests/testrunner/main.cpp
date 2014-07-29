@@ -21,13 +21,16 @@
 #include "shellscript.h"
 #include "testrunner.h"
 
-#include <KApplication>
+
 #include <KAboutData>
-#include <KCmdLineArgs>
+
 #include <QDebug>
 #include <KLocalizedString>
 
 #include <signal.h>
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 static SetupTest *setup = 0;
 static TestRunner *runner = 0;
@@ -55,28 +58,30 @@ void sigHandler( int signal )
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutdata( "akonadi-TES", 0,
-                        ki18n( "Akonadi Testing Environment Setup" ),
-                        "1.0",
-                        ki18n( "Setup Environmnet" ),
-                        KAboutData::License_GPL,
-                        ki18n( "(c) 2008 Igor Trindade Oliveira" ) );
+  KAboutData aboutdata( QLatin1String("akonadi-TES"),
+                        i18n( "Akonadi Testing Environment Setup" ),
+                        QLatin1String("1.0"),
+                        i18n( "Setup Environmnet" ),
+                        KAboutLicense::GPL,
+                        i18n( "(c) 2008 Igor Trindade Oliveira" ) );
 
-  KCmdLineArgs::init( argc, argv, &aboutdata );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutdata);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutdata.setupCommandLine(&parser);
+  parser.process(app);
+  aboutdata.processCommandLine(&parser);
 
-  KCmdLineOptions options;
-  options.add( "c" ).add( "config <configfile>", ki18n( "Configuration file to open" ), "config.xml" );
-  options.add( "!+[test]", ki18n( "Test to run automatically, interactive if none specified" ) );
-  options.add( "testenv <path>", ki18n( "Path where testenvironment would be saved" ) );
-  KCmdLineArgs::addCmdLineOptions( options );
+  parser.addOption(QCommandLineOption(QStringList() << QString()<<QLatin1String("c") << QLatin1String("!+[test]"), i18n( "Test to run automatically, interactive if none specified" )));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("testenv"), i18n( "Path where testenvironment would be saved" ), QLatin1String("path")));
 
-  KApplication app;
-  app.disableSessionManagement();
+  //QT5 app.disableSessionManagement();
 
-  const KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  if ( args->isSet( "config" ) ) {
-    Config::instance( args->getOption( "config" ) );
+  if ( parser.isSet( QLatin1String("config") ) ) {
+    Config::instance( parser.value( QLatin1String("config") ) );
   }
 
 #ifdef Q_OS_UNIX
@@ -95,16 +100,16 @@ int main( int argc, char **argv )
   ShellScript sh;
   sh.setEnvironmentVariables( setup->environmentVariables() );
 
-  if ( args->isSet( "testenv" ) ) {
-    sh.makeShellScript( args->getOption( "testenv" ) );
+  if ( parser.isSet( QLatin1String("testenv") ) ) {
+    sh.makeShellScript( parser.value( QLatin1String("testenv") ) );
   } else {
-    sh.makeShellScript( setup->basePath() + "testenvironment.sh" );
+    sh.makeShellScript( setup->basePath() + QLatin1String("testenvironment.sh") );
   }
 
-  if ( args->count() > 0 ) {
+  if ( parser.positionalArguments().count() > 0 ) {
     QStringList testArgs;
-    for ( int i = 0; i < args->count(); ++i ) {
-      testArgs << args->arg( i );
+    for ( int i = 0; i < parser.positionalArguments().count(); ++i ) {
+      testArgs << parser.positionalArguments().at( i );
     }
     runner = new TestRunner( testArgs );
     QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );

@@ -16,12 +16,13 @@ set(akonaditest_SRCS
   testrunner.cpp
 )
 
-add_executable(akonaditest NOGUI ${akonaditest_SRCS})
+add_executable(akonaditest ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
-  
+  KF5::AkonadiCore 
   ${KDE4_AKONADI_LIBS}
   Qt5::Xml
+  Qt5::DBus
 )
 
 install(TARGETS akonaditest ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})

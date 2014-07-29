@@ -18,7 +18,7 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#include <akonadi/servermanager.h>
+#include <servermanager.h>
 
 #include <QtCore/QObject>
 #include <QVector>

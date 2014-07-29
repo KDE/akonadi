@@ -31,14 +31,14 @@ ShellScript::ShellScript()
 void ShellScript::writeEnvironmentVariables()
 {
   foreach ( const EnvVar &envvar, mEnvVars ) {
-    mScript += "_old_" + envvar.first + "=" + envvar.first + "\n";
-    mScript.append( envvar.first );
+    mScript += QLatin1String("_old_") + QLatin1String(envvar.first) + QLatin1String("=") + QLatin1String(envvar.first) + QLatin1String("\n");
+    mScript.append( QLatin1String(envvar.first) );
     mScript.append( QLatin1Char( '=' ) );
-    mScript.append( envvar.second );
+    mScript.append( QLatin1String(envvar.second) );
     mScript.append( QLatin1Char( '\n' ) );
 
     mScript.append( QLatin1String( "export " ) );
-    mScript.append( envvar.first );
+    mScript.append( QLatin1String(envvar.first) );
     mScript.append( QLatin1Char( '\n' ) );
   }
 
@@ -48,15 +48,15 @@ void ShellScript::writeEnvironmentVariables()
 void ShellScript::writeShutdownFunction()
 {
   QString s =
-    "function shutdown-testenvironment()\n"
+    QLatin1String("function shutdown-testenvironment()\n"
     "{\n"
-    "  qdbus org.kde.Akonadi.Testrunner-" + QString::number( QCoreApplication::instance()->applicationPid() ) + " / org.kde.Akonadi.Testrunner.shutdown\n";
+    "  qdbus org.kde.Akonadi.Testrunner-") + QString::number( QCoreApplication::instance()->applicationPid() ) + QLatin1String(" / org.kde.Akonadi.Testrunner.shutdown\n");
 
   foreach ( const EnvVar &envvar, mEnvVars ) {
-    s += "  " + envvar.first + "=$_old_" + envvar.first + "\n";
-    s += "  export " + envvar.first + "\n";
+    s += QLatin1String("  ") + QLatin1String(envvar.first) + QLatin1String("=$_old_") + QLatin1String(envvar.first) + QLatin1String("\n");
+    s += QLatin1String("  export ") + QLatin1String(envvar.first) + QLatin1String("\n");
   }
-  s.append( "}\n\n" );
+  s.append( QLatin1String("}\n\n") );
   mScript.append( s );
 }
 
@@ -69,7 +69,7 @@ void ShellScript::makeShellScript( const QString &fileName )
     writeEnvironmentVariables();
     writeShutdownFunction();
 
-    file.write( mScript.toLatin1(), qstrlen( mScript.toAscii() ) );
+    file.write( mScript.toLatin1().constData(), qstrlen( mScript.toLatin1().constData() ) );
     file.close();
   } else {
     qCritical() << "Failed to write" << fileName;
