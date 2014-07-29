@@ -81,7 +81,7 @@ void Firstrun::findPendingDefaults()
     foreach (const QString &dirName, paths) {
         const QStringList files = QDir(dirName).entryList(QDir::Files | QDir::Readable);
         foreach (const QString &fileName, files) {
-            const QString fullName = dirName + fileName;
+            const QString fullName = dirName + QLatin1Char('/') + fileName;
             KConfig c(fullName);
             const QString id = KConfigGroup(&c, "Agent").readEntry("Id", QString());
             if (id.isEmpty()) {
@@ -91,7 +91,7 @@ void Firstrun::findPendingDefaults()
             if (cfg.hasKey(id)) {
                 continue;
             }
-            mPendingDefaults << dirName + fileName;
+            mPendingDefaults << fullName;
         }
     }
 
