@@ -335,9 +335,8 @@ private:
     QObject *findBestMatchImpl(const QString &type, const QVector<int> &metaTypeIds, int &chosen) const
     {
         KMimeType::Ptr mimeType = KMimeType::mimeType(type, KMimeType::ResolveAliases);
-        if (mimeType.isNull()) {
-            //PORT QT5
-            //return mDefaultPlugin.plugin();
+        if (!mimeType) {
+            return mDefaultPlugin.plugin();
         }
 
         // step 1: find all plugins that match at all
