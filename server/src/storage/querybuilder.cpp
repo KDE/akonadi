@@ -375,6 +375,7 @@ bool QueryBuilder::exec()
     }
   }
 
+
   // Add the query to DataStore so that we can replay it in case transaction deadlocks.
   // The method does nothing when this query is not executed within a transaction.
   // We don't care whether the query was successful or not. In case of error, the caller
@@ -452,7 +453,12 @@ void QueryBuilder::addAggregation( const QString &col, const QString &aggregate 
 
 QString QueryBuilder::bindValue( const QVariant &value )
 {
-  mBindValues << value;
+  // TODO: Remove once we support Qt 5 only
+  if ( value.type() == QVariant::Bool) {
+      mBindValues << (value.toBool() ? int(1) : int(0));
+  } else {
+      mBindValues << value;
+  }
   return QLatin1Char( ':' ) + QString::number( mBindValues.count() - 1 );
 }
 
