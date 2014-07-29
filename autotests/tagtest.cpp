@@ -138,7 +138,7 @@ void TagTest::testRID()
 void TagTest::testRIDIsolation()
 {
     {
-        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
 
@@ -163,7 +163,7 @@ void TagTest::testRIDIsolation()
     }
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_1");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_1"));
         AKVERIFYEXEC(select);
     }
 
@@ -189,7 +189,7 @@ void TagTest::testRIDIsolation()
     AKVERIFYEXEC(deleteJob);
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob("");
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
         AKVERIFYEXEC(select);
     }
 }
