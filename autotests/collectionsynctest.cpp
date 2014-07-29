@@ -27,7 +27,7 @@
 #include <collectionfetchscope.h>
 #include <entitydisplayattribute.h>
 
-#include "../akonadi/src/core/collectionsync.cpp"
+#include "../src/core/collectionsync.cpp"
 
 #include <krandom.h>
 
@@ -38,7 +38,7 @@
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE( KJob* )
+//Q_DECLARE_METATYPE( KJob* )
 
 class CollectionSyncTest : public QObject
 {
@@ -263,17 +263,17 @@ class CollectionSyncTest : public QObject
     void testAttributeChanges()
     {
       QFETCH(bool, keepLocalChanges);
-      const QString resource("akonadi_knut_resource_0");
+      const QString resource(QLatin1String("akonadi_knut_resource_0"));
       Collection col = fetchCollections( resource ).first();
-      col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName("foo");
-      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << "foo");
+      col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName(QLatin1String("foo"));
+      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QLatin1String("foo"));
       {
         CollectionModifyJob *job = new CollectionModifyJob(col);
         AKVERIFYEXEC(job);
       }
 
-      col.attribute<EntityDisplayAttribute>()->setDisplayName("default");
-      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << "default");
+      col.attribute<EntityDisplayAttribute>()->setDisplayName(QLatin1String("default"));
+      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QLatin1String("default"));
 
       CollectionSync* syncer = new CollectionSync( resource, this );
       if (keepLocalChanges) {
@@ -291,15 +291,15 @@ class CollectionSyncTest : public QObject
         Collection resultCol = job->collections().first();
         if (keepLocalChanges) {
           QCOMPARE( resultCol.displayName(), QString::fromLatin1("foo") );
-          QVERIFY(resultCol.contentMimeTypes().contains("foo"));
+          QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("foo")));
         } else {
           QCOMPARE( resultCol.displayName(), QString::fromLatin1("default") );
-          QVERIFY(resultCol.contentMimeTypes().contains("default"));
+          QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("default")));
         }
       }
     }
 };
 
-QTEST_AKONADIMAIN( CollectionSyncTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionSyncTest )
 
 #include "collectionsynctest.moc"
