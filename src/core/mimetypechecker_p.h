@@ -50,7 +50,7 @@ public:
         }
 
         KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-        if (mimeTypePtr.isNull()) {
+        if (!mimeTypePtr) {
             return false;
         }
 

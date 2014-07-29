@@ -123,7 +123,7 @@ bool MimeTypeChecker::isWantedItem(const Item &item, const QString &wantedMimeTy
     }
 
     KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-    if (mimeTypePtr.isNull()) {
+    if (!mimeTypePtr) {
         return false;
     }
 
@@ -151,7 +151,7 @@ bool MimeTypeChecker::isWantedCollection(const Collection &collection, const QSt
         }
 
         KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-        if (mimeTypePtr.isNull()) {
+        if (!mimeTypePtr) {
             continue;
         }
 
