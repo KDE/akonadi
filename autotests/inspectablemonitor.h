@@ -26,6 +26,7 @@
 
 #include "fakeakonadiservercommand.h"
 #include "fakeentitycache.h"
+#include "akonaditestfake_export.h"
 
 class InspectableMonitor;
 
@@ -42,7 +43,7 @@ public:
   }
 };
 
-class InspectableMonitor : public Akonadi::Monitor
+class AKONADITESTFAKE_EXPORT InspectableMonitor : public Akonadi::Monitor
 {
   Q_OBJECT
 public:

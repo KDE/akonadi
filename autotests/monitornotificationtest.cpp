@@ -24,15 +24,18 @@
 #include "fakesession.h"
 #include "inspectablemonitor.h"
 #include "inspectablechangerecorder.h"
+#include "akonaditestfake_export.h"
 #include <QTest>
 #include <QSignalSpy>
 
+
+
 using namespace Akonadi;
 
-class MonitorNotificationTest : public QObject
+class AKONADITESTFAKE_EXPORT MonitorNotificationTest : public QObject
 {
   Q_OBJECT
-public:
+public: 
   MonitorNotificationTest(QObject *parent = 0)
     : QObject(parent)
   {

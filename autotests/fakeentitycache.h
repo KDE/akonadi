@@ -25,6 +25,7 @@
 
 #include "collectionfetchscope.h"
 #include "itemfetchscope.h"
+#include "akonaditestfake_export.h"
 
 template<typename T, typename Cache>
 class FakeEntityCache : public Cache
@@ -71,7 +72,7 @@ private:
 typedef FakeEntityCache<Akonadi::Collection, Akonadi::CollectionCache> FakeCollectionCache;
 typedef FakeEntityCache<Akonadi::Item, Akonadi::ItemCache> FakeItemCache;
 
-class FakeNotificationSource : public QObject
+class AKONADITESTFAKE_EXPORT FakeNotificationSource : public QObject
 {
   Q_OBJECT
 public:

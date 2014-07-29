@@ -20,7 +20,7 @@
 #include <QtCore/QObject>
 
 #include "monitor_p.h"
-#include <private/notificationmessagev2_p.h>
+#include <private/notificationmessagev3_p.h>
 #include <qtest.h>
 #include <qtest_akonadi.h>
 

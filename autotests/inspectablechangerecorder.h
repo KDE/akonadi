@@ -26,6 +26,7 @@
 
 #include "fakeakonadiservercommand.h"
 #include "fakeentitycache.h"
+#include "akonaditestfake_export.h"
 
 class InspectableChangeRecorder;
 
@@ -42,7 +43,7 @@ public:
   }
 };
 
-class InspectableChangeRecorder : public Akonadi::ChangeRecorder
+class AKONADITESTFAKE_EXPORT InspectableChangeRecorder : public Akonadi::ChangeRecorder
 {
   Q_OBJECT
 public:
