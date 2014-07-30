@@ -85,6 +85,23 @@ public:
         fetchAttribute(dummy.type(), fetch);
     }
 
+    /**
+     * Sets wether only the id or the complete tag should be fetched.
+     *
+     * The default is @c false.
+     *
+     * @since 4.15
+     */
+    void setFetchIdOnly(bool fetchIdOnly);
+
+    /**
+     * Sets wether only the id of the tags should be retieved or the complete tag.
+     *
+     * @see tagFetchScope()
+     * @since 4.15
+     */
+    bool fetchIdOnly() const;
+
 private:
     class Private;
     //@cond PRIVATE
