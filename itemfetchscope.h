@@ -31,6 +31,7 @@ template <typename T> class QSet;
 namespace Akonadi {
 
 class ItemFetchScopePrivate;
+class TagFetchScope;
 
 /**
  * @short Specifies which parts of an item should be fetched from the Akonadi storage.
@@ -344,6 +345,49 @@ public:
      * @since 4.13
      */
     bool fetchTags() const;
+
+    /**
+     * Sets the tag fetch scope.
+     *
+     * The TagFetchScope controls how much of an tags's data is fetched
+     * from the server.
+     *
+     * By default setFetchIdOnly is set to true on the tag fetch scope.
+     *
+     * @param fetchScope The new fetch scope for tag fetch operations.
+     * @see fetchScope()
+     * @since 4.15
+     */
+    void setTagFetchScope(const TagFetchScope &fetchScope);
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the TagFetchScope documentation
+     * for an example.
+     *
+     * By default setFetchIdOnly is set to true on the tag fetch scope.
+     *
+     * @return a reference to the current tag fetch scope
+     *
+     * @see setFetchScope() for replacing the current tag fetch scope
+     * @since 4.15
+     */
+    TagFetchScope &tagFetchScope();
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * By default setFetchIdOnly is set to true on the tag fetch scope.
+     *
+     * @return a reference to the current tag fetch scope
+     *
+     * @see setFetchScope() for replacing the current tag fetch scope
+     * @since 4.15
+     */
+    TagFetchScope tagFetchScope() const;
 
     /**
      * Returns whether to fetch list of virtual collections the item is linked to

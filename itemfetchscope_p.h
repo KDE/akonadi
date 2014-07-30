@@ -24,6 +24,7 @@
 #include <QtCore/QString>
 #include <KDE/KDateTime>
 #include "itemfetchscope.h"
+#include "tagfetchscope.h"
 
 namespace Akonadi {
 
@@ -46,6 +47,7 @@ public:
         , mFetchTags(false)
         , mFetchVRefs(false)
     {
+        mTagFetchScope.setFetchIdOnly(true);
     }
 
     ItemFetchScopePrivate(const ItemFetchScopePrivate &other)
@@ -64,6 +66,7 @@ public:
         mFetchRid = other.mFetchRid;
         mFetchGid = other.mFetchGid;
         mFetchTags = other.mFetchTags;
+        mTagFetchScope = other.mTagFetchScope;
         mFetchVRefs = other.mFetchVRefs;
     }
 
@@ -81,6 +84,7 @@ public:
     bool mFetchRid;
     bool mFetchGid;
     bool mFetchTags;
+    TagFetchScope mTagFetchScope;
     bool mFetchVRefs;
 };
 
