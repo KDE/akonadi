@@ -194,6 +194,21 @@ bool ItemFetchScope::fetchTags() const
     return d->mFetchTags;
 }
 
+void ItemFetchScope::setTagFetchScope(const TagFetchScope &tagFetchScope)
+{
+    d->mTagFetchScope = tagFetchScope;
+}
+
+TagFetchScope &ItemFetchScope::tagFetchScope()
+{
+    return d->mTagFetchScope;
+}
+
+TagFetchScope ItemFetchScope::tagFetchScope() const
+{
+    return d->mTagFetchScope;
+}
+
 void ItemFetchScope::setFetchVirtualReferences(bool fetchVRefs)
 {
     d->mFetchVRefs = fetchVRefs;

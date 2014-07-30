@@ -24,7 +24,13 @@ using namespace Akonadi;
 
 struct Akonadi::TagFetchScope::Private
 {
+    Private()
+    : mFetchIdOnly(false)
+    {
+    }
+
     QSet<QByteArray> mAttributes;
+    bool mFetchIdOnly;
 };
 
 TagFetchScope::TagFetchScope()
@@ -46,6 +52,7 @@ TagFetchScope::TagFetchScope(const TagFetchScope &other)
 TagFetchScope &TagFetchScope::operator=(const TagFetchScope &other)
 {
     d->mAttributes = other.d->mAttributes;
+    d->mFetchIdOnly = other.d->mFetchIdOnly;
     return *this;
 }
 
@@ -62,3 +69,15 @@ void TagFetchScope::fetchAttribute(const QByteArray &type, bool fetch)
         d->mAttributes.remove(type);
     }
 }
+
+void TagFetchScope::setFetchIdOnly(bool idOnly)
+{
+    d->mFetchIdOnly = idOnly;
+    d->mAttributes.clear();
+}
+
+bool TagFetchScope::fetchIdOnly() const
+{
+    return d->mFetchIdOnly;
+}
+

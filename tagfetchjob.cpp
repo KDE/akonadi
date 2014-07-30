@@ -134,11 +134,7 @@ void TagFetchJob::doStart()
             return;
         }
     }
-    command += " (UID";
-    Q_FOREACH (const QByteArray &part, d->mFetchScope.attributes()) {
-        command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
-    }
-    command += ")\n";
+    command += " " + ProtocolHelper::tagFetchScopeToByteArray(d->mFetchScope) + "\n";
 
     d->writeData(command);
 }
