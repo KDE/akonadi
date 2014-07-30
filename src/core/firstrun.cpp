@@ -29,8 +29,6 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QDebug>
-#include <KGlobal>
-#include <KStandardDirs>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
