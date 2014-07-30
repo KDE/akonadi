@@ -412,17 +412,17 @@ void TagTest::testTagItem()
 
 void TagTest::testFetchTagIdWithItem()
 {
-    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
     Tag tag;
     {
-        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        TagCreateJob *createjob = new TagCreateJob(Tag(QLatin1String("gid1")), this);
         AKVERIFYEXEC(createjob);
         tag = createjob->tag();
     }
 
     Item item1;
     {
-        item1.setMimeType( "application/octet-stream" );
+        item1.setMimeType( QLatin1String("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -449,17 +449,17 @@ void TagTest::testFetchTagIdWithItem()
 
 void TagTest::testFetchFullTagWithItem()
 {
-    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
     Tag tag;
     {
-        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        TagCreateJob *createjob = new TagCreateJob(Tag(QLatin1String("gid1")), this);
         AKVERIFYEXEC(createjob);
         tag = createjob->tag();
     }
 
     Item item1;
     {
-        item1.setMimeType( "application/octet-stream" );
+        item1.setMimeType( QLatin1String("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -573,9 +573,9 @@ void TagTest::testMonitor()
     QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
     QVERIFY(addedSpy.isValid());
     Tag tag;
-    tag.setGid(QLatin1String("gid2"));
+    tag.setGid("gid2");
     tag.setName(QLatin1String("name2"));
-    tag.setType(QLatin1String("type2"));
+    tag.setType("type2");
     TagCreateJob *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
     //We usually pick up signals from the previous tests as well (due to server-side notification caching)
@@ -588,7 +588,7 @@ void TagTest::testMonitor()
   {
     QSignalSpy modifedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
     QVERIFY(modifedSpy.isValid());
-    createdTag.setName("name3");
+    createdTag.setName(QLatin1String("name3"));
 
     TagModifyJob *modJob = new TagModifyJob(createdTag, this);
     AKVERIFYEXEC(modJob);
