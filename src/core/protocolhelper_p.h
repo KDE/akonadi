@@ -224,6 +224,11 @@ public:
     static QByteArray itemFetchScopeToByteArray(const ItemFetchScope &fetchScope);
 
     /**
+      Converts a given TagFetchScope object into a protocol representation.
+    */
+    static QByteArray tagFetchScopeToByteArray( const TagFetchScope &fetchScope );
+
+    /**
       Parses a single line from an item fetch job result into an Item object.
      */
     static void parseItemFetchResult(const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0);

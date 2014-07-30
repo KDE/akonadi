@@ -55,6 +55,8 @@ private Q_SLOTS:
     void testAttributes();
     void testTagItem();
     void testRIDIsolation();
+    void testFetchTagIdWithItem();
+    void testFetchFullTagWithItem();
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
     void testMonitor();
@@ -408,6 +410,79 @@ void TagTest::testTagItem()
     AKVERIFYEXEC(deleteJob);
 }
 
+void TagTest::testFetchTagIdWithItem()
+{
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    Tag tag;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+
+        // FIXME This should also be possible with create, but isn't
+        item1.setTag(tag);
+
+        ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+        AKVERIFYEXEC(modJob);
+    }
+
+    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    fetchJob->fetchScope().tagFetchScope().setFetchIdOnly(true);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().first().tags().size(), 1);
+    Tag t = fetchJob->items().first().tags().first();
+    QCOMPARE(t.id(), tag.id());
+    QVERIFY(t.gid().isEmpty());
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
+}
+
+void TagTest::testFetchFullTagWithItem()
+{
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    Tag tag;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+        //FIXME This should also be possible with create, but isn't
+        item1.setTag(tag);
+    }
+
+    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    AKVERIFYEXEC(modJob);
+
+    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    fetchJob->fetchScope().tagFetchScope().setFetchIdOnly(false);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().first().tags().size(), 1);
+    Tag t = fetchJob->items().first().tags().first();
+    QCOMPARE(t, tag);
+    QVERIFY(!t.gid().isEmpty());
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
+}
+
 void TagTest::testModifyItemWithTagByGID()
 {
     const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
@@ -497,9 +572,10 @@ void TagTest::testMonitor()
   {
     QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
     QVERIFY(addedSpy.isValid());
-    Tag tag(QLatin1String("gid2"));
-    tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
-    QVERIFY(tag.hasAttribute<Akonadi::TagAttribute>());
+    Tag tag;
+    tag.setGid(QLatin1String("gid2"));
+    tag.setName(QLatin1String("name2"));
+    tag.setType(QLatin1String("type2"));
     TagCreateJob *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
     //We usually pick up signals from the previous tests as well (due to server-side notification caching)
@@ -507,6 +583,19 @@ void TagTest::testMonitor()
     QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createjob->tag().id());
     QVERIFY(addedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
     createdTag = createjob->tag();
+  }
+
+  {
+    QSignalSpy modifedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
+    QVERIFY(modifedSpy.isValid());
+    createdTag.setName("name3");
+
+    TagModifyJob *modJob = new TagModifyJob(createdTag, this);
+    AKVERIFYEXEC(modJob);
+    //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+    QTRY_VERIFY(modifedSpy.count() >= 1);
+    QTRY_COMPARE(modifedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+    QVERIFY(modifedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
   }
 
   {

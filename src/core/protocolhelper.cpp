@@ -26,6 +26,7 @@
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 #include "servermanager.h"
+#include "tagfetchscope.h"
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtCore/QDateTime>
@@ -445,8 +446,12 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " " AKONADI_PARAM_REMOTEID " " AKONADI_PARAM_REMOTEREVISION;
   if ( fetchScope.fetchGid() )
     command += " GID";
-  if ( fetchScope.fetchTags() )
+  if ( fetchScope.fetchTags() ) {
     command += " TAGS";
+    if ( !fetchScope.tagFetchScope().fetchIdOnly() ) {
+      command += " " + ProtocolHelper::tagFetchScopeToByteArray( fetchScope.tagFetchScope() );
+    }
+  }
   if ( fetchScope.fetchVirtualReferences() )
     command += " VIRTREF";
   if ( fetchScope.fetchModificationTime() )
@@ -457,6 +462,18 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, part );
   command += ")\n";
 
+  return command;
+}
+
+QByteArray ProtocolHelper::tagFetchScopeToByteArray( const TagFetchScope &fetchScope )
+{
+  QByteArray command;
+
+  command += "(UID";
+  Q_FOREACH (const QByteArray &part, fetchScope.attributes()) {
+    command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
+  }
+  command += ")";
   return command;
 }
 
@@ -536,15 +553,27 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         item.setFlags( convertedFlags );
       }
     } else if ( key == "TAGS" ) {
-      ImapSet set;
-      ImapParser::parseSequenceSet( lineTokens[i + 1], set );
       Tag::List tags;
-      Q_FOREACH ( const ImapInterval &interval, set.intervals() ) {
-        Q_ASSERT( interval.hasDefinedBegin() );
-        Q_ASSERT( interval.hasDefinedEnd() );
-        for ( qint64 i = interval.begin(); i <= interval.end(); i++ ) {
-          //TODO use value pool when tag is shared data
-          tags << Tag( i );
+      if ( lineTokens[i + 1].startsWith("(") ) {
+        QList<QByteArray> tagsData;
+        ImapParser::parseParenthesizedList( lineTokens[i + 1], tagsData );
+        Q_FOREACH (const QByteArray &t, tagsData) {
+          QList<QByteArray> tagParts;
+          ImapParser::parseParenthesizedList( t, tagParts );
+          Tag tag;
+          parseTagFetchResult(tagParts, tag);
+          tags << tag;
+        }
+      } else {
+        ImapSet set;
+        ImapParser::parseSequenceSet( lineTokens[i + 1], set );
+        Q_FOREACH ( const ImapInterval &interval, set.intervals() ) {
+          Q_ASSERT( interval.hasDefinedBegin() );
+          Q_ASSERT( interval.hasDefinedEnd() );
+          for ( qint64 i = interval.begin(); i <= interval.end(); i++ ) {
+            //TODO use value pool when tag is shared data
+            tags << Tag( i );
+          }
         }
       }
       item.setTags( tags );
