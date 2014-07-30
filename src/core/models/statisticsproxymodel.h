@@ -96,7 +96,7 @@ public:
                                    Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
-    virtual void connectNotify(const char* signal);
+    virtual void connectNotify(const QMetaMethod & signal);
 
     QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
     QModelIndex mapToSource(const QModelIndex& sourceIndex) const;

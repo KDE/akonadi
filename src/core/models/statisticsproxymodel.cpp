@@ -36,6 +36,7 @@
 #include <QApplication>
 #include <QPalette>
 #include <QIcon>
+#include <QMetaMethod>
 using namespace Akonadi;
 
 /**
@@ -278,22 +279,19 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
 }
 
-void StatisticsProxyModel::connectNotify(const char *signal)
+void StatisticsProxyModel::connectNotify(const QMetaMethod & signal)
 {
     static bool ignore = false;
 //QT5
 #if 0
-    if (ignore || QLatin1String(signal) == SIGNAL(layoutAboutToBeChanged()))
+    if (ignore || signal == SIGNAL(layoutAboutToBeChanged())
         return QIdentityProxyModel::connectNotify(signal);
 #endif
     ignore = true;
     disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
     connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
     ignore = false;
-//QT5
-#if 0
     QIdentityProxyModel::connectNotify(signal);
-#endif
 }
 
 
