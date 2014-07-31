@@ -451,7 +451,7 @@ void QueryBuilder::addAggregation(const QString &col, const QString &aggregate)
 QString QueryBuilder::bindValue(const QVariant &value)
 {
     // TODO: Remove once we support Qt 5 only
-    if (value.type() == QVariant::Bool) {
+    if (value.type() == QVariant::Bool && mDatabaseType == DbType::Sqlite) {
         mBindValues << (value.toBool() ? int(1) : int(0));
     } else {
         mBindValues << value;
