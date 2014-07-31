@@ -383,7 +383,10 @@ private:
             if (metaTypeIds.empty()) {
                 if (const PluginEntry *const entry = mt.defaultPlugin()) {
 //             qDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
-                    return entry->plugin();
+                    //FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use default at the end if necessary
+                    if (allMimeTypes[matchingIndexes[*it]].type() != QLatin1String("application/octet-stream")) {
+                       return entry->plugin();
+                    }
                 } else {
 //             qDebug() << "    -> no default plugin for this mime type, trying next";
                 }
