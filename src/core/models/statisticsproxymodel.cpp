@@ -282,11 +282,8 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 void StatisticsProxyModel::connectNotify(const QMetaMethod & signal)
 {
     static bool ignore = false;
-//QT5
-#if 0
-    if (ignore || signal == SIGNAL(layoutAboutToBeChanged())
+    if (ignore || signal == QMetaMethod::fromSignal(&StatisticsProxyModel::layoutAboutToBeChanged))
         return QIdentityProxyModel::connectNotify(signal);
-#endif
     ignore = true;
     disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
     connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
