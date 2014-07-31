@@ -29,11 +29,12 @@ namespace Server {
 /// Details of a single item retrieval request
 class ItemRetrievalRequest
 {
-  public:
+public:
     ItemRetrievalRequest()
-      : processed( false )
+        : processed(false)
     {
     }
+
     qint64 id;
     QByteArray remoteId;
     QByteArray mimeType;
@@ -41,8 +42,9 @@ class ItemRetrievalRequest
     QStringList parts;
     QString errorMsg;
     bool processed;
-  private:
-    Q_DISABLE_COPY( ItemRetrievalRequest )
+
+private:
+    Q_DISABLE_COPY(ItemRetrievalRequest)
 };
 
 } // namespace Server

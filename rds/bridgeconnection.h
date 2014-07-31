@@ -27,45 +27,45 @@ class QIODevice;
 
 class BridgeConnection : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit BridgeConnection( QTcpSocket *remoteSocket, QObject *parent = 0 );
+public:
+    explicit BridgeConnection(QTcpSocket *remoteSocket, QObject *parent = 0);
     ~BridgeConnection();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void connectLocal() = 0;
     void doConnects();
 
-  protected:
+protected:
     QIODevice *m_localSocket;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotDataAvailable();
 
-  private:
+private:
     QTcpSocket *m_remoteSocket;
 };
 
 class AkonadiBridgeConnection : public BridgeConnection
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit AkonadiBridgeConnection( QTcpSocket *remoteSocket, QObject *parent = 0 );
+public:
+    explicit AkonadiBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = 0);
 
-  protected:
+protected:
     void connectLocal();
 };
 
 class DBusBridgeConnection : public BridgeConnection
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DBusBridgeConnection( QTcpSocket *remoteSocket, QObject *parent = 0 );
+public:
+    explicit DBusBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = 0);
 
-  protected:
+protected:
     void connectLocal();
 };
 

@@ -42,17 +42,17 @@ class NotificationSource;
 */
 class NotificationManager : public QObject, protected QDBusContext
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.NotificationManager" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.NotificationManager")
 
-  public:
+public:
     static NotificationManager *self();
 
     virtual ~NotificationManager();
 
-    void connectNotificationCollector( NotificationCollector *collector );
+    void connectNotificationCollector(NotificationCollector *collector);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     Q_SCRIPTABLE void emitPendingNotifications();
 
     /**
@@ -61,7 +61,7 @@ class NotificationManager : public QObject, protected QDBusContext
      * @param identifier Identifier to use of our subscription.
      * @return The path we got assigned. Contains identifier.
      */
-    Q_SCRIPTABLE QDBusObjectPath subscribe( const QString &identifier );
+    Q_SCRIPTABLE QDBusObjectPath subscribe(const QString &identifier);
 
     /**
      * Subscribe to notifications emitted by this manager.
@@ -70,7 +70,7 @@ class NotificationManager : public QObject, protected QDBusContext
      * @param serverSideMonitor Whether client supports server-side monitoring
      * @return The path we got assigned. Contains identifier.
      */
-    Q_SCRIPTABLE QDBusObjectPath subscribeV2( const QString &identifier, bool serverSideMonitor );
+    Q_SCRIPTABLE QDBusObjectPath subscribeV2(const QString &identifier, bool serverSideMonitor);
 
     /**
      * Subscribe to notifications emitted by this manager.
@@ -80,7 +80,7 @@ class NotificationManager : public QObject, protected QDBusContext
      * @param exclusive Exclusive subscribers also receive notifications on referenced collections
      * @return The path we got assigned. Contains identifier.
      */
-    Q_SCRIPTABLE QDBusObjectPath subscribeV3( const QString &identifier, bool serverSideMonitor, bool exclusive );
+    Q_SCRIPTABLE QDBusObjectPath subscribeV3(const QString &identifier, bool serverSideMonitor, bool exclusive);
 
     /**
      * Unsubscribe from this manager.
@@ -90,28 +90,28 @@ class NotificationManager : public QObject, protected QDBusContext
      *
      * @param identifier The identifier used for subscription.
      */
-    Q_SCRIPTABLE void unsubscribe( const QString &identifier );
+    Q_SCRIPTABLE void unsubscribe(const QString &identifier);
 
     /**
      * Returns identifiers of currently subscribed sources
      */
     Q_SCRIPTABLE QStringList subscribers() const;
 
-  Q_SIGNALS:
-    Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
+Q_SIGNALS:
+    Q_SCRIPTABLE void notify(const Akonadi::NotificationMessage::List &msgs);
 
-    Q_SCRIPTABLE void subscribed( const QString &identifier );
-    Q_SCRIPTABLE void unsubscribed( const QString &identifier );
+    Q_SCRIPTABLE void subscribed(const QString &identifier);
+    Q_SCRIPTABLE void unsubscribed(const QString &identifier);
 
-  private Q_SLOTS:
-    void slotNotify( const Akonadi::NotificationMessageV3::List &msgs );
+private Q_SLOTS:
+    void slotNotify(const Akonadi::NotificationMessageV3::List &msgs);
 
-  private:
+private:
     NotificationManager();
 
-  private:
-    void registerSource( NotificationSource *source );
-    void unregisterSource( NotificationSource *source );
+private:
+    void registerSource(NotificationSource *source);
+    void unregisterSource(NotificationSource *source);
 
     static NotificationManager *mSelf;
     NotificationMessageV3::List mNotifications;

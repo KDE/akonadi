@@ -32,13 +32,13 @@ namespace Server {
 
   A persistent search can have the following forms:
   @verbatim
-  123 SEARCH_STORE <name> <query> [ '(' (<key> <value>)* ')' ]
+  123 SEARCH_STORE <name> <query> ['(' (<key> <value>)* ')']
   @endverbatim
 */
 class SearchPersistent : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     SearchPersistent();
 
     ~SearchPersistent();

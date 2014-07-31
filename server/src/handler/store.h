@@ -97,33 +97,34 @@ namespace Server {
 
 class Store : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Store( Scope::SelectionScope scope );
+public:
+    Store(Scope::SelectionScope scope);
     bool parseStream();
 
-  private:
+private:
     enum Operation {
-      Replace,
-      Add,
-      Delete
+        Replace,
+        Add,
+        Delete
     };
 
     void parseCommand();
 
-    bool replaceFlags( const PimItem::List &items, const QVector<QByteArray> &flags );
-    bool addFlags( const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged );
-    bool deleteFlags( const PimItem::List &items, const QVector<QByteArray> &flags );
-    bool replaceTags( const PimItem::List &items, const Tag::List &tags );
-    bool addTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged );
-    bool deleteTags( const PimItem::List &items, const Tag::List &tags );
-    bool setGid( const PimItem &item, const QString &gid );
-    void sendPimItemResponse( const PimItem &pimItem );
+    bool replaceFlags(const PimItem::List &items, const QVector<QByteArray> &flags);
+    bool addFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged);
+    bool deleteFlags(const PimItem::List &items, const QVector<QByteArray> &flags);
+    bool replaceTags(const PimItem::List &items, const Tag::List &tags);
+    bool addTags(const PimItem::List &items, const Tag::List &tags, bool &tagsChanged);
+    bool deleteTags(const PimItem::List &items, const Tag::List &tags);
+    bool setGid(const PimItem &item, const QString &gid);
+    void sendPimItemResponse(const PimItem &pimItem);
 
-    bool processTagsChange(Store::Operation operation, const PimItem::List &items, const Tag::List &tags, QSet<QByteArray> &changes);
+    bool processTagsChange(Store::Operation operation, const PimItem::List &items,
+                           const Tag::List &tags, QSet<QByteArray> &changes);
 
-  private:
+private:
     Scope mScope;
     int mPos;
     qint64 mPreviousRevision;

@@ -49,12 +49,12 @@ namespace Server {
 */
 class  Move : public Handler
 {
-  Q_OBJECT
-  public:
-    Move( Scope::SelectionScope scope );
+    Q_OBJECT
+public:
+    Move(Scope::SelectionScope scope);
     bool parseStream();
 
-  private:
+private:
     Scope mScope;
 };
 

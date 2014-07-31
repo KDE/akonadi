@@ -32,56 +32,56 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ColMove::ColMove( Scope::SelectionScope scope )
-  : m_scope( scope )
+ColMove::ColMove(Scope::SelectionScope scope)
+    : m_scope(scope)
 {
 }
 
 bool ColMove::parseStream()
 {
-  m_scope.parseScope( m_streamParser );
-  SelectQueryBuilder<Collection> qb;
-  CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
-  if ( !qb.exec() ) {
-    throw HandlerException( "Unable to execute collection query" );
-  }
-  const Collection::List sources = qb.result();
-  if ( sources.isEmpty() ) {
-    throw HandlerException( "No source collection specified" );
-  } else if ( sources.size() > 1 ) { // TODO
-    throw HandlerException( "Moving multiple collections is not yet implemented" );
-  }
-  Collection source = sources.first();
+    m_scope.parseScope(m_streamParser);
+    SelectQueryBuilder<Collection> qb;
+    CollectionQueryHelper::scopeToQuery(m_scope, connection(), qb);
+    if (!qb.exec()) {
+        throw HandlerException("Unable to execute collection query");
+    }
+    const Collection::List sources = qb.result();
+    if (sources.isEmpty()) {
+        throw HandlerException("No source collection specified");
+    } else if (sources.size() > 1) {   // TODO
+        throw HandlerException("Moving multiple collections is not yet implemented");
+    }
+    Collection source = sources.first();
 
-  Scope destScope( m_scope.scope() );
-  destScope.parseScope( m_streamParser );
-  akDebug() << destScope.uidSet().toImapSequenceSet();
-  const Collection target = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
+    Scope destScope(m_scope.scope());
+    destScope.parseScope(m_streamParser);
+    akDebug() << destScope.uidSet().toImapSequenceSet();
+    const Collection target = CollectionQueryHelper::singleCollectionFromScope(destScope, connection());
 
-  if ( source.parentId() == target.id() ) {
-    return successResponse( "COLMOVE complete - nothing to do" );
-  }
+    if (source.parentId() == target.id()) {
+        return successResponse("COLMOVE complete - nothing to do");
+    }
 
-  CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor;
 
-  // retrieve all not yet cached items of the source
-  ItemRetriever retriever( connection() );
-  retriever.setCollection( source, true );
-  retriever.setRetrieveFullPayload( true );
-  if ( !retriever.exec() ) {
-    return failureResponse( retriever.lastError() );
-  }
+    // retrieve all not yet cached items of the source
+    ItemRetriever retriever(connection());
+    retriever.setCollection(source, true);
+    retriever.setRetrieveFullPayload(true);
+    if (!retriever.exec()) {
+        return failureResponse(retriever.lastError());
+    }
 
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
+    DataStore *store = connection()->storageBackend();
+    Transaction transaction(store);
 
-  if ( !store->moveCollection( source, target ) ) {
-    return failureResponse( "Unable to reparent collection" );
-  }
+    if (!store->moveCollection(source, target)) {
+        return failureResponse("Unable to reparent collection");
+    }
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Cannot commit transaction." );
-  }
+    if (!transaction.commit()) {
+        return failureResponse("Cannot commit transaction.");
+    }
 
-  return successResponse( "COLMOVE complete" );
+    return successResponse("COLMOVE complete");
 }

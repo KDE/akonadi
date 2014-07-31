@@ -31,9 +31,9 @@ namespace Akonadi {
  */
 class ProcessControl : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Theses enums describe the behaviour when the observed
      * application crashed.
@@ -42,8 +42,8 @@ class ProcessControl : public QObject
      * @li RestartOnCrash - The application is restarted with the same arguments.
      */
     enum CrashPolicy {
-      StopOnCrash,
-      RestartOnCrash
+        StopOnCrash,
+        RestartOnCrash
     };
 
     /**
@@ -51,7 +51,7 @@ class ProcessControl : public QObject
      *
      * @param parent The parent object.
      */
-    ProcessControl( QObject *parent = 0 );
+    ProcessControl(QObject *parent = 0);
 
     /**
      * Destroys the process control.
@@ -61,8 +61,8 @@ class ProcessControl : public QObject
     /**
      * Starts the @p application with the given list of @p arguments.
      */
-    void start( const QString &application, const QStringList &arguments = QStringList(),
-                CrashPolicy policy = RestartOnCrash );
+    void start(const QString &application, const QStringList &arguments = QStringList(),
+               CrashPolicy policy = RestartOnCrash);
 
     /**
      * Starts the process with the previously set application and arguments.
@@ -77,12 +77,14 @@ class ProcessControl : public QObject
     /**
      * Sets the crash policy.
      */
-    void setCrashPolicy( CrashPolicy policy );
+    void setCrashPolicy(CrashPolicy policy);
 
     /**
      * Restart the application the next time it exits normally.
      */
-    void restartOnceWhenFinished() { mRestartOnceOnExit = true; }
+    void restartOnceWhenFinished() {
+        mRestartOnceOnExit = true;
+    }
 
     /**
      * Returns true if the process is currently running.
@@ -95,16 +97,16 @@ class ProcessControl : public QObject
      * Note that it is your responsiblility to ask the process to quit, otherwise this is just
      * pointless waiting.
      */
-    void setShutdownTimeout( int msecs );
+    void setShutdownTimeout(int msecs);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the observed application
      * writes something to stderr.
      *
      * @param errorMsg The error output of the observed application.
      */
-    void processErrorMessages( const QString &errorMsg );
+    void processErrorMessages(const QString &errorMsg);
 
     /**
      * This signal is emitted when the server is restarted after a crash.
@@ -117,12 +119,12 @@ class ProcessControl : public QObject
      */
     void unableToStart();
 
-  private Q_SLOTS:
-    void slotError( QProcess::ProcessError );
-    void slotFinished( int, QProcess::ExitStatus );
+private Q_SLOTS:
+    void slotError(QProcess::ProcessError);
+    void slotFinished(int, QProcess::ExitStatus);
     void resetCrashCount();
 
-  private:
+private:
     QProcess mProcess;
     QString mApplication;
     QStringList mArguments;

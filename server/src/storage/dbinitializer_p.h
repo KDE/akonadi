@@ -28,41 +28,41 @@ namespace Server {
 
 class DbInitializerMySql : public DbInitializer
 {
-  public:
-    DbInitializerMySql( const QSqlDatabase &database );
-  protected:
-    QString sqlType( const QString &type, int size ) const;
+public:
+    DbInitializerMySql(const QSqlDatabase &database);
+protected:
+    QString sqlType(const QString &type, int size) const;
 
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
-    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
-    virtual QString buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const;
-    virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
+    virtual QString buildCreateTableStatement(const TableDescription &tableDescription) const;
+    virtual QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const;
+    virtual QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const;
+    virtual QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const;
+    virtual QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const;
 };
 
 class DbInitializerSqlite : public DbInitializer
 {
-  public:
-    DbInitializerSqlite( const QSqlDatabase &database );
-  protected:
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
-    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
+public:
+    DbInitializerSqlite(const QSqlDatabase &database);
+protected:
+    virtual QString buildCreateTableStatement(const TableDescription &tableDescription) const;
+    virtual QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const;
+    virtual QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const;
     virtual QString sqlValue(const QString &type, const QString &value) const;
 };
 
 class DbInitializerPostgreSql : public DbInitializer
 {
-  public:
-    DbInitializerPostgreSql( const QSqlDatabase &database );
-  protected:
-    QString sqlType( const QString &type, int size ) const;
+public:
+    DbInitializerPostgreSql(const QSqlDatabase &database);
+protected:
+    QString sqlType(const QString &type, int size) const;
 
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
-    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
-    virtual QString buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const;
-    virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
+    virtual QString buildCreateTableStatement(const TableDescription &tableDescription) const;
+    virtual QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const;
+    virtual QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const;
+    virtual QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const;
+    virtual QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const;
 };
 
 } // namespace Server

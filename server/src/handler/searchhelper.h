@@ -30,10 +30,10 @@ namespace Server {
 
 class SearchHelper
 {
-  public:
-    static QList<QByteArray> splitLine( const QByteArray &line );
-    static QString extractMimetype( const QList<QByteArray> &junks, int start );
-    static QVector<qint64> listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes );
+public:
+    static QList<QByteArray> splitLine(const QByteArray &line);
+    static QString extractMimetype(const QList<QByteArray> &junks, int start);
+    static QVector<qint64> listCollectionsRecursive(const QVector<qint64> &ancestors, const QStringList &mimeTypes);
 };
 
 } // namespace Server

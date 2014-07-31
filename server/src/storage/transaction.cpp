@@ -22,29 +22,29 @@
 
 using namespace Akonadi::Server;
 
-Transaction::Transaction( DataStore *db, bool beginTransaction )
-  : mDb( db )
-  , mCommitted( false )
+Transaction::Transaction(DataStore *db, bool beginTransaction)
+    : mDb(db)
+    , mCommitted(false)
 {
-  if ( beginTransaction ) {
-    mDb->beginTransaction();
-  }
+    if (beginTransaction) {
+        mDb->beginTransaction();
+    }
 }
 
 Transaction::~Transaction()
 {
-  if ( !mCommitted ) {
-    mDb->rollbackTransaction();
-  }
+    if (!mCommitted) {
+        mDb->rollbackTransaction();
+    }
 }
 
 bool Transaction::commit()
 {
-  mCommitted = true;
-  return mDb->commitTransaction();
+    mCommitted = true;
+    return mDb->commitTransaction();
 }
 
 void Transaction::begin()
 {
-  mDb->beginTransaction();
+    mDb->beginTransaction();
 }

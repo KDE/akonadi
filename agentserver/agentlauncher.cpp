@@ -23,39 +23,39 @@
 #include <QtCore/QStringList>
 #include <QApplication>
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  QApplication app( argc, argv );
-  app.setQuitOnLastWindowClosed( false );
+    QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
 
-  if ( app.arguments().size() != 3 ) { // Expected usage: ./agent_launcher ${plugin_name} ${identifier}
-    qDebug() << "Invalid usage: expected: ./agent_launcher pluginName agentIdentifier";
-    return 1;
-  }
+    if (app.arguments().size() != 3) {   // Expected usage: ./agent_launcher ${plugin_name} ${identifier}
+        qDebug() << "Invalid usage: expected: ./agent_launcher pluginName agentIdentifier";
+        return 1;
+    }
 
-  const QString agentPluginName = app.arguments().at( 1 );
-  const QString agentIdentifier = app.arguments().at( 2 );
+    const QString agentPluginName = app.arguments().at(1);
+    const QString agentIdentifier = app.arguments().at(2);
 
-  AgentPluginLoader loader;
-  QPluginLoader *factory = loader.load( agentPluginName );
-  if ( factory == 0 ) {
-    return 1;
-  }
+    AgentPluginLoader loader;
+    QPluginLoader *factory = loader.load(agentPluginName);
+    if (factory == 0) {
+        return 1;
+    }
 
-  QObject *instance = 0;
-  const bool invokeSucceeded = QMetaObject::invokeMethod( factory->instance(),
-                                                          "createInstance",
-                                                          Qt::DirectConnection,
-                                                          Q_RETURN_ARG( QObject*, instance ),
-                                                          Q_ARG( QString, agentIdentifier ) );
-  if ( invokeSucceeded ) {
-    qDebug() << "Agent instance created in separate process.";
-  } else {
-    qDebug() << "Agent instance creation in separate process failed";
-    return 2;
-  }
+    QObject *instance = 0;
+    const bool invokeSucceeded = QMetaObject::invokeMethod(factory->instance(),
+                                                           "createInstance",
+                                                           Qt::DirectConnection,
+                                                           Q_RETURN_ARG(QObject *, instance),
+                                                           Q_ARG(QString, agentIdentifier));
+    if (invokeSucceeded) {
+        qDebug() << "Agent instance created in separate process.";
+    } else {
+        qDebug() << "Agent instance creation in separate process failed";
+        return 2;
+    }
 
-  const int rv = app.exec();
-  delete instance;
-  return rv;
+    const int rv = app.exec();
+    delete instance;
+    return rv;
 }

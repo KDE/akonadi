@@ -39,18 +39,20 @@ QDebug akError();
 #ifndef QT_NO_DEBUG_OUTPUT
 QDebug akDebug();
 #else
-inline QNoDebug akDebug() { return QNoDebug(); }
+inline QNoDebug akDebug() {
+    return QNoDebug();
+}
 #endif
 
 /**
  * Init and rotate error logs.
  */
-void akInit( const QString &appName );
+void akInit(const QString &appName);
 
 /**
  * Returns the contents of @p name environment variable if it is defined,
  * or @p defaultValue otherwise.
  */
-QString getEnv( const char *name, const QString &defaultValue = QString() );
+QString getEnv(const char *name, const QString &defaultValue = QString());
 
 #endif

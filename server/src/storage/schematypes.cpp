@@ -26,19 +26,19 @@
 using namespace Akonadi::Server;
 
 ColumnDescription::ColumnDescription()
-  : size( -1 )
-  , allowNull( true )
-  , isAutoIncrement( false )
-  , isPrimaryKey( false )
-  , isUnique( false )
-  , onUpdate( Cascade )
-  , onDelete( Cascade )
-  , noUpdate( false )
+    : size(-1)
+    , allowNull(true)
+    , isAutoIncrement(false)
+    , isPrimaryKey(false)
+    , isUnique(false)
+    , onUpdate(Cascade)
+    , onDelete(Cascade)
+    , noUpdate(false)
 {
 }
 
 IndexDescription::IndexDescription()
-  : isUnique( false )
+    : isUnique(false)
 {
 }
 
@@ -52,7 +52,7 @@ TableDescription::TableDescription()
 
 int TableDescription::primaryKeyColumnCount() const
 {
-  return std::count_if( columns.constBegin(), columns.constEnd(), boost::bind<bool>( &ColumnDescription::isPrimaryKey, _1 ) );
+    return std::count_if(columns.constBegin(), columns.constEnd(), boost::bind<bool>(&ColumnDescription::isPrimaryKey, _1));
 }
 
 RelationDescription::RelationDescription()

@@ -26,24 +26,24 @@ namespace Akonadi {
 namespace Server {
 
 /** Helper methods for checking the database system we are dealing with. */
-namespace DbType
-{
-  /** Supported database types. */
-  enum Type {
+namespace DbType {
+
+/** Supported database types. */
+enum Type {
     Unknown,
     Sqlite,
     MySQL,
     PostgreSQL
-  };
+};
 
-  /** Returns the type of the given databse object. */
-  Type type( const QSqlDatabase &db );
+/** Returns the type of the given databse object. */
+Type type(const QSqlDatabase &db);
 
-  /** Returns the type for the given driver name. */
-  Type typeForDriverName( const QString &driverName );
+/** Returns the type for the given driver name. */
+Type typeForDriverName(const QString &driverName);
 
-  /** Returns true when using QSQLITE driver shipped with Qt, FALSE otherwise */
-  bool isSystemSQLite( const QSqlDatabase &db );
+/** Returns true when using QSQLITE driver shipped with Qt, FALSE otherwise */
+bool isSystemSQLite(const QSqlDatabase &db);
 
 } // namespace DbType
 } // namespace Server

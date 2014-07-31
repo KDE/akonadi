@@ -33,14 +33,14 @@ namespace Server {
  */
 class TagFetch : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-    TagFetch( Scope::SelectionScope scope );
+    TagFetch(Scope::SelectionScope scope);
     ~TagFetch();
 
     bool parseStream();
 
-  private:
+private:
     Scope mScope;
 };
 

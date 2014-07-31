@@ -32,42 +32,42 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Fetch::Fetch( Scope::SelectionScope scope )
-  : mScope( scope )
+Fetch::Fetch(Scope::SelectionScope scope)
+    : mScope(scope)
 {
 }
 
 bool Fetch::parseStream()
 {
-  // sequence set
-  mScope.parseScope( m_streamParser );
+    // sequence set
+    mScope.parseScope(m_streamParser);
 
-  // context
-  connection()->context()->parseContext( m_streamParser );
-  // We require context in case we do RID fetch
-  if ( connection()->context()->isEmpty() && mScope.scope() == Scope::Rid ) {
-    throw HandlerException( "No FETCH context specified" );
-  }
+    // context
+    connection()->context()->parseContext(m_streamParser);
+    // We require context in case we do RID fetch
+    if (connection()->context()->isEmpty() && mScope.scope() == Scope::Rid) {
+        throw HandlerException("No FETCH context specified");
+    }
 
-  CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor;
 
-  FetchHelper fetchHelper( connection(), mScope, FetchScope( m_streamParser ) );
-  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
+    FetchHelper fetchHelper(connection(), mScope, FetchScope(m_streamParser));
+    connect(&fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
 
-  if ( !fetchHelper.fetchItems( AKONADI_CMD_ITEMFETCH ) ) {
-    return false;
-  }
+    if (!fetchHelper.fetchItems(AKONADI_CMD_ITEMFETCH)) {
+        return false;
+    }
 
-  if ( mScope.scope() == Scope::Uid ) {
-    successResponse( "UID FETCH completed" );
-  } else if ( mScope.scope() == Scope::Rid ) {
-    successResponse( "RID FETCH completed" );
-  } else if ( mScope.scope() == Scope::Gid ) {
-    successResponse( "GID FETCH completed" );
-  } else {
-    successResponse( "FETCH completed" );
-  }
+    if (mScope.scope() == Scope::Uid) {
+        successResponse("UID FETCH completed");
+    } else if (mScope.scope() == Scope::Rid) {
+        successResponse("RID FETCH completed");
+    } else if (mScope.scope() == Scope::Gid) {
+        successResponse("GID FETCH completed");
+    } else {
+        successResponse("FETCH completed");
+    }
 
-  return true;
+    return true;
 }

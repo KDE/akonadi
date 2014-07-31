@@ -28,31 +28,31 @@
 
 class AkStandardDirsTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testCondigFile()
     {
-      akTestSetInstanceIdentifier( QString() );
-      QVERIFY( AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::ReadOnly ).endsWith( QL1S( "agentsrc" ) ) );
-      QVERIFY( AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::ReadWrite ).endsWith( QL1S( "agentsrc" ) ) );
-      QVERIFY( !AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::ReadWrite ).endsWith( QL1S( "foo/agentsrc" ) ) );
+        akTestSetInstanceIdentifier(QString());
+        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly).endsWith(QL1S("agentsrc")));
+        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadWrite).endsWith(QL1S("agentsrc")));
+        QVERIFY(!AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadWrite).endsWith(QL1S("foo/agentsrc")));
 
-      akTestSetInstanceIdentifier( QL1S( "foo" ) );
-      QVERIFY( AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::ReadOnly ).endsWith( QL1S( "agentsrc" ) ) );
-      QVERIFY( AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::ReadWrite ).endsWith( QL1S( "instance/foo/agentsrc" ) ) );
+        akTestSetInstanceIdentifier(QL1S("foo"));
+        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly).endsWith(QL1S("agentsrc")));
+        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadWrite).endsWith(QL1S("instance/foo/agentsrc")));
     }
 
     void testSaveDir()
     {
-      akTestSetInstanceIdentifier( QString() );
-      QVERIFY( AkStandardDirs::saveDir( "data" ).endsWith( QL1S( "/akonadi" ) ) );
-      QVERIFY( !AkStandardDirs::saveDir( "data" ).endsWith( QL1S( "foo/akonadi" ) ) );
+        akTestSetInstanceIdentifier(QString());
+        QVERIFY(AkStandardDirs::saveDir("data").endsWith(QL1S("/akonadi")));
+        QVERIFY(!AkStandardDirs::saveDir("data").endsWith(QL1S("foo/akonadi")));
 
-      akTestSetInstanceIdentifier( QL1S( "foo" ) );
-      QVERIFY( AkStandardDirs::saveDir( "data" ).endsWith( QL1S( "/akonadi/instance/foo" ) ) );
+        akTestSetInstanceIdentifier(QL1S("foo"));
+        QVERIFY(AkStandardDirs::saveDir("data").endsWith(QL1S("/akonadi/instance/foo")));
     }
 };
 
-AKTEST_MAIN( AkStandardDirsTest )
+AKTEST_MAIN(AkStandardDirsTest)
 
 #include "akstandarddirstest.moc"

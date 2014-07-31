@@ -24,16 +24,16 @@
 
 using namespace Akonadi::Server;
 
-ItemRetrievalThread::ItemRetrievalThread( QObject *parent )
-  : QThread( parent )
+ItemRetrievalThread::ItemRetrievalThread(QObject *parent)
+    : QThread(parent)
 {
-  // make sure we are created from the main thread, ie. before all other threads start to potentially use us
-  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+    // make sure we are created from the main thread, ie. before all other threads start to potentially use us
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 }
 
 void ItemRetrievalThread::run()
 {
-  ItemRetrievalManager *mgr = new ItemRetrievalManager();
-  exec();
-  delete mgr;
+    ItemRetrievalManager *mgr = new ItemRetrievalManager();
+    exec();
+    delete mgr;
 }

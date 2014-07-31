@@ -32,79 +32,78 @@
 
 using namespace Akonadi::Server;
 
-Link::Link( Scope::SelectionScope scope, bool create )
-  : Handler()
-  , mDestinationScope( scope )
-  , mCreateLinks( create )
+Link::Link(Scope::SelectionScope scope, bool create)
+    : Handler()
+    , mDestinationScope(scope)
+    , mCreateLinks(create)
 {
 }
 
 bool Link::parseStream()
 {
-  mDestinationScope.parseScope( m_streamParser );
-  const Collection collection = CollectionQueryHelper::singleCollectionFromScope( mDestinationScope, connection() );
+    mDestinationScope.parseScope(m_streamParser);
+    const Collection collection = CollectionQueryHelper::singleCollectionFromScope(mDestinationScope, connection());
 
-  if ( !collection.isVirtual() ) {
-    return failureResponse( "Can't link items to non-virtual collections" );
-  }
-
-  Resource originalContext;
-  Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray( m_streamParser->peekString() );
-  if ( itemSelectionScope != Scope::None ) {
-    m_streamParser->readString();
-    // Unset Resource context if destination collection is specified using HRID/RID,
-    // because otherwise the Resource context is relative to the destination collection
-    // instead of the source collection (collection context)
-    if ( ( mDestinationScope.scope() == Scope::HierarchicalRid || mDestinationScope.scope() == Scope::Rid ) && itemSelectionScope == Scope::Rid ) {
-        originalContext = connection()->context()->resource();
-        connection()->context()->setResource(Resource());
+    if (!collection.isVirtual()) {
+        return failureResponse("Can't link items to non-virtual collections");
     }
-  }
-  Scope itemScope( itemSelectionScope );
-  itemScope.parseScope( m_streamParser );
 
-  SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( itemScope, connection()->context(), qb );
-
-  // Restore resource context if necessary
-  if (originalContext.isValid()) {
-    connection()->context()->setResource(originalContext);
-  }
-
-  if ( !qb.exec() ) {
-    return failureResponse( "Unable to execute item query" );
-  }
-
-  const PimItem::List items = qb.result();
-
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
-
-  PimItem::List toLink, toUnlink;
-  Q_FOREACH ( const PimItem &item, items ) {
-    const bool alreadyLinked = collection.relatesToPimItem( item );
-    bool result = true;
-    if ( mCreateLinks && !alreadyLinked ) {
-      result = collection.addPimItem( item );
-      toLink << item;
-    } else if ( !mCreateLinks && alreadyLinked ) {
-      result = collection.removePimItem( item );
-      toUnlink << item;
+    Resource originalContext;
+    Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray(m_streamParser->peekString());
+    if (itemSelectionScope != Scope::None) {
+        m_streamParser->readString();
+        // Unset Resource context if destination collection is specified using HRID/RID,
+        // because otherwise the Resource context is relative to the destination collection
+        // instead of the source collection (collection context)
+        if ((mDestinationScope.scope() == Scope::HierarchicalRid || mDestinationScope.scope() == Scope::Rid) && itemSelectionScope == Scope::Rid) {
+            originalContext = connection()->context()->resource();
+            connection()->context()->setResource(Resource());
+        }
     }
-    if ( !result ) {
-      return failureResponse( "Failed to modify item reference" );
+    Scope itemScope(itemSelectionScope);
+    itemScope.parseScope(m_streamParser);
+
+    SelectQueryBuilder<PimItem> qb;
+    ItemQueryHelper::scopeToQuery(itemScope, connection()->context(), qb);
+
+    if (originalContext.isValid()) {
+        connection()->context()->setResource(originalContext);
     }
-  }
 
-  if ( !toLink.isEmpty() ) {
-    store->notificationCollector()->itemsLinked( toLink, collection );
-  } else if ( !toUnlink.isEmpty() ) {
-    store->notificationCollector()->itemsUnlinked( toUnlink, collection );
-  }
+    if (!qb.exec()) {
+        return failureResponse("Unable to execute item query");
+    }
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Cannot commit transaction." );
-  }
+    const PimItem::List items = qb.result();
 
-  return successResponse( "LINK complete" );
+    DataStore *store = connection()->storageBackend();
+    Transaction transaction(store);
+
+    PimItem::List toLink, toUnlink;
+    Q_FOREACH (const PimItem &item, items) {
+        const bool alreadyLinked = collection.relatesToPimItem(item);
+        bool result = true;
+        if (mCreateLinks && !alreadyLinked) {
+            result = collection.addPimItem(item);
+            toLink << item;
+        } else if (!mCreateLinks && alreadyLinked) {
+            result = collection.removePimItem(item);
+            toUnlink << item;
+        }
+        if (!result) {
+            return failureResponse("Failed to modify item reference");
+        }
+    }
+
+    if (!toLink.isEmpty()) {
+        store->notificationCollector()->itemsLinked(toLink, collection);
+    } else if (!toUnlink.isEmpty()) {
+        store->notificationCollector()->itemsUnlinked(toUnlink, collection);
+    }
+
+    if (!transaction.commit()) {
+        return failureResponse("Cannot commit transaction.");
+    }
+
+    return successResponse("LINK complete");
 }

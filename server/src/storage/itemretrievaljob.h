@@ -33,29 +33,29 @@ class ItemRetrievalRequest;
 /// Async D-Bus retrieval, no modification of the request (thus no need for locking)
 class ItemRetrievalJob : public QObject
 {
-  Q_OBJECT
-  public:
-    ItemRetrievalJob( ItemRetrievalRequest *req, QObject *parent )
-      : QObject( parent )
-      , m_request( req )
-      , m_active( false )
-      , m_interface( 0 )
-      , m_oldMethodCalled( false )
+    Q_OBJECT
+public:
+    ItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent)
+        : QObject(parent)
+        , m_request(req)
+        , m_active(false)
+        , m_interface(0)
+        , m_oldMethodCalled(false)
     {
     }
     ~ItemRetrievalJob();
-    void start( QDBusAbstractInterface *interface );
+    void start(QDBusAbstractInterface *interface);
     void kill();
 
-  Q_SIGNALS:
-    void requestCompleted( ItemRetrievalRequest *req, const QString &errorMsg );
+Q_SIGNALS:
+    void requestCompleted(ItemRetrievalRequest *req, const QString &errorMsg);
 
-  private Q_SLOTS:
-    void callFinished( bool returnValue );
-    void callFinished( const QString &errorMsg );
-    void callFailed( const QDBusError &error );
+private Q_SLOTS:
+    void callFinished(bool returnValue);
+    void callFinished(const QString &errorMsg);
+    void callFailed(const QDBusError &error);
 
-  private:
+private:
     ItemRetrievalRequest *m_request;
     bool m_active;
     QDBusAbstractInterface *m_interface;

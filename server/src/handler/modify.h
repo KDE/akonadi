@@ -38,7 +38,7 @@ namespace Server {
 
   Request:
   @verbatim
-  request = tag " [ "RID " ] MODIFY " collection-ids " " attribute-list
+  request = tag " ["RID "] MODIFY " collection-ids " " attribute-list
   attribute-list = *([-]attribute-name [" " attribute-value])
   attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "REMOTEREVISION" | "CACHEPOLICY" | "PARENT" | "ENABLED" | "SYNC" | "DISPLAY" | "INDEX" | "REFERENCED" | [-]custom-attr-name
   @endverbatim
@@ -49,12 +49,12 @@ namespace Server {
 */
 class Modify : public Handler
 {
-  Q_OBJECT
-  public:
-    Modify( Scope::SelectionScope scope );
+    Q_OBJECT
+public:
+    Modify(Scope::SelectionScope scope);
     bool parseStream();
 
-  private:
+private:
     Scope m_scope;
 };
 

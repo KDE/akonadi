@@ -29,7 +29,7 @@ namespace Server {
 
 class DbConfigMysql : public DbConfig
 {
-  public:
+public:
     DbConfigMysql();
 
     /**
@@ -49,13 +49,13 @@ class DbConfigMysql : public DbConfig
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back.
      */
-    virtual bool init( QSettings &settings );
+    virtual bool init(QSettings &settings);
 
     /**
      * This method applies the configured settings to the QtSql @p database
      * instance.
      */
-    virtual void apply( QSqlDatabase &database );
+    virtual void apply(QSqlDatabase &database);
 
     /**
      * Returns whether an internal server needs to be used.
@@ -73,9 +73,9 @@ class DbConfigMysql : public DbConfig
     virtual void stopInternalServer();
 
     /// reimpl
-    virtual void initSession( const QSqlDatabase &database );
+    virtual void initSession(const QSqlDatabase &database);
 
-  private:
+private:
     QString mDatabaseName;
     QString mHostName;
     QString mUserName;

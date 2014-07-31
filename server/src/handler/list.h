@@ -84,19 +84,18 @@ namespace Server {
 */
 class List : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    List( Scope::SelectionScope scope, bool onlySubscribed );
+public:
+    List(Scope::SelectionScope scope, bool onlySubscribed);
 
     bool parseStream();
 
-  private:
-    bool listCollection( const Collection &root, int depth, const QStack<Collection> &ancestors );
-    QStack<Collection> ancestorsForCollection( const Collection &col );
+private:
+    bool listCollection(const Collection &root, int depth, const QStack<Collection> &ancestors);
+    QStack<Collection> ancestorsForCollection(const Collection &col);
     Collection::List retrieveChildren(const QVariant &value);
 
-  private:
     Resource mResource;
     QVector<MimeType::Id> mMimeTypes;
     Scope mScope;

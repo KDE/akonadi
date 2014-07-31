@@ -27,78 +27,78 @@
 
 using namespace Akonadi;
 
-AgentProcessInstance::AgentProcessInstance( AgentManager *manager )
-  : AgentInstance( manager )
-  , mController( 0 )
+AgentProcessInstance::AgentProcessInstance(AgentManager *manager)
+    : AgentInstance(manager)
+    , mController(0)
 {
 }
 
-bool AgentProcessInstance::start( const AgentType &agentInfo )
+bool AgentProcessInstance::start(const AgentType &agentInfo)
 {
-  Q_ASSERT( !identifier().isEmpty() );
-  if ( identifier().isEmpty() ) {
-    return false;
-  }
+    Q_ASSERT(!identifier().isEmpty());
+    if (identifier().isEmpty()) {
+        return false;
+    }
 
-  setAgentType( agentInfo.identifier );
+    setAgentType(agentInfo.identifier);
 
-  Q_ASSERT( agentInfo.launchMethod == AgentType::Process ||
-            agentInfo.launchMethod == AgentType::Launcher );
+    Q_ASSERT(agentInfo.launchMethod == AgentType::Process ||
+             agentInfo.launchMethod == AgentType::Launcher);
 
-  const QString executable = ( agentInfo.launchMethod == AgentType::Process )
-    ? XdgBaseDirs::findExecutableFile( agentInfo.exec ) : agentInfo.exec;
+    const QString executable = (agentInfo.launchMethod == AgentType::Process)
+                               ? XdgBaseDirs::findExecutableFile(agentInfo.exec) : agentInfo.exec;
 
-  if ( executable.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "Unable to find agent executable" << agentInfo.exec;
-    return false;
-  }
+    if (executable.isEmpty()) {
+        akError() << Q_FUNC_INFO << "Unable to find agent executable" << agentInfo.exec;
+        return false;
+    }
 
-  mController = new Akonadi::ProcessControl( this );
-  connect( mController, SIGNAL(unableToStart()), SLOT(failedToStart()) );
+    mController = new Akonadi::ProcessControl(this);
+    connect(mController, SIGNAL(unableToStart()), SLOT(failedToStart()));
 
-  if ( agentInfo.launchMethod == AgentType::Process ) {
-    QStringList arguments;
-    arguments << QLatin1String( "--identifier" ) << identifier();
-    mController->start( executable, arguments );
-  } else {
-    Q_ASSERT( agentInfo.launchMethod == AgentType::Launcher );
-    const QStringList arguments = QStringList() << executable << identifier();
-    const QString agentLauncherExec = XdgBaseDirs::findExecutableFile( QLatin1String( "akonadi_agent_launcher" ) );
-    mController->start( agentLauncherExec, arguments );
-  }
-  return true;
+    if (agentInfo.launchMethod == AgentType::Process) {
+        QStringList arguments;
+        arguments << QLatin1String("--identifier") << identifier();
+        mController->start(executable, arguments);
+    } else {
+        Q_ASSERT(agentInfo.launchMethod == AgentType::Launcher);
+        const QStringList arguments = QStringList() << executable << identifier();
+        const QString agentLauncherExec = XdgBaseDirs::findExecutableFile(QLatin1String("akonadi_agent_launcher"));
+        mController->start(agentLauncherExec, arguments);
+    }
+    return true;
 }
 
 void AgentProcessInstance::quit()
 {
-  mController->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
-  AgentInstance::quit();
+    mController->setCrashPolicy(Akonadi::ProcessControl::StopOnCrash);
+    AgentInstance::quit();
 }
 
 void AgentProcessInstance::cleanup()
 {
-  mController->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
-  AgentInstance::cleanup();
+    mController->setCrashPolicy(Akonadi::ProcessControl::StopOnCrash);
+    AgentInstance::cleanup();
 }
 
 void AgentProcessInstance::restartWhenIdle()
 {
-  if ( mController->isRunning() ) {
-    if ( status() != 1 ) {
-      mController->restartOnceWhenFinished();
-      quit();
+    if (mController->isRunning()) {
+        if (status() != 1) {
+            mController->restartOnceWhenFinished();
+            quit();
+        }
+    } else {
+        mController->start();
     }
-  } else {
-    mController->start();
-  }
 }
 
-void Akonadi::AgentProcessInstance::configure( qlonglong windowId )
+void Akonadi::AgentProcessInstance::configure(qlonglong windowId)
 {
-  controlInterface()->configure( windowId );
+    controlInterface()->configure(windowId);
 }
 
 void AgentProcessInstance::failedToStart()
 {
-  statusChanged( 2 /*Broken*/, QLatin1String( "Unable to start." ) );
+    statusChanged(2 /*Broken*/, QLatin1String("Unable to start."));
 }

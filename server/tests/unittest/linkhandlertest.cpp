@@ -59,7 +59,6 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-
 private Q_SLOTS:
     void testLink_data()
     {
@@ -157,9 +156,9 @@ private Q_SLOTS:
 
         Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
             if (expectFail) {
-              QVERIFY(!Collection::relatesToPimItem(notification.parentCollection(), entity.id));
+                QVERIFY(!Collection::relatesToPimItem(notification.parentCollection(), entity.id));
             } else {
-              QVERIFY(Collection::relatesToPimItem(notification.parentCollection(), entity.id));
+                QVERIFY(Collection::relatesToPimItem(notification.parentCollection(), entity.id));
             }
         }
     }
@@ -238,7 +237,6 @@ private Q_SLOTS:
         QTest::newRow("HRID collection, RID items") << scenario << notification << false;
     }
 
-
     void testUnlink()
     {
         QFETCH(QList<QByteArray>, scenario);
@@ -260,9 +258,9 @@ private Q_SLOTS:
 
         Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
             if (expectFail) {
-              QVERIFY(Collection::relatesToPimItem(notification.parentCollection(), entity.id));
+                QVERIFY(Collection::relatesToPimItem(notification.parentCollection(), entity.id));
             } else {
-              QVERIFY(!Collection::relatesToPimItem(notification.parentCollection(), entity.id));
+                QVERIFY(!Collection::relatesToPimItem(notification.parentCollection(), entity.id));
             }
         }
     }

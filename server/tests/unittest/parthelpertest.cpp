@@ -33,85 +33,85 @@ using namespace Akonadi::Server;
 
 class PartHelperTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testFileName()
     {
-      akTestSetInstanceIdentifier( QString() );
+        akTestSetInstanceIdentifier(QString());
 
-      Part p;
-      p.setId( 42 );
+        Part p;
+        p.setId(42);
 
-      QString fileName = PartHelper::fileNameForPart( &p );
-      QVERIFY( fileName.endsWith( QL1S( "42" ) ) );
+        QString fileName = PartHelper::fileNameForPart(&p);
+        QVERIFY(fileName.endsWith(QL1S("42")));
     }
 
     void testRemoveFile_data()
     {
-      QTest::addColumn<QString>( "instance" );
-      QTest::newRow( "main" ) << QString();
-      QTest::newRow( "multi-instance" ) << QL1S( "foo" );
+        QTest::addColumn<QString>("instance");
+        QTest::newRow("main") << QString();
+        QTest::newRow("multi-instance") << QL1S("foo");
     }
 
     void testRemoveFile()
     {
-      QFETCH( QString, instance );
-      akTestSetInstanceIdentifier( instance );
+        QFETCH(QString, instance);
+        akTestSetInstanceIdentifier(instance);
 
-      Part p;
-      p.setId( 23 );
-      const QString validFileName = PartHelper::storagePath() + QDir::separator() + PartHelper::fileNameForPart( &p );
-      PartHelper::removeFile( validFileName ); // no throw
+        Part p;
+        p.setId(23);
+        const QString validFileName = PartHelper::storagePath() + QDir::separator() + PartHelper::fileNameForPart(&p);
+        PartHelper::removeFile(validFileName);   // no throw
     }
 
     void testInvalidRemoveFile_data()
     {
-      QTest::addColumn<QString>( "fileName" );
-      QTest::newRow( "empty" ) << QString();
-      QTest::newRow( "relative" ) << QL1S( "foo" );
-      QTest::newRow( "absolute" ) << QL1S( "/foo" );
+        QTest::addColumn<QString>("fileName");
+        QTest::newRow("empty") << QString();
+        QTest::newRow("relative") << QL1S("foo");
+        QTest::newRow("absolute") << QL1S("/foo");
 
-      akTestSetInstanceIdentifier( QL1S( "foo" ) );
-      Part p;
-      p.setId( 23 );
-      QTest::newRow( "wrong instance" ) << PartHelper::fileNameForPart( &p );
+        akTestSetInstanceIdentifier(QL1S("foo"));
+        Part p;
+        p.setId(23);
+        QTest::newRow("wrong instance") << PartHelper::fileNameForPart(&p);
     }
 
     void testInvalidRemoveFile()
     {
-      QFETCH( QString, fileName );
-      akTestSetInstanceIdentifier( QString() );
-      try {
-        PartHelper::removeFile( fileName );
-      } catch ( const PartHelperException &e ) {
-        return; // all good
-      }
-      QVERIFY( false ); // didn't throw
+        QFETCH(QString, fileName);
+        akTestSetInstanceIdentifier(QString());
+        try {
+            PartHelper::removeFile(fileName);
+        } catch (const PartHelperException &e) {
+            return; // all good
+        }
+        QVERIFY(false);   // didn't throw
     }
 
     void testStorageLocation()
     {
-      akTestSetInstanceIdentifier( QString() );
-      const QString mainLocation = PartHelper::storagePath();
-      QVERIFY( mainLocation.endsWith( QDir::separator() ) );
-      QVERIFY( mainLocation.startsWith( QDir::separator() ) );
+        akTestSetInstanceIdentifier(QString());
+        const QString mainLocation = PartHelper::storagePath();
+        QVERIFY(mainLocation.endsWith(QDir::separator()));
+        QVERIFY(mainLocation.startsWith(QDir::separator()));
 
-      akTestSetInstanceIdentifier( QL1S( "foo" ) );
-      QVERIFY( PartHelper::storagePath().endsWith( QDir::separator() ) );
-      QVERIFY( PartHelper::storagePath().startsWith( QDir::separator() ) );
-      QVERIFY( mainLocation != PartHelper::storagePath() );
+        akTestSetInstanceIdentifier(QL1S("foo"));
+        QVERIFY(PartHelper::storagePath().endsWith(QDir::separator()));
+        QVERIFY(PartHelper::storagePath().startsWith(QDir::separator()));
+        QVERIFY(mainLocation != PartHelper::storagePath());
     }
 
     void testResolveAbsolutePath()
     {
 #ifndef Q_OS_WIN
-      QVERIFY( PartHelper::resolveAbsolutePath( "foo" ).startsWith( QLatin1Char( '/' ) ) );
-      QCOMPARE( PartHelper::resolveAbsolutePath( "/foo" ), QString::fromLatin1( "/foo" ) );
-      QVERIFY( !PartHelper::resolveAbsolutePath( "foo" ).contains( QL1S( "//" ) ) ); // no double separator
+        QVERIFY(PartHelper::resolveAbsolutePath("foo").startsWith(QLatin1Char('/')));
+        QCOMPARE(PartHelper::resolveAbsolutePath("/foo"), QString::fromLatin1("/foo"));
+        QVERIFY(!PartHelper::resolveAbsolutePath("foo").contains(QL1S("//")));         // no double separator
 #endif
     }
 };
 
-AKTEST_MAIN( PartHelperTest )
+AKTEST_MAIN(PartHelperTest)
 
 #include "parthelpertest.moc"

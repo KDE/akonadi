@@ -31,8 +31,8 @@ namespace Server {
 */
 class Login : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     Login();
     bool parseStream();
 };

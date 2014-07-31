@@ -41,12 +41,12 @@ namespace Server {
  */
 class Subscribe : public Handler
 {
-  Q_OBJECT
-  public:
-    Subscribe( bool subscribe );
+    Q_OBJECT
+public:
+    Subscribe(bool subscribe);
     bool parseStream();
 
-  private:
+private:
     bool mSubscribe;
 };
 

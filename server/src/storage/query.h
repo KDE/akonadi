@@ -39,33 +39,33 @@ namespace Query {
   Compare operators to be used in query conditions.
 */
 enum CompareOperator {
-  Equals,
-  NotEquals,
-  Is,
-  IsNot,
-  Less,
-  LessOrEqual,
-  Greater,
-  GreaterOrEqual,
-  In,
-  NotIn,
-  Like
+    Equals,
+    NotEquals,
+    Is,
+    IsNot,
+    Less,
+    LessOrEqual,
+    Greater,
+    GreaterOrEqual,
+    In,
+    NotIn,
+    Like
 };
 
 /**
   Logic operations used to combine multiple query conditions.
 */
 enum LogicOperator {
-  And,
-  Or
+    And,
+    Or
 };
 
 /**
   Sort orders.
 */
 enum SortOrder {
-  Ascending,
-  Descending
+    Ascending,
+    Descending
 };
 
 /**
@@ -73,8 +73,8 @@ enum SortOrder {
 */
 class Condition
 {
-  friend class Akonadi::Server::QueryBuilder;
-  public:
+    friend class Akonadi::Server::QueryBuilder;
+public:
     /** A list of conditions. */
     typedef QVector<Condition> List;
 
@@ -82,7 +82,7 @@ class Condition
       Create an empty condition.
       @param op how to combine sub queries.
     */
-    Condition( LogicOperator op = And );
+    Condition(LogicOperator op = And);
 
     /**
       Add a WHERE condition which compares a column with a given value.
@@ -90,7 +90,7 @@ class Condition
       @param op The operator used for comparison
       @param value The value @p column is compared to.
     */
-    void addValueCondition( const QString &column, CompareOperator op, const QVariant &value );
+    void addValueCondition(const QString &column, CompareOperator op, const QVariant &value);
 
     /**
       Add a WHERE condition which compares a column with another column.
@@ -98,17 +98,17 @@ class Condition
       @param op The operator used for comparison.
       @param column2 The column @p column is compared to.
     */
-    void addColumnCondition( const QString &column, CompareOperator op, const QString &column2 );
+    void addColumnCondition(const QString &column, CompareOperator op, const QString &column2);
 
     /**
       Add a WHERE condition. Use this method to build hierarchical conditions.
     */
-    void addCondition( const Condition &condition );
+    void addCondition(const Condition &condition);
 
     /**
       Set how sub-conditions should be combined, default is And.
     */
-    void setSubQueryMode( LogicOperator op );
+    void setSubQueryMode(LogicOperator op);
 
     /**
       Returns if there are sub conditions.
@@ -120,7 +120,7 @@ class Condition
     */
     Condition::List subConditions() const;
 
-  private:
+private:
     Condition::List mSubConditions;
     QString mColumn;
     QString mComparedColumn;
@@ -134,6 +134,6 @@ class Condition
 } // namespace Server
 } // namespace Akonadi
 
-Q_DECLARE_TYPEINFO( Akonadi::Server::Query::Condition, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::Server::Query::Condition, Q_MOVABLE_TYPE);
 
 #endif

@@ -26,52 +26,52 @@ using namespace Akonadi::Server;
 
 struct ClientCapabilityAggregatorData
 {
-  QMutex m_mutex;
-  QVector<int> m_notifyVersions;
+    QMutex m_mutex;
+    QVector<int> m_notifyVersions;
 };
 
-Q_GLOBAL_STATIC( ClientCapabilityAggregatorData, s_aggregator )
+Q_GLOBAL_STATIC(ClientCapabilityAggregatorData, s_aggregator)
 
-void ClientCapabilityAggregator::addSession( const ClientCapabilities &capabilities )
+void ClientCapabilityAggregator::addSession(const ClientCapabilities &capabilities)
 {
-  if ( capabilities.notificationMessageVersion() <= 0 ) {
-    return;
-  }
-  QMutexLocker locker( &s_aggregator()->m_mutex );
-  if ( s_aggregator()->m_notifyVersions.size() <= capabilities.notificationMessageVersion() ) {
-    s_aggregator()->m_notifyVersions.resize( capabilities.notificationMessageVersion() + 1 );
-  }
-  s_aggregator()->m_notifyVersions[capabilities.notificationMessageVersion()]++;
+    if (capabilities.notificationMessageVersion() <= 0) {
+        return;
+    }
+    QMutexLocker locker(&s_aggregator()->m_mutex);
+    if (s_aggregator()->m_notifyVersions.size() <= capabilities.notificationMessageVersion()) {
+        s_aggregator()->m_notifyVersions.resize(capabilities.notificationMessageVersion() + 1);
+    }
+    s_aggregator()->m_notifyVersions[capabilities.notificationMessageVersion()]++;
 }
 
-void ClientCapabilityAggregator::removeSession( const ClientCapabilities &capabilities )
+void ClientCapabilityAggregator::removeSession(const ClientCapabilities &capabilities)
 {
-  if ( capabilities.notificationMessageVersion() <= 0 ) {
-    return;
-  }
-  QMutexLocker locker( &s_aggregator()->m_mutex );
-  s_aggregator()->m_notifyVersions[capabilities.notificationMessageVersion()]--;
-  Q_ASSERT( s_aggregator()->m_notifyVersions.at( capabilities.notificationMessageVersion() ) >= 0 );
+    if (capabilities.notificationMessageVersion() <= 0) {
+        return;
+    }
+    QMutexLocker locker(&s_aggregator()->m_mutex);
+    s_aggregator()->m_notifyVersions[capabilities.notificationMessageVersion()]--;
+    Q_ASSERT(s_aggregator()->m_notifyVersions.at(capabilities.notificationMessageVersion()) >= 0);
 }
 
 int ClientCapabilityAggregator::minimumNotificationMessageVersion()
 {
-  QMutexLocker locker( &s_aggregator()->m_mutex );
-  for ( int i = 1; i < s_aggregator()->m_notifyVersions.size(); ++i ) {
-    if ( s_aggregator()->m_notifyVersions.at( i ) != 0 ) {
-      return i;
+    QMutexLocker locker(&s_aggregator()->m_mutex);
+    for (int i = 1; i < s_aggregator()->m_notifyVersions.size(); ++i) {
+        if (s_aggregator()->m_notifyVersions.at(i) != 0) {
+            return i;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 
 int ClientCapabilityAggregator::maximumNotificationMessageVersion()
 {
-  QMutexLocker locker( &s_aggregator()->m_mutex );
-  for ( int i = s_aggregator()->m_notifyVersions.size() - 1; i >= 1; --i ) {
-    if ( s_aggregator()->m_notifyVersions.at( i ) != 0 ) {
-      return i;
+    QMutexLocker locker(&s_aggregator()->m_mutex);
+    for (int i = s_aggregator()->m_notifyVersions.size() - 1; i >= 1; --i) {
+        if (s_aggregator()->m_notifyVersions.at(i) != 0) {
+            return i;
+        }
     }
-  }
-  return 0;
+    return 0;
 }

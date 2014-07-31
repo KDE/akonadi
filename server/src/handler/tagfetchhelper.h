@@ -38,25 +38,27 @@ class Response;
 
 class TagFetchHelper : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    TagFetchHelper( Connection *connection, const ImapSet &set );
+public:
+    TagFetchHelper(Connection *connection, const ImapSet &set);
 
-    bool fetchTags( const QByteArray &responseIdentifier );
+    bool fetchTags(const QByteArray &responseIdentifier);
 
-    static QList<QByteArray> fetchTagAttributes( qint64 tagId );
-    static QByteArray tagToByteArray( qint64 tagId, const QByteArray &gid, qint64 parentId, const QByteArray &type, const QByteArray &remoteId, const QList<QByteArray> &tagAttributes );
+    static QList<QByteArray> fetchTagAttributes(qint64 tagId);
+    static QByteArray tagToByteArray(qint64 tagId, const QByteArray &gid, qint64 parentId,
+                                     const QByteArray &type, const QByteArray &remoteId,
+                                     const QList<QByteArray> &tagAttributes);
 
-  Q_SIGNALS:
-    void responseAvailable( const Akonadi::Server::Response &response );
+Q_SIGNALS:
+    void responseAvailable(const Akonadi::Server::Response &response);
 
-  private:
+private:
     QSqlQuery buildTagQuery();
     QSqlQuery buildAttributeQuery() const;
     static QSqlQuery buildAttributeQuery( qint64 id );
 
-  private:
+private:
     ImapStreamParser *mStreamParser;
 
     Connection *mConnection;

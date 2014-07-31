@@ -29,13 +29,13 @@ namespace Server {
 class TagRemove : public Handler
 {
     Q_OBJECT
-  public:
-    TagRemove( Scope::SelectionScope scope );
+public:
+    TagRemove(Scope::SelectionScope scope);
     ~TagRemove();
 
     virtual bool parseStream();
 
-  private:
+private:
     Scope mScope;
 };
 

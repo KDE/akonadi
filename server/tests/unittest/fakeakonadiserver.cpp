@@ -50,10 +50,9 @@ FakeAkonadiServer *FakeAkonadiServer::instance()
         AkonadiServer::s_instance = new FakeAkonadiServer;
     }
 
-    Q_ASSERT(qobject_cast<FakeAkonadiServer*>(AkonadiServer::s_instance));
-    return qobject_cast<FakeAkonadiServer*>(AkonadiServer::s_instance);
+    Q_ASSERT(qobject_cast<FakeAkonadiServer *>(AkonadiServer::s_instance));
+    return qobject_cast<FakeAkonadiServer *>(AkonadiServer::s_instance);
 }
-
 
 FakeAkonadiServer::FakeAkonadiServer()
     : AkonadiServer()
@@ -155,7 +154,7 @@ bool FakeAkonadiServer::init()
 
     DbConfig *dbConfig = DbConfig::configuredDatabase();
     if (dbConfig->driverName() != QLatin1String("QSQLITE3")) {
-      throw FakeAkonadiServerException(QLatin1String("Unexpected driver specified. Expected QSQLITE3, got ") + dbConfig->driverName());
+        throw FakeAkonadiServerException(QLatin1String("Unexpected driver specified. Expected QSQLITE3, got ") + dbConfig->driverName());
     }
 
     const QLatin1String initCon("initConnection");
@@ -176,7 +175,7 @@ bool FakeAkonadiServer::init()
 
     dbConfig->setup();
 
-    mDataStore = static_cast<FakeDataStore*>(FakeDataStore::self());
+    mDataStore = static_cast<FakeDataStore *>(FakeDataStore::self());
     mDataStore->setPopulateDb(mPopulateDb);
     if (!mDataStore->init()) {
         throw FakeAkonadiServerException("Failed to initialize datastore");
@@ -202,19 +201,18 @@ bool FakeAkonadiServer::deleteDirectory(const QString &path)
 
     const QFileInfoList list = dir.entryInfoList();
     for (int i = 0; i < list.size(); ++i) {
-      if (list.at(i).isDir() && !list.at(i).isSymLink()) {
-        deleteDirectory(list.at(i).absoluteFilePath());
-        const QDir tmpDir(list.at(i).absoluteDir());
-        tmpDir.rmdir(list.at(i).fileName());
-      } else {
-        QFile::remove(list.at(i).absoluteFilePath());
-      }
+        if (list.at(i).isDir() && !list.at(i).isSymLink()) {
+            deleteDirectory(list.at(i).absoluteFilePath());
+            const QDir tmpDir(list.at(i).absoluteDir());
+            tmpDir.rmdir(list.at(i).fileName());
+        } else {
+            QFile::remove(list.at(i).absoluteFilePath());
+        }
     }
     dir.cdUp();
     dir.rmdir(path);
     return true;
 }
-
 
 bool FakeAkonadiServer::quit()
 {
@@ -281,14 +279,14 @@ void FakeAkonadiServer::runTest()
     close();
 }
 
-FakeDataStore* FakeAkonadiServer::dataStore() const
+FakeDataStore *FakeAkonadiServer::dataStore() const
 {
     Q_ASSERT_X(mDataStore, "FakeAkonadiServer::connection()",
                "You have to call FakeAkonadiServer::start() first");
     return mDataStore;
 }
 
-QSignalSpy* FakeAkonadiServer::notificationSpy() const
+QSignalSpy *FakeAkonadiServer::notificationSpy() const
 {
     return mNotificationSpy;
 }

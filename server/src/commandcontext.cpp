@@ -27,7 +27,7 @@
 using namespace Akonadi::Server;
 
 CommandContext::CommandContext()
-  : mTagId( -1 )
+    : mTagId(-1)
 {
 }
 
@@ -35,106 +35,105 @@ CommandContext::~CommandContext()
 {
 }
 
-void CommandContext::setResource( const Resource &resource )
+void CommandContext::setResource(const Resource &resource)
 {
-  mResource = resource;
+    mResource = resource;
 }
 
 Resource CommandContext::resource() const
 {
-  return mResource;
+    return mResource;
 }
 
-void CommandContext::setCollection( const Collection &collection )
+void CommandContext::setCollection(const Collection &collection)
 {
-  mCollection = collection;
+    mCollection = collection;
 }
 
 qint64 CommandContext::collectionId() const
 {
-  return mCollection.id();
+    return mCollection.id();
 }
 
 Collection CommandContext::collection() const
 {
-  return mCollection;
+    return mCollection;
 }
 
-void CommandContext::setTag( qint64 tagId )
+void CommandContext::setTag(qint64 tagId)
 {
-  mTagId = tagId;
+    mTagId = tagId;
 }
 
 qint64 CommandContext::tagId() const
 {
-  return mTagId;
+    return mTagId;
 }
 
 Tag CommandContext::tag() const
 {
-  if ( mTagId == -1 ) {
-    return Tag();
-  }
+    if (mTagId == -1) {
+        return Tag();
+    }
 
-  return Tag::retrieveById( mTagId );
+    return Tag::retrieveById(mTagId);
 }
 
 bool CommandContext::isEmpty() const
 {
-  return !mCollection.isValid() && mTagId < 0;
+    return !mCollection.isValid() && mTagId < 0;
 }
 
-
-void CommandContext::parseContext( ImapStreamParser *parser )
+void CommandContext::parseContext(ImapStreamParser *parser)
 {
-  // Context
-  if ( !parser->hasString() ) {
-    return;
-  }
+    // Context
+    if (!parser->hasString()) {
+        return;
+    }
 
-  const QByteArray param = parser->peekString();
+    const QByteArray param = parser->peekString();
 
-  if ( param == AKONADI_PARAM_COLLECTIONID ) {
-    parser->readString(); // Read the param
-    bool ok = false;
-    const qint64 colId = parser->readNumber( &ok );
-    if ( !ok ) {
-      throw HandlerException( "Invalid FETCH collection ID" );
+    if (param == AKONADI_PARAM_COLLECTIONID) {
+        parser->readString(); // Read the param
+        bool ok = false;
+        const qint64 colId = parser->readNumber(&ok);
+        if (!ok) {
+            throw HandlerException("Invalid FETCH collection ID");
+        }
+        const Collection col = Collection::retrieveById(colId);
+        if (!col.isValid()) {
+            throw HandlerException("No such collection");
+        }
+        setCollection(col);
+    } else if (param == AKONADI_PARAM_COLLECTION) {
+        if (!resource().isValid()) {
+            throw HandlerException("Only resources can use REMOTEID");
+        }
+        parser->readString(); // Read the param
+        const QByteArray rid = parser->readString();
+        SelectQueryBuilder<Collection> qb;
+        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8(rid));
+        qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, resource().id());
+        if (!qb.exec()) {
+            throw HandlerException("Failed to select collection");
+        }
+        Collection::List results = qb.result();
+        if (results.count() != 1) {
+            throw HandlerException(QByteArray::number(results.count()) + " collections found");
+        }
+        setCollection(results.first());
     }
-    const Collection col = Collection::retrieveById( colId );
-    if ( !col.isValid() ) {
-      throw HandlerException( "No such collection" );
-    }
-    setCollection( col );
-  } else if ( param == AKONADI_PARAM_COLLECTION ) {
-    if ( !resource().isValid() ) {
-      throw HandlerException( "Only resources can use REMOTEID" );
-    }
-    parser->readString(); // Read the param
-    const QByteArray rid = parser->readString();
-    SelectQueryBuilder<Collection> qb;
-    qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8( rid ) );
-    qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, resource().id() );
-    if ( !qb.exec() ) {
-      throw HandlerException( "Failed to select collection" );
-    }
-    Collection::List results = qb.result();
-    if ( results.count() != 1 ) {
-      throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
-    }
-    setCollection( results.first() );
-  }
 
-  if ( param == AKONADI_PARAM_TAGID ) {
-    parser->readString(); // Read the param
-    bool ok = false;
-    const qint64 tagId = parser->readNumber( &ok );
-    if ( !ok ) {
-      throw HandlerException( "Invalid FETCH tag" );
+    if (param == AKONADI_PARAM_TAGID) {
+        parser->readString(); // Read the param
+        bool ok = false;
+        const qint64 tagId = parser->readNumber(&ok);
+        if (!ok) {
+            throw HandlerException("Invalid FETCH tag");
+        }
+        if (!Tag::exists(tagId)) {
+            throw HandlerException("No such tag");
+        }
+        setTag(tagId);
     }
-    if ( !Tag::exists( tagId ) ) {
-      throw HandlerException( "No such tag" );
-    }
-    setTag( tagId );
-  }
 }

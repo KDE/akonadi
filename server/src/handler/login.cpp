@@ -24,22 +24,23 @@
 
 using namespace Akonadi::Server;
 
-Login::Login(): Handler()
+Login::Login()
+    : Handler()
 {
 }
 
 bool Login::parseStream()
 {
-  const QByteArray sessionId = m_streamParser->readString();
-  if ( sessionId.isEmpty() ) {
-    return failureResponse( "Missing session identifier." );
-  }
-  connection()->setSessionId( sessionId );
+    const QByteArray sessionId = m_streamParser->readString();
+    if (sessionId.isEmpty()) {
+        return failureResponse("Missing session identifier.");
+    }
+    connection()->setSessionId(sessionId);
 
-  // ignore anything that follows, for Roundcube compatibility
-  m_streamParser->readUntilCommandEnd();
+    // ignore anything that follows, for Roundcube compatibility
+    m_streamParser->readUntilCommandEnd();
 
-  successResponse( "User logged in" );
-  Q_EMIT connectionStateChange( Authenticated );
-  return true;
+    successResponse("User logged in");
+    Q_EMIT connectionStateChange(Authenticated);
+    return true;
 }

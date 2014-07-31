@@ -31,25 +31,25 @@ class QSocketNotifier;
 class Session : public QObject
 {
     Q_OBJECT
-  public:
-    explicit Session( const QString &input, QObject *parent = 0 );
+public:
+    explicit Session(const QString &input, QObject *parent = 0);
     ~Session();
 
     void printStats() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void connectToHost();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void disconnected();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void inputAvailable();
     void serverDisconnected();
-    void serverError( QLocalSocket::LocalSocketError socketError );
+    void serverError(QLocalSocket::LocalSocketError socketError);
     void serverRead();
 
-  private:
+private:
     QIODevice *m_input;
     QIODevice *m_session;
     QSocketNotifier *m_notifier;

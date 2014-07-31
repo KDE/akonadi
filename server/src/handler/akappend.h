@@ -39,7 +39,7 @@ namespace Server {
  */
 class AkAppend : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     AkAppend();
 
@@ -61,27 +61,25 @@ protected:
         QVector<QByteArray> removed;
     };
 
-    bool buildPimItem( PimItem &item,
-                       Collection &parentCollection,
-                       ChangedAttributes &flags,
-                       ChangedAttributes &tagsRID,
-                       ChangedAttributes &tagsGID );
+    bool buildPimItem(PimItem &item,
+                      Collection &parentCollection,
+                      ChangedAttributes &flags,
+                      ChangedAttributes &tagsRID,
+                      ChangedAttributes &tagsGID);
 
+    bool insertItem(PimItem &item,
+                    const Collection &parentCollection,
+                    const QVector<QByteArray> &itemFlags,
+                    const QVector<QByteArray> &itemTagsRID,
+                    const QVector<QByteArray> &itemTagsGID);
 
-    bool insertItem( PimItem &item,
-                     const Collection &parentCollection,
-                     const QVector<QByteArray> &itemFlags,
-                     const QVector<QByteArray> &itemTagsRID,
-                     const QVector<QByteArray> &itemTagsGID );
+    bool readParts(PimItem &item);
 
-    bool readParts( PimItem &item );
-
-    virtual bool notify( const PimItem &item, const Collection &collection );
-    virtual bool sendResponse( const QByteArray &response, const PimItem &item );
-
+    virtual bool notify(const PimItem &item, const Collection &collection);
+    virtual bool sendResponse(const QByteArray &response, const PimItem &item);
 
 private:
-    QByteArray parseFlag( const QByteArray &flag ) const;
+    QByteArray parseFlag(const QByteArray &flag) const;
 
 };
 

@@ -65,7 +65,6 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-
 private Q_SLOTS:
     void slotStreamerResponseAvailable(const Akonadi::Server::Response &response)
     {
@@ -97,7 +96,7 @@ private Q_SLOTS:
         item.setCollectionId(Collection::retrieveByName(QLatin1String("Col A")).id());
         item.setMimeType(MimeType::retrieveByName(QLatin1String("application/octet-stream")));
         item.setSize(1); // this will not match reality during the test, but that does not matter, as
-                         // that's not the subject of this test
+        // that's not the subject of this test
         QVERIFY(item.insert());
 
         // Order of these tests matters!

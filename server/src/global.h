@@ -22,15 +22,15 @@
 namespace Akonadi {
 namespace Server {
 
-    // rfc1730 section 3
-  /** The state of the client
-  */
-    enum ConnectionState {
-        NonAuthenticated, ///< Not yet authenticated
-        Authenticated, ///< The client is authenticated
-        Selected,
-        LoggingOut
-    };
+// rfc1730 section 3
+/** The state of the client
+*/
+enum ConnectionState {
+    NonAuthenticated, ///< Not yet authenticated
+    Authenticated, ///< The client is authenticated
+    Selected,
+    LoggingOut
+};
 
 } // namespace Server
 } // namespace Akonadi

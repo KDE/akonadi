@@ -31,7 +31,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Expunge::Expunge()
-  : Handler()
+    : Handler()
 {
 }
 
@@ -41,56 +41,56 @@ Expunge::~Expunge()
 
 bool Expunge::parseStream()
 {
-  Response response;
+    Response response;
 
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
+    DataStore *store = connection()->storageBackend();
+    Transaction transaction(store);
 
-  Flag flag = Flag::retrieveByName( QLatin1String( "\\DELETED" ) );
-  if ( !flag.isValid() ) {
-    response.setError();
-    response.setString( "\\DELETED flag unknown" );
+    Flag flag = Flag::retrieveByName(QLatin1String("\\DELETED"));
+    if (!flag.isValid()) {
+        response.setError();
+        response.setString("\\DELETED flag unknown");
 
-    Q_EMIT responseAvailable( response );
-    return true;
-  }
-
-  SelectQueryBuilder<PimItem> qb;
-  qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
-              PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
-  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
-
-  if ( qb.exec() ) {
-    const QVector<PimItem> items = qb.result();
-    if ( store->cleanupPimItems( items ) ) {
-      // FIXME: Change the protocol to EXPUNGE + list of removed ids
-      Q_FOREACH ( const PimItem &item, items ) {
-        response.setUntagged();
-        // IMAP protocol violation: should actually be the sequence number
-        response.setString( QByteArray::number( item.id() ) + " EXPUNGE" );
-
-        Q_EMIT responseAvailable( response );
-      }
-    } else {
-      response.setTag( tag() );
-      response.setError();
-      response.setString( "internal error" );
-
-      Q_EMIT responseAvailable( response );
-      return true;
+        Q_EMIT responseAvailable(response);
+        return true;
     }
-  } else {
-    throw HandlerException( "Unable to execute query." );
-  }
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Unable to commit transaction." );
-  }
+    SelectQueryBuilder<PimItem> qb;
+    qb.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
+               PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName());
+    qb.addValueCondition(PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id());
 
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "EXPUNGE completed" );
+    if (qb.exec()) {
+        const QVector<PimItem> items = qb.result();
+        if (store->cleanupPimItems(items)) {
+            // FIXME: Change the protocol to EXPUNGE + list of removed ids
+            Q_FOREACH (const PimItem &item, items) {
+                response.setUntagged();
+                // IMAP protocol violation: should actually be the sequence number
+                response.setString(QByteArray::number(item.id()) + " EXPUNGE");
 
-  Q_EMIT responseAvailable( response );
-  return true;
+                Q_EMIT responseAvailable(response);
+            }
+        } else {
+            response.setTag(tag());
+            response.setError();
+            response.setString("internal error");
+
+            Q_EMIT responseAvailable(response);
+            return true;
+        }
+    } else {
+        throw HandlerException("Unable to execute query.");
+    }
+
+    if (!transaction.commit()) {
+        return failureResponse("Unable to commit transaction.");
+    }
+
+    response.setTag(tag());
+    response.setSuccess();
+    response.setString("EXPUNGE completed");
+
+    Q_EMIT responseAvailable(response);
+    return true;
 }

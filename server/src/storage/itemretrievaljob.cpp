@@ -28,81 +28,81 @@ using namespace Akonadi::Server;
 
 ItemRetrievalJob::~ItemRetrievalJob()
 {
-  Q_ASSERT( !m_active );
+    Q_ASSERT(!m_active);
 }
 
-void ItemRetrievalJob::start( QDBusAbstractInterface *interface )
+void ItemRetrievalJob::start(QDBusAbstractInterface *interface)
 {
-  Q_ASSERT( m_request );
-  akDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
+    Q_ASSERT(m_request);
+    akDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
 
-  m_interface = interface;
-  // call the resource
-  if ( interface ) {
-    m_active = true;
-    m_oldMethodCalled = false;
-    QList<QVariant> arguments;
-    arguments << m_request->id
-              << QString::fromUtf8( m_request->remoteId )
-              << QString::fromUtf8( m_request->mimeType )
-              << m_request->parts;
-    interface->callWithCallback( QLatin1String( "requestItemDeliveryV2" ), arguments, this, SLOT(callFinished(QString)), SLOT(callFailed(QDBusError)) );
-  } else {
-    Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Unable to contact resource" ) );
-    deleteLater();
-  }
+    m_interface = interface;
+    // call the resource
+    if (interface) {
+        m_active = true;
+        m_oldMethodCalled = false;
+        QList<QVariant> arguments;
+        arguments << m_request->id
+                  << QString::fromUtf8(m_request->remoteId)
+                  << QString::fromUtf8(m_request->mimeType)
+                  << m_request->parts;
+        interface->callWithCallback(QLatin1String("requestItemDeliveryV2"), arguments, this, SLOT(callFinished(QString)), SLOT(callFailed(QDBusError)));
+    } else {
+        Q_EMIT requestCompleted(m_request, QString::fromLatin1("Unable to contact resource"));
+        deleteLater();
+    }
 }
 
 void ItemRetrievalJob::kill()
 {
-  m_active = false;
-  Q_EMIT requestCompleted( m_request, QLatin1String( "Request cancelled" ) );
+    m_active = false;
+    Q_EMIT requestCompleted(m_request, QLatin1String("Request cancelled"));
 }
 
-void ItemRetrievalJob::callFinished( bool returnValue )
+void ItemRetrievalJob::callFinished(bool returnValue)
 {
-  if ( m_active ) {
-    m_active = false;
-    if ( !returnValue ) {
-      Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Resource was unable to deliver item" ) );
-    } else {
-      Q_EMIT requestCompleted( m_request, QString() );
+    if (m_active) {
+        m_active = false;
+        if (!returnValue) {
+            Q_EMIT requestCompleted(m_request, QString::fromLatin1("Resource was unable to deliver item"));
+        } else {
+            Q_EMIT requestCompleted(m_request, QString());
+        }
     }
-  }
-  deleteLater();
+    deleteLater();
 }
 
-void ItemRetrievalJob::callFinished( const QString &errorMsg )
+void ItemRetrievalJob::callFinished(const QString &errorMsg)
 {
-  if ( m_active ) {
-    m_active = false;
-    if ( !errorMsg.isEmpty() ) {
-      Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Unable to retrieve item from resource: %1" ).arg( errorMsg ) );
-    } else {
-      Q_EMIT requestCompleted( m_request, QString() );
+    if (m_active) {
+        m_active = false;
+        if (!errorMsg.isEmpty()) {
+            Q_EMIT requestCompleted(m_request, QString::fromLatin1("Unable to retrieve item from resource: %1").arg(errorMsg));
+        } else {
+            Q_EMIT requestCompleted(m_request, QString());
+        }
     }
-  }
-  deleteLater();
+    deleteLater();
 }
 
-void ItemRetrievalJob::callFailed( const QDBusError &error )
+void ItemRetrievalJob::callFailed(const QDBusError &error)
 {
-  if ( error.type() == QDBusError::UnknownMethod && !m_oldMethodCalled ) {
-    akDebug() << "processing retrieval request (old method) for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
-    Q_ASSERT( m_interface );
-    //try the old version
-    QList<QVariant> arguments;
-    arguments << m_request->id
-              << QString::fromUtf8( m_request->remoteId )
-              << QString::fromUtf8( m_request->mimeType )
-              << m_request->parts;
-    m_oldMethodCalled = true;
-    m_interface->callWithCallback( QLatin1String( "requestItemDelivery" ), arguments, this, SLOT(callFinished(bool)), SLOT(callFailed(QDBusError)) );
-    return;
-  }
-  if ( m_active ) {
-    m_active = false;
-    Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Unable to retrieve item from resource: %1" ).arg( error.message() ) );
-  }
-  deleteLater();
+    if (error.type() == QDBusError::UnknownMethod && !m_oldMethodCalled) {
+        akDebug() << "processing retrieval request (old method) for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
+        Q_ASSERT(m_interface);
+        //try the old version
+        QList<QVariant> arguments;
+        arguments << m_request->id
+                  << QString::fromUtf8(m_request->remoteId)
+                  << QString::fromUtf8(m_request->mimeType)
+                  << m_request->parts;
+        m_oldMethodCalled = true;
+        m_interface->callWithCallback(QLatin1String("requestItemDelivery"), arguments, this, SLOT(callFinished(bool)), SLOT(callFailed(QDBusError)));
+        return;
+    }
+    if (m_active) {
+        m_active = false;
+        Q_EMIT requestCompleted(m_request, QString::fromLatin1("Unable to retrieve item from resource: %1").arg(error.message()));
+    }
+    deleteLater();
 }

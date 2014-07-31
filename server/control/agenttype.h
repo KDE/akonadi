@@ -26,7 +26,7 @@
 #include <QHash>
 
 namespace Akonadi {
-  class ProcessControl;
+class ProcessControl;
 }
 
 class AgentManager;
@@ -34,17 +34,17 @@ class QSettings;
 
 class AgentType
 {
-  public:
+public:
     enum LaunchMethod {
-      Process, /// Standalone executable
-      Server,  /// Agent plugin launched in AgentManager
-      Launcher /// Agent plugin launched in own process
+        Process, /// Standalone executable
+        Server,  /// Agent plugin launched in AgentManager
+        Launcher /// Agent plugin launched in own process
     };
 
-  public:
+public:
     AgentType();
-    bool load( const QString &fileName, AgentManager *manager );
-    void save( QSettings *config ) const;
+    bool load(const QString &fileName, AgentManager *manager);
+    void save(QSettings *config) const;
 
     QString identifier;
     QHash<QString, QString> name;
@@ -63,8 +63,8 @@ class AgentType
     static QLatin1String CapabilityPreprocessor;
     static QLatin1String CapabilitySearch;
 
-  private:
-    QString readString( const QSettings &file, const QString &key );
+private:
+    QString readString(const QSettings &file, const QString &key);
 };
 
 #endif

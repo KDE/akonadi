@@ -36,21 +36,21 @@ namespace Server {
 
   @verbatim
   tag " " scope-selector " SEARCH_RESULT " searchId " " result
-  scope-selector = [ "UID" / "RID" ]
-  result = [ scope / "DONE" ]
+  scope-selector = ["UID" / "RID"]
+  result = [scope / "DONE"]
   @endverbatim
 */
 class SearchResult : public Handler
 {
     Q_OBJECT
-  public:
-    SearchResult( Scope::SelectionScope scope );
+public:
+    SearchResult(Scope::SelectionScope scope);
     ~SearchResult();
 
     bool parseStream();
 
-  private:
-    void fail( const QByteArray &searchId, const char *error );
+private:
+    void fail(const QByteArray &searchId, const char *error);
 
     Scope mScope;
 };

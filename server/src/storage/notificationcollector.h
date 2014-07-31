@@ -41,20 +41,20 @@ class DataStore;
 */
 class NotificationCollector : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Create a new notification collector that is not attached to
       a DataStore and just collects notifications until you emit them manually.
     */
-    NotificationCollector( QObject *parent = 0 );
+    NotificationCollector(QObject *parent = 0);
 
     /**
       Create a new notification collector for the given DataStore @p db.
       @param db The datastore using this notification collector.
     */
-    NotificationCollector( DataStore *db );
+    NotificationCollector(DataStore *db);
 
     /**
       Destroys this notification collector.
@@ -64,173 +64,173 @@ class NotificationCollector : public QObject
     /**
       Sets the identifier of the session causing the changes.
     */
-    void setSessionId( const QByteArray &sessionId );
+    void setSessionId(const QByteArray &sessionId);
 
     /**
       Notify about an added item.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemAdded( const PimItem &item, const Collection &collection = Collection(),
-                    const QByteArray &resource = QByteArray() );
+    void itemAdded(const PimItem &item, const Collection &collection = Collection(),
+                   const QByteArray &resource = QByteArray());
 
     /**
       Notify about a changed item.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemChanged( const PimItem &item,
-                      const QSet<QByteArray> &changedParts,
-                      const Collection &collection = Collection(),
-                      const QByteArray &resource = QByteArray() );
+    void itemChanged(const PimItem &item,
+                     const QSet<QByteArray> &changedParts,
+                     const Collection &collection = Collection(),
+                     const QByteArray &resource = QByteArray());
 
     /**
       Notify about changed items flags
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemsFlagsChanged( const PimItem::List &items,
-                            const QSet<QByteArray> &addedFlags,
-                            const QSet<QByteArray> &removedFlags,
-                            const Collection &collection = Collection(),
-                            const QByteArray &resource = QByteArray() );
+    void itemsFlagsChanged(const PimItem::List &items,
+                           const QSet<QByteArray> &addedFlags,
+                           const QSet<QByteArray> &removedFlags,
+                           const Collection &collection = Collection(),
+                           const QByteArray &resource = QByteArray());
 
     /**
      Notify about changed items tags
     **/
-    void itemsTagsChanged( const PimItem::List &items,
-                           const QSet<qint64> &addedTags,
-                           const QSet<qint64> &removedTags,
-                           const Collection &collection = Collection(),
-                           const QByteArray &resource = QByteArray() );
+    void itemsTagsChanged(const PimItem::List &items,
+                          const QSet<qint64> &addedTags,
+                          const QSet<qint64> &removedTags,
+                          const Collection &collection = Collection(),
+                          const QByteArray &resource = QByteArray());
 
     /**
       Notify about moved items
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemsMoved( const PimItem::List &items, const Collection &collectionSrc = Collection(),
-                     const Collection &collectionDest = Collection(),
-                     const QByteArray &sourceResource = QByteArray() );
+    void itemsMoved(const PimItem::List &items, const Collection &collectionSrc = Collection(),
+                    const Collection &collectionDest = Collection(),
+                    const QByteArray &sourceResource = QByteArray());
 
     /**
       Notify about removed items.
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
     */
-    void itemsRemoved( const PimItem::List &items, const Collection &collection = Collection(),
-                       const QByteArray &resource = QByteArray() );
+    void itemsRemoved(const PimItem::List &items, const Collection &collection = Collection(),
+                      const QByteArray &resource = QByteArray());
 
     /**
      * Notify about linked items
      */
-    void itemsLinked( const PimItem::List &items, const Collection &collection );
+    void itemsLinked(const PimItem::List &items, const Collection &collection);
 
     /**
      * Notify about unlinked items.
      */
-    void itemsUnlinked( const PimItem::List &items, const Collection &collection );
+    void itemsUnlinked(const PimItem::List &items, const Collection &collection);
 
     /**
       Notify about a added collection.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
      */
-    void collectionAdded( const Collection &collection,
-                          const QByteArray &resource = QByteArray() );
+    void collectionAdded(const Collection &collection,
+                         const QByteArray &resource = QByteArray());
 
     /**
       Notify about a changed collection.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void collectionChanged( const Collection &collection,
-                            const QList<QByteArray> &changes,
-                            const QByteArray &resource = QByteArray() );
+    void collectionChanged(const Collection &collection,
+                           const QList<QByteArray> &changes,
+                           const QByteArray &resource = QByteArray());
 
     /**
       Notify about a moved collection.
       Provide as many parameters as you have at hand currently, everything
       missing will be lookeded up on demand in the database later.
     */
-    void collectionMoved( const Collection &collection,
-                          const Collection &source,
-                          const QByteArray &resource = QByteArray(),
-                          const QByteArray &destResource = QByteArray() );
+    void collectionMoved(const Collection &collection,
+                         const Collection &source,
+                         const QByteArray &resource = QByteArray(),
+                         const QByteArray &destResource = QByteArray());
 
     /**
       Notify about a removed collection.
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
      */
-    void collectionRemoved( const Collection &collection,
-                            const QByteArray &resource = QByteArray() );
+    void collectionRemoved(const Collection &collection,
+                           const QByteArray &resource = QByteArray());
 
     /**
      *      Notify about a collection subscription.
      */
-    void collectionSubscribed( const Collection &collection,
-                            const QByteArray &resource = QByteArray() );
+    void collectionSubscribed(const Collection &collection,
+                              const QByteArray &resource = QByteArray());
     /**
      *      Notify about a collection unsubscription
      */
-    void collectionUnsubscribed( const Collection &collection,
-                            const QByteArray &resource = QByteArray() );
+    void collectionUnsubscribed(const Collection &collection,
+                                const QByteArray &resource = QByteArray());
 
     /**
       Notify about an added tag.
      */
-    void tagAdded( const Tag &tag );
+    void tagAdded(const Tag &tag);
 
     /**
      Notify about a changed tag.
      */
-    void tagChanged( const Tag &tag );
+    void tagChanged(const Tag &tag);
 
     /**
       Notify about a removed tag.
      */
-    void tagRemoved( const Tag &tag );
+    void tagRemoved(const Tag &tag);
 
     /**
       Trigger sending of collected notifications.
     */
     void dispatchNotifications();
 
-  Q_SIGNALS:
-    void notify( const Akonadi::NotificationMessageV3::List &msgs );
+Q_SIGNALS:
+    void notify(const Akonadi::NotificationMessageV3::List &msgs);
 
-  private:
-    void itemNotification( NotificationMessageV2::Operation op, const PimItem::List &items,
-                           const Collection &collection,
-                           const Collection &collectionDest,
-                           const QByteArray &resource,
-                           const QSet<QByteArray> &parts = QSet<QByteArray>(),
-                           const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
-                           const QSet<QByteArray> &removedFlags = QSet<QByteArray>(),
-                           const QSet<qint64> &addedTags = QSet<qint64>(),
-                           const QSet<qint64> &removedTags = QSet<qint64>() );
-    void itemNotification( NotificationMessageV2::Operation op, const PimItem &item,
-                           const Collection &collection,
-                           const Collection &collectionDest,
-                           const QByteArray &resource,
-                           const QSet<QByteArray> &parts = QSet<QByteArray>() );
-    void collectionNotification( NotificationMessageV2::Operation op,
-                                 const Collection &collection,
-                                 Collection::Id source, Collection::Id destination,
-                                 const QByteArray &resource,
-                                 const QSet<QByteArray> &changes = QSet<QByteArray>(),
-                                 const QByteArray &destResource = QByteArray() );
-    void tagNotification( NotificationMessageV2::Operation op,
-                          const Tag &tag );
-    void dispatchNotification( const NotificationMessageV3 &msg );
+private:
+    void itemNotification(NotificationMessageV2::Operation op, const PimItem::List &items,
+                          const Collection &collection,
+                          const Collection &collectionDest,
+                          const QByteArray &resource,
+                          const QSet<QByteArray> &parts = QSet<QByteArray>(),
+                          const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
+                          const QSet<QByteArray> &removedFlags = QSet<QByteArray>(),
+                          const QSet<qint64> &addedTags = QSet<qint64>(),
+                          const QSet<qint64> &removedTags = QSet<qint64>());
+    void itemNotification(NotificationMessageV2::Operation op, const PimItem &item,
+                          const Collection &collection,
+                          const Collection &collectionDest,
+                          const QByteArray &resource,
+                          const QSet<QByteArray> &parts = QSet<QByteArray>());
+    void collectionNotification(NotificationMessageV2::Operation op,
+                                const Collection &collection,
+                                Collection::Id source, Collection::Id destination,
+                                const QByteArray &resource,
+                                const QSet<QByteArray> &changes = QSet<QByteArray>(),
+                                const QByteArray &destResource = QByteArray());
+    void tagNotification(NotificationMessageV2::Operation op,
+                         const Tag &tag);
+    void dispatchNotification(const NotificationMessageV3 &msg);
     void clear();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void transactionCommitted();
     void transactionRolledBack();
 
-  private:
+private:
     DataStore *mDb;
     QByteArray mSessionId;
 

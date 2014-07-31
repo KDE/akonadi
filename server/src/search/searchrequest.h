@@ -30,21 +30,21 @@ namespace Server {
 
 class Connection;
 
-class SearchRequest: public QObject
+class SearchRequest : public QObject
 {
     Q_OBJECT
 
-  public:
-    SearchRequest( const QByteArray &connectionId );
+public:
+    SearchRequest(const QByteArray &connectionId);
     ~SearchRequest();
 
-    void setQuery( const QString &query );
+    void setQuery(const QString &query);
     QString query() const;
-    void setCollections( const QVector<qint64> &collections );
+    void setCollections(const QVector<qint64> &collections);
     QVector<qint64> collections() const;
-    void setMimeTypes( const QStringList &mimeTypes );
+    void setMimeTypes(const QStringList &mimeTypes);
     QStringList mimeTypes() const;
-    void setRemoteSearch( bool remote );
+    void setRemoteSearch(bool remote);
     bool remoteSearch() const;
 
     /**
@@ -52,7 +52,7 @@ class SearchRequest: public QObject
      * so that they can be extracted via results() after the search is over. This
      * is disabled by default.
      */
-    void setStoreResults( bool storeResults );
+    void setStoreResults(bool storeResults);
 
     QByteArray connectionId() const;
 
@@ -60,12 +60,12 @@ class SearchRequest: public QObject
 
     QSet<qint64> results() const;
 
-  Q_SIGNALS:
-    void resultsAvailable( const QSet<qint64> &results );
+Q_SIGNALS:
+    void resultsAvailable(const QSet<qint64> &results);
 
-  private:
+private:
     void searchPlugins();
-    void emitResults( const QSet<qint64> &results );
+    void emitResults(const QSet<qint64> &results);
 
     QByteArray mConnectionId;
     QString mQuery;

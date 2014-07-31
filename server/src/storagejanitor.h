@@ -31,10 +31,10 @@ class Collection;
 
 class StorageJanitorThread : public QThread
 {
-  Q_OBJECT
-  public:
-    explicit StorageJanitorThread( QObject *parent = 0 );
-  protected:
+    Q_OBJECT
+public:
+    explicit StorageJanitorThread(QObject *parent = 0);
+protected:
     virtual void run();
 };
 
@@ -43,25 +43,25 @@ class StorageJanitorThread : public QThread
  */
 class StorageJanitor : public QObject
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.Janitor" )
-  public:
-    explicit StorageJanitor( QObject *parent = 0 );
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.Janitor")
+public:
+    explicit StorageJanitor(QObject *parent = 0);
     ~StorageJanitor();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /** Triggers a consistency check of the internal storage. */
     Q_SCRIPTABLE Q_NOREPLY void check();
     /** Triggers a vacuuming of the database, that is compacting of unused space. */
     Q_SCRIPTABLE Q_NOREPLY void vacuum();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /** Sends informational messages to a possible UI for this. */
-    Q_SCRIPTABLE void information( const QString &msg );
+    Q_SCRIPTABLE void information(const QString &msg);
 
-  private:
-    void inform( const char *msg );
-    void inform( const QString &msg );
+private:
+    void inform(const char *msg);
+    void inform(const QString &msg);
     /** Create a lost+found collection if necessary. */
     qint64 lostAndFoundCollection();
 
@@ -79,7 +79,7 @@ class StorageJanitor : public QObject
      * Verifies there is a path from @p col to the root of the collection tree
      * and that that everything along that path belongs to the same resource.
      */
-    void checkPathToRoot( const Collection &col );
+    void checkPathToRoot(const Collection &col);
 
     /**
      * Look for items belonging to non-existing collections.
@@ -119,7 +119,7 @@ class StorageJanitor : public QObject
      */
     void checkSizeTreshold();
 
-  private:
+private:
     QDBusConnection m_connection;
     qint64 m_lostFoundCollectionId;
 };

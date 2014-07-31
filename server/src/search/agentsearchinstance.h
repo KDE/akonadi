@@ -29,24 +29,23 @@ class OrgFreedesktopAkonadiAgentSearchInterface;
 namespace Akonadi {
 namespace Server {
 
-class AgentSearchInstance: public QObject
+class AgentSearchInstance : public QObject
 {
     Q_OBJECT
-  public:
-    AgentSearchInstance( const QString &id );
+public:
+    AgentSearchInstance(const QString &id);
     virtual ~AgentSearchInstance();
 
     bool init();
 
-    void search( const QByteArray &searchId, const QString &query,
-                 qlonglong collectionId );
+    void search(const QByteArray &searchId, const QString &query, qlonglong collectionId);
 
     OrgFreedesktopAkonadiAgentSearchInterface *interface() const;
 
-  private Q_SLOTS:
-    void serviceOwnerChanged( const QString &service, const QString &oldName, const QString &newName );
+private Q_SLOTS:
+    void serviceOwnerChanged(const QString &service, const QString &oldName, const QString &newName);
 
-  private:
+private:
     QString mId;
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
     QDBusServiceWatcher *mServiceWatcher;

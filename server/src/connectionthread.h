@@ -22,17 +22,15 @@
 
 #include <QThread>
 
-namespace Akonadi
-{
-namespace Server
-{
+namespace Akonadi {
+namespace Server {
 
 class ConnectionThread : public QThread
 {
     Q_OBJECT
 
 public:
-    explicit ConnectionThread(quintptr socketDescriptor, QObject* parent = 0);
+    explicit ConnectionThread(quintptr socketDescriptor, QObject *parent = 0);
     virtual ~ConnectionThread();
 
     void run();

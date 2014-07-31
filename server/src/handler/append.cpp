@@ -59,33 +59,33 @@ bool Append::commit()
 
     //need to read out the data before the below code to avoid hangs, probably at some place the eventloop is reentered
     //and more data is read into the stream and that causes the problems.
-    if ( m_streamParser->hasLiteral() ) {
-      dataSize = m_streamParser->remainingLiteralSize();
-      m_size = qMax( m_size, dataSize );
-      storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
-      if ( storeInFile ) {
-        try {
-          PartHelper::streamToFile( m_streamParser, tmpFile );
-        } catch ( const PartHelperException &e ) {
-          return failureResponse( e.what() );
+    if (m_streamParser->hasLiteral()) {
+        dataSize = m_streamParser->remainingLiteralSize();
+        m_size = qMax(m_size, dataSize);
+        storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
+        if (storeInFile) {
+            try {
+                PartHelper::streamToFile(m_streamParser, tmpFile);
+            } catch (const PartHelperException &e) {
+                return failureResponse(e.what());
+            }
+        } else {
+            while (!m_streamParser->atLiteralEnd()) {
+                m_data += m_streamParser->readLiteralPart();
+            }
         }
-      } else {
-        while ( !m_streamParser->atLiteralEnd() ) {
-          m_data += m_streamParser->readLiteralPart();
-        }
-      }
     } else {
-      m_data = m_streamParser->readString();
+        m_data = m_streamParser->readString();
     }
 
     Response response;
 
     DataStore *db = connection()->storageBackend();
-    Transaction transaction( db );
+    Transaction transaction(db);
 
-    Collection col = HandlerHelper::collectionFromIdOrName( m_mailbox );
-    if ( !col.isValid() ) {
-      return failureResponse( QByteArray( "Unknown collection for '" ) + m_mailbox + QByteArray( "'." ) );
+    Collection col = HandlerHelper::collectionFromIdOrName(m_mailbox);
+    if (!col.isValid()) {
+        return failureResponse(QByteArray("Unknown collection for '") + m_mailbox + QByteArray("'."));
     }
 
     QByteArray mt;
@@ -93,121 +93,121 @@ bool Append::commit()
     QString remote_revision;
     QString gid;
     QVector<QByteArray> flags;
-    Q_FOREACH ( const QByteArray &flag, m_flags ) {
-      if ( flag.startsWith( "\\MimeType" ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.indexOf( ']', pos1 );
-        mt = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
-      } else if ( flag.startsWith( "\\RemoteId" ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.lastIndexOf( ']' );
-        remote_id = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else if ( flag.startsWith( "\\RemoteRevision" ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.lastIndexOf( ']' );
-        remote_revision = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else if ( flag.startsWith( "\\Gid" ) ) {
-        int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.lastIndexOf( ']' );
-        gid = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else {
-        flags << flag;
-      }
+    Q_FOREACH (const QByteArray &flag, m_flags) {
+        if (flag.startsWith("\\MimeType")) {
+            int pos1 = flag.indexOf('[');
+            int pos2 = flag.indexOf(']', pos1);
+            mt = flag.mid(pos1 + 1, pos2 - pos1 - 1);
+        } else if (flag.startsWith("\\RemoteId")) {
+            int pos1 = flag.indexOf('[');
+            int pos2 = flag.lastIndexOf(']');
+            remote_id = QString::fromUtf8(flag.mid(pos1 + 1, pos2 - pos1 - 1));
+        } else if (flag.startsWith("\\RemoteRevision")) {
+            int pos1 = flag.indexOf('[');
+            int pos2 = flag.lastIndexOf(']');
+            remote_revision = QString::fromUtf8(flag.mid(pos1 + 1, pos2 - pos1 - 1));
+        } else if (flag.startsWith("\\Gid")) {
+            int pos1 = flag.indexOf('[');
+            int pos2 = flag.lastIndexOf(']');
+            gid = QString::fromUtf8(flag.mid(pos1 + 1, pos2 - pos1 - 1));
+        } else {
+            flags << flag;
+        }
     }
     // standard imap does not know this attribute, so that's mail
-    if ( mt.isEmpty() ) {
-      mt = "message/rfc822";
+    if (mt.isEmpty()) {
+        mt = "message/rfc822";
     }
-    MimeType mimeType = MimeType::retrieveByName( QString::fromLatin1( mt ) );
-    if ( !mimeType.isValid() ) {
-      MimeType m( QString::fromLatin1( mt ) );
-      if ( !m.insert() ) {
-        return failureResponse( QByteArray( "Unable to create mimetype '" ) +  mt + QByteArray( "'." ) );
-      }
-      mimeType = m;
+    MimeType mimeType = MimeType::retrieveByName(QString::fromLatin1(mt));
+    if (!mimeType.isValid()) {
+        MimeType m(QString::fromLatin1(mt));
+        if (!m.insert()) {
+            return failureResponse(QByteArray("Unable to create mimetype '") +  mt + QByteArray("'."));
+        }
+        mimeType = m;
     }
 
     PimItem item;
-    item.setRev( 0 );
-    item.setSize( m_size );
-    item.setDatetime( m_dateTime );
+    item.setRev(0);
+    item.setSize(m_size);
+    item.setDatetime(m_dateTime);
 
     // wrap data into a part
     Part part;
-    part.setPartType( PartTypeHelper::fromName( "PLD", "RFC822" ) );
-    part.setData( m_data );
-    part.setPimItemId( item.id() );
-    part.setDatasize( dataSize );
+    part.setPartType(PartTypeHelper::fromName("PLD", "RFC822"));
+    part.setData(m_data);
+    part.setPimItemId(item.id());
+    part.setDatasize(dataSize);
 
     QVector<Part> parts;
-    parts.append( part );
+    parts.append(part);
 
     // If we have active preprocessors then we also set the hidden attribute
     // for the UI and we enqueue the item for preprocessing.
     bool doPreprocessing = PreprocessorManager::instance()->isActive();
     //akDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
-    if ( doPreprocessing ) {
-      Part hiddenAttribute;
-      hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
-      hiddenAttribute.setData( QByteArray() );
-      hiddenAttribute.setPimItemId( item.id() );
-      hiddenAttribute.setDatasize( 0 );
-      parts.append( hiddenAttribute );
+    if (doPreprocessing) {
+        Part hiddenAttribute;
+        hiddenAttribute.setPartType(PartTypeHelper::fromName("ATR", "HIDDEN"));
+        hiddenAttribute.setData(QByteArray());
+        hiddenAttribute.setPimItemId(item.id());
+        hiddenAttribute.setDatasize(0);
+        parts.append(hiddenAttribute);
     }
 
-    bool ok = db->appendPimItem( parts, mimeType, col, m_dateTime, remote_id, remote_revision, gid, item );
-    response.setTag( tag() );
-    if ( !ok ) {
-        return failureResponse( "Append failed" );
+    bool ok = db->appendPimItem(parts, mimeType, col, m_dateTime, remote_id, remote_revision, gid, item);
+    response.setTag(tag());
+    if (!ok) {
+        return failureResponse("Append failed");
     }
 
     // set message flags
-    const Flag::List flagList = HandlerHelper::resolveFlags( flags );
+    const Flag::List flagList = HandlerHelper::resolveFlags(flags);
     bool flagsChanged = false;
-    if ( !db->appendItemsFlags( PimItem::List() << item, flagList, &flagsChanged, false, col ) ) {
-      return failureResponse( "Unable to append item flags." );
+    if (!db->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, col)) {
+        return failureResponse("Unable to append item flags.");
     }
 
-    if ( storeInFile ) {
-      const QString fileName = PartHelper::resolveAbsolutePath( parts[0].data() );
+    if (storeInFile) {
+        const QString fileName = PartHelper::resolveAbsolutePath(parts[0].data());
 
-      //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
-      //client knows about the item yet
-      PartHelper::removeFile( fileName );
+        //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
+        //client knows about the item yet
+        PartHelper::removeFile(fileName);
 
-      if ( !tmpFile.copy( fileName ) ) {
-        return failureResponse( "Unable to copy item part data from the temporary file" );
-      }
+        if (!tmpFile.copy(fileName)) {
+            return failureResponse("Unable to copy item part data from the temporary file");
+        }
     }
 
     // TODO if the mailbox is currently selected, the normal new message
     //      actions SHOULD occur.  Specifically, the server SHOULD notify the
     //      client immediately via an untagged EXISTS response.
 
-    if ( !transaction.commit() ) {
-        return failureResponse( "Unable to commit transaction." );
+    if (!transaction.commit()) {
+        return failureResponse("Unable to commit transaction.");
     }
 
-    if ( doPreprocessing ) {
-      // enqueue the item for preprocessing
-      PreprocessorManager::instance()->beginHandleItem( item, db );
+    if (doPreprocessing) {
+        // enqueue the item for preprocessing
+        PreprocessorManager::instance()->beginHandleItem(item, db);
     }
 
     // Date time is always stored in UTC time zone by the server.
-    QString datetime = QLocale::c().toString( item.datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
+    QString datetime = QLocale::c().toString(item.datetime(), QLatin1String("dd-MMM-yyyy hh:mm:ss +0000"));
 
-    QByteArray res( "[UIDNEXT " + QByteArray::number( item.id() ) + ' ' );
-    res.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
-    res.append( ']' );
+    QByteArray res("[UIDNEXT " + QByteArray::number(item.id()) + ' ');
+    res.append("DATETIME " + ImapParser::quote(datetime.toUtf8()));
+    res.append(']');
 
-    response.setTag( tag() );
+    response.setTag(tag());
     response.setUserDefined();
-    response.setString( res );
-    Q_EMIT responseAvailable( response );
+    response.setString(res);
+    Q_EMIT responseAvailable(response);
 
     response.setSuccess();
-    response.setString( "Append completed" );
-    Q_EMIT responseAvailable( response );
+    response.setString("Append completed");
+    Q_EMIT responseAvailable(response);
     return true;
 }
 
@@ -217,13 +217,13 @@ bool Append::parseStream()
     //        OPTIONAL flag parenthesized list
     //        OPTIONAL date/time string
     //        message literal
-  //
+    //
     // Syntax:
     // append = "APPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP literal
 
-  m_mailbox = m_streamParser->readString();
+    m_mailbox = m_streamParser->readString();
 
-  m_size = m_streamParser->readNumber();
+    m_size = m_streamParser->readNumber();
 
     // parse optional flag parenthesized list
     // Syntax:
@@ -233,20 +233,20 @@ bool Append::parseStream()
     //                    ; Does not include "\Recent"
     // flag-extension = "\" atom
     // flag-keyword   = atom
-  if ( m_streamParser->hasList() ) {
-    m_flags = m_streamParser->readParenthesizedList();
-  }
+    if (m_streamParser->hasList()) {
+        m_flags = m_streamParser->readParenthesizedList();
+    }
 
     // parse optional date/time string
-  if ( m_streamParser->hasDateTime() ) {
-    m_dateTime = m_streamParser->readDateTime();
-    m_dateTime = m_dateTime.toUTC();
+    if (m_streamParser->hasDateTime()) {
+        m_dateTime = m_streamParser->readDateTime();
+        m_dateTime = m_dateTime.toUTC();
         // FIXME Should we return an error if m_dateTime is invalid?
-  } else {
+    } else {
         // if date/time is not given then it will be set to the current date/time
         // converted to UTC.
-    m_dateTime = QDateTime::currentDateTime().toUTC();
-  }
+        m_dateTime = QDateTime::currentDateTime().toUTC();
+    }
 
-  return commit();
+    return commit();
 }

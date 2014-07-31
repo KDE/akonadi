@@ -26,7 +26,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-CollectionReferenceManager* CollectionReferenceManager::s_instance = 0;
+CollectionReferenceManager *CollectionReferenceManager::s_instance = 0;
 
 CollectionReferenceManager::CollectionReferenceManager()
     : mReferenceLock(QMutex::Recursive)
@@ -95,12 +95,12 @@ void CollectionReferenceManager::expireCollectionIfNecessary(Collection::Id coll
 void CollectionReferenceManager::cleanup()
 {
     SelectQueryBuilder<Collection> qb;
-    qb.addValueCondition( Collection::referencedColumn(), Query::Equals, true );
-    if ( !qb.exec() ) {
+    qb.addValueCondition(Collection::referencedColumn(), Query::Equals, true);
+    if (!qb.exec()) {
         akError() << "Failed to execute  collection reference cleanup query.";
         return;
     }
-    Q_FOREACH ( Collection col, qb.result() ) {
+    Q_FOREACH (Collection col, qb.result()) {
         col.setReferenced(false);
         col.update();
         if (AkonadiServer::instance()->cacheCleaner()) {
@@ -108,4 +108,3 @@ void CollectionReferenceManager::cleanup()
         }
     }
 }
-

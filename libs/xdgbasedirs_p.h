@@ -71,7 +71,7 @@ class XdgBaseDirsPrivate;
  */
 class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 {
-  public:
+public:
     /**
      @brief Creates the instance
      */
@@ -97,7 +97,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
      @see systemPathList()
      @see saveDir()
      */
-    static QString homePath( const char *resource );
+    static QString homePath(const char *resource);
 
     /**
      @brief Returns the list of system wide directories for a given resource type
@@ -119,7 +119,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 
      @see homePath()
      */
-    static QStringList systemPathList( const char *resource );
+    static QStringList systemPathList(const char *resource);
 
     /**
      @brief Searches the resource specific directories for a given file
@@ -141,7 +141,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
      @see findResourceDir()
      @see saveDir
      */
-    static QString findResourceFile( const char *resource, const QString &relPath );
+    static QString findResourceFile(const char *resource, const QString &relPath);
 
     /**
      @brief Searches the executable specific directories for a given file
@@ -162,7 +162,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 
      @see findResourceFile()
      */
-    static QString findExecutableFile( const QString &relPath, const QStringList &searchPath = QStringList() );
+    static QString findExecutableFile(const QString &relPath, const QStringList &searchPath = QStringList());
 
     /**
      @brief Searches the plugin specific directories for a given file
@@ -183,7 +183,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 
      @see findResourceFile()
      */
-    static QString findPluginFile( const QString &relPath, const QStringList &searchPath = QStringList() );
+    static QString findPluginFile(const QString &relPath, const QStringList &searchPath = QStringList());
 
     /**
      @brief Returns plugin specific directories
@@ -221,7 +221,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
      @see findResourceFile()
      @see saveDir()
      */
-    static QString findResourceDir( const char *resource, const QString &relPath );
+    static QString findResourceDir(const char *resource, const QString &relPath);
 
     /**
      @brief Searches the resource specific directories for a given subdirectory
@@ -247,7 +247,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 
      @see findResourceDir()
      */
-    static QStringList findAllResourceDirs( const char *resource, const QString &relPath );
+    static QStringList findAllResourceDirs(const char *resource, const QString &relPath);
 
     /**
      @brief Finds or creates the "save to" directory for a given resource
@@ -266,7 +266,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 
      @see findResourceDir()
      */
-    static QString saveDir( const char *resource, const QString &relPath );
+    static QString saveDir(const char *resource, const QString &relPath);
 
     /**
     * @brief Open mode flags for resource files
@@ -292,7 +292,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
     *
     * @return the path of the server config file, suitable for \p openMode
     */
-    static QString akonadiServerConfigFile( FileAccessMode openMode = ReadOnly );
+    static QString akonadiServerConfigFile(FileAccessMode openMode = ReadOnly);
 
     /**
     * @brief Returns the path of the Akonadi data connection config file
@@ -304,17 +304,17 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
     *
     * @return the path of the data connection config file, suitable for \p openMode
     */
-    static QString akonadiConnectionConfigFile( FileAccessMode openMode = ReadOnly );
+    static QString akonadiConnectionConfigFile(FileAccessMode openMode = ReadOnly);
 
-  private:
+private:
     XdgBaseDirsPrivate *const d;
 
-  private:
-    static QString akonadiConfigFile( const QString &file, FileAccessMode openMode );
+private:
+    static QString akonadiConfigFile(const QString &file, FileAccessMode openMode);
 
-  private:
-    XdgBaseDirs( const XdgBaseDirs & );
-    XdgBaseDirs &operator=( const XdgBaseDirs & );
+private:
+    XdgBaseDirs(const XdgBaseDirs &);
+    XdgBaseDirs &operator=(const XdgBaseDirs &);
 };
 
 }

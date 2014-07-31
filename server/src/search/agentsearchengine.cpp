@@ -30,34 +30,34 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-void AgentSearchEngine::addSearch( const Collection &collection )
+void AgentSearchEngine::addSearch(const Collection &collection)
 {
-  QDBusInterface agentMgr( AkDBus::serviceName( AkDBus::Control ),
-                           QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
-                           QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
-  if ( agentMgr.isValid() ) {
-    QList<QVariant> args;
-    args << collection.queryString()
-         << QLatin1String("")
-         << collection.id();
-    agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "addSearch" ), args );
-    return;
-  }
+    QDBusInterface agentMgr(AkDBus::serviceName(AkDBus::Control),
+                            QLatin1String(AKONADI_DBUS_AGENTMANAGER_PATH),
+                            QLatin1String("org.freedesktop.Akonadi.AgentManagerInternal"));
+    if (agentMgr.isValid()) {
+        QList<QVariant> args;
+        args << collection.queryString()
+             << QLatin1String("")
+             << collection.id();
+        agentMgr.callWithArgumentList(QDBus::NoBlock, QLatin1String("addSearch"), args);
+        return;
+    }
 
-  akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
+    akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }
 
-void AgentSearchEngine::removeSearch( qint64 id )
+void AgentSearchEngine::removeSearch(qint64 id)
 {
-  QDBusInterface agentMgr( AkDBus::serviceName( AkDBus::Control ),
-                            QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
-                            QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
-  if ( agentMgr.isValid() ) {
-    QList<QVariant> args;
-    args << id;
-    agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "removeSearch" ), args );
-    return;
-  }
+    QDBusInterface agentMgr(AkDBus::serviceName(AkDBus::Control),
+                            QLatin1String(AKONADI_DBUS_AGENTMANAGER_PATH),
+                            QLatin1String("org.freedesktop.Akonadi.AgentManagerInternal"));
+    if (agentMgr.isValid()) {
+        QList<QVariant> args;
+        args << id;
+        agentMgr.callWithArgumentList(QDBus::NoBlock, QLatin1String("removeSearch"), args);
+        return;
+    }
 
-  akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
+    akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }

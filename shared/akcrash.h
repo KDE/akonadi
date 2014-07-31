@@ -28,12 +28,12 @@ QString akBacktrace();
 
 class AkonadiCrash
 {
-  public:
-    typedef void ( *HandlerType )( int );
+public:
+    typedef void (*HandlerType)(int);
 
     static void init();
-    static void setEmergencyMethod( HandlerType method );
-    static void setShutdownMethod( HandlerType method );
+    static void setEmergencyMethod(HandlerType method);
+    static void setShutdownMethod(HandlerType method);
 };
 
 #endif

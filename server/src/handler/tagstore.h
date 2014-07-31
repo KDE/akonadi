@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef AKONADI_TAGSTORE_H
 #define AKONADI_TAGSTORE_H
 
@@ -28,9 +27,9 @@ namespace Server {
 
 class TagStore : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     TagStore();
     ~TagStore();
 

@@ -25,26 +25,26 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  AkCoreApplication app( argc, argv );
-  app.setDescription( QLatin1String( "Akonadi ASAP cat\n"
-    "This is a development tool, only use this if you know what you are doing.\n\n"
-    "Usage: asapcat [input]" ) );
+    AkCoreApplication app(argc, argv);
+    app.setDescription(QLatin1String("Akonadi ASAP cat\n"
+                                     "This is a development tool, only use this if you know what you are doing.\n\n"
+                                     "Usage: asapcat [input]"));
 
-  boost::program_options::options_description options;
-  options.add_options()
-    ( "input", boost::program_options::value<std::string>()->default_value( "-" ), "input to read commands from" );
-  app.addCommandLineOptions( options );
-  app.addPositionalCommandLineOption( "input", 1 );
+    boost::program_options::options_description options;
+    options.add_options()
+    ("input", boost::program_options::value<std::string>()->default_value("-"), "input to read commands from");
+    app.addCommandLineOptions(options);
+    app.addPositionalCommandLineOption("input", 1);
 
-  app.parseCommandLine();
+    app.parseCommandLine();
 
-  Session session( QString::fromStdString( app.commandLineArguments()["input"].as<std::string>() ) );
-  QObject::connect( &session, SIGNAL(disconnected()), QCoreApplication::instance(), SLOT(quit()) );
-  QMetaObject::invokeMethod( &session, "connectToHost", Qt::QueuedConnection );
+    Session session(QString::fromStdString(app.commandLineArguments()["input"].as<std::string>()));
+    QObject::connect(&session, SIGNAL(disconnected()), QCoreApplication::instance(), SLOT(quit()));
+    QMetaObject::invokeMethod(&session, "connectToHost", Qt::QueuedConnection);
 
-  const int result = app.exec();
-  session.printStats();
-  return result;
+    const int result = app.exec();
+    session.printStats();
+    return result;
 }

@@ -28,7 +28,7 @@
 using namespace Akonadi::Server;
 
 TagStore::TagStore()
-  : Handler()
+    : Handler()
 {
 }
 
@@ -38,72 +38,72 @@ TagStore::~TagStore()
 
 bool TagStore::parseStream()
 {
-  const qint64 tagId = m_streamParser->readNumber();
+    const qint64 tagId = m_streamParser->readNumber();
 
-  if ( !m_streamParser->hasList() ) {
-    failureResponse( "No changes to store" );
-    return false;
-  }
-
-  Tag changedTag = Tag::retrieveById( tagId );
-  if ( !changedTag.isValid() ) {
-    throw HandlerException( "No such tag" );
-  }
-
-  // Retrieve all tag's attributes
-  const TagAttribute::List attributes = TagAttribute::retrieveFiltered( TagAttribute::tagIdFullColumnName(), tagId );
-  QMap<QByteArray,TagAttribute> attributesMap;
-  Q_FOREACH ( const TagAttribute &attribute, attributes ) {
-    attributesMap.insert( attribute.type(), attribute );
-  }
-
-  m_streamParser->beginList();
-  while ( !m_streamParser->atListEnd() ) {
-    const QByteArray attr = m_streamParser->readString();
-
-    if ( attr == AKONADI_PARAM_PARENT ) {
-      const qint64 parent = m_streamParser->readNumber();
-            changedTag.setParentId( parent );
-    } else if ( attr == AKONADI_PARAM_GID ) {
-      throw HandlerException( "Changing tag GID is not allowed" );
-    } else if ( attr == AKONADI_PARAM_UID ) {
-      throw HandlerException( "Changing tag UID is not allowed" );
-    } else {
-      if ( attr.startsWith( '-' ) ) {
-        const QByteArray attrName = attr.mid( 1 );
-        if ( attributesMap.contains( attrName ) ) {
-          TagAttribute attribute = attributesMap.value( attrName );
-          TagAttribute::remove( attribute.id() );
-        }
-      } else if ( attributesMap.contains( attr ) ) {
-        TagAttribute attribute = attributesMap.value( attr );
-        attribute.setValue( m_streamParser->readString() );
-        attribute.update();
-      } else {
-        TagAttribute attribute;
-        attribute.setTagId( tagId );
-        attribute.setType( attr );
-        attribute.setValue( m_streamParser->readString() );
-        attribute.insert();
-      }
+    if (!m_streamParser->hasList()) {
+        failureResponse("No changes to store");
+        return false;
     }
-  }
 
-  DataStore::self()->notificationCollector()->tagChanged( changedTag );
+    Tag changedTag = Tag::retrieveById(tagId);
+    if (!changedTag.isValid()) {
+        throw HandlerException("No such tag");
+    }
 
-  ImapSet set;
-  set.add( QVector<qint64>() << tagId );
-  TagFetchHelper helper( connection(), set );
-  connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
-  if ( !helper.fetchTags( AKONADI_CMD_TAGFETCH ) ) {
-    return false;
-  }
+    // Retrieve all tag's attributes
+    const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), tagId);
+    QMap<QByteArray, TagAttribute> attributesMap;
+    Q_FOREACH (const TagAttribute &attribute, attributes) {
+        attributesMap.insert(attribute.type(), attribute);
+    }
 
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "TAGSTORE completed" );
-  Q_EMIT responseAvailable( response );
-  return true;
+    m_streamParser->beginList();
+    while (!m_streamParser->atListEnd()) {
+        const QByteArray attr = m_streamParser->readString();
+
+        if (attr == AKONADI_PARAM_PARENT) {
+            const qint64 parent = m_streamParser->readNumber();
+            changedTag.setParentId(parent);
+        } else if (attr == AKONADI_PARAM_GID) {
+            throw HandlerException("Changing tag GID is not allowed");
+        } else if (attr == AKONADI_PARAM_UID) {
+            throw HandlerException("Changing tag UID is not allowed");
+        } else {
+            if (attr.startsWith('-')) {
+                const QByteArray attrName = attr.mid(1);
+                if (attributesMap.contains(attrName)) {
+                    TagAttribute attribute = attributesMap.value(attrName);
+                    TagAttribute::remove(attribute.id());
+                }
+            } else if (attributesMap.contains(attr)) {
+                TagAttribute attribute = attributesMap.value(attr);
+                attribute.setValue(m_streamParser->readString());
+                attribute.update();
+            } else {
+                TagAttribute attribute;
+                attribute.setTagId(tagId);
+                attribute.setType(attr);
+                attribute.setValue(m_streamParser->readString());
+                attribute.insert();
+            }
+        }
+    }
+
+    DataStore::self()->notificationCollector()->tagChanged(changedTag);
+
+    ImapSet set;
+    set.add(QVector<qint64>() << tagId);
+    TagFetchHelper helper(connection(), set);
+    connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
+    if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
+        return false;
+    }
+
+    Response response;
+    response.setTag(tag());
+    response.setSuccess();
+    response.setString("TAGSTORE completed");
+    Q_EMIT responseAvailable(response);
+    return true;
 }

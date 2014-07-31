@@ -36,51 +36,51 @@
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 
-Q_IMPORT_PLUGIN( qsqlite3 )
+Q_IMPORT_PLUGIN(qsqlite3)
 #endif
 
 namespace po = boost::program_options;
 
-void shutdownHandler( int )
+void shutdownHandler(int)
 {
-  akDebug() << "Shutting down AkonadiServer...";
+    akDebug() << "Shutting down AkonadiServer...";
 
-  Akonadi::Server::AkonadiServer::instance()->quit();
+    Akonadi::Server::AkonadiServer::instance()->quit();
 
-  exit( 255 );
+    exit(255);
 }
 
-int main( int argc, char ** argv )
+int main(int argc, char **argv)
 {
-    Q_INIT_RESOURCE( akonadidb );
-    AkCoreApplication app( argc, argv );
-    app.setDescription( QLatin1String( "Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
+    Q_INIT_RESOURCE(akonadidb);
+    AkCoreApplication app(argc, argv);
+    app.setDescription(QLatin1String("Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
 
 #if !defined(NDEBUG)
-    po::options_description debugOptions( "Debug options (use with care)" );
+    po::options_description debugOptions("Debug options (use with care)");
     debugOptions.add_options()
-        ( "start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available" );
-    app.addCommandLineOptions( debugOptions );
+    ("start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available");
+    app.addCommandLineOptions(debugOptions);
 #endif
 
     app.parseCommandLine();
 
-   if ( !app.commandLineArguments().count( "start-without-control" ) &&
-        !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::ControlLock ) ) ) {
-     akError() << "Akonadi control process not found - aborting.";
-     akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
-   }
+    if (!app.commandLineArguments().count("start-without-control") &&
+        !QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::ControlLock))) {
+        akError() << "Akonadi control process not found - aborting.";
+        akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
+    }
 
     // Make sure we do initialization from eventloop, otherwise
     // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
     QTimer::singleShot(0, Akonadi::Server::AkonadiServer::instance(), SLOT(init()));
-    AkonadiCrash::setShutdownMethod( shutdownHandler );
+    AkonadiCrash::setShutdownMethod(shutdownHandler);
 
     const int result = app.exec();
 
     Akonadi::Server::AkonadiServer::instance()->quit();
 
-    Q_CLEANUP_RESOURCE( akonadidb );
+    Q_CLEANUP_RESOURCE(akonadidb);
 
     return result;
 }

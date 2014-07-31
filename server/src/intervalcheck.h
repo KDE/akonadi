@@ -33,10 +33,10 @@ namespace Server {
 */
 class IntervalCheck : public CollectionScheduler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    IntervalCheck( QObject *parent = 0 );
+public:
+    IntervalCheck(QObject *parent = 0);
     ~IntervalCheck();
 
     /**
@@ -45,17 +45,17 @@ class IntervalCheck : public CollectionScheduler
      * retrieval thread.
      * A minimum time interval between two sync requests is ensured.
      */
-    void requestCollectionSync( const Collection &collection );
+    void requestCollectionSync(const Collection &collection);
 
-  protected:
-    int collectionScheduleInterval( const Collection &collection );
-    bool hasChanged( const Collection &collection, const Collection &changed );
-    bool shouldScheduleCollection( const Collection &collection );
+protected:
+    int collectionScheduleInterval(const Collection &collection);
+    bool hasChanged(const Collection &collection, const Collection &changed);
+    bool shouldScheduleCollection(const Collection &collection);
 
-  protected Q_SLOTS:
-    void collectionExpired( const Collection &collection );
+protected Q_SLOTS:
+    void collectionExpired(const Collection &collection);
 
-  private:
+private:
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
 

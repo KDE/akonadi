@@ -25,33 +25,33 @@
 
 class BridgeServerBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit BridgeServerBase( quint16 port, QObject *parent = 0 );
+public:
+    explicit BridgeServerBase(quint16 port, QObject *parent = 0);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void slotNewConnection() = 0;
 
-  protected:
+protected:
     QTcpServer *m_server;
 };
 
 template <typename ConnectionType>
 class BridgeServer : public BridgeServerBase
 {
-  public:
-    explicit BridgeServer( quint16 port, QObject *parent = 0 )
-      : BridgeServerBase( port, parent )
+public:
+    explicit BridgeServer(quint16 port, QObject *parent = 0)
+        : BridgeServerBase(port, parent)
     {
     }
 
-  protected:
+protected:
     void slotNewConnection()
     {
-      while ( m_server->hasPendingConnections() ) {
-        new ConnectionType( m_server->nextPendingConnection(), this );
-      }
+        while (m_server->hasPendingConnections()) {
+            new ConnectionType(m_server->nextPendingConnection(), this);
+        }
     }
 };
 

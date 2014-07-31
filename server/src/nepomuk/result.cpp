@@ -33,18 +33,18 @@ public:
 };
 
 Nepomuk::Query::Result::Result()
-    : d( new Private() )
+    : d(new Private())
 {
 }
 
-Nepomuk::Query::Result::Result( const QUrl &uri, double score )
-    : d( new Private() )
+Nepomuk::Query::Result::Result(const QUrl &uri, double score)
+    : d(new Private())
 {
     d->resource = uri;
     d->score = score;
 }
 
-Nepomuk::Query::Result::Result( const Result &other )
+Nepomuk::Query::Result::Result(const Result &other)
 {
     d = other.d;
 }
@@ -53,7 +53,7 @@ Nepomuk::Query::Result::~Result()
 {
 }
 
-Nepomuk::Query::Result &Nepomuk::Query::Result::operator=( const Result &other )
+Nepomuk::Query::Result &Nepomuk::Query::Result::operator=(const Result &other)
 {
     d = other.d;
     return *this;
@@ -69,25 +69,25 @@ QUrl Nepomuk::Query::Result::resourceUri() const
     return d->resource;
 }
 
-void Nepomuk::Query::Result::setScore( double score )
+void Nepomuk::Query::Result::setScore(double score)
 {
     d->score = score;
 }
 
-void Nepomuk::Query::Result::addRequestProperty( const QUrl &property, const Soprano::Node &value )
+void Nepomuk::Query::Result::addRequestProperty(const QUrl &property, const Soprano::Node &value)
 {
     d->requestProperties[property] = value;
 }
 
-Soprano::Node Nepomuk::Query::Result::operator[]( const QUrl &property ) const
+Soprano::Node Nepomuk::Query::Result::operator[](const QUrl &property) const
 {
-    return requestProperty( property );
+    return requestProperty(property);
 }
 
-Soprano::Node Nepomuk::Query::Result::requestProperty( const QUrl &property ) const
+Soprano::Node Nepomuk::Query::Result::requestProperty(const QUrl &property) const
 {
-    QHash<QUrl, Soprano::Node>::const_iterator it = d->requestProperties.find( property );
-    if ( it != d->requestProperties.end() ) {
+    QHash<QUrl, Soprano::Node>::const_iterator it = d->requestProperties.find(property);
+    if (it != d->requestProperties.end()) {
         return *it;
     } else {
         return Soprano::Node();
@@ -99,25 +99,25 @@ QHash<QUrl, Soprano::Node> Nepomuk::Query::Result::requestProperties() const
     return d->requestProperties;
 }
 
-bool Nepomuk::Query::Result::operator==( const Result &other ) const
+bool Nepomuk::Query::Result::operator==(const Result &other) const
 {
-    if ( d->resource != other.d->resource ||
-         d->score != other.d->score ) {
+    if (d->resource != other.d->resource ||
+        d->score != other.d->score) {
         return false;
     }
-    for ( QHash<QUrl, Soprano::Node>::const_iterator it = d->requestProperties.constBegin();
-          it != d->requestProperties.constEnd(); ++it ) {
-        QHash<QUrl, Soprano::Node>::const_iterator it2 = other.d->requestProperties.constFind( it.key() );
-        if ( it2 == other.d->requestProperties.constEnd() ||
-             it2.value() != it.value() ) {
+    for (QHash<QUrl, Soprano::Node>::const_iterator it = d->requestProperties.constBegin();
+         it != d->requestProperties.constEnd(); ++it) {
+        QHash<QUrl, Soprano::Node>::const_iterator it2 = other.d->requestProperties.constFind(it.key());
+        if (it2 == other.d->requestProperties.constEnd() ||
+            it2.value() != it.value()) {
             return false;
         }
     }
-    for ( QHash<QUrl, Soprano::Node>::const_iterator it = other.d->requestProperties.constBegin();
-          it != other.d->requestProperties.constEnd(); ++it ) {
-        QHash<QUrl, Soprano::Node>::const_iterator it2 = d->requestProperties.constFind( it.key() );
-        if ( it2 == d->requestProperties.constEnd() ||
-             it2.value() != it.value() ) {
+    for (QHash<QUrl, Soprano::Node>::const_iterator it = other.d->requestProperties.constBegin();
+         it != other.d->requestProperties.constEnd(); ++it) {
+        QHash<QUrl, Soprano::Node>::const_iterator it2 = d->requestProperties.constFind(it.key());
+        if (it2 == d->requestProperties.constEnd() ||
+            it2.value() != it.value()) {
             return false;
         }
     }

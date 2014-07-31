@@ -36,7 +36,7 @@ public:
     }
     DataStore *storageBackend()
     {
-        if ( !s_backend ) {
+        if (!s_backend) {
             s_backend = new MockBackend();
         }
         return s_backend;
@@ -46,16 +46,16 @@ public:
 class MockObjects
 {
 public:
-        MockObjects();
-        ~MockObjects();
+    MockObjects();
+    ~MockObjects();
 
-        static AkonadiConnection *mockConnection()
-        {
-           if ( !s_connection ) {
-               s_connection = new MockConnection();
-           }
-           return s_connection;
+    static AkonadiConnection *mockConnection()
+    {
+        if (!s_connection) {
+            s_connection = new MockConnection();
         }
+        return s_connection;
+    }
 }; // End of class MockObjects
 
 #endif // MOCKOBJECTS_H

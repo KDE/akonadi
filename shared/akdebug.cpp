@@ -37,90 +37,99 @@ using Akonadi::XdgBaseDirs;
 
 class FileDebugStream : public QIODevice
 {
-  public:
+public:
     FileDebugStream()
-      : mType( QtCriticalMsg )
+        : mType(QtCriticalMsg)
     {
-      open( WriteOnly );
+        open(WriteOnly);
     }
 
-    bool isSequential() const { return true; }
-    qint64 readData( char *, qint64 ) { return 0;  }
-    qint64 readLineData( char *, qint64 ) { return 0; }
-    qint64 writeData( const char *data, qint64 len )
+    bool isSequential() const
     {
-      QByteArray buf = QByteArray::fromRawData( data, len );
+        return true;
+    }
+    qint64 readData(char *, qint64)
+    {
+        return 0;
+    }
+    qint64 readLineData(char *, qint64)
+    {
+        return 0;
+    }
+    qint64 writeData(const char *data, qint64 len)
+    {
+        QByteArray buf = QByteArray::fromRawData(data, len);
 
-      if ( !mFileName.isEmpty() ) {
-        QFile outputFile( mFileName );
-        outputFile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered );
-        outputFile.write( data, len );
-        outputFile.putChar( '\n' );
-        outputFile.close();
-      }
+        if (!mFileName.isEmpty()) {
+            QFile outputFile(mFileName);
+            outputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
+            outputFile.write(data, len);
+            outputFile.putChar('\n');
+            outputFile.close();
+        }
 
-      qt_message_output( mType,
+        qt_message_output(mType,
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-                         QMessageLogContext(),
-                         QString::fromLatin1( buf.trimmed() ) );
+                          QMessageLogContext(),
+                          QString::fromLatin1(buf.trimmed()));
 #else
-                         buf.trimmed().constData() );
+                          buf.trimmed().constData());
 #endif
-      return len;
+        return len;
     }
 
-    void setFileName( const QString &fileName )
+    void setFileName(const QString &fileName)
     {
-      mFileName = fileName;
+        mFileName = fileName;
     }
 
-    void setType( QtMsgType type )
+    void setType(QtMsgType type)
     {
-      mType = type;
+        mType = type;
     }
-  private:
+private:
     QString mFileName;
     QtMsgType mType;
 };
 
 class DebugPrivate
 {
-  public:
+public:
     DebugPrivate()
-      : fileStream( new FileDebugStream() )
+        : fileStream(new FileDebugStream())
     {
     }
 
     ~DebugPrivate()
     {
-      delete fileStream;
+        delete fileStream;
     }
 
     QString errorLogFileName() const
     {
-      return AkStandardDirs::saveDir( "data" )
-          + QDir::separator()
-          + name
-          + QString::fromLatin1( ".error" );
+        return AkStandardDirs::saveDir("data")
+               + QDir::separator()
+               + name
+               + QString::fromLatin1(".error");
     }
 
-    QDebug stream( QtMsgType type )
+    QDebug stream(QtMsgType type)
     {
-      QMutexLocker locker( &mutex );
+        QMutexLocker locker(&mutex);
 #ifndef QT_NO_DEBUG_OUTPUT
-      if ( type == QtDebugMsg ) {
-        return qDebug();
-      }
+        if (type == QtDebugMsg) {
+            return qDebug();
+        }
 #endif
-      fileStream->setType( type );
-      return QDebug( fileStream );
+        fileStream->setType(type);
+        return QDebug(fileStream);
     }
 
-    void setName( const QString &appName )
+    void setName(const QString &appName)
     {
-      // Keep only the executable name, e.g. akonadi_control
-      name = appName.mid( appName.lastIndexOf( QLatin1Char( '/' ) ) + 1 );
-      fileStream->setFileName( errorLogFileName() );
+        // Keep only the executable name, e.g. akonadi_control
+        name = appName.mid(appName.lastIndexOf(QLatin1Char('/')) + 1);
+        fileStream->setFileName(errorLogFileName());
     }
 
     QMutex mutex;
@@ -128,50 +137,50 @@ class DebugPrivate
     QString name;
 };
 
-Q_GLOBAL_STATIC( DebugPrivate, sInstance )
+Q_GLOBAL_STATIC(DebugPrivate, sInstance)
 
 QDebug akFatal()
 {
-  return sInstance()->stream( QtFatalMsg );
+    return sInstance()->stream(QtFatalMsg);
 }
 
 QDebug akError()
 {
-  return sInstance()->stream( QtCriticalMsg );
+    return sInstance()->stream(QtCriticalMsg);
 }
 
 #ifndef QT_NO_DEBUG_OUTPUT
 QDebug akDebug()
 {
-  return sInstance()->stream( QtDebugMsg );
+    return sInstance()->stream(QtDebugMsg);
 }
 #endif
 
-void akInit( const QString &appName )
+void akInit(const QString &appName)
 {
-  AkonadiCrash::init();
-  sInstance()->setName( appName );
+    AkonadiCrash::init();
+    sInstance()->setName(appName);
 
-  QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1( ".old" ) );
-  if ( infoOld.exists() ) {
-    QFile fileOld( infoOld.absoluteFilePath() );
-    const bool success = fileOld.remove();
-    if ( !success ) {
-      qFatal( "Cannot remove old log file - running on a readonly filesystem maybe?" );
+    QFileInfo infoOld(sInstance()->errorLogFileName() + QString::fromLatin1(".old"));
+    if (infoOld.exists()) {
+        QFile fileOld(infoOld.absoluteFilePath());
+        const bool success = fileOld.remove();
+        if (!success) {
+            qFatal("Cannot remove old log file - running on a readonly filesystem maybe?");
+        }
     }
-  }
-  QFileInfo info( sInstance()->errorLogFileName() );
-  if ( info.exists() ) {
-    QFile file( info.absoluteFilePath() );
-    const bool success = file.rename( sInstance()->errorLogFileName() + QString::fromLatin1( ".old" ) );
-    if ( !success ) {
-      qFatal( "Cannot rename log file - running on a readonly filesystem maybe?" );
+    QFileInfo info(sInstance()->errorLogFileName());
+    if (info.exists()) {
+        QFile file(info.absoluteFilePath());
+        const bool success = file.rename(sInstance()->errorLogFileName() + QString::fromLatin1(".old"));
+        if (!success) {
+            qFatal("Cannot rename log file - running on a readonly filesystem maybe?");
+        }
     }
-  }
 }
 
-QString getEnv( const char *name, const QString &defaultValue )
+QString getEnv(const char *name, const QString &defaultValue)
 {
-  const QString v = QString::fromLocal8Bit( qgetenv( name ) );
-  return !v.isEmpty() ? v : defaultValue;
+    const QString v = QString::fromLocal8Bit(qgetenv(name));
+    return !v.isEmpty() ? v : defaultValue;
 }

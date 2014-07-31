@@ -41,19 +41,19 @@ namespace Server {
 */
 class Search : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     Search();
 
     ~Search();
 
     bool parseStream();
 
-  private Q_SLOTS:
-    void slotResultsAvailable( const QSet<qint64> &results );
+private Q_SLOTS:
+    void slotResultsAvailable(const QSet<qint64> &results);
 
-  private:
+private:
     void searchNepomuk();
 
     FetchScope mFetchScope;

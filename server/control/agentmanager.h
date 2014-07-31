@@ -34,7 +34,7 @@ class QFileSystemWatcher;
 #endif
 
 namespace Akonadi {
-  class ProcessControl;
+class ProcessControl;
 }
 
 /**
@@ -44,16 +44,16 @@ namespace Akonadi {
  */
 class AgentManager : public QObject, protected QDBusContext
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentManager" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.AgentManager")
 
-  public:
+public:
     /**
      * Creates a new agent manager.
      *
      * @param parent The parent object.
      */
-    AgentManager( QObject *parent = 0 );
+    AgentManager(QObject *parent = 0);
 
     /**
      * Destroys the agent manager.
@@ -66,7 +66,7 @@ class AgentManager : public QObject, protected QDBusContext
      */
     void cleanup();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Returns the list of identifiers of all available
      * agent types.
@@ -77,38 +77,38 @@ class AgentManager : public QObject, protected QDBusContext
      * Returns the i18n'ed name of the agent type for
      * the given @p identifier and the given @p language.
      */
-    QString agentName( const QString &identifier, const QString &language = QLatin1String( "en_US" ) ) const;
+    QString agentName(const QString &identifier, const QString &language = QLatin1String("en_US")) const;
 
     /**
      * Returns the i18n'ed comment of the agent type for
      * the given @p identifier and the given @p language.
      */
-    QString agentComment( const QString &identifier, const QString &language = QLatin1String( "en_US" ) ) const;
+    QString agentComment(const QString &identifier, const QString &language = QLatin1String("en_US")) const;
 
     /**
      * Returns the icon name of the agent type for the
      * given @p identifier.
      */
-    QString agentIcon( const QString &identifier ) const;
+    QString agentIcon(const QString &identifier) const;
 
     /**
      * Returns a list of supported mimetypes of the agent type
      * for the given @p identifier.
      */
-    QStringList agentMimeTypes( const QString &identifier ) const;
+    QStringList agentMimeTypes(const QString &identifier) const;
 
     /**
      * Returns a list of supported capabilities of the agent type
      * for the given @p identifier.
      */
-    QStringList agentCapabilities( const QString &identifier ) const;
+    QStringList agentCapabilities(const QString &identifier) const;
 
     /**
      * Returns a list of Custom added propeties of the agent type
      * for the given @p identifier
      * @since 1.11
      */
-    QVariantMap agentCustomProperties( const QString &identifier ) const;
+    QVariantMap agentCustomProperties(const QString &identifier) const;
 
     /**
      * Creates a new agent of the given agent type @p identifier.
@@ -119,17 +119,17 @@ class AgentManager : public QObject, protected QDBusContext
      *         agent and an unique instance number, and looks like
      *         the following: 'file_1' or 'imap_267'.
      */
-    QString createAgentInstance( const QString &identifier );
+    QString createAgentInstance(const QString &identifier);
 
     /**
      * Removes the agent with the given @p identifier.
      */
-    void removeAgentInstance( const QString &identifier );
+    void removeAgentInstance(const QString &identifier);
 
     /**
      * Returns the type of the agent instance with the given @p identifier.
      */
-    QString agentInstanceType( const QString &identifier );
+    QString agentInstanceType(const QString &identifier);
 
     /**
      * Returns the list of identifiers of configured instances.
@@ -139,122 +139,122 @@ class AgentManager : public QObject, protected QDBusContext
     /**
      * Returns the current status code of the agent with the given @p identifier.
      */
-    int agentInstanceStatus( const QString &identifier ) const;
+    int agentInstanceStatus(const QString &identifier) const;
 
     /**
      * Returns the i18n'ed description of the current status of the agent with
      * the given @p identifier.
      */
-    QString agentInstanceStatusMessage( const QString &identifier ) const;
+    QString agentInstanceStatusMessage(const QString &identifier) const;
 
     /**
      * Returns the current progress of the agent with the given @p identifier
      * in percentage.
      */
-    uint agentInstanceProgress( const QString &identifier ) const;
+    uint agentInstanceProgress(const QString &identifier) const;
 
     /**
      * Returns the i18n'ed description of the current progress of the agent with
      * the given @p identifier.
      */
-    QString agentInstanceProgressMessage( const QString &identifier ) const;
+    QString agentInstanceProgressMessage(const QString &identifier) const;
 
     /**
      * Sets the @p name of the agent instance with the given @p identifier.
      */
-    void setAgentInstanceName( const QString &identifier, const QString &name );
+    void setAgentInstanceName(const QString &identifier, const QString &name);
 
     /**
      * Returns the name of the agent instance with the given @p identifier.
      * If there is no name, it returns the default name of the agent, you can tweak
      * the language for that name with the @p language setting.
      */
-    QString agentInstanceName( const QString &identifier, const QString &language = QLatin1String( "en_US" ) ) const;
+    QString agentInstanceName(const QString &identifier, const QString &language = QLatin1String("en_US")) const;
 
     /**
      * Triggers the agent instance with the given @p identifier to show
      * its configuration dialog.
      * @param windowId Parent window id for the configuration dialog.
      */
-    void agentInstanceConfigure( const QString &identifier, qlonglong windowId );
+    void agentInstanceConfigure(const QString &identifier, qlonglong windowId);
 
     /**
      * Triggers the agent instance with the given @p identifier to start
      * synchronization.
      */
-    void agentInstanceSynchronize( const QString &identifier );
+    void agentInstanceSynchronize(const QString &identifier);
 
     /**
       Trigger a synchronization of the collection tree by the given resource agent.
       @param identifier The resource agent identifier.
     */
-    void agentInstanceSynchronizeCollectionTree( const QString &identifier );
+    void agentInstanceSynchronizeCollectionTree(const QString &identifier);
 
     /**
       Trigger a synchronization of the given collection by its owning resource agent.
     */
-    void agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection );
+    void agentInstanceSynchronizeCollection(const QString &identifier, qint64 collection);
 
     /**
       Trigger a synchronization of the given collection by its owning resource agent.
       @param recursive set it true to have sub-collection synchronized as well
     */
-    void agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection, bool recursive );
+    void agentInstanceSynchronizeCollection(const QString &identifier, qint64 collection, bool recursive);
 
     /**
       Returns if the agent instance @p identifier is in online mode.
     */
-    bool agentInstanceOnline( const QString &identifier );
+    bool agentInstanceOnline(const QString &identifier);
 
     /**
       Sets agent instance @p identifier to online or offline mode.
     */
-    void setAgentInstanceOnline( const QString &identifier, bool state );
+    void setAgentInstanceOnline(const QString &identifier, bool state);
 
     /**
       Restarts the agent instance @p identifier. This is supposed to be used as a
       development aid and not something to use during normal operations.
     */
-    void restartAgentInstance( const QString &identifier );
+    void restartAgentInstance(const QString &identifier);
 
     /**
      * Add a persistent search to remote search agents.
      */
-    void addSearch( const QString &query, const QString &queryLanguage, qint64 resultCollectionId );
+    void addSearch(const QString &query, const QString &queryLanguage, qint64 resultCollectionId);
 
     /**
      * Removes a persistent search for the given result collection.
      */
-    void removeSearch( quint64 resultCollectionId );
+    void removeSearch(quint64 resultCollectionId);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
      *
      * @param agentType The identifier of the new agent type.
      */
-    void agentTypeAdded( const QString &agentType );
+    void agentTypeAdded(const QString &agentType);
 
     /**
      * This signal is emitted whenever an agent type was removed from the system.
      *
      * @param agentType The identifier of the removed agent type.
      */
-    void agentTypeRemoved( const QString &agentType );
+    void agentTypeRemoved(const QString &agentType);
 
     /**
      * This signal is emitted whenever a new agent instance was created.
      *
      * @param agentIdentifier The identifier of the new agent instance.
      */
-    void agentInstanceAdded( const QString &agentIdentifier );
+    void agentInstanceAdded(const QString &agentIdentifier);
 
     /**
      * This signal is emitted whenever an agent instance was removed.
      *
      * @param agentIdentifier The identifier of the removed agent instance.
      */
-    void agentInstanceRemoved( const QString &agentIdentifier );
+    void agentInstanceRemoved(const QString &agentIdentifier);
 
     /**
      * This signal is emitted whenever the status of an agent instance has
@@ -264,7 +264,7 @@ class AgentManager : public QObject, protected QDBusContext
      * @param status The new status code.
      * @param message The i18n'ed description of the new status.
      */
-    void agentInstanceStatusChanged( const QString &agentIdentifier, int status, const QString &message );
+    void agentInstanceStatusChanged(const QString &agentIdentifier, int status, const QString &message);
 
     /**
      * This signal is emitted whenever the status of an agent instance has
@@ -273,7 +273,7 @@ class AgentManager : public QObject, protected QDBusContext
      * @param agentIdentifier The identifier of the agent that has changed.
      * @param status The object that describes the status change.
      */
-    void agentInstanceAdvancedStatusChanged( const QString &agentIdentifier, const QVariantMap &status );
+    void agentInstanceAdvancedStatusChanged(const QString &agentIdentifier, const QVariantMap &status);
 
     /**
      * This signal is emitted whenever the progress of an agent instance has
@@ -283,7 +283,7 @@ class AgentManager : public QObject, protected QDBusContext
      * @param progress The new progress in percentage.
      * @param message The i18n'ed description of the new progress.
      */
-    void agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message );
+    void agentInstanceProgressChanged(const QString &agentIdentifier, uint progress, const QString &message);
 
     /**
      * This signal is emitted whenever an agent instance raised a warning.
@@ -291,7 +291,7 @@ class AgentManager : public QObject, protected QDBusContext
      * @param agentIdentifier The identifier of the agent instance.
      * @param message The i18n'ed warning message.
      */
-    void agentInstanceWarning( const QString &agentIdentifier, const QString &message );
+    void agentInstanceWarning(const QString &agentIdentifier, const QString &message);
 
     /**
      * This signal is emitted whenever an agent instance raised an error.
@@ -299,7 +299,7 @@ class AgentManager : public QObject, protected QDBusContext
      * @param agentIdentifier The identifier of the agent instance.
      * @param message The i18n'ed error message.
      */
-    void agentInstanceError( const QString &agentIdentifier, const QString &message );
+    void agentInstanceError(const QString &agentIdentifier, const QString &message);
 
     /**
      * This signal is emitted whenever the name of the agent instance has changed.
@@ -307,21 +307,21 @@ class AgentManager : public QObject, protected QDBusContext
      * @param agentIdentifier The identifier of the agent that has changed.
      * @param name The new name of the agent instance.
      */
-    void agentInstanceNameChanged( const QString &agentIdentifier, const QString &name );
+    void agentInstanceNameChanged(const QString &agentIdentifier, const QString &name);
 
     /**
      * Emitted when the online state of an agent changed.
      */
-    void agentInstanceOnlineChanged( const QString &agentIdentifier, bool state );
+    void agentInstanceOnlineChanged(const QString &agentIdentifier, bool state);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updatePluginInfos();
-    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
-    void agentExeChanged( const QString &fileName );
+    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
+    void agentExeChanged(const QString &fileName);
     void agentServerFailure();
     void serverFailure();
 
-  private:
+private:
     /**
      * Returns the list of directory paths where the .desktop files
      * for the plugins are located.
@@ -348,18 +348,18 @@ class AgentManager : public QObject, protected QDBusContext
      *
      * @param directory the directory to get plugin information from
      */
-    void readPluginInfos( const QDir &directory );
+    void readPluginInfos(const QDir &directory);
 
-    AgentInstance::Ptr createAgentInstance( const AgentType &type );
-    bool checkAgentInterfaces( const QString &identifier, const QString &method ) const;
-    bool checkInstance( const QString &identifier ) const;
-    bool checkResourceInterface( const QString &identifier, const QString &method ) const;
-    bool checkAgentExists( const QString &identifier ) const;
-    void ensureAutoStart( const AgentType &info );
+    AgentInstance::Ptr createAgentInstance(const AgentType &type);
+    bool checkAgentInterfaces(const QString &identifier, const QString &method) const;
+    bool checkInstance(const QString &identifier) const;
+    bool checkResourceInterface(const QString &identifier, const QString &method) const;
+    bool checkAgentExists(const QString &identifier) const;
+    void ensureAutoStart(const AgentType &info);
     void continueStartup();
-    void registerAgentAtServer( const QString &agentIdentifier, const AgentType &type );
+    void registerAgentAtServer(const QString &agentIdentifier, const AgentType &type);
 
-  private:
+private:
     /**
      * The map which stores the .desktop file
      * entries for every agent type.

@@ -56,7 +56,6 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-
 private Q_SLOTS:
     void testModify_data()
     {
@@ -75,8 +74,8 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY 5 NAME \"New Name\""
-                    << "S: 2 OK MODIFY done";
+                     << "C: 2 MODIFY 5 NAME \"New Name\""
+                     << "S: 2 OK MODIFY done";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "NAME");
@@ -86,21 +85,21 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY 5 ENABLED FALSE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
-                    << "S: 2 OK MODIFY done";
+                     << "C: 2 MODIFY 5 ENABLED FALSE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
+                     << "S: 2 OK MODIFY done";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED");
             Akonadi::NotificationMessageV3 unsubscribeNotification = notificationTemplate;
             unsubscribeNotification.setOperation(NotificationMessageV2::Unsubscribe);
 
-            QTest::newRow("disable collection") << scenario <<  (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(false);
+            QTest::newRow("disable collection") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(false);
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY 5 ENABLED TRUE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
-                    << "S: 2 OK MODIFY done";
+                     << "C: 2 MODIFY 5 ENABLED TRUE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
+                     << "S: 2 OK MODIFY done";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED");
@@ -112,8 +111,8 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 MODIFY 5 ENABLED FALSE SYNC TRUE DISPLAY TRUE INDEX TRUE"
-                    << "S: 2 OK MODIFY done";
+                     << "C: 2 MODIFY 5 ENABLED FALSE SYNC TRUE DISPLAY TRUE INDEX TRUE"
+                     << "S: 2 OK MODIFY done";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
@@ -149,11 +148,11 @@ private Q_SLOTS:
             NotificationMessageV3 notification = receivedNotifications.at(i);
             Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
                 if (notification.itemParts().contains("NAME")) {
-                    Collection col = Collection::retrieveById( entity.id );
+                    Collection col = Collection::retrieveById(entity.id);
                     QCOMPARE(col.name(), newValue.toString());
                 }
                 if (notification.itemParts().contains("ENABLED") || notification.itemParts().contains("SYNC") || notification.itemParts().contains("DISPLAY") || notification.itemParts().contains("INDEX")) {
-                    Collection col = Collection::retrieveById( entity.id );
+                    Collection col = Collection::retrieveById(entity.id);
                     const bool sync = col.syncPref() == Tristate::Undefined ? col.enabled() : col.syncPref() == Tristate::True;
                     QCOMPARE(sync, newValue.toBool());
                     const bool display = col.displayPref() == Tristate::Undefined ? col.enabled() : col.displayPref() == Tristate::True;

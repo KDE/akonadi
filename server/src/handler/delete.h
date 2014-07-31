@@ -50,13 +50,13 @@ namespace Server {
 */
 class Delete : public Handler
 {
-  Q_OBJECT
-  public:
-    Delete( Scope scope );
+    Q_OBJECT
+public:
+    Delete(Scope scope);
     bool parseStream();
 
-  private:
-    bool deleteRecursive( Collection &col );
+private:
+    bool deleteRecursive(Collection &col);
     Scope m_scope;
 
 };

@@ -29,9 +29,9 @@ namespace Akonadi {
  */
 class AgentThread : public QThread
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new agent thread.
      *
@@ -39,19 +39,19 @@ class AgentThread : public QThread
      * @param factory The factory object that creates the agent instance.
      * @param parent The parent object.
      */
-    AgentThread( const QString &identifier, QObject *factory, QObject *parent = 0 );
+    AgentThread(const QString &identifier, QObject *factory, QObject *parent = 0);
 
     /**
      * Configures the agent.
      *
      * @param windowId The parent window id for the config dialog.
      */
-    void configure( qlonglong windowId );
+    void configure(qlonglong windowId);
 
-  protected:
+protected:
     void run();
 
-  private:
+private:
     QString m_identifier;
     QObject *m_factory;
     QObject *m_instance;

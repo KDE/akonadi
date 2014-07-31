@@ -31,7 +31,6 @@
 #include <QAtomicInt>
 #endif
 
-
 class QSqlQuery;
 
 namespace Akonadi {
@@ -41,26 +40,32 @@ class StorageDebugger : public QObject
 {
     Q_OBJECT
 
-  public:
+public:
     static StorageDebugger *instance();
 
     ~StorageDebugger();
 
-    void enableSQLDebugging( bool enable );
-    inline bool isSQLDebuggingEnabled() const { return mEnabled; }
+    void enableSQLDebugging(bool enable);
+    inline bool isSQLDebuggingEnabled() const
+    {
+        return mEnabled;
+    }
 
-    void queryExecuted( const QSqlQuery &query, int duration );
+    void queryExecuted(const QSqlQuery &query, int duration);
 
-    void incSequence() { mSequence.ref(); }
+    void incSequence()
+    {
+        mSequence.ref();
+    }
 
-  Q_SIGNALS:
-    void queryExecuted( double sequence, uint duration, const QString &query,
-                        const QMap<QString,QVariant> &values,
-                        int resultsCount,
-                        const QList<QList<QVariant> > &result,
-                        const QString &error );
+Q_SIGNALS:
+    void queryExecuted(double sequence, uint duration, const QString &query,
+                       const QMap<QString, QVariant> &values,
+                       int resultsCount,
+                       const QList<QList<QVariant> > &result,
+                       const QString &error);
 
-  private:
+private:
     StorageDebugger();
 
     static StorageDebugger *mSelf;

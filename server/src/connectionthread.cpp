@@ -21,12 +21,11 @@
 #include "connection.h"
 #include "storage/datastore.h"
 
-
 using namespace Akonadi::Server;
 
-ConnectionThread::ConnectionThread(quintptr socketDescriptor, QObject* parent)
-  : QThread(parent)
-  , mSocketDescriptor(socketDescriptor)
+ConnectionThread::ConnectionThread(quintptr socketDescriptor, QObject *parent)
+    : QThread(parent)
+    , mSocketDescriptor(socketDescriptor)
 {
 }
 
@@ -48,7 +47,3 @@ void ConnectionThread::run()
 
     DataStore::self()->close();
 }
-
-
-
-

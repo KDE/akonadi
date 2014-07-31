@@ -30,19 +30,18 @@ namespace Server {
  * A per-thread cache (should be per session, but that'S the same for us) prepared
  * query cache.
  */
-namespace QueryCache
-{
-  /// Check whether the query @p queryStatement is cached already.
-  bool contains( const QString &queryStatement );
+namespace QueryCache {
+/// Check whether the query @p queryStatement is cached already.
+bool contains(const QString &queryStatement);
 
-  /// Returns the cached (and prepared) query for @p queryStatement.
-  QSqlQuery query( const QString &queryStatement );
+/// Returns the cached (and prepared) query for @p queryStatement.
+QSqlQuery query(const QString &queryStatement);
 
-  /// Insert @p query into the cache for @p queryStatement.
-  void insert( const QString &queryStatement, const QSqlQuery &query );
+/// Insert @p query into the cache for @p queryStatement.
+void insert(const QString &queryStatement, const QSqlQuery &query);
 
-  /// Clears all queries from current thread
-  void clear();
+/// Clears all queries from current thread
+void clear();
 
 } // namespace QueryCache
 

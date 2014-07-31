@@ -28,45 +28,45 @@
 
 using namespace Akonadi::Server;
 
-Subscribe::Subscribe( bool subscribe )
-  : mSubscribe( subscribe )
+Subscribe::Subscribe(bool subscribe)
+    : mSubscribe(subscribe)
 {
 }
 
 bool Subscribe::parseStream()
 {
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
+    DataStore *store = connection()->storageBackend();
+    Transaction transaction(store);
 
-  QByteArray buffer;
-  while ( !m_streamParser->atCommandEnd() ) {
-    buffer = m_streamParser->readString();
-    if ( buffer.isEmpty() ) {
-      break;
+    QByteArray buffer;
+    while (!m_streamParser->atCommandEnd()) {
+        buffer = m_streamParser->readString();
+        if (buffer.isEmpty()) {
+            break;
+        }
+        Collection col = HandlerHelper::collectionFromIdOrName(buffer);
+        if (!col.isValid()) {
+            return failureResponse("Invalid collection");
+        }
+        if (col.enabled() == mSubscribe) {
+            continue;
+        }
+        // TODO do all changes in one db operation
+        col.setEnabled(mSubscribe);
+        if (!col.update()) {
+            return failureResponse("Unable to change subscription");
+        }
+        store->notificationCollector()->collectionChanged(col, QList<QByteArray>() << AKONADI_PARAM_ENABLED);
+        if (mSubscribe) {
+            store->notificationCollector()->collectionSubscribed(col);
+        } else {
+            store->notificationCollector()->collectionUnsubscribed(col);
+        }
     }
-    Collection col = HandlerHelper::collectionFromIdOrName( buffer );
-    if ( !col.isValid() ) {
-      return failureResponse( "Invalid collection" );
-    }
-    if ( col.enabled() == mSubscribe ) {
-      continue;
-    }
-    // TODO do all changes in one db operation
-    col.setEnabled( mSubscribe );
-    if ( !col.update() ) {
-      return failureResponse( "Unable to change subscription" );
-    }
-    store->notificationCollector()->collectionChanged( col, QList<QByteArray>() << AKONADI_PARAM_ENABLED );
-    if ( mSubscribe ) {
-      store->notificationCollector()->collectionSubscribed( col );
-    } else {
-      store->notificationCollector()->collectionUnsubscribed( col );
-    }
-  }
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Cannot commit transaction." );
-  }
+    if (!transaction.commit()) {
+        return failureResponse("Cannot commit transaction.");
+    }
 
-  return successResponse( "Completed" );
+    return successResponse("Completed");
 }

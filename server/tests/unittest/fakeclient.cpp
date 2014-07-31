@@ -44,7 +44,7 @@ do {\
 
 using namespace Akonadi::Server;
 
-FakeClient::FakeClient(QObject* parent)
+FakeClient::FakeClient(QObject *parent)
     : QThread(parent)
 {
     moveToThread(this);
@@ -64,7 +64,6 @@ bool FakeClient::isScenarioDone() const
     QMutexLocker locker(&mMutex);
     return mScenario.isEmpty();
 }
-
 
 void FakeClient::dataAvailable()
 {

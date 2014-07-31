@@ -41,7 +41,7 @@ class SearchResultsRetriever;
 
 class SearchTask
 {
-  public:
+public:
     QByteArray id;
     QString query;
     QStringList mimeTypes;
@@ -57,28 +57,26 @@ class SearchTask
 
 class SearchTaskManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     static SearchTaskManager *instance();
 
     ~SearchTaskManager();
 
-    void registerInstance( const QString &id );
-    void unregisterInstance( const QString &id );
+    void registerInstance(const QString &id);
+    void unregisterInstance(const QString &id);
 
-    void addTask( SearchTask *task );
+    void addTask(SearchTask *task);
 
-    void pushResults( const QByteArray &searchId, const QSet<qint64> &ids,
-                      Connection *connection );
+    void pushResults(const QByteArray &searchId, const QSet<qint64> &ids, Connection *connection);
 
-
-  private Q_SLOTS:
+private Q_SLOTS:
     void searchLoop();
 
-  private:
+private:
     class ResourceTask {
-      public:
+    public:
         QString resourceId;
         qint64 collectionId;
         SearchTask *parentTask;
@@ -94,16 +92,16 @@ class SearchTaskManager : public QObject
     void stop();
     bool mShouldStop;
 
-    TasksMap::Iterator cancelRunningTask( TasksMap::Iterator &iter );
-    bool allResourceTasksCompleted( SearchTask* ) const;
+    TasksMap::Iterator cancelRunningTask(TasksMap::Iterator &iter);
+    bool allResourceTasksCompleted(SearchTask *agentSearchTask) const;
 
-    QMap<QString, AgentSearchInstance* > mInstances;
+    QMap<QString, AgentSearchInstance *> mInstances;
     QMutex mInstancesLock;
 
     QWaitCondition mWait;
     QMutex mLock;
 
-    QVector<SearchTask*> mTasklist;
+    QVector<SearchTask *> mTasklist;
 
     QMap<QString /* resource */, ResourceTask *> mRunningTasks;
     QVector<ResourceTask *> mPendingResults;
@@ -111,7 +109,7 @@ class SearchTaskManager : public QObject
     friend class SearchTaskManagerThread;
 };
 
-AKONADI_EXCEPTION_MAKE_INSTANCE( SearchException );
+AKONADI_EXCEPTION_MAKE_INSTANCE(SearchException);
 
 } // namespace Server
 } // namespace Akonadi

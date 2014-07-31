@@ -34,37 +34,37 @@ namespace Server {
 */
 class CountQueryBuilder : public QueryBuilder
 {
-  public:
+public:
     enum CountMode {
-      All,
-      Distinct
+        All,
+        Distinct
     };
 
     /**
       Creates a new query builder that counts all entries in @p table.
     */
-    explicit inline CountQueryBuilder( const QString &table )
-      : QueryBuilder( table, Select )
+    explicit inline CountQueryBuilder(const QString &table)
+        : QueryBuilder(table, Select)
     {
-      addColumn( QLatin1String( "count(*)" ) );
+        addColumn(QLatin1String("count(*)"));
     }
 
     /**
      * Creates a new query builder that counts entries in @p column of @p table.
      * If @p mode is set to @c Distinct, duplicate entries in that column are ignored.
      */
-    inline CountQueryBuilder( const QString &table, const QString &column, CountMode mode )
-      : QueryBuilder( table, Select )
+    inline CountQueryBuilder(const QString &table, const QString &column, CountMode mode)
+        : QueryBuilder(table, Select)
     {
-      Q_ASSERT( !table.isEmpty() );
-      Q_ASSERT( !column.isEmpty() );
-      QString s = QLatin1String( "count(" );
-      if ( mode == Distinct ) {
-        s += QLatin1String( "DISTINCT " );
-      }
-      s += column;
-      s += QLatin1Char( ')' );
-      addColumn( s );
+        Q_ASSERT(!table.isEmpty());
+        Q_ASSERT(!column.isEmpty());
+        QString s = QLatin1String("count(");
+        if (mode == Distinct) {
+            s += QLatin1String("DISTINCT ");
+        }
+        s += column;
+        s += QLatin1Char(')');
+        addColumn(s);
     }
 
     /**
@@ -73,11 +73,11 @@ class CountQueryBuilder : public QueryBuilder
     */
     inline int result()
     {
-      if ( !query().next() ) {
-        akDebug() << "Error during retrieving result of query:" << query().lastError().text();
-        return -1;
-      }
-      return query().value( 0 ).toInt();
+        if (!query().next()) {
+            akDebug() << "Error during retrieving result of query:" << query().lastError().text();
+            return -1;
+        }
+        return query().value(0).toInt();
     }
 };
 

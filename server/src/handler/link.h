@@ -46,15 +46,15 @@ namespace Server {
  */
 class Link : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * @param create @c true adds references, @c false removes them
      */
-    Link( Scope::SelectionScope scope, bool create );
+    Link(Scope::SelectionScope scope, bool create);
     bool parseStream();
 
-  private:
+private:
     Scope mDestinationScope;
     bool mCreateLinks;
 };

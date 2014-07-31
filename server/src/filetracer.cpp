@@ -23,54 +23,54 @@
 
 using namespace Akonadi::Server;
 
-FileTracer::FileTracer( const QString &fileName )
+FileTracer::FileTracer(const QString &fileName)
 {
-  m_file = new QFile( fileName );
-  m_file->open( QIODevice::WriteOnly | QIODevice::Unbuffered );
+    m_file = new QFile(fileName);
+    m_file->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
 }
 
 FileTracer::~FileTracer()
 {
-  delete m_file;
+    delete m_file;
 }
 
-void FileTracer::beginConnection( const QString &identifier, const QString &msg )
+void FileTracer::beginConnection(const QString &identifier, const QString &msg)
 {
-  output( identifier, QString::fromLatin1( "begin_connection: %1" ).arg( msg ) );
+    output(identifier, QString::fromLatin1("begin_connection: %1").arg(msg));
 }
 
-void FileTracer::endConnection( const QString &identifier, const QString &msg )
+void FileTracer::endConnection(const QString &identifier, const QString &msg)
 {
-  output( identifier, QString::fromLatin1( "end_connection: %1" ).arg( msg ) );
+    output(identifier, QString::fromLatin1("end_connection: %1").arg(msg));
 }
 
-void FileTracer::connectionInput( const QString &identifier, const QByteArray &msg )
+void FileTracer::connectionInput(const QString &identifier, const QByteArray &msg)
 {
-  output( identifier, QString::fromLatin1( "input: %1" ).arg( QString::fromUtf8( msg ) ) );
+    output(identifier, QString::fromLatin1("input: %1").arg(QString::fromUtf8(msg)));
 }
 
-void FileTracer::connectionOutput( const QString &identifier, const QByteArray &msg )
+void FileTracer::connectionOutput(const QString &identifier, const QByteArray &msg)
 {
-  output( identifier, QString::fromLatin1( "output: %1" ).arg( QString::fromUtf8( msg ) ) );
+    output(identifier, QString::fromLatin1("output: %1").arg(QString::fromUtf8(msg)));
 }
 
-void FileTracer::signal( const QString &signalName, const QString &msg )
+void FileTracer::signal(const QString &signalName, const QString &msg)
 {
-  output( QLatin1String( "signal" ), QString::fromLatin1( "<%1> %2" ).arg( signalName, msg ) );
+    output(QLatin1String("signal"), QString::fromLatin1("<%1> %2").arg(signalName, msg));
 }
 
-void FileTracer::warning( const QString &componentName, const QString &msg )
+void FileTracer::warning(const QString &componentName, const QString &msg)
 {
-  output( QLatin1String( "warning" ), QString::fromLatin1( "<%1> %2" ).arg( componentName, msg ) );
+    output(QLatin1String("warning"), QString::fromLatin1("<%1> %2").arg(componentName, msg));
 }
 
-void FileTracer::error( const QString &componentName, const QString &msg )
+void FileTracer::error(const QString &componentName, const QString &msg)
 {
-  output( QLatin1String( "error" ), QString::fromLatin1( "<%1> %2" ).arg( componentName, msg ) );
+    output(QLatin1String("error"), QString::fromLatin1("<%1> %2").arg(componentName, msg));
 }
 
-void FileTracer::output( const QString &id, const QString &msg )
+void FileTracer::output(const QString &id, const QString &msg)
 {
-  QString output = QString::fromLatin1( "%1: %2: %3\r\n" ).arg( QTime::currentTime().toString( QLatin1String( "HH:mm:ss.zzz" ) ), id, msg.left( msg.indexOf( QLatin1String( "\n" ) ) ) );
-  m_file->write( output.toUtf8() );
+    QString output = QString::fromLatin1("%1: %2: %3\r\n").arg(QTime::currentTime().toString(QLatin1String("HH:mm:ss.zzz")), id, msg.left(msg.indexOf(QLatin1String("\n"))));
+    m_file->write(output.toUtf8());
 }

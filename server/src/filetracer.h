@@ -33,20 +33,20 @@ namespace Server {
  */
 class FileTracer : public TracerInterface
 {
-  public:
-    FileTracer( const QString &fileName );
+public:
+    FileTracer(const QString &fileName);
     virtual ~FileTracer();
 
-    virtual void beginConnection( const QString &identifier, const QString &msg );
-    virtual void endConnection( const QString &identifier, const QString &msg );
-    virtual void connectionInput( const QString &identifier, const QByteArray &msg );
-    virtual void connectionOutput( const QString &identifier, const QByteArray &msg );
-    virtual void signal( const QString &signalName, const QString &msg );
-    virtual void warning( const QString &componentName, const QString &msg );
-    virtual void error( const QString &componentName, const QString &msg );
+    virtual void beginConnection(const QString &identifier, const QString &msg);
+    virtual void endConnection(const QString &identifier, const QString &msg);
+    virtual void connectionInput(const QString &identifier, const QByteArray &msg);
+    virtual void connectionOutput(const QString &identifier, const QByteArray &msg);
+    virtual void signal(const QString &signalName, const QString &msg);
+    virtual void warning(const QString &componentName, const QString &msg);
+    virtual void error(const QString &componentName, const QString &msg);
 
-  private:
-    void output( const QString &id, const QString &msg );
+private:
+    void output(const QString &id, const QString &msg);
 
     QFile *m_file;
 };

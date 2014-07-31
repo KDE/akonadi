@@ -92,7 +92,7 @@ Name=/home/foo/.local/share/akonadi/akonadi.db
 class DataStore : public QObject
 {
     Q_OBJECT
-  public:
+public:
     /**
       Closes the database connection and destroys the DataStore object.
     */
@@ -119,66 +119,74 @@ class DataStore : public QObject
     static DataStore *self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0, bool silent = false );
-    virtual bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0,
-                                   bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0, bool silent = false );
+    virtual bool setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
+                               bool *flagsChanged = 0, bool silent = false);
+    virtual bool appendItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
+                                  bool *flagsChanged = 0, bool checkIfExists = true,
+                                  const Collection &col = Collection(), bool silent = false);
+    virtual bool removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
+                                  bool *tagsChanged = 0, bool silent = false);
 
     /* --- ItemTags ----------------------------------------------------- */
-    virtual bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );
-    virtual bool appendItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0,
-                                  bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    virtual bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );
+    virtual bool setItemsTags(const PimItem::List &items, const Tag::List &tags,
+                              bool *tagsChanged = 0, bool silent = false);
+    virtual bool appendItemsTags(const PimItem::List &items, const Tag::List &tags,
+                                 bool *tagsChanged = 0, bool checkIfExists = true,
+                                 const Collection &col = Collection(), bool silent = false);
+    virtual bool removeItemsTags(const PimItem::List &items, const Tag::List &tags,
+                                 bool *tagsChanged = 0, bool silent = false);
 
     /* --- ItemParts ----------------------------------------------------- */
-    virtual bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
+    virtual bool removeItemParts(const PimItem &item, const QList<QByteArray> &parts);
 
     // removes all payload parts for this item.
-    virtual bool invalidateItemCache( const PimItem &item );
+    virtual bool invalidateItemCache(const PimItem &item);
 
     /* --- Collection ------------------------------------------------------ */
-    virtual bool appendCollection( Collection &collection );
+    virtual bool appendCollection(Collection &collection);
 
     /// removes the given collection and all its content
-    virtual bool cleanupCollection( Collection &collection );
+    virtual bool cleanupCollection(Collection &collection);
     /// same as the above but for database backends without working referential actions on foreign keys
-    virtual bool cleanupCollection_slow( Collection &collection );
+    virtual bool cleanupCollection_slow(Collection &collection);
 
     /// moves the collection @p collection to @p newParent.
-    virtual bool moveCollection( Collection &collection, const Collection &newParent );
+    virtual bool moveCollection(Collection &collection, const Collection &newParent);
 
-    virtual bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
+    virtual bool appendMimeTypeForCollection(qint64 collectionId, const QStringList &mimeTypes);
 
-    static QString collectionDelimiter() { return QLatin1String( "/" ); }
+    static QString collectionDelimiter()
+    {
+        return QLatin1String("/");
+    }
 
     /**
       Determines the active cache policy for this Collection.
       The active cache policy is set in the corresponding Collection fields.
     */
-    virtual void activeCachePolicy( Collection &col );
+    virtual void activeCachePolicy(Collection &col);
 
     /// Returns all virtual collections the @p item is linked to
-    QVector<Collection> virtualCollections( const PimItem &item );
+    QVector<Collection> virtualCollections(const PimItem &item);
 
-    QMap< Server::Entity::Id, QList< PimItem > > virtualCollections( const Akonadi::Server::PimItem::List &items );
+    QMap< Server::Entity::Id, QList< PimItem > > virtualCollections(const Akonadi::Server::PimItem::List &items);
 
     /* --- MimeType ------------------------------------------------------ */
-    virtual bool appendMimeType( const QString &mimetype, qint64 *insertId = 0 );
+    virtual bool appendMimeType(const QString &mimetype, qint64 *insertId = 0);
 
     /* --- PimItem ------------------------------------------------------- */
-    virtual bool appendPimItem( QVector<Part> &parts,
-                                const MimeType &mimetype,
-                                const Collection &collection,
-                                const QDateTime &dateTime,
-                                const QString &remote_id,
-                                const QString &remoteRevision,
-                                const QString &gid,
-                                PimItem &pimItem );
-
+    virtual bool appendPimItem(QVector<Part> &parts,
+                               const MimeType &mimetype,
+                               const Collection &collection,
+                               const QDateTime &dateTime,
+                               const QString &remote_id,
+                               const QString &remoteRevision,
+                               const QString &gid,
+                               PimItem &pimItem);
     /**
      * Removes the pim item and all referenced data ( e.g. flags )
      */
-    virtual bool cleanupPimItems( const PimItem::List &items );
+    virtual bool cleanupPimItems(const PimItem::List &items);
 
     /**
      * Unhides the specified PimItem. Emits the itemAdded() notification as
@@ -190,7 +198,7 @@ class DataStore : public QObject
      * This function does NOT verify if the item was *really* hidden: this is
      * responsibility of the caller.
      */
-    virtual bool unhidePimItem( PimItem &pimItem );
+    virtual bool unhidePimItem(PimItem &pimItem);
 
     /**
      * Unhides all the items which have the "hidden" flag set.
@@ -202,13 +210,14 @@ class DataStore : public QObject
     virtual bool unhideAllPimItems();
 
     /* --- Collection attributes ------------------------------------------ */
-    virtual bool addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value );
+    virtual bool addCollectionAttribute(const Collection &col, const QByteArray &key,
+                                        const QByteArray &value);
     /**
      * Removes the given collection attribute for @p col.
      * @throws HandlerException on database errors
      * @returns @c true if the attribute existed, @c false otherwise
      */
-    virtual bool removeCollectionAttribute( const Collection &col, const QByteArray &key );
+    virtual bool removeCollectionAttribute(const Collection &col, const QByteArray &key);
 
     /* --- Helper functions ---------------------------------------------- */
 
@@ -245,12 +254,18 @@ class DataStore : public QObject
     /**
       Returns the QSqlDatabase object. Use this for generating queries yourself.
     */
-    QSqlDatabase database() const { return m_database; }
+    QSqlDatabase database() const
+    {
+        return m_database;
+    }
 
     /**
       Sets the current session id.
     */
-    void setSessionId( const QByteArray &sessionId ) { mSessionId = sessionId; }
+    void setSessionId(const QByteArray &sessionId)
+    {
+        mSessionId = sessionId;
+    }
 
 Q_SIGNALS:
     /**
@@ -268,17 +283,17 @@ protected:
     */
     DataStore();
 
-    void debugLastDbError( const char *actionDescription ) const;
-    void debugLastQueryError( const QSqlQuery &query, const char *actionDescription ) const;
+    void debugLastDbError(const char *actionDescription) const;
+    void debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const;
 
-  private:
-    bool doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
-                            const QSet<PimItem::Id> &existing, const Collection &col,
-                            bool silent );
+private:
+    bool doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
+                           const QSet<PimItem::Id> &existing, const Collection &col,
+                           bool silent);
 
-    bool doAppendItemsTag( const PimItem::List &items, const Tag &tag,
+    bool doAppendItemsTag(const PimItem::List &items, const Tag &tag,
                           const QSet<Entity::Id> &existing, const Collection &col,
-                          bool silent );
+                          bool silent);
 
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
@@ -286,15 +301,14 @@ protected:
         @return the date/time in database format
         @see dateTimeToQDateTime
      */
-    static QString dateTimeFromQDateTime( const QDateTime &dateTime );
+    static QString dateTimeFromQDateTime(const QDateTime &dateTime);
 
     /** Converts the given date/time from database format to QDateTime.
         @param dateTime the date/time in database format
         @return the date/time as QDateTime
         @see dateTimeFromQDateTime
      */
-    static QDateTime dateTimeToQDateTime( const QByteArray &dateTime );
-
+    static QDateTime dateTimeToQDateTime(const QByteArray &dateTime);
 
     /**
      * Adds the @p query to current transaction, so that it can be replayed in
@@ -307,7 +321,7 @@ protected:
      *
      * This method should only be used by QueryBuilder.
      */
-    void addQueryToTransaction( const QSqlQuery &query, bool isBatch );
+    void addQueryToTransaction(const QSqlQuery &query, bool isBatch);
 
     /**
      * Tries to execute all queries from last transaction again. If any of the
@@ -319,19 +333,19 @@ protected:
      * @return Returns an invalid query when error occurs, or the last replayed
      *         query on success.
      */
-    QSqlQuery retryLastTransaction( bool rollbackFirst );
+    QSqlQuery retryLastTransaction(bool rollbackFirst);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void sendKeepAliveQuery();
 
 protected:
-    static QThreadStorage<DataStore*> sInstances;
+    static QThreadStorage<DataStore *> sInstances;
 
     QString m_connectionName;
     QSqlDatabase m_database;
     bool m_dbOpened;
     uint m_transactionLevel;
-    QVector<QPair<QSqlQuery,bool /* isBatch */> > m_transactionQueries;
+    QVector<QPair<QSqlQuery, bool /* isBatch */> > m_transactionQueries;
     QByteArray mSessionId;
     NotificationCollector *mNotificationCollector;
     QTimer *m_keepAliveTimer;

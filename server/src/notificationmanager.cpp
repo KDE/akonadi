@@ -39,24 +39,24 @@ using namespace Akonadi::Server;
 NotificationManager *NotificationManager::mSelf = 0;
 
 NotificationManager::NotificationManager()
-  : QObject( 0 )
+    : QObject(0)
 {
-  NotificationMessage::registerDBusTypes();
-  NotificationMessageV2::registerDBusTypes();
-  NotificationMessageV3::registerDBusTypes();
+    NotificationMessage::registerDBusTypes();
+    NotificationMessageV2::registerDBusTypes();
+    NotificationMessageV3::registerDBusTypes();
 
-  new NotificationManagerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/notifications" ),
-    this, QDBusConnection::ExportAdaptors );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/notifications/debug" ),
-    this, QDBusConnection::ExportScriptableSlots );
+    new NotificationManagerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications"),
+                                                 this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications/debug"),
+                                                 this, QDBusConnection::ExportScriptableSlots);
 
-  const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
-  QSettings settings( serverConfigFile, QSettings::IniFormat );
+    const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    QSettings settings(serverConfigFile, QSettings::IniFormat);
 
-  mTimer.setInterval( settings.value( QLatin1String( "NotificationManager/Interval" ), 50 ).toInt() );
-  mTimer.setSingleShot( true );
-  connect( &mTimer, SIGNAL(timeout()), SLOT(emitPendingNotifications()) );
+    mTimer.setInterval(settings.value(QLatin1String("NotificationManager/Interval"), 50).toInt());
+    mTimer.setSingleShot(true);
+    connect(&mTimer, SIGNAL(timeout()), SLOT(emitPendingNotifications()));
 }
 
 NotificationManager::~NotificationManager()
@@ -65,170 +65,170 @@ NotificationManager::~NotificationManager()
 
 NotificationManager *NotificationManager::self()
 {
-  if ( !mSelf ) {
-    mSelf = new NotificationManager();
-  }
+    if (!mSelf) {
+        mSelf = new NotificationManager();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
-void NotificationManager::connectNotificationCollector( NotificationCollector *collector )
+void NotificationManager::connectNotificationCollector(NotificationCollector *collector)
 {
-  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)),
-           SLOT(slotNotify(Akonadi::NotificationMessageV3::List)) );
+    connect(collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)),
+            SLOT(slotNotify(Akonadi::NotificationMessageV3::List)));
 }
 
-void NotificationManager::slotNotify( const Akonadi::NotificationMessageV3::List &msgs )
+void NotificationManager::slotNotify(const Akonadi::NotificationMessageV3::List &msgs)
 {
-  //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
-  Q_FOREACH ( const NotificationMessageV3 &msg, msgs )
-    NotificationMessageV3::appendAndCompress( mNotifications, msg );
-  //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
+    //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
+    Q_FOREACH (const NotificationMessageV3 &msg, msgs) {
+        NotificationMessageV3::appendAndCompress(mNotifications, msg);
+    }
+    //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
 
-  if ( !mTimer.isActive() ) {
-    mTimer.start();
-  }
+    if (!mTimer.isActive()) {
+        mTimer.start();
+    }
 }
 
 void NotificationManager::emitPendingNotifications()
 {
-  if ( mNotifications.isEmpty() ) {
-    return;
-  }
-
-  NotificationMessage::List legacyNotifications;
-  Q_FOREACH ( const NotificationMessageV3 &notification, mNotifications ) {
-    Tracer::self()->signal( "NotificationManager::notify", notification.toString() );
-
-    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
-      const NotificationMessage::List tmp = notification.toNotificationV1().toList();
-      Q_FOREACH ( const NotificationMessage &legacyNotification, tmp ) {
-        bool appended = false;
-        NotificationMessage::appendAndCompress( legacyNotifications, legacyNotification, &appended );
-        if ( !appended ) {
-          legacyNotifications << legacyNotification;
-        }
-      }
+    if (mNotifications.isEmpty()) {
+        return;
     }
-  }
 
-  if ( !legacyNotifications.isEmpty() ) {
-    Q_FOREACH ( NotificationSource *src, mNotificationSources ) {
-      src->emitNotification( legacyNotifications );
+    NotificationMessage::List legacyNotifications;
+    Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
+        Tracer::self()->signal("NotificationManager::notify", notification.toString());
+
+        if (ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2) {
+            const NotificationMessage::List tmp = notification.toNotificationV1().toList();
+            Q_FOREACH (const NotificationMessage &legacyNotification, tmp) {
+                bool appended = false;
+                NotificationMessage::appendAndCompress(legacyNotifications, legacyNotification, &appended);
+                if (!appended) {
+                    legacyNotifications << legacyNotification;
+                }
+            }
+        }
     }
-  }
 
-
-  NotificationMessageV2::List v2List;
-  if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2 ) {
-    v2List = NotificationMessageV3::toV2List( mNotifications );
-  }
-
-  if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1 ) {
-    Q_FOREACH ( NotificationSource *source, mNotificationSources ) {
-      if ( !source->isServerSideMonitorEnabled() ) {
-        if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2 ) {
-          source->emitNotification( v2List );
-        } else {
-          source->emitNotification( mNotifications );
+    if (!legacyNotifications.isEmpty()) {
+        Q_FOREACH (NotificationSource *src, mNotificationSources) {
+            src->emitNotification(legacyNotifications);
         }
-        continue;
-      }
-
-      NotificationMessageV3::List acceptedNotifications;
-      Q_FOREACH ( const NotificationMessageV3 &notification, mNotifications ) {
-        if ( source->acceptsNotification( notification ) ) {
-          acceptedNotifications << notification;
-        }
-      }
-
-      if ( !acceptedNotifications.isEmpty() ) {
-        if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2 ) {
-          source->emitNotification( NotificationMessageV3::toV2List( acceptedNotifications ) );
-        } else {
-          source->emitNotification( acceptedNotifications );
-        }
-      }
     }
-  }
 
-  // backward compatibility with the old non-subcription interface
-  // FIXME: Can we drop this already?
-  if ( !legacyNotifications.isEmpty() ) {
-    Q_EMIT notify( legacyNotifications );
-  }
+    NotificationMessageV2::List v2List;
+    if (ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2) {
+        v2List = NotificationMessageV3::toV2List(mNotifications);
+    }
 
-  mNotifications.clear();
+    if (ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1) {
+        Q_FOREACH (NotificationSource *source, mNotificationSources) {
+            if (!source->isServerSideMonitorEnabled()) {
+                if (ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2) {
+                    source->emitNotification(v2List);
+                } else {
+                    source->emitNotification(mNotifications);
+                }
+                continue;
+            }
+
+            NotificationMessageV3::List acceptedNotifications;
+            Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
+                if (source->acceptsNotification(notification)) {
+                    acceptedNotifications << notification;
+                }
+            }
+
+            if (!acceptedNotifications.isEmpty()) {
+                if (ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2) {
+                    source->emitNotification(NotificationMessageV3::toV2List(acceptedNotifications));
+                } else {
+                    source->emitNotification(acceptedNotifications);
+                }
+            }
+        }
+    }
+
+    // backward compatibility with the old non-subcription interface
+    // FIXME: Can we drop this already?
+    if (!legacyNotifications.isEmpty()) {
+        Q_EMIT notify(legacyNotifications);
+    }
+
+    mNotifications.clear();
 }
 
-QDBusObjectPath NotificationManager::subscribeV2( const QString &identifier, bool serverSideMonitor )
+QDBusObjectPath NotificationManager::subscribeV2(const QString &identifier, bool serverSideMonitor)
 {
-  akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
-  return subscribeV3( identifier, serverSideMonitor, false );
+    akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
+    return subscribeV3(identifier, serverSideMonitor, false);
 }
 
-QDBusObjectPath NotificationManager::subscribeV3( const QString &identifier, bool serverSideMonitor, bool exclusive )
+QDBusObjectPath NotificationManager::subscribeV3(const QString &identifier, bool serverSideMonitor, bool exclusive)
 {
-  akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor << exclusive;
+    akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
 
-  NotificationSource *source = mNotificationSources.value( identifier );
-  if ( source ) {
-    akDebug() << "Known subscriber" << identifier << "subscribes again";
-    source->addClientServiceName( message().service() );
-  } else {
-    source = new NotificationSource( identifier, message().service(), this );
-  }
+    NotificationSource *source = mNotificationSources.value(identifier);
+    if (source) {
+        akDebug() << "Known subscriber" << identifier << "subscribes again";
+        source->addClientServiceName(message().service());
+    } else {
+        source = new NotificationSource(identifier, message().service(), this);
+    }
 
-  registerSource( source );
-  source->setServerSideMonitorEnabled( serverSideMonitor );
-  source->setExclusive( exclusive );
+    registerSource(source);
+    source->setServerSideMonitorEnabled(serverSideMonitor);
+    source->setExclusive(exclusive);
 
-  // The path is /subscriber/escaped_identifier. We want to extract
-  // the escaped_identifier and emit it in subscribed() instead of the original
-  // identifier
-  const QStringList paths = source->dbusPath().path().split( QLatin1Char( '/' ), QString::SkipEmptyParts );
+    // The path is /subscriber/escaped_identifier. We want to extract
+    // the escaped_identifier and emit it in subscribed() instead of the original
+    // identifier
+    const QStringList paths = source->dbusPath().path().split(QLatin1Char('/'), QString::SkipEmptyParts);
 
-  // FIXME KF5: Emit the QDBusObjectPath instead of the identifier
-  Q_EMIT subscribed( paths.at( 1 ) );
+    // FIXME KF5: Emit the QDBusObjectPath instead of the identifier
+    Q_EMIT subscribed(paths.at(1));
 
-  return source->dbusPath();
+    return source->dbusPath();
 }
 
-void NotificationManager::registerSource( NotificationSource *source )
+void NotificationManager::registerSource(NotificationSource *source)
 {
-  mNotificationSources.insert( source->identifier(), source );
+    mNotificationSources.insert(source->identifier(), source);
 }
 
-QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
+QDBusObjectPath NotificationManager::subscribe(const QString &identifier)
 {
-  akDebug() << Q_FUNC_INFO << this << identifier;
-  return subscribeV2( identifier, false );
+    akDebug() << Q_FUNC_INFO << this << identifier;
+    return subscribeV2(identifier, false);
 }
 
-void NotificationManager::unsubscribe( const QString &identifier )
+void NotificationManager::unsubscribe(const QString &identifier)
 {
-  NotificationSource *source = mNotificationSources.value( identifier );
-  if ( source ) {
-    unregisterSource( source );
-    const QStringList paths = source->dbusPath().path().split( QLatin1Char( '/' ), QString::SkipEmptyParts );
-    source->deleteLater();
-    Q_EMIT unsubscribed( paths.at( 1 ) );
-  } else {
-    akDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
-  }
+    NotificationSource *source = mNotificationSources.value(identifier);
+    if (source) {
+        unregisterSource(source);
+        const QStringList paths = source->dbusPath().path().split(QLatin1Char('/'), QString::SkipEmptyParts);
+        source->deleteLater();
+        Q_EMIT unsubscribed(paths.at(1));
+    } else {
+        akDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
+    }
 }
 
-void NotificationManager::unregisterSource( NotificationSource *source )
+void NotificationManager::unregisterSource(NotificationSource *source)
 {
-  mNotificationSources.remove( source->identifier() );
+    mNotificationSources.remove(source->identifier());
 }
 
 QStringList NotificationManager::subscribers() const
 {
-  QStringList identifiers;
-  Q_FOREACH ( NotificationSource *source, mNotificationSources ) {
-    identifiers << source->identifier();
-  }
+    QStringList identifiers;
+    Q_FOREACH (NotificationSource *source, mNotificationSources) {
+        identifiers << source->identifier();
+    }
 
-  return identifiers;
+    return identifiers;
 }

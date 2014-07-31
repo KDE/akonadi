@@ -22,59 +22,59 @@
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE( QList<QByteArray> )
+Q_DECLARE_METATYPE(QList<QByteArray>)
 
 class ImapParserBenchmark : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void quote_data()
     {
-      QTest::addColumn<QByteArray>( "input" );
-      QTest::newRow( "empty" ) << QByteArray();
-      QTest::newRow( "10-idle" ) << QByteArray( "ababababab" );
-      QTest::newRow( "10-quote" ) << QByteArray( "\"abababab\"" );
-      QTest::newRow( "50-idle" ) << QByteArray(  "ababababababababababababababababababababababababab" );
-      QTest::newRow( "50-quote" ) << QByteArray( "\"abababab\ncabababab\ncabababab\ncabababab\ncabababab\"" );
+        QTest::addColumn<QByteArray>("input");
+        QTest::newRow("empty") << QByteArray();
+        QTest::newRow("10-idle") << QByteArray("ababababab");
+        QTest::newRow("10-quote") << QByteArray("\"abababab\"");
+        QTest::newRow("50-idle") << QByteArray("ababababababababababababababababababababababababab");
+        QTest::newRow("50-quote") << QByteArray("\"abababab\ncabababab\ncabababab\ncabababab\ncabababab\"");
     }
 
     void quote()
     {
-      QFETCH( QByteArray, input );
-      QBENCHMARK {
-        ImapParser::quote( input );
-      }
+        QFETCH(QByteArray, input);
+        QBENCHMARK {
+            ImapParser::quote(input);
+        }
     }
 
     void join_data()
     {
-      QTest::addColumn<QList<QByteArray> >( "list" );
-      QTest::newRow( "empty" ) << QList<QByteArray>();
-      QTest::newRow( "single" ) << ( QList<QByteArray>() << "ababab" );
-      QTest::newRow( "two" ) << ( QList<QByteArray>() << "ababab" << "ababab" );
-      QTest::newRow( "five" ) << ( QList<QByteArray>() << "ababab" << "ababab" << "ababab" << "ababab" << "ababab" );
-      QList<QByteArray> list;
-      for ( int i = 0; i < 50; ++i ) {
-        list << "ababab";
-      }
-      QTest::newRow( "a lot" ) << list;
+        QTest::addColumn<QList<QByteArray> >("list");
+        QTest::newRow("empty") << QList<QByteArray>();
+        QTest::newRow("single") << (QList<QByteArray>() << "ababab");
+        QTest::newRow("two") << (QList<QByteArray>() << "ababab" << "ababab");
+        QTest::newRow("five") << (QList<QByteArray>() << "ababab" << "ababab" << "ababab" << "ababab" << "ababab");
+        QList<QByteArray> list;
+        for (int i = 0; i < 50; ++i) {
+            list << "ababab";
+        }
+        QTest::newRow("a lot") << list;
     }
 
     void join()
     {
-      QFETCH( QList<QByteArray>, list );
-      QBENCHMARK {
-        ImapParser::join( list, " " );
-      }
+        QFETCH(QList<QByteArray>, list);
+        QBENCHMARK {
+            ImapParser::join(list, " ");
+        }
     }
 
     void parseParenthesizedList_data()
     {
-      QTest::addColumn<QByteArray>( "data" );
-      QTest::newRow( "empty" ) << QByteArray();
-      QTest::newRow( "unnested" ) << QByteArray("(\"Foo Bar\" NIL \"foobar\" \"test.com\")");
-      QTest::newRow( "nested" ) << QByteArray("((\"Foo Bar\" NIL \"foobar\" \"test.com\"))");
-      QTest::newRow( "nested-long" ) << QByteArray("(UID 86 REV 0 MIMETYPE \"message/rfc822\" COLLECTIONID 13 SIZE 6114 FLAGS (\\SEEN)"
+        QTest::addColumn<QByteArray>("data");
+        QTest::newRow("empty") << QByteArray();
+        QTest::newRow("unnested") << QByteArray("(\"Foo Bar\" NIL \"foobar\" \"test.com\")");
+        QTest::newRow("nested") << QByteArray("((\"Foo Bar\" NIL \"foobar\" \"test.com\"))");
+        QTest::newRow("nested-long") << QByteArray("(UID 86 REV 0 MIMETYPE \"message/rfc822\" COLLECTIONID 13 SIZE 6114 FLAGS (\\SEEN)"
                                                    " ANCESTORS ((13 \"/INBOX\") (12 \"imap://mail@mail.test.com/\") (0 \"\")) PLD:ENVELOPE[1] {396}"
                                                    " (\"Fri, 04 Jun 2010 09:07:54 +0200\" \"Re: [ADMIN] foobar available again!\""
                                                    " ((\"Foo Bar\" NIL \"foobar\" \"test.com\"))"
@@ -88,14 +88,14 @@ class ImapParserBenchmark : public QObject
 
     void parseParenthesizedList()
     {
-      QFETCH( QByteArray, data );
-      QVarLengthArray<QByteArray, 16> result;
-      QBENCHMARK {
-        ImapParser::parseParenthesizedList( data, result, 0 );
-      }
+        QFETCH(QByteArray, data);
+        QVarLengthArray<QByteArray, 16> result;
+        QBENCHMARK {
+            ImapParser::parseParenthesizedList(data, result, 0);
+        }
     }
 };
 
 #include "imapparserbenchmark.moc"
 
-QTEST_APPLESS_MAIN( ImapParserBenchmark )
+QTEST_APPLESS_MAIN(ImapParserBenchmark)

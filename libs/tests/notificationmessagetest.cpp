@@ -23,133 +23,133 @@
 #include <QSet>
 #include <QtTest/QTest>
 
-QTEST_APPLESS_MAIN( NotificationMessageTest )
+QTEST_APPLESS_MAIN(NotificationMessageTest)
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE( NotificationMessage::Type )
+Q_DECLARE_METATYPE(NotificationMessage::Type)
 
 void NotificationMessageTest::testCompress()
 {
-  NotificationMessage::List list;
-  NotificationMessage msg;
-  msg.setType( NotificationMessage::Item );
-  msg.setOperation( NotificationMessage::Add );
+    NotificationMessage::List list;
+    NotificationMessage msg;
+    msg.setType(NotificationMessage::Item);
+    msg.setOperation(NotificationMessage::Add);
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  msg.setOperation( NotificationMessage::Modify );
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
-  QCOMPARE( list.first().operation(), NotificationMessage::Add );
+    msg.setOperation(NotificationMessage::Modify);
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
+    QCOMPARE(list.first().operation(), NotificationMessage::Add);
 
-  msg.setOperation( NotificationMessage::Remove );
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 2 ); // should be 2 for collections, 0 for items?
+    msg.setOperation(NotificationMessage::Remove);
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 2);   // should be 2 for collections, 0 for items?
 }
 
 void NotificationMessageTest::testCompress2()
 {
-  NotificationMessage::List list;
-  NotificationMessage msg;
-  msg.setType( NotificationMessage::Item );
-  msg.setOperation( NotificationMessage::Modify );
+    NotificationMessage::List list;
+    NotificationMessage msg;
+    msg.setType(NotificationMessage::Item);
+    msg.setOperation(NotificationMessage::Modify);
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  msg.setOperation( NotificationMessage::Remove );
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
-  QCOMPARE( list.first().operation(), NotificationMessage::Remove );
+    msg.setOperation(NotificationMessage::Remove);
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
+    QCOMPARE(list.first().operation(), NotificationMessage::Remove);
 }
 
 void NotificationMessageTest::testCompress3()
 {
-  NotificationMessage::List list;
-  NotificationMessage msg;
-  msg.setType( NotificationMessage::Item );
-  msg.setOperation( NotificationMessage::Modify );
+    NotificationMessage::List list;
+    NotificationMessage msg;
+    msg.setType(NotificationMessage::Item);
+    msg.setOperation(NotificationMessage::Modify);
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 }
 
 void NotificationMessageTest::testCompressWithItemParts()
 {
-  NotificationMessage::List list;
-  NotificationMessage msg;
-  msg.setType( NotificationMessage::Item );
-  msg.setOperation( NotificationMessage::Add );
+    NotificationMessage::List list;
+    NotificationMessage msg;
+    msg.setType(NotificationMessage::Item);
+    msg.setOperation(NotificationMessage::Add);
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  msg.setOperation( NotificationMessage::Modify );
-  QSet<QByteArray> changes;
-  changes.insert( "FLAGS" );
-  msg.setItemParts( changes );
-  NotificationMessage::appendAndCompress( list, msg );
-  NotificationMessage::appendAndCompress( list, msg );
+    msg.setOperation(NotificationMessage::Modify);
+    QSet<QByteArray> changes;
+    changes.insert("FLAGS");
+    msg.setItemParts(changes);
+    NotificationMessage::appendAndCompress(list, msg);
+    NotificationMessage::appendAndCompress(list, msg);
 
-  QCOMPARE( list.count(), 1 );
-  QCOMPARE( list.first().operation(), NotificationMessage::Add );
-  QCOMPARE( list.first().itemParts(), QSet<QByteArray>() );
+    QCOMPARE(list.count(), 1);
+    QCOMPARE(list.first().operation(), NotificationMessage::Add);
+    QCOMPARE(list.first().itemParts(), QSet<QByteArray>());
 
-  list.clear();
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    list.clear();
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  msg.setOperation( NotificationMessage::Remove );
-  msg.setItemParts( QSet<QByteArray>() );
-  NotificationMessage::appendAndCompress( list, msg );
+    msg.setOperation(NotificationMessage::Remove);
+    msg.setItemParts(QSet<QByteArray>());
+    NotificationMessage::appendAndCompress(list, msg);
 
-  QCOMPARE( list.count(), 1 );
-  QCOMPARE( list.first().operation(), NotificationMessage::Remove );
-  QCOMPARE( list.first().itemParts(), QSet<QByteArray>() );
+    QCOMPARE(list.count(), 1);
+    QCOMPARE(list.first().operation(), NotificationMessage::Remove);
+    QCOMPARE(list.first().itemParts(), QSet<QByteArray>());
 }
 
 void NotificationMessageTest::testNoCompress()
 {
-  NotificationMessage::List list;
-  NotificationMessage msg;
-  msg.setType( NotificationMessage::Item );
-  msg.setOperation( NotificationMessage::Modify );
+    NotificationMessage::List list;
+    NotificationMessage msg;
+    msg.setType(NotificationMessage::Item);
+    msg.setOperation(NotificationMessage::Modify);
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  msg.setType( NotificationMessage::Collection );
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 2 );
+    msg.setType(NotificationMessage::Collection);
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 2);
 }
 
 void NotificationMessageTest::testPartModificationMerge_data()
 {
-  QTest::addColumn<NotificationMessage::Type>( "type" );
-  QTest::newRow( "item" ) << NotificationMessage::Item;
-  QTest::newRow( "collection" ) << NotificationMessage::Collection;
+    QTest::addColumn<NotificationMessage::Type>("type");
+    QTest::newRow("item") << NotificationMessage::Item;
+    QTest::newRow("collection") << NotificationMessage::Collection;
 }
 
 void NotificationMessageTest::testPartModificationMerge()
 {
-  QFETCH( NotificationMessage::Type, type );
+    QFETCH(NotificationMessage::Type, type);
 
-  NotificationMessage::List list;
-  NotificationMessage msg;
-  msg.setType( type );
-  msg.setOperation( NotificationMessage::Modify );
-  msg.setItemParts( QSet<QByteArray>() << "PART1" );
+    NotificationMessage::List list;
+    NotificationMessage msg;
+    msg.setType(type);
+    msg.setOperation(NotificationMessage::Modify);
+    msg.setItemParts(QSet<QByteArray>() << "PART1");
 
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
 
-  msg.setItemParts( QSet<QByteArray>() << "PART2" );
-  NotificationMessage::appendAndCompress( list, msg );
-  QCOMPARE( list.count(), 1 );
-  QCOMPARE( list.first().itemParts(), ( QSet<QByteArray>() << "PART1" << "PART2" ) );
+    msg.setItemParts(QSet<QByteArray>() << "PART2");
+    NotificationMessage::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 1);
+    QCOMPARE(list.first().itemParts(), (QSet<QByteArray>() << "PART1" << "PART2"));
 }

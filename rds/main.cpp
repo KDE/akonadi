@@ -25,20 +25,20 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  AkCoreApplication app( argc, argv );
-  app.setDescription( QLatin1String( "Akonadi Remote Debugging Server\nUse for debugging only." ) );
-  app.parseCommandLine();
-  try {
-      new BridgeServer<AkonadiBridgeConnection>( 31415 );
-      new BridgeServer<DBusBridgeConnection>( 31416 );
-      return app.exec();
-  } catch ( const std::exception &e ) {
-      qDebug( "Caught exception: %s", e.what() );
-      return EXIT_FAILURE;
-  } catch ( ... ) {
-      qDebug( "Caught unknown exception - fix the program!" );
-      return EXIT_FAILURE;
-  }
+    AkCoreApplication app(argc, argv);
+    app.setDescription(QLatin1String("Akonadi Remote Debugging Server\nUse for debugging only."));
+    app.parseCommandLine();
+    try {
+        new BridgeServer<AkonadiBridgeConnection>(31415);
+        new BridgeServer<DBusBridgeConnection>(31416);
+        return app.exec();
+    } catch (const std::exception &e) {
+        qDebug("Caught exception: %s", e.what());
+        return EXIT_FAILURE;
+    } catch (...) {
+        qDebug("Caught unknown exception - fix the program!");
+        return EXIT_FAILURE;
+    }
 }

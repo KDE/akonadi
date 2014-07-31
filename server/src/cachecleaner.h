@@ -41,14 +41,14 @@ class Collection;
  */
 class CacheCleanerInhibitor
 {
-  public:
-    CacheCleanerInhibitor( bool inhibit = true );
+public:
+    CacheCleanerInhibitor(bool inhibit = true);
     ~CacheCleanerInhibitor();
 
     void inhibit();
     void uninhibit();
 
-  private:
+private:
     static QMutex sLock;
     static int sInhibitCount;
     bool mInhibited;
@@ -59,23 +59,23 @@ class CacheCleanerInhibitor
 */
 class CacheCleaner : public CollectionScheduler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new cache cleaner thread.
       @param parent The parent object.
     */
-    CacheCleaner( QObject *parent = 0 );
+    CacheCleaner(QObject *parent = 0);
     ~CacheCleaner();
 
-  protected:
-    void collectionExpired( const Collection &collection );
-    int collectionScheduleInterval( const Collection &collection );
-    bool hasChanged( const Collection &collection, const Collection &changed );
-    bool shouldScheduleCollection( const Collection &collection );
+protected:
+    void collectionExpired(const Collection &collection);
+    int collectionScheduleInterval(const Collection &collection);
+    bool hasChanged(const Collection &collection, const Collection &changed);
+    bool shouldScheduleCollection(const Collection &collection);
 
-  private:
+private:
     static CacheCleaner *sInstance;
 
     friend class CacheCleanerInhibitor;

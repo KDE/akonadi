@@ -35,8 +35,8 @@ namespace Server {
   Request syntax:
   @verbatim
   fetch-request = tag " " [scope-selector " "] "FETCH " scope " " fetch-parameters " " part-list
-  scope-selector = [ "UID" / "RID" ]
-  fetch-parameters = [ "FULLPAYLOAD" / "CACHEONLY" / "CACHEONLY" / "EXTERNALPAYLOAD" / "ANCESTORS " depth ]
+  scope-selector = ["UID" / "RID"]
+  fetch-parameters = ["FULLPAYLOAD" / "CACHEONLY" / "CACHEONLY" / "EXTERNALPAYLOAD" / "ANCESTORS " depth]
   part-list = "(" *(part-id) ")"
   depth = "0" / "1" / "INF"
   @endverbatim
@@ -49,13 +49,13 @@ namespace Server {
  */
 class Fetch : public Handler
 {
-  Q_OBJECT
-  public:
-    Fetch( Scope::SelectionScope scope );
+    Q_OBJECT
+public:
+    Fetch(Scope::SelectionScope scope);
 
     bool parseStream();
 
-  private:
+private:
     Scope mScope;
 };
 

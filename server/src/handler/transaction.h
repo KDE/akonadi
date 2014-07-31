@@ -32,20 +32,20 @@ namespace Server {
 */
 class TransactionHandler : public Handler
 {
-  Q_OBJECT
-  Q_ENUMS( Mode )
+    Q_OBJECT
+    Q_ENUMS(Mode)
 
-  public:
+public:
     enum Mode {
-      Begin,
-      Commit,
-      Rollback
+        Begin,
+        Commit,
+        Rollback
     };
 
-    TransactionHandler( Mode mode );
+    TransactionHandler(Mode mode);
     bool parseStream();
 
-  private:
+private:
     Mode mMode;
 };
 

@@ -30,10 +30,10 @@
 
 using namespace Akonadi::Server;
 
-SearchRequest::SearchRequest( const QByteArray &connectionId )
-  : mConnectionId( connectionId )
-  , mRemoteSearch( true )
-  , mStoreResults( false )
+SearchRequest::SearchRequest(const QByteArray &connectionId)
+    : mConnectionId(connectionId)
+    , mRemoteSearch(true)
+    , mStoreResults(false)
 {
 }
 
@@ -43,120 +43,119 @@ SearchRequest::~SearchRequest()
 
 QByteArray SearchRequest::connectionId() const
 {
-  return mConnectionId;
+    return mConnectionId;
 }
 
-void SearchRequest::setQuery( const QString &query )
+void SearchRequest::setQuery(const QString &query)
 {
-  mQuery = query;
+    mQuery = query;
 }
 
 QString SearchRequest::query() const
 {
-  return mQuery;
+    return mQuery;
 }
 
-void SearchRequest::setCollections( const QVector<qint64> &collectionsIds )
+void SearchRequest::setCollections(const QVector<qint64> &collectionsIds)
 {
-  mCollections = collectionsIds;
+    mCollections = collectionsIds;
 }
 
 QVector<qint64> SearchRequest::collections() const
 {
-  return mCollections;
+    return mCollections;
 }
 
-
-void SearchRequest::setMimeTypes( const QStringList &mimeTypes )
+void SearchRequest::setMimeTypes(const QStringList &mimeTypes)
 {
-  mMimeTypes = mimeTypes;
+    mMimeTypes = mimeTypes;
 }
 
 QStringList SearchRequest::mimeTypes() const
 {
-  return mMimeTypes;
+    return mMimeTypes;
 }
 
-void SearchRequest::setRemoteSearch( bool remote )
+void SearchRequest::setRemoteSearch(bool remote)
 {
-  mRemoteSearch = remote;
+    mRemoteSearch = remote;
 }
 
 bool SearchRequest::remoteSearch() const
 {
-  return mRemoteSearch;
+    return mRemoteSearch;
 }
 
-void SearchRequest::setStoreResults( bool storeResults )
+void SearchRequest::setStoreResults(bool storeResults)
 {
-  mStoreResults = storeResults;
+    mStoreResults = storeResults;
 }
 
 QSet<qint64> SearchRequest::results() const
 {
-  return mResults;
+    return mResults;
 }
 
-void SearchRequest::emitResults( const QSet<qint64> &results )
+void SearchRequest::emitResults(const QSet<qint64> &results)
 {
-  Q_EMIT resultsAvailable( results );
-  if ( mStoreResults ) {
-    mResults.unite( results );
-  }
+    Q_EMIT resultsAvailable(results);
+    if (mStoreResults) {
+        mResults.unite(results);
+    }
 }
 
 void SearchRequest::searchPlugins()
 {
-  const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
-  Q_FOREACH ( AbstractSearchPlugin *plugin, plugins ) {
-    const QSet<qint64> result = plugin->search( mQuery, mCollections.toList(), mMimeTypes );
-    emitResults( result );
-  }
+    const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
+    Q_FOREACH (AbstractSearchPlugin *plugin, plugins) {
+        const QSet<qint64> result = plugin->search(mQuery, mCollections.toList(), mMimeTypes);
+        emitResults(result);
+    }
 }
 
 void SearchRequest::exec()
 {
-  akDebug() << "Executing search" << mConnectionId;
+    akDebug() << "Executing search" << mConnectionId;
 
-  //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
-  //since the plugin search is executed in this thread directly.
-  searchPlugins();
+    //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
+    //since the plugin search is executed in this thread directly.
+    searchPlugins();
 
-  // If remote search is disabled, just finish here after searching the plugins
-  if ( !mRemoteSearch ) {
-    akDebug() << "Search done" << mConnectionId << "(without remote search)";
-    return;
-  }
-
-  SearchTask task;
-  task.id = mConnectionId;
-  task.query = mQuery;
-  task.mimeTypes = mMimeTypes;
-  task.collections = mCollections;
-  task.complete = false;
-
-  SearchTaskManager::instance()->addTask( &task );
-
-  task.sharedLock.lock();
-  Q_FOREVER {
-    if ( task.complete ) {
-      akDebug() << "All queries processed!";
-      break;
-    } else {
-      task.notifier.wait( &task.sharedLock );
-
-      akDebug() << task.pendingResults.count() << "search results available in search" << task.id;
-      if ( !task.pendingResults.isEmpty() ) {
-        emitResults( task.pendingResults );
-      }
-      task.pendingResults.clear();
+    // If remote search is disabled, just finish here after searching the plugins
+    if (!mRemoteSearch) {
+        akDebug() << "Search done" << mConnectionId << "(without remote search)";
+        return;
     }
-  }
 
-  if ( !task.pendingResults.isEmpty() ) {
-    emitResults( task.pendingResults );
-  }
-  task.sharedLock.unlock();
+    SearchTask task;
+    task.id = mConnectionId;
+    task.query = mQuery;
+    task.mimeTypes = mMimeTypes;
+    task.collections = mCollections;
+    task.complete = false;
 
-  akDebug() << "Search done" << mConnectionId;
+    SearchTaskManager::instance()->addTask(&task);
+
+    task.sharedLock.lock();
+    Q_FOREVER {
+        if (task.complete) {
+            akDebug() << "All queries processed!";
+            break;
+        } else {
+            task.notifier.wait(&task.sharedLock);
+
+            akDebug() << task.pendingResults.count() << "search results available in search" << task.id;
+            if (!task.pendingResults.isEmpty()) {
+                emitResults(task.pendingResults);
+            }
+            task.pendingResults.clear();
+        }
+    }
+
+    if (!task.pendingResults.isEmpty()) {
+        emitResults(task.pendingResults);
+    }
+    task.sharedLock.unlock();
+
+    akDebug() << "Search done" << mConnectionId;
 }

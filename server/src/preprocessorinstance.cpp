@@ -40,13 +40,13 @@
 
 using namespace Akonadi::Server;
 
-PreprocessorInstance::PreprocessorInstance( const QString &id )
-  : QObject()
-  , mBusy( false )
-  , mId( id )
-  , mInterface( 0 )
+PreprocessorInstance::PreprocessorInstance(const QString &id)
+    : QObject()
+    , mBusy(false)
+    , mId(id)
+    , mInterface(0)
 {
-  Q_ASSERT( !id.isEmpty() );
+    Q_ASSERT(!id.isEmpty());
 }
 
 PreprocessorInstance::~PreprocessorInstance()
@@ -55,194 +55,194 @@ PreprocessorInstance::~PreprocessorInstance()
 
 bool PreprocessorInstance::init()
 {
-  Q_ASSERT( !mBusy ); // must be called very early
-  Q_ASSERT( !mInterface );
+    Q_ASSERT(!mBusy);   // must be called very early
+    Q_ASSERT(!mInterface);
 
-  mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
-      AkDBus::agentServiceName( mId, AkDBus::Preprocessor ),
-      QLatin1String( "/Preprocessor" ),
-      QDBusConnection::sessionBus(),
-      this );
+    mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
+        AkDBus::agentServiceName(mId, AkDBus::Preprocessor),
+        QLatin1String("/Preprocessor"),
+        QDBusConnection::sessionBus(),
+        this);
 
-  if ( !mInterface || !mInterface->isValid() ) {
-    Tracer::self()->warning(
-        QLatin1String( "PreprocessorInstance" ),
-        QString::fromLatin1( "Could not connect to pre-processor instance '%1': %2" )
-          .arg( mId )
-          .arg( mInterface ? mInterface->lastError().message() : QString() ) );
-    delete mInterface;
-    mInterface = 0;
-    return false;
-  }
+    if (!mInterface || !mInterface->isValid()) {
+        Tracer::self()->warning(
+            QLatin1String("PreprocessorInstance"),
+            QString::fromLatin1("Could not connect to pre-processor instance '%1': %2")
+            .arg(mId)
+            .arg(mInterface ? mInterface->lastError().message() : QString()));
+        delete mInterface;
+        mInterface = 0;
+        return false;
+    }
 
-  QObject::connect( mInterface, SIGNAL(itemProcessed(qlonglong)), this, SLOT(itemProcessed(qlonglong)) );
+    QObject::connect(mInterface, SIGNAL(itemProcessed(qlonglong)), this, SLOT(itemProcessed(qlonglong)));
 
-  return true;
+    return true;
 }
 
-void PreprocessorInstance::enqueueItem( qint64 itemId )
+void PreprocessorInstance::enqueueItem(qint64 itemId)
 {
-  akDebug() << "PreprocessorInstance::enqueueItem("  << itemId <<  ")";
+    akDebug() << "PreprocessorInstance::enqueueItem("  << itemId <<  ")";
 
-  mItemQueue.push_back( itemId );
+    mItemQueue.push_back(itemId);
 
-  // If the preprocessor is already busy processing another item then do nothing.
-  if ( mBusy ) {
-    // The "head" item is the one being processed and we have just added another one.
-    Q_ASSERT( mItemQueue.size() > 1 );
-    return;
-  }
+    // If the preprocessor is already busy processing another item then do nothing.
+    if (mBusy) {
+        // The "head" item is the one being processed and we have just added another one.
+        Q_ASSERT(mItemQueue.size() > 1);
+        return;
+    }
 
-  // Not busy: handle the item.
-  processHeadItem();
+    // Not busy: handle the item.
+    processHeadItem();
 }
 
 void PreprocessorInstance::processHeadItem()
 {
-  // We shouldn't be called if there are no items in the queue
-  Q_ASSERT( !mItemQueue.empty() );
-  // We shouldn't be here with no interface
-  Q_ASSERT( mInterface );
+    // We shouldn't be called if there are no items in the queue
+    Q_ASSERT(!mItemQueue.empty());
+    // We shouldn't be here with no interface
+    Q_ASSERT(mInterface);
 
-  qint64 itemId = mItemQueue.front();
+    qint64 itemId = mItemQueue.front();
 
-  // Fetch the actual item data (as it may have changed since it was enqueued)
-  // The fetch will hit the cache if the item wasn't changed.
+    // Fetch the actual item data (as it may have changed since it was enqueued)
+    // The fetch will hit the cache if the item wasn't changed.
 
-  PimItem actualItem = PimItem::retrieveById( itemId );
+    PimItem actualItem = PimItem::retrieveById(itemId);
 
-  while ( !actualItem.isValid() ) {
-    // hum... item is gone ?
-    // FIXME: Signal to the manager that the item is no longer valid!
-    PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
+    while (!actualItem.isValid()) {
+        // hum... item is gone ?
+        // FIXME: Signal to the manager that the item is no longer valid!
+        PreprocessorManager::instance()->preProcessorFinishedHandlingItem(this, itemId);
 
-    mItemQueue.pop_front();
-    if ( mItemQueue.empty() ) {
-      // nothing more to process for this instance: jump out
-      mBusy = false;
-      return;
+        mItemQueue.pop_front();
+        if (mItemQueue.empty()) {
+            // nothing more to process for this instance: jump out
+            mBusy = false;
+            return;
+        }
+
+        // try the next one in the queue
+        itemId = mItemQueue.front();
+        actualItem = PimItem::retrieveById(itemId);
     }
 
-    // try the next one in the queue
-    itemId = mItemQueue.front();
-    actualItem = PimItem::retrieveById( itemId );
-  }
+    // Ok.. got a valid item to process: collection and mimetype is known.
 
-  // Ok.. got a valid item to process: collection and mimetype is known.
+    akDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
 
-  akDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
+    mBusy = true;
 
-  mBusy = true;
+    mItemProcessingStartDateTime = QDateTime::currentDateTime();
 
-  mItemProcessingStartDateTime = QDateTime::currentDateTime();
+    // The beginProcessItem() D-Bus call is asynchronous (marked with NoReply attribute)
+    mInterface->beginProcessItem(itemId, actualItem.collectionId(), actualItem.mimeType().name());
 
-  // The beginProcessItem() D-Bus call is asynchronous (marked with NoReply attribute)
-  mInterface->beginProcessItem( itemId, actualItem.collectionId(), actualItem.mimeType().name() );
-
-  akDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
+    akDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
 }
 
 int PreprocessorInstance::currentProcessingTime()
 {
-  if ( !mBusy ) {
-    return -1; // nothing being processed
-  }
+    if (!mBusy) {
+        return -1; // nothing being processed
+    }
 
-  return mItemProcessingStartDateTime.secsTo( QDateTime::currentDateTime() );
+    return mItemProcessingStartDateTime.secsTo(QDateTime::currentDateTime());
 }
 
 bool PreprocessorInstance::abortProcessing()
 {
-  Q_ASSERT_X( mBusy, "PreprocessorInstance::abortProcessing()", "You shouldn't call this method when isBusy() returns false" );
+    Q_ASSERT_X(mBusy, "PreprocessorInstance::abortProcessing()", "You shouldn't call this method when isBusy() returns false");
 
-  OrgFreedesktopAkonadiAgentControlInterface iface(
-      AkDBus::agentServiceName( mId, AkDBus::Agent ),
-      QLatin1String( "/" ),
-      QDBusConnection::sessionBus(),
-      this );
+    OrgFreedesktopAkonadiAgentControlInterface iface(
+        AkDBus::agentServiceName(mId, AkDBus::Agent),
+        QLatin1String("/"),
+        QDBusConnection::sessionBus(),
+        this);
 
-  if ( !iface.isValid() ) {
-    Tracer::self()->warning(
-        QLatin1String( "PreprocessorInstance" ),
-        QString::fromLatin1( "Could not connect to pre-processor instance '%1': %2" )
-          .arg( mId )
-          .arg( iface.lastError().message() ) );
-    return false;
-  }
+    if (!iface.isValid()) {
+        Tracer::self()->warning(
+            QLatin1String("PreprocessorInstance"),
+            QString::fromLatin1("Could not connect to pre-processor instance '%1': %2")
+            .arg(mId)
+            .arg(iface.lastError().message()));
+        return false;
+    }
 
-  // We don't check the return value.. as this is a "warning"
-  // The preprocessor manager will check again in a while and eventually
-  // terminate the agent at all...
-  iface.abort();
+    // We don't check the return value.. as this is a "warning"
+    // The preprocessor manager will check again in a while and eventually
+    // terminate the agent at all...
+    iface.abort();
 
-  return true;
+    return true;
 }
 
 bool PreprocessorInstance::invokeRestart()
 {
-  Q_ASSERT_X( mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false" );
+    Q_ASSERT_X(mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false");
 
-  OrgFreedesktopAkonadiAgentManagerInterface iface(
-      AkDBus::serviceName( AkDBus::Control ),
-      QLatin1String( "/AgentManager" ),
-      QDBusConnection::sessionBus(),
-      this );
+    OrgFreedesktopAkonadiAgentManagerInterface iface(
+        AkDBus::serviceName(AkDBus::Control),
+        QLatin1String("/AgentManager"),
+        QDBusConnection::sessionBus(),
+        this);
 
-  if ( !iface.isValid() ) {
-    Tracer::self()->warning(
-        QLatin1String( "PreprocessorInstance" ),
-        QString::fromLatin1( "Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2" )
-          .arg( mId )
-          .arg( iface.lastError().message() ) );
-    return false;
-  }
+    if (!iface.isValid()) {
+        Tracer::self()->warning(
+            QLatin1String("PreprocessorInstance"),
+            QString::fromLatin1("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
+            .arg(mId)
+            .arg(iface.lastError().message()));
+        return false;
+    }
 
-  iface.restartAgentInstance( mId );
+    iface.restartAgentInstance(mId);
 
-  return true;
+    return true;
 }
 
-void PreprocessorInstance::itemProcessed( qlonglong id )
+void PreprocessorInstance::itemProcessed(qlonglong id)
 {
-  akDebug() << "PreprocessorInstance::itemProcessed("  << id <<  ")";
+    akDebug() << "PreprocessorInstance::itemProcessed("  << id <<  ")";
 
-  // We shouldn't be called if there are no items in the queue
-  if ( mItemQueue.empty() ) {
-    Tracer::self()->warning(
-        QLatin1String( "PreprocessorInstance" ),
-        QString::fromLatin1( "Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue" )
-          .arg( mId )
-          .arg( id ) );
-    mBusy = false;
-    return; // preprocessor is buggy (FIXME: What now ?)
-  }
+    // We shouldn't be called if there are no items in the queue
+    if (mItemQueue.empty()) {
+        Tracer::self()->warning(
+            QLatin1String("PreprocessorInstance"),
+            QString::fromLatin1("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue")
+            .arg(mId)
+            .arg(id));
+        mBusy = false;
+        return; // preprocessor is buggy (FIXME: What now ?)
+    }
 
-  // We should be busy now: this is more likely our fault, not the preprocessor's one.
-  Q_ASSERT( mBusy );
+    // We should be busy now: this is more likely our fault, not the preprocessor's one.
+    Q_ASSERT(mBusy);
 
-  qlonglong itemId = mItemQueue.front();
+    qlonglong itemId = mItemQueue.front();
 
-  if ( itemId != id ) {
-    Tracer::self()->warning(
-        QLatin1String( "PreprocessorInstance" ),
-        QString::fromLatin1( "Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3" )
-          .arg( mId )
-          .arg( id )
-          .arg( itemId ) );
+    if (itemId != id) {
+        Tracer::self()->warning(
+            QLatin1String("PreprocessorInstance"),
+            QString::fromLatin1("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3")
+            .arg(mId)
+            .arg(id)
+            .arg(itemId));
 
-    // FIXME: And what now ?
-  }
+        // FIXME: And what now ?
+    }
 
-  mItemQueue.pop_front();
+    mItemQueue.pop_front();
 
-  PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
+    PreprocessorManager::instance()->preProcessorFinishedHandlingItem(this, itemId);
 
-  if ( mItemQueue.empty() ) {
-    // Nothing more to do
-    mBusy = false;
-    return;
-  }
+    if (mItemQueue.empty()) {
+        // Nothing more to do
+        mBusy = false;
+        return;
+    }
 
-  // Stay busy and process next item in the queue
-  processHeadItem();
+    // Stay busy and process next item in the queue
+    processHeadItem();
 }

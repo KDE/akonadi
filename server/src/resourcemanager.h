@@ -31,20 +31,20 @@ namespace Server {
 */
 class ResourceManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     static ResourceManager *self();
 
-  private:
-    ResourceManager( QObject *parent = 0 );
+private:
+    ResourceManager(QObject *parent = 0);
 
-  public Q_SLOTS:
-    void addResourceInstance( const QString &name, const QStringList &capabilities );
-    void removeResourceInstance( const QString &name );
+public Q_SLOTS:
+    void addResourceInstance(const QString &name, const QStringList &capabilities);
+    void removeResourceInstance(const QString &name);
     QStringList resourceInstances() const;
 
-  private:
+private:
     static ResourceManager *mSelf;
 };
 

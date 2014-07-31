@@ -28,25 +28,25 @@ namespace Server {
 
 class DbIntrospectorMySql : public DbIntrospector
 {
-  public:
-    DbIntrospectorMySql( const QSqlDatabase &database );
-    virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
-    virtual QString hasIndexQuery( const QString &tableName, const QString &indexName );
+public:
+    DbIntrospectorMySql(const QSqlDatabase &database);
+    virtual QVector<ForeignKey> foreignKeyConstraints(const QString &tableName);
+    virtual QString hasIndexQuery(const QString &tableName, const QString &indexName);
 };
 
 class DbIntrospectorSqlite : public DbIntrospector
 {
-  public:
-    DbIntrospectorSqlite( const QSqlDatabase &database );
-    QString hasIndexQuery( const QString &tableName, const QString &indexName );
+public:
+    DbIntrospectorSqlite(const QSqlDatabase &database);
+    QString hasIndexQuery(const QString &tableName, const QString &indexName);
 };
 
 class DbIntrospectorPostgreSql : public DbIntrospector
 {
-  public:
-    DbIntrospectorPostgreSql( const QSqlDatabase &database );
-    virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
-    QString hasIndexQuery( const QString &tableName, const QString &indexName );
+public:
+    DbIntrospectorPostgreSql(const QSqlDatabase &database);
+    virtual QVector<ForeignKey> foreignKeyConstraints(const QString &tableName);
+    QString hasIndexQuery(const QString &tableName, const QString &indexName);
 };
 
 } // namespace Server

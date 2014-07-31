@@ -36,9 +36,9 @@ namespace Server {
  */
 class Tracer : public QObject, public TracerInterface
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Returns the global tracer instance.
      */
@@ -49,7 +49,7 @@ class Tracer : public QObject, public TracerInterface
      */
     virtual ~Tracer();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * This method is called whenever a new data (imap) connection to the akonadi server
      * is established.
@@ -59,7 +59,7 @@ class Tracer : public QObject, public TracerInterface
      *
      * @param msg A message specific string.
      */
-    virtual void beginConnection( const QString &identifier, const QString &msg );
+    virtual void beginConnection(const QString &identifier, const QString &msg);
 
     /**
      * This method is called whenever a data (imap) connection to akonadi server is
@@ -68,7 +68,7 @@ class Tracer : public QObject, public TracerInterface
      * @param identifier The unique identifier of this connection.
      * @param msg A message specific string.
      */
-    virtual void endConnection( const QString &identifier, const QString &msg );
+    virtual void endConnection(const QString &identifier, const QString &msg);
 
     /**
      * This method is called whenever the akonadi server retrieves some data from the
@@ -78,7 +78,7 @@ class Tracer : public QObject, public TracerInterface
      *                   is retrieved.
      * @param msg A message specific string.
      */
-    virtual void connectionInput( const QString &identifier, const QByteArray &msg );
+    virtual void connectionInput(const QString &identifier, const QByteArray &msg);
 
     /**
      * This method is called whenever the akonadi server sends some data out to a client.
@@ -87,7 +87,7 @@ class Tracer : public QObject, public TracerInterface
      *                   data is send.
      * @param msg A message specific string.
      */
-    virtual void connectionOutput( const QString &identifier, const QByteArray &msg );
+    virtual void connectionOutput(const QString &identifier, const QByteArray &msg);
 
     /**
      * This method is called whenever a dbus signal is emitted on the bus.
@@ -95,27 +95,27 @@ class Tracer : public QObject, public TracerInterface
      * @param signalName The name of the signal being sent.
      * @param msg A message specific string.
      */
-    virtual void signal( const QString &signalName, const QString &msg );
+    virtual void signal(const QString &signalName, const QString &msg);
 
     /**
       Convenience method with internal toLatin1 cast to compile with QT_NO_CAST_FROM_ASCII.
     */
-    void signal( const char *signalName, const QString &msg );
+    void signal(const char *signalName, const QString &msg);
 
     /**
      * This method is called whenever a component wants to output a warning.
      */
-    virtual void warning( const QString &componentName, const QString &msg );
+    virtual void warning(const QString &componentName, const QString &msg);
 
     /**
      * This method is called whenever a component wants to output an error.
      */
-    virtual void error( const QString &componentName, const QString &msg );
+    virtual void error(const QString &componentName, const QString &msg);
 
     /**
      * Convenience method for QT_NO_CAST_FROM_ASCII usage.
      */
-    void error( const char *componentName, const QString &msg );
+    void error(const char *componentName, const QString &msg);
 
     /**
      * Returns the currently activated tracer type.
@@ -125,9 +125,9 @@ class Tracer : public QObject, public TracerInterface
     /**
      * Activates the given tracer type.
      */
-    void activateTracer( const QString &type );
+    void activateTracer(const QString &type);
 
-  private:
+private:
     Tracer();
 
     static Tracer *mSelf;

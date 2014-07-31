@@ -39,390 +39,390 @@ using namespace Akonadi::Server;
 #define MYSQL_MIN_MINOR 1
 
 DbConfigMysql::DbConfigMysql()
-  : mDatabaseProcess( 0 )
+    : mDatabaseProcess(0)
 {
 }
 
 QString DbConfigMysql::driverName() const
 {
-  return QLatin1String( "QMYSQL" );
+    return QLatin1String("QMYSQL");
 }
 
 QString DbConfigMysql::databaseName() const
 {
-  return mDatabaseName;
+    return mDatabaseName;
 }
 
-bool DbConfigMysql::init( QSettings &settings )
+bool DbConfigMysql::init(QSettings &settings)
 {
-  // determine default settings depending on the driver
-  QString defaultHostName;
-  QString defaultOptions;
-  QString defaultServerPath;
-  QString defaultCleanShutdownCommand;
+    // determine default settings depending on the driver
+    QString defaultHostName;
+    QString defaultOptions;
+    QString defaultServerPath;
+    QString defaultCleanShutdownCommand;
 
 #ifndef Q_OS_WIN
-  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
+    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QLatin1String("db_misc")));
 #endif
 
-  const bool defaultInternalServer = true;
+    const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
-   if ( QFile::exists( QLatin1String( MYSQLD_EXECUTABLE ) ) ) {
-     defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
-   }
+    if (QFile::exists(QLatin1String(MYSQLD_EXECUTABLE))) {
+        defaultServerPath = QLatin1String(MYSQLD_EXECUTABLE);
+    }
 #endif
-  const QStringList mysqldSearchPath = QStringList()
-      << QLatin1String( "/usr/sbin" )
-      << QLatin1String( "/usr/local/sbin" )
-      << QLatin1String( "/usr/local/libexec" )
-      << QLatin1String( "/usr/libexec" )
-      << QLatin1String( "/opt/mysql/libexec" )
-      << QLatin1String( "/opt/local/lib/mysql5/bin" )
-      << QLatin1String( "/opt/mysql/sbin" );
-  if ( defaultServerPath.isEmpty() ) {
-    defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqld" ), mysqldSearchPath );
-  }
+    const QStringList mysqldSearchPath = QStringList()
+                                         << QLatin1String("/usr/sbin")
+                                         << QLatin1String("/usr/local/sbin")
+                                         << QLatin1String("/usr/local/libexec")
+                                         << QLatin1String("/usr/libexec")
+                                         << QLatin1String("/opt/mysql/libexec")
+                                         << QLatin1String("/opt/local/lib/mysql5/bin")
+                                         << QLatin1String("/opt/mysql/sbin");
+    if (defaultServerPath.isEmpty()) {
+        defaultServerPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysqld"), mysqldSearchPath);
+    }
 
-  const QString mysqladminPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqladmin" ), mysqldSearchPath );
-  if ( !mysqladminPath.isEmpty() ) {
+    const QString mysqladminPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysqladmin"), mysqldSearchPath);
+    if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
-    defaultCleanShutdownCommand = QString::fromLatin1( "--defaults-file=%1/mysql.conf %2 shutdown --socket=%3/mysql.socket" )
-                                      .arg( AkStandardDirs::saveDir( "data" ) )
-                                      .arg( mysqladminPath )
-                                      .arg( socketDirectory );
+        defaultCleanShutdownCommand = QString::fromLatin1("--defaults-file=%1/mysql.conf %2 shutdown --socket=%3/mysql.socket")
+                                      .arg(AkStandardDirs::saveDir("data"))
+                                      .arg(mysqladminPath)
+                                      .arg(socketDirectory);
 #else
-    defaultCleanShutdownCommand = QString::fromLatin1( "%1 shutdown --shared-memory" ).arg( mysqladminPath );
+        defaultCleanShutdownCommand = QString::fromLatin1("%1 shutdown --shared-memory").arg(mysqladminPath);
 #endif
-  }
+    }
 
-  mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_install_db" ), mysqldSearchPath );
-  akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
+    mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysql_install_db"), mysqldSearchPath);
+    akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
-  mMysqlCheckPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqlcheck" ), mysqldSearchPath );
-  akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
+    mMysqlCheckPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysqlcheck"), mysqldSearchPath);
+    akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
 
-  mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
+    mInternalServer = settings.value(QLatin1String("QMYSQL/StartServer"), defaultInternalServer).toBool();
 #if !(defined Q_WS_WIN)
-  if ( mInternalServer ) {
-    defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( socketDirectory );
-  }
+    if (mInternalServer) {
+        defaultOptions = QString::fromLatin1("UNIX_SOCKET=%1/mysql.socket").arg(socketDirectory);
+    }
 #endif
 
-  // read settings for current driver
-  settings.beginGroup( driverName() );
-  mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDatabaseName() ).toString();
-  mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
-  mUserName = settings.value( QLatin1String( "User" ) ).toString();
-  mPassword = settings.value( QLatin1String( "Password" ) ).toString();
-  mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
-  mServerPath = settings.value( QLatin1String( "ServerPath" ), defaultServerPath ).toString();
-  mCleanServerShutdownCommand = settings.value( QLatin1String( "CleanServerShutdownCommand" ), defaultCleanShutdownCommand ).toString();
-  settings.endGroup();
+    // read settings for current driver
+    settings.beginGroup(driverName());
+    mDatabaseName = settings.value(QLatin1String("Name"), defaultDatabaseName()).toString();
+    mHostName = settings.value(QLatin1String("Host"), defaultHostName).toString();
+    mUserName = settings.value(QLatin1String("User")).toString();
+    mPassword = settings.value(QLatin1String("Password")).toString();
+    mConnectionOptions = settings.value(QLatin1String("Options"), defaultOptions).toString();
+    mServerPath = settings.value(QLatin1String("ServerPath"), defaultServerPath).toString();
+    mCleanServerShutdownCommand = settings.value(QLatin1String("CleanServerShutdownCommand"), defaultCleanShutdownCommand).toString();
+    settings.endGroup();
 
-  // verify settings and apply permanent changes (written out below)
-  if ( mInternalServer ) {
-    mConnectionOptions = defaultOptions;
-    // intentionally not namespaced as we are the only one in this db instance when using internal mode
-    mDatabaseName = QLatin1String( "akonadi" );
-  }
-  if ( mInternalServer && ( mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) ) {
-    mServerPath = defaultServerPath;
-  }
+    // verify settings and apply permanent changes (written out below)
+    if (mInternalServer) {
+        mConnectionOptions = defaultOptions;
+        // intentionally not namespaced as we are the only one in this db instance when using internal mode
+        mDatabaseName = QLatin1String("akonadi");
+    }
+    if (mInternalServer && (mServerPath.isEmpty() || !QFile::exists(mServerPath))) {
+        mServerPath = defaultServerPath;
+    }
 
-  // store back the default values
-  settings.beginGroup( driverName() );
-  settings.setValue( QLatin1String( "Name" ), mDatabaseName );
-  settings.setValue( QLatin1String( "Host" ), mHostName );
-  settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
-  if ( !mServerPath.isEmpty() ) {
-    settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
-  }
-  settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
-  settings.endGroup();
-  settings.sync();
+    // store back the default values
+    settings.beginGroup(driverName());
+    settings.setValue(QLatin1String("Name"), mDatabaseName);
+    settings.setValue(QLatin1String("Host"), mHostName);
+    settings.setValue(QLatin1String("Options"), mConnectionOptions);
+    if (!mServerPath.isEmpty()) {
+        settings.setValue(QLatin1String("ServerPath"), mServerPath);
+    }
+    settings.setValue(QLatin1String("StartServer"), mInternalServer);
+    settings.endGroup();
+    settings.sync();
 
-  // apply temporary changes to the settings
-  if ( mInternalServer ) {
-    mHostName.clear();
-    mUserName.clear();
-    mPassword.clear();
-  }
+    // apply temporary changes to the settings
+    if (mInternalServer) {
+        mHostName.clear();
+        mUserName.clear();
+        mPassword.clear();
+    }
 
-  return true;
+    return true;
 }
 
-void DbConfigMysql::apply( QSqlDatabase &database )
+void DbConfigMysql::apply(QSqlDatabase &database)
 {
-  if ( !mDatabaseName.isEmpty() ) {
-    database.setDatabaseName( mDatabaseName );
-  }
-  if ( !mHostName.isEmpty() ) {
-    database.setHostName( mHostName );
-  }
-  if ( !mUserName.isEmpty() ) {
-    database.setUserName( mUserName );
-  }
-  if ( !mPassword.isEmpty() ) {
-    database.setPassword( mPassword );
-  }
+    if (!mDatabaseName.isEmpty()) {
+        database.setDatabaseName(mDatabaseName);
+    }
+    if (!mHostName.isEmpty()) {
+        database.setHostName(mHostName);
+    }
+    if (!mUserName.isEmpty()) {
+        database.setUserName(mUserName);
+    }
+    if (!mPassword.isEmpty()) {
+        database.setPassword(mPassword);
+    }
 
-  database.setConnectOptions( mConnectionOptions );
+    database.setConnectOptions(mConnectionOptions);
 
-  // can we check that during init() already?
-  Q_ASSERT( database.driver()->hasFeature( QSqlDriver::LastInsertId ) );
+    // can we check that during init() already?
+    Q_ASSERT(database.driver()->hasFeature(QSqlDriver::LastInsertId));
 }
 
 bool DbConfigMysql::useInternalServer() const
 {
-  return mInternalServer;
+    return mInternalServer;
 }
 
 void DbConfigMysql::startInternalServer()
 {
-  const QString mysqldPath = mServerPath;
+    const QString mysqldPath = mServerPath;
 
-  const QString akDir   = AkStandardDirs::saveDir( "data" );
-  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) );
+    const QString akDir   = AkStandardDirs::saveDir("data");
+    const QString dataDir = AkStandardDirs::saveDir("data", QLatin1String("db_data"));
 #ifndef Q_OS_WIN
-  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
+    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QLatin1String("db_misc")));
 #endif
 
-  // generate config file
-  const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
-  const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
-  const QString actualConfig = AkStandardDirs::saveDir( "data" ) + QLatin1String( "/mysql.conf" );
-  if ( globalConfig.isEmpty() ) {
-    akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
-  }
+    // generate config file
+    const QString globalConfig = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-global.conf"));
+    const QString localConfig  = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-local.conf"));
+    const QString actualConfig = AkStandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
+    if (globalConfig.isEmpty()) {
+        akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
+    }
 
 #ifdef Q_OS_LINUX
-  // It is recommended to disable CoW feature when running on Btrfs to improve
-  // database performance. Disabling CoW only has effect on empty directory (since
-  // it affects only new files), so we check whether MySQL has not yet been initialized.
-  QDir dir(dataDir + QDir::separator() + QLatin1String("mysql"));
-  if (!dir.exists()) {
-    if (Utils::getDirectoryFileSystem(dataDir) == QLatin1String("btrfs")) {
-        Utils::disableCoW(dataDir);
+    // It is recommended to disable CoW feature when running on Btrfs to improve
+    // database performance. Disabling CoW only has effect on empty directory (since
+    // it affects only new files), so we check whether MySQL has not yet been initialized.
+    QDir dir(dataDir + QDir::separator() + QLatin1String("mysql"));
+    if (!dir.exists()) {
+        if (Utils::getDirectoryFileSystem(dataDir) == QLatin1String("btrfs")) {
+            Utils::disableCoW(dataDir);
+        }
     }
-  }
 #endif
 
-  bool confUpdate = false;
-  QFile actualFile ( actualConfig );
-  // update conf only if either global (or local) is newer than actual
-  if ( ( QFileInfo( globalConfig ).lastModified() > QFileInfo( actualFile ).lastModified() ) ||
-       ( QFileInfo( localConfig ).lastModified()  > QFileInfo( actualFile ).lastModified() ) ) {
-    QFile globalFile( globalConfig );
-    QFile localFile ( localConfig );
-    if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
-      actualFile.write( globalFile.readAll() );
-      if ( !localConfig.isEmpty() ) {
-        if ( localFile.open( QFile::ReadOnly ) ) {
-          actualFile.write( localFile.readAll() );
-          localFile.close();
+    bool confUpdate = false;
+    QFile actualFile(actualConfig);
+    // update conf only if either global (or local) is newer than actual
+    if ((QFileInfo(globalConfig).lastModified() > QFileInfo(actualFile).lastModified()) ||
+        (QFileInfo(localConfig).lastModified()  > QFileInfo(actualFile).lastModified())) {
+        QFile globalFile(globalConfig);
+        QFile localFile(localConfig);
+        if (globalFile.open(QFile::ReadOnly) && actualFile.open(QFile::WriteOnly)) {
+            actualFile.write(globalFile.readAll());
+            if (!localConfig.isEmpty()) {
+                if (localFile.open(QFile::ReadOnly)) {
+                    actualFile.write(localFile.readAll());
+                    localFile.close();
+                }
+            }
+            globalFile.close();
+            actualFile.close();
+            confUpdate = true;
+        } else {
+            akError() << "Unable to create MySQL server configuration file.";
+            akError() << "This means that either the default configuration file (mysql-global.conf) was not readable";
+            akFatal() << "or the target file (mysql.conf) could not be written.";
         }
-      }
-      globalFile.close();
-      actualFile.close();
-      confUpdate = true;
-    } else {
-      akError() << "Unable to create MySQL server configuration file.";
-      akError() << "This means that either the default configuration file (mysql-global.conf) was not readable";
-      akFatal() << "or the target file (mysql.conf) could not be written.";
     }
-  }
 
-  // MySQL doesn't like world writeable config files (which makes sense), but
-  // our config file somehow ends up being world-writable on some systems for no
-  // apparent reason nevertheless, so fix that
-  const QFile::Permissions allowedPerms = actualFile.permissions()
-      &( QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther );
-  if ( allowedPerms != actualFile.permissions() ) {
-    actualFile.setPermissions( allowedPerms );
-  }
+    // MySQL doesn't like world writeable config files (which makes sense), but
+    // our config file somehow ends up being world-writable on some systems for no
+    // apparent reason nevertheless, so fix that
+    const QFile::Permissions allowedPerms = actualFile.permissions()
+                                            & (QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther);
+    if (allowedPerms != actualFile.permissions()) {
+        actualFile.setPermissions(allowedPerms);
+    }
 
-  if ( dataDir.isEmpty() ) {
-    akFatal() << "Akonadi server was not able to create database data directory";
-  }
+    if (dataDir.isEmpty()) {
+        akFatal() << "Akonadi server was not able to create database data directory";
+    }
 
-  if ( akDir.isEmpty() ) {
-    akFatal() << "Akonadi server was not able to create database log directory";
-  }
+    if (akDir.isEmpty()) {
+        akFatal() << "Akonadi server was not able to create database log directory";
+    }
 
 #ifndef Q_OS_WIN
-  if ( socketDirectory.isEmpty() ) {
-    akFatal() << "Akonadi server was not able to create database misc directory";
-  }
+    if (socketDirectory.isEmpty()) {
+        akFatal() << "Akonadi server was not able to create database misc directory";
+    }
 
-  // the socket path must not exceed 103 characters, so check for max dir length right away
-  if ( socketDirectory.length() >= 90 ) {
-      akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
-  }
+    // the socket path must not exceed 103 characters, so check for max dir length right away
+    if (socketDirectory.length() >= 90) {
+        akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
+    }
 #endif
 
-  // move mysql error log file out of the way
-  const QFileInfo errorLog( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err" ) );
-  if ( errorLog.exists() ) {
-    QFile logFile( errorLog.absoluteFilePath() );
-    QFile oldLogFile( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err.old" ) );
-    if ( logFile.open( QFile::ReadOnly ) && oldLogFile.open( QFile::Append ) ) {
-      oldLogFile.write( logFile.readAll() );
-      oldLogFile.close();
-      logFile.close();
-      logFile.remove();
-    } else {
-      akError() << "Failed to open MySQL error log.";
+    // move mysql error log file out of the way
+    const QFileInfo errorLog(dataDir + QDir::separator() + QString::fromLatin1("mysql.err"));
+    if (errorLog.exists()) {
+        QFile logFile(errorLog.absoluteFilePath());
+        QFile oldLogFile(dataDir + QDir::separator() + QString::fromLatin1("mysql.err.old"));
+        if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::Append)) {
+            oldLogFile.write(logFile.readAll());
+            oldLogFile.close();
+            logFile.close();
+            logFile.remove();
+        } else {
+            akError() << "Failed to open MySQL error log.";
+        }
     }
-  }
 
-  // first run, some MySQL versions need a mysql_install_db run for that
-  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
-  if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
-    const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1" ).arg( confFile ) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
-    QProcess::execute( mMysqlInstallDbPath, arguments );
-  }
+    // first run, some MySQL versions need a mysql_install_db run for that
+    const QString confFile = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-global.conf"));
+    if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty() && !mMysqlInstallDbPath.isEmpty()) {
+        const QStringList arguments = QStringList() << QString::fromLatin1("--force") << QString::fromLatin1("--defaults-file=%1").arg(confFile) << QString::fromLatin1("--datadir=%1/").arg(dataDir);
+        QProcess::execute(mMysqlInstallDbPath, arguments);
+    }
 
-  // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
-  if ( confUpdate ) {
-    QFile( dataDir + QDir::separator() + QString::fromLatin1( "ib_logfile0" ) ).remove();
-    QFile( dataDir + QDir::separator() + QString::fromLatin1( "ib_logfile1" ) ).remove();
-  }
+    // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
+    if (confUpdate) {
+        QFile(dataDir + QDir::separator() + QString::fromLatin1("ib_logfile0")).remove();
+        QFile(dataDir + QDir::separator() + QString::fromLatin1("ib_logfile1")).remove();
+    }
 
-  // synthesize the mysqld command
-  QStringList arguments;
-  arguments << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir );
-  arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
+    // synthesize the mysqld command
+    QStringList arguments;
+    arguments << QString::fromLatin1("--defaults-file=%1/mysql.conf").arg(akDir);
+    arguments << QString::fromLatin1("--datadir=%1/").arg(dataDir);
 #ifndef Q_WS_WIN
-  arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory );
+    arguments << QString::fromLatin1("--socket=%1/mysql.socket").arg(socketDirectory);
 #else
-  arguments << QString::fromLatin1( "--shared-memory" );
+    arguments << QString::fromLatin1("--shared-memory");
 #endif
 
-  if ( mysqldPath.isEmpty() ) {
-    akError() << "mysqld not found. Please verify your installation";
-    return;
-  }
-  mDatabaseProcess = new QProcess;
-  mDatabaseProcess->start( mysqldPath, arguments );
-  if ( !mDatabaseProcess->waitForStarted() ) {
-    akError() << "Could not start database server!";
-    akError() << "executable:" << mysqldPath;
-    akError() << "arguments:" << arguments;
-    akFatal() << "process error:" << mDatabaseProcess->errorString();
-  }
-
-  const QLatin1String initCon( "initConnection" );
-  {
-    QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), initCon );
-    apply( db );
-
-    db.setDatabaseName( QString() ); // might not exist yet, then connecting to the actual db will fail
-    if ( !db.isValid() ) {
-      akFatal() << "Invalid database object during database server startup";
+    if (mysqldPath.isEmpty()) {
+        akError() << "mysqld not found. Please verify your installation";
+        return;
     }
-
-    bool opened = false;
-    for ( int i = 0; i < 120; ++i ) {
-      opened = db.open();
-      if ( opened ) {
-        break;
-      }
-      if ( mDatabaseProcess->waitForFinished( 500 ) ) {
-        akError() << "Database process exited unexpectedly during initial connection!";
+    mDatabaseProcess = new QProcess;
+    mDatabaseProcess->start(mysqldPath, arguments);
+    if (!mDatabaseProcess->waitForStarted()) {
+        akError() << "Could not start database server!";
         akError() << "executable:" << mysqldPath;
         akError() << "arguments:" << arguments;
-        akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
-        akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
-        akError() << "exit code:" << mDatabaseProcess->exitCode();
         akFatal() << "process error:" << mDatabaseProcess->errorString();
-      }
     }
 
-    if ( opened ) {
-      if ( !mMysqlCheckPath.isEmpty() ) {
-        const QStringList arguments = QStringList() << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir )
-                                                    << QLatin1String( "--check-upgrade" )
-                                                    << QLatin1String( "--all-databases" )
-                                                    << QLatin1String( "--auto-repair" )
+    const QLatin1String initCon("initConnection");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QMYSQL"), initCon);
+        apply(db);
+
+        db.setDatabaseName(QString());   // might not exist yet, then connecting to the actual db will fail
+        if (!db.isValid()) {
+            akFatal() << "Invalid database object during database server startup";
+        }
+
+        bool opened = false;
+        for (int i = 0; i < 120; ++i) {
+            opened = db.open();
+            if (opened) {
+                break;
+            }
+            if (mDatabaseProcess->waitForFinished(500)) {
+                akError() << "Database process exited unexpectedly during initial connection!";
+                akError() << "executable:" << mysqldPath;
+                akError() << "arguments:" << arguments;
+                akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
+                akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
+                akError() << "exit code:" << mDatabaseProcess->exitCode();
+                akFatal() << "process error:" << mDatabaseProcess->errorString();
+            }
+        }
+
+        if (opened) {
+            if (!mMysqlCheckPath.isEmpty()) {
+                const QStringList arguments = QStringList() << QString::fromLatin1("--defaults-file=%1/mysql.conf").arg(akDir)
+                                              << QLatin1String("--check-upgrade")
+                                              << QLatin1String("--all-databases")
+                                              << QLatin1String("--auto-repair")
 #ifndef Q_OS_WIN
-                                                    << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory )
+                                              << QString::fromLatin1("--socket=%1/mysql.socket").arg(socketDirectory)
 #endif
-                                                    ;
-        QProcess::execute( mMysqlCheckPath, arguments );
-      }
+                                              ;
+                QProcess::execute(mMysqlCheckPath, arguments);
+            }
 
-      // Verify MySQL version
-      {
-        QSqlQuery query( db );
-        if ( !query.exec( QString::fromLatin1( "SELECT VERSION()" ) ) || !query.first() ) {
-          akError() << "Failed to verify database server version";
-          akError() << "Query error:" << query.lastError().text();
-          akFatal() << "Database error:" << db.lastError().text();
-        }
+            // Verify MySQL version
+            {
+                QSqlQuery query(db);
+                if (!query.exec(QString::fromLatin1("SELECT VERSION()")) || !query.first()) {
+                    akError() << "Failed to verify database server version";
+                    akError() << "Query error:" << query.lastError().text();
+                    akFatal() << "Database error:" << db.lastError().text();
+                }
 
-        const QString version = query.value( 0 ).toString();
-        const QStringList versions = version.split( QLatin1Char( '.' ), QString::SkipEmptyParts );
-        if ( versions.count() < 3 ) {
-          akFatal() << "Invalid database server version: " << version;
-        }
+                const QString version = query.value(0).toString();
+                const QStringList versions = version.split(QLatin1Char('.'), QString::SkipEmptyParts);
+                if (versions.count() < 3) {
+                    akFatal() << "Invalid database server version: " << version;
+                }
 
-        if ( versions[0].toInt() < MYSQL_MIN_MAJOR || ( versions[0].toInt() == MYSQL_MIN_MAJOR && versions[1].toInt() < MYSQL_MIN_MINOR ) ) {
-          akError() << "Unsupported MySQL version:";
-          akError() << "Current version:" << QString::fromLatin1( "%1.%2" ).arg( versions[0], versions[1] );
-          akError() << "Minimum required version:" << QString::fromLatin1( "%1.%2" ).arg( MYSQL_MIN_MAJOR ).arg( MYSQL_MIN_MINOR );
-          akFatal() << "Please update your MySQL database server";
-        } else {
-          akDebug() << "MySQL version OK"
-                    << "(required" << QString::fromLatin1( "%1.%2" ).arg( MYSQL_MIN_MAJOR ).arg( MYSQL_MIN_MINOR )
-                    << ", available" << QString::fromLatin1( "%1.%2" ).arg( versions[0], versions[1] ) << ")";
-        }
-      }
+                if (versions[0].toInt() < MYSQL_MIN_MAJOR || (versions[0].toInt() == MYSQL_MIN_MAJOR && versions[1].toInt() < MYSQL_MIN_MINOR)) {
+                    akError() << "Unsupported MySQL version:";
+                    akError() << "Current version:" << QString::fromLatin1("%1.%2").arg(versions[0], versions[1]);
+                    akError() << "Minimum required version:" << QString::fromLatin1("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR);
+                    akFatal() << "Please update your MySQL database server";
+                } else {
+                    akDebug() << "MySQL version OK"
+                              << "(required" << QString::fromLatin1("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR)
+                              << ", available" << QString::fromLatin1("%1.%2").arg(versions[0], versions[1]) << ")";
+                }
+            }
 
-      {
-        QSqlQuery query( db );
-        if ( !query.exec( QString::fromLatin1( "USE %1" ).arg( mDatabaseName ) ) ) {
-          akDebug() << "Failed to use database" << mDatabaseName;
-          akDebug() << "Query error:" << query.lastError().text();
-          akDebug() << "Database error:" << db.lastError().text();
-          akDebug() << "Trying to create database now...";
-          if ( !query.exec( QLatin1String( "CREATE DATABASE akonadi" ) ) ) {
-            akError() << "Failed to create database";
-            akError() << "Query error:" << query.lastError().text();
-            akFatal() << "Database error:" << db.lastError().text();
-          }
+            {
+                QSqlQuery query(db);
+                if (!query.exec(QString::fromLatin1("USE %1").arg(mDatabaseName))) {
+                    akDebug() << "Failed to use database" << mDatabaseName;
+                    akDebug() << "Query error:" << query.lastError().text();
+                    akDebug() << "Database error:" << db.lastError().text();
+                    akDebug() << "Trying to create database now...";
+                    if (!query.exec(QLatin1String("CREATE DATABASE akonadi"))) {
+                        akError() << "Failed to create database";
+                        akError() << "Query error:" << query.lastError().text();
+                        akFatal() << "Database error:" << db.lastError().text();
+                    }
+                }
+            } // make sure query is destroyed before we close the db
+            db.close();
         }
-      } // make sure query is destroyed before we close the db
-      db.close();
     }
-  }
 
-  QSqlDatabase::removeDatabase( initCon );
+    QSqlDatabase::removeDatabase(initCon);
 }
 
 void DbConfigMysql::stopInternalServer()
 {
-  if ( !mDatabaseProcess ) {
-    return;
-  }
-
-  // first, try the nicest approach
-  if ( !mCleanServerShutdownCommand.isEmpty() ) {
-    QProcess::execute( mCleanServerShutdownCommand );
-    if ( mDatabaseProcess->waitForFinished( 3000 ) ) {
-      return;
+    if (!mDatabaseProcess) {
+        return;
     }
-  }
 
-  mDatabaseProcess->terminate();
-  const bool result = mDatabaseProcess->waitForFinished( 3000 );
-  // We've waited nicely for 3 seconds, to no avail, let's be rude.
-  if ( !result ) {
-    mDatabaseProcess->kill();
-  }
+    // first, try the nicest approach
+    if (!mCleanServerShutdownCommand.isEmpty()) {
+        QProcess::execute(mCleanServerShutdownCommand);
+        if (mDatabaseProcess->waitForFinished(3000)) {
+            return;
+        }
+    }
+
+    mDatabaseProcess->terminate();
+    const bool result = mDatabaseProcess->waitForFinished(3000);
+    // We've waited nicely for 3 seconds, to no avail, let's be rude.
+    if (!result) {
+        mDatabaseProcess->kill();
+    }
 }
 
-void DbConfigMysql::initSession( const QSqlDatabase &database )
+void DbConfigMysql::initSession(const QSqlDatabase &database)
 {
-  QSqlQuery query( database );
-  query.exec( QLatin1String( "SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED" ) );
+    QSqlQuery query(database);
+    query.exec(QLatin1String("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED"));
 }

@@ -48,13 +48,13 @@ public:
 
     ListHandlerTest()
         : QObject(),
-        colAResponse("S: * 2 0 (NAME \"Collection A\" MIMETYPE (inode/directory) REMOTEID \"ColA\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
-        colBResponse("S: * 3 2 (NAME \"Collection B\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"ColB\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE )"),
-        colCResponse("S: * 4 3 (NAME \"Collection C\" MIMETYPE (inode/directory) REMOTEID \"ColC\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY FALSE SYNC FALSE INDEX FALSE )"),
-        colDResponse("S: * 5 4 (NAME \"Collection D\" MIMETYPE () REMOTEID \"ColD\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
-        colSearchResponse("S: * 1 0 (NAME \"Search\" MIMETYPE () REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_search_resource\" VIRTUAL 1 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
-        colVirtualResponse("S: * 6 0 (NAME \"Virtual Collection\" MIMETYPE () REMOTEID \"virtual\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_with_virtual_collections_0\" VIRTUAL 1 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
-        colVirtualSubResponse("S: * 7 6 (NAME \"Virtual Subcollection\" MIMETYPE () REMOTEID \"virtual2\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_with_virtual_collections_0\" VIRTUAL 1 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )")
+          colAResponse("S: * 2 0 (NAME \"Collection A\" MIMETYPE (inode/directory) REMOTEID \"ColA\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
+          colBResponse("S: * 3 2 (NAME \"Collection B\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"ColB\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE )"),
+          colCResponse("S: * 4 3 (NAME \"Collection C\" MIMETYPE (inode/directory) REMOTEID \"ColC\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY FALSE SYNC FALSE INDEX FALSE )"),
+          colDResponse("S: * 5 4 (NAME \"Collection D\" MIMETYPE () REMOTEID \"ColD\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
+          colSearchResponse("S: * 1 0 (NAME \"Search\" MIMETYPE () REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_search_resource\" VIRTUAL 1 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
+          colVirtualResponse("S: * 6 0 (NAME \"Virtual Collection\" MIMETYPE () REMOTEID \"virtual\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_with_virtual_collections_0\" VIRTUAL 1 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )"),
+          colVirtualSubResponse("S: * 7 6 (NAME \"Virtual Subcollection\" MIMETYPE () REMOTEID \"virtual2\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_with_virtual_collections_0\" VIRTUAL 1 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT )")
 
     {
         qRegisterMetaType<Akonadi::Server::Response>();
@@ -72,7 +72,6 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-
 private Q_SLOTS:
 
     void testList_data()
@@ -82,78 +81,78 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 INF () ()"
-                    << colDResponse
-                    << colCResponse
-                    << colBResponse
-                    << colAResponse
-                    << colSearchResponse
-                    << colVirtualSubResponse
-                    << colVirtualResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 0 INF () ()"
+                     << colDResponse
+                     << colCResponse
+                     << colBResponse
+                     << colAResponse
+                     << colSearchResponse
+                     << colVirtualSubResponse
+                     << colVirtualResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("recursive list") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 2 0 () ()"
-                    << colAResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 2 0 () ()"
+                     << colAResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("base list") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 2 1 () ()"
-                    << colBResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 2 1 () ()"
+                     << colBResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("first level list") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 INF (DISPLAY  ) ()"
-                    << colBResponse
-                    << colAResponse
-                    << colSearchResponse
-                    << colVirtualSubResponse
-                    << colVirtualResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 0 INF (DISPLAY  ) ()"
+                     << colBResponse
+                     << colAResponse
+                     << colSearchResponse
+                     << colVirtualSubResponse
+                     << colVirtualResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("recursive list to display including local override") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 INF (SYNC  ) ()"
-                    << colBResponse
-                    << colAResponse
-                    << colSearchResponse
-                    << colVirtualSubResponse
-                    << colVirtualResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 0 INF (SYNC  ) ()"
+                     << colBResponse
+                     << colAResponse
+                     << colSearchResponse
+                     << colVirtualSubResponse
+                     << colVirtualResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("recursive list to sync including local override") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 INF (INDEX  ) ()"
-                    << colBResponse
-                    << colAResponse
-                    << colSearchResponse
-                    << colVirtualSubResponse
-                    << colVirtualResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 0 INF (INDEX  ) ()"
+                     << colBResponse
+                     << colAResponse
+                     << colSearchResponse
+                     << colVirtualSubResponse
+                     << colVirtualResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("recursive list to index including local override") << scenario;
         }
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST 0 INF (ENABLED  ) ()"
-                    << colAResponse
-                    << colSearchResponse
-                    << colVirtualSubResponse
-                    << colVirtualResponse
-                    << "S: 2 OK List completed";
+                     << "C: 2 LIST 0 INF (ENABLED  ) ()"
+                     << colAResponse
+                     << colSearchResponse
+                     << colVirtualSubResponse
+                     << colVirtualResponse
+                     << "S: 2 OK List completed";
             QTest::newRow("recursive list of enabled") << scenario;
         }
     }

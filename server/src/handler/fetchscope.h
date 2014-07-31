@@ -32,57 +32,57 @@ class ImapStreamParser;
 
 class FetchScope
 {
-  public:
+public:
     FetchScope();
-    FetchScope( ImapStreamParser *streamParser );
-    FetchScope( const FetchScope &other );
+    FetchScope(ImapStreamParser *streamParser);
+    FetchScope(const FetchScope &other);
     ~FetchScope();
 
-    FetchScope &operator=( const FetchScope &other );
+    FetchScope &operator=(const FetchScope &other);
 
     bool isValid() const;
 
     ImapStreamParser *streamParser() const;
 
-    void setRequestedParts( const QVector<QByteArray> &requestedParts );
+    void setRequestedParts(const QVector<QByteArray> &requestedParts);
     QVector<QByteArray> requestedParts() const;
-    void setRequestedPayloads( const QStringList &payloads );
+    void setRequestedPayloads(const QStringList &payloads);
     QStringList requestedPayloads() const;
-    void setChangedSince( const QDateTime &dt );
+    void setChangedSince(const QDateTime &dt);
     QDateTime changedSince() const;
-    void setAncestorDepth( int depth );
+    void setAncestorDepth(int depth);
     int ancestorDepth() const;
-    void setCacheOnly( bool cacheOnly );
+    void setCacheOnly(bool cacheOnly);
     bool cacheOnly() const;
-    void setCheckCachedPayloadPartsOnly( bool checkCachedPayloadPartsOnly );
+    void setCheckCachedPayloadPartsOnly(bool checkCachedPayloadPartsOnly);
     bool checkCachedPayloadPartsOnly() const;
-    void setFullPayload( bool fullPayload );
+    void setFullPayload(bool fullPayload);
     bool fullPayload() const;
-    void setAllAttributes( bool allAttributes );
+    void setAllAttributes(bool allAttributes);
     bool allAttributes() const;
-    void setSizeRequested( bool sizeRequested );
+    void setSizeRequested(bool sizeRequested);
     bool sizeRequested() const;
-    void setMTimeRequested( bool mTimeRequested );
+    void setMTimeRequested(bool mTimeRequested);
     bool mTimeRequested() const;
-    void setExternalPayloadSupported( bool externalPayloadSupported );
+    void setExternalPayloadSupported(bool externalPayloadSupported);
     bool externalPayloadSupported() const;
-    void setRemoteRevisionRequested( bool remoteRevisionRequested );
+    void setRemoteRevisionRequested(bool remoteRevisionRequested);
     bool remoteRevisionRequested() const;
-    void setIgnoreErrors( bool ignoreErrors );
+    void setIgnoreErrors(bool ignoreErrors);
     bool ignoreErrors() const;
-    void setFlagsRequested( bool flagsRequested );
+    void setFlagsRequested(bool flagsRequested);
     bool flagsRequested() const;
-    void setRemoteIdRequested( bool remoteIdRequested );
+    void setRemoteIdRequested(bool remoteIdRequested);
     bool remoteIdRequested() const;
-    void setGidRequested( bool gidRequested );
+    void setGidRequested(bool gidRequested);
     bool gidRequested() const;
-    void setTagsRequested( bool tagsRequested );
+    void setTagsRequested(bool tagsRequested);
     bool tagsRequested() const;
     QVector<QByteArray> tagFetchScope() const;
-    void setVirtualReferencesRequested( bool vRefRequested );
+    void setVirtualReferencesRequested(bool vRefRequested);
     bool virtualReferencesRequested() const;
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 

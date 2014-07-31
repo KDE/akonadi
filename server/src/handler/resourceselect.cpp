@@ -26,24 +26,24 @@
 using namespace Akonadi::Server;
 
 ResourceSelect::ResourceSelect()
-  : Handler()
+    : Handler()
 {
 }
 
 bool ResourceSelect::parseStream()
 {
-  const QString resourceName = m_streamParser->readUtf8String();
-  if ( resourceName.isEmpty() ) {
-    connection()->context()->setResource( Resource() );
-    return successResponse( "Resource deselected" );
-  }
+    const QString resourceName = m_streamParser->readUtf8String();
+    if (resourceName.isEmpty()) {
+        connection()->context()->setResource(Resource());
+        return successResponse("Resource deselected");
+    }
 
-  const Resource res = Resource::retrieveByName( resourceName );
-  if ( !res.isValid() ) {
-    throw HandlerException( resourceName.toUtf8() + " is not a valid resource identifier" );
-  }
+    const Resource res = Resource::retrieveByName(resourceName);
+    if (!res.isValid()) {
+        throw HandlerException(resourceName.toUtf8() + " is not a valid resource identifier");
+    }
 
-  connection()->context()->setResource( res );
+    connection()->context()->setResource(res);
 
-  return successResponse( resourceName.toUtf8() + " selected" );
+    return successResponse(resourceName.toUtf8() + " selected");
 }

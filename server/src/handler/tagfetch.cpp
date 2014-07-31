@@ -27,9 +27,9 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagFetch::TagFetch( Scope::SelectionScope scope )
-  : Handler()
-  , mScope( scope )
+TagFetch::TagFetch(Scope::SelectionScope scope)
+    : Handler()
+    , mScope(scope)
 {
 }
 
@@ -39,19 +39,19 @@ TagFetch::~TagFetch()
 
 bool TagFetch::parseStream()
 {
-  if ( mScope.scope() != Scope::Uid ) {
-    throw HandlerException( "Only UID-based TAGFETCH is supported" );
-  }
+    if (mScope.scope() != Scope::Uid) {
+        throw HandlerException("Only UID-based TAGFETCH is supported");
+    }
 
-  mScope.parseScope( m_streamParser );
+    mScope.parseScope(m_streamParser);
 
-  TagFetchHelper helper( connection(),  mScope.uidSet() );
-  connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
+    TagFetchHelper helper(connection(),  mScope.uidSet());
+    connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
 
-  if ( !helper.fetchTags( AKONADI_CMD_TAGFETCH ) ) {
-    return false;
-  }
+    if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
+        return false;
+    }
 
-  return successResponse( "UID TAGFETCH completed" );
+    return successResponse("UID TAGFETCH completed");
 }

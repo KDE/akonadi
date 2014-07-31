@@ -31,12 +31,11 @@ class Scope;
 /**
   Helper methods for common query tasks.
 */
-namespace QueryHelper
-{
-  /**
-    Add conditions to @p qb for the given uid set @p set applied to @p column.
-  */
-  void setToQuery( const ImapSet &set, const QString &column, QueryBuilder &qb );
+namespace QueryHelper {
+/**
+  Add conditions to @p qb for the given uid set @p set applied to @p column.
+*/
+void setToQuery(const ImapSet &set, const QString &column, QueryBuilder &qb);
 
 } // namespace QueryHelper
 

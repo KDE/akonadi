@@ -22,7 +22,6 @@
 #ifndef AKONADI_CLIENTCAPABILITIES_H
 #define AKONADI_CLIENTCAPABILITIES_H
 
-
 namespace Akonadi {
 namespace Server {
 
@@ -32,34 +31,34 @@ namespace Server {
 class ClientCapabilities
 {
 public:
-  ClientCapabilities();
+    ClientCapabilities();
 
-  /** Returns @c true if no capabilities have been set by the client.
-   *  This is useful for detecting legacy clients.
-   */
-  bool isEmpty();
+    /** Returns @c true if no capabilities have been set by the client.
+     *  This is useful for detecting legacy clients.
+     */
+    bool isEmpty();
 
-  int notificationMessageVersion() const;
-  void setNotificationMessageVersion( int version );
+    int notificationMessageVersion() const;
+    void setNotificationMessageVersion(int version);
 
-  bool noPayloadPath() const;
-  void setNoPayloadPath( bool noPayloadPath );
+    bool noPayloadPath() const;
+    void setNoPayloadPath(bool noPayloadPath);
 
-  void setServerSideSearch( bool serverSideSearch );
-  bool serverSideSearch() const;
+    void setServerSideSearch(bool serverSideSearch);
+    bool serverSideSearch() const;
 
-  bool akAppendStreaming() const;
-  void setAkAppendStreaming( bool akAppendStreaming );
+    bool akAppendStreaming() const;
+    void setAkAppendStreaming(bool akAppendStreaming);
 
-  bool directStreaming() const;
-  void setDirectStreaming( bool directStreaming );
+    bool directStreaming() const;
+    void setDirectStreaming(bool directStreaming);
 
 private:
-  int m_notificationMessageVersion;
-  int m_noPayloadPath : 1;
-  int m_serverSideSearch : 1;
-  int m_akAppendStreaming : 1;
-  int m_directStreaming : 1;
+    int m_notificationMessageVersion;
+    int m_noPayloadPath : 1;
+    int m_serverSideSearch : 1;
+    int m_akAppendStreaming : 1;
+    int m_directStreaming : 1;
 };
 
 } // namespace Server

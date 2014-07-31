@@ -22,7 +22,7 @@
 using namespace Akonadi::Server;
 
 FakeSearchManager::FakeSearchManager(QObject *parent)
-  : SearchManager(parent)
+    : SearchManager(parent)
 {
 }
 
@@ -50,9 +50,9 @@ void FakeSearchManager::updateSearchAsync(const Collection &collection)
     Q_UNUSED(collection);
 }
 
-QVector<Akonadi::AbstractSearchPlugin*> FakeSearchManager::searchPlugins() const
+QVector<Akonadi::AbstractSearchPlugin *> FakeSearchManager::searchPlugins() const
 {
-    return QVector<Akonadi::AbstractSearchPlugin*>();
+    return QVector<Akonadi::AbstractSearchPlugin *>();
 }
 
 void FakeSearchManager::scheduleSearchUpdate()

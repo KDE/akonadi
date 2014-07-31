@@ -22,69 +22,68 @@
 using namespace Akonadi::Server;
 
 ClientCapabilities::ClientCapabilities()
-  : m_notificationMessageVersion( 0 )
-  , m_noPayloadPath( false )
-  , m_serverSideSearch( false )
-  , m_akAppendStreaming( false )
-  , m_directStreaming( false )
+    : m_notificationMessageVersion(0)
+    , m_noPayloadPath(false)
+    , m_serverSideSearch(false)
+    , m_akAppendStreaming(false)
+    , m_directStreaming(false)
 {
 }
 
 bool ClientCapabilities::isEmpty()
 {
-  return m_notificationMessageVersion == 0;
+    return m_notificationMessageVersion == 0;
 }
 
 int ClientCapabilities::notificationMessageVersion() const
 {
-  return m_notificationMessageVersion;
+    return m_notificationMessageVersion;
 }
 
-void ClientCapabilities::setNotificationMessageVersion( int version )
+void ClientCapabilities::setNotificationMessageVersion(int version)
 {
-  if ( version <= 0 ) {
-    return; // invalid
-  }
-  m_notificationMessageVersion = version;
+    if (version <= 0) {
+        return; // invalid
+    }
+    m_notificationMessageVersion = version;
 }
 
 bool ClientCapabilities::noPayloadPath() const
 {
-  return m_noPayloadPath;
+    return m_noPayloadPath;
 }
 
-void ClientCapabilities::setNoPayloadPath( bool noPayloadPath )
+void ClientCapabilities::setNoPayloadPath(bool noPayloadPath)
 {
-  m_noPayloadPath = noPayloadPath;
+    m_noPayloadPath = noPayloadPath;
 }
 
 bool ClientCapabilities::serverSideSearch() const
 {
-  return m_serverSideSearch;
+    return m_serverSideSearch;
 }
 
-void ClientCapabilities::setServerSideSearch( bool serverSideSearch )
+void ClientCapabilities::setServerSideSearch(bool serverSideSearch)
 {
-  m_serverSideSearch = serverSideSearch;
+    m_serverSideSearch = serverSideSearch;
 }
 
 bool ClientCapabilities::akAppendStreaming() const
 {
-  return m_akAppendStreaming;
+    return m_akAppendStreaming;
 }
 
 void ClientCapabilities::setAkAppendStreaming(bool akAppendStreaming)
 {
-  m_akAppendStreaming = akAppendStreaming;
+    m_akAppendStreaming = akAppendStreaming;
 }
 
 bool ClientCapabilities::directStreaming() const
 {
-  return m_directStreaming;
+    return m_directStreaming;
 }
 
 void ClientCapabilities::setDirectStreaming(bool directStreaming)
 {
-  m_directStreaming = directStreaming;
+    m_directStreaming = directStreaming;
 }
-

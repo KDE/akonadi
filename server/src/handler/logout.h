@@ -31,8 +31,8 @@ namespace Server {
  */
 class Logout : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     Logout();
 
     ~Logout();

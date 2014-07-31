@@ -31,7 +31,7 @@
 
 #include "exception.h"
 
-AKONADI_EXCEPTION_MAKE_INSTANCE( ImapParserException );
+AKONADI_EXCEPTION_MAKE_INSTANCE(ImapParserException);
 
 class QIODevice;
 
@@ -45,14 +45,14 @@ namespace Server {
 */
 class ImapStreamParser
 {
-  friend class ::ImapStreamParserTest;
+    friend class ::ImapStreamParserTest;
 
-  public:
+public:
     /**
      * Construct the parser.
      * @param socket the local socket to work with.
      */
-    ImapStreamParser( QIODevice *socket );
+    ImapStreamParser(QIODevice *socket);
 
     /**
      * Destructor.
@@ -112,7 +112,7 @@ class ImapStreamParser
      * @param ok true if the data found was a number
      * @return the number
      */
-    qint64 readNumber( bool *ok = 0 );
+    qint64 readNumber(bool *ok = 0);
 
     /**
      * Check if the next data is a string or not. This call might block.
@@ -126,7 +126,7 @@ class ImapStreamParser
      * This call might block.
      * @return true if a literal follows
      */
-    bool hasLiteral( bool requestData = true);
+    bool hasLiteral(bool requestData = true);
 
     /**
      * Read the next literal sequence. This might or might not be the full data. Example code to read a literal would be:
@@ -182,11 +182,11 @@ class ImapStreamParser
      */
     void beginList();
 
-     /**
-     * Check if the next data is a parenthesized list end. This call might block.
-     * @return true if a parenthesized list end. In this case the closing parenthesis
-     * is read from the stream.
-      */
+    /**
+    * Check if the next data is a parenthesized list end. This call might block.
+    * @return true if a parenthesized list end. In this case the closing parenthesis
+    * is read from the stream.
+     */
     bool atListEnd();
 
     /**
@@ -201,10 +201,10 @@ class ImapStreamParser
      */
     bool hasDateTime();
 
-     /**
-     * Check if the command end was reached
-     * @return true if the end of command is reached
-     */
+    /**
+    * Check if the command end was reached
+    * @return true if the end of command is reached
+    */
     bool atCommandEnd();
 
     /**
@@ -228,19 +228,19 @@ class ImapStreamParser
      */
     QByteArray readRemainingData();
 
-    void setData( const QByteArray &data );
+    void setData(const QByteArray &data);
 
     /**
      * Inserts some data back into the parse buffer at the current position.
      * @param data data to be inserted
      */
-    void insertData( const QByteArray &data );
+    void insertData(const QByteArray &data);
 
     /**
      * Appends some data to the end of the parse buffer.
      * @param data data to be appended
      */
-    void appendData( const QByteArray &data );
+    void appendData(const QByteArray &data);
 
     /**
      * Skips everything until the first character that isn't a space.
@@ -250,15 +250,15 @@ class ImapStreamParser
     /**
      * Set the identification used for Tracer calls.
      */
-    void setTracerIdentifier( const QString &id );
+    void setTracerIdentifier(const QString &id);
 
     /**
      * Inform the client to send more literal data.
      * @param size size of the requested literal in bytes
      */
-    void sendContinuationResponse( qint64 size );
+    void sendContinuationResponse(qint64 size);
 
-  private:
+private:
     QByteArray parseQuotedString();
 
     /**
@@ -267,7 +267,7 @@ class ImapStreamParser
      * @param wait the condition
      * @return true if more data is available
      */
-    bool waitForMoreData( bool wait );
+    bool waitForMoreData(bool wait);
 
     QIODevice *m_socket;
     QByteArray m_data;

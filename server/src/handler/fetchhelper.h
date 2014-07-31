@@ -41,44 +41,45 @@ class Response;
 
 class FetchHelper : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    FetchHelper( Connection *connection, const Scope &scope, const FetchScope &fetchScope );
+public:
+    FetchHelper(Connection *connection, const Scope &scope, const FetchScope &fetchScope);
 
-    bool fetchItems( const QByteArray &responseIdentifier );
+    bool fetchItems(const QByteArray &responseIdentifier);
 
-  Q_SIGNALS:
-    void responseAvailable( const Akonadi::Server::Response &response );
+Q_SIGNALS:
+    void responseAvailable(const Akonadi::Server::Response &response);
 
-  private:
+private:
     enum ItemQueryColumns {
-      ItemQueryPimItemIdColumn,
-      ItemQueryPimItemRidColumn,
-      ItemQueryMimeTypeColumn,
-      ItemQueryRevColumn,
-      ItemQueryRemoteRevisionColumn,
-      ItemQuerySizeColumn,
-      ItemQueryDatetimeColumn,
-      ItemQueryCollectionIdColumn,
-      ItemQueryPimItemGidColumn,
-      ItemQueryColumnCount
+        ItemQueryPimItemIdColumn,
+        ItemQueryPimItemRidColumn,
+        ItemQueryMimeTypeColumn,
+        ItemQueryRevColumn,
+        ItemQueryRemoteRevisionColumn,
+        ItemQuerySizeColumn,
+        ItemQueryDatetimeColumn,
+        ItemQueryCollectionIdColumn,
+        ItemQueryPimItemGidColumn,
+        ItemQueryColumnCount
     };
 
     void updateItemAccessTime();
     void triggerOnDemandFetch();
     QSqlQuery buildItemQuery();
-    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
+    QSqlQuery buildPartQuery(const QVector<QByteArray> &partList, bool allPayload, bool allAttrs);
     QSqlQuery buildFlagQuery();
     QSqlQuery buildTagQuery();
     QSqlQuery buildVRefQuery();
-    QStack<Collection> ancestorsForItem( Collection::Id parentColId );
-    static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
-    QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
-    bool isScopeLocal( const Scope &scope );
+
+    QStack<Collection> ancestorsForItem(Collection::Id parentColId);
+    static bool needsAccessTimeUpdate(const QVector<QByteArray> &parts);
+    QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
+    bool isScopeLocal(const Scope &scope);
     static QByteArray tagsToByteArray(const Tag::List &tags);
 
-  private:
+private:
     ImapStreamParser *mStreamParser;
 
     Connection *mConnection;

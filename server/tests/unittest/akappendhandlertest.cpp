@@ -25,7 +25,6 @@
 #include <response.h>
 #include <storage/selectquerybuilder.h>
 
-
 #include <libs/notificationmessagev3_p.h>
 #include <libs/notificationmessagev2_p.h>
 #include <imapparser_p.h>
@@ -90,7 +89,8 @@ public:
     struct PartHelper {
         PartHelper(const QString &type_, const QByteArray &data_, int size_, bool external_ = false, int version_ = 0)
             : type(type_), data(data_), size(size_), external(external_), version(version_)
-        {}
+        {
+        }
         QString type;
         QByteArray data;
         int size;
@@ -128,7 +128,8 @@ public:
     struct TagHelper {
         TagHelper(const QString &tagType_, const QString &gid_, const QString &remoteId_ = QString())
             : tagType(tagType_), gid(gid_), remoteId(remoteId_)
-        {}
+        {
+        }
         QString tagType;
         QString gid;
         QString remoteId;
@@ -154,12 +155,12 @@ public:
     {
         const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();
         return "C: 2 X-AKAPPEND " + QByteArray::number(pimItem.collectionId()) + " "
-                                  + QByteArray::number(size) + " "
-                                  + "(\\RemoteId[" + pimItem.remoteId().toLatin1() + "] "
-                                  +  "\\MimeType[" + pimItem.mimeType().name().toLatin1() + "] "
-                                  +  "\\RemoteRevision[" + pimItem.remoteRevision().toLatin1() + "] "
-                                  +  "\\Gid[" + pimItem.gid().toLatin1() + "]) "
-                                  + "\"" + dt.toString(QLatin1String("dd-MMM-yyyy hh:mm:ss")).toLatin1() + " +0000\"";
+               + QByteArray::number(size) + " "
+               + "(\\RemoteId[" + pimItem.remoteId().toLatin1() + "] "
+               +  "\\MimeType[" + pimItem.mimeType().name().toLatin1() + "] "
+               +  "\\RemoteRevision[" + pimItem.remoteRevision().toLatin1() + "] "
+               +  "\\Gid[" + pimItem.gid().toLatin1() + "]) "
+               + "\"" + dt.toString(QLatin1String("dd-MMM-yyyy hh:mm:ss")).toLatin1() + " +0000\"";
     }
 
 private Q_SLOTS:
@@ -208,7 +209,6 @@ private Q_SLOTS:
         QTest::newRow("single-part") << scenario << notification << pimItem << parts
                                      << flags << tags << uidnext << datetime << false;
 
-
         updatePimItem(pimItem, QLatin1String("TEST-2"), 20);
         updateParts(parts, { { QLatin1String("PLD:DATA"), "Random Data", 11 },
                              { QLatin1String("PLD:PLDTEST"), "Test Data", 9 } });
@@ -226,7 +226,6 @@ private Q_SLOTS:
         QTest::newRow("multi-part") << scenario << notification << pimItem << parts
                                     << flags << tags << uidnext << datetime << false;
 
-
         scenario.clear();
         scenario << FakeAkonadiServer::defaultScenario()
                  << "C: 2 X-AKAPPEND 100 0 () ()"
@@ -236,7 +235,6 @@ private Q_SLOTS:
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
 
-
         scenario.clear();
         scenario << FakeAkonadiServer::defaultScenario()
                  << "C: 2 X-AKAPPEND 6 0 () ()"
@@ -245,7 +243,6 @@ private Q_SLOTS:
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
-
 
         updatePimItem(pimItem, QLatin1String("TEST-3"), 5);
         updateParts(parts, { { QLatin1String("PLD:DATA"), "12345", 5 } });
@@ -262,7 +259,6 @@ private Q_SLOTS:
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
-
         updatePimItem(pimItem, QLatin1String("TEST-4"), 1000);
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -277,7 +273,6 @@ private Q_SLOTS:
                                                       << parts << flags << tags << uidnext
                                                       << datetime << false;
 
-
         scenario.clear();
         scenario << FakeAkonadiServer::defaultScenario()
                  << createCommand(pimItem, datetime) + " (PLD:DATA[0] {4}"
@@ -289,7 +284,6 @@ private Q_SLOTS:
                                               << QVector<Flag>() << QVector<FakeTag>()
                                               << -1ll << QDateTime() << true;
 
-
         scenario.clear();
         scenario << FakeAkonadiServer::defaultScenario()
                  << createCommand(pimItem, datetime) + " (PLD:DATA[0] {4}"
@@ -300,7 +294,6 @@ private Q_SLOTS:
                                                           << PimItem() << QVector<FakePart>()
                                                           << QVector<Flag>() << QVector<FakeTag>()
                                                           << -1ll << QDateTime() << true;
-
 
         updatePimItem(pimItem, QLatin1String("TEST-5"), 0);
         updateParts(parts, { { QLatin1String("PLD:DATA"), QByteArray(), 0 } });
@@ -314,20 +307,18 @@ private Q_SLOTS:
         QTest::newRow("empty payload part") << scenario << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
 
-
         updatePimItem(pimItem, QLatin1String("TEST-7"), 0);
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenario.clear();
         scenario << FakeAkonadiServer::defaultScenario()
-                << createCommand(pimItem, datetime) + " (PLD:DATA[0] {0}"
+                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {0}"
                  << "S: + Ready for literal data (expecting 0 bytes)"
                  << "C: )"
                  << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
                  << "S: 2 OK Append completed";
         QTest::newRow("empty part data") << scenario << notification << pimItem << parts
                                          << flags << tags << uidnext << datetime << false;
-
 
         updatePimItem(pimItem, QLatin1String("TEST-8"), 1);
         updateParts(parts, { { QLatin1String("PLD:DATA"), QByteArray("\0", 1), 1 } });
@@ -344,7 +335,6 @@ private Q_SLOTS:
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
-
         const QString utf8String = QString::fromUtf8("äöüß@€µøđ¢©®");
         updatePimItem(pimItem, QLatin1String("TEST-9"), utf8String.toUtf8().size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), utf8String.toUtf8(), utf8String.toUtf8().size() } });
@@ -359,7 +349,6 @@ private Q_SLOTS:
                  << "S: 2 OK Append completed";
         QTest::newRow("utf8 part data") << scenario << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
-
 
         const QByteArray hugeData = QByteArray("a").repeated(1 << 20);
         updatePimItem(pimItem, QLatin1String("TEST-10"), 1 << 20);
@@ -376,7 +365,6 @@ private Q_SLOTS:
         QTest::newRow("huge part data") << scenario << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
-
         const QByteArray dataWithNewLines = "Bernard, Bernard, Bernard, Bernard, look, look Bernard!\nWHAT!!!!!!!\nI'm a prostitute robot from the future!";
         updatePimItem(pimItem, QLatin1String("TEST-11"), dataWithNewLines.size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), dataWithNewLines, dataWithNewLines.size() } });
@@ -391,7 +379,6 @@ private Q_SLOTS:
                  << "S: 2 OK Append completed";
         QTest::newRow("data with newlines") << scenario << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
-
 
         const QByteArray lotsOfNewlines = QByteArray("\n").repeated(1 << 20);
         updatePimItem(pimItem, QLatin1String("TEST-12"), lotsOfNewlines.size());
@@ -408,7 +395,6 @@ private Q_SLOTS:
         QTest::newRow("data with lots of newlines") << scenario << notification << pimItem
                                                     << parts << flags << tags << uidnext
                                                     << datetime << false;
-
 
         updatePimItem(pimItem, QLatin1String("TEST-13"), 20);
         updateParts(parts, { { QLatin1String("PLD:NEWPARTTYPE1"), "0123456789", 10 },
@@ -428,10 +414,9 @@ private Q_SLOTS:
                                                  << parts << flags << tags << uidnext
                                                  << datetime << false;
 
-
         updatePimItem(pimItem, QLatin1String("TEST-14"), 0);
         updateParts(parts, {});
-        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("\\RANDOM") );
+        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("\\RANDOM"));
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenario.clear();
@@ -441,7 +426,6 @@ private Q_SLOTS:
                  << "S: 2 OK Append completed";
         QTest::newRow("item with flags") << scenario << notification << pimItem << parts
                                          << flags << tags << uidnext << datetime << false;
-
 
         updatePimItem(pimItem, QLatin1String("TEST-15"), 0);
         updateFlags(flags, {});
@@ -457,7 +441,6 @@ private Q_SLOTS:
         QTest::newRow("item with non-existent tags (GID)") << scenario << notification << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
 
-
         updatePimItem(pimItem, QLatin1String("TEST-16"), 0);
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-3") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-4") } });
@@ -470,8 +453,7 @@ private Q_SLOTS:
                  << "S: 3 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
                  << "S: 3 OK Append completed";
         QTest::newRow("item with non-existent tags (RID)") << scenario << notification << pimItem << parts
-                                                          << flags << tags << uidnext << datetime << false;
-
+                                                           << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-17"), 0);
         updateNotifcationEntity(notification, pimItem);
@@ -487,8 +469,6 @@ private Q_SLOTS:
         QTest::newRow("item with existing tags (RID)") << scenario << notification << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
 
-
-
         updatePimItem(pimItem, QLatin1String("TEST-18"), 0);
         updateNotifcationEntity(notification, pimItem);
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-3") },
@@ -502,9 +482,8 @@ private Q_SLOTS:
         QTest::newRow("item with existing tags (GID)") << scenario << notification << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
 
-
         updatePimItem(pimItem, QLatin1String("TEST-19"), 0);
-        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("$FLAG") );
+        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("$FLAG"));
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-1") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
         updateNotifcationEntity(notification, pimItem);
@@ -516,7 +495,6 @@ private Q_SLOTS:
                  << "S: 2 OK Append completed";
         QTest::newRow("item with flags and tags") << scenario << notification << pimItem << parts
                                                   << flags << tags << uidnext << datetime << false;
-
 
         updatePimItem(pimItem, QLatin1String("TEST-20"), 0);
         updateFlags(flags, {});
@@ -554,7 +532,7 @@ private Q_SLOTS:
             QCOMPARE(notifications.count(), 1);
             const NotificationMessageV3 itemNotification = notifications.first();
 
-            QVERIFY(AkTest::compareNotifications(itemNotification, notification, QFlag(AkTest::NtfAll &~ AkTest::NtfEntities)));
+            QVERIFY(AkTest::compareNotifications(itemNotification, notification, QFlag(AkTest::NtfAll & ~ AkTest::NtfEntities)));
             QCOMPARE(itemNotification.entities().count(), notification.entities().count());
         } else {
             QVERIFY(notificationSpy->isEmpty());
@@ -578,9 +556,8 @@ private Q_SLOTS:
             Q_FOREACH (const Flag &flag, flags) {
                 const QList<Flag>::const_iterator actualFlagIter =
                     std::find_if(actualFlags.constBegin(), actualFlags.constEnd(),
-                                 [flag] (Flag const &actualFlag) {
-                                     return flag.name() == actualFlag.name();
-                                 });
+                                 [flag](Flag const & actualFlag) {
+                                     return flag.name() == actualFlag.name(); });
                 QVERIFY(actualFlagIter != actualFlags.constEnd());
                 const Flag actualFlag = *actualFlagIter;
                 QVERIFY(actualFlag.isValid());
@@ -591,9 +568,8 @@ private Q_SLOTS:
             Q_FOREACH (const FakeTag &tag, tags) {
                 const QList<Tag>::const_iterator actualTagIter =
                     std::find_if(actualTags.constBegin(), actualTags.constEnd(),
-                                 [tag] (Tag const &actualTag) {
-                                     return tag.gid() == actualTag.gid();
-                                 });
+                                [tag](Tag const & actualTag) {
+                                    return tag.gid() == actualTag.gid(); });
 
                 QVERIFY(actualTagIter != actualTags.constEnd());
                 const Tag actualTag = *actualTagIter;
@@ -615,10 +591,9 @@ private Q_SLOTS:
             Q_FOREACH (const FakePart &part, parts) {
                 const QList<Part>::const_iterator actualPartIter =
                     std::find_if(actualParts.constBegin(), actualParts.constEnd(),
-                                 [part] (Part const &actualPart) {
+                                 [part](Part const & actualPart) {
                                      return part.partType().ns() == actualPart.partType().ns() &&
-                                            part.partType().name() == actualPart.partType().name();
-                                 });
+                                            part.partType().name() == actualPart.partType().name(); });
 
                 QVERIFY(actualPartIter != actualParts.constEnd());
                 const Part actualPart = *actualPartIter;

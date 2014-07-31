@@ -36,7 +36,7 @@ namespace Akonadi {
 */
 class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
 {
-  public:
+public:
     /**
      * Describes the ids stored in the interval.
      */
@@ -55,14 +55,14 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
     /**
       Copy constructor.
     */
-    ImapInterval( const ImapInterval &other );
+    ImapInterval(const ImapInterval &other);
 
     /**
       Create a new interval.
       @param begin The begin of the interval.
       @param end Keep default (0) to just set the interval begin
     */
-    explicit ImapInterval( Id begin, Id end = 0 );
+    explicit ImapInterval(Id begin, Id end = 0);
 
     /**
       Destructor.
@@ -72,12 +72,12 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
     /**
       Assignment operator.
     */
-    ImapInterval &operator=( const ImapInterval &other );
+    ImapInterval &operator=(const ImapInterval &other);
 
     /**
       Comparison operator.
     */
-    bool operator==( const ImapInterval &other ) const;
+    bool operator==(const ImapInterval &other) const;
 
     /**
       Returns the size of this interval.
@@ -110,19 +110,19 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
     /**
       Sets the begin of the interval.
     */
-    void setBegin( Id value );
+    void setBegin(Id value);
 
     /**
       Sets the end of this interval.
     */
-    void setEnd( Id value );
+    void setEnd(Id value);
 
     /**
       Converts this set into an IMAP compatible sequence.
     */
     QByteArray toImapSequence() const;
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };
@@ -134,7 +134,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
 */
 class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
 {
-  public:
+public:
     /**
      * Describes the ids stored in the set.
      */
@@ -148,7 +148,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
     /**
       Copy constructor.
     */
-    ImapSet( const ImapSet &other );
+    ImapSet(const ImapSet &other);
 
     /**
       Destructor.
@@ -158,7 +158,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
     /**
       Assignment operator.
     */
-    ImapSet &operator=( const ImapSet &other );
+    ImapSet &operator=(const ImapSet &other);
 
     /**
       Adds the given list of positive integer numbers to the set.
@@ -166,24 +166,24 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
       No interval merging is performed.
       @param values List of positive integer numbers in arbitrary order
     */
-    void add( const QVector<Id> &values );
+    void add(const QVector<Id> &values);
 
     /**
        @overload
        @deprecated Use the QVector version instead.
     */
-    void add( const QList<Id> &values );
+    void add(const QList<Id> &values);
 
     /**
      * @overload
      */
-    void add( const QSet<Id> &values );
+    void add(const QSet<Id> &values);
 
     /**
       Adds the given ImapInterval to this set.
       No interval merging is performed.
     */
-    void add( const ImapInterval &interval );
+    void add(const ImapInterval &interval);
 
     /**
       Returns a IMAP-compatible QByteArray representation of this set.
@@ -200,21 +200,21 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
     */
     bool isEmpty() const;
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };
 
 }
 
-AKONADIPROTOCOLINTERNALS_EXPORT QDebug &operator<<( QDebug &d, const Akonadi::ImapInterval &interval );
-AKONADIPROTOCOLINTERNALS_EXPORT QDebug operator<<( QDebug d, const Akonadi::ImapSet &set );
+AKONADIPROTOCOLINTERNALS_EXPORT QDebug &operator<<(QDebug &d, const Akonadi::ImapInterval &interval);
+AKONADIPROTOCOLINTERNALS_EXPORT QDebug operator<<(QDebug d, const Akonadi::ImapSet &set);
 
-Q_DECLARE_TYPEINFO( Akonadi::ImapInterval, Q_MOVABLE_TYPE );
-Q_DECLARE_TYPEINFO( Akonadi::ImapSet,      Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::ImapInterval, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::ImapSet, Q_MOVABLE_TYPE);
 
-Q_DECLARE_METATYPE( Akonadi::ImapInterval )
-Q_DECLARE_METATYPE( Akonadi::ImapInterval::List )
-Q_DECLARE_METATYPE( Akonadi::ImapSet )
+Q_DECLARE_METATYPE(Akonadi::ImapInterval)
+Q_DECLARE_METATYPE(Akonadi::ImapInterval::List)
+Q_DECLARE_METATYPE(Akonadi::ImapSet)
 
 #endif

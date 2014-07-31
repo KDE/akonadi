@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef AKONADI_SERVER_COLLECTIONSCHEDULER_H
 #define AKONADI_SERVER_COLLECTIONSCHEDULER_H
 
@@ -34,17 +33,17 @@ namespace Server {
 class Collection;
 class PauseableTimer;
 
-class CollectionScheduler: public QThread
+class CollectionScheduler : public QThread
 {
     Q_OBJECT
 
-  public:
-    CollectionScheduler( QObject *parent = 0 );
+public:
+    CollectionScheduler(QObject *parent = 0);
     virtual ~CollectionScheduler();
 
-    void collectionChanged( qint64 collectionId );
-    void collectionRemoved( qint64 collectionId );
-    void collectionAdded( qint64 collectionId );
+    void collectionChanged(qint64 collectionId);
+    void collectionRemoved(qint64 collectionId);
+    void collectionAdded(qint64 collectionId);
 
     /**
      * Sets the minimum timeout interval.
@@ -53,29 +52,29 @@ class CollectionScheduler: public QThread
      *
      * @p intervalMinutes Minimum timeout interval in minutes.
      */
-    void setMinimumInterval( int intervalMinutes );
+    void setMinimumInterval(int intervalMinutes);
     int minimumInterval() const;
 
-  protected:
+protected:
     virtual void run();
 
-    virtual bool shouldScheduleCollection( const Collection &collection ) = 0;
-    virtual bool hasChanged( const Collection &collection, const Collection &changed ) = 0;
+    virtual bool shouldScheduleCollection(const Collection &collection) = 0;
+    virtual bool hasChanged(const Collection &collection, const Collection &changed) = 0;
     /**
      * @return Return cache timeout in minutes
      */
-    virtual int collectionScheduleInterval( const Collection &collection ) = 0;
-    virtual void collectionExpired( const Collection &collection ) = 0;
+    virtual int collectionScheduleInterval(const Collection &collection) = 0;
+    virtual void collectionExpired(const Collection &collection) = 0;
 
-    void inhibit( bool inhibit = true );
+    void inhibit(bool inhibit = true);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void initScheduler();
     void schedulerTimeout();
     void startScheduler();
-    void scheduleCollection( /*sic!*/ Collection collection, bool shouldStartScheduler = true );
+    void scheduleCollection(/*sic!*/ Collection collection, bool shouldStartScheduler = true);
 
-  protected:
+protected:
     QMutex mScheduleLock;
     QMultiMap<uint /*timestamp*/, Collection> mSchedule;
     PauseableTimer *mScheduler;

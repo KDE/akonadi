@@ -22,10 +22,8 @@
 
 #include <QSqlDatabase>
 
-namespace Akonadi
-{
-namespace Server
-{
+namespace Akonadi {
+namespace Server {
 
 class DbPopulator
 {

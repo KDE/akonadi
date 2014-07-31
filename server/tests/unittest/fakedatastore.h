@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef AKONADI_SERVER_FAKEDATASTORE_H
 #define AKONADI_SERVER_FAKEDATASTORE_H
 
@@ -26,84 +25,87 @@
 namespace Akonadi {
 namespace Server {
 
-class FakeDataStore: public DataStore
+class FakeDataStore : public DataStore
 {
     Q_OBJECT
 
-  public:
+public:
     virtual ~FakeDataStore();
     static DataStore *self();
 
     virtual bool init();
 
-    QMap<QString, QVariantList> changes() const { return mChanges; }
+    QMap<QString, QVariantList> changes() const
+    {
+        return mChanges;
+    }
 
-    virtual bool setItemsFlags( const PimItem::List &items,
-                                const QVector<Flag> &flags,
-                                bool *flagsChanged = 0,
-                                bool silent = false );
-    virtual bool appendItemsFlags( const PimItem::List &items,
-                                   const QVector<Flag> &flags,
-                                   bool *flagsChanged = 0,
-                                   bool checkIfExists = true,
-                                   const Collection &col = Collection(),
-                                   bool silent = false );
-    virtual bool removeItemsFlags( const PimItem::List &items,
-                                   const QVector<Flag> &flags,
-                                   bool *flagsChanged = 0,
-                                   bool silent = false );
-
-    virtual bool setItemsTags( const PimItem::List &items,
-                               const Tag::List &tags,
-                               bool *tagsChanged = 0,
-                               bool silent = false );
-    virtual bool appendItemsTags( const PimItem::List &items,
-                                  const Tag::List &tags,
-                                  bool *tagsChanged = 0,
+    virtual bool setItemsFlags(const PimItem::List &items,
+                               const QVector<Flag> &flags,
+                               bool *flagsChanged = 0,
+                               bool silent = false);
+    virtual bool appendItemsFlags(const PimItem::List &items,
+                                  const QVector<Flag> &flags,
+                                  bool *flagsChanged = 0,
                                   bool checkIfExists = true,
                                   const Collection &col = Collection(),
-                                  bool silent = false );
-    virtual bool removeItemsTags( const PimItem::List &items,
-                                  const Tag::List &tags,
-                                  bool *tagsChanged = 0,
-                                  bool silent = false );
+                                  bool silent = false);
+    virtual bool removeItemsFlags(const PimItem::List &items,
+                                  const QVector<Flag> &flags,
+                                  bool *flagsChanged = 0,
+                                  bool silent = false);
 
-    virtual bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
+    virtual bool setItemsTags(const PimItem::List &items,
+                              const Tag::List &tags,
+                              bool *tagsChanged = 0,
+                              bool silent = false);
+    virtual bool appendItemsTags(const PimItem::List &items,
+                                 const Tag::List &tags,
+                                 bool *tagsChanged = 0,
+                                 bool checkIfExists = true,
+                                 const Collection &col = Collection(),
+                                 bool silent = false);
+    virtual bool removeItemsTags(const PimItem::List &items,
+                                 const Tag::List &tags,
+                                 bool *tagsChanged = 0,
+                                 bool silent = false);
 
-    virtual bool invalidateItemCache( const PimItem &item );
+    virtual bool removeItemParts(const PimItem &item, const QList<QByteArray> &parts);
 
-    virtual bool appendCollection( Collection &collection );
+    virtual bool invalidateItemCache(const PimItem &item);
 
-    virtual bool cleanupCollection( Collection &collection );
-    virtual bool cleanupCollection_slow( Collection &collection );
+    virtual bool appendCollection(Collection &collection);
 
-    virtual bool moveCollection( Collection &collection, const Collection &newParent );
+    virtual bool cleanupCollection(Collection &collection);
+    virtual bool cleanupCollection_slow(Collection &collection);
 
-    virtual bool appendMimeTypeForCollection( qint64 collectionId, const QStringList &mimeTypes );
+    virtual bool moveCollection(Collection &collection, const Collection &newParent);
 
-    virtual void activeCachePolicy( Collection &col);
+    virtual bool appendMimeTypeForCollection(qint64 collectionId, const QStringList &mimeTypes);
 
-    virtual bool appendMimeType( const QString &mimetype,
-                                 qint64 *insertId = 0 );
-    virtual bool appendPimItem( QVector<Part> &parts,
-                                const MimeType &mimetype,
-                                const Collection &collection,
-                                const QDateTime &dateTime,
-                                const QString &remote_id,
-                                const QString &remoteRevision,
-                                const QString &gid,
-                                PimItem &pimItem );
+    virtual void activeCachePolicy(Collection &col);
 
-    virtual bool cleanupPimItems( const PimItem::List &items );
+    virtual bool appendMimeType(const QString &mimetype,
+                                qint64 *insertId = 0);
+    virtual bool appendPimItem(QVector<Part> &parts,
+                               const MimeType &mimetype,
+                               const Collection &collection,
+                               const QDateTime &dateTime,
+                               const QString &remote_id,
+                               const QString &remoteRevision,
+                               const QString &gid,
+                               PimItem &pimItem);
 
-    virtual bool unhidePimItem( PimItem &pimItem );
+    virtual bool cleanupPimItems(const PimItem::List &items);
+
+    virtual bool unhidePimItem(PimItem &pimItem);
     virtual bool unhideAllPimItems();
 
-    virtual bool addCollectionAttribute( const Collection &col,
-                                         const QByteArray &key,
-                                         const QByteArray &value );
-    virtual bool removeCollectionAttribute( const Collection &col,
-                                            const QByteArray &key );
+    virtual bool addCollectionAttribute(const Collection &col,
+                                        const QByteArray &key,
+                                        const QByteArray &value);
+    virtual bool removeCollectionAttribute(const Collection &col,
+                                           const QByteArray &key);
 
     virtual bool beginTransaction();
     virtual bool rollbackTransaction();
@@ -113,12 +115,12 @@ class FakeDataStore: public DataStore
 
     void setPopulateDb(bool populate);
 
-  protected:
+protected:
     FakeDataStore();
 
     QMap<QString, QVariantList> mChanges;
 
-  private:
+private:
     bool populateDatabase();
     bool mPopulateDb;
 

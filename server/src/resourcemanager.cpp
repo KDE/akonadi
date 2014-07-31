@@ -30,61 +30,61 @@ using namespace Akonadi::Server;
 
 ResourceManager *ResourceManager::mSelf = 0;
 
-ResourceManager::ResourceManager( QObject *parent )
-  : QObject( parent )
+ResourceManager::ResourceManager(QObject *parent)
+    : QObject(parent)
 {
-  new ResourceManagerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/ResourceManager" ), this );
+    new ResourceManagerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/ResourceManager"), this);
 }
 
-void ResourceManager::addResourceInstance( const QString &name, const QStringList &capabilities )
+void ResourceManager::addResourceInstance(const QString &name, const QStringList &capabilities)
 {
-  Transaction transaction( DataStore::self() );
-  Resource resource = Resource::retrieveByName( name );
-  if ( resource.isValid() ) {
-    Tracer::self()->error( "ResourceManager", QString::fromLatin1( "Resource '%1' already exists." ).arg( name ) );
-    return; // resource already exists
-  }
-
-  // create the resource
-  resource.setName( name );
-  resource.setIsVirtual( capabilities.contains( QLatin1String( AKONADI_AGENT_CAPABILITY_VIRTUAL ) ) );
-  if ( !resource.insert() ) {
-    Tracer::self()->error( "ResourceManager", QString::fromLatin1( "Could not create resource '%1'." ).arg( name ) );
-  }
-  transaction.commit();
-}
-
-void ResourceManager::removeResourceInstance( const QString &name )
-{
-  DataStore *db = DataStore::self();
-
-  // remove items and collections
-  Resource resource = Resource::retrieveByName( name );
-  if ( resource.isValid() ) {
-    const QVector<Collection> collections = resource.collections();
-    Q_FOREACH ( /*sic!*/ Collection collection, collections ) {
-      db->cleanupCollection( collection );
+    Transaction transaction(DataStore::self());
+    Resource resource = Resource::retrieveByName(name);
+    if (resource.isValid()) {
+        Tracer::self()->error("ResourceManager", QString::fromLatin1("Resource '%1' already exists.").arg(name));
+        return; // resource already exists
     }
 
-    // remove resource
-    resource.remove();
-  }
+    // create the resource
+    resource.setName(name);
+    resource.setIsVirtual(capabilities.contains(QLatin1String(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
+    if (!resource.insert()) {
+        Tracer::self()->error("ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name));
+    }
+    transaction.commit();
+}
+
+void ResourceManager::removeResourceInstance(const QString &name)
+{
+    DataStore *db = DataStore::self();
+
+    // remove items and collections
+    Resource resource = Resource::retrieveByName(name);
+    if (resource.isValid()) {
+        const QVector<Collection> collections = resource.collections();
+        Q_FOREACH (/*sic!*/ Collection collection, collections) {
+            db->cleanupCollection(collection);
+        }
+
+        // remove resource
+        resource.remove();
+    }
 }
 
 QStringList ResourceManager::resourceInstances() const
 {
-  QStringList result;
-  Q_FOREACH ( const Resource &res, Resource::retrieveAll() ) {
-    result.append( res.name() );
-  }
-  return result;
+    QStringList result;
+    Q_FOREACH (const Resource &res, Resource::retrieveAll()) {
+        result.append(res.name());
+    }
+    return result;
 }
 
 ResourceManager *ResourceManager::self()
 {
-  if ( !mSelf ) {
-    mSelf = new ResourceManager();
-  }
-  return mSelf;
+    if (!mSelf) {
+        mSelf = new ResourceManager();
+    }
+    return mSelf;
 }

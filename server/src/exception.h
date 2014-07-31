@@ -32,52 +32,64 @@ namespace Server {
 */
 class Exception : public std::exception
 {
-  public:
-    Exception( const char *what ) throw()
-      : mWhat( what )
+public:
+    Exception(const char *what) throw()
+        : mWhat(what)
     {
     }
-    Exception( const QByteArray &what ) throw()
-      : mWhat( what )
+
+    Exception(const QByteArray &what) throw()
+        : mWhat(what)
     {
     }
-    Exception( const QString &what ) throw()
-      : mWhat( what.toUtf8() )
+
+    Exception(const QString &what) throw()
+        : mWhat(what.toUtf8())
     {
     }
-    Exception( const Exception &other ) throw()
-      : std::exception( other )
-      , mWhat( other.what() )
+
+    Exception(const Exception &other) throw()
+        : std::exception(other)
+        , mWhat(other.what())
     {
     }
+
     virtual ~Exception() throw()
     {
     }
-    const char *what() const throw() { return mWhat.constData(); }
-    virtual const char *type() const throw() { return "General Exception"; }
-  protected:
+
+    const char *what() const throw()
+    {
+        return mWhat.constData();
+    }
+
+    virtual const char *type() const throw()
+    {
+        return "General Exception";
+    }
+protected:
     QByteArray mWhat;
 };
 
 #define AKONADI_EXCEPTION_MAKE_INSTANCE( classname ) \
 class classname : public Akonadi::Server::Exception \
 { \
-  public: \
+public: \
     classname ( const char *what ) throw() \
-      : Akonadi::Server::Exception( what ) \
+        : Akonadi::Server::Exception( what ) \
     { \
     } \
     classname ( const QByteArray &what ) throw() \
-      : Akonadi::Server::Exception( what ) \
+        : Akonadi::Server::Exception( what ) \
     { \
     } \
     classname ( const QString &what ) throw() \
-      : Akonadi::Server::Exception( what ) \
+        : Akonadi::Server::Exception( what ) \
     { \
     } \
     const char *type() const throw() \
     { \
-      return "" #classname; \
+        return "" #classname; \
     } \
 }
 

@@ -37,31 +37,30 @@ class Scope;
   Helper methods to generate WHERE clauses for item queries based on the item set
   used in the protocol.
 */
-namespace ItemQueryHelper
-{
-  /**
-    Add conditions to @p qb for the given item set @p set. If @p collection is valid,
-    only items in this collection are considered.
-  */
-  void itemSetToQuery( const ImapSet &set, QueryBuilder &qb, const Collection &collection = Collection() );
+namespace ItemQueryHelper {
+/**
+  Add conditions to @p qb for the given item set @p set. If @p collection is valid,
+  only items in this collection are considered.
+*/
+void itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection = Collection());
 
-  /**
-    Convenience method, does essentially the same as the one above.
-  */
-  void itemSetToQuery( const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb );
+/**
+  Convenience method, does essentially the same as the one above.
+*/
+void itemSetToQuery(const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb);
 
-  /**
-    Add conditions to @p qb for the given remote identifier @p rid.
-    The rid context is taken from @p context.
-  */
-  void remoteIdToQuery( const QStringList &rids, CommandContext *context, QueryBuilder &qb );
-  void gidToQuery( const QStringList &gids, CommandContext *context, QueryBuilder &qb );
+/**
+  Add conditions to @p qb for the given remote identifier @p rid.
+  The rid context is taken from @p context.
+*/
+void remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb);
+void gidToQuery(const QStringList &gids, CommandContext *context, QueryBuilder &qb);
 
-  /**
-    Add conditions to @p qb for the given item operation scope @p scope.
-    The rid context is taken from @p context, if none is specified an exception is thrown.
-  */
-  void scopeToQuery( const Scope &scope, CommandContext *context, QueryBuilder &qb );
+/**
+  Add conditions to @p qb for the given item operation scope @p scope.
+  The rid context is taken from @p context, if none is specified an exception is thrown.
+*/
+void scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb);
 }
 
 } // namespace Server

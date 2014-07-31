@@ -22,49 +22,49 @@
 using namespace Akonadi::Server;
 using namespace Akonadi::Server::Query;
 
-void Condition::addValueCondition( const QString &column, CompareOperator op, const QVariant &value )
+void Condition::addValueCondition(const QString &column, CompareOperator op, const QVariant &value)
 {
-  Q_ASSERT( !column.isEmpty() );
-  Condition c;
-  c.mColumn = column;
-  c.mCompareOp = op;
-  c.mComparedValue = value;
-  mSubConditions << c;
+    Q_ASSERT(!column.isEmpty());
+    Condition c;
+    c.mColumn = column;
+    c.mCompareOp = op;
+    c.mComparedValue = value;
+    mSubConditions << c;
 }
 
-void Condition::addColumnCondition( const QString &column, CompareOperator op, const QString &column2 )
+void Condition::addColumnCondition(const QString &column, CompareOperator op, const QString &column2)
 {
-  Q_ASSERT( !column.isEmpty() );
-  Q_ASSERT( !column2.isEmpty() );
-  Condition c;
-  c.mColumn = column;
-  c.mComparedColumn = column2;
-  c.mCompareOp = op;
-  mSubConditions << c;
+    Q_ASSERT(!column.isEmpty());
+    Q_ASSERT(!column2.isEmpty());
+    Condition c;
+    c.mColumn = column;
+    c.mComparedColumn = column2;
+    c.mCompareOp = op;
+    mSubConditions << c;
 }
 
-Query::Condition::Condition( LogicOperator op )
-  : mCompareOp( Equals )
-  , mCombineOp( op )
+Query::Condition::Condition(LogicOperator op)
+    : mCompareOp(Equals)
+    , mCombineOp(op)
 {
 }
 
 bool Query::Condition::isEmpty() const
 {
-  return mSubConditions.isEmpty();
+    return mSubConditions.isEmpty();
 }
 
 Condition::List Query::Condition::subConditions() const
 {
-  return mSubConditions;
+    return mSubConditions;
 }
 
-void Query::Condition::setSubQueryMode( LogicOperator op )
+void Query::Condition::setSubQueryMode(LogicOperator op)
 {
-  mCombineOp = op;
+    mCombineOp = op;
 }
 
-void Query::Condition::addCondition( const Condition &condition )
+void Query::Condition::addCondition(const Condition &condition)
 {
-  mSubConditions << condition;
+    mSubConditions << condition;
 }

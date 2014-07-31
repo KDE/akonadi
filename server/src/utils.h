@@ -30,40 +30,40 @@ namespace Utils {
 /**
  * Converts a QVariant to a QString depending on its internal type.
  */
-static inline QString variantToString( const QVariant &variant )
+static inline QString variantToString(const QVariant &variant)
 {
-  if ( variant.type() == QVariant::String ) {
-    return variant.toString();
-  } else if ( variant.type() == QVariant::ByteArray ) {
-    return QString::fromUtf8( variant.toByteArray() );
-  } else {
-    qWarning( "Unable to convert variant of type %s to QString", variant.typeName() );
-    Q_ASSERT( false );
-    return QString();
-  }
+    if (variant.type() == QVariant::String) {
+        return variant.toString();
+    } else if (variant.type() == QVariant::ByteArray) {
+        return QString::fromUtf8(variant.toByteArray());
+    } else {
+        qWarning("Unable to convert variant of type %s to QString", variant.typeName());
+        Q_ASSERT(false);
+        return QString();
+    }
 }
 
 /**
  * Converts a QVariant to a QByteArray depending on its internal type.
  */
-static inline QByteArray variantToByteArray( const QVariant &variant )
+static inline QByteArray variantToByteArray(const QVariant &variant)
 {
-  if ( variant.type() == QVariant::String ) {
-    return variant.toString().toUtf8();
-  } else if ( variant.type() == QVariant::ByteArray ) {
-    return variant.toByteArray();
-  } else {
-    qWarning( "Unable to convert variant of type %s to QByteArray", variant.typeName() );
-    Q_ASSERT( false );
-    return QByteArray();
-  }
+    if (variant.type() == QVariant::String) {
+        return variant.toString().toUtf8();
+    } else if (variant.type() == QVariant::ByteArray) {
+        return variant.toByteArray();
+    } else {
+        qWarning("Unable to convert variant of type %s to QByteArray", variant.typeName());
+        Q_ASSERT(false);
+        return QByteArray();
+    }
 }
 
 /**
  * Returns the socket @p directory that is passed to this method or the one
  * the user has overwritten via the config file.
  */
-QString preferredSocketDirectory( const QString &directory );
+QString preferredSocketDirectory(const QString &directory);
 
 /**
  * Returns name of filesystem that @p directory is stored on. This
@@ -80,7 +80,6 @@ QString getDirectoryFileSystem(const QString &directory);
  * supports NOCOW.
  */
 void disableCoW(const QString &path);
-
 
 } // namespace Utils
 } // namespace Server

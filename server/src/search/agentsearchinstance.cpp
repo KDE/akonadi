@@ -25,61 +25,60 @@
 
 using namespace Akonadi::Server;
 
-AgentSearchInstance::AgentSearchInstance( const QString &id )
- : mId( id )
- , mInterface( 0 )
- , mServiceWatcher( 0 )
+AgentSearchInstance::AgentSearchInstance(const QString &id)
+    : mId(id)
+    , mInterface(0)
+    , mServiceWatcher(0)
 {
 }
 
 AgentSearchInstance::~AgentSearchInstance()
 {
-  delete mInterface;
+    delete mInterface;
 }
 
 bool AgentSearchInstance::init()
 {
-  Q_ASSERT( !mInterface );
+    Q_ASSERT(!mInterface);
 
-  mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
-      AkDBus::agentServiceName( mId, AkDBus::Agent ),
-      QLatin1String( "/Search" ),
-      DBusConnectionPool::threadConnection() );
+    mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
+        AkDBus::agentServiceName(mId, AkDBus::Agent),
+        QLatin1String("/Search"),
+        DBusConnectionPool::threadConnection());
 
-  if ( !mInterface || !mInterface->isValid() ) {
-    delete mInterface;
-    mInterface = 0;
-    return false;
-  }
+    if (!mInterface || !mInterface->isValid()) {
+        delete mInterface;
+        mInterface = 0;
+        return false;
+    }
 
-  mServiceWatcher = new QDBusServiceWatcher( AkDBus::agentServiceName( mId, AkDBus::Agent ),
-                                             DBusConnectionPool::threadConnection(),
-                                             QDBusServiceWatcher::WatchForOwnerChange,
-                                             this );
-  connect( mServiceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
+    mServiceWatcher = new QDBusServiceWatcher(AkDBus::agentServiceName(mId, AkDBus::Agent),
+                                              DBusConnectionPool::threadConnection(),
+                                              QDBusServiceWatcher::WatchForOwnerChange,
+                                              this);
+    connect(mServiceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
-  return true;
+    return true;
 }
 
-void AgentSearchInstance::serviceOwnerChanged( const QString &service, const QString &oldName, const QString &newName )
+void AgentSearchInstance::serviceOwnerChanged(const QString &service, const QString &oldName, const QString &newName)
 {
-  Q_UNUSED( service );
-  Q_UNUSED( oldName );
+    Q_UNUSED(service);
+    Q_UNUSED(oldName);
 
-  if ( newName.isEmpty() ) {
-    SearchTaskManager::instance()->unregisterInstance( mId );
-  }
+    if (newName.isEmpty()) {
+        SearchTaskManager::instance()->unregisterInstance(mId);
+    }
 }
 
-
-void AgentSearchInstance::search( const QByteArray &searchId, const QString &query,
-                                  qlonglong collectionId )
+void AgentSearchInstance::search(const QByteArray &searchId, const QString &query,
+                                 qlonglong collectionId)
 {
-  mInterface->search( searchId, query, collectionId );
+    mInterface->search(searchId, query, collectionId);
 }
 
-OrgFreedesktopAkonadiAgentSearchInterface* AgentSearchInstance::interface() const
+OrgFreedesktopAkonadiAgentSearchInterface *AgentSearchInstance::interface() const
 {
-  return mInterface;
+    return mInterface;
 }

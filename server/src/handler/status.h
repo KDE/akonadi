@@ -31,7 +31,7 @@ namespace Server {
  */
 class Status : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     Status();
 

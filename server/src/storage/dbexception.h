@@ -31,8 +31,8 @@ namespace Server {
 /** Exception for reporting SQL errors. */
 class DbException : public Exception
 {
-  public:
-    explicit DbException( const QSqlQuery &query, const char *what = 0 );
+public:
+    explicit DbException(const QSqlQuery &query, const char *what = 0);
     virtual const char *type() const throw();
 };
 

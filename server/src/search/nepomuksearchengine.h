@@ -36,25 +36,25 @@ class NotificationCollector;
 
 class NepomukSearchEngine : public QObject, public AbstractSearchEngine
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    NepomukSearchEngine( QObject *parent = 0 );
+public:
+    NepomukSearchEngine(QObject *parent = 0);
     ~NepomukSearchEngine();
 
-    void addSearch( const Collection &collection );
-    void removeSearch( qint64 collection );
+    void addSearch(const Collection &collection);
+    void removeSearch(qint64 collection);
 
-  private:
+private:
     void stopSearches();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void reloadSearches();
-    void hitsAdded( const QList<Nepomuk::Query::Result> &entries );
-    void hitsRemoved( const QList<Nepomuk::Query::Result> &entries );
+    void hitsAdded(const QList<Nepomuk::Query::Result> &entries);
+    void hitsRemoved(const QList<Nepomuk::Query::Result> &entries);
     void finishedListing();
 
-  private:
+private:
     QMutex mMutex;
     NotificationCollector *mCollector;
 

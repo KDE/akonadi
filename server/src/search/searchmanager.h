@@ -41,19 +41,17 @@ class NotificationCollector;
 class AbstractSearchEngine;
 class Collection;
 
-
 class SearchManagerThread : public QThread
 {
-  public:
-    SearchManagerThread( const QStringList &searchEngines, QObject *parent = 0 );
+public:
+    SearchManagerThread(const QStringList &searchEngines, QObject *parent = 0);
     ~SearchManagerThread();
 
     void run();
 
-  private:
+private:
     QStringList mSearchEngines;
 };
-
 
 /**
  * SearchManager creates and deletes persistent searches for all currently
@@ -61,14 +59,15 @@ class SearchManagerThread : public QThread
  */
 class SearchManager : public QObject
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.SearchManager" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.SearchManager")
 
-  friend class SearchManagerThread;
+    friend class SearchManagerThread;
 
-  public:
+public:
     /** Create a new search manager with the given @p searchEngines. */
-    explicit SearchManager( QObject *parent = 0 );
+    explicit SearchManager(QObject *parent = 0);
+
     ~SearchManager();
 
     /**
@@ -80,35 +79,35 @@ class SearchManager : public QObject
      * This is called via D-Bus from AgentManager to register an agent with
      * search interface.
      */
-    virtual void registerInstance( const QString &id );
+    virtual void registerInstance(const QString &id);
 
     /**
      * This is called via D-Bus from AgentManager to unregister an agent with
      * search interface.
      */
-    virtual void unregisterInstance( const QString &id );
+    virtual void unregisterInstance(const QString &id);
 
     /**
      * Updates the search query asynchronously. Returns immediately
      */
-    virtual void updateSearchAsync( const Collection &collection );
+    virtual void updateSearchAsync(const Collection &collection);
 
     /**
      * Updates the search query synchronously.
      */
-    virtual void updateSearch( const Collection &collection );
+    virtual void updateSearch(const Collection &collection);
 
     /**
      * Returns currently available search plugins.
      */
     virtual QVector<AbstractSearchPlugin *> searchPlugins() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     virtual void scheduleSearchUpdate();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void searchUpdateTimeout();
-    void searchUpdateResultsAvailable( const QSet<qint64> &results );
+    void searchUpdateResultsAvailable(const QSet<qint64> &results);
 
     /**
      * Actual implementation of search updates.
@@ -118,12 +117,12 @@ class SearchManager : public QObject
      * synchrounously, we can pass in a QWaitCondition that the code will wake up
      * once the search update is completed.
      */
-    void updateSearchImpl( const Collection &collection, QWaitCondition *cond );
+    void updateSearchImpl(const Collection &collection, QWaitCondition *cond);
 
-  protected:
-    void init( const QStringList &searchEngines );
+protected:
+    void init(const QStringList &searchEngines);
 
-  private:
+private:
     void loadSearchPlugins();
 
     static SearchManager *sInstance;

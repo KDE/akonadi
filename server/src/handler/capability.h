@@ -53,7 +53,7 @@ namespace Server {
  */
 class Capability : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     Capability();
     ~Capability();

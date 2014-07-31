@@ -33,32 +33,32 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-Session::Session( const QString &input, QObject *parent )
-  : QObject( parent )
-  , m_input( 0 )
-  , m_session( 0 )
-  , m_notifier( 0 )
-  , m_receivedBytes( 0 )
-  , m_sentBytes( 0 )
+Session::Session(const QString &input, QObject *parent)
+    : QObject(parent)
+    , m_input(0)
+    , m_session(0)
+    , m_notifier(0)
+    , m_receivedBytes(0)
+    , m_sentBytes(0)
 {
-  QFile *file = new QFile( this );
-  if ( input != QLatin1String( "-" ) ) {
-    file->setFileName( input );
-    if ( !file->open( QFile::ReadOnly ) ) {
-      akFatal() << "Failed to open" << input;
-    }
-  } else {
-    // ### does that work on Windows?
-    const int flags = fcntl( 0, F_GETFL );
-    fcntl( 0, F_SETFL, flags | O_NONBLOCK );
+    QFile *file = new QFile(this);
+    if (input != QLatin1String("-")) {
+        file->setFileName(input);
+        if (!file->open(QFile::ReadOnly)) {
+            akFatal() << "Failed to open" << input;
+        }
+    } else {
+        // ### does that work on Windows?
+        const int flags = fcntl(0, F_GETFL);
+        fcntl(0, F_SETFL, flags | O_NONBLOCK);
 
-    if ( !file->open( stdin, QFile::ReadOnly|QFile::Unbuffered ) ) {
-      akFatal() << "Failed to open stdin!";
+        if (!file->open(stdin, QFile::ReadOnly | QFile::Unbuffered)) {
+            akFatal() << "Failed to open stdin!";
+        }
+        m_notifier = new QSocketNotifier(0, QSocketNotifier::Read, this);
+        connect(m_notifier, SIGNAL(activated(int)), SLOT(inputAvailable()));
     }
-    m_notifier = new QSocketNotifier( 0, QSocketNotifier::Read, this );
-    connect( m_notifier, SIGNAL(activated(int)), SLOT(inputAvailable()) );
-  }
-  m_input = file;
+    m_input = file;
 }
 
 Session::~Session()
@@ -67,87 +67,87 @@ Session::~Session()
 
 void Session::connectToHost()
 {
-  const QSettings connectionSettings( AkStandardDirs::connectionConfigFile(), QSettings::IniFormat );
+    const QSettings connectionSettings(AkStandardDirs::connectionConfigFile(), QSettings::IniFormat);
 
-  QString serverAddress;
+    QString serverAddress;
 #ifdef Q_OS_WIN
-  serverAddress = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QString() ).toString();
+    serverAddress = connectionSettings.value(QLatin1String("Data/NamedPipe"), QString()).toString();
 #else
-  serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString() ).toString();
+    serverAddress = connectionSettings.value(QLatin1String("Data/UnixPath"), QString()).toString();
 #endif
-  if ( serverAddress.isEmpty() ) {
-    akFatal() << "Unable to determine server address.";
-  }
+    if (serverAddress.isEmpty()) {
+        akFatal() << "Unable to determine server address.";
+    }
 
-  QLocalSocket *socket = new QLocalSocket( this );
-  connect( socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(serverError(QLocalSocket::LocalSocketError)) );
-  connect( socket, SIGNAL(disconnected()), SLOT(serverDisconnected()) );
-  connect( socket, SIGNAL(readyRead()), SLOT(serverRead()) );
-  connect( socket, SIGNAL(connected()), SLOT(inputAvailable()) );
+    QLocalSocket *socket = new QLocalSocket(this);
+    connect(socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(serverError(QLocalSocket::LocalSocketError)));
+    connect(socket, SIGNAL(disconnected()), SLOT(serverDisconnected()));
+    connect(socket, SIGNAL(readyRead()), SLOT(serverRead()));
+    connect(socket, SIGNAL(connected()), SLOT(inputAvailable()));
 
-  m_session = socket;
-  socket->connectToServer( serverAddress );
+    m_session = socket;
+    socket->connectToServer(serverAddress);
 
-  m_connectionTime.start();
+    m_connectionTime.start();
 }
 
 void Session::inputAvailable()
 {
-  if ( !m_session->isOpen() ) {
-    return;
-  }
+    if (!m_session->isOpen()) {
+        return;
+    }
 
-  if ( m_notifier ) {
-    m_notifier->setEnabled( false );
-  }
+    if (m_notifier) {
+        m_notifier->setEnabled(false);
+    }
 
-  if ( m_input->atEnd() ) {
-    return;
-  }
+    if (m_input->atEnd()) {
+        return;
+    }
 
-  QByteArray buffer( 1024, Qt::Uninitialized );
-  qint64 readSize = 0;
+    QByteArray buffer(1024, Qt::Uninitialized);
+    qint64 readSize = 0;
 
-  while ( ( readSize = m_input->read( buffer.data(), buffer.size() ) ) > 0 ) {
-    m_session->write( buffer.constData(), readSize );
-    m_sentBytes += readSize;
-  }
+    while ((readSize = m_input->read(buffer.data(), buffer.size())) > 0) {
+        m_session->write(buffer.constData(), readSize);
+        m_sentBytes += readSize;
+    }
 
-  if ( m_notifier ) {
-    m_notifier->setEnabled( true );
-  }
+    if (m_notifier) {
+        m_notifier->setEnabled(true);
+    }
 }
 
 void Session::serverDisconnected()
 {
-  QCoreApplication::exit( 0 );
+    QCoreApplication::exit(0);
 }
 
-void Session::serverError( QLocalSocket::LocalSocketError socketError )
+void Session::serverError(QLocalSocket::LocalSocketError socketError)
 {
-  if ( socketError == QLocalSocket::PeerClosedError ) {
-    QCoreApplication::exit( 0 );
-    return;
-  }
+    if (socketError == QLocalSocket::PeerClosedError) {
+        QCoreApplication::exit(0);
+        return;
+    }
 
-  std::cerr << qPrintable( m_session->errorString() );
-  QCoreApplication::exit( 1 );
+    std::cerr << qPrintable(m_session->errorString());
+    QCoreApplication::exit(1);
 }
 
 void Session::serverRead()
 {
-  QByteArray buffer( 1024, Qt::Uninitialized );
-  qint64 readSize = 0;
+    QByteArray buffer(1024, Qt::Uninitialized);
+    qint64 readSize = 0;
 
-  while ( ( readSize = m_session->read( buffer.data(), buffer.size() ) ) > 0 ) {
-    write( 1, buffer.data(), readSize );
-    m_receivedBytes += readSize;
-  }
+    while ((readSize = m_session->read(buffer.data(), buffer.size())) > 0) {
+        write(1, buffer.data(), readSize);
+        m_receivedBytes += readSize;
+    }
 }
 
 void Session::printStats() const
 {
-  std::cerr << "Connection time: " << m_connectionTime.elapsed() << " ms" << std::endl;
-  std::cerr << "Sent: " << m_sentBytes << " bytes" << std::endl;
-  std::cerr << "Received: " << m_receivedBytes << " bytes" << std::endl;
+    std::cerr << "Connection time: " << m_connectionTime.elapsed() << " ms" << std::endl;
+    std::cerr << "Sent: " << m_sentBytes << " bytes" << std::endl;
+    std::cerr << "Received: " << m_receivedBytes << " bytes" << std::endl;
 }

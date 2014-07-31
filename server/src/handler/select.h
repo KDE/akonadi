@@ -32,12 +32,12 @@ namespace Server {
  */
 class Select : public Handler
 {
-  Q_OBJECT
-  public:
-    explicit Select( Scope::SelectionScope scope );
+    Q_OBJECT
+public:
+    explicit Select(Scope::SelectionScope scope);
     bool parseStream();
 
-  private:
+private:
     Scope::SelectionScope mScope;
 
 };

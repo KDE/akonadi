@@ -38,7 +38,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 SearchPersistent::SearchPersistent()
-  : Handler()
+    : Handler()
 {
 }
 
@@ -48,77 +48,77 @@ SearchPersistent::~SearchPersistent()
 
 bool SearchPersistent::parseStream()
 {
-  QString collectionName = m_streamParser->readUtf8String();
-  if ( collectionName.isEmpty() ) {
-    return failureResponse( "No name specified" );
-  }
-
-  DataStore *db = connection()->storageBackend();
-  Transaction transaction( db );
-
-  const QString queryString = m_streamParser->readUtf8String();
-  if ( queryString.isEmpty() ) {
-    return failureResponse( "No query specified" );
-  }
-
-  // for legacy clients we have to guess the language
-  QString lang = QLatin1String( "SPARQL" );
-
-  QList<QByteArray> mimeTypes;
-  QString queryCollections;
-  QStringList queryAttributes;
-  if ( m_streamParser->hasList() ) {
-    m_streamParser->beginList();
-    while ( !m_streamParser->atListEnd() ) {
-      const QByteArray key = m_streamParser->readString();
-      if ( key == AKONADI_PARAM_MIMETYPE ) {
-        mimeTypes = m_streamParser->readParenthesizedList();
-      } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) {
-        const QList<QByteArray> collections = m_streamParser->readParenthesizedList();
-        queryCollections = QString::fromLatin1( ImapParser::join( collections, " " ) );
-      } else if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
-        queryAttributes << QLatin1String( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG)
-                        << QString::fromUtf8( m_streamParser->readString() );
-      } else if ( key == AKONADI_PARAM_REMOTE ) {
-        queryAttributes << QLatin1String( AKONADI_PARAM_REMOTE );
-      } else if ( key == AKONADI_PARAM_RECURSIVE ) {
-        queryAttributes << QLatin1String( AKONADI_PARAM_RECURSIVE );
-      }
+    QString collectionName = m_streamParser->readUtf8String();
+    if (collectionName.isEmpty()) {
+        return failureResponse("No name specified");
     }
-  }
 
-  Collection col;
-  col.setQueryString( queryString );
-  col.setQueryAttributes( queryAttributes.join( QLatin1String( " " ) ) );
-  col.setQueryCollections( queryCollections );
-  col.setParentId( 1 ); // search root
-  col.setResourceId( 1 ); // search resource
-  col.setName( collectionName );
-  col.setIsVirtual( true );
-  if ( !db->appendCollection( col ) ) {
-    return failureResponse( "Unable to create persistent search" );
-  }
+    DataStore *db = connection()->storageBackend();
+    Transaction transaction(db);
 
-  if ( !db->addCollectionAttribute( col, "AccessRights", "luD" ) ) {
-    return failureResponse( "Unable to set rights attribute on persistent search" );
-  }
+    const QString queryString = m_streamParser->readUtf8String();
+    if (queryString.isEmpty()) {
+        return failureResponse("No query specified");
+    }
 
-  Q_FOREACH ( const QByteArray &mimeType, mimeTypes ) {
-    col.addMimeType( MimeType::retrieveByName( QString::fromLatin1( mimeType ) ) );
-  }
+    // for legacy clients we have to guess the language
+    QString lang = QLatin1String("SPARQL");
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Unable to commit transaction" );
-  }
+    QList<QByteArray> mimeTypes;
+    QString queryCollections;
+    QStringList queryAttributes;
+    if (m_streamParser->hasList()) {
+        m_streamParser->beginList();
+        while (!m_streamParser->atListEnd()) {
+            const QByteArray key = m_streamParser->readString();
+            if (key == AKONADI_PARAM_MIMETYPE) {
+                mimeTypes = m_streamParser->readParenthesizedList();
+            } else if (key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS) {
+                const QList<QByteArray> collections = m_streamParser->readParenthesizedList();
+                queryCollections = QString::fromLatin1(ImapParser::join(collections, " "));
+            } else if (key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG) {
+                queryAttributes << QLatin1String(AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG)
+                                << QString::fromUtf8(m_streamParser->readString());
+            } else if (key == AKONADI_PARAM_REMOTE) {
+                queryAttributes << QLatin1String(AKONADI_PARAM_REMOTE);
+            } else if (key == AKONADI_PARAM_RECURSIVE) {
+                queryAttributes << QLatin1String(AKONADI_PARAM_RECURSIVE);
+            }
+        }
+    }
 
-  SearchManager::instance()->updateSearch( col );
+    Collection col;
+    col.setQueryString(queryString);
+    col.setQueryAttributes(queryAttributes.join(QLatin1String(" ")));
+    col.setQueryCollections(queryCollections);
+    col.setParentId(1);   // search root
+    col.setResourceId(1);   // search resource
+    col.setName(collectionName);
+    col.setIsVirtual(true);
+    if (!db->appendCollection(col)) {
+        return failureResponse("Unable to create persistent search");
+    }
 
-  const QByteArray b = HandlerHelper::collectionToByteArray( col );
+    if (!db->addCollectionAttribute(col, "AccessRights", "luD")) {
+        return failureResponse("Unable to set rights attribute on persistent search");
+    }
 
-  Response colResponse;
-  colResponse.setUntagged();
-  colResponse.setString( b );
-  Q_EMIT responseAvailable( colResponse );
+    Q_FOREACH (const QByteArray &mimeType, mimeTypes) {
+        col.addMimeType(MimeType::retrieveByName(QString::fromLatin1(mimeType)));
+    }
 
-  return successResponse( "SEARCH_STORE completed" );
+    if (!transaction.commit()) {
+        return failureResponse("Unable to commit transaction");
+    }
+
+    SearchManager::instance()->updateSearch(col);
+
+    const QByteArray b = HandlerHelper::collectionToByteArray(col);
+
+    Response colResponse;
+    colResponse.setUntagged();
+    colResponse.setString(b);
+    Q_EMIT responseAvailable(colResponse);
+
+    return successResponse("SEARCH_STORE completed");
 }

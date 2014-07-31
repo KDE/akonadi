@@ -32,84 +32,84 @@ QMutex Akonadi::Server::StorageDebugger::mMutex;
 
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE( QList< QList<QVariant> > )
+Q_DECLARE_METATYPE(QList< QList<QVariant> >)
 
 StorageDebugger *StorageDebugger::instance()
 {
-  mMutex.lock();
-  if ( mSelf == 0 ) {
-    mSelf = new StorageDebugger();
-  }
-  mMutex.unlock();
+    mMutex.lock();
+    if (mSelf == 0) {
+        mSelf = new StorageDebugger();
+    }
+    mMutex.unlock();
 
-  return mSelf;
+    return mSelf;
 }
 
 StorageDebugger::StorageDebugger()
-  : mEnabled( false )
-  , mSequence( 0 )
+    : mEnabled(false)
+    , mSequence(0)
 {
-  qDBusRegisterMetaType<QList< QList<QVariant> > >();
-  new StorageDebuggerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/storageDebug" ),
-                                                this, QDBusConnection::ExportAdaptors );
+    qDBusRegisterMetaType<QList< QList<QVariant> > >();
+    new StorageDebuggerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/storageDebug"),
+                                                 this, QDBusConnection::ExportAdaptors);
 }
 
 StorageDebugger::~StorageDebugger()
 {
 }
 
-void StorageDebugger::enableSQLDebugging( bool enable )
+void StorageDebugger::enableSQLDebugging(bool enable)
 {
-  mEnabled = enable;
+    mEnabled = enable;
 }
 
-void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
+void StorageDebugger::queryExecuted(const QSqlQuery &query, int duration)
 {
-  const qint64 seq = mSequence.fetchAndAddOrdered(1);
+    const qint64 seq = mSequence.fetchAndAddOrdered(1);
 
-  if ( !mEnabled ) {
-    return;
-  }
-
-  if ( query.lastError().isValid() ) {
-    Q_EMIT queryExecuted( seq, duration, query.executedQuery(), query.boundValues(),
-                          0, QList< QList<QVariant> >(), query.lastError().text() );
-    return;
-  }
-
-  QSqlQuery q( query );
-  QList< QVariantList > result;
-
-  if ( q.first() ) {
-    const QSqlRecord record = q.record();
-    QVariantList row;
-    for ( int i = 0; i < record.count(); ++i ) {
-      row << record.fieldName( i );
+    if (!mEnabled) {
+        return;
     }
-    result << row;
 
-    int cnt = 0;
-    do {
-      const QSqlRecord record = q.record();
-      QVariantList row;
-      for ( int i = 0; i < record.count(); ++i ) {
-        row << record.value( i );
-      }
-      result << row;
-    } while ( q.next() && ++cnt < 1000 );
-  }
+    if (query.lastError().isValid()) {
+        Q_EMIT queryExecuted(seq, duration, query.executedQuery(), query.boundValues(),
+                             0, QList< QList<QVariant> >(), query.lastError().text());
+        return;
+    }
 
-  int querySize;
-  if ( query.isSelect() ) {
-    querySize = query.size();
-  } else {
-    querySize = query.numRowsAffected();
-  }
+    QSqlQuery q(query);
+    QList< QVariantList > result;
 
-  Q_EMIT queryExecuted( seq, duration, query.executedQuery(),
-                        query.boundValues(), querySize, result, QString() );
+    if (q.first()) {
+        const QSqlRecord record = q.record();
+        QVariantList row;
+        for (int i = 0; i < record.count(); ++i) {
+            row << record.fieldName(i);
+        }
+        result << row;
 
-  // Reset the query
-  q.seek( -1, false );
+        int cnt = 0;
+        do {
+            const QSqlRecord record = q.record();
+            QVariantList row;
+            for (int i = 0; i < record.count(); ++i) {
+                row << record.value(i);
+            }
+            result << row;
+        } while (q.next() && ++cnt < 1000);
+    }
+
+    int querySize;
+    if (query.isSelect()) {
+        querySize = query.size();
+    } else {
+        querySize = query.numRowsAffected();
+    }
+
+    Q_EMIT queryExecuted(seq, duration, query.executedQuery(),
+                         query.boundValues(), querySize, result, QString());
+
+    // Reset the query
+    q.seek(-1, false);
 }

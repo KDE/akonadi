@@ -66,8 +66,8 @@ using namespace Akonadi::Server;
 
 Handler::Handler()
     : QObject()
-    , m_connection( 0 )
-    , m_streamParser( 0 )
+    , m_connection(0)
+    , m_streamParser(0)
 {
 }
 
@@ -75,29 +75,29 @@ Handler::~Handler()
 {
 }
 
-Handler *Handler::findHandlerForCommandNonAuthenticated( const QByteArray &command )
+Handler *Handler::findHandlerForCommandNonAuthenticated(const QByteArray &command)
 {
     // allowed are LOGIN
-    if ( command == AKONADI_CMD_LOGIN ) {
+    if (command == AKONADI_CMD_LOGIN) {
         return new Login();
     }
 
     return 0;
 }
 
-Handler *Handler::findHandlerForCommandAlwaysAllowed( const QByteArray &command )
+Handler *Handler::findHandlerForCommandAlwaysAllowed(const QByteArray &command)
 {
     // allowed commands CAPABILITY and LOGOUT
-    if ( command == AKONADI_CMD_LOGOUT ) {
+    if (command == AKONADI_CMD_LOGOUT) {
         return new Logout();
     }
-    if ( command == AKONADI_CMD_CAPABILITY ) {
+    if (command == AKONADI_CMD_CAPABILITY) {
         return new Capability();
     }
     return 0;
 }
 
-void Handler::setTag( const QByteArray &tag )
+void Handler::setTag(const QByteArray &tag)
 {
     m_tag = tag;
 }
@@ -107,120 +107,120 @@ QByteArray Handler::tag() const
     return m_tag;
 }
 
-Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command, ImapStreamParser *streamParser )
+Handler *Handler::findHandlerForCommandAuthenticated(const QByteArray &_command, ImapStreamParser *streamParser)
 {
-  QByteArray command( _command );
-  // deal with command prefixes
-  Scope::SelectionScope scope = Scope::selectionScopeFromByteArray( command );
-  if ( scope != Scope::None ) {
-    command = streamParser->readString();
-  }
+    QByteArray command(_command);
+    // deal with command prefixes
+    Scope::SelectionScope scope = Scope::selectionScopeFromByteArray(command);
+    if (scope != Scope::None) {
+        command = streamParser->readString();
+    }
 
     // allowed commands are listed below ;-).
-    if ( command == AKONADI_CMD_APPEND ) {
+    if (command == AKONADI_CMD_APPEND) {
         return new Append();
     }
-    if ( command == AKONADI_CMD_COLLECTIONCREATE ) {
-        return new Create( scope );
+    if (command == AKONADI_CMD_COLLECTIONCREATE) {
+        return new Create(scope);
     }
-    if ( command == AKONADI_CMD_LIST || command == AKONADI_CMD_X_AKLIST ) { //TODO: remove X-AKLIST support in Akonadi 2.0
-        return new List( scope, false );
+    if (command == AKONADI_CMD_LIST || command == AKONADI_CMD_X_AKLIST) {   //TODO: remove X-AKLIST support in Akonadi 2.0
+        return new List(scope, false);
     }
-    if ( command == AKONADI_CMD_LSUB || command == AKONADI_CMD_X_AKLSUB ) { //TODO: remove X-AKLSUB support in Akonadi 2.0
-        return new List( scope, true );
+    if (command == AKONADI_CMD_LSUB || command == AKONADI_CMD_X_AKLSUB) {   //TODO: remove X-AKLSUB support in Akonadi 2.0
+        return new List(scope, true);
     }
-    if ( command == AKONADI_CMD_SELECT ) {
-        return new Select( scope );
+    if (command == AKONADI_CMD_SELECT) {
+        return new Select(scope);
     }
-    if ( command == AKONADI_CMD_SEARCH_STORE ) {
+    if (command == AKONADI_CMD_SEARCH_STORE) {
         return new SearchPersistent();
     }
-    if ( command == AKONADI_CMD_SEARCH ) {
+    if (command == AKONADI_CMD_SEARCH) {
         return new Search();
     }
-    if ( command == AKONADI_CMD_SEARCH_RESULT ) {
-        return new SearchResult( scope );
+    if (command == AKONADI_CMD_SEARCH_RESULT) {
+        return new SearchResult(scope);
     }
-    if ( command == AKONADI_CMD_ITEMFETCH ) {
-        return new Fetch( scope );
+    if (command == AKONADI_CMD_ITEMFETCH) {
+        return new Fetch(scope);
     }
-    if ( command == AKONADI_CMD_EXPUNGE ) { //TODO: remove EXPUNGE support in Akonadi 2.0
+    if (command == AKONADI_CMD_EXPUNGE) {   //TODO: remove EXPUNGE support in Akonadi 2.0
         return new Expunge();
     }
-    if ( command == AKONADI_CMD_ITEMMODIFY ) {
-        return new Store( scope );
+    if (command == AKONADI_CMD_ITEMMODIFY) {
+        return new Store(scope);
     }
-    if ( command == AKONADI_CMD_STATUS ) {
+    if (command == AKONADI_CMD_STATUS) {
         return new Status();
     }
-    if ( command == AKONADI_CMD_COLLECTIONDELETE ) {
-      return new Delete( scope );
+    if (command == AKONADI_CMD_COLLECTIONDELETE) {
+        return new Delete(scope);
     }
-    if ( command == AKONADI_CMD_COLLECTIONMODIFY ) {
-      return new Modify( scope );
+    if (command == AKONADI_CMD_COLLECTIONMODIFY) {
+        return new Modify(scope);
     }
-    if ( command == AKONADI_CMD_BEGIN ) {
-      return new TransactionHandler( TransactionHandler::Begin );
+    if (command == AKONADI_CMD_BEGIN) {
+        return new TransactionHandler(TransactionHandler::Begin);
     }
-    if ( command == AKONADI_CMD_ROLLBACK ) {
-      return new TransactionHandler( TransactionHandler::Rollback );
+    if (command == AKONADI_CMD_ROLLBACK) {
+        return new TransactionHandler(TransactionHandler::Rollback);
     }
-    if ( command == AKONADI_CMD_COMMIT ) {
-      return new TransactionHandler( TransactionHandler::Commit );
+    if (command == AKONADI_CMD_COMMIT) {
+        return new TransactionHandler(TransactionHandler::Commit);
     }
-    if ( command == AKONADI_CMD_ITEMCREATE ) {
-      return new AkAppend();
+    if (command == AKONADI_CMD_ITEMCREATE) {
+        return new AkAppend();
     }
-    if ( command == AKONADI_CMD_SUBSCRIBE ) {
-      return new Subscribe( true );
+    if (command == AKONADI_CMD_SUBSCRIBE) {
+        return new Subscribe(true);
     }
-    if ( command == AKONADI_CMD_UNSUBSCRIBE ) {
-      return new Subscribe( false );
+    if (command == AKONADI_CMD_UNSUBSCRIBE) {
+        return new Subscribe(false);
     }
-    if ( command == AKONADI_CMD_ITEMCOPY ) {
-      return new Copy();
+    if (command == AKONADI_CMD_ITEMCOPY) {
+        return new Copy();
     }
-    if ( command == AKONADI_CMD_COLLECTIONCOPY ) {
-      return new ColCopy();
+    if (command == AKONADI_CMD_COLLECTIONCOPY) {
+        return new ColCopy();
     }
-    if ( command == AKONADI_CMD_ITEMLINK ) {
-      return new Link( scope, true );
+    if (command == AKONADI_CMD_ITEMLINK) {
+        return new Link(scope, true);
     }
-    if ( command == AKONADI_CMD_ITEMUNLINK ) {
-      return new Link( scope, false );
+    if (command == AKONADI_CMD_ITEMUNLINK) {
+        return new Link(scope, false);
     }
-    if ( command == AKONADI_CMD_RESOURCESELECT ) {
-      return new ResourceSelect();
+    if (command == AKONADI_CMD_RESOURCESELECT) {
+        return new ResourceSelect();
     }
-    if ( command == AKONADI_CMD_ITEMDELETE ) {
-      return new Remove( scope );
+    if (command == AKONADI_CMD_ITEMDELETE) {
+        return new Remove(scope);
     }
-    if ( command == AKONADI_CMD_ITEMMOVE ) {
-      return new Move( scope );
+    if (command == AKONADI_CMD_ITEMMOVE) {
+        return new Move(scope);
     }
-    if ( command == AKONADI_CMD_COLLECTIONMOVE ) {
-      return new ColMove( scope );
+    if (command == AKONADI_CMD_COLLECTIONMOVE) {
+        return new ColMove(scope);
     }
-    if ( command == AKONADI_CMD_TAGAPPEND ) {
-      return new TagAppend();
+    if (command == AKONADI_CMD_TAGAPPEND) {
+        return new TagAppend();
     }
-    if ( command == AKONADI_CMD_TAGFETCH ) {
-      return new TagFetch( scope );
+    if (command == AKONADI_CMD_TAGFETCH) {
+        return new TagFetch(scope);
     }
-    if ( command == AKONADI_CMD_TAGREMOVE ) {
-      return new TagRemove( scope );
+    if (command == AKONADI_CMD_TAGREMOVE) {
+        return new TagRemove(scope);
     }
-    if ( command == AKONADI_CMD_TAGSTORE ) {
-      return new TagStore();
+    if (command == AKONADI_CMD_TAGSTORE) {
+        return new TagStore();
     }
-    if ( command == AKONADI_CMD_MERGE ) {
-      return new Merge();
+    if (command == AKONADI_CMD_MERGE) {
+        return new Merge();
     }
 
     return 0;
 }
 
-void Handler::setConnection( Connection *connection )
+void Handler::setConnection(Connection *connection)
 {
     m_connection = connection;
 }
@@ -230,58 +230,58 @@ Connection *Handler::connection() const
     return m_connection;
 }
 
-bool Handler::failureResponse( const QByteArray &failureMessage )
+bool Handler::failureResponse(const QByteArray &failureMessage)
 {
-  Response response;
-  response.setTag( tag() );
-  response.setFailure();
-  response.setString( failureMessage );
-  Q_EMIT responseAvailable( response );
-  return false;
+    Response response;
+    response.setTag(tag());
+    response.setFailure();
+    response.setString(failureMessage);
+    Q_EMIT responseAvailable(response);
+    return false;
 }
 
-bool Handler::failureResponse( const char *failureMessage )
+bool Handler::failureResponse(const char *failureMessage)
 {
-  return failureResponse( QByteArray( failureMessage ) );
+    return failureResponse(QByteArray(failureMessage));
 }
 
-bool Handler::successResponse( const QByteArray &successMessage )
+bool Handler::successResponse(const QByteArray &successMessage)
 {
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( successMessage );
-  Q_EMIT responseAvailable( response );
-  return true;
+    Response response;
+    response.setTag(tag());
+    response.setSuccess();
+    response.setString(successMessage);
+    Q_EMIT responseAvailable(response);
+    return true;
 }
 
-bool Handler::successResponse( const char *successMessage )
+bool Handler::successResponse(const char *successMessage)
 {
-  return successResponse( QByteArray( successMessage ) );
+    return successResponse(QByteArray(successMessage));
 }
 
-void Handler::setStreamParser( ImapStreamParser *parser )
+void Handler::setStreamParser(ImapStreamParser *parser)
 {
-  m_streamParser = parser;
+    m_streamParser = parser;
 }
 
-UnknownCommandHandler::UnknownCommandHandler( const QByteArray &command )
-  : mCommand( command )
+UnknownCommandHandler::UnknownCommandHandler(const QByteArray &command)
+    : mCommand(command)
 {
 }
 
 bool UnknownCommandHandler::parseStream()
 {
-  Response response;
-  response.setError();
-  response.setTag( tag() );
-  if ( mCommand.isEmpty() ) {
-    response.setString( "No command specified" );
-  } else {
-    response.setString( "Unrecognized command: " + mCommand );
-  }
-  m_streamParser->readUntilCommandEnd();
+    Response response;
+    response.setError();
+    response.setTag(tag());
+    if (mCommand.isEmpty()) {
+        response.setString("No command specified");
+    } else {
+        response.setString("Unrecognized command: " + mCommand);
+    }
+    m_streamParser->readUntilCommandEnd();
 
-  Q_EMIT responseAvailable( response );
-  return true;
+    Q_EMIT responseAvailable(response);
+    return true;
 }

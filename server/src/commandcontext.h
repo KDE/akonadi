@@ -29,26 +29,26 @@ class ImapStreamParser;
 
 class CommandContext
 {
-  public:
+public:
     CommandContext();
     ~CommandContext();
 
-    void setResource( const Resource &resource );
+    void setResource(const Resource &resource);
     Resource resource() const;
 
-    void setCollection( const Collection &collection );
+    void setCollection(const Collection &collection);
     qint64 collectionId() const;
     Collection collection() const;
 
-    void setTag( qint64 tagId );
+    void setTag(qint64 tagId);
     qint64 tagId() const;
     Tag tag() const;
 
     bool isEmpty() const;
 
-    void parseContext( ImapStreamParser *parser );
+    void parseContext(ImapStreamParser *parser);
 
-  private:
+private:
     Resource mResource;
     Collection mCollection;
     qint64 mTagId;

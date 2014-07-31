@@ -28,49 +28,49 @@ using namespace Akonadi;
 
 class NotificationMessage::Private : public QSharedData
 {
-  public:
+public:
     Private()
-      : QSharedData()
-      , type( NotificationMessage::InvalidType )
-      , operation( NotificationMessage::InvalidOp )
-      , uid( -1 )
-      , parentCollection( -1 )
-      , parentDestCollection( -1 )
+        : QSharedData()
+        , type(NotificationMessage::InvalidType)
+        , operation(NotificationMessage::InvalidOp)
+        , uid(-1)
+        , parentCollection(-1)
+        , parentDestCollection(-1)
     {
     }
 
-    Private( const Private &other )
-      : QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      sessionId = other.sessionId;
-      type = other.type;
-      operation = other.operation;
-      uid = other.uid;
-      remoteId = other.remoteId;
-      resource = other.resource;
-      destResource = other.destResource;
-      parentCollection = other.parentCollection;
-      parentDestCollection = other.parentDestCollection;
-      mimeType = other.mimeType;
-      parts = other.parts;
+        sessionId = other.sessionId;
+        type = other.type;
+        operation = other.operation;
+        uid = other.uid;
+        remoteId = other.remoteId;
+        resource = other.resource;
+        destResource = other.destResource;
+        parentCollection = other.parentCollection;
+        parentDestCollection = other.parentDestCollection;
+        mimeType = other.mimeType;
+        parts = other.parts;
     }
 
-    bool compareWithoutOpAndParts( const Private &other ) const
+    bool compareWithoutOpAndParts(const Private &other) const
     {
-      return uid == other.uid
-          && type == other.type
-          && sessionId == other.sessionId
-          && remoteId == other.remoteId
-          && resource == other.resource
-          && destResource == other.destResource
-          && parentCollection == other.parentCollection
-          && parentDestCollection == other.parentDestCollection
-          && mimeType == other.mimeType;
+        return uid == other.uid
+               && type == other.type
+               && sessionId == other.sessionId
+               && remoteId == other.remoteId
+               && resource == other.resource
+               && destResource == other.destResource
+               && parentCollection == other.parentCollection
+               && parentDestCollection == other.parentDestCollection
+               && mimeType == other.mimeType;
     }
 
-    bool operator==( const Private &other ) const
+    bool operator==(const Private &other) const
     {
-      return operation == other.operation && parts == other.parts && compareWithoutOpAndParts( other );
+        return operation == other.operation && parts == other.parts && compareWithoutOpAndParts(other);
     }
 
     QByteArray sessionId;
@@ -87,12 +87,12 @@ class NotificationMessage::Private : public QSharedData
 };
 
 NotificationMessage::NotificationMessage()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
-NotificationMessage::NotificationMessage( const NotificationMessage &other )
-  : d( other.d )
+NotificationMessage::NotificationMessage(const NotificationMessage &other)
+    : d(other.d)
 {
 }
 
@@ -100,333 +100,330 @@ NotificationMessage::~NotificationMessage()
 {
 }
 
-NotificationMessage &NotificationMessage::operator=( const NotificationMessage &other )
+NotificationMessage &NotificationMessage::operator=(const NotificationMessage &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
+    if (this != &other) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
-bool NotificationMessage::operator==( const NotificationMessage &other ) const
+bool NotificationMessage::operator==(const NotificationMessage &other) const
 {
-  return d == other.d;
+    return d == other.d;
 }
 
 void NotificationMessage::registerDBusTypes()
 {
-  qDBusRegisterMetaType<Akonadi::NotificationMessage>();
-  qDBusRegisterMetaType<Akonadi::NotificationMessage::List>();
+    qDBusRegisterMetaType<Akonadi::NotificationMessage>();
+    qDBusRegisterMetaType<Akonadi::NotificationMessage::List>();
 }
 
 QByteArray NotificationMessage::sessionId() const
 {
-  return d->sessionId;
+    return d->sessionId;
 }
 
-void NotificationMessage::setSessionId( const QByteArray &sessionId )
+void NotificationMessage::setSessionId(const QByteArray &sessionId)
 {
-  d->sessionId = sessionId;
+    d->sessionId = sessionId;
 }
 
 NotificationMessage::Type NotificationMessage::type() const
 {
-  return d->type;
+    return d->type;
 }
 
-void NotificationMessage::setType( Type type )
+void NotificationMessage::setType(Type type)
 {
-  d->type = type;
+    d->type = type;
 }
 
 NotificationMessage::Operation NotificationMessage::operation() const
 {
-  return d->operation;
+    return d->operation;
 }
 
-void NotificationMessage::setOperation( Operation operation )
+void NotificationMessage::setOperation(Operation operation)
 {
-  d->operation = operation;
+    d->operation = operation;
 }
 
 NotificationMessage::Id NotificationMessage::uid() const
 {
-  return d->uid;
+    return d->uid;
 }
 
-void NotificationMessage::setUid( Id uid )
+void NotificationMessage::setUid(Id uid)
 {
-  d->uid = uid;
+    d->uid = uid;
 }
 
 QString NotificationMessage::remoteId() const
 {
-  return d->remoteId;
+    return d->remoteId;
 }
 
-void NotificationMessage::setRemoteId( const QString &remoteId )
+void NotificationMessage::setRemoteId(const QString &remoteId)
 {
-  d->remoteId = remoteId;
+    d->remoteId = remoteId;
 }
 
 QByteArray NotificationMessage::resource() const
 {
-  return d->resource;
+    return d->resource;
 }
 
-void NotificationMessage::setResource( const QByteArray &resource )
+void NotificationMessage::setResource(const QByteArray &resource)
 {
-  d->resource = resource;
+    d->resource = resource;
 }
 
 NotificationMessage::Id NotificationMessage::parentCollection() const
 {
-  return d->parentCollection;
+    return d->parentCollection;
 }
 
 NotificationMessage::Id NotificationMessage::parentDestCollection() const
 {
-  return d->parentDestCollection;
+    return d->parentDestCollection;
 }
 
-void NotificationMessage::setParentCollection( Id parent )
+void NotificationMessage::setParentCollection(Id parent)
 {
-  d->parentCollection = parent;
+    d->parentCollection = parent;
 }
 
-void NotificationMessage::setParentDestCollection( Id parent )
+void NotificationMessage::setParentDestCollection(Id parent)
 {
-  d->parentDestCollection = parent;
+    d->parentDestCollection = parent;
 }
 
-void NotificationMessage::setDestinationResource( const QByteArray &destResource )
+void NotificationMessage::setDestinationResource(const QByteArray &destResource)
 {
-  d->destResource = destResource;
+    d->destResource = destResource;
 }
 
 QByteArray NotificationMessage::destinationResource() const
 {
-  return d->destResource;
+    return d->destResource;
 }
 
 QString NotificationMessage::mimeType() const
 {
-  return d->mimeType;
+    return d->mimeType;
 }
 
-void NotificationMessage::setMimeType( const QString &mimeType )
+void NotificationMessage::setMimeType(const QString &mimeType)
 {
-  d->mimeType = mimeType;
+    d->mimeType = mimeType;
 }
 
 QSet<QByteArray> NotificationMessage::itemParts() const
 {
-  return d->parts;
+    return d->parts;
 }
 
-void NotificationMessage::setItemParts( const QSet<QByteArray> &parts )
+void NotificationMessage::setItemParts(const QSet<QByteArray> &parts)
 {
-  d->parts = parts;
+    d->parts = parts;
 }
 
 QString NotificationMessage::toString() const
 {
-  QString rv;
-  // some tests before making the string
-  if ( type() == InvalidType ) {
-    return QLatin1String( "Error: Type is not set" );
-  }
-  if ( uid() == -1 ) {
-    return QLatin1String( "Error: uid is not set" );
-  }
-  if ( remoteId().isEmpty() ) {
-    return QLatin1String( "Error: remoteId is empty" );
-  }
-  if ( operation() == InvalidOp ) {
-    return QLatin1String( "Error: operation is not set" );
-  }
+    QString rv;
+    // some tests before making the string
+    if (type() == InvalidType) {
+        return QLatin1String("Error: Type is not set");
+    }
+    if (uid() == -1) {
+        return QLatin1String("Error: uid is not set");
+    }
+    if (remoteId().isEmpty()) {
+        return QLatin1String("Error: remoteId is empty");
+    }
+    if (operation() == InvalidOp) {
+        return QLatin1String("Error: operation is not set");
+    }
 
-  switch ( type() ) {
-  case Item:
-    rv += QLatin1String( "Item " );
-    break;
-  case Collection:
-    rv += QLatin1String( "Collection " );
-    break;
-  case InvalidType:
-    // already done above
-    break;
-  }
+    switch (type()) {
+    case Item:
+        rv += QLatin1String("Item ");
+        break;
+    case Collection:
+        rv += QLatin1String("Collection ");
+        break;
+    case InvalidType:
+        // already done above
+        break;
+    }
 
-  rv += QString::fromLatin1( "(%1, %2) " ).arg( uid() ).arg( remoteId() );
+    rv += QString::fromLatin1("(%1, %2) ").arg(uid()).arg(remoteId());
 
-  if ( parentCollection() >= 0 ) {
-    if ( parentDestCollection() >= 0 ) {
-      rv += QString::fromLatin1( "from " );
+    if (parentCollection() >= 0) {
+        if (parentDestCollection() >= 0) {
+            rv += QString::fromLatin1("from ");
+        } else {
+            rv += QString::fromLatin1("in ");
+        }
+        rv += QString::fromLatin1("collection %1 ").arg(parentCollection());
     } else {
-      rv += QString::fromLatin1( "in " );
+        rv += QLatin1String("unspecified parent collection ");
     }
-    rv += QString::fromLatin1( "collection %1 " ).arg( parentCollection() );
-  } else {
-    rv += QLatin1String( "unspecified parent collection " );
-  }
 
-  rv += QString::fromLatin1( "mimetype %1 " ).arg( mimeType().isEmpty() ? QLatin1String( "unknown" ) : mimeType() );
+    rv += QString::fromLatin1("mimetype %1 ").arg(mimeType().isEmpty() ? QLatin1String("unknown") : mimeType());
 
-  switch ( operation() ) {
-  case Add:
-    rv += QLatin1String( "added" );
-    break;
-  case Modify:
-    rv += QLatin1String( "modified parts (" );
-    rv += QString::fromLatin1( ImapParser::join( itemParts().toList(), ", " ) );
-    rv += QLatin1String( ")" );
-    break;
-  case Move:
-    rv += QLatin1String( "moved" );
-    break;
-  case Remove:
-    rv += QLatin1String( "removed" );
-    break;
-  case Link:
-    rv += QLatin1String( "linked" );
-    break;
-  case Unlink:
-    rv += QLatin1String( "unlinked" );
-    break;
-  case Subscribe:
-    rv += QLatin1String( "subscribed" );
-    break;
-  case Unsubscribe:
-    rv += QLatin1String( "unsubscribed" );
-    break;
-  case InvalidOp:
-    // already done above
-    break;
-  }
-
-  if ( parentDestCollection() >= 0 ) {
-    rv += QString::fromLatin1( " to collection %1" ).arg( parentDestCollection() );
-  }
-
-  return rv;
-}
-
-void NotificationMessage::appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg )
-{
-  bool appended;
-  appendAndCompress( list, msg, &appended );
-}
-
-void NotificationMessage::appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg, bool *appended )
-{
-  // fast-path for stuff that is not considered during O(n) compression below
-  if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
-    NotificationMessage::List::Iterator end = list.end();
-    for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
-      if ( msg.d.constData()->compareWithoutOpAndParts( *( ( *it ).d.constData() ) ) ) {
-        // same operation: merge changed parts and drop the new one
-        if ( msg.operation() == ( *it ).operation() ) {
-          ( *it ).setItemParts( ( *it ).itemParts() + msg.itemParts() );
-          *appended = false;
-          return;
-        }
-        // new one is a modification, the existing one not, so drop the new one
-        else if ( msg.operation() == Modify ) {
-          *appended = false;
-          return;
-        }
-        // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
-        else if ( msg.operation() == Remove && ( *it ).operation() == Modify ) {
-          it = list.erase( it );
-          end = list.end();
-        }
-        // keep looking
-        else {
-          ++it;
-        }
-      } else {
-        ++it;
-      }
+    switch (operation()) {
+    case Add:
+        rv += QLatin1String("added");
+        break;
+    case Modify:
+        rv += QLatin1String("modified parts (");
+        rv += QString::fromLatin1(ImapParser::join(itemParts().toList(), ", "));
+        rv += QLatin1String(")");
+        break;
+    case Move:
+        rv += QLatin1String("moved");
+        break;
+    case Remove:
+        rv += QLatin1String("removed");
+        break;
+    case Link:
+        rv += QLatin1String("linked");
+        break;
+    case Unlink:
+        rv += QLatin1String("unlinked");
+        break;
+    case Subscribe:
+        rv += QLatin1String("subscribed");
+        break;
+    case Unsubscribe:
+        rv += QLatin1String("unsubscribed");
+        break;
+    case InvalidOp:
+        // already done above
+        break;
     }
-  }
-  *appended = true;
-  list.append( msg );
-}
 
-QDBusArgument &operator<<( QDBusArgument &arg, const NotificationMessage &msg )
-{
-  arg.beginStructure();
-  arg << msg.sessionId();
-  arg << msg.type();
-  arg << msg.operation();
-  arg << msg.uid();
-  arg << msg.remoteId();
-  arg << msg.resource();
-  arg << msg.parentCollection();
-  arg << msg.parentDestCollection();
-  arg << msg.mimeType();
-
-  QStringList itemParts;
-  if ( msg.operation() == NotificationMessage::Move ) {
-    // encode destination resource in parts, as a backward compat hack
-    itemParts.push_back( QString::fromLatin1( msg.destinationResource() ) );
-  } else {
-    Q_FOREACH ( const QByteArray &itemPart, msg.itemParts() ) {
-      itemParts.append( QString::fromLatin1( itemPart ) );
+    if (parentDestCollection() >= 0) {
+        rv += QString::fromLatin1(" to collection %1").arg(parentDestCollection());
     }
-  }
 
-  arg << itemParts;
-  arg.endStructure();
-  return arg;
+    return rv;
 }
 
-const QDBusArgument &operator>>( const QDBusArgument &arg, NotificationMessage &msg )
+void NotificationMessage::appendAndCompress(NotificationMessage::List &list, const NotificationMessage &msg)
 {
-  arg.beginStructure();
-  QByteArray b;
-  arg >> b;
-  msg.setSessionId( b );
-  int i;
-  arg >> i;
-  msg.setType( static_cast<NotificationMessage::Type>( i ) );
-  arg >> i;
-  msg.setOperation( static_cast<NotificationMessage::Operation>( i ) );
-  NotificationMessage::Id id;
-  arg >> id;
-  msg.setUid( id );
-  QString s;
-  arg >> s;
-  msg.setRemoteId( s );
-  arg >> b;
-  msg.setResource( b );
-  arg >> id;
-  msg.setParentCollection( id );
-  arg >> id;
-  msg.setParentDestCollection( id );
-  arg >> s;
-  msg.setMimeType( s );
-  QStringList l;
-  arg >> l;
+    bool appended;
+    appendAndCompress(list, msg, &appended);
+}
 
-  QSet<QByteArray> itemParts;
-  if ( msg.operation() == NotificationMessage::Move && l.size() >= 1 ) {
-    // decode destination resource, which is stored in parts as a backward compat hack
-    msg.setDestinationResource( l.first().toLatin1() );
-  } else {
-    Q_FOREACH ( const QString &itemPart, l ) {
-      itemParts.insert( itemPart.toLatin1() );
+void NotificationMessage::appendAndCompress(NotificationMessage::List &list, const NotificationMessage &msg, bool *appended)
+{
+    // fast-path for stuff that is not considered during O(n) compression below
+    if (msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move) {
+        NotificationMessage::List::Iterator end = list.end();
+        for (NotificationMessage::List::Iterator it = list.begin(); it != end;) {
+            if (msg.d.constData()->compareWithoutOpAndParts(*((*it).d.constData()))) {
+                // same operation: merge changed parts and drop the new one
+                if (msg.operation() == (*it).operation()) {
+                    (*it).setItemParts((*it).itemParts() + msg.itemParts());
+                    *appended = false;
+                    return;
+                } else if (msg.operation() == Modify) {
+                    // new one is a modification, the existing one not, so drop the new one
+                    *appended = false;
+                    return;
+                } else if (msg.operation() == Remove && (*it).operation() == Modify) {
+                    // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
+                    it = list.erase(it);
+                    end = list.end();
+                } else {
+                    // keep looking
+                    ++it;
+                }
+            } else {
+                ++it;
+            }
+        }
     }
-  }
-
-  msg.setItemParts( itemParts );
-  arg.endStructure();
-  return arg;
+    *appended = true;
+    list.append(msg);
 }
 
-uint qHash( const Akonadi::NotificationMessage &msg )
+QDBusArgument &operator<<(QDBusArgument &arg, const NotificationMessage &msg)
 {
-  return qHash( msg.uid() + ( msg.type() << 31 ) + ( msg.operation() << 28 ) );
+    arg.beginStructure();
+    arg << msg.sessionId();
+    arg << msg.type();
+    arg << msg.operation();
+    arg << msg.uid();
+    arg << msg.remoteId();
+    arg << msg.resource();
+    arg << msg.parentCollection();
+    arg << msg.parentDestCollection();
+    arg << msg.mimeType();
+
+    QStringList itemParts;
+    if (msg.operation() == NotificationMessage::Move) {
+        // encode destination resource in parts, as a backward compat hack
+        itemParts.push_back(QString::fromLatin1(msg.destinationResource()));
+    } else {
+        Q_FOREACH (const QByteArray &itemPart, msg.itemParts()) {
+            itemParts.append(QString::fromLatin1(itemPart));
+        }
+    }
+
+    arg << itemParts;
+    arg.endStructure();
+    return arg;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &arg, NotificationMessage &msg)
+{
+    arg.beginStructure();
+    QByteArray b;
+    arg >> b;
+    msg.setSessionId(b);
+    int i;
+    arg >> i;
+    msg.setType(static_cast<NotificationMessage::Type>(i));
+    arg >> i;
+    msg.setOperation(static_cast<NotificationMessage::Operation>(i));
+    NotificationMessage::Id id;
+    arg >> id;
+    msg.setUid(id);
+    QString s;
+    arg >> s;
+    msg.setRemoteId(s);
+    arg >> b;
+    msg.setResource(b);
+    arg >> id;
+    msg.setParentCollection(id);
+    arg >> id;
+    msg.setParentDestCollection(id);
+    arg >> s;
+    msg.setMimeType(s);
+    QStringList l;
+    arg >> l;
+
+    QSet<QByteArray> itemParts;
+    if (msg.operation() == NotificationMessage::Move && l.size() >= 1) {
+        // decode destination resource, which is stored in parts as a backward compat hack
+        msg.setDestinationResource(l.first().toLatin1());
+    } else {
+        Q_FOREACH (const QString &itemPart, l) {
+            itemParts.insert(itemPart.toLatin1());
+        }
+    }
+
+    msg.setItemParts(itemParts);
+    arg.endStructure();
+    return arg;
+}
+
+uint qHash(const Akonadi::NotificationMessage &msg)
+{
+    return qHash(msg.uid() + (msg.type() << 31) + (msg.operation() << 28));
 }

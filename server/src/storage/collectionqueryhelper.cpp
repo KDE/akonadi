@@ -30,133 +30,133 @@
 
 using namespace Akonadi::Server;
 
-void CollectionQueryHelper::remoteIdToQuery( const QStringList &rids, Connection *connection, QueryBuilder &qb )
+void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection *connection, QueryBuilder &qb)
 {
-  if ( rids.size() == 1 ) {
-    qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rids.first() );
-  } else {
-    qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::In, rids );
-  }
-
-  if ( connection->context()->resource().isValid() ) {
-    qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->context()->resource().id() );
-  }
-}
-
-void CollectionQueryHelper::scopeToQuery( const Scope &scope, Connection *connection, QueryBuilder &qb )
-{
-  if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
-    QueryHelper::setToQuery( scope.uidSet(), Collection::idFullColumnName(), qb );
-  } else if ( scope.scope() == Scope::Rid ) {
-    if ( connection->context()->collectionId() <= 0 && !connection->context()->resource().isValid() ) {
-      throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
-    }
-    CollectionQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
-  } else if ( scope.scope() == Scope::HierarchicalRid ) {
-    if ( !connection->context()->resource().isValid() ) {
-      throw HandlerException( "Operations based on hierarchical remote identifiers require a resource or collection context" );
-    }
-    const Collection c = CollectionQueryHelper::resolveHierarchicalRID( scope.ridChain(), connection->context()->resource().id() );
-    qb.addValueCondition( Collection::idFullColumnName(), Query::Equals, c.id() );
-  } else {
-    throw HandlerException( "WTF?" );
-  }
-}
-
-bool CollectionQueryHelper::hasAllowedName( const Collection &collection, const QString &name, Collection::Id parent )
-{
-  Q_UNUSED( collection );
-  SelectQueryBuilder<Collection> qb;
-  if ( parent > 0 ) {
-    qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parent );
-  } else {
-    qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
-  }
-  qb.addValueCondition( Collection::nameColumn(), Query::Equals, name );
-  if ( !qb.exec() ) {
-    return false;
-  }
-  const QVector<Collection> result = qb.result();
-  if ( result.size() > 0 ) {
-    if ( result.first().id() == collection.id() ) {
-      return true;
-    }
-    return false;
-  }
-  return true;
-}
-
-bool CollectionQueryHelper::canBeMovedTo ( const Collection &collection, const Collection &_parent )
-{
-  if ( _parent.isValid() ) {
-    Collection parent = _parent;
-    Q_FOREVER {
-      if ( parent.id() == collection.id() ) {
-        return false; // target is child of source
-      }
-      if ( parent.parentId() == 0 ) {
-        break;
-      }
-      parent = parent.parent();
-    }
-  }
-  return hasAllowedName( collection, collection.name(), _parent.id() );
-}
-
-Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &ridChain, Resource::Id resId )
-{
-  if ( ridChain.size() < 2 ) {
-    throw HandlerException( "Empty or incomplete hierarchical RID chain" );
-  }
-  if ( !ridChain.last().isEmpty() ) {
-    throw HandlerException( "Hierarchical RID chain is not root-terminated" );
-  }
-  Collection::Id parentId = 0;
-  Collection result;
-  for ( int i = ridChain.size() - 2; i >= 0; --i ) {
-    SelectQueryBuilder<Collection> qb;
-    if ( parentId > 0 ) {
-      qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parentId );
+    if (rids.size() == 1) {
+        qb.addValueCondition(Collection::remoteIdFullColumnName(), Query::Equals, rids.first());
     } else {
-      qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
+        qb.addValueCondition(Collection::remoteIdFullColumnName(), Query::In, rids);
     }
-    qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, ridChain.at( i ) );
-    qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, resId );
-    if ( !qb.exec() ) {
-      throw HandlerException( "Unable to execute query" );
+
+    if (connection->context()->resource().isValid()) {
+        qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, connection->context()->resource().id());
     }
-    Collection::List results = qb.result();
-    if ( results.size() != 1 ) {
-      throw HandlerException( "Hierarchical RID does not specify a unique collection" );
-    }
-    result = results.first();
-    parentId = result.id();
-  }
-  return result;
 }
 
-Collection CollectionQueryHelper::singleCollectionFromScope( const Scope &scope, Connection *connection )
+void CollectionQueryHelper::scopeToQuery(const Scope &scope, Connection *connection, QueryBuilder &qb)
 {
-  // root
-  if ( ( scope.scope() == Scope::Uid || scope.scope() == Scope::None ) && scope.uidSet().intervals().count() == 1 ) {
-    const ImapInterval i = scope.uidSet().intervals().first();
-    if ( !i.size() ) { // ### why do we need this hack for 0, shouldn't that be size() == 1?
-      Collection root;
-      root.setId( 0 );
-      return root;
+    if (scope.scope() == Scope::None || scope.scope() == Scope::Uid) {
+        QueryHelper::setToQuery(scope.uidSet(), Collection::idFullColumnName(), qb);
+    } else if (scope.scope() == Scope::Rid) {
+        if (connection->context()->collectionId() <= 0 && !connection->context()->resource().isValid()) {
+            throw HandlerException("Operations based on remote identifiers require a resource or collection context");
+        }
+        CollectionQueryHelper::remoteIdToQuery(scope.ridSet(), connection, qb);
+    } else if (scope.scope() == Scope::HierarchicalRid) {
+        if (!connection->context()->resource().isValid()) {
+            throw HandlerException("Operations based on hierarchical remote identifiers require a resource or collection context");
+        }
+        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.ridChain(), connection->context()->resource().id());
+        qb.addValueCondition(Collection::idFullColumnName(), Query::Equals, c.id());
+    } else {
+        throw HandlerException("WTF?");
     }
-  }
-  SelectQueryBuilder<Collection> qb;
-  scopeToQuery( scope, connection, qb );
-  if ( !qb.exec() ) {
-    throw HandlerException( "Unable to execute query" );
-  }
-  const Collection::List cols = qb.result();
-  if ( cols.isEmpty() ) {
-    throw HandlerException( "No collection found" );
-  }
-  if ( cols.size() > 1 ) {
-    throw HandlerException( "Collection cannot be uniquely identified" );
-  }
-  return cols.first();
+}
+
+bool CollectionQueryHelper::hasAllowedName(const Collection &collection, const QString &name, Collection::Id parent)
+{
+    Q_UNUSED(collection);
+    SelectQueryBuilder<Collection> qb;
+    if (parent > 0) {
+        qb.addValueCondition(Collection::parentIdColumn(), Query::Equals, parent);
+    } else {
+        qb.addValueCondition(Collection::parentIdColumn(), Query::Is, QVariant());
+    }
+    qb.addValueCondition(Collection::nameColumn(), Query::Equals, name);
+    if (!qb.exec()) {
+        return false;
+    }
+    const QVector<Collection> result = qb.result();
+    if (result.size() > 0) {
+        if (result.first().id() == collection.id()) {
+            return true;
+        }
+        return false;
+    }
+    return true;
+}
+
+bool CollectionQueryHelper::canBeMovedTo(const Collection &collection, const Collection &_parent)
+{
+    if (_parent.isValid()) {
+        Collection parent = _parent;
+        Q_FOREVER {
+            if (parent.id() == collection.id()) {
+                return false; // target is child of source
+            }
+            if (parent.parentId() == 0) {
+                break;
+            }
+            parent = parent.parent();
+        }
+    }
+    return hasAllowedName(collection, collection.name(), _parent.id());
+}
+
+Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridChain, Resource::Id resId)
+{
+    if (ridChain.size() < 2) {
+        throw HandlerException("Empty or incomplete hierarchical RID chain");
+    }
+    if (!ridChain.last().isEmpty()) {
+        throw HandlerException("Hierarchical RID chain is not root-terminated");
+    }
+    Collection::Id parentId = 0;
+    Collection result;
+    for (int i = ridChain.size() - 2; i >= 0; --i) {
+        SelectQueryBuilder<Collection> qb;
+        if (parentId > 0) {
+            qb.addValueCondition(Collection::parentIdColumn(), Query::Equals, parentId);
+        } else {
+            qb.addValueCondition(Collection::parentIdColumn(), Query::Is, QVariant());
+        }
+        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, ridChain.at(i));
+        qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, resId);
+        if (!qb.exec()) {
+            throw HandlerException("Unable to execute query");
+        }
+        Collection::List results = qb.result();
+        if (results.size() != 1) {
+            throw HandlerException("Hierarchical RID does not specify a unique collection");
+        }
+        result = results.first();
+        parentId = result.id();
+    }
+    return result;
+}
+
+Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, Connection *connection)
+{
+    // root
+    if ((scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1) {
+        const ImapInterval i = scope.uidSet().intervals().first();
+        if (!i.size()) {   // ### why do we need this hack for 0, shouldn't that be size() == 1?
+            Collection root;
+            root.setId(0);
+            return root;
+        }
+    }
+    SelectQueryBuilder<Collection> qb;
+    scopeToQuery(scope, connection, qb);
+    if (!qb.exec()) {
+        throw HandlerException("Unable to execute query");
+    }
+    const Collection::List cols = qb.result();
+    if (cols.isEmpty()) {
+        throw HandlerException("No collection found");
+    }
+    if (cols.size() > 1) {
+        throw HandlerException("Collection cannot be uniquely identified");
+    }
+    return cols.first();
 }

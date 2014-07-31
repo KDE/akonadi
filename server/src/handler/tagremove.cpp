@@ -26,9 +26,9 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagRemove::TagRemove( Scope::SelectionScope scope )
-  : Handler()
-  , mScope( scope )
+TagRemove::TagRemove(Scope::SelectionScope scope)
+    : Handler()
+    , mScope(scope)
 {
 }
 
@@ -38,48 +38,47 @@ TagRemove::~TagRemove()
 
 bool TagRemove::parseStream()
 {
-  if ( mScope.scope() != Scope::Uid ) {
-    throw HandlerException( "Only UID-based TAGREMOVE is supported" );
-  }
+    if (mScope.scope() != Scope::Uid) {
+        throw HandlerException("Only UID-based TAGREMOVE is supported");
+    }
 
-  mScope.parseScope( m_streamParser );
+    mScope.parseScope(m_streamParser);
 
-  // Get all PIM items that we will untag
-  SelectQueryBuilder<PimItem> itemsQuery;
-  itemsQuery.addJoin( QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
-  QueryHelper::setToQuery( mScope.uidSet(), PimItemTagRelation::rightColumn(), itemsQuery );
+    // Get all PIM items that we will untag
+    SelectQueryBuilder<PimItem> itemsQuery;
+    itemsQuery.addJoin(QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName());
+    QueryHelper::setToQuery(mScope.uidSet(), PimItemTagRelation::rightColumn(), itemsQuery);
 
-  if ( !itemsQuery.exec() ) {
-    throw HandlerException( "Untagging failed" );
-  }
-  const PimItem::List items = itemsQuery.result();
+    if (!itemsQuery.exec()) {
+        throw HandlerException("Untagging failed");
+    }
+    const PimItem::List items = itemsQuery.result();
 
-  SelectQueryBuilder<Tag> tagQuery;
-  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), tagQuery );
-  if ( !tagQuery.exec() ) {
-    throw HandlerException( "Failed to obtain tags" );
-  }
-  const Tag::List tags = tagQuery.result();
+    SelectQueryBuilder<Tag> tagQuery;
+    QueryHelper::setToQuery(mScope.uidSet(), Tag::idFullColumnName(), tagQuery);
+    if (!tagQuery.exec()) {
+        throw HandlerException("Failed to obtain tags");
+    }
+    const Tag::List tags = tagQuery.result();
 
-  QSet<qint64> removedTags;
-  Q_FOREACH ( const Tag &tag, tags ) {
-    removedTags << tag.id();
-  }
-  if ( !items.isEmpty() ) {
-    DataStore::self()->notificationCollector()->itemsTagsChanged( items, QSet<qint64>(), removedTags );
-  }
+    QSet<qint64> removedTags;
+    Q_FOREACH (const Tag &tag, tags) {
+        removedTags << tag.id();
+    }
+    if (!items.isEmpty()) {
+        DataStore::self()->notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+    }
 
-  Q_FOREACH ( const Tag &tag, tags ) {
-    DataStore::self()->notificationCollector()->tagRemoved( tag );
-  }
+    Q_FOREACH (const Tag &tag, tags) {
+        DataStore::self()->notificationCollector()->tagRemoved(tag);
+    }
 
-  // Just remove the tags, table constraints will take care of the rest
-  QueryBuilder qb( Tag::tableName(), QueryBuilder::Delete );
-  QueryHelper::setToQuery( mScope.uidSet(), Tag::idFullColumnName(), qb );
-  if ( !qb.exec() ) {
-    throw HandlerException( "Deletion failed" );
-  }
+    // Just remove the tags, table constraints will take care of the rest
+    QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
+    QueryHelper::setToQuery(mScope.uidSet(), Tag::idFullColumnName(), qb);
+    if (!qb.exec()) {
+        throw HandlerException("Deletion failed");
+    }
 
-  return successResponse( "TAGREMOVE complete" );
+    return successResponse("TAGREMOVE complete");
 }
-

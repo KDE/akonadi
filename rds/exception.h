@@ -25,12 +25,12 @@
 template <typename Ex>
 class Exception : Ex
 {
-  public:
-    explicit Exception( const QString &message )
+public:
+    explicit Exception(const QString &message)
 #ifdef QT_NO_STL
-      : Ex( std::string( qPrintable( message ) ) )
+        : Ex(std::string(qPrintable(message)))
 #else
-      : Ex( message.toStdString() )
+        : Ex(message.toStdString())
 #endif
     {
     }

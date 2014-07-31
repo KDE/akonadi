@@ -28,14 +28,13 @@
 
 using namespace Akonadi::Server;
 
-
 FakeConnection::FakeConnection(quintptr socketDescriptor, QObject *parent)
-  : Connection(socketDescriptor, parent)
+    : Connection(socketDescriptor, parent)
 {
-    m_streamParser->setWaitTimeout( 500 );
+    m_streamParser->setWaitTimeout(500);
 }
 
-FakeConnection::FakeConnection(QObject* parent):
+FakeConnection::FakeConnection(QObject *parent):
     Connection(parent)
 {
 }
@@ -45,16 +44,16 @@ FakeConnection::~FakeConnection()
 
 }
 
-DataStore* FakeConnection::storageBackend()
+DataStore *FakeConnection::storageBackend()
 {
     if (!m_backend) {
-        m_backend = static_cast<FakeDataStore*>(FakeDataStore::self());
+        m_backend = static_cast<FakeDataStore *>(FakeDataStore::self());
     }
 
     return m_backend;
 }
 
-NotificationCollector* FakeConnection::notificationCollector()
+NotificationCollector *FakeConnection::notificationCollector()
 {
     return storageBackend()->notificationCollector();
 }

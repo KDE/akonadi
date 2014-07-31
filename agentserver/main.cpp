@@ -28,23 +28,23 @@
 #include <QtDBus/QDBusError>
 #include <QApplication>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  AkGuiApplication app( argc, argv );
-  app.setDescription( QLatin1String( "Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
-  app.parseCommandLine();
-  qApp->setQuitOnLastWindowClosed( false );
+    AkGuiApplication app(argc, argv);
+    app.setDescription(QLatin1String("Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
+    app.parseCommandLine();
+    qApp->setQuitOnLastWindowClosed(false);
 
-  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::ControlLock ) ) ) {
-    akError() << "Akonadi control process not found - aborting.";
-    akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
-  }
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::ControlLock))) {
+        akError() << "Akonadi control process not found - aborting.";
+        akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
+    }
 
-  new Akonadi::AgentServer( &app );
+    new Akonadi::AgentServer(&app);
 
-  if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::AgentServer ) ) ) {
-    akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
-  }
+    if (!QDBusConnection::sessionBus().registerService(AkDBus::serviceName(AkDBus::AgentServer))) {
+        akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+    }
 
-  return app.exec();
+    return app.exec();
 }

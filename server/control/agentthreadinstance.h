@@ -26,21 +26,21 @@ namespace Akonadi {
 
 class AgentThreadInstance : public AgentInstance
 {
-  Q_OBJECT
-  public:
-    AgentThreadInstance( AgentManager *manager );
+    Q_OBJECT
+public:
+    AgentThreadInstance(AgentManager *manager);
 
-    virtual bool start( const AgentType &agentInfo );
+    virtual bool start(const AgentType &agentInfo);
     virtual void quit();
     virtual void restartWhenIdle();
-    virtual void configure( qlonglong windowId );
+    virtual void configure(qlonglong windowId);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void agentServerRegistered();
 
-  private:
+private:
     AgentType mAgentType;
-  };
+};
 
 }
 

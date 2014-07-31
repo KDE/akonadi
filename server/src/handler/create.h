@@ -25,7 +25,6 @@
 namespace Akonadi {
 namespace Server {
 
-
 /**
   @ingroup akonadi_server_handler
 
@@ -47,13 +46,13 @@ namespace Server {
  */
 class Create : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-    Create( Scope::SelectionScope scope );
+    Create(Scope::SelectionScope scope);
 
     bool parseStream();
 
-  private:
+private:
     Scope::SelectionScope m_scope;
 };
 

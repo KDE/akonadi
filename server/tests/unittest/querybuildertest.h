@@ -32,12 +32,12 @@ class QueryBuilder;
 
 class QueryBuilderTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testQueryBuilder_data();
     void testQueryBuilder();
 
-  private:
+private:
     QList< Akonadi::Server::QueryBuilder > mBuilders;
 };
 

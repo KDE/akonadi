@@ -27,39 +27,39 @@
 
 using namespace Akonadi::Server;
 
-TransactionHandler::TransactionHandler( Mode mode )
-  : mMode( mode )
+TransactionHandler::TransactionHandler(Mode mode)
+    : mMode(mode)
 {
 }
 
 bool TransactionHandler::parseStream()
 {
-  DataStore *store = connection()->storageBackend();
+    DataStore *store = connection()->storageBackend();
 
-  if ( mMode == Begin ) {
-    if ( !store->beginTransaction() ) {
-      return failureResponse( "Unable to begin transaction." );
+    if (mMode == Begin) {
+        if (!store->beginTransaction()) {
+            return failureResponse("Unable to begin transaction.");
+        }
     }
-  }
 
-  if ( mMode == Rollback ) {
-    if ( !store->inTransaction() ) {
-      return failureResponse( "There is no transaction in progress." );
+    if (mMode == Rollback) {
+        if (!store->inTransaction()) {
+            return failureResponse("There is no transaction in progress.");
+        }
+        if (!store->rollbackTransaction()) {
+            return failureResponse("Unable to roll back transaction.");
+        }
     }
-    if ( !store->rollbackTransaction() ) {
-      return failureResponse( "Unable to roll back transaction." );
-    }
-  }
 
-  if ( mMode == Commit ) {
-    if ( !store->inTransaction() ) {
-      return failureResponse( "There is no transaction in progress." );
+    if (mMode == Commit) {
+        if (!store->inTransaction()) {
+            return failureResponse("There is no transaction in progress.");
+        }
+        if (!store->commitTransaction()) {
+            return failureResponse("Unable to commit transaction.");
+        }
     }
-    if ( !store->commitTransaction() ) {
-      return failureResponse( "Unable to commit transaction." );
-    }
-  }
 
-  const QMetaEnum me = metaObject()->enumerator( metaObject()->indexOfEnumerator( "Mode" ) );
-  return successResponse( me.valueToKey( mMode ) + QByteArray( " completed" ) );
+    const QMetaEnum me = metaObject()->enumerator(metaObject()->indexOfEnumerator("Mode"));
+    return successResponse(me.valueToKey(mMode) + QByteArray(" completed"));
 }

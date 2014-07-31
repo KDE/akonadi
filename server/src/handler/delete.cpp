@@ -37,69 +37,69 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Delete::Delete( Scope scope )
-  : Handler()
-  , m_scope( scope )
+Delete::Delete(Scope scope)
+    : Handler()
+    , m_scope(scope)
 {
 }
 
-bool Delete::deleteRecursive( Collection &col )
+bool Delete::deleteRecursive(Collection &col)
 {
-  Collection::List children = col.children();
-  Q_FOREACH ( Collection child, children ) {
-    if ( !deleteRecursive( child ) ) {
-      return false;
+    Collection::List children = col.children();
+    Q_FOREACH (Collection child, children) {
+        if (!deleteRecursive(child)) {
+            return false;
+        }
     }
-  }
-  DataStore *db = connection()->storageBackend();
-  return db->cleanupCollection( col );
+    DataStore *db = connection()->storageBackend();
+    return db->cleanupCollection(col);
 }
 
 bool Delete::parseStream()
 {
-  m_scope.parseScope( m_streamParser );
-  connection()->context()->parseContext( m_streamParser );
+    m_scope.parseScope(m_streamParser);
+    connection()->context()->parseContext(m_streamParser);
 
-  SelectQueryBuilder<Collection> qb;
-  CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
-  if ( !qb.exec() ) {
-    throw HandlerException( "Unable to execute collection query" );
-  }
-  const Collection::List collections = qb.result();
-  if ( collections.isEmpty() ) {
-    throw HandlerException( "No collection selected" );
-  } else if ( collections.size() > 1 ) {
-    throw HandlerException( "Deleting multiple collections is not yet implemented" );
-  }
-
-  // check if collection exists
-  DataStore *db = connection()->storageBackend();
-  Transaction transaction( db );
-
-  Collection collection = collections.first();
-  if ( !collection.isValid() ) {
-    return failureResponse( "No such collection." );
-  }
-
-  // handle virtual folders
-  if ( collection.resource().name() == QLatin1String( AKONADI_SEARCH_RESOURCE ) ) {
-    // don't delete virtual root
-    if ( collection.parentId() == 0 ) {
-      return failureResponse( "Cannot delete virtual root collection" );
+    SelectQueryBuilder<Collection> qb;
+    CollectionQueryHelper::scopeToQuery(m_scope, connection(), qb);
+    if (!qb.exec()) {
+        throw HandlerException("Unable to execute collection query");
     }
-  }
+    const Collection::List collections = qb.result();
+    if (collections.isEmpty()) {
+        throw HandlerException("No collection selected");
+    } else if (collections.size() > 1) {
+        throw HandlerException("Deleting multiple collections is not yet implemented");
+    }
 
-  if ( !deleteRecursive( collection ) ) {
-    return failureResponse( "Unable to delete collection" );
-  }
+    // check if collection exists
+    DataStore *db = connection()->storageBackend();
+    Transaction transaction(db);
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Unable to commit transaction." );
-  }
+    Collection collection = collections.first();
+    if (!collection.isValid()) {
+        return failureResponse("No such collection.");
+    }
 
-  Response response;
-  response.setTag( tag() );
-  response.setString( "DELETE completed" );
-  Q_EMIT responseAvailable( response );
-  return true;
+    // handle virtual folders
+    if (collection.resource().name() == QLatin1String(AKONADI_SEARCH_RESOURCE)) {
+        // don't delete virtual root
+        if (collection.parentId() == 0) {
+            return failureResponse("Cannot delete virtual root collection");
+        }
+    }
+
+    if (!deleteRecursive(collection)) {
+        return failureResponse("Unable to delete collection");
+    }
+
+    if (!transaction.commit()) {
+        return failureResponse("Unable to commit transaction.");
+    }
+
+    Response response;
+    response.setTag(tag());
+    response.setString("DELETE completed");
+    Q_EMIT responseAvailable(response);
+    return true;
 }

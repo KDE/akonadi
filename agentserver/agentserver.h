@@ -32,26 +32,26 @@ class AgentThread;
 
 class AgentServer : public QObject
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentServer" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.AgentServer")
 
-  typedef QPair<QString, qlonglong> ConfigureInfo;
+    typedef QPair<QString, qlonglong> ConfigureInfo;
 
-  public:
-    explicit AgentServer( QObject *parent = 0 );
+public:
+    explicit AgentServer(QObject *parent = 0);
     ~AgentServer();
 
-  public Q_SLOTS:
-    Q_SCRIPTABLE void agentInstanceConfigure( const QString &identifier, qlonglong windowId );
-    Q_SCRIPTABLE bool started( const QString &identifier ) const;
-    Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &typeIdentifier, const QString &fileName );
-    Q_SCRIPTABLE void stopAgent( const QString &identifier );
+public Q_SLOTS:
+    Q_SCRIPTABLE void agentInstanceConfigure(const QString &identifier, qlonglong windowId);
+    Q_SCRIPTABLE bool started(const QString &identifier) const;
+    Q_SCRIPTABLE void startAgent(const QString &identifier, const QString &typeIdentifier, const QString &fileName);
+    Q_SCRIPTABLE void stopAgent(const QString &identifier);
     Q_SCRIPTABLE void quit();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void processConfigureRequest();
 
-  private:
+private:
     QHash<QString, AgentThread *> m_agents;
     QQueue<ConfigureInfo> m_configureQueue;
     AgentPluginLoader m_agentLoader;

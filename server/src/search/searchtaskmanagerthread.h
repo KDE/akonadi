@@ -27,14 +27,15 @@ namespace Server {
 
 class SearchTaskManagerThread : public QThread
 {
-  Q_OBJECT
-  public:
-    SearchTaskManagerThread( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    SearchTaskManagerThread(QObject *parent = 0);
 
     void stop();
 
-  protected:
-    /* reimpl */ void run();
+protected:
+    /* reimpl */
+    void run();
 };
 
 } // namespace Server

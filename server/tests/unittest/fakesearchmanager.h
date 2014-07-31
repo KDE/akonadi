@@ -30,7 +30,7 @@ namespace Server {
  */
 class FakeSearchManager : public SearchManager
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit FakeSearchManager(QObject *parent = 0);
@@ -38,9 +38,9 @@ public:
 
     void registerInstance(const QString &id);
     void unregisterInstance(const QString &id);
-    void updateSearch(const Collection& collection);
+    void updateSearch(const Collection &collection);
     void updateSearchAsync(const Collection &collection);
-    QVector<AbstractSearchPlugin*> searchPlugins() const;
+    QVector<AbstractSearchPlugin *> searchPlugins() const;
 
     void scheduleSearchUpdate();
 };

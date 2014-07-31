@@ -30,7 +30,8 @@ namespace Server {
     Encapsulates the result of a command, including what to send
     back to the client.
  */
-class Response{
+class Response
+{
 public:
     enum ResultCode {
         OK = 0,
@@ -49,18 +50,19 @@ public:
     /** The response string to be sent to the client. */
     QByteArray asString() const;
 
-    void setTag( const QByteArray &tag );
+    void setTag(const QByteArray &tag);
     void setUntagged();
     void setContinuation();
 
-    void setString( const char *string );
-    void setString( const QByteArray &string );
+    void setString(const char *string);
+    void setString(const QByteArray &string);
 
     void setSuccess();
     void setFailure();
     void setError();
     void setBye();
     void setUserDefined();
+
 private:
     QByteArray m_responseString;
     ResultCode m_resultCode;
@@ -70,6 +72,6 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-Q_DECLARE_METATYPE( Akonadi::Server::Response )
+Q_DECLARE_METATYPE(Akonadi::Server::Response)
 
 #endif

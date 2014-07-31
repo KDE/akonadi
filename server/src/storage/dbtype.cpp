@@ -21,26 +21,26 @@
 
 using namespace Akonadi::Server;
 
-DbType::Type DbType::type( const QSqlDatabase &db )
+DbType::Type DbType::type(const QSqlDatabase &db)
 {
-  return typeForDriverName( db.driverName() );
+    return typeForDriverName(db.driverName());
 }
 
-DbType::Type DbType::typeForDriverName( const QString &driverName )
+DbType::Type DbType::typeForDriverName(const QString &driverName)
 {
-  if ( driverName.startsWith( QLatin1String( "QMYSQL" ) ) ) {
-    return MySQL;
-  }
-  if ( driverName == QLatin1String( "QPSQL" ) ) {
-    return PostgreSQL;
-  }
-  if ( driverName.startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    return Sqlite;
-  }
-  return Unknown;
+    if (driverName.startsWith(QLatin1String("QMYSQL"))) {
+        return MySQL;
+    }
+    if (driverName == QLatin1String("QPSQL")) {
+        return PostgreSQL;
+    }
+    if (driverName.startsWith(QLatin1String("QSQLITE"))) {
+        return Sqlite;
+    }
+    return Unknown;
 }
 
-bool DbType::isSystemSQLite( const QSqlDatabase &db )
+bool DbType::isSystemSQLite(const QSqlDatabase &db)
 {
-  return db.driverName() == QLatin1String( "QSQLITE" );
+    return db.driverName() == QLatin1String("QSQLITE");
 }

@@ -27,19 +27,19 @@ using namespace Akonadi::Server;
 
 class ItemRetrieverTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testFullPayload()
     {
-      ItemRetriever r1( 0 );
-      r1.setRetrieveFullPayload( true );
-      QCOMPARE( r1.retrieveParts().size(), 1 );
-      QCOMPARE( r1.retrieveParts().at( 0 ), QString::fromLatin1( "PLD:RFC822" ) );
-      r1.setRetrieveParts( QStringList() << QLatin1String( "PLD:FOO" ) );
-      QCOMPARE( r1.retrieveParts().size(), 2 );
+        ItemRetriever r1(0);
+        r1.setRetrieveFullPayload(true);
+        QCOMPARE(r1.retrieveParts().size(), 1);
+        QCOMPARE(r1.retrieveParts().at(0), QString::fromLatin1("PLD:RFC822"));
+        r1.setRetrieveParts(QStringList() << QLatin1String("PLD:FOO"));
+        QCOMPARE(r1.retrieveParts().size(), 2);
     }
 };
 
-QTEST_MAIN( ItemRetrieverTest )
+QTEST_MAIN(ItemRetrieverTest)
 
 #include "itemretrievertest.moc"

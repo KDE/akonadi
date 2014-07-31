@@ -28,114 +28,114 @@
 
 using namespace Akonadi;
 
-QLatin1String AgentType::CapabilityUnique = QLatin1String( AKONADI_AGENT_CAPABILITY_UNIQUE );
-QLatin1String AgentType::CapabilityResource = QLatin1String( AKONADI_AGENT_CAPABILITY_RESOURCE );
-QLatin1String AgentType::CapabilityAutostart = QLatin1String( AKONADI_AGENT_CAPABILITY_AUTOSTART );
-QLatin1String AgentType::CapabilityPreprocessor = QLatin1String( AKONADI_AGENT_CAPABILITY_PREPROCESSOR );
-QLatin1String AgentType::CapabilitySearch = QLatin1String( AKONADI_AGENT_CAPABILITY_SEARCH );
+QLatin1String AgentType::CapabilityUnique = QLatin1String(AKONADI_AGENT_CAPABILITY_UNIQUE);
+QLatin1String AgentType::CapabilityResource = QLatin1String(AKONADI_AGENT_CAPABILITY_RESOURCE);
+QLatin1String AgentType::CapabilityAutostart = QLatin1String(AKONADI_AGENT_CAPABILITY_AUTOSTART);
+QLatin1String AgentType::CapabilityPreprocessor = QLatin1String(AKONADI_AGENT_CAPABILITY_PREPROCESSOR);
+QLatin1String AgentType::CapabilitySearch = QLatin1String(AKONADI_AGENT_CAPABILITY_SEARCH);
 
 AgentType::AgentType()
-  : instanceCounter( 0 )
+    : instanceCounter(0)
 {
 }
 
-QString AgentType::readString( const QSettings &file, const QString &key )
+QString AgentType::readString(const QSettings &file, const QString &key)
 {
-  const QVariant value = file.value( key );
-  if ( value.isNull() ) {
-    return QString();
-  } else if ( value.canConvert<QString>() ) {
-    return QString::fromUtf8( value.toByteArray() );
-  } else if ( value.canConvert<QStringList>() ) {
-    // This is a workaround for QSettings interpreting value with a comma as
-    // a QStringList, which is not compatible with KConfig. KConfig reads everything
-    // as a QByteArray and splits it to a list when requested. See BKO#330010
-    // TODO KF5: If we end up in Tier 2 or above, depend on KConfig for parsing
-    // .desktop files
-    const QStringList parts = value.toStringList();
-    QStringList utf8Parts;
-    utf8Parts.reserve( parts.size() );
-    Q_FOREACH ( const QString &part, parts ) {
-      utf8Parts << QString::fromUtf8( part.toLatin1() );
+    const QVariant value = file.value(key);
+    if (value.isNull()) {
+        return QString();
+    } else if (value.canConvert<QString>()) {
+        return QString::fromUtf8(value.toByteArray());
+    } else if (value.canConvert<QStringList>()) {
+        // This is a workaround for QSettings interpreting value with a comma as
+        // a QStringList, which is not compatible with KConfig. KConfig reads everything
+        // as a QByteArray and splits it to a list when requested. See BKO#330010
+        // TODO KF5: If we end up in Tier 2 or above, depend on KConfig for parsing
+        // .desktop files
+        const QStringList parts = value.toStringList();
+        QStringList utf8Parts;
+        utf8Parts.reserve(parts.size());
+        Q_FOREACH (const QString &part, parts) {
+            utf8Parts << QString::fromUtf8(part.toLatin1());
+        }
+        return utf8Parts.join(QLatin1String(", "));
+    } else {
+        akError() << "Agent desktop file" << file.fileName() << "contains invalid value for key" << key;
+        return QString();
     }
-    return utf8Parts.join( QLatin1String( ", ") );
-  } else {
-    akError() << "Agent desktop file" << file.fileName() << "contains invalid value for key" << key;
-    return QString();
-  }
 }
 
-bool AgentType::load( const QString &fileName, AgentManager *manager )
+bool AgentType::load(const QString &fileName, AgentManager *manager)
 {
-  Q_UNUSED( manager );
+    Q_UNUSED(manager);
 
-  QSettings file( fileName, QSettings::IniFormat );
-  file.beginGroup( QLatin1String( "Desktop Entry" ) );
+    QSettings file(fileName, QSettings::IniFormat);
+    file.beginGroup(QLatin1String("Desktop Entry"));
 
-  Q_FOREACH ( const QString &key, file.allKeys() ) {
-    if ( key.startsWith( QLatin1String( "Name[" ) ) ) {
-      QString lang = key.mid( 5, key.length() - 6 );
-      name.insert( lang, readString( file, key ) );
-    } else if ( key == QLatin1String( "Name" ) ) {
-      name.insert( QLatin1String( "en_US" ), readString( file, key ) );
-    } else if ( key.startsWith( QLatin1String( "Comment[" ) ) ) {
-      QString lang = key.mid( 8, key.length() - 9 );
-      comment.insert( lang, readString( file, key ) );
-    } else if ( key == QLatin1String( "Comment" ) ) {
-      comment.insert( QLatin1String( "en_US" ), readString( file, key ) );
-    } else if ( key.startsWith( QLatin1String( "X-Akonadi-Custom-" ) ) ) {
-      QString customKey = key.mid( 17, key.length() );
-      custom[customKey] = file.value( key );
+    Q_FOREACH (const QString &key, file.allKeys()) {
+        if (key.startsWith(QLatin1String("Name["))) {
+            QString lang = key.mid(5, key.length() - 6);
+            name.insert(lang, readString(file, key));
+        } else if (key == QLatin1String("Name")) {
+            name.insert(QLatin1String("en_US"), readString(file, key));
+        } else if (key.startsWith(QLatin1String("Comment["))) {
+            QString lang = key.mid(8, key.length() - 9);
+            comment.insert(lang, readString(file, key));
+        } else if (key == QLatin1String("Comment")) {
+            comment.insert(QLatin1String("en_US"), readString(file, key));
+        } else if (key.startsWith(QLatin1String("X-Akonadi-Custom-"))) {
+            QString customKey = key.mid(17, key.length());
+            custom[customKey] = file.value(key);
+        }
     }
-  }
-  icon = file.value( QLatin1String( "Icon" ) ).toString();
-  mimeTypes = file.value( QLatin1String( "X-Akonadi-MimeTypes" ) ).toStringList();
-  capabilities = file.value( QLatin1String( "X-Akonadi-Capabilities" ) ).toStringList();
-  exec = file.value( QLatin1String( "Exec" ) ).toString();
-  identifier = file.value( QLatin1String( "X-Akonadi-Identifier" ) ).toString();
-  launchMethod = Process; // Save default
+    icon = file.value(QLatin1String("Icon")).toString();
+    mimeTypes = file.value(QLatin1String("X-Akonadi-MimeTypes")).toStringList();
+    capabilities = file.value(QLatin1String("X-Akonadi-Capabilities")).toStringList();
+    exec = file.value(QLatin1String("Exec")).toString();
+    identifier = file.value(QLatin1String("X-Akonadi-Identifier")).toString();
+    launchMethod = Process; // Save default
 
-  const QString method = file.value( QLatin1String( "X-Akonadi-LaunchMethod" ) ).toString();
-  if ( method.compare( QLatin1String( "AgentProcess" ), Qt::CaseInsensitive ) == 0 ) {
-    launchMethod = Process;
-  } else if ( method.compare( QLatin1String( "AgentServer" ), Qt::CaseInsensitive ) == 0 ) {
-    launchMethod = Server;
-  } else if ( method.compare( QLatin1String( "AgentLauncher" ), Qt::CaseInsensitive ) == 0 ) {
-    launchMethod = Launcher;
-  } else if ( !method.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "Invalid exec method:" << method << "falling back to AgentProcess";
-  }
+    const QString method = file.value(QLatin1String("X-Akonadi-LaunchMethod")).toString();
+    if (method.compare(QLatin1String("AgentProcess"), Qt::CaseInsensitive) == 0) {
+        launchMethod = Process;
+    } else if (method.compare(QLatin1String("AgentServer"), Qt::CaseInsensitive) == 0) {
+        launchMethod = Server;
+    } else if (method.compare(QLatin1String("AgentLauncher"), Qt::CaseInsensitive) == 0) {
+        launchMethod = Launcher;
+    } else if (!method.isEmpty()) {
+        akError() << Q_FUNC_INFO << "Invalid exec method:" << method << "falling back to AgentProcess";
+    }
 
-  file.endGroup();
+    file.endGroup();
 
-  if ( identifier.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty identifier";
-    return false;
-  }
-  if ( exec.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty Exec entry";
-    return false;
-  }
+    if (identifier.isEmpty()) {
+        akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty identifier";
+        return false;
+    }
+    if (exec.isEmpty()) {
+        akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty Exec entry";
+        return false;
+    }
 
-  // autostart implies unique
-  if ( capabilities.contains( CapabilityAutostart ) && !capabilities.contains( CapabilityUnique ) ) {
-    capabilities << CapabilityUnique;
-  }
+    // autostart implies unique
+    if (capabilities.contains(CapabilityAutostart) && !capabilities.contains(CapabilityUnique)) {
+        capabilities << CapabilityUnique;
+    }
 
-  // load instance count if needed
-  if ( !capabilities.contains( CapabilityUnique ) ) {
-    QSettings agentrc( AkStandardDirs::agentConfigFile( XdgBaseDirs::ReadOnly ), QSettings::IniFormat );
-    instanceCounter = agentrc.value( QString::fromLatin1( "InstanceCounters/%1/InstanceCounter" )
-        .arg( identifier ), 0 ).toInt();
-  }
+    // load instance count if needed
+    if (!capabilities.contains(CapabilityUnique)) {
+        QSettings agentrc(AkStandardDirs::agentConfigFile(XdgBaseDirs::ReadOnly), QSettings::IniFormat);
+        instanceCounter = agentrc.value(QString::fromLatin1("InstanceCounters/%1/InstanceCounter")
+                                        .arg(identifier), 0).toInt();
+    }
 
-  return true;
+    return true;
 }
 
-void AgentType::save( QSettings *config ) const
+void AgentType::save(QSettings *config) const
 {
-  Q_ASSERT( config );
-  if ( !capabilities.contains( CapabilityUnique ) ) {
-    config->setValue( QString::fromLatin1( "InstanceCounters/%1/InstanceCounter" ).arg( identifier ), instanceCounter );
-  }
+    Q_ASSERT(config);
+    if (!capabilities.contains(CapabilityUnique)) {
+        config->setValue(QString::fromLatin1("InstanceCounters/%1/InstanceCounter").arg(identifier), instanceCounter);
+    }
 }

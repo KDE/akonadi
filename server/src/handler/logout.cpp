@@ -24,7 +24,8 @@
 
 using namespace Akonadi::Server;
 
-Logout::Logout(): Handler()
+Logout::Logout()
+    : Handler()
 {
 }
 
@@ -34,16 +35,16 @@ Logout::~Logout()
 
 bool Logout::parseStream()
 {
-  Response response;
-  response.setBye();
-  response.setString( "Akonadi server logging out" );
-  response.setUntagged();
-  Q_EMIT responseAvailable( response );
+    Response response;
+    response.setBye();
+    response.setString("Akonadi server logging out");
+    response.setUntagged();
+    Q_EMIT responseAvailable(response);
 
-  response.setSuccess();
-  response.setTag( tag() );
-  response.setString( "Logout completed" );
-  Q_EMIT responseAvailable( response );
-  Q_EMIT connectionStateChange( LoggingOut );
-  return true;
+    response.setSuccess();
+    response.setTag(tag());
+    response.setString("Logout completed");
+    Q_EMIT responseAvailable(response);
+    Q_EMIT connectionStateChange(LoggingOut);
+    return true;
 }

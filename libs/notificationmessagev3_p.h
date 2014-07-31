@@ -26,23 +26,22 @@
 #include <QDBusArgument>
 #include <QDebug>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV3 : public Akonadi::NotificationMessageV2
 {
-  public:
+public:
     typedef QVector<NotificationMessageV3> List;
 
     static void registerDBusTypes();
 
     NotificationMessageV3();
-    NotificationMessageV3( const NotificationMessageV3 &other );
+    NotificationMessageV3(const NotificationMessageV3 &other);
     ~NotificationMessageV3();
 
-    static NotificationMessageV2::List toV2List( const NotificationMessageV3::List &list );
-    static bool appendAndCompress( NotificationMessageV3::List &list, const NotificationMessageV3 &msg );
-    static bool appendAndCompress( QList<NotificationMessageV3> &list, const NotificationMessageV3 &msg );
+    static NotificationMessageV2::List toV2List(const NotificationMessageV3::List &list);
+    static bool appendAndCompress(NotificationMessageV3::List &list, const NotificationMessageV3 &msg);
+    static bool appendAndCompress(QList<NotificationMessageV3> &list, const NotificationMessageV3 &msg);
 
 };
 
@@ -50,11 +49,11 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV3 : public Akonadi::No
 
 AKONADIPROTOCOLINTERNALS_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::NotificationMessageV3 &msg);
 
-const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV3 &msg );
-QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV3 &msg );
+const QDBusArgument &operator>>(const QDBusArgument &arg, Akonadi::NotificationMessageV3 &msg);
+QDBusArgument &operator<<(QDBusArgument &arg, const Akonadi::NotificationMessageV3 &msg);
 
-Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV3, Q_MOVABLE_TYPE );
-Q_DECLARE_METATYPE( Akonadi::NotificationMessageV3 )
-Q_DECLARE_METATYPE( Akonadi::NotificationMessageV3::List )
+Q_DECLARE_TYPEINFO(Akonadi::NotificationMessageV3, Q_MOVABLE_TYPE);
+Q_DECLARE_METATYPE(Akonadi::NotificationMessageV3)
+Q_DECLARE_METATYPE(Akonadi::NotificationMessageV3::List)
 
 #endif // AKONADI_NOTIFICATIONMESSAGEV3_H

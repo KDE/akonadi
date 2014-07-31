@@ -25,7 +25,7 @@
 namespace Akonadi {
 namespace Server {
 
-class FakePart: public Part
+class FakePart : public Part
 {
 public:
     FakePart()
@@ -48,8 +48,7 @@ private:
     PartType m_partType;
 };
 
-
-class FakeTag: public Tag
+class FakeTag : public Tag
 {
 public:
     FakeTag()
@@ -82,7 +81,6 @@ private:
     TagType m_tagType;
     QString m_remoteId;
 };
-
 
 } // namespace Server
 } // namespace Akonadi

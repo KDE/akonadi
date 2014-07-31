@@ -47,67 +47,132 @@ class AgentType;
  */
 class AgentInstance : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     typedef boost::shared_ptr<AgentInstance> Ptr;
 
-    explicit AgentInstance( AgentManager *manager );
-    virtual ~AgentInstance() {}
+    explicit AgentInstance(AgentManager *manager);
+    virtual ~AgentInstance()
+    {
+    }
 
     /** Set/get the unique identifier of this AgentInstance */
-    QString identifier() const { return mIdentifier; }
-    void setIdentifier( const QString &identifier ) { mIdentifier = identifier; }
+    QString identifier() const
+    {
+        return mIdentifier;
+    }
 
-    QString agentType() const { return mType; }
-    int status() const { return mStatus; }
-    QString statusMessage() const { return mStatusMessage; }
-    int progress() const { return mPercent; }
-    bool isOnline() const { return mOnline; }
-    QString resourceName() const { return mResourceName; }
+    void setIdentifier(const QString &identifier)
+    {
+        mIdentifier = identifier;
+    }
 
-    virtual bool start( const AgentType &agentInfo ) = 0;
+    QString agentType() const
+    {
+        return mType;
+    }
+
+    int status() const
+    {
+        return mStatus;
+    }
+
+    QString statusMessage() const
+    {
+        return mStatusMessage;
+    }
+
+    int progress() const
+    {
+        return mPercent;
+    }
+
+    bool isOnline() const
+    {
+        return mOnline;
+    }
+
+    QString resourceName() const
+    {
+        return mResourceName;
+    }
+
+    virtual bool start(const AgentType &agentInfo) = 0;
     virtual void quit();
     virtual void cleanup();
     virtual void restartWhenIdle() = 0;
-    virtual void configure( qlonglong windowId ) = 0;
+    virtual void configure(qlonglong windowId) = 0;
 
-    bool hasResourceInterface() const { return mResourceInterface; }
-    bool hasAgentInterface() const { return mAgentControlInterface && mAgentStatusInterface; }
-    bool hasPreprocessorInterface() const { return mPreprocessorInterface; }
+    bool hasResourceInterface() const
+    {
+        return mResourceInterface;
+    }
 
-    org::freedesktop::Akonadi::Agent::Control *controlInterface() const { return mAgentControlInterface; }
-    org::freedesktop::Akonadi::Agent::Status *statusInterface() const { return mAgentStatusInterface; }
-    org::freedesktop::Akonadi::Agent::Search *searchInterface() const { return mSearchInterface; }
-    org::freedesktop::Akonadi::Resource *resourceInterface() const { return mResourceInterface; }
-    org::freedesktop::Akonadi::Preprocessor *preProcessorInterface() const { return mPreprocessorInterface; }
+    bool hasAgentInterface() const
+    {
+        return mAgentControlInterface && mAgentStatusInterface;
+    }
+
+    bool hasPreprocessorInterface() const
+    {
+        return mPreprocessorInterface;
+    }
+
+    org::freedesktop::Akonadi::Agent::Control *controlInterface() const
+    {
+        return mAgentControlInterface;
+    }
+
+    org::freedesktop::Akonadi::Agent::Status *statusInterface() const
+    {
+        return mAgentStatusInterface;
+    }
+
+    org::freedesktop::Akonadi::Agent::Search *searchInterface() const
+    {
+        return mSearchInterface;
+    }
+
+    org::freedesktop::Akonadi::Resource *resourceInterface() const
+    {
+        return mResourceInterface;
+    }
+
+    org::freedesktop::Akonadi::Preprocessor *preProcessorInterface() const
+    {
+        return mPreprocessorInterface;
+    }
 
     bool obtainAgentInterface();
     bool obtainResourceInterface();
     bool obtainPreprocessorInterface();
 
-  protected Q_SLOTS:
-    void statusChanged( int status, const QString &statusMsg );
-    void advancedStatusChanged( const QVariantMap &status );
-    void statusStateChanged( int status );
-    void statusMessageChanged( const QString &msg );
-    void percentChanged( int percent );
-    void warning( const QString &msg );
-    void error( const QString &msg );
-    void onlineChanged( bool state );
-    void resourceNameChanged( const QString &name );
+protected Q_SLOTS:
+    void statusChanged(int status, const QString &statusMsg);
+    void advancedStatusChanged(const QVariantMap &status);
+    void statusStateChanged(int status);
+    void statusMessageChanged(const QString &msg);
+    void percentChanged(int percent);
+    void warning(const QString &msg);
+    void error(const QString &msg);
+    void onlineChanged(bool state);
+    void resourceNameChanged(const QString &name);
 
     void refreshAgentStatus();
     void refreshResourceStatus();
 
-    void errorHandler( const QDBusError &error );
+    void errorHandler(const QDBusError &error);
 
-  private:
-    template <typename T> T *findInterface( AkDBus::AgentType agentType, const char *path = 0 );
+private:
+    template <typename T> T *findInterface(AkDBus::AgentType agentType, const char *path = 0);
 
-  protected:
-    void setAgentType( const QString &agentType ) { mType = agentType; }
+protected:
+    void setAgentType(const QString &agentType)
+    {
+        mType = agentType;
+    }
 
-  private:
+private:
     QString mIdentifier;
     QString mType;
     AgentManager *mManager;

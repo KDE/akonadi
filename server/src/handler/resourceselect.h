@@ -42,8 +42,8 @@ namespace Server {
 */
 class  ResourceSelect : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     ResourceSelect();
     bool parseStream();
 };

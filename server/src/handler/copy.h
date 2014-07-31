@@ -51,17 +51,17 @@ namespace Server {
  */
 class Copy : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     bool parseStream();
 
-  protected:
+protected:
     /**
       Copy the given item and all its parts into the @p target.
       The changes mentioned above are applied.
     */
-    bool copyItem( const PimItem &item, const Collection &target );
+    bool copyItem(const PimItem &item, const Collection &target);
 };
 
 } // namespace Server

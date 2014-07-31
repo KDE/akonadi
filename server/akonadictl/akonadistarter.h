@@ -24,15 +24,15 @@
 
 class AkonadiStarter : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit AkonadiStarter( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit AkonadiStarter(QObject *parent = 0);
     bool start();
 
-  private Q_SLOTS:
-    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+private Q_SLOTS:
+    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
 
-  private:
+private:
     bool mRegistered;
 };
 

@@ -25,7 +25,6 @@
 
 #include <QSignalSpy>
 
-
 class QLocalServer;
 class QEventLoop;
 
@@ -42,7 +41,7 @@ class FakeConnection;
 /**
  * A fake server used for testing. Losely based on KIMAP::FakeServer
  */
-class FakeAkonadiServer: public AkonadiServer
+class FakeAkonadiServer : public AkonadiServer
 {
     Q_OBJECT
 
@@ -50,7 +49,6 @@ public:
     static FakeAkonadiServer *instance();
 
     ~FakeAkonadiServer();
-
 
     /* Reimpl */
     bool init();
@@ -88,7 +86,7 @@ private:
 
     FakeDataStore *mDataStore;
     FakeSearchManager *mSearchManager;
-    FakeConnection* mConnection;
+    FakeConnection *mConnection;
     FakeClient *mClient;
 
     QEventLoop *mServerLoop;

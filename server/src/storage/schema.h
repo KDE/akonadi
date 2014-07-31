@@ -31,13 +31,15 @@ namespace Server {
 class Schema
 {
 public:
-  inline virtual ~Schema() {}
+    inline virtual ~Schema()
+    {
+    }
 
-  /** List of tables in the schema. */
-  virtual QVector<TableDescription> tables() = 0;
+    /** List of tables in the schema. */
+    virtual QVector<TableDescription> tables() = 0;
 
-  /** List of relations (N:M helper tables) in the schema. */
-  virtual QVector<RelationDescription> relations() = 0;
+    /** List of relations (N:M helper tables) in the schema. */
+    virtual QVector<RelationDescription> relations() = 0;
 };
 
 } // namespace Server

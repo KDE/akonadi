@@ -24,20 +24,20 @@
 
 using namespace Akonadi::Server;
 
-SearchTaskManagerThread::SearchTaskManagerThread( QObject *parent )
-  : QThread(parent)
+SearchTaskManagerThread::SearchTaskManagerThread(QObject *parent)
+    : QThread(parent)
 {
-  // make sure we are created from the main thread, ie. before all other threads start to potentially use us
-  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+    // make sure we are created from the main thread, ie. before all other threads start to potentially use us
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 }
 
 void SearchTaskManagerThread::run()
 {
-  SearchTaskManager mgr;
-  exec();
+    SearchTaskManager mgr;
+    exec();
 }
 
 void SearchTaskManagerThread::stop()
 {
-  SearchTaskManager::instance()->stop();
+    SearchTaskManager::instance()->stop();
 }

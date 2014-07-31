@@ -32,8 +32,8 @@ namespace Server {
  */
 class Expunge : public Handler
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     Expunge();
 
     ~Expunge();

@@ -31,102 +31,102 @@ Q_DECLARE_METATYPE(QVector<QByteArray>)
 
 class FetchScopeTest : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     FetchScopeTest()
-      : QObject()
+        : QObject()
     {
-      qRegisterMetaType<QVector<QByteArray> >();
+        qRegisterMetaType<QVector<QByteArray> >();
     }
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void testCommandParsing_data()
     {
-      QTest::addColumn<QString>( "input" );
-      QTest::addColumn<QVector<QByteArray> >( "requestedParts" );
-      QTest::addColumn<QStringList>( "requestedPayloads" );
-      QTest::addColumn<QDateTime>( "changedSince" );
-      QTest::addColumn<int>( "ancestorDepth" );
-      QTest::addColumn<bool>( "cacheOnly" );
-      QTest::addColumn<bool>( "checkCachedPayloadPartsOnly" );
-      QTest::addColumn<bool>( "fullPayload" );
-      QTest::addColumn<bool>( "allAttrs" );
-      QTest::addColumn<bool>( "sizeRequested" );
-      QTest::addColumn<bool>( "mTimeRequested" );
-      QTest::addColumn<bool>( "externalPayloadSupported" );
-      QTest::addColumn<bool>( "remoteRevisionRequested" );
-      QTest::addColumn<bool>( "ignoreErrors" );
-      QTest::addColumn<bool>( "flagsRequested" );
-      QTest::addColumn<bool>( "remoteIdRequested" );
-      QTest::addColumn<bool>( "gidRequested" );
+        QTest::addColumn<QString>("input");
+        QTest::addColumn<QVector<QByteArray> >("requestedParts");
+        QTest::addColumn<QStringList>("requestedPayloads");
+        QTest::addColumn<QDateTime>("changedSince");
+        QTest::addColumn<int>("ancestorDepth");
+        QTest::addColumn<bool>("cacheOnly");
+        QTest::addColumn<bool>("checkCachedPayloadPartsOnly");
+        QTest::addColumn<bool>("fullPayload");
+        QTest::addColumn<bool>("allAttrs");
+        QTest::addColumn<bool>("sizeRequested");
+        QTest::addColumn<bool>("mTimeRequested");
+        QTest::addColumn<bool>("externalPayloadSupported");
+        QTest::addColumn<bool>("remoteRevisionRequested");
+        QTest::addColumn<bool>("ignoreErrors");
+        QTest::addColumn<bool>("flagsRequested");
+        QTest::addColumn<bool>("remoteIdRequested");
+        QTest::addColumn<bool>("gidRequested");
 
-      QTest::newRow( "Normal fetch scope" )
-        << "CACHEONLY EXTERNALPAYLOAD IGNOREERRORS CHANGEDSINCE 1374150376 ANCESTORS 42 (DATETIME REMOTEREVISION REMOTEID GID FLAGS SIZE PLD:RFC822 ATR::MyAttr)\n"
-        << ( QVector<QByteArray>() << "PLD:RFC822" << "ATR:MyAttr" )
-        << ( QStringList() << QLatin1String( "PLD:RFC822" ) )
-        << QDateTime::fromTime_t( 1374150376 )
-        << 42
-        << true << false << false << false << true << true << true << true
-        << true << true << true << true;
+        QTest::newRow("Normal fetch scope")
+                << "CACHEONLY EXTERNALPAYLOAD IGNOREERRORS CHANGEDSINCE 1374150376 ANCESTORS 42 (DATETIME REMOTEREVISION REMOTEID GID FLAGS SIZE PLD:RFC822 ATR::MyAttr)\n"
+                << (QVector<QByteArray>() << "PLD:RFC822" << "ATR:MyAttr")
+                << (QStringList() << QLatin1String("PLD:RFC822"))
+                << QDateTime::fromTime_t(1374150376)
+                << 42
+                << true << false << false << false << true << true << true << true
+                << true << true << true << true;
 
-      QTest::newRow( "fullpayload" )
-        << "FULLPAYLOAD ()"
-        << ( QVector<QByteArray>() << "PLD:RFC822" )
-        << QStringList()
-        << QDateTime()
-        << 0
-        << false << false << true << false << false << false << false << false
-        << false << false << false << false;
+        QTest::newRow("fullpayload")
+                << "FULLPAYLOAD ()"
+                << (QVector<QByteArray>() << "PLD:RFC822")
+                << QStringList()
+                << QDateTime()
+                << 0
+                << false << false << true << false << false << false << false << false
+                << false << false << false << false;
     }
 
     void testCommandParsing()
     {
-      QFETCH( QString, input );
-      QFETCH( QVector<QByteArray>, requestedParts );
-      QFETCH( QStringList, requestedPayloads );
-      QFETCH( QDateTime, changedSince );
-      QFETCH( int, ancestorDepth );
-      QFETCH( bool, cacheOnly );
-      QFETCH( bool, checkCachedPayloadPartsOnly );
-      QFETCH( bool, fullPayload );
-      QFETCH( bool, allAttrs );
-      QFETCH( bool, sizeRequested );
-      QFETCH( bool, mTimeRequested );
-      QFETCH( bool, externalPayloadSupported );
-      QFETCH( bool, remoteRevisionRequested );
-      QFETCH( bool, ignoreErrors );
-      QFETCH( bool, flagsRequested );
-      QFETCH( bool, remoteIdRequested );
-      QFETCH( bool, gidRequested );
+        QFETCH(QString, input);
+        QFETCH(QVector<QByteArray>, requestedParts);
+        QFETCH(QStringList, requestedPayloads);
+        QFETCH(QDateTime, changedSince);
+        QFETCH(int, ancestorDepth);
+        QFETCH(bool, cacheOnly);
+        QFETCH(bool, checkCachedPayloadPartsOnly);
+        QFETCH(bool, fullPayload);
+        QFETCH(bool, allAttrs);
+        QFETCH(bool, sizeRequested);
+        QFETCH(bool, mTimeRequested);
+        QFETCH(bool, externalPayloadSupported);
+        QFETCH(bool, remoteRevisionRequested);
+        QFETCH(bool, ignoreErrors);
+        QFETCH(bool, flagsRequested);
+        QFETCH(bool, remoteIdRequested);
+        QFETCH(bool, gidRequested);
 
-      FetchScope fs;
-      QVERIFY( !fs.remoteRevisionRequested() );
+        FetchScope fs;
+        QVERIFY(!fs.remoteRevisionRequested());
 
-      QByteArray ba( input.toLatin1() );
-      QBuffer buffer( &ba, this );
-      buffer.open( QIODevice::ReadOnly );
-      ImapStreamParser parser( &buffer );
+        QByteArray ba(input.toLatin1());
+        QBuffer buffer(&ba, this);
+        buffer.open(QIODevice::ReadOnly);
+        ImapStreamParser parser(&buffer);
 
-      fs = FetchScope( &parser );
-      QCOMPARE( fs.requestedParts().size(), requestedParts.size() );
-      QCOMPARE( fs.requestedPayloads().size(), requestedPayloads.size() );
-      QCOMPARE( fs.changedSince(), changedSince );
-      QCOMPARE( fs.ancestorDepth(), ancestorDepth );
-      QCOMPARE( fs.cacheOnly(), cacheOnly );
-      QCOMPARE( fs.checkCachedPayloadPartsOnly(), checkCachedPayloadPartsOnly );
-      QCOMPARE( fs.fullPayload(), fullPayload );
-      QCOMPARE( fs.allAttributes(), allAttrs );
-      QCOMPARE( fs.sizeRequested(), sizeRequested );
-      QCOMPARE( fs.mTimeRequested(), mTimeRequested );
-      QCOMPARE( fs.externalPayloadSupported(), externalPayloadSupported );
-      QCOMPARE( fs.remoteRevisionRequested(), remoteRevisionRequested );
-      QCOMPARE( fs.ignoreErrors(), ignoreErrors );
-      QCOMPARE( fs.flagsRequested(), flagsRequested );
-      QCOMPARE( fs.remoteIdRequested(), remoteIdRequested );
-      QCOMPARE( fs.gidRequested(), gidRequested );
+        fs = FetchScope(&parser);
+        QCOMPARE(fs.requestedParts().size(), requestedParts.size());
+        QCOMPARE(fs.requestedPayloads().size(), requestedPayloads.size());
+        QCOMPARE(fs.changedSince(), changedSince);
+        QCOMPARE(fs.ancestorDepth(), ancestorDepth);
+        QCOMPARE(fs.cacheOnly(), cacheOnly);
+        QCOMPARE(fs.checkCachedPayloadPartsOnly(), checkCachedPayloadPartsOnly);
+        QCOMPARE(fs.fullPayload(), fullPayload);
+        QCOMPARE(fs.allAttributes(), allAttrs);
+        QCOMPARE(fs.sizeRequested(), sizeRequested);
+        QCOMPARE(fs.mTimeRequested(), mTimeRequested);
+        QCOMPARE(fs.externalPayloadSupported(), externalPayloadSupported);
+        QCOMPARE(fs.remoteRevisionRequested(), remoteRevisionRequested);
+        QCOMPARE(fs.ignoreErrors(), ignoreErrors);
+        QCOMPARE(fs.flagsRequested(), flagsRequested);
+        QCOMPARE(fs.remoteIdRequested(), remoteIdRequested);
+        QCOMPARE(fs.gidRequested(), gidRequested);
     }
 };
 
-QTEST_MAIN( FetchScopeTest )
+QTEST_MAIN(FetchScopeTest)
 
 #include "fetchscopetest.moc"

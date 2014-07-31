@@ -40,9 +40,12 @@ class Schema;
 
 class TestInterface
 {
-  public:
-    virtual ~TestInterface() {}
-    virtual void execStatement( const QString &statement ) = 0;
+public:
+    virtual ~TestInterface()
+    {
+    }
+
+    virtual void execStatement(const QString &statement) = 0;
 };
 
 /**
@@ -54,13 +57,13 @@ class TestInterface
  */
 class DbInitializer
 {
-  public:
-   typedef boost::shared_ptr<DbInitializer> Ptr;
+public:
+    typedef boost::shared_ptr<DbInitializer> Ptr;
 
     /**
       Returns an initializer instance for a given backend.
     */
-    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, Schema *schema = 0 );
+    static DbInitializer::Ptr createInstance(const QSqlDatabase &database, Schema *schema = 0);
 
     /**
      * Destroys the database initializer.
@@ -99,79 +102,79 @@ class DbInitializer
     /**
      * Returns a backend-specific CREATE TABLE SQL query describing given table
      */
-    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
+    virtual QString buildCreateTableStatement(const TableDescription &tableDescription) const = 0;
 
-  protected:
+protected:
     /**
      * Creates a new database initializer.
      *
      * @param database The reference to the database.
      */
-    DbInitializer( const QSqlDatabase &database );
+    DbInitializer(const QSqlDatabase &database);
 
     /**
      * Overwrite in backend-specific sub-classes to return the SQL type for a given C++ type.
      * @param type Name of the C++ type.
      * @param size Optional size hint for the column, if -1 use the default SQL type for @p type.
      */
-    virtual QString sqlType( const QString &type, int size ) const;
+    virtual QString sqlType(const QString &type, int size) const;
     /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
-    virtual QString sqlValue( const QString &type, const QString &value ) const;
+    virtual QString sqlValue(const QString &type, const QString &value) const;
 
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const = 0;
-    virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
-    virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
-    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
+    virtual QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const = 0;
+    virtual QString buildAddColumnStatement(const TableDescription &tableDescription, const ColumnDescription &columnDescription) const;
+    virtual QString buildCreateIndexStatement(const TableDescription &tableDescription, const IndexDescription &indexDescription) const;
+    virtual QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const = 0;
 
     /**
      * Returns an SQL statement to add a foreign key constraint to an existing column @p column.
      * The default implementation returns an empty string, so any backend supporting foreign key constraints
      * must reimplement this.
      */
-    virtual QString buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const;
+    virtual QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const;
 
     /**
      * Returns an SQL statement to remove the foreign key constraint @p fk from table @p table.
      * The default implementation returns an empty string, so any backend supporting foreign key constraints
      * must reimplement this.
      */
-    virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
+    virtual QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const;
 
-    static QString buildReferentialAction( ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete );
+    static QString buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete);
     /// Use for multi-column primary keys during table creation
-    static QString buildPrimaryKeyStatement( const TableDescription &table );
+    static QString buildPrimaryKeyStatement(const TableDescription &table);
 
-  private:
+private:
     friend class ::DbInitializerTest;
 
     /**
      * Sets the debug @p interface that shall be used on unit test run.
      */
-    void setTestInterface( TestInterface *interface );
+    void setTestInterface(TestInterface *interface);
 
     /**
      * Sets a different DbIntrospector. This allows unit tests to simulate certain
      * states of the database.
      */
-    void setIntrospector( const DbIntrospector::Ptr &introspector );
+    void setIntrospector(const DbIntrospector::Ptr &introspector);
 
     /** Helper method for executing a query.
      * If a debug interface is set for testing, that gets the queries instead.
      * @throws DbException if something went wrong.
      */
-    void execQuery( const QString &queryString );
+    void execQuery(const QString &queryString);
 
-    bool checkTable( const TableDescription &tableDescription );
+    bool checkTable(const TableDescription &tableDescription);
     /**
      * Checks foreign key constraints on table @p tableDescription and fixes them if necessary.
      */
-    void checkForeignKeys( const TableDescription &tableDescription );
-    void checkIndexes( const TableDescription &tableDescription );
-    bool checkRelation( const RelationDescription &relationDescription );
+    void checkForeignKeys(const TableDescription &tableDescription);
+    void checkIndexes(const TableDescription &tableDescription);
+    bool checkRelation(const RelationDescription &relationDescription);
 
-    static QString referentialActionToString( ColumnDescription::ReferentialAction action );
+    static QString referentialActionToString(ColumnDescription::ReferentialAction action);
 
-    void execPendingQueries( const QStringList &queries );
+    void execPendingQueries(const QStringList &queries);
 
     QSqlDatabase mDatabase;
     Schema *mSchema;

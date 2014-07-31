@@ -31,102 +31,102 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-void ItemQueryHelper::itemSetToQuery( const ImapSet &set, QueryBuilder &qb, const Collection &collection )
+void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection)
 {
-  QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
-  if ( collection.isValid() ) {
-    if ( collection.isVirtual() || collection.resource().isVirtual() ) {
-      qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
-                  CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
-      qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id() );
-    } else {
-      qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, collection.id() );
+    QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+    if (collection.isValid()) {
+        if (collection.isVirtual() || collection.resource().isVirtual()) {
+            qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+                       CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
+            qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id());
+        } else {
+            qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, collection.id());
+        }
     }
-  }
 }
 
-void ItemQueryHelper::itemSetToQuery( const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb )
+void ItemQueryHelper::itemSetToQuery(const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb)
 {
-  if ( !isUid && context->collectionId() >= 0 ) {
-    itemSetToQuery( set, qb, context->collection() );
-  } else {
-    itemSetToQuery( set, qb );
-  }
+    if (!isUid && context->collectionId() >= 0) {
+        itemSetToQuery(set, qb, context->collection());
+    } else {
+        itemSetToQuery(set, qb);
+    }
 
-  if ( context->tagId() >= 0 ) {
-    qb.addJoin( QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
-                PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName() );
-    qb.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId() );
-  }
+    if (context->tagId() >= 0) {
+        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
+                   PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId());
+    }
 }
 
-void ItemQueryHelper::remoteIdToQuery( const QStringList &rids, CommandContext *context, QueryBuilder &qb )
+void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb)
 {
-  if ( rids.size() == 1 ) {
-    qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::Equals, rids.first() );
-  } else {
-    qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::In, rids );
-  }
+    if (rids.size() == 1) {
+        qb.addValueCondition(PimItem::remoteIdFullColumnName(), Query::Equals, rids.first());
+    } else {
+        qb.addValueCondition(PimItem::remoteIdFullColumnName(), Query::In, rids);
+    }
 
-  if ( context->resource().isValid() ) {
-    qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
-                PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
-    qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id() );
-  }
-  if ( context->collectionId() > 0 ) {
-    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, context->collectionId() );
-  }
-  if ( context->tagId() > 0 ) {
-    qb.addJoin( QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
-                PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName() );
-    qb.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId() );
-  }
+    if (context->resource().isValid()) {
+        qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
+                   PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
+        qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+    }
+    if (context->collectionId() > 0) {
+        qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, context->collectionId());
+    }
+    if (context->tagId() > 0) {
+        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
+                   PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId());
+    }
 }
 
-void ItemQueryHelper::gidToQuery( const QStringList &gids, CommandContext *context, QueryBuilder &qb )
+void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *context, QueryBuilder &qb)
 {
-  if ( gids.size() == 1 ) {
-    qb.addValueCondition( PimItem::gidFullColumnName(), Query::Equals, gids.first() );
-  } else {
-    qb.addValueCondition( PimItem::gidFullColumnName(), Query::In, gids );
-  }
+    if (gids.size() == 1) {
+        qb.addValueCondition(PimItem::gidFullColumnName(), Query::Equals, gids.first());
+    } else {
+        qb.addValueCondition(PimItem::gidFullColumnName(), Query::In, gids);
+    }
 
-  if ( context->tagId() > 0 ) {
-    qb.addJoin( QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
-                PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName() );
-    qb.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId() );
-  }
+    if (context->tagId() > 0) {
+        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
+                   PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId());
+    }
 }
 
-void ItemQueryHelper::scopeToQuery( const Scope &scope, CommandContext *context, QueryBuilder &qb )
+void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
 {
-  if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
-    itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, context, qb );
-    return;
-  }
+    if (scope.scope() == Scope::None || scope.scope() == Scope::Uid) {
+        itemSetToQuery(scope.uidSet(), scope.scope() == Scope::Uid, context, qb);
+        return;
+    }
 
-  if ( scope.scope() == Scope::Gid ) {
-    ItemQueryHelper::gidToQuery( scope.gidSet(), context, qb );
-    return;
-  }
+    if (scope.scope() == Scope::Gid) {
+        ItemQueryHelper::gidToQuery(scope.gidSet(), context, qb);
+        return;
+    }
 
-  if ( context->collectionId() <= 0 && !context->resource().isValid() ) {
-      throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
-  }
+    if (context->collectionId() <= 0 && !context->resource().isValid()) {
+        throw HandlerException("Operations based on remote identifiers require a resource or collection context");
+    }
 
-  if ( scope.scope() == Scope::Rid ) {
-    ItemQueryHelper::remoteIdToQuery( scope.ridSet(), context, qb );
-    return;
-  } else if ( scope.scope() == Scope::HierarchicalRid ) {
-    QStringList ridChain = scope.ridChain();
-    const QString itemRid = ridChain.takeFirst();
-    const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID( ridChain, context->resource().id() );
-    const Collection oldSelection = context->collection();
-    context->setCollection( parentCol );
-    remoteIdToQuery( QStringList() << itemRid, context, qb );
-    context->setCollection( oldSelection );
-    return;
-  }
+    if (scope.scope() == Scope::Rid) {
+        ItemQueryHelper::remoteIdToQuery(scope.ridSet(), context, qb);
+        return;
+    } else if (scope.scope() == Scope::HierarchicalRid) {
+        QStringList ridChain = scope.ridChain();
+        const QString itemRid = ridChain.takeFirst();
+        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(ridChain, context->resource().id());
+        const Collection oldSelection = context->collection();
+        context->setCollection(parentCol);
+        remoteIdToQuery(QStringList() << itemRid, context, qb);
+        context->setCollection(oldSelection);
+        return;
+    }
 
-  throw HandlerException( "Dude, WTF?!?" );
+    throw HandlerException("Dude, WTF?!?");
 }

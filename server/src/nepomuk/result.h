@@ -28,45 +28,45 @@
 #include "soprano/statement.h"
 
 namespace Nepomuk {
-    namespace Query {
-        /**
-         * \brief A single search result.
-         *
-         * A search returns a set of Result object.
-         *
-         * \author Sebastian Trueg <trueg@kde.org>
-         */
-        class Result
-        {
-        public:
-            Result();
-            explicit Result( const QUrl &uri, double score = 0.0 );
-            Result( const Result &other );
-            ~Result();
+namespace Query {
+/**
+ * \brief A single search result.
+ *
+ * A search returns a set of Result object.
+ *
+ * \author Sebastian Trueg <trueg@kde.org>
+ */
+class Result
+{
+public:
+    Result();
+    explicit Result(const QUrl &uri, double score = 0.0);
+    Result(const Result &other);
+    ~Result();
 
-            Result &operator=( const Result &other );
+    Result &operator=(const Result &other);
 
-            double score() const;
-            QUrl resourceUri() const;
+    double score() const;
+    QUrl resourceUri() const;
 
-            void setScore( double score );
+    void setScore(double score);
 
-            void addRequestProperty( const QUrl &property, const Soprano::Node &value );
+    void addRequestProperty(const QUrl &property, const Soprano::Node &value);
 
-            QHash<QUrl, Soprano::Node> requestProperties() const;
+    QHash<QUrl, Soprano::Node> requestProperties() const;
 
-            Soprano::Node operator[]( const QUrl &property ) const;
-            Soprano::Node requestProperty( const QUrl &property ) const;
+    Soprano::Node operator[](const QUrl &property) const;
+    Soprano::Node requestProperty(const QUrl &property) const;
 
-            bool operator==( const Result &other ) const;
+    bool operator==(const Result &other) const;
 
-        private:
-            class Private;
-            QSharedDataPointer<Private> d;
-        };
-    }
+private:
+    class Private;
+    QSharedDataPointer<Private> d;
+};
+}
 }
 
-Q_DECLARE_TYPEINFO( Nepomuk::Query::Result, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Nepomuk::Query::Result, Q_MOVABLE_TYPE);
 
 #endif

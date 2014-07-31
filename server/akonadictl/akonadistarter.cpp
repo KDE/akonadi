@@ -30,56 +30,56 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusServiceWatcher>
 
-AkonadiStarter::AkonadiStarter( QObject *parent )
-  : QObject( parent )
-  , mRegistered( false )
+AkonadiStarter::AkonadiStarter(QObject *parent)
+    : QObject(parent)
+    , mRegistered(false)
 {
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName( AkDBus::ControlLock ),
-                                                          QDBusConnection::sessionBus(),
-                                                          QDBusServiceWatcher::WatchForOwnerChange, this );
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(AkDBus::serviceName(AkDBus::ControlLock),
+                                                           QDBusConnection::sessionBus(),
+                                                           QDBusServiceWatcher::WatchForOwnerChange, this);
 
-  connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
+    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 }
 
 bool AkonadiStarter::start()
 {
-  akDebug() << "Starting Akonadi Server...";
+    akDebug() << "Starting Akonadi Server...";
 
-  QStringList serverArgs;
-  if ( AkApplication::hasInstanceIdentifier() ) {
-    serverArgs << QLatin1String( "--instance" ) << AkApplication::instanceIdentifier();
-  }
+    QStringList serverArgs;
+    if (AkApplication::hasInstanceIdentifier()) {
+        serverArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
+    }
 
-  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ), serverArgs );
-  if ( !ok ) {
-    akError() << "Error: unable to execute binary akonadi_control";
-    return false;
-  }
+    const bool ok = QProcess::startDetached(QLatin1String("akonadi_control"), serverArgs);
+    if (!ok) {
+        akError() << "Error: unable to execute binary akonadi_control";
+        return false;
+    }
 
-  // safety timeout
-  QTimer::singleShot( 5000, QCoreApplication::instance(), SLOT(quit()) );
-  // wait for the server to register with D-Bus
-  QCoreApplication::instance()->exec();
+    // safety timeout
+    QTimer::singleShot(5000, QCoreApplication::instance(), SLOT(quit()));
+    // wait for the server to register with D-Bus
+    QCoreApplication::instance()->exec();
 
-  if ( !mRegistered ) {
-    akError() << "Error: akonadi_control was started but didn't register at D-Bus session bus.";
-    akError() << "Make sure your system is set up correctly!";
-    return false;
-  }
+    if (!mRegistered) {
+        akError() << "Error: akonadi_control was started but didn't register at D-Bus session bus.";
+        akError() << "Make sure your system is set up correctly!";
+        return false;
+    }
 
-  akDebug() << "   done.";
-  return true;
+    akDebug() << "   done.";
+    return true;
 }
 
-void AkonadiStarter::serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
+void AkonadiStarter::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
-  Q_UNUSED( name );
-  Q_UNUSED( oldOwner );
-  if ( newOwner.isEmpty() ) {
-    return;
-  }
+    Q_UNUSED(name);
+    Q_UNUSED(oldOwner);
+    if (newOwner.isEmpty()) {
+        return;
+    }
 
-  mRegistered = true;
-  QCoreApplication::instance()->quit();
+    mRegistered = true;
+    QCoreApplication::instance()->quit();
 }

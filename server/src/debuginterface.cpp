@@ -24,20 +24,20 @@
 
 using namespace Akonadi::Server;
 
-DebugInterface::DebugInterface( QObject *parent )
-  : QObject( parent )
+DebugInterface::DebugInterface(QObject *parent)
+    : QObject(parent)
 {
-  new DebugInterfaceAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/debug" ),
-    this, QDBusConnection::ExportAdaptors );
+    new DebugInterfaceAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/debug"),
+                                                 this, QDBusConnection::ExportAdaptors);
 }
 
 QString DebugInterface::tracer() const
 {
-  return Tracer::self()->currentTracer();
+    return Tracer::self()->currentTracer();
 }
 
-void DebugInterface::setTracer( const QString &tracer )
+void DebugInterface::setTracer(const QString &tracer)
 {
-  Tracer::self()->activateTracer( tracer );
+    Tracer::self()->activateTracer(tracer);
 }

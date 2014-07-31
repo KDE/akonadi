@@ -56,12 +56,12 @@ namespace Server {
  */
 class ColCopy : public Copy
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     bool parseStream();
 
-  private:
-    bool copyCollection( const Collection &source, const Collection &target );
+private:
+    bool copyCollection(const Collection &source, const Collection &target);
 };
 
 } // namespace Server

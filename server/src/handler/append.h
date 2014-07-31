@@ -33,7 +33,7 @@ namespace Server {
  */
 class Append : public Handler
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     Append();
 

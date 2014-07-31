@@ -33,72 +33,71 @@ using namespace Akonadi::Server;
 
 class Cache : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
 
-  Cache()
-  {
-    connect( &m_cleanupTimer, SIGNAL(timeout()), SLOT(cleanup()));
-    m_cleanupTimer.setSingleShot( true );
-  }
+    Cache()
+    {
+        connect(&m_cleanupTimer, SIGNAL(timeout()), SLOT(cleanup()));
+        m_cleanupTimer.setSingleShot(true);
+    }
 
-  QSqlQuery query( const QString &queryStatement )
-  {
-    m_cleanupTimer.start( CLEANUP_TIMEOUT * 1000 );
-    return m_cache.value( queryStatement );
-  }
+    QSqlQuery query(const QString &queryStatement)
+    {
+        m_cleanupTimer.start(CLEANUP_TIMEOUT * 1000);
+        return m_cache.value(queryStatement);
+    }
 
 public Q_SLOTS:
-  void cleanup()
-  {
-    m_cache.clear();
-  }
+    void cleanup()
+    {
+        m_cache.clear();
+    }
 
 public: // public, this is just a helper class
-  QHash<QString, QSqlQuery> m_cache;
-  QTimer m_cleanupTimer;
+    QHash<QString, QSqlQuery> m_cache;
+    QTimer m_cleanupTimer;
 };
 
 static QThreadStorage<Cache *> g_queryCache;
 
 static Cache *perThreadCache()
 {
-  if ( !g_queryCache.hasLocalData() ) {
-    g_queryCache.setLocalData( new Cache() );
-  }
+    if (!g_queryCache.hasLocalData()) {
+        g_queryCache.setLocalData(new Cache());
+    }
 
-  return g_queryCache.localData();
+    return g_queryCache.localData();
 }
 
-bool QueryCache::contains( const QString &queryStatement )
+bool QueryCache::contains(const QString &queryStatement)
 {
-  if ( DbType::type( DataStore::self()->database() ) == DbType::Sqlite ) {
-    return false;
-  } else {
-    return perThreadCache()->m_cache.contains( queryStatement );
-  }
+    if (DbType::type(DataStore::self()->database()) == DbType::Sqlite) {
+        return false;
+    } else {
+        return perThreadCache()->m_cache.contains(queryStatement);
+    }
 }
 
-QSqlQuery QueryCache::query( const QString &queryStatement )
+QSqlQuery QueryCache::query(const QString &queryStatement)
 {
-  return perThreadCache()->query( queryStatement );
+    return perThreadCache()->query(queryStatement);
 }
 
-void QueryCache::insert( const QString &queryStatement, const QSqlQuery &query )
+void QueryCache::insert(const QString &queryStatement, const QSqlQuery &query)
 {
-  if ( DbType::type( DataStore::self()->database() ) != DbType::Sqlite ) {
-    perThreadCache()->m_cache.insert( queryStatement, query );
-  }
+    if (DbType::type(DataStore::self()->database()) != DbType::Sqlite) {
+        perThreadCache()->m_cache.insert(queryStatement, query);
+    }
 }
 
 void QueryCache::clear()
 {
-  if (!g_queryCache.hasLocalData()) {
-    return;
-  }
+    if (!g_queryCache.hasLocalData()) {
+        return;
+    }
 
-  g_queryCache.localData()->cleanup();
+    g_queryCache.localData()->cleanup();
 }
-
 
 #include <querycache.moc>

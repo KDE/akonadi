@@ -34,13 +34,13 @@ namespace Server {
   */
 class ColumnDescription
 {
-  public:
+public:
     ColumnDescription();
 
     enum ReferentialAction {
-      Cascade,
-      Restrict,
-      SetNull
+        Cascade,
+        Restrict,
+        SetNull
     };
 
     QString name;
@@ -63,7 +63,7 @@ class ColumnDescription
   */
 class IndexDescription
 {
-  public:
+public:
     IndexDescription();
 
     QString name;
@@ -76,7 +76,7 @@ class IndexDescription
   */
 class DataDescription
 {
-  public:
+public:
     DataDescription();
 
     /**
@@ -90,7 +90,7 @@ class DataDescription
   */
 class TableDescription
 {
-  public:
+public:
     TableDescription();
     int primaryKeyColumnCount() const;
 
@@ -105,7 +105,7 @@ class TableDescription
   */
 class RelationDescription
 {
-  public:
+public:
     RelationDescription();
 
     QString firstTable;

@@ -24,7 +24,7 @@
 
 class AgentPluginLoader
 {
-  public:
+public:
     /**
       Deletes all instantiated QPluginLoaders.
      */
@@ -37,9 +37,9 @@ class AgentPluginLoader
 
       @return the plugin for @param pluginName or 0 if the plugin is not found.
      */
-    QPluginLoader *load( const QString &pluginName );
+    QPluginLoader *load(const QString &pluginName);
 
-  private:
+private:
     QHash<QString, QPluginLoader *> m_pluginLoaders;
 };
 

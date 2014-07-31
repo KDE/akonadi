@@ -51,12 +51,12 @@ namespace Server {
 */
 class ColMove : public Handler
 {
-  Q_OBJECT
-  public:
-    ColMove( Scope::SelectionScope scope );
+    Q_OBJECT
+public:
+    ColMove(Scope::SelectionScope scope);
     virtual bool parseStream();
 
-  private:
+private:
     Scope m_scope;
 };
 

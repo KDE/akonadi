@@ -46,7 +46,7 @@ class Connection : public QObject
 {
     Q_OBJECT
 public:
-    Connection( quintptr socketDescriptor, QObject *parent = 0 );
+    Connection(quintptr socketDescriptor, QObject *parent = 0);
     virtual ~Connection();
 
     static int protocolVersion();
@@ -60,17 +60,17 @@ public:
     /**
       Returns @c true if this connection belongs to the owning resource of @p item.
     */
-    bool isOwnerResource( const PimItem &item ) const;
-    bool isOwnerResource( const Collection &collection ) const;
+    bool isOwnerResource(const PimItem &item) const;
+    bool isOwnerResource(const Collection &collection) const;
 
-    void addStatusMessage( const QByteArray &msg );
+    void addStatusMessage(const QByteArray &msg);
     void flushStatusMessageQueue();
 
-    void setSessionId( const QByteArray &id );
+    void setSessionId(const QByteArray &id);
     QByteArray sessionId() const;
 
     const ClientCapabilities &capabilities() const;
-    void setCapabilities( const ClientCapabilities &capabilities );
+    void setCapabilities(const ClientCapabilities &capabilities);
 
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
@@ -83,15 +83,15 @@ protected Q_SLOTS:
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotConnectionStateChange( ConnectionState );
+    void slotConnectionStateChange(ConnectionState state);
 
-    virtual void slotResponseAvailable( const Akonadi::Server::Response &response );
+    virtual void slotResponseAvailable(const Akonadi::Server::Response &response);
 
 protected:
     Connection(QObject *parent = 0); // used for testing
 
-    void writeOut( const QByteArray &data );
-    virtual Handler *findHandlerForCommand( const QByteArray &command );
+    void writeOut(const QByteArray &data);
+    virtual Handler *findHandlerForCommand(const QByteArray &command);
 
 protected:
     quintptr m_socketDescriptor;

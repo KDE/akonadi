@@ -28,7 +28,7 @@
 
 #include <QStringList>
 
-AKONADI_EXCEPTION_MAKE_INSTANCE( ItemRetrieverException );
+AKONADI_EXCEPTION_MAKE_INSTANCE(ItemRetrieverException);
 
 namespace Akonadi {
 namespace Server {
@@ -45,31 +45,31 @@ class QueryBuilder;
 */
 class ItemRetriever
 {
-  public:
-    ItemRetriever( Connection *connection );
+public:
+    ItemRetriever(Connection *connection);
     ~ItemRetriever();
 
     Connection *connection() const;
 
-    void setRetrieveParts( const QStringList &parts );
+    void setRetrieveParts(const QStringList &parts);
     QStringList retrieveParts() const;
-    void setRetrieveFullPayload( bool fullPayload );
-    void setChangedSince( const QDateTime &changedSince );
-    void setItemSet( const ImapSet &set, const Collection &collection = Collection() );
-    void setItemSet( const ImapSet &set, bool isUid );
-    void setItem( const Entity::Id &id );
+    void setRetrieveFullPayload(bool fullPayload);
+    void setChangedSince(const QDateTime &changedSince);
+    void setItemSet(const ImapSet &set, const Collection &collection = Collection());
+    void setItemSet(const ImapSet &set, bool isUid);
+    void setItem(const Entity::Id &id);
     /** Retrieve all items in the given collection. */
-    void setCollection( const Collection &collection, bool recursive = true );
+    void setCollection(const Collection &collection, bool recursive = true);
 
     /** Retrieve all items matching the given item scope. */
-    void setScope( const Scope &scope );
+    void setScope(const Scope &scope);
     Scope scope() const;
 
     bool exec();
 
     QByteArray lastError() const;
 
-  private:
+private:
     QSqlQuery buildQuery() const;
 
     /**

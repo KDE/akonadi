@@ -29,21 +29,21 @@ class ProcessControl;
 
 class AgentProcessInstance : public AgentInstance
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit AgentProcessInstance( AgentManager *manager );
+public:
+    explicit AgentProcessInstance(AgentManager *manager);
 
-    virtual bool start( const AgentType &agentInfo );
+    virtual bool start(const AgentType &agentInfo);
     virtual void quit();
     virtual void cleanup();
     virtual void restartWhenIdle();
-    virtual void configure( qlonglong windowId );
+    virtual void configure(qlonglong windowId);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void failedToStart();
 
-  private:
+private:
     Akonadi::ProcessControl *mController;
 };
 

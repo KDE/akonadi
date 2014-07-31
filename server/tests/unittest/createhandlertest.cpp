@@ -54,7 +54,6 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-
 private Q_SLOTS:
     void testCreate_data()
     {
@@ -71,9 +70,9 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 CREATE \"New Name\" 3 (MYRANDOMATTRIBUTE \"\")"
-                    << "S: * 8 3 (NAME \"New Name\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT MYRANDOMATTRIBUTE \"\")"
-                    << "S: 2 OK CREATE completed";
+                     << "C: 2 CREATE \"New Name\" 3 (MYRANDOMATTRIBUTE \"\")"
+                     << "S: * 8 3 (NAME \"New Name\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT MYRANDOMATTRIBUTE \"\")"
+                     << "S: 2 OK CREATE completed";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.addEntity(8, QLatin1String(""), QLatin1String(""));
@@ -83,9 +82,9 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 CREATE \"Name2\" 3 (ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE)"
-                    << "S: * 9 3 (NAME \"Name2\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE )"
-                    << "S: 2 OK CREATE completed";
+                     << "C: 2 CREATE \"Name2\" 3 (ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE)"
+                     << "S: * 9 3 (NAME \"Name2\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE )"
+                     << "S: 2 OK CREATE completed";
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.addEntity(9, QLatin1String(""), QLatin1String(""));

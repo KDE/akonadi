@@ -30,14 +30,14 @@ namespace Server {
 */
 template <typename T> class SelectQueryBuilder : public QueryBuilder
 {
-  public:
+public:
     /**
       Creates a new query builder.
     */
     inline SelectQueryBuilder()
-      : QueryBuilder( T::tableName(), Select )
+        : QueryBuilder(T::tableName(), Select)
     {
-      addColumns( T::fullColumnNames() );
+        addColumns(T::fullColumnNames());
     }
 
     /**
@@ -45,7 +45,7 @@ template <typename T> class SelectQueryBuilder : public QueryBuilder
     */
     QVector<T> result()
     {
-      return T::extractResult( query() );
+        return T::extractResult(query());
     }
 };
 

@@ -33,14 +33,14 @@ class ImapStreamParser;
 */
 class Scope
 {
-  public:
+public:
     enum SelectionScope {
-      Invalid,
-      None,
-      Uid,
-      Rid,
-      HierarchicalRid,
-      Gid
+        Invalid,
+        None,
+        Uid,
+        Rid,
+        HierarchicalRid,
+        Gid
     };
 
     /**
@@ -50,28 +50,28 @@ class Scope
      */
     Scope();
 
-    Scope( SelectionScope scope );
+    Scope(SelectionScope scope);
     /**
       Parse the object set dependent on the set selection scope.
       The set has to be non-empty. If not a HandlerException is thrown.
     */
-    void parseScope( ImapStreamParser *parser );
+    void parseScope(ImapStreamParser *parser);
 
     /**
       Parse the selection scope identifier (UID, RID, HRID, etc.).
       Returns None if @p input is not a selection scope.
     */
-    static SelectionScope selectionScopeFromByteArray( const QByteArray &input );
+    static SelectionScope selectionScopeFromByteArray(const QByteArray &input);
 
     SelectionScope scope() const;
-    void setScope( SelectionScope scope );
+    void setScope(SelectionScope scope);
     ImapSet uidSet() const;
-    void setUidSet( const ImapSet &uidSet );
+    void setUidSet(const ImapSet &uidSet);
     QStringList ridSet() const;
     QStringList ridChain() const;
     QStringList gidSet() const;
 
-  private:
+private:
     SelectionScope mScope;
     ImapSet mUidSet;
     QStringList mRidSet;

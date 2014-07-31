@@ -31,64 +31,64 @@ using namespace Akonadi::Server;
 
 class DbIntrospectorTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testHasIndexQuery_data()
     {
-      QTest::addColumn<QString>( "driverName" );
-      QTest::addColumn<QString>( "indexQuery" );
+        QTest::addColumn<QString>("driverName");
+        QTest::addColumn<QString>("indexQuery");
 
-      QTest::newRow( "mysql" ) << "QMYSQL" << "SHOW INDEXES FROM myTable WHERE `Key_name` = 'myIndex'";
-      QTest::newRow( "sqlite" ) << "QSQLITE" << "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='myTable' AND name='myIndex';";
-      QTest::newRow( "psql" ) << "QPSQL" << "SELECT indexname FROM pg_catalog.pg_indexes WHERE tablename ilike 'myTable' AND  indexname ilike 'myIndex' UNION SELECT conname FROM pg_catalog.pg_constraint  WHERE conname ilike 'myIndex'";
+        QTest::newRow("mysql") << "QMYSQL" << "SHOW INDEXES FROM myTable WHERE `Key_name` = 'myIndex'";
+        QTest::newRow("sqlite") << "QSQLITE" << "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='myTable' AND name='myIndex';";
+        QTest::newRow("psql") << "QPSQL" << "SELECT indexname FROM pg_catalog.pg_indexes WHERE tablename ilike 'myTable' AND  indexname ilike 'myIndex' UNION SELECT conname FROM pg_catalog.pg_constraint  WHERE conname ilike 'myIndex'";
     }
 
     void testHasIndexQuery()
     {
-      QFETCH( QString, driverName );
-      QFETCH( QString, indexQuery );
+        QFETCH(QString, driverName);
+        QFETCH(QString, indexQuery);
 
-      if ( QSqlDatabase::drivers().contains( driverName ) ) {
-        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName );
-        DbIntrospector::Ptr introspector = DbIntrospector::createInstance( db );
-        QVERIFY( introspector );
-        QCOMPARE( introspector->hasIndexQuery( QL1S( "myTable" ), QL1S( "myIndex" ) ), indexQuery );
-      }
+        if (QSqlDatabase::drivers().contains(driverName)) {
+            QSqlDatabase db = QSqlDatabase::addDatabase(driverName, driverName);
+            DbIntrospector::Ptr introspector = DbIntrospector::createInstance(db);
+            QVERIFY(introspector);
+            QCOMPARE(introspector->hasIndexQuery(QL1S("myTable"), QL1S("myIndex")), indexQuery);
+        }
     }
 
     void testHasIndex_data()
     {
-      QTest::addColumn<QString>( "driverName" );
-      QTest::addColumn<bool>( "shouldThrow" );
+        QTest::addColumn<QString>("driverName");
+        QTest::addColumn<bool>("shouldThrow");
 
-      QTest::newRow( "mysql" ) << "QMYSQL" << true;
-      QTest::newRow( "sqlite" ) << "QSQLITE" << true;
-      QTest::newRow( "psql" ) << "QPSQL" << true;
+        QTest::newRow("mysql") << "QMYSQL" << true;
+        QTest::newRow("sqlite") << "QSQLITE" << true;
+        QTest::newRow("psql") << "QPSQL" << true;
     }
 
     void testHasIndex()
     {
-      QFETCH( QString, driverName );
-      QFETCH( bool, shouldThrow );
+        QFETCH(QString, driverName);
+        QFETCH(bool, shouldThrow);
 
-      if ( QSqlDatabase::drivers().contains( driverName ) ) {
-        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName + QL1S( "hasIndex" ) );
-        DbIntrospector::Ptr introspector = DbIntrospector::createInstance( db );
-        QVERIFY( introspector );
+        if (QSqlDatabase::drivers().contains(driverName)) {
+            QSqlDatabase db = QSqlDatabase::addDatabase(driverName, driverName + QL1S("hasIndex"));
+            DbIntrospector::Ptr introspector = DbIntrospector::createInstance(db);
+            QVERIFY(introspector);
 
-        bool didThrow = false;
-        try {
-          QVERIFY( introspector->hasIndex( QL1S( "myTable" ), QL1S( "myIndex" ) ) );
-        } catch ( const DbException &e ) {
-          didThrow = true;
-          qDebug() << Q_FUNC_INFO << e.what();
+            bool didThrow = false;
+            try {
+                QVERIFY(introspector->hasIndex(QL1S("myTable"), QL1S("myIndex")));
+            } catch (const DbException &e) {
+                didThrow = true;
+                qDebug() << Q_FUNC_INFO << e.what();
+            }
+            QCOMPARE(didThrow, shouldThrow);
         }
-        QCOMPARE( didThrow, shouldThrow );
-      }
     }
 
 };
 
-AKTEST_MAIN( DbIntrospectorTest )
+AKTEST_MAIN(DbIntrospectorTest)
 
 #include "dbintrospectortest.moc"

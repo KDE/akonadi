@@ -34,7 +34,8 @@
 
 using namespace Akonadi::Server;
 
-Status::Status(): Handler()
+Status::Status()
+    : Handler()
 {
 }
 
@@ -51,60 +52,60 @@ bool Status::parseStream()
     // status     = "STATUS" SP mailbox SP "(" status-att *(SP status-att) ")"
     // status-att = "MESSAGES" / "RECENT" / "UNSEEN" / "SIZE"
 
-  const QByteArray mailbox = m_streamParser->readString();
-  QList<QByteArray> attributeList = m_streamParser->readParenthesizedList();
-  const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
+    const QByteArray mailbox = m_streamParser->readString();
+    QList<QByteArray> attributeList = m_streamParser->readParenthesizedList();
+    const Collection col = HandlerHelper::collectionFromIdOrName(mailbox);
 
-  if ( !col.isValid() ) {
-    return failureResponse( "No status for this folder" );
-  }
+    if (!col.isValid()) {
+        return failureResponse("No status for this folder");
+    }
 
     // Responses:
     // REQUIRED untagged responses: STATUS
 
-  qint64 itemCount, itemSize;
-  if ( !HandlerHelper::itemStatistics( col, itemCount, itemSize ) ) {
-    return failureResponse( "Failed to query statistics." );
-  }
+    qint64 itemCount, itemSize;
+    if (!HandlerHelper::itemStatistics(col, itemCount, itemSize)) {
+        return failureResponse("Failed to query statistics.");
+    }
 
     // build STATUS response
-  QByteArray statusResponse;
+    QByteArray statusResponse;
     // MESSAGES - The number of messages in the mailbox
-  if ( attributeList.contains( AKONADI_ATTRIBUTE_MESSAGES ) ) {
-    statusResponse += AKONADI_ATTRIBUTE_MESSAGES " ";
-    statusResponse += QByteArray::number( itemCount );
-  }
-
-  if ( attributeList.contains( AKONADI_ATTRIBUTE_UNSEEN ) ) {
-    if ( !statusResponse.isEmpty() ) {
-      statusResponse += " ";
+    if (attributeList.contains(AKONADI_ATTRIBUTE_MESSAGES)) {
+        statusResponse += AKONADI_ATTRIBUTE_MESSAGES " ";
+        statusResponse += QByteArray::number(itemCount);
     }
-    statusResponse += AKONADI_ATTRIBUTE_UNSEEN " ";
 
-    // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
-    const int count = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
-                                                                            << QLatin1String( AKONADI_FLAG_IGNORED ) );
-    if ( count < 0 ) {
-      return failureResponse( "Unable to retrieve unread count" );
+    if (attributeList.contains(AKONADI_ATTRIBUTE_UNSEEN)) {
+        if (!statusResponse.isEmpty()) {
+            statusResponse += " ";
+        }
+        statusResponse += AKONADI_ATTRIBUTE_UNSEEN " ";
+
+        // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
+        const int count = HandlerHelper::itemWithFlagsCount(col, QStringList() << QLatin1String(AKONADI_FLAG_SEEN)
+                                                            << QLatin1String(AKONADI_FLAG_IGNORED));
+        if (count < 0) {
+            return failureResponse("Unable to retrieve unread count");
+        }
+        statusResponse += QByteArray::number(itemCount - count);
     }
-    statusResponse += QByteArray::number( itemCount - count );
-  }
-  if ( attributeList.contains( AKONADI_PARAM_SIZE ) ) {
-    if ( !statusResponse.isEmpty() ) {
-      statusResponse += " ";
+    if (attributeList.contains(AKONADI_PARAM_SIZE)) {
+        if (!statusResponse.isEmpty()) {
+            statusResponse += " ";
+        }
+        statusResponse += AKONADI_PARAM_SIZE " ";
+        statusResponse += QByteArray::number(itemSize);
     }
-    statusResponse += AKONADI_PARAM_SIZE " ";
-    statusResponse += QByteArray::number( itemSize );
-  }
 
-  Response response;
-  response.setUntagged();
-  response.setString( "STATUS \"" + HandlerHelper::pathForCollection( col ).toUtf8() + "\" (" + statusResponse + ')' );
-  Q_EMIT responseAvailable( response );
+    Response response;
+    response.setUntagged();
+    response.setString("STATUS \"" + HandlerHelper::pathForCollection(col).toUtf8() + "\" (" + statusResponse + ')');
+    Q_EMIT responseAvailable(response);
 
-  response.setSuccess();
-  response.setTag( tag() );
-  response.setString( "STATUS completed" );
-  Q_EMIT responseAvailable( response );
-  return true;
+    response.setSuccess();
+    response.setTag(tag());
+    response.setString("STATUS completed");
+    Q_EMIT responseAvailable(response);
+    return true;
 }

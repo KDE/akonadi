@@ -26,26 +26,33 @@
  * Convenience wrappers on top of XdgBaseDirs that are instance namespace aware.
  * @since 1.7
  */
-namespace AkStandardDirs
-{
-  /** Returns path to the config file @p configFile. */
-  QString configFile( const QString &configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly );
+namespace AkStandardDirs {
+/**
+ * Returns path to the config file @p configFile.
+ */
+QString configFile(const QString &configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
 
-  /** Returns the full path to the server config file (akonadiserverrc). */
-  QString serverConfigFile( Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly );
+/**
+ * Returns the full path to the server config file (akonadiserverrc).
+ */
+QString serverConfigFile(Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
 
-  /** Returns the full path to the connection config file (akonadiconnectionrc). */
-  QString connectionConfigFile( Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly );
+/**
+ * Returns the full path to the connection config file (akonadiconnectionrc).
+ */
+QString connectionConfigFile(Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
 
-  /** Returns the full path to the agent config file (agentsrc). */
-  QString agentConfigFile( Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly );
+/**
+ * Returns the full path to the agent config file (agentsrc).
+ */
+QString agentConfigFile(Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
 
-  /**
-   * Instance-aware wrapper for XdgBaseDirs::saveDir().
-   * @note @p relPath does not need to include the "akonadi/" folder.
-   * @see XdgBaseDirs::saveDir()
-   */
-  QString saveDir( const char *resource, const QString &relPath = QString() );
+/**
+ * Instance-aware wrapper for XdgBaseDirs::saveDir().
+ * @note @p relPath does not need to include the "akonadi/" folder.
+ * @see XdgBaseDirs::saveDir()
+ */
+QString saveDir(const char *resource, const QString &relPath = QString());
 }
 
 #endif

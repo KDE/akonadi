@@ -37,114 +37,114 @@ using namespace Akonadi::Server;
 Tracer *Tracer::mSelf = 0;
 
 Tracer::Tracer()
-  : mTracerBackend( 0 )
+    : mTracerBackend(0)
 {
-  activateTracer( currentTracer() );
+    activateTracer(currentTracer());
 
-  new TracerAdaptor( this );
+    new TracerAdaptor(this);
 
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/tracing" ), this, QDBusConnection::ExportAdaptors );
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/tracing"), this, QDBusConnection::ExportAdaptors);
 }
 
 Tracer::~Tracer()
 {
-  delete mTracerBackend;
-  mTracerBackend = 0;
+    delete mTracerBackend;
+    mTracerBackend = 0;
 }
 
 Tracer *Tracer::self()
 {
-  if ( !mSelf ) {
-    mSelf = new Tracer();
-  }
+    if (!mSelf) {
+        mSelf = new Tracer();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
-void Tracer::beginConnection( const QString &identifier, const QString &msg )
+void Tracer::beginConnection(const QString &identifier, const QString &msg)
 {
-  mMutex.lock();
-  mTracerBackend->beginConnection( identifier, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->beginConnection(identifier, msg);
+    mMutex.unlock();
 }
 
-void Tracer::endConnection( const QString &identifier, const QString &msg )
+void Tracer::endConnection(const QString &identifier, const QString &msg)
 {
-  mMutex.lock();
-  mTracerBackend->endConnection( identifier, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->endConnection(identifier, msg);
+    mMutex.unlock();
 }
 
-void Tracer::connectionInput( const QString &identifier, const QByteArray &msg )
+void Tracer::connectionInput(const QString &identifier, const QByteArray &msg)
 {
-  mMutex.lock();
-  mTracerBackend->connectionInput( identifier, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->connectionInput(identifier, msg);
+    mMutex.unlock();
 }
 
-void Tracer::connectionOutput( const QString &identifier, const QByteArray &msg )
+void Tracer::connectionOutput(const QString &identifier, const QByteArray &msg)
 {
-  mMutex.lock();
-  mTracerBackend->connectionOutput( identifier, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->connectionOutput(identifier, msg);
+    mMutex.unlock();
 }
 
-void Tracer::signal( const QString &signalName, const QString &msg )
+void Tracer::signal(const QString &signalName, const QString &msg)
 {
-  mMutex.lock();
-  mTracerBackend->signal( signalName, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->signal(signalName, msg);
+    mMutex.unlock();
 }
 
-void Tracer::signal( const char *signalName, const QString &msg )
+void Tracer::signal(const char *signalName, const QString &msg)
 {
-  signal( QLatin1String( signalName ), msg );
+    signal(QLatin1String(signalName), msg);
 }
 
-void Tracer::warning( const QString &componentName, const QString &msg )
+void Tracer::warning(const QString &componentName, const QString &msg)
 {
-  mMutex.lock();
-  mTracerBackend->warning( componentName, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->warning(componentName, msg);
+    mMutex.unlock();
 }
 
-void Tracer::error( const QString &componentName, const QString &msg )
+void Tracer::error(const QString &componentName, const QString &msg)
 {
-  mMutex.lock();
-  mTracerBackend->error( componentName, msg );
-  mMutex.unlock();
+    mMutex.lock();
+    mTracerBackend->error(componentName, msg);
+    mMutex.unlock();
 }
 
-void Tracer::error( const char *componentName, const QString &msg )
+void Tracer::error(const char *componentName, const QString &msg)
 {
-  error( QLatin1String( componentName ), msg );
+    error(QLatin1String(componentName), msg);
 }
 
 QString Tracer::currentTracer() const
 {
-  QMutexLocker locker( &mMutex );
-  const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
-  return settings.value( QLatin1String( "Debug/Tracer" ), DEFAULT_TRACER ).toString();
+    QMutexLocker locker(&mMutex);
+    const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
+    return settings.value(QLatin1String("Debug/Tracer"), DEFAULT_TRACER).toString();
 }
 
-void Tracer::activateTracer( const QString &type )
+void Tracer::activateTracer(const QString &type)
 {
-  QMutexLocker locker( &mMutex );
-  delete mTracerBackend;
-  mTracerBackend = 0;
+    QMutexLocker locker(&mMutex);
+    delete mTracerBackend;
+    mTracerBackend = 0;
 
-  QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
-  settings.setValue( QLatin1String( "Debug/Tracer" ), type );
-  settings.sync();
+    QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
+    settings.setValue(QLatin1String("Debug/Tracer"), type);
+    settings.sync();
 
-  if ( type == QLatin1String( "file" ) ) {
-    const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
-    const QString file = settings.value( QLatin1String( "Debug/File" ), QLatin1String( "/dev/null" ) ).toString();
-    mTracerBackend = new FileTracer( file );
-  } else if ( type == QLatin1String( "null" ) ) {
-    mTracerBackend = new NullTracer();
-  } else {
-    mTracerBackend = new DBusTracer();
-  }
-  Q_ASSERT( mTracerBackend );
+    if (type == QLatin1String("file")) {
+        const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
+        const QString file = settings.value(QLatin1String("Debug/File"), QLatin1String("/dev/null")).toString();
+        mTracerBackend = new FileTracer(file);
+    } else if (type == QLatin1String("null")) {
+        mTracerBackend = new NullTracer();
+    } else {
+        mTracerBackend = new DBusTracer();
+    }
+    Q_ASSERT(mTracerBackend);
 }

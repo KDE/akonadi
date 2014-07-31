@@ -34,7 +34,7 @@ class DataStore;
 */
 class Transaction
 {
-  public:
+public:
     /**
       Starts a new transaction. The transaction will automatically rolled back
       on destruction if it hasn't been committed explicitly before.
@@ -44,7 +44,7 @@ class Transaction
       the lifetime of a Transaction object.
       @param beginTransaction if false, the transaction won't be started, until begin is eplicitely called. The default is to begin the transaction right away.
     */
-    explicit Transaction( DataStore *db, bool beginTransaction = true );
+    explicit Transaction(DataStore *db, bool beginTransaction = true);
 
     /**
       Rolls back the transaction if it hasn't been committed explicitly.
@@ -61,8 +61,8 @@ class Transaction
 
     void begin();
 
-  private:
-    Q_DISABLE_COPY( Transaction )
+private:
+    Q_DISABLE_COPY(Transaction)
     DataStore *mDb;
     bool mGlobal;
     bool mCommitted;

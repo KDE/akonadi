@@ -36,13 +36,13 @@ namespace Server {
  */
 class UpdateSet
 {
-  public:
+public:
     typedef QMap<int, UpdateSet> Map;
 
     UpdateSet()
-      : version( -1 )
-      , abortOnFailure( false )
-      , complex( false )
+        : version(-1)
+        , abortOnFailure(false)
+        , complex(false)
     {
     }
 
@@ -55,18 +55,18 @@ class UpdateSet
 /**
   Updates the database schema.
 */
-class DbUpdater: public QObject
+class DbUpdater : public QObject
 {
     Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new database updates.
      *
      * @param database The reference to the database.
      * @param filename The file containing the update descriptions.
      */
-    DbUpdater( const QSqlDatabase &database, const QString &filename );
+    DbUpdater(const QSqlDatabase &database, const QString &filename);
 
     /**
      * Starts the update process.
@@ -74,16 +74,16 @@ class DbUpdater: public QObject
      */
     bool run();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     bool complexUpdate_25();
 
-  private:
+private:
     friend class ::DbUpdaterTest;
 
-    bool updateApplicable( const QString &backends ) const;
-    QString buildRawSqlStatement( const QDomElement &element ) const;
+    bool updateApplicable(const QString &backends) const;
+    QString buildRawSqlStatement(const QDomElement &element) const;
 
-    bool parseUpdateSets( int, UpdateSet::Map &updates ) const;
+    bool parseUpdateSets(int, UpdateSet::Map &updates) const;
 
     QSqlDatabase m_database;
     QString m_filename;

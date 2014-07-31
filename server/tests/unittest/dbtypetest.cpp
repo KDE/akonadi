@@ -27,37 +27,37 @@
 
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE( DbType::Type )
+Q_DECLARE_METATYPE(DbType::Type)
 
 class DbTypeTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testDriverName_data()
     {
-      QTest::addColumn<QString>( "driverName" );
-      QTest::addColumn<DbType::Type>( "dbType" );
+        QTest::addColumn<QString>("driverName");
+        QTest::addColumn<DbType::Type>("dbType");
 
-      QTest::newRow( "mysql" ) << "QMYSQL" << DbType::MySQL;
-      QTest::newRow( "sqlite" ) << "QSQLITE" << DbType::Sqlite;
-      QTest::newRow( "sqlite3" ) << "QSQLITE3" << DbType::Sqlite;
-      QTest::newRow( "psql" ) << "QPSQL" << DbType::PostgreSQL;
+        QTest::newRow("mysql") << "QMYSQL" << DbType::MySQL;
+        QTest::newRow("sqlite") << "QSQLITE" << DbType::Sqlite;
+        QTest::newRow("sqlite3") << "QSQLITE3" << DbType::Sqlite;
+        QTest::newRow("psql") << "QPSQL" << DbType::PostgreSQL;
     }
 
     void testDriverName()
     {
-      QFETCH( QString, driverName );
-      QFETCH( DbType::Type, dbType );
+        QFETCH(QString, driverName);
+        QFETCH(DbType::Type, dbType);
 
-      QCOMPARE( DbType::typeForDriverName( driverName ), dbType );
+        QCOMPARE(DbType::typeForDriverName(driverName), dbType);
 
-      if ( QSqlDatabase::drivers().contains( driverName ) ) {
-        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName );
-        QCOMPARE( DbType::type( db ), dbType );
-      }
+        if (QSqlDatabase::drivers().contains(driverName)) {
+            QSqlDatabase db = QSqlDatabase::addDatabase(driverName, driverName);
+            QCOMPARE(DbType::type(db), dbType);
+        }
     }
 };
 
-AKTEST_MAIN( DbTypeTest )
+AKTEST_MAIN(DbTypeTest)
 
 #include "dbtypetest.moc"

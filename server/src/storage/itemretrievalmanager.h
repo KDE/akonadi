@@ -41,36 +41,36 @@ class ItemRetrievalRequest;
 /** Manages and processes item retrieval requests. */
 class ItemRetrievalManager : public QObject
 {
-  Q_OBJECT
-  public:
-    ItemRetrievalManager( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    ItemRetrievalManager(QObject *parent = 0);
     ~ItemRetrievalManager();
 
-    void requestItemDelivery( qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
-                              const QString &resource, const QStringList &parts );
+    void requestItemDelivery(qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
+                             const QString &resource, const QStringList &parts);
 
     /**
      * Added for convenience. ItemRetrievalManager takes ownership over the
      * pointer and deletes it when the request is processed.
      */
-    void requestItemDelivery( ItemRetrievalRequest *request );
+    void requestItemDelivery(ItemRetrievalRequest *request);
 
     static ItemRetrievalManager *instance();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void requestAdded();
 
-  private:
-    OrgFreedesktopAkonadiResourceInterface *resourceInterface( const QString &id );
+private:
+    OrgFreedesktopAkonadiResourceInterface *resourceInterface(const QString &id);
 
-  private Q_SLOTS:
-    void serviceOwnerChanged( const QString &serviceName, const QString &oldOwner, const QString &newOwner );
+private Q_SLOTS:
+    void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void processRequest();
-    void triggerCollectionSync( const QString &resource, qint64 colId );
-    void triggerCollectionTreeSync( const QString &resource );
-    void retrievalJobFinished( ItemRetrievalRequest *request, const QString &errorMsg );
+    void triggerCollectionSync(const QString &resource, qint64 colId);
+    void triggerCollectionTreeSync(const QString &resource);
+    void retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg);
 
-  private:
+private:
     static ItemRetrievalManager *sInstance;
     /// Protects mPendingRequests and every Request object posted to it
     QReadWriteLock *mLock;

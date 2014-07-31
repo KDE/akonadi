@@ -36,40 +36,40 @@ class Scope;
 /**
   Helper methods to generate WHERE clauses for collection queries based on a Scope object.
 */
-namespace CollectionQueryHelper
-{
-  /**
-    Add conditions to @p qb for the given remote identifier @p rid.
-    The rid context is taken from @p connection.
-  */
-  void remoteIdToQuery( const QStringList &rids, Connection *connection, QueryBuilder &qb );
+namespace CollectionQueryHelper {
 
-  /**
-    Add conditions to @p qb for the given collection operation scope @p scope.
-    The rid context is taken from @p connection, if none is specified an exception is thrown.
-  */
-  void scopeToQuery( const Scope &scope, Connection *connection, QueryBuilder &qb );
+/**
+  Add conditions to @p qb for the given remote identifier @p rid.
+  The rid context is taken from @p connection.
+*/
+void remoteIdToQuery(const QStringList &rids, Connection *connection, QueryBuilder &qb);
 
-  /**
-    Checks if a collection could exist in the given parent folder with the given name.
-  */
-  bool hasAllowedName( const Collection &collection, const QString &name, Collection::Id parent );
+/**
+  Add conditions to @p qb for the given collection operation scope @p scope.
+  The rid context is taken from @p connection, if none is specified an exception is thrown.
+*/
+void scopeToQuery(const Scope &scope, Connection *connection, QueryBuilder &qb);
 
-  /**
-    Checks if a collection could be moved from its current parent into the given one.
-  */
-  bool canBeMovedTo ( const Collection &collection, const Collection &parent );
+/**
+  Checks if a collection could exist in the given parent folder with the given name.
+*/
+bool hasAllowedName(const Collection &collection, const QString &name, Collection::Id parent);
 
-  /**
-    Retrieve the collection referred to by the given hierarchical RID chain.
-  */
-  Collection resolveHierarchicalRID( const QStringList &ridChain, Resource::Id resId );
+/**
+  Checks if a collection could be moved from its current parent into the given one.
+*/
+bool canBeMovedTo(const Collection &collection, const Collection &parent);
 
-  /**
-    Returns an existing collection specified by the given scope. If that does not
-    specify exactly one valid collection, an exception is thrwon.
-  */
-  Collection singleCollectionFromScope( const Scope &scope, Connection *connection );
+/**
+  Retrieve the collection referred to by the given hierarchical RID chain.
+*/
+Collection resolveHierarchicalRID(const QStringList &ridChain, Resource::Id resId);
+
+/**
+  Returns an existing collection specified by the given scope. If that does not
+  specify exactly one valid collection, an exception is thrwon.
+*/
+Collection singleCollectionFromScope(const Scope &scope, Connection *connection);
 }
 
 } // namespace Server

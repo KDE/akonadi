@@ -25,16 +25,16 @@
 
 class DbInitializerTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
 
     void testRun_data();
     void testRun();
 
-  private:
-    static QString readNextStatement( QIODevice *io );
+private:
+    static QString readNextStatement(QIODevice *io);
 };
 
 #endif

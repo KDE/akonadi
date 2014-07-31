@@ -37,8 +37,10 @@ namespace Server {
  */
 class TracerInterface
 {
-  public:
-    virtual ~TracerInterface() {}
+public:
+    virtual ~TracerInterface()
+    {
+    }
 
     /**
      * This method is called whenever a new data (imap) connection to the akonadi server
@@ -49,7 +51,7 @@ class TracerInterface
      *
      * @param msg A message specific string.
      */
-    virtual void beginConnection( const QString &identifier, const QString &msg ) = 0;
+    virtual void beginConnection(const QString &identifier, const QString &msg) = 0;
 
     /**
      * This method is called whenever a data (imap) connection to akonadi server is
@@ -58,7 +60,7 @@ class TracerInterface
      * @param identifier The unique identifier of this connection.
      * @param msg A message specific string.
      */
-    virtual void endConnection( const QString &identifier, const QString &msg ) = 0;
+    virtual void endConnection(const QString &identifier, const QString &msg) = 0;
 
     /**
      * This method is called whenever the akonadi server retrieves some data from the
@@ -68,7 +70,7 @@ class TracerInterface
      *                   is retrieved.
      * @param msg A message specific string.
      */
-    virtual void connectionInput( const QString &identifier, const QByteArray &msg ) = 0;
+    virtual void connectionInput(const QString &identifier, const QByteArray &msg) = 0;
 
     /**
      * This method is called whenever the akonadi server sends some data out to a client.
@@ -77,7 +79,7 @@ class TracerInterface
      *                   data is send.
      * @param msg A message specific string.
      */
-    virtual void connectionOutput( const QString &identifier, const QByteArray &msg ) = 0;
+    virtual void connectionOutput(const QString &identifier, const QByteArray &msg) = 0;
 
     /**
      * This method is called whenever a dbus signal is emitted on the bus.
@@ -85,17 +87,17 @@ class TracerInterface
      * @param signalName The name of the signal being sent.
      * @param msg A message specific string.
      */
-    virtual void signal( const QString &signalName, const QString &msg ) = 0;
+    virtual void signal(const QString &signalName, const QString &msg) = 0;
 
     /**
      * This method is called whenever a component wants to output a warning.
      */
-    virtual void warning( const QString &componentName, const QString &msg ) = 0;
+    virtual void warning(const QString &componentName, const QString &msg) = 0;
 
     /**
      * This method is called whenever a component wants to output an error.
      */
-    virtual void error( const QString &componentName, const QString &msg ) = 0;
+    virtual void error(const QString &componentName, const QString &msg) = 0;
 };
 
 } // namespace Server

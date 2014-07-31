@@ -27,13 +27,13 @@ namespace Server {
 
 class NotificationCollector;
 
-class FakeConnection: public Connection
+class FakeConnection : public Connection
 {
     Q_OBJECT
 
-  public:
+public:
     FakeConnection(quintptr socketDescriptor, QObject *parent = 0);
-    FakeConnection(QObject* parent = 0);
+    FakeConnection(QObject *parent = 0);
     virtual ~FakeConnection();
 
     DataStore *storageBackend();

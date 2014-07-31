@@ -47,7 +47,7 @@ PartStreamer::PartStreamer(Connection *connection, ImapStreamParser *parser,
     , mItem(pimItem)
 {
     // Make sure the file_db_data path exists
-    AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) );
+    AkStandardDirs::saveDir("data", QLatin1String("file_db_data"));
 }
 
 PartStreamer::~PartStreamer()
@@ -59,7 +59,7 @@ QByteArray PartStreamer::error() const
     return mError;
 }
 
-bool PartStreamer::streamNonliteral(Part& part, qint64& partSize, QByteArray& value)
+bool PartStreamer::streamNonliteral(Part &part, qint64 &partSize, QByteArray &value)
 {
     value = mStreamParser->readString();
     if (part.partType().ns() == QLatin1String("PLD")) {
@@ -92,7 +92,7 @@ bool PartStreamer::streamNonliteral(Part& part, qint64& partSize, QByteArray& va
     return true;
 }
 
-bool PartStreamer::streamLiteral(Part& part, qint64& partSize, QByteArray& value)
+bool PartStreamer::streamLiteral(Part &part, qint64 &partSize, QByteArray &value)
 {
     const qint64 dataSize = mStreamParser->remainingLiteralSize();
     if (part.partType().ns() == QLatin1String("PLD")) {
@@ -120,15 +120,14 @@ bool PartStreamer::streamLiteral(Part& part, qint64& partSize, QByteArray& value
             part.setData(value);
             part.setDatasize(value.size());
             if (!part.insert()) {
-              mError = "Failed to insert part to database";
-              return false;
+                mError = "Failed to insert part to database";
+                return false;
             }
         }
     }
 
     return true;
 }
-
 
 bool PartStreamer::streamLiteralToFile(qint64 dataSize, Part &part, QByteArray &value)
 {
@@ -156,9 +155,9 @@ bool PartStreamer::streamLiteralToFile(qint64 dataSize, Part &part, QByteArray &
         if (part.isValid()) {
             PartHelper::update(&part, value, dataSize);
         } else {
-            part.setData( value );
-            part.setDatasize( dataSize );
-            if ( !PartHelper::insert( &part ) ) {
+            part.setData(value);
+            part.setDatasize(dataSize);
+            if (!PartHelper::insert(&part)) {
                 mError = "Unable to add item part";
                 return false;
             }
@@ -197,7 +196,6 @@ bool PartStreamer::streamLiteralToFileDirectly(qint64 dataSize, Part &part)
         }
         filename = PartHelper::updateFileNameRevision(filename);
     }
-
 
     QFileInfo finfo(filename);
     if (finfo.isAbsolute()) {
@@ -252,7 +250,6 @@ bool PartStreamer::streamLiteralToFileDirectly(qint64 dataSize, Part &part)
     return true;
 }
 
-
 bool PartStreamer::stream(const QByteArray &command, bool checkExists,
                           QByteArray &partName, qint64 &partSize, bool *changed)
 {
@@ -266,7 +263,7 @@ bool PartStreamer::stream(const QByteArray &command, bool checkExists,
     }
 
     ImapParser::splitVersionedKey(command, partName, partVersion);
-    const PartType partType = PartTypeHelper::fromFqName( partName );
+    const PartType partType = PartTypeHelper::fromFqName(partName);
 
     Part part;
 
@@ -308,6 +305,3 @@ bool PartStreamer::stream(const QByteArray &command, bool checkExists,
 
     return ok;
 }
-
-
-

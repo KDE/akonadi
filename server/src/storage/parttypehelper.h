@@ -33,64 +33,63 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(PartTypeException);
 /**
  * Methods for dealing with the PartType table.
  */
-namespace PartTypeHelper
-{
-  /**
-   * Retrieve (or create) PartType for the given fully qualified name.
-   * @param fqName Fully qualified name (NS:NAME).
-   * @throws PartTypeException
-   */
-  PartType fromFqName( const QString &fqName );
+namespace PartTypeHelper {
+/**
+ * Retrieve (or create) PartType for the given fully qualified name.
+ * @param fqName Fully qualified name (NS:NAME).
+ * @throws PartTypeException
+ */
+PartType fromFqName(const QString &fqName);
 
-  /**
-   * Convenience overload of the above.
-   */
-  PartType fromFqName( const QByteArray &fqName );
+/**
+ * Convenience overload of the above.
+ */
+PartType fromFqName(const QByteArray &fqName);
 
-  /**
-   * Retrieve (or create) PartType for the given namespace and type name.
-   * @param ns Namespace
-   * @param typeName Part type name.
-   * @throws PartTypeException
-   */
-  PartType fromName( const QString &ns, const QString &typeName );
+/**
+ * Retrieve (or create) PartType for the given namespace and type name.
+ * @param ns Namespace
+ * @param typeName Part type name.
+ * @throws PartTypeException
+ */
+PartType fromName(const QString &ns, const QString &typeName);
 
-  /**
-   * Convenience overload of the above.
-   */
-  PartType fromName( const char *ns, const char *typeName );
+/**
+ * Convenience overload of the above.
+ */
+PartType fromName(const char *ns, const char *typeName);
 
-  /**
-   * Returns a query condition that matches the given part.
-   * @param fqName fully-qualified part type name
-   * @throws PartTypeException
-   */
-  Query::Condition conditionFromFqName( const QString &fqName );
+/**
+ * Returns a query condition that matches the given part.
+ * @param fqName fully-qualified part type name
+ * @throws PartTypeException
+ */
+Query::Condition conditionFromFqName(const QString &fqName);
 
-  /**
-   * Returns a query condition that mathes the given part type list.
-   * @param fqNames fully qualified part type name list
-   * @throws PartTypeException
-   */
-  Query::Condition conditionFromFqNames( const QStringList &fqNames );
+/**
+ * Returns a query condition that mathes the given part type list.
+ * @param fqNames fully qualified part type name list
+ * @throws PartTypeException
+ */
+Query::Condition conditionFromFqNames(const QStringList &fqNames);
 
-  /**
-   * Convenience overload for the above.
-   */
-  Query::Condition conditionFromFqNames( const QList<QByteArray> &fqNames );
+/**
+ * Convenience overload for the above.
+ */
+Query::Condition conditionFromFqNames(const QList<QByteArray> &fqNames);
 
-  /**
-   * Parses a fully qualified part type name into namespace/name.
-   * @param fqName fully-qualified part type name
-   * @throws PartTypeException if @p fqName does not match the NS:NAME schema
-   * @internal
-   */
-  QPair<QString, QString> parseFqName( const QString &fqName );
+/**
+ * Parses a fully qualified part type name into namespace/name.
+ * @param fqName fully-qualified part type name
+ * @throws PartTypeException if @p fqName does not match the NS:NAME schema
+ * @internal
+ */
+QPair<QString, QString> parseFqName(const QString &fqName);
 
-  /**
-   * Returns full part name
-   */
-  QString fullName( const PartType &type );
+/**
+ * Returns full part name
+ */
+QString fullName(const PartType &type);
 
 } // namespace PartTypeHelper
 

@@ -26,28 +26,28 @@
 #include "result.h"
 #include "nepomukquery_export.h"
 
-Q_DECLARE_METATYPE( Nepomuk::Query::Result )
-Q_DECLARE_METATYPE( Soprano::Node )
-Q_DECLARE_METATYPE( QList<Nepomuk::Query::Result> )
+Q_DECLARE_METATYPE(Nepomuk::Query::Result)
+Q_DECLARE_METATYPE(Soprano::Node)
+Q_DECLARE_METATYPE(QList<Nepomuk::Query::Result>)
 typedef QHash<QString, QString> RequestPropertyMapDBus;
-Q_DECLARE_METATYPE( RequestPropertyMapDBus )
+Q_DECLARE_METATYPE(RequestPropertyMapDBus)
 
 namespace Nepomuk {
-    namespace Query {
-        /**
-         * Register the DBus types necessary for communication with the Nepomuk
-         * query service. This method is only made public for the query service
-         * itself which links to this library, too.
-         */
-        NEPOMUKQUERY_EXPORT void registerDBusTypes();
-    }
+namespace Query {
+/**
+ * Register the DBus types necessary for communication with the Nepomuk
+ * query service. This method is only made public for the query service
+ * itself which links to this library, too.
+ */
+NEPOMUKQUERY_EXPORT void registerDBusTypes();
+}
 }
 
 // We export the non-public operators so that we do not need duplicated code in kdebase
-NEPOMUKQUERY_EXPORT QDBusArgument &operator<<( QDBusArgument &arg, const Soprano::Node &node );
-NEPOMUKQUERY_EXPORT const QDBusArgument &operator>>( const QDBusArgument &arg, Soprano::Node &node );
+NEPOMUKQUERY_EXPORT QDBusArgument &operator<<(QDBusArgument &arg, const Soprano::Node &node);
+NEPOMUKQUERY_EXPORT const QDBusArgument &operator>>(const QDBusArgument &arg, Soprano::Node &node);
 
-NEPOMUKQUERY_EXPORT QDBusArgument &operator<<( QDBusArgument &arg, const Nepomuk::Query::Result &result );
-NEPOMUKQUERY_EXPORT const QDBusArgument &operator>>( const QDBusArgument &arg, Nepomuk::Query::Result &result );
+NEPOMUKQUERY_EXPORT QDBusArgument &operator<<(QDBusArgument &arg, const Nepomuk::Query::Result &result);
+NEPOMUKQUERY_EXPORT const QDBusArgument &operator>>(const QDBusArgument &arg, Nepomuk::Query::Result &result);
 
 #endif

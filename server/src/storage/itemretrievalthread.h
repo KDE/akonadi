@@ -30,12 +30,13 @@ namespace Server {
 /** Container thread for the item retrieval manager. */
 class ItemRetrievalThread : public QThread
 {
-  Q_OBJECT
-  public:
-    ItemRetrievalThread( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    ItemRetrievalThread(QObject *parent = 0);
 
-  protected:
-    /* reimpl */ void run();
+protected:
+    /* reimpl */
+    void run();
 };
 
 } // namespace Server

@@ -37,13 +37,13 @@ public:
     bool parseStream();
 
 protected:
-    bool mergeItem( PimItem &newItem, PimItem &currentItem,
-                    const ChangedAttributes &itemFlags,
-                    const ChangedAttributes &itemTagsRID,
-                    const ChangedAttributes &itemTagsGID );
+    bool mergeItem(PimItem &newItem, PimItem &currentItem,
+                   const ChangedAttributes &itemFlags,
+                   const ChangedAttributes &itemTagsRID,
+                   const ChangedAttributes &itemTagsGID);
 
-    bool notify( const PimItem &item, const Collection &collection );
-    bool sendResponse( const QByteArray &response, const PimItem &item );
+    bool notify(const PimItem &item, const Collection &collection);
+    bool sendResponse(const QByteArray &response, const PimItem &item);
 
 private:
     QSet<QByteArray> mChangedParts;

@@ -37,69 +37,69 @@ namespace Akonadi {
 
 class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
 {
-  public:
+public:
     typedef QList<NotificationMessage> List;
     typedef qint64 Id;
 
     enum Type {
-      InvalidType,
-      Collection,
-      Item
+        InvalidType,
+        Collection,
+        Item
     };
 
     enum Operation {
-      InvalidOp,
-      Add,
-      Modify,
-      Move,
-      Remove,
-      Link,
-      Unlink,
-      Subscribe,
-      Unsubscribe
+        InvalidOp,
+        Add,
+        Modify,
+        Move,
+        Remove,
+        Link,
+        Unlink,
+        Subscribe,
+        Unsubscribe
     };
 
     NotificationMessage();
-    NotificationMessage( const NotificationMessage &other );
+    NotificationMessage(const NotificationMessage &other);
     ~NotificationMessage();
 
-    NotificationMessage &operator=( const NotificationMessage &other );
-    bool operator==( const NotificationMessage &other ) const;
+    NotificationMessage &operator=(const NotificationMessage &other);
+    bool operator==(const NotificationMessage &other) const;
 
     static void registerDBusTypes();
 
     QByteArray sessionId() const;
-    void setSessionId( const QByteArray &sessionId );
+    void setSessionId(const QByteArray &sessionId);
 
     Type type() const;
-    void setType( Type type );
+    void setType(Type type);
 
     Operation operation() const;
-    void setOperation( Operation operation );
+    void setOperation(Operation operation);
 
     Id uid() const;
-    void setUid( Id uid );
+    void setUid(Id uid);
 
     QString remoteId() const;
-    void setRemoteId( const QString &remoteId );
+    void setRemoteId(const QString &remoteId);
 
     QByteArray resource() const;
-    void setResource( const QByteArray &resource );
+    void setResource(const QByteArray &resource);
 
     Id parentCollection() const;
-    void setParentCollection( Id parent );
+    void setParentCollection(Id parent);
 
     Id parentDestCollection() const;
-    void setParentDestCollection( Id parent );
+    void setParentDestCollection(Id parent);
 
     QByteArray destinationResource() const;
-    void setDestinationResource( const QByteArray &destResource );
+    void setDestinationResource(const QByteArray &destResource);
 
     QString mimeType() const;
-    void setMimeType( const QString &mimeType );
+    void setMimeType(const QString &mimeType);
 
     QSet<QByteArray> itemParts() const;
-    void setItemParts( const QSet<QByteArray> &parts );
+    void setItemParts(const QSet<QByteArray> &parts);
 
     QString toString() const;
 
@@ -107,26 +107,26 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
       Adds a new notification message to the given list and compresses notifications
       where possible.
     */
-    static void appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg );
+    static void appendAndCompress(NotificationMessage::List &list, const NotificationMessage &msg);
     // BIC: make the above return bool.
-    static void appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg, bool *appended );
+    static void appendAndCompress(NotificationMessage::List &list, const NotificationMessage &msg, bool *appended);
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };
 
 }
 
-QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessage &msg );
-const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessage &msg );
+QDBusArgument &operator<<(QDBusArgument &arg, const Akonadi::NotificationMessage &msg);
+const QDBusArgument &operator>>(const QDBusArgument &arg, Akonadi::NotificationMessage &msg);
 
-uint qHash( const Akonadi::NotificationMessage &msg );
+uint qHash(const Akonadi::NotificationMessage &msg);
 
-Q_DECLARE_TYPEINFO( Akonadi::NotificationMessage, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::NotificationMessage, Q_MOVABLE_TYPE);
 
-Q_DECLARE_METATYPE( Akonadi::NotificationMessage )
-Q_DECLARE_METATYPE( Akonadi::NotificationMessage::List )
+Q_DECLARE_METATYPE(Akonadi::NotificationMessage)
+Q_DECLARE_METATYPE(Akonadi::NotificationMessage::List)
 
 // V2 is used in NotificationSource.xml interface, so it must be
 // defined so that old clients that only include this header

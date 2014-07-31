@@ -34,15 +34,21 @@ class QApplication;
  */
 class AkApplication : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     ~AkApplication();
     void parseCommandLine();
-    void setDescription( const QString &desc ) { mDescription = desc; }
+    void setDescription(const QString &desc)
+    {
+        mDescription = desc;
+    }
 
-    void addCommandLineOptions( const boost::program_options::options_description &desc );
-    void addPositionalCommandLineOption( const char *option, int count );
-    const boost::program_options::variables_map &commandLineArguments() const { return mCmdLineArguments; }
+    void addCommandLineOptions(const boost::program_options::options_description &desc);
+    void addPositionalCommandLineOption(const char *option, int count);
+    const boost::program_options::variables_map &commandLineArguments() const
+    {
+        return mCmdLineArguments;
+    }
 
     void printUsage() const;
 
@@ -58,20 +64,20 @@ class AkApplication : public QObject
     /** Forward to Q[Core]Application for convenience. */
     int exec();
 
-  protected:
-    AkApplication( int &argc, char **argv );
+protected:
+    AkApplication(int &argc, char **argv);
     void init();
     QScopedPointer<QCoreApplication> mApp;
 
-  private:
+private:
     /** Change instane identifier, for unit tests only. */
-    static void setInstanceIdentifier( const QString &instanceId );
-    friend void akTestSetInstanceIdentifier( const QString &instanceId );
+    static void setInstanceIdentifier(const QString &instanceId);
+    friend void akTestSetInstanceIdentifier(const QString &instanceId);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void pollSessionBus() const;
 
-  private:
+private:
     int mArgc;
     char **mArgv;
     QString mDescription;
@@ -86,12 +92,12 @@ class AkApplication : public QObject
 template <typename T>
 class AkApplicationImpl : public AkApplication
 {
-  public:
-    AkApplicationImpl( int &argc, char **argv )
-      : AkApplication( argc, argv )
+public:
+    AkApplicationImpl(int &argc, char **argv)
+        : AkApplication(argc, argv)
     {
-      mApp.reset( new T( argc, argv ) );
-      init();
+        mApp.reset(new T(argc, argv));
+        init();
     }
 };
 

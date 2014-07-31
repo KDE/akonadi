@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef AKONADI_TAGAPPEND_H
 #define AKONADI_TAGAPPEND_H
 
@@ -30,7 +29,7 @@ class TagAppend : public Handler
 {
     Q_OBJECT
 
-  public:
+public:
     TagAppend();
     ~TagAppend();
 

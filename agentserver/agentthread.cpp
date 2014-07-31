@@ -29,35 +29,35 @@
 
 using namespace Akonadi;
 
-AgentThread::AgentThread( const QString &identifier, QObject *factory, QObject *parent )
-  : QThread( parent )
-  , m_identifier( identifier )
-  , m_factory( factory )
-  , m_instance( 0 )
+AgentThread::AgentThread(const QString &identifier, QObject *factory, QObject *parent)
+    : QThread(parent)
+    , m_identifier(identifier)
+    , m_factory(factory)
+    , m_instance(0)
 {
 }
 
 void AgentThread::run()
 {
-  const bool invokeSucceeded = QMetaObject::invokeMethod( m_factory,
-                                                          "createInstance",
-                                                          Qt::DirectConnection,
-                                                          Q_RETURN_ARG( QObject*, m_instance ),
-                                                          Q_ARG( QString, m_identifier ) );
-  if ( invokeSucceeded ) {
-    qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
-  } else {
-    qDebug() << Q_FUNC_INFO << "agent instance creation failed";
-  }
+    const bool invokeSucceeded = QMetaObject::invokeMethod(m_factory,
+                                                           "createInstance",
+                                                           Qt::DirectConnection,
+                                                           Q_RETURN_ARG(QObject *, m_instance),
+                                                           Q_ARG(QString, m_identifier));
+    if (invokeSucceeded) {
+        qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
+    } else {
+        qDebug() << Q_FUNC_INFO << "agent instance creation failed";
+    }
 
-  exec();
-  delete m_instance;
+    exec();
+    delete m_instance;
 }
 
-void AgentThread::configure( qlonglong windowId )
+void AgentThread::configure(qlonglong windowId)
 {
-  QMetaObject::invokeMethod( m_instance,
-                             "configure",
-                             Qt::DirectConnection,
-                             Q_ARG( WId, (WId)windowId ) );
+    QMetaObject::invokeMethod(m_instance,
+                              "configure",
+                              Qt::DirectConnection,
+                              Q_ARG(WId, (WId)windowId));
 }

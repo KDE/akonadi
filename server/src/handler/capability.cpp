@@ -31,7 +31,8 @@
 using namespace Akonadi;
 using namespace Server;
 
-Capability::Capability(): Handler()
+Capability::Capability()
+    : Handler()
 {
 }
 
@@ -41,35 +42,35 @@ Capability::~Capability()
 
 bool Capability::parseStream()
 {
-  ClientCapabilities capabilities;
+    ClientCapabilities capabilities;
 
-  m_streamParser->beginList();
-  while ( !m_streamParser->atListEnd() ) {
-    const QByteArray capability = m_streamParser->readString();
-    if ( capability.isEmpty() ) {
-      break; // shouldn't happen
+    m_streamParser->beginList();
+    while (!m_streamParser->atListEnd()) {
+        const QByteArray capability = m_streamParser->readString();
+        if (capability.isEmpty()) {
+            break; // shouldn't happen
+        }
+        if (capability == AKONADI_PARAM_CAPABILITY_NOTIFY) {
+            capabilities.setNotificationMessageVersion(m_streamParser->readNumber());
+        } else if (capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH) {
+            capabilities.setNoPayloadPath(true);
+        } else if (capability == AKONADI_PARAM_CAPABILITY_SERVERSEARCH) {
+            capabilities.setServerSideSearch(true);
+        } else if (capability == AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING) {
+            capabilities.setAkAppendStreaming(true);
+        } else if (capability == AKONADI_PARAM_CAPABILITY_DIRECTSTREAMING) {
+            capabilities.setDirectStreaming(true);
+        } else {
+            qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
+        }
     }
-    if ( capability == AKONADI_PARAM_CAPABILITY_NOTIFY ) {
-      capabilities.setNotificationMessageVersion( m_streamParser->readNumber() );
-    } else if ( capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH ) {
-      capabilities.setNoPayloadPath( true );
-    } else if ( capability == AKONADI_PARAM_CAPABILITY_SERVERSEARCH ) {
-      capabilities.setServerSideSearch( true );
-    } else if ( capability == AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING ) {
-      capabilities.setAkAppendStreaming( true );
-    } else if ( capability == AKONADI_PARAM_CAPABILITY_DIRECTSTREAMING ) {
-      capabilities.setDirectStreaming( true );
-    } else {
-      qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
-    }
-  }
 
-  connection()->setCapabilities( capabilities );
+    connection()->setCapabilities(capabilities);
 
-  Response response;
-  response.setSuccess();
-  response.setTag( tag() );
-  response.setString( "CAPABILITY completed" );
-  Q_EMIT responseAvailable( response );
-  return true;
+    Response response;
+    response.setSuccess();
+    response.setTag(tag());
+    response.setString("CAPABILITY completed");
+    Q_EMIT responseAvailable(response);
+    return true;
 }

@@ -31,40 +31,39 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Remove::Remove( Scope::SelectionScope scope )
-  : mScope( scope )
+Remove::Remove(Scope::SelectionScope scope)
+    : mScope(scope)
 {
 }
 
 bool Remove::parseStream()
 {
-  mScope.parseScope( m_streamParser );
-  connection()->context()->parseContext( m_streamParser );
-  qDebug() << "Tag context:" << connection()->context()->tagId();
-  qDebug() << "Collection context: " << connection()->context()->collectionId();
+    mScope.parseScope(m_streamParser);
+    connection()->context()->parseContext(m_streamParser);
+    qDebug() << "Tag context:" << connection()->context()->tagId();
+    qDebug() << "Collection context: " << connection()->context()->collectionId();
 
+    SelectQueryBuilder<PimItem> qb;
+    ItemQueryHelper::scopeToQuery(mScope, connection()->context(), qb);
 
-  SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::scopeToQuery( mScope, connection()->context(), qb );
+    DataStore *store = connection()->storageBackend();
+    Transaction transaction(store);
 
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
-
-  if ( qb.exec() ) {
-    const QVector<PimItem> items = qb.result();
-    if ( items.isEmpty() ) {
-      throw HandlerException( "No items found" );
+    if (qb.exec()) {
+        const QVector<PimItem> items = qb.result();
+        if (items.isEmpty()) {
+            throw HandlerException("No items found");
+        }
+        if (!store->cleanupPimItems(items)) {
+            throw HandlerException("Deletion failed");
+        }
+    } else {
+        throw HandlerException("Unable to execute query");
     }
-    if ( !store->cleanupPimItems( items ) ) {
-      throw HandlerException( "Deletion failed" );
+
+    if (!transaction.commit()) {
+        return failureResponse("Unable to commit transaction.");
     }
-  } else {
-    throw HandlerException( "Unable to execute query" );
-  }
 
-  if ( !transaction.commit() ) {
-    return failureResponse( "Unable to commit transaction." );
-  }
-
-  return successResponse( "REMOVE complete" );
+    return successResponse("REMOVE complete");
 }

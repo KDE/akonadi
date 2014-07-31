@@ -25,28 +25,28 @@ using namespace Akonadi;
 
 AgentPluginLoader::~AgentPluginLoader()
 {
-  qDeleteAll( m_pluginLoaders );
-  m_pluginLoaders.clear();
+    qDeleteAll(m_pluginLoaders);
+    m_pluginLoaders.clear();
 }
 
-QPluginLoader *AgentPluginLoader::load( const QString &pluginName )
+QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
 {
-  const QString pluginFile = XdgBaseDirs::findPluginFile( pluginName );
-  if ( pluginFile.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "plugin file:" << pluginName << "not found!";
-    return 0;
-  }
-
-  if ( m_pluginLoaders.contains( pluginFile ) ) {
-    return m_pluginLoaders.value( pluginFile );
-  } else {
-    QPluginLoader *loader = new QPluginLoader( pluginFile );
-    if ( !loader->load() ) {
-      akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
-      delete loader;
-      return 0;
+    const QString pluginFile = XdgBaseDirs::findPluginFile(pluginName);
+    if (pluginFile.isEmpty()) {
+        akError() << Q_FUNC_INFO << "plugin file:" << pluginName << "not found!";
+        return 0;
     }
-    m_pluginLoaders.insert( pluginFile, loader );
-    return loader;
-  }
+
+    if (m_pluginLoaders.contains(pluginFile)) {
+        return m_pluginLoaders.value(pluginFile);
+    } else {
+        QPluginLoader *loader = new QPluginLoader(pluginFile);
+        if (!loader->load()) {
+            akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
+            delete loader;
+            return 0;
+        }
+        m_pluginLoaders.insert(pluginFile, loader);
+        return loader;
+    }
 }

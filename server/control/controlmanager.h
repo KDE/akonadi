@@ -28,20 +28,20 @@
  */
 class ControlManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new control manager.
      */
-    ControlManager( QObject *parent = 0 );
+    ControlManager(QObject *parent = 0);
 
     /**
      * Destroys the control manager.
      */
     ~ControlManager();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Shutdown the Akonadi Control process cleanly.
      */

@@ -32,7 +32,7 @@ namespace Server {
  */
 class DbConfig
 {
-  public:
+public:
 
     virtual ~DbConfig();
 
@@ -59,20 +59,20 @@ class DbConfig
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back.
      */
-    virtual bool init( QSettings &settings ) = 0;
+    virtual bool init(QSettings &settings) = 0;
 
     /**
      * This method applies the configured settings to the QtSql @p database
      * instance.
      */
-    virtual void apply( QSqlDatabase &database ) = 0;
+    virtual void apply(QSqlDatabase &database) = 0;
 
     /**
      * Do session setup/initialization work on @p database.
      * An example would be to run some SQL commands on every new session,
      * typically stuff like setting encodings, transaction isolation levels, etc.
      */
-    virtual void initSession( const QSqlDatabase &database );
+    virtual void initSession(const QSqlDatabase &database);
 
     /**
      * Returns whether an internal server needs to be used.
@@ -101,7 +101,7 @@ class DbConfig
      */
     virtual void setup();
 
-  protected:
+protected:
     DbConfig();
 
     /**
@@ -111,7 +111,7 @@ class DbConfig
      */
     static QString defaultDatabaseName();
 
-  private:
+private:
     qint64 mSizeThreshold;
 };
 

@@ -28,106 +28,106 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Scope::Scope()
-  : mScope( Scope::Invalid )
+    : mScope(Scope::Invalid)
 {
 }
 
-Scope::Scope( SelectionScope scope )
-  : mScope( scope )
+Scope::Scope(SelectionScope scope)
+    : mScope(scope)
 {
 }
 
-void Scope::parseScope( ImapStreamParser *parser )
+void Scope::parseScope(ImapStreamParser *parser)
 {
-  if ( mScope == None || mScope == Uid ) {
-    mUidSet = parser->readSequenceSet();
-    if ( mUidSet.isEmpty() ) {
-      throw HandlerException( "Empty uid set specified" );
-    }
-  } else if ( mScope == Rid ) {
-    if ( parser->hasList() ) {
-      parser->beginList();
-      while ( !parser->atListEnd() ) {
-        mRidSet << parser->readUtf8String();
-      }
+    if (mScope == None || mScope == Uid) {
+        mUidSet = parser->readSequenceSet();
+        if (mUidSet.isEmpty()) {
+            throw HandlerException("Empty uid set specified");
+        }
+    } else if (mScope == Rid) {
+        if (parser->hasList()) {
+            parser->beginList();
+            while (!parser->atListEnd()) {
+                mRidSet << parser->readUtf8String();
+            }
+        } else {
+            mRidSet << parser->readUtf8String();
+        }
+        if (mRidSet.isEmpty()) {
+            throw HandlerException("Empty remote identifier set specified");
+        }
+    } else if (mScope == HierarchicalRid) {
+        parser->beginList();
+        while (!parser->atListEnd()) {
+            parser->beginList();
+            parser->readString(); // uid, invalid here
+            mRidChain.append(parser->readUtf8String());
+            if (!parser->atListEnd()) {
+                throw HandlerException("Invalid hierarchical RID chain format");
+            }
+        }
+    } else if (mScope == Gid) {
+        if (parser->hasList()) {
+            parser->beginList();
+            while (!parser->atListEnd()) {
+                mGidSet << parser->readUtf8String();
+            }
+        } else {
+            mGidSet << parser->readUtf8String();
+        }
+        if (mGidSet.isEmpty()) {
+            throw HandlerException("Empty gid set specified");
+        }
     } else {
-      mRidSet << parser->readUtf8String();
+        throw HandlerException("WTF?!?");
     }
-    if ( mRidSet.isEmpty() ) {
-      throw HandlerException( "Empty remote identifier set specified" );
-    }
-  } else if ( mScope == HierarchicalRid ) {
-    parser->beginList();
-    while ( !parser->atListEnd() ) {
-      parser->beginList();
-      parser->readString(); // uid, invalid here
-      mRidChain.append( parser->readUtf8String() );
-      if ( !parser->atListEnd() ) {
-        throw HandlerException( "Invalid hierarchical RID chain format" );
-      }
-    }
-  } else if ( mScope == Gid ) {
-    if ( parser->hasList() ) {
-      parser->beginList();
-      while ( !parser->atListEnd() ) {
-        mGidSet << parser->readUtf8String();
-      }
-    } else {
-      mGidSet << parser->readUtf8String();
-    }
-    if ( mGidSet.isEmpty() ) {
-      throw HandlerException( "Empty gid set specified" );
-    }
-  } else {
-    throw HandlerException( "WTF?!?" );
-  }
 }
 
-Scope::SelectionScope Scope::selectionScopeFromByteArray( const QByteArray &input )
+Scope::SelectionScope Scope::selectionScopeFromByteArray(const QByteArray &input)
 {
-  if ( input == AKONADI_CMD_UID ) {
-    return Scope::Uid;
-  } else if ( input == AKONADI_CMD_RID ) {
-    return Scope::Rid;
-  } else if ( input == AKONADI_CMD_HRID ) {
-    return Scope::HierarchicalRid;
-  } else if ( input == AKONADI_CMD_GID ) {
-    return Scope::Gid;
-  }
-  return Scope::None;
+    if (input == AKONADI_CMD_UID) {
+        return Scope::Uid;
+    } else if (input == AKONADI_CMD_RID) {
+        return Scope::Rid;
+    } else if (input == AKONADI_CMD_HRID) {
+        return Scope::HierarchicalRid;
+    } else if (input == AKONADI_CMD_GID) {
+        return Scope::Gid;
+    }
+    return Scope::None;
 }
 
 Scope::SelectionScope Scope::scope() const
 {
-  return mScope;
+    return mScope;
 }
 
-void Scope::setScope( SelectionScope scope )
+void Scope::setScope(SelectionScope scope)
 {
-  mScope = scope;
+    mScope = scope;
 }
 
 ImapSet Scope::uidSet() const
 {
-  return mUidSet;
+    return mUidSet;
 }
 
-void Scope::setUidSet( const ImapSet &uidSet )
+void Scope::setUidSet(const ImapSet &uidSet)
 {
-  mUidSet = uidSet;
+    mUidSet = uidSet;
 }
 
 QStringList Scope::ridSet() const
 {
-  return mRidSet;
+    return mRidSet;
 }
 
 QStringList Scope::ridChain() const
 {
-  return mRidChain;
+    return mRidChain;
 }
 
 QStringList Scope::gidSet() const
 {
-  return mGidSet;
+    return mGidSet;
 }

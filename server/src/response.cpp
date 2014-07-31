@@ -27,8 +27,8 @@ static const char *s_resultCodeStrings[] = {
 };
 
 Response::Response()
-    : m_resultCode( OK )
-    , m_tag( "*" )
+    : m_resultCode(OK)
+    , m_tag("*")
 {
 }
 
@@ -39,7 +39,7 @@ Response::~Response()
 QByteArray Response::asString() const
 {
     QByteArray b = m_tag;
-    if ( m_tag != "*" && m_tag != "+" && m_resultCode != USER ) {
+    if (m_tag != "*" && m_tag != "+" && m_resultCode != USER) {
         b += ' ';
         b += s_resultCodeStrings[m_resultCode];
     }
@@ -50,7 +50,7 @@ QByteArray Response::asString() const
 
 Response::ResultCode Response::resultCode() const
 {
-  return m_resultCode;
+    return m_resultCode;
 }
 
 void Response::setSuccess()
@@ -68,29 +68,29 @@ void Response::setError()
     m_resultCode = Response::BAD;
 }
 
-void Response::setTag( const QByteArray &tag )
+void Response::setTag(const QByteArray &tag)
 {
     m_tag = tag;
 }
 
 void Response::setUntagged()
 {
-    m_tag = QByteArray( 1, '*' );
+    m_tag = QByteArray(1, '*');
 }
 
 void Response::setContinuation()
 {
-    m_tag = QByteArray( 1, '+' );
+    m_tag = QByteArray(1, '+');
 }
 
-void Response::setString( const QByteArray &string )
+void Response::setString(const QByteArray &string)
 {
     m_responseString = string;
 }
 
-void Response::setString( const char *string )
+void Response::setString(const char *string)
 {
-    m_responseString = QByteArray( string );
+    m_responseString = QByteArray(string);
 }
 
 void Response::setBye()
@@ -100,5 +100,5 @@ void Response::setBye()
 
 void Response::setUserDefined()
 {
-  m_resultCode = Response::USER;
+    m_resultCode = Response::USER;
 }
