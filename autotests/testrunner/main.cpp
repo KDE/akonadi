@@ -70,12 +70,13 @@ int main( int argc, char **argv )
   KAboutData::setApplicationData(aboutdata);
   parser.addVersionOption();
   parser.addHelpOption();
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("c") << QLatin1String("config"), i18n( "Configuration file to open" ), QLatin1String("configfile"), QLatin1String("config.xml")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("!+[test]"), i18n( "Test to run automatically, interactive if none specified" )));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("testenv"), i18n( "Path where testenvironment would be saved" ), QLatin1String("path")));
+
   aboutdata.setupCommandLine(&parser);
   parser.process(app);
   aboutdata.processCommandLine(&parser);
-
-  parser.addOption(QCommandLineOption(QStringList() << QString()<<QLatin1String("c") << QLatin1String("!+[test]"), i18n( "Test to run automatically, interactive if none specified" )));
-  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("testenv"), i18n( "Path where testenvironment would be saved" ), QLatin1String("path")));
 
   //QT5 app.disableSessionManagement();
 

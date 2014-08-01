@@ -28,8 +28,11 @@
 #include <QApplication>
 
 #include <klocale.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+
+
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 #include "transactionjobs.h"
 #include "itemcreatejob.h"
@@ -84,20 +87,29 @@ void ItemDumper::done( KJob * job )
 
 int main( int argc, char** argv )
 {
-  KCmdLineArgs::init( argc, argv, "test", 0, ki18n("Test Application") ,"1.0" ,ki18n("test app") );
+    KAboutData aboutData( QStringLiteral("test"),
+                          i18n("Test Application"),
+                          QLatin1String("1.0"));
 
-  KCmdLineOptions options;
-  options.add("path <argument>", ki18n("IMAP destination path"));
-  options.add("mimetype <argument>", ki18n("Source mimetype"), "application/octet-stream");
-  options.add("file <argument>", ki18n("Source file"));
-  options.add("count <argument>", ki18n("Number of times this file is added"), "1");
-  KCmdLineArgs::addCmdLineOptions( options );
-  KApplication app;
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QString path = args->getOption( "path" );
-  QString mimetype = args->getOption( "mimetype" );
-  QString file = args->getOption( "file" );
-  int count = qMax( 1, args->getOption( "count").toInt() );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("path"), i18n("IMAP destination path"), QLatin1String("argument")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("mimetype"), i18n("Source mimetype"), QLatin1String("argument"), QLatin1String("application/octet-stream")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("file"), i18n("Source file"), QLatin1String("argument")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("count"), i18n("Number of times this file is added"), QLatin1String("argument"), QLatin1String("1")));
+
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+  QString path = parser.value( QLatin1String("path") );
+  QString mimetype = parser.value( QLatin1String("mimetype") );
+  QString file = parser.value( QLatin1String("file") );
+  int count = qMax( 1, parser.value( QLatin1String("count") ).toInt() );
   ItemDumper d( path, file, mimetype, count );
   return app.exec();
 }

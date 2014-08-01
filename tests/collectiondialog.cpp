@@ -21,17 +21,31 @@
 
 #include <QtCore/QDebug>
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
 #include <klocalizedstring.h>
+#include <qapplication.h>
+#include <QCommandLineParser>
+#include <kaboutdata.h>
+
+
 
 using namespace Akonadi;
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "test", 0, ki18n( "Test Application" ), "1.0", ki18n( "test app" ) );
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("test"),
+                          i18n("Test Application"),
+                          QLatin1String("1.0"));
 
-  KApplication app;
+    KAboutData::setApplicationData(aboutData);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
   CollectionDialog dlg;
   dlg.setMimeTypeFilter( QStringList() << QLatin1String( "text/directory" ) );
