@@ -183,6 +183,8 @@ bool Create::parseStream()
             collection.setDisplayPref(getTristateValue(value));
         } else if (key == AKONADI_PARAM_INDEX) {
             collection.setIndexPref(getTristateValue(value));
+        } else {
+            userDefAttrs << qMakePair(key, value);
         }
     }
 
