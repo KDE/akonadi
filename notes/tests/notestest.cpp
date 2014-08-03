@@ -78,6 +78,61 @@ class NotesTest : public QObject
       QVERIFY(result.lastModifiedDate().isValid());
     }
 
+    void testNormalTextWithoutAttachments()
+    {
+        NoteMessageWrapper note;
+        QString text(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
+            <html> \
+              <head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head> \
+              <body style=\"font-family:'Sans Serif'; font-size:9pt;\"> <p>sdfg</p></body> \
+            </html>"));
+        note.setText(text);
+
+        KMime::Message::Ptr msg = note.message();
+        NoteMessageWrapper result(msg);
+
+        QCOMPARE(result.text(), text);
+        QCOMPARE(result.textFormat(), Qt::PlainText);
+    }
+
+    void testRichTextWithoutAttachments()
+    {
+        NoteMessageWrapper note;
+        QString text(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
+            <html> \
+              <head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head> \
+              <body style=\"font-family:'Sans Serif'; font-size:9pt;\"> <p>sdfg</p></body> \
+            </html>"));
+        note.setText(text, Qt::RichText);
+
+        KMime::Message::Ptr msg = note.message();
+        NoteMessageWrapper result(msg);
+
+        QCOMPARE(result.text(), text);
+        QCOMPARE(result.textFormat(), Qt::RichText);
+    }
+
+    void testRichTextWithAttachments()
+    {
+        NoteMessageWrapper note;
+        QString text(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
+            <html> \
+              <head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head> \
+              <body style=\"font-family:'Sans Serif'; font-size:9pt;\"> <p>sdfg</p></body> \
+            </html>"));
+        note.setText(text, Qt::RichText);
+
+        Attachment a(QByteArray("testfile2"), QLatin1String("mimetype/mime3"));
+        a.setLabel(QLatin1String("label"));
+        note.attachments() << Attachment(QUrl("file://url/to/file"), QLatin1String("mimetype/mime")) << a;
+
+        KMime::Message::Ptr msg = note.message();
+        NoteMessageWrapper result(msg);
+
+        QCOMPARE(result.text(), text);
+        QCOMPARE(result.textFormat(), Qt::RichText);
+        QCOMPARE(result.attachments(), note.attachments());
+    }
 };
 
 QTEST_MAIN( NotesTest )
