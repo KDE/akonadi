@@ -75,19 +75,39 @@ QByteArray DbInitializer::toByteArray(Akonadi::Server::Tristate tristate)
     return "DEFAULT";
 }
 
-QByteArray DbInitializer::listResponse(const Collection &col)
+QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes)
 {
     QByteArray s;
     s = "S: * " + QByteArray::number(col.id()) + " " + QByteArray::number(col.parentId()) + " (NAME \"" + col.name().toLatin1() +
-        "\" MIMETYPE () REMOTEID \"" + col.remoteId().toLatin1() +
-        "\" REMOTEREVISION \"\" RESOURCE \"" + col.resource().name().toLatin1() +
-        "\" VIRTUAL ";
+        "\" MIMETYPE (";
+    if (mimetypes) {
+        for (int i = 0; i < col.mimeTypes().size(); i++) {
+            const MimeType mt = col.mimeTypes().at(i);
+            s += mt.name().toUtf8();
+            if (i != (col.mimeTypes().size() - 1)) {
+                s += " ";
+            }
+        }
+    }
+    s += ") REMOTEID \"" + col.remoteId().toLatin1() +
+         "\" REMOTEREVISION \"\" RESOURCE \"" + col.resource().name().toLatin1() +
+         "\" VIRTUAL ";
     if (col.isVirtual()) {
         s += "1";
     } else {
         s += "0";
     }
     s += " CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL))";
+    if (ancestors) {
+        s += " ANCESTORS (";
+        Collection parent = col.parent();
+        while (parent.isValid()) {
+            s += "(" + QByteArray::number(parent.id()) + " \"" + parent.remoteId().toUtf8() + "\") ";
+            parent = parent.parent();
+        }
+        s += "(0 \"\")";
+        s += ")";
+    }
     if (col.referenced()) {
         s += " REFERENCED TRUE";
     }
