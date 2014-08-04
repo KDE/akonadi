@@ -18,6 +18,7 @@ kde_enable_exceptions()
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${AKONADI_INCLUDE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/../src/selftest/
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
 )
@@ -35,8 +36,7 @@ add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(subscriber.cpp)
 add_akonadi_demo(agentinstancewidgettest.cpp)
 add_akonadi_demo(agenttypewidgettest.cpp)
-##REACTIVATE
-#add_akonadi_demo(pluginloadertest.cpp)
+add_akonadi_demo(pluginloadertest.cpp)
 ##REACTIVATE
 #add_akonadi_demo(selftester.cpp)
 add_akonadi_demo(collectiondialog.cpp)

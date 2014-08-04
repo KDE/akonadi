@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <akonadi/selftestdialog_p.h>
+#include <../src/selftest/selftestdialog.h>
 
 #include <KComponentData>
 #include <QApplication>
@@ -27,7 +27,7 @@ int main( int argc, char **argv )
   QApplication app( argc, argv );
   KComponentData kcd( "akonadi-selftester" );
 
-  Akonadi::SelfTestDialog dlg;
+  SelfTestDialog dlg;
   dlg.exec();
 
   return 0;

@@ -23,9 +23,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QStringList>
-
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+#include <KComponentData>
 
 using namespace Akonadi;
 

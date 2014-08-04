@@ -323,4 +323,3 @@ void KnutResource::removeSearch(const Collection& resultCollection)
 }
 
 
-#include "knutresource.moc"
