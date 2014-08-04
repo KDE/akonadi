@@ -19,7 +19,6 @@ kde_enable_exceptions()
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/src/agentbase/
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
