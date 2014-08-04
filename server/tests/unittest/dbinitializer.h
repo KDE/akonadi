@@ -28,7 +28,7 @@ public:
     Akonadi::Server::Collection createCollection(const char *name, const Akonadi::Server::Collection &parent = Akonadi::Server::Collection());
     QByteArray toByteArray(bool enabled);
     QByteArray toByteArray(Akonadi::Server::Tristate tristate);
-    QByteArray listResponse(const Akonadi::Server::Collection &col);
+    QByteArray listResponse(const Akonadi::Server::Collection &col, bool ancestors = false, bool mimetypes = true);
     Akonadi::Server::Collection collection(const char *name);
 
     void cleanup();
