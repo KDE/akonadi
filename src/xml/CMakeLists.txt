@@ -27,7 +27,6 @@ add_executable(akonadi2xml akonadi2xml.cpp)
 
 target_link_libraries(akonadi2xml
     KF5::AkonadiXml
-    KF5::KDELibs4Support
 )
 
 add_library(KF5AkonadiXml ${akonadixml_SRCS})

@@ -13,7 +13,6 @@ add_executable(akonadiselftest ${selftest_SRCS})
 
 target_link_libraries(akonadiselftest
     KF5::AkonadiCore
-    KF5::KDELibs4Support
     Qt5::Sql
 )
 

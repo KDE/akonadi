@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
 {
   QCommandLineParser parser;
   KAboutData about(QStringLiteral("akonadiselftest"),
-                   /*QStringLiteral("akonadiselftest"),*/
                    i18n("Akonadi Self Test"),
                    QStringLiteral("1.0"),
                    i18n("Checks and reports state of Akonadi server"),
