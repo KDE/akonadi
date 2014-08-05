@@ -693,12 +693,18 @@ void ResourceBase::changeCommitted(const Item &item)
 
 void ResourceBase::changesCommitted(const Item::List &items)
 {
-    ItemModifyJob *job = new ItemModifyJob(items);
-    job->d_func()->setClean();
-    job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
-    job->setIgnorePayload(true);   // we only want to reset the dirty flag and update the remote id
-    job->setUpdateGid(true);   // allow resources to update GID too
-    connect(job, SIGNAL(finished(KJob*)), this, SLOT(changeCommittedResult(KJob*)));
+    TransactionSequence *transaction = new TransactionSequence(this);
+    connect(transaction, SIGNAL(finished(KJob*)),
+            this, SLOT(changeCommittedResult(KJob*)));
+
+    // Modify the items one-by-one, because STORE does not support mass RID change
+    Q_FOREACH (const Item &item, items) {
+        ItemModifyJob *job = new ItemModifyJob(item, transaction);
+        job->d_func()->setClean();
+        job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
+        job->setIgnorePayload(true);   // we only want to reset the dirty flag and update the remote id
+        job->setUpdateGid(true);   // allow resources to update GID too
+    }
 }
 
 void ResourceBase::changeCommitted(const Collection &collection)
@@ -709,6 +715,10 @@ void ResourceBase::changeCommitted(const Collection &collection)
 
 void ResourceBasePrivate::changeCommittedResult(KJob *job)
 {
+    if (job->error()) {
+        kWarning() << job->errorText();
+    }
+
     Q_Q(ResourceBase);
     if (qobject_cast<CollectionModifyJob *>(job)) {
         if (job->error()) {
@@ -716,7 +726,6 @@ void ResourceBasePrivate::changeCommittedResult(KJob *job)
         }
         mChangeRecorder->d_ptr->invalidateCache(static_cast<CollectionModifyJob *>(job)->collection());
     } else {
-        // TODO: Error handling for item changes?
         // Item and tag cache is invalidated by modify job
     }
 
