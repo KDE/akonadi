@@ -198,6 +198,7 @@ void SessionPrivate::dataReceived()
 
             if (logFile) {
                 logFile->write("S: " + parser->data());
+                logFile->flush();
             }
 
             // handle login response
