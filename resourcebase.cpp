@@ -726,6 +726,9 @@ void ResourceBasePrivate::changeCommittedResult(KJob *job)
         }
         mChangeRecorder->d_ptr->invalidateCache(static_cast<CollectionModifyJob *>(job)->collection());
     } else {
+        if (job->error()) {
+            emit q->error(i18nc("@info", "Updating local items failed: %1.", job->errorText()));
+        }
         // Item and tag cache is invalidated by modify job
     }
 
