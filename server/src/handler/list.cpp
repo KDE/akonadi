@@ -134,9 +134,32 @@ bool List::checkFilterCondition(const Collection &col) const
     return true;
 }
 
+bool List::checkChildrenForMimeTypes(const QHash<qint64, Collection> &collectionsMap,
+                                     const QHash<qint64, qint64> &parentLookup,
+                                     const Collection &col)
+{
+    const QList<qint64> children = parentLookup.values(col.id());
+    Q_FOREACH (qint64 childId, children) {
+        if (!collectionsMap.contains(childId)) {
+            continue;
+        }
+
+        const Collection &child = collectionsMap[childId];
+        if (!intersect(mMimeTypes, child.mimeTypes())) {
+            if (checkChildrenForMimeTypes(collectionsMap, parentLookup, child)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 Collection::List List::retrieveChildren(const Collection &topParent, int depth)
 {
-    Collection::List collections;
+    QHash<qint64 /*id*/, Collection> collections;
+    QMultiHash<qint64 /* parent */, qint64 /* children */> parentLookup;
+
     const qint64 parentId = topParent.isValid() ? topParent.id() : 0;
     {
         SelectQueryBuilder<Collection> qb;
@@ -177,24 +200,26 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
         if (!qb.exec()) {
             throw HandlerException("Unable to retrieve collection for listing");
         }
-        collections = qb.result();
+        Q_FOREACH (const Collection &col, qb.result()) {
+            collections.insert(col.id(), col);
+            parentLookup.insertMulti(col.parentId(), col.id());
+        }
     }
 
     //Post filtering that we couldn't do as part of the sql query
     if (topParent.isValid() || !mMimeTypes.isEmpty()) {
-        QHash<qint64, qint64> parentMap;
-        Q_FOREACH (const Collection &col, collections) {
-            parentMap.insert(col.id(), col.parentId());
-        }
-
-        Collection::List::iterator it = collections.begin();
+        auto it = collections.begin();
         while (it != collections.end()) {
             //Filter by mimetype
             if (!mMimeTypes.isEmpty()) {
                 // filter if this node isn't needed by it's children
                 const bool hidden = !intersect(mMimeTypes, it->mimeTypes());
-                const bool hasChildCollections = parentMap.values().contains(it->id());
+                const bool hasChildCollections = checkChildrenForMimeTypes(collections, parentLookup, (*it));
                 if (hidden && !hasChildCollections) {
+                    Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
+                        parentLookup.remove(id, it->id());
+                    }
+                    parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
                 }
@@ -210,7 +235,7 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
                         foundParent = true;
                         break;
                     }
-                    const qint64 pId = parentMap.value(id, -1);
+                    const qint64 pId = collections.value(id).parentId();
                     if (pId >= 0) {
                         id = pId;
                     } else {
@@ -219,6 +244,10 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
                     }
                 }
                 if (!foundParent) {
+                    Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
+                        parentLookup.remove(id, it->id());
+                    }
+                    parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
                 }
@@ -232,13 +261,17 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
 
     //If we matched referenced collecions we need to ensure the collection was referenced from this session
     if (listFilterEnabled) {
-        Collection::List::iterator it = collections.begin();
+        auto it = collections.begin();
         while (it != collections.end()) {
             const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
             //The collection is referenced, but not from this session. We need to reevaluate the filter condition
             if (it->referenced() && !isReferencedFromSession) {
                 //Don't include the collection when only looking for enabled collections
                 if (!checkFilterCondition(*it)) {
+                    Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
+                        parentLookup.remove(id, it->id());
+                    }
+                    parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
                 }
@@ -247,16 +280,9 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
         }
     }
 
-    //We can't use parentMap because some collections may have been removed meanwhile from collections.
-    QSet<qint64> knownIds;
-    knownIds.reserve(collections.size());
-    Q_FOREACH (const Collection &col, collections) {
-        knownIds.insert(col.id());
-    }
-
     QSet<qint64> missingCollections;
     Q_FOREACH (const Collection &col, collections) {
-        if (col.parentId() != parentId && !knownIds.contains(col.parentId())) {
+        if (col.parentId() != parentId && !collections.contains(col.parentId())) {
             missingCollections.insert(col.parentId());
         }
     }
@@ -278,10 +304,10 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
         }
 
         Q_FOREACH (const Collection &missingCol, qb.result()) {
-            collections.append(missingCol);
+            collections.insert(missingCol.id(), missingCol);
         }
     }
-    return collections;
+    return collections.values().toVector();
 }
 
 bool List::parseStream()

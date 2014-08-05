@@ -96,6 +96,9 @@ private:
     QStack<Collection> ancestorsForCollection(const Collection &col);
     Collection::List retrieveChildren(const Collection &topParent, int depth);
     bool checkFilterCondition(const Collection &col) const;
+    bool checkChildrenForMimeTypes(const QHash<qint64, Collection> &collectionsMap,
+                                   const QHash<qint64, qint64> &parentMap,
+                                   const Collection &col);
 
     Resource mResource;
     QVector<MimeType::Id> mMimeTypes;

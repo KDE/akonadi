@@ -280,8 +280,8 @@ private Q_SLOTS:
                      << "C: 2 LIST 0 INF (ENABLED  ) ()"
                      << initializer->listResponse(initializer->collection("Search"))
                      << initializer->listResponse(col1)
-                     << initializer->listResponse(col3)
                      << initializer->listResponse(col2)
+                     << initializer->listResponse(col3)
                      << "S: 2 OK List completed";
             QTest::newRow("recursive list of enabled") << scenario;
         }
@@ -317,6 +317,8 @@ private Q_SLOTS:
         col5.setEnabled(false);
         col5.update();
 
+        QTime t;
+        t.start();
         for (int i = 0; i < 100000; i++) {
             QByteArray name = QString::fromLatin1("col%1").arg(i+4).toLatin1();
             Collection col = initializer->createCollection(name.data(), col3);
@@ -327,6 +329,7 @@ private Q_SLOTS:
             QByteArray name = QString::fromLatin1("col%1").arg(i+100004).toLatin1();
             Collection col = initializer->createCollection(name.data(), col5);
         }
+        qDebug() << "Created 100000 collections in" << t.elapsed() << "msecs";
 
         QTest::addColumn<QList<QByteArray> >("scenario");
 
