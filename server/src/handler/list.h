@@ -92,9 +92,10 @@ public:
     bool parseStream();
 
 private:
-    bool listCollection(const Collection &root, int depth, const QStack<Collection> &ancestors);
+    void listCollection(const Collection &root, const QStack<Collection> &ancestors);
     QStack<Collection> ancestorsForCollection(const Collection &col);
-    Collection::List retrieveChildren(const QVariant &value);
+    Collection::List retrieveChildren(const Collection &topParent, int depth);
+    bool checkFilterCondition(const Collection &col) const;
 
     Resource mResource;
     QVector<MimeType::Id> mMimeTypes;

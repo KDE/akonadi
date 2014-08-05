@@ -77,54 +77,12 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
     return ancestors;
 }
 
-bool List::listCollection(const Collection &root, int depth, const QStack<Collection> &ancestors)
+void List::listCollection(const Collection &root, const QStack<Collection> &ancestors)
 {
-    // recursive listing of child collections
-    bool childrenFound = false;
-    if (depth > 0) {
-        const Collection::List children = retrieveChildren(root.id());
-        QStack<Collection> ancestorsAndMe(ancestors);
-        ancestorsAndMe.push(root);
-        Q_FOREACH (const Collection &col, children) {
-            if (listCollection(col, depth - 1, ancestorsAndMe)) {
-                childrenFound = true;
-            }
-        }
-    }
-
+    //We exclude the mimetypes of the collection if this would normally be hidden but is required to complete the tree
+    //TODO: should the enabled state also contribute to hidden?
+    const bool hidden = (!mMimeTypes.isEmpty() && !intersect(mMimeTypes, root.mimeTypes()));
     const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(root.id(), connection()->sessionId());
-    //The collection is referenced, but not from this session.
-    if (root.referenced() && !isReferencedFromSession) {
-        //Don't include the collection when only looking for enabled collections
-        if (mEnabledCollections && !root.enabled()) {
-            return false;
-        }
-        //Don't include the collection when only looking for collections to display/index/sync
-        if (mCollectionsToDisplay &&
-            (((root.displayPref() == Tristate::Undefined) && !root.enabled()) ||
-             (root.displayPref() == Tristate::False))) {
-            return false;
-        }
-        if (mCollectionsToIndex &&
-            (((root.indexPref() == Tristate::Undefined) && !root.enabled()) ||
-             (root.indexPref() == Tristate::False))) {
-            return false;
-        }
-        //Single collection sync will still work since that is using a base fetch
-        if (mCollectionsToSynchronize &&
-            (((root.syncPref() == Tristate::Undefined) && !root.enabled()) ||
-             (root.syncPref() == Tristate::False))) {
-            return false;
-        }
-    }
-
-    // filter if this node isn't needed by it's children
-    const bool hidden = (mResource.isValid() && root.resourceId() != mResource.id())
-                        || (!mMimeTypes.isEmpty() && !intersect(mMimeTypes, root.mimeTypes()));
-
-    if (!childrenFound && hidden) {
-        return false;
-    }
 
     // write out collection details
     Collection dummy = root;
@@ -136,8 +94,6 @@ bool List::listCollection(const Collection &root, int depth, const QStack<Collec
     response.setUntagged();
     response.setString(b);
     Q_EMIT responseAvailable(response);
-
-    return true;
 }
 
 static Query::Condition filterCondition(const QString &column)
@@ -152,31 +108,180 @@ static Query::Condition filterCondition(const QString &column)
     return orCondition;
 }
 
-Collection::List List::retrieveChildren(const QVariant &value)
+bool List::checkFilterCondition(const Collection &col) const
 {
-    SelectQueryBuilder<Collection> qb;
-    if (value.isNull()) {
-        qb.addValueCondition(Collection::parentIdColumn(), Query::Is, QVariant());
-    } else {
-        qb.addValueCondition(Collection::parentIdColumn(), Query::Equals, value);
+    //Don't include the collection when only looking for enabled collections
+    if (mEnabledCollections && !col.enabled()) {
+        return false;
+    }
+    //Don't include the collection when only looking for collections to display/index/sync
+    if (mCollectionsToDisplay &&
+            (((col.displayPref() == Tristate::Undefined) && !col.enabled()) ||
+            (col.displayPref() == Tristate::False))) {
+        return false;
+    }
+    if (mCollectionsToIndex &&
+            (((col.indexPref() == Tristate::Undefined) && !col.enabled()) ||
+            (col.indexPref() == Tristate::False))) {
+        return false;
+    }
+    //Single collection sync will still work since that is using a base fetch
+    if (mCollectionsToSynchronize &&
+            (((col.syncPref() == Tristate::Undefined) && !col.enabled()) ||
+            (col.syncPref() == Tristate::False))) {
+        return false;
+    }
+    return true;
+}
+
+Collection::List List::retrieveChildren(const Collection &topParent, int depth)
+{
+    Collection::List collections;
+    const qint64 parentId = topParent.isValid() ? topParent.id() : 0;
+    {
+        SelectQueryBuilder<Collection> qb;
+
+        if (depth == 0) {
+            qb.addValueCondition(Collection::idFullColumnName(), Query::Equals, parentId);
+        } else if (depth == 1) {
+            if (topParent.isValid()) {
+                qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Equals, parentId);
+            } else {
+                qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Is, QVariant());
+            }
+        } else {
+            if (topParent.isValid()) {
+                qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, topParent.resourceId());
+            } else {
+                // Gimme gimme gimme...everything!
+            }
+        }
+
+        if (mCollectionsToSynchronize) {
+            qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
+        } else if (mCollectionsToDisplay) {
+            qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
+        } else if (mCollectionsToIndex) {
+            qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
+        } else if (mEnabledCollections) {
+            Query::Condition orCondition(Query::Or);
+            orCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
+            orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
+            qb.addCondition(orCondition);
+        }
+
+        if (mResource.isValid()) {
+            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, mResource.id());
+        }
+
+        if (!qb.exec()) {
+            throw HandlerException("Unable to retrieve collection for listing");
+        }
+        collections = qb.result();
     }
 
-    if (mEnabledCollections) {
-        Query::Condition orCondition(Query::Or);
-        orCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
-        orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
-        qb.addCondition(orCondition);
-    } else if (mCollectionsToSynchronize) {
-        qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
-    } else if (mCollectionsToDisplay) {
-        qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
-    } else if (mCollectionsToIndex) {
-        qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
+    //Post filtering that we couldn't do as part of the sql query
+    if (topParent.isValid() || !mMimeTypes.isEmpty()) {
+        QHash<qint64, qint64> parentMap;
+        Q_FOREACH (const Collection &col, collections) {
+            parentMap.insert(col.id(), col.parentId());
+        }
+
+        Collection::List::iterator it = collections.begin();
+        while (it != collections.end()) {
+            //Filter by mimetype
+            if (!mMimeTypes.isEmpty()) {
+                // filter if this node isn't needed by it's children
+                const bool hidden = !intersect(mMimeTypes, it->mimeTypes());
+                const bool hasChildCollections = parentMap.values().contains(it->id());
+                if (hidden && !hasChildCollections) {
+                    it = collections.erase(it);
+                    continue;
+                }
+            }
+
+            //Check that each collection is linked to the root collection
+            if (topParent.isValid()) {
+                bool foundParent = false;
+                //We iterate over parents to link it to topParent if possible
+                Collection::Id id = it->parentId();
+                while (id > 0) {
+                    if (id == parentId) {
+                        foundParent = true;
+                        break;
+                    }
+                    const qint64 pId = parentMap.value(id, -1);
+                    if (pId >= 0) {
+                        id = pId;
+                    } else {
+                        //parentMap doesn't necessarily contain all nodes of the tree
+                        id = Collection::retrieveById(id).parentId();
+                    }
+                }
+                if (!foundParent) {
+                    it = collections.erase(it);
+                    continue;
+                }
+            }
+
+            ++it;
+        }
     }
-    if (!qb.exec()) {
-        throw HandlerException("Unable to retrieve collection for listing");
+
+    const bool listFilterEnabled = mEnabledCollections || mCollectionsToIndex || mCollectionsToDisplay || mCollectionsToSynchronize;
+
+    //If we matched referenced collecions we need to ensure the collection was referenced from this session
+    if (listFilterEnabled) {
+        Collection::List::iterator it = collections.begin();
+        while (it != collections.end()) {
+            const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
+            //The collection is referenced, but not from this session. We need to reevaluate the filter condition
+            if (it->referenced() && !isReferencedFromSession) {
+                //Don't include the collection when only looking for enabled collections
+                if (!checkFilterCondition(*it)) {
+                    it = collections.erase(it);
+                    continue;
+                }
+            }
+            it++;
+        }
     }
-    return qb.result();
+
+    //We can't use parentMap because some collections may have been removed meanwhile from collections.
+    QSet<qint64> knownIds;
+    knownIds.reserve(collections.size());
+    Q_FOREACH (const Collection &col, collections) {
+        knownIds.insert(col.id());
+    }
+
+    QSet<qint64> missingCollections;
+    Q_FOREACH (const Collection &col, collections) {
+        if (col.parentId() != parentId && !knownIds.contains(col.parentId())) {
+            missingCollections.insert(col.parentId());
+        }
+    }
+
+    // qDebug() << "HAS:" << knownIds;
+    // qDebug() << "MISSING:" << missingCollections;
+
+    //Fetch missing collections that are part of the tree
+    if (!missingCollections.isEmpty()) {
+        SelectQueryBuilder<Collection> qb;
+        QVariantList ids;
+        ids.reserve(missingCollections.size());
+        Q_FOREACH (qint64 id, missingCollections) {
+            ids << id;
+        }
+        qb.addValueCondition(Collection::idFullColumnName(), Query::In, ids);
+        if (!qb.exec()) {
+            throw HandlerException("Unable to retrieve collections for listing");
+        }
+
+        Q_FOREACH (const Collection &missingCol, qb.result()) {
+            collections.append(missingCol);
+        }
+    }
+    return collections;
 }
 
 bool List::parseStream()
@@ -200,7 +305,7 @@ bool List::parseStream()
         throw HandlerException("WTF");
     }
 
-    int depth = HandlerHelper::parseDepth(m_streamParser->readString());
+    const int depth = HandlerHelper::parseDepth(m_streamParser->readString());
 
     m_streamParser->beginList();
     while (!m_streamParser->atListEnd()) {
@@ -304,24 +409,17 @@ bool List::parseStream()
 
         if (depth == 0) { //Base listing
             collections << col;
-            ancestors = ancestorsForCollection(col);
         } else { //First level or recursive listing
-            collections << retrieveChildren(col.id());
-            --depth;
-            if (!collections.isEmpty()) {
-                ancestors = ancestorsForCollection(collections.first());
-            }
+            collections << retrieveChildren(col, depth);
         }
     } else { //Root folder listing
         if (depth != 0) {
-            Collection::List list = retrieveChildren(QVariant());
-            collections << list;
+            collections << retrieveChildren(Collection(), depth);
         }
-        --depth;
     }
 
     Q_FOREACH (const Collection &col, collections) {
-        listCollection(col, depth, ancestors);
+        listCollection(col, ancestorsForCollection(col));
     }
 
     Response response;
