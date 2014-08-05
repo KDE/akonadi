@@ -1652,8 +1652,11 @@ QAction *StandardActionManager::createAction(Type type)
     if (standardActionData[type].icon) {
         action->setIcon(QIcon::fromTheme(QString::fromLatin1(standardActionData[type].icon)));
     }
-
-    action->setShortcut(standardActionData[type].shortcut);
+    if ( d->actionCollection ) {
+        d->actionCollection->setDefaultShortcut(action, QKeySequence(standardActionData[type].shortcut));
+    } else {
+        action->setShortcut(standardActionData[type].shortcut);
+    }
 
     if (standardActionData[type].slot) {
         switch (standardActionData[type].actionType) {
