@@ -173,6 +173,7 @@ void ItemSyncPrivate::checkDone()
 
     if (allProcessed() && !mFinished) {
         // prevent double result emission, can happen since checkDone() is called from all over the place
+        kDebug() << "finished";
         mFinished = true;
         q->emitResult();
     }
@@ -493,6 +494,7 @@ void ItemSync::deliveryDone()
 void ItemSync::slotResult(KJob *job)
 {
     if (job->error()) {
+        kWarning() << "Error during ItemSync: " << job->errorString();
         // pretent there were no errors
         Akonadi::Job::removeSubjob(job);
         // propagate the first error we got but continue, we might still be fed with stuff from a resource
@@ -508,6 +510,7 @@ void ItemSync::slotResult(KJob *job)
 void ItemSync::rollback()
 {
     Q_D(ItemSync);
+    kWarning() << "The item sync is being rolled-back.";
     setError(UserCanceled);
     if (d->mCurrentTransaction) {
         d->mCurrentTransaction->rollback();
