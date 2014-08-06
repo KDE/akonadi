@@ -33,16 +33,13 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#ifdef HAVE_EXECINFO_H
-# include <execinfo.h>
-#endif
 
 QString akBacktrace()
 {
     QString s;
 
     /* FIXME: is there an equivalent for darwin, *BSD, or windows? */
-#ifdef HAVE_EXECINFO_H
+#ifdef Backtrace_FOUND
     void *trace[256];
     int n = backtrace(trace, 256);
     if (!n) {
