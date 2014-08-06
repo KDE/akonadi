@@ -61,12 +61,12 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     QPushButton *defaultButtonName = new QPushButton(i18n("Default Name"));
     buttonBox->addButton(defaultButtonName, QDialogButtonBox::ActionRole);
-    connect(defaultButtonName, SIGNAL(clicked()), this, SLOT(slotDefaultName()));
+    connect(defaultButtonName, &QPushButton::clicked, this, &RenameFavoriteDialog::slotDefaultName);
 
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &RenameFavoriteDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &RenameFavoriteDialog::reject);
     mainLayout->addWidget(buttonBox);
 
     slotEditTextChanged(value);

@@ -83,8 +83,8 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     QPushButton *user2Button = new QPushButton;
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelfTestDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SelfTestDialog::reject);
     mainLayout->addWidget(buttonBox);
     user1Button->setText(i18n("Save Report..."));
     user1Button->setIcon(QIcon::fromTheme(QString::fromLatin1("document-save")));
@@ -98,8 +98,8 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
             SLOT(selectionChanged(QModelIndex)));
     connect(ui.detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)));
 
-    connect(user1Button, SIGNAL(clicked()), SLOT(saveReport()));
-    connect(user2Button, SIGNAL(clicked()), SLOT(copyReport()));
+    connect(user1Button, &QPushButton::clicked, this, &SelfTestDialog::saveReport);
+    connect(user2Button, &QPushButton::clicked, this, &SelfTestDialog::copyReport);
 
     connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(runTests()));
     runTests();

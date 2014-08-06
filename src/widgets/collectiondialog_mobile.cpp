@@ -191,7 +191,7 @@ void CollectionDialog::Private::slotAddChildCollection()
         collection.setName(name);
         collection.setParentCollection(parentCollection);
         Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob(collection);
-        connect(job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)));
+        connect(job, &Akonadi::CollectionCreateJob::result, mParent, &CollectionDialog::slotCollectionCreationResult);
     }
 }
 

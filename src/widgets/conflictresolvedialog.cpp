@@ -205,17 +205,17 @@ ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
     QPushButton *user3Button = new QPushButton;
     buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ConflictResolveDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ConflictResolveDialog::reject);
     user3Button->setDefault(true);
 
     user3Button->setText( i18n( "Take left one" ) );
     user2Button->setText( i18n( "Take right one" ) );
     user1Button->setText( i18n( "Keep both" ) );
 
-    connect(user1Button, SIGNAL(clicked()), SLOT(slotUseBothItemsChoosen()) );
-    connect(user2Button, SIGNAL(clicked()), SLOT(slotUseOtherItemChoosen()) );
-    connect(user3Button, SIGNAL(clicked()), SLOT(slotUseLocalItemChoosen()) );
+    connect(user1Button, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseBothItemsChoosen);
+    connect(user2Button, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseOtherItemChoosen);
+    connect(user3Button, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseLocalItemChoosen);
 
     QLabel *label = new QLabel( xi18nc( "@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply." ), mainWidget );
     mainLayout->addWidget( label );

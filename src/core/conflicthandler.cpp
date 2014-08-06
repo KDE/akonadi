@@ -50,7 +50,7 @@ void ConflictHandler::start()
         ItemFetchJob *job = new ItemFetchJob(mConflictingItem, mSession);
         job->fetchScope().fetchFullPayload();
         job->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
-        connect(job, SIGNAL(result(KJob*)), SLOT(slotOtherItemFetched(KJob*)));
+        connect(job, &ItemFetchJob::result, this, &ConflictHandler::slotOtherItemFetched);
     } else {
         resolve();
     }
@@ -106,7 +106,7 @@ void ConflictHandler::useLocalItem()
     newItem.setRevision(mConflictingItem.revision());
 
     ItemModifyJob *job = new ItemModifyJob(newItem, mSession);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotUseLocalItemFinished(KJob*)));
+    connect(job, &ItemModifyJob::result, this, &ConflictHandler::slotUseLocalItemFinished);
 }
 
 void ConflictHandler::slotUseLocalItemFinished(KJob *job)
@@ -129,7 +129,7 @@ void ConflictHandler::useBothItems()
     // We have to create a new item for the local item under the collection that has
     // been retrieved when we fetched the other item.
     ItemCreateJob *job = new ItemCreateJob(mChangedItem, mConflictingItem.parentCollection(), mSession);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotUseBothItemsFinished(KJob*)));
+    connect(job, &ItemCreateJob::result, this, &ConflictHandler::slotUseBothItemsFinished);
 }
 
 void ConflictHandler::slotUseBothItemsFinished(KJob *job)

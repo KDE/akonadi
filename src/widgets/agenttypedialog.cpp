@@ -79,8 +79,8 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     layout->addWidget(d->Widget);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentTypeDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentTypeDialog::reject);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);

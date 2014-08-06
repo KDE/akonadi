@@ -74,8 +74,8 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     vbox->addWidget(new Akonadi::TagEditWidget(model, this, false));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &TagManagementDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &TagManagementDialog::reject);
 
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);

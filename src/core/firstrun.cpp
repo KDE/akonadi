@@ -116,7 +116,7 @@ void Firstrun::setupNext()
     }
 
     AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type);
-    connect(job, SIGNAL(result(KJob*)), SLOT(instanceCreated(KJob*)));
+    connect(job, &AgentInstanceCreateJob::result, this, &Firstrun::instanceCreated);
     job->start();
 }
 
