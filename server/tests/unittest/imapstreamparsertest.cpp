@@ -26,6 +26,7 @@
 
 #include "imapstreamparser.h"
 #include <aktest.h>
+#include <config-akonadi.h>
 
 Q_DECLARE_METATYPE( QList<QByteArray> )
 Q_DECLARE_METATYPE( QList<int> )
@@ -39,7 +40,7 @@ QString akBacktrace()
   QString s;
 
   /* FIXME: is there an equivalent for darwin, *BSD, or windows? */
-#ifdef HAVE_EXECINFO_H
+#ifdef Backtrace_FOUND
   void *trace[256];
   int n = backtrace( trace, 256 );
   if ( !n ) {
