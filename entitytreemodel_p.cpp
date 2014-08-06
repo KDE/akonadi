@@ -482,7 +482,6 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         collectionIt.next();
 
         const Collection::Id topCollectionId = collectionIt.key();
-        kDebug() << "Subtree: " << topCollectionId << collectionIt.value();
 
         Q_ASSERT(!m_collections.contains(topCollectionId));
         Collection topCollection = collectionsToInsert.value(topCollectionId);
