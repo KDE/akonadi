@@ -83,18 +83,6 @@ AgentManager::AgentManager(QObject *parent)
         serviceArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
     }
 
-    // Enable this to run the resources in valgrind
-#if 0
-    serviceArgs.prepend(serviceExe);
-    serviceExe = QStringLiteral("valgrind");
-    // For memcheck:
-    QStringList memcheckArgs = { QString::fromLatin1("--tool=memcheck"), QString::fromLatin1("--partial-loads-ok=yes") };
-    serviceArgs = memcheckArgs + serviceArgs;
-    // For helgrind:
-    //QStringList helgrindArgs = { QString::fromLatin1("--tool=helgrind"), QString::fromLatin1("--track-lockorders=no") };
-    //serviceArgs = helgrindArgs + serviceArgs;
-#endif
-
     mStorageController = new Akonadi::ProcessControl;
     mStorageController->setShutdownTimeout(15 * 1000);   // the server needs more time for shutdown if we are using an internal mysqld
     connect(mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()));
