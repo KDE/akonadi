@@ -412,6 +412,9 @@ public:
         if (!(localCollection.cachePolicy() == remoteCollection.cachePolicy())) {
             return true;
         }
+        if (localCollection.enabled() != remoteCollection.enabled()) {
+            return true;
+        }
 
         // CollectionModifyJob adds the remote attributes to the local collection
         foreach (const Attribute *attr, remoteCollection.attributes()) {
