@@ -28,9 +28,11 @@
 #include <qdebug.h>
 
 #include <ksharedconfig.h>
+#include <KConfigGroup>
 #include <qtabwidget.h>
 
 #include <QBoxLayout>
+#include <QDialogButtonBox>
 
 using namespace Akonadi;
 
@@ -116,10 +118,20 @@ void CollectionPropertiesDialog::Private::registerBuiltinPages()
 
 void CollectionPropertiesDialog::Private::init()
 {
-    QBoxLayout *layout = new QHBoxLayout(q->mainWidget());
-    layout->setMargin(0);
-    mTabWidget = new QTabWidget(q->mainWidget());
-    layout->addWidget(mTabWidget);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
+    q->setLayout(mainLayout);
+    mTabWidget = new QTabWidget(q);
+    mainLayout->addWidget(mTabWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+
 
     if (mPageNames.isEmpty()) {   // default loading
         foreach (CollectionPropertiesPageFactory *factory, *s_pages) {
@@ -154,8 +166,8 @@ void CollectionPropertiesDialog::Private::init()
         }
     }
 
-    q->connect(q, SIGNAL(okClicked()), SLOT(save()));
-    q->connect(q, SIGNAL(cancelClicked()), SLOT(deleteLater()));
+    q->connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(save()));
+    q->connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(deleteLater()));
 
     KConfigGroup group(KSharedConfig::openConfig(), "CollectionPropertiesDialog");
     const QSize size = group.readEntry("Size", QSize());
@@ -168,14 +180,14 @@ void CollectionPropertiesDialog::Private::init()
 }
 
 CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection &collection, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(this, collection, QStringList()))
 {
     d->init();
 }
 
 CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection &collection, const QStringList &pages, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(this, collection, pages))
 {
     d->init();

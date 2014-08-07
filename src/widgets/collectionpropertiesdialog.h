@@ -23,7 +23,7 @@
 #include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
 
-#include <kdialog.h>
+#include <QDialog>
 
 namespace Akonadi {
 
@@ -50,7 +50,7 @@ class Collection;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADIWIDGETS_EXPORT CollectionPropertiesDialog : public KDialog
+class AKONADIWIDGETS_EXPORT CollectionPropertiesDialog : public QDialog
 {
     Q_OBJECT
 public:

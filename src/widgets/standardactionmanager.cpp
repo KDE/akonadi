@@ -898,7 +898,7 @@ public:
         Q_ASSERT(collection.isValid());
 
         CollectionPropertiesDialog *dlg = new CollectionPropertiesDialog(collection, mCollectionPropertiesPageNames, parentWidget);
-        dlg->setCaption(contextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, collection.displayName()));
+        dlg->setWindowTitle(contextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, collection.displayName()));
         dlg->show();
     }
 
