@@ -55,22 +55,22 @@ QSqlQuery TagFetchHelper::buildAttributeQuery() const
     return qb.query();
 }
 
-QSqlQuery TagFetchHelper::buildAttributeQuery( qint64 id )
+QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id)
 {
-  QueryBuilder qb( TagAttribute::tableName() );
-  qb.addColumn( TagAttribute::tagIdColumn() );
-  qb.addColumn( TagAttribute::typeColumn() );
-  qb.addColumn( TagAttribute::valueColumn() );
-  qb.addSortColumn( TagAttribute::tagIdColumn(), Query::Descending );
+    QueryBuilder qb(TagAttribute::tableName());
+    qb.addColumn(TagAttribute::tagIdColumn());
+    qb.addColumn(TagAttribute::typeColumn());
+    qb.addColumn(TagAttribute::valueColumn());
+    qb.addSortColumn(TagAttribute::tagIdColumn(), Query::Descending);
 
-  qb.addValueCondition( TagAttribute::tagIdColumn(), Query::Equals, id );
+    qb.addValueCondition(TagAttribute::tagIdColumn(), Query::Equals, id);
 
-  if ( !qb.exec() ) {
-    throw HandlerException( "Unable to list tag attributes" );
-  }
+    if (!qb.exec()) {
+        throw HandlerException("Unable to list tag attributes");
+    }
 
-  qb.query().next();
-  return qb.query();
+    qb.query().next();
+    return qb.query();
 }
 
 QSqlQuery TagFetchHelper::buildTagQuery()
