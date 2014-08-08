@@ -380,6 +380,18 @@ void EntityTreeModelPrivate::collectionListFetched(const Akonadi::Collection::Li
     }
 }
 
+static QSet<Collection::Id> getChildren(Collection::Id parent, const QHash<Collection::Id, Collection::Id> &childParentMap)
+{
+    QSet<Collection::Id> children;
+    Q_FOREACH (Collection::Id c, childParentMap.keys()) {
+        if (childParentMap.value(c) == parent) {
+            children << c;
+            children += getChildren(c, childParentMap);
+        }
+    }
+    return children;
+}
+
 void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List &collections)
 {
     Q_Q(EntityTreeModel);
@@ -389,22 +401,13 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
     QListIterator<Akonadi::Collection> it(collections);
 
     QHash<Collection::Id, Collection> collectionsToInsert;
-    QHash<Collection::Id, QVector<Collection::Id> > subTreesToInsert;
-    QHash<Collection::Id, Collection> parents;
 
     while (it.hasNext()) {
         const Collection collection = it.next();
 
         const Collection::Id collectionId = collection.id();
 
-        // If a collection is hidden, we still need to put it in the model if it has a
-        // non-hidden child. We rely on the fact that children will be returned
-        // first and will be in collectionsToInsert (if returned in this batch)
-        // or will already be in the model as a dummy node in m_collections
-        // if returned and processed in an earlier batch.
-        if (isHidden(collection) &&
-            !collectionsToInsert.contains(collectionId) &&
-            !m_collections.contains(collectionId)) {
+        if (isHidden(collection)) {
             continue;
         }
 
@@ -428,49 +431,69 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
             retrieveAncestors(collection, false);
         }
 
-        Collection parent = collection;
-
-        while (!m_collections.contains(parent.parentCollection().id())) {
-            if (!subTreesToInsert[parent.parentCollection().id()].contains(parent.parentCollection().id())) {
-                subTreesToInsert[parent.parentCollection().id()].append(parent.parentCollection().id());
-                collectionsToInsert.insert(parent.parentCollection().id(), parent.parentCollection());
-            }
-
-            foreach (Collection::Id collectionId, subTreesToInsert.take(parent.id())) {
-                if (!subTreesToInsert[parent.parentCollection().id()].contains(collectionId)) {
-                    subTreesToInsert[parent.parentCollection().id()].append(collectionId);
-                }
-            }
-
-            parent = parent.parentCollection();
-        }
-
-        if (!subTreesToInsert[parent.id()].contains(collectionId)) {
-            subTreesToInsert[parent.id()].append(collectionId);
-        }
-
         collectionsToInsert.insert(collectionId, collection);
-        if (!parents.contains(parent.id())) {
-            parents.insert(parent.id(), parent.parentCollection());
+    }
+
+    //Build a list of subtrees to insert, with the root of the subtree on the left, and the complete subtree including root on the right
+    QHash<Collection::Id, QSet<Collection::Id> > subTreesToInsert;
+    {
+        //Build a child-parent map that allows us to build the subtrees afterwards
+        QHash<Collection::Id, Collection::Id> childParentMap;
+        Q_FOREACH (const Collection &col, collectionsToInsert) {
+            childParentMap.insert(col.id(), col.parentCollection().id());
+
+            //Complete the subtree up to the last known parent
+            Collection parent = col.parentCollection();
+            while (parent.isValid() && parent != m_rootCollection && !m_collections.contains(parent.id())) {
+                childParentMap.insert(parent.id(), parent.parentCollection().id());
+
+                if (!collectionsToInsert.contains(parent.id())) {
+                    collectionsToInsert.insert(parent.id(), parent);
+                }
+                parent = parent.parentCollection();
+            }
+        }
+
+        QSet<Collection::Id> parents;
+
+        //Find toplevel parents of the subtrees
+        Q_FOREACH (Collection::Id c, childParentMap.keys()) {
+            //The child has a parent without parent (it's a toplevel node that is not yet in m_collections)
+            if (!childParentMap.contains(childParentMap.value(c))) {
+                Q_ASSERT(!m_collections.contains(c));
+                parents << c;
+            }
+        }
+
+        //Find children of each subtree
+        Q_FOREACH (Collection::Id p, parents) {
+            QSet<Collection::Id> children;
+            //We add the parent itself as well so it can be inserted below as part of the same loop
+            children << p;
+            children += getChildren(p, childParentMap);
+            subTreesToInsert[p] = children;
         }
     }
 
     const int row = 0;
 
-    QHashIterator<Collection::Id, QVector<Collection::Id> > collectionIt(subTreesToInsert);
+    QHashIterator<Collection::Id, QSet<Collection::Id> > collectionIt(subTreesToInsert);
     while (collectionIt.hasNext()) {
         collectionIt.next();
 
         const Collection::Id topCollectionId = collectionIt.key();
+        kDebug() << "Subtree: " << topCollectionId << collectionIt.value();
 
         Q_ASSERT(!m_collections.contains(topCollectionId));
+        Collection topCollection = collectionsToInsert.value(topCollectionId);
+        Q_ASSERT(topCollection.isValid());
 
-        Q_ASSERT(parents.contains(topCollectionId));
-        const QModelIndex parentIndex = indexForCollection(parents.value(topCollectionId));
+        //The toplevels parent must already be part of the model
+        Q_ASSERT(m_collections.contains(topCollection.parentCollection().id()));
+        const QModelIndex parentIndex = indexForCollection(topCollection.parentCollection());
 
         q->beginInsertRows(parentIndex, row, row);
         Q_ASSERT(!collectionIt.value().isEmpty());
-        Q_ASSERT(m_collections.contains(parents.value(topCollectionId).id()));
 
         foreach (Collection::Id collectionId, collectionIt.value()) {
             const Collection collection = collectionsToInsert.take(collectionId);

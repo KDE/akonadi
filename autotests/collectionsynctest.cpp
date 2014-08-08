@@ -164,8 +164,9 @@ class CollectionSyncTest : public QObject
       QCOMPARE( resultCols.count(), origCols.count() );
 
       Collection::List delCols;
-      delCols << resultCols.front();
-      resultCols.pop_front();
+      delCols << resultCols.last();
+      resultCols.pop_back();
+
 
       // ### not implemented yet I guess
 #if 0
