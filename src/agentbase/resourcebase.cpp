@@ -717,7 +717,7 @@ void ResourceBase::changeCommitted(const Collection &collection)
 void ResourceBasePrivate::changeCommittedResult(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorText();
+        qWarning() << job->errorText();
     }
 
     Q_Q(ResourceBase);
