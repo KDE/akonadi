@@ -283,7 +283,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
 
     d->mOkButton->setEnabled(false);
-    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(buttonBox);
 
     connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
     connect(d->mOkButton, SIGNAL(clicked()), SLOT(done()));
