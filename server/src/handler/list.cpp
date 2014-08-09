@@ -83,12 +83,15 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     //TODO: should the enabled state also contribute to hidden?
     const bool hidden = (!mMimeTypes.isEmpty() && !intersect(mMimeTypes, root.mimeTypes()));
     const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(root.id(), connection()->sessionId());
+    //We always expose referenced collections to the resource as referenced (although it's a different session)
+    //Otherwise syncing wouldn't work.
+    const bool resourceIsSynchronizing = root.referenced() && mCollectionsToSynchronize && connection()->context()->resource().isValid();
 
     // write out collection details
     Collection dummy = root;
     DataStore *db = connection()->storageBackend();
     db->activeCachePolicy(dummy);
-    const QByteArray b = HandlerHelper::collectionToByteArray(dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors, isReferencedFromSession);
+    const QByteArray b = HandlerHelper::collectionToByteArray(dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors, isReferencedFromSession || resourceIsSynchronizing, mAncestorAttributes);
 
     Response response;
     response.setUntagged();
@@ -266,8 +269,9 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
             const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
             //The collection is referenced, but not from this session. We need to reevaluate the filter condition
             if (it->referenced() && !isReferencedFromSession) {
-                //Don't include the collection when only looking for enabled collections
-                if (!checkFilterCondition(*it)) {
+                //Don't include the collection when only looking for enabled collections.
+                //However, a referenced collection should be still synchronized by the resource, so we exclude this case.
+                if (!checkFilterCondition(*it) && !(mCollectionsToSynchronize && connection()->context()->resource().isValid())) {
                     Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
                         parentLookup.remove(id, it->id());
                     }
