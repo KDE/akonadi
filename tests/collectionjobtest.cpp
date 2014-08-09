@@ -766,6 +766,37 @@ void CollectionJobTest::testAncestorRetrieval()
   QCOMPARE( col, col2 );
 }
 
+void CollectionJobTest::testAncestorAttributeRetrieval()
+{
+  Akonadi::Collection baseCol;
+  {
+    baseCol.setParentCollection(Akonadi::Collection(res1ColId));
+    baseCol.setName("base");
+    baseCol.attribute<TestAttribute>( Collection::AddIfMissing )->data = "new";
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
+    AKVERIFYEXEC(create);
+    baseCol = create->collection();
+  }
+  {
+    Akonadi::Collection col;
+    col.setParentCollection(baseCol);
+    col.setName("enabled");
+    Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
+    AKVERIFYEXEC(create);
+
+    CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+    job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
+    job->fetchScope().fetchAncestorAttribute<TestAttribute>(CollectionFetchScope::All);
+    AKVERIFYEXEC(job);
+    Akonadi::Collection result = job->collections().first();
+    QCOMPARE(result.parentCollection().hasAttribute<TestAttribute>(), true);
+  }
+
+  //Cleanup
+  CollectionDeleteJob *deleteJob = new CollectionDeleteJob(baseCol);
+  AKVERIFYEXEC(deleteJob);
+}
+
 void CollectionJobTest::testListPreference()
 {
   Akonadi::Collection baseCol;

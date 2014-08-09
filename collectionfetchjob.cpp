@@ -302,6 +302,10 @@ void CollectionFetchJob::doStart()
             Q_ASSERT(false);
         }
     }
+    Q_FOREACH (const QByteArray &ancestorAttributes, d->mScope.ancestorAttributes()) {
+        options.append("ANCESTORATTR");
+        options.append(ancestorAttributes);
+    }
 
     command += ImapParser::join(filter, " ") + ") (" + ImapParser::join(options, " ") + ")\n";
     d->writeData(command);

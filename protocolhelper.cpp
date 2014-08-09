@@ -116,7 +116,7 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
   for ( int i = 0; i < ancestors.count(); ++i ) {
     parentIds.clear();
     ImapParser::parseParenthesizedList( ancestors[ i ], parentIds );
-    if ( parentIds.size() != 2 )
+    if ( parentIds.size() < 2 )
       break;
 
     const Collection::Id uid = parentIds[ 0 ].toLongLong();
@@ -127,6 +127,15 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
 
     current->parentCollection().setId( uid );
     current->parentCollection().setRemoteId( QString::fromUtf8( parentIds[ 1 ] ) );
+    for ( int q = 2; q < parentIds.count(); q += 2 ) {
+        const QByteArray &attrType = parentIds[q];
+        const QByteArray &attrValue = parentIds[q + 1];
+        Attribute* attr = AttributeFactory::createAttribute( attrType );
+        Q_ASSERT( attr );
+        attr->deserialize( attrValue );
+        current->parentCollection().addAttribute( attr );
+    }
+
     current = &current->parentCollection();
   }
 }

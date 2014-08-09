@@ -43,6 +43,7 @@ public:
         ancestorDepth = other.ancestorDepth;
         statistics = other.statistics;
         listFilter = other.listFilter;
+        ancestorAttributes = other.ancestorAttributes;
     }
 
 public:
@@ -51,6 +52,7 @@ public:
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
     bool statistics;
     CollectionFetchScope::ListFilter listFilter;
+    QSet<QByteArray> ancestorAttributes;
 };
 
 CollectionFetchScope::CollectionFetchScope()
@@ -148,6 +150,20 @@ CollectionFetchScope::ListFilter CollectionFetchScope::listFilter() const
 void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFilter)
 {
     d->listFilter = listFilter;
+}
+
+QSet<QByteArray> CollectionFetchScope::ancestorAttributes() const
+{
+    return d->ancestorAttributes;
+}
+
+void CollectionFetchScope::fetchAncestorAttribute(const QByteArray &type, bool fetch)
+{
+    if (fetch) {
+        d->ancestorAttributes.insert(type);
+    } else {
+        d->ancestorAttributes.remove(type);
+    }
 }
 
 

@@ -24,6 +24,7 @@
 #include "akonadi_export.h"
 
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QSet>
 
 class QStringList;
 
@@ -215,6 +216,34 @@ public:
      * @see setAncestorRetrieval()
      */
     AncestorRetrieval ancestorRetrieval() const;
+
+    /**
+     * Returns all explicitly fetched attributes.
+     *
+     * Undefined if fetchAllAttributes() returns true.
+     *
+     * @see fetchAttribute()
+     */
+    QSet<QByteArray> ancestorAttributes() const;
+
+    /**
+     * Sets whether the attribute of the given @p type should be fetched.
+     *
+     * @param type The attribute type to fetch.
+     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     */
+    void fetchAncestorAttribute(const QByteArray &type, bool fetch = true);
+
+    /**
+     * Sets whether the attribute of the requested type should be fetched.
+     *
+     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     */
+    template <typename T> inline void fetchAncestorAttribute(bool fetch = true)
+    {
+        T dummy;
+        fetchAncestorAttribute(dummy.type(), fetch);
+    }
 
     /**
      * Returns @c true if there is nothing to fetch.
