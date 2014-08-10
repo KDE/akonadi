@@ -115,34 +115,55 @@ bool Store::deleteFlags( const PimItem::List &items, const QVector<QByteArray> &
   return true;
 }
 
-bool Store::replaceTags( const PimItem::List &item, const ImapSet &tags )
+bool Store::replaceTags( const PimItem::List &item, const Tag::List &tags )
 {
-  const Tag::List tagList = HandlerHelper::resolveTags( tags );
-  if ( !connection()->storageBackend()->setItemsTags( item, tagList ) ) {
+  if ( !connection()->storageBackend()->setItemsTags( item, tags ) ) {
     throw HandlerException( "Store::replaceTags: Unable to set new item tags" );
   }
   return true;
 }
 
-bool Store::addTags( const PimItem::List &items, const ImapSet &tags, bool &tagsChanged )
+bool Store::addTags( const PimItem::List &items, const Tag::List &tags, bool &tagsChanged )
 {
-  const Tag::List tagList = HandlerHelper::resolveTags( tags );
-  if ( !connection()->storageBackend()->appendItemsTags( items, tagList, &tagsChanged ) ) {
+  if ( !connection()->storageBackend()->appendItemsTags( items, tags, &tagsChanged ) ) {
     akDebug() << "Store::addTags: Unable to add new item tags";
     return false;
   }
   return true;
 }
 
-bool Store::deleteTags( const PimItem::List &items, const ImapSet &tags )
+bool Store::deleteTags( const PimItem::List &items, const Tag::List &tags )
 {
-  const Tag::List tagList = HandlerHelper::resolveTags( tags );
-  if ( !connection()->storageBackend()->removeItemsTags( items, tagList ) ) {
+  if ( !connection()->storageBackend()->removeItemsTags( items, tags ) ) {
     akDebug() << "Store::deleteTags: Unable to remove item tags";
     return false;
   }
   return true;
 }
+
+bool Store::processTagsChange( Store::Operation op, const PimItem::List &items,
+                               const Tag::List &tags, QSet<QByteArray> &changes )
+{
+  bool tagsChanged = true;
+  if ( op == Replace ) {
+    tagsChanged = replaceTags( items, tags );
+  } else if ( op == Add ) {
+    if ( !addTags( items, tags, tagsChanged ) ) {
+      return failureResponse( "Unable to add item tags." );
+    }
+  } else if ( op == Delete ) {
+    if ( !( tagsChanged = deleteTags( items, tags ) ) ) {
+      return failureResponse( "Unable to remove item tags." );
+    }
+  }
+
+  if ( tagsChanged && !changes.contains( AKONADI_PARAM_TAGS ) ) {
+    changes << AKONADI_PARAM_TAGS;
+  }
+
+  return true;
+}
+
 
 bool Store::parseStream()
 {
@@ -234,22 +255,31 @@ bool Store::parseStream()
     }
 
     if ( command == AKONADI_PARAM_TAGS ) {
-      bool tagsChanged = true;
-      const ImapSet tags = m_streamParser->readSequenceSet();
-      if ( op == Replace ) {
-        tagsChanged = replaceTags( pimItems, tags );
-      } else if ( op == Add ) {
-        if ( !addTags( pimItems, tags, tagsChanged ) ) {
-          return failureResponse( "Unable to add item tags." );
-        }
-      } else if ( op == Delete ) {
-        if ( !( tagsChanged = deleteTags( pimItems, tags ) ) ) {
-          return failureResponse( "Unable to remove item tags." );
-        }
+      const ImapSet tagsIds = m_streamParser->readSequenceSet();
+      const Tag::List tags = HandlerHelper::resolveTags( tagsIds );
+      if (!processTagsChange( op, pimItems, tags, changes )) {
+        return false;
       }
+      continue;
+    }
 
-      if ( tagsChanged && !changes.contains( AKONADI_PARAM_TAGS ) ) {
-        changes << AKONADI_PARAM_TAGS;
+    if ( command == AKONADI_PARAM_RTAGS ) {
+      if (!connection()->context()->resource().isValid()) {
+        throw HandlerException( "Only resources can use RTAGS" );
+      }
+      const QVector<QByteArray> tagsIds = m_streamParser->readParenthesizedList().toVector();
+      const Tag::List tags = HandlerHelper::resolveTagsByRID( tagsIds, connection()->context() );
+      if (!processTagsChange( op, pimItems, tags, changes )) {
+        return false;
+      }
+      continue;
+    }
+
+    if ( command == AKONADI_PARAM_GTAGS ) {
+      const QVector<QByteArray> tagsIds = m_streamParser->readParenthesizedList().toVector();
+      const Tag::List tags = HandlerHelper::resolveTagsByGID( tagsIds );
+      if (!processTagsChange( op, pimItems, tags, changes )) {
+        return false;
       }
       continue;
     }

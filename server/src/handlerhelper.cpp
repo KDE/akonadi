@@ -366,7 +366,7 @@ Tag::List HandlerHelper::resolveTagsByGID(const QVector<QByteArray> &tagsGIDs)
     }
 
     Q_FOREACH (const QByteArray &tagGID, tagsGIDs) {
-        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), tagGID);
+        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), QString::fromLatin1(tagGID));
         Tag tag;
         if (tags.isEmpty()) {
             tag.setGid(QString::fromUtf8(tagGID));
@@ -413,7 +413,7 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray >& tagsRIDs,
         cond.addColumnCondition(Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName());
         cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond);
-        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
+        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, QString::fromLatin1(tagRID));
         if (!qb.exec()) {
             throw HandlerException("Unable to resolve tags");
         }
