@@ -24,21 +24,21 @@
 #include <QtCore/QObject>
 
 namespace Akonadi {
-  class CollectionCreateJob;
-  class ItemCreateJob;
+class CollectionCreateJob;
+class ItemCreateJob;
 }
 
 class AutoIncrementTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase();
     void testItemAutoIncrement();
     void testCollectionAutoIncrement();
 
-  private:
+private:
     Akonadi::ItemCreateJob *createItemCreateJob();
-    Akonadi::CollectionCreateJob *createCollectionCreateJob( int number );
+    Akonadi::CollectionCreateJob *createCollectionCreateJob(int number);
     Akonadi::Collection itemTargetCollection;
     Akonadi::Collection collectionTargetCollection;
 };
