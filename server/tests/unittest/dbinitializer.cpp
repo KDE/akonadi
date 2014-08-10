@@ -102,7 +102,11 @@ QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bo
         s += " ANCESTORS (";
         Collection parent = col.parent();
         while (parent.isValid()) {
-            s += "(" + QByteArray::number(parent.id()) + " \"" + parent.remoteId().toUtf8() + "\") ";
+            s += "(" + QByteArray::number(parent.id()) + " \"" + parent.remoteId().toUtf8() + "\"";
+            Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
+                s += ' ' + attr.type() + " \"" + attr.value() + "\"";
+            }
+            s += ") ";
             parent = parent.parent();
         }
         s += "(0 \"\")";

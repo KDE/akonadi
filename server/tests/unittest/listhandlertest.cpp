@@ -295,6 +295,40 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->runTest();
     }
 
+    void testListAncestorAttributes_data()
+    {
+        initializer.reset(new DbInitializer);
+        Resource res = initializer->createResource("testresource");
+        Collection col1 = initializer->createCollection("col1");
+
+        CollectionAttribute attr1;
+        attr1.setType("type");
+        attr1.setValue("value");
+        attr1.setCollection(col1);
+        attr1.insert();
+
+        Collection col2 = initializer->createCollection("col2", col1);
+
+        QTest::addColumn<QList<QByteArray> >("scenario");
+
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () (ANCESTORS INF ANCESTORATTR type)"
+                     << initializer->listResponse(col2, true)
+                     << "S: 2 OK List completed";
+            QTest::newRow("list ancestor attribute") << scenario;
+        }
+    }
+
+    void testListAncestorAttributes()
+    {
+        QFETCH(QList<QByteArray>, scenario);
+
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
+    }
+
 //No point in running the benchmark everytime
 #if 0
 

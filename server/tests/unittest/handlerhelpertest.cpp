@@ -92,16 +92,6 @@ class HandlerHelperTest : public QObject
       QTest::newRow( "two4" ) << 4 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\"))" );
     }
 
-    void testAncestorsToByteArray()
-    {
-      QFETCH( int, depth );
-      QFETCH( QStack<Collection>, ancestors );
-      QFETCH( QByteArray, result );
-
-      const QByteArray realResult = HandlerHelper::ancestorsToByteArray( depth, ancestors );
-      QCOMPARE( realResult, result );
-    }
-
     void testParseDepth_data()
     {
       QTest::addColumn<QByteArray>( "input" );

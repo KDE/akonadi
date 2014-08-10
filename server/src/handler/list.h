@@ -111,6 +111,7 @@ class List : public Handler
     bool mCollectionsToDisplay;
     bool mCollectionsToSynchronize;
     bool mCollectionsToIndex;
+    QVector<QByteArray> mAncestorAttributes;
 
 };
 

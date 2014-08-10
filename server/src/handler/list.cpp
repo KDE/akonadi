@@ -387,6 +387,10 @@ bool List::parseStream()
                 const QByteArray argument = m_streamParser->readString();
                 mAncestorDepth = HandlerHelper::parseDepth(argument);
             }
+            if (option == AKONADI_PARAM_ANCESTORATTRIBUTE) {
+                const QByteArray argument = m_streamParser->readString();
+                mAncestorAttributes << argument;
+            }
         }
     }
 

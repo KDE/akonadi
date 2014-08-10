@@ -212,7 +212,8 @@ QByteArray HandlerHelper::tristateToByteArray( const Tristate &tristate )
 }
 
 QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hidden, bool includeStatistics,
-                                                 int ancestorDepth, const QStack<Collection> &ancestors, bool isReferenced )
+                                                 int ancestorDepth, const QStack<Collection> &ancestors,
+                                                bool isReferenced, const QVector<QByteArray> &ancestorAttributes)
 {
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
@@ -254,7 +255,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';
   if ( ancestorDepth > 0 ) {
-    b += HandlerHelper::ancestorsToByteArray( ancestorDepth, ancestors ) + ' ';
+        b += HandlerHelper::ancestorsToByteArray(ancestorDepth, ancestors, ancestorAttributes) + ' ';
   }
 
   if ( isReferenced ) {
@@ -287,7 +288,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   return b;
 }
 
-QByteArray HandlerHelper::ancestorsToByteArray( int ancestorDepth, const QStack<Collection> &_ancestors )
+QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &_ancestors, const QVector<QByteArray> ancestorAttributes)
 {
   QByteArray b;
   if ( ancestorDepth > 0 ) {
@@ -302,6 +303,9 @@ QByteArray HandlerHelper::ancestorsToByteArray( int ancestorDepth, const QStack<
       const Collection c = ancestors.pop();
       b += QByteArray::number( c.id() ) + " ";
       b += ImapParser::quote( c.remoteId().toUtf8() );
+            Q_FOREACH (const CollectionAttribute &attribute, c.attributes()) {
+                b += ' ' + attribute.type() + ' ' + ImapParser::quote(attribute.value());
+            }
       b += ")";
       if ( i != ancestorDepth - 1 ) {
         b += ' ';

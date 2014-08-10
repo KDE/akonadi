@@ -40,22 +40,22 @@ class ImapStreamParser;
 */
 class HandlerHelper
 {
-  public:
+public:
     /**
       Returns the collection identified by the given id or path.
     */
-    static Collection collectionFromIdOrName( const QByteArray &id );
+    static Collection collectionFromIdOrName(const QByteArray &id);
 
     /**
       Returns the full path for the given collection.
     */
-    static QString pathForCollection( const Collection &col );
+    static QString pathForCollection(const Collection &col);
 
     /**
       Returns the amount of existing items in the given collection.
       @return -1 on error
     */
-    static int itemCount( const Collection &col );
+    static int itemCount(const Collection &col);
 
     /**
      * Queries for collection statistics.
@@ -64,14 +64,14 @@ class HandlerHelper
      * @param size The size of all items in this collection.
      * @return @c false on a query error, @c true otherwise
      */
-    static bool itemStatistics( const Collection &col, qint64 &count, qint64 &size );
+    static bool itemStatistics(const Collection &col, qint64 &count, qint64 &size);
 
     /**
       Returns the amount of existing items in the given collection
       which have a given flag set.
       @return -1 on error.
     */
-    static int itemWithFlagsCount( const Collection &col, const QStringList &flags );
+    static int itemWithFlagsCount(const Collection &col, const QStringList &flags);
 
     /**
       Parse cache policy and update the given Collection object accoordingly.
@@ -79,49 +79,49 @@ class HandlerHelper
       has actually changed
       @todo Error handling.
     */
-    static int parseCachePolicy( const QByteArray &data, Collection &col, int start = 0, bool *changed = 0 );
+    static int parseCachePolicy(const QByteArray &data, Collection &col, int start = 0, bool *changed = 0);
 
     /**
       Returns the protocol representation of the cache policy of the given
       Collection object.
     */
-    static QByteArray cachePolicyToByteArray( const Collection &col );
+    static QByteArray cachePolicyToByteArray(const Collection &col);
 
-    static QByteArray tristateToByteArray( const Tristate &tristate );
+    static QByteArray tristateToByteArray(const Tristate &tristate);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray( const Collection &col, bool hidden = false, bool includeStatistics = false,
-                                             int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), bool isReferenced = false );
+    static QByteArray collectionToByteArray(const Collection &col, bool hidden = false, bool includeStatistics = false,
+                                            int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), bool isReferenced = false, const QVector<QByteArray> &ancestorAttributes = QVector<QByteArray>());
 
     /**
       Returns the protocol representation of a collection ancestor chain.
     */
-    static QByteArray ancestorsToByteArray( int ancestorDepth, const QStack<Collection> &ancestors );
+    static QByteArray ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &ancestors, const QVector<QByteArray> ancestorAttributes = QVector<QByteArray>());
 
     /**
       Parses the listing/ancestor depth parameter.
     */
-    static int parseDepth( const QByteArray &depth );
+    static int parseDepth(const QByteArray &depth);
 
     /**
       Converts a bytearray list of flag names into flag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Flag::List resolveFlags( const QVector<QByteArray> &flagNames );
+    static Flag::List resolveFlags(const QVector<QByteArray> &flagNames);
 
     /**
       Converts a imap set of tags into tag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Tag::List resolveTags( const ImapSet &tags );
+    static Tag::List resolveTags(const ImapSet &tags);
 
-    static Tag::List resolveTagsByGID( const QVector<QByteArray> &tagsGIDs );
+    static Tag::List resolveTagsByGID(const QVector<QByteArray> &tagsGIDs);
 
-    static Tag::List resolveTagsByRID( const QVector<QByteArray> &tagsRIDs, CommandContext *context );
+    static Tag::List resolveTagsByRID(const QVector<QByteArray> &tagsRIDs, CommandContext *context);
 };
 
 } // namespace Server
