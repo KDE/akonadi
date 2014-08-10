@@ -51,11 +51,15 @@ public:
   bool akAppendStreaming() const;
   void setAkAppendStreaming( bool akAppendStreaming );
 
+  bool directStreaming() const;
+  void setDirectStreaming( bool directStreaming );
+
 private:
   int m_notificationMessageVersion;
   int m_noPayloadPath : 1;
   int m_serverSideSearch : 1;
   int m_akAppendStreaming : 1;
+  int m_directStreaming : 1;
 };
 
 } // namespace Server

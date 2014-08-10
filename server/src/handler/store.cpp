@@ -32,6 +32,7 @@
 #include "storage/dbconfig.h"
 #include "storage/itemretriever.h"
 #include "storage/parttypehelper.h"
+#include "storage/partstreamer.h"
 
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
@@ -310,10 +311,13 @@ bool Store::parseStream()
     } else if ( command == AKONADI_CMD_COLLECTION ) {
       throw HandlerException( "Item moving via STORE is deprecated, update your Akonadi client" );
     } else { // parts/attributes
-     QByteArray partName, error;
+     QByteArray partName;
      qint64 partSize;
-     if ( !PartHelper::storeStreamedParts( command, m_streamParser, item, true, partName, partSize, error ) ) {
-       return failureResponse( error );
+     PartStreamer streamer( connection(), m_streamParser, item, this );
+     connect( &streamer, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+              this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
+     if ( !streamer.stream( command, true, partName, partSize ) ) {
+       return failureResponse( streamer.error() );
      }
 
      changes << partName;

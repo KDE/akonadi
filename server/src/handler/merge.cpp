@@ -26,6 +26,7 @@
 #include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
 #include "storage/itemretriever.h"
+#include "storage/partstreamer.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include <response.h>
@@ -147,9 +148,12 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       partsSizes.insert( PartTypeHelper::fullName( part.partType() ).toLatin1(), part.datasize() );
     }
 
+    PartStreamer streamer(connection(), m_streamParser, currentItem);
+    connect( &streamer, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+             this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
     m_streamParser->beginList();
     while ( !m_streamParser->atListEnd() ) {
-      QByteArray error, partName;
+      QByteArray partName;
       qint64 partSize;
       QByteArray command = m_streamParser->readString();
       bool changed = false;
@@ -172,8 +176,8 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
         command = command.mid( 1 );
       }
 
-      if ( !PartHelper::storeStreamedParts( command, m_streamParser, currentItem, true, partName, partSize, error, &changed ) ) {
-        return failureResponse( error );
+      if ( !streamer.stream( command, true, partName, partSize, &changed ) ) {
+        return failureResponse( streamer.error() );
       }
       if ( changed ) {
         mChangedParts << partName;

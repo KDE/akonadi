@@ -74,17 +74,8 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     if ( fileName.isEmpty() ) {
       fileName = fileNameForPart( part );
     }
-    QString rev = QString::fromAscii( "_r0" );
-    if ( fileName.contains( QString::fromAscii( "_r" ) ) ) {
-      int revIndex = fileName.indexOf( QString::fromAscii( "_r" ) );
-      rev = fileName.mid( revIndex + 2 );
-      int r = rev.toInt();
-      r++;
-      rev = QString::number( r );
-      fileName = fileName.left( revIndex );
-      rev.prepend( QString::fromAscii( "_r" ) );
-    }
-    fileName += rev;
+
+    fileName = updateFileNameRevision( fileName );
 
     QFile file( storagePath() + fileName );
     if ( file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
@@ -303,146 +294,19 @@ QString PartHelper::resolveAbsolutePath( const QByteArray &data )
     return fileName;
 }
 
-bool PartHelper::storeStreamedParts( const QByteArray &command,
-                                     ImapStreamParser* streamParser,
-                                     const PimItem &item, bool checkExists,
-                                     QByteArray &partName, qint64 &partSize,
-                                     QByteArray &error, bool *changed )
+QString PartHelper::updateFileNameRevision(const QString& fileName)
 {
-  int partVersion = 0;
-  bool dataChanged = false;
-  partSize = 0;
-  ImapParser::splitVersionedKey( command, partName, partVersion );
-
-  const PartType partType = PartTypeHelper::fromFqName( partName );
-
-  Part part;
-
-  // In case of error, nothing has changed
-  if ( changed != 0 ) {
-    *changed = false;
-  }
-
-  if ( checkExists || changed != 0 ) {
-    SelectQueryBuilder<Part> qb;
-    qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, item.id() );
-    qb.addValueCondition( Part::partTypeIdColumn(), Query::Equals, partType.id() );
-    if ( !qb.exec() ) {
-      error = "Unable to check item part existence";
-      return false;
+    QString fn = fileName;
+    QString rev = QString::fromAscii( "_r0" );
+    if ( fileName.contains( QString::fromAscii( "_r" ) ) ) {
+      int revIndex = fileName.indexOf( QString::fromAscii( "_r" ) );
+      rev = fileName.mid( revIndex + 2 );
+      int r = rev.toInt();
+      r++;
+      rev = QString::number( r );
+      fn = fileName.left( revIndex );
+      rev.prepend( QString::fromAscii( "_r" ) );
     }
 
-    Part::List result = qb.result();
-    if ( !result.isEmpty() ) {
-      part = result.first();
-    }
-  }
-
-  // Shortcut: newly created parts are always "changed"
-  if ( !part.isValid() ) {
-    dataChanged = true;
-  }
-
-  part.setPartType( partType );
-  part.setVersion( partVersion );
-  part.setPimItemId( item.id() );
-
-  QByteArray value;
-  if ( streamParser->hasLiteral() ) {
-    const qint64 dataSize = streamParser->remainingLiteralSize();
-    if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
-      partSize = dataSize;
-      // Shortcut: if sizes differ, we don't need to compare data later no in order
-      // to detect whether the part has changed
-      if ( !dataChanged ) {
-        dataChanged = ( partSize != part.datasize() );
-      }
-    }
-    const bool storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
-    //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
-    if ( storeInFile ) {
-      QByteArray origData;
-      if ( !dataChanged && changed != 0 ) {
-        origData = PartHelper::translateData( part );
-      }
-
-      // use first part as value for the initial insert into / update to the database.
-      // this will give us a proper filename to stream the rest of the parts contents into
-      // NOTE: we have to set the correct size (== dataSize) directly
-      value = streamParser->readLiteralPart();
-      // akDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
-
-      if ( part.isValid() ) {
-        PartHelper::update( &part, value, dataSize );
-      } else {
-//             akDebug() << "insert from Store::handleLine";
-        part.setData( value );
-        part.setDatasize( dataSize );
-        if ( !PartHelper::insert( &part ) ) {
-          error = "Unable to add item part";
-          return false;
-        }
-      }
-
-      //the actual streaming code for the remaining parts:
-      // reads from the parser, writes immediately to the file
-      QFile partFile( PartHelper::resolveAbsolutePath( part.data() ) );
-      try {
-        PartHelper::streamToFile( streamParser, partFile, QIODevice::WriteOnly | QIODevice::Append );
-      } catch ( const PartHelperException &e ) {
-        error = e.what();
-        return false;
-      }
-
-      if ( changed != 0 ) {
-        if ( !dataChanged ) {
-          // This is invoked only when part already exists, data sizes match and
-          // caller wants to know whether parts really differ
-          dataChanged = ( origData != PartHelper::translateData( part ) );
-        }
-        *changed = dataChanged;
-      }
-      return true;
-    } else { // not store in file
-      //don't write in streaming way as the data goes to the database
-      while ( !streamParser->atLiteralEnd() ) {
-        value += streamParser->readLiteralPart();
-      }
-    }
-  } else { //not a literal
-    value = streamParser->readString();
-    if ( partName.startsWith( AKONADI_PARAM_PLD ) ) {
-      partSize = value.size();
-    }
-    if ( !dataChanged ) {
-      dataChanged = ( value.size() != part.datasize() );
-    }
-  }
-
-  // only relevant for non-literals or non-external literals
-
-  // only fallback to data comparision if part already exists and sizes match
-  if ( !dataChanged ) {
-    dataChanged = ( value != PartHelper::translateData( part ) );
-  }
-
-  if ( changed != 0 ) {
-    *changed = dataChanged;
-  }
-
-  if ( dataChanged ) {
-    if ( part.isValid() ) {
-      PartHelper::update( &part, value, value.size() );
-    } else {
-//           akDebug() << "insert from Store::handleLine: " << value.left(100);
-      part.setData( value );
-      part.setDatasize( value.size() );
-      if ( !PartHelper::insert( &part ) ) {
-        error = "Unable to add item part";
-        return false;
-      }
-    }
-  }
-
-  return true;
+    return fn + rev;
 }

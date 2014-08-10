@@ -33,6 +33,7 @@ class FakeConnection: public Connection
 
   public:
     FakeConnection(quintptr socketDescriptor, QObject *parent = 0);
+    FakeConnection(QObject* parent = 0);
     virtual ~FakeConnection();
 
     DataStore *storageBackend();

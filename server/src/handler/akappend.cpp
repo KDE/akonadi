@@ -34,6 +34,7 @@
 #include "storage/transaction.h"
 #include "storage/parttypehelper.h"
 #include "storage/dbconfig.h"
+#include "storage/partstreamer.h"
 #include "storage/parthelper.h"
 #include "libs/protocol_p.h"
 
@@ -286,17 +287,22 @@ bool AkAppend::insertItem( PimItem &item, const Collection &parentCol,
   // Handle individual parts
   qint64 partSizes = 0;
   if ( connection()->capabilities().akAppendStreaming() ) {
-    QByteArray error, partName /* unused */;
+    QByteArray partName /* unused */;
     qint64 partSize;
     m_streamParser->beginList();
+    PartStreamer streamer(connection(), m_streamParser, item, this);
+    connect( &streamer, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+             this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
     while ( !m_streamParser->atListEnd() ) {
       QByteArray command = m_streamParser->readString();
       if ( command.isEmpty() ) {
         throw HandlerException( "Syntax error" );
       }
-      if ( !PartHelper::storeStreamedParts( command, m_streamParser, item, false, partName, partSize, error ) ) {
-        return failureResponse( error );
+
+      if ( !streamer.stream( command, false, partName, partSize ) ) {
+        throw HandlerException( streamer.error() );
       }
+
       partSizes += partSize;
     }
 

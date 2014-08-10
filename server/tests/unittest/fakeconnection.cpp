@@ -35,6 +35,11 @@ FakeConnection::FakeConnection(quintptr socketDescriptor, QObject *parent)
     m_streamParser->setWaitTimeout( 500 );
 }
 
+FakeConnection::FakeConnection(QObject* parent):
+    Connection(parent)
+{
+}
+
 FakeConnection::~FakeConnection()
 {
 

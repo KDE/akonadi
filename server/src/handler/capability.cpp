@@ -57,6 +57,8 @@ bool Capability::parseStream()
       capabilities.setServerSideSearch( true );
     } else if ( capability == AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING ) {
       capabilities.setAkAppendStreaming( true );
+    } else if ( capability == AKONADI_PARAM_CAPABILITY_DIRECTSTREAMING ) {
+      capabilities.setDirectStreaming( true );
     } else {
       qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
     }

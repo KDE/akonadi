@@ -126,7 +126,7 @@ class ImapStreamParser
      * This call might block.
      * @return true if a literal follows
      */
-    bool hasLiteral();
+    bool hasLiteral( bool requestData = true);
 
     /**
      * Read the next literal sequence. This might or might not be the full data. Example code to read a literal would be:
@@ -252,6 +252,12 @@ class ImapStreamParser
      */
     void setTracerIdentifier( const QString &id );
 
+    /**
+     * Inform the client to send more literal data.
+     * @param size size of the requested literal in bytes
+     */
+    void sendContinuationResponse( qint64 size );
+
   private:
     QByteArray parseQuotedString();
 
@@ -263,12 +269,6 @@ class ImapStreamParser
      */
     bool waitForMoreData( bool wait );
 
-    /**
-     * Inform the client to send more literal data.
-     * @param size size of the requested literal in bytes
-     */
-    void sendContinuationResponse( qint64 size );
-
     QIODevice *m_socket;
     QByteArray m_data;
     QByteArray m_tag;
@@ -277,6 +277,7 @@ class ImapStreamParser
     qint64 m_literalSize;
     bool m_peeking;
     int m_timeout;
+
 };
 
 } // namespace Server

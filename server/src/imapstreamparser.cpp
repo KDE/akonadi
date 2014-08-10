@@ -119,7 +119,7 @@ bool ImapStreamParser::hasString()
   return false; //something else, not a string
 }
 
-bool ImapStreamParser::hasLiteral()
+bool ImapStreamParser::hasLiteral( bool requestData )
 {
   if ( !waitForMoreData( m_position >= m_data.length() ) ) {
     throw ImapParserException( "Unable to read more data" );
@@ -144,7 +144,7 @@ bool ImapStreamParser::hasLiteral()
       ++m_position;
     }
 
-    if ( m_literalSize >= 0 ) {
+    if ( m_literalSize >= 0 && requestData ) {
       sendContinuationResponse( m_literalSize );
     }
     return true;

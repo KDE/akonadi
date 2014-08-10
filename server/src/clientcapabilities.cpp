@@ -26,6 +26,7 @@ ClientCapabilities::ClientCapabilities()
   , m_noPayloadPath( false )
   , m_serverSideSearch( false )
   , m_akAppendStreaming( false )
+  , m_directStreaming( false )
 {
 }
 
@@ -76,3 +77,14 @@ void ClientCapabilities::setAkAppendStreaming(bool akAppendStreaming)
 {
   m_akAppendStreaming = akAppendStreaming;
 }
+
+bool ClientCapabilities::directStreaming() const
+{
+  return m_directStreaming;
+}
+
+void ClientCapabilities::setDirectStreaming(bool directStreaming)
+{
+  m_directStreaming = directStreaming;
+}
+
