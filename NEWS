@@ -1,3 +1,11 @@
+1.13.0                          10-August-2014
+----------------------------------------------
+- Fixed virtual collections statistics
+- Fixed tag RID fetch
+- Fixed HRID-based fetches
+- Fixed race condition in StorageDebugger
+- Use FindBacktrace.cmake from CMake 3.0 instead of our own detection
+
 1.12.90                           07-July-2014
 ----------------------------------------------
 - MERGE command for faster synchronization
