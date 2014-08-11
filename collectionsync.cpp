@@ -56,6 +56,7 @@ struct LocalNode
     Collection collection;
     QList<LocalNode *> childNodes;
     QHash<QString, LocalNode *> childRidMap;
+    QHash<QString, LocalNode *> childNameMap;
     /** When using hierarchical RIDs we attach a list of not yet processable remote nodes to
         the closest already existing local ancestor node. They will be re-evaluated once a new
         child node is added. */
@@ -149,6 +150,7 @@ public:
                 node->childNodes.append(childNode);
                 if (!childNode->collection.remoteId().isEmpty()) {
                     node->childRidMap.insert(childNode->collection.remoteId(), childNode);
+                    node->childNameMap.insert(childNode->collection.name(), childNode);
                 }
             }
         }
@@ -159,6 +161,7 @@ public:
             parentNode->childNodes.append(node);
             if (!node->collection.remoteId().isEmpty()) {
                 parentNode->childRidMap.insert(node->collection.remoteId(), node);
+                parentNode->childNameMap.insert(node->collection.name(), node);
             }
         } else {
             localPendingCollections[col.parentCollection().id()].append(col.id());
@@ -220,13 +223,12 @@ public:
         if (localParentNode == localRoot) {   // possibly non-unique names on top-level
             return 0;
         }
-
-        foreach (LocalNode *childNode, localParentNode->childNodes) {
-            // the restriction on empty RIDs can possibly removed, but for now I only understand the implication for this case
-            if (childNode->collection.name() == name && childNode->collection.remoteId().isEmpty()) {
-                return childNode;
-            }
+        LocalNode *childNode = localParentNode->childNameMap.value(name, 0);
+        // the restriction on empty RIDs can possibly removed, but for now I only understand the implication for this case
+        if (childNode && childNode->collection.remoteId().isEmpty()) {
+            return childNode;
         }
+
         return 0;
     }
 
