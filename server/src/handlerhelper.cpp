@@ -302,10 +302,13 @@ QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<C
       b += '(';
       const Collection c = ancestors.pop();
       b += QByteArray::number( c.id() ) + " ";
-      b += ImapParser::quote( c.remoteId().toUtf8() );
+      b += " (";
+      b += " REMOTEID " + ImapParser::quote( c.remoteId().toUtf8() );
+      b += " NAME " + ImapParser::quote(c.name().toUtf8());
             Q_FOREACH (const CollectionAttribute &attribute, c.attributes()) {
                 b += ' ' + attribute.type() + ' ' + ImapParser::quote(attribute.value());
             }
+      b += ")";
       b += ")";
       if ( i != ancestorDepth - 1 ) {
         b += ' ';
