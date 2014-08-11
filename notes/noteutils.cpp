@@ -188,7 +188,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
   if ( msg->from( false ) )
     from = msg->from( false )->asUnicodeString();
   creationDate = msg->date( true )->dateTime();
-  if ( msg->contentType( false ) && msg->contentType( false )->asUnicodeString() == QLatin1String("text/html") ) {
+  if ( msg->mainBodyPart()->contentType( false ) && msg->mainBodyPart()->contentType()->mimeType() == "text/html" ) {
     textFormat = Qt::RichText;
   }
 
@@ -376,10 +376,10 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
   }
 
   msg->subject( true )->fromUnicodeString( title, ENCODING );
-  msg->contentType( true )->setMimeType( d->textFormat == Qt::RichText ? "text/html" : "text/plain" );
   msg->date( true )->setDateTime( creationDate );
   msg->from( true )->fromUnicodeString( d->from, ENCODING );
   msg->mainBodyPart()->fromUnicodeString( text );
+  msg->mainBodyPart()->contentType( true )->setMimeType( d->textFormat == Qt::RichText ? "text/html" : "text/plain" );
   msg->appendHeader( new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), lastModifiedDate.toString( KDateTime::RFCDateDay ).toLatin1(), ENCODING ) );
   msg->appendHeader( new KMime::Headers::Generic( X_NOTES_UID_HEADER, msg.get(), uid, ENCODING ) );
 

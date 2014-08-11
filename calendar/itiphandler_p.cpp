@@ -41,6 +41,9 @@ ITIPHandler::Private::Private(ITIPHandlerComponentFactory *factory, ITIPHandler 
 
     connect(m_helper, SIGNAL(finished(Akonadi::ITIPHandlerHelper::SendResult,QString)),
             SLOT(onHelperFinished(Akonadi::ITIPHandlerHelper::SendResult,QString)));
+
+    connect(m_helper, SIGNAL(sendIncidenceModifiedMessageFinished(ITIPHandlerHelper::SendResult,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)),
+            SLOT(onHelperModifyDialogClosed(ITIPHandlerHelper::SendResult,KCalCore::iTIPMethod,KCalCore::Incidence::Ptr)));
 }
 
 void ITIPHandler::Private::onSchedulerFinished(Akonadi::Scheduler::Result result,
@@ -127,18 +130,12 @@ void ITIPHandler::Private::finishProcessiTIPMessage(Akonadi::MailScheduler::Resu
         if (success) {
             // send update to all attendees
             Q_ASSERT(m_incidence);
-            ITIPHandlerHelper::SendResult sendResult
-                = m_helper->sendIncidenceModifiedMessage(KCalCore::iTIPRequest,
+            m_helper->setDialogParent(m_parentWidget);
+            m_helper->sendIncidenceModifiedMessage(KCalCore::iTIPRequest,
                         KCalCore::Incidence::Ptr(m_incidence->clone()),
                         false);
             m_incidence.clear();
-            if (sendResult == ITIPHandlerHelper::ResultNoSendingNeeded ||
-                    sendResult == ITIPHandlerHelper::ResultCanceled) {
-                emit q->iTipMessageSent(ResultSuccess, QString());
-            } else {
-                // ITIPHandlerHelper is working hard and slot onHelperFinished will be called soon
-                return;
-            }
+            return;
         } else {
             //fall through
         }
@@ -147,6 +144,15 @@ void ITIPHandler::Private::finishProcessiTIPMessage(Akonadi::MailScheduler::Resu
     emit q->iTipMessageProcessed(success ? ResultSuccess : ResultError,
                                  success ? QString() : i18n("Error: %1", errorMessage));
 }
+
+void ITIPHandler::Private::onHelperModifyDialogClosed(ITIPHandlerHelper::SendResult sendResult, KCalCore::iTIPMethod /*method*/, const KCalCore::Incidence::Ptr &incidence)
+{
+    if (sendResult == ITIPHandlerHelper::ResultNoSendingNeeded ||
+        sendResult == ITIPHandlerHelper::ResultCanceled) {
+            emit q->iTipMessageSent(ResultSuccess, QString());
+    }
+}
+
 
 void ITIPHandler::Private::finishSendiTIPMessage(Akonadi::MailScheduler::Result result,
         const QString &errorMessage)
