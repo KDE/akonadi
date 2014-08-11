@@ -28,24 +28,24 @@ using namespace Akonadi;
 
 class AKONADITESTFAKE_EXPORT FakeSession : public Session
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum Mode {
-    EndJobsImmediately,
-    EndJobsManually
-  };
+    enum Mode {
+        EndJobsImmediately,
+        EndJobsManually
+    };
 
-  explicit FakeSession(const QByteArray& sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject* parent = 0);
+    explicit FakeSession(const QByteArray &sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject *parent = 0);
 
-  /** Make this the default session returned by Akonadi::Session::defaultSession().
-   *  Note that ownership is taken over by the thread-local storage.
-   */
-  void setAsDefaultSession();
+    /** Make this the default session returned by Akonadi::Session::defaultSession().
+     *  Note that ownership is taken over by the thread-local storage.
+     */
+    void setAsDefaultSession();
 
 Q_SIGNALS:
-  void jobAdded( Akonadi::Job* );
+    void jobAdded(Akonadi::Job *job);
 
-  friend class FakeSessionPrivate;
+    friend class FakeSessionPrivate;
 };
 
 #endif

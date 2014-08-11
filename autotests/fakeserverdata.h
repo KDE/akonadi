@@ -34,37 +34,46 @@ using namespace Akonadi;
 
 class AKONADITESTFAKE_EXPORT FakeServerData : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  FakeServerData( EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = 0 );
+    FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = 0);
 
-  void setCommands( QList<FakeAkonadiServerCommand*> list );
+    void setCommands(QList<FakeAkonadiServerCommand *> list);
 
-  Entity::Id nextCollectionId() const { return m_nextCollectionId++; }
-  Entity::Id nextItemId()       const { return m_nextItemId++;       }
+    Entity::Id nextCollectionId() const
+    {
+        return m_nextCollectionId++;
+    };
+    Entity::Id nextItemId() const
+    {
+        return m_nextItemId++;
+    };
 
-  Akonadi::EntityTreeModel* model() const { return m_model; }
+    Akonadi::EntityTreeModel *model() const
+    {
+        return m_model;
+    };
 
-  void processNotifications();
+    void processNotifications();
 
 private Q_SLOTS:
-  void jobAdded( Akonadi::Job *job );
+    void jobAdded(Akonadi::Job *job);
 
 private:
-  bool returnCollections( Entity::Id fetchColId );
-  void returnItems( Entity::Id fetchColId );
-  void returnEntities( Entity::Id fetchColId );
+    bool returnCollections(Entity::Id fetchColId);
+    void returnItems(Entity::Id fetchColId);
+    void returnEntities(Entity::Id fetchColId);
 
 private:
-  EntityTreeModel *m_model;
-  FakeSession *m_session;
-  FakeMonitor *m_monitor;
+    EntityTreeModel *m_model;
+    FakeSession *m_session;
+    FakeMonitor *m_monitor;
 
-  QList<FakeAkonadiServerCommand*> m_commandList;
-  QQueue<FakeAkonadiServerCommand*> m_communicationQueue;
+    QList<FakeAkonadiServerCommand *> m_commandList;
+    QQueue<FakeAkonadiServerCommand *> m_communicationQueue;
 
-  mutable Entity::Id m_nextCollectionId;
-  mutable Entity::Id m_nextItemId;
+    mutable Entity::Id m_nextCollectionId;
+    mutable Entity::Id m_nextItemId;
 };
 
 #endif
