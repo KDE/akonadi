@@ -355,7 +355,7 @@ private:
             boost::adjacency_list<> graph(matchingIndexes.size());
             for (int i = 0, end = matchingIndexes.size(); i != end; ++i) {
                 KMimeType::Ptr mimeType = KMimeType::mimeType(allMimeTypes[matchingIndexes[i]].type(), KMimeType::ResolveAliases);
-                if (mimeType.isNull()) {
+                if (!mimeType) {
                     continue;
                 }
                 for (int j = 0; j != end; ++j) {
