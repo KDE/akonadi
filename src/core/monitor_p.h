@@ -275,7 +275,7 @@ private:
         }
 
         KMimeType::Ptr mimeType = KMimeType::mimeType(mimetype, KMimeType::ResolveAliases);
-        if (mimeType.isNull()) {
+        if (!mimeType) {
             return false;
         }
 
