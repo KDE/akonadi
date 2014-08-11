@@ -97,9 +97,10 @@ public:
       @param data The input data.
       @param collection The parsed collection.
       @param start Start of the data.
+      @param requireParent Wether or not we require a parent as part of the data.
       @returns Position in data after the collection description.
     */
-    static int parseCollection(const QByteArray &data, Collection &collection, int start = 0);
+    static int parseCollection(const QByteArray &data, Collection &collection, int start = 0, bool requireParent = true);
 
     /**
       Convert attributes to their protocol representation.

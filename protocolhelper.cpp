@@ -109,7 +109,8 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
 
   static const Collection::Id rootCollectionId = Collection::root().id();
   QVarLengthArray<QByteArray, 16> ancestors;
-  QVarLengthArray<QByteArray, 16> parentIds;
+  // QVarLengthArray<QByteArray, 16> parentIds;
+  QList<QByteArray> parentIds;
 
   ImapParser::parseParenthesizedList( data, ancestors );
   Entity* current = entity;
@@ -125,16 +126,9 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
       break;
     }
 
-    current->parentCollection().setId( uid );
-    current->parentCollection().setRemoteId( QString::fromUtf8( parentIds[ 1 ] ) );
-    for ( int q = 2; q < parentIds.count(); q += 2 ) {
-        const QByteArray &attrType = parentIds[q];
-        const QByteArray &attrValue = parentIds[q + 1];
-        Attribute* attr = AttributeFactory::createAttribute( attrType );
-        Q_ASSERT( attr );
-        attr->deserialize( attrValue );
-        current->parentCollection().addAttribute( attr );
-    }
+    Akonadi::Collection parentCollection;
+    parseCollection( ImapParser::join(parentIds, " "), parentCollection, 0, false );
+    current->setParentCollection(parentCollection);
 
     current = &current->parentCollection();
   }
@@ -151,7 +145,7 @@ static Collection::ListPreference parsePreference( const QByteArray &value )
   return Collection::ListDefault;
 }
 
-int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collection, int start)
+int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collection, int start, bool requireParent)
 {
   int pos = start;
 
@@ -164,15 +158,17 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
     return start;
   }
 
-  Collection::Id parentId = -1;
-  pos = ImapParser::parseNumber( data, parentId, &ok, pos );
-  if ( !ok || parentId < 0 ) {
-    kDebug() << "Could not parse parent id from response:" << data;
-    return start;
-  }
-
   collection = Collection( colId );
-  collection.setParentCollection( Collection( parentId ) );
+
+  if (requireParent) {
+    Collection::Id parentId = -1;
+    pos = ImapParser::parseNumber( data, parentId, &ok, pos );
+    if ( !ok || parentId < 0 ) {
+        kDebug() << "Could not parse parent id from response:" << data;
+        return start;
+    }
+    collection.setParentCollection( Collection( parentId ) );
+  }
 
   // attributes
   QVarLengthArray<QByteArray,16> attributes;
