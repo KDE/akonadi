@@ -39,8 +39,24 @@
 #include <QItemSelectionModel>
 #include <QTreeView>
 
+#include <recursivecollectionfilterproxymodel.h>
+#include <mimetypechecker.h>
+
 using namespace Akonadi;
 using namespace KCalCore;
+
+class CollectionFilter : public QSortFilterProxyModel
+{
+public:
+    explicit CollectionFilter(QObject *parent = 0): QSortFilterProxyModel (parent) {};
+
+    virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+    {
+        const Collection collection = sourceModel()->index(sourceRow, 0, sourceParent).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        return collection.isValid();
+    }
+
+};
 
 //TODO: implement batchAdding
 
@@ -144,12 +160,9 @@ void ETMCalendarPrivate::setupFilteredETM()
     columnFilterProxy->setVisibleColumn(CalendarModel::CollectionTitle);
     columnFilterProxy->setObjectName("Remove columns");
 
-    mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel(this);
+    CollectionFilter *mCollectionProxyModel = new CollectionFilter(this);
     mCollectionProxyModel->setObjectName("Only show collections");
     mCollectionProxyModel->setDynamicSortFilter(true);
-    mCollectionProxyModel->addMimeTypeFilter(QString::fromLatin1("text/calendar"));
-    mCollectionProxyModel->setExcludeVirtualCollections(true);
-    mCollectionProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     mCollectionProxyModel->setSourceModel(columnFilterProxy);
 
     // Keep track of selected items.
