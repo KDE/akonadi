@@ -25,7 +25,7 @@
 #include "xmlreader.h"
 #include <searchquery.h>
 
-#include <KUrl>
+#include <QUrl>
 #include <agentfactory.h>
 #include <changerecorder.h>
 #include <collection.h>
@@ -109,7 +109,7 @@ void KnutResource::save()
 void KnutResource::configure( WId windowId )
 {
   const QString oldFile = mSettings->dataFile();
-  KUrl url;
+  QUrl url;
   if ( !oldFile.isEmpty() )
     url = QUrl::fromLocalFile( oldFile );
   else
