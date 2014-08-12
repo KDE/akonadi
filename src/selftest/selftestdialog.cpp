@@ -27,7 +27,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QDebug>
-#include <KUrl>
+#include <QUrl>
 #include <QIcon>
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -35,7 +35,7 @@
 #include <KRun>
 #include <QStandardPaths>
 #include <KUser>
-#include <KUrl>
+#include <QUrl>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>

@@ -25,10 +25,11 @@
 
 
 #include <QAction>
+#include <QMimeData>
 #include <qdebug.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
-#include <kurl.h>
+#include <QUrl>
 #include <kxmlguifactory.h>
 #include <kxmlguiwindow.h>
 
@@ -186,8 +187,8 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
     // Check if the collection under the cursor accepts this data type
     const QStringList supportedContentTypes = model()->data(index, CollectionModel::CollectionRole).value<Collection>().contentMimeTypes();
     const QMimeData *mimeData = event->mimeData();
-    const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
-    foreach (const KUrl &url, urls) {
+    const QList<QUrl> urls = mimeData->urls();
+    foreach (const QUrl &url, urls) {
 
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {
@@ -200,9 +201,14 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
                 break;
             }
         } else {
-            const QString type = url.queryItems()[QString::fromLatin1("type")];
-            if (!supportedContentTypes.contains(type)) {
-                break;
+            QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
+            for (int i = 0;i<query.count(); ++i) {
+                if ( query.at(i).first == QString::fromLatin1("type")) {
+                   const QString type = query.at(i).second;
+                   if (!supportedContentTypes.contains(type)) {
+                      break;
+                   }
+                }
             }
         }
 

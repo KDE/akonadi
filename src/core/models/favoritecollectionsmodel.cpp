@@ -26,7 +26,7 @@
 #include <klocale.h>
 #include <klocalizedstring.h>
 #include <KJob>
-#include <KUrl>
+#include <QUrl>
 
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
@@ -388,7 +388,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
     Q_UNUSED(row);
     Q_UNUSED(column);
     if (data->hasFormat(QStringLiteral("text/uri-list"))) {
-        const KUrl::List urls = KUrl::List::fromMimeData(data);
+        const QList<QUrl> urls = data->urls();
 
         const QModelIndex sourceIndex = mapToSource(parent);
         const Collection destCollection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
@@ -396,7 +396,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
         MimeTypeChecker mimeChecker;
         mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());
 
-        foreach (const KUrl &url, urls) {
+        foreach (const QUrl &url, urls) {
             const Collection col = Collection::fromUrl(url);
             if (col.isValid()) {
                 addCollection(col);

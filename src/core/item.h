@@ -39,7 +39,7 @@
 #include <typeinfo>
 #include <memory>
 
-class KUrl;
+class QUrl;
 
 template <typename T>
 class QVector;
@@ -167,7 +167,7 @@ public:
     /**
      * Creates an item from the given @p url.
      */
-    static Item fromUrl(const KUrl &url);
+    static Item fromUrl(const QUrl &url);
 
     /**
      * Returns all flags of this item.
@@ -411,7 +411,7 @@ public:
     /**
      * Returns the url of the item.
      */
-    KUrl url(UrlType type = UrlShort) const;
+    QUrl url(UrlType type = UrlShort) const;
 
     /**
      * Returns the parts available for this item.

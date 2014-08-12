@@ -25,6 +25,7 @@
 #include "xmlreader.h"
 #include <searchquery.h>
 
+#include <KUrl>
 #include <agentfactory.h>
 #include <changerecorder.h>
 #include <collection.h>

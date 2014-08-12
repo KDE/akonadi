@@ -99,13 +99,13 @@ bool Tag::operator==(const Tag &other) const
     return d->gid == other.d->gid;
 }
 
-Tag Tag::fromUrl(const KUrl &url)
+Tag Tag::fromUrl(const QUrl &url)
 {
-    if (url.protocol() != QLatin1String("akonadi")) {
+    if (url.scheme() != QLatin1String("akonadi")) {
         return Tag();
     }
 
-    const QString tagStr = url.queryItem(QStringLiteral("tag"));
+    const QString tagStr = QUrlQuery(url).queryItemValue(QStringLiteral("tag"));
     bool ok = false;
     Tag::Id itemId = tagStr.toLongLong(&ok);
     if (!ok) {
@@ -115,10 +115,10 @@ Tag Tag::fromUrl(const KUrl &url)
     return Tag(itemId);
 }
 
-KUrl Tag::url() const
+QUrl Tag::url() const
 {
-    KUrl url;
-    url.setProtocol(QString::fromLatin1("akonadi"));
+    QUrl url;
+    url.setScheme(QString::fromLatin1("akonadi"));
     url.addQueryItem(QStringLiteral("tag"), QString::number(id()));
     return url;
 }

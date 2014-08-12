@@ -29,7 +29,7 @@
 
 #include <qdebug.h>
 #include <QIcon>
-#include <kurl.h>
+#include <QUrl>
 
 
 #include <QtCore/QMimeData>
@@ -263,7 +263,7 @@ QStringList CollectionModel::mimeTypes() const
 QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
 {
     QMimeData *data = new QMimeData();
-    KUrl::List urls;
+    QList<QUrl> urls;
     foreach (const QModelIndex &index, indexes) {
         if (index.column() != 0) {
             continue;
@@ -271,7 +271,7 @@ QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
 
         urls << Collection(index.internalId()).url();
     }
-    urls.populateMimeData(data);
+    data->setUrls(urls);
 
     return data;
 }

@@ -32,7 +32,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <KUrl>
+#include <QUrl>
 
 using namespace Akonadi;
 
@@ -150,10 +150,10 @@ void Collection::setParentRemoteId(const QString &remoteParent)
     parentCollection().setRemoteId(remoteParent);
 }
 
-KUrl Collection::url(UrlType type) const
+QUrl Collection::url(UrlType type) const
 {
-    KUrl url;
-    url.setProtocol(QString::fromLatin1("akonadi"));
+    QUrl url;
+    url.setScheme(QString::fromLatin1("akonadi"));
     url.addQueryItem(QStringLiteral("collection"), QString::number(id()));
 
     if (type == UrlWithName) {
@@ -163,13 +163,13 @@ KUrl Collection::url(UrlType type) const
     return url;
 }
 
-Collection Collection::fromUrl(const KUrl &url)
+Collection Collection::fromUrl(const QUrl &url)
 {
-    if (url.protocol() != QLatin1String("akonadi")) {
+    if (url.scheme() != QLatin1String("akonadi")) {
         return Collection();
     }
 
-    const QString colStr = url.queryItem(QStringLiteral("collection"));
+    const QString colStr = QUrlQuery(url).queryItemValue(QStringLiteral("collection"));
     bool ok = false;
     Collection::Id colId = colStr.toLongLong(&ok);
     if (!ok) {

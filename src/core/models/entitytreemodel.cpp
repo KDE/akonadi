@@ -29,7 +29,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KUrl>
+#include <QUrl>
 
 #include "attributefactory.h"
 #include "changerecorder.h"
@@ -533,8 +533,8 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             MimeTypeChecker mimeChecker;
             mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());
 
-            const KUrl::List urls = KUrl::List::fromMimeData(data);
-            foreach (const KUrl &url, urls) {
+            const QList<QUrl> urls = data->urls();
+            foreach (const QUrl &url, urls) {
                 const Collection collection = d->m_collections.value(Collection::fromUrl(url).id());
                 if (collection.isValid()) {
                     if (collection.parentCollection().id() == destCollection.id() &&
@@ -754,7 +754,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
     Q_D(const EntityTreeModel);
 
     QMimeData *data = new QMimeData();
-    KUrl::List urls;
+    QList<QUrl> urls;
     foreach (const QModelIndex &index, indexes) {
         if (index.column() != 0) {
             continue;
@@ -769,7 +769,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
         if (Node::Collection == node->type) {
             urls << d->m_collections.value(node->id).url(Collection::UrlWithName);
         } else if (Node::Item == node->type) {
-            KUrl url = d->m_items.value(node->id).url(Item::Item::UrlWithMimeType);
+            QUrl url = d->m_items.value(node->id).url(Item::Item::UrlWithMimeType);
             // Encode the "virtual" parent
             url.addQueryItem(QLatin1String("parent"), QString::number(node->parent));
             urls << url;
@@ -778,7 +778,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
         }
     }
 
-    urls.populateMimeData(data);
+    data->setUrls(urls);
 
     return data;
 }
@@ -1033,7 +1033,7 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
     }
 
     if (role == EntityUrlRole) {
-        const KUrl url(value.toString());
+        const QUrl url(value.toString());
         const Item item = Item::fromUrl(url);
 
         if (item.isValid()) {

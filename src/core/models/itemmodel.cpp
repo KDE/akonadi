@@ -28,7 +28,7 @@
 
 #include <qdebug.h>
 #include <klocalizedstring.h>
-#include <kurl.h>
+#include <QUrl>
 
 #include <QCoreApplication>
 #include <QtCore/QDebug>
@@ -431,7 +431,7 @@ QMimeData *ItemModel::mimeData(const QModelIndexList &indexes) const
 {
     QMimeData *data = new QMimeData();
     // Add item uri to the mimedata for dropping in external applications
-    KUrl::List urls;
+    QList<QUrl> urls;
     foreach (const QModelIndex &index, indexes) {
         if (index.column() != 0) {
             continue;
@@ -439,7 +439,7 @@ QMimeData *ItemModel::mimeData(const QModelIndexList &indexes) const
 
         urls << itemForIndex(index).url(Item::UrlWithMimeType);
     }
-    urls.populateMimeData(data);
+    data->setUrls(urls);
 
     return data;
 }

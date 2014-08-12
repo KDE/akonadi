@@ -27,7 +27,8 @@
 #include <QDrag>
 
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
+#include <QMimeData>
 
 #include "collection.h"
 #include "entitytreemodel.h"
@@ -63,8 +64,8 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
         const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
 
         const QMimeData *data = event->mimeData();
-        const KUrl::List urls = KUrl::List::fromMimeData(data);
-        foreach (const KUrl &url, urls) {
+        const QList<QUrl> urls = data->urls();
+        foreach (const QUrl &url, urls) {
             const Collection collection = Collection::fromUrl(url);
             if (collection.isValid()) {
                 if (!supportedContentTypes.contains(Collection::mimeType()) &&
@@ -77,12 +78,16 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
                     break;
                 }
             } else { // This is an item.
-                const QString type = url.queryItems()[QString::fromLatin1("type")];
-                if (!supportedContentTypes.contains(type)) {
-                    break;
-                }
+              QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
+               for (int i = 0;i<query.count(); ++i) {
+                  if ( query.at(i).first == QString::fromLatin1("type")) {
+                     const QString type = query.at(i).second;
+                     if (!supportedContentTypes.contains(type)) {
+                        break;
+                     }
+                  }
+               }
             }
-
             return true;
         }
     }
@@ -118,8 +123,8 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
 
     const QMimeData *data = event->mimeData();
-    const KUrl::List urls = KUrl::List::fromMimeData(data);
-    foreach (const KUrl &url, urls) {
+    const QList<QUrl> urls = data->urls();
+    foreach (const QUrl &url, urls) {
         const Collection collection = Collection::fromUrl(url);
         if (!collection.isValid()) {
             if (!dropOnItem) {

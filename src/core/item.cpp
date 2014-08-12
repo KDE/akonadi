@@ -22,7 +22,7 @@
 #include "itemserializer_p.h"
 #include <akonadi/private/protocol_p.h>
 
-#include <kurl.h>
+#include <QUrl>
 #include <qdebug.h>
 
 #include <QtCore/QStringList>
@@ -357,10 +357,10 @@ bool Item::hasPayload() const
     return d_func()->hasMetaTypeId(-1);
 }
 
-KUrl Item::url(UrlType type) const
+QUrl Item::url(UrlType type) const
 {
-    KUrl url;
-    url.setProtocol(QString::fromLatin1("akonadi"));
+    QUrl url;
+    url.setScheme(QString::fromLatin1("akonadi"));
     url.addQueryItem(QStringLiteral("item"), QString::number(id()));
 
     if (type == UrlWithMimeType) {
@@ -370,13 +370,13 @@ KUrl Item::url(UrlType type) const
     return url;
 }
 
-Item Item::fromUrl(const KUrl &url)
+Item Item::fromUrl(const QUrl &url)
 {
-    if (url.protocol() != QLatin1String("akonadi")) {
+    if (url.scheme() != QLatin1String("akonadi")) {
         return Item();
     }
 
-    const QString itemStr = url.queryItem(QStringLiteral("item"));
+    const QString itemStr = QUrlQuery(url).queryItemValue(QStringLiteral("item"));
     bool ok = false;
     Item::Id itemId = itemStr.toLongLong(&ok);
     if (!ok) {

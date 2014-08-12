@@ -24,7 +24,7 @@
 #include <QMimeData>
 
 #include <KConfigGroup>
-#include <KUrl>
+#include <QUrl>
 
 #include "collection.h"
 #include "item.h"
@@ -126,7 +126,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
 
     bool containsMove = false;
 
-    const KUrl::List urls = KUrl::List::fromMimeData(data);
+    const QList<QUrl> urls = data->urls();
 
     Collection parentCol;
 
@@ -143,7 +143,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     }
 
     QStringList droppedList;
-    foreach (const KUrl &url, urls) {
+    foreach (const QUrl &url, urls) {
         Collection col = Collection::fromUrl(url);
 
         if (!col.isValid()) {

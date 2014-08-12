@@ -31,7 +31,7 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 
 #include "attributeentity.h"
 #include <QSharedPointer>
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 
 namespace Akonadi {
@@ -71,12 +71,12 @@ public:
     AttributeEntity &operator=(const AttributeEntity &);
     bool operator==(const Tag &) const;
 
-    static Tag fromUrl(const KUrl &url);
+    static Tag fromUrl(const QUrl &url);
 
     /**
      * Returns the url of the tag.
      */
-    KUrl url() const;
+    QUrl url() const;
 
     /**
      * Sets the unique @p identifier of the tag.

@@ -26,7 +26,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 
-class KUrl;
+class QUrl;
 
 namespace Akonadi {
 
@@ -122,7 +122,7 @@ public:
     /**
      * Creates a collection from the given @p url.
      */
-    static Collection fromUrl(const KUrl &url);
+    static Collection fromUrl(const QUrl &url);
 
     /**
      * Returns the i18n'ed name of the collection.
@@ -263,7 +263,7 @@ public:
      * @param type the type of url
      * @since 4.7
      */
-    KUrl url(UrlType type = UrlShort) const;
+    QUrl url(UrlType type = UrlShort) const;
 
     /**
      * Returns whether the collection is virtual, for example a search collection.

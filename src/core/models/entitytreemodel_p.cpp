@@ -27,7 +27,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KUrl>
+#include <QUrl>
 
 #include "agentmanager.h"
 #include "agenttype.h"

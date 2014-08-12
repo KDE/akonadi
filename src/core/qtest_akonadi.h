@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) \
   KAboutData aboutData( QLatin1String( "qttest" ), i18n( "KDE Test Program" ), QLatin1String( "version" ) );  \
   QApplication app( argc, argv ); \
   KAboutData::setApplicationData(aboutData); \
-  qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
-  qRegisterMetaType<KUrl::List>(); \
+  qRegisterMetaType<QUrl>(); /*as done by kapplication*/ \
+  qRegisterMetaType<QList<QUrl>>(); \
   TestObject tc; \
   KGlobal::ref(); /* don't quit qeventloop after closing a mainwindow */ \
   return QTest::qExec( &tc, argc, argv ); \

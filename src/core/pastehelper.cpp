@@ -32,7 +32,7 @@
 #include "session.h"
 #include "unlinkjob.h"
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMimeData>
@@ -228,9 +228,9 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
     // check that the target collection has the rights to
     // create the pasted items resp. collections
     Collection::Rights neededRights = Collection::ReadOnly;
-    if (KUrl::List::canDecode(mimeData)) {
-        const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
-        foreach (const KUrl &url, urls) {
+    if (mimeData->hasUrls()) {
+        const QList<QUrl> urls = mimeData->urls();
+        foreach (const QUrl &url, urls) {
             if (url.hasQueryItem(QStringLiteral("item"))) {
                 neededRights |= Collection::CanCreateItem;
             } else if (url.hasQueryItem(QStringLiteral("collection"))) {
@@ -245,7 +245,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
         // check that the target collection supports the mime types of the
         // items/collections that shall be pasted
         bool supportsMimeTypes = true;
-        foreach (const KUrl &url, urls) {
+        foreach (const QUrl &url, urls) {
             // collections do not provide mimetype information, so ignore this check
             if (url.hasQueryItem(QStringLiteral("collection"))) {
                 continue;
@@ -295,7 +295,7 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
         return job;
     }
 
-    if (!KUrl::List::canDecode(mimeData)) {
+    if (!mimeData->hasUrls()) {
         return 0;
     }
 
@@ -305,7 +305,7 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
 
 KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &destination, Qt::DropAction action, Session *session)
 {
-    if (!KUrl::List::canDecode(mimeData)) {
+    if (!mimeData->hasUrls()) {
         return 0;
     }
 
@@ -313,17 +313,17 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         return 0;
     }
 
-    const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
+    const QList<QUrl> urls = mimeData->urls();
     Collection::List collections;
     Item::List items;
-    foreach (const KUrl &url, urls) {
+    foreach (const QUrl &url, urls) {
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {
             collections.append(collection);
         }
         Item item = Item::fromUrl(url);
         if (url.hasQueryItem(QLatin1String("parent"))) {
-            item.setParentCollection(Collection(url.queryItem(QLatin1String("parent")).toLongLong()));
+            item.setParentCollection(Collection(QUrlQuery(url).queryItemValue(QLatin1String("parent")).toLongLong()));
         }
         if (item.isValid()) {
             items.append(item);
