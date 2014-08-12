@@ -240,6 +240,13 @@ public:
                 StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
                 i18n("Paste failed"));
             break;
+        case Akonadi::StandardActionManager::SynchronizeCollectionTree:
+            mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeCollectionTree,
+                                           ki18n("Update Available Calendars"));
+            mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollectionTree)->setWhatsThis(
+                i18n("Updates the tree of available calendars."));
+
+            break;
         default:
             break;
         }
@@ -283,6 +290,7 @@ public:
         updateGenericAction(StandardActionManager::MoveToTrashRestoreItem);
         updateGenericAction(StandardActionManager::MoveToTrashRestoreItemAlternative);
         updateGenericAction(StandardActionManager::SynchronizeFavoriteCollections);
+        updateGenericAction(StandardActionManager::SynchronizeCollectionTree);
 
     }
 

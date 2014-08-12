@@ -168,6 +168,7 @@ public:
         MoveToTrashRestoreItem,                  ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
         MoveToTrashRestoreItemAlternative,       ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
         SynchronizeFavoriteCollections,          ///< Synchronize favorite collections @since 4.8
+        SynchronizeCollectionTree,               ///< Synchronize collection tree @since 4.15
         LastType                                 ///< Marks last action
     };
 
@@ -407,6 +408,7 @@ private:
     Q_PRIVATE_SLOT( d, void slotDeleteResource() )
     Q_PRIVATE_SLOT( d, void slotResourceProperties() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeResource() )
+    Q_PRIVATE_SLOT( d, void slotSynchronizeCollectionTree() )
     Q_PRIVATE_SLOT( d, void slotToggleWorkOffline(bool) )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
