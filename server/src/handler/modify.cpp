@@ -264,9 +264,6 @@ bool Modify::parseStream()
       const bool referenced = connection()->collectionReferenceManager()->isReferenced(collection.id());
       if ( referenced != collection.referenced() ) {
         collection.setReferenced( referenced );
-        if ( AkonadiServer::instance()->intervalChecker() && referenced ) {
-          AkonadiServer::instance()->intervalChecker()->requestCollectionSync( collection );
-        }
         changes.append( AKONADI_PARAM_REFERENCED );
       }
     } else if ( type.isEmpty() ) {
@@ -319,6 +316,10 @@ bool Modify::parseStream()
   if ( !changes.isEmpty() ) {
     if ( collection.hasPendingChanges() && !collection.update() ) {
       return failureResponse( "Unable to update collection" );
+    }
+    //This must be after the collection was updated in the db. The resource will immediately request a copy of the collection.
+    if ( AkonadiServer::instance()->intervalChecker() && collection.referenced() && changes.contains( AKONADI_PARAM_REFERENCED ) ) {
+        AkonadiServer::instance()->intervalChecker()->requestCollectionSync( collection );
     }
     db->notificationCollector()->collectionChanged( collection, changes );
     //For backwards compatibility. Must be after the changed notification (otherwise the compression removes it).
