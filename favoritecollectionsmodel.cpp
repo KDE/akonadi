@@ -166,8 +166,8 @@ public:
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (index.isValid()) {
             q->sourceModel()->setData(index, QVariant(), EntityTreeModel::CollectionDerefRole);
-            referencedCollections.remove(collectionId);
         }
+	referencedCollections.remove(collectionId);
     }
 
     void clearReferences()
