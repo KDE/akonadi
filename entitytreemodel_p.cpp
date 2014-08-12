@@ -676,6 +676,11 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
         return;
     }
 
+    if (ancestors.isEmpty() && !insertBaseCollection) {
+        //Nothing to do, avoid emitting insert signals
+        return;
+    }
+
     if (!ancestors.isEmpty()) {
         // Fetch the real ancestors
         CollectionFetchJob *job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
@@ -693,11 +698,27 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     // Still prepending all collections for now.
     int row = 0;
 
+    // Although we insert several Collections here, we only need to notify though the model
+    // about the top-level one. The rest will be found auotmatically by the view.
+    q->beginInsertRows(parent, row, row);
+
+
+    Collection::List::const_iterator it = ancestors.constBegin();
+    const Collection::List::const_iterator end = ancestors.constEnd();
+
+    for (; it != end; ++it) {
+        const Collection ancestor = *it;
+        Q_ASSERT(ancestor.parentCollection().isValid());
+        m_collections.insert(ancestor.id(), ancestor);
+
+        Node *node = new Node;
+        node->id = ancestor.id();
+        node->parent = ancestor.parentCollection().id();
+        node->type = Node::Collection;
+        m_childEntities[node->parent].prepend(node);
+    }
 
     if (insertBaseCollection) {
-        // Although we insert several Collections here, we only need to notify though the model
-        // about the top-level one. The rest will be found auotmatically by the view.
-        q->beginInsertRows(parent, row, row);
         m_collections.insert(collection.id(), collection);
         Node *node = new Node;
         node->id = collection.id();
@@ -707,31 +728,7 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
         m_childEntities[node->parent].prepend(node);
     }
 
-    Collection::List::const_iterator it = ancestors.constBegin();
-    const Collection::List::const_iterator end = ancestors.constEnd();
-
-    for (; it != end; ++it) {
-        const Collection ancestor = *it;
-        Q_ASSERT(ancestor.parentCollection().isValid());
-        if (!insertBaseCollection) {
-            const QModelIndex ancestorParent = indexForCollection(ancestor.parentCollection());
-            q->beginInsertRows(ancestorParent, 0, 0);
-        }
-        m_collections.insert(ancestor.id(), ancestor);
-
-        Node *node = new Node;
-        node->id = ancestor.id();
-        node->parent = ancestor.parentCollection().id();
-        node->type = Node::Collection;
-        m_childEntities[node->parent].prepend(node);
-        if (!insertBaseCollection) {
-            q->endInsertRows();
-        }
-    }
-
-    if (insertBaseCollection) {
-        q->endInsertRows();
-    }
+    q->endInsertRows();
 }
 
 void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List &collectionList)
