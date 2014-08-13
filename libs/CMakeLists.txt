@@ -36,5 +36,7 @@ install(FILES
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
 )
 
-add_subdirectory(tests)
+if(AKONADI_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
 
