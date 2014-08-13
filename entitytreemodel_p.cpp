@@ -872,10 +872,16 @@ void EntityTreeModelPrivate::monitoredCollectionAdded(const Akonadi::Collection 
         if (collection != Collection::root()) {
             retrieveAncestors(collection);
         }
+        if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
+            fetchItems(collection);
+        }
         return;
     }
 
     insertCollection(collection, parent);
+    if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
+        fetchItems(collection);
+    }
 }
 
 void EntityTreeModelPrivate::monitoredCollectionRemoved(const Akonadi::Collection &collection)
