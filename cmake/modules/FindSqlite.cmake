@@ -94,7 +94,7 @@ if(EXISTS ${SQLITE_INCLUDE_DIR}/sqlite3.h)
                 ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify
                 ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify.cpp
                 LINK_LIBRARIES ${SQLITE_LIBRARIES}
-                CMAKE_FLAGS INCLUDE_DIRECTORIES ${SQLITE_INCLUDE_DIR})
+                CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:PATH=${SQLITE_INCLUDE_DIR}")
     if (NOT SQLITE_HAS_UNLOCK_NOTIFY)
         message(STATUS "Sqlite ${SQLITE_VERSION} was found, but it is not compiled with -DSQLITE_ENABLE_UNLOCK_NOTIFY")
     endif()
