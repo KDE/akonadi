@@ -163,7 +163,6 @@ bool List::checkChildrenForMimeTypes(const QHash<qint64, Collection> &collection
 Collection::List List::retrieveChildren(const Collection &topParent, int depth)
 {
     QHash<qint64 /*id*/, Collection> collections;
-    QMultiHash<qint64 /* parent */, qint64 /* children */> parentLookup;
 
     const qint64 parentId = topParent.isValid() ? topParent.id() : 0;
     {
@@ -207,12 +206,15 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
         }
         Q_FOREACH (const Collection &col, qb.result()) {
             collections.insert(col.id(), col);
-            parentLookup.insertMulti(col.parentId(), col.id());
         }
     }
 
     //Post filtering that we couldn't do as part of the sql query
     if (topParent.isValid() || !mMimeTypes.isEmpty()) {
+        QMultiHash<qint64 /* parent */, qint64 /* children */> parentLookup;
+        Q_FOREACH (const Collection &col, collections) {
+            parentLookup.insertMulti(col.parentId(), col.id());
+        }
         auto it = collections.begin();
         while (it != collections.end()) {
             //Filter by mimetype
@@ -268,7 +270,6 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
                 //Don't include the collection when only looking for enabled collections.
                 //However, a referenced collection should be still synchronized by the resource, so we exclude this case.
                 if (!checkFilterCondition(*it) && !(mCollectionsToSynchronize && connection()->context()->resource().isValid())) {
-                    parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
                 }
