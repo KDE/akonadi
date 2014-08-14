@@ -28,7 +28,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <qdebug.h>
-#include <KDebug>
+#include <QDebug>
 #include <klocalizedstring.h>
 
 #include <QCoreApplication>
@@ -363,7 +363,7 @@ void SessionPrivate::writeData(const QByteArray &data)
     if (socket) {
         socket->write(data);
     } else {
-        qWarning() << "Trying to write while session is disconnected!" << kBacktrace();
+        //PORT QT5 qWarning() << "Trying to write while session is disconnected!" << kBacktrace();
     }
 }
 

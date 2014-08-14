@@ -22,7 +22,7 @@
 #include "dbusconnectionpool.h"
 #include "recursivemover_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 
 #include <QtCore/QTimer>
@@ -449,7 +449,7 @@ void ResourceScheduler::Task::sendDBusReplies( const QString &errorMsg )
     } else if (methodName.isEmpty()) {
       continue; // unittest calls scheduleItemFetch with empty QDBusMessage
     } else {
-      kFatal() << "Got unexpected member:" << methodName;
+      qCritical() << "Got unexpected member:" << methodName;
     }
     DBusConnectionPool::threadConnection().send( reply );
   }

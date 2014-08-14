@@ -24,10 +24,8 @@
 #include "collectionstatistics.h"
 #include "collectionutils.h"
 
-#include <klocale.h>
 #include <klocalizedstring.h>
 
-#include <KLocale>
 #include <KFormat>
 
 using namespace Akonadi;

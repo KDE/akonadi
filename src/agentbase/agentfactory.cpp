@@ -24,7 +24,6 @@
 #include "servermanager.h"
 #include "servermanager_p.h"
 
-#include <klocale.h>
 #include <klocalizedstring.h>
 #include <kglobal.h>
 

@@ -24,9 +24,7 @@
 #include "collectionstatistics.h"
 
 #include <qdebug.h>
-#include <klocale.h>
 #include <klocalizedstring.h>
-#include <KLocale>
 #include <KFormat>
 
 using namespace Akonadi;
