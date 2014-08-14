@@ -725,7 +725,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void rootFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void finalCollectionFetchJobDone(KJob *job))
 
     Q_PRIVATE_SLOT(d_func(), void itemsFetched(Akonadi::Item::List))
     Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))

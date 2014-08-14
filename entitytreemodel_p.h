@@ -136,6 +136,7 @@ public:
     QVector<Entity::Id> m_pendingCutItems;
     QVector<Entity::Id> m_pendingCutCollections;
     mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
+    mutable QSet<KJob*> m_pendingCollectionFetchJobs;
 
     ChangeRecorder *m_monitor;
     Collection m_rootCollection;
@@ -169,7 +170,6 @@ public:
     void rootFetchJobDone(KJob *job);
     void collectionFetchJobDone(KJob *job);
     void itemFetchJobDone(KJob *job);
-    void finalCollectionFetchJobDone(KJob *job);
     void updateJobDone(KJob *job);
     void pasteJobDone(KJob *job);
 

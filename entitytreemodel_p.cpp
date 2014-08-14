@@ -288,6 +288,7 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
 
     job->fetchScope().setListFilter(m_listFilter);
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
+    m_pendingCollectionFetchJobs.insert(static_cast<KJob*>(job));
 
     if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
@@ -297,8 +298,6 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                     q, SLOT(collectionsFetched(Akonadi::Collection::List)));
-        q->connect(job, SIGNAL(result(KJob*)),
-                    q, SLOT(finalCollectionFetchJobDone(KJob*)));
     }
     q->connect(job, SIGNAL(result(KJob*)),
                 q, SLOT(collectionFetchJobDone(KJob*)));
@@ -1355,10 +1354,16 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
 void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 {
+    m_pendingCollectionFetchJobs.remove(job);
     CollectionFetchJob *cJob = static_cast<CollectionFetchJob *>(job);
     if (job->error()) {
         kWarning() << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
         return;
+    }
+
+    if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
+        m_collectionTreeFetched = true;
+        emit q_ptr->collectionTreeFetched(m_collections.values());
     }
 
 #ifdef DBG_TRACK_JOB_TIMES
@@ -1541,21 +1546,6 @@ void EntityTreeModelPrivate::startFirstListJob()
     // This fetches virtual collections into the tree.
     if (!m_monitor->resourcesMonitored().isEmpty()) {
         fetchTopLevelCollections();
-    }
-}
-
-void EntityTreeModelPrivate::finalCollectionFetchJobDone(KJob *job)
-{
-    if (job->error()) {
-        kWarning() << job->errorString();
-        return;
-    }
-
-    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
-    //Can happen when monitoring resources
-    if (!m_collectionTreeFetched) {
-        m_collectionTreeFetched = true;
-        emit q_ptr->collectionTreeFetched(fetchJob->collections());
     }
 }
 
@@ -1866,6 +1856,9 @@ void EntityTreeModelPrivate::endResetModel()
     m_collectionsWithoutItems.clear();
     m_populatedCols.clear();
     m_items.clear();
+    m_pendingCollectionFetchJobs.clear();
+    m_pendingCollectionRetrieveJobs.clear();
+    m_collectionTreeFetched = false;
 
     foreach (const QList<Node *> &list, m_childEntities) {
         qDeleteAll(list);
