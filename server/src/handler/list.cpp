@@ -152,6 +152,8 @@ bool List::checkChildrenForMimeTypes(const QHash<qint64, Collection> &collection
             if (checkChildrenForMimeTypes(collectionsMap, parentLookup, child)) {
                 return true;
             }
+        } else {
+            return true;
         }
     }
 
@@ -219,9 +221,6 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
                 const bool hidden = !intersect(mMimeTypes, it->mimeTypes());
                 const bool hasChildCollections = checkChildrenForMimeTypes(collections, parentLookup, (*it));
                 if (hidden && !hasChildCollections) {
-                    Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
-                        parentLookup.remove(id, it->id());
-                    }
                     parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
@@ -247,9 +246,6 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
                     }
                 }
                 if (!foundParent) {
-                    Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
-                        parentLookup.remove(id, it->id());
-                    }
                     parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
@@ -272,9 +268,6 @@ Collection::List List::retrieveChildren(const Collection &topParent, int depth)
                 //Don't include the collection when only looking for enabled collections.
                 //However, a referenced collection should be still synchronized by the resource, so we exclude this case.
                 if (!checkFilterCondition(*it) && !(mCollectionsToSynchronize && connection()->context()->resource().isValid())) {
-                    Q_FOREACH (qint64 id, parentLookup.keys(it->id())) {
-                        parentLookup.remove(id, it->id());
-                    }
                     parentLookup.remove(it->id());
                     it = collections.erase(it);
                     continue;
