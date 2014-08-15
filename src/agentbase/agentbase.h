@@ -41,7 +41,6 @@ class AgentBasePrivate;
 class ChangeRecorder;
 class Collection;
 class Item;
-class Session;
 
 /**
  * @short The base class for all Akonadi agents and resources.

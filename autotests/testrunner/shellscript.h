@@ -22,7 +22,6 @@
 #include <QVector>
 #include <QPair>
 
-class Symbols;
 
 class ShellScript
 {

@@ -30,7 +30,6 @@ class KJob;
 
 namespace Akonadi {
 
-class ImapSet;
 
 class AgentSearchInterfacePrivate : public QObject
 {

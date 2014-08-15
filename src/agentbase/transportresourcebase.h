@@ -26,7 +26,6 @@
 #include <QtCore/QString>
 
 
-class KJob;
 
 namespace Akonadi {
 

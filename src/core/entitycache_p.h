@@ -39,7 +39,6 @@
 #include <QHash>
 #include <QtCore/QQueue>
 
-class Dummy;
 class KJob;
 
 typedef QList<Akonadi::Entity::Id> EntityIdList;

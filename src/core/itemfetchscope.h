@@ -25,7 +25,6 @@
 #include <QtCore/QSharedDataPointer>
 #include <QDateTime>
 
-class QStringList;
 template <typename T> class QSet;
 
 namespace Akonadi {

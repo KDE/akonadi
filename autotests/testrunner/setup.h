@@ -24,9 +24,7 @@
 #include <QVector>
 #include <QPair>
 
-class QIODevice;
 class KProcess;
-class QSignalMapper;
 class KJob;
 
 class SetupTest : public QObject

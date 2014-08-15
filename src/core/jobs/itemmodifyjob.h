@@ -26,7 +26,6 @@
 
 namespace Akonadi {
 
-class Collection;
 class ItemModifyJobPrivate;
 
 /**

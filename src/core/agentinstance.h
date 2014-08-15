@@ -27,7 +27,6 @@
 #include <QtCore/QSharedDataPointer>
 
 class QString;
-class QStringList;
 class QWidget;
 
 namespace Akonadi

@@ -32,7 +32,6 @@
 #include "akonadiprivate_export.h"
 
 namespace Akonadi {
-class ItemFetchJob;
 class ChangeRecorder;
 class AgentInstance;
 }
