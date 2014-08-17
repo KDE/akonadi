@@ -379,11 +379,19 @@ bool List::parseStream()
             }
             if (option == AKONADI_PARAM_ANCESTORS) {
                 const QByteArray argument = m_streamParser->readString();
-                mAncestorDepth = HandlerHelper::parseDepth(argument);
-            }
-            if (option == AKONADI_PARAM_ANCESTORATTRIBUTE) {
-                const QByteArray argument = m_streamParser->readString();
-                mAncestorAttributes << argument;
+                if (m_streamParser->hasList()) {
+                    m_streamParser->beginList();
+                    while (!m_streamParser->atListEnd()) {
+                        const QByteArray &value = m_streamParser->readString();
+                        if (value == "DEPTH") {
+                            mAncestorDepth = HandlerHelper::parseDepth(m_streamParser->readString());
+                        } else {
+                            mAncestorAttributes << value;
+                        }
+                    }
+                } else { //Backwards compatibility
+                    mAncestorDepth = HandlerHelper::parseDepth(argument);
+                }
             }
         }
     }

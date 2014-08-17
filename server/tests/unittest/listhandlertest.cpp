@@ -314,10 +314,10 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () (ANCESTORS INF ANCESTORATTR type)"
-                     << initializer->listResponse(col2, true)
+                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () (ANCESTORS (DEPTH INF type NAME REMOTEID))"
+                     << initializer->listResponse(col2, true, true, QStringList() << QLatin1String("type") << QLatin1String("NAME") << QLatin1String("REMOTEID"))
                      << "S: 2 OK List completed";
-            QTest::newRow("list ancestor attribute") << scenario;
+            QTest::newRow("list ancestor attribute with fetch scope") << scenario;
         }
     }
 

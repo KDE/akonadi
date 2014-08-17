@@ -75,7 +75,7 @@ QByteArray DbInitializer::toByteArray(Akonadi::Server::Tristate tristate)
     return "DEFAULT";
 }
 
-QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes)
+QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes, const QStringList &ancestorFetchScope)
 {
     QByteArray s;
     s = "S: * " + QByteArray::number(col.id()) + " " + QByteArray::number(col.parentId()) + " (NAME \"" + col.name().toLatin1() +
@@ -102,13 +102,25 @@ QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bo
         s += " ANCESTORS (";
         Collection parent = col.parent();
         while (parent.isValid()) {
-            s += "(" + QByteArray::number(parent.id()) + "  (";
-            s += " REMOTEID \"" + parent.remoteId().toUtf8() + "\"";
-            s += " NAME \"" + parent.name().toUtf8() + "\"";
-            Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
-                s += ' ' + attr.type() + " \"" + attr.value() + "\"";
+            s += "(" + QByteArray::number(parent.id());
+            if (ancestorFetchScope.isEmpty()) {
+                s += " \"" + parent.remoteId().toUtf8() + "\"";
+            } else {
+                s += "  (";
+                if (ancestorFetchScope.contains(QLatin1String("REMOTEID"))) {
+                    s += "REMOTEID \"" + parent.remoteId().toUtf8() + "\" ";
+                }
+                if (ancestorFetchScope.contains(QLatin1String("NAME"))) {
+                    s += "NAME \"" + parent.name().toUtf8() + "\" ";
+                }
+                Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
+                    if (ancestorFetchScope.contains(QString::fromLatin1(attr.type()))) {
+                        s += attr.type() + " \"" + attr.value() + "\" ";
+                    }
+                }
+                s += ")";
             }
-            s += ")) ";
+            s += ") ";
             parent = parent.parent();
         }
         s += "(0 \"\")";

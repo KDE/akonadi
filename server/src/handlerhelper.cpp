@@ -302,13 +302,23 @@ QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<C
       b += '(';
       const Collection c = ancestors.pop();
       b += QByteArray::number( c.id() ) + " ";
-      b += " (";
-      b += " REMOTEID " + ImapParser::quote( c.remoteId().toUtf8() );
-      b += " NAME " + ImapParser::quote(c.name().toUtf8());
-            Q_FOREACH (const CollectionAttribute &attribute, c.attributes()) {
-                b += ' ' + attribute.type() + ' ' + ImapParser::quote(attribute.value());
+      if (ancestorAttributes.isEmpty()) {
+        b += ImapParser::quote( c.remoteId().toUtf8() );
+      } else {
+        b += " (";
+        if (ancestorAttributes.contains("REMOTEID")) {
+            b += "REMOTEID " + ImapParser::quote( c.remoteId().toUtf8() ) + ' ';
+        }
+        if (ancestorAttributes.contains("NAME")) {
+            b += "NAME " + ImapParser::quote(c.name().toUtf8()) + ' ';
+        }
+        Q_FOREACH (const CollectionAttribute &attribute, c.attributes()) {
+            if (ancestorAttributes.contains(attribute.type())) {
+                b += attribute.type() + ' ' + ImapParser::quote(attribute.value()) + ' ';
             }
-      b += ")";
+        }
+        b += ")";
+      }
       b += ")";
       if ( i != ancestorDepth - 1 ) {
         b += ' ';
