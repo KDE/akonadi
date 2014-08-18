@@ -85,6 +85,15 @@ void NotificationCollector::itemsTagsChanged(const PimItem::List& items,
   itemNotification( NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), addedTags, removedTags );
 }
 
+void NotificationCollector::itemsRelationsChanged(const PimItem::List &items,
+                                                  const Relation::List &addedRelations,
+                                                  const Relation::List &removedRelations,
+                                                  const Collection &collection,
+                                                  const QByteArray &resource)
+{
+    itemNotification(NotificationMessageV2::ModifyRelations, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), QSet<qint64>(), QSet<qint64>(), addedRelations, removedRelations);
+}
+
 void NotificationCollector::itemsMoved( const PimItem::List &items,
                                         const Collection &collectionSrc,
                                         const Collection &collectionDest,
@@ -201,6 +210,16 @@ void NotificationCollector::tagRemoved( const Tag &tag )
   tagNotification( NotificationMessageV2::Remove, tag );
 }
 
+void NotificationCollector::relationAdded(const Relation &relation)
+{
+    relationNotification(NotificationMessageV2::Add, relation);
+}
+
+void NotificationCollector::relationRemoved(const Relation &relation)
+{
+    relationNotification(NotificationMessageV2::Remove, relation);
+}
+
 void NotificationCollector::transactionCommitted()
 {
   dispatchNotifications();
@@ -242,14 +261,17 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
                                               const QSet<QByteArray> &addedFlags,
                                               const QSet<QByteArray> &removedFlags,
                                               const QSet<qint64> &addedTags,
-                                              const QSet<qint64> &removedTags )
+                                             const QSet<qint64> &removedTags,
+                                             const Relation::List &addedRelations,
+                                             const Relation::List &removedRelations)
 {
   Collection notificationDestCollection;
   QMap<Entity::Id, QList<PimItem> > vCollections;
 
   if ( ( op == NotificationMessageV2::Modify ) ||
-       ( op == NotificationMessageV2::ModifyFlags ) ||
-       ( op == NotificationMessageV2::ModifyTags ) ) {
+       (op == NotificationMessageV2::ModifyFlags) ||
+       (op == NotificationMessageV2::ModifyTags) ||
+       (op == NotificationMessageV2::ModifyRelations)) {
     vCollections = DataStore::self()->virtualCollections( items );
   }
 
@@ -259,8 +281,16 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   msg.setOperation( op );
 
   msg.setItemParts( parts );
-  msg.setAddedFlags( addedFlags );
-  msg.setRemovedFlags( removedFlags );
+    QSet<QByteArray> addedFlagsAndRelations(addedFlags);
+    Q_FOREACH (const Relation rel, addedRelations) {
+        addedFlagsAndRelations << "RELATION " + rel.relationType().name().toLatin1() + " " + QByteArray::number(rel.leftId()) + " " + QByteArray::number(rel.rightId());
+    }
+    msg.setAddedFlags(addedFlagsAndRelations);
+    QSet<QByteArray> removedFlagsAndRelations(removedFlags);
+    Q_FOREACH (const Relation rel, removedRelations) {
+        removedFlagsAndRelations << "RELATION " + rel.relationType().name().toLatin1() + " " + QByteArray::number(rel.leftId()) + " " + QByteArray::number(rel.rightId());
+    }
+    msg.setRemovedFlags(removedFlagsAndRelations);
   msg.setAddedTags( addedTags );
   msg.setRemovedTags( removedTags );
 
@@ -342,6 +372,24 @@ void NotificationCollector::tagNotification( NotificationMessageV2::Operation op
   msg.setOperation( op );
   msg.setSessionId( mSessionId );
   msg.addEntity( tag.id() );
+
+    dispatchNotification(msg);
+}
+
+void NotificationCollector::relationNotification(NotificationMessageV2::Operation op,
+                                                 const Relation &relation)
+{
+    NotificationMessageV3 msg;
+    msg.setType(NotificationMessageV2::Relations);
+    msg.setOperation(op);
+    msg.setSessionId(mSessionId);
+    QSet<QByteArray> itemParts;
+    //We're not using entites becaues they are not sorted
+    itemParts << "LEFT " + QByteArray::number(relation.leftId());
+    itemParts << "RIGHT " + QByteArray::number(relation.rightId());
+    itemParts << "RID " + relation.remoteId().toLatin1();
+    itemParts << "TYPE " + relation.relationType().name().toLatin1();
+    msg.setItemParts(itemParts);
 
   dispatchNotification( msg );
 }

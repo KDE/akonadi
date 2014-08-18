@@ -82,16 +82,26 @@ class NotificationMessageHelpers
               }
 
               return false;
-            }
-            // new one is a modification, the existing one not, so drop the new one
-            else if ( ( ( msg.operation() == NotificationMessageV2::Modify ) || ( msg.operation() == NotificationMessageV2::ModifyFlags ) )
+            } else if (msg.operation() == NotificationMessageV2::ModifyRelations && it->operation() == NotificationMessageV2::ModifyRelations) {
+                (*it).setAddedFlags((*it).addedFlags() + msg.addedFlags());
+                (*it).setRemovedFlags((*it).removedFlags() + msg.removedFlags());
+
+                // If merged notifications result in no-change notification, drop both.
+                if ((*it).addedFlags() == (*it).removedFlags()) {
+                    it = list.erase(it);
+                    end = list.end();
+                }
+
+                return false;
+            } else if (((msg.operation() == NotificationMessageV2::Modify) ||(msg.operation() == NotificationMessageV2::ModifyFlags))
               && ( ( *it ).operation() != NotificationMessageV2::Modify )
               && ( *it ).operation() != NotificationMessageV2::ModifyFlags
+              && (*it).operation() != NotificationMessageV2::ModifyRelations
               && ( *it ).operation() != NotificationMessageV2::ModifyTags ) {
               return false;
             }
             // new one is a deletion, erase the existing modification ones (and keep going, in case there are more)
-            else if ( msg.operation() == NotificationMessageV2::Remove && ( ( *it ).operation() == NotificationMessageV2::Modify || ( *it ).operation() == NotificationMessageV2::ModifyFlags || ( *it ).operation() == NotificationMessageV2::ModifyTags ) ) {
+            else if ( msg.operation() == NotificationMessageV2::Remove && ( ( *it ).operation() == NotificationMessageV2::Modify || ( *it ).operation() == NotificationMessageV2::ModifyFlags || ( *it ).operation() == NotificationMessageV2::ModifyTags || (*it).operation() == NotificationMessageV2::ModifyRelations) ) {
               it = list.erase( it );
               end = list.end();
             }

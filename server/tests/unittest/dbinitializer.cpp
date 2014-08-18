@@ -19,6 +19,8 @@
 #include "dbinitializer.h"
 
 #include "akdebug.h"
+#include <storage/querybuilder.h>
+#include <storage/datastore.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -50,6 +52,23 @@ Collection DbInitializer::createCollection(const char *name, const Collection &p
     col.setResource(mResource);
     Q_ASSERT(col.insert());
     return col;
+}
+
+PimItem DbInitializer::createItem(const char *name, const Collection &parent)
+{
+    PimItem item;
+    MimeType mimeType = MimeType::retrieveByName(QLatin1String("test"));
+    if (!mimeType.isValid()) {
+        MimeType mt;
+        mt.setName(QLatin1String("test"));
+        mt.insert();
+        mimeType = mt;
+    }
+    item.setMimeType(mimeType);
+    item.setCollection(parent);
+    item.setRemoteId(QLatin1String(name));
+    Q_ASSERT(item.insert());
+    return item;
 }
 
 QByteArray DbInitializer::toByteArray(bool enabled)
@@ -146,5 +165,14 @@ void DbInitializer::cleanup()
         }
     }
     mResource.remove();
+
+    if (DataStore::self()->database().isOpen()) {
+        QueryBuilder qb( Relation::tableName(), QueryBuilder::Delete );
+        qb.exec();
+    }
+
+    Q_FOREACH(PimItem item, PimItem::retrieveAll()) {
+        item.remove();
+    }
 }
 

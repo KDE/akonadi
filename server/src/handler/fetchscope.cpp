@@ -54,6 +54,7 @@ class FetchScope::Private : public QSharedData
     uint mRemoteIdRequested : 1;
     uint mGidRequested : 1;
     uint mTagsRequested : 1;
+    uint mRelationsRequested : 1;
     uint mVirtRefRequested: 1;
     QVector<QByteArray> mTagFetchScope;
 };
@@ -75,6 +76,7 @@ FetchScope::Private::Private()
   , mRemoteIdRequested( false )
   , mGidRequested( false )
   , mTagsRequested( false )
+    , mRelationsRequested(false)
   , mVirtRefRequested( false )
 {
 }
@@ -99,6 +101,7 @@ FetchScope::Private::Private( const Private &other )
   , mRemoteIdRequested( other.mRemoteIdRequested )
   , mGidRequested( other.mGidRequested )
   , mTagsRequested( other.mTagsRequested )
+    , mRelationsRequested(other.mRelationsRequested)
   , mVirtRefRequested( other.mVirtRefRequested )
   , mTagFetchScope( other.mTagFetchScope )
 {
@@ -175,6 +178,8 @@ void FetchScope::Private::parsePartList()
           mTagFetchScope << mStreamParser->readString();
         }
       }
+        } else if (b == AKONADI_PARAM_RELATIONS) {
+            mRelationsRequested = true;
     } else if ( b == AKONADI_PARAM_COLLECTIONID ) {
       // we always return collection IDs anyway
     } else if ( b == AKONADI_PARAM_VIRTREF ) {
@@ -402,6 +407,16 @@ bool FetchScope::tagsRequested() const
 QVector<QByteArray> FetchScope::tagFetchScope() const
 {
   return d->mTagFetchScope;
+}
+
+void FetchScope::setRelationsRequested(bool relationsRequested)
+{
+    d->mRelationsRequested = relationsRequested;
+}
+
+bool FetchScope::relationsRequested() const
+{
+    return d->mRelationsRequested;
 }
 
 void FetchScope::setVirtualReferencesRequested( bool vRefRequested )

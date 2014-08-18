@@ -105,6 +105,15 @@ class NotificationCollector : public QObject
                            const QByteArray &resource = QByteArray() );
 
     /**
+     Notify about changed items relations
+    **/
+    void itemsRelationsChanged(const PimItem::List &items,
+                               const Relation::List &addedRelations,
+                               const Relation::List &removedRelations,
+                               const Collection &collection = Collection(),
+                               const QByteArray &resource = QByteArray());
+
+    /**
       Notify about moved items
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
@@ -193,6 +202,16 @@ class NotificationCollector : public QObject
     void tagRemoved( const Tag &tag );
 
     /**
+      Notify about an added relation.
+     */
+    void relationAdded(const Relation &relation);
+
+    /**
+      Notify about a removed relation.
+     */
+    void relationRemoved(const Relation &relation);
+
+    /**
       Trigger sending of collected notifications.
     */
     void dispatchNotifications();
@@ -209,7 +228,9 @@ class NotificationCollector : public QObject
                            const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
                            const QSet<QByteArray> &removedFlags = QSet<QByteArray>(),
                            const QSet<qint64> &addedTags = QSet<qint64>(),
-                           const QSet<qint64> &removedTags = QSet<qint64>() );
+                          const QSet<qint64> &removedTags = QSet<qint64>(),
+                          const Relation::List &addedRelations = Relation::List(),
+                          const Relation::List &removedRelations = Relation::List() );
     void itemNotification( NotificationMessageV2::Operation op, const PimItem &item,
                            const Collection &collection,
                            const Collection &collectionDest,
@@ -223,6 +244,8 @@ class NotificationCollector : public QObject
                                  const QByteArray &destResource = QByteArray() );
     void tagNotification( NotificationMessageV2::Operation op,
                           const Tag &tag );
+    void relationNotification(NotificationMessageV2::Operation op,
+                                             const Relation &relation);
     void dispatchNotification( const NotificationMessageV3 &msg );
     void clear();
 

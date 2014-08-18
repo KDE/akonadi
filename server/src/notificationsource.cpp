@@ -332,7 +332,7 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
     return false;
   }
 
-  if ( notification.entities().count() == 0 ) {
+    if (notification.entities().count() == 0 && notification.type() != NotificationMessageV2::Relations) {
     return false;
   }
 
@@ -436,6 +436,13 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
     }
 
     return false;
+
+    case NotificationMessageV2::Relations:
+        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(NotificationMessageV2::Relations)) {
+            return false;
+        }
+        return true;
+
   }
 
   return false;

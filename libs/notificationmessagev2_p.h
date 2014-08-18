@@ -51,7 +51,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
       InvalidType,
       Collections,
       Items,
-      Tags
+        Tags,
+        Relations
     };
 
     // NOTE: Keep this BC with NotificationMessage - i.e. append new stuff to the end
@@ -66,7 +67,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
       Subscribe,
       Unsubscribe,
       ModifyFlags,
-      ModifyTags
+        ModifyTags,
+        ModifyRelations
     };
 
     class Entity

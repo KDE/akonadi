@@ -16,26 +16,30 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef AKTEST_DBINITIALIZER_H
-#define AKTEST_DBINITIALIZER_H
 
-#include "entities.h"
+#ifndef AKONADI_RELATIONREMOVE_H
+#define AKONADI_RELATIONREMOVE_H
 
-class DbInitializer {
+#include "handler.h"
+#include "scope.h"
+
+namespace Akonadi {
+namespace Server {
+
+class RelationRemove : public Handler
+{
+    Q_OBJECT
 public:
-    ~DbInitializer();
-    Akonadi::Server::Resource createResource(const char *name);
-    Akonadi::Server::Collection createCollection(const char *name, const Akonadi::Server::Collection &parent = Akonadi::Server::Collection());
-    Akonadi::Server::PimItem createItem(const char *name, const Akonadi::Server::Collection &parent);
-    QByteArray toByteArray(bool enabled);
-    QByteArray toByteArray(Akonadi::Server::Tristate tristate);
-    QByteArray listResponse(const Akonadi::Server::Collection &col, bool ancestors = false, bool mimetypes = true, const QStringList &ancestorFetchScope = QStringList());
-    Akonadi::Server::Collection collection(const char *name);
+    RelationRemove(Scope::SelectionScope scope);
+    ~RelationRemove();
 
-    void cleanup();
+    virtual bool parseStream();
 
 private:
-    Akonadi::Server::Resource mResource;
+    Scope mScope;
 };
 
-#endif
+} // namespace Server
+} // namespace Akonadi
+
+#endif // AKONADI_RELATIONREMOVE_H

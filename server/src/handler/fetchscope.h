@@ -79,6 +79,8 @@ class FetchScope
     void setTagsRequested( bool tagsRequested );
     bool tagsRequested() const;
     QVector<QByteArray> tagFetchScope() const;
+    void setRelationsRequested(bool relationsRequested);
+    bool relationsRequested() const;
     void setVirtualReferencesRequested( bool vRefRequested );
     bool virtualReferencesRequested() const;
 

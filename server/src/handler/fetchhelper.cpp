@@ -41,6 +41,7 @@
 #include "agentmanagerinterface.h"
 #include "dbusconnectionpool.h"
 #include "tagfetchhelper.h"
+#include "relationfetch.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -299,7 +300,6 @@ bool FetchHelper::isScopeLocal( const Scope &scope )
 QByteArray FetchHelper::tagsToByteArray( const Tag::List &tags )
 {
   QByteArray b;
-  QList<QByteArray> attributes;
   b += "(";
   Q_FOREACH ( const Tag &tag, tags ) {
     b += "(" + TagFetchHelper::tagToByteArray( tag.id(),
@@ -311,6 +311,20 @@ QByteArray FetchHelper::tagsToByteArray( const Tag::List &tags )
   }
   b += ")";
   return b;
+}
+
+QByteArray FetchHelper::relationsToByteArray(const Relation::List &relations)
+{
+    QByteArray b;
+    b += "(";
+    Q_FOREACH (const Relation &relation, relations) {
+        b += "(" + RelationFetch::relationToByteArray(relation.leftId(),
+                                                      relation.rightId(),
+                                                      relation.relationType().name().toLatin1(),
+                                                      relation.remoteId().toLatin1()) + ") ";
+    }
+    b += ")";
+    return b;
 }
 
 bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
@@ -475,6 +489,21 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
         }
         attributes.append( AKONADI_PARAM_TAGS " " + tagsToByteArray( tagList ) );
       }
+        }
+
+        if (mFetchScope.relationsRequested()) {
+            SelectQueryBuilder<Relation> qb;
+            Query::Condition condition;
+            condition.setSubQueryMode(Query::Or);
+            condition.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, pimItemId);
+            condition.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, pimItemId);
+            qb.addCondition(condition);
+            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn());
+            if (!qb.exec()) {
+                throw HandlerException("Unable to list item relations");
+            }
+            const Relation::List relations = qb.result();
+            attributes.append(AKONADI_PARAM_RELATIONS " " + relationsToByteArray(relations));
     }
 
     if ( mFetchScope.virtualReferencesRequested() ) {

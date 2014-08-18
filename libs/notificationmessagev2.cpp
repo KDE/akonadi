@@ -299,6 +299,9 @@ QString NotificationMessageV2::toString() const
   case Tags:
     rv += QLatin1String( "Tags " );
     break;
+    case Relations:
+        rv += QLatin1String("Relations ");
+        break;
   case InvalidType:
     return QLatin1String( "*INVALID TYPE* " );
   }
@@ -362,6 +365,16 @@ QString NotificationMessageV2::toString() const
     }
     rv += QLatin1String( "removed tags (" );
     rv += QString::fromLatin1( ImapParser::join( tags, ", " ) );
+            rv += QLatin1String( ") " );
+            break;
+  }
+  case ModifyRelations: {
+        rv += QLatin1String( "added relations (" );
+        rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
+        rv += QLatin1String( ") " );
+
+        rv += QLatin1String( "removed relations (" );
+        rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
     rv += QLatin1String( ") " );
     break;
   }

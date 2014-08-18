@@ -144,6 +144,9 @@ set(libakonadiprivate_SRCS
   src/handler/subscribe.cpp
   src/handler/status.cpp
   src/handler/store.cpp
+  src/handler/relationstore.cpp
+  src/handler/relationremove.cpp
+  src/handler/relationfetch.cpp
   src/handler/tagappend.cpp
   src/handler/tagfetch.cpp
   src/handler/tagfetchhelper.cpp

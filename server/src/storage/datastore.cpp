@@ -1033,6 +1033,22 @@ bool DataStore::unhideAllPimItems()
 
 bool DataStore::cleanupPimItems( const PimItem::List &items )
 {
+    // generate relation removed notifications
+    Q_FOREACH (const PimItem &item, items) {
+        SelectQueryBuilder<Relation> relationQuery;
+        relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, item.id());
+        relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, item.id());
+        relationQuery.setSubQueryMode(Query::Or);
+
+        if (!relationQuery.exec()) {
+            throw HandlerException("Failed to obtain relations");
+        }
+        const Relation::List relations = relationQuery.result();
+        Q_FOREACH (const Relation &relation, relations) {
+            DataStore::self()->notificationCollector()->relationRemoved(relation);
+        }
+    }
+
   // generate the notification before actually removing the data
   mNotificationCollector->itemsRemoved( items );
 

@@ -77,6 +77,7 @@ class FetchHelper : public QObject
     QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
     bool isScopeLocal( const Scope &scope );
     static QByteArray tagsToByteArray(const Tag::List &tags);
+    static QByteArray relationsToByteArray(const Relation::List &relations);
 
   private:
     ImapStreamParser *mStreamParser;

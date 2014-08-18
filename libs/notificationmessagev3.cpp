@@ -159,6 +159,9 @@ QDebug operator<<( QDebug dbg, const NotificationMessageV3 &msg )
   case NotificationMessageV2::Tags:
     dbg.nospace() << QLatin1String("Tags");
     break;
+    case NotificationMessageV2::Relations:
+        dbg.nospace() << QLatin1String("Relations");
+        break;
   }
   dbg.nospace() << '\n';
 
@@ -196,6 +199,9 @@ QDebug operator<<( QDebug dbg, const NotificationMessageV3 &msg )
     break;
   case NotificationMessageV2::ModifyTags:
     dbg.nospace() << QLatin1String("ModifyTags");
+        break;
+    case NotificationMessageV2::ModifyRelations:
+        dbg.nospace() << QLatin1String("ModifyRelations");
     break;
   }
   dbg.nospace() << "\n";
