@@ -1,6 +1,5 @@
 @PACKAGE_INIT@
 
-find_dependency(KF5Bookmarks "@KF5_VERSION@")
 find_dependency(KF5Completion "@KF5_VERSION@")
 find_dependency(KF5JobWidgets "@KF5_VERSION@")
 find_dependency(KF5Service "@KF5_VERSION@")
