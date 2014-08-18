@@ -14,7 +14,7 @@ include(FeatureSummary)
 
 ############### Build Options ###############
 
-include(CTest)
+include(CTest)  # Calls enable_testing().
 include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
@@ -25,10 +25,6 @@ option(WITH_SOPRANO "Build with Soprano support. Needed for Nepomuk search integ
 
 if(NOT DEFINED DATABASE_BACKEND)
   set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
-endif()
-
-if(AKONADI_BUILD_TESTS)
-  enable_testing()
 endif()
 
 ############### CMake Macros ###############

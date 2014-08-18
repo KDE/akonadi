@@ -64,7 +64,10 @@ endmacro()
 add_subdirectory(akonadictl)
 add_subdirectory(control)
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if(AKONADI_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}")
 if(MYSQLD_EXECUTABLE)
