@@ -178,6 +178,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "nothing selected" ) << collectionList << map;
       }
@@ -219,6 +220,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "root collection selected" ) << collectionList << map;
       }
@@ -260,6 +262,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, true );
 
         QTest::newRow( "read-only resource collection selected" ) << collectionList << map;
       }
@@ -301,6 +304,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, true );
 
         QTest::newRow( "writable resource collection selected" ) << collectionList << map;
       }
@@ -342,6 +346,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, true );
 
         QTest::newRow( "non-configurable resource collection selected" ) << collectionList << map;
       }
@@ -383,6 +388,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "read-only folder collection selected" ) << collectionList << map;
       }
@@ -424,6 +430,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, true );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "writable folder collection selected" ) << collectionList << map;
       }
@@ -465,6 +472,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, true );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "favorite writable folder collection selected" ) << collectionList << map;
       }
@@ -506,6 +514,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, true );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "structural folder collection selected" ) << collectionList << map;
       }
@@ -548,6 +557,8 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
+        map.insert( StandardActionManager::SynchronizeCollectionTree, false );
 
         QTest::newRow( "root collection and writable resource collection selected" ) << collectionList << map;
       }
@@ -566,7 +577,7 @@ class ActionStateManagerTest : public QObject
       QHashIterator<StandardActionManager::Type, bool> it( stateMap );
       while ( it.hasNext() ) {
         it.next();
-        //qDebug() << it.key();
+        qDebug() << it.key();
         QVERIFY( mStateMap.contains( it.key() ) );
         QCOMPARE( it.value(), mStateMap.value( it.key() ) );
       }
