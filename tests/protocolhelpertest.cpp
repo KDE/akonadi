@@ -175,13 +175,15 @@ class ProtocolHelperTest : public QObject
       QTest::newRow( "empty" ) << Collection() << QByteArray();
       QTest::newRow( "root" ) << Collection::root() << QByteArray( "(0 \"\")" );
       Collection c;
+      c.setId(1);
       c.setParentCollection( Collection::root() );
       c.setRemoteId( "r1" );
-      QTest::newRow( "one level" ) << c << QByteArray( "(-23 \"r1\") (0 \"\")" );
+      QTest::newRow( "one level" ) << c << QByteArray( "(1 \"r1\") (0 \"\")" );
       Collection c2;
+      c2.setId(2);
       c2.setParentCollection( c );
       c2.setRemoteId( "r2" );
-      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-24 \"r2\") (-23 \"r1\") (0 \"\")" );
+      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(2 \"r2\") (1 \"r1\") (0 \"\")" );
     }
 
     void testHRidToByteArray()
