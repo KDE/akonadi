@@ -32,6 +32,8 @@ public:
         : ancestorDepth(CollectionFetchScope::None)
         , statistics(false)
         , listFilter(CollectionFetchScope::Enabled)
+        , fetchAllAttributes(false)
+        , fetchIdOnly(true)
     {
     }
 
@@ -43,7 +45,15 @@ public:
         ancestorDepth = other.ancestorDepth;
         statistics = other.statistics;
         listFilter = other.listFilter;
-        ancestorAttributes = other.ancestorAttributes;
+        attributes = other.attributes;
+        if (!ancestorFetchScope && other.ancestorFetchScope) {
+            ancestorFetchScope.reset(new CollectionFetchScope());
+            *ancestorFetchScope = *other.ancestorFetchScope;
+        } else if (ancestorFetchScope && !other.ancestorFetchScope) {
+            ancestorFetchScope.reset(0);
+        }
+        fetchAllAttributes = other.fetchAllAttributes;
+        fetchIdOnly = other.fetchIdOnly;
     }
 
 public:
@@ -52,7 +62,10 @@ public:
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
     bool statistics;
     CollectionFetchScope::ListFilter listFilter;
-    QSet<QByteArray> ancestorAttributes;
+    QSet<QByteArray> attributes;
+    QScopedPointer<CollectionFetchScope> ancestorFetchScope;
+    bool fetchAllAttributes;
+    bool fetchIdOnly;
 };
 
 CollectionFetchScope::CollectionFetchScope()
@@ -152,18 +165,49 @@ void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFi
     d->listFilter = listFilter;
 }
 
-QSet<QByteArray> CollectionFetchScope::ancestorAttributes() const
+QSet<QByteArray> CollectionFetchScope::attributes() const
 {
-    return d->ancestorAttributes;
+    return d->attributes;
 }
 
-void CollectionFetchScope::fetchAncestorAttribute(const QByteArray &type, bool fetch)
+void CollectionFetchScope::fetchAttribute(const QByteArray &type, bool fetch)
 {
     if (fetch) {
-        d->ancestorAttributes.insert(type);
+        d->attributes.insert(type);
     } else {
-        d->ancestorAttributes.remove(type);
+        d->attributes.remove(type);
     }
+}
+
+void CollectionFetchScope::setFetchIdOnly(bool fetchIdOnly)
+{
+    d->fetchIdOnly = fetchIdOnly;
+}
+
+bool CollectionFetchScope::fetchIdOnly() const
+{
+    return d->fetchIdOnly;
+}
+
+void CollectionFetchScope::setAncestorFetchScope(const CollectionFetchScope &scope)
+{
+    *d->ancestorFetchScope = scope;
+}
+
+CollectionFetchScope CollectionFetchScope::ancestorFetchScope() const
+{
+    if (!d->ancestorFetchScope) {
+        return CollectionFetchScope();
+    }
+    return *d->ancestorFetchScope;
+}
+
+CollectionFetchScope &CollectionFetchScope::ancestorFetchScope()
+{
+    if (!d->ancestorFetchScope) {
+        d->ancestorFetchScope.reset(new CollectionFetchScope());
+    }
+    return *d->ancestorFetchScope;
 }
 
 

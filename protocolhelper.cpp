@@ -126,8 +126,12 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
       break;
     }
 
-    Akonadi::Collection parentCollection;
-    parseCollection( ImapParser::join(parentIds, " "), parentCollection, 0, false );
+    Akonadi::Collection parentCollection(uid);
+    if (parentIds[1].at(0) == '(') {
+        parseCollection( ImapParser::join(parentIds, " "), parentCollection, 0, false );
+    } else {
+        parentCollection.setRemoteId(QString::fromLatin1(parentIds[1]));
+    }
     current->setParentCollection(parentCollection);
 
     current = &current->parentCollection();

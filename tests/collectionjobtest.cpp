@@ -786,7 +786,8 @@ void CollectionJobTest::testAncestorAttributeRetrieval()
 
     CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-    job->fetchScope().fetchAncestorAttribute<TestAttribute>(CollectionFetchScope::All);
+    job->fetchScope().ancestorFetchScope().setFetchIdOnly(false);
+    job->fetchScope().ancestorFetchScope().fetchAttribute<TestAttribute>();
     AKVERIFYEXEC(job);
     Akonadi::Collection result = job->collections().first();
     QCOMPARE(result.parentCollection().hasAttribute<TestAttribute>(), true);

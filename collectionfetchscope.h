@@ -218,13 +218,44 @@ public:
     AncestorRetrieval ancestorRetrieval() const;
 
     /**
+     * Sets the fetch scope for ancestor retrieval.
+     *
+     * @see setAncestorRetrieval()
+     */
+    void setAncestorFetchScope(const CollectionFetchScope &scope);
+
+    /**
+     * Returns the fetch scope for ancestor retrieval.
+     */
+    CollectionFetchScope ancestorFetchScope() const;
+
+    /**
+     * Returns the fetch scope for ancestor retrieval.
+     */
+    CollectionFetchScope &ancestorFetchScope();
+
+    /**
+     * Sets wether all attributes should be retrieved (true by default).
+     * 
+     * This is currently only supported for ancestors.
+     */
+    void setFetchAllAttribute(bool fetchAll = true);
+
+    /**
+     * Returns wether all attributes should be retrieved (true by default).
+     * 
+     * This is currently only supported for ancestors.
+     */
+    bool fetchAllAttributes() const;
+
+    /**
      * Returns all explicitly fetched attributes.
      *
      * Undefined if fetchAllAttributes() returns true.
      *
      * @see fetchAttribute()
      */
-    QSet<QByteArray> ancestorAttributes() const;
+    QSet<QByteArray> attributes() const;
 
     /**
      * Sets whether the attribute of the given @p type should be fetched.
@@ -232,18 +263,35 @@ public:
      * @param type The attribute type to fetch.
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    void fetchAncestorAttribute(const QByteArray &type, bool fetch = true);
+    void fetchAttribute(const QByteArray &type, bool fetch = true);
 
     /**
      * Sets whether the attribute of the requested type should be fetched.
      *
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    template <typename T> inline void fetchAncestorAttribute(bool fetch = true)
+    template <typename T> inline void fetchAttribute(bool fetch = true)
     {
         T dummy;
-        fetchAncestorAttribute(dummy.type(), fetch);
+        fetchAttribute(dummy.type(), fetch);
     }
+
+    /**
+     * Sets wether only the id or the complete tag should be fetched.
+     *
+     * The default is @c false.
+     *
+     * @since 4.15
+     */
+    void setFetchIdOnly(bool fetchIdOnly);
+
+    /**
+     * Sets wether only the id of the tags should be retieved or the complete tag.
+     *
+     * @see tagFetchScope()
+     * @since 4.15
+     */
+    bool fetchIdOnly() const;
 
     /**
      * Returns @c true if there is nothing to fetch.

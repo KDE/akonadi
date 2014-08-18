@@ -288,23 +288,45 @@ void CollectionFetchJob::doStart()
     }
     if (d->mScope.ancestorRetrieval() != CollectionFetchScope::None) {
         options.append("ANCESTORS");
-        switch (d->mScope.ancestorRetrieval()) {
-        case CollectionFetchScope::None:
-            options.append("0");
-            break;
-        case CollectionFetchScope::Parent:
-            options.append("1");
-            break;
-        case CollectionFetchScope::All:
-            options.append("INF");
-            break;
-        default:
-            Q_ASSERT(false);
+
+        if (d->mScope.ancestorFetchScope().fetchIdOnly()) {
+            switch (d->mScope.ancestorRetrieval()) {
+            case CollectionFetchScope::None:
+                options.append("0");
+                break;
+            case CollectionFetchScope::Parent:
+                options.append("1");
+                break;
+            case CollectionFetchScope::All:
+                options.append("INF");
+                break;
+            default:
+                Q_ASSERT(false);
+            }
+        } else {
+            QByteArray ancestorFetchScope = "(";
+            ancestorFetchScope += "DEPTH ";
+            switch (d->mScope.ancestorRetrieval()) {
+            case CollectionFetchScope::None:
+                ancestorFetchScope += "0 ";
+                break;
+            case CollectionFetchScope::Parent:
+                ancestorFetchScope += "1 ";
+                break;
+            case CollectionFetchScope::All:
+                ancestorFetchScope += "INF ";
+                break;
+            default:
+                Q_ASSERT(false);
+            }
+            ancestorFetchScope += "NAME ";
+            ancestorFetchScope += "REMOTEID ";
+            Q_FOREACH (const QByteArray &ancestorAttribute, d->mScope.ancestorFetchScope().attributes()) {
+                ancestorFetchScope += ancestorAttribute + " ";
+            }
+            ancestorFetchScope += ")";
+            options.append(ancestorFetchScope);
         }
-    }
-    Q_FOREACH (const QByteArray &ancestorAttributes, d->mScope.ancestorAttributes()) {
-        options.append("ANCESTORATTR");
-        options.append(ancestorAttributes);
     }
 
     command += ImapParser::join(filter, " ") + ") (" + ImapParser::join(options, " ") + ")\n";
