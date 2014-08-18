@@ -57,6 +57,12 @@ bool AsyncSelectionHandler::scanSubTree(const QModelIndex &index, bool searchFor
 
     for (int row = 0; row < mModel->rowCount(index); ++row) {
         const QModelIndex childIndex = mModel->index(row, 0, index);
+        //This should not normally happen, but if it does we end up in an endless loop
+        if (!childIndex.isValid()) {
+            kWarning() << "Invalid child detected: " << index.data().toString();
+            Q_ASSERT(false);
+            return false;
+        }
         if (scanSubTree(childIndex, searchForItem)) {
             return true;
         }
