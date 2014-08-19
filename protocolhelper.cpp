@@ -386,7 +386,7 @@ QByteArray ProtocolHelper::commandContextToByteArray(const Akonadi::Collection &
     }
 
     if (collection == Collection::root()) {
-        if (requestedItems.isEmpty()) {   // collection content listing
+        if (requestedItems.isEmpty() && !tag.isValid()) {   // collection content listing
             throw Exception("Cannot perform item operations on root collection.");
         }
     } else {
