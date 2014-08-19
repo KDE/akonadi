@@ -25,7 +25,6 @@
 #include "subscriptionmodel_p.h"
 
 #include <qdebug.h>
-#include <kglobal.h>
 #include <ksharedconfig.h>
 
 #include <klocalizedstring.h>

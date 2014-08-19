@@ -31,7 +31,6 @@
 #include <akonadi/private/notificationmessagev2_p.h>
 
 #include <qdebug.h>
-#include <kcomponentdata.h>
 
 using namespace Akonadi;
 

@@ -22,7 +22,7 @@
 #ifndef AKONADI_ETMVIEWSTATESAVER_H
 #define AKONADI_ETMVIEWSTATESAVER_H
 
-#include <kviewstatesaver.h>
+#include <KConfigViewStateSaver>
 
 #include "collection.h"
 #include "item.h"
@@ -32,7 +32,7 @@
 namespace Akonadi
 {
 
-class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KViewStateSaver  //krazy:exclude=dpointer
+class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver  //krazy:exclude=dpointer
 {
     Q_OBJECT
 public:

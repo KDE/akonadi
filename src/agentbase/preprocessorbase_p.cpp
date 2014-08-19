@@ -25,7 +25,7 @@
 #include "servermanager.h"
 
 #include "itemfetchjob.h"
-#include <KDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 
@@ -47,7 +47,7 @@ PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
 void PreprocessorBasePrivate::delayedInit()
 {
     if (!DBusConnectionPool::threadConnection().registerService(ServerManager::agentServiceName(ServerManager::Preprocessor, mId))) {
-        kFatal() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
+        qCritical() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
     }
     AgentBasePrivate::delayedInit();
 }

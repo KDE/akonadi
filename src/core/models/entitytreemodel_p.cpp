@@ -279,7 +279,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
                q, SLOT(itemsFetched(Akonadi::Item::List)));
     q->connect(itemFetchJob, SIGNAL(result(KJob*)),
                q, SLOT(itemFetchJobDone(KJob*)));
-    ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
+    ifDebug(qDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
 }
 
 void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
@@ -302,7 +302,7 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
     }
     q->connect(job, SIGNAL(result(KJob*)),
                 q, SLOT(collectionFetchJobDone(KJob*)));
-    ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
+    ifDebug(qDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
 void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type)
@@ -1360,8 +1360,8 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
     }
 
 #ifdef DBG_TRACK_JOB_TIMES
-    kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    kDebug() << "was collection fetch job: collections:" << cJob->collections().size();
+    qDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
+    qDebug() << "was collection fetch job: collections:" << cJob->collections().size();
     if (!cJob->collections().isEmpty()) {
         qDebug() << "first fetched collection:" << cJob->collections().first().name();
     }
@@ -1565,7 +1565,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
                q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
     q->connect(job, SIGNAL(result(KJob*)),
                q, SLOT(collectionFetchJobDone(KJob*)));
-    ifDebug(kDebug() << ""; jobTimeTracker[job].start();)
+    ifDebug(qDebug() << ""; jobTimeTracker[job].start();)
 }
 
 void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collection::List &list)

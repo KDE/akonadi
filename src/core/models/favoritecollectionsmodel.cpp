@@ -23,10 +23,10 @@
 #include <QtCore/QMimeData>
 
 #include <kconfiggroup.h>
-#include <klocale.h>
 #include <klocalizedstring.h>
 #include <KJob>
 #include <QUrl>
+#include <KConfig>
 
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"

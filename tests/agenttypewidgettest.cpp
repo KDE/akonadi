@@ -23,8 +23,9 @@
 #include "agentfilterproxymodel.h"
 
 #include <kcombobox.h>
-#include <kcomponentdata.h>
+#include <KAboutData>
 
+#include <QCommandLineParser>
 #include <QApplication>
 #include <QDialogButtonBox>
 #include <QPushButton>
@@ -88,7 +89,17 @@ void Dialog::filterChanged( int index )
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
-  KComponentData kcd( "agenttypeviewtest" );
+  KAboutData aboutData( QLatin1String("agenttypeviewtest"),
+                        QLatin1String( "agenttypeviewtest" ),
+                        QLatin1String("0.10"));
+  KAboutData::setApplicationData(aboutData);
+
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   Dialog dlg;
   dlg.exec();

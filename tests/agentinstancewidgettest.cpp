@@ -21,14 +21,12 @@
 
 #include "agentinstance.h"
 
-#include <kcomponentdata.h>
-
 #include <QApplication>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-
-//krazy:excludeall=qclasses
+#include <QCommandLineParser>
+#include <KAboutData>
 
 Dialog::Dialog( QWidget *parent )
   : QDialog( parent )
@@ -67,7 +65,17 @@ void Dialog::currentChanged( const Akonadi::AgentInstance &current, const Akonad
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
-  KComponentData kcd( "agentinstanceviewtest" );
+  KAboutData aboutData( QLatin1String("agentinstanceviewtest"),
+                        QLatin1String( "agentinstanceviewtest" ),
+                        QLatin1String("0.10"));
+  KAboutData::setApplicationData(aboutData);
+
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   Dialog dlg;
   dlg.exec();

@@ -28,7 +28,7 @@
 using namespace Akonadi;
 
 ETMViewStateSaver::ETMViewStateSaver(QObject *parent)
-    : KViewStateSaver(parent)
+    : KConfigViewStateSaver(parent)
 {
 }
 

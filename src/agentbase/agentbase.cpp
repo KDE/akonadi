@@ -37,7 +37,7 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocalizedstring.h>
 
@@ -410,7 +410,7 @@ void AgentBasePrivate::delayedInit()
 
     const QString serviceId = ServerManager::agentServiceName(ServerManager::Agent, mId);
     if (!DBusConnectionPool::threadConnection().registerService(serviceId)) {
-        kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
+        qCritical() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
     }
     q->setOnlineInternal(mDesiredOnlineState);
 

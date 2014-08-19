@@ -35,7 +35,7 @@
 #include <tagcreatejob.h>
 
 #include <kfiledialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 
 #include <QtCore/QFile>
@@ -80,7 +80,7 @@ void KnutResource::load()
   }
 
   if ( !QFile::exists( fileName ) )
-    fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "akonadi_knut_resource/knut-template.xml" ) );
+    fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "kf5/akonadi_knut_resource/knut-template.xml" ) );
 
   if ( !mDocument.loadFile( fileName ) ) {
     emit status( Broken, mDocument.lastError() );

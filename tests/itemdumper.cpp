@@ -27,7 +27,7 @@
 #include <QFile>
 #include <QApplication>
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 
 #include <KAboutData>

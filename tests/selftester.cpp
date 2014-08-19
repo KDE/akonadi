@@ -19,13 +19,24 @@
 
 #include <../src/selftest/selftestdialog.h>
 
-#include <KComponentData>
+#include <KAboutData>
+#include <QCommandLineParser>
 #include <QApplication>
 
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
-  KComponentData kcd( "akonadi-selftester" );
+  KAboutData aboutData( QLatin1String("akonadi-selftester"),
+                        QLatin1String( "akonadi-selftester" ),
+                        QLatin1String("0.10"));
+  KAboutData::setApplicationData(aboutData);
+
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   SelfTestDialog dlg;
   dlg.exec();

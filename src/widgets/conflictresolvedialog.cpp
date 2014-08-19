@@ -29,7 +29,6 @@
 #include <QPushButton>
 
 #include <kcolorscheme.h>
-#include <klocale.h>
 #include <klocalizedstring.h>
 #include <kglobal.h>
 #include <qtextbrowser.h>

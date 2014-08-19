@@ -30,7 +30,6 @@
 #include "session_p.h"
 
 #include <qdebug.h>
-#include <KDebug>
 
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>

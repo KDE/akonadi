@@ -19,13 +19,26 @@
 
 #include "firstrun_p.h"
 
-#include <KComponentData>
+#include <KAboutData>
+#include <QCommandLineParser>
 #include <QApplication>
 
 int main( int argc, char** argv )
 {
-  KComponentData kcd( "akonadi-firstrun" );
   QApplication app( argc, argv );
+
+  KAboutData aboutData( QLatin1String("akonadi-firstrun"),
+                        QLatin1String( "Test akonadi-firstrun" ),
+                        QLatin1String("0.10"));
+  KAboutData::setApplicationData(aboutData);
+
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
+
   Akonadi::Firstrun *f = new Akonadi::Firstrun();
   QObject::connect( f, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()) );
   app.exec();
