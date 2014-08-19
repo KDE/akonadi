@@ -312,6 +312,11 @@ protected Q_SLOTS:
             changeProcessed();
             return;
         }
+        if (!item.parentCollection().isValid()) {
+            kWarning() << "Invalid parent collection for item" << item.id();
+            changeProcessed();
+            return;
+        }
         AgentBasePrivate::itemRemoved(item);
     }
 
@@ -319,6 +324,10 @@ protected Q_SLOTS:
     {
         Item::List validItems;
         foreach (const Akonadi::Item &item, items) {
+            if (!item.parentCollection().isValid()) {
+                kWarning() << "Invalid parent collection for item" << item.id();
+                continue;
+            }
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
             }
