@@ -184,7 +184,10 @@ class EntityCache : public EntityCacheBase
 
     void processResult( KJob* job )
     {
-      // Error handling?
+      if (job->error()) {
+        //This can happen if we have stale notifications for items that have already been removed
+        kWarning() << "An error occured: " << job->errorString();
+      }
       typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
       EntityCacheNode<T> *node = cacheNodeForId( id );
       if ( !node ) {
