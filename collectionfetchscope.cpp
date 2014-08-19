@@ -172,6 +172,7 @@ QSet<QByteArray> CollectionFetchScope::attributes() const
 
 void CollectionFetchScope::fetchAttribute(const QByteArray &type, bool fetch)
 {
+    d->fetchIdOnly = false;
     if (fetch) {
         d->attributes.insert(type);
     } else {
