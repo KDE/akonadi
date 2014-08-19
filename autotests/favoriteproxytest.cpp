@@ -188,7 +188,7 @@ void FavoriteProxyTest::testLoadConfig()
 class Filter: public QSortFilterProxyModel
 {
 public:
-  virtual bool filterAcceptsRow(int, const QModelIndex &) { return accepts; }
+  virtual bool filterAcceptsRow(int, const QModelIndex &) const { return accepts; }
   bool accepts;
 };
 
@@ -210,6 +210,11 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
   KConfigGroup configGroup( KSharedConfig::openConfig(), "favoritecollectionsmodeltest2" );
 
   FavoriteCollectionsModel *favoriteModel = new FavoriteCollectionsModel(&filter, configGroup, this);
+
+  //Make sure the filter is not letting anything through
+  QTest::qWait(0);
+  QCOMPARE(filter.rowCount(QModelIndex()), 0);
+
   //The collection is not in the model yet
   favoriteModel->addCollection(favoriteCollection);
   filter.accepts = true;
