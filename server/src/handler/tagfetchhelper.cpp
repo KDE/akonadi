@@ -167,7 +167,10 @@ bool TagFetchHelper::fetchTags(const QByteArray& responseIdentifier)
       const QByteArray attrName = attributeQuery.value( 1 ).toByteArray();
       const QByteArray attrValue = attributeQuery.value( 2 ).toByteArray();
 
-      tagAttributes << attrName << ImapParser::quote( attrValue );
+      //Skip attributes that we're created by accident. This can be removed in the future.
+      if (attrName != "REMOTEID" && attrName != "MIMETYPE") {
+        tagAttributes << attrName << ImapParser::quote( attrValue );
+      }
       attributeQuery.next();
     }
     QByteArray tagReply = QByteArray::number( tagId ) + ' ' + responseIdentifier + " (";

@@ -167,8 +167,18 @@ void DbInitializer::cleanup()
     mResource.remove();
 
     if (DataStore::self()->database().isOpen()) {
-        QueryBuilder qb( Relation::tableName(), QueryBuilder::Delete );
-        qb.exec();
+        {
+            QueryBuilder qb( Relation::tableName(), QueryBuilder::Delete );
+            qb.exec();
+        }
+        {
+            QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
+            qb.exec();
+        }
+        {
+            QueryBuilder qb(TagType::tableName(), QueryBuilder::Delete);
+            qb.exec();
+        }
     }
 
     Q_FOREACH(PimItem item, PimItem::retrieveAll()) {

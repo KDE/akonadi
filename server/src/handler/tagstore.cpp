@@ -24,6 +24,7 @@
 #include "response.h"
 #include "storage/datastore.h"
 #include "libs/protocol_p.h"
+#include "connection.h"
 
 using namespace Akonadi::Server;
 
@@ -68,6 +69,32 @@ bool TagStore::parseStream()
       throw HandlerException( "Changing tag GID is not allowed" );
     } else if ( attr == AKONADI_PARAM_UID ) {
       throw HandlerException( "Changing tag UID is not allowed" );
+    } else if ( attr == AKONADI_PARAM_MIMETYPE ) {
+        const QString &typeName = m_streamParser->readUtf8String();
+        TagType type = TagType::retrieveByName(typeName);
+        if (!type.isValid()) {
+            TagType newType;
+            newType.setName(typeName);
+            if (!newType.insert()) {
+                throw HandlerException( "Failed to insert type" );
+            }
+            type = newType;
+        }
+        changedTag.setTagType(type);
+    } else if ( attr == AKONADI_PARAM_REMOTEID ) {
+        const QString &remoteId = m_streamParser->readUtf8String();
+        if (!connection()->context()->resource().isValid()) {
+            throw HandlerException( "Only resources can change the remoteid" );
+        }
+        TagRemoteIdResourceRelation::remove(TagRemoteIdResourceRelation::resourceIdFullColumnName(), connection()->context()->resource().id());
+
+        TagRemoteIdResourceRelation remoteIdRelation;
+        remoteIdRelation.setRemoteId(remoteId);
+        remoteIdRelation.setResourceId(connection()->context()->resource().id());
+        remoteIdRelation.setTag(changedTag);
+        if (!remoteIdRelation.insert()) {
+            throw HandlerException( "Failed to insert remotedid resource relation" );
+        }
     } else {
       if ( attr.startsWith( '-' ) ) {
         const QByteArray attrName = attr.mid( 1 );
@@ -76,19 +103,28 @@ bool TagStore::parseStream()
           TagAttribute::remove( attribute.id() );
         }
       } else if ( attributesMap.contains( attr ) ) {
+        const QByteArray value = m_streamParser->readString();
         TagAttribute attribute = attributesMap.value( attr );
-        attribute.setValue( m_streamParser->readString() );
-        attribute.update();
+        attribute.setValue( value );
+        if (!attribute.update()) {
+            throw HandlerException("Failed to update attribute");
+        }
       } else {
+        const QByteArray value = m_streamParser->readString();
         TagAttribute attribute;
         attribute.setTagId( tagId );
         attribute.setType( attr );
-        attribute.setValue( m_streamParser->readString() );
-        attribute.insert();
+        attribute.setValue( value );
+        if (!attribute.insert()) {
+            throw HandlerException("Failed to insert attribute");
+        }
       }
     }
   }
 
+  if (!changedTag.update()) {
+    throw HandlerException( "Failed to store changes" );
+  }
   DataStore::self()->notificationCollector()->tagChanged( changedTag );
 
   ImapSet set;
