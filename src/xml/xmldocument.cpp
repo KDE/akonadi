@@ -262,6 +262,11 @@ Collection::List XmlDocument::collections() const
   return XmlReader::readCollections( d->document.documentElement() );
 }
 
+Tag::List XmlDocument::tags() const
+{
+  return XmlReader::readTags( d->document.documentElement() );
+}
+
 Collection::List XmlDocument::childCollections( const Collection &parentCollection ) const
 {
   QDomElement parentElem = collectionElement( parentCollection );

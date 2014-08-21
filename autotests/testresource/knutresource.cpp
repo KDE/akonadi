@@ -132,15 +132,6 @@ void KnutResource::configure( WId windowId )
 
 void KnutResource::retrieveCollections()
 {
-#if 0 //PORT QT5
-  const Collection::List collections = mDocument.collections();
-  collectionsRetrieved( collections );
-  const Tag::List tags = mDocument.tags();
-  Q_FOREACH ( const Tag &tag, tags ) {
-      TagCreateJob *createjob = new TagCreateJob(tag);
-      createjob->setMergeIfExisting(true);
-  }
-#endif
 }
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )

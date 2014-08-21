@@ -54,11 +54,11 @@ private Q_SLOTS:
     void testCreateMerge();
     void testAttributes();
     void testTagItem();
-    void testRIDIsolation();
     void testFetchTagIdWithItem();
     void testFetchFullTagWithItem();
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
+    void testRIDIsolation();
     void testMonitor();
 };
 

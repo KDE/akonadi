@@ -108,6 +108,11 @@ class AKONADI_XML_EXPORT XmlDocument
     Collection::List collections() const;
 
     /**
+      Returns the tags defined in this document.
+    */
+    Tag::List tags() const;
+
+    /**
       Returns the immediate child collections of @p parentCollection.
     */
     Collection::List childCollections( const Collection &parentCollection ) const;
