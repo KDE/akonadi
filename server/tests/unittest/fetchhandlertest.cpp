@@ -84,6 +84,14 @@ private Q_SLOTS:
 
             QTest::newRow("basic fetch") << scenario;
         }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col.id()) + " (UID COLLECTIONID)"
+            << "S: * " + QByteArray::number(item2.id()) + " FETCH (UID " + QByteArray::number(item2.id()) + " REV 0 MIMETYPE \"" + item2.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
+            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")";
+            QTest::newRow("collection context") << scenario;
+        }
     }
 
     void testFetch()
@@ -124,9 +132,84 @@ private Q_SLOTS:
 
             QTest::newRow("fetch by tag") << scenario;
         }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+            << "C: 2 UID FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
+            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
+            << "S: 2 OK UID FETCH completed";
+
+            QTest::newRow("uid fetch by tag from resource") << scenario;
+        }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+            << "C: 2 FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
+            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
+            << "S: 2 OK FETCH completed";
+
+            QTest::newRow("fetch by tag from resource") << scenario;
+        }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col.id()) + " (UID COLLECTIONID)"
+            << "S: * " + QByteArray::number(item2.id()) + " FETCH (UID " + QByteArray::number(item2.id()) + " REV 0 MIMETYPE \"" + item2.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
+            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
+            << "S: 2 OK FETCH completed";
+
+            QTest::newRow("fetch collection") << scenario;
+        }
     }
 
     void testFetchByTag()
+    {
+        QFETCH(QList<QByteArray>, scenario);
+
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
+    }
+
+    void testFetchCommandContext_data()
+    {
+        initializer.reset(new DbInitializer);
+        Resource res = initializer->createResource("testresource");
+        Collection col1 = initializer->createCollection("col1");
+        PimItem item1 = initializer->createItem("item1", col1);
+        Collection col2 = initializer->createCollection("col2");
+
+        Tag tag;
+        TagType type;
+        type.setName(QLatin1String("PLAIN"));
+        type.insert();
+        tag.setTagType(type);
+        tag.setGid(QLatin1String("gid"));
+        tag.insert();
+
+        item1.addTag(tag);
+        item1.update();
+
+        QTest::addColumn<QList<QByteArray> >("scenario");
+
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col2.id()) + " (UID COLLECTIONID)"
+            << "S: 2 OK FETCH completed"
+            << "C: 3 FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
+            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col1.id()) + ")"
+            << "S: 3 OK FETCH completed";
+
+            //Special case that used to be broken due to persistent command context
+            QTest::newRow("fetch by tag after collection") << scenario;
+        }
+    }
+
+    void testFetchCommandContext()
     {
         QFETCH(QList<QByteArray>, scenario);
 

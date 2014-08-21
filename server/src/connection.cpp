@@ -153,10 +153,8 @@ void Connection::slotNewData()
       if ( command.isEmpty() ) {
         throw Akonadi::Server::Exception("empty command");
       }
-      // Tag context is not persistent, unlike Collection
-      // FIXME: Collection should not be persistent either, but we need to keep backward compatibility
-      //        with SELECT job
       context()->setTag( -1 );
+      context()->setCollection( Collection() );
       Tracer::self()->connectionInput( m_identifier, ( tag + ' ' + command + ' ' + m_streamParser->readRemainingData() ) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
