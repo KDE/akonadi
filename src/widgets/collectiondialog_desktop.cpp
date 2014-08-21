@@ -63,7 +63,7 @@ public:
 
         QLineEdit *filterCollectionLineEdit = new QLineEdit(widget);
         filterCollectionLineEdit->setClearButtonEnabled(true);
-        filterCollectionLineEdit->setPlaceholderText(i18nc("@info/plain Displayed grayed-out inside the "
+        filterCollectionLineEdit->setPlaceholderText(i18nc("@info Displayed grayed-out inside the "
                                                         "textbox, verb to search", "Search"));
         layout->addWidget(filterCollectionLineEdit);
 
