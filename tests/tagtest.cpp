@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
     void testMonitor();
+    void testFetchItemsByTag();
 };
 
 void TagTest::initTestCase()
@@ -607,6 +608,39 @@ void TagTest::testMonitor()
     QTRY_VERIFY(removedSpy.count() >= 1);
     QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
   }
+}
+
+void TagTest::testFetchItemsByTag()
+{
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    Tag tag;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+        //FIXME This should also be possible with create, but isn't
+        item1.setTag(tag);
+    }
+
+    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    AKVERIFYEXEC(modJob);
+
+    ItemFetchJob *fetchJob = new ItemFetchJob(tag, this);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().size(), 1);
+    Item i = fetchJob->items().first();
+    QCOMPARE(i, item1);
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
 }
 
 #include "tagtest.moc"
