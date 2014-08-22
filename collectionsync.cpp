@@ -454,7 +454,7 @@ public:
             }
         }
 
-        {
+        if (checkLocalCollection(localNode, remoteNode)) {
             // ### HACK to work around the implicit move attempts of CollectionModifyJob
             // which we do explicitly below
             Collection c(upd);
