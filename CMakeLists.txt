@@ -207,6 +207,7 @@ set( akonadikde_LIB_SRC
   tageditwidget.cpp
   tagmanagementdialog.cpp
   tagselectiondialog.cpp
+  tagsync.cpp
   tagwidget.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
@@ -430,6 +431,7 @@ install( FILES
   tagwidget.h
   tagmanagementdialog.h
   tagselectiondialog.h
+  tagsync.h
   trashjob.h
   trashrestorejob.h
   trashsettings.h
