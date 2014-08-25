@@ -88,12 +88,14 @@ bool TagStore::parseStream()
         }
         TagRemoteIdResourceRelation::remove(TagRemoteIdResourceRelation::resourceIdFullColumnName(), connection()->context()->resource().id());
 
-        TagRemoteIdResourceRelation remoteIdRelation;
-        remoteIdRelation.setRemoteId(remoteId);
-        remoteIdRelation.setResourceId(connection()->context()->resource().id());
-        remoteIdRelation.setTag(changedTag);
-        if (!remoteIdRelation.insert()) {
-            throw HandlerException( "Failed to insert remotedid resource relation" );
+        if (!remoteId.isEmpty()) {
+            TagRemoteIdResourceRelation remoteIdRelation;
+            remoteIdRelation.setRemoteId(remoteId);
+            remoteIdRelation.setResourceId(connection()->context()->resource().id());
+            remoteIdRelation.setTag(changedTag);
+            if (!remoteIdRelation.insert()) {
+                throw HandlerException( "Failed to insert remotedid resource relation" );
+            }
         }
     } else {
       if ( attr.startsWith( '-' ) ) {
