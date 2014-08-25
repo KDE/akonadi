@@ -380,7 +380,7 @@ bool AkAppend::parseStream()
   if ( itemFlags.incremental ) {
     throw HandlerException( "Incremental flags changes are not allowed in AK-APPEND" );
   }
-  if ( itemTagsRID.incremental || itemTagsRID.incremental ) {
+  if ( itemTagsRID.incremental || itemTagsGID.incremental ) {
     throw HandlerException( "Incremental tags changes are not allowed in AK-APPEND" );
   }
 
