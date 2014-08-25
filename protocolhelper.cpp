@@ -477,6 +477,29 @@ QByteArray ProtocolHelper::tagFetchScopeToByteArray( const TagFetchScope &fetchS
   return command;
 }
 
+static Item::Flags convertFlags( const QList<QByteArray>& flags, ProtocolHelperValuePool *valuePool )
+{
+#if __cplusplus >= 201103L || defined(__GNUC__) || defined(__clang__)
+  // When the compiler supports thread-safe static initialization (mandated by the C++11 memory model)
+  // then use it to share the common case of a single-item set only containing the \SEEN flag.
+  // NOTE: GCC and clang has threadsafe static initialization for some time now, even without C++11.
+  if (flags.size() == 1 && flags.first() == "\\SEEN") {
+    static const Item::Flags sharedSeen = Item::Flags() << QByteArray( "\\SEEN" );
+    return sharedSeen;
+  }
+#endif
+
+  Item::Flags convertedFlags;
+  convertedFlags.reserve( flags.size() );
+  foreach ( const QByteArray &flag, flags ) {
+    if ( valuePool )
+      convertedFlags.insert( valuePool->flagPool.sharedValue( flag ) );
+    else
+      convertedFlags.insert( flag );
+  }
+  return convertedFlags;
+}
+
 void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool )
 {
   // create a new item object
@@ -542,15 +565,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
       QList<QByteArray> flags;
       ImapParser::parseParenthesizedList( lineTokens[i + 1], flags );
       if ( !flags.isEmpty() ) {
-        Item::Flags convertedFlags;
-        convertedFlags.reserve( flags.size() );
-        foreach ( const QByteArray &flag, flags ) {
-          if ( valuePool )
-            convertedFlags.insert( valuePool->flagPool.sharedValue( flag ) );
-          else
-            convertedFlags.insert( flag );
-        }
-        item.setFlags( convertedFlags );
+        item.setFlags( convertFlags( flags, valuePool ) );
       }
     } else if ( key == "TAGS" ) {
       Tag::List tags;
