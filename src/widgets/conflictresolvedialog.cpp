@@ -27,6 +27,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QDateTime>
 
 #include <kcolorscheme.h>
 #include <klocalizedstring.h>
@@ -34,7 +35,6 @@
 #include <qtextbrowser.h>
 #include <KLocale>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 
 using namespace Akonadi;
 

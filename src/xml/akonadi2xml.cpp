@@ -26,7 +26,6 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
-#include <QCommandLineOption>
 #include <KLocalizedString>
 
 using namespace Akonadi;

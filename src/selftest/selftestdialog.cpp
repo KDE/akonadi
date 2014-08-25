@@ -26,7 +26,6 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
-#include <QDebug>
 #include <QUrl>
 #include <QIcon>
 #include <KFileDialog>
@@ -34,6 +33,8 @@
 #include <KMessageBox>
 #include <KRun>
 #include <QStandardPaths>
+#include <QSqlDatabase>
+#include <QSqlError>
 #include <KUser>
 #include <QUrl>
 
@@ -45,10 +46,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QStandardItemModel>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 #include <QVBoxLayout>
 

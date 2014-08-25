@@ -31,7 +31,6 @@
 #include <KConfigGroup>
 #include <qtabwidget.h>
 
-#include <QBoxLayout>
 #include <QDialogButtonBox>
 
 using namespace Akonadi;
