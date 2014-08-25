@@ -27,11 +27,11 @@
 
 class MimeTypeCheckerTest : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit MimeTypeCheckerTest( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit MimeTypeCheckerTest(QObject *parent = 0);
 
-  private:
+private:
     QStringList mCalendarSubTypes;
 
     Akonadi::MimeTypeChecker mEmptyChecker;
@@ -39,7 +39,7 @@ class MimeTypeCheckerTest : public QObject
     Akonadi::MimeTypeChecker mSubTypeChecker;
     Akonadi::MimeTypeChecker mAliasChecker;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
     void testCollectionCheck();
     void testItemCheck();

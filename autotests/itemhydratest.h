@@ -22,13 +22,15 @@
 
 #include <QObject>
 
-class ItemHydra: public QObject
+class ItemHydra : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     ItemHydra();
-    virtual ~ItemHydra() { }
-  private Q_SLOTS:
+    virtual ~ItemHydra()
+    {
+    }
+private Q_SLOTS:
     void initTestCase();
     void testItemValuePayload();
     void testItemPointerPayload();

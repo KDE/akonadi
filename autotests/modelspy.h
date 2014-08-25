@@ -25,66 +25,67 @@
 #include <QModelIndex>
 #include "akonaditestfake_export.h"
 
-enum SignalType
-{
-  NoSignal,
-  RowsAboutToBeInserted,
-  RowsInserted,
-  RowsAboutToBeRemoved,
-  RowsRemoved,
-  RowsAboutToBeMoved,
-  RowsMoved,
-  DataChanged
+enum SignalType {
+    NoSignal,
+    RowsAboutToBeInserted,
+    RowsInserted,
+    RowsAboutToBeRemoved,
+    RowsRemoved,
+    RowsAboutToBeMoved,
+    RowsMoved,
+    DataChanged
 };
 
-struct ExpectedSignal
-{
-  SignalType signalType;
-  int startRow;
-  int endRow;
-  QVariant parentData;
-  QVariant sourceParentData;
-  int destRow;
-  QVariantList newData;
+struct ExpectedSignal {
+    SignalType signalType;
+    int startRow;
+    int endRow;
+    QVariant parentData;
+    QVariant sourceParentData;
+    int destRow;
+    QVariantList newData;
 };
 
-Q_DECLARE_METATYPE( QModelIndex )
+Q_DECLARE_METATYPE(QModelIndex)
 
 class AKONADITESTFAKE_EXPORT ModelSpy : public QObject, public QList<QVariantList>
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ModelSpy(QObject *parent);
+    ModelSpy(QObject *parent);
 
-  void setModel(QAbstractItemModel *model);
+    void setModel(QAbstractItemModel *model);
 
-  bool isEmpty() const;
+    bool isEmpty() const;
 
-  void setExpectedSignals( QList<ExpectedSignal> expectedSignals );
-  QList<ExpectedSignal> expectedSignals() const;
+    void setExpectedSignals(const QList<ExpectedSignal> &expectedSignals);
+    QList<ExpectedSignal> expectedSignals() const;
 
-  void verifySignal( SignalType type, const QModelIndex &parent, int start, int end );
-  void verifySignal( SignalType type, const QModelIndex &parent, int start, int end, const QModelIndex &destParent, int destStart );
-  void verifySignal( SignalType type, const QModelIndex &topLeft, const QModelIndex &bottomRight );
+    void verifySignal(SignalType type, const QModelIndex &parent, int start, int end);
+    void verifySignal(SignalType type, const QModelIndex &parent, int start, int end, const QModelIndex &destParent, int destStart);
+    void verifySignal(SignalType type, const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
-  void startSpying();
-  void stopSpying();
-  bool isSpying() { return m_isSpying; }
+    void startSpying();
+    void stopSpying();
+    bool isSpying()
+    {
+        return m_isSpying;
+    }
 
 protected Q_SLOTS:
-  void rowsAboutToBeInserted(const QModelIndex &parent, int start, int end);
-  void rowsInserted(const QModelIndex &parent, int start, int end);
-  void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
-  void rowsRemoved(const QModelIndex &parent, int start, int end);
-  void rowsAboutToBeMoved(const QModelIndex &srcParent, int start, int end, const QModelIndex &destParent, int destStart);
-  void rowsMoved(const QModelIndex &srcParent, int start, int end, const QModelIndex &destParent, int destStart);
+    void rowsAboutToBeInserted(const QModelIndex &parent, int start, int end);
+    void rowsInserted(const QModelIndex &parent, int start, int end);
+    void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+    void rowsRemoved(const QModelIndex &parent, int start, int end);
+    void rowsAboutToBeMoved(const QModelIndex &srcParent, int start, int end, const QModelIndex &destParent, int destStart);
+    void rowsMoved(const QModelIndex &srcParent, int start, int end, const QModelIndex &destParent, int destStart);
 
-  void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-  QAbstractItemModel *m_model;
-  bool m_isSpying;
-  QList<ExpectedSignal> m_expectedSignals;
+    QAbstractItemModel *m_model;
+    bool m_isSpying;
+    QList<ExpectedSignal> m_expectedSignals;
 };
 
 #endif

@@ -24,8 +24,8 @@
 
 class GidTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase();
     void testSetAndFetch_data();
     void testSetAndFetch();
@@ -38,18 +38,18 @@ class GidTest : public QObject
 #include <itemserializer_p.h>
 #include <itemserializerplugin.h>
 
-class TestSerializer: public QObject,
-                      public Akonadi::ItemSerializerPlugin,
-                      public Akonadi::GidExtractorInterface
+class TestSerializer : public QObject,
+                       public Akonadi::ItemSerializerPlugin,
+                       public Akonadi::GidExtractorInterface
 {
     Q_OBJECT
-    Q_INTERFACES( Akonadi::ItemSerializerPlugin )
-    Q_INTERFACES( Akonadi::GidExtractorInterface )
+    Q_INTERFACES(Akonadi::ItemSerializerPlugin)
+    Q_INTERFACES(Akonadi::GidExtractorInterface)
 
-  public:
-    bool deserialize( Akonadi::Item& item, const QByteArray& label, QIODevice& data, int version );
-    void serialize( const Akonadi::Item& item, const QByteArray& label, QIODevice& data, int &version );
-    QString extractGid( const Akonadi::Item& item ) const;
+public:
+    bool deserialize(Akonadi::Item &item, const QByteArray &label, QIODevice &data, int version);
+    void serialize(const Akonadi::Item &item, const QByteArray &label, QIODevice &data, int &version);
+    QString extractGid(const Akonadi::Item &item) const;
 };
 
 #endif

@@ -32,111 +32,112 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( AutoIncrementTest )
+QTEST_AKONADIMAIN(AutoIncrementTest)
 
 static bool isMySQLEnvironment()
 {
-  return (qgetenv( "TESTRUNNER_DB_ENVIRONMENT" ) == "mysql");
+    return (qgetenv("TESTRUNNER_DB_ENVIRONMENT") == "mysql");
 }
 
 void AutoIncrementTest::initTestCase()
 {
-  AkonadiTest::checkTestIsIsolated();
-  Control::start();
-  AkonadiTest::setAllResourcesOffline();
+    AkonadiTest::checkTestIsIsolated();
+    Control::start();
+    AkonadiTest::setAllResourcesOffline();
 
-  itemTargetCollection = Collection( collectionIdFromPath( QLatin1String("res2/space folder") ) );
-  QVERIFY( itemTargetCollection.isValid() );
+    itemTargetCollection = Collection(collectionIdFromPath(QLatin1String("res2/space folder")));
+    QVERIFY(itemTargetCollection.isValid());
 
-  collectionTargetCollection = Collection( collectionIdFromPath( QLatin1String("res3") ) );
-  QVERIFY( collectionTargetCollection.isValid() );
+    collectionTargetCollection = Collection(collectionIdFromPath(QLatin1String("res3")));
+    QVERIFY(collectionTargetCollection.isValid());
 }
 
-Akonadi::ItemCreateJob* AutoIncrementTest::createItemCreateJob()
+Akonadi::ItemCreateJob *AutoIncrementTest::createItemCreateJob()
 {
-  QByteArray payload( "Hello world" );
-  Item item( -1 );
-  item.setMimeType( QLatin1String("application/octet-stream") );
-  item.setPayload( payload );
-  return new ItemCreateJob( item, itemTargetCollection );
+    QByteArray payload("Hello world");
+    Item item(-1);
+    item.setMimeType(QLatin1String("application/octet-stream"));
+    item.setPayload(payload);
+    return new ItemCreateJob(item, itemTargetCollection);
 }
 
-Akonadi::CollectionCreateJob* AutoIncrementTest::createCollectionCreateJob( int number )
+Akonadi::CollectionCreateJob *AutoIncrementTest::createCollectionCreateJob(int number)
 {
-  Collection collection;
-  collection.setParentCollection( collectionTargetCollection );
-  collection.setName( QLatin1String("testCollection") + QString::number( number) );
-  return new CollectionCreateJob( collection );
+    Collection collection;
+    collection.setParentCollection(collectionTargetCollection);
+    collection.setName(QLatin1String("testCollection") + QString::number(number));
+    return new CollectionCreateJob(collection);
 }
 
 void AutoIncrementTest::testItemAutoIncrement()
 {
-  QList<Item> itemsToDelete;
-  Item::Id lastId = -1;
+    QList<Item> itemsToDelete;
+    Item::Id lastId = -1;
 
-  // Create 20 test items
-  for ( int i = 0; i < 20; i++ ) {
+    // Create 20 test items
+    for (int i = 0; i < 20; i++) {
+        ItemCreateJob *job = createItemCreateJob();
+        AKVERIFYEXEC(job);
+        Item newItem = job->item();
+        QVERIFY(newItem.id() > lastId);
+        lastId = newItem.id();
+        itemsToDelete.append(newItem);
+    }
+
+    // Delete the 20 items
+    foreach (const Item &item, itemsToDelete) {
+        ItemDeleteJob *job = new ItemDeleteJob(item);
+        AKVERIFYEXEC(job);
+    }
+
+    // Restart the server, then test item creation again. The new id of the item
+    // should be higher than all ids before.
+    restartAkonadiServer();
     ItemCreateJob *job = createItemCreateJob();
-    AKVERIFYEXEC( job );
+    AKVERIFYEXEC(job);
     Item newItem = job->item();
-    QVERIFY( newItem.id() > lastId );
+
+    if (isMySQLEnvironment()) {
+        QEXPECT_FAIL("", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue);
+    }
+
+    QVERIFY(newItem.id() > lastId);
     lastId = newItem.id();
-    itemsToDelete.append( newItem );
-  }
-
-  // Delete the 20 items
-  foreach( const Item &item, itemsToDelete ) {
-    ItemDeleteJob *job = new ItemDeleteJob( item );
-    AKVERIFYEXEC( job );
-  }
-
-  // Restart the server, then test item creation again. The new id of the item
-  // should be higher than all ids before.
-  restartAkonadiServer();
-  ItemCreateJob *job = createItemCreateJob();
-  AKVERIFYEXEC( job );
-  Item newItem = job->item();
-
-  if ( isMySQLEnvironment() )
-    QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
-
-  QVERIFY( newItem.id() > lastId );
-  lastId = newItem.id();
 }
 
 void AutoIncrementTest::testCollectionAutoIncrement()
 {
-  QList<Collection> collectionsToDelete;
-  Collection::Id lastId = -1;
+    QList<Collection> collectionsToDelete;
+    Collection::Id lastId = -1;
 
-  // Create 20 test collections
-  for ( int i = 0; i < 20; i++ ) {
-    CollectionCreateJob *job = createCollectionCreateJob( i );
-    AKVERIFYEXEC( job );
+    // Create 20 test collections
+    for (int i = 0; i < 20; i++) {
+        CollectionCreateJob *job = createCollectionCreateJob(i);
+        AKVERIFYEXEC(job);
+        Collection newCollection = job->collection();
+        QVERIFY(newCollection.id() > lastId);
+        lastId = newCollection.id();
+        collectionsToDelete.append(newCollection);
+    }
+
+    // Delete the 20 collections
+    foreach (const Collection &collection, collectionsToDelete) {
+        CollectionDeleteJob *job = new CollectionDeleteJob(collection);
+        AKVERIFYEXEC(job);
+    }
+
+    // Restart the server, then test collection creation again. The new id of the collection
+    // should be higher than all ids before.
+    restartAkonadiServer();
+
+    CollectionCreateJob *job = createCollectionCreateJob(0);
+    AKVERIFYEXEC(job);
     Collection newCollection = job->collection();
-    QVERIFY( newCollection.id() > lastId );
+
+    if (isMySQLEnvironment()) {
+        QEXPECT_FAIL("", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue);
+    }
+
+    QVERIFY(newCollection.id() > lastId);
     lastId = newCollection.id();
-    collectionsToDelete.append( newCollection );
-  }
-
-  // Delete the 20 collections
-  foreach( const Collection &collection, collectionsToDelete ) {
-    CollectionDeleteJob *job = new CollectionDeleteJob( collection );
-    AKVERIFYEXEC( job );
-  }
-
-  // Restart the server, then test collection creation again. The new id of the collection
-  // should be higher than all ids before.
-  restartAkonadiServer();
-
-  CollectionCreateJob *job = createCollectionCreateJob( 0 );
-  AKVERIFYEXEC( job );
-  Collection newCollection = job->collection();
-
-  if ( isMySQLEnvironment() )
-    QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
-
-  QVERIFY( newCollection.id() > lastId );
-  lastId = newCollection.id();
 }
-

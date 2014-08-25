@@ -31,67 +31,66 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( AttributeFactoryTest )
+QTEST_AKONADIMAIN(AttributeFactoryTest)
 
 static Collection res1;
 
 void AttributeFactoryTest::initTestCase()
 {
-  AkonadiTest::checkTestIsIsolated();
-  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res1"), this );
-  AKVERIFYEXEC( resolver );
-  res1 = Collection( resolver->collection() );
+    AkonadiTest::checkTestIsIsolated();
+    CollectionPathResolver *resolver = new CollectionPathResolver(QLatin1String("res1"), this);
+    AKVERIFYEXEC(resolver);
+    res1 = Collection(resolver->collection());
 }
 
 void AttributeFactoryTest::testUnknownAttribute()
 {
-  // The attribute is currently not registered.
-  Item item;
-  item.setMimeType( QLatin1String("text/directory") );
-  item.setPayload<QByteArray>( "payload" );
-  TestAttribute *ta = new TestAttribute;
-  QVERIFY( AttributeFactory::createAttribute( ta->type() ) ); // DefaultAttribute
-  ta->data = "lalala";
-  item.addAttribute( ta );
-  ItemCreateJob *cjob = new ItemCreateJob( item, res1 );
-  AKVERIFYEXEC( cjob );
-  int id = cjob->item().id();
-  item = Item( id );
-  ItemFetchJob *fjob = new ItemFetchJob( item );
-  fjob->fetchScope().fetchFullPayload();
-  fjob->fetchScope().fetchAllAttributes();
-  AKVERIFYEXEC( fjob );
-  QCOMPARE( fjob->items().count(), 1 );
-  item = fjob->items().first();
-  QVERIFY( item.hasAttribute<TestAttribute>() ); // has DefaultAttribute
-  ta = item.attribute<TestAttribute>();
-  QVERIFY( !ta ); // but can't cast it to TestAttribute
+    // The attribute is currently not registered.
+    Item item;
+    item.setMimeType(QLatin1String("text/directory"));
+    item.setPayload<QByteArray>("payload");
+    TestAttribute *ta = new TestAttribute;
+    QVERIFY(AttributeFactory::createAttribute(ta->type()));     // DefaultAttribute
+    ta->data = "lalala";
+    item.addAttribute(ta);
+    ItemCreateJob *cjob = new ItemCreateJob(item, res1);
+    AKVERIFYEXEC(cjob);
+    int id = cjob->item().id();
+    item = Item(id);
+    ItemFetchJob *fjob = new ItemFetchJob(item);
+    fjob->fetchScope().fetchFullPayload();
+    fjob->fetchScope().fetchAllAttributes();
+    AKVERIFYEXEC(fjob);
+    QCOMPARE(fjob->items().count(), 1);
+    item = fjob->items().first();
+    QVERIFY(item.hasAttribute<TestAttribute>());   // has DefaultAttribute
+    ta = item.attribute<TestAttribute>();
+    QVERIFY(!ta);   // but can't cast it to TestAttribute
 }
 
 void AttributeFactoryTest::testRegisteredAttribute()
 {
-  AttributeFactory::registerAttribute<TestAttribute>();
+    AttributeFactory::registerAttribute<TestAttribute>();
 
-  Item item;
-  item.setMimeType( QLatin1String("text/directory") );
-  item.setPayload<QByteArray>( "payload" );
-  TestAttribute *ta = new TestAttribute;
-  QVERIFY( AttributeFactory::createAttribute( ta->type() ) != 0 );
-  ta->data = "lalala";
-  item.addAttribute( ta );
-  ItemCreateJob *cjob = new ItemCreateJob( item, res1 );
-  AKVERIFYEXEC( cjob );
-  int id = cjob->item().id();
-  item = Item( id );
-  ItemFetchJob *fjob = new ItemFetchJob( item );
-  fjob->fetchScope().fetchFullPayload();
-  fjob->fetchScope().fetchAllAttributes();
-  AKVERIFYEXEC( fjob );
-  QCOMPARE( fjob->items().count(), 1 );
-  item = fjob->items().first();
-  QVERIFY( item.hasAttribute<TestAttribute>() );
-  ta = item.attribute<TestAttribute>();
-  QVERIFY( ta );
-  QCOMPARE( ta->data, QByteArray( "lalala" ) );
+    Item item;
+    item.setMimeType(QLatin1String("text/directory"));
+    item.setPayload<QByteArray>("payload");
+    TestAttribute *ta = new TestAttribute;
+    QVERIFY(AttributeFactory::createAttribute(ta->type()) != 0);
+    ta->data = "lalala";
+    item.addAttribute(ta);
+    ItemCreateJob *cjob = new ItemCreateJob(item, res1);
+    AKVERIFYEXEC(cjob);
+    int id = cjob->item().id();
+    item = Item(id);
+    ItemFetchJob *fjob = new ItemFetchJob(item);
+    fjob->fetchScope().fetchFullPayload();
+    fjob->fetchScope().fetchAllAttributes();
+    AKVERIFYEXEC(fjob);
+    QCOMPARE(fjob->items().count(), 1);
+    item = fjob->items().first();
+    QVERIFY(item.hasAttribute<TestAttribute>());
+    ta = item.attribute<TestAttribute>();
+    QVERIFY(ta);
+    QCOMPARE(ta->data, QByteArray("lalala"));
 }
-

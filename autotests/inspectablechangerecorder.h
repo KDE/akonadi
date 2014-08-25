@@ -33,51 +33,59 @@ class InspectableChangeRecorder;
 class InspectableChangeRecorderPrivate : public Akonadi::ChangeRecorderPrivate
 {
 public:
-  InspectableChangeRecorderPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableChangeRecorder* parent);
-  ~InspectableChangeRecorderPrivate() {}
+    InspectableChangeRecorderPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableChangeRecorder *parent);
+    ~InspectableChangeRecorderPrivate()
+    {
+    }
 
-  virtual bool emitNotification( const Akonadi::NotificationMessageV3& msg )
-  {
-    // TODO: Check/Log
-    return Akonadi::ChangeRecorderPrivate::emitNotification(msg);
-  }
+    virtual bool emitNotification(const Akonadi::NotificationMessageV3 &msg)
+    {
+        // TODO: Check/Log
+        return Akonadi::ChangeRecorderPrivate::emitNotification(msg);
+    }
 };
 
 class AKONADITESTFAKE_EXPORT InspectableChangeRecorder : public Akonadi::ChangeRecorder
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = 0);
+    InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = 0);
 
-  FakeNotificationSource* notifier() const {
-    return qobject_cast<FakeNotificationSource*>(d_ptr->notificationSource->source());
-  }
+    FakeNotificationSource *notifier() const {
+        return qobject_cast<FakeNotificationSource *>(d_ptr->notificationSource->source());
+    }
 
-  QQueue<Akonadi::NotificationMessageV3> pendingNotifications() const { return d_ptr->pendingNotifications; }
-  QQueue<Akonadi::NotificationMessageV3> pipeline() const { return d_ptr->pipeline; }
+    QQueue<Akonadi::NotificationMessageV3> pendingNotifications() const
+    {
+        return d_ptr->pendingNotifications;
+    }
+    QQueue<Akonadi::NotificationMessageV3> pipeline() const
+    {
+        return d_ptr->pipeline;
+    }
 
 Q_SIGNALS:
-  void dummySignal();
+    void dummySignal();
 
 private Q_SLOTS:
-  void dispatchNotifications()
-  {
-    d_ptr->dispatchNotifications();
-  }
+    void dispatchNotifications()
+    {
+        d_ptr->dispatchNotifications();
+    }
 
-  void doConnectToNotificationManager();
+    void doConnectToNotificationManager();
 
 private:
-  struct MessageStruct {
-    enum Position {
-      Queued,
-      FilterPipelined,
-      Pipelined,
-      Emitted
+    struct MessageStruct {
+        enum Position {
+            Queued,
+            FilterPipelined,
+            Pipelined,
+            Emitted
+        };
+        Position position;
     };
-    Position position;
-  };
-  QQueue<MessageStruct> m_messages;
+    QQueue<MessageStruct> m_messages;
 };
 
 #endif
