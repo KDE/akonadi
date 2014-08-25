@@ -432,7 +432,6 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
 
         collectionsToInsert.insert(collectionId, collection);
     }
-
     //Build a list of subtrees to insert, with the root of the subtree on the left, and the complete subtree including root on the right
     QHash<Collection::Id, QSet<Collection::Id> > subTreesToInsert;
     {
