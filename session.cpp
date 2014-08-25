@@ -118,7 +118,7 @@ void SessionPrivate::reconnect()
         const QString connectionConfigFile = connectionFile();
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
-            kDebug() << "Akonadi Client Session: connection config file '"
+            kWarning() << "Akonadi Client Session: connection config file '"
                      "akonadi/akonadiconnectionrc' can not be found in"
                      << XdgBaseDirs::homePath("config") << "nor in any of"
                      << XdgBaseDirs::systemPathList("config");
