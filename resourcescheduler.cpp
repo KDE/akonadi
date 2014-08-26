@@ -68,6 +68,18 @@ void ResourceScheduler::scheduleCollectionTreeSync()
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleTagSync()
+{
+  Task t;
+  t.type = SyncTags;
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
+    return;
+  queue << t;
+  signalTaskToTracker( t, "SyncTags" );
+  scheduleNext();
+}
+
 void ResourceScheduler::scheduleSync(const Collection & col)
 {
   Task t;
@@ -318,6 +330,9 @@ void ResourceScheduler::executeNext()
     case SyncCollectionAttributes:
       emit executeCollectionAttributesSync( mCurrentTask.collection );
       break;
+    case SyncTags:
+      emit executeTagSync();
+      break;
     case FetchItem:
       emit executeItemFetch( mCurrentTask.item, mCurrentTask.itemParts );
       break;
@@ -532,6 +547,7 @@ static const char s_taskTypes[][27] = {
       "SyncCollectionTree",
       "SyncCollection",
       "SyncCollectionAttributes",
+      "SyncTags",
       "FetchItem",
       "ChangeReplay",
       "RecursiveMoveReplay",

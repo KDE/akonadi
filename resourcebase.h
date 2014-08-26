@@ -270,6 +270,8 @@ protected Q_SLOTS:
      */
     virtual void retrieveCollections() = 0;
 
+    virtual void retrieveTags();
+
     /**
      * Retrieve the attributes of a single collection from the backend. The
      * collection to retrieve attributes for is provided as @p collection.
@@ -426,6 +428,8 @@ protected:
      * @see collectionsRetrievedIncremental()
     */
     void collectionsRetrieved(const Collection::List &collections);
+
+    void tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers);
 
     /**
      * Call this to supply incrementally retrieved collections from the remote server.
@@ -631,6 +635,11 @@ protected:
     void synchronizeCollectionTree();
 
     /**
+     * Refetches Tags.
+     */
+    void synchronizeTags();
+
+    /**
      * Stops the execution of the current task and continues with the next one.
      */
     void cancelTask();
@@ -781,6 +790,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplayResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotTagSyncDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotSynchronizeTags())
 };
 
 }

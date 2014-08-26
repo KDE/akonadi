@@ -26,6 +26,7 @@
 #include "collectionsync_p.h"
 #include "dbusconnectionpool.h"
 #include "itemsync.h"
+#include "tagsync.h"
 #include "kdepimlibs-version.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
@@ -76,6 +77,7 @@ public:
         , mItemSyncFetchScope(0)
         , mItemTransactionMode(ItemSync::SingleTransaction)
         , mCollectionSyncer(0)
+        , mTagSyncer(0)
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
@@ -141,6 +143,7 @@ public:
     void slotSynchronizeCollectionAttributes(const Collection &col);
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
+    void slotSynchronizeTags();
 
     void slotItemSyncDone(KJob *job);
 
@@ -160,6 +163,7 @@ public:
     void slotRecursiveMoveReplay(RecursiveMover *mover);
     void slotRecursiveMoveReplayResult(KJob *job);
 
+    void slotTagSyncDone(KJob *job);
     void slotSessionReconnected()
     {
         Q_Q(ResourceBase);
@@ -437,6 +441,7 @@ public:
     ItemFetchScope *mItemSyncFetchScope;
     ItemSync::TransactionMode mItemTransactionMode;
     CollectionSync *mCollectionSyncer;
+    TagSync *mTagSyncer;
     bool mHierarchicalRid;
     QTimer mProgressEmissionCompressor;
     int mUnemittedProgress;
@@ -473,6 +478,8 @@ ResourceBase::ResourceBase(const QString &id)
             SLOT(slotSynchronizeCollection(Akonadi::Collection)));
     connect(d->scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)),
             SLOT(slotSynchronizeCollectionAttributes(Akonadi::Collection)));
+    connect(d->scheduler, SIGNAL(executeTagSync()),
+            SLOT(slotSynchronizeTags()));
     connect(d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
             SLOT(slotPrepareItemRetrieval(Akonadi::Item)));
     connect(d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
@@ -924,6 +931,12 @@ void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &
     QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, col));
 }
 
+void ResourceBasePrivate::slotSynchronizeTags()
+{
+    Q_Q(ResourceBase);
+    QMetaObject::invokeMethod(q, "retrieveTags");
+}
+
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Akonadi::Item &item)
 {
     Q_Q(ResourceBase);
@@ -1030,6 +1043,11 @@ Item ResourceBase::currentItem() const
 void ResourceBase::synchronizeCollectionTree()
 {
     d_func()->scheduler->scheduleCollectionTreeSync();
+}
+
+void ResourceBase::synchronizeTags()
+{
+    d_func()->scheduler->scheduleTagSync();
 }
 
 void ResourceBase::cancelTask()
@@ -1242,6 +1260,12 @@ void ResourceBase::retrieveCollectionAttributes(const Collection &collection)
     collectionAttributesRetrieved(collection);
 }
 
+void ResourceBase::retrieveTags()
+{
+    Q_D(ResourceBase);
+    d->scheduler->taskDone();
+}
+
 void Akonadi::ResourceBase::abortActivity()
 {
 }
@@ -1290,6 +1314,37 @@ QString ResourceBase::dumpMemoryInfoToString() const
     Q_D(const ResourceBase);
     return d->dumpMemoryInfoToString();
 }
+
+void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers)
+{
+    Q_D(ResourceBase);
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncTags ||
+               d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
+               d->scheduler->currentTask().type == ResourceScheduler::Custom,
+               "ResourceBase::tagsRetrieved()",
+               "Calling tagsRetrieved() although no tag retrieval is in progress");
+    if (!d->mTagSyncer) {
+        d->mTagSyncer = new TagSync(this);
+        connect(d->mTagSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
+        connect(d->mTagSyncer, SIGNAL(result(KJob*)), SLOT(slotTagSyncDone(KJob*)));
+    }
+    d->mTagSyncer->setFullTagList(tags);
+    d->mTagSyncer->setTagMembers(tagMembers);
+}
+
+void ResourceBasePrivate::slotTagSyncDone(KJob *job)
+{
+    Q_Q(ResourceBase);
+    mTagSyncer = 0;
+    if (job->error()) {
+        if (job->error() != Job::UserCanceled) {
+            kWarning() << "TagSync failed: " << job->errorString();
+            emit q->error(job->errorString());
+        }
+    }
+    scheduler->taskDone();
+}
+
 
 #include "resourcebase.moc"
 #include "moc_resourcebase.cpp"
