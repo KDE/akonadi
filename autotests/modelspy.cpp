@@ -39,7 +39,7 @@ void ModelSpy::setModel(QAbstractItemModel *model)
   m_model = model;
 }
 
-void ModelSpy::setExpectedSignals( QList< ExpectedSignal > expectedSignals )
+void ModelSpy::setExpectedSignals( const QList< ExpectedSignal > &expectedSignals )
 {
   m_expectedSignals = expectedSignals;
 }
