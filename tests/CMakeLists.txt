@@ -74,6 +74,17 @@ add_library(akonaditestfake STATIC
   inspectablechangerecorder.cpp
 )
 
+add_library(akonaditest ${LIBRARY_TYPE} 
+    virtualresource.cpp
+    ../resourcescheduler.cpp
+)
+target_link_libraries(akonaditest akonadi-kde ${KDE4_KDEUI_LIBS})
+install(TARGETS akonaditest ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES
+    virtualresource.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
+)
+
 # demo applications
 add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(subscriber.cpp)
