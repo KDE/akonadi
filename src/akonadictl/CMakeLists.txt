@@ -1,0 +1,26 @@
+include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
+
+########### next target ###############
+
+set(akonadictl_SRCS
+    akonadistarter.cpp
+    main.cpp
+)
+
+qt5_add_dbus_interfaces(akonadictl_SRCS
+    ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml
+)
+
+add_executable(akonadictl ${akonadictl_SRCS})
+set_target_properties(akonadictl PROPERTIES OUTPUT_NAME akonadictl)
+target_link_libraries(akonadictl
+    akonadi_shared
+    KF5AkonadiPrivate
+    Qt5::Core
+    Qt5::DBus
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
+
+install(TARGETS akonadictl
+        ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}}
+)

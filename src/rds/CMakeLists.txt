@@ -1,0 +1,22 @@
+########### next target ###############
+
+set(akonadi_rds_srcs
+    bridgeserver.cpp
+    bridgeconnection.cpp
+    main.cpp
+)
+
+add_executable(akonadi_rds ${akonadi_rds_srcs})
+
+target_link_libraries(akonadi_rds
+    akonadi_shared
+    KF5AkonadiPrivate
+    Qt5::Core
+    Qt5::Network
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
+
+install(TARGETS akonadi_rds
+        ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
