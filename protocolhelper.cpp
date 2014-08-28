@@ -22,6 +22,7 @@
 #include "attributefactory.h"
 #include "collectionstatistics.h"
 #include "entity_p.h"
+#include "item_p.h"
 #include "exception.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
@@ -109,7 +110,6 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
 
   static const Collection::Id rootCollectionId = Collection::root().id();
   QVarLengthArray<QByteArray, 16> ancestors;
-  // QVarLengthArray<QByteArray, 16> parentIds;
   QList<QByteArray> parentIds;
 
   ImapParser::parseParenthesizedList( data, ancestors );
@@ -465,6 +465,8 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " VIRTREF";
   if ( fetchScope.fetchModificationTime() )
     command += " DATETIME";
+  if ( fetchScope.fetchRelations() )
+    command += " RELATIONS";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
   foreach ( const QByteArray &part, fetchScope.attributes() )
@@ -586,6 +588,18 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         }
       }
       item.setTags( tags );
+    } else if ( key == "RELATIONS" ) {
+        Relation::List relations;
+        QList<QByteArray> data;
+        ImapParser::parseParenthesizedList( lineTokens[i + 1], data );
+        Q_FOREACH (const QByteArray &d, data) {
+            QList<QByteArray> parts;
+            ImapParser::parseParenthesizedList( d, parts );
+            Relation relation;
+            parseRelationFetchResult(parts, relation);
+            relations << relation;
+        }
+        item.d_func()->mRelations = relations;
     } else if ( key == "VIRTREF" ) {
       ImapSet set;
       ImapParser::parseSequenceSet( lineTokens[i + 1], set );
@@ -691,6 +705,26 @@ void ProtocolHelper::parseTagFetchResult( const QList<QByteArray> &lineTokens, T
       }
       attr->deserialize(value);
       tag.addAttribute(attr);
+    }
+  }
+}
+
+void ProtocolHelper::parseRelationFetchResult( const QList<QByteArray> &lineTokens, Relation &relation )
+{
+  for (int i = 0; i < lineTokens.count() - 1; i += 2) {
+    const QByteArray key = lineTokens.value(i);
+    const QByteArray value = lineTokens.value(i + 1);
+
+    if (key == "LEFT") {
+      relation.setLeft(Akonadi::Item(value.toLongLong()));
+    } else if (key == "RIGHT") {
+      relation.setRight(Akonadi::Item(value.toLongLong()));
+    } else if (key == "REMOTEID") {
+      relation.setRemoteId(value);
+    } else if ( key == "TYPE" ) {
+      relation.setType(value);
+    } else {
+      kWarning() << "Unknown relation attribute " << key;
     }
   }
 }

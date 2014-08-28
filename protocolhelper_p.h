@@ -234,6 +234,7 @@ public:
      */
     static void parseItemFetchResult(const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0);
     static void parseTagFetchResult(const QList<QByteArray> &lineTokens, Tag &tag);
+    static void parseRelationFetchResult(const QList<QByteArray> &lineTokens, Relation &tag);
 
     static QString akonadiStoragePath();
     static QString absolutePayloadFilePath(const QString &fileName);

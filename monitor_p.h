@@ -158,6 +158,8 @@ public:
 
     bool emitTagsNotification(const NotificationMessageV3 &msg, const Tag::List &tags);
 
+    bool emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations);
+
     void serverStateChanged(Akonadi::ServerManager::State state);
 
     /**

@@ -191,6 +191,10 @@ set( akonadikde_LIB_SRC
   transportresourcebase.cpp
   typepluginloader.cpp
   attributeentity.cpp
+  relation.cpp
+  relationcreatejob.cpp
+  relationdeletejob.cpp
+  relationfetchjob.cpp
   tag.cpp
   tagmodel.cpp
   tagmodel_p.cpp
@@ -412,6 +416,9 @@ install( FILES
   specialcollectionsdiscoveryjob.h
   standardactionmanager.h
   statisticsproxymodel.h
+  relation.h
+  relationcreatejob.h
+  relationdeletejob.h
   tagattribute.h
   tag.h
   tagmodel.h

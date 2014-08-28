@@ -46,6 +46,7 @@ public:
         , mFetchGid(false)
         , mFetchTags(false)
         , mFetchVRefs(false)
+        , mFetchRelations(false)
     {
         mTagFetchScope.setFetchIdOnly(true);
     }
@@ -68,6 +69,7 @@ public:
         mFetchTags = other.mFetchTags;
         mTagFetchScope = other.mTagFetchScope;
         mFetchVRefs = other.mFetchVRefs;
+        mFetchRelations = other.mFetchRelations;
     }
 
 public:
@@ -86,6 +88,7 @@ public:
     bool mFetchTags;
     TagFetchScope mTagFetchScope;
     bool mFetchVRefs;
+    bool mFetchRelations;
 };
 
 }

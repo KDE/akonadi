@@ -414,6 +414,7 @@ public:
     int mRevision;
     Item::Flags mFlags;
     Tag::List mTags;
+    Relation::List mRelations;
     Entity::Id mCollectionId;
     Collection::List mVirtualReferences;
     qint64 mSize;

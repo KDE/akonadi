@@ -232,6 +232,11 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &n
             batchSupported = true;
             needsSplit = false;
             return;
+        case NotificationMessageV2::ModifyRelations:
+            // Relations were added after batch notifications, so they are always supported
+            batchSupported = true;
+            needsSplit = false;
+            return;
         case NotificationMessageV2::Move:
             needsSplit = isBatch && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) > 0;
             batchSupported = q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) > 0;
@@ -258,6 +263,9 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &n
         needsSplit = isBatch;
         batchSupported = false;
     } else if (msg.type() == NotificationMessageV2::Tags) {
+        needsSplit = isBatch;
+        batchSupported = false;
+    } else if (msg.type() == NotificationMessageV2::Relations) {
         needsSplit = isBatch;
         batchSupported = false;
     }
@@ -303,7 +311,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
         return false;
     }
 
-    if (msg.entities().count() == 0) {
+    if (msg.entities().count() == 0 && msg.type() != NotificationMessageV2::Relations) {
         return false;
     }
 
@@ -378,6 +386,8 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
             return false;
         }
         return true;
+    case NotificationMessageV2::Relations:
+        return true;
     }
     Q_ASSERT(false);
     return false;
@@ -416,6 +426,9 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
                 return false;
             }
         }
+        return true;
+    }
+    if (msg.type() == NotificationMessageV2::Relations) {
         return true;
     }
 
@@ -490,6 +503,22 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
         //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
         const Tag::List tags = tagCache->retrieve(msg.uids());
         someoneWasListening = emitTagsNotification(msg, tags);
+    } else if (msg.type() == NotificationMessageV2::Relations) {
+        Relation rel;
+        Q_FOREACH (const QByteArray & part, msg.itemParts()) {
+            QList<QByteArray> splitPart = part.split(' ');
+            Q_ASSERT(splitPart.size() == 2);
+            if (splitPart.first() == "LEFT") {
+                rel.setLeft(Akonadi::Item(splitPart.at(1).toLongLong()));
+            } else if (splitPart.first() == "RIGHT") {
+                rel.setRight(Akonadi::Item(splitPart.at(1).toLongLong()));
+            } else if (splitPart.first() == "TYPE") {
+                rel.setType(splitPart.at(1));
+            } else if (splitPart.first() == "RID") {
+                rel.setRemoteId(splitPart.at(1));
+            }
+        }
+        someoneWasListening = emitRelationsNotification(msg, Relation::List() << rel);
     } else {
         const Collection parent = collectionCache->retrieve(msg.parentCollection());
         Collection destParent;
@@ -741,8 +770,23 @@ void MonitorPrivate::dispatchNotifications()
     }
 }
 
-bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+static Relation::List extractRelations(QSet<QByteArray> &flags)
 {
+    Relation::List relations;
+    Q_FOREACH (const QByteArray &flag, flags) {
+        if (flag.startsWith("RELATION")) {
+            flags.remove(flag);
+            const QList<QByteArray> parts = flag.split(' ');
+            Q_ASSERT(parts.size() == 4);
+            relations << Relation(parts[1], Item(parts[2].toLongLong()), Item(parts[3].toLongLong()));
+        }
+    }
+    return relations;
+}
+
+bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+{
+    NotificationMessageV3 msg = msg_;
     Q_ASSERT(msg.type() == NotificationMessageV2::Items);
     Collection col = collection;
     Collection colDest = collectionDest;
@@ -756,6 +800,17 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, con
         if (!msg.itemParts().isEmpty()) {
             colDest.setResource(QString::fromLatin1(*(msg.itemParts().begin())));
         }
+    }
+
+    Relation::List addedRelations, removedRelations;
+    if (msg.operation() == NotificationMessageV2::ModifyRelations) {
+        QSet<QByteArray> addedFlags = msg.addedFlags();
+        addedRelations = extractRelations(addedFlags);
+        msg.setAddedFlags(addedFlags);
+
+        QSet<QByteArray> removedFlags = msg.removedFlags();
+        removedRelations = extractRelations(removedFlags);
+        msg.setRemovedFlags(removedFlags);
     }
 
     Tag::List addedTags, removedTags;
@@ -895,6 +950,12 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, con
             return true;
         }
         return false;
+    case NotificationMessageV2::ModifyRelations:
+        if (q_ptr->receivers(SIGNAL(itemsRelationsChanged(Akonadi::Item::List,QSet<Akonadi::Relation>,QSet<Akonadi::Relation>))) > 0) {
+            emit q_ptr->itemsRelationsChanged(its, addedRelations, removedRelations);
+            return true;
+        }
+        return false;
     default:
         kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
     }
@@ -1017,6 +1078,34 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
         }
         Q_FOREACH (const Tag &tag, validTags) {
             Q_EMIT q_ptr->tagRemoved(tag);
+        }
+        return true;
+    default:
+        kDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
+    }
+
+    return false;
+}
+
+bool MonitorPrivate::emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations)
+{
+    Q_ASSERT(msg.type() == NotificationMessageV2::Relations);
+
+    switch (msg.operation()) {
+    case NotificationMessageV2::Add:
+        if (q_ptr->receivers(SIGNAL(relationAdded(Akonadi::Relation))) == 0) {
+            return false;
+        }
+        Q_FOREACH (const Relation &relation, relations) {
+            Q_EMIT q_ptr->relationAdded(relation);
+        }
+        return true;
+    case NotificationMessageV2::Remove:
+        if (q_ptr->receivers(SIGNAL(relationRemoved(Akonadi::Relation))) == 0) {
+            return false;
+        }
+        Q_FOREACH (const Relation &relation, relations) {
+            Q_EMIT q_ptr->relationRemoved(relation);
         }
         return true;
     default:

@@ -405,6 +405,24 @@ public:
      */
     bool fetchVirtualReferences() const;
 
+    /**
+     * Fetch relations for items.
+     *
+     * The default is @c false.
+     *
+     * @param fetchTags whether or not to load relations.
+     * @since 4.15
+     */
+    void setFetchRelations(bool fetchRelations);
+
+    /**
+     * Returns whether relations should be retrieved.
+     *
+     * @see setFetchRelations()
+     * @since 4.15
+     */
+    bool fetchRelations() const;
+
 private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;

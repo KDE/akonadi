@@ -267,6 +267,12 @@ Tag::List Item::tags() const
     return d->mTags;
 }
 
+Relation::List Item::relations() const
+{
+    Q_D(const Item);
+    return d->mRelations;
+}
+
 QSet<QByteArray> Item::loadedPayloadParts() const
 {
     return ItemSerializer::parts(*this);
