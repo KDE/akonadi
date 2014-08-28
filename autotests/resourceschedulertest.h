@@ -24,15 +24,15 @@
 
 class ResourceSchedulerTest : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit ResourceSchedulerTest( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit ResourceSchedulerTest(QObject *parent = 0);
 
-  public Q_SLOTS:
-    void customTask( const QVariant &argument );
+public Q_SLOTS:
+    void customTask(const QVariant &argument);
     void customTaskNoArg();
 
-  private Q_SLOTS:
+private Q_SLOTS:
 
     void testTaskComparision();
     void testChangeReplaySchedule();
@@ -41,7 +41,7 @@ class ResourceSchedulerTest : public QObject
     void testSyncCompletion();
     void testPriorities();
 
-  private:
+private:
     int mCustomCallCount;
     QVariant mLastArgument;
 };

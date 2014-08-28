@@ -28,56 +28,58 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 
-qint64 collectionIdFromPath( const QString &path )
+qint64 collectionIdFromPath(const QString &path)
 {
-  Akonadi::CollectionPathResolver *resolver = new Akonadi::CollectionPathResolver( path );
-  bool success = resolver->exec();
-  if ( !success ) {
-    qDebug() << "path resolution for " << path << " failed: " << resolver->errorText();
-    return -1;
-  }
-  qint64 id = resolver->collection();
-  return id;
+    Akonadi::CollectionPathResolver *resolver = new Akonadi::CollectionPathResolver(path);
+    bool success = resolver->exec();
+    if (!success) {
+        qDebug() << "path resolution for " << path << " failed: " << resolver->errorText();
+        return -1;
+    }
+    qint64 id = resolver->collection();
+    return id;
 }
 
 QString testrunnerServiceName()
 {
-  const QString pid = QString::fromLocal8Bit( qgetenv( "AKONADI_TESTRUNNER_PID" ) );
-  Q_ASSERT( !pid.isEmpty() );
-  return QLatin1String( "org.kde.Akonadi.Testrunner-" ) + pid;
+    const QString pid = QString::fromLocal8Bit(qgetenv("AKONADI_TESTRUNNER_PID"));
+    Q_ASSERT(!pid.isEmpty());
+    return QLatin1String("org.kde.Akonadi.Testrunner-") + pid;
 }
 
 bool restartAkonadiServer()
 {
-    QDBusInterface testrunnerIface( testrunnerServiceName(),
-                                    QLatin1String( "/" ),
-                                    QLatin1String( "org.kde.Akonadi.Testrunner" ),
-                                    Akonadi::DBusConnectionPool::threadConnection() );
-    if ( !testrunnerIface.isValid() )
+    QDBusInterface testrunnerIface(testrunnerServiceName(),
+                                   QLatin1String("/"),
+                                   QLatin1String("org.kde.Akonadi.Testrunner"),
+                                   Akonadi::DBusConnectionPool::threadConnection());
+    if (!testrunnerIface.isValid()) {
         qWarning() << "Unable to get a dbus interface to the testrunner!";
+    }
 
-    QDBusReply<void> reply = testrunnerIface.call( QLatin1String("restartAkonadiServer") );
-    if ( !reply.isValid() ) {
+    QDBusReply<void> reply = testrunnerIface.call(QLatin1String("restartAkonadiServer"));
+    if (!reply.isValid()) {
         qWarning() << reply.error();
         return false;
-    } else if ( Akonadi::ServerManager::isRunning() ) {
+    } else if (Akonadi::ServerManager::isRunning()) {
         return true;
     } else {
-        return QTest::kWaitForSignal( Akonadi::ServerManager::self(), SIGNAL(started()), 10000 );
+        return QTest::kWaitForSignal(Akonadi::ServerManager::self(), SIGNAL(started()), 10000);
     }
 }
 
-bool trackAkonadiProcess( bool track )
+bool trackAkonadiProcess(bool track)
 {
-    QDBusInterface testrunnerIface( testrunnerServiceName(),
-                                    QLatin1String( "/" ),
-                                    QLatin1String( "org.kde.Akonadi.Testrunner" ),
-                                    Akonadi::DBusConnectionPool::threadConnection() );
-    if ( !testrunnerIface.isValid() )
+    QDBusInterface testrunnerIface(testrunnerServiceName(),
+                                   QLatin1String("/"),
+                                   QLatin1String("org.kde.Akonadi.Testrunner"),
+                                   Akonadi::DBusConnectionPool::threadConnection());
+    if (!testrunnerIface.isValid()) {
         qWarning() << "Unable to get a dbus interface to the testrunner!";
+    }
 
-    QDBusReply<void> reply = testrunnerIface.call( QLatin1String("trackAkonadiProcess"), track );
-    if ( !reply.isValid() ) {
+    QDBusReply<void> reply = testrunnerIface.call(QLatin1String("trackAkonadiProcess"), track);
+    if (!reply.isValid()) {
         qWarning() << reply.error();
         return false;
     } else {
