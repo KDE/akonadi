@@ -37,6 +37,7 @@ set(common_SRCS
 add_library(akonadi_unittest_common STATIC ${common_SRCS})
 target_link_libraries(akonadi_unittest_common
     KF5AkonadiPrivate
+    libakonadiserver
     Qt5::Core
     Qt5::DBus
     Qt5::Test
