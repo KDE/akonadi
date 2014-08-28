@@ -24,6 +24,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
+#include <QFile>
 
 #ifdef QT5_BUILD
 #include <QAtomicInteger>
@@ -53,6 +54,8 @@ class StorageDebugger : public QObject
 
     void incSequence() { mSequence.ref(); }
 
+    void writeToFile( const QString &file );
+
   Q_SIGNALS:
     void queryExecuted( double sequence, uint duration, const QString &query,
                         const QMap<QString,QVariant> &values,
@@ -65,6 +68,8 @@ class StorageDebugger : public QObject
 
     static StorageDebugger *mSelf;
     static QMutex mMutex;
+
+    QFile *mFile;
 
     bool mEnabled;
 #ifdef Q_ATOMC_INT64_IS_SUPPORTED

@@ -48,6 +48,7 @@ StorageDebugger *StorageDebugger::instance()
 StorageDebugger::StorageDebugger()
   : mEnabled( false )
   , mSequence( 0 )
+  , mFile( 0 )
 {
   qDBusRegisterMetaType<QList< QList<QVariant> > >();
   new StorageDebuggerAdaptor( this );
@@ -57,11 +58,22 @@ StorageDebugger::StorageDebugger()
 
 StorageDebugger::~StorageDebugger()
 {
+  if (mFile) {
+    mFile->close();
+    delete mFile;
+  }
 }
 
 void StorageDebugger::enableSQLDebugging( bool enable )
 {
   mEnabled = enable;
+}
+
+void StorageDebugger::writeToFile( const QString &file )
+{
+    delete mFile;
+    mFile = new QFile(file);
+    mFile->open(QIODevice::WriteOnly);
 }
 
 void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
@@ -109,6 +121,11 @@ void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
 
   Q_EMIT queryExecuted( seq, duration, query.executedQuery(),
                         query.boundValues(), querySize, result, QString() );
+
+  if (mFile && mFile->isOpen()) {
+    QTextStream out(mFile);
+    out << query.executedQuery() << " " << duration << "ms " << "\n";
+  }
 
   // Reset the query
   q.seek( -1, false );
