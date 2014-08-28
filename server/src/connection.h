@@ -106,6 +106,17 @@ protected:
     ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
+    QTime m_time;
+    qint64 m_totalTime;
+    QHash<QString, qint64> m_totalTimeByHandler;
+    QHash<QString, qint64> m_executionsByHandler;
+
+private:
+    /** For debugging */
+    void startTime();
+    void stopTime(const QString &identifier);
+    void reportTime() const;
+    bool m_reportTime;
 
 };
 
