@@ -51,10 +51,8 @@
 #include <qvector.h>
 #include <qdebug.h>
 
-#ifdef QT5_BUILD
 #include "QtSql/private/qsqldriver_p.h"
 #include "QtSql/private/qsqlcachedresult_p.h"
-#endif
 
 #if defined Q_OS_WIN
 # include <qt_windows.h>
@@ -67,10 +65,8 @@
 #include <qthread.h>
 #include "sqlite_blocking.h"
 
-#ifdef QT5_BUILD
 Q_DECLARE_OPAQUE_POINTER(sqlite3*)
 Q_DECLARE_OPAQUE_POINTER(sqlite3_stmt*)
-#endif
 
 Q_DECLARE_METATYPE(sqlite3*)
 Q_DECLARE_METATYPE(sqlite3_stmt*)
@@ -136,9 +132,7 @@ protected:
     int numRowsAffected();
     QVariant lastInsertId() const;
     QSqlRecord record() const;
-#ifdef QT5_BUILD
     void detachFromResultSet();
-#endif
     void virtual_hook(int id, void *data);
 
 private:
@@ -146,17 +140,11 @@ private:
 };
 
 
-#ifdef QT5_BUILD
 class QSQLiteDriverPrivate : public QSqlDriverPrivate
-#else
-class QSQLiteDriverPrivate
-#endif
 {
 public:
     inline QSQLiteDriverPrivate() : access(0) {
-#ifdef QT5_BUILD
       dbmsType = SQLite;
-#endif
     }
     sqlite3 *access;
     QList<QSQLiteResult *> results;
@@ -381,18 +369,7 @@ QSQLiteResult::~QSQLiteResult()
 
 void QSQLiteResult::virtual_hook(int id, void *data)
 {
-#ifdef QT5_BUILD
     QSqlCachedResult::virtual_hook(id, data);
-#else
-    switch (id) {
-    case QSqlResult::DetachFromResultSet:
-        if (d->stmt)
-            sqlite3_reset(d->stmt);
-        break;
-    default:
-        QSqlCachedResult::virtual_hook(id, data);
-    }
-#endif
 }
 
 bool QSQLiteResult::reset(const QString &query)
@@ -482,22 +459,14 @@ bool QSQLiteResult::exec()
                     break;
                 case QVariant::DateTime: {
                     const QDateTime dateTime = value.toDateTime();
-#ifdef QT5_BUILD
                     const QString str = dateTime.toString(QStringLiteral("yyyy-MM-ddThh:mm:ss.zzz"));
-#else
-                    const QString str = dateTime.toString(QLatin1String("yyyy-MM-ddThh:mm:ss.zzz"));
-#endif
                     res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(),
                                               str.size() * sizeof(ushort), SQLITE_TRANSIENT);
                     break;
                 }
                 case QVariant::Time: {
                     const QTime time = value.toTime();
-#ifdef QT5_BUILD
                     const QString str = time.toString(QStringLiteral("hh:mm:ss.zzz"));
-#else
-                    const QString str = time.toString(QLatin1String("hh:mm:ss.zzz"));
-#endif
                     res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(),
                                               str.size() * sizeof(ushort), SQLITE_TRANSIENT);
                     break;
@@ -571,13 +540,11 @@ QSqlRecord QSQLiteResult::record() const
     return d->rInf;
 }
 
-#ifdef QT5_BUILD
 void QSQLiteResult::detachFromResultSet()
 {
     if (d->stmt)
         sqlite3_reset(d->stmt);
 }
-#endif
 
 QVariant QSQLiteResult::handle() const
 {
@@ -587,29 +554,15 @@ QVariant QSQLiteResult::handle() const
 /////////////////////////////////////////////////////////
 
 QSQLiteDriver::QSQLiteDriver(QObject * parent)
-#ifdef QT5_BUILD
     : QSqlDriver(*new QSQLiteDriverPrivate, parent)
-#else
-    : QSqlDriver(parent)
-#endif
 {
-#ifndef QT5_BUILD
-    d_ptr = new QSQLiteDriverPrivate();
-#endif
 }
 
 QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
-#ifdef QT5_BUILD
     : QSqlDriver(*new QSQLiteDriverPrivate, parent)
-#else
-    : QSqlDriver(parent)
-#endif
 {
     Q_D(QSQLiteDriver);
 
-#ifndef QT5_BUILD
-    d_ptr = new QSQLiteDriverPrivate();
-#endif
     d->access = connection;
     setOpen(true);
     setOpenError(false);
@@ -618,9 +571,6 @@ QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
 
 QSQLiteDriver::~QSQLiteDriver()
 {
-#ifndef QT5_BUILD
-    delete d_ptr;
-#endif
 }
 
 bool QSQLiteDriver::hasFeature(DriverFeature f) const
@@ -641,9 +591,7 @@ bool QSQLiteDriver::hasFeature(DriverFeature f) const
     case BatchOperations:
     case EventNotifications:
     case MultipleResultSets:
-#ifdef QT5_BUILD
     case CancelQuery:
-#endif
         return false;
     }
     return false;
@@ -669,11 +617,7 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
     Q_FOREACH (const QString &option, opts) {
         if (option.startsWith(QLatin1String("QSQLITE_BUSY_TIMEOUT="))) {
             bool ok;
-#ifdef QT5_BUILD
             const int nt = option.midRef(21).toInt(&ok);
-#else
-            const int nt = option.mid(21).toInt(&ok);
-#endif
             if (ok)
                 timeout = nt;
         } else if (option == QLatin1String("QSQLITE_OPEN_READONLY")) {

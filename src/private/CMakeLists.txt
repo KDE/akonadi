@@ -30,3 +30,16 @@ install(TARGETS
     EXPORT KF5AkonadiTargets
     ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+install(FILES
+    akonadiprivate_export.h
+    imapparser_p.h
+    imapset_p.h
+    notificationmessage_p.h
+    notificationmessagev2_p.h
+    notificationmessagev3_p.h
+    protocol_p.h
+    xdgbasedirs_p.h
+    capabilities_p.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
+)

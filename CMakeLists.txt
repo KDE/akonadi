@@ -24,7 +24,7 @@ set(AKONADI_VERSION "5.0.40")
 ecm_setup_version(${AKONADI_VERSION}
     VARIABLE_PREFIX AKONADI
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
+    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfigVersion.cmake"
     SOVERSION 5)
 
 
@@ -37,8 +37,10 @@ find_package(Qt5Network REQUIRED)
 find_package(Qt5Xml REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5Test REQUIRED)
-# FIXME: Remove DQT5_BUILD from codebase
-add_definitions(-DQT5_BUILD)
+
+############### Build Options ###############
+option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
+option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 
 set(SMI_MIN_VERSION "0.20")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION})
@@ -130,8 +132,6 @@ endif()
 
 include(CTest)  # Calls enable_testing().
 include(CTestConfig.cmake)
-option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
-option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 
 if(NOT DEFINED DATABASE_BACKEND)
     set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
@@ -235,7 +235,20 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 ############### CMake Config Files ###############
 
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Akonadi")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5AkonadiServer")
+
+ecm_configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiServerConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfig.cmake"
+    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfigVersion.cmake"
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    COMPONENT Devel
+)
 
 install(EXPORT
     KF5AkonadiTargets

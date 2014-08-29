@@ -25,11 +25,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
 
-#ifdef QT5_BUILD
 #include <QAtomicInteger>
-#else
-#include <QAtomicInt>
-#endif
 
 class QSqlQuery;
 

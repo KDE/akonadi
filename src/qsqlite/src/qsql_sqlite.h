@@ -89,9 +89,6 @@ public:
     QString escapeIdentifier(const QString &identifier, IdentifierType) const;
 
 private:
-#ifndef QT5_BUILD
-    QSQLiteDriverPrivate* d_ptr;
-#endif
     Q_DECLARE_PRIVATE(QSQLiteDriver)
 };
 
