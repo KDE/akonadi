@@ -232,7 +232,6 @@ protected:
 private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(ItemSync)
-    ItemSyncPrivate *dummy; // for BC. KF5 TODO: REMOVE.
 
     Q_PRIVATE_SLOT(d_func(), void slotLocalListDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotLocalDeleteDone(KJob *))
