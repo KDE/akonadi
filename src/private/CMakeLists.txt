@@ -32,7 +32,7 @@ install(TARGETS
 )
 
 install(FILES
-    akonadiprivate_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h
     imapparser_p.h
     imapset_p.h
     notificationmessage_p.h
