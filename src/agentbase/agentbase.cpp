@@ -42,6 +42,7 @@
 #include <klocalizedstring.h>
 
 #include <k4aboutdata.h>
+#include <Kdelibs4ConfigMigrator>
 
 #include <Solid/PowerManagement>
 
@@ -317,6 +318,11 @@ AgentBasePrivate::~AgentBasePrivate()
 void AgentBasePrivate::init()
 {
     Q_Q(AgentBase);
+
+    Kdelibs4ConfigMigrator migrate(mId);
+    migrate.setConfigFiles(QStringList() << QString::fromLatin1("%1rc").arg(mId));
+    migrate.migrate();
+
 
     /**
      * Create a default session for this process.
