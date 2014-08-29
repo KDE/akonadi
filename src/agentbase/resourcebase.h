@@ -279,9 +279,7 @@ protected Q_SLOTS:
      * @see collectionAttributesRetrieved()
      * @since 4.6
      */
-    // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
-    //       in order to simulate polymorphism
-    void retrieveCollectionAttributes(const Akonadi::Collection &collection);
+    virtual void retrieveCollectionAttributes(const Akonadi::Collection &collection);
 
     /**
      * Retrieve all (new/changed) items in collection @p collection.
@@ -333,17 +331,13 @@ protected Q_SLOTS:
      *
      * @since 4.6
      */
-    // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
-    //       in order to simulate polymorphism
-    void abortActivity();
+    virtual void abortActivity();
 
     /**
      * Dump resource internals, for debugging.
      * @since 4.9
      */
-    // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
-    //       in order to simulate polymorphism
-    QString dumpResourceToString() const
+    virtual QString dumpResourceToString() const
     {
         return QString();
     }

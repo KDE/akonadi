@@ -193,9 +193,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString dumpToString() const
     {
         Q_Q(const ResourceBase);
-        QString retVal;
-        QMetaObject::invokeMethod(const_cast<ResourceBase *>(q), "dumpResourceToString", Qt::DirectConnection, Q_RETURN_ARG(QString, retVal));
-        return scheduler->dumpToString() + QLatin1Char('\n') + retVal;
+        return scheduler->dumpToString() + QLatin1Char('\n') + q->dumpResourceToString();
     }
 
     Q_SCRIPTABLE void dump()
@@ -587,7 +585,7 @@ void ResourceBasePrivate::slotAbortRequested()
     Q_Q(ResourceBase);
 
     scheduler->cancelQueues();
-    QMetaObject::invokeMethod(q, "abortActivity");
+    q->abortActivity();
 }
 
 void ResourceBase::itemRetrieved(const Item &item)
@@ -931,7 +929,7 @@ void ResourceBase::setItemSyncBatchSize(int batchSize)
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
 {
     Q_Q(ResourceBase);
-    QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, col));
+    q->retrieveCollectionAttributes(col);
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Akonadi::Item &item)
