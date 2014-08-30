@@ -1,5 +1,5 @@
 REVIEWBOARD_URL = "https://git.reviewboard.kde.org"
 #REPOSITORY = "git://anongit.kde.org/akonadi"
-BRANCH = "frameworks"
+BRANCH = "master"
 TARGET_GROUPS = "kdepimlibs"
 TARGET_PEOPLE = "mlaurent"
