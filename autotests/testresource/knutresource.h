@@ -25,7 +25,6 @@
 #include <collection.h>
 #include <item.h>
 
-
 #include <xmldocument.h>
 #include <agentsearchinterface.h>
 #include <searchquery.h>
@@ -36,42 +35,42 @@ class QFileSystemWatcher;
 
 class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer, public Akonadi::AgentSearchInterface
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KnutResource( const QString &id );
+public:
+    KnutResource(const QString &id);
     ~KnutResource();
 
-  public Q_SLOTS:
-    virtual void configure( WId windowId );
+public Q_SLOTS:
+    virtual void configure(WId windowId);
 
-  protected:
+protected:
     void retrieveCollections();
-    void retrieveItems( const Akonadi::Collection &collection );
-    bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts );
+    void retrieveItems(const Akonadi::Collection &collection);
+    bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts);
 
-    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-    void collectionChanged( const Akonadi::Collection &collection );
-    void collectionRemoved( const Akonadi::Collection &collection );
+    void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
+    void collectionChanged(const Akonadi::Collection &collection);
+    void collectionRemoved(const Akonadi::Collection &collection);
 
-    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
-    void itemRemoved( const Akonadi::Item &ref );
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
+    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts);
+    void itemRemoved(const Akonadi::Item &ref);
 
-    void search(const QString& query, const Akonadi::Collection& collection);
-    void addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection);
-    void removeSearch(const Akonadi::Collection& resultCollection);
+    void search(const QString &query, const Akonadi::Collection &collection);
+    void addSearch(const QString &query, const QString &queryLanguage, const Akonadi::Collection &resultCollection);
+    void removeSearch(const Akonadi::Collection &resultCollection);
 
-  private:
-    QDomElement findElementByRid( const QString &rid ) const;
+private:
+    QDomElement findElementByRid(const QString &rid) const;
 
-    static QSet<qint64> parseQuery(const QString &);
+    static QSet<qint64> parseQuery(const QString &queryString);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void load();
     void save();
 
-  private:
+private:
     Akonadi::XmlDocument mDocument;
     QFileSystemWatcher *mWatcher;
     KnutSettings *mSettings;

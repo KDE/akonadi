@@ -32,58 +32,58 @@ using namespace Akonadi;
 
 class CollectionCreator : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
-      AkonadiTest::setAllResourcesOffline();
+        AkonadiTest::checkTestIsIsolated();
+        AkonadiTest::setAllResourcesOffline();
     }
 
     void createCollections_data()
     {
-      QTest::addColumn<int>( "count" );
-      QTest::addColumn<bool>( "useTransaction" );
+        QTest::addColumn<int>("count");
+        QTest::addColumn<bool>("useTransaction");
 
-      QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
-      QList<bool> transactions = QList<bool>() << false << true;
-      foreach( int count, counts ) {
-        foreach( bool transaction, transactions ) { //krazy:exclude=foreach
-          QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( transaction ? QLatin1String("trans") : QLatin1String("notrans") ).toLatin1().constData() )
-            << count << transaction;
+        QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
+        QList<bool> transactions = QList<bool>() << false << true;
+        foreach (int count, counts) {
+            foreach (bool transaction, transactions) {  //krazy:exclude=foreach
+                QTest::newRow(QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1String("trans") : QLatin1String("notrans")).toLatin1().constData())
+                        << count << transaction;
+            }
         }
-      }
     }
 
     void createCollections()
     {
-      QFETCH( int, count );
-      QFETCH( bool, useTransaction );
+        QFETCH(int, count);
+        QFETCH(bool, useTransaction);
 
-      const Collection parent( collectionIdFromPath( QLatin1String("res3") ) );
-      QVERIFY( parent.isValid() );
+        const Collection parent(collectionIdFromPath(QLatin1String("res3")));
+        QVERIFY(parent.isValid());
 
-      static int index = 0;
-      Job *lastJob = 0;
-      QBENCHMARK
-      {
-        if ( useTransaction ) {
-          lastJob = new TransactionBeginJob( this );
+        static int index = 0;
+        Job *lastJob = 0;
+        QBENCHMARK
+        {
+            if (useTransaction) {
+                lastJob = new TransactionBeginJob(this);
+            }
+            for (int i = 0; i < count; ++i) {
+                Collection col;
+                col.setParentCollection(parent);
+                col.setName(QLatin1String("col") + QString::number(++index));
+                lastJob = new CollectionCreateJob(col, this);
+            }
+            if (useTransaction) {
+                lastJob = new TransactionCommitJob(this);
+            }
+            QTest::kWaitForSignal(lastJob, SIGNAL(result(KJob*)));
         }
-        for ( int i = 0; i < count; ++i ) {
-          Collection col;
-          col.setParentCollection( parent );
-          col.setName( QLatin1String( "col" ) + QString::number( ++index ) );
-          lastJob = new CollectionCreateJob( col, this );
-        }
-        if ( useTransaction ) {
-          lastJob = new TransactionCommitJob( this );
-        }
-        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
-      }
     }
 };
 
-QTEST_AKONADIMAIN( CollectionCreator )
+QTEST_AKONADIMAIN(CollectionCreator)
 
 #include "collectioncreator.moc"

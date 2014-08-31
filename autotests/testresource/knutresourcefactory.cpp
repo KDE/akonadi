@@ -17,9 +17,8 @@
 
 #include "knutresourcefactory.h"
 
-KnutResourceFactory::KnutResourceFactory( QObject * parent )
-  : Akonadi::AgentFactory< KnutResource >( "akonadi_knut_resource", parent )
+KnutResourceFactory::KnutResourceFactory(QObject *parent)
+    : Akonadi::AgentFactory< KnutResource >("akonadi_knut_resource", parent)
 {
-   setObjectName(QLatin1String("akonadi_knut_resource") );
+    setObjectName(QLatin1String("akonadi_knut_resource"));
 }
-

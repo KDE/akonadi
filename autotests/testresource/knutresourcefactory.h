@@ -18,15 +18,15 @@
 #ifndef KNUTRESOURCEFACTORY_H
 #define KNUTRESOURCEFACTORY_H
 
-#include <agentfactory.h> 
+#include <agentfactory.h>
 #include <knutresource.h>
- 
+
 class KnutResourceFactory : public Akonadi::AgentFactory<KnutResource>
 {
-   Q_OBJECT
-   Q_PLUGIN_METADATA(IID "org.kde.akonadi.KnutResource");
-public: 
-    explicit KnutResourceFactory( QObject * parent = 0 );
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.kde.akonadi.KnutResource");
+public:
+    explicit KnutResourceFactory(QObject *parent = 0);
 
 };
 #endif
