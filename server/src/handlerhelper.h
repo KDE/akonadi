@@ -94,13 +94,20 @@ public:
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray(const Collection &col, bool hidden = false, bool includeStatistics = false,
-                                            int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), bool isReferenced = false, const QVector<QByteArray> &ancestorAttributes = QVector<QByteArray>());
+    static QByteArray collectionToByteArray(const Collection &col);
+
+    /**
+      Returns the protocol representation of the given collection.
+      Make sure DataStore::activeCachePolicy() has been called before to include
+      the effective cache policy
+    */
+    static QByteArray collectionToByteArray(const Collection &col, const CollectionAttribute::List &attributeList, bool includeStatistics = false,
+                                            int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(), bool isReferenced = false, const QList<QByteArray> &mimeTypes = QList<QByteArray>());
 
     /**
       Returns the protocol representation of a collection ancestor chain.
     */
-    static QByteArray ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &ancestors, const QVector<QByteArray> ancestorAttributes = QVector<QByteArray>());
+    static QByteArray ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
 
     /**
       Parses the listing/ancestor depth parameter.

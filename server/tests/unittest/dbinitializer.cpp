@@ -148,7 +148,14 @@ QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bo
     if (col.referenced()) {
         s += " REFERENCED TRUE";
     }
-    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) +" )";
+    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) + " ";
+    Q_FOREACH(const CollectionAttribute &attr, col.attributes()) {
+        s += attr.type() + " \"" + attr.value() + "\" ";
+    }
+    if (!col.attributes().isEmpty()) {
+        s.chop(1);
+    }
+    s += ")";
     return s;
 }
 

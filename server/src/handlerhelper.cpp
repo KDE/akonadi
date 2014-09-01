@@ -211,19 +211,24 @@ QByteArray HandlerHelper::tristateToByteArray( const Tristate &tristate )
   return "DEFAULT";
 }
 
-QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hidden, bool includeStatistics,
-                                                 int ancestorDepth, const QStack<Collection> &ancestors,
-                                                bool isReferenced, const QVector<QByteArray> &ancestorAttributes)
+QByteArray HandlerHelper::collectionToByteArray(const Collection &col)
+{
+    QList<QByteArray> mimeTypes;
+    Q_FOREACH (const MimeType &mt, col.mimeTypes()) {
+        mimeTypes << mt.name().toUtf8();
+    }
+    return collectionToByteArray(col, col.attributes(), false, 0, QStack<Collection>(), QStack<CollectionAttribute::List>(), false, mimeTypes);
+}
+
+QByteArray HandlerHelper::collectionToByteArray( const Collection &col, const CollectionAttribute::List &attrs, bool includeStatistics,
+                                                 int ancestorDepth, const QStack<Collection> &ancestors, const QStack<CollectionAttribute::List> &ancestorAttributes,
+                                                bool isReferenced, const QList<QByteArray> &mimeTypes )
 {
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
 
   b += AKONADI_PARAM_NAME " " + ImapParser::quote( col.name().toUtf8() ) + ' ';
-  if ( hidden ) {
-    b += AKONADI_PARAM_MIMETYPE " () ";
-  } else {
-    b += AKONADI_PARAM_MIMETYPE " (" + MimeType::joinByName( col.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
-  }
+  b += AKONADI_PARAM_MIMETYPE " (" + ImapParser::join(mimeTypes, " ") + ") ";
   b += AKONADI_PARAM_REMOTEID " " + ImapParser::quote( col.remoteId().toUtf8() );
   b += " " AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( col.remoteRevision().toUtf8() );
   b += " " AKONADI_PARAM_RESOURCE " " + ImapParser::quote( col.resource().name().toUtf8() );
@@ -271,7 +276,6 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   b += AKONADI_PARAM_SYNC " " + tristateToByteArray( col.syncPref() ) + ' ';
   b += AKONADI_PARAM_INDEX " " + tristateToByteArray( col.indexPref() ) + ' ';
 
-  const CollectionAttribute::List attrs = col.attributes();
   for ( int i = 0; i < attrs.size(); ++i ) {
     const CollectionAttribute &attr = attrs[i];
     //Workaround to skip invalid "PARENT " attributes that were accidentaly created after 6e5bbf6
@@ -288,12 +292,13 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   return b;
 }
 
-QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &_ancestors, const QVector<QByteArray> ancestorAttributes)
+QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &_ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes)
 {
   QByteArray b;
   if ( ancestorDepth > 0 ) {
     b += AKONADI_PARAM_ANCESTORS " (";
     QStack<Collection> ancestors( _ancestors );
+    QStack<CollectionAttribute::List> ancestorAttributes( _ancestorsAttributes );
     for ( int i = 0; i < ancestorDepth; ++i ) {
       if ( ancestors.isEmpty() ) {
         b += "(0 \"\")";
@@ -302,20 +307,13 @@ QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<C
       b += '(';
       const Collection c = ancestors.pop();
       b += QByteArray::number( c.id() ) + " ";
-      if (ancestorAttributes.isEmpty()) {
+      if (ancestorAttributes.isEmpty() || ancestorAttributes.top().isEmpty()) {
         b += ImapParser::quote( c.remoteId().toUtf8() );
       } else {
+        const CollectionAttribute::List attrs = ancestorAttributes.pop();
         b += " (";
-        if (ancestorAttributes.contains("REMOTEID")) {
-            b += "REMOTEID " + ImapParser::quote( c.remoteId().toUtf8() ) + ' ';
-        }
-        if (ancestorAttributes.contains("NAME")) {
-            b += "NAME " + ImapParser::quote(c.name().toUtf8()) + ' ';
-        }
-        Q_FOREACH (const CollectionAttribute &attribute, c.attributes()) {
-            if (ancestorAttributes.contains(attribute.type())) {
-                b += attribute.type() + ' ' + ImapParser::quote(attribute.value()) + ' ';
-            }
+        Q_FOREACH (const CollectionAttribute &attribute, attrs) {
+            b += attribute.type() + ' ' + ImapParser::quote(attribute.value()) + ' ';
         }
         b += ")";
       }
