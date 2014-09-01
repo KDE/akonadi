@@ -41,5 +41,5 @@ install(FILES
     protocol_p.h
     xdgbasedirs_p.h
     capabilities_p.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/private
 )
