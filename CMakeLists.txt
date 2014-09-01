@@ -251,8 +251,8 @@ install(FILES
 )
 
 install(EXPORT
-    KF5AkonadiTargets
+    KF5AkonadiServerTargets
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE KF5AkonadiTargets.cmake
+    FILE KF5AkonadiServerTargets.cmake
     NAMESPACE KF5::)
 

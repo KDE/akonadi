@@ -27,7 +27,7 @@ set_target_properties(KF5AkonadiPrivate PROPERTIES
 
 install(TARGETS
     KF5AkonadiPrivate
-    EXPORT KF5AkonadiTargets
+    EXPORT KF5AkonadiServerTargets
     ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
