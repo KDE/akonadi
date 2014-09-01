@@ -1,4 +1,0 @@
-knutresource.cpp
-knutresource.h
-knutresourcefactory.cpp
-knutresourcefactory.h
