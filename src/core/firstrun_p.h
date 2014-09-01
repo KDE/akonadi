@@ -37,7 +37,7 @@ namespace Akonadi {
  <h4>Defining your own default agent setups</h4>
 
   To add an additional agent to the default Akonadi setup, add a file with the
-  agent setup description into $KDEDIR/share/akonadi/firstrun.
+  agent setup description into <QStandardPaths::GenericDataLocation>/akonadi/firstrun.
 
   Such a file looks as follows:
 
