@@ -39,8 +39,8 @@ set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
 
 
-set(AkonadiServer_MIN_VERSION "1.72.43")
-find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
+set(KF5AkonadiServer_MIN_VERSION "5.0.40")
+find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
