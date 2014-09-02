@@ -18,7 +18,7 @@ include(CheckIncludeFiles)
 
 include(AkonadiMacros)
 
-set(KF5_VERSION "5.1.0")
+set(QT_REQUIRED_VERSION "5.2.0")
 set(AKONADI_VERSION "5.0.40")
 
 ecm_setup_version(${AKONADI_VERSION}
@@ -29,14 +29,14 @@ ecm_setup_version(${AKONADI_VERSION}
 
 
 # Find packages
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Sql REQUIRED)
-find_package(Qt5Network REQUIRED)
-find_package(Qt5Xml REQUIRED)
-find_package(Qt5DBus REQUIRED)
-find_package(Qt5Test REQUIRED)
+find_package(Qt5Core ${QT_REQUIRED_VERSION} CONFIG  REQUIRED)
+find_package(Qt5Gui ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5Widgets ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5Sql ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5Network ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5Xml ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5DBus ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
