@@ -71,7 +71,8 @@ private Q_SLOTS:
         foreach (const Collection &c, cols) {
             ItemFetchJob *job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
-            referenceData.insert(c, job->items());
+            //FIX IT with qt 5.4
+            //QT5 referenceData.insert(c, job->items());
         }
 
         // actually copy the collection
