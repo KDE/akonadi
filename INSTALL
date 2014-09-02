@@ -36,8 +36,6 @@ The following options are available when running CMake:
 * STATIC_LIBRARY (Default: FALSE): Build the Akonadi server libraries statically. Only useful for certain cases (eg: WINCE builds).
 * DATABASE_BACKEND (Default: MYSQL, available: MYSQL, POSTGRES, SQLITE): Define which database driver to use by default.
   MYSQL is preferred, SQLITE should be avoided.
-* QT5_BUILD (Default: FALSE): Build against Qt5 instead of Qt4.
-* WITH_SOPRANO (Default: TRUE): Don't build with Soprano/Nepomuk support
 
 === Build Requirements ===
 
