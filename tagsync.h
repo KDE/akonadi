@@ -20,9 +20,10 @@
 #define TAGSYNC_H
 
 #include "akonadi_export.h"
-#include <Akonadi/Job>
-#include <Akonadi/Tag>
-#include <Akonadi/Item>
+
+#include <akonadi/job.h>
+#include <akonadi/tag.h>
+#include <akonadi/item.h>
 
 class AKONADI_EXPORT TagSync : public Akonadi::Job
 {
@@ -39,7 +40,6 @@ protected:
 
 private Q_SLOTS:
     void onLocalTagFetchDone(KJob *job);
-    // void onItemsFetchDone(KJob *job);
     void onCreateTagDone(KJob *job);
     void onTagItemsFetchDone(KJob *job);
     void onJobDone(KJob *job);
