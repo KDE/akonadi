@@ -64,8 +64,15 @@ public Q_SLOTS:
                             Akonadi::IncidenceChanger::ResultCode,
                             const QString &errorMessage);
 
+    void collectionFetchResult(KJob *job);
+
+signals:
+    void fetchFinished();
+
 public:
     QMultiHash<Akonadi::Collection::Id, Akonadi::Item> mItemsByCollection;
+    QHash<Akonadi::Collection::Id, Akonadi::Collection> mCollections;
+    QHash<KJob*, Akonadi::Collection::Id> mCollectionJobs;
     QHash<QString,Akonadi::Item::Id> mItemIdByUid;
     QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
     Akonadi::IncidenceChanger *mIncidenceChanger;

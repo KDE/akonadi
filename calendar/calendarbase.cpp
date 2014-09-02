@@ -23,6 +23,7 @@
 #include "incidencechanger.h"
 #include "utils_p.h"
 
+#include <Akonadi/CollectionFetchJob>
 #include <akonadi/item.h>
 #include <akonadi/collection.h>
 
@@ -124,7 +125,20 @@ void CalendarBasePrivate::internalInsert(const Akonadi::Item &item)
     Akonadi::Collection collection = item.parentCollection();
     if (collection.isValid()) {
         // Some items don't have collection set
-        incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+        if (item.storageCollectionId() !=  collection.id() && item.storageCollectionId() > -1) {
+            if (mCollections.contains(item.storageCollectionId())) {
+                collection = mCollections.value(item.storageCollectionId());
+                incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+              } else if (!mCollectionJobs.key(item.storageCollectionId())) {
+                collection = Akonadi::Collection(item.storageCollectionId());
+                Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, this);
+                connect(job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)));
+                mCollectionJobs.insert(job,  collection.id());
+            }
+        } else {
+            mCollections.insert(collection.id(), collection);
+            incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+        }
     }
 
     mItemById.insert(item.id(), item);
@@ -146,6 +160,35 @@ void CalendarBasePrivate::internalInsert(const Akonadi::Item &item)
     if (!result) {
         kError() << "Error adding incidence " << itemToString(item);
         Q_ASSERT(false);
+    }
+}
+
+void CalendarBasePrivate::collectionFetchResult(KJob* job)
+{
+    Akonadi::Collection::Id colid = mCollectionJobs.take(job);
+
+    if ( job->error() ) {
+        qDebug() << "Error occurred";
+        return;
+    }
+
+    Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+
+    const Akonadi::Collection collection = fetchJob->collections().first();
+    if (collection.id() !=  colid) {
+        kError() <<  "Fetched the wrong collection,  should fetch: " <<  colid << "fetched: " <<  collection.id();
+    }
+
+    bool isReadOnly = !(collection.rights() & Akonadi::Collection::CanChangeItem);
+    foreach (const Akonadi::Item &item, mItemsByCollection.values(collection.id())) {
+        KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
+        incidence->setReadOnly(isReadOnly);
+    }
+
+    mCollections.insert(collection.id(),  collection);
+
+    if (mCollectionJobs.count() == 0) {
+        emit fetchFinished();
     }
 }
 

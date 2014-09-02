@@ -38,12 +38,15 @@ public:
 
 public Q_SLOTS:
     void slotSearchJobFinished(KJob *job);
+    void slotFetchJobFinished();
 
 public:
     bool m_isLoaded;
 
 private:
     FetchJobCalendar *const q;
+    QString mErrorMessage;
+    bool mSuccess;
 };
 
 }
