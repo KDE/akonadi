@@ -195,7 +195,7 @@ install(FILES
 
 install(FILES
   search/abstractsearchplugin.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi
 )
 
 ## DBus XML files
