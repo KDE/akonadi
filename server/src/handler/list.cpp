@@ -174,6 +174,32 @@ bool List::checkFilterCondition(const Collection &col) const
     return true;
 }
 
+static QSqlQuery getAttributeQuery(const QVariantList &ids, const QVector<QByteArray> &requestedAttributes)
+{
+    QueryBuilder qb(CollectionAttribute::tableName());
+
+    qb.addValueCondition(CollectionAttribute::collectionIdFullColumnName(), Query::In, ids);
+
+    qb.addColumn(CollectionAttribute::collectionIdFullColumnName());
+    qb.addColumn(CollectionAttribute::typeFullColumnName());
+    qb.addColumn(CollectionAttribute::valueFullColumnName());
+    
+    if (!requestedAttributes.isEmpty()) {
+        QVariantList attributes;
+        Q_FOREACH (const QByteArray &type, requestedAttributes) {
+            attributes << type;
+        }
+        qb.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::In, attributes);
+    }
+
+    qb.addSortColumn(CollectionAttribute::collectionIdFullColumnName(), Query::Ascending);
+
+    if (!qb.exec()) {
+        throw HandlerException("Unable to retrieve attributes for listing");
+    }
+    return qb.query();
+}
+
 void List::retrieveAttributes(const QVariantList &collectionIds)
 {
     //We are querying for the attributes in batches because something can't handle WHERE IN queries with sets larger than 999
@@ -181,23 +207,13 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
     const int size = 999;
     while (start < collectionIds.size()) {
         const QVariantList ids = collectionIds.mid(start, size);
-        QueryBuilder qb(CollectionAttribute::tableName());
-
-        qb.addValueCondition(CollectionAttribute::collectionIdFullColumnName(), Query::In, ids);
-
-        qb.addColumn(CollectionAttribute::collectionIdFullColumnName());
-        qb.addColumn(CollectionAttribute::typeFullColumnName());
-        qb.addColumn(CollectionAttribute::valueFullColumnName());
-
-        if (!qb.exec()) {
-            throw HandlerException("Unable to retrieve attributes for listing");
-        }
-        while (qb.query().next()) {
+        QSqlQuery attributeQuery = getAttributeQuery(ids, mAncestorAttributes);
+        while (attributeQuery.next()) {
             CollectionAttribute attr;
-            attr.setType(qb.query().value(1).toString().toUtf8());
-            attr.setValue(qb.query().value(2).toString().toUtf8());
+            attr.setType(attributeQuery.value(1).toString().toUtf8());
+            attr.setValue(attributeQuery.value(2).toString().toUtf8());
             // qDebug() << "found attribute " << attr.type() << attr.value();
-            mCollectionAttributes.insert(qb.query().value(0).toLongLong(), attr);
+            mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
         start += size;
     }
@@ -236,8 +252,6 @@ void List::retrieveCollections(const Collection &topParent, int depth)
      * Note that we're not querying attributes and mimetypes for the collections that are only included to complete the tree,
      * this results in no items being queried for those collections.
      */
-
-    QVariantList collectionIds;
 
     const qint64 parentId = topParent.isValid() ? topParent.id() : 0;
     {
@@ -293,7 +307,6 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         }
         Q_FOREACH (const Collection &col, qb.result()) {
             mCollections.insert(col.id(), col);
-            collectionIds << col.id();
         }
     }
 
@@ -351,19 +364,14 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         mimeTypeIds << id;
     }
 
-    QSet<qint64> missingCollections;
-    if (depth > 0) {
-        Q_FOREACH (const Collection &col, mCollections) {
-            if (col.parentId() != parentId && !mCollections.contains(col.parentId())) {
-                missingCollections.insert(col.parentId());
-            }
-        }
+    QVariantList ancestorIds;
+    Q_FOREACH (const Collection::Id id, mCollections.keys()) {
+        ancestorIds << id;
     }
-
     if (mAncestorDepth > 0 && topParent.isValid()) {
         //unless depth is 0 the base collection is not part of the listing
         mAncestors.insert(topParent.id(), topParent);
-        collectionIds << topParent.id();
+        ancestorIds << topParent.id();
         //We need to retrieve additional ancestors to what we already have in the tree
         Collection parent = topParent;
         for (int i = 0; i < mAncestorDepth; ++i) {
@@ -373,7 +381,16 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             parent = parent.parent();
             mAncestors.insert(parent.id(), parent);
             //We also require the attributes
-            collectionIds << parent.id();
+            ancestorIds << parent.id();
+        }
+    }
+
+    QSet<qint64> missingCollections;
+    if (depth > 0) {
+        Q_FOREACH (const Collection &col, mCollections) {
+            if (col.parentId() != parentId && !mCollections.contains(col.parentId())) {
+                missingCollections.insert(col.parentId());
+            }
         }
     }
 
@@ -396,9 +413,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         missingCollections.clear();
         Q_FOREACH (const Collection &missingCol, qb.result()) {
             mCollections.insert(missingCol.id(), missingCol);
-            if (!mAncestorAttributes.isEmpty()) {
-                collectionIds << missingCol.id();
-            }
+            ancestorIds << missingCol.id();
             //We have to do another round if the parents parent is missing
             if (missingCol.parentId() != parentId && !mCollections.contains(missingCol.parentId())) {
                 missingCollections.insert(missingCol.parentId());
@@ -406,13 +421,17 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         }
     }
 
-    // Get attributes if we don't require ancestor attributes, otherwise wait until we have all ancestors
-    retrieveAttributes(collectionIds);
+    if (!mAncestorAttributes.isEmpty()) {
+        retrieveAttributes(ancestorIds);
+    }
 
+    //We are querying in batches because something can't handle WHERE IN queries with sets larger than 999
     const int querySizeLimit = 999;
     int mimetypeQueryStart = 0;
-    auto it = mCollections.begin();
+    int attributeQueryStart = 0;
     QSqlQuery mimeTypeQuery;
+    QSqlQuery attributeQuery;
+    auto it = mCollections.begin();
     while (it != mCollections.end()) {
         const Collection col = it.value();
         // qDebug() << "col " << col.id();
@@ -443,7 +462,35 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             }
         }
 
-        const CollectionAttribute::List attributes = getAttributes(col);
+        CollectionAttribute::List attributes;
+        {
+            //Get new query if necessary
+            if (!attributeQuery.isValid() && attributeQueryStart < mimeTypeIds.size()) {
+                const QVariantList ids = mimeTypeIds.mid(attributeQueryStart, querySizeLimit);
+                attributeQueryStart += querySizeLimit;
+                attributeQuery = getAttributeQuery(ids, QVector<QByteArray>());
+                attributeQuery.next(); //place at first record
+            }
+
+            // qDebug() << attributeQuery.isValid() << attributeQuery.value(0).toLongLong();
+            while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() < col.id()) {
+                qDebug() << "skipped: " << attributeQuery.value(0).toLongLong() << attributeQuery.value(1).toString();
+                if (!attributeQuery.next()) {
+                    break;
+                }
+            }
+            //Advance query while a mimetype for this collection is returned
+            while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() == col.id()) {
+                CollectionAttribute attr;
+                attr.setType(attributeQuery.value(1).toString().toUtf8());
+                attr.setValue(attributeQuery.value(2).toString().toUtf8());
+                attributes << attr;
+
+                if (!attributeQuery.next()) {
+                    break;
+                }
+            }
+        }
 
         listCollection(col, ancestorsForCollection(col), mimeTypes, attributes);
         it++;
