@@ -221,6 +221,9 @@ void ITIPHandler::processiTIPMessage(const QString &receiver,
             d->m_scheduler->acceptCounterProposal(d->m_incidence, d->calendar());
         }
         return; // signal emitted in onSchedulerFinished().
+    } else if (action.startsWith(QLatin1String("request"))) {
+        d->m_scheduler->acceptTransaction(d->m_incidence, d->calendar(), d->m_method, status, receiver);
+        return;
     } else {
         kError() << "Unknown incoming action" << action;
 

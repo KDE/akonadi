@@ -304,7 +304,7 @@ void Scheduler::acceptRequest(const IncidenceBase::Ptr &incidenceBase,
         KMessageBox::information(
             0,
             i18nc("@info",
-                  "<para>You accepted an invitation update, but an earlier version of the "
+                  "<para>You added an invitation update, but an earlier version of the "
                   "item could not be found in your calendar.</para>"
                   "<para>This may have occurred because:<list>"
                   "<item>the organizer did not include you in the original invitation</item>"
@@ -313,7 +313,7 @@ void Scheduler::acceptRequest(const IncidenceBase::Ptr &incidenceBase,
                   "<item>you no longer have access to the calendar containing the invitation</item>"
                   "</list></para>"
                   "<para>This is not a problem, but we thought you should know.</para>"),
-            i18nc("@title", "Cannot find invitation to be updated"), "AcceptCantFindIncidence");
+            i18nc("@title", "Cannot find invitation to be updated"), "CantFindIncidence");
     }
     kDebug() << "Storing new incidence with scheduling uid=" << schedulingUid << " and uid=" << incidence->uid();
 

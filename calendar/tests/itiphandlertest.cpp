@@ -182,6 +182,18 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                                  << expectedNumIncidences
                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
+    // Process a REQUEST without having the incidence in our calendar.
+    // itiphandler should return success and add the rquest to a calendar
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("invited_us");
+    expectedNumIncidences = 1;
+    expectedPartStat = KCalCore::Attendee::NeedsAction;
+    action = QLatin1String("request");
+    QTest::newRow("invited us5") << data_filename << action << receiver << incidenceUid
+                                 << expectedResult
+                                 << expectedNumIncidences
+                                 << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumIncidences = 0;
