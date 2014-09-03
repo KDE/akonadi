@@ -109,21 +109,12 @@ CollectionAttribute::List List::getAttributes(const Collection &col, const QVect
     return attributes;
 }
 
-void List::listCollection(const Collection &root, const QStack<Collection> &ancestors)
+void List::listCollection(const Collection &root, const QStack<Collection> &ancestors, const QList<QByteArray> &mimeTypes, const CollectionAttribute::List &attributes)
 {
     const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(root.id(), connection()->sessionId());
     //We always expose referenced collections to the resource as referenced (although it's a different session)
     //Otherwise syncing wouldn't work.
     const bool resourceIsSynchronizing = root.referenced() && mCollectionsToSynchronize && connection()->context()->resource().isValid();
-
-    QList<QByteArray> mimeTypes;
-    {
-        auto it = mCollectionMimeTypes.find(root.id());
-        while (it != mCollectionMimeTypes.end() && it.key() == root.id()) {
-            mimeTypes << mMimeTypeNames.value(it.value()).toUtf8();
-            ++it;
-        }
-    }
 
     QStack<CollectionAttribute::List> ancestorAttributes;
     //backwards compatibilty, collectionToByteArray will automatically fall-back to id + remoteid
@@ -132,8 +123,6 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
             ancestorAttributes.push(getAttributes(col, mAncestorAttributes));
         }
     }
-
-    const CollectionAttribute::List attributes = getAttributes(root);
 
     // write out collection details
     Collection dummy = root;
@@ -214,7 +203,25 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
     }
 }
 
-Collection::List List::retrieveCollections(const Collection &topParent, int depth)
+static QSqlQuery getMimeTypeQuery(const QVariantList &ids)
+{
+    QueryBuilder qb(CollectionMimeTypeRelation::tableName());
+
+    qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(), MimeType::idFullColumnName(), CollectionMimeTypeRelation::rightFullColumnName());
+    qb.addValueCondition(CollectionMimeTypeRelation::leftFullColumnName(), Query::In, ids);
+
+    qb.addColumn(CollectionMimeTypeRelation::leftFullColumnName());
+    qb.addColumn(CollectionMimeTypeRelation::rightFullColumnName());
+    qb.addColumn(MimeType::nameFullColumnName());
+    qb.addSortColumn(CollectionMimeTypeRelation::leftFullColumnName(), Query::Ascending);
+
+    if (!qb.exec()) {
+        throw HandlerException("Unable to retrieve mimetypes for listing");
+    }
+    return qb.query();
+}
+
+void List::retrieveCollections(const Collection &topParent, int depth)
 {
     /*
      * Retrieval of collections:
@@ -279,6 +286,8 @@ Collection::List List::retrieveCollections(const Collection &topParent, int dept
             qb.addGroupColumn(Collection::idFullColumnName());
         }
 
+        // qb.addSortColumn(Collection::idFullColumnName(), Query::Ascending);
+
         if (!qb.exec()) {
             throw HandlerException("Unable to retrieve collection for listing");
         }
@@ -336,31 +345,10 @@ Collection::List List::retrieveCollections(const Collection &topParent, int dept
         }
     }
 
-    // Get mimetypes
-    {
-        //We are querying for the mimetypes in batches because something can't handle WHERE IN queries with sets larger than 999
-        int start = 0;
-        const int size = 999;
-        while (start < collectionIds.size()) {
-            const QVariantList ids = collectionIds.mid(start, size);
-            QueryBuilder qb(CollectionMimeTypeRelation::tableName());
-
-            qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(), MimeType::idFullColumnName(), CollectionMimeTypeRelation::rightFullColumnName());
-            qb.addValueCondition(CollectionMimeTypeRelation::leftFullColumnName(), Query::In, ids);
-
-            qb.addColumn(CollectionMimeTypeRelation::leftFullColumnName());
-            qb.addColumn(CollectionMimeTypeRelation::rightFullColumnName());
-            qb.addColumn(MimeType::nameFullColumnName());
-
-            if (!qb.exec()) {
-                throw HandlerException("Unable to retrieve mimetypes for listing");
-            }
-            while (qb.query().next()) {
-                mCollectionMimeTypes.insert(qb.query().value(0).toLongLong(), qb.query().value(1).toLongLong());
-                mMimeTypeNames.insert(qb.query().value(1).toLongLong(), qb.query().value(2).toString());
-            }
-            start += size;
-        }
+    QVariantList mimeTypeIds;
+    mimeTypeIds.reserve(mCollections.keys().size());
+    Q_FOREACH (const Collection::Id id, mCollections.keys()) {
+        mimeTypeIds << id;
     }
 
     QSet<qint64> missingCollections;
@@ -421,7 +409,45 @@ Collection::List List::retrieveCollections(const Collection &topParent, int dept
     // Get attributes if we don't require ancestor attributes, otherwise wait until we have all ancestors
     retrieveAttributes(collectionIds);
 
-    return mCollections.values().toVector();
+    const int querySizeLimit = 999;
+    int mimetypeQueryStart = 0;
+    auto it = mCollections.begin();
+    QSqlQuery mimeTypeQuery;
+    while (it != mCollections.end()) {
+        const Collection col = it.value();
+        // qDebug() << "col " << col.id();
+
+        QList<QByteArray> mimeTypes;
+        {
+            //Get new query if necessary
+            if (!mimeTypeQuery.isValid() && mimetypeQueryStart < mimeTypeIds.size()) {
+                const QVariantList ids = mimeTypeIds.mid(mimetypeQueryStart, querySizeLimit);
+                mimetypeQueryStart += querySizeLimit;
+                mimeTypeQuery = getMimeTypeQuery(ids);
+                mimeTypeQuery.next(); //place at first record
+            }
+
+            // qDebug() << mimeTypeQuery.isValid() << mimeTypeQuery.value(0).toLongLong();
+            while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() < col.id()) {
+                qDebug() << "skipped: " << mimeTypeQuery.value(0).toLongLong() << mimeTypeQuery.value(2).toString();
+                if (!mimeTypeQuery.next()) {
+                    break;
+                }
+            }
+            //Advance query while a mimetype for this collection is returned
+            while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() == col.id()) {
+                mimeTypes << mimeTypeQuery.value(2).toString().toUtf8();
+                if (!mimeTypeQuery.next()) {
+                    break;
+                }
+            }
+        }
+
+        const CollectionAttribute::List attributes = getAttributes(col);
+
+        listCollection(col, ancestorsForCollection(col), mimeTypes, attributes);
+        it++;
+    }
 }
 
 bool List::parseStream()
@@ -512,8 +538,6 @@ bool List::parseStream()
         }
     }
 
-    Collection::List collections;
-
     if (baseCollection != 0) { // not root
         Collection col;
         if (mScope.scope() == Scope::None || mScope.scope() == Scope::Uid) {
@@ -558,15 +582,11 @@ bool List::parseStream()
             return failureResponse("Collection " + QByteArray::number(baseCollection) + " does not exist");
         }
 
-        collections = retrieveCollections(col, depth);
+        retrieveCollections(col, depth);
     } else { //Root folder listing
         if (depth != 0) {
-            collections << retrieveCollections(Collection(), depth);
+            retrieveCollections(Collection(), depth);
         }
-    }
-
-    Q_FOREACH (const Collection &col, collections) {
-        listCollection(col, ancestorsForCollection(col));
     }
 
     Response response;

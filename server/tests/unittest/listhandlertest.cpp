@@ -397,10 +397,10 @@ private Q_SLOTS:
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
                     << "C: 2 LIST " + QByteArray::number(0) + " INF (MIMETYPE (mimetype1)) ()"
+                    << initializer->listResponse(col1)
                     << initializer->listResponse(col2)
                     << initializer->listResponse(col3)
                     << initializer->listResponse(col4)
-                    << initializer->listResponse(col1)
                     << "S: 2 OK List completed";
             QTest::newRow("ensure filtered grandparent is included") << scenario;
         }

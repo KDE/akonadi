@@ -92,9 +92,9 @@ class List : public Handler
     bool parseStream();
 
   private:
-    void listCollection(const Collection &root, const QStack<Collection> &ancestors);
+    void listCollection(const Collection &root, const QStack<Collection> &ancestors, const QList<QByteArray> &mimeTypes, const CollectionAttribute::List &attributes);
     QStack<Collection> ancestorsForCollection( const Collection &col );
-    Collection::List retrieveCollections(const Collection &topParent, int depth);
+    void retrieveCollections(const Collection &topParent, int depth);
     bool checkFilterCondition(const Collection &col) const;
     bool checkChildrenForMimeTypes(const QHash<qint64, Collection> &collectionsMap,
                                    const QHash<qint64, qint64> &parentMap,
@@ -114,12 +114,9 @@ class List : public Handler
     bool mCollectionsToSynchronize;
     bool mCollectionsToIndex;
     QVector<QByteArray> mAncestorAttributes;
-    QHash<qint64 /*id*/, Collection> mCollections;
+    QMap<qint64 /*id*/, Collection> mCollections;
     QHash<qint64 /*id*/, Collection> mAncestors;
-    QMultiHash<qint64 /*collectionId*/, qint64 /*mimetypeId*/> mCollectionMimeTypes;
     QMultiHash<qint64 /*collectionId*/, CollectionAttribute /*mimetypeId*/> mCollectionAttributes;
-    QHash<qint64 /*mimetypeId*/, QString> mMimeTypeNames;
-
 };
 
 } // namespace Server
