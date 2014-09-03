@@ -69,6 +69,7 @@ public:
         listPreferenceChanged = other.listPreferenceChanged;
         referenced = other.referenced;
         referencedChanged = other.referencedChanged;
+        keepLocalChanges = other.keepLocalChanges;
     }
 
     ~CollectionPrivate()
@@ -116,6 +117,7 @@ public:
     bool listPreferenceChanged;
     bool referenced;
     bool referencedChanged;
+    QSet<QByteArray> keepLocalChanges;
 };
 
 #endif

@@ -397,6 +397,17 @@ public:
      */
     bool referenced() const;
 
+    /**
+     * Set during sync to indicate that the provided parts are only default values;
+     * @since 4.15
+     */
+    void setKeepLocalChanges(const QSet<QByteArray> &parts);
+
+    /**
+     * Returns what parts are only default values.
+     */
+    QSet<QByteArray> keepLocalChanges() const;
+
 private:
     AKONADI_DECLARE_PRIVATE(Collection)
     friend class CollectionFetchJob;

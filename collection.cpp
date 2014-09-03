@@ -350,4 +350,18 @@ bool Collection::referenced() const
     return d->referenced;
 }
 
+void Collection::setKeepLocalChanges(const QSet<QByteArray> &parts)
+{
+    Q_D(Collection);
+
+    d->keepLocalChanges = parts;
+}
+
+QSet<QByteArray> Collection::keepLocalChanges() const
+{
+    Q_D(const Collection);
+
+    return d->keepLocalChanges;
+}
+
 AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

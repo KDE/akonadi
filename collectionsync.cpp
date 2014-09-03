@@ -386,7 +386,7 @@ public:
         const Collection &localCollection = localNode->collection;
         const Collection &remoteCollection = remoteNode->collection;
 
-        if (!keepLocalChanges.contains(CONTENTMIMETYPES)) {
+        if (!keepLocalChanges.contains(CONTENTMIMETYPES) && !remoteCollection.keepLocalChanges().contains(CONTENTMIMETYPES)) {
             if (localCollection.contentMimeTypes().size() != remoteCollection.contentMimeTypes().size()) {
                 return true;
             } else {
@@ -421,7 +421,7 @@ public:
         // CollectionModifyJob adds the remote attributes to the local collection
         foreach (const Attribute *attr, remoteCollection.attributes()) {
             const Attribute *localAttr = localCollection.attribute(attr->type());
-            if (localAttr && keepLocalChanges.contains(attr->type())) {
+            if (localAttr && (keepLocalChanges.contains(attr->type()) || remoteCollection.keepLocalChanges().contains(CONTENTMIMETYPES))) {
                 continue;
             }
             // The attribute must both exist and have equal contents
@@ -442,11 +442,11 @@ public:
         Q_ASSERT(!upd.remoteId().isEmpty());
         Q_ASSERT(currentTransaction);
         upd.setId(localNode->collection.id());
-        if (keepLocalChanges.contains(CONTENTMIMETYPES)) {
+        if (keepLocalChanges.contains(CONTENTMIMETYPES) || remoteNode->collection.keepLocalChanges().contains(CONTENTMIMETYPES)) {
             upd.setContentMimeTypes(localNode->collection.contentMimeTypes());
         }
         foreach (Attribute *remoteAttr, upd.attributes()) {
-            if (keepLocalChanges.contains(remoteAttr->type()) && localNode->collection.hasAttribute(remoteAttr->type())) {
+            if ((keepLocalChanges.contains(remoteAttr->type()) || remoteNode->collection.keepLocalChanges().contains(remoteAttr->type()))&& localNode->collection.hasAttribute(remoteAttr->type())) {
                 //We don't want to overwrite the attribute changes with the defaults provided by the resource.
                 Attribute *localAttr = localNode->collection.attribute(remoteAttr->type());
                 upd.removeAttribute(localAttr->type());
