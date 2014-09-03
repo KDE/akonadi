@@ -25,7 +25,12 @@
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
 
+#ifdef Q_ATOMC_INT64_IS_SUPPORTED
 #include <QAtomicInteger>
+#else
+#include <QAtomicInt>
+#endif
+
 
 class QSqlQuery;
 
