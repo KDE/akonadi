@@ -30,6 +30,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <KCheckableProxyModel>
+#include <KEMailSettings>
 
 #include <QTestEventLoop>
 #include <QSignalSpy>
@@ -531,6 +532,75 @@ void ETMCalendarTest::testShareETM()
     QVERIFY(!mCalendar->incidences().isEmpty());
     QVERIFY(calendar2->incidences().isEmpty());
 }
+
+void ETMCalendarTest::testFilterInvitations()
+{
+    int anz = mCalendar->model()->rowCount();
+    QString uid = QLatin1String("invite-01");
+    Item item;
+    Incidence::Ptr incidence = Incidence::Ptr(new Event());
+    KEMailSettings emailSettings;
+    KCalCore::Attendee::Ptr me(new KCalCore::Attendee(QLatin1String("me"), emailSettings.getSetting(KEMailSettings::EmailAddress)));
+
+    item.setMimeType(Event::eventMimeType());
+    incidence->setUid(uid);
+    incidence->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
+    incidence->setSummary(QLatin1String("summary"));
+
+    me->setStatus(KCalCore::Attendee::NeedsAction);
+    incidence->addAttendee(me);
+
+    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+    ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+    AKVERIFYEXEC(job);
+    waitForIt();
+    // incidence do not pop up in model
+    QCOMPARE(mCalendar->model()->rowCount(), anz);
+
+    kDebug() << "first invite ended";
+}
+
+void ETMCalendarTest::testFilterInvitationsChanged()
+{
+    int anz = mCalendar->model()->rowCount();
+
+    KEMailSettings emailSettings;
+    KCalCore::Attendee::Ptr me(new KCalCore::Attendee(QLatin1String("me"), emailSettings.getSetting(KEMailSettings::EmailAddress)));
+
+    QString uid = QLatin1String("invite-02");
+    mIncidencesToAdd = 1;
+    createIncidence(uid);
+    waitForIt();
+    QCOMPARE(mCalendar->model()->rowCount(), anz+1);
+
+    Incidence::Ptr incidence = mCalendar->incidence(uid);
+    Item item = mCalendar->item(uid);
+
+    incidence->addAttendee(me);
+    incidence->setRevision(1);
+    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+
+    mIncidencesToDelete = 1;
+    ItemModifyJob *modifyJob = new ItemModifyJob(item,  this);
+    AKVERIFYEXEC(modifyJob);
+    waitForIt();
+    QCOMPARE(mCalendar->model()->rowCount(), anz);
+
+    me->setStatus(KCalCore::Attendee::Accepted);
+    incidence->clearAttendees();
+    incidence->addAttendee(me);
+
+    incidence->setRevision(2);
+
+    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+    item.setRevision(2);
+    mIncidencesToAdd = 1;
+    modifyJob = new ItemModifyJob(item,  this);
+    AKVERIFYEXEC(modifyJob);
+    waitForIt();
+    QCOMPARE(mCalendar->model()->rowCount(), anz+1);
+}
+
 
 void ETMCalendarTest::waitForIt()
 {

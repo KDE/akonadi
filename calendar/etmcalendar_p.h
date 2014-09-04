@@ -41,6 +41,7 @@ class EntityTreeModel;
 class EntityMimeTypeFilterModel;
 class CollectionFilterProxyModel;
 class CalFilterProxyModel;
+class CalFilterPartStatusProxyModel;
 
 static bool isStructuralCollection(const Akonadi::Collection &collection)
 {
@@ -133,6 +134,8 @@ public:
     CheckableProxyModel *mCheckableProxyModel;
     Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
     Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
+    //filter out all invitations and declined events
+    Akonadi::CalFilterPartStatusProxyModel *mCalFilterPartStatusProxyModel;
     KSelectionProxyModel *mSelectionProxy;
     bool mCollectionFilteringEnabled;
     QSet<Akonadi::Collection::Id> mPopulatedCollectionIds;

@@ -23,6 +23,7 @@
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 #include "calfilterproxymodel_p.h"
+#include "calfilterpartstatusproxymodel_p.h"
 #include "utils_p.h"
 
 #include <akonadi/item.h>
@@ -66,6 +67,7 @@ ETMCalendarPrivate::ETMCalendarPrivate(ETMCalendar *qq) : CalendarBasePrivate(qq
     , mCheckableProxyModel(0)
     , mCollectionProxyModel(0)
     , mCalFilterProxyModel(0)
+    , mCalFilterPartStatusProxyModel(0)
     , mSelectionProxy(0)
     , mCollectionFilteringEnabled(true)
     , q(qq)
@@ -185,8 +187,18 @@ void ETMCalendarPrivate::setupFilteredETM()
     mCalFilterProxyModel->setSourceModel(mSelectionProxy);
     mCalFilterProxyModel->setObjectName("KCalCore::CalFilter filtering");
 
+    mCalFilterPartStatusProxyModel = new CalFilterPartStatusProxyModel(this);
+    mCalFilterPartStatusProxyModel->setFilterVirtual(false);
+    QList<KCalCore::Attendee::PartStat> blockedStatusList;
+    blockedStatusList << KCalCore::Attendee::NeedsAction;
+    blockedStatusList << KCalCore::Attendee::Declined;
+    mCalFilterPartStatusProxyModel->setDynamicSortFilter(true);
+    mCalFilterPartStatusProxyModel->setBlockedStatusList(blockedStatusList);
+    mCalFilterPartStatusProxyModel->setSourceModel(mCalFilterProxyModel);
+    mCalFilterPartStatusProxyModel->setObjectName("PartStatus filtering");
+
     mFilteredETM = new Akonadi::EntityMimeTypeFilterModel(this);
-    mFilteredETM->setSourceModel(mCalFilterProxyModel);
+    mFilteredETM->setSourceModel(mCalFilterPartStatusProxyModel);
     mFilteredETM->setHeaderGroup(Akonadi::EntityTreeModel::ItemListHeaders);
     mFilteredETM->setSortRole(CalendarModel::SortRole);
     mFilteredETM->setObjectName("Show headers");
