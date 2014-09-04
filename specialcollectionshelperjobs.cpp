@@ -210,6 +210,7 @@ void ResourceScanJob::doStart()
                                                           CollectionFetchJob::Recursive, this);
     fetchJob->fetchScope().setResource(d->mResourceId);
     fetchJob->fetchScope().setIncludeStatistics(true);
+    fetchJob->fetchScope().setListFilter(CollectionFetchScope::Display);
     connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)));
 }
 
