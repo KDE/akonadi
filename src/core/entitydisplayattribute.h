@@ -25,7 +25,6 @@
 
 #include <QColor>
 
-
 namespace Akonadi {
 
 /**

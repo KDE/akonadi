@@ -40,7 +40,7 @@ public:
     /**
      * Sets an identifier for the collection.
      */
-    void setIdentifier(const QByteArray &);
+    void setIdentifier(const QByteArray &identifier);
     QByteArray identifier() const;
 
     /**
@@ -50,17 +50,17 @@ public:
      * * "person" for a collection shared by a person.
      * * "shared" for a collection shared by a person.
      */
-    void setCollectionNamespace(const QByteArray &);
+    void setCollectionNamespace(const QByteArray &ns);
     QByteArray collectionNamespace() const;
     virtual QByteArray type() const;
-    virtual Attribute* clone() const;
+    virtual Attribute *clone() const;
     virtual QByteArray serialized() const;
     virtual void deserialize(const QByteArray &data);
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

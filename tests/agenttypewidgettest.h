@@ -28,18 +28,18 @@ class KComboBox;
 
 class Dialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Dialog( QWidget *parent = 0 );
+public:
+    Dialog(QWidget *parent = 0);
 
-    virtual void done( int );
+    virtual void done(int);
 
-  private Q_SLOTS:
-    void currentChanged( const Akonadi::AgentType&, const Akonadi::AgentType& );
-    void filterChanged( int );
+private Q_SLOTS:
+    void currentChanged(const Akonadi::AgentType &current, const Akonadi::AgentType &previous);
+    void filterChanged(int);
 
-  private:
+private:
     Akonadi::AgentTypeWidget *mWidget;
     KComboBox *mFilter;
 };

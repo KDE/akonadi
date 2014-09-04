@@ -28,58 +28,57 @@
 #include <QCommandLineParser>
 #include <KAboutData>
 
-Dialog::Dialog( QWidget *parent )
-  : QDialog( parent )
+Dialog::Dialog(QWidget *parent)
+    : QDialog(parent)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  mWidget = new Akonadi::AgentInstanceWidget( this );
-  connect( mWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
-           this, SLOT(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)) );
+    mWidget = new Akonadi::AgentInstanceWidget(this);
+    connect(mWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
+            this, SLOT(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)));
 
-  QDialogButtonBox *box = new QDialogButtonBox( this );
+    QDialogButtonBox *box = new QDialogButtonBox(this);
 
-  layout->addWidget( mWidget );
-  layout->addWidget( box );
+    layout->addWidget(mWidget);
+    layout->addWidget(box);
 
-  QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
-  connect( ok, SIGNAL(clicked()), this, SLOT(accept()) );
+    QPushButton *ok = box->addButton(QDialogButtonBox::Ok);
+    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
 
-  resize( 450, 320 );
+    resize(450, 320);
 }
 
-void Dialog::done( int r )
+void Dialog::done(int r)
 {
-  if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentInstance().identifier() ) );
-  }
+    if (r == Accepted) {
+        qDebug("'%s' selected", qPrintable(mWidget->currentAgentInstance().identifier()));
+    }
 
-  QDialog::done( r );
+    QDialog::done(r);
 }
 
-void Dialog::currentChanged( const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous )
+void Dialog::currentChanged(const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous)
 {
-  qDebug( "current changed: %s -> %s", qPrintable( previous.identifier() ), qPrintable( current.identifier() ) );
+    qDebug("current changed: %s -> %s", qPrintable(previous.identifier()), qPrintable(current.identifier()));
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
-  KAboutData aboutData( QLatin1String("agentinstanceviewtest"),
-                        QLatin1String( "agentinstanceviewtest" ),
-                        QLatin1String("0.10"));
-  KAboutData::setApplicationData(aboutData);
+    QApplication app(argc, argv);
+    KAboutData aboutData(QLatin1String("agentinstanceviewtest"),
+                         QLatin1String("agentinstanceviewtest"),
+                         QLatin1String("0.10"));
+    KAboutData::setApplicationData(aboutData);
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  Dialog dlg;
-  dlg.exec();
+    Dialog dlg;
+    dlg.exec();
 
-  return 0;
+    return 0;
 }
-

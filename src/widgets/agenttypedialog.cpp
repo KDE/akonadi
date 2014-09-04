@@ -71,14 +71,14 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
 
     d->Widget = new Akonadi::AgentTypeWidget;
     connect(d->Widget, SIGNAL(activated()), this, SLOT(accept()));
-     
+
     KFilterProxySearchLine *searchLine = new KFilterProxySearchLine;
     layout->addWidget(searchLine);
     searchLine->setProxy(d->Widget->agentFilterProxyModel());
 
     layout->addWidget(d->Widget);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentTypeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentTypeDialog::reject);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -86,7 +86,6 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     layout->addWidget(buttonBox);
     d->readConfig();
-    
 
     searchLine->lineEdit()->setFocus();
 }

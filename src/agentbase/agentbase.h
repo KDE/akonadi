@@ -752,7 +752,7 @@ protected:
 
 private:
     //@cond PRIVATE
-    static QString parseArguments(int, char **);
+    static QString parseArguments(int argc, char **argv);
     static int init(AgentBase *r);
     void setOnlineInternal(bool state);
 

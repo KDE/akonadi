@@ -26,25 +26,25 @@ class KProcess;
 
 class TestRunner : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    TestRunner( const QStringList &args, QObject *parent = 0 );
+public:
+    TestRunner(const QStringList &args, QObject *parent = 0);
     int exitCode() const;
     void terminate();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void run();
     void triggerTermination(int);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void finished();
 
-  private Q_SLOTS:
-    void processFinished( int exitCode );
-    void processError( QProcess::ProcessError error );
+private Q_SLOTS:
+    void processFinished(int exitCode);
+    void processError(QProcess::ProcessError error);
 
-  private:
+private:
     QStringList mArguments;
     int mExitCode;
     KProcess *mProcess;

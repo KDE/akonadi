@@ -29,10 +29,10 @@ class KJob;
 
 class SetupTest : public QObject
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.Testrunner" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.Akonadi.Testrunner")
 
-  public:
+public:
     SetupTest();
     ~SetupTest();
 
@@ -49,40 +49,40 @@ class SetupTest : public QObject
     QString instanceId() const;
 
     /// set an environment variable
-    void setEnvironmentVariable( const QByteArray &name, const QString &value );
+    void setEnvironmentVariable(const QByteArray &name, const QString &value);
 
     /// retrieve all modified environment variables, for writing the shell script
     typedef QPair<QByteArray, QByteArray> EnvVar;
     QVector<EnvVar> environmentVariables() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();
     Q_SCRIPTABLE void shutdownHarder();
     /** Synchronously restarts the server. */
     Q_SCRIPTABLE void restartAkonadiServer();
-    Q_SCRIPTABLE void trackAkonadiProcess( bool track );
+    Q_SCRIPTABLE void trackAkonadiProcess(bool track);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void setupDone();
     void serverExited(int exitCode);
 
-  private Q_SLOTS:
-    void serverStateChanged( Akonadi::ServerManager::State state );
-    void slotAkonadiDaemonProcessFinished( int exitCode );
-    void agentCreationResult(KJob* job);
-    void synchronizationResult(KJob* job);
+private Q_SLOTS:
+    void serverStateChanged(Akonadi::ServerManager::State state);
+    void slotAkonadiDaemonProcessFinished(int exitCode);
+    void agentCreationResult(KJob *job);
+    void synchronizationResult(KJob *job);
 
-  private:
+private:
     void setupAgents();
-    void copyXdgDirectory( const QString &src, const QString &dst );
-    void copyKdeHomeDirectory( const QString &src, const QString &dst );
-    void copyDirectory( const QString &src, const QString &dst );
+    void copyXdgDirectory(const QString &src, const QString &dst);
+    void copyKdeHomeDirectory(const QString &src, const QString &dst);
+    void copyDirectory(const QString &src, const QString &dst);
     void createTempEnvironment();
     void cleanTempEnvironment();
     bool isSetupDone() const;
     void setupFailed();
 
-  private:
+private:
     KProcess *mAkonadiDaemonProcess;
     bool mShuttingDown;
     bool mAgentsCreated;

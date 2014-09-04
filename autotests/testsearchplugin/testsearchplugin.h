@@ -29,9 +29,9 @@ class TestSearchPlugin : public QObject, public Akonadi::AbstractSearchPlugin
     Q_OBJECT
     Q_INTERFACES(Akonadi::AbstractSearchPlugin)
 public:
-    virtual QSet<qint64> search( const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes );
+    virtual QSet<qint64> search(const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes);
 
-    static QSet<qint64> parseQuery(const QString &);
+    static QSet<qint64> parseQuery(const QString &queryString);
 };
 
 #endif

@@ -36,11 +36,13 @@ class Item;
  */
 class DifferencesAlgorithmInterface
 {
-  public:
+public:
     /**
      * Destroys the differences algorithm interface.
      */
-    virtual ~DifferencesAlgorithmInterface() {}
+    virtual ~DifferencesAlgorithmInterface()
+    {
+    }
 
     /**
      * Calculates the differences between two Akonadi objects and reports
@@ -50,13 +52,13 @@ class DifferencesAlgorithmInterface
      * @param leftItem The left-hand side item that will be compared.
      * @param rightItem The right-hand side item that will be compared.
      */
-    virtual void compare( AbstractDifferencesReporter *reporter,
-                          const Akonadi::Item &leftItem,
-                          const Akonadi::Item &rightItem ) = 0;
+    virtual void compare(AbstractDifferencesReporter *reporter,
+                         const Akonadi::Item &leftItem,
+                         const Akonadi::Item &rightItem) = 0;
 };
 
 }
 
-Q_DECLARE_INTERFACE( Akonadi::DifferencesAlgorithmInterface, "org.freedesktop.Akonadi.DifferencesAlgorithmInterface/1.0" )
+Q_DECLARE_INTERFACE(Akonadi::DifferencesAlgorithmInterface, "org.freedesktop.Akonadi.DifferencesAlgorithmInterface/1.0")
 
 #endif

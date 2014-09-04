@@ -19,7 +19,6 @@
 
 #include <QDebug>
 
-
 #include <QtCore/QDir>
 #include <QtCore/QPair>
 #include <QtCore/QFile>
@@ -40,100 +39,104 @@ Config::~Config()
 
 Config *Config::instance(const QString &pathToConfig)
 {
-  if ( !pathToConfig.isEmpty() )
-    globalConfig()->readConfiguration(pathToConfig);
+    if (!pathToConfig.isEmpty()) {
+        globalConfig()->readConfiguration(pathToConfig);
+    }
 
-  return globalConfig();
+    return globalConfig();
 }
 
 void Config::readConfiguration(const QString &configfile)
 {
-  QDomDocument doc;
-  QFile file( configfile );
+    QDomDocument doc;
+    QFile file(configfile);
 
-  if ( !file.open( QIODevice::ReadOnly ) )
-    qFatal( "error reading file: %s", qPrintable( configfile ) );
-
-  QString errorMsg;
-  if ( !doc.setContent( &file, &errorMsg ) )
-    qFatal( "unable to parse config file: %s", qPrintable( errorMsg ) );
-
-  const QDomElement root = doc.documentElement();
-  if ( root.tagName() != QLatin1String("config") )
-    qFatal( "could not file root tag" );
-
-  const QString basePath = QFileInfo( configfile ).absolutePath() + QLatin1Char('/');
-
-  QDomNode node = root.firstChild();
-  while ( !node.isNull() ) {
-    const QDomElement element = node.toElement();
-    if ( !element.isNull() ) {
-      if ( element.tagName() == QLatin1String("kdehome") ) {
-        setKdeHome( basePath + element.text() );
-      } else if ( element.tagName() == QLatin1String("confighome") ) {
-        setXdgConfigHome( basePath + element.text() );
-      } else if ( element.tagName() == QLatin1String("datahome") ) {
-        setXdgDataHome( basePath + element.text() );
-      } else if ( element.tagName() == QLatin1String("agent") ) {
-        insertAgent( element.text(), element.attribute( QLatin1String("synchronize"), QLatin1String("false") ) == QLatin1String("true") );
-      } else if ( element.tagName() == QLatin1String("envvar") ) {
-        const QString name = element.attribute( QLatin1String("name") );
-        if ( name.isEmpty() ) {
-          qWarning() << "Given envvar with no name.";
-        } else {
-          mEnvVars[ name ] = element.text();
-        }
-      }
+    if (!file.open(QIODevice::ReadOnly)) {
+        qFatal("error reading file: %s", qPrintable(configfile));
     }
 
-    node = node.nextSibling();
-  }
+    QString errorMsg;
+    if (!doc.setContent(&file, &errorMsg)) {
+        qFatal("unable to parse config file: %s", qPrintable(errorMsg));
+    }
+
+    const QDomElement root = doc.documentElement();
+    if (root.tagName() != QLatin1String("config")) {
+        qFatal("could not file root tag");
+    }
+
+    const QString basePath = QFileInfo(configfile).absolutePath() + QLatin1Char('/');
+
+    QDomNode node = root.firstChild();
+    while (!node.isNull()) {
+        const QDomElement element = node.toElement();
+        if (!element.isNull()) {
+            if (element.tagName() == QLatin1String("kdehome")) {
+                setKdeHome(basePath + element.text());
+            } else if (element.tagName() == QLatin1String("confighome")) {
+                setXdgConfigHome(basePath + element.text());
+            } else if (element.tagName() == QLatin1String("datahome")) {
+                setXdgDataHome(basePath + element.text());
+            } else if (element.tagName() == QLatin1String("agent")) {
+                insertAgent(element.text(), element.attribute(QLatin1String("synchronize"), QLatin1String("false")) == QLatin1String("true"));
+            } else if (element.tagName() == QLatin1String("envvar")) {
+                const QString name = element.attribute(QLatin1String("name"));
+                if (name.isEmpty()) {
+                    qWarning() << "Given envvar with no name.";
+                } else {
+                    mEnvVars[name] = element.text();
+                }
+            }
+        }
+
+        node = node.nextSibling();
+    }
 }
 
 QString Config::kdeHome() const
 {
-  return mKdeHome;
+    return mKdeHome;
 }
 
 QString Config::xdgDataHome() const
 {
-  return mXdgDataHome;
+    return mXdgDataHome;
 }
 
 QString Config::xdgConfigHome() const
 {
-  return mXdgConfigHome;
+    return mXdgConfigHome;
 }
 
-void Config::setKdeHome( const QString &home )
+void Config::setKdeHome(const QString &home)
 {
-  const QDir kdeHomeDir( home );
-  mKdeHome = kdeHomeDir.absolutePath();
+    const QDir kdeHomeDir(home);
+    mKdeHome = kdeHomeDir.absolutePath();
 }
 
-void Config::setXdgDataHome( const QString &dataHome )
+void Config::setXdgDataHome(const QString &dataHome)
 {
-  const QDir dataHomeDir( dataHome );
-  mXdgDataHome = dataHomeDir.absolutePath();
+    const QDir dataHomeDir(dataHome);
+    mXdgDataHome = dataHomeDir.absolutePath();
 }
 
-void Config::setXdgConfigHome( const QString &configHome )
+void Config::setXdgConfigHome(const QString &configHome)
 {
-  const QDir configHomeDir( configHome );
-  mXdgConfigHome = configHomeDir.absolutePath();
+    const QDir configHomeDir(configHome);
+    mXdgConfigHome = configHomeDir.absolutePath();
 }
 
-void Config::insertAgent( const QString &agent, bool sync )
+void Config::insertAgent(const QString &agent, bool sync)
 {
-  mAgents.append( qMakePair( agent, sync ) );
+    mAgents.append(qMakePair(agent, sync));
 }
 
 QList<QPair<QString, bool> > Config::agents() const
 {
-  return mAgents;
+    return mAgents;
 }
 
 QHash<QString, QString> Config::envVars() const
 {
-  return mEnvVars;
+    return mEnvVars;
 }

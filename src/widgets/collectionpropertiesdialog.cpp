@@ -123,14 +123,13 @@ void CollectionPropertiesDialog::Private::init()
     mTabWidget = new QTabWidget(q);
     mainLayout->addWidget(mTabWidget);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
     q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
-
 
     if (mPageNames.isEmpty()) {   // default loading
         foreach (CollectionPropertiesPageFactory *factory, *s_pages) {

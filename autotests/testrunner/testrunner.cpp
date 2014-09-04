@@ -23,53 +23,54 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 
-TestRunner::TestRunner(const QStringList& args, QObject* parent)
-  : QObject( parent ),
-    mArguments( args ),
-    mExitCode( 0 ),
-    mProcess( 0 )
+TestRunner::TestRunner(const QStringList &args, QObject *parent)
+    : QObject(parent)
+    , mArguments(args)
+    , mExitCode(0)
+    , mProcess(0)
 {
 }
 
 int TestRunner::exitCode() const
 {
-  return mExitCode;
+    return mExitCode;
 }
 
 void TestRunner::run()
 {
-  qDebug() << mArguments;
-  mProcess = new KProcess( this );
-  mProcess->setProgram( mArguments );
-  connect( mProcess, SIGNAL(finished(int)), SLOT(processFinished(int)) );
-  connect( mProcess, SIGNAL(error(QProcess::ProcessError)), SLOT(processError(QProcess::ProcessError)) );
-  // environment setup seems to have been done by setuptest globally already
-  mProcess->start();
-  if ( !mProcess->waitForStarted() ) {
-    qWarning() << mArguments << "failed to start!";
-    mExitCode = 255;
+    qDebug() << mArguments;
+    mProcess = new KProcess(this);
+    mProcess->setProgram(mArguments);
+    connect(mProcess, SIGNAL(finished(int)), SLOT(processFinished(int)));
+    connect(mProcess, SIGNAL(error(QProcess::ProcessError)), SLOT(processError(QProcess::ProcessError)));
+    // environment setup seems to have been done by setuptest globally already
+    mProcess->start();
+    if (!mProcess->waitForStarted()) {
+        qWarning() << mArguments << "failed to start!";
+        mExitCode = 255;
+        emit finished();
+    }
+}
+
+void TestRunner::triggerTermination(int exitCode)
+{
+    processFinished(exitCode);
+}
+
+void TestRunner::processFinished(int exitCode)
+{
+    // Only update the exit code when it is 0. This prevents overwriting a non-zero
+    // value with 0. This can happen when multiple processes finish or triggerTermination
+    // is called after a proces has finished.
+    if (mExitCode == 0) {
+        mExitCode = exitCode;
+        qDebug() << exitCode;
+    }
     emit finished();
-  }
 }
 
-void TestRunner::triggerTermination( int exitCode )
+void TestRunner::processError(QProcess::ProcessError error)
 {
-  processFinished( exitCode );
-}
-
-void TestRunner::processFinished( int exitCode )
-{
-  // Only update the exit code when it is 0. This prevents overwriting a non-zero
-  // value with 0. This can happen when multiple processes finish or triggerTermination
-  // is called after a proces has finished.
-  if ( mExitCode == 0 ) {
-    mExitCode = exitCode;
-    qDebug() << exitCode;
-  }
-  emit finished();
-}
-
-void TestRunner::processError( QProcess::ProcessError error ) {
     qWarning() << mArguments << "exited with an error:" << error;
     mExitCode = 255;
     emit finished();
@@ -77,7 +78,7 @@ void TestRunner::processError( QProcess::ProcessError error ) {
 
 void TestRunner::terminate()
 {
-  if ( mProcess )
-    mProcess->terminate();
+    if (mProcess) {
+        mProcess->terminate();
+    }
 }
-

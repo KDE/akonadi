@@ -23,23 +23,23 @@
 #include <QCommandLineParser>
 #include <QApplication>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
-  KAboutData aboutData( QLatin1String("akonadi-selftester"),
-                        QLatin1String( "akonadi-selftester" ),
-                        QLatin1String("0.10"));
-  KAboutData::setApplicationData(aboutData);
+    QApplication app(argc, argv);
+    KAboutData aboutData(QLatin1String("akonadi-selftester"),
+                         QLatin1String("akonadi-selftester"),
+                         QLatin1String("0.10"));
+    KAboutData::setApplicationData(aboutData);
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  SelfTestDialog dlg;
-  dlg.exec();
+    SelfTestDialog dlg;
+    dlg.exec();
 
-  return 0;
+    return 0;
 }

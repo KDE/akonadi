@@ -26,17 +26,17 @@
 
 class Dialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Dialog( QWidget *parent = 0 );
+public:
+    Dialog(QWidget *parent = 0);
 
-    virtual void done( int );
+    virtual void done(int);
 
-  private Q_SLOTS:
-    void currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& );
+private Q_SLOTS:
+    void currentChanged(const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous);
 
-  private:
+private:
     Akonadi::AgentInstanceWidget *mWidget;
 };
 

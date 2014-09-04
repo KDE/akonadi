@@ -153,7 +153,7 @@ public:
     {
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(mParentWidget));
         dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance,
-                                    AgentActionManager::DialogTitle));
+                                        AgentActionManager::DialogTitle));
 
         foreach (const QString &mimeType, mMimeTypeFilter) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);

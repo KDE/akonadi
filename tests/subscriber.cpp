@@ -24,24 +24,24 @@
 #include <KAboutData>
 #include <QCommandLineParser>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
-  app.setQuitOnLastWindowClosed( false );
-  KAboutData aboutData( QLatin1String("akonadi-subscriber"),
-                        QLatin1String( "Test akonadi subscriber" ),
-                        QLatin1String("0.10"));
-  KAboutData::setApplicationData(aboutData);
+    QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
+    KAboutData aboutData(QLatin1String("akonadi-subscriber"),
+                         QLatin1String("Test akonadi subscriber"),
+                         QLatin1String("0.10"));
+    KAboutData::setApplicationData(aboutData);
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  Akonadi::SubscriptionDialog* dlg = new Akonadi::SubscriptionDialog();
-  QObject::connect( dlg, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()) );
-  dlg->show();
-  app.exec();
+    Akonadi::SubscriptionDialog *dlg = new Akonadi::SubscriptionDialog();
+    QObject::connect(dlg, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()));
+    dlg->show();
+    app.exec();
 }

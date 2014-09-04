@@ -66,8 +66,7 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-enum ActionType
-{
+enum ActionType {
     NormalAction,
     ActionWithAlternative, //Normal action, but with an alternative state
     ActionAlternative, //Alternative state of the ActionWithAlternative
@@ -180,7 +179,7 @@ static QModelIndexList safeSelectedRows(QItemSelectionModel *selectionModel)
         for (int row = range.top(); row <= range.bottom(); ++row) {
             const QModelIndex index = range.model()->index(row, range.left(), parent);
             const Qt::ItemFlags flags = range.model()->flags(index);
-            if ((flags &Qt::ItemIsSelectable) && (flags &Qt::ItemIsEnabled)) {
+            if ((flags & Qt::ItemIsSelectable) && (flags & Qt::ItemIsEnabled)) {
                 selectedRows.push_back(index);
             }
         }
@@ -1255,7 +1254,7 @@ public:
         while (item.hasNext()) {
             item.next();
             if (item.value().data()) {
-                item.value().data()->addRecentCollection(item.key(),id);
+                item.value().data()->addRecentCollection(item.key(), id);
             }
         }
     }
@@ -1413,15 +1412,15 @@ public:
 
                 fillFoldersMenu(selectedCollectionsList, mimeTypes, type, popup, model, index);
                 if (!(type == CopyCollectionToMenu && collectionIsSelected)) {
-                    if ( !readOnly ) {
+                    if (!readOnly) {
                         popup->addSeparator();
 
-                        QAction *action = popup->addAction( moveAction ? i18n( "Move to This Folder" ) : i18n( "Copy to This Folder" ) );
-                        action->setData( QVariant::fromValue<QModelIndex>( index ) );
+                        QAction *action = popup->addAction(moveAction ? i18n("Move to This Folder") : i18n("Copy to This Folder"));
+                        action->setData(QVariant::fromValue<QModelIndex>(index));
                     }
-               }
+                }
 
-               menu->addMenu(popup);
+                menu->addMenu(popup);
 
             } else {
                 // insert an item
@@ -1652,7 +1651,7 @@ QAction *StandardActionManager::createAction(Type type)
     if (standardActionData[type].icon) {
         action->setIcon(QIcon::fromTheme(QString::fromLatin1(standardActionData[type].icon)));
     }
-    if ( d->actionCollection ) {
+    if (d->actionCollection) {
         d->actionCollection->setDefaultShortcut(action, QKeySequence(standardActionData[type].shortcut));
     } else {
         action->setShortcut(standardActionData[type].shortcut);

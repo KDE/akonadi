@@ -33,77 +33,77 @@
 
 //krazy:excludeall=qclasses
 
-Dialog::Dialog( QWidget *parent )
-  : QDialog( parent )
+Dialog::Dialog(QWidget *parent)
+    : QDialog(parent)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  mFilter = new KComboBox( this );
-  mFilter->addItem( QLatin1String("None") );
-  mFilter->addItem( QLatin1String("text/calendar") );
-  mFilter->addItem( QLatin1String("text/directory") );
-  mFilter->addItem( QLatin1String("message/rfc822") );
-  connect( mFilter, SIGNAL(activated(int)),
-           this, SLOT(filterChanged(int)) );
+    mFilter = new KComboBox(this);
+    mFilter->addItem(QLatin1String("None"));
+    mFilter->addItem(QLatin1String("text/calendar"));
+    mFilter->addItem(QLatin1String("text/directory"));
+    mFilter->addItem(QLatin1String("message/rfc822"));
+    connect(mFilter, SIGNAL(activated(int)),
+            this, SLOT(filterChanged(int)));
 
-  mWidget = new Akonadi::AgentTypeWidget( this );
-  connect( mWidget, SIGNAL(currentChanged(Akonadi::AgentType,Akonadi::AgentType)),
-           this, SLOT(currentChanged(Akonadi::AgentType,Akonadi::AgentType)) );
+    mWidget = new Akonadi::AgentTypeWidget(this);
+    connect(mWidget, SIGNAL(currentChanged(Akonadi::AgentType,Akonadi::AgentType)),
+            this, SLOT(currentChanged(Akonadi::AgentType,Akonadi::AgentType)));
 
-  QDialogButtonBox *box = new QDialogButtonBox( this );
+    QDialogButtonBox *box = new QDialogButtonBox(this);
 
-  layout->addWidget( mFilter );
-  layout->addWidget( mWidget );
-  layout->addWidget( box );
+    layout->addWidget(mFilter);
+    layout->addWidget(mWidget);
+    layout->addWidget(box);
 
-  QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
-  connect( ok, SIGNAL(clicked()), this, SLOT(accept()) );
+    QPushButton *ok = box->addButton(QDialogButtonBox::Ok);
+    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
 
-  QPushButton *cancel = box->addButton( QDialogButtonBox::Cancel );
-  connect( cancel, SIGNAL(clicked()), this, SLOT(reject()) );
+    QPushButton *cancel = box->addButton(QDialogButtonBox::Cancel);
+    connect(cancel, SIGNAL(clicked()), this, SLOT(reject()));
 
-  resize( 450, 320 );
+    resize(450, 320);
 }
 
-void Dialog::done( int r )
+void Dialog::done(int r)
 {
-  if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentType().identifier() ) );
-  }
+    if (r == Accepted) {
+        qDebug("'%s' selected", qPrintable(mWidget->currentAgentType().identifier()));
+    }
 
-  QDialog::done( r );
+    QDialog::done(r);
 }
 
-void Dialog::currentChanged( const Akonadi::AgentType &current, const Akonadi::AgentType &previous )
+void Dialog::currentChanged(const Akonadi::AgentType &current, const Akonadi::AgentType &previous)
 {
-  qDebug( "current changed: %s -> %s", qPrintable( previous.identifier() ), qPrintable( current.identifier() ) );
+    qDebug("current changed: %s -> %s", qPrintable(previous.identifier()), qPrintable(current.identifier()));
 }
 
-void Dialog::filterChanged( int index )
+void Dialog::filterChanged(int index)
 {
-  mWidget->agentFilterProxyModel()->clearFilters();
-  if ( index > 0 )
-    mWidget->agentFilterProxyModel()->addMimeTypeFilter( mFilter->itemText( index ) );
+    mWidget->agentFilterProxyModel()->clearFilters();
+    if (index > 0) {
+        mWidget->agentFilterProxyModel()->addMimeTypeFilter(mFilter->itemText(index));
+    }
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
-  KAboutData aboutData( QLatin1String("agenttypeviewtest"),
-                        QLatin1String( "agenttypeviewtest" ),
-                        QLatin1String("0.10"));
-  KAboutData::setApplicationData(aboutData);
+    QApplication app(argc, argv);
+    KAboutData aboutData(QLatin1String("agenttypeviewtest"),
+                         QLatin1String("agenttypeviewtest"),
+                         QLatin1String("0.10"));
+    KAboutData::setApplicationData(aboutData);
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  Dialog dlg;
-  dlg.exec();
+    Dialog dlg;
+    dlg.exec();
 
-  return 0;
+    return 0;
 }
-

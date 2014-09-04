@@ -25,8 +25,7 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QString>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
  * @internal

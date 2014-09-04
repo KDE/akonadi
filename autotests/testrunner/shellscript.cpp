@@ -30,53 +30,53 @@ ShellScript::ShellScript()
 
 void ShellScript::writeEnvironmentVariables()
 {
-  foreach ( const EnvVar &envvar, mEnvVars ) {
-    mScript += QLatin1String("_old_") + QLatin1String(envvar.first) + QLatin1String("=") + QLatin1String(envvar.first) + QLatin1String("\n");
-    mScript.append( QLatin1String(envvar.first) );
-    mScript.append( QLatin1Char( '=' ) );
-    mScript.append( QLatin1String(envvar.second) );
-    mScript.append( QLatin1Char( '\n' ) );
+    foreach (const EnvVar &envvar, mEnvVars) {
+        mScript += QLatin1String("_old_") + QLatin1String(envvar.first) + QLatin1String("=") + QLatin1String(envvar.first) + QLatin1String("\n");
+        mScript.append(QLatin1String(envvar.first));
+        mScript.append(QLatin1Char('='));
+        mScript.append(QLatin1String(envvar.second));
+        mScript.append(QLatin1Char('\n'));
 
-    mScript.append( QLatin1String( "export " ) );
-    mScript.append( QLatin1String(envvar.first) );
-    mScript.append( QLatin1Char( '\n' ) );
-  }
+        mScript.append(QLatin1String("export "));
+        mScript.append(QLatin1String(envvar.first));
+        mScript.append(QLatin1Char('\n'));
+    }
 
-  mScript.append( QLatin1String( "\n\n" ) );
+    mScript.append(QLatin1String("\n\n"));
 }
 
 void ShellScript::writeShutdownFunction()
 {
-  QString s =
-    QLatin1String("function shutdown-testenvironment()\n"
-    "{\n"
-    "  qdbus org.kde.Akonadi.Testrunner-") + QString::number( QCoreApplication::instance()->applicationPid() ) + QLatin1String(" / org.kde.Akonadi.Testrunner.shutdown\n");
+    QString s =
+        QLatin1String("function shutdown-testenvironment()\n"
+                      "{\n"
+                      "  qdbus org.kde.Akonadi.Testrunner-") + QString::number(QCoreApplication::instance()->applicationPid()) + QLatin1String(" / org.kde.Akonadi.Testrunner.shutdown\n");
 
-  foreach ( const EnvVar &envvar, mEnvVars ) {
-    s += QLatin1String("  ") + QLatin1String(envvar.first) + QLatin1String("=$_old_") + QLatin1String(envvar.first) + QLatin1String("\n");
-    s += QLatin1String("  export ") + QLatin1String(envvar.first) + QLatin1String("\n");
-  }
-  s.append( QLatin1String("}\n\n") );
-  mScript.append( s );
+    foreach (const EnvVar &envvar, mEnvVars) {
+        s += QLatin1String("  ") + QLatin1String(envvar.first) + QLatin1String("=$_old_") + QLatin1String(envvar.first) + QLatin1String("\n");
+        s += QLatin1String("  export ") + QLatin1String(envvar.first) + QLatin1String("\n");
+    }
+    s.append(QLatin1String("}\n\n"));
+    mScript.append(s);
 }
 
-void ShellScript::makeShellScript( const QString &fileName )
+void ShellScript::makeShellScript(const QString &fileName)
 {
-  qDebug() << fileName;
-  QFile file( fileName ); //can user define the file name/location?
+    qDebug() << fileName;
+    QFile file(fileName);   //can user define the file name/location?
 
-  if ( file.open( QIODevice::WriteOnly ) ) {
-    writeEnvironmentVariables();
-    writeShutdownFunction();
+    if (file.open(QIODevice::WriteOnly)) {
+        writeEnvironmentVariables();
+        writeShutdownFunction();
 
-    file.write( mScript.toLatin1().constData(), qstrlen( mScript.toLatin1().constData() ) );
-    file.close();
-  } else {
-    qCritical() << "Failed to write" << fileName;
-  }
+        file.write(mScript.toLatin1().constData(), qstrlen(mScript.toLatin1().constData()));
+        file.close();
+    } else {
+        qCritical() << "Failed to write" << fileName;
+    }
 }
 
-void ShellScript::setEnvironmentVariables(const QVector< ShellScript::EnvVar >& envVars)
+void ShellScript::setEnvironmentVariables(const QVector< ShellScript::EnvVar > &envVars)
 {
-  mEnvVars = envVars;
+    mEnvVars = envVars;
 }

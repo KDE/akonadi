@@ -607,7 +607,7 @@ void ResourceBase::itemRetrieved(const Item &item)
     }
 
     ItemModifyJob *job = new ItemModifyJob(i);
-  job->d_func()->setSilent( true );
+    job->d_func()->setSilent(true);
     // FIXME: remove once the item with which we call retrieveItem() has a revision number
     job->disableRevisionCheck();
     connect(job, SIGNAL(result(KJob*)), SLOT(slotDeliveryDone(KJob*)));

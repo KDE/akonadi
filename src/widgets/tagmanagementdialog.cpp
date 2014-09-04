@@ -73,7 +73,7 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
     vbox->addWidget(new Akonadi::TagEditWidget(model, this, false));
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &TagManagementDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &TagManagementDialog::reject);
 
@@ -81,7 +81,6 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     vbox->addWidget(buttonBox);
-
 
     d->readConfig();
 }

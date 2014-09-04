@@ -29,14 +29,14 @@ class KJob;
 
 class ItemDumper : public QObject
 {
-  Q_OBJECT
-  public:
-    ItemDumper( const QString &path, const QString &filename, const QString &mimetype, int count );
+    Q_OBJECT
+public:
+    ItemDumper(const QString &path, const QString &filename, const QString &mimetype, int count);
 
-  private Q_SLOTS:
-    void done(KJob* job);
+private Q_SLOTS:
+    void done(KJob *job);
 
-  private:
+private:
     QTime mTime;
     int mJobCount;
 

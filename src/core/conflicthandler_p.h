@@ -66,7 +66,7 @@ public:
      * @param type The type of the conflict that should be resolved.
      * @param parent The parent object.
      */
-    explicit ConflictHandler( ConflictType type, QObject *parent = 0 );
+    explicit ConflictHandler(ConflictType type, QObject *parent = 0);
 
     /**
      * Sets the items that causes the conflict.
@@ -75,7 +75,7 @@ public:
      * @param conflictingItem The item from the Akonadi storage that is conflicting.
      *                        This needs only the id set, the payload will be refetched automatically.
      */
-    void setConflictingItems( const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem );
+    void setConflictingItems(const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem);
 
 public Q_SLOTS:
     /**
@@ -96,12 +96,12 @@ Q_SIGNALS:
      *
      * @param message A user visible string that describes the error.
      */
-    void error( const QString &message );
+    void error(const QString &message);
 
 private Q_SLOTS:
-    void slotOtherItemFetched( KJob * );
-    void slotUseLocalItemFinished( KJob * );
-    void slotUseBothItemsFinished( KJob * );
+    void slotOtherItemFetched(KJob *);
+    void slotUseLocalItemFinished(KJob *);
+    void slotUseBothItemsFinished(KJob *);
     void resolve();
 
 private:

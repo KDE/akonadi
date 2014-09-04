@@ -76,7 +76,7 @@ void CollectionRequester::Private::fetchCollection(const Collection &collection)
 
 void CollectionRequester::Private::_k_collectionReceived(KJob *job)
 {
-    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
+    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
     Collection::List chain;
     if (fetch->collections().size() == 1) {
         Collection currentCollection = fetch->collections().first();
@@ -92,12 +92,12 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
                 q, SLOT(_k_collectionsNamesReceived(KJob*)));
     } else {
         _k_collectionsNamesReceived(job);
-  }
+    }
 }
 
 void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
 {
-    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
+    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
     const qint64 originalId = fetch->property("OriginalCollectionId").toLongLong();
 
     QMap<qint64, Collection> names;
@@ -111,7 +111,7 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
         namesList.prepend(currentCollection.displayName());
         currentCollection = names.take(currentCollection.parent());
     }
-    edit->setText(namesList.join(QLatin1String( "/")));
+    edit->setText(namesList.join(QLatin1String("/")));
 }
 
 void CollectionRequester::Private::init()

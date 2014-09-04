@@ -78,7 +78,7 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
 
     vbox->addWidget(d->mTagWidget);
 
-    d->mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    d->mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = d->mButtonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);

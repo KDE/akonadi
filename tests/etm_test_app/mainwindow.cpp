@@ -29,58 +29,56 @@
 
 using namespace Akonadi;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
-  : QMainWindow(parent, flags)
+MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
+    : QMainWindow(parent, flags)
 {
-  FakeMonitor *monitor = new FakeMonitor( this );
-  FakeSession *session = new FakeSession( "FS1", FakeSession::EndJobsImmediately, this );
-  monitor->setSession( session );
+    FakeMonitor *monitor = new FakeMonitor(this);
+    FakeSession *session = new FakeSession("FS1", FakeSession::EndJobsImmediately, this);
+    monitor->setSession(session);
 
-  m_model = new EntityTreeModel( monitor, this );
-  m_serverData = new FakeServerData( m_model, session, monitor );
+    m_model = new EntityTreeModel(monitor, this);
+    m_serverData = new FakeServerData(m_model, session, monitor);
 
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( m_serverData, QLatin1String(
-    "- C (inode/directory) 'Col 1' 4"
-    "- - C (text/directory, message/rfc822) 'Col 2' 3"
-    // Items just have the mimetype they contain in the payload.
-    "- - - I text/directory"
-    "- - - I text/directory 'Item 1'"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory) 'Col 3' 3"
-    "- - - C (text/directory) 'Col 4' 2"
-    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
-    "- - - - - I text/directory"
-    "- - - - - I text/directory"
-    "- - - - I text/directory"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - C (message/rfc822) 'Col 6' 3"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory, message/rfc822) 'Col 7' 3"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822")
-  );
-  m_serverData->setCommands( initialFetchResponse );
+    QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(m_serverData, QLatin1String(
+        "- C (inode/directory) 'Col 1' 4"
+        "- - C (text/directory, message/rfc822) 'Col 2' 3"
+        // Items just have the mimetype they contain in the payload.
+        "- - - I text/directory"
+        "- - - I text/directory 'Item 1'"
+        "- - - I message/rfc822"
+        "- - - I message/rfc822"
+        "- - C (text/directory) 'Col 3' 3"
+        "- - - C (text/directory) 'Col 4' 2"
+        "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
+        "- - - - - I text/directory"
+        "- - - - - I text/directory"
+        "- - - - I text/directory"
+        "- - - I text/directory"
+        "- - - I text/directory"
+        "- - C (message/rfc822) 'Col 6' 3"
+        "- - - I message/rfc822"
+        "- - - I message/rfc822"
+        "- - C (text/directory, message/rfc822) 'Col 7' 3"
+        "- - - I text/directory"
+        "- - - I text/directory"
+        "- - - I message/rfc822"
+        "- - - I message/rfc822"));
+    m_serverData->setCommands(initialFetchResponse);
 
-  EntityTreeView *view = new EntityTreeView( this );
-  view->setModel( m_model );
+    EntityTreeView *view = new EntityTreeView(this);
+    view->setModel(m_model);
 
-  view->expandAll();
-  setCentralWidget( view );
+    view->expandAll();
+    setCentralWidget(view);
 
-  QTimer::singleShot(5000, this, SLOT(moveCollection()));
+    QTimer::singleShot(5000, this, SLOT(moveCollection()));
 }
 
 void MainWindow::moveCollection()
 {
-  // Move Col 3 from Col 4 to Col 7
-  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( QLatin1String("Col 4"), QLatin1String("Col 3"), QLatin1String("Col 7"), m_serverData );
+    // Move Col 3 from Col 4 to Col 7
+    FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand(QLatin1String("Col 4"), QLatin1String("Col 3"), QLatin1String("Col 7"), m_serverData);
 
-  m_serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
-  m_serverData->processNotifications();
+    m_serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
+    m_serverData->processNotifications();
 }
-

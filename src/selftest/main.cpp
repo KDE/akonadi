@@ -26,22 +26,22 @@
 
 int main(int argc, char *argv[])
 {
-  QCommandLineParser parser;
-  KAboutData about(QStringLiteral("akonadiselftest"),
-                   i18n("Akonadi Self Test"),
-                   QStringLiteral("1.0"),
-                   i18n("Checks and reports state of Akonadi server"),
-                   KAboutLicense::GPL_V2,
-                   i18n("(c) 2008 Volker Krause <vkrause@kde.org>"));
-  about.setupCommandLine(&parser);
+    QCommandLineParser parser;
+    KAboutData about(QStringLiteral("akonadiselftest"),
+                     i18n("Akonadi Self Test"),
+                     QStringLiteral("1.0"),
+                     i18n("Checks and reports state of Akonadi server"),
+                     KAboutLicense::GPL_V2,
+                     i18n("(c) 2008 Volker Krause <vkrause@kde.org>"));
+    about.setupCommandLine(&parser);
 
-  QApplication app(argc, argv);
-  QCoreApplication::setApplicationName(QStringLiteral("akonadiselftest"));
-  QCoreApplication::setApplicationVersion(QLatin1String("1.0"));
-  parser.process(app);
+    QApplication app(argc, argv);
+    QCoreApplication::setApplicationName(QStringLiteral("akonadiselftest"));
+    QCoreApplication::setApplicationVersion(QLatin1String("1.0"));
+    parser.process(app);
 
-  SelfTestDialog dlg;
-  dlg.show();
+    SelfTestDialog dlg;
+    dlg.show();
 
-  return app.exec();
+    return app.exec();
 }

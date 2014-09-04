@@ -91,8 +91,8 @@ public:
     {
     }
 
-    void currentAgentInstanceChanged(const QModelIndex &, const QModelIndex &);
-    void currentAgentInstanceDoubleClicked(const QModelIndex &);
+    void currentAgentInstanceChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex);
+    void currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex);
     void currentAgentInstanceClicked(const QModelIndex &currentIndex);
 
     AgentInstanceWidget *mParent;
@@ -266,7 +266,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
 
     const QPixmap iconPixmap = icon.pixmap(decorationSize);
 
-    QPalette::ColorGroup cg = option.state &QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
+    QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
     if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
         cg = QPalette::Inactive;
     }

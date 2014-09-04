@@ -36,15 +36,15 @@ namespace Akonadi {
  */
 class ConflictResolveDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new conflict resolve dialog.
      *
      * @param parent The parent widget.
      */
-    explicit ConflictResolveDialog( QWidget *parent = 0 );
+    explicit ConflictResolveDialog(QWidget *parent = 0);
 
     /**
      * Sets the items that causes the conflict.
@@ -54,19 +54,19 @@ class ConflictResolveDialog : public QDialog
      *
      * @note Both items need the full payload set.
      */
-    void setConflictingItems( const Akonadi::Item &localItem, const Akonadi::Item &otherItem );
+    void setConflictingItems(const Akonadi::Item &localItem, const Akonadi::Item &otherItem);
 
     /**
      * Returns the resolve strategy the user choose.
      */
     ConflictHandler::ResolveStrategy resolveStrategy() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotUseLocalItemChoosen();
     void slotUseOtherItemChoosen();
     void slotUseBothItemsChoosen();
 
-  private:
+private:
     ConflictHandler::ResolveStrategy mResolveStrategy;
 
     Akonadi::Item mLocalItem;

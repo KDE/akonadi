@@ -29,20 +29,22 @@ using namespace Akonadi;
 
 int main()
 {
-  KComponentData data( "pluginloadertest" );
+    KComponentData data("pluginloadertest");
 
-  PluginLoader *loader = PluginLoader::self();
+    PluginLoader *loader = PluginLoader::self();
 
-  const QStringList types = loader->names();
-  qDebug( "Types:" );
-  for ( int i = 0; i < types.count(); ++i )
-    qDebug( "%s", qPrintable( types.at( i ) ) );
+    const QStringList types = loader->names();
+    qDebug("Types:");
+    for (int i = 0; i < types.count(); ++i) {
+        qDebug("%s", qPrintable(types.at(i)));
+    }
 
-  QObject *object = loader->createForName( QLatin1String("text/vcard@KABC::Addressee") );
-  if ( qobject_cast<ItemSerializerPlugin*>( object ) != 0 )
-    qDebug( "Loaded plugin for mimetype 'text/vcard@KABC::Addressee' successfully" );
-  else
-    qDebug( "Unable to load plugin for mimetype 'text/vcard'" );
+    QObject *object = loader->createForName(QLatin1String("text/vcard@KABC::Addressee"));
+    if (qobject_cast<ItemSerializerPlugin *>(object) != 0) {
+        qDebug("Loaded plugin for mimetype 'text/vcard@KABC::Addressee' successfully");
+    } else {
+        qDebug("Unable to load plugin for mimetype 'text/vcard'");
+    }
 
-  return 0;
+    return 0;
 }

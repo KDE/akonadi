@@ -112,7 +112,7 @@ public:
 
     QTimer *mTemporaryOfflineTimer;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     // Dump the contents of the current ChangeReplay
     Q_SCRIPTABLE QString dumpNotificationListToString() const;
     Q_SCRIPTABLE void dumpMemoryInfo() const;

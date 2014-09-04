@@ -31,8 +31,7 @@ namespace Akonadi {
 /**
  * @internal
  */
-namespace CollectionUtils
-{
+namespace CollectionUtils {
 inline bool isVirtualParent(const Collection &collection)
 {
     return (collection.parentCollection() == Collection::root() && collection.isVirtual());

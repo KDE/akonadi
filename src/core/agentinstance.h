@@ -29,8 +29,7 @@
 class QString;
 class QWidget;
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class AgentType;
 

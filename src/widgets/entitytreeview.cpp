@@ -107,8 +107,9 @@ void EntityTreeView::Private::init()
     Control::widgetNeedsAkonadi(mParent);
 }
 
-void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &)
+void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    Q_UNUSED(deselected)
     const int column = 0;
     foreach (const QItemSelectionRange &range, selected) {
         const QModelIndex index = range.topLeft();

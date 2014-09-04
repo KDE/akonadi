@@ -64,7 +64,7 @@ public:
         QLineEdit *filterCollectionLineEdit = new QLineEdit(widget);
         filterCollectionLineEdit->setClearButtonEnabled(true);
         filterCollectionLineEdit->setPlaceholderText(i18nc("@info Displayed grayed-out inside the "
-                                                        "textbox, verb to search", "Search"));
+                                                           "textbox, verb to search", "Search"));
         layout->addWidget(filterCollectionLineEdit);
 
         mView = new EntityTreeView;
@@ -143,19 +143,19 @@ public:
 
     void readConfig()
     {
-        KConfig config( QLatin1String( "akonadi_contactrc" ) );
-        KConfigGroup group( &config, QLatin1String( "CollectionDialog" ) );
-        const QSize size = group.readEntry( "Size", QSize(800,  500) );
-        if ( size.isValid() ) {
-            mParent->resize( size );
+        KConfig config(QLatin1String("akonadi_contactrc"));
+        KConfigGroup group(&config, QLatin1String("CollectionDialog"));
+        const QSize size = group.readEntry("Size", QSize(800,  500));
+        if (size.isValid()) {
+            mParent->resize(size);
         }
     }
 
     void writeConfig()
     {
-        KConfig config( QLatin1String( "akonadi_contactrc" ) );
-        KConfigGroup group( &config, QLatin1String( "CollectionDialog" ) );
-        group.writeEntry( "Size", mParent->size() );
+        KConfig config(QLatin1String("akonadi_contactrc"));
+        KConfigGroup group(&config, QLatin1String("CollectionDialog"));
+        group.writeEntry("Size", mParent->size());
         group.sync();
     }
 

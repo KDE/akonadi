@@ -323,7 +323,6 @@ void AgentBasePrivate::init()
     migrate.setConfigFiles(QStringList() << QString::fromLatin1("%1rc").arg(mId));
     migrate.migrate();
 
-
     /**
      * Create a default session for this process.
      */
@@ -430,7 +429,7 @@ void AgentBasePrivate::setProgramName()
     if (!mName.isEmpty()) {
         programName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName) ;
     }
-    const_cast<K4AboutData*>(KGlobal::mainComponent().aboutData())->setProgramName(ki18n(programName.toUtf8().constData()));
+    const_cast<K4AboutData *>(KGlobal::mainComponent().aboutData())->setProgramName(ki18n(programName.toUtf8().constData()));
 }
 
 void AgentBasePrivate::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
@@ -761,8 +760,8 @@ void AgentBasePrivate::slotResumedFromSuspend()
 
 void AgentBasePrivate::slotTemporaryOfflineTimeout()
 {
-  Q_Q(AgentBase);
-  q->setOnlineInternal(true);
+    Q_Q(AgentBase);
+    q->setOnlineInternal(true);
 }
 
 QString AgentBasePrivate::dumpNotificationListToString() const
@@ -788,18 +787,18 @@ QString AgentBasePrivate::dumpMemoryInfoToString() const
     mi = mallinfo();
     QTextStream stream(&str);
     stream
-      << "Total non-mmapped bytes (arena):      " << mi.arena     << '\n'
-      << "# of free chunks (ordblks):           " << mi.ordblks   << '\n'
-      << "# of free fastbin blocks (smblks>:    " << mi.smblks    << '\n'
-      << "# of mapped regions (hblks):          " << mi.hblks     << '\n'
-      << "Bytes in mapped regions (hblkhd):     " << mi.hblkhd    << '\n'
-      << "Max. total allocated space (usmblks): " << mi.usmblks   << '\n'
-      << "Free bytes held in fastbins (fsmblks):" << mi.fsmblks   << '\n'
-      << "Total allocated space (uordblks):     " << mi.uordblks  << '\n'
-      << "Total free space (fordblks):          " << mi.fordblks  << '\n'
-      << "Topmost releasable block (keepcost):  " << mi.keepcost  << '\n';
+            << "Total non-mmapped bytes (arena):      " << mi.arena     << '\n'
+            << "# of free chunks (ordblks):           " << mi.ordblks   << '\n'
+            << "# of free fastbin blocks (smblks>:    " << mi.smblks    << '\n'
+            << "# of mapped regions (hblks):          " << mi.hblks     << '\n'
+            << "Bytes in mapped regions (hblkhd):     " << mi.hblkhd    << '\n'
+            << "Max. total allocated space (usmblks): " << mi.usmblks   << '\n'
+            << "Free bytes held in fastbins (fsmblks):" << mi.fsmblks   << '\n'
+            << "Total allocated space (uordblks):     " << mi.uordblks  << '\n'
+            << "Total free space (fordblks):          " << mi.fordblks  << '\n'
+            << "Topmost releasable block (keepcost):  " << mi.keepcost  << '\n';
 #else
-    str = QLatin1String( "mallinfo() not supported" );
+    str = QLatin1String("mallinfo() not supported");
 #endif
     return str;
 }
@@ -863,7 +862,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
 int AgentBase::init(AgentBase *r)
 {
     QApplication::setQuitOnLastWindowClosed(false);
-    KLocalizedString::setApplicationDomain( "libakonadi5" );
+    KLocalizedString::setApplicationDomain("libakonadi5");
     int rv = kapp->exec();
     delete r;
     return rv;
@@ -931,25 +930,25 @@ void AgentBase::setOnline(bool state)
 
 void AgentBase::setTemporaryOffline(int makeOnlineInSeconds)
 {
-  Q_D(AgentBase);
+    Q_D(AgentBase);
 
-  // if not currently online, avoid bringing it online after the timeout
-  if (!d->mOnline) {
-      return;
-  }
+    // if not currently online, avoid bringing it online after the timeout
+    if (!d->mOnline) {
+        return;
+    }
 
-  setOnlineInternal(false);
+    setOnlineInternal(false);
 
-  if (!d->mTemporaryOfflineTimer) {
-      d->mTemporaryOfflineTimer = new QTimer(d);
-      d->mTemporaryOfflineTimer->setSingleShot(true);
-      connect(d->mTemporaryOfflineTimer, SIGNAL(timeout()), this, SLOT(slotTemporaryOfflineTimeout()));
-  }
-  d->mTemporaryOfflineTimer->setInterval(makeOnlineInSeconds * 1000);
-  d->mTemporaryOfflineTimer->start();
+    if (!d->mTemporaryOfflineTimer) {
+        d->mTemporaryOfflineTimer = new QTimer(d);
+        d->mTemporaryOfflineTimer->setSingleShot(true);
+        connect(d->mTemporaryOfflineTimer, SIGNAL(timeout()), this, SLOT(slotTemporaryOfflineTimeout()));
+    }
+    d->mTemporaryOfflineTimer->setInterval(makeOnlineInSeconds * 1000);
+    d->mTemporaryOfflineTimer->start();
 }
 
-void AgentBase::setOnlineInternal( bool state )
+void AgentBase::setOnlineInternal(bool state)
 {
     Q_D(AgentBase);
     if (state && d->mNeedsNetwork) {
@@ -966,9 +965,9 @@ void AgentBase::setOnlineInternal( bool state )
     }
 
     const QString newMessage = d->defaultReadyMessage();
-    if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken ) {
-        emit status( d->mStatusCode, newMessage );
-     }
+    if (d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken) {
+        emit status(d->mStatusCode, newMessage);
+    }
 
     doSetOnline(state);
     emit onlineChanged(state);
@@ -1154,8 +1153,9 @@ void AgentBase::setAgentName(const QString &name)
     if (d->mName.isEmpty() || d->mName == d->mId) {
         d->mSettings->remove(QStringLiteral("Resource/Name"));
         d->mSettings->remove(QStringLiteral("Agent/Name"));
-    } else
+    } else {
         d->mSettings->setValue(QStringLiteral("Agent/Name"), d->mName);
+    }
 
     d->mSettings->sync();
 

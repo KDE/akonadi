@@ -56,8 +56,7 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString
     connect(m_lineEdit, SIGNAL(textChanged(QString)),
             SLOT(slotEditTextChanged(QString)));
 
-
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     QPushButton *defaultButtonName = new QPushButton(i18n("Default Name"));
     buttonBox->addButton(defaultButtonName, QDialogButtonBox::ActionRole);

@@ -29,8 +29,7 @@
 
 #include "akonadiwidgets_export.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver  //krazy:exclude=dpointer
 {

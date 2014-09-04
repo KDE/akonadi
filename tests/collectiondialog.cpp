@@ -26,16 +26,14 @@
 #include <QCommandLineParser>
 #include <kaboutdata.h>
 
-
-
 using namespace Akonadi;
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData( QStringLiteral("test"),
-                          i18n("Test Application"),
-                          QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("test"),
+                         i18n("Test Application"),
+                         QLatin1String("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -47,16 +45,17 @@ int main( int argc, char **argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-  CollectionDialog dlg;
-  dlg.setMimeTypeFilter( QStringList() << QLatin1String( "text/directory" ) );
-  dlg.setAccessRightsFilter( Collection::CanCreateItem );
-  dlg.setDescription( i18n( "Select an address book for saving:" ) );
-  dlg.setSelectionMode( QAbstractItemView::ExtendedSelection );
-  dlg.changeCollectionDialogOptions( CollectionDialog::AllowToCreateNewChildCollection );
-  dlg.exec();
+    CollectionDialog dlg;
+    dlg.setMimeTypeFilter(QStringList() << QLatin1String("text/directory"));
+    dlg.setAccessRightsFilter(Collection::CanCreateItem);
+    dlg.setDescription(i18n("Select an address book for saving:"));
+    dlg.setSelectionMode(QAbstractItemView::ExtendedSelection);
+    dlg.changeCollectionDialogOptions(CollectionDialog::AllowToCreateNewChildCollection);
+    dlg.exec();
 
-  foreach ( const Collection &collection, dlg.selectedCollections() )
-    qDebug() << "Selected collection:" << collection.name();
+    foreach (const Collection &collection, dlg.selectedCollections()) {
+        qDebug() << "Selected collection:" << collection.name();
+    }
 
-  return 0;
+    return 0;
 }

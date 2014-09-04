@@ -51,18 +51,19 @@ RecentCollectionAction::~RecentCollectionAction()
 
 bool RecentCollectionAction::clear()
 {
-     delete mRecentAction->menu();
-     if (mListRecentCollection.isEmpty()) {
-         mRecentAction->setEnabled(false);
-         return true;
-     }
-     return false;
+    delete mRecentAction->menu();
+    if (mListRecentCollection.isEmpty()) {
+        mRecentAction->setEnabled(false);
+        return true;
+    }
+    return false;
 }
 
 void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList)
 {
-    if (clear())
+    if (clear()) {
         return;
+    }
 
     QMenu *popup = new QMenu;
     mRecentAction->setMenu(popup);
@@ -74,7 +75,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
         if (index.isValid()) {
             const bool collectionIsSelected = selectedCollectionsList.contains(collection);
             if (type == Akonadi::StandardActionManager::MoveCollectionToMenu && collectionIsSelected) {
-               continue;
+                continue;
             }
 
             const bool canCreateNewItems = (collection.rights() &Collection::CanCreateItem);

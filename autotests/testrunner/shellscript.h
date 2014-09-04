@@ -22,17 +22,16 @@
 #include <QVector>
 #include <QPair>
 
-
 class ShellScript
 {
-  public:
+public:
     ShellScript();
-    void makeShellScript( const QString &filename );
+    void makeShellScript(const QString &filename);
 
     typedef QPair<QByteArray, QByteArray> EnvVar;
-    void setEnvironmentVariables( const QVector<EnvVar> &envVars );
+    void setEnvironmentVariables(const QVector<EnvVar> &envVars);
 
-  private:
+private:
     void writeEnvironmentVariables();
     void writeShutdownFunction();
 

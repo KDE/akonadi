@@ -24,10 +24,10 @@
 
 class Config
 {
-  public:
+public:
     Config();
     ~Config();
-    static Config *instance( const QString &pathToConfig = QString() );
+    static Config *instance(const QString &pathToConfig = QString());
     static void destroyInstance();
     QString kdeHome() const;
     QString xdgDataHome() const;
@@ -35,16 +35,16 @@ class Config
     QList<QPair<QString, bool> > agents() const;
     QHash<QString, QString> envVars() const;
 
-  protected:
-    void setKdeHome( const QString &home );
-    void setXdgDataHome( const QString &dataHome );
-    void setXdgConfigHome( const QString &configHome );
-    void insertAgent( const QString &agent, bool sync );
+protected:
+    void setKdeHome(const QString &home);
+    void setXdgDataHome(const QString &dataHome);
+    void setXdgConfigHome(const QString &configHome);
+    void insertAgent(const QString &agent, bool sync);
 
-  private:
+private:
     void readConfiguration(const QString &configFile);
 
-  private:
+private:
     QString mKdeHome;
     QString mXdgDataHome;
     QString mXdgConfigHome;

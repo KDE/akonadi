@@ -23,7 +23,6 @@
 #include "collectionmodel.h"
 #include "control.h"
 
-
 #include <QAction>
 #include <QMimeData>
 #include <qdebug.h>
@@ -56,8 +55,8 @@ public:
 
     void init();
     void dragExpand();
-    void itemClicked(const QModelIndex &);
-    void itemCurrentChanged(const QModelIndex &);
+    void itemClicked(const QModelIndex &index);
+    void itemCurrentChanged(const QModelIndex &index);
     bool hasParent(const QModelIndex &idx, Collection::Id parentId);
 
     CollectionView *mParent;
@@ -202,12 +201,12 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
             }
         } else {
             QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
-            for (int i = 0;i<query.count(); ++i) {
-                if ( query.at(i).first == QString::fromLatin1("type")) {
-                   const QString type = query.at(i).second;
-                   if (!supportedContentTypes.contains(type)) {
-                      break;
-                   }
+            for (int i = 0; i < query.count(); ++i) {
+                if (query.at(i).first == QString::fromLatin1("type")) {
+                    const QString type = query.at(i).second;
+                    if (!supportedContentTypes.contains(type)) {
+                        break;
+                    }
                 }
             }
         }

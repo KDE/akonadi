@@ -28,8 +28,7 @@
 #include "item.h"
 #include <akonadi/private/notificationmessagev2_p.h>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class Job;
 class JobPrivate;

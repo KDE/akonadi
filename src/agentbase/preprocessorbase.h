@@ -27,8 +27,7 @@
 #include "collection.h"
 #include "item.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class ItemFetchScope;
 

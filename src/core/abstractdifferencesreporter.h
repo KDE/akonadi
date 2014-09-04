@@ -91,38 +91,40 @@ namespace Akonadi {
  */
 class AbstractDifferencesReporter
 {
-  public:
+public:
     /**
      * Describes the property modes.
      */
     enum Mode {
-      NormalMode,         ///< The left and right column show the same property values.
-      ConflictMode,       ///< The left and right column show conflicting property values.
-      AdditionalLeftMode, ///< The left column contains a property value that is not available in the right column.
-      AdditionalRightMode ///< The right column contains a property value that is not available in the left column.
+        NormalMode,         ///< The left and right column show the same property values.
+        ConflictMode,       ///< The left and right column show conflicting property values.
+        AdditionalLeftMode, ///< The left column contains a property value that is not available in the right column.
+        AdditionalRightMode ///< The right column contains a property value that is not available in the left column.
     };
 
     /**
      * Destroys the abstract differences reporter.
      */
-    virtual ~AbstractDifferencesReporter() {}
+    virtual ~AbstractDifferencesReporter()
+    {
+    }
 
     /**
      * Sets the @p title of the property name column.
      */
-    virtual void setPropertyNameTitle( const QString &title ) = 0;
+    virtual void setPropertyNameTitle(const QString &title) = 0;
 
     /**
      * Sets the @p title of the column that shows the property values
      * of the left object.
      */
-    virtual void setLeftPropertyValueTitle( const QString &title ) = 0;
+    virtual void setLeftPropertyValueTitle(const QString &title) = 0;
 
     /**
      * Sets the @p title of the column that shows the property values
      * of the right object.
      */
-    virtual void setRightPropertyValueTitle( const QString &title ) = 0;
+    virtual void setRightPropertyValueTitle(const QString &title) = 0;
 
     /**
      * Adds a new property entry to the table.
@@ -133,7 +135,7 @@ class AbstractDifferencesReporter
      * @param leftValue The user visible property value of the left object.
      * @param rightValue The user visible property value of the right object.
      */
-    virtual void addProperty( Mode mode, const QString &name, const QString &leftValue, const QString &rightValue ) = 0;
+    virtual void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) = 0;
 };
 
 }

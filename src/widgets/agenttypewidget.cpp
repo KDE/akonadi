@@ -19,7 +19,6 @@
 
 #include "agenttypewidget.h"
 
-
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QListView>

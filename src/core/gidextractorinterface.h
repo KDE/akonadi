@@ -38,7 +38,9 @@ public:
     /**
      * Destructor.
      */
-    virtual ~GidExtractorInterface() {}
+    virtual ~GidExtractorInterface()
+    {
+    }
     /**
      * Extracts the globally unique id of @p item
      *

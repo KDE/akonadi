@@ -28,8 +28,14 @@
 #include <QtCore/QString>
 
 #define AKONADI_DEFINE_PRIVATE( Class ) \
-Class##Private *Class ::d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \
-const Class##Private *Class ::d_func() const { return reinterpret_cast<const Class##Private *>( d_ptr.data() ); }
+Class##Private *Class ::d_func() \
+{\
+    return reinterpret_cast<Class##Private *>( d_ptr.data() );\
+} \
+const Class##Private *Class ::d_func() const \
+{\
+    return reinterpret_cast<const Class##Private *>( d_ptr.data() );\
+}
 
 namespace Akonadi {
 

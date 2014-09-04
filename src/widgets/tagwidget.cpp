@@ -26,7 +26,6 @@
 #include "changerecorder.h"
 #include "tagselectiondialog.h"
 
-
 #include <klocalizedstring.h>
 #include <ksqueezedtextlabel.h>
 

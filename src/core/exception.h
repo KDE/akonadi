@@ -79,14 +79,20 @@ private:
 class AKONADICORE_EXPORT classname : public Akonadi::Exception \
 { \
   public: \
-    classname ( const char *what ) throw() : Akonadi::Exception( what ) {} \
-    classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) {} \
-    classname ( const QString &what ) throw() : Akonadi::Exception( what ) {} \
+    classname ( const char *what ) throw() : Akonadi::Exception( what ) \
+    { \
+    } \
+    classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) \
+    { \
+    } \
+    classname ( const QString &what ) throw() : Akonadi::Exception( what ) \
+    { \
+    } \
     ~classname() throw(); \
     QByteArray type() const throw(); \
 }
 
-AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( PayloadException );
+AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);
 
 #undef AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE
 

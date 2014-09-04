@@ -25,11 +25,9 @@
 
 #include <QObject>
 
-
 class KJob;
 
 namespace Akonadi {
-
 
 class AgentSearchInterfacePrivate : public QObject
 {

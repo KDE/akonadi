@@ -25,8 +25,6 @@
 
 #include <QtCore/QString>
 
-
-
 namespace Akonadi {
 
 class TransportResourceBasePrivate;
