@@ -76,7 +76,10 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
         } else {
             parent = mCollections.value(parent.parentId());
         }
-        Q_ASSERT(parent.isValid());
+        if (!parent.isValid()) {
+            qWarning() << col.id();
+            throw HandlerException("Found invalid parent in ancestors");
+        }
         ancestors.prepend(parent);
     }
     return ancestors;
