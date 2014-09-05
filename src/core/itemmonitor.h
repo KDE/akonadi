@@ -23,7 +23,6 @@
 #include "akonadicore_export.h"
 #include <qglobal.h>
 
-
 namespace Akonadi {
 
 class Item;

@@ -24,8 +24,7 @@
 
 #include "akonadicore_export.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
  * Search term represents the actual condition within query.

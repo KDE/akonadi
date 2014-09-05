@@ -192,7 +192,6 @@ public:
     static QByteArray tagSetToImapSequenceSet(const Akonadi::Tag::List &_objects);
     static QByteArray tagSetToByteArray(const Akonadi::Tag::List &_objects, const QByteArray &command);
 
-
     static QByteArray commandContextToByteArray(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
                                                 const Item::List &requestedItems, const QByteArray &command);
 
@@ -226,7 +225,7 @@ public:
     /**
       Converts a given TagFetchScope object into a protocol representation.
     */
-    static QByteArray tagFetchScopeToByteArray( const TagFetchScope &fetchScope );
+    static QByteArray tagFetchScopeToByteArray(const TagFetchScope &fetchScope);
 
     /**
       Parses a single line from an item fetch job result into an Item object.

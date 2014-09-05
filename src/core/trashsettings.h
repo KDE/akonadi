@@ -36,8 +36,7 @@ namespace Akonadi {
   * @since 4.8
   */
 //TODO setting for time before items are deleted by janitor agent
-namespace TrashSettings
-{
+namespace TrashSettings {
 /**
  * Set the trash collection for the given @p resource which is then used by the TrashJob
  */
