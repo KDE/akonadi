@@ -22,7 +22,7 @@ PRIVATE
 set_target_properties(KF5AkonadiPrivate PROPERTIES
     VERSION ${AKONADI_VERSION_STRING}
     SOVERSION ${AKONADI_SOVERSION}
-    EXPORT_NAME AkonadiPrivate
+    EXPORT_NAME KF5AkonadiPrivate
 )
 
 install(TARGETS
