@@ -57,7 +57,7 @@ int main(int argc, char **argv) \
       } \
   } \
   TestObject tc; \
-  char **fakeArgv = (char **) malloc(options.count()); \
+  char **fakeArgv = (char **) malloc(options.count() * sizeof(char**)); \
   for (int i = 0; i < options.count(); ++i) { \
       fakeArgv[i] = options[i]; \
   } \
