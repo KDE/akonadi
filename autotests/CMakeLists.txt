@@ -38,7 +38,7 @@ macro(add_akonadi_test _source)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
-  target_link_libraries(${_name}  akonaditestfake Qt5::Test     KF5::AkonadiPrivate )
+  target_link_libraries(${_name}  akonaditestfake Qt5::Test     KF5::KF5AkonadiPrivate )
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -48,7 +48,7 @@ macro(add_akonadi_test_widgets _source)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
-  target_link_libraries(${_name}  akonaditestfake Qt5::Test    KF5::AkonadiWidgets KF5::AkonadiPrivate )
+  target_link_libraries(${_name}  akonaditestfake Qt5::Test    KF5::AkonadiWidgets KF5::KF5AkonadiPrivate )
 endmacro()
 
 
