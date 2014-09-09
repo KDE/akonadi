@@ -276,34 +276,35 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             }
         }
 
-        if (mCollectionsToSynchronize) {
-            qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
-        } else if (mCollectionsToDisplay) {
-            qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
-        } else if (mCollectionsToIndex) {
-            qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
-        } else if (mEnabledCollections) {
-            Query::Condition orCondition(Query::Or);
-            orCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
-            orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
-            qb.addCondition(orCondition);
-        }
-
-        if (mResource.isValid()) {
-            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, mResource.id());
-        }
-
-        if (!mMimeTypes.isEmpty()) {
-            qb.addJoin(QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftColumn(), Collection::idFullColumnName());
-            QVariantList mimeTypeFilter;
-            Q_FOREACH(MimeType::Id mtId, mMimeTypes) {
-                mimeTypeFilter << mtId;
+        //Base listings should succeed always
+        if (depth != 0) {
+            if (mCollectionsToSynchronize) {
+                qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
+            } else if (mCollectionsToDisplay) {
+                qDebug() << "only display";
+                qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
+            } else if (mCollectionsToIndex) {
+                qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
+            } else if (mEnabledCollections) {
+                Query::Condition orCondition(Query::Or);
+                orCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
+                orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
+                qb.addCondition(orCondition);
             }
-            qb.addValueCondition(CollectionMimeTypeRelation::rightColumn(), Query::In, mimeTypeFilter);
-            qb.addGroupColumn(Collection::idFullColumnName());
-        }
+            if (mResource.isValid()) {
+                qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, mResource.id());
+            }
 
-        // qb.addSortColumn(Collection::idFullColumnName(), Query::Ascending);
+            if (!mMimeTypes.isEmpty()) {
+                qb.addJoin(QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftColumn(), Collection::idFullColumnName());
+                QVariantList mimeTypeFilter;
+                Q_FOREACH(MimeType::Id mtId, mMimeTypes) {
+                    mimeTypeFilter << mtId;
+                }
+                qb.addValueCondition(CollectionMimeTypeRelation::rightColumn(), Query::In, mimeTypeFilter);
+                qb.addGroupColumn(Collection::idFullColumnName());
+            }
+        }
 
         if (!qb.exec()) {
             throw HandlerException("Unable to retrieve collection for listing");

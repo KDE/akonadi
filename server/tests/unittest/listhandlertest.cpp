@@ -259,6 +259,15 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
+                    << "C: 2 LIST " + QByteArray::number(col3.id()) + " 0 (DISPLAY  ) ()"
+                    << initializer->listResponse(col3)
+                    << "S: 2 OK List completed";
+            //Listing a disabled collection should still work for base listing
+            QTest::newRow("list base of disabled collection") << scenario;
+        }
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
                     << "C: 2 LIST 0 INF (DISPLAY  ) ()"
                      << initializer->listResponse(initializer->collection("Search"))
                      << initializer->listResponse(col1)
