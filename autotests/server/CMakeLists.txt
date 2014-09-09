@@ -51,6 +51,11 @@ macro(add_server_test _source)
     qt5_add_resources(_test dbtest_data/dbtest_data.qrc)
     add_executable(${_name} ${_test})
     add_test(AkonadiServer-${_name} ${_name})
+    if (ENABLE_ASAN)
+        set_tests_properties(AkonadiServer-${_name} PROPERTIES
+                             ENVIRONMENT ASAN_OPTIONS=symbolize=1
+        )
+    endif()
     target_link_libraries(${_name}
         akonadi_shared
         akonadi_unittest_common
@@ -61,6 +66,7 @@ macro(add_server_test _source)
         Qt5::Test
         Qt5::Sql
         Qt5::Network
+        ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
     )
 endmacro()
 

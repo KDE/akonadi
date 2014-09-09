@@ -19,6 +19,7 @@ target_link_libraries(akonadictl
     Qt5::Core
     Qt5::DBus
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${CMAKE_EXE_LINKER_FLAGS_ASAN}
 )
 
 install(TARGETS akonadictl

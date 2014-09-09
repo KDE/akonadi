@@ -113,7 +113,7 @@ void AkonadiCrash::init()
 {
     HandlerType handler = defaultCrashHandler;
 
-#ifdef Q_OS_UNIX
+#if defined Q_OS_UNIX && !defined ENABLE_ASAN
     if (!handler) {
         handler = SIG_DFL;
     }

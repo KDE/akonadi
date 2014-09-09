@@ -41,6 +41,7 @@ find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
+option(ENABLE_ASAN "Build Akonadi with AddressSanitzer - https://code.google.com/p/address-sanitizer/" FALSE)
 
 set(SMI_MIN_VERSION "0.20")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION})
@@ -128,6 +129,10 @@ if(HAVE_UNISTD_H)
     add_definitions(-DHAVE_UNISTD_H)
 endif()
 
+if (ENABLE_ASAN)
+    find_package(ASan)
+endif ()
+
 ############### Build Options ###############
 
 include(CTest)  # Calls enable_testing().
@@ -187,6 +192,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
     set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
         "Choose the type of build, options are: None debugfull Debug Release RelWithDebInfo MinSizeRel."
         FORCE)
+
+    if (ASAN_FOUND)
+        set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_ASAN}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_ASAN}")
+        add_definitions(-DENABLE_ASAN)
+    endif()
 
     # coverage support
     if(CMAKE_COMPILE_GCOV)
