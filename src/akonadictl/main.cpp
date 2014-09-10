@@ -159,52 +159,44 @@ static bool statusServer()
 int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
-    app.setDescription(QLatin1String("Akonadi server manipulation tool\n"
-                                     "Usage: akonadictl [command]\n\n"
+
+    app.setDescription(QLatin1String("Akonadi server manipulation tool\n\n"
                                      "Commands:\n"
-                                     "  start      : Starts the Akonadi server with all its processes\n"
-                                     "  stop       : Stops the Akonadi server and all its processes cleanly\n"
-                                     "  restart    : Restart Akonadi server with all its processes\n"
-                                     "  status     : Shows a status overview of the Akonadi server\n"
-                                     "  vacuum     : Vacuum internal storage (WARNING: needs a lot of time and disk space!)\n"
-                                     "  fsck       : Check (and attempt to fix) consistency of the internal storage (can take some time)"));
+                                     "  start          Starts the Akonadi server with all its processes\n"
+                                     "  stop           Stops the Akonadi server and all its processes cleanly\n"
+                                     "  restart        Restart Akonadi server with all its processes\n"
+                                     "  status         Shows a status overview of the Akonadi server\n"
+                                     "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
+                                     "                 space!)\n"
+                                     "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
+                                     "                 (can take some time)"));
+
+
+    app.addPositionalCommandLineOption(QLatin1String("command"), QLatin1String("Command to execute"),
+                                       QLatin1String("start|stop|restart|status|vacuum|fsck"));
 
     app.parseCommandLine();
 
-    QStringList optionsList;
-    optionsList.append(QLatin1String("start"));
-    optionsList.append(QLatin1String("stop"));
-    optionsList.append(QLatin1String("status"));
-    optionsList.append(QLatin1String("restart"));
-    optionsList.append(QLatin1String("vacuum"));
-    optionsList.append(QLatin1String("fsck"));
-
-    QStringList arguments = QCoreApplication::instance()->arguments();
-    if (AkApplication::hasInstanceIdentifier()) {   // HACK: we should port all of this to boost::program_options...
-        arguments.removeFirst();
-        arguments.removeFirst();
-    }
-    if (arguments.count() != 2) {
+    const QStringList commands = app.commandLineArguments().positionalArguments();
+    if (commands.size() != 1) {
         app.printUsage();
-        return 1;
-    } else if (!optionsList.contains(arguments[1])) {
-        app.printUsage();
-        return 2;
+        return -1;
     }
 
-    if (arguments[1] == QLatin1String("start")) {
+    const QString command = commands[0];
+    if (command == QLatin1String("start")) {
         if (!startServer()) {
             return 3;
         }
-    } else if (arguments[1] == QLatin1String("stop")) {
+    } else if (command == QLatin1String("stop")) {
         if (!stopServer()) {
             return 4;
         }
-    } else if (arguments[1] == QLatin1String("status")) {
+    } else if (command == QLatin1String("status")) {
         if (!statusServer()) {
             return 5;
         }
-    } else if (arguments[1] == QLatin1String("restart")) {
+    } else if (command == QLatin1String("restart")) {
         if (!stopServer()) {
             return 4;
         } else {
@@ -219,10 +211,10 @@ int main(int argc, char **argv)
                 return 3;
             }
         }
-    } else if (arguments[1] == QLatin1String("vacuum")) {
+    } else if (command == QLatin1String("vacuum")) {
         QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH));
         iface.call(QDBus::NoBlock, QLatin1String("vacuum"));
-    } else if (arguments[1] == QLatin1String("fsck")) {
+    } else if (command == QLatin1String("fsck")) {
         QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH));
         iface.call(QDBus::NoBlock, QLatin1String("check"));
     }

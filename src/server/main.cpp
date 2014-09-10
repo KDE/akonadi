@@ -40,8 +40,6 @@
 Q_IMPORT_PLUGIN(qsqlite3)
 #endif
 
-namespace po = boost::program_options;
-
 void shutdownHandler(int)
 {
     akDebug() << "Shutting down AkonadiServer...";
@@ -58,15 +56,16 @@ int main(int argc, char **argv)
     app.setDescription(QLatin1String("Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
 
 #if !defined(NDEBUG)
-    po::options_description debugOptions("Debug options (use with care)");
-    debugOptions.add_options()
-    ("start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available");
-    app.addCommandLineOptions(debugOptions);
+    const QCommandLineOption startWithoutControlOption(
+              QLatin1String("start-without-control"),
+              QLatin1String("Allow to start the Akonadi server without the Akonadi control process being available"));
+    app.addCommandLineOptions(startWithoutControlOption);
+
 #endif
 
     app.parseCommandLine();
 
-    if (!app.commandLineArguments().count("start-without-control") &&
+    if (!app.commandLineArguments().isSet(QLatin1String("start-without-control")) &&
         !QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::ControlLock))) {
         akError() << "Akonadi control process not found - aborting.";
         akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";

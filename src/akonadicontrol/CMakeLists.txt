@@ -41,8 +41,6 @@ target_link_libraries(akonadi_control
     KF5AkonadiPrivate
     Qt5::Core
     Qt5::DBus
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${CMAKE_EXE_LINKER_FLAGS_ASAN}
 )
 
 install(TARGETS akonadi_control

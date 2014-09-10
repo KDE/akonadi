@@ -222,8 +222,8 @@ bool FakeAkonadiServer::quit()
     // Stop listening for connections
     close();
 
-    const boost::program_options::variables_map options = AkApplication::instance()->commandLineArguments();
-    if (!options.count("no-cleanup")) {
+    const QCommandLineParser &args = AkApplication::instance()->commandLineArguments();
+    if (!args.isSet(QLatin1String("no-cleanup"))) {
         deleteDirectory(basePath());
         qDebug() << "Cleaned up" << basePath();
     } else {

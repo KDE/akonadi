@@ -13,8 +13,6 @@ target_link_libraries(akonadi_rds
     KF5AkonadiPrivate
     Qt5::Core
     Qt5::Network
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${CMAKE_EXE_LINKER_FLAGS_ASAN}
 )
 
 install(TARGETS akonadi_rds

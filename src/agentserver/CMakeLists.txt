@@ -14,8 +14,6 @@ target_link_libraries(akonadi_agent_server
     Qt5::Core
     Qt5::DBus
     Qt5::Widgets
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${CMAKE_EXE_LINKER_FLAGS_ASAN}
 )
 
 # Agent plugin launcher
@@ -31,8 +29,6 @@ target_link_libraries(akonadi_agent_launcher
     KF5AkonadiPrivate
     Qt5::Core
     Qt5::Widgets
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${CMAKE_EXE_LINKER_FLAGS_ASAN}
 )
 
 if(Q_WS_MAC)

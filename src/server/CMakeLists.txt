@@ -174,15 +174,12 @@ target_link_libraries(libakonadiserver
     Qt5::Sql
     Qt5::DBus
     Qt5::Xml
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
 )
 
 add_executable(akonadiserver ${akonadiserver_SRCS})
 set_target_properties(akonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(akonadiserver
     libakonadiserver
-    ${CMAKE_EXE_LINKER_FLAGS_ASAN}
 )
 
 install(TARGETS akonadiserver

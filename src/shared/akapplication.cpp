@@ -23,11 +23,10 @@
 
 #include <QDBusConnection>
 #include <QTimer>
+#include <QCommandLineParser>
 #include <QtCore/QCoreApplication>
 
 #include <iostream>
-
-namespace po = boost::program_options;
 
 AkApplication *AkApplication::sInstance = 0;
 
@@ -38,6 +37,11 @@ AkApplication::AkApplication(int &argc, char **argv)
 {
     Q_ASSERT(!sInstance);
     sInstance = this;
+
+    QCoreApplication::setApplicationName(QLatin1String("Akonadi"));
+    QCoreApplication::setApplicationVersion(QLatin1String(AKONADI_VERSION_STRING));
+    mCmdLineParser.addHelpOption();
+    mCmdLineParser.addVersionOption();
 }
 
 AkApplication::~AkApplication()
@@ -64,45 +68,22 @@ void AkApplication::init()
     timer->start(10 * 1000);
 }
 
+void AkApplication::setDescription(const QString &desc)
+{
+    mCmdLineParser.setApplicationDescription(desc);
+}
+
 void AkApplication::parseCommandLine()
 {
-    try {
-        po::options_description generalOptions("General options");
-        generalOptions.add_options()
-        ("help,h", "show this help message")
-        ("version", "show version information");
-        mCmdLineOptions.add(generalOptions);
+    const QCommandLineOption instanceOption(QStringList() << QLatin1String("instance"),
+                                            QLatin1String("Namespace for starting multiple Akonadi instances in the same user session"),
+                                            QLatin1String("name"));
+    mCmdLineParser.addOption(instanceOption);
 
-        po::options_description miOptions("Multi-instance options");
-        miOptions.add_options()
-        ("instance", po::value<std::string>(), "Namespace for starting multiple Akonadi instances in the same user session");
-        mCmdLineOptions.add(miOptions);
+    mCmdLineParser.process(QCoreApplication::arguments());
 
-        po::command_line_parser parser(mArgc, mArgv);
-        parser.options(mCmdLineOptions);
-        if (mCmdPositionalOptions.max_total_count() > 0) {
-            parser.positional(mCmdPositionalOptions);
-        }
-        po::store(parser.run(), mCmdLineArguments);
-        po::notify(mCmdLineArguments);
-
-        if (mCmdLineArguments.count("help")) {
-            printUsage();
-            ::exit(0);
-        }
-
-        if (mCmdLineArguments.count("version")) {
-            std::cout << "Akonadi " << AKONADI_VERSION_STRING << std::endl;
-            ::exit(0);
-        }
-
-        if (mCmdLineArguments.count("instance")) {
-            mInstanceId = QString::fromStdString(mCmdLineArguments["instance"].as<std::string>());
-        }
-    } catch (std::exception &e) {
-        std::cerr << "Failed to parse command line arguments: " << e.what() << std::endl;
-        std::cerr << "Run '" << mArgv[0] << " --help' to obtain a list of valid command line arguments." << std::endl;
-        ::exit(1);
+    if (mCmdLineParser.isSet(instanceOption)) {
+        mInstanceId = mCmdLineParser.value(instanceOption);
     }
 }
 
@@ -114,22 +95,19 @@ void AkApplication::pollSessionBus() const
     }
 }
 
-void AkApplication::addCommandLineOptions(const boost::program_options::options_description &desc)
+void AkApplication::addCommandLineOptions(const QCommandLineOption &option)
 {
-    mCmdLineOptions.add(desc);
+    mCmdLineParser.addOption(option);
 }
 
-void AkApplication::addPositionalCommandLineOption(const char *option, int count)
+void AkApplication::addPositionalCommandLineOption(const QString &name, const QString &description, const QString &syntax)
 {
-    mCmdPositionalOptions.add(option, count);
+    mCmdLineParser.addPositionalArgument(name, description, syntax);
 }
 
 void AkApplication::printUsage() const
 {
-    if (!mDescription.isEmpty()) {
-        std::cout << qPrintable(mDescription) << std::endl;
-    }
-    std::cout << mCmdLineOptions << std::endl;
+    std::cout << qPrintable(mCmdLineParser.helpText()) << std::endl;
 }
 
 QString AkApplication::instanceIdentifier()

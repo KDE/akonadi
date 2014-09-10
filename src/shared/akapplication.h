@@ -21,10 +21,7 @@
 #define AKAPPLICATION_H
 
 #include <QtCore/QObject>
-
-#ifndef Q_MOC_RUN
-#include <boost/program_options.hpp>
-#endif
+#include <QtCore/QCommandLineParser>
 
 class QCoreApplication;
 class QApplication;
@@ -38,16 +35,13 @@ class AkApplication : public QObject
 public:
     ~AkApplication();
     void parseCommandLine();
-    void setDescription(const QString &desc)
-    {
-        mDescription = desc;
-    }
+    void setDescription(const QString &desc);
 
-    void addCommandLineOptions(const boost::program_options::options_description &desc);
-    void addPositionalCommandLineOption(const char *option, int count);
-    const boost::program_options::variables_map &commandLineArguments() const
+    void addCommandLineOptions(const QCommandLineOption &option);
+    void addPositionalCommandLineOption(const QString &name, const QString &description = QString(), const QString &syntax = QString());
+    const QCommandLineParser &commandLineArguments() const
     {
-        return mCmdLineArguments;
+        return mCmdLineParser;
     }
 
     void printUsage() const;
@@ -80,13 +74,10 @@ private Q_SLOTS:
 private:
     int mArgc;
     char **mArgv;
-    QString mDescription;
     QString mInstanceId;
     static AkApplication *sInstance;
 
-    boost::program_options::options_description mCmdLineOptions;
-    boost::program_options::variables_map mCmdLineArguments;
-    boost::program_options::positional_options_description mCmdPositionalOptions;
+    QCommandLineParser mCmdLineParser;
 };
 
 template <typename T>

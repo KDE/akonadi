@@ -17,7 +17,6 @@ target_link_libraries(KF5AkonadiPrivate
 PRIVATE
     Qt5::Core
     Qt5::DBus
-    ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
 )
 
 set_target_properties(KF5AkonadiPrivate PROPERTIES

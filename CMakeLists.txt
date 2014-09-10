@@ -56,21 +56,6 @@ if(NOT XSLTPROC_EXECUTABLE)
     message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif()
 
-set(Boost_MINIMUM_VERSION "1.34.0")
-find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS program_options)
-set_package_properties(Boost PROPERTIES
-    DESCRIPTION "Boost C++ Libraries"
-    URL "http://www.boost.org"
-    TYPE REQUIRED
-)
-
-# should be handled by FindBoost.cmake ->  cmake bug #8335
-# FIXME: Still an issue?
-if(WIN32 AND NOT Boost_USE_STATIC_LIBS)
-    add_definitions(-DBOOST_DYN_LINK)
-    add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
-endif()
-
 find_program(MYSQLD_EXECUTABLE NAMES mysqld
     PATHS /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin /opt/mysql/sbin
     DOC "The mysqld executable path. ONLY needed at runtime"
@@ -196,6 +181,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
     if (ASAN_FOUND)
         set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_ASAN}")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_ASAN}")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_ASAN}" CACHE STRING "Flags used by the linker" FORCE)
+        set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_ASAN}" CACHE STRING "Flags used by the linker" FORCE)
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_ASAN}" CACHE STRING "Flags used by the linker" FORCE)
         add_definitions(-DENABLE_ASAN)
     endif()
 

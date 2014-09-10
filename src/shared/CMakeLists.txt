@@ -13,5 +13,4 @@ target_link_libraries(akonadi_shared
     Qt5::DBus
     KF5AkonadiPrivate
     ${Backtrace_LIBRARIES}
-    ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
 )
