@@ -22,7 +22,6 @@
 #include "searchquery.h"
 #include <qjson/serializer.h>
 #include <qjson/parser.h>
-#include <boost/concept_check.hpp>
 
 using namespace Akonadi;
 

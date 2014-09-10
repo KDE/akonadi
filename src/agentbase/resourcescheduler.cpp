@@ -28,7 +28,6 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
-#include <boost/graph/graph_concepts.hpp>
 
 using namespace Akonadi;
 
