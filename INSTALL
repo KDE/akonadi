@@ -41,7 +41,6 @@ The following options are available when running CMake:
 
 Required:
 
-* Boost (http://www.boost.org)
 * CMake (http://www.cmake.org) >= 2.8.12
 * Qt5 >= 5.2.0 (http://qt.nokia.com/downloads)
 * Shared-mime-info >= 0.20 (http://freedesktop.org/wiki/Software/shared-mime-info)
