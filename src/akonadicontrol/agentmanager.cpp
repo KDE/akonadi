@@ -44,11 +44,10 @@
 #ifndef QT_NO_DEBUG
 #include <QtCore/QFileSystemWatcher>
 #endif
+#include <QScopedPointer>
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
-
-#include <boost/scoped_ptr.hpp>
 
 using Akonadi::ProcessControl;
 
@@ -843,7 +842,7 @@ void AgentManager::agentExeChanged(const QString &fileName)
 void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const AgentType &type)
 {
     if (type.capabilities.contains(AgentType::CapabilityResource)) {
-        boost::scoped_ptr<org::freedesktop::Akonadi::ResourceManager> resmanager(
+        QScopedPointer<org::freedesktop::Akonadi::ResourceManager> resmanager(
             new org::freedesktop::Akonadi::ResourceManager(AkDBus::serviceName(AkDBus::Server),
                                                            QLatin1String("/ResourceManager"),
                                                            QDBusConnection::sessionBus(), this));

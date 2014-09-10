@@ -29,10 +29,9 @@
 #include <shared/akdbus.h>
 
 #include <QDBusError>
+#include <QSharedPointer>
 #include <QString>
 #include <QStringList>
-
-#include <boost/shared_ptr.hpp>
 
 class AgentManager;
 class AgentType;
@@ -49,7 +48,7 @@ class AgentInstance : public QObject
 {
     Q_OBJECT
 public:
-    typedef boost::shared_ptr<AgentInstance> Ptr;
+    typedef QSharedPointer<AgentInstance> Ptr;
 
     explicit AgentInstance(AgentManager *manager);
     virtual ~AgentInstance()

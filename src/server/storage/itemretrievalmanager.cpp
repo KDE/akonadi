@@ -29,11 +29,10 @@
 
 #include <QCoreApplication>
 #include <QReadWriteLock>
+#include <QScopedPointer>
 #include <QWaitCondition>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-
-#include <boost/scoped_ptr.hpp>
 
 using namespace Akonadi::Server;
 
@@ -142,7 +141,7 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
     Q_FOREVER {
         //akDebug() << "checking if request for item" << req->id << "has been processed...";
         if (req->processed) {
-            boost::scoped_ptr<ItemRetrievalRequest> reqDeleter(req);
+            QScopedPointer<ItemRetrievalRequest> reqDeleter(req);
             Q_ASSERT(!mPendingRequests[req->resourceId].contains(req));
             const QString errorMsg = req->errorMsg;
             mLock->unlock();

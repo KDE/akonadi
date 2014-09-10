@@ -27,9 +27,8 @@
 #include <QtCore/QPair>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
+#include <QSharedPointer>
 #include <QtSql/QSqlDatabase>
-
-#include <boost/shared_ptr.hpp>
 
 class DbInitializerTest;
 
@@ -58,7 +57,7 @@ public:
 class DbInitializer
 {
 public:
-    typedef boost::shared_ptr<DbInitializer> Ptr;
+    typedef QSharedPointer<DbInitializer> Ptr;
 
     /**
       Returns an initializer instance for a given backend.
