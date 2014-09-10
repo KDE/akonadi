@@ -278,7 +278,7 @@ PUBLIC
     KF5::ItemModels
     KF5::KIOCore
     KF5::KDELibs4Support
-    KF5::KF5AkonadiPrivate
+    KF5::AkonadiPrivate
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES
