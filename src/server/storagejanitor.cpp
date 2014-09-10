@@ -46,7 +46,6 @@
 #include <QtCore/qdiriterator.h>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
 #include <algorithm>
 
 using namespace Akonadi::Server;
@@ -94,7 +93,7 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
     inform("Checking collection tree consistency...");
     const Collection::List cols = Collection::retrieveAll();
-    std::for_each(cols.begin(), cols.end(), boost::bind(&StorageJanitor::checkPathToRoot, this, _1));
+    std::for_each(cols.begin(), cols.end(), [this](const Collection &col) { checkPathToRoot(col); });
 
     inform("Looking for items not belonging to a valid collection...");
     findOrphanedItems();

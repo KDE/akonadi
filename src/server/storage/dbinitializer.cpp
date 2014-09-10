@@ -36,7 +36,6 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
-#include <boost/bind.hpp>
 #include <algorithm>
 
 using namespace Akonadi::Server;

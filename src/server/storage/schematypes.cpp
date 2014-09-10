@@ -20,7 +20,6 @@
 
 #include "schematypes.h"
 
-#include <boost/bind.hpp>
 #include <algorithm>
 
 using namespace Akonadi::Server;
@@ -52,7 +51,7 @@ TableDescription::TableDescription()
 
 int TableDescription::primaryKeyColumnCount() const
 {
-    return std::count_if(columns.constBegin(), columns.constEnd(), boost::bind<bool>(&ColumnDescription::isPrimaryKey, _1));
+    return std::count_if(columns.constBegin(), columns.constEnd(), [](const ColumnDescription &col) { return col.isPrimaryKey; });
 }
 
 RelationDescription::RelationDescription()
