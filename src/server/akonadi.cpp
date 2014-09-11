@@ -195,8 +195,7 @@ bool AkonadiServer::init()
     mAgentSearchManagerThread->start();
 
     const QStringList searchManagers = settings.value(QLatin1String("Search/Manager"),
-                                                      QStringList() << QLatin1String("Nepomuk")
-                                                      << QLatin1String("Agent")).toStringList();
+                                                      QStringList() << QLatin1String("Agent")).toStringList();
     mSearchManager = new SearchManagerThread(searchManagers, this);
     mSearchManager->start();
 

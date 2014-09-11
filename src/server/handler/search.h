@@ -54,8 +54,6 @@ private Q_SLOTS:
     void slotResultsAvailable(const QSet<qint64> &results);
 
 private:
-    void searchNepomuk();
-
     FetchScope mFetchScope;
     QSet<qint64> mAllResults;
 };

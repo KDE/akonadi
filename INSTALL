@@ -51,7 +51,6 @@ Optional:
 * Mysqld (http://www.mysql.com) - Optional at build time. You can pass -DMYSQLD_EXECUTABLE=/path/to/mysqld when running CMake instead
 * SQlite >= 3.6.23 (http://www.sqlite.org) - Needed if you want to build the Sqlite backend
 * Postgresql (http://www.postgres.org) - Optional at build time. You can pass -DPOSTGRES_PATH=/path/to/pg_ctl when running CMake instead
-* Soprano (http://soprano.sourceforge.net)
 
 === Runtime Requirements ===
 

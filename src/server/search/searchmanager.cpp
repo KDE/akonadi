@@ -89,11 +89,7 @@ void SearchManager::init(const QStringList &searchEngines)
 {
     mEngines.reserve(searchEngines.size());
     Q_FOREACH (const QString &engineName, searchEngines) {
-        if (engineName == QLatin1String("Nepomuk")) {
-#ifdef HAVE_SOPRANO
-            m_engines.append(new NepomukSearchEngine);
-#endif
-        } else if (engineName == QLatin1String("Agent")) {
+        if (engineName == QLatin1String("Agent")) {
             mEngines.append(new AgentSearchEngine);
         } else {
             akError() << "Unknown search engine type: " << engineName;

@@ -25,7 +25,6 @@
 #include "handlerhelper.h"
 #include "searchhelper.h"
 #include "imapstreamparser.h"
-#include "nepomuksearch.h"
 #include "response.h"
 #include "search/searchrequest.h"
 #include "search/searchmanager.h"
@@ -54,7 +53,7 @@ bool Search::parseStream()
 
     // Backward compatibility
     if (!connection()->capabilities().serverSideSearch()) {
-        searchNepomuk();
+        throw HandlerException("Akonadi has been built without Nepomuk support!");
     } else {
         while (m_streamParser->hasString()) {
             const QByteArray param = m_streamParser->readString();
@@ -133,33 +132,6 @@ bool Search::parseStream()
     akDebug() << "\tResult:" << mAllResults.count() << "matches";
 
     return successResponse("Search done");
-}
-
-void Search::searchNepomuk()
-{
-    const QString queryString = m_streamParser->readUtf8String();
-    mFetchScope = FetchScope(m_streamParser);
-
-    QStringList uids;
-#ifdef HAVE_SOPRANO
-    NepomukSearch *service = new NepomukSearch;
-    uids = service->search(queryString);
-    delete service;
-#else
-    akError() << "Akonadi has been built without Nepomuk support!";
-    return;
-#endif
-
-    if (uids.isEmpty()) {
-        return;
-    }
-
-    QSet<qint64> results;
-    Q_FOREACH (const QString &uid, uids) {
-        results.insert(uid.toLongLong());
-    }
-
-    slotResultsAvailable(results);
 }
 
 void Search::slotResultsAvailable(const QSet<qint64> &results)
