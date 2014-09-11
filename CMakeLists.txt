@@ -44,12 +44,7 @@ option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR
 option(ENABLE_ASAN "Build Akonadi with AddressSanitzer - https://code.google.com/p/address-sanitizer/" FALSE)
 
 set(SMI_MIN_VERSION "0.20")
-find_package(SharedMimeInfo ${SMI_MIN_VERSION})
-set_package_properties(SharedMimeInfo PROPERTIES
-    URL "http://freedesktop.org/wiki/Software/shared-mime-info"
-    DESCRIPTION "File types database and utilities"
-    TYPE REQUIRED
-)
+find_package(SharedMimeInfo ${SMI_MIN_VERSION} REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc)
 if(NOT XSLTPROC_EXECUTABLE)
