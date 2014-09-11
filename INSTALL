@@ -33,7 +33,6 @@ The following options are available when running CMake:
 * AKONADI_BUILD_QSQLITE (Default: TRUE): Build the SQLite backend
 * INSTALL_QSQLITE_IN_QT_PREFIX (Default: FALSE): Useful for distributions.
   Once enabled, the qsqlite3 backend will be installed in ${QT_PLUGINS_DIR}/sqldrivers
-* STATIC_LIBRARY (Default: FALSE): Build the Akonadi server libraries statically. Only useful for certain cases (eg: WINCE builds).
 * DATABASE_BACKEND (Default: MYSQL, available: MYSQL, POSTGRES, SQLITE): Define which database driver to use by default.
   MYSQL is preferred, SQLITE should be avoided.
 
