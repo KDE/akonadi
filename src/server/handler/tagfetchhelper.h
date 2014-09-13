@@ -59,8 +59,6 @@ private:
     static QSqlQuery buildAttributeQuery( qint64 id );
 
 private:
-    ImapStreamParser *mStreamParser;
-
     Connection *mConnection;
     ImapSet mSet;
 };

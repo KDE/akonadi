@@ -64,7 +64,6 @@ public:
 private:
     Q_DISABLE_COPY(Transaction)
     DataStore *mDb;
-    bool mGlobal;
     bool mCommitted;
 };
 
