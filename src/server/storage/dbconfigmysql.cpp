@@ -39,7 +39,8 @@ using namespace Akonadi::Server;
 #define MYSQL_MIN_MINOR 1
 
 DbConfigMysql::DbConfigMysql()
-    : mDatabaseProcess(0)
+    : mInternalServer(true)
+    , mDatabaseProcess(0)
 {
 }
 

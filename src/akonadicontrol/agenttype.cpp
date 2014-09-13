@@ -38,6 +38,7 @@ QLatin1String AgentType::CapabilitySearch = QLatin1String(AKONADI_AGENT_CAPABILI
 
 AgentType::AgentType()
     : instanceCounter(0)
+    , launchMethod(Process)
 {
 }
 

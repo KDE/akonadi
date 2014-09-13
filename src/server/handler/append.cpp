@@ -45,6 +45,7 @@ using namespace Akonadi::Server;
 
 Append::Append()
     : Handler()
+    , m_size(0)
 {
 }
 

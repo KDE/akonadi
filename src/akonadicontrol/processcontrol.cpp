@@ -37,6 +37,7 @@ static const int s_maxCrashCount = 2;
 
 ProcessControl::ProcessControl(QObject *parent)
     : QObject(parent)
+    , mPolicy(RestartOnCrash)
     , mFailedToStart(false)
     , mCrashCount(0)
     , mRestartOnceOnExit(false)

@@ -62,7 +62,7 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase &database, S
 }
 
 DbInitializer::DbInitializer(const QSqlDatabase &database)
-    : mDatabase(database), mTestInterface(0), m_noForeignKeyContraints(false)
+    : mDatabase(database), mSchema(0), mTestInterface(0), m_noForeignKeyContraints(false)
 {
     m_introspector = DbIntrospector::createInstance(mDatabase);
 }

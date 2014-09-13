@@ -31,7 +31,8 @@ class ItemRetrievalRequest
 {
 public:
     ItemRetrievalRequest()
-        : processed(false)
+        : id(-1)
+        , processed(false)
     {
     }
 

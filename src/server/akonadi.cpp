@@ -75,7 +75,9 @@ AkonadiServer::AkonadiServer(QObject *parent)
     , mIntervalChecker(0)
     , mStorageJanitor(0)
     , mItemRetrievalThread(0)
+    , mAgentSearchManagerThread(0)
     , mDatabaseProcess(0)
+    , mSearchManager(0)
     , mAlreadyShutdown(false)
 {
 }
