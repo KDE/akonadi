@@ -57,17 +57,17 @@ ItemDumper::ItemDumper(const QString &path, const QString &filename, const QStri
     mTime.start();
 #ifdef GLOBAL_TRANSACTION
     TransactionBeginJob *begin = new TransactionBeginJob(this);
-    connect(begin, SIGNAL(result(KJob*)), SLOT(done(KJob*)));
+    connect(begin, &TransactionBeginJob::result, this, &ItemDumper::done);
     ++mJobCount;
 #endif
     for (int i = 0; i < count; ++i) {
         ++mJobCount;
         ItemCreateJob *job = new ItemCreateJob(item, collection, this);
-        connect(job, SIGNAL(result(KJob*)), SLOT(done(KJob*)));
+        connect(job, &ItemCreateJob::result, this, &ItemDumper::done);
     }
 #ifdef GLOBAL_TRANSACTION
     TransactionCommitJob *commit = new TransactionCommitJob(this);
-    connect(commit, SIGNAL(result(KJob*)), SLOT(done(KJob*)));
+    connect(commit, &TransactionCommitJob::result, this, &ItemDumper::done);
     ++mJobCount;
 #endif
 }

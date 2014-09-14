@@ -84,7 +84,7 @@ void SetupTest::setupAgents()
         ++mSetupJobCount;
         Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(agent.first, this);
         job->setProperty("sync", agent.second);
-        connect(job, SIGNAL(result(KJob*)), SLOT(agentCreationResult(KJob*)));
+        connect(job, &Akonadi::AgentInstanceCreateJob::result, this, &SetupTest::agentCreationResult);
         job->start();
     }
 
@@ -106,7 +106,7 @@ void SetupTest::agentCreationResult(KJob *job)
         ++mSetupJobCount;
         Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(
             qobject_cast<Akonadi::AgentInstanceCreateJob *>(job)->instance(), this);
-        connect(sync, SIGNAL(result(KJob*)), SLOT(synchronizationResult(KJob*)));
+        connect(sync, &Akonadi::ResourceSynchronizationJob::result, this, &SetupTest::synchronizationResult);
         sync->start();
     }
 

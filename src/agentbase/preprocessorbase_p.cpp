@@ -58,7 +58,7 @@ void PreprocessorBasePrivate::beginProcessItem(qlonglong itemId, qlonglong colle
 
     ItemFetchJob *fetchJob = new ItemFetchJob(Item(itemId), this);
     fetchJob->setFetchScope(mFetchScope);
-    connect(fetchJob, SIGNAL(result(KJob*)), SLOT(itemFetched(KJob*)));
+    connect(fetchJob, &ItemFetchJob::result, this, &PreprocessorBasePrivate::itemFetched);
 }
 
 void PreprocessorBasePrivate::itemFetched(KJob *job)

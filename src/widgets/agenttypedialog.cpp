@@ -70,7 +70,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     setLayout(layout);
 
     d->Widget = new Akonadi::AgentTypeWidget;
-    connect(d->Widget, SIGNAL(activated()), this, SLOT(accept()));
+    connect(d->Widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);
 
     KFilterProxySearchLine *searchLine = new KFilterProxySearchLine;
     layout->addWidget(searchLine);

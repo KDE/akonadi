@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     Akonadi::SubscriptionDialog *dlg = new Akonadi::SubscriptionDialog();
-    QObject::connect(dlg, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()));
+    QObject::connect(dlg, &Akonadi::SubscriptionDialog::destroyed, &app, &QApplication::quit);
     dlg->show();
     app.exec();
 }

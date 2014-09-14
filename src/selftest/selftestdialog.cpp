@@ -94,12 +94,12 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     ui.testView->setModel(mTestModel);
     connect(ui.testView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             SLOT(selectionChanged(QModelIndex)));
-    connect(ui.detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)));
+    connect(ui.detailsLabel, &QLabel::linkActivated, this, &SelfTestDialog::linkActivated);
 
     connect(user1Button, &QPushButton::clicked, this, &SelfTestDialog::saveReport);
     connect(user2Button, &QPushButton::clicked, this, &SelfTestDialog::copyReport);
 
-    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(runTests()));
+    connect(ServerManager::self(), &ServerManager::stateChanged, this, &SelfTestDialog::runTests);
     runTests();
 }
 

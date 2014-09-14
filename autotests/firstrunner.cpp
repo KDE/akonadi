@@ -40,6 +40,6 @@ int main( int argc, char** argv )
   aboutData.processCommandLine(&parser);
 
   Akonadi::Firstrun *f = new Akonadi::Firstrun();
-  QObject::connect( f, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()) );
+  QObject::connect(f, &Akonadi::Firstrun::destroyed, &app, &QApplication::quit);
   app.exec();
 }

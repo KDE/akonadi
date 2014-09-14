@@ -286,7 +286,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 
     connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
     connect(d->mOkButton, SIGNAL(clicked()), SLOT(done()));
-    connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(deleteLater()));
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &SubscriptionDialog::deleteLater);
     Control::widgetNeedsAkonadi(mainWidget);
     d->readConfig();
 }

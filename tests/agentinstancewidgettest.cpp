@@ -43,7 +43,7 @@ Dialog::Dialog(QWidget *parent)
     layout->addWidget(box);
 
     QPushButton *ok = box->addButton(QDialogButtonBox::Ok);
-    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(ok, &QPushButton::clicked, this, &Dialog::accept);
 
     resize(450, 320);
 }

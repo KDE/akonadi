@@ -56,8 +56,8 @@ KnutResource::KnutResource(const QString &id)
     new SettingsAdaptor(mSettings);
     DBusConnectionPool::threadConnection().registerObject(QLatin1String("/Settings"),
                                                           mSettings, QDBusConnection::ExportAdaptors);
-    connect(this, SIGNAL(reloadConfiguration()), SLOT(load()));
-    connect(mWatcher, SIGNAL(fileChanged(QString)), SLOT(load()));
+    connect(this, &KnutResource::reloadConfiguration, this, &KnutResource::load);
+    connect(mWatcher, &QFileSystemWatcher::fileChanged, this, &KnutResource::load);
     load();
 }
 

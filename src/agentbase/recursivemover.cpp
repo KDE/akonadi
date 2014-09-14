@@ -39,7 +39,7 @@ void RecursiveMover::start()
     Q_ASSERT(receivers(SIGNAL(result(KJob*))));
 
     CollectionFetchJob *job = new CollectionFetchJob(m_movedCollection, CollectionFetchJob::Recursive, this);
-    connect(job, SIGNAL(finished(KJob*)), SLOT(collectionListResult(KJob*)));
+    connect(job, &CollectionFetchJob::finished, this, &RecursiveMover::collectionListResult);
     addSubjob(job);
     ++m_runningJobs;
 }
@@ -156,7 +156,7 @@ void RecursiveMover::replayNextCollection()
 
         m_currentCollection = m_pendingCollections.takeFirst();
         ItemFetchJob *job = new ItemFetchJob(m_currentCollection, this);
-        connect(job, SIGNAL(result(KJob*)), SLOT(itemListResult(KJob*)));
+        connect(job, &ItemFetchJob::result, this, &RecursiveMover::itemListResult);
         addSubjob(job);
         ++m_runningJobs;
 
@@ -187,7 +187,7 @@ void RecursiveMover::replayNextItem()
         m_currentItem = m_pendingItems.takeFirst();
         ItemFetchJob *job = new ItemFetchJob(m_currentItem, this);
         job->fetchScope().fetchFullPayload();
-        connect(job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)));
+        connect(job, &ItemFetchJob::result, this, &RecursiveMover::itemFetchResult);
         addSubjob(job);
         ++m_runningJobs;
     }
@@ -201,7 +201,7 @@ void RecursiveMover::changeProcessed()
         Q_ASSERT(m_currentCollection.isValid());
         CollectionFetchJob *job = new CollectionFetchJob(m_currentCollection, CollectionFetchJob::Base, this);
         job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-        connect(job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)));
+        connect(job, &CollectionFetchJob::result, this, &RecursiveMover::collectionFetchResult);
         addSubjob(job);
         ++m_runningJobs;
     }
