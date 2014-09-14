@@ -22,7 +22,7 @@
 
 using namespace Akonadi::Server;
 
-static const char *s_resultCodeStrings[] = {
+static const char *const s_resultCodeStrings[] = {
     "OK", "NO", "BAD", "BYE", ""
 };
 

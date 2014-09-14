@@ -57,11 +57,11 @@ public:
     uint instanceCounter;
     LaunchMethod launchMethod;
 
-    static QLatin1String CapabilityUnique;
-    static QLatin1String CapabilityResource;
-    static QLatin1String CapabilityAutostart;
-    static QLatin1String CapabilityPreprocessor;
-    static QLatin1String CapabilitySearch;
+    static const QLatin1String CapabilityUnique;
+    static const QLatin1String CapabilityResource;
+    static const QLatin1String CapabilityAutostart;
+    static const QLatin1String CapabilityPreprocessor;
+    static const QLatin1String CapabilitySearch;
 
 private:
     QString readString(const QSettings &file, const QString &key);

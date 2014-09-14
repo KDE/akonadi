@@ -52,9 +52,9 @@
 using Akonadi::ProcessControl;
 
 #if defined(Q_WS_MAEMO_5)
-static bool enableAgentServerDefault = true;
+static const bool enableAgentServerDefault = true;
 #else
-static bool enableAgentServerDefault = false;
+static const bool enableAgentServerDefault = false;
 #endif
 
 AgentManager::AgentManager(QObject *parent)

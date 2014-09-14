@@ -25,8 +25,8 @@
 
 using namespace Akonadi::Server;
 
-static int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
-static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
+static const int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
+static const int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 
 IntervalCheck::IntervalCheck(QObject *parent)
     : CollectionScheduler(parent)
