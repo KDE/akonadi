@@ -28,7 +28,7 @@
 #include <QAction>
 using namespace Akonadi;
 
-static int s_maximumRecentCollection = 10;
+static const int s_maximumRecentCollection = 10;
 
 RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList, const QAbstractItemModel *model, QMenu *menu)
     : QObject(menu)

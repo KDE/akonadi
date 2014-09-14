@@ -135,7 +135,7 @@ public:
      * Describes the part name that is used to fetch the
      * full payload of an item.
      */
-    static const char *FullPayload;
+    static const char *const FullPayload;
 
     /**
      * Creates a new item.

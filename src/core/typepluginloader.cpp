@@ -368,7 +368,7 @@ private:
             order.reserve(matchingIndexes.size());
             try {
                 boost::topological_sort(graph, std::back_inserter(order));
-            } catch (boost::not_a_dag &e) {
+            } catch (const boost::not_a_dag &e) {
                 qWarning() << "Mimetype tree is not a DAG!";
                 return mDefaultPlugin.plugin();
             }

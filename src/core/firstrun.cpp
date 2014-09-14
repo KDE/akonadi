@@ -38,7 +38,7 @@
 #include <QtCore/QMetaObject>
 #include <QStandardPaths>
 
-static char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
+static const char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
 
 using namespace Akonadi;
 

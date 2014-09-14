@@ -22,7 +22,7 @@
 
 using namespace Akonadi;
 
-const char *Akonadi::Tag::PLAIN = "PLAIN";
+const char *const Akonadi::Tag::PLAIN = "PLAIN";
 
 struct Akonadi::Tag::Private {
     Private()

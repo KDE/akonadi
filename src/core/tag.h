@@ -53,7 +53,7 @@ public:
      *
      * PLAIN tags are general purpose tags that are easy to map by backends.
      */
-    static const char *PLAIN;
+    static const char *const PLAIN;
 
     Tag();
     explicit Tag(Id id);

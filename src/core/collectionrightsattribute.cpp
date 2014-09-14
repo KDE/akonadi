@@ -21,7 +21,7 @@
 
 using namespace Akonadi;
 
-static const char *s_accessRightsIdentifier = "AccessRights";
+static const char s_accessRightsIdentifier[] = "AccessRights";
 
 static Collection::Rights dataToRights(const QByteArray &data)
 {

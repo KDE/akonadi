@@ -52,13 +52,13 @@ public:
     QDBusInterface *interface;
     QTimer *safetyTimer;
     int timeoutCount;
-    static int timeoutCountLimit;
+    static const int timeoutCountLimit;
 
     void slotSynchronized(qlonglong);
     void slotTimeout();
 };
 
-int CollectionAttributesSynchronizationJobPrivate::timeoutCountLimit = 2;
+const int CollectionAttributesSynchronizationJobPrivate::timeoutCountLimit = 2;
 
 CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob(const Collection &collection, QObject *parent)
     : KJob(parent)

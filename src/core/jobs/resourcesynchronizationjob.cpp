@@ -51,13 +51,13 @@ public:
     QTimer *safetyTimer;
     int timeoutCount;
     bool collectionTreeOnly;
-    static int timeoutCountLimit;
+    static const int timeoutCountLimit;
 
     void slotSynchronized();
     void slotTimeout();
 };
 
-int ResourceSynchronizationJobPrivate::timeoutCountLimit = 60;
+const int ResourceSynchronizationJobPrivate::timeoutCountLimit = 60;
 
 ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent)
     : KJob(parent)
