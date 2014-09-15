@@ -1020,7 +1020,7 @@ void ResourceBase::invalidateCache(const Collection &collection)
 Collection ResourceBase::currentCollection() const
 {
     Q_D(const ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollection ,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
                "ResourceBase::currentCollection()",
                "Trying to access current collection although no item retrieval is in progress");
     return d->currentCollection;
@@ -1029,7 +1029,7 @@ Collection ResourceBase::currentCollection() const
 Item ResourceBase::currentItem() const
 {
     Q_D(const ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::FetchItem ,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::FetchItem,
                "ResourceBase::currentItem()",
                "Trying to access current item although no item retrieval is in progress");
     return d->scheduler->currentTask().item;

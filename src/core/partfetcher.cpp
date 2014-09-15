@@ -128,7 +128,7 @@ void PartFetcher::start()
     const QSet<QByteArray> availableParts = index.data(EntityTreeModel::AvailablePartsRole).value<QSet<QByteArray> >();
     if (!availableParts.contains(d->m_partName)) {
         setError(UserDefinedError);
-        setErrorText(i18n("Payload part '%1' is not available for this index" , QString::fromLatin1(d->m_partName)));
+        setErrorText(i18n("Payload part '%1' is not available for this index", QString::fromLatin1(d->m_partName)));
         emitResult();
         return;
     }

@@ -219,7 +219,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
 
     d->m_newTagButton = new QPushButton(i18nc("@label", "Create new tag"));
     d->m_newTagButton->setEnabled(false);
-    connect(d->m_newTagButton , SIGNAL(clicked(bool)),
+    connect(d->m_newTagButton, SIGNAL(clicked(bool)),
             d.data(), SLOT(slotCreateTag()));
 
     QHBoxLayout *newTagLayout = new QHBoxLayout();

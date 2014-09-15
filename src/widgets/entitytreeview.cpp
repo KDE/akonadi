@@ -242,7 +242,7 @@ void EntityTreeView::timerEvent(QTimerEvent *event)
 #ifndef QT_NO_DRAGANDDROP
 void EntityTreeView::dragMoveEvent(QDragMoveEvent *event)
 {
-    d->mDragExpandTimer.start(QApplication::startDragTime() , this);
+    d->mDragExpandTimer.start(QApplication::startDragTime(), this);
 
     if (d->mDragDropManager->dropAllowed(event)) {
         // All urls are supported. process the event.

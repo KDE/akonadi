@@ -119,7 +119,7 @@ static const struct {
     { 0, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", 0, 0, ActionAlternative },
     { "akonadi_item_trash_restore", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "user-trash", 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative },
     { 0, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", 0, 0, ActionAlternative },
-    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL + Qt::SHIFT + Qt::Key_L , SLOT(slotSynchronizeFavoriteCollections()), NormalAction }
+    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL + Qt::SHIFT + Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction }
 
 };
 static const int numStandardActionData = sizeof standardActionData / sizeof * standardActionData;
@@ -1030,7 +1030,7 @@ public:
         const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
-        QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle), contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText) , favoritesModel->favoriteLabel(collection), collection.displayName(), parentWidget));
+        QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle), contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText), favoritesModel->favoriteLabel(collection), collection.displayName(), parentWidget));
         if (dlg->exec() == QDialog::Accepted && dlg != 0) {
             favoritesModel->setFavoriteLabel(collection, dlg->newName());
         }

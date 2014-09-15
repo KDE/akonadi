@@ -211,7 +211,7 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
         // The proper solution is a KExtraColumnsProxyModel, but this will do for now.
         QModelIndex parent = topLeft.parent();
         int parentColumnCount = mParent->columnCount( parent );
-        QModelIndex extraTopLeft = mParent->index( topLeft.row(), parentColumnCount - 1 - 3 , parent );
+        QModelIndex extraTopLeft = mParent->index( topLeft.row(), parentColumnCount - 1 - 3, parent );
         QModelIndex extraBottomRight = mParent->index( bottomRight.row(), parentColumnCount -1, parent );
         mParent->disconnect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                              mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
