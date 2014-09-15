@@ -368,6 +368,11 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         mimeTypeIds << id;
     }
 
+    QVariantList attributeIds;
+    Q_FOREACH (const Collection::Id id, mCollections.keys()) {
+        attributeIds << id;
+    }
+
     QVariantList ancestorIds;
     Q_FOREACH (const Collection::Id id, mCollections.keys()) {
         ancestorIds << id;
@@ -418,6 +423,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         Q_FOREACH (const Collection &missingCol, qb.result()) {
             mCollections.insert(missingCol.id(), missingCol);
             ancestorIds << missingCol.id();
+            attributeIds << missingCol.id();
             //We have to do another round if the parents parent is missing
             if (missingCol.parentId() != parentId && !mCollections.contains(missingCol.parentId())) {
                 missingCollections.insert(missingCol.parentId());
@@ -469,8 +475,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         CollectionAttribute::List attributes;
         {
             //Get new query if necessary
-            if (!attributeQuery.isValid() && attributeQueryStart < mimeTypeIds.size()) {
-                const QVariantList ids = mimeTypeIds.mid(attributeQueryStart, querySizeLimit);
+            if (!attributeQuery.isValid() && attributeQueryStart < attributeIds.size()) {
+                const QVariantList ids = attributeIds.mid(attributeQueryStart, querySizeLimit);
                 attributeQueryStart += querySizeLimit;
                 attributeQuery = getAttributeQuery(ids, QVector<QByteArray>());
                 attributeQuery.next(); //place at first record
