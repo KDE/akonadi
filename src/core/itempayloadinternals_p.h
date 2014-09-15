@@ -26,13 +26,14 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QMetaType>
 
+
 #include <boost/shared_ptr.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/utility/enable_if.hpp>
 
+#include <type_traits>
 #include <typeinfo>
+#include <memory>
 
 #include "exception.h"
 
@@ -96,6 +97,8 @@ template <typename T>
 struct shared_pointer_traits
 {
     static const bool defined = false;
+
+    typedef boost::shared_ptr<T> next_shared_ptr;
 };
 
 template <typename T>
@@ -119,7 +122,19 @@ struct shared_pointer_traits< QSharedPointer<T> >
     struct make {
         typedef QSharedPointer<S> type;
     };
-    typedef boost::shared_ptr<T> next_shared_ptr;
+    typedef std::shared_ptr<T> next_shared_ptr;
+};
+
+template <typename T>
+struct shared_pointer_traits< std::shared_ptr<T> >
+{
+    static const bool defined = true;
+    typedef T element_type;
+    template <typename S>
+    struct make {
+        typedef std::shared_ptr<S> type;
+    };
+    typedef void next_shared_ptr;
 };
 
 template <typename T>
@@ -145,7 +160,7 @@ struct get_hierarchy_root_recurse<T, T>
 
 template <typename T>
 struct get_hierarchy_root
-    : get_hierarchy_root_recurse< T, typename ::KPIMUtils::SuperClass<T>::Type >
+    : get_hierarchy_root_recurse< T, typename Akonadi::SuperClass<T>::Type >
 {
 };
 
@@ -159,6 +174,12 @@ template <typename T>
 struct get_hierarchy_root< QSharedPointer<T> >
 {
     typedef QSharedPointer< typename get_hierarchy_root<T>::type > type;
+};
+
+template <typename T>
+struct get_hierarchy_root< std::shared_ptr<T> >
+{
+    typedef std::shared_ptr< typename get_hierarchy_root<T>::type > type;
 };
 
 /**
@@ -179,13 +200,13 @@ template <typename T> struct PayloadTrait
     }
     /// type of the base class of the payload object inside a shared pointer,
     /// same as ElementType if there is no super class
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperElementType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
     /// type of this payload object
     typedef T Type;
     /// type of the payload to store a base class of this payload
     /// (eg. a shared pointer containing a pointer to SuperElementType)
     /// same as Type if there is not super class
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperType;
     /// indicates if this payload is polymorphic, that is is a shared pointer
     /// and has a known super class
     static const bool isPolymorphic = false;
@@ -231,10 +252,10 @@ template <typename T> struct PayloadTrait<boost::shared_ptr<T> >
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperElementType;
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
     typedef boost::shared_ptr<ElementType> Type;
     typedef boost::shared_ptr<SuperElementType> SuperType;
-    static const bool isPolymorphic = !boost::is_same<ElementType, SuperElementType>::value;
+    static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
         return p.get() == 0;
@@ -264,6 +285,13 @@ template <typename T> struct PayloadTrait<boost::shared_ptr<T> >
             return boost::shared_ptr<T>();
         }
     }
+    static boost::shared_ptr<T> clone(const std::shared_ptr<T> &t) {
+        if (T *nt = clone_traits<T>::clone(t.get())) {
+            return boost::shared_ptr<T>(nt);
+        } else {
+            return boost::shared_ptr<T>();
+        }
+    }
     static const unsigned int sharedPointerId = 1;
 };
 
@@ -279,10 +307,10 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> >
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename KPIMUtils::SuperClass<T>::Type SuperElementType;
-    typedef QSharedPointer<T> Type;
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
+    typedef QSharedPointer<ElementType> Type;
     typedef QSharedPointer<SuperElementType> SuperType;
-    static const bool isPolymorphic = !boost::is_same<ElementType, SuperElementType>::value;
+    static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
         return p.isNull();
@@ -312,8 +340,72 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> >
             return QSharedPointer<T>();
         }
     }
+    static QSharedPointer<T> clone(const std::shared_ptr<T> &t) {
+        if (T *nt = clone_traits<T>::clone(t.get())) {
+            return QSharedPointer<T>(nt);
+        } else {
+            return QSharedPointer<T>();
+        }
+    }
     static const unsigned int sharedPointerId = 2;
 };
+
+
+/**
+  @internal
+  Payload type trait specialization for std::shared_ptr
+  for documentation of the various members, see above
+*/
+template <typename T> struct PayloadTrait<std::shared_ptr<T> >
+{
+    typedef T ElementType;
+    static int elementMetaTypeId()
+    {
+        return qMetaTypeId<T *>();
+    }
+    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
+    typedef std::shared_ptr<ElementType> Type;
+    typedef std::shared_ptr<SuperElementType> SuperType;
+    static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
+    static inline bool isNull(const Type &p)
+    {
+        return p.get() == 0;
+    }
+    template <typename U> static inline Type castFrom(const std::shared_ptr<U> &p)
+    {
+        const Type sp = std::dynamic_pointer_cast<T, U>(p);
+        if (sp.get() != 0 || p.get() == 0) {
+            return sp;
+        }
+        throw PayloadException("std::dynamic_pointer_cast failed");
+    }
+    template <typename U> static inline bool canCastFrom(const std::shared_ptr<U> &p)
+    {
+        const Type sp = std::dynamic_pointer_cast<T, U>(p);
+        return sp.get() != 0 || p.get() == 0;
+    }
+    template <typename U> static inline std::shared_ptr<U> castTo(const Type &p)
+    {
+        const std::shared_ptr<U> sp = std::dynamic_pointer_cast<U, T>(p);
+        return sp;
+    }
+    static std::shared_ptr<T> clone(const boost::shared_ptr<T> &t) {
+        if (T *nt = clone_traits<T>::clone(t.get())) {
+            return std::shared_ptr<T>(nt);
+        } else {
+            return std::shared_ptr<T>();
+        }
+    }
+    static std::shared_ptr<T> clone(const QSharedPointer<T> &t) {
+        if (T *nt = clone_traits<T>::clone(t.data())) {
+            return std::shared_ptr<T>(nt);
+        } else {
+            return std::shared_ptr<T>();
+        }
+    }
+    static const unsigned int sharedPointerId = 3;
+};
+
 
 }
 

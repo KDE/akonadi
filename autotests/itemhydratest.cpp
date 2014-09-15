@@ -27,8 +27,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
+#include <memory>
+
 using namespace Akonadi;
-using boost::shared_ptr;
 
 struct Volker
 {
@@ -40,7 +41,7 @@ struct Volker
     virtual Volker * clone() const = 0;
     QString who;
 };
-typedef shared_ptr<Volker> VolkerPtr;
+typedef boost::shared_ptr<Volker> VolkerPtr;
 typedef QSharedPointer<Volker> VolkerQPtr;
 
 struct Rudi: public Volker
@@ -50,7 +51,7 @@ struct Rudi: public Volker
     /* reimp */ Rudi * clone() const { return new Rudi( *this ); }
 };
 
-typedef shared_ptr<Rudi> RudiPtr;
+typedef boost::shared_ptr<Rudi> RudiPtr;
 typedef QSharedPointer<Rudi> RudiQPtr;
 
 struct Gerd: public Volker
@@ -59,7 +60,7 @@ struct Gerd: public Volker
     /* reimp */ Gerd * clone() const { return new Gerd( *this ); }
 };
 
-typedef shared_ptr<Gerd> GerdPtr;
+typedef std::shared_ptr<Gerd> GerdPtr;
 typedef QSharedPointer<Gerd> GerdQPtr;
 
 Q_DECLARE_METATYPE( Volker* )
@@ -69,7 +70,7 @@ Q_DECLARE_METATYPE( Gerd* )
 Q_DECLARE_METATYPE( Rudi )
 Q_DECLARE_METATYPE( Gerd )
 
-namespace KPIMUtils
+namespace Akonadi
 {
   template <> struct SuperClass<Rudi> : public SuperClassTrait<Volker>{};
   template <> struct SuperClass<Gerd> : public SuperClassTrait<Volker>{};
@@ -253,7 +254,9 @@ void ItemHydra::testNullPointerPayload()
   QVERIFY( i.hasPayload() );
   QVERIFY( i.hasPayload<RudiPtr>() );
   QVERIFY( i.hasPayload<VolkerPtr>() );
-  QVERIFY( i.hasPayload<GerdPtr>() );
+  // Fails, because GerdPtr is std::shared_ptr, while RudiPtr is boost::shared_ptr
+  // and we cannot do sharedptr casting for null pointers
+  QVERIFY( !i.hasPayload<GerdPtr>() );
   QCOMPARE( i.payload<RudiPtr>().get(), (Rudi*)0 );
   QCOMPARE( i.payload<VolkerPtr>().get(), (Volker*)0 );
 }

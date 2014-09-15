@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef KPIMUTILS_SUPERTRAIT_H
-#define KPIMUTILS_SUPERTRAIT_H
+#ifndef AKONADI_SUPERTRAIT_H
+#define AKONADI_SUPERTRAIT_H
 
-namespace KPIMUtils {
+namespace Akonadi {
 
   /**
     @internal
@@ -38,7 +38,7 @@ namespace KPIMUtils {
 
     To provide base class introspection for own types, extend this trait as follows:
     @code
-    namespace KPIMUtils
+    namespace Akonadi
     {
       template <> struct SuperClass<MyClass> : public SuperClassTrait<MyBaseClass>{};
     }

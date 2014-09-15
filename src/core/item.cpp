@@ -36,14 +36,6 @@ using namespace Akonadi;
 
 namespace {
 
-struct nodelete
-{
-    template <typename T>
-    void operator()(T *)
-    {
-    }
-};
-
 struct ByTypeId
 {
     typedef bool result_type;
@@ -64,7 +56,7 @@ void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, s
     if (!p.get()) {
         return;
     }
-    const std::shared_ptr<PayloadBase> sp(p.get());
+    const std::shared_ptr<PayloadBase> sp(p.release());
     const QWriteLocker locker(legacyMapLock());
     std::pair<int, int> &item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
     item.first = spid;
@@ -120,7 +112,7 @@ static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QSt
     if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
         return std::shared_ptr<const std::pair<int, int> >();
     }
-    const std::shared_ptr<PayloadBase> sp(p, nodelete());
+    const std::shared_ptr<PayloadBase> sp(p, [=](PayloadBase *) {/*noop*/});
     const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
     if (it == hit->end()) {
         return std::shared_ptr<const std::pair<int, int> >();

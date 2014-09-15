@@ -25,6 +25,8 @@
 #include <qtest.h>
 #include <collection.h>
 
+#include <memory>
+
 QTEST_MAIN( ItemTest )
 
 using namespace Akonadi;

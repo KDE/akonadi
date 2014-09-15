@@ -68,7 +68,7 @@ class ItemPrivate;
  * Technically the only restriction on payload objects is that they have to be copyable.
  * For safety reasons, pointer payloads are forbidden as well though, as the
  * ownership would not be clear. In this case, usage of a shared pointer is
- * recommended (such as boost::shared_ptr or QSharedPointer).
+ * recommended (such as boost::shared_ptr, QSharedPointer or std::shared_ptr).
  *
  * Using a shared pointer is also required in case the payload is a polymorphic
  * type. For supported shared pointer types implicit casting is provided when possible.
@@ -357,8 +357,9 @@ public:
      * fast (such as implicitly shared classes) is recommended.
      * If the payload type is polymorphic and you intend to set and retrieve payload
      * objects with mismatching but castable types, make sure to use a supported
-     * shared pointer implementation (currently boost::shared_ptr and QSharedPointer)
-     * and make sure there is a specialization of Akonadi::super_trait for your class.
+     * shared pointer implementation (currently boost::shared_ptr, QSharedPointer
+     * and std::shared_ptr and make sure there is a specialization of
+     * Akonadi::super_trait for your class.
      */
     template <typename T> void setPayload(const T &p);
     //@cond PRIVATE
@@ -369,9 +370,9 @@ public:
     /**
      * Returns the payload object of this PIM item. This method will only succeed if either
      * you requested the exact same payload type that was put in or the payload uses a
-     * supported shared pointer type (currently boost::shared_ptr and QSharedPointer), and
-     * is castable to the requested type. For this to work there needs to be a specialization
-     * of Akonadi::super_trait of the used classes.
+     * supported shared pointer type (currently boost::shared_ptr, QSharedPointer and
+     * std::shared_ptr), and is castable to the requested type. For this to work there needs
+     * to be a specialization of Akonadi::super_trait of the used classes.
      *
      * If a mismatching or non-castable payload type is requested, an Akonadi::PayloadException
      * is thrown. Therefore it is generally recommended to guard calls to payload() with a
@@ -389,8 +390,8 @@ public:
     /**
      * Returns whether the item has a payload of type @c T.
      * This method will only return @c true if either you requested the exact same payload type
-     * that was put in or the payload uses a supported shared pointer type (currently boost::shared_ptr
-     * and QSharedPointer), and is castable to the requested type. For this to work there needs
+     * that was put in or the payload uses a supported shared pointer type (currently boost::shared_ptr,
+     * QSharedPointer and std::shared_ptr), and is castable to the requested type. For this to work there needs
      * to be a specialization of Akonadi::super_trait of the used classes.
      *
      * Trying to retrieve a pointer type will fail to compile.
@@ -507,6 +508,20 @@ private:
     typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type
     tryToClone(T *ret) const;
 
+    template <typename T, typename NewT>
+    typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type
+    tryToCloneImpl(T *ret, const int * /*disambiguate*/ = 0) const;
+    template <typename T, typename NewT>
+    typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
+    tryToCloneImpl(T *ret) const;
+
+    template <typename T, typename NewT>
+    typename std::enable_if<Internal::shared_pointer_traits<NewT>::defined, bool>::type
+    tryToCloneImplImpl(T *ret, const int * /*disambiguate*/ = 0) const;
+    template <typename T, typename NewT>
+    typename std::enable_if<!Internal::shared_pointer_traits<NewT>::defined, bool>::type
+    tryToCloneImplImpl(T *ret) const;
+
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
      * @param collectionId the unique identifier of the collection where this item is stored in.
@@ -592,23 +607,17 @@ Item::payloadImpl() const
     return ret;
 }
 
-template <typename T>
-typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
-Item::tryToClone(T *ret, const int *) const
+// TODO: Could we somehow merge the *impl and *implimpl?
+template<typename T, typename NewT>
+typename std::enable_if<Internal::shared_pointer_traits<NewT>::defined, bool>::type
+Item::tryToCloneImplImpl(T* ret, const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(!PayloadType::isPolymorphic,
-                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
-
-    const int metaTypeId = PayloadType::elementMetaTypeId();
-
-    // Check whether we have the same payload in 'the other
-    // shared pointer' (### make it recurse, trying to find one, but
-    // don't introduce infinite recursion):
-    typedef typename Internal::shared_pointer_traits<T>::next_shared_ptr NewT;
     typedef Internal::PayloadTrait<NewT> NewPayloadType;
 
-    if (const Payload<NewT> *const p = Internal::payload_cast<NewT>(payloadBaseV2(NewPayloadType::sharedPointerId, metaTypeId))) {
+    const int metaTypeId = PayloadType::elementMetaTypeId();
+    Akonadi::PayloadBase *payloadBase = payloadBaseV2(NewPayloadType::sharedPointerId, metaTypeId);
+    if (const Payload<NewT> *const p = Internal::payload_cast<NewT>(payloadBase)) {
         // If found, attempt to make a clone (required the payload to provide virtual T * T::clone() const)
         const T nt = PayloadType::clone(p->payload);
         if (!PayloadType::isNull(nt)) {
@@ -623,7 +632,39 @@ Item::tryToClone(T *ret, const int *) const
         }
     }
 
+    return tryToCloneImpl<T, typename Internal::shared_pointer_traits<NewT>::next_shared_ptr>(ret);
+}
+
+template <typename T, typename NewT>
+typename std::enable_if<!Internal::shared_pointer_traits<NewT>::defined, bool>::type
+Item::tryToCloneImplImpl(T *) const
+{
     return false;
+}
+
+template <typename T, typename NewT>
+typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type
+Item::tryToCloneImpl(T *ret, const int *) const
+{
+    return tryToCloneImplImpl<T, NewT>(ret);
+}
+
+template <typename T, typename NewT>
+typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
+Item::tryToCloneImpl(T *ret) const
+{
+    return tryToCloneImpl<T, typename Internal::shared_pointer_traits<NewT>::next_shared_ptr>(ret);
+}
+
+template <typename T>
+typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
+Item::tryToClone(T *ret, const int *) const
+{
+    typedef Internal::PayloadTrait<T> PayloadType;
+    static_assert(!PayloadType::isPolymorphic,
+                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
+
+    return tryToCloneImpl<T, typename Internal::shared_pointer_traits<typename PayloadType::ElementType>::next_shared_ptr>(ret);
 }
 
 template <typename T>
@@ -646,7 +687,7 @@ bool Item::hasPayload() const
 
 template <typename T>
 typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
-Item::hasPayloadImpl(const int *ptr) const
+Item::hasPayloadImpl(const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     static_assert(PayloadType::isPolymorphic,
@@ -661,6 +702,7 @@ Item::hasPayloadImpl(const int *ptr) const
         return hasPayloadImpl<Root_T>()
                && PayloadType::canCastFrom(payload<Root_T>());
     } catch (const Akonadi::PayloadException &e) {
+        qDebug() << e.what();
         Q_UNUSED(e)
         return false;
     }
