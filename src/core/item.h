@@ -32,10 +32,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QSet>
 
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/utility/enable_if.hpp>
-
+#include <type_traits>
 #include <typeinfo>
 #include <memory>
 
@@ -483,31 +480,31 @@ private:
     bool ensureMetaTypeId(int mtid) const;
 
     template <typename T>
-    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, void>::type
+    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, void>::type
     setPayloadImpl(const T &p, const int * /*disambiguate*/ = 0);
     template <typename T>
-    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, void>::type
+    typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, void>::type
     setPayloadImpl(const T &p);
 
     template <typename T>
-    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
+    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type
     payloadImpl(const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
+    typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type
     payloadImpl() const;
 
     template <typename T>
-    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
     hasPayloadImpl(const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+    typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type
     hasPayloadImpl() const;
 
     template <typename T>
-    typename boost::enable_if<Internal::is_shared_pointer<T>, bool>::type
+    typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
     tryToClone(T *ret, const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
+    typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type
     tryToClone(T *ret) const;
 
     /**
@@ -542,7 +539,7 @@ private:
 template <typename T>
 T Item::payload() const
 {
-    BOOST_STATIC_ASSERT(!boost::is_pointer<T>::value);
+    static_assert(!std::is_pointer<T>::value, "Payload must not be a pointer");
 
     if (!hasPayload()) {
         throwPayloadException(-1, -1);
@@ -552,25 +549,28 @@ T Item::payload() const
 }
 
 template <typename T>
-typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
+typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type
 Item::payloadImpl(const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
+    static_assert(PayloadType::isPolymorphic,
+                  "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
     typedef typename Internal::get_hierarchy_root<T>::type Root_T;
     typedef Internal::PayloadTrait<Root_T> RootType;
-    BOOST_STATIC_ASSERT((!RootType::isPolymorphic));   // prevent endless recursion
+    static_assert(!RootType::isPolymorphic,
+                  "Root type of payload type must not be polymorphic");   // prevent endless recursion
 
     return PayloadType::castFrom(payloadImpl<Root_T>());
 }
 
 template <typename T>
-typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, T>::type
+typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type
 Item::payloadImpl() const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
+    static_assert(!PayloadType::isPolymorphic,
+                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
 
@@ -593,11 +593,12 @@ Item::payloadImpl() const
 }
 
 template <typename T>
-typename boost::enable_if<Internal::is_shared_pointer<T>, bool>::type
-Item::tryToClone(T *ret, const int *ptr) const
+typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
+Item::tryToClone(T *ret, const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
+    static_assert(!PayloadType::isPolymorphic,
+                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
 
@@ -626,11 +627,12 @@ Item::tryToClone(T *ret, const int *ptr) const
 }
 
 template <typename T>
-typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
-Item::tryToClone(T *ret) const
+typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type
+Item::tryToClone(T *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
+    static_assert(!PayloadType::isPolymorphic,
+                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     return false;
 }
@@ -638,20 +640,22 @@ Item::tryToClone(T *ret) const
 template <typename T>
 bool Item::hasPayload() const
 {
-    BOOST_STATIC_ASSERT(!boost::is_pointer<T>::value);
+    static_assert(!std::is_pointer<T>::value, "Payload type cannot be a pointer");
     return hasPayload() && hasPayloadImpl<T>();
 }
 
 template <typename T>
-typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
 Item::hasPayloadImpl(const int *ptr) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
+    static_assert(PayloadType::isPolymorphic,
+                  "Non-polymorphic payload type in polymorphic implementation is no allowed");
 
     typedef typename Internal::get_hierarchy_root<T>::type Root_T;
     typedef Internal::PayloadTrait<Root_T> RootType;
-    BOOST_STATIC_ASSERT((!RootType::isPolymorphic));   // prevent endless recursion
+    static_assert(!RootType::isPolymorphic,
+                  "Root type of payload type must not be polymorphic");   // prevent endless recursion
 
     try {
         return hasPayloadImpl<Root_T>()
@@ -663,11 +667,12 @@ Item::hasPayloadImpl(const int *ptr) const
 }
 
 template <typename T>
-typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type
 Item::hasPayloadImpl() const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
+    static_assert(!PayloadType::isPolymorphic,
+                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
 
@@ -688,26 +693,28 @@ Item::hasPayloadImpl() const
 template <typename T>
 void Item::setPayload(const T &p)
 {
-    BOOST_STATIC_ASSERT((!boost::is_pointer<T>::value));
+    static_assert(!std::is_pointer<T>::value, "Payload type must not be a pointer");
     setPayloadImpl(p);
 }
 
 template <typename T>
-typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
+typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic>::type
 Item::setPayloadImpl(const T &p, const int *)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((PayloadType::isPolymorphic));
+    static_assert(PayloadType::isPolymorphic,
+                  "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
     typedef typename Internal::get_hierarchy_root<T>::type Root_T;
     typedef Internal::PayloadTrait<Root_T> RootType;
-    BOOST_STATIC_ASSERT((!RootType::isPolymorphic));   // prevent endless recursion
+    static_assert(!RootType::isPolymorphic,
+                  "Root type of payload type must not be polymorphic");   // prevent endless recursion
 
     setPayloadImpl<Root_T>(p);
 }
 
 template <typename T>
-typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
+typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic>::type
 Item::setPayloadImpl(const T &p)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
@@ -732,7 +739,7 @@ void Item::setPayload(std::auto_ptr<T> p)
 template <typename T>
 void Item::addToLegacyMapping(const QString &mimeType) {
     typedef Internal::PayloadTrait<T> PayloadType;
-    BOOST_STATIC_ASSERT((!PayloadType::isPolymorphic));
+    static_assert(!PayloadType::isPolymorphic, "Payload type must not be polymorphic");
     std::auto_ptr<PayloadBase> p(new Payload<T>);
     addToLegacyMappingImpl(mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p);
 }

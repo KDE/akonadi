@@ -33,7 +33,6 @@
 #include <utility>
 
 using namespace Akonadi;
-using namespace boost;
 
 namespace {
 
@@ -48,7 +47,7 @@ struct nodelete
 struct ByTypeId
 {
     typedef bool result_type;
-    bool operator()(const boost::shared_ptr<PayloadBase> &lhs, const boost::shared_ptr<PayloadBase> &rhs) const
+    bool operator()(const std::shared_ptr<PayloadBase> &lhs, const std::shared_ptr<PayloadBase> &rhs) const
     {
         return strcmp(lhs->typeName(), rhs->typeName()) < 0 ;
     }
@@ -56,7 +55,7 @@ struct ByTypeId
 
 } // anon namespace
 
-typedef QHash< QString, std::map< boost::shared_ptr<PayloadBase>, std::pair<int, int>, ByTypeId > > LegacyMap;
+typedef QHash< QString, std::map< std::shared_ptr<PayloadBase>, std::pair<int, int>, ByTypeId > > LegacyMap;
 Q_GLOBAL_STATIC(LegacyMap, typeInfoToMetaTypeIdMap)
 Q_GLOBAL_STATIC_WITH_ARGS(QReadWriteLock, legacyMapLock, (QReadWriteLock::Recursive))
 
@@ -65,7 +64,7 @@ void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, s
     if (!p.get()) {
         return;
     }
-    const boost::shared_ptr<PayloadBase> sp(p);
+    const std::shared_ptr<PayloadBase> sp(p.get());
     const QWriteLocker locker(legacyMapLock());
     std::pair<int, int> &item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
     item.first = spid;
@@ -94,18 +93,18 @@ public:
     }
 
     template <typename T>
-    shared_ptr<T> makeUnlockingPointer(T *t)
+    std::shared_ptr<T> makeUnlockingPointer(T *t)
     {
         if (t) {
             // the bind() doesn't throw, so if shared_ptr
             // construction line below, or anything else after it,
             // throws, we're unlocked. Mark us as such:
             locked = false;
-            const shared_ptr<T> result(t, bind(&QReadWriteLock::unlock, rwl));
+            const std::shared_ptr<T> result(t, [&] (const void*) { rwl->unlock(); });
             // from now on, the shared_ptr is responsible for unlocking
             return result;
         } else {
-            return shared_ptr<T>();
+            return std::shared_ptr<T>();
         }
     }
 private:
@@ -114,17 +113,17 @@ private:
 };
 }
 
-static shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QString &mimeType, PayloadBase *p)
+static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QString &mimeType, PayloadBase *p)
 {
     MyReadLocker locker(legacyMapLock());
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind(mimeType);
     if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
-        return shared_ptr<const std::pair<int, int> >();
+        return std::shared_ptr<const std::pair<int, int> >();
     }
-    const boost::shared_ptr<PayloadBase> sp(p, nodelete());
+    const std::shared_ptr<PayloadBase> sp(p, nodelete());
     const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
     if (it == hit->end()) {
-        return shared_ptr<const std::pair<int, int> >();
+        return std::shared_ptr<const std::pair<int, int> >();
     }
 
     return locker.makeUnlockingPointer(&it->second);
@@ -522,7 +521,7 @@ void Item::setPayloadBase(PayloadBase *p)
 
 void ItemPrivate::setLegacyPayloadBaseImpl(std::auto_ptr<PayloadBase> p)
 {
-    if (const shared_ptr<const std::pair<int, int> > pair = lookupLegacyMapping(mMimeType, p.get())) {
+    if (const std::shared_ptr<const std::pair<int, int> > pair = lookupLegacyMapping(mMimeType, p.get())) {
         std::auto_ptr<PayloadBase> clone;
         if (p.get()) {
             clone.reset(p->clone());

@@ -28,8 +28,6 @@
 #include "itempayloadinternals_p.h"
 #include "tag.h"
 
-#include <boost/bind.hpp>
-
 #include <memory>
 #include <algorithm>
 #include <cassert>
