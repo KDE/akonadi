@@ -338,16 +338,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 continue;
             }
 
-            ++it;
-        }
-    }
-
-    const bool listFilterEnabled = mEnabledCollections || mCollectionsToIndex || mCollectionsToDisplay || mCollectionsToSynchronize;
-
-    //If we matched referenced collecions we need to ensure the collection was referenced from this session
-    if (listFilterEnabled) {
-        auto it = mCollections.begin();
-        while (it != mCollections.end()) {
+            //If we matched referenced collecions we need to ensure the collection was referenced from this session
             const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
             //The collection is referenced, but not from this session. We need to reevaluate the filter condition
             if (it->referenced() && !isReferencedFromSession) {
@@ -358,7 +349,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                     continue;
                 }
             }
-            it++;
+
+            ++it;
         }
     }
 
@@ -374,6 +366,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     }
 
     QVariantList ancestorIds;
+    //We'd only require the non-leaf collections, but we don't know which those are, so we take all.
     Q_FOREACH (const Collection::Id id, mCollections.keys()) {
         ancestorIds << id;
     }
@@ -431,6 +424,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         }
     }
 
+    //Since we don't know when we'll need the ancestor attributes, we have to fetch them all together.
+    //The alternative would be to query for each collection which would reintroduce the N+1 query performance problem.
     if (!mAncestorAttributes.isEmpty()) {
         retrieveAttributes(ancestorIds);
     }
