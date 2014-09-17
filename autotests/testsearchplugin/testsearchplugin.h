@@ -28,6 +28,7 @@ class TestSearchPlugin : public QObject, public Akonadi::AbstractSearchPlugin
 {
     Q_OBJECT
     Q_INTERFACES(Akonadi::AbstractSearchPlugin)
+    Q_PLUGIN_METADATA(IID "org.kde.akonadi.TestSearchPlugin")
 public:
     virtual QSet<qint64> search(const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes);
 

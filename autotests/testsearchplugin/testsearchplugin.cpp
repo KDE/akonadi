@@ -40,5 +40,3 @@ QSet<qint64> TestSearchPlugin::parseQuery(const QString &queryString)
     }
     return resultSet;
 }
-
-//QT5 Q_EXPORT_PLUGIN2(testsearchplugin, TestSearchPlugin)
