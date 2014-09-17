@@ -51,7 +51,7 @@ typedef QHash< QString, std::map< std::shared_ptr<PayloadBase>, std::pair<int, i
 Q_GLOBAL_STATIC(LegacyMap, typeInfoToMetaTypeIdMap)
 Q_GLOBAL_STATIC_WITH_ARGS(QReadWriteLock, legacyMapLock, (QReadWriteLock::Recursive))
 
-void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, std::auto_ptr<PayloadBase> p)
+void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, std::unique_ptr<PayloadBase> &p)
 {
     if (!p.get()) {
         return;
@@ -508,13 +508,13 @@ void Item::throwPayloadException(int spid, int mtid) const
 
 void Item::setPayloadBase(PayloadBase *p)
 {
-    d_func()->setLegacyPayloadBaseImpl(std::auto_ptr<PayloadBase>(p));
+    d_func()->setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase>(p));
 }
 
-void ItemPrivate::setLegacyPayloadBaseImpl(std::auto_ptr<PayloadBase> p)
+void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase> p)
 {
     if (const std::shared_ptr<const std::pair<int, int> > pair = lookupLegacyMapping(mMimeType, p.get())) {
-        std::auto_ptr<PayloadBase> clone;
+        std::unique_ptr<PayloadBase> clone;
         if (p.get()) {
             clone.reset(p->clone());
         }
@@ -526,12 +526,12 @@ void ItemPrivate::setLegacyPayloadBaseImpl(std::auto_ptr<PayloadBase> p)
     }
 }
 
-void Item::setPayloadBaseV2(int spid, int mtid, std::auto_ptr<PayloadBase> p)
+void Item::setPayloadBaseV2(int spid, int mtid, std::unique_ptr<PayloadBase> &p)
 {
     d_func()->setPayloadBaseImpl(spid, mtid, p, false);
 }
 
-void Item::addPayloadBaseVariant(int spid, int mtid, std::auto_ptr<PayloadBase> p) const
+void Item::addPayloadBaseVariant(int spid, int mtid, std::unique_ptr<PayloadBase> &p) const
 {
     d_func()->setPayloadBaseImpl(spid, mtid, p, true);
 }

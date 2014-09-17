@@ -365,6 +365,7 @@ public:
     //@cond PRIVATE
     template <typename T> void setPayload(T *p);
     template <typename T> void setPayload(std::auto_ptr<T> p);
+    template <typename T> void setPayload(std::unique_ptr<T> p);
     //@endcond
 
     /**
@@ -470,9 +471,9 @@ private:
     void setPayloadBase(PayloadBase *p);
     PayloadBase *payloadBaseV2(int sharedPointerId, int metaTypeId) const;
     //std::auto_ptr<PayloadBase> takePayloadBase( int sharedPointerId, int metaTypeId );
-    void setPayloadBaseV2(int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p);
-    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p) const;
-    static void addToLegacyMappingImpl(const QString &mimeType, int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p);
+    void setPayloadBaseV2(int sharedPointerId, int metaTypeId, std::unique_ptr<PayloadBase> &p);
+    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId, std::unique_ptr<PayloadBase> &p) const;
+    static void addToLegacyMappingImpl(const QString &mimeType, int sharedPointerId, int metaTypeId, std::unique_ptr<PayloadBase> &p);
 
     /**
      * Try to ensure that we have a variant of the payload for metatype id @a mtid.
@@ -622,7 +623,7 @@ Item::tryToCloneImplImpl(T* ret, const int *) const
         const T nt = PayloadType::clone(p->payload);
         if (!PayloadType::isNull(nt)) {
             // if clone succeeded, add the clone to the Item:
-            std::auto_ptr<PayloadBase> npb(new Payload<T>(nt));
+            std::unique_ptr<PayloadBase> npb(new Payload<T>(nt));
             addPayloadBaseVariant(PayloadType::sharedPointerId, metaTypeId, npb);
             // and return it
             if (ret) {
@@ -760,7 +761,7 @@ typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic>::type
 Item::setPayloadImpl(const T &p)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    std::auto_ptr<PayloadBase> pb(new Payload<T>(p));
+    std::unique_ptr<PayloadBase> pb(new Payload<T>(p));
     setPayloadBaseV2(PayloadType::sharedPointerId,
                      PayloadType::elementMetaTypeId(),
                      pb);
@@ -779,10 +780,16 @@ void Item::setPayload(std::auto_ptr<T> p)
 }
 
 template <typename T>
+void Item::setPayload(std::unique_ptr<T> p)
+{
+    p.Nope_even_std_unique_ptr_is_not_allowed;
+}
+
+template <typename T>
 void Item::addToLegacyMapping(const QString &mimeType) {
     typedef Internal::PayloadTrait<T> PayloadType;
     static_assert(!PayloadType::isPolymorphic, "Payload type must not be polymorphic");
-    std::auto_ptr<PayloadBase> p(new Payload<T>);
+    std::unique_ptr<PayloadBase> p(new Payload<T>);
     addToLegacyMappingImpl(mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p);
 }
 

@@ -36,7 +36,7 @@ Exception::Exception(const char *what) throw()
     : d(0)
 {
     try {
-        std::auto_ptr<Private> nd(new Private);
+        std::unique_ptr<Private> nd(new Private);
         nd->what = what;
         d = nd.release();
     } catch (...) {
@@ -47,7 +47,7 @@ Exception::Exception(const QByteArray &what) throw()
     : d(0)
 {
     try {
-        std::auto_ptr<Private> nd(new Private);
+        std::unique_ptr<Private> nd(new Private);
         nd->what = what;
         d = nd.release();
     } catch (...) {
@@ -58,7 +58,7 @@ Exception::Exception(const QString &what) throw()
     : d(0)
 {
     try {
-        std::auto_ptr<Private> nd(new Private);
+        std::unique_ptr<Private> nd(new Private);
         nd->what = what.toUtf8();
         d = nd.release();
     } catch (...) {
@@ -73,7 +73,7 @@ Exception::Exception(const Akonadi::Exception &other) throw()
         return;
     }
     try {
-        std::auto_ptr<Private> nd(new Private(*other.d));
+        std::unique_ptr<Private> nd(new Private(*other.d));
         d = nd.release();
     } catch (...) {
     }

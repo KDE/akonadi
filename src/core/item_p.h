@@ -384,7 +384,7 @@ public:
     }
 #endif
 
-    void setPayloadBaseImpl(int spid, int mtid, std::auto_ptr<PayloadBase> p, bool add) const   /*sic!*/
+    void setPayloadBaseImpl(int spid, int mtid, std::unique_ptr<PayloadBase> &p, bool add) const   /*sic!*/
     {
 
         if (!add) {
@@ -407,7 +407,7 @@ public:
         tp.metaTypeId = mtid;
     }
 
-    void setLegacyPayloadBaseImpl(std::auto_ptr<PayloadBase> p);
+    void setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase> p);
     void tryEnsureLegacyPayload() const;
 
     mutable _detail::clone_ptr<PayloadBase> mLegacyPayload;
