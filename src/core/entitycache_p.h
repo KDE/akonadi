@@ -33,7 +33,6 @@
 
 #include "akonadiprivate_export.h"
 
-#include <kdebug.h>
 #include <qobject.h>
 #include <QQueue>
 #include <QVariant>
@@ -197,7 +196,7 @@ private:
         typename T::Id id = job->property("EntityCacheNode").template value<typename T::Id>();
         // Error handling?
         if (job->error()) {
-            kWarning() << job->errorString();
+            qWarning() << job->errorString();
         }
         EntityCacheNode<T> *node = cacheNodeForId(id);
         if (!node) {
@@ -462,7 +461,7 @@ private:
     void processResult(KJob *job)
     {
         if (job->error()) {
-            kWarning() << job->errorString();
+            qWarning() << job->errorString();
         }
         const QList<Entity::Id> ids = job->property("EntityListCacheIds").value< QList<Entity::Id> >();
 
