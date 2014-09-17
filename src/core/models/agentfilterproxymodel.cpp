@@ -23,9 +23,10 @@
 #include "agentinstancemodel.h"
 
 #include <qdebug.h>
-#include <kmimetype.h>
 
 #include <QtCore/QStringList>
+#include <QtCore/QMimeDatabase>
+#include <QtCore/QMimeType>
 
 #include <boost/static_assert.hpp>
 
@@ -100,15 +101,16 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
     }
 
     if (!d->mimeTypes.isEmpty()) {
+        QMimeDatabase mimeDb;
         bool found = false;
         foreach (const QString &mimeType, index.data(AgentTypeModel::MimeTypesRole).toStringList()) {
             if (d->mimeTypes.contains(mimeType)) {
                 found = true;
             } else {
-                KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-                if (mimeTypePtr) {
+                const QMimeType mt = mimeDb.mimeTypeForName(mimeType);
+                if (mt.isValid()) {
                     foreach (const QString &type, d->mimeTypes) {
-                        if (mimeTypePtr->is(type)) {
+                        if (mt.inherits(type)) {
                             found = true;
                             break;
                         }

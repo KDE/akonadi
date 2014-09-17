@@ -24,7 +24,6 @@
 #include "mimetypechecker.h"
 
 #include <qdebug.h>
-#include <kmimetype.h>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

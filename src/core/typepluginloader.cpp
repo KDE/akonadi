@@ -24,15 +24,15 @@
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 
-// KDE core
 #include <qdebug.h>
-#include <kmimetype.h>
 
 // Qt
 #include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
+#include <QtCore/QMimeDatabase>
+#include <QtCore/QMimeType>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
@@ -264,11 +264,12 @@ public:
                  << "found" << names.size() << "plugins." << endl;
         QMap<QString, MimeTypeEntry> map;
         QRegExp rx(QStringLiteral("(.+)@(.+)"));
+        QMimeDatabase mimeDb;
         Q_FOREACH (const QString &name, names) {
             if (rx.exactMatch(name)) {
-                KMimeType::Ptr mime = KMimeType::mimeType(rx.cap(1), KMimeType::ResolveAliases);
-                if (mime) {
-                    const QString mimeType = mime->name();
+                const QMimeType mime = mimeDb.mimeTypeForName(rx.cap(1));
+                if (mime.isValid()) {
+                    const QString mimeType = mime.name();
                     const QByteArray classType = rx.cap(2).toLatin1();
                     QMap<QString, MimeTypeEntry>::iterator it = map.find(mimeType);
                     if (it == map.end()) {
@@ -336,15 +337,16 @@ public:
 private:
     QObject *findBestMatchImpl(const QString &type, const QVector<int> &metaTypeIds, int &chosen) const
     {
-        KMimeType::Ptr mimeType = KMimeType::mimeType(type, KMimeType::ResolveAliases);
-        if (!mimeType) {
+        const QMimeDatabase mimeDb;
+        const QMimeType mimeType = mimeDb.mimeTypeForName(type);
+        if (!mimeType.isValid()) {
             return mDefaultPlugin.plugin();
         }
 
         // step 1: find all plugins that match at all
         QVector<int> matchingIndexes;
         for (int i = 0, end = allMimeTypes.size(); i < end; ++i) {
-            if (mimeType->is(allMimeTypes[i].type())) {
+            if (mimeType.inherits(allMimeTypes[i].type())) {
                 matchingIndexes.append(i);
             }
         }
@@ -356,12 +358,12 @@ private:
         } else {
             boost::adjacency_list<> graph(matchingIndexes.size());
             for (int i = 0, end = matchingIndexes.size(); i != end; ++i) {
-                KMimeType::Ptr mimeType = KMimeType::mimeType(allMimeTypes[matchingIndexes[i]].type(), KMimeType::ResolveAliases);
-                if (!mimeType) {
+                const QMimeType mimeType = mimeDb.mimeTypeForName(allMimeTypes[matchingIndexes[i]].type());
+                if (!mimeType.isValid()) {
                     continue;
                 }
                 for (int j = 0; j != end; ++j) {
-                    if (i != j && mimeType->is(allMimeTypes[matchingIndexes[j]].type())) {
+                    if (i != j && mimeType.inherits(allMimeTypes[matchingIndexes[j]].type())) {
                         boost::add_edge(j, i, graph);
                     }
                 }

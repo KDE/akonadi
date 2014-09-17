@@ -36,10 +36,11 @@
 
 #include <akonadi/private/notificationmessagev3_p.h>
 
-#include <kmimetype.h>
-
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+
+#include <QMimeDatabase>
+#include <QMimeType>
 
 namespace Akonadi {
 
@@ -79,6 +80,7 @@ public:
     CollectionCache *collectionCache;
     ItemListCache *itemCache;
     TagListCache *tagCache;
+    QMimeDatabase mimeDatabase;
 
     // The waiting list
     QQueue<NotificationMessageV3> pendingNotifications;
@@ -274,13 +276,13 @@ private:
             return true;
         }
 
-        KMimeType::Ptr mimeType = KMimeType::mimeType(mimetype, KMimeType::ResolveAliases);
-        if (!mimeType) {
+        const QMimeType mimeType = mimeDatabase.mimeTypeForName(mimetype);
+        if (!mimeType.isValid()) {
             return false;
         }
 
         foreach (const QString &mt, mimetypes) {
-            if (mimeType->is(mt)) {
+            if (mimeType.inherits(mt)) {
                 return true;
             }
         }

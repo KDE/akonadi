@@ -20,7 +20,8 @@
 #ifndef MIMETYPECHECKER_P_H
 #define MIMETYPECHECKER_P_H
 
-#include <KMimeType>
+#include <QMimeType>
+#include <QMimeDatabase>
 
 #include <QtCore/QSet>
 #include <QtCore/QStringList>
@@ -49,13 +50,14 @@ public:
             return true;
         }
 
-        KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-        if (!mimeTypePtr) {
+        QMimeDatabase db;
+        const QMimeType mt = db.mimeTypeForName(mimeType);
+        if (!mt.isValid()) {
             return false;
         }
 
         foreach (const QString &wantedMimeType, mWantedMimeTypes) {
-            if (mimeTypePtr->is(wantedMimeType)) {
+            if (mt.inherits(wantedMimeType)) {
                 return true;
             }
         }

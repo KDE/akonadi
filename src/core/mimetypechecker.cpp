@@ -122,12 +122,13 @@ bool MimeTypeChecker::isWantedItem(const Item &item, const QString &wantedMimeTy
         return true;
     }
 
-    KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-    if (!mimeTypePtr) {
+    QMimeDatabase db;
+    const QMimeType mt = db.mimeTypeForName(mimeType);
+    if (!mt.isValid()) {
         return false;
     }
 
-    return mimeTypePtr->is(wantedMimeType);
+    return mt.inherits(wantedMimeType);
 }
 
 bool MimeTypeChecker::isWantedCollection(const Collection &collection, const QString &wantedMimeType)
@@ -150,12 +151,13 @@ bool MimeTypeChecker::isWantedCollection(const Collection &collection, const QSt
             return true;
         }
 
-        KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-        if (!mimeTypePtr) {
+        QMimeDatabase db;
+        const QMimeType mt = db.mimeTypeForName(mimeType);
+        if (!mt.isValid()) {
             continue;
         }
 
-        if (mimeTypePtr->is(wantedMimeType)) {
+        if (mt.inherits(wantedMimeType)) {
             return true;
         }
     }
