@@ -96,7 +96,7 @@ class ItemBenchmark : public QObject
           lastJob = new ItemCreateJob( item, parent, this );
           connect( lastJob, SIGNAL(result(KJob*)), SLOT(createResult(KJob*)) );
         }
-        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+        AkonadiTest::akWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }
     }
 
@@ -120,7 +120,7 @@ class ItemBenchmark : public QObject
         fetchJob->fetchScope().fetchFullPayload();
         fetchJob->fetchScope().setCacheOnly( true );
         connect( fetchJob, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
-        QTest::kWaitForSignal( fetchJob, SIGNAL(result(KJob*)) );
+        AkonadiTest::akWaitForSignal( fetchJob, SIGNAL(result(KJob*)) );
       }
     }
 
@@ -146,7 +146,7 @@ class ItemBenchmark : public QObject
           lastJob = job;
           connect( lastJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
         }
-        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+        AkonadiTest::akWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }
     }
 
@@ -166,7 +166,7 @@ class ItemBenchmark : public QObject
         for ( int i = 0; i < count && !mCreatedItems[size].isEmpty(); ++i )
           items << mCreatedItems[size].takeFirst();
         lastJob = new ItemDeleteJob( items, this );
-        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+        AkonadiTest::akWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }
 
       if ( emptyItemArrayIterations )

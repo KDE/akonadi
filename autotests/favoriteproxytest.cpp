@@ -22,6 +22,8 @@
 #include "test_utils.h"
 
 #include <KConfigGroup>
+#include <KSharedConfig>
+
 #include <entitytreemodel.h>
 #include <control.h>
 #include <entitytreemodel_p.h>

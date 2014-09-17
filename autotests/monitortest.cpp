@@ -137,7 +137,7 @@ void MonitorTest::testMonitor()
   AKVERIFYEXEC( create );
   monitorCol = create->collection();
   QVERIFY( monitorCol.isValid() );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( caddspy.count(), 1 );
   QList<QVariant> arg = caddspy.takeFirst();
@@ -166,7 +166,7 @@ void MonitorTest::testMonitor()
   AKVERIFYEXEC( append );
   Item monitorRef = append->item();
   QVERIFY( monitorRef.isValid() );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
 
   QCOMPARE( cstatspy.count(), 1 );
   arg = cstatspy.takeFirst();
@@ -194,7 +194,7 @@ void MonitorTest::testMonitor()
   item.setPayload<QByteArray>( "some new content" );
   ItemModifyJob *store = new ItemModifyJob( item, this );
   AKVERIFYEXEC( store );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
 
   QCOMPARE( cstatspy.count(), 1 );
   arg = cstatspy.takeFirst();
@@ -222,7 +222,7 @@ void MonitorTest::testMonitor()
   // move an item
   ItemMoveJob *move = new ItemMoveJob( item, res3 );
   AKVERIFYEXEC( move );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
   QCOMPARE( cstatspy.count(), 2 );
   arg = cstatspy.takeFirst();       // the destination collection
   QCOMPARE( arg.at(0).value<Collection::Id>(), res3.id() );
@@ -251,7 +251,7 @@ void MonitorTest::testMonitor()
   // delete an item
   ItemDeleteJob *del = new ItemDeleteJob( monitorRef, this );
   AKVERIFYEXEC( del );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
 
   QCOMPARE( cstatspy.count(), 1 );
   arg = cstatspy.takeFirst();
@@ -284,7 +284,7 @@ void MonitorTest::testMonitor()
   subscribeJob->unsubscribe( Collection::List() << subCollection );
   AKVERIFYEXEC( subscribeJob );
   // Wait for unsubscribed signal, it goes after changed, so we can check for both
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000 ) );
   QCOMPARE( cmodspy.size(), 1 );
   arg = cmodspy.takeFirst();
   col = arg.at( 0 ).value<Collection>();
@@ -300,7 +300,7 @@ void MonitorTest::testMonitor()
   subscribeJob->subscribe( Collection::List() << subCollection );
   AKVERIFYEXEC( subscribeJob );
   // Wait for subscribed signal, it goes after changed, so we can check for both
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
   QCOMPARE( cmodspy.size(), 1 );
   arg = cmodspy.takeFirst();
   col = arg.at( 0 ).value<Collection>();
@@ -330,7 +330,7 @@ void MonitorTest::testMonitor()
   monitorCol.setName( QLatin1String("changed name") );
   CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
   AKVERIFYEXEC( mod );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( cmodspy.count(), 1 );
   arg = cmodspy.takeFirst();
@@ -354,7 +354,7 @@ void MonitorTest::testMonitor()
   Collection dest = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
   CollectionMoveJob *cmove = new CollectionMoveJob( monitorCol, dest, this );
   AKVERIFYEXEC( cmove );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( cmvspy.count(), 1 );
   arg = cmvspy.takeFirst();
@@ -382,7 +382,7 @@ void MonitorTest::testMonitor()
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
   AKVERIFYEXEC( cdel );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( crmspy.count(), 1 );
   arg = crmspy.takeFirst();
@@ -413,7 +413,7 @@ void MonitorTest::testVirtualCollectionsMonitoring()
 
   SearchCreateJob *job = new SearchCreateJob( QLatin1String("Test search collection"), QLatin1String("test-search-query"), this );
   AKVERIFYEXEC( job );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
   QCOMPARE( caddspy.count(), 1 );
 #endif
 }

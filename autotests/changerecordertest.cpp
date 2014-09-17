@@ -90,7 +90,7 @@ private Q_SLOTS:
                 triggerChange(id);
                 if (action != lastAction) {
                     // enter event loop and wait for change notifications from the server
-                    QVERIFY(QTest::kWaitForSignal(rec, SIGNAL(changesAdded()), 1000));
+                    QVERIFY(AkonadiTest::akWaitForSignal(rec, SIGNAL(changesAdded()), 1000));
                 }
             } else if (action.at(0) == QLatin1Char('d')) {
                 // d1 = "delete item 1"
@@ -142,7 +142,7 @@ private:
 
         rec->replayNext();
         if (itemChangedSpy.isEmpty()) {
-            QVERIFY(QTest::kWaitForSignal(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000));
+            QVERIFY(AkonadiTest::akWaitForSignal(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000));
         }
         QCOMPARE(itemChangedSpy.count(), 1);
         QCOMPARE(itemChangedSpy.at(0).at(0).value<Akonadi::Item>().id(), expectedUid);

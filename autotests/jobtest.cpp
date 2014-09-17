@@ -65,13 +65,13 @@ class JobTest : public QObject
       QCOMPARE(sessionQueueSpy.size(), 2);
       QCOMPARE(job1DoneSpy.size(), 0);
 
-      QVERIFY(QTest::kWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
       QCOMPARE(job1DoneSpy.size(), 0);
 
       job1->done();
       QCOMPARE(job1DoneSpy.size(), 1);
 
-      QVERIFY(QTest::kWaitForSignal(job2, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(job2, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
       QCOMPARE(job2DoneSpy.size(), 0);
       job2->done();
 
@@ -97,11 +97,11 @@ class JobTest : public QObject
       QVERIFY(job2DoneSpy.isValid());
 
       QCOMPARE(sessionQueueSpy.size(), 2);
-      QVERIFY(QTest::kWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
 
       // one job running, one queued, now kill the session
       session.clear();
-      QVERIFY(QTest::kWaitForSignal(&session, SIGNAL(reconnected()), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(&session, SIGNAL(reconnected()), 1));
 
       QCOMPARE(job1DoneSpy.size(), 1);
       QCOMPARE(job2DoneSpy.size(), 1);
@@ -126,7 +126,7 @@ class JobTest : public QObject
       QVERIFY(job2DoneSpy.isValid());
 
       QCOMPARE(sessionQueueSpy.size(), 2);
-      QVERIFY(QTest::kWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
 
       // one job running, one queued, now kill the waiting job
       QVERIFY(job2->kill(KJob::EmitResult));
@@ -158,7 +158,7 @@ class JobTest : public QObject
       QVERIFY(job2DoneSpy.isValid());
 
       QCOMPARE(sessionQueueSpy.size(), 2);
-      QVERIFY(QTest::kWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
 
       // one job running, one queued, now kill the running one
       QVERIFY(job1->kill(KJob::EmitResult));
@@ -167,7 +167,7 @@ class JobTest : public QObject
       QCOMPARE(job2DoneSpy.size(), 0);
 
       // session needs to reconnect, then execute the next job
-      QVERIFY(QTest::kWaitForSignal(job2, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+      QVERIFY(AkonadiTest::akWaitForSignal(job2, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
       QCOMPARE(sessionReconnectSpy.size(), 1);
       job2->done();
 

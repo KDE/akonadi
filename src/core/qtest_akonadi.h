@@ -20,11 +20,11 @@
 #ifndef QTEST_AKONADI_H
 #define QTEST_AKONADI_H
 
-#include <qtest_kde.h>
-
 #include <agentinstance.h>
 #include <agentmanager.h>
-#include <KLocalizedString>
+
+#include <QtTest/QTest>
+#include <QtTest/QSignalSpy>
 
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib
@@ -43,13 +43,13 @@ int main(int argc, char *argv[]) \
 { \
   setenv( "LC_ALL", "C", 1); \
   unsetenv( "KDE_COLOR_DEBUG" ); \
-  KAboutData aboutData( QLatin1String( "qttest" ), i18n( "KDE Test Program" ), QLatin1String( "version" ) );  \
   QApplication app( argc, argv ); \
-  KAboutData::setApplicationData(aboutData); \
-  qRegisterMetaType<QUrl>(); /*as done by kapplication*/ \
+  app.setApplicationName(QLatin1String("qttest")); \
+  app.setOrganizationDomain(QLatin1String("kde.org")); \
+  app.setOrganizationName(QLatin1String("KDE")); \
+  QGuiApplication::setQuitOnLastWindowClosed(false); \
   qRegisterMetaType<QList<QUrl>>(); \
   TestObject tc; \
-  KGlobal::ref(); /* don't quit qeventloop after closing a mainwindow */ \
   return QTest::qExec( &tc, argc, argv ); \
 }
 
@@ -71,6 +71,17 @@ void setAllResourcesOffline() {
     foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {    //krazy:exclude=foreach
         agent.setIsOnline(false);
     }
+}
+
+bool akWaitForSignal(QObject *sender, const char *member, int timeout = 1000)
+{
+    QSignalSpy spy(sender, member);
+    bool ok = false;
+    [&]() {
+        QTRY_VERIFY_WITH_TIMEOUT(spy.count() > 0, timeout);
+        ok = true;
+    }();
+    return ok;
 }
 
 } // namespace
