@@ -516,13 +516,6 @@ private:
     typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
     tryToCloneImpl(T *ret) const;
 
-    template <typename T, typename NewT>
-    typename std::enable_if<Internal::shared_pointer_traits<NewT>::defined, bool>::type
-    tryToCloneImplImpl(T *ret, const int * /*disambiguate*/ = 0) const;
-    template <typename T, typename NewT>
-    typename std::enable_if<!Internal::shared_pointer_traits<NewT>::defined, bool>::type
-    tryToCloneImplImpl(T *ret) const;
-
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
      * @param collectionId the unique identifier of the collection where this item is stored in.
@@ -608,10 +601,9 @@ Item::payloadImpl() const
     return ret;
 }
 
-// TODO: Could we somehow merge the *impl and *implimpl?
 template<typename T, typename NewT>
-typename std::enable_if<Internal::shared_pointer_traits<NewT>::defined, bool>::type
-Item::tryToCloneImplImpl(T* ret, const int *) const
+typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type
+Item::tryToCloneImpl(T* ret, const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     typedef Internal::PayloadTrait<NewT> NewPayloadType;
@@ -637,24 +629,10 @@ Item::tryToCloneImplImpl(T* ret, const int *) const
 }
 
 template <typename T, typename NewT>
-typename std::enable_if<!Internal::shared_pointer_traits<NewT>::defined, bool>::type
-Item::tryToCloneImplImpl(T *) const
+typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
+Item::tryToCloneImpl(T *) const
 {
     return false;
-}
-
-template <typename T, typename NewT>
-typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type
-Item::tryToCloneImpl(T *ret, const int *) const
-{
-    return tryToCloneImplImpl<T, NewT>(ret);
-}
-
-template <typename T, typename NewT>
-typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
-Item::tryToCloneImpl(T *ret) const
-{
-    return tryToCloneImpl<T, typename Internal::shared_pointer_traits<NewT>::next_shared_ptr>(ret);
 }
 
 template <typename T>
@@ -665,7 +643,7 @@ Item::tryToClone(T *ret, const int *) const
     static_assert(!PayloadType::isPolymorphic,
                   "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
-    return tryToCloneImpl<T, typename Internal::shared_pointer_traits<typename PayloadType::ElementType>::next_shared_ptr>(ret);
+    return tryToCloneImpl<T, typename Internal::shared_pointer_traits<T>::next_shared_ptr>(ret);
 }
 
 template <typename T>

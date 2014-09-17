@@ -97,8 +97,6 @@ template <typename T>
 struct shared_pointer_traits
 {
     static const bool defined = false;
-
-    typedef boost::shared_ptr<T> next_shared_ptr;
 };
 
 template <typename T>
@@ -134,7 +132,7 @@ struct shared_pointer_traits< std::shared_ptr<T> >
     struct make {
         typedef std::shared_ptr<S> type;
     };
-    typedef void next_shared_ptr;
+    typedef boost::shared_ptr<T> next_shared_ptr;
 };
 
 template <typename T>
