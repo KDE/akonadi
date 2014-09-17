@@ -25,7 +25,8 @@ using namespace Akonadi;
 struct Akonadi::AttributeEntity::Private
 {
     Private()
-    {}
+    {
+    }
 
     ~Private()
     {

@@ -27,13 +27,15 @@
 class CollectionIdentificationAttribute::Private
 {
 public:
-    Private() {}
+    Private()
+    {
+    }
     QByteArray mFolderNamespace;
     QByteArray mIdentifier;
 };
 
 CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier, const QByteArray &folderNamespace)
-    :d(new Private)
+    : d(new Private)
 {
     d->mIdentifier = identifier;
     d->mFolderNamespace = folderNamespace;
@@ -69,7 +71,7 @@ QByteArray CollectionIdentificationAttribute::type() const
     return "collectionidentification";
 }
 
-Akonadi::Attribute* CollectionIdentificationAttribute::clone() const
+Akonadi::Attribute *CollectionIdentificationAttribute::clone() const
 {
     return new CollectionIdentificationAttribute(d->mIdentifier, d->mFolderNamespace);
 }
@@ -94,4 +96,3 @@ void CollectionIdentificationAttribute::deserialize(const QByteArray &data)
     d->mIdentifier = l[0];
     d->mFolderNamespace = l[1];
 }
-

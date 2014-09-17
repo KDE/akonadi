@@ -71,7 +71,7 @@ public:
     void checkDone();
     void slotItemsReceived(const Item::List &items);
     void slotLocalListDone(KJob *job);
-    void slotLocalDeleteDone(KJob *);
+    void slotLocalDeleteDone(KJob *job);
     void slotLocalChangeDone(KJob *job);
     void execute();
     void processItems();
@@ -128,9 +128,9 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
     mPendingJobs++;
     ItemCreateJob *create = new ItemCreateJob(item, mSyncCollection, subjobParent());
     if (!item.gid().isEmpty()) {
-        create->setMerge(ItemCreateJob::GID|ItemCreateJob::Silent);
+        create->setMerge(ItemCreateJob::GID | ItemCreateJob::Silent);
     } else {
-        create->setMerge(ItemCreateJob::RID|ItemCreateJob::Silent);
+        create->setMerge(ItemCreateJob::RID | ItemCreateJob::Silent);
     }
     q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
 }
@@ -192,14 +192,14 @@ ItemSync::~ItemSync()
 
 void ItemSync::setFullSyncItems(const Item::List &items)
 {
-  /*
-   * We received a list of items from the server:
-   * * fetch all local id's + rid's only
-   * * check each full sync item wether it's locally available
-   * * if it is modify the item
-   * * if it's not create it
-   * * delete all superfluous items
-   */
+    /*
+     * We received a list of items from the server:
+     * * fetch all local id's + rid's only
+     * * check each full sync item wether it's locally available
+     * * if it is modify the item
+     * * if it's not create it
+     * * delete all superfluous items
+     */
     Q_D(ItemSync);
     Q_ASSERT(!d->mIncremental);
     if (!d->mStreaming) {
@@ -237,13 +237,13 @@ void ItemSync::setDisableAutomaticDeliveryDone(bool disable)
 
 void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Item::List &removedItems)
 {
-  /*
-   * We received an incremental listing of items:
-   * * for each changed item:
-   * ** If locally available => modify
-   * ** else => create
-   * * removed items can be removed right away
-   */
+    /*
+     * We received an incremental listing of items:
+     * * for each changed item:
+     * ** If locally available => modify
+     * ** else => create
+     * * removed items can be removed right away
+     */
     Q_D(ItemSync);
     d->mIncremental = true;
     if (!d->mStreaming) {
@@ -319,9 +319,9 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
 
 QString ItemSyncPrivate::jobDebuggingString() const /*Q_DECL_OVERRIDE*/
 {
-  // TODO: also print out mIncremental and mTotalItemsProcessed, but they are set after the job
-  // started, so this requires passing jobDebuggingString to jobEnded().
-  return QString::fromLatin1("Collection %1 (%2)").arg(mSyncCollection.id()).arg(mSyncCollection.name());
+    // TODO: also print out mIncremental and mTotalItemsProcessed, but they are set after the job
+    // started, so this requires passing jobDebuggingString to jobEnded().
+    return QString::fromLatin1("Collection %1 (%2)").arg(mSyncCollection.id()).arg(mSyncCollection.name());
 }
 
 void ItemSyncPrivate::execute()
@@ -422,8 +422,9 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
     }
 }
 
-void ItemSyncPrivate::slotLocalDeleteDone(KJob *)
+void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 {
+    Q_UNUSED(job)
     mPendingJobs--;
     mProgress++;
 
@@ -529,6 +530,5 @@ void ItemSync::setBatchSize(int size)
     Q_D(ItemSync);
     d->mBatchSize = size;
 }
-
 
 #include "moc_itemsync.cpp"

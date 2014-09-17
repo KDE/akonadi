@@ -192,7 +192,7 @@ QVariant::Type Firstrun::argumentType(const QMetaObject *mo, const QString &meth
 {
     QMetaMethod m;
     for (int i = 0; i < mo->methodCount(); ++i) {
-    const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
+        const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
         if (signature.startsWith(method)) {
             m = mo->method(i);
         }

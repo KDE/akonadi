@@ -40,9 +40,9 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
 
     org::freedesktop::Akonadi::NotificationManager *manager =
         new org::freedesktop::Akonadi::NotificationManager(
-            ServerManager::serviceName(Akonadi::ServerManager::Server),
-            QStringLiteral("/notifications"),
-            DBusConnectionPool::threadConnection());
+        ServerManager::serviceName(Akonadi::ServerManager::Server),
+        QStringLiteral("/notifications"),
+        DBusConnectionPool::threadConnection());
 
     if (!manager) {
         // :TODO: error handling
@@ -65,9 +65,9 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
     delete manager;
     org::freedesktop::Akonadi::NotificationSource *notificationSource =
         new org::freedesktop::Akonadi::NotificationSource(
-            ServerManager::serviceName(Akonadi::ServerManager::Server),
-            p.path(),
-            DBusConnectionPool::threadConnection(), parent);
+        ServerManager::serviceName(Akonadi::ServerManager::Server),
+        p.path(),
+        DBusConnectionPool::threadConnection(), parent);
 
     if (!notificationSource) {
         // :TODO: error handling

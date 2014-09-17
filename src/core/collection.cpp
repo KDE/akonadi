@@ -285,7 +285,7 @@ void Collection::setLocalListPreference(Collection::ListPurpose purpose, Collect
 {
     Q_D(Collection);
 
-    switch(purpose) {
+    switch (purpose) {
     case ListDisplay:
         d->displayPreference = preference;
         break;
@@ -303,7 +303,7 @@ Collection::ListPreference Collection::localListPreference(Collection::ListPurpo
 {
     Q_D(const Collection);
 
-    switch(purpose) {
+    switch (purpose) {
     case ListDisplay:
         return d->displayPreference;
     case ListSync:

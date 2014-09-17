@@ -43,7 +43,7 @@
 
 using namespace Akonadi;
 
-class PasteHelperJob: public Akonadi::TransactionSequence
+class PasteHelperJob : public Akonadi::TransactionSequence
 {
     Q_OBJECT
 
@@ -89,9 +89,8 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         // Check if all items have the same parent collection ID
         const Collection parent = items.first().parentCollection();
         if (std::find_if(items.constBegin(), items.constEnd(),
-                         boost::bind(&Entity::operator!=, boost::bind(static_cast<Collection (Item::*)() const>(&Item::parentCollection), _1), parent))
-             == items.constEnd())
-        {
+                         boost::bind(&Entity::operator!=, boost::bind(static_cast<Collection(Item::*)() const>(&Item::parentCollection), _1), parent))
+            == items.constEnd()) {
             dragSourceCollection = parent;
         }
     }
@@ -119,14 +118,13 @@ PasteHelperJob::~PasteHelperJob()
 
 void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
 {
-    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
+    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
     qDebug() << fetch->error() << fetch->collections().count();
     if (fetch->error() || fetch->collections().count() != 1) {
         runActions();
         commit();
         return;
     }
-
 
     // If the source collection is virtual, treat copy and move actions differently
     const Collection sourceCollection = fetch->collections().first();
@@ -159,7 +157,7 @@ void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
         runCollectionsActions();
         commit();
     } else {
-      runActions();
+        runActions();
     }
 
     commit();
@@ -216,8 +214,6 @@ void PasteHelperJob::runCollectionsActions()
         Q_ASSERT(false); // WTF?!
     }
 }
-
-
 
 bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection)
 {
@@ -330,7 +326,6 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         }
         // TODO: handle non Akonadi URLs?
     }
-
 
     PasteHelperJob *job = new PasteHelperJob(action, items,
                                              collections, destination,

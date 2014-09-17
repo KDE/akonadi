@@ -145,5 +145,4 @@ void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFi
     d->listFilter = listFilter;
 }
 
-
 }

@@ -21,7 +21,6 @@
 #include "entity_p.h"
 #include "collection.h"
 
-
 using namespace Akonadi;
 
 Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection)

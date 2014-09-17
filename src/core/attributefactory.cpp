@@ -45,7 +45,8 @@ public:
     explicit DefaultAttribute(const QByteArray &type, const QByteArray &value = QByteArray())
         : mType(type)
         , mValue(value)
-    {}
+    {
+    }
 
     QByteArray type() const
     {
@@ -77,8 +78,11 @@ class StaticAttributeFactory : public AttributeFactory
 public:
     StaticAttributeFactory()
         : AttributeFactory()
-        , initialized(false) {}
-    void init() {
+        , initialized(false)
+    {
+    }
+    void init()
+    {
         if (initialized) {
             return;
         }

@@ -63,9 +63,9 @@ public:
         delete instance;
     }
 
-    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
+    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
     {
-        if (name == ServerManager::serviceName(ServerManager::ControlLock ) && !oldOwner.isEmpty() && newOwner.isEmpty()) {
+        if (name == ServerManager::serviceName(ServerManager::ControlLock) && !oldOwner.isEmpty() && newOwner.isEmpty()) {
             // Control.Lock has disappeared during startup, which means that akonadi_control
             // has terminated, most probably because it was not able to start akonadiserver
             // process. Don't wait 30 seconds for sefetyTimeout, but go into Broken state

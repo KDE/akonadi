@@ -25,7 +25,7 @@ using namespace Akonadi;
 struct Akonadi::TagFetchScope::Private
 {
     Private()
-    : mFetchIdOnly(false)
+        : mFetchIdOnly(false)
     {
     }
 
@@ -80,4 +80,3 @@ bool TagFetchScope::fetchIdOnly() const
 {
     return d->mFetchIdOnly;
 }
-

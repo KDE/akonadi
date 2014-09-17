@@ -37,14 +37,16 @@ using namespace boost;
 
 namespace {
 
-struct nodelete {
+struct nodelete
+{
     template <typename T>
     void operator()(T *)
     {
     }
 };
 
-struct ByTypeId {
+struct ByTypeId
+{
     typedef bool result_type;
     bool operator()(const boost::shared_ptr<PayloadBase> &lhs, const boost::shared_ptr<PayloadBase> &rhs) const
     {
@@ -71,7 +73,8 @@ void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, s
 }
 
 namespace {
-class MyReadLocker {
+class MyReadLocker
+{
 public:
     explicit MyReadLocker(QReadWriteLock *rwl)
         : rwl(rwl)
@@ -433,7 +436,8 @@ public:
     {
         b = true;
     }
-    ~ConversionGuard() {
+    ~ConversionGuard()
+    {
         b = old;
     }
 };

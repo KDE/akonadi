@@ -24,13 +24,16 @@ using namespace Akonadi;
 
 const char *const Akonadi::Tag::PLAIN = "PLAIN";
 
-struct Akonadi::Tag::Private {
+struct Akonadi::Tag::Private
+{
     Private()
         : id(-1)
-    {}
+    {
+    }
 
     ~Private()
-    {}
+    {
+    }
 
     Id id;
     QByteArray gid;

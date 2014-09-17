@@ -35,16 +35,19 @@ public:
                            QString::fromLatin1("AkonadiKde%1").arg(newNumber())))
     {
     }
-    ~DBusConnectionPoolPrivate() {
+    ~DBusConnectionPoolPrivate()
+    {
         QDBusConnection::disconnectFromBus(m_connection.name());
     }
 
-    QDBusConnection connection() const {
+    QDBusConnection connection() const
+    {
         return m_connection;
     }
 
 private:
-    static int newNumber() {
+    static int newNumber()
+    {
         return s_connectionCounter.fetchAndAddAcquire(1);
     }
     QDBusConnection m_connection;

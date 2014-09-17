@@ -65,8 +65,9 @@ Item ItemMonitor::item() const
     return d->mItem;
 }
 
-void ItemMonitor::itemChanged(const Item &)
+void ItemMonitor::itemChanged(const Item &item)
 {
+    Q_UNUSED(item)
 }
 
 void ItemMonitor::itemRemoved()

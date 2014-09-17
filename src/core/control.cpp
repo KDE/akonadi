@@ -77,7 +77,6 @@ public:
 
 K_GLOBAL_STATIC(Internal::StaticControl, s_instance)
 
-
 /**
  * @internal
  */
@@ -191,8 +190,9 @@ void Control::Private::serverStateChanged(ServerManager::State state)
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
         if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
-            (mStopping && state == ServerManager::Stopping))
+            (mStopping && state == ServerManager::Stopping)) {
             return;
+        }
         mEventLoop->quit();
         mSuccess = (mStarting && state == ServerManager::Running) || (mStopping && state == ServerManager::NotRunning);
     }

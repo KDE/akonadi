@@ -29,8 +29,7 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 using namespace Akonadi;
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class PartFetcherPrivate
 {
@@ -41,7 +40,7 @@ class PartFetcherPrivate
     {
     }
 
-    void fetchJobDone(KJob *);
+    void fetchJobDone(KJob *job);
 
     void modelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 

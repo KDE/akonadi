@@ -30,8 +30,6 @@
 #include "collection.h"
 #include "item.h"
 
-
-
 //static const char mediatorSessionId[] = "MediatorSession"; TODO: remove?
 
 using namespace Akonadi;
@@ -163,7 +161,7 @@ void ChangeMediator::do_beginMoveItems(JobPrivate *movePrivate, const QByteArray
     }
 
     Q_ASSERT(movePrivate->q_ptr->inherits("Akonadi::ItemMoveJob"));
-    MoveJobImpl<Item, ItemMoveJob> *itemMoveJob = static_cast<MoveJobImpl<Item, ItemMoveJob>*>(movePrivate);
+    MoveJobImpl<Item, ItemMoveJob> *itemMoveJob = static_cast<MoveJobImpl<Item, ItemMoveJob> *>(movePrivate);
 
     Item::List itemsDataAvailable;
     Item::List itemsDataNotAvailable;

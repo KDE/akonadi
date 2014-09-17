@@ -20,7 +20,6 @@
 #include "specialcollectionattribute.h"
 #include "attributefactory.h"
 
-
 using namespace Akonadi;
 
 /**

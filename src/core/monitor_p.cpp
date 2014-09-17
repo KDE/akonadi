@@ -157,21 +157,21 @@ bool MonitorPrivate::isLazilyIgnored(const NotificationMessageV3 &msg, bool allo
     if (!fetchCollectionStatistics
         && (msg.type() == NotificationMessageV2::Items)
         && ((op == NotificationMessageV2::Add && q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) == 0)
-             || (op == NotificationMessageV2::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
-                 && q_ptr->receivers(SIGNAL(itemsRemoved(Akonadi::Item::List))) == 0)
-             || (op == NotificationMessageV2::Modify && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)
-             || (op == NotificationMessageV2::ModifyFlags
-                 && (q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) == 0
-                     // Newly delivered ModifyFlags notifications will be converted to
-                     // itemChanged(item, "FLAGS") for legacy clients.
-                     && (!allowModifyFlagsConversion || q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)))
-             || (op == NotificationMessageV2::ModifyTags && q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) == 0)
-             || (op == NotificationMessageV2::Move && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) == 0
-                 && q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) == 0)
-             || (op == NotificationMessageV2::Link && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) == 0
-                 && q_ptr->receivers(SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection))) == 0)
-             || (op == NotificationMessageV2::Unlink && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) == 0
-                 && q_ptr->receivers(SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection))) == 0))) {
+            || (op == NotificationMessageV2::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
+                && q_ptr->receivers(SIGNAL(itemsRemoved(Akonadi::Item::List))) == 0)
+            || (op == NotificationMessageV2::Modify && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)
+            || (op == NotificationMessageV2::ModifyFlags
+                && (q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) == 0
+                    // Newly delivered ModifyFlags notifications will be converted to
+                    // itemChanged(item, "FLAGS") for legacy clients.
+                    && (!allowModifyFlagsConversion || q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)))
+            || (op == NotificationMessageV2::ModifyTags && q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) == 0)
+            || (op == NotificationMessageV2::Move && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) == 0
+                && q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) == 0)
+            || (op == NotificationMessageV2::Link && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) == 0
+                && q_ptr->receivers(SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection))) == 0)
+            || (op == NotificationMessageV2::Unlink && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) == 0
+                && q_ptr->receivers(SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection))) == 0))) {
         return true;
     }
 
@@ -1030,8 +1030,9 @@ void MonitorPrivate::invalidateCaches(const NotificationMessageV3 &msg)
     // remove invalidates
     if (msg.operation() == NotificationMessageV2::Remove) {
         if (msg.type() == NotificationMessageV2::Collections) {
-            Q_FOREACH (qint64 uid, msg.uids())
-            collectionCache->invalidate(uid);
+            Q_FOREACH (qint64 uid, msg.uids()) {
+                collectionCache->invalidate(uid);
+            }
         } else if (msg.type() == NotificationMessageV2::Items) {
             itemCache->invalidate(msg.uids());
         } else if (msg.type() == NotificationMessageV2::Tags) {
@@ -1047,8 +1048,9 @@ void MonitorPrivate::invalidateCaches(const NotificationMessageV3 &msg)
         || msg.operation() == NotificationMessageV2::Move
         || msg.operation() == NotificationMessageV2::Subscribe) {
         if (msg.type() == NotificationMessageV2::Collections) {
-            Q_FOREACH (quint64 uid, msg.uids())
-            collectionCache->update(uid, mCollectionFetchScope);
+            Q_FOREACH (quint64 uid, msg.uids()) {
+                collectionCache->update(uid, mCollectionFetchScope);
+            }
         } else if (msg.type() == NotificationMessageV2::Items) {
             itemCache->update(msg.uids(), mItemFetchScope);
         } else if (msg.type() == NotificationMessageV2::Tags) {
@@ -1118,7 +1120,8 @@ bool MonitorPrivate::isMonitored(Entity::Id colId) const
     return refCountMap.contains(colId) || m_buffer.isBuffered(colId);
 }
 
-void MonitorPrivate::notifyCollectionStatisticsWatchers(Entity::Id collection, const QByteArray &resource) {
+void MonitorPrivate::notifyCollectionStatisticsWatchers(Entity::Id collection, const QByteArray &resource)
+{
     if (collection > 0 && (monitorAll || isCollectionMonitored(collection) || resources.contains(resource))) {
         recentlyChangedCollections.insert(collection);
         if (!statisticsCompressionTimer.isActive()) {

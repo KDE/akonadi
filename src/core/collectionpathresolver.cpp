@@ -56,7 +56,7 @@ public:
         mCurrentNode = rootCollection;
     }
 
-    void jobResult(KJob *);
+    void jobResult(KJob *job);
 
     QStringList splitPath(const QString &path)
     {

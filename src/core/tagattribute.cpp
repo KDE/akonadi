@@ -21,7 +21,6 @@
 
 #include <akonadi/private/imapparser_p.h>
 
-
 using namespace Akonadi;
 
 class TagAttribute::Private
@@ -30,7 +29,8 @@ public:
     Private()
         : inToolbar(false)
         , priority(-1)
-    {}
+    {
+    }
 
     QString name;
     QString icon;

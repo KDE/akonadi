@@ -51,8 +51,9 @@ bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &labe
     return true;
 }
 
-void DefaultItemSerializerPlugin::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &)
+void DefaultItemSerializerPlugin::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version)
 {
+    Q_UNUSED(version)
     Q_ASSERT(label == Item::FullPayload);
     Q_UNUSED(label);
     data.write(item.payload<QByteArray>());
@@ -72,8 +73,9 @@ bool StdStringItemSerializerPlugin::deserialize(Item &item, const QByteArray &la
     return true;
 }
 
-void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &)
+void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version)
 {
+    Q_UNUSED(version)
     Q_ASSERT(label == Item::FullPayload);
     Q_UNUSED(label);
     const std::string str = item.payload<std::string>();

@@ -45,7 +45,8 @@ struct LocalNode
     LocalNode(const Collection &col)
         : collection(col)
         , processed(false)
-    {}
+    {
+    }
 
     ~LocalNode()
     {
@@ -74,7 +75,8 @@ struct RemoteNode
 {
     RemoteNode(const Collection &col)
         : collection(col)
-    {}
+    {
+    }
 
     Collection collection;
 };
@@ -617,8 +619,9 @@ public:
         }
     }
 
-    void deleteLocalCollectionsResult(KJob *)
+    void deleteLocalCollectionsResult(KJob *job)
     {
+        Q_UNUSED(job)
         --pendingJobs;
 
         ++progress;

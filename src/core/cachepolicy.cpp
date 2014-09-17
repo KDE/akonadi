@@ -34,7 +34,8 @@ public:
         , timeout(-1)
         , interval(-1)
         , syncOnDemand(false)
-    {}
+    {
+    }
 
     Private(const Private &other)
         : QSharedData(other)

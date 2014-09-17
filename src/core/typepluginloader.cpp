@@ -63,7 +63,7 @@ public:
         : mIdentifier(identifier)
         , mPlugin(plugin)
     {
-        qDebug()<<" PLUGIN : identifier"<<identifier;
+        qDebug() << " PLUGIN : identifier" << identifier;
     }
 
     QObject *plugin() const
@@ -235,7 +235,8 @@ static bool operator<(const QString &lhs, const MimeTypeEntry &rhs)
     return lhs < rhs.type();
 }
 
-static QString format(const QString &mimeType, const QVector<int> &metaTypeIds) {
+static QString format(const QString &mimeType, const QVector<int> &metaTypeIds)
+{
     if (metaTypeIds.empty()) {
         return QStringLiteral("default for ") + mimeType;
     }
@@ -294,12 +295,13 @@ public:
 
     QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeId, TypePluginLoader::Options opt)
     {
-        if (QObject *const plugin = findBestMatch(type, metaTypeId)) { {
-            if ((opt &TypePluginLoader::NoDefault) && plugin == mDefaultPlugin.plugin()) {
-                return 0;
+        if (QObject *const plugin = findBestMatch(type, metaTypeId)) {
+            {
+                if ((opt & TypePluginLoader::NoDefault) && plugin == mDefaultPlugin.plugin()) {
+                    return 0;
+                }
+                return plugin;
             }
-            return plugin;
-        }
         }
         return 0;
     }
@@ -385,7 +387,7 @@ private:
 //             qDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                     //FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use default at the end if necessary
                     if (allMimeTypes[matchingIndexes[*it]].type() != QLatin1String("application/octet-stream")) {
-                       return entry->plugin();
+                        return entry->plugin();
                     }
                 } else {
 //             qDebug() << "    -> no default plugin for this mime type, trying next";
@@ -408,7 +410,8 @@ private:
     QHash<QString, QObject *> cachedDefaultPlugins;
 
     // ### cache NULLs, too
-    QObject *cacheLookup(const QString &mimeType, const QVector<int> &metaTypeIds) const {
+    QObject *cacheLookup(const QString &mimeType, const QVector<int> &metaTypeIds) const
+    {
         if (metaTypeIds.empty()) {
             const QHash<QString, QObject *>::const_iterator hit = cachedDefaultPlugins.find(mimeType);
             if (hit != cachedDefaultPlugins.end()) {
@@ -447,13 +450,15 @@ QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, co
 }
 
 #if 0
-QObject *TypePluginLoader::legacyObjectForMimeType(const QString &mimetype) {
+QObject *TypePluginLoader::legacyObjectForMimeType(const QString &mimetype)
+{
     // ### impl specifically - only works b/c vector isn't used in impl ###
     return objectForMimeTypeAndClass(mimetype, QVector<int>(1, 0));
 }
 #endif
 
-QObject *TypePluginLoader::defaultObjectForMimeType(const QString &mimetype) {
+QObject *TypePluginLoader::defaultObjectForMimeType(const QString &mimetype)
+{
     return objectForMimeTypeAndClass(mimetype, QVector<int>());
 }
 
@@ -463,20 +468,23 @@ ItemSerializerPlugin *TypePluginLoader::pluginForMimeTypeAndClass(const QString 
 }
 
 #if 0
-ItemSerializerPlugin *TypePluginLoader::legacyPluginForMimeType(const QString &mimetype) {
+ItemSerializerPlugin *TypePluginLoader::legacyPluginForMimeType(const QString &mimetype)
+{
     ItemSerializerPlugin *plugin = qobject_cast<ItemSerializerPlugin *>(legacyObjectForMimeType(mimetype));
     Q_ASSERT(plugin);
     return plugin;
 }
 #endif
 
-ItemSerializerPlugin *TypePluginLoader::defaultPluginForMimeType(const QString &mimetype) {
+ItemSerializerPlugin *TypePluginLoader::defaultPluginForMimeType(const QString &mimetype)
+{
     ItemSerializerPlugin *plugin = qobject_cast<ItemSerializerPlugin *>(defaultObjectForMimeType(mimetype));
     Q_ASSERT(plugin);
     return plugin;
 }
 
-void TypePluginLoader::overridePluginLookup(QObject *p) {
+void TypePluginLoader::overridePluginLookup(QObject *p)
+{
     s_pluginRegistry->overrideDefaultPlugin(p);
 }
 

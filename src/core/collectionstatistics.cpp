@@ -35,7 +35,8 @@ public:
         , count(-1)
         , unreadCount(-1)
         , size(-1)
-    {}
+    {
+    }
 
     Private(const Private &other)
         : QSharedData(other)
