@@ -179,6 +179,9 @@ QString Utils::getDirectoryFileSystem(const QString &directory)
     QString bestMatchFS;
 
     FILE *mtab = setmntent("/etc/mtab", "r");
+    if (!mtab) {
+        return QString();
+    }
     while (mntent *mnt = getmntent(mtab)) {
         if (qstrcmp(mnt->mnt_type, MNTTYPE_IGNORE) == 0) {
             continue;
