@@ -33,7 +33,7 @@ Resource DbInitializer::createResource(const char *name)
     Resource res;
     qint64 id = -1;
     res.setName(QLatin1String(name));
-    bool ret = res.insert(&id);
+    const bool ret = res.insert(&id);
     Q_ASSERT(ret);
     mResource = res;
     return res;
@@ -48,7 +48,8 @@ Collection DbInitializer::createCollection(const char *name, const Collection &p
     col.setName(QLatin1String(name));
     col.setRemoteId(QLatin1String(name));
     col.setResource(mResource);
-    Q_ASSERT(col.insert());
+    const bool ret = col.insert();
+    Q_ASSERT(ret);
     return col;
 }
 
