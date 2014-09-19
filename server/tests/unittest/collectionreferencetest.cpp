@@ -45,7 +45,8 @@ public:
         Resource res;
         res.setId(1);
         res.setName(QLatin1String(name));
-        Q_ASSERT(res.insert());
+        const bool success = res.insert();
+        Q_ASSERT(success);
         mResource = res;
         return res;
     }
@@ -57,7 +58,8 @@ public:
         col.setName(QLatin1String(name));
         col.setRemoteId(QLatin1String(name));
         col.setResource(mResource);
-        Q_ASSERT(col.insert());
+        const bool success = col.insert();
+        Q_ASSERT(success);
         return col;
     }
 
