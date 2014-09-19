@@ -47,6 +47,7 @@ public:
         res.setName(QLatin1String(name));
         const bool success = res.insert();
         Q_ASSERT(success);
+        Q_UNUSED(success);
         mResource = res;
         return res;
     }
@@ -60,6 +61,7 @@ public:
         col.setResource(mResource);
         const bool success = col.insert();
         Q_ASSERT(success);
+        Q_UNUSED(success);
         return col;
     }
 
