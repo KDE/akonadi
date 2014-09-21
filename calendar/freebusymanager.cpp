@@ -888,7 +888,8 @@ void FreeBusyManager::publishFreeBusy(QWidget *parentWidget)
 
         job->ui()->setWindow(parentWidget);
 
-        connect(job, SIGNAL(result(KJob*)), SLOT(slotUploadFreeBusyResult(KJob*)));
+        //FIXME slot doesn't exist
+        //connect(job, SIGNAL(result(KJob*)), SLOT(slotUploadFreeBusyResult(KJob*)));
     }
 }
 
