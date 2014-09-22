@@ -530,14 +530,18 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
             Collection col;
             Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
                 col = collectionCache->retrieve(entity.id);
-                if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
-                    someoneWasListening = true;
+                if (col.isValid()) {
+                    if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
+                        someoneWasListening = true;
+                    }
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
             //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
             const Item::List items = itemCache->retrieve(msg.uids());
-            someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+            if (!items.isEmpty()) {
+                someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+            }
         }
     }
 
