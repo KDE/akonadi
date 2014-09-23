@@ -216,6 +216,24 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-common")
 
+  file(WRITE ${CMAKE_BINARY_DIR}/cxx11_check.cpp
+       "enum Enum { Value = 1 };
+        struct Class {
+            Class(int val) { (void)val; };
+            // Delegating constructor
+            Class(): Class(42) {};
+            // New-style enumerator
+            Class(Enum e = Enum::Value) { (void)e; };
+        };
+        int main() {}
+       ")
+  try_compile(CXX11_SUPPORTED
+              ${CMAKE_BINARY_DIR}/cxx11_check
+              ${CMAKE_BINARY_DIR}/cxx11_check.cpp)
+  if (NOT CXX11_SUPPORTED)
+      message(FATAL_ERROR "Compiler does not support all required C++11 features")
+  endif()
+
   # debugfull target
   set(CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" CACHE STRING "Flags used by the C++ compiler during debugfull builds." FORCE)
   set(CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" CACHE STRING "Flags used by the C compiler during debugfull builds." FORCE)
