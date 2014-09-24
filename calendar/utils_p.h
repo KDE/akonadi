@@ -39,6 +39,10 @@ namespace CalendarUtils {
 QString fullName();
 QString email();
 bool thatIsMe(const QString &email);
+
+//faster version, because we know that attendee->email() is only the email address
+bool thatIsMe(const KCalCore::Attendee::Ptr &attendee);
+
 QStringList allEmails();
 
 KCalCore::Incidence::Ptr incidence(const Akonadi::Item &item);

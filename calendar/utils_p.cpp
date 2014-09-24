@@ -22,6 +22,7 @@
 #include <kpimutils/email.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
+#include <kpimidentities/utils.h>
 #include <kmime/kmime_header_parsing.h>
 
 #include <KEMailSettings>
@@ -85,25 +86,13 @@ QString Akonadi::CalendarUtils::email()
     return emailSettings.getSetting(KEMailSettings::EmailAddress);
 }
 
+bool Akonadi::CalendarUtils::thatIsMe(const KCalCore::Attendee::Ptr &attendee)
+{
+    return KPIMIdentities::thatIsMe(attendee->email());
+}
+
 bool Akonadi::CalendarUtils::thatIsMe(const QString &_email)
 {
-    KPIMIdentities::IdentityManager identityManager(/*ro=*/ true);
-
-    // NOTE: this method is called for every created agenda view item,
-    // so we need to keep performance in mind
-
-    /* identityManager()->thatIsMe() is quite expensive since it does parsing of
-       _email in a way which is unnecessarily complex for what we can have here,
-       so we do that ourselves. This makes sense since this
-
-    if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
-      return true;
-    }
-    */
-
-    // in case email contains a full name, strip it out.
-    // the below is the simpler but slower version of the following code:
-    // const QString email = KPIM::getEmailAddress( _email );
     const QByteArray tmp = _email.toUtf8();
     const char *cursor = tmp.constData();
     const char *end = tmp.data() + tmp.length();
@@ -111,30 +100,16 @@ bool Akonadi::CalendarUtils::thatIsMe(const QString &_email)
     KMime::HeaderParsing::parseMailbox(cursor, end, mbox);
     const QString email = mbox.addrSpec().asString();
 
-    KEMailSettings emailSettings;
-    const QString myEmail = emailSettings.getSetting(KEMailSettings::EmailAddress);
-
-    if (myEmail == email) {
-        return true;
-    }
-
-    KPIMIdentities::IdentityManager::ConstIterator it;
-    for (it = identityManager.begin();
-            it != identityManager.end(); ++it) {
-        if ((*it).matchesEmailAddress(email)) {
-            return true;
-        }
-    }
-
-    return false;
+    return KPIMIdentities::thatIsMe(email);
 }
 
 QStringList Akonadi::CalendarUtils::allEmails()
 {
-    KPIMIdentities::IdentityManager identityManager(/*ro=*/ true);
-    // Grab emails from the email identities
-    // Warning, this list could contain duplicates.
-    return identityManager.allEmails();
+    QStringList emails;
+    foreach(const QString &email, KPIMIdentities::allEmails()) {
+        emails.append(email);
+    }
+    return emails;
 }
 
 KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence(const Akonadi::Item &item)
