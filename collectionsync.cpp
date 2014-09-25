@@ -511,7 +511,7 @@ public:
 
             // Commit transaction after every 100 collections are created,
             // otherwise it overlads database journal and things get veeery slow
-            if (pendingJobs % 100 == 0) {
+            if (pendingJobs % 50 == 0) {
                 currentTransaction->commit();
                 createTransaction();
             }
