@@ -19,6 +19,7 @@
 */
 
 #include "calfilterproxymodel_p.h"
+#include "utils_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/entitytreemodel.h>
@@ -70,10 +71,10 @@ bool CalFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &so
         return false;
 
     const Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-    if (!item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>())
+    if (!item.isValid())
         return false;
 
-    const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+    const KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
     if (!incidence)
         return false;
 
