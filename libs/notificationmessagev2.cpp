@@ -573,12 +573,12 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
 
 bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg )
 {
-  return NotificationMessageHelpers::appendAndCompressImpl<NotificationMessageV2::List, NotificationMessageV2>( list, msg );
+  return NotificationMessageHelpers::appendAndCompress(list, msg);
 }
 
 bool NotificationMessageV2::appendAndCompress( QList<NotificationMessageV2> &list, const NotificationMessageV2 &msg )
 {
-  return NotificationMessageHelpers::appendAndCompressImpl<QList<NotificationMessageV2>, NotificationMessageV2>( list, msg );
+  return NotificationMessageHelpers::appendAndCompress(list, msg);
 }
 
 QDebug operator<<( QDebug dbg, const NotificationMessageV2::Entity &entity)
