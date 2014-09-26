@@ -217,6 +217,47 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->runTest();
     }
 
+    void testList_data()
+    {
+        QElapsedTimer timer;
+        initializer.reset(new DbInitializer);
+        Resource res = initializer->createResource("testresource");
+        Collection col1 = initializer->createCollection("col1");
+
+        timer.start();
+        QList<PimItem> items;
+        for (int i = 0; i< 1000; i++) {
+            items.append(initializer->createItem(QString::number(i).toAscii().constData(),col1));
+        }
+        akDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
+        timer.start();
+
+        QTest::addColumn<QList<QByteArray> >("scenario");
+
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col1.id()) + "CACHEONLY FULLPAYLOAD ALLATTR IGNOREERRORS ANCESTORS INF EXTERNALPAYLOAD (UID COLLECTIONID FLAGS SIZE REMOTEID REMOTEREVISION ATR:ENTITYDISPLAY)";
+            while (!items.isEmpty()) {
+                const PimItem &item = items.takeLast();
+                scenario << "S: * " + QByteArray::number(item.id()) + " FETCH (UID " + QByteArray::number(item.id()) + " REV 0 REMOTEID \""+item.remoteId().toAscii()+"\" MIMETYPE \"test\" COLLECTIONID "+QByteArray::number(col1.id())+" SIZE 0 FLAGS () ANCESTORS (("+QByteArray::number(col1.id())+" \""+col1.name().toAscii()+"\") (0 \"\")))";
+            }
+            scenario << "S: 2 OK FETCH completed";
+            QTest::newRow("complete list") << scenario;
+        }
+        akDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
+    }
+
+    void testList()
+    {
+        QFETCH(QList<QByteArray>, scenario);
+
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        //StorageDebugger::instance()->enableSQLDebugging(true);
+        //StorageDebugger::instance()->writeToFile(QLatin1String("sqllog.txt"));
+        FakeAkonadiServer::instance()->runTest();
+    }
+
 };
 
 AKTEST_FAKESERVER_MAIN(FetchHandlerTest)
