@@ -534,6 +534,11 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
                     if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
                         someoneWasListening = true;
                     }
+                } else {
+                    // We don't know if someone is actually listening, but we don't want
+                    // to trigger cleanOldNotifications() every time we run into an invalid
+                    // notification, because it's rather expensive
+                    someoneWasListening = true;
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
@@ -541,6 +546,8 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
             const Item::List items = itemCache->retrieve(msg.uids());
             if (!items.isEmpty()) {
                 someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+            } else {
+                someoneWasListening = true;
             }
         }
     }
