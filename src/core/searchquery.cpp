@@ -109,24 +109,24 @@ public:
         return termJSON;
     }
 
-    static SearchTerm JSONToTerm(const QJsonObject &json)
+    static SearchTerm JSONToTerm(const QVariantMap &map)
     {
-        if (json.contains(QStringLiteral("key"))) {
-            SearchTerm term(json[QStringLiteral("key")].toString(),
-                            json[QStringLiteral("value")],
-                            static_cast<SearchTerm::Condition>(json[QStringLiteral("cond")].toInt()));
-            term.setIsNegated(json[QStringLiteral("negated")].toBool());
+        if (map.contains(QStringLiteral("key"))) {
+            SearchTerm term(map[QStringLiteral("key")].toString(),
+                            map[QStringLiteral("value")],
+                            static_cast<SearchTerm::Condition>(map[QStringLiteral("cond")].toInt()));
+            term.setIsNegated(map[QStringLiteral("negated")].toBool());
             return term;
-        } else if (json.contains(QStringLiteral("rel"))) {
-            SearchTerm term(static_cast<SearchTerm::Relation>(json[QStringLiteral("rel")].toInt()));
-            term.setIsNegated(json[QStringLiteral("negated")].toBool());
-            const QJsonArray subTermsJSON = json[QStringLiteral("subTerms")].toArray();
-            Q_FOREACH (const QJsonValue &subTermJSON, subTermsJSON) {
-                term.addSubTerm(JSONToTerm(subTermJSON.toObject()));
+        } else if (map.contains(QStringLiteral("rel"))) {
+            SearchTerm term(static_cast<SearchTerm::Relation>(map[QStringLiteral("rel")].toInt()));
+            term.setIsNegated(map[QStringLiteral("negated")].toBool());
+            const QList<QVariant> list = map[QStringLiteral("subTerms")].toList();
+            Q_FOREACH (const QVariant& var, list) {
+                term.addSubTerm(JSONToTerm(var.toMap()));
             }
             return term;
         } else {
-            qWarning() << "Invalid JSON for term: " << json;
+            qWarning() << "Invalid JSON for term: " << map;
             return SearchTerm();
         }
     }
@@ -297,7 +297,7 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
 
     SearchQuery query;
     const QJsonObject obj = json.object();
-    query.d->rootTerm = Private::JSONToTerm(obj);
+    query.d->rootTerm = Private::JSONToTerm(obj.toVariantMap());
     if (obj.contains(QStringLiteral("limit"))) {
         query.d->limit = obj.value(QStringLiteral("limit")).toInt();
     }
