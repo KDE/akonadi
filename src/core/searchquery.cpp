@@ -281,12 +281,10 @@ QByteArray SearchQuery::toJSON() const
     QVariantMap root = Private::termToJSON(d->rootTerm);
     root.insert(QStringLiteral("limit"), d->limit);
 
-#warning KF5 Port me!
-#if 0
-    QJson::Serializer serializer;
-    return serializer.serialize(root);
-#endif
-    return QByteArray();
+    QJsonObject jo = QJsonObject::fromVariantMap(root);
+    QJsonDocument jdoc;
+    jdoc.setObject(jo);
+    return jdoc.toJson();
 }
 
 SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
