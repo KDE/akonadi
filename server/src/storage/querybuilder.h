@@ -233,6 +233,8 @@ class QueryBuilder
     */
     qint64 insertId();
 
+    void setForwardOnly(bool forwardOnly);
+
   private:
     QString buildQuery();
     QString bindValue( const QVariant &value );

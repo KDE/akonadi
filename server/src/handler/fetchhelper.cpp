@@ -77,6 +77,8 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
 {
   ///TODO: merge with ItemQuery
   QueryBuilder partQuery( PimItem::tableName() );
+  partQuery.setForwardOnly(true);
+
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
     partQuery.addJoin( QueryBuilder::InnerJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
     partQuery.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
@@ -129,6 +131,8 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
 QSqlQuery FetchHelper::buildItemQuery()
 {
   QueryBuilder itemQuery( PimItem::tableName() );
+
+  itemQuery.setForwardOnly(true);
 
   itemQuery.addJoin( QueryBuilder::InnerJoin, MimeType::tableName(),
                      PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName() );

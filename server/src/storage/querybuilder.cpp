@@ -330,6 +330,10 @@ bool QueryBuilder::retryLastTransaction( bool rollback )
 #endif
 }
 
+void QueryBuilder::setForwardOnly(bool forwardOnly)
+{
+    mQuery.setForwardOnly(forwardOnly);
+}
 
 bool QueryBuilder::exec()
 {
