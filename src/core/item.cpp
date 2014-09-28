@@ -122,7 +122,7 @@ static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QSt
 }
 
 // Change to something != RFC822 as soon as the server supports it
-const char *const Item::FullPayload = "RFC822";
+const char Item::FullPayload[] = "RFC822";
 
 Item::Item()
     : Entity(new ItemPrivate)
