@@ -213,8 +213,8 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
         QSqlQuery attributeQuery = getAttributeQuery(ids, mAncestorAttributes);
         while (attributeQuery.next()) {
             CollectionAttribute attr;
-            attr.setType(attributeQuery.value(1).toString().toUtf8());
-            attr.setValue(attributeQuery.value(2).toString().toUtf8());
+            attr.setType(attributeQuery.value(1).toByteArray());
+            attr.setValue(attributeQuery.value(2).toByteArray());
             // qDebug() << "found attribute " << attr.type() << attr.value();
             mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
@@ -479,7 +479,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
 
             // qDebug() << attributeQuery.isValid() << attributeQuery.value(0).toLongLong();
             while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() < col.id()) {
-                qDebug() << "skipped: " << attributeQuery.value(0).toLongLong() << attributeQuery.value(1).toString();
+                qDebug() << "skipped: " << attributeQuery.value(0).toLongLong() << attributeQuery.value(1).toByteArray();
                 if (!attributeQuery.next()) {
                     break;
                 }
@@ -487,8 +487,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             //Advance query while a mimetype for this collection is returned
             while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() == col.id()) {
                 CollectionAttribute attr;
-                attr.setType(attributeQuery.value(1).toString().toUtf8());
-                attr.setValue(attributeQuery.value(2).toString().toUtf8());
+                attr.setType(attributeQuery.value(1).toByteArray());
+                attr.setValue(attributeQuery.value(2).toByteArray());
                 attributes << attr;
 
                 if (!attributeQuery.next()) {

@@ -321,12 +321,19 @@ private Q_SLOTS:
         initializer.reset(new DbInitializer);
         Resource res = initializer->createResource("testresource");
         Collection col1 = initializer->createCollection("col1");
+        Collection col2 = initializer->createCollection("col2");
 
         CollectionAttribute attr1;
         attr1.setType("type");
         attr1.setValue("value");
         attr1.setCollection(col1);
         attr1.insert();
+
+        CollectionAttribute attr2;
+        attr2.setType("type");
+        attr2.setValue(QString::fromUtf8("Umlautäöü").toUtf8());
+        attr2.setCollection(col2);
+        attr2.insert();
 
         QTest::addColumn<QList<QByteArray> >("scenario");
 
@@ -335,6 +342,15 @@ private Q_SLOTS:
             scenario << FakeAkonadiServer::defaultScenario()
                      << "C: 2 LIST " + QByteArray::number(col1.id()) + " 0 () ()"
                      << initializer->listResponse(col1, false, true)
+                     << "S: 2 OK List completed";
+            QTest::newRow("list attribute") << scenario;
+        }
+
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () ()"
+                     << initializer->listResponse(col2, false, true)
                      << "S: 2 OK List completed";
             QTest::newRow("list attribute") << scenario;
         }
