@@ -59,9 +59,17 @@ Connection::Connection( QObject *parent )
 
 
 Connection::Connection( quintptr socketDescriptor, QObject *parent )
-    : Connection( parent )
+    : QObject( parent )
+    , m_socketDescriptor( socketDescriptor )
+    , m_socket( 0 )
+    , m_currentHandler( 0 )
+    , m_connectionState( NonAuthenticated )
+    , m_backend( 0 )
+    , m_streamParser( 0 )
+    , m_verifyCacheOnRetrieval( false )
+    , m_totalTime( 0 )
+    , m_reportTime( false )
 {
-    m_socketDescriptor = socketDescriptor;
     m_identifier.sprintf( "%p", static_cast<void *>( this ) );
     ClientCapabilityAggregator::addSession( m_clientCapabilities );
 
