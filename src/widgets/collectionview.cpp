@@ -82,8 +82,7 @@ void CollectionView::Private::init()
     dragExpandTimer.setSingleShot(true);
     mParent->connect(&dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()));
 
-    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)),
-                     mParent, SLOT(itemClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
 
     Control::widgetNeedsAkonadi(mParent);
 }

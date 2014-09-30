@@ -213,8 +213,7 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
         int parentColumnCount = mParent->columnCount( parent );
         QModelIndex extraTopLeft = mParent->index( topLeft.row(), parentColumnCount - 1 - 3, parent );
         QModelIndex extraBottomRight = mParent->index( bottomRight.row(), parentColumnCount -1, parent );
-        mParent->disconnect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                             mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
+        mParent->disconnect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)), mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
         emit mParent->dataChanged( extraTopLeft, extraBottomRight );
 
         // We get this signal when the statistics of a row changes.

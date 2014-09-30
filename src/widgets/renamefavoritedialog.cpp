@@ -53,8 +53,7 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString
 
     layout->addStretch();
 
-    connect(m_lineEdit, SIGNAL(textChanged(QString)),
-            SLOT(slotEditTextChanged(QString)));
+    connect(m_lineEdit, &QLineEdit::textChanged, this, &RenameFavoriteDialog::slotEditTextChanged);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);

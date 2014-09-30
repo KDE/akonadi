@@ -75,10 +75,8 @@ void EntityListView::Private::init()
     mParent->setDragDropMode(DragDrop);
     mParent->setDragEnabled(true);
 #endif
-    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)),
-                     mParent, SLOT(itemClicked(QModelIndex)));
-    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)),
-                     mParent, SLOT(itemDoubleClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)), mParent, SLOT(itemDoubleClicked(QModelIndex)));
 
     DelegateAnimator *animator = new DelegateAnimator(mParent);
     ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);

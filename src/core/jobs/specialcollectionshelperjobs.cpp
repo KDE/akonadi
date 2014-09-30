@@ -586,8 +586,7 @@ void GetLockJob::Private::doStart()
         QDBusServiceWatcher *watcher = new QDBusServiceWatcher(dbusServiceName(), DBusConnectionPool::threadConnection(),
                                                                QDBusServiceWatcher::WatchForOwnerChange, q);
         //qDebug() << "Waiting for lock.";
-        connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-                q, SLOT(serviceOwnerChanged(QString,QString,QString)));
+        connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), q, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
         mSafetyTimer = new QTimer(q);
         mSafetyTimer->setSingleShot(true);

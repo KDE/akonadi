@@ -30,8 +30,7 @@ void KJobPrivateBase::start()
         return;
     }
 
-    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-            this, SLOT(serverStateChanged(Akonadi::ServerManager::State)));
+    connect(ServerManager::self(), &ServerManager::stateChanged, this, &KJobPrivateBase::serverStateChanged);
 
     if (serverState == ServerManager::NotRunning) {
         ServerManager::start();
@@ -41,8 +40,7 @@ void KJobPrivateBase::start()
 void KJobPrivateBase::serverStateChanged(Akonadi::ServerManager::State state)
 {
     if (state == ServerManager::Running) {
-        disconnect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                   this, SLOT(serverStateChanged(Akonadi::ServerManager::State)));
+        disconnect(ServerManager::self(), &ServerManager::stateChanged, this, &KJobPrivateBase::serverStateChanged);
         doStart();
     }
 }

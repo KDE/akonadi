@@ -99,10 +99,8 @@ void EntityTreeView::Private::init()
     mParent->setDragEnabled(true);
 #endif
 
-    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)),
-                     mParent, SLOT(itemClicked(QModelIndex)));
-    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)),
-                     mParent, SLOT(itemDoubleClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
+    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)), mParent, SLOT(itemDoubleClicked(QModelIndex)));
 
     Control::widgetNeedsAkonadi(mParent);
 }
