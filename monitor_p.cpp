@@ -615,12 +615,14 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     // We have to split moves into insert or remove if the source or destination
     // is not monitored.
     if (msg.operation() != NotificationMessageV2::Move) {
-        return NotificationMessageV3::appendAndCompress(notificationQueue, msg) ? 1 : 0;
+        notificationQueue.enqueue(msg);
+        return 1;
     }
 
     // Always handle tags
     if (msg.type() == NotificationMessageV2::Tags) {
-        return NotificationMessageV3::appendAndCompress(notificationQueue, msg);
+        notificationQueue.enqueue(msg);
+        return 1;
     }
 
     bool sourceWatched = false;
@@ -647,7 +649,8 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     }
 
     if ((sourceWatched && destWatched) || (!collectionMoveTranslationEnabled && msg.type() == NotificationMessageV2::Collections)) {
-        return NotificationMessageV3::appendAndCompress(notificationQueue, msg) ? 1 : 0;
+        notificationQueue.enqueue(msg);
+        return 1;
     }
 
     if (sourceWatched) {
@@ -655,7 +658,8 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
         NotificationMessageV3 removalMessage = msg;
         removalMessage.setOperation(NotificationMessageV2::Remove);
         removalMessage.setParentDestCollection(-1);
-        return NotificationMessageV3::appendAndCompress(notificationQueue, removalMessage) ? 1 : 0;
+        notificationQueue.enqueue(removalMessage);
+        return 1;
     }
 
     // Transform into an insertion
@@ -665,13 +669,10 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     insertionMessage.setParentDestCollection(-1);
     // We don't support batch insertion, so we have to do it one by one
     const NotificationMessageV3::List split = splitMessage(insertionMessage, false);
-    int appended = 0;
     Q_FOREACH (const NotificationMessageV3 &insertion, split) {
-        if (NotificationMessageV3::appendAndCompress(notificationQueue, insertion)) {
-            ++appended;
-        }
+        notificationQueue.enqueue(insertion);
     }
-    return appended;
+    return split.count();
 }
 
 /*
