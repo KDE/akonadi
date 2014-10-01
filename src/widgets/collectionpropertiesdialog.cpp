@@ -118,7 +118,6 @@ void CollectionPropertiesDialog::Private::registerBuiltinPages()
 void CollectionPropertiesDialog::Private::init()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMargin(0);
     q->setLayout(mainLayout);
     mTabWidget = new QTabWidget(q);
     mainLayout->addWidget(mTabWidget);
