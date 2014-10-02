@@ -24,19 +24,28 @@
 #include <QByteArray>
 #include <QList>
 
+#include <KDebug>
+
 class CollectionIdentificationAttribute::Private
 {
 public:
     Private() {}
     QByteArray mFolderNamespace;
     QByteArray mIdentifier;
+    QByteArray mName;
+    QByteArray mOrganizationUnit;
+    QByteArray mMail;
 };
 
-CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier, const QByteArray &folderNamespace)
+CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier, const QByteArray &folderNamespace,
+                                                                     const QByteArray &name, const QByteArray &organizationUnit, const QByteArray &mail)
     :d(new Private)
 {
     d->mIdentifier = identifier;
     d->mFolderNamespace = folderNamespace;
+    d->mName = name;
+    d->mOrganizationUnit = organizationUnit;
+    d->mMail = mail;
 }
 
 CollectionIdentificationAttribute::~CollectionIdentificationAttribute()
@@ -53,6 +62,37 @@ QByteArray CollectionIdentificationAttribute::identifier() const
 {
     return d->mIdentifier;
 }
+
+void CollectionIdentificationAttribute::setMail(const QByteArray &mail)
+{
+    d->mMail = mail;
+}
+
+QByteArray CollectionIdentificationAttribute::mail() const
+{
+    return d->mMail;
+}
+
+void CollectionIdentificationAttribute::setOu(const QByteArray &ou)
+{
+    d->mOrganizationUnit = ou;
+}
+
+QByteArray CollectionIdentificationAttribute::ou() const
+{
+    return d->mOrganizationUnit;
+}
+
+void CollectionIdentificationAttribute::setName(const QByteArray &name)
+{
+    d->mName = name;
+}
+
+QByteArray CollectionIdentificationAttribute::name() const
+{
+    return d->mName;
+}
+
 
 void CollectionIdentificationAttribute::setCollectionNamespace(const QByteArray &ns)
 {
@@ -71,7 +111,7 @@ QByteArray CollectionIdentificationAttribute::type() const
 
 Akonadi::Attribute* CollectionIdentificationAttribute::clone() const
 {
-    return new CollectionIdentificationAttribute(d->mIdentifier, d->mFolderNamespace);
+    return new CollectionIdentificationAttribute(d->mIdentifier, d->mFolderNamespace, d->mName, d->mOrganizationUnit, d->mMail);
 }
 
 QByteArray CollectionIdentificationAttribute::serialized() const
@@ -79,6 +119,9 @@ QByteArray CollectionIdentificationAttribute::serialized() const
     QList<QByteArray> l;
     l << Akonadi::ImapParser::quote(d->mIdentifier);
     l << Akonadi::ImapParser::quote(d->mFolderNamespace);
+    l << Akonadi::ImapParser::quote(d->mName);
+    l << Akonadi::ImapParser::quote(d->mOrganizationUnit);
+    l << Akonadi::ImapParser::quote(d->mMail);
     return '(' + Akonadi::ImapParser::join(l, " ") + ')';
 }
 
@@ -93,5 +136,11 @@ void CollectionIdentificationAttribute::deserialize(const QByteArray &data)
     }
     d->mIdentifier = l[0];
     d->mFolderNamespace = l[1];
+
+    if (size == 5) {
+        d->mName = l[2];
+        d->mOrganizationUnit = l[3];
+        d->mMail = l[4];
+    }
 }
 
