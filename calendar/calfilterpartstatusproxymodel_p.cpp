@@ -28,8 +28,8 @@
 #include <kcalcore/attendee.h>
 #include <kpimutils/email.h>
 
-#include <KPIMIdentities/IdentityManager>
-#include <KEMailSettings>
+#include <kpimidentities/identitymanager.h>
+#include <kemailsettings.h>
 
 using namespace Akonadi;
 

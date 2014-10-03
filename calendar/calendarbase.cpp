@@ -23,7 +23,7 @@
 #include "incidencechanger.h"
 #include "utils_p.h"
 
-#include <Akonadi/CollectionFetchJob>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/item.h>
 #include <akonadi/collection.h>
 
