@@ -264,12 +264,16 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     /**
-     * Retrieve the collection tree from the remote server and supply it via
+     * Retrieve the collection tree from the backend and supply it via
      * collectionsRetrieved() or collectionsRetrievedIncremental().
      * @see collectionsRetrieved(), collectionsRetrievedIncremental()
      */
     virtual void retrieveCollections() = 0;
 
+    /**
+     * Retreive all tags from the backend
+     * @see tagsRetrieved()
+     */
     virtual void retrieveTags();
 
     /**
