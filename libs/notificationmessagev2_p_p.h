@@ -44,9 +44,11 @@ class NotificationMessageHelpers
     template<typename List, typename Msg>
     static bool appendAndCompress(List &list, const Msg &msg)
     {
+        //It is likely that compressable notifications are within the last few notifications, so avoid searching a list that is potentially huge
+        static int maxCompressionSearchLength = 10;
+        int searchCounter = 0;
         // There are often multiple Collection Modify notifications in the queue,
-        // so we optimize for this case. All other cases are just append, as the
-        // compression becomes too expensive in large batches
+        // so we optimize for this case.
         if (msg.type() == NotificationMessageV2::Collections && msg.operation() == NotificationMessageV2::Modify) {
             typename List::Iterator iter, begin;
             // We are iterating from end, since there's higher probability of finding
@@ -60,16 +62,19 @@ class NotificationMessageHelpers
                         return false;
                     }
 
-                    // we found Add notification, which means there will be no other
-                    // notifications for this entity in the list, so break here
+                    // we found Add notification, which means we can drop this modification
                     if (iter->operation() == NotificationMessageV2::Add) {
-                        break;
+                        return false;
                     }
                 }
+                searchCounter++;
+                if (searchCounter >= maxCompressionSearchLength) {
+                    break;
+                }
             }
-
         }
 
+        // All other cases are just append, as the compression becomes too expensive in large batches
         list.append(msg);
         return true;
     }
