@@ -27,6 +27,8 @@
 #include <KConfig>
 #include <QtCore/QDebug>
 #include <KGlobal>
+#include <QDir>
+#include <QStandardPaths>
 using namespace Akonadi;
 
 PluginMetaData::PluginMetaData()
@@ -123,66 +125,67 @@ PluginMetaData PluginLoader::infoForName(const QString &name) const
 
 void PluginLoader::scan()
 {
-    const QStringList list = KGlobal::dirs()->findAllResources("data", QStringLiteral("akonadi/plugins/serializer/*.desktop"),
-                                                               KStandardDirs::Recursive | KStandardDirs::NoDuplicates);
-    for (int i = 0; i < list.count(); ++i) {
-        const QString entry = list.at(i);
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1Literal("akonadi/plugins/serializer/"), QStandardPaths::LocateDirectory);
+    Q_FOREACH (const QString &dir, dirs) {
+        const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
+        Q_FOREACH (const QString& file, fileNames) {
+            const QString entry = dir + QLatin1Char('/') + file;
+            KConfig config(entry, KConfig::SimpleConfig);
+            if (config.hasGroup("Misc") && config.hasGroup("Plugin")) {
+                KConfigGroup group(&config, "Plugin");
 
-        KConfig config(entry, KConfig::SimpleConfig);
-        if (config.hasGroup("Misc") && config.hasGroup("Plugin")) {
-            KConfigGroup group(&config, "Plugin");
-
-            const QString type = group.readEntry("Type").toLower();
-            if (type.isEmpty()) {
-                qWarning() << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
-                continue;
-            }
-
-            // read Class entry as a list so that types like QPair<A,B> are
-            // properly escaped and don't end up being split into QPair<A
-            // and B>.
-            const QStringList classes = group.readXdgListEntry("X-Akonadi-Class");
-            if (classes.isEmpty()) {
-                qWarning() << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
-                continue;
-            }
-
-            const QString library = group.readEntry("X-KDE-Library");
-            if (library.isEmpty()) {
-                qWarning() << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" << endl;
-                continue;
-            }
-
-            KConfigGroup group2(&config, "Misc");
-
-            QString name = group2.readEntry("Name");
-            if (name.isEmpty()) {
-                qWarning() << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
-                name = i18n("Unnamed plugin");
-            }
-
-            QString comment = group2.readEntry("Comment");
-            if (comment.isEmpty()) {
-                qWarning() << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
-                comment = i18n("No description available");
-            }
-
-            QString cname      = group.readEntry("X-KDE-ClassName");
-            if (cname.isEmpty()) {
-                qWarning() << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
-            }
-
-            const QStringList mimeTypes = type.split(QLatin1Char(','), QString::SkipEmptyParts);
-
-            qDebug() << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
-            Q_FOREACH (const QString &mimeType, mimeTypes) {
-                Q_FOREACH (const QString &classType, classes) {
-                    mPluginInfos.insert(mimeType + QLatin1Char('@') + classType, PluginMetaData(library, name, comment, cname));
+                const QString type = group.readEntry("Type").toLower();
+                if (type.isEmpty()) {
+                    qWarning() << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
+                    continue;
                 }
-            }
 
-        } else {
-            qWarning() << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
+                // read Class entry as a list so that types like QPair<A,B> are
+                // properly escaped and don't end up being split into QPair<A
+                // and B>.
+                const QStringList classes = group.readXdgListEntry("X-Akonadi-Class");
+                if (classes.isEmpty()) {
+                    qWarning() << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
+                    continue;
+                }
+
+                const QString library = group.readEntry("X-KDE-Library");
+                if (library.isEmpty()) {
+                    qWarning() << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" << endl;
+                    continue;
+                }
+
+                KConfigGroup group2(&config, "Misc");
+
+                QString name = group2.readEntry("Name");
+                if (name.isEmpty()) {
+                    qWarning() << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
+                    name = i18n("Unnamed plugin");
+                }
+
+                QString comment = group2.readEntry("Comment");
+                if (comment.isEmpty()) {
+                    qWarning() << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
+                    comment = i18n("No description available");
+                }
+
+                QString cname      = group.readEntry("X-KDE-ClassName");
+                if (cname.isEmpty()) {
+                    qWarning() << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
+                }
+
+                const QStringList mimeTypes = type.split(QLatin1Char(','), QString::SkipEmptyParts);
+
+                qDebug() << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
+                Q_FOREACH (const QString &mimeType, mimeTypes) {
+                    Q_FOREACH (const QString &classType, classes) {
+                        mPluginInfos.insert(mimeType + QLatin1Char('@') + classType, PluginMetaData(library, name, comment, cname));
+                    }
+                }
+
+            } else {
+                qWarning() << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
+            }
         }
     }
 }
