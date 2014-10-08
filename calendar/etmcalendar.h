@@ -32,6 +32,7 @@ class KCheckableProxyModel;
 namespace Akonadi {
 
 class EntityTreeModel;
+class ChangeRecorder;
 class ETMCalendarPrivate;
 class CollectionSelection;
 
@@ -90,6 +91,7 @@ public:
      */
     explicit ETMCalendar(ETMCalendar *calendar, QObject *parent = 0);
 
+    explicit ETMCalendar(ChangeRecorder *monitor, QObject *parent = 0);
     /**
       * Destroys this ETMCalendar.
       */

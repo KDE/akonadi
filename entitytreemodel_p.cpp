@@ -1411,6 +1411,9 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
         (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
         const QModelIndex index = indexForCollection(Collection(collectionId));
+        if (collectionId == m_rootCollection.id() && !index.isValid()) {
+            return;
+        }
         Q_ASSERT(index.isValid());
         //To notify about the changed fetch and population state
         emit dataChanged(index, index);

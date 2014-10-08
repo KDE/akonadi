@@ -501,6 +501,22 @@ ETMCalendar::ETMCalendar(ETMCalendar *other, QObject *parent)
     d->init();
 }
 
+ETMCalendar::ETMCalendar(ChangeRecorder *monitor, QObject *parent)
+    : CalendarBase(new ETMCalendarPrivate(this), parent)
+{
+    Q_D(ETMCalendar);
+
+    if (monitor) {
+        connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+            d, SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
+        d->mETM = CalendarModel::create(monitor);
+        d->mETM->setObjectName("ETM");
+        d->mETM->setListFilter(Akonadi::CollectionFetchScope::Display);
+    }
+
+    d->init();
+}
+
 ETMCalendar::~ETMCalendar()
 {
 }
