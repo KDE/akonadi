@@ -106,12 +106,12 @@ public:
     QByteArray type() const;
 
     /**
-     * Sets the type of the relation.
+     * Sets the remote id of the relation.
      */
     void setRemoteId(const QByteArray &type) const;
 
     /**
-     * Returns the type of the relation.
+     * Returns the remote idof the relation.
      */
     QByteArray remoteId() const;
 
