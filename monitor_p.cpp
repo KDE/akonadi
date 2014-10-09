@@ -432,11 +432,6 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         return true;
     }
 
-    if (msg.operation() == NotificationMessageV2::Remove) {
-        // For both collection and item removals we don't require the parent collection, that may be gone already anyways. So let's avoid a failing fetchjob
-        return true;
-    }
-
     bool allCached = true;
     if (fetchCollection) {
         if (!collectionCache->ensureCached(msg.parentCollection(), mCollectionFetchScope)) {
@@ -445,6 +440,9 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         if (msg.operation() == NotificationMessageV2::Move && !collectionCache->ensureCached(msg.parentDestCollection(), mCollectionFetchScope)) {
             allCached = false;
         }
+    }
+    if (msg.operation() == NotificationMessageV2::Remove) {
+        return allCached; // the actual object is gone already, nothing to fetch there
     }
 
     if (msg.type() == NotificationMessageV2::Items && !mItemFetchScope.isEmpty()) {
