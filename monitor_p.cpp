@@ -432,6 +432,11 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         return true;
     }
 
+    if (msg.operation() == NotificationMessageV2::Remove && msg.type() == NotificationMessageV2::Collections) {
+        //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
+        return true;
+    }
+
     bool allCached = true;
     if (fetchCollection) {
         if (!collectionCache->ensureCached(msg.parentCollection(), mCollectionFetchScope)) {
