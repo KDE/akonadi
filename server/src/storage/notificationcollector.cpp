@@ -25,6 +25,7 @@
 #include "intervalcheck.h"
 #include "search/searchmanager.h"
 #include "akonadi.h"
+#include "libs/notificationmessagev2_p_p.h"
 #include <search.h>
 
 #include <QtCore/QDebug>
@@ -354,6 +355,10 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
   msg.setParentDestCollection( destination );
   msg.setDestinationResource( destResource );
   msg.setItemParts( changes );
+
+  if (!collection.enabled()) {
+      msg.d->metadata << "DISABLED";
+  }
 
   QByteArray res = resource;
   if ( res.isEmpty() ) {

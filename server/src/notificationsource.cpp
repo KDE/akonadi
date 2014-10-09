@@ -23,6 +23,7 @@
 #include "notificationsourceadaptor.h"
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
+#include <libs/notificationmessagev2_p_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -332,16 +333,34 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
     return false;
   }
 
-    if (notification.entities().count() == 0 && notification.type() != NotificationMessageV2::Relations) {
+  if (notification.entities().count() == 0 && notification.type() != NotificationMessageV2::Relations) {
     return false;
   }
 
   //Only emit notifications for referenced collections if the subscriber is exclusive or monitors the collection
   if ( notification.type() == NotificationMessageV2::Collections ) {
-    Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
-      if ( CollectionReferenceManager::instance()->isReferenced( entity.id ) ) {
-        return ( mExclusive || isCollectionMonitored( entity.id ) );
-      }
+    // HACK: We need to dispatch notifications about disabled collections to SOME
+    // agents (that's what we have the exclusive subscription for) - but because
+    // querying each Collection from database would be expensive, we use the
+    // metadata hack to transfer this information from NotificationCollector
+    if ( notification.d->metadata.contains("DISABLED") ) {
+        // Exclusive subscriber always gets it
+        if ( mExclusive ) {
+            return true;
+        }
+
+        // Now let's see if the collection is referenced - then we still might need
+        // to accept it
+        Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+          if ( CollectionReferenceManager::instance()->isReferenced( entity.id ) ) {
+            return ( mExclusive || isCollectionMonitored( entity.id ) );
+          }
+        }
+
+        // If the collection is not referenced, monitored or the subscriber is not
+        // exclusive (i.e. if we got here), then the subscriber does not care about
+        // this one, so drop it
+        return false;
     }
   } else if ( notification.type() == NotificationMessageV2::Items ) {
       if ( CollectionReferenceManager::instance()->isReferenced( notification.parentCollection() ) ) {

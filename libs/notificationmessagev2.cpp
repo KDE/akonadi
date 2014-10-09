@@ -30,51 +30,6 @@
 
 using namespace Akonadi;
 
-class NotificationMessageV2::Private : public QSharedData
-{
-  public:
-    Private()
-      : QSharedData()
-      , type( InvalidType )
-      , operation( InvalidOp )
-      , parentCollection( -1 )
-      , parentDestCollection( -1 )
-    {
-    }
-
-    Private( const Private &other )
-      : QSharedData( other )
-    {
-      sessionId = other.sessionId;
-      type = other.type;
-      operation = other.operation;
-      items = other.items;
-      resource = other.resource;
-      destResource = other.destResource;
-      parentCollection = other.parentCollection;
-      parentDestCollection = other.parentDestCollection;
-      parts = other.parts;
-      addedFlags = other.addedFlags;
-      removedFlags = other.removedFlags;
-      addedTags = other.addedTags;
-      removedTags = other.removedTags;
-    }
-
-    QByteArray sessionId;
-    NotificationMessageV2::Type type;
-    NotificationMessageV2::Operation operation;
-    QMap<Id, NotificationMessageV2::Entity> items;
-    QByteArray resource;
-    QByteArray destResource;
-    Id parentCollection;
-    Id parentDestCollection;
-    QSet<QByteArray> parts;
-    QSet<QByteArray> addedFlags;
-    QSet<QByteArray> removedFlags;
-    QSet<qint64> addedTags;
-    QSet<qint64> removedTags;
-};
-
 NotificationMessageV2::NotificationMessageV2():
   d( new Private )
 {

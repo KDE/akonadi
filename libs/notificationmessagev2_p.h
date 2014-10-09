@@ -36,6 +36,12 @@
 namespace Akonadi
 {
 
+namespace Server
+{
+class NotificationCollector;
+class NotificationSource;
+}
+
 /**
   @internal
   Used for sending notification signals over DBus.
@@ -160,6 +166,10 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
   protected:
     class Private;
     QSharedDataPointer<Private> d;
+
+    // Grant access to the d-pointer
+    friend class Server::NotificationCollector;
+    friend class Server::NotificationSource;
 };
 
 } // namespace Akonadi
