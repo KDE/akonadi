@@ -45,6 +45,7 @@ public:
     QStringList mimeTypes;
     QStringList capabilities;
     QStringList excludeCapabilities;
+    bool filterAcceptRegExp(const QModelIndex &index, const QRegExp &filterRegExpStr);
 };
 
 AgentFilterProxyModel::AgentFilterProxyModel(QObject *parent)
@@ -85,20 +86,24 @@ void AgentFilterProxyModel::clearFilters()
     invalidateFilter();
 }
 
-bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
+bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index, const QRegExp &filterRegExpStr)
 {
-    const QModelIndex index = sourceModel()->index(row, 0);
-
     // First see if the name matches a set regexp filter.
-    if (!filterRegExp().isEmpty()) {
-        if (index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExp())) {
+    if (!filterRegExpStr.isEmpty()) {
+        if (index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExpStr)) {
             return true;
-        } else if (index.data().toString().contains(filterRegExp())) {
+        } else if (index.data().toString().contains(filterRegExpStr)) {
             return true;
         } else {
             return false;
         }
     }
+    return true;
+}
+
+bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
+{
+    const QModelIndex index = sourceModel()->index(row, 0);
 
     if (!d->mimeTypes.isEmpty()) {
         QMimeDatabase mimeDb;
@@ -119,6 +124,7 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
             }
 
             if (found) {
+                found = d->filterAcceptRegExp(index, filterRegExp());
                 break;
             }
         }
@@ -126,6 +132,8 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
         if (!found) {
             return false;
         }
+    } else {
+        return d->filterAcceptRegExp(index, filterRegExp());
     }
 
     if (!d->capabilities.isEmpty()) {
@@ -151,6 +159,8 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
 
             if (!found) {
                 return false;
+            } else {
+                return d->filterAcceptRegExp(index, filterRegExp());
             }
         }
     }
