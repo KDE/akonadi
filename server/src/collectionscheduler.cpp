@@ -20,6 +20,7 @@
 
 #include "collectionscheduler.h"
 #include "storage/datastore.h"
+#include "storage/selectquerybuilder.h"
 #include "akdebug.h"
 
 #include <QDateTime>
@@ -269,7 +270,23 @@ void CollectionScheduler::scheduleCollection( Collection collection, bool should
 
 void CollectionScheduler::initScheduler()
 {
-  const QVector<Collection> collections = Collection::retrieveAll();
+  // Only retrieve enabled collections and referenced collections, we don't care
+  // about anything else
+  SelectQueryBuilder<Collection> qb;
+  Query::Condition orCondition(Query::Or);
+  orCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, Akonadi::Server::Tristate::True);
+  Query::Condition andCondition(Query::And);
+  andCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, Akonadi::Server::Tristate::Undefined);
+  andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
+  orCondition.addCondition(andCondition);
+  orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
+  qb.addCondition(orCondition);
+  if (!qb.exec()) {
+      qWarning() << "Failed to query initial collections for scheduler!";
+      qWarning() << "Not a fatal error, no collections will be scheduled for sync or cache expiration!";
+  }
+
+  const Collection::List collections = qb.result();
   Q_FOREACH ( /*sic!*/ Collection collection, collections ) {
     scheduleCollection( collection );
   }
