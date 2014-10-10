@@ -42,6 +42,7 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory)
     , notificationSource(0)
     , monitorAll(false)
+    , exclusive(false)
     , mFetchChangedOnly(false)
     , session(Session::defaultSession())
     , collectionCache(0)
@@ -121,6 +122,7 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
         Q_FOREACH (Monitor::Type type, types) {
             notificationSource->setMonitoredType(static_cast<NotificationMessageV2::Type>(type), true);
         }
+        notificationSource->setExclusive(exclusive);
     }
 }
 

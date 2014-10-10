@@ -186,6 +186,9 @@ public:
      */
     void setAllMonitored(bool monitored = true);
 
+    void setExclusive(bool exclusive = true);
+    bool exclusive() const;
+
     /**
      * Ignores all change notifications caused by the given session. This
      * overrides all other settings on this session.

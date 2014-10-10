@@ -70,6 +70,7 @@ public:
     QSet<Monitor::Type> types;
     QSet<QString> mimetypes;
     bool monitorAll;
+    bool exclusive;
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
     TagFetchScope mTagFetchScope;

@@ -39,6 +39,7 @@ public:
     ~NotificationSource();
 
     void setAllMonitored(bool allMonitored);
+    void setExclusive(bool exclusive);
     void setMonitoredCollection(Entity::Id id, bool monitored);
     void setMonitoredItem(Entity::Id id, bool monitored);
     void setMonitoredResource(const QByteArray &resource, bool monitored);
