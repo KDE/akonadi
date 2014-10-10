@@ -1911,9 +1911,9 @@ void EntityTreeModelPrivate::fillModel()
     const QList<Collection> collections = m_monitor->collectionsMonitored();
 
     if (collections.isEmpty() &&
-        m_monitor->mimeTypesMonitored().isEmpty() &&
-        m_monitor->resourcesMonitored().isEmpty() &&
-        !m_monitor->itemsMonitoredEx().isEmpty()) {
+        m_monitor->numMimeTypesMonitored() == 0 &&
+        m_monitor->numResourcesMonitored() == 0 &&
+        m_monitor->numItemsMonitored() != 0) {
         m_rootCollection = Collection(-1);
         m_collectionTreeFetched = true;
         emit q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch
