@@ -87,7 +87,7 @@ public:
     }
 
     /**
-     * Stuff changed, reload everything.
+     * Stuff changed (e.g. new rows inserted into sorted model), reload everything.
      */
     void reload()
     {
@@ -143,7 +143,7 @@ public:
     void reference(const Collection::Id &collectionId)
     {
         if (referencedCollections.contains(collectionId)) {
-            kWarning() << "already referenced " << collectionId;
+            kWarning() << "already referenced" << collectionId;
             return;
         }
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
@@ -160,14 +160,14 @@ public:
     void dereference(const Collection::Id &collectionId)
     {
         if (!referencedCollections.contains(collectionId)) {
-            kWarning() << "not referenced " << collectionId;
+            kWarning() << "not referenced" << collectionId;
             return;
         }
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (index.isValid()) {
             q->sourceModel()->setData(index, QVariant(), EntityTreeModel::CollectionDerefRole);
         }
-	referencedCollections.remove(collectionId);
+        referencedCollections.remove(collectionId);
     }
 
     void clearReferences()
