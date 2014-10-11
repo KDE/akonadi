@@ -84,6 +84,16 @@ bool TransactionSequence::addSubjob(KJob *job)
 {
     Q_D(TransactionSequence);
 
+    //Don't abort the rollback job, while keeping the state set.
+    if (d->mState == TransactionSequencePrivate::RollingBack) {
+        return Job::addSubjob(job);
+    }
+
+    if (error()) {
+        //This can happen if a rollback is in progress, so make sure we don't set the state back to running.
+        job->kill(EmitResult);
+        return false;
+    }
     // TODO KDE5: remove property hack once SpecialCollectionsRequestJob has been fixed
     if (d->mState == TransactionSequencePrivate::Idle && !property("transactionsDisabled").toBool()) {
         d->mState = TransactionSequencePrivate::Running; // needs to be set before creating the transaction job to avoid infinite recursion

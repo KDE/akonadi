@@ -448,6 +448,116 @@ class ItemsyncTest : public QObject
        QCOMPARE(fetchJob->items().first().remoteId(), QString::fromLatin1("rid3"));
     }
 
+    /*
+     * This test verifies that ItemSync doesn't prematurly emit it's result if a job inside a transaction fails.
+     * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
+     */
+    void testFailingJob()
+    {
+      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
+
+      ItemSync* syncer = new ItemSync( col );
+      QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+      QVERIFY(transactionSpy.isValid());
+      QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
+      QVERIFY( spy.isValid() );
+      syncer->setStreamingEnabled( true );
+      syncer->setTransactionMode(ItemSync::MultipleTransactions);
+      QTest::qWait( 0 );
+      QCOMPARE( spy.count(), 0 );
+
+      for ( int i = 0; i < syncer->batchSize(); ++i ) {
+        Item::List l;
+        //Modify to trigger a changed signal
+        Item item = modifyItem(origItems[i]);
+        // item.setRemoteId(QByteArray("foo"));
+        item.setRemoteId(QString());
+        item.setId(-1);
+        l << item;
+        syncer->setIncrementalSyncItems( l, Item::List() );
+        if ( i < (syncer->batchSize() - 1) ) {
+          QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
+        }
+        QCOMPARE( spy.count(), 0 );
+      }
+      QTest::qWait(100);
+      QTRY_COMPARE( spy.count(), 0 );
+
+      for ( int i = syncer->batchSize(); i < origItems.count(); ++i ) {
+        Item::List l;
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
+        syncer->setIncrementalSyncItems( l, Item::List() );
+        if ( i < origItems.count() - 1 ) {
+          QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
+        }
+        QCOMPARE( spy.count(), 0 );
+      }
+
+      syncer->deliveryDone();
+      QTRY_COMPARE( spy.count(), 1 );
+    }
+
+    /*
+     * This test verifies that ItemSync doesn't prematurly emit it's result if a job inside a transaction fails, due to a duplicate.
+     * This case used to break the TransactionSequence.
+     * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
+     */
+    void testFailingDueToDuplicateJob()
+    {
+      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
+
+      //Create a duplicate that will trigger an error during the first batch
+      Item duplicate = origItems.first();
+      duplicate.setId(-1);
+      {
+        ItemCreateJob *job = new ItemCreateJob(duplicate, col);
+        AKVERIFYEXEC(job);
+      }
+      origItems = fetchItems( col );
+
+      ItemSync* syncer = new ItemSync( col );
+      QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+      QVERIFY(transactionSpy.isValid());
+      QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
+      QVERIFY( spy.isValid() );
+      syncer->setStreamingEnabled( true );
+      syncer->setTransactionMode(ItemSync::MultipleTransactions);
+      QTest::qWait( 0 );
+      QCOMPARE( spy.count(), 0 );
+
+      for ( int i = 0; i < syncer->batchSize(); ++i ) {
+        Item::List l;
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
+        syncer->setIncrementalSyncItems( l, Item::List() );
+        if ( i < (syncer->batchSize() - 1) ) {
+          QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
+        }
+        QCOMPARE( spy.count(), 0 );
+      }
+      QTest::qWait(100);
+      //Ensure the job hasn't finished yet due to the errors
+      QTRY_COMPARE( spy.count(), 0 );
+
+      for ( int i = syncer->batchSize(); i < origItems.count(); ++i ) {
+        Item::List l;
+        //Modify to trigger a changed signal
+        l << modifyItem(origItems[i]);
+        syncer->setIncrementalSyncItems( l, Item::List() );
+        if ( i < origItems.count() - 1 ) {
+          QTest::qWait( 0 ); // enter the event loop so itemsync actually can do something
+        }
+        QCOMPARE( spy.count(), 0 );
+      }
+
+      syncer->deliveryDone();
+      QTRY_COMPARE( spy.count(), 1 );
+    }
 };
 
 QTEST_AKONADIMAIN( ItemsyncTest )
