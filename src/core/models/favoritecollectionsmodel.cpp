@@ -87,7 +87,7 @@ public:
     }
 
     /**
-     * Stuff changed, reload everything.
+     * Stuff changed (e.g. new rows inserted into sorted model), reload everything.
      */
     void reload()
     {
@@ -167,7 +167,7 @@ public:
         if (index.isValid()) {
             q->sourceModel()->setData(index, QVariant(), EntityTreeModel::CollectionDerefRole);
         }
-	referencedCollections.remove(collectionId);
+        referencedCollections.remove(collectionId);
     }
 
     void clearReferences()

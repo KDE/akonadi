@@ -338,11 +338,25 @@ public:
     QVector<Item::Id> itemsMonitoredEx() const;
 
     /**
+     * Returns the number of items being monitored.
+     * Optimization.
+     * @since 4.14.3
+     */
+    int numItemsMonitored() const;
+
+    /**
      * Returns the set of mimetypes being monitored.
      *
      * @since 4.3
      */
     QStringList mimeTypesMonitored() const;
+
+    /**
+     * Returns the number of mimetypes being monitored.
+     * Optimization.
+     * @since 4.14.3
+     */
+    int numMimeTypesMonitored() const;
 
     /**
      * Returns the set of tags being monitored.
@@ -364,6 +378,13 @@ public:
      * @since 4.3
      */
     QList<QByteArray> resourcesMonitored() const;
+
+    /**
+     * Returns the number of resources being monitored.
+     * Optimization.
+     * @since 4.14.3
+     */
+    int numResourcesMonitored() const;
 
     /**
      * Returns true if everything is being monitored.

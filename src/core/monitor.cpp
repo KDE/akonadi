@@ -291,6 +291,12 @@ QVector<Item::Id> Monitor::itemsMonitoredEx() const
     return result;
 }
 
+int Monitor::numItemsMonitored() const
+{
+    Q_D(const Monitor);
+    return d->items.size();
+}
+
 QVector<Tag::Id> Monitor::tagsMonitored() const
 {
     Q_D(const Monitor);
@@ -315,10 +321,22 @@ QStringList Monitor::mimeTypesMonitored() const
     return d->mimetypes.toList();
 }
 
+int Monitor::numMimeTypesMonitored() const
+{
+    Q_D(const Monitor);
+    return d->mimetypes.count();
+}
+
 QList<QByteArray> Monitor::resourcesMonitored() const
 {
     Q_D(const Monitor);
     return d->resources.toList();
+}
+
+int Monitor::numResourcesMonitored() const
+{
+    Q_D(const Monitor);
+    return d->resources.count();
 }
 
 bool Monitor::isAllMonitored() const
