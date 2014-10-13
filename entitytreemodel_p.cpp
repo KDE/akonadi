@@ -1410,7 +1410,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     // If collections are not in the model, there will be no valid index for them.
     if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
         (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) &&
-        !(m_showRootCollection && collectionId == m_rootCollection.id())) {
+        !(!m_showRootCollection && collectionId == m_rootCollection.id())) {
         const QModelIndex index = indexForCollection(Collection(collectionId));
         Q_ASSERT(index.isValid());
         //To notify about the changed fetch and population state
