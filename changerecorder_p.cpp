@@ -501,8 +501,11 @@ void ChangeRecorderPrivate::notificationsEnqueued(int count)
 
 void ChangeRecorderPrivate::dequeueNotification()
 {
-    pendingNotifications.dequeue();
+    if (pendingNotifications.isEmpty()) {
+        return;
+    }
 
+    pendingNotifications.dequeue();
     if (enableChangeRecording) {
 
         Q_ASSERT(pendingNotifications.count() == m_lastKnownNotificationsCount - 1);
