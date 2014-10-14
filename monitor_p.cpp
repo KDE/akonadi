@@ -430,6 +430,7 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         }
         return true;
     }
+
     if (msg.type() == NotificationMessageV2::Relations) {
         return true;
     }
@@ -480,9 +481,9 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
                 }
             }
         }
+
         if (!itemCache->ensureCached(msg.uids(), scope)) {
             allCached = false;
-
         }
 
         // Make sure all tags for ModifyTags operation are in cache too
@@ -549,12 +550,16 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
-            //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
             const Item::List items = itemCache->retrieve(msg.uids());
             if (!items.isEmpty()) {
                 someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
             } else {
-                someoneWasListening = true;
+                // In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
+                // Of course, we may end up with an inconsistency in the database and have a pending notification that has
+                // been (e.g.) written out to a log for later replay (such as in a ChangeRecorder) and now references uids
+                // that no longer exist. In *that* case we want to just drop the notification, otherwise we get stuck on it
+                // forever
+                someoneWasListening = msg.operation() == NotificationMessageV2::Remove;
             }
         }
     }
@@ -696,6 +701,7 @@ void MonitorPrivate::slotNotify(const NotificationMessageV3::List &msgs)
     int appendedMessages = 0;
     int modifiedMessages = 0;
     int erasedMessages = 0;
+
     Q_FOREACH (const NotificationMessageV3 &msg, msgs) {
         invalidateCaches(msg);
         updatePendingStatistics(msg);
@@ -763,6 +769,7 @@ void MonitorPrivate::flushPipeline()
             // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
             // being called again) and we end up dequeuing an empty pipeline
             pipeline.dequeue();
+            dequeueNotification();
             emitNotification(msg);
         } else {
             break;

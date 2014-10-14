@@ -102,6 +102,9 @@ public:
     virtual void notificationsErased()
     {
     }
+    virtual void dequeueNotification()
+    {
+    }
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
