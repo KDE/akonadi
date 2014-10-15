@@ -542,24 +542,12 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
                     if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
                         someoneWasListening = true;
                     }
-                } else {
-                    // We don't know if someone is actually listening, but we don't want
-                    // to trigger cleanOldNotifications() every time we run into an invalid
-                    // notification, because it's rather expensive
-                    someoneWasListening = true;
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
             const Item::List items = itemCache->retrieve(msg.uids());
             if (!items.isEmpty()) {
                 someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
-            } else {
-                // In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
-                // Of course, we may end up with an inconsistency in the database and have a pending notification that has
-                // been (e.g.) written out to a log for later replay (such as in a ChangeRecorder) and now references uids
-                // that no longer exist. In *that* case we want to just drop the notification, otherwise we get stuck on it
-                // forever
-                someoneWasListening = msg.operation() == NotificationMessageV2::Remove;
             }
         }
     }
