@@ -538,17 +538,13 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
             Collection col;
             Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
                 col = collectionCache->retrieve(entity.id);
-                if (col.isValid()) {
-                    if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
-                        someoneWasListening = true;
-                    }
+                if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
+                    someoneWasListening = true;
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
             const Item::List items = itemCache->retrieve(msg.uids());
-            if (!items.isEmpty()) {
-                someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
-            }
+            someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
         }
     }
 
