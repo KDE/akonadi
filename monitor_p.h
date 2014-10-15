@@ -309,6 +309,8 @@ private:
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);
+    bool fetchCollections() const;
+    bool fetchItems() const;
 };
 
 }

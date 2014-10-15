@@ -420,6 +420,16 @@ void MonitorPrivate::cleanOldNotifications()
     }
 }
 
+bool MonitorPrivate::fetchCollections() const
+{
+    return fetchCollection;
+}
+
+bool MonitorPrivate::fetchItems() const
+{
+    return !mItemFetchScope.isEmpty();
+}
+
 bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
 {
     if (msg.type() == NotificationMessageV2::Tags) {
@@ -441,7 +451,7 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
     }
 
     bool allCached = true;
-    if (fetchCollection) {
+    if (fetchCollections()) {
         if (!collectionCache->ensureCached(msg.parentCollection(), mCollectionFetchScope)) {
             allCached = false;
         }
@@ -453,7 +463,7 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         return allCached; // the actual object is gone already, nothing to fetch there
     }
 
-    if (msg.type() == NotificationMessageV2::Items && !mItemFetchScope.isEmpty()) {
+    if (msg.type() == NotificationMessageV2::Items && fetchItems()) {
         ItemFetchScope scope(mItemFetchScope);
         if (mFetchChangedOnly && (msg.operation() == NotificationMessageV2::Modify || msg.operation() == NotificationMessageV2::ModifyFlags)) {
             bool fullPayloadWasRequested = scope.fullPayload();
@@ -493,7 +503,7 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
             }
         }
 
-    } else if (msg.type() == NotificationMessageV2::Collections && fetchCollection) {
+    } else if (msg.type() == NotificationMessageV2::Collections && fetchCollections()) {
         Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
             if (!collectionCache->ensureCached(entity.id, mCollectionFetchScope)) {
                 allCached = false;
@@ -507,10 +517,12 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
 bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
 {
     bool someoneWasListening = false;
+    bool shouldCleanOldNotifications = false;
     if (msg.type() == NotificationMessageV2::Tags) {
         //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
         const Tag::List tags = tagCache->retrieve(msg.uids());
         someoneWasListening = emitTagsNotification(msg, tags);
+        shouldCleanOldNotifications = !someoneWasListening;
     } else if (msg.type() == NotificationMessageV2::Relations) {
         Relation rel;
         Q_FOREACH (const QByteArray & part, msg.itemParts()) {
@@ -527,6 +539,7 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
             }
         }
         someoneWasListening = emitRelationsNotification(msg, Relation::List() << rel);
+        shouldCleanOldNotifications = !someoneWasListening;
     } else {
         const Collection parent = collectionCache->retrieve(msg.parentCollection());
         Collection destParent;
@@ -537,18 +550,28 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
         if (msg.type() == NotificationMessageV2::Collections) {
             Collection col;
             Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+                //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
                 col = collectionCache->retrieve(entity.id);
-                if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
-                    someoneWasListening = true;
+                //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
+                //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
+                if (col.isValid() || msg.operation() == NotificationMessageV2::Remove || !fetchCollections()) {
+                    someoneWasListening = emitCollectionNotification(msg, col, parent, destParent);
+                    shouldCleanOldNotifications = !someoneWasListening;
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
+            //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
             const Item::List items = itemCache->retrieve(msg.uids());
-            someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+            //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
+            //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
+            if (!items.isEmpty() || msg.operation() == NotificationMessageV2::Remove || !fetchItems()) {
+                someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+                shouldCleanOldNotifications = !someoneWasListening;
+            }
         }
     }
 
-    if (!someoneWasListening) {
+    if (shouldCleanOldNotifications) {
         cleanOldNotifications(); // probably someone disconnected a signal in the meantime, get rid of the no longer interesting stuff
     }
 
