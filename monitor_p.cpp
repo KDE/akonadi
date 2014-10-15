@@ -977,7 +977,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
         }
         return false;
     case NotificationMessageV2::ModifyRelations:
-        if (q_ptr->receivers(SIGNAL(itemsRelationsChanged(Akonadi::Item::List,QSet<Akonadi::Relation>,QSet<Akonadi::Relation>))) > 0) {
+        if (q_ptr->receivers(SIGNAL(itemsRelationsChanged(Akonadi::Item::List,Akonadi::Relation::List,Akonadi::Relation::List))) > 0) {
             emit q_ptr->itemsRelationsChanged(its, addedRelations, removedRelations);
             return true;
         }
