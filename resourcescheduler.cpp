@@ -418,6 +418,11 @@ void ResourceScheduler::setOnline(bool state)
 
 void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType, const QString &debugString )
 {
+  if (!dynamic_cast<AgentBase*>(parent())) {
+    //We're probably in a test and don't require task tracking
+    return;
+  }
+
   // if there's a job tracer running, tell it about the new job
   if ( !s_resourcetracker && DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
     s_resourcetracker = new QDBusInterface( QLatin1String( "org.kde.akonadiconsole" ),
