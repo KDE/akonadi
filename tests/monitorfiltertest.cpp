@@ -336,6 +336,6 @@ class MonitorFilterTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( MonitorFilterTest, NoGUI )
+QTEST_AKONADIMAIN( MonitorFilterTest, NoGUI )
 
 #include "monitorfiltertest.moc"
