@@ -343,7 +343,7 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
     // agents (that's what we have the exclusive subscription for) - but because
     // querying each Collection from database would be expensive, we use the
     // metadata hack to transfer this information from NotificationCollector
-    if ( notification.d->metadata.contains("DISABLED") ) {
+    if ( notification.d->metadata.contains("DISABLED") && (notification.operation() != NotificationMessageV2::Unsubscribe) && !notification.itemParts().contains("ENABLED") ) {
         // Exclusive subscriber always gets it
         if ( mExclusive ) {
             return true;
