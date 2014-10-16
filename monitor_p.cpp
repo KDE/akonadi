@@ -440,7 +440,6 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         }
         return true;
     }
-
     if (msg.type() == NotificationMessageV2::Relations) {
         return true;
     }
@@ -491,9 +490,9 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
                 }
             }
         }
-
         if (!itemCache->ensureCached(msg.uids(), scope)) {
             allCached = false;
+
         }
 
         // Make sure all tags for ModifyTags operation are in cache too
@@ -708,7 +707,6 @@ void MonitorPrivate::slotNotify(const NotificationMessageV3::List &msgs)
     int appendedMessages = 0;
     int modifiedMessages = 0;
     int erasedMessages = 0;
-
     Q_FOREACH (const NotificationMessageV3 &msg, msgs) {
         invalidateCaches(msg);
         updatePendingStatistics(msg);
@@ -776,7 +774,6 @@ void MonitorPrivate::flushPipeline()
             // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
             // being called again) and we end up dequeuing an empty pipeline
             pipeline.dequeue();
-            dequeueNotification();
             emitNotification(msg);
         } else {
             break;

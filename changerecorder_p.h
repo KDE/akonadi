@@ -52,9 +52,8 @@ public:
     void addToStream(QDataStream &stream, const NotificationMessageV3 &msg);
     void saveNotifications();
     void saveTo(QIODevice *device);
-    void dequeueNotification();
-
 private:
+    void dequeueNotification();
     void notificationsLoaded();
     void writeStartOffset();
 
