@@ -27,6 +27,7 @@
 #include <akonadi/transactionjobs.h>
 #include <akonadi/tagcreatejob.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/resourceselectjob_p.h>
 #include "test_utils.h"
 
 #include <QtCore/QObject>
@@ -98,6 +99,10 @@ class ItemDeleteTest : public QObject
 
     void testRidDelete()
     {
+      {
+          ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+          AKVERIFYEXEC(select);
+      }
       const Collection col ( collectionIdFromPath( "res1/foo" ) );
       QVERIFY( col.isValid() );
 
@@ -118,6 +123,10 @@ class ItemDeleteTest : public QObject
       fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
       QVERIFY( !fjob->exec() );
+      {
+          ResourceSelectJob *select = new ResourceSelectJob("");
+          AKVERIFYEXEC(select);
+      }
     }
 
     void testTagDelete()
