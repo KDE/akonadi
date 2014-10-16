@@ -78,6 +78,7 @@ void MonitorTest::testMonitor()
   monitor->setCollectionMonitored( Collection::root() );
   monitor->fetchCollection( fetchCol );
   monitor->itemFetchScope().fetchFullPayload();
+  monitor->itemFetchScope().setCacheOnly(true);
 
   // monitor signals
   qRegisterMetaType<Akonadi::Collection>();
