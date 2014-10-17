@@ -90,14 +90,6 @@ EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     // using collection as a parameter of a queued call in runItemFetchJob()
     qRegisterMetaType<Collection>();
 
-    org::freedesktop::Akonadi::AgentManager *manager =
-        new org::freedesktop::Akonadi::AgentManager(ServerManager::serviceName(Akonadi::ServerManager::Control),
-                                                    QLatin1String("/AgentManager"),
-                                                    DBusConnectionPool::threadConnection(), q_ptr);
-
-    QObject::connect(manager, SIGNAL(agentInstanceAdvancedStatusChanged(QString,QVariantMap)),
-                     q_ptr, SLOT(agentInstanceAdvancedStatusChanged(QString,QVariantMap)));
-
     Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
     QObject::connect(agentManager, SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
                      q_ptr, SLOT(agentInstanceRemoved(Akonadi::AgentInstance)));
@@ -219,31 +211,6 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
             }
         }
     }
-}
-
-void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged(const QString &, const QVariantMap &status)
-{
-    const QString key = status.value(QLatin1String("key")).toString();
-    if (key != QLatin1String("collectionSyncProgress")) {
-        return;
-    }
-
-    const Collection::Id collectionId = status.value(QLatin1String("collectionId")).toLongLong();
-    const uint percent = status.value(QLatin1String("percent")).toUInt();
-    if (m_collectionSyncProgress.value(collectionId) == percent) {
-        return;
-    }
-    m_collectionSyncProgress.insert(collectionId, percent);
-
-    const QModelIndex collectionIndex = indexForCollection(Collection(collectionId));
-    if (!collectionIndex.isValid()) {
-        return;
-    }
-
-    Q_Q(EntityTreeModel);
-    // This is really slow (80 levels of method calls in proxy models...), and called
-    // very often during an imap sync...
-    q->dataChanged(collectionIndex, collectionIndex);
 }
 
 void EntityTreeModelPrivate::fetchItems(const Collection &parent)
