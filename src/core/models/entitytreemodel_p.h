@@ -123,7 +123,6 @@ public:
     void fillModel();
 
     void changeFetchState(const Collection &parent);
-    void agentInstanceAdvancedStatusChanged(const QString &, const QVariantMap &);
     void agentInstanceRemoved(const Akonadi::AgentInstance &instace);
 
     QHash<Collection::Id, Collection> m_collections;
@@ -148,7 +147,6 @@ public:
     bool m_includeStatistics;
     bool m_showRootCollection;
     bool m_collectionTreeFetched;
-    QHash<Collection::Id, uint> m_collectionSyncProgress;
 
     /**
      * Called after the root collection was fetched by fillModel

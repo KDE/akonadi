@@ -313,7 +313,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
             return d->m_pendingCollectionRetrieveJobs.contains(collection.id()) ? FetchingState : IdleState;
         }
         case CollectionSyncProgressRole: {
-            return d->m_collectionSyncProgress.value(collection.id());
+            return QVariant(); // no longer supported
         }
         case IsPopulatedRole: {
             return d->m_populatedCols.contains(collection.id());
