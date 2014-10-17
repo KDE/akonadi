@@ -125,6 +125,10 @@ CollectionDialog::Private::~Private()
 {
 }
 
+void CollectionDialog::Private::slotDoubleClicked()
+{
+}
+
 void CollectionDialog::Private::slotCollectionAvailable(const QModelIndex &index)
 {
     mSelectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);

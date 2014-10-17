@@ -114,7 +114,7 @@ public:
                          mParent, SLOT(slotSelectionChanged()));
 
         mParent->connect(mView, SIGNAL(doubleClicked(QModelIndex)),
-                         mParent, SLOT(accept()));
+                         mParent, SLOT(slotDoubleClicked()));
 
         mSelectionHandler = new AsyncSelectionHandler(mFilterCollection, mParent);
         mParent->connect(mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
@@ -172,13 +172,34 @@ public:
     KRecursiveFilterProxyModel *mFilterCollection;
     QCheckBox *mUseByDefault;
 
+    void slotDoubleClicked();
     void slotSelectionChanged();
     void slotAddChildCollection();
     void slotCollectionCreationResult(KJob *job);
     bool canCreateCollection(const Akonadi::Collection &parentCollection) const;
     void changeCollectionDialogOptions(CollectionDialogOptions options);
-
+    bool canSelectCollection() const;
 };
+
+void CollectionDialog::Private::slotDoubleClicked()
+{
+    if (canSelectCollection()) {
+       mParent->accept();
+    }
+}
+
+bool CollectionDialog::Private::canSelectCollection() const
+{
+    bool result = (mView->selectionModel()->selectedIndexes().count() > 0);
+    if (mAllowToCreateNewChildCollection) {
+        const Akonadi::Collection parentCollection = mParent->selectedCollection();
+
+        if (parentCollection.isValid()) {
+            result = (parentCollection.rights() & Akonadi::Collection::CanCreateItem);
+        }
+    }
+    return result;
+}
 
 void CollectionDialog::Private::slotSelectionChanged()
 {
