@@ -27,17 +27,17 @@ class NotificationMessageV2Test : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void testCompress();
-    void testCompress2();
-    void testCompress3();
-    void testCompress4();
-    void testCompress5();
-    void testCompress6();
+    // void testCompress();
+    // void testCompress2();
+    // void testCompress3();
+    // void testCompress4();
+    // void testCompress5();
+    // void testCompress6();
     void testCompress7();
-    void testCompressWithItemParts();
+    // void testCompressWithItemParts();
     void testNoCompress();
-    void testPartModificationMerge_data();
-    void testPartModificationMerge();
+    // void testPartModificationMerge_data();
+    // void testPartModificationMerge();
 };
 
 #endif
