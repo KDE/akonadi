@@ -349,7 +349,7 @@ public:
         EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
         UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
         FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
-        CollectionSyncProgressRole,             ///< Returns the progress of synchronization in percent for a particular collection. @since 4.6
+        CollectionSyncProgressRole,             ///< Returns the progress of synchronization in percent for a particular collection. @since 4.6. Deprecated since 4.14.3.
         IsPopulatedRole,                        ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
         UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
         TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
@@ -754,7 +754,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void monitoredItemUnlinked(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void changeFetchState(const Akonadi::Collection &))
 
-    Q_PRIVATE_SLOT(d_func(), void agentInstanceAdvancedStatusChanged(const QString &, const QVariantMap &))
     Q_PRIVATE_SLOT(d_func(), void agentInstanceRemoved(Akonadi::AgentInstance))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemsRetrieved(KJob *job))
     //@endcond
