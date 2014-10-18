@@ -325,6 +325,14 @@ protected Q_SLOTS:
     void setItemSyncBatchSize(int batchSize);
 
     /**
+     * Set to true to scheudle an attribute sync before every item sync.
+     * The default is false.
+     *
+     * @since 4.15
+     */
+    void setScheduleAttributeSyncBeforeItemSync(bool);
+
+    /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
      * Add the requested payload parts and call itemRetrieved() when done.
      * @param item The empty item whose payload should be retrieved. Use this object when delivering

@@ -84,6 +84,7 @@ public:
         , mDisableAutomaticItemDeliveryDone(false)
         , mItemSyncBatchSize(10)
         , mCurrentCollectionFetchJob(0)
+        , mScheduleAttributeSyncBeforeCollectionSync(false)
     {
         Internal::setClientType(Internal::Resource);
         mStatusMessage = defaultReadyMessage();
@@ -455,6 +456,7 @@ public:
     int mItemSyncBatchSize;
     QSet<QByteArray> mKeepLocalCollectionChanges;
     KJob *mCurrentCollectionFetchJob;
+    bool mScheduleAttributeSyncBeforeCollectionSync;
 };
 
 ResourceBase::ResourceBase(const QString &id)
@@ -946,6 +948,12 @@ void ResourceBase::setItemSyncBatchSize(int batchSize)
     d->mItemSyncBatchSize = batchSize;
 }
 
+void ResourceBase::setScheduleAttributeSyncBeforeItemSync(bool enable)
+{
+    Q_D(ResourceBase);
+    d->mScheduleAttributeSyncBeforeCollectionSync = enable;
+}
+
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
 {
     Q_Q(ResourceBase);
@@ -1161,6 +1169,9 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
         Q_FOREACH (const Collection &collection, list) {
             //We also get collections that should not be synced but are part of the tree.
             if (collection.shouldList(Collection::ListSync) || collection.referenced()) {
+                if (mScheduleAttributeSyncBeforeCollectionSync) {
+                    scheduler->scheduleAttributesSync(collection);
+                }
                 scheduler->scheduleSync(collection);
             }
         }
