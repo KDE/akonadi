@@ -1169,6 +1169,12 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
     }
 }
 
+void ResourceBase::synchronizeCollectionAttributes(const Akonadi::Collection &col)
+{
+    Q_D(ResourceBase);
+    d->scheduler->scheduleAttributesSync(col);
+}
+
 void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
 {
     CollectionFetchJob *job = new CollectionFetchJob(Collection(collectionId), CollectionFetchJob::Base);

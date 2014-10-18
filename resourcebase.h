@@ -634,6 +634,14 @@ protected:
     void synchronizeCollectionAttributes(qint64 id);
 
     /**
+     * Synchronizes the collection attributes.
+     *
+     * @param col The id of the collection to synchronize
+     * @since 4.15
+     */
+    void synchronizeCollectionAttributes(const Akonadi::Collection &col);
+
+    /**
      * Refetches the Collections.
      */
     void synchronizeCollectionTree();
