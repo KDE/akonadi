@@ -22,11 +22,9 @@
 #include <kconfiggroup.h>
 #include <QDebug>
 #include <klocalizedstring.h>
-#include <kstandarddirs.h>
 #include <KPluginLoader>
 #include <KConfig>
 #include <QtCore/QDebug>
-#include <KGlobal>
 #include <QDir>
 #include <QStandardPaths>
 using namespace Akonadi;
