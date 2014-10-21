@@ -35,7 +35,9 @@
 
 class QFileSystemWatcher;
 
-class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer, public Akonadi::AgentSearchInterface
+class KnutResource : public Akonadi::ResourceBase,
+                     public Akonadi::AgentBase::ObserverV2,
+                     public Akonadi::AgentSearchInterface
 {
   Q_OBJECT
 
@@ -58,6 +60,7 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     void itemRemoved( const Akonadi::Item &ref );
+    void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination );
 
     void search(const QString& query, const Akonadi::Collection& collection);
     void addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection);

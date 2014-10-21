@@ -283,6 +283,46 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   changeProcessed();
 }
 
+void KnutResource::itemMoved(const Item &item, const Collection &collectionSource, const Collection &collectionDestination)
+{
+  const QDomElement oldElem = mDocument.itemElementByRemoteId(item.remoteId());
+  if (oldElem.isNull()) {
+    kWarning() << "Moved item not found in DOM tree";
+    changeProcessed();
+    return;
+  }
+
+  QDomElement sourceParentElem = mDocument.collectionElementByRemoteId(collectionSource.remoteId());
+  if (sourceParentElem.isNull()) {
+    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
+    changeProcessed();
+    return;
+  }
+
+  QDomElement destParentElem = mDocument.collectionElementByRemoteId(collectionDestination.remoteId());
+  if (destParentElem.isNull()) {
+    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionDestination.remoteId()));
+    changeProcessed();
+    return;
+  }
+
+  QDomElement itemElem = mDocument.itemElementByRemoteId(item.remoteId());
+  if (itemElem.isNull()) {
+    emit error(i18n("No item found for remoteid %1", item.remoteId()));
+  }
+
+  sourceParentElem.removeChild(itemElem);
+  destParentElem.appendChild(itemElem);
+
+  if (XmlWriter::writeItem(item, destParentElem).isNull()) {
+    emit error(i18n("Unable to write item."));
+  } else {
+    save();
+  }
+  changeProcessed();
+}
+
+
 QSet<qint64> KnutResource::parseQuery(const QString &queryString)
 {
   QSet<qint64> resultSet;
