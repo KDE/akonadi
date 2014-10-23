@@ -42,6 +42,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QUuid>
 #include <QStandardPaths>
+#include <QDebug>
 
 using namespace Akonadi;
 
@@ -289,6 +290,47 @@ void KnutResource::itemRemoved(const Akonadi::Item &item)
     save();
     changeProcessed();
 }
+
+void KnutResource::itemMoved(const Item &item, const Collection &collectionSource, const Collection &collectionDestination)
+{
+  const QDomElement oldElem = mDocument.itemElementByRemoteId(item.remoteId());
+  if (oldElem.isNull()) {
+    qWarning() << "Moved item not found in DOM tree";
+    changeProcessed();
+    return;
+  }
+#if 0 //PORT QT5
+  QDomElement sourceParentElem = mDocument.collectionElementByRemoteId(collectionSource.remoteId());
+  if (sourceParentElem.isNull()) {
+    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
+    changeProcessed();
+    return;
+  }
+
+  QDomElement destParentElem = mDocument.collectionElementByRemoteId(collectionDestination.remoteId());
+  if (destParentElem.isNull()) {
+    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionDestination.remoteId()));
+    changeProcessed();
+    return;
+  }
+  QDomElement itemElem = mDocument.itemElementByRemoteId(item.remoteId());
+  if (itemElem.isNull()) {
+    emit error(i18n("No item found for remoteid %1", item.remoteId()));
+  }
+
+  sourceParentElem.removeChild(itemElem);
+  destParentElem.appendChild(itemElem);
+
+  if (XmlWriter::writeItem(item, destParentElem).isNull()) {
+    emit error(i18n("Unable to write item."));
+  } else {
+    save();
+  }
+  changeProcessed();
+#endif
+}
+
+
 
 QSet<qint64> KnutResource::parseQuery(const QString &queryString)
 {
