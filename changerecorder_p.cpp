@@ -119,7 +119,7 @@ void ChangeRecorderPrivate::loadNotifications()
     QFile file(changesFileName);
     if (file.open(QIODevice::ReadOnly)) {
         m_needFullSave = false;
-        pendingNotifications = loadFrom(&file);
+        pendingNotifications = loadFrom(&file, m_needFullSave);
     } else {
         m_needFullSave = true;
     }
@@ -130,7 +130,7 @@ static const quint64 s_currentVersion = Q_UINT64_C(0x000300000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device)
+QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device, bool &needsFullSave) const
 {
     QDataStream stream(device);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -157,7 +157,7 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 
     // If we skip the first N items, then we'll need to rewrite the file on saving.
     // Also, if the file is old, it needs to be rewritten.
-    m_needFullSave = startOffset > 0 || version == 0;
+    needsFullSave = startOffset > 0 || version == 0;
 
     for (quint64 i = 0; i < size && !stream.atEnd(); ++i) {
         NotificationMessageV2 msg;
@@ -238,73 +238,44 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device)
     return list;
 }
 
+static QString join(const QSet<QByteArray> &set)
+{
+    QString string;
+    Q_FOREACH (const QByteArray &b, set) {
+        string += QString::fromLatin1(b) + QLatin1String(", ");
+    }
+    return string;
+}
+
+static QString join(const QList<qint64> &set)
+{
+    QString string;
+    Q_FOREACH (qint64 b, set) {
+        string += QString::number(b) + QLatin1String(", ");
+    }
+    return string;
+}
+
 QString ChangeRecorderPrivate::dumpNotificationListToString() const
 {
     if (!settings) {
         return QString::fromLatin1("No settings set in ChangeRecorder yet.");
     }
-    QString result;
     const QString changesFileName = notificationsFileName();
     QFile file(changesFileName);
+
     if (!file.open(QIODevice::ReadOnly)) {
         return QString::fromLatin1("Error reading ") + changesFileName;
     }
 
-    QDataStream stream(&file);
-    stream.setVersion(QDataStream::Qt_4_6);
-
-    QByteArray sessionId, resource, destResource;
-    int type, operation, entityCnt;
-    quint64 parentCollection, parentDestCollection;
-    QString remoteId, remoteRevision, mimeType;
-    QSet<QByteArray> itemParts, addedFlags, removedFlags;
-    QSet<qint64> addedTags, removedTags;
-    QVariantList items;
-
-    QStringList list;
-
-    quint64 sizeAndVersion;
-    stream >> sizeAndVersion;
-
-    const quint64 size = sizeAndVersion & s_sizeMask;
-    const quint64 version = (sizeAndVersion & s_versionMask) >> 32;
-
-    quint64 startOffset = 0;
-    if (version >= 1) {
-        stream >> startOffset;
-    }
-
-    for (quint64 i = 0; i < size && !stream.atEnd(); ++i) {
-        stream >> sessionId;
-        stream >> type;
-        stream >> operation;
-        stream >> entityCnt;
-        for (int j = 0; j < entityCnt; ++j) {
-            QVariantMap map;
-            stream >> map[QLatin1String("uid")];
-            stream >> map[QLatin1String("remoteId")];
-            stream >> map[QLatin1String("remoteRevision")];
-            stream >> map[QLatin1String("mimeType")];
-            items << map;
-        }
-        stream >> resource;
-        stream >> destResource;
-        stream >> parentCollection;
-        stream >> parentDestCollection;
-        stream >> itemParts;
-        stream >> addedFlags;
-        stream >> removedFlags;
-        if (version == 3) {
-            stream >> addedTags;
-            stream >> removedTags;
-        }
-
-        if (i < startOffset) {
-            continue;
-        }
+    QString result;
+    bool dummy;
+    const QQueue<NotificationMessageV3> notifications = loadFrom(&file, dummy);
+    Q_FOREACH(const NotificationMessageV3 &n, notifications) {
+        n.toString();
 
         QString typeString;
-        switch (type) {
+        switch (n.type()) {
         case NotificationMessageV2::Collections:
             typeString = QLatin1String("Collections");
             break;
@@ -320,7 +291,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
         };
 
         QString operationString;
-        switch (operation) {
+        switch (n.operation()) {
         case NotificationMessageV2::Add:
             operationString = QLatin1String("Add");
             break;
@@ -356,41 +327,26 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
             break;
         };
 
-        QStringList itemPartsList, addedFlagsList, removedFlagsList, addedTagsList, removedTagsList;
-        foreach (const QByteArray &b, itemParts) {
-            itemPartsList.push_back(QString::fromLatin1(b));
-        }
-        foreach (const QByteArray &b, addedFlags) {
-            addedFlagsList.push_back(QString::fromLatin1(b));
-        }
-        foreach (const QByteArray &b, removedFlags) {
-            removedFlagsList.push_back(QString::fromLatin1(b));
-        }
-        foreach (qint64 id, addedTags) {
-            addedTagsList.push_back(QString::number(id));
-        }
-        foreach (qint64 id, removedTags) {
-            removedTagsList.push_back(QString::number(id)) ;
-        }
+        const QString entities = join(n.entities().keys());
+        const QString addedTags = join(n.addedTags().toList());
+        const QString removedTags = join(n.removedTags().toList());
 
         const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11 addedTags=%12 removedTags=%13")
-                              .arg(QString::fromLatin1(sessionId))
-                              .arg(typeString)
-                              .arg(operationString)
-                              .arg(QVariant(items).toString())
-                              .arg(QString::fromLatin1(resource))
-                              .arg(QString::fromLatin1(destResource))
-                              .arg(parentCollection)
-                              .arg(parentDestCollection)
-                              .arg(itemPartsList.join(QLatin1String(", ")))
-                              .arg(addedFlagsList.join(QLatin1String(", ")))
-                              .arg(removedFlagsList.join(QLatin1String(", ")))
-                              .arg(addedTagsList.join(QLatin1String(", ")))
-                              .arg(removedTagsList.join(QLatin1String(", ")));
-
+                            .arg(QString::fromLatin1(n.sessionId()))
+                            .arg(typeString)
+                            .arg(operationString)
+                            .arg(entities)
+                            .arg(QString::fromLatin1(n.resource()))
+                            .arg(QString::fromLatin1(n.destinationResource()))
+                            .arg(n.parentCollection())
+                            .arg(n.parentDestCollection())
+                            .arg(join(n.itemParts()))
+                            .arg(join(n.addedFlags()))
+                            .arg(join(n.removedFlags()))
+                            .arg(addedTags)
+                            .arg(removedTags);
         result += entry + QLatin1Char('\n');
     }
-
     return result;
 }
 

@@ -47,7 +47,7 @@ public:
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<NotificationMessageV3> loadFrom(QIODevice *device);
+    QQueue<NotificationMessageV3> loadFrom(QIODevice *device, bool &needsFullSave) const;
     QString dumpNotificationListToString() const;
     void addToStream(QDataStream &stream, const NotificationMessageV3 &msg);
     void saveNotifications();
