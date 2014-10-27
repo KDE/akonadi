@@ -361,6 +361,9 @@ Flag::List HandlerHelper::resolveFlags( const QVector<QByteArray> &flagNames )
 
 Tag::List HandlerHelper::resolveTags( const ImapSet &tags )
 {
+  if (tags.isEmpty()) {
+    return Tag::List();
+  }
   SelectQueryBuilder<Tag> qb;
   QueryHelper::setToQuery( tags, Tag::idFullColumnName(), qb );
   if ( !qb.exec() ) {
