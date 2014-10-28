@@ -81,6 +81,7 @@ public:
         , mAutomaticProgressReporting(true)
         , mDisableAutomaticItemDeliveryDone(false)
         , mItemSyncBatchSize(10)
+        , mCurrentCollectionFetchJob(0)
     {
         Internal::setClientType(Internal::Resource);
         mStatusMessage = defaultReadyMessage();
@@ -137,10 +138,12 @@ public:
     void slotCollectionSyncDone(KJob *job);
     void slotLocalListDone(KJob *job);
     void slotSynchronizeCollection(const Collection &col);
+    void slotItemRetrievalCollectionFetchDone(KJob *job);
     void slotCollectionListDone(KJob *job);
     void slotSynchronizeCollectionAttributes(const Collection &col);
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
+    void slotAttributeRetrievalCollectionFetchDone(KJob *job);
 
     void slotItemSyncDone(KJob *job);
 
@@ -453,6 +456,7 @@ public:
     QPointer<RecursiveMover> m_recursiveMover;
     int mItemSyncBatchSize;
     QSet<QByteArray> mKeepLocalCollectionChanges;
+    KJob *mCurrentCollectionFetchJob;
 };
 
 ResourceBase::ResourceBase(const QString &id)
@@ -907,11 +911,28 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
             if (mAutomaticProgressReporting) {
                 emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
             }
-            q->retrieveItems(currentCollection);
+
+            Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
+            fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
+            connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(slotItemRetrievalCollectionFetchDone(KJob*)));
+            mCurrentCollectionFetchJob = fetchJob;
             return;
         }
     }
     scheduler->taskDone();
+}
+
+void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
+{
+    Q_Q(ResourceBase);
+    mCurrentCollectionFetchJob = 0;
+    if (job->error()) {
+        qWarning() << "Failed to retrieve collection for sync: " << job->errorString();
+        q->cancelTask(i18n("Failed to retrieve collection for sync."));
+        return;
+    }
+    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
+    q->retrieveItems(fetchJob->collections().first());
 }
 
 int ResourceBase::itemSyncBatchSize() const
@@ -929,7 +950,24 @@ void ResourceBase::setItemSyncBatchSize(int batchSize)
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
 {
     Q_Q(ResourceBase);
-    q->retrieveCollectionAttributes(col);
+    Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
+    connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(slotAttributeRetrievalCollectionFetchDone(KJob*)));
+    Q_ASSERT(!mCurrentCollectionFetchJob);
+    mCurrentCollectionFetchJob = fetchJob;
+}
+
+void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
+{
+    mCurrentCollectionFetchJob = 0;
+    Q_Q(ResourceBase);
+    if (job->error()) {
+        qWarning() << "Failed to retrieve collection for attribute sync: " << job->errorString();
+        q->cancelTask(i18n("Failed to retrieve collection for attribute sync."));
+        return;
+    }
+    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
+    QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().first()));
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Akonadi::Item &item)
@@ -1043,6 +1081,10 @@ void ResourceBase::synchronizeCollectionTree()
 void ResourceBase::cancelTask()
 {
     Q_D(ResourceBase);
+    if (d->mCurrentCollectionFetchJob) {
+        d->mCurrentCollectionFetchJob->kill();
+        d->mCurrentCollectionFetchJob = 0;
+    }
     switch (d->scheduler->currentTask().type) {
     case ResourceScheduler::FetchItem:
         itemRetrieved(Item());   // sends the error reply and
@@ -1109,6 +1151,8 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
         Q_FOREACH (const Collection &collection, list) {
             //We also get collections that should not be synced but are part of the tree.
             if (collection.shouldList(Collection::ListSync)) {
+                // Schedule attribute sync before each collection sync
+                scheduler->scheduleAttributesSync(collection);
                 scheduler->scheduleSync(collection);
             }
         }

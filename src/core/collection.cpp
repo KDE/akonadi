@@ -268,9 +268,7 @@ void Collection::setEnabled(bool enabled)
 {
     Q_D(Collection);
 
-    if (enabled != d->enabled) {
-        d->enabledChanged = true;
-    }
+    d->enabledChanged = true;
     d->enabled = enabled;
 }
 
@@ -335,9 +333,7 @@ void Collection::setReferenced(bool referenced)
 {
     Q_D(Collection);
 
-    if (d->referenced != referenced) {
-        d->referencedChanged = true;
-    }
+    d->referencedChanged = true;
     d->referenced = referenced;
 }
 
