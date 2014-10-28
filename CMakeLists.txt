@@ -418,6 +418,7 @@ install( FILES
   standardactionmanager.h
   statisticsproxymodel.h
   relation.h
+  relationfetchjob.h
   relationcreatejob.h
   relationdeletejob.h
   tagattribute.h
