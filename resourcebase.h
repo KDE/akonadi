@@ -781,6 +781,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplayResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotItemRetrievalCollectionFetchDone(KJob *));
+    Q_PRIVATE_SLOT(d_func(), void slotAttributeRetrievalCollectionFetchDone(KJob *));
 };
 
 }
