@@ -83,7 +83,7 @@ class PauseableTimer : public QTimer
         return;
       }
 
-      start( interval() - ( mStarted.secsTo( mPaused ) * 1000 ) );
+      start( qMax(0, interval() - ( mStarted.secsTo( mPaused ) * 1000 )) );
       mPaused = QDateTime();
       // Update mStarted so that pause() can be called repeatedly
       mStarted = QDateTime::currentDateTime();
