@@ -1149,6 +1149,8 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
         Q_FOREACH (const Collection &collection, list) {
             //We also get collections that should not be synced but are part of the tree.
             if (collection.shouldList(Collection::ListSync)) {
+                // Schedule attribute sync before each collection sync
+                scheduler->scheduleAttributesSync(collection);
                 scheduler->scheduleSync(collection);
             }
         }
