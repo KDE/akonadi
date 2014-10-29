@@ -716,7 +716,6 @@ void ResourceBase::changesCommitted(const Item::List &items)
         job->d_func()->setClean();
         job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
         job->setIgnorePayload(true);   // we only want to reset the dirty flag and update the remote id
-        job->setUpdateGid(true);   // allow resources to update GID too
     }
 }
 
