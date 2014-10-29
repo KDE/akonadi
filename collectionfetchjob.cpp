@@ -103,6 +103,27 @@ public:
             return QString::fromLatin1("Collection RemoteId %1").arg(mBase.remoteId());
         }
     }
+
+    bool jobFailed(KJob *job)
+    {
+        Q_Q(CollectionFetchJob);
+        if (mScope.ignoreRetrievalErrors()) {
+           int error = job->error();
+           if (error && !q->error()) {
+               q->setError(error);
+               q->setErrorText(job->errorText());
+           }
+
+           if (error == Job::ConnectionFailed ||
+               error == Job::ProtocolVersionMismatch ||
+               error == Job::UserCanceled) {
+               return true;
+           }
+           return false;
+        } else {
+            return job->error();
+        }
+    }
 };
 
 CollectionFetchJob::CollectionFetchJob(const Collection &collection, Type type, QObject *parent)
@@ -411,10 +432,27 @@ void CollectionFetchJob::slotResult(KJob *job)
 
     CollectionFetchJob *list = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(job);
+
+    if (d->mType == NonOverlappingRoots) {
+        d->mPrefetchList += list->collections();
+    } else if (!d->mBasePrefetch) {
+        d->mCollections += list->collections();
+    }
+
+    if (d_ptr->mCurrentSubJob == job && !d->jobFailed(job)) {
+        if (job->error()) {
+            kWarning() << "Error during CollectionFetchJob: " << job->errorString();
+        }
+        d_ptr->mCurrentSubJob = 0;
+        removeSubjob(job);
+        QTimer::singleShot(0, this, SLOT(startNext()));
+    } else {
+        Job::slotResult(job);
+    }
+
     if (d->mBasePrefetch) {
         d->mBasePrefetch = false;
         const Collection::List roots = list->collections();
-        Job::slotResult(job);
         Q_ASSERT(!hasSubjobs());
         if (!job->error()) {
             foreach (const Collection &col, roots) {
@@ -425,18 +463,14 @@ void CollectionFetchJob::slotResult(KJob *job)
         }
         // No result yet.
     } else if (d->mType == NonOverlappingRoots) {
-        d->mPrefetchList += list->collections();
-        Job::slotResult(job);
-        if (!job->error() && !hasSubjobs()) {
+        if (!d->jobFailed(job) && !hasSubjobs()) {
             const Collection::List result = filterDescendants(d->mPrefetchList);
             d->mPendingCollections += result;
             d->mCollections = result;
             d->delayedEmitResult();
         }
     } else {
-        d->mCollections += list->collections();
-        Job::slotResult(job);
-        if (!job->error() && !hasSubjobs()) {
+        if (!d->jobFailed(job) && !hasSubjobs()) {
             d->delayedEmitResult();
         }
     }

@@ -294,6 +294,24 @@ public:
     bool fetchIdOnly() const;
 
     /**
+     * Ignore retrieval errors while fetching collections, and always deliver what is available.
+     *
+     * This flag is useful to fetch a list of collections, where some might no longer be available.
+     *
+     * @since KF5
+     */
+    void setIgnoreRetrievalErrors(bool enabled);
+
+    /**
+     * Returns whether retrieval errors should be ignored.
+     *
+     * @see setIgnoreRetrievalErrors()
+     * @since KF5
+     */
+    bool ignoreRetrievalErrors() const;
+
+
+    /**
      * Returns @c true if there is nothing to fetch.
      */
     bool isEmpty() const;

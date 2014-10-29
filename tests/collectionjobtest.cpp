@@ -603,6 +603,24 @@ void CollectionJobTest::testMultiList()
   compareLists( res, req );
 }
 
+void CollectionJobTest::testMultiListInvalid()
+{
+  Collection::List req;
+  req << Collection( res1ColId ) << Collection (1234567) << Collection( res2ColId );
+  CollectionFetchJob* job = new CollectionFetchJob( req, this );
+  QVERIFY( !job->exec() );
+  // not all available collections are fetched
+  QVERIFY( job->collections().count() != 2 );
+
+  job = new CollectionFetchJob( req, this );
+  job->fetchScope().setIgnoreRetrievalErrors(true);
+  QVERIFY( !job->exec() );
+  Collection::List res;
+  res = job->collections();
+  req = Collection::List() << Collection( res1ColId ) << Collection( res2ColId );
+  compareLists( res, req );
+}
+
 void CollectionJobTest::testRecursiveMultiList()
 {
   Akonadi::Collection::List toFetch;

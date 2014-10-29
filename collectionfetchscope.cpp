@@ -34,6 +34,7 @@ public:
         , listFilter(CollectionFetchScope::Enabled)
         , fetchAllAttributes(false)
         , fetchIdOnly(true)
+        , mIgnoreRetrievalErrors(false)
     {
     }
 
@@ -54,6 +55,7 @@ public:
         }
         fetchAllAttributes = other.fetchAllAttributes;
         fetchIdOnly = other.fetchIdOnly;
+        mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
     }
 
 public:
@@ -66,6 +68,7 @@ public:
     QScopedPointer<CollectionFetchScope> ancestorFetchScope;
     bool fetchAllAttributes;
     bool fetchIdOnly;
+    bool mIgnoreRetrievalErrors;
 };
 
 CollectionFetchScope::CollectionFetchScope()
@@ -188,6 +191,16 @@ void CollectionFetchScope::setFetchIdOnly(bool fetchIdOnly)
 bool CollectionFetchScope::fetchIdOnly() const
 {
     return d->fetchIdOnly;
+}
+
+void CollectionFetchScope::setIgnoreRetrievalErrors(bool enable)
+{
+    d->mIgnoreRetrievalErrors = enable;
+}
+
+bool CollectionFetchScope::ignoreRetrievalErrors() const
+{
+    return d->mIgnoreRetrievalErrors;
 }
 
 void CollectionFetchScope::setAncestorFetchScope(const CollectionFetchScope &scope)

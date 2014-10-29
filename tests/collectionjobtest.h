@@ -45,6 +45,7 @@ class CollectionJobTest : public QObject
     void testUtf8CollectionName_data();
     void testUtf8CollectionName();
     void testMultiList();
+    void testMultiListInvalid();
     void testRecursiveMultiList();
     void testNonOverlappingRootList();
     void testSelect();
