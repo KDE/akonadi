@@ -119,13 +119,9 @@ void ItemModifyJobPrivate::setSilent( bool silent )
 QByteArray ItemModifyJobPrivate::tagsToCommandParameter(const Tag::List &tags) const
 {
     QByteArray c;
-    if (tags.isEmpty() || (tags.first().id() >= 0)) {
+    if (tags.first().id() >= 0) {
         c += "TAGS";
-        if (tags.isEmpty()) {
-            c += " ()";
-        } else {
-            c += ' ' + ProtocolHelper::tagSetToImapSequenceSet(tags);
-        }
+        c += ' ' + ProtocolHelper::tagSetToImapSequenceSet(tags);
     } else if (std::find_if(tags.constBegin(), tags.constEnd(),
                         boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::remoteId, _1)))
         == tags.constEnd()) {
