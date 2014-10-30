@@ -11,4 +11,5 @@ endmacro()
 
 add_unit_test(notificationmessagetest.cpp)
 add_unit_test(notificationmessagev2test.cpp)
-add_unit_test(imapparserbenchmark.cpp)
+#Avoid running a benchmark every time during make test
+#add_unit_test(imapparserbenchmark.cpp)
