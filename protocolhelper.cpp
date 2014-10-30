@@ -326,13 +326,10 @@ QByteArray ProtocolHelper::entitySetToByteArray( const QList<Item> &_objects, co
 
 QByteArray ProtocolHelper::tagSetToImapSequenceSet( const Akonadi::Tag::List &_objects )
 {
-  if ( _objects.isEmpty() )
-    throw Exception( "No objects specified" );
-
   Tag::List objects( _objects );
 
   std::sort( objects.begin(), objects.end(), boost::bind( &Tag::id, _1 ) < boost::bind( &Tag::id, _2 ) );
-  if ( !objects.first().isValid() ) {
+  if ( !objects.isEmpty() && !objects.first().isValid() ) {
     throw Exception( "Not all tags have a uid" );
   }
   // all items have a uid set
