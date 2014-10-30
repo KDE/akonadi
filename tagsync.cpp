@@ -20,8 +20,6 @@ namespace Akonadi {
     class Item;
 }
 
-unsigned int qHash(const Akonadi::Item &item);
-
 #include "tagsync.h"
 
 #include <akonadi/itemfetchjob.h>
@@ -33,22 +31,15 @@ unsigned int qHash(const Akonadi::Item &item);
 
 using namespace Akonadi;
 
-//We want to compare items by remoteId and not by id
-uint qHash(const Item &item)
-{
-    if (item.isValid()) {
-        return qHash(item.id());
-    }
-    Q_ASSERT(!item.remoteId().isEmpty());
-    return qHash(item.remoteId());
-}
-
 bool operator==(const Item &left, const Item &right)
 {
     if (left.isValid() && right.isValid() && (left.id() == right.id())) {
         return true;
     }
     if (!left.remoteId().isEmpty() && !right.remoteId().isEmpty() && (left.remoteId() == right.remoteId())) {
+        return true;
+    }
+    if (!left.gid().isEmpty() && !right.gid().isEmpty() && (left.gid() == right.gid())) {
         return true;
     }
     return false;
@@ -123,6 +114,7 @@ void TagSync::diffTags()
             ItemFetchJob *itemFetch = new ItemFetchJob(tag, this);
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
             itemFetch->setProperty("merge", false);
+            itemFetch->fetchScope().setFetchGid(true);
             connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onTagItemsFetchDone(KJob*)));
             connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
             tagById.remove(tagByRid.value(remoteTag.remoteId()).id());
@@ -134,6 +126,7 @@ void TagSync::diffTags()
             ItemFetchJob *itemFetch = new ItemFetchJob(tag, this);
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
             itemFetch->setProperty("merge", true);
+            itemFetch->fetchScope().setFetchGid(true);
             connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onTagItemsFetchDone(KJob*)));
             connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
             tagById.remove(tagByGid.value(remoteTag.gid()).id());
@@ -143,7 +136,6 @@ void TagSync::diffTags()
             createJob->setMergeIfExisting(true);
             connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onCreateTagDone(KJob*)));
             connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
-            //TODO add tags
         }
     }
     Q_FOREACH (const Akonadi::Tag::Id &removedTag, tagById.keys()) {
@@ -156,20 +148,10 @@ void TagSync::diffTags()
     checkDone();
 }
 
-static QSet<QString> ridSet(const Akonadi::Item::List &list)
-{
-    QSet<QString> set;
-    Q_FOREACH (const Akonadi::Item &item, list) {
-        set << item.remoteId();
-    }
-    return set;
-}
-
 void TagSync::onCreateTagDone(KJob *job)
 {
     if (job->error()) {
         kWarning() << "ItemFetch failed: " << job->errorString();
-        // cancelTask(job->errorString());
         return;
     }
 
@@ -183,21 +165,46 @@ void TagSync::onCreateTagDone(KJob *job)
     }
 }
 
+static bool containsByGidOrRid(const Item::List &items, const Item &key)
+{
+    Q_FOREACH(const Item &item, items) {
+        if ((!item.gid().isEmpty() && !key.gid().isEmpty()) && (item.gid() == key.gid())) {
+            return true;
+        } else if (item.remoteId() == key.remoteId()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void TagSync::onTagItemsFetchDone(KJob *job)
 {
     if (job->error()) {
         kWarning() << "ItemFetch failed: " << job->errorString();
-        // cancelTask(job->errorString());
         return;
     }
 
     const Akonadi::Item::List items = static_cast<Akonadi::ItemFetchJob*>(job)->items();
     const Akonadi::Tag tag = job->property("tag").value<Akonadi::Tag>();
     const bool merge = job->property("merge").toBool();
-    const QSet<Item> localMembers = items.toSet();
-    const QSet<Item> remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId())).toSet();
-    const QSet<Item> toAdd = remoteMembers - localMembers;
-    const QSet<Item> toRemove = localMembers - remoteMembers;
+    const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
+
+    //add = remote - local
+    Item::List toAdd;
+    Q_FOREACH(const Item &remote, remoteMembers) {
+        if (!containsByGidOrRid(items, remote)) {
+            toAdd << remote;
+        }
+    }
+
+    //remove = local - remote
+    Item::List toRemove;
+    Q_FOREACH(const Item &local, items) {
+        if (!containsByGidOrRid(remoteMembers, local)) {
+            toRemove << local;
+        }
+    }
+
     if (!merge) {
         Q_FOREACH (Item item, toRemove) {
             item.clearTag(tag);
