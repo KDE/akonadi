@@ -145,6 +145,7 @@ public:
         , localListDone(false)
         , deliveryDone(false)
         , akonadiRootCollection(Collection::root())
+        , resultEmitted(false)
     {
     }
 
@@ -500,7 +501,8 @@ public:
                 currentTransaction->rollback();
                 q->setError(Unknown);
                 q->setErrorText(i18n("Found unresolved orphan collections"));
-                q->emitResult();
+                kWarning() << "found unresolved orphan collection";
+                emitResult();
                 return;
             }
 
@@ -515,7 +517,7 @@ public:
             currentTransaction->rollback();
             q->setError(Unknown);
             q->setErrorText(i18n("Incomplete collection tree"));
-            q->emitResult();
+            emitResult();
             return;
         }
         */
@@ -629,6 +631,7 @@ public:
     void done()
     {
         if (currentTransaction) {
+            //This can trigger a direct call of transactionSequenceResult
             currentTransaction->commit();
             currentTransaction = 0;
         }
@@ -637,7 +640,17 @@ public:
             q->setError(Unknown);
             q->setErrorText(i18n("Found unresolved orphan collections"));
         }
-        q->emitResult();
+        emitResult();
+    }
+
+    void emitResult()
+    {
+        //Prevent double result emission
+        Q_ASSERT(!resultEmitted);
+        if (!resultEmitted) {
+            resultEmitted = true;
+            q->emitResult();
+        }
     }
 
     void createTransaction()
@@ -659,7 +672,6 @@ public:
         // a new transaction in the queue already
         if (job == currentTransaction) {
             currentTransaction = 0;
-            q->emitResult();
         }
     }
 
@@ -691,7 +703,7 @@ public:
             // There's nothing to do after local listing -> we are done!
             if (remoteCollectionsToCreate.isEmpty() && remoteCollectionsToUpdate.isEmpty() && localCollectionsToRemove.isEmpty()) {
                 kDebug() << "Nothing to do";
-                q->emitResult();
+                emitResult();
                 return;
             }
             // Ok, there's some work to do, so create a transaction we can use
@@ -734,6 +746,8 @@ public:
     // store the Collection::root() collection in a variable here for faster
     // access
     Collection akonadiRootCollection;
+
+    bool resultEmitted;
 
 
 };
