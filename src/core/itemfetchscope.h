@@ -22,6 +22,8 @@
 
 #include "akonadicore_export.h"
 
+#include <QMetaType>
+#include <QSet>
 #include <QtCore/QSharedDataPointer>
 #include <QDateTime>
 
