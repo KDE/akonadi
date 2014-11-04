@@ -199,9 +199,11 @@ Akonadi::Collection::List ResourceScanJob::specialCollections() const
 void ResourceScanJob::doStart()
 {
     if (d->mResourceId.isEmpty()) {
-        qCritical() << "No resource ID given.";
-        setError(Job::Unknown);
-        setErrorText(i18n("No resource ID given."));
+        if(!qobject_cast<DefaultResourceJob *>(this)) {
+            qCritical() << "No resource ID given.";
+            setError(Job::Unknown);
+            setErrorText(i18n("No resource ID given."));
+        }
         emitResult();
         return;
     }
