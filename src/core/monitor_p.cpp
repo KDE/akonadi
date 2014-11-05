@@ -23,7 +23,7 @@
 
 #include "collectionfetchjob.h"
 #include "collectionstatistics.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "itemfetchjob.h"
 #include "notificationmanagerinterface.h"
 #include "session.h"

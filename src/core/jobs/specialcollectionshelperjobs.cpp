@@ -19,7 +19,7 @@
 
 #include "specialcollectionshelperjobs_p.h"
 
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "specialcollectionattribute.h"
 #include "specialcollections.h"
 #include "servermanager.h"
@@ -577,7 +577,7 @@ void GetLockJob::Private::doStart()
     // Just doing registerService() and checking its return value is not sufficient,
     // since we may *already* own the name, and then registerService() returns true.
 
-    QDBusConnection bus = DBusConnectionPool::threadConnection();
+    QDBusConnection bus = KDBusConnectionPool::threadConnection();
     const bool alreadyLocked = bus.interface()->isServiceRegistered(dbusServiceName());
     const bool gotIt = bus.registerService(dbusServiceName());
 
@@ -585,7 +585,7 @@ void GetLockJob::Private::doStart()
         //qDebug() << "Got lock immediately.";
         q->emitResult();
     } else {
-        QDBusServiceWatcher *watcher = new QDBusServiceWatcher(dbusServiceName(), DBusConnectionPool::threadConnection(),
+        QDBusServiceWatcher *watcher = new QDBusServiceWatcher(dbusServiceName(), KDBusConnectionPool::threadConnection(),
                                                                QDBusServiceWatcher::WatchForOwnerChange, q);
         //qDebug() << "Waiting for lock.";
         connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), q, SLOT(serviceOwnerChanged(QString,QString,QString)));
@@ -601,7 +601,7 @@ void GetLockJob::Private::doStart()
 void GetLockJob::Private::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
     if (newOwner.isEmpty()) {
-        const bool gotIt = DBusConnectionPool::threadConnection().registerService(dbusServiceName());
+        const bool gotIt = KDBusConnectionPool::threadConnection().registerService(dbusServiceName());
         if (gotIt) {
             mSafetyTimer->stop();
             q->emitResult();
@@ -653,7 +653,7 @@ void Akonadi::setCollectionAttributes(Akonadi::Collection &collection, const QBy
 
 bool Akonadi::releaseLock()
 {
-    return DBusConnectionPool::threadConnection().unregisterService(dbusServiceName());
+    return KDBusConnectionPool::threadConnection().unregisterService(dbusServiceName());
 }
 
 #include "moc_specialcollectionshelperjobs_p.cpp"

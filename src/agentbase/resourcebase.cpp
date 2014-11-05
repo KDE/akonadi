@@ -24,7 +24,7 @@
 #include "resourceadaptor.h"
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "itemsync.h"
 #include "akonadi_version.h"
 #include "resourcescheduler_p.h"
@@ -101,8 +101,8 @@ public:
     void delayedInit()
     {
         const QString serviceId = ServerManager::agentServiceName(ServerManager::Resource, mId);
-        if (!DBusConnectionPool::threadConnection().registerService(serviceId)) {
-            QString reason = DBusConnectionPool::threadConnection().lastError().message();
+        if (!KDBusConnectionPool::threadConnection().registerService(serviceId)) {
+            QString reason = KDBusConnectionPool::threadConnection().lastError().message();
             if (reason.isEmpty()) {
                 reason = QString::fromLatin1("this service is probably running already.");
             }

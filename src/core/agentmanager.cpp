@@ -22,7 +22,7 @@
 
 #include "agenttype_p.h"
 #include "agentinstance_p.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "servermanager.h"
 
 #include "collection.h"
@@ -307,7 +307,7 @@ void AgentManagerPrivate::createDBusInterface()
 
     mManager = new org::freedesktop::Akonadi::AgentManager(ServerManager::serviceName(ServerManager::Control),
                                                            QStringLiteral("/AgentManager"),
-                                                           DBusConnectionPool::threadConnection(), mParent);
+                                                           KDBusConnectionPool::threadConnection(), mParent);
 
     QObject::connect(mManager, SIGNAL(agentTypeAdded(QString)),
                      mParent, SLOT(agentTypeAdded(QString)));
@@ -363,7 +363,7 @@ AgentManager::AgentManager()
     d->createDBusInterface();
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Control),
-                                                           DBusConnectionPool::threadConnection(),
+                                                           KDBusConnectionPool::threadConnection(),
                                                            QDBusServiceWatcher::WatchForOwnerChange, this);
     connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));

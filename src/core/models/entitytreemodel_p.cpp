@@ -21,7 +21,7 @@
 #include "entitytreemodel.h"
 
 #include "agentmanagerinterface.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
 

@@ -20,7 +20,7 @@
 #include "preprocessorbase_p.h"
 #include "preprocessorbase.h"
 
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "preprocessoradaptor.h"
 #include "servermanager.h"
 
@@ -38,16 +38,16 @@ PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
 
     new Akonadi__PreprocessorAdaptor(this);
 
-    if (!DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Preprocessor"), this, QDBusConnection::ExportAdaptors)) {
-        q->error(i18n("Unable to register object at dbus: %1", DBusConnectionPool::threadConnection().lastError().message()));
+    if (!KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Preprocessor"), this, QDBusConnection::ExportAdaptors)) {
+        q->error(i18n("Unable to register object at dbus: %1", KDBusConnectionPool::threadConnection().lastError().message()));
     }
 
 }
 
 void PreprocessorBasePrivate::delayedInit()
 {
-    if (!DBusConnectionPool::threadConnection().registerService(ServerManager::agentServiceName(ServerManager::Preprocessor, mId))) {
-        qCritical() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
+    if (!KDBusConnectionPool::threadConnection().registerService(ServerManager::agentServiceName(ServerManager::Preprocessor, mId))) {
+        qCritical() << "Unable to register service at D-Bus: " << KDBusConnectionPool::threadConnection().lastError().message();
     }
     AgentBasePrivate::delayedInit();
 }

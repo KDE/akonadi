@@ -18,7 +18,7 @@
 */
 
 #include "changenotificationdependenciesfactory_p.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "notificationsource_p.h"
 #include "notificationsourceinterface.h"
 #include "notificationmanagerinterface.h"
@@ -42,7 +42,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
         new org::freedesktop::Akonadi::NotificationManager(
         ServerManager::serviceName(Akonadi::ServerManager::Server),
         QStringLiteral("/notifications"),
-        DBusConnectionPool::threadConnection());
+        KDBusConnectionPool::threadConnection());
 
     if (!manager) {
         // :TODO: error handling
@@ -67,7 +67,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
         new org::freedesktop::Akonadi::NotificationSource(
         ServerManager::serviceName(Akonadi::ServerManager::Server),
         p.path(),
-        DBusConnectionPool::threadConnection(), parent);
+        KDBusConnectionPool::threadConnection(), parent);
 
     if (!notificationSource) {
         // :TODO: error handling

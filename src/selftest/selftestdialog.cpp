@@ -19,7 +19,7 @@
 
 #include "selftestdialog.h"
 #include "agentmanager.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "session_p.h"
 #include "servermanager.h"
 #include "servermanager_p.h"
@@ -418,7 +418,7 @@ void SelfTestDialog::testAkonadiCtl()
 
 void SelfTestDialog::testServerStatus()
 {
-    if (DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control))) {
+    if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control))) {
         report(Success, ki18n("Akonadi control process registered at D-Bus."),
                ki18n("The Akonadi control process is registered at D-Bus which typically indicates it is operational."));
     } else {
@@ -427,7 +427,7 @@ void SelfTestDialog::testServerStatus()
                      "or encountered a fatal error during startup."));
     }
 
-    if (DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server))) {
+    if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server))) {
         report(Success, ki18n("Akonadi server process registered at D-Bus."),
                ki18n("The Akonadi server process is registered at D-Bus which typically indicates it is operational."));
     } else {

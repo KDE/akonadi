@@ -19,7 +19,7 @@
 
 #include "resourcescheduler_p.h"
 
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "recursivemover_p.h"
 
 #include <qdebug.h>
@@ -420,11 +420,11 @@ void ResourceScheduler::setOnline(bool state)
 void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString)
 {
     // if there's a job tracer running, tell it about the new job
-    if (!s_resourcetracker && DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole"))) {
+    if (!s_resourcetracker && KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole"))) {
         s_resourcetracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole"),
                                                QLatin1String("/resourcesJobtracker"),
                                                QLatin1String("org.freedesktop.Akonadi.JobTracker"),
-                                               DBusConnectionPool::threadConnection(), 0);
+                                               KDBusConnectionPool::threadConnection(), 0);
     }
 
     if (s_resourcetracker) {
@@ -469,7 +469,7 @@ void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
         } else {
             qCritical() << "Got unexpected member:" << methodName;
         }
-        DBusConnectionPool::threadConnection().send(reply);
+        KDBusConnectionPool::threadConnection().send(reply);
     }
 }
 

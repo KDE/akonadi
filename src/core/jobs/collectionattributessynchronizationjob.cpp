@@ -16,7 +16,7 @@
  */
 
 #include "collectionattributessynchronizationjob.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
 
@@ -101,7 +101,7 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
     interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
                                    QString::fromLatin1("/"),
                                    QString::fromLatin1("org.freedesktop.Akonadi.Resource"),
-                                   DBusConnectionPool::threadConnection(), this);
+                                   KDBusConnectionPool::threadConnection(), this);
     connect(interface, SIGNAL(attributesSynchronized(qlonglong)), q, SLOT(slotSynchronized(qlonglong)));
 
     if (interface->isValid()) {

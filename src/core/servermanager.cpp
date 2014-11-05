@@ -22,7 +22,7 @@
 
 #include "agenttype.h"
 #include "agentmanager.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "session_p.h"
 #include "firstrun_p.h"
 
@@ -134,7 +134,7 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Server),
-                                                           DBusConnectionPool::threadConnection(),
+                                                           KDBusConnectionPool::threadConnection(),
                                                            QDBusServiceWatcher::WatchForOwnerChange, this);
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::Control));
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::ControlLock));
@@ -162,13 +162,13 @@ ServerManager *Akonadi::ServerManager::self()
 
 bool ServerManager::start()
 {
-    const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
-    const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
+    const bool controlRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
+    const bool serverRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
     if (controlRegistered && serverRegistered) {
         return true;
     }
 
-    const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
+    const bool controlLockRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
         qDebug() << "Akonadi server is already starting up";
         sInstance->setState(Starting);
@@ -183,7 +183,7 @@ bool ServerManager::start()
     const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), args);
     if (!ok) {
         qWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
-        QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService(ServerManager::serviceName(ServerManager::Control));
+        QDBusReply<void> reply = KDBusConnectionPool::threadConnection().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
             qDebug() << "Akonadi server could not be started via D-Bus either: "
                      << reply.error().message();
@@ -224,13 +224,13 @@ ServerManager::State ServerManager::state()
         previousState = sInstance->mState;
     }
 
-    const bool serverUpgrading = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::UpgradeIndicator));
+    const bool serverUpgrading = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::UpgradeIndicator));
     if (serverUpgrading) {
         return Upgrading;
     }
 
-    const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
-    const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
+    const bool controlRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
+    const bool serverRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
     if (controlRegistered && serverRegistered) {
         // check if the server protocol is recent enough
         if (sInstance.exists()) {
@@ -255,7 +255,7 @@ ServerManager::State ServerManager::state()
         }
     }
 
-    const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
+    const bool controlLockRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
         qDebug() << "Akonadi server is already starting up";
         if (previousState == Running) {

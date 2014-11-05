@@ -23,7 +23,6 @@ set(akonadicore_base_SRCS
     conflicthandler.cpp
     collectionidentificationattribute.cpp
     control.cpp
-    dbusconnectionpool.cpp
     entity.cpp
     entityannotationsattribute.cpp
     entitycache.cpp
@@ -81,7 +80,6 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CollectionUtils
     CollectionIdentificationAttribute
     Control
-    DBusConnectionPool
     DifferencesAlgorithmInterface
     Entity
     EntityAnnotationsAttribute
@@ -279,6 +277,7 @@ PUBLIC
     KF5::KIOCore
     KF5::KDELibs4Support
     KF5::AkonadiPrivate
+    KF5::DBusAddons
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES

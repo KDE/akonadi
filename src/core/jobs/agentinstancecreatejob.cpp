@@ -23,7 +23,7 @@
 #include "agentmanager.h"
 #include "agentmanager_p.h"
 #include "controlinterface.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
 
@@ -81,7 +81,7 @@ public:
     {
         org::freedesktop::Akonadi::Agent::Control *agentControlIface =
             new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, agentInstance.identifier()),
-                                                          QStringLiteral("/"), DBusConnectionPool::threadConnection(), q);
+                                                          QStringLiteral("/"), KDBusConnectionPool::threadConnection(), q);
         if (!agentControlIface || !agentControlIface->isValid()) {
             delete agentControlIface;
 

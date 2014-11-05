@@ -20,7 +20,7 @@
 #include "transportresourcebase.h"
 #include "transportresourcebase_p.h"
 
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "transportadaptor.h"
 
 #include "itemfetchjob.h"
@@ -35,7 +35,7 @@ TransportResourceBasePrivate::TransportResourceBasePrivate(TransportResourceBase
     , q(qq)
 {
     new Akonadi__TransportAdaptor(this);
-    DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Transport"),
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Transport"),
                                                           this, QDBusConnection::ExportAdaptors);
 }
 

@@ -20,7 +20,7 @@
 #include "agentsearchinterface.h"
 #include "agentsearchinterface_p.h"
 #include "collection.h"
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 #include "searchresultjob_p.h"
 #include "searchadaptor.h"
 #include "collectionfetchjob.h"
@@ -35,7 +35,7 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
     : q(qq)
 {
     new Akonadi__SearchAdaptor(this);
-    DBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Search"),
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Search"),
                                                           this, QDBusConnection::ExportAdaptors);
 
     QTimer::singleShot(0, this, SLOT(delayedInit()));

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 
 #include <qtest_akonadi.h>
 #include <servermanager.h>
@@ -50,7 +50,7 @@ class TestEnvironmentTest : public QObject
 
     void testDBus()
     {
-      QVERIFY( DBusConnectionPool::threadConnection().isConnected() );
+      QVERIFY( KDBusConnectionPool::threadConnection().isConnected() );
     }
 
     void testAkonadiServer()
@@ -60,11 +60,11 @@ class TestEnvironmentTest : public QObject
 
     void testResources()
     {
-      QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+      QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
         ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_0") ) ) );
-      QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+      QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
         ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_1") ) ) );
-      QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+      QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
         ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_2") ) ) );
     }
 };
