@@ -130,6 +130,8 @@ class DataStore : public QObject
                                   bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
     virtual bool removeItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );
 
+    virtual bool removeTags( const Tag::List &tags, bool silent = false );
+
     /* --- ItemParts ----------------------------------------------------- */
     virtual bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 

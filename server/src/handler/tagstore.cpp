@@ -58,6 +58,7 @@ bool TagStore::parseStream()
     attributesMap.insert( attribute.type(), attribute );
   }
 
+  bool tagRemoved = false;
   m_streamParser->beginList();
   while ( !m_streamParser->atListEnd() ) {
     const QByteArray attr = m_streamParser->readString();
@@ -96,6 +97,18 @@ bool TagStore::parseStream()
             if (!remoteIdRelation.insert()) {
                 throw HandlerException( "Failed to insert remotedid resource relation" );
             }
+        } else {
+            const int tagRidsCount = TagRemoteIdResourceRelation::count(TagRemoteIdResourceRelation::tagIdColumn(), changedTag.id());
+            // We just removed the last RID of the tag, which means that no other
+            // resource owns this tag, so we have to remove it to simulate tag
+            // removal
+            if (tagRidsCount == 0) {
+                if (!DataStore::self()->removeTags(Tag::List() << changedTag)) {
+                    throw HandlerException( "Failed to remove tag" );
+                }
+                tagRemoved = true;
+                break;
+            }
         }
     } else {
       if ( attr.startsWith( '-' ) ) {
@@ -124,18 +137,26 @@ bool TagStore::parseStream()
     }
   }
 
-  if (!changedTag.update()) {
-    throw HandlerException( "Failed to store changes" );
-  }
-  DataStore::self()->notificationCollector()->tagChanged( changedTag );
+  if (!tagRemoved) {
+      if (!changedTag.update()) {
+        throw HandlerException( "Failed to store changes" );
+      }
+      DataStore::self()->notificationCollector()->tagChanged( changedTag );
 
-  ImapSet set;
-  set.add( QVector<qint64>() << tagId );
-  TagFetchHelper helper( connection(), set );
-  connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-           this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
-  if ( !helper.fetchTags( AKONADI_CMD_TAGFETCH ) ) {
-    return false;
+      ImapSet set;
+      set.add( QVector<qint64>() << tagId );
+      TagFetchHelper helper( connection(), set );
+      connect( &helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
+               this, SIGNAL(responseAvailable(Akonadi::Server::Response)) );
+      if ( !helper.fetchTags( AKONADI_CMD_TAGFETCH ) ) {
+        return false;
+      }
+  } else {
+      QByteArray str = QByteArray::number( tagId ) + " TAGREMOVE";
+      Response response;
+      response.setUntagged();
+      response.setString( str );
+      Q_EMIT responseAvailable( response );
   }
 
   Response response;

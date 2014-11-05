@@ -143,6 +143,9 @@ private Q_SLOTS:
     {
         initializer.reset(new DbInitializer);
         Resource res = initializer->createResource("testresource");
+        Resource res2 = initializer->createResource("testresource2");
+        Collection col = initializer->createCollection("Col 1");
+        PimItem pimItem = initializer->createItem("Item 1", col);
 
         Tag tag;
         TagType type;
@@ -152,6 +155,14 @@ private Q_SLOTS:
         tag.setGid(QLatin1String("gid"));
         tag.insert();
 
+        pimItem.addTag(tag);
+
+        TagRemoteIdResourceRelation rel;
+        rel.setRemoteId(QLatin1String("TAG1RES2RID"));
+        rel.setResource(res2);
+        rel.setTag(tag);
+        rel.insert();
+
         QTest::addColumn<QList<QByteArray> >("scenario");
         QTest::addColumn<Tag::List>("expectedTags");
         QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
@@ -159,7 +170,7 @@ private Q_SLOTS:
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
             << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * 2 TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
+            << "S: * " + QByteArray::number(tag.id()) + " TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
             << "S: 2 OK TAGSTORE completed";
 
 
@@ -177,7 +188,7 @@ private Q_SLOTS:
             scenario << FakeAkonadiServer::defaultScenario()
             << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
             << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (REMOTEID \"remote1\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * 2 TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" REMOTEID remote1 TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
+            << "S: * " + QByteArray::number(tag.id()) + " TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" REMOTEID remote1 TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
             << "S: 2 OK TAGSTORE completed";
 
 
@@ -188,6 +199,49 @@ private Q_SLOTS:
             notification.addEntity(tag.id());
 
             QTest::newRow("uid store rid") << scenario << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
+        }
+
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << FakeAkonadiServer::selectResourceScenario(res.name())
+            << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (REMOTEID \"\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
+            << "S: * " + QByteArray::number(tag.id()) + " TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
+            << "S: 2 OK TAGSTORE completed";
+
+            Akonadi::NotificationMessageV3 tagChangeNtf;
+            tagChangeNtf.setType(NotificationMessageV2::Tags);
+            tagChangeNtf.setOperation(NotificationMessageV2::Modify);
+            tagChangeNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            tagChangeNtf.addEntity(tag.id());
+
+            QTest::newRow("uid store unset one rid") << scenario << (Tag::List() << tag) << (NotificationMessageV3::List() << tagChangeNtf);
+        }
+
+       {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << FakeAkonadiServer::selectResourceScenario(res2.name())
+            << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (REMOTEID \"\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
+            << "S: * " + QByteArray::number(tag.id()) + " TAGREMOVE"
+            << "S: 2 OK TAGSTORE completed";
+
+            Akonadi::NotificationMessageV3 itemUntaggedNtf;
+            itemUntaggedNtf.setType(NotificationMessageV2::Items);
+            itemUntaggedNtf.setOperation(NotificationMessageV2::ModifyTags);
+            itemUntaggedNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            itemUntaggedNtf.addEntity(pimItem.id(), pimItem.remoteId(), QString(), pimItem.mimeType().name());
+            itemUntaggedNtf.setResource(res2.name().toLatin1());
+            itemUntaggedNtf.setParentCollection(col.id());
+            itemUntaggedNtf.setRemovedTags(QSet<qint64>() << tag.id());
+
+            Akonadi::NotificationMessageV3 tagRemoveNtf;
+            tagRemoveNtf.setType(NotificationMessageV2::Tags);
+            tagRemoveNtf.setOperation(NotificationMessageV2::Remove);
+            tagRemoveNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            tagRemoveNtf.addEntity(tag.id());
+
+            QTest::newRow("uid store unset last rid") << scenario << Tag::List() << (NotificationMessageV3::List() << itemUntaggedNtf << tagRemoveNtf);
         }
     }
 

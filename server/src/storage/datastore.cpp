@@ -38,6 +38,7 @@
 #include "akonadischema.h"
 #include "parttypehelper.h"
 #include "querycache.h"
+#include "queryhelper.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -585,6 +586,46 @@ bool DataStore::removeItemsTags( const PimItem::List &items, const Tag::List &ta
 
   return true;
 }
+
+bool DataStore::removeTags(const Tag::List &tags, bool silent)
+{
+    QVariantList removedTagsIds;
+    QSet<qint64> removedTags;
+    Q_FOREACH ( const Tag &tag, tags ) {
+      removedTagsIds << tag.id();
+      removedTags << tag.id();
+    }
+
+    // Get all PIM items that we will untag
+    SelectQueryBuilder<PimItem> itemsQuery;
+    itemsQuery.addJoin( QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
+    itemsQuery.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::In, removedTagsIds );
+
+    if ( !itemsQuery.exec() ) {
+        qDebug() << "Failed to execute query: " << itemsQuery.query().lastError();
+        return false;
+    }
+    const PimItem::List items = itemsQuery.result();
+
+    if ( !items.isEmpty() ) {
+        DataStore::self()->notificationCollector()->itemsTagsChanged( items, QSet<qint64>(), removedTags );
+    }
+
+    Q_FOREACH ( const Tag &tag, tags ) {
+      DataStore::self()->notificationCollector()->tagRemoved( tag );
+    }
+
+    // Just remove the tags, table constraints will take care of the rest
+    QueryBuilder qb( Tag::tableName(), QueryBuilder::Delete );
+    qb.addValueCondition( Tag::idColumn(), Query::In, removedTagsIds );
+    if ( !qb.exec() ) {
+        qDebug() << "Failed to execute query: " << itemsQuery.query().lastError();
+        return false;
+    }
+
+    return true;
+}
+
 
 /* --- ItemParts ----------------------------------------------------- */
 
