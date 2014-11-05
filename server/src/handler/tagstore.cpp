@@ -107,7 +107,8 @@ bool TagStore::parseStream()
                     throw HandlerException( "Failed to remove tag" );
                 }
                 tagRemoved = true;
-                break;
+
+                // We can't break here, we need to finish reading the command
             }
         }
     } else {
