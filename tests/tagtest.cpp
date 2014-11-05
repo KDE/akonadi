@@ -313,14 +313,12 @@ void TagTest::testModifyFromResource()
         TagModifyJob *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
+        // The tag is removed on the server, because we just removed the last
+        // RemoteID
         TagFetchJob *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
-        QCOMPARE(fetchJob->tags().size(), 1);
-        QVERIFY(fetchJob->tags().first().remoteId().isEmpty());
+        QCOMPARE(fetchJob->tags().size(), 0);
     }
-
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
-    AKVERIFYEXEC(deleteJob);
 }
 
 void TagTest::testCreateMerge()
