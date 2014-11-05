@@ -366,6 +366,37 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
       if ( CollectionReferenceManager::instance()->isReferenced( notification.parentCollection() ) ) {
         return ( mExclusive || isCollectionMonitored( notification.parentCollection() ) || isMoveDestinationResourceMonitored( notification ) );
       }
+  } else if ( notification.type() == NotificationMessageV2::Tags ) {
+      // Special handling for Tag removal notifications: When a Tag is removed,
+      // a notification is emitted for each Resource that owns the tag (i.e.
+      // each resource that owns a Tag RID - Tag RIDs are resource-specific).
+      // Additionally then we send one more notification without any RID that is
+      // destined for regular applications (which don't know anything about Tag RIDs)
+      if ( notification.operation() == NotificationMessageV2::Remove ) {
+          // HACK: Since have no way to determine which resource this NotificationSource
+          // belongs to, we are abusing the fact that each resource ignores it's own
+          // main session, which is called the same name as the resource.
+
+          // If there are any ignored sessions, but this notification does not have
+          // a specific resource set, then we ignore it, as this notification is
+          // for clients, not resources (does not have tag RID)
+          if ( !mIgnoredSessions.isEmpty() && notification.resource().isEmpty() ) {
+              return false;
+          }
+
+          // If this source ignores a session (i.e. we assume it is a resource),
+          // but this notification is for another resource, then we ignore it
+          if ( !notification.resource().isEmpty() && !mIgnoredSessions.contains(notification.resource()) ) {
+              return false;
+          }
+
+          // Now we got here, which means that this notification either has empty
+          // resource, i.e. it is destined for a client applications, or it's
+          // destined for resource that we *think* (see the hack above) this
+          // NotificationSource belongs too. Which means we approve this notification,
+          // but it can still be discarded in the generic Tag notification filter
+          // below
+      }
   }
 
   // user requested everything

@@ -206,9 +206,9 @@ void NotificationCollector::tagChanged( const Tag &tag )
   tagNotification( NotificationMessageV2::Modify, tag );
 }
 
-void NotificationCollector::tagRemoved( const Tag &tag )
+void NotificationCollector::tagRemoved( const Tag &tag, const QByteArray &resource, const QString &remoteId )
 {
-  tagNotification( NotificationMessageV2::Remove, tag );
+  tagNotification( NotificationMessageV2::Remove, tag, resource, remoteId );
 }
 
 void NotificationCollector::relationAdded(const Relation &relation)
@@ -370,13 +370,17 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
 }
 
 void NotificationCollector::tagNotification( NotificationMessageV2::Operation op,
-                                             const Tag &tag )
+                                             const Tag &tag,
+                                             const QByteArray &resource,
+                                             const QString &remoteId
+                                           )
 {
   NotificationMessageV3 msg;
   msg.setType( NotificationMessageV2::Tags );
   msg.setOperation( op );
   msg.setSessionId( mSessionId );
-  msg.addEntity( tag.id() );
+  msg.setResource( resource );
+  msg.addEntity( tag.id(), remoteId );
 
     dispatchNotification(msg);
 }

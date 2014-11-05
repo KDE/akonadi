@@ -268,6 +268,81 @@ private Q_SLOTS:
             QCOMPARE(tags.at(i).tagType().name(), expectedTags.at(i).tagType().name());
         }
     }
+
+    void testRemoveTag_data()
+    {
+        initializer.reset(new DbInitializer);
+        Resource res1 = initializer->createResource("testresource3");
+        Resource res2 = initializer->createResource("testresource4");
+
+        Tag tag;
+        TagType type;
+        type.setName(QLatin1String("PLAIN"));
+        type.insert();
+        tag.setTagType(type);
+        tag.setGid(QLatin1String("gid2"));
+        tag.insert();
+
+        TagRemoteIdResourceRelation rel1;
+        rel1.setRemoteId(QLatin1String("TAG2RES1RID"));
+        rel1.setResource(res1);
+        rel1.setTag(tag);
+        rel1.insert();
+
+        TagRemoteIdResourceRelation rel2;
+        rel2.setRemoteId(QLatin1String("TAG2RES2RID"));
+        rel2.setResource(res2);
+        rel2.setTag(tag);
+        rel2.insert();
+
+        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<Tag::List>("expectedTags");
+        QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
+        {
+            QList<QByteArray> scenario;
+            scenario << FakeAkonadiServer::defaultScenario()
+            << "C: 2 UID TAGREMOVE " + QByteArray::number(tag.id())
+            << "S: 2 OK TAGREMOVE complete";
+
+            Akonadi::NotificationMessageV3 ntf;
+            ntf.setType(NotificationMessageV2::Tags);
+            ntf.setOperation(NotificationMessageV2::Remove);
+            ntf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+
+            Akonadi::NotificationMessageV3 res1Ntf = ntf;
+            res1Ntf.addEntity(tag.id(), rel1.remoteId());
+            res1Ntf.setResource(res1.name().toLatin1());
+
+            Akonadi::NotificationMessageV3 res2Ntf = ntf;
+            res2Ntf.addEntity(tag.id(), rel2.remoteId());
+            res2Ntf.setResource(res2.name().toLatin1());
+
+            Akonadi::NotificationMessageV3 clientNtf = ntf;
+            clientNtf.addEntity(tag.id());
+
+            QTest::newRow("uid remove") << scenario << Tag::List() << (NotificationMessageV3::List() << res1Ntf << res2Ntf << clientNtf);
+        }
+    }
+
+    void testRemoveTag()
+    {
+        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(Tag::List, expectedTags);
+        QFETCH(Akonadi::NotificationMessageV3::List, expectedNotifications);
+
+        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->runTest();
+
+        const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+
+        QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
+        for (int i = 0; i < receivedNotifications.size(); i++) {
+            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+        }
+
+        const Tag::List tags = Tag::retrieveAll();
+        QCOMPARE(tags.size(), 0);
+    }
 };
 
 AKTEST_FAKESERVER_MAIN(TagHandlerTest)

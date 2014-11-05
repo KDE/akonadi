@@ -612,7 +612,29 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     }
 
     Q_FOREACH ( const Tag &tag, tags ) {
-      DataStore::self()->notificationCollector()->tagRemoved( tag );
+      // Emit special tagRemoved notification for each resource that owns the tag
+      QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Select);
+      qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
+      qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(),
+                 TagRemoteIdResourceRelation::resourceIdFullColumnName(), Resource::idFullColumnName());
+      qb.addColumn(Resource::nameFullColumnName());
+      qb.addValueCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, tag.id());
+      if (!qb.exec()) {
+          qDebug() << "Failed to execute query: " << qb.query().lastError();
+          return false;
+      }
+
+      // Emit specialized notifications for each resource
+      QSqlQuery query = qb.query();
+      while (query.next()) {
+          const QString rid = query.value(0).value<QString>();
+          const QByteArray resource = query.value(1).value<QByteArray>();
+
+          DataStore::self()->notificationCollector()->tagRemoved( tag, resource, rid );
+      }
+
+      // And one for clients - without RID
+      DataStore::self()->notificationCollector()->tagRemoved( tag, QByteArray(), QString() );
     }
 
     // Just remove the tags, table constraints will take care of the rest

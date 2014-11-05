@@ -199,7 +199,7 @@ class NotificationCollector : public QObject
     /**
       Notify about a removed tag.
      */
-    void tagRemoved( const Tag &tag );
+    void tagRemoved( const Tag &tag, const QByteArray &resource, const QString &remoteId );
 
     /**
       Notify about an added relation.
@@ -243,7 +243,9 @@ class NotificationCollector : public QObject
                                  const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                  const QByteArray &destResource = QByteArray() );
     void tagNotification( NotificationMessageV2::Operation op,
-                          const Tag &tag );
+                          const Tag &tag,
+                          const QByteArray &resource = QByteArray(),
+                          const QString &remoteId = QString());
     void relationNotification(NotificationMessageV2::Operation op,
                                              const Relation &relation);
     void dispatchNotification( const NotificationMessageV3 &msg );

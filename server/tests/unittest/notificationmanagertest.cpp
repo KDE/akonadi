@@ -204,6 +204,57 @@ class NotificationManagerTest : public QObject
         << EmptyList( QByteArray )
         << msg
         << true;
+
+      msg = NotificationMessageV3();
+      msg.setType( NotificationMessageV2::Tags );
+      msg.setOperation( NotificationMessageV2::Remove );
+      msg.setSessionId( "randomSession" );
+      msg.setResource( "akonadi_random_resource_0" );
+      msg.addEntity( 1, QLatin1String("TAG") );
+      QTest::newRow( "Tag removal - resource notification - matching resource source")
+        << false
+        << EmptyList( Entity::Id )
+        << EmptyList( Entity::Id )
+        << EmptyList( QByteArray )
+        << EmptyList( QString )
+        << List( QByteArray, "akonadi_random_resource_0" )
+        << msg
+        << true;
+
+      QTest::newRow( "Tag removal - resource notification - wrong resource source" )
+        << false
+        << EmptyList( Entity::Id )
+        << EmptyList( Entity::Id )
+        << EmptyList( QByteArray )
+        << EmptyList( QString )
+        << List( QByteArray, "akonadi_another_resource_1" )
+        << msg
+        << false;
+
+      msg = NotificationMessageV3();
+      msg.setType( NotificationMessageV2::Tags );
+      msg.setOperation( NotificationMessageV2::Remove );
+      msg.setSessionId( "randomSession" );
+      msg.addEntity( 1, QLatin1String("TAG") );
+      QTest::newRow( "Tag removal - client notification - client source" )
+        << false
+        << EmptyList( Entity::Id )
+        << EmptyList( Entity::Id )
+        << EmptyList( QByteArray )
+        << EmptyList( QString )
+        << EmptyList( QByteArray )
+        << msg
+        << true;
+
+      QTest::newRow( "Tag removal - client notification - resource source" )
+        << false
+        << EmptyList( Entity::Id )
+        << EmptyList( Entity::Id )
+        << EmptyList( QByteArray )
+        << EmptyList( QString )
+        << List( QByteArray, "akonadi_some_resource_0" )
+        << msg
+        << false;
     }
 
     void testSourceFilter()
