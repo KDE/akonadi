@@ -37,6 +37,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/monitor.h>
 #include <akonadi/attributefactory.h>
+#include <akonadi/session.h>
 
 using namespace Akonadi;
 
@@ -50,6 +51,7 @@ private Q_SLOTS:
     void testCreateFetch();
     void testRID();
     void testDelete();
+    void testDeleteRIDIsolation();
     void testModify();
     void testModifyFromResource();
     void testCreateMerge();
@@ -202,6 +204,10 @@ void TagTest::testRIDIsolation()
 
 void TagTest::testDelete()
 {
+    Akonadi::Monitor monitor;
+    monitor.setTypeMonitored(Monitor::Tags);
+    QSignalSpy spy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+
     Tag tag1;
     {
       tag1.setGid("tag1");
@@ -233,7 +239,62 @@ void TagTest::testDelete()
       TagDeleteJob *deleteJob = new TagDeleteJob(tag2, this);
       AKVERIFYEXEC(deleteJob);
     }
+
+    // Collect Remove notification, so that they don't interfere with testDeleteRIDIsolation
+    QTRY_VERIFY(!spy.isEmpty());
 }
+
+void TagTest::testDeleteRIDIsolation()
+{
+    Tag tag;
+    tag.setGid("gid");
+    tag.setType("mytype");
+    tag.setRemoteId("rid_0");
+
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0");
+        AKVERIFYEXEC(select);
+
+        TagCreateJob *createJob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createJob);
+        QVERIFY(createJob->tag().isValid());
+        tag.setId(createJob->tag().id());
+    }
+
+    tag.setRemoteId("rid_1");
+    {
+        ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_1");
+        AKVERIFYEXEC(select);
+
+        TagCreateJob *createJob = new TagCreateJob(tag, this);
+        createJob->setMergeIfExisting(true);
+        AKVERIFYEXEC(createJob);
+        QVERIFY(createJob->tag().isValid());
+    }
+
+    Akonadi::Monitor monitor;
+    monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+    QSignalSpy signalSpy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
+
+    // Other tests notifications might interfere due to notification compression on server
+    QTRY_VERIFY(signalSpy.count() >= 1);
+
+    Tag removedTag;
+    while (!signalSpy.isEmpty()) {
+        const Tag t = signalSpy.takeFirst().takeFirst().value<Akonadi::Tag>();
+        if (t.id() == tag.id()) {
+            removedTag = t;
+            break;
+        }
+    }
+
+    QVERIFY(removedTag.isValid());
+    QVERIFY(removedTag.remoteId().isEmpty());
+}
+
 
 void TagTest::testModify()
 {

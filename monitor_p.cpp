@@ -1079,6 +1079,8 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
     if (msg.operation() == NotificationMessageV2::Remove) {
         //In case of a removed signal the cache entry was already invalidated, and we therefore received an empty list of tags
         Q_FOREACH (const Entity::Id &uid, msg.uids()) {
+            Tag tag(uid);
+            tag.setRemoteId(msg.entity(uid).remoteId.toLatin1());
             validTags << Tag(uid);
         }
     } else {
