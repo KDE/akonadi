@@ -40,6 +40,7 @@ using namespace Akonadi::Server;
 
 DbConfigPostgresql::DbConfigPostgresql()
     : mInternalServer(true)
+    , mHostPort(0)
 {
 }
 
@@ -102,6 +103,7 @@ bool DbConfigPostgresql::init(QSettings &settings)
     if (mHostName.isEmpty()) {
         mHostName = defaultHostName;
     }
+    mHostPort = settings.value(QStringLiteral("Port")).toInt();
     // User, password and Options can be empty and still valid, so don't override them
     mUserName = settings.value(QStringLiteral("User")).toString();
     mPassword = settings.value(QStringLiteral("Password")).toString();
@@ -124,6 +126,9 @@ bool DbConfigPostgresql::init(QSettings &settings)
     settings.beginGroup(driverName());
     settings.setValue(QStringLiteral("Name"), mDatabaseName);
     settings.setValue(QStringLiteral("Host"), mHostName);
+    if (mHostPort) {
+        settings.setValue(QStringLiteral("Port"), mHostPort);
+    }
     settings.setValue(QStringLiteral("Options"), mConnectionOptions);
     settings.setValue(QStringLiteral("ServerPath"), mServerPath);
     settings.setValue(QStringLiteral("InitDbPath"), mInitDbPath);
@@ -141,6 +146,9 @@ void DbConfigPostgresql::apply(QSqlDatabase &database)
     }
     if (!mHostName.isEmpty()) {
         database.setHostName(mHostName);
+    }
+    if (mHostPort > 0 && mHostPort < 65535) {
+        database.setPort(mHostPort);
     }
     if (!mUserName.isEmpty()) {
         database.setUserName(mUserName);
