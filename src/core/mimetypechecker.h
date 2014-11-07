@@ -52,10 +52,10 @@ class MimeTypeCheckerPrivate;
  * Example: Checking whether an Akonadi::Item is contact MIME type
  * @code
  * Akonadi::MimeTypeChecker checker;
- * checker.addWantedMimeType( KABC::Addressee::mimeType() );
+ * checker.addWantedMimeType( KContacts::Addressee::mimeType() );
  *
  * if ( checker.isWantedItem( item ) ){
- *   // item.mimeType() is equal KABC::Addressee::mimeType(), an aliases
+ *   // item.mimeType() is equal KContacts::Addressee::mimeType(), an aliases
  *   // or a sub type.
  * }
  * @endcode
@@ -90,11 +90,11 @@ class MimeTypeCheckerPrivate;
  * of them specially.
  * @code
  * Akonadi::MimeTypeChecker mimeFilter;
- * mimeFilter.setWantedMimeTypes( QStringList() << KABC::Addressee::mimeType()
- *                                << KABC::ContactGroup::mimeType() );
+ * mimeFilter.setWantedMimeTypes( QStringList() << KContacts::Addressee::mimeType()
+ *                                << KContacts::ContactGroup::mimeType() );
  *
  * if ( mimeFilter.isWantedItem( item ) ) {
- *   if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) {
+ *   if ( Akonadi::MimeTypeChecker::isWantedItem( item, KContacts::ContactGroup::mimeType() ) {
  *     // treat contact group's differently
  *   }
  * }

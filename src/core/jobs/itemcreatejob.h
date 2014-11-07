@@ -45,12 +45,12 @@ class ItemCreateJobPrivate;
  *
  * // Create a contact item in the root collection
  *
- * KABC::Addressee addr;
+ * KContacts::Addressee addr;
  * addr.setNameFromString( "Joe Jr. Miller" );
  *
  * Akonadi::Item item;
  * item.setMimeType( "text/directory" );
- * item.setPayload<KABC::Addressee>( addr );
+ * item.setPayload<KContacts::Addressee>( addr );
  *
  * Akonadi::Collection collection = getCollection();
  *

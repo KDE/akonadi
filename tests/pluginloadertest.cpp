@@ -39,9 +39,9 @@ int main()
         qDebug("%s", qPrintable(types.at(i)));
     }
 
-    QObject *object = loader->createForName(QLatin1String("text/vcard@KABC::Addressee"));
+    QObject *object = loader->createForName(QLatin1String("text/vcard@KContacts::Addressee"));
     if (qobject_cast<ItemSerializerPlugin *>(object) != 0) {
-        qDebug("Loaded plugin for mimetype 'text/vcard@KABC::Addressee' successfully");
+        qDebug("Loaded plugin for mimetype 'text/vcard@KContacts::Addressee' successfully");
     } else {
         qDebug("Unable to load plugin for mimetype 'text/vcard'");
     }

@@ -59,7 +59,7 @@ class ItemFetchScope;
  * // returns all contact items from 'Contacts', 'Private' and 'Business'.
  *
  * const Akonadi::Collection contactsCollection( 15 );
- * const QStringList mimeTypes = QStringList() << KABC::Addressee::mimeType();
+ * const QStringList mimeTypes = QStringList() << KContacts::Addressee::mimeType();
  *
  * Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( contactsCollection, mimeTypes );
  * job->fetchScope().fetchFullPayload();

@@ -87,7 +87,7 @@ class EntityTreeModelPrivate;
  *
  *   ChangeRecorder *changeRecorder = new ChangeRecorder( this );
  *   changeRecorder->setCollectionMonitored( Collection::root() );
- *   changeRecorder->setMimeTypeMonitored( KABC::addresseeMimeType() );
+ *   changeRecorder->setMimeTypeMonitored( KContacts::addresseeMimeType() );
  *   changeRecorder->setSession( session );
  *
  *   EntityTreeModel *model = new EntityTreeModel( changeRecorder, this );
@@ -100,10 +100,10 @@ class EntityTreeModelPrivate;
  * The EntityTreeModel will show items of a different type by changing the line
  *
  * @code
- * changeRecorder->setMimeTypeMonitored( KABC::addresseeMimeType() );
+ * changeRecorder->setMimeTypeMonitored( KContacts::addresseeMimeType() );
  * @endcode
  *
- * to a different mimetype. KABC::addresseeMimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
+ * to a different mimetype. KContacts::addresseeMimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
  * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
  * known to %Akonadi.
  *

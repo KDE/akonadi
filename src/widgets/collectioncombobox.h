@@ -44,8 +44,8 @@ namespace Akonadi {
  * using namespace Akonadi;
  *
  * QStringList contentMimeTypes;
- * contentMimeTypes << KABC::Addressee::mimeType();
- * contentMimeTypes << KABC::ContactGroup::mimeType();
+ * contentMimeTypes << KContacts::Addressee::mimeType();
+ * contentMimeTypes << KContacts::ContactGroup::mimeType();
  *
  * CollectionComboBox *box = new CollectionComboBox( this );
  * box->setMimeTypeFilter( contentMimeTypes );

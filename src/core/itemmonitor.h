@@ -56,7 +56,7 @@ class ItemFetchScope;
  *       if ( item.mimeType() != "text/directory" )
  *         return;
  *
- *       const KABC::Addressee addr = item.payload<KABC::Addressee>();
+ *       const KContacts::Addressee addr = item.payload<KContacts::Addressee>();
  *       setText( addr.fullName() );
  *     }
  *

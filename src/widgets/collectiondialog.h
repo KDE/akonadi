@@ -49,7 +49,7 @@ namespace Akonadi {
  *
  * // Show the user a dialog to select a writable collection of contacts
  * CollectionDialog dlg( this );
- * dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+ * dlg.setMimeTypeFilter( QStringList() << KContacts::Addressee::mimeType() );
  * dlg.setAccessRightsFilter( Collection::CanCreateItem );
  * dlg.setDescription( i18n( "Select an address book for saving:" ) );
  *
