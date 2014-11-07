@@ -459,18 +459,17 @@ public:
         }
 
 #ifndef QT_NO_CLIPBOARD
+        QAbstractItemModel *model = const_cast<QAbstractItemModel *>(selectionModel->model());
+        model->setData(QModelIndex(), true, EntityTreeModel::PendingCutRole);
         QMimeData *mimeData = selectionModel->model()->mimeData(safeSelectedRows(selectionModel));
         markCutAction(mimeData, cut);
         QApplication::clipboard()->setMimeData(mimeData);
-
-        QAbstractItemModel *model = const_cast<QAbstractItemModel *>(selectionModel->model());
 
         foreach (const QModelIndex &index, safeSelectedRows(selectionModel)) {
             model->setData(index, true, EntityTreeModel::PendingCutRole);
         }
 #endif
     }
-
     void updateActions()
     {
         // collect all selected collections
