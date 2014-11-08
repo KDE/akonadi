@@ -161,6 +161,7 @@ RemoveDuplicatesJob::RemoveDuplicatesJob(const Akonadi::Collection &folder, QObj
     : Job(parent)
     , d(new Private(this))
 {
+    d->mJobCount = 1;   
     d->mFolders << folder;
 }
 
