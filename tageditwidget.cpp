@@ -111,13 +111,15 @@ void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start
 
 void TagEditWidget::Private::slotCreateTag()
 {
-    Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag(m_newTagEdit->text()), this);
-    connect(createJob, SIGNAL(finished(KJob*)),
-            this, SLOT(slotCreateTagFinished(KJob*)));
+    if (m_newTagButton->isEnabled()) {
+        Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag(m_newTagEdit->text()), this);
+        connect(createJob, SIGNAL(finished(KJob*)),
+                this, SLOT(slotCreateTagFinished(KJob*)));
 
-    m_newTagEdit->clear();
-    m_newTagEdit->setEnabled(false);
-    m_newTagButton->setEnabled(false);
+        m_newTagEdit->clear();
+        m_newTagEdit->setEnabled(false);
+        m_newTagButton->setEnabled(false);
+    }
 }
 
 void TagEditWidget::Private::slotCreateTagFinished(KJob *job)
@@ -214,9 +216,12 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
             d.data(), SLOT(slotItemEntered(QModelIndex)));
 
     d->m_newTagEdit = new KLineEdit(this);
+    d->m_newTagEdit->setTrapReturnKey(true);
     d->m_newTagEdit->setClearButtonShown(true);
     connect(d->m_newTagEdit, SIGNAL(textEdited(QString)),
             d.data(), SLOT(slotTextEdited(QString)));
+    connect(d->m_newTagEdit, SIGNAL(returnPressed()),
+            d.data(), SLOT(slotCreateTag()));
 
     d->m_newTagButton = new QPushButton(i18nc("@label", "Create new tag"));
     d->m_newTagButton->setEnabled(false);
