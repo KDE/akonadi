@@ -61,7 +61,8 @@ PublishDialog::PublishDialog(QWidget *parent)
     d->mUI.mRemove->setIcon(KIcon("list-remove"));
     d->mUI.mRemove->setEnabled(false);
     d->mUI.mSelectAddressee->setIcon(KIcon("view-pim-contacts"));
-
+    d->mUI.mNameLineEdit->setTrapReturnKey( true );
+    d->mUI.mEmailLineEdit->setTrapReturnKey( true );    
     connect(d->mUI.mListWidget, SIGNAL(itemSelectionChanged()),
             d, SLOT(updateInput()));
     connect(d->mUI.mNew, SIGNAL(clicked()),
