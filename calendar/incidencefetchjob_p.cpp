@@ -55,6 +55,12 @@ void Akonadi::IncidenceFetchJob::collectionFetchResult(KJob* job)
         return;
     CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>(job);
     Q_ASSERT(fetch);
+
+    if (fetch->collections().isEmpty()) {
+        emitResult();
+        return;
+    }
+
     foreach(const Collection &col, fetch->collections()) {
         if (!m_mimeTypeChecker.isWantedCollection(col) || col.isVirtual())
             continue;
