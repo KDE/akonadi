@@ -22,6 +22,7 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
+#include <QtCore/QTimer>
 #include <QtNetwork/QLocalSocket>
 #include <QtCore/QDataStream>
 
@@ -86,6 +87,7 @@ protected Q_SLOTS:
      */
     void slotNewData();
     void slotConnectionStateChange(ConnectionState state);
+    void slotConnectionIdle();
 
     void slotSendHello();
 
@@ -106,6 +108,7 @@ protected:
     QByteArray m_sessionId;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
+    QTimer m_idleTimer;
 
     QTime m_time;
     qint64 m_totalTime;

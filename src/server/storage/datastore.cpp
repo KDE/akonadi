@@ -86,7 +86,6 @@ DataStore::DataStore()
     , mNotificationCollector(0)
     , m_keepAliveTimer(0)
 {
-    open();
     notificationCollector();
 
     if (DbConfig::configuredDatabase()->driverName() == QLatin1String("QMYSQL")) {
@@ -103,7 +102,9 @@ DataStore::DataStore()
 
 DataStore::~DataStore()
 {
-    close();
+    if (m_dbOpened) {
+        close();
+    }
 }
 
 void DataStore::open()
@@ -127,6 +128,14 @@ void DataStore::open()
     }
 
     DbConfig::configuredDatabase()->initSession(m_database);
+}
+
+QSqlDatabase DataStore::database()
+{
+    if (!m_dbOpened) {
+        open();
+    }
+    return m_database;
 }
 
 void DataStore::close()
@@ -160,7 +169,7 @@ bool DataStore::init()
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 
     AkonadiSchema schema;
-    DbInitializer::Ptr initializer = DbInitializer::createInstance(m_database, &schema);
+    DbInitializer::Ptr initializer = DbInitializer::createInstance(database(), &schema);
     if (!initializer->run()) {
         akError() << initializer->errorMsg();
         return false;
@@ -168,7 +177,7 @@ bool DataStore::init()
     s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
 
     if (QFile::exists(QStringLiteral(":dbupdate.xml"))) {
-        DbUpdater updater(m_database, QStringLiteral(":dbupdate.xml"));
+        DbUpdater updater(database(), QStringLiteral(":dbupdate.xml"));
         if (!updater.run()) {
             return false;
         }
