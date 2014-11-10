@@ -159,7 +159,7 @@ void SearchManager::loadSearchPlugins()
   Q_FOREACH ( const QString &pluginDir, dirs ) {
     QDir dir( pluginDir + QLatin1String( "/akonadi" ) );
     const QStringList desktopFiles = dir.entryList( QStringList() << QLatin1String( "*.desktop" ), QDir::Files );
-    qDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String( "/akonadi" ) << ":" << desktopFiles;
+    akDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String( "/akonadi" ) << ":" << desktopFiles;
 
     Q_FOREACH ( const QString &desktopFileName, desktopFiles ) {
       QSettings desktop( pluginDir + QLatin1String( "/akonadi/" ) + desktopFileName, QSettings::IniFormat );
@@ -170,13 +170,13 @@ void SearchManager::loadSearchPlugins()
 
       const QString libraryName = desktop.value( QLatin1String( "X-Akonadi-Library" ) ).toString();
       if ( loadedPlugins.contains( libraryName ) ) {
-        qDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
+        akDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
         continue;
       }
       // When search plugin override is active, ignore all plugins except for the override
       if ( !pluginOverride.isEmpty() ) {
         if ( libraryName != pluginOverride ) {
-          qDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+          akDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
           continue;
         }
 
@@ -198,7 +198,7 @@ void SearchManager::loadSearchPlugins()
         continue;
       }
 
-      qDebug() << "SearchManager: loaded search plugin" << libraryName;
+      akDebug() << "SearchManager: loaded search plugin" << libraryName;
       mPlugins << plugin;
       loadedPlugins << libraryName;
     }
@@ -390,7 +390,7 @@ void SearchManager::searchUpdateResultsAvailable( const QSet<qint64> &results )
     }
   }
 
-  qDebug() << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "are already in the collection";
+  akDebug() << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "are already in the collection";
 
   newMatches = newMatches - existingMatches;
 
@@ -405,7 +405,7 @@ void SearchManager::searchUpdateResultsAvailable( const QSet<qint64> &results )
     Collection::addPimItem( collection.id(), id );
   }
 
-  qDebug() << "Added" << newMatches.count();
+  akDebug() << "Added" << newMatches.count();
 
   if ( !existingTransaction && !DataStore::self()->commitTransaction() ) {
     akDebug() << "Failed to commit transaction";

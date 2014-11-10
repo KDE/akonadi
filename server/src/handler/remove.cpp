@@ -40,8 +40,8 @@ bool Remove::parseStream()
 {
   mScope.parseScope( m_streamParser );
   connection()->context()->parseContext( m_streamParser );
-  qDebug() << "Tag context:" << connection()->context()->tagId();
-  qDebug() << "Collection context: " << connection()->context()->collectionId();
+  akDebug() << "Tag context:" << connection()->context()->tagId();
+  akDebug() << "Collection context: " << connection()->context()->collectionId();
 
 
   SelectQueryBuilder<PimItem> qb;

@@ -328,8 +328,9 @@ bool Merge::parseStream()
       }
 
     } else {
+      akDebug() << "Multiple merge candidates:";
       Q_FOREACH (const PimItem &item, result) {
-          qDebug() << item.id() << item.remoteId() << item.gid();
+          akDebug() << "\t" << item.id() << item.remoteId() << item.gid();
       }
       // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
       // something we don't want
