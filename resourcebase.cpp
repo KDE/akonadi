@@ -1410,7 +1410,7 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
 void ResourceBase::relationsRetrieved(const Relation::List &relations)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations ||
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncTags ||
                d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
                d->scheduler->currentTask().type == ResourceScheduler::Custom,
                "ResourceBase::relationsRetrieved()",
