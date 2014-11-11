@@ -27,6 +27,7 @@
 #include "dbusconnectionpool.h"
 #include "itemsync.h"
 #include "tagsync.h"
+#include "relationsync.h"
 #include "kdepimlibs-version.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
@@ -78,6 +79,7 @@ public:
         , mItemTransactionMode(ItemSync::SingleTransaction)
         , mCollectionSyncer(0)
         , mTagSyncer(0)
+        , mRelationSyncer(0)
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
@@ -168,6 +170,8 @@ public:
     void slotRecursiveMoveReplayResult(KJob *job);
 
     void slotTagSyncDone(KJob *job);
+    void slotRelationSyncDone(KJob *job);
+
     void slotSessionReconnected()
     {
         Q_Q(ResourceBase);
@@ -446,6 +450,7 @@ public:
     ItemSync::TransactionMode mItemTransactionMode;
     CollectionSync *mCollectionSyncer;
     TagSync *mTagSyncer;
+    RelationSync *mRelationSyncer;
     bool mHierarchicalRid;
     QTimer mProgressEmissionCompressor;
     int mUnemittedProgress;
@@ -1397,6 +1402,34 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             kWarning() << "TagSync failed: " << job->errorString();
+            emit q->error(job->errorString());
+        }
+    }
+}
+
+void ResourceBase::relationsRetrieved(const Relation::List &relations)
+{
+    Q_D(ResourceBase);
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations ||
+               d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
+               d->scheduler->currentTask().type == ResourceScheduler::Custom,
+               "ResourceBase::relationsRetrieved()",
+               "Calling relationsRetrieved() although no relation retrieval is in progress");
+    if (!d->mRelationSyncer) {
+        d->mRelationSyncer = new RelationSync(this);
+        connect(d->mRelationSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
+        connect(d->mRelationSyncer, SIGNAL(result(KJob*)), SLOT(slotRelationSyncDone(KJob*)));
+    }
+    d->mRelationSyncer->setRemoteRelations(relations);
+}
+
+void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
+{
+    Q_Q(ResourceBase);
+    mRelationSyncer = 0;
+    if (job->error()) {
+        if (job->error() != Job::UserCanceled) {
+            kWarning() << "RelationSync failed: " << job->errorString();
             emit q->error(job->errorString());
         }
     }

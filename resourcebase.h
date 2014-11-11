@@ -442,6 +442,7 @@ protected:
     void collectionsRetrieved(const Collection::List &collections);
 
     void tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers);
+    void relationsRetrieved(const Relation::List &relations);
 
     /**
      * Call this to supply incrementally retrieved collections from the remote server.
@@ -811,6 +812,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplayResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotTagSyncDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotRelationSyncDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void slotSynchronizeTags())
     Q_PRIVATE_SLOT(d_func(), void slotItemRetrievalCollectionFetchDone(KJob *));
     Q_PRIVATE_SLOT(d_func(), void slotAttributeRetrievalCollectionFetchDone(KJob *));

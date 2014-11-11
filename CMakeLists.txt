@@ -195,6 +195,7 @@ set( akonadikde_LIB_SRC
   relationcreatejob.cpp
   relationdeletejob.cpp
   relationfetchjob.cpp
+  relationsync.cpp
   tag.cpp
   tagmodel.cpp
   tagmodel_p.cpp
