@@ -149,6 +149,7 @@ public:
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
     void slotSynchronizeTags();
+    void slotSynchronizeRelations();
     void slotAttributeRetrievalCollectionFetchDone(KJob *job);
 
     void slotItemSyncDone(KJob *job);
@@ -491,6 +492,8 @@ ResourceBase::ResourceBase(const QString &id)
             SLOT(slotSynchronizeCollectionAttributes(Akonadi::Collection)));
     connect(d->scheduler, SIGNAL(executeTagSync()),
             SLOT(slotSynchronizeTags()));
+    connect(d->scheduler, SIGNAL(executeRelationSync()),
+            SLOT(slotSynchronizeRelations()));
     connect(d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
             SLOT(slotPrepareItemRetrieval(Akonadi::Item)));
     connect(d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
@@ -987,6 +990,12 @@ void ResourceBasePrivate::slotSynchronizeTags()
     QMetaObject::invokeMethod(q, "retrieveTags");
 }
 
+void ResourceBasePrivate::slotSynchronizeRelations()
+{
+    Q_Q(ResourceBase);
+    QMetaObject::invokeMethod(q, "retrieveRelations");
+}
+
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Akonadi::Item &item)
 {
     Q_Q(ResourceBase);
@@ -1098,6 +1107,11 @@ void ResourceBase::synchronizeCollectionTree()
 void ResourceBase::synchronizeTags()
 {
     d_func()->scheduler->scheduleTagSync();
+}
+
+void ResourceBase::synchronizeRelations()
+{
+    d_func()->scheduler->scheduleRelationSync();
 }
 
 void ResourceBase::cancelTask()
@@ -1329,6 +1343,12 @@ void ResourceBase::retrieveTags()
     d->scheduler->taskDone();
 }
 
+void ResourceBase::retrieveRelations()
+{
+    Q_D(ResourceBase);
+    d->scheduler->taskDone();
+}
+
 void Akonadi::ResourceBase::abortActivity()
 {
 }
@@ -1405,12 +1425,14 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
             emit q->error(job->errorString());
         }
     }
+
+    scheduler->taskDone();
 }
 
 void ResourceBase::relationsRetrieved(const Relation::List &relations)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncTags ||
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations ||
                d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
                d->scheduler->currentTask().type == ResourceScheduler::Custom,
                "ResourceBase::relationsRetrieved()",
@@ -1433,6 +1455,7 @@ void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
             emit q->error(job->errorString());
         }
     }
+
     scheduler->taskDone();
 }
 

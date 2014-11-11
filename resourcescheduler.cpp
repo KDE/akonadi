@@ -80,6 +80,18 @@ void ResourceScheduler::scheduleTagSync()
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleRelationSync()
+{
+  Task t;
+  t.type = SyncRelations;
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
+    return;
+  queue << t;
+  signalTaskToTracker( t, "SyncRelations" );
+  scheduleNext();
+}
+
 void ResourceScheduler::scheduleSync(const Collection & col)
 {
   Task t;
@@ -354,6 +366,9 @@ void ResourceScheduler::executeNext()
     case SyncCollectionTreeDone:
       emit collectionTreeSyncComplete();
       break;
+    case SyncRelations:
+      emit executeRelationSync();
+      break;
     case Custom:
     {
       const QByteArray methodSig = mCurrentTask.methodName + "(QVariant)";
@@ -560,6 +575,7 @@ static const char s_taskTypes[][27] = {
       "InvalideCacheForCollection",
       "SyncAllDone",
       "SyncCollectionTreeDone",
+      "SyncRelations",
       "Custom"
 };
 

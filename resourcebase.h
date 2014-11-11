@@ -277,6 +277,12 @@ protected Q_SLOTS:
     virtual void retrieveTags();
 
     /**
+     * Retreive all relations from the backend
+     * @see relationsRetrieved()
+     */
+    virtual void retrieveRelations();
+
+    /**
      * Retrieve the attributes of a single collection from the backend. The
      * collection to retrieve attributes for is provided as @p collection.
      * Add the attributes parts and call collectionAttributesRetrieved()
@@ -661,6 +667,11 @@ protected:
     void synchronizeTags();
 
     /**
+     * Refetches Relations.
+     */
+    void synchronizeRelations();
+
+    /**
      * Stops the execution of the current task and continues with the next one.
      */
     void cancelTask();
@@ -814,6 +825,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotTagSyncDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotRelationSyncDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void slotSynchronizeTags())
+    Q_PRIVATE_SLOT(d_func(), void slotSynchronizeRelations())
     Q_PRIVATE_SLOT(d_func(), void slotItemRetrievalCollectionFetchDone(KJob *));
     Q_PRIVATE_SLOT(d_func(), void slotAttributeRetrievalCollectionFetchDone(KJob *));
 };
