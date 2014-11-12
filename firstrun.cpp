@@ -77,10 +77,15 @@ Firstrun::~Firstrun()
 void Firstrun::findPendingDefaults()
 {
     const KConfigGroup cfg(mConfig, "ProcessedDefaults");
+    QSet<QString> defaults;
     foreach (const QString &dirName, KGlobal::dirs()->findDirs("data", QLatin1String("akonadi/firstrun"))) {
         const QStringList files = QDir(dirName).entryList(QDir::Files | QDir::Readable);
         foreach (const QString &fileName, files) {
             const QString fullName = dirName + fileName;
+            if (defaults.contains(fileName)) {
+                continue;
+            }
+            defaults.insert(fileName);
             KConfig c(fullName);
             const QString id = KConfigGroup(&c, "Agent").readEntry("Id", QString());
             if (id.isEmpty()) {
