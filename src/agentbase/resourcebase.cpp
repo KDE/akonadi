@@ -1256,7 +1256,7 @@ void ResourceBasePrivate::slotPercent(KJob *job, unsigned long percent)
     const Collection collection = job->property("collection").value<Collection>();
     if (collection.isValid()) {
         QVariantMap statusMap;
-        statusMap.insert(QStringLiteral("key"), QString::fromLatin1("collectionSyncProgress"));
+        statusMap.insert(QStringLiteral("key"), QStringLiteral("collectionSyncProgress"));
         statusMap.insert(QStringLiteral("collectionId"), collection.id());
         statusMap.insert(QStringLiteral("percent"), static_cast<unsigned int>(percent));
 

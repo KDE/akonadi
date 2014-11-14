@@ -94,7 +94,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
 
     ui->setupUi(this);
     ui->notRunningIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(64));
-    ui->brokenIcon->setPixmap(QIcon::fromTheme(QString::fromLatin1("dialog-error")).pixmap(64));
+    ui->brokenIcon->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-error")).pixmap(64));
     ui->progressIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(32));
     ui->quitButton->setText(KStandardGuiItem::quit().text());
     ui->detailsQuitButton->setText(KStandardGuiItem::quit().text());

@@ -71,7 +71,7 @@ void CollectionTest::testBuildCollection()
 
   QVERIFY( colist.at( 0 ).hasAttribute<EntityDisplayAttribute>() );
   EntityDisplayAttribute *attr = colist.at( 0 ).attribute<EntityDisplayAttribute>();
-  QCOMPARE( attr->displayName(), QString::fromLatin1( "Posteingang" ) );
+  QCOMPARE( attr->displayName(), QStringLiteral( "Posteingang" ) );
 }
 
 void CollectionTest::serializeCollection()

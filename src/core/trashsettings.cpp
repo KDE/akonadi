@@ -29,7 +29,7 @@ using namespace Akonadi;
 
 Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
 {
-    KConfig config(QString::fromLatin1("akonaditrashrc"));
+    KConfig config(QStringLiteral("akonaditrashrc"));
     KConfigGroup group(&config, resource);
     const Akonadi::Entity::Id colId = group.readEntry<Akonadi::Entity::Id> ("TrashCollection", -1);
     qWarning() << resource << colId;
@@ -38,7 +38,7 @@ Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
 
 void TrashSettings::setTrashCollection(const QString &resource, const Akonadi::Collection &collection)
 {
-    KConfig config(QString::fromLatin1("akonaditrashrc"));
+    KConfig config(QStringLiteral("akonaditrashrc"));
     KConfigGroup group(&config, resource);
     qWarning() << resource << collection.id();
     group.writeEntry("TrashCollection", collection.id());

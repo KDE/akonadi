@@ -51,10 +51,10 @@ void ItemAppendTest::testItemAppend_data()
   QTest::addColumn<QString>( "remoteId" );
 
   QTest::newRow( "empty" ) << QString();
-  QTest::newRow( "non empty" ) << QString::fromLatin1( "remote-id" );
-  QTest::newRow( "whitespace" ) << QString::fromLatin1( "remote id" );
-  QTest::newRow( "quotes" ) << QString::fromLatin1 ( "\"remote\" id" );
-  QTest::newRow( "brackets" ) << QString::fromLatin1( "[remote id]" );
+  QTest::newRow( "non empty" ) << QStringLiteral( "remote-id" );
+  QTest::newRow( "whitespace" ) << QStringLiteral( "remote id" );
+  QTest::newRow( "quotes" ) << QStringLiteral ( "\"remote\" id" );
+  QTest::newRow( "brackets" ) << QStringLiteral( "[remote id]" );
 }
 
 void ItemAppendTest::testItemAppend()

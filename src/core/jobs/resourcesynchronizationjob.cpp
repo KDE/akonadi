@@ -100,8 +100,8 @@ void ResourceSynchronizationJobPrivate::doStart()
     }
 
     interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
-                                   QString::fromLatin1("/"),
-                                   QString::fromLatin1("org.freedesktop.Akonadi.Resource"),
+                                   QStringLiteral("/"),
+                                   QStringLiteral("org.freedesktop.Akonadi.Resource"),
                                    KDBusConnectionPool::threadConnection(), this);
     if (collectionTreeOnly) {
         connect(interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()));
