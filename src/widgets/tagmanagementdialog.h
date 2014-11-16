@@ -26,7 +26,7 @@
 
 #include <QDialog>
 #include "tag.h"
-
+class QDialogButtonBox;
 namespace Akonadi {
 
 /**
@@ -40,6 +40,8 @@ class AKONADIWIDGETS_EXPORT TagManagementDialog : public QDialog
 public:
     explicit TagManagementDialog(QWidget *parent = 0);
     virtual ~TagManagementDialog();
+
+    QDialogButtonBox *buttons();
 
 private:
     class Private;

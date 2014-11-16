@@ -36,12 +36,14 @@ using namespace Akonadi;
 
 struct TagManagementDialog::Private {
     Private(QDialog *parent)
-        : d(parent)
+        : d(parent),
+          buttonBox(0)
     {
     }
     void writeConfig();
     void readConfig();
     QDialog *d;
+    QDialogButtonBox *buttonBox;
 };
 
 void TagManagementDialog::Private::writeConfig()
@@ -73,14 +75,14 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
     vbox->addWidget(new Akonadi::TagEditWidget(model, this, false));
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &TagManagementDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &TagManagementDialog::reject);
+    d->buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    connect(d->buttonBox, &QDialogButtonBox::accepted, this, &TagManagementDialog::accept);
+    connect(d->buttonBox, &QDialogButtonBox::rejected, this, &TagManagementDialog::reject);
 
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    QPushButton *okButton = d->buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    vbox->addWidget(buttonBox);
+    vbox->addWidget(d->buttonBox);
 
     d->readConfig();
 }
@@ -88,4 +90,9 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
 TagManagementDialog::~TagManagementDialog()
 {
     d->writeConfig();
+}
+
+QDialogButtonBox *TagManagementDialog::buttons()
+{
+    return d->buttonBox;
 }
