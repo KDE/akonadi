@@ -115,9 +115,14 @@ class SearchQueryTest : public QObject
         map[QLatin1String( "rel" )] = static_cast<int>( SearchTerm::RelAnd );
         map[QLatin1String( "subTerms" )] = subTerms;
 
+#if !defined( USE_QJSON_0_8 )
+        const QByteArray json = serializer.serialize( map );
+        QVERIFY( !json.isNull() );
+#else
         ok = false;
         const QByteArray json = serializer.serialize( map, &ok );
         QVERIFY( ok );
+#endif
 
         const SearchQuery query = SearchQuery::fromJSON( json );
         QVERIFY( !query.isNull() );
