@@ -300,6 +300,9 @@ configure_file(akonadiprivate_export.h.in
 )
 
 target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
+if (NOT USE_QJSON_0_8)
+   target_link_libraries(akonadi-kde ${qjson_LIBRARIES}) # some qjson 0.7.1 packages have broken cmake file
+endif (NOT USE_QJSON_0_8)
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 if (KDEPIM_MOBILE_UI)
