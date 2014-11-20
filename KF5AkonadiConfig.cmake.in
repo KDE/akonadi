@@ -5,6 +5,8 @@ find_dependency(KF5JobWidgets "@KF5_VERSION@")
 find_dependency(KF5Service "@KF5_VERSION@")
 find_dependency(KF5Solid "@KF5_VERSION@")
 find_dependency(KF5XmlGui "@KF5_VERSION@")
+find_dependency(KF5ItemModels "@KF5_VERSION@")
+find_dependency(KF5KDELibs4Support "@KF5_VERSION@")
 
 find_dependency(Qt5Network "@QT_REQUIRED_VERSION@")
 find_dependency(KF5AkonadiServer "@KF5AkonadiServer_MIN_VERSION@")
