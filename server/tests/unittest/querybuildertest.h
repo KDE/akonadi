@@ -37,6 +37,8 @@ class QueryBuilderTest : public QObject
     void testQueryBuilder_data();
     void testQueryBuilder();
 
+    void benchQueryBuilder();
+
   private:
     QList< Akonadi::Server::QueryBuilder > mBuilders;
 };
