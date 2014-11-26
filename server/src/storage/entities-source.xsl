@@ -214,36 +214,41 @@ void <xsl:value-of select="$className"/>::<xsl:call-template name="setter-signat
 // SQL table information
 <xsl:text>QString </xsl:text><xsl:value-of select="$className"/>::tableName()
 {
-  return QLatin1String( "<xsl:value-of select="$tableName"/>" );
+  static const QString tableName = QLatin1String( "<xsl:value-of select="$tableName"/>" );
+  return tableName;
 }
 
 QStringList <xsl:value-of select="$className"/>::columnNames()
 {
-  QStringList rv;
+  static const QStringList columns = QStringList()
   <xsl:for-each select="column">
-  rv.append( QLatin1String( "<xsl:value-of select="@name"/>" ) );
+    &lt;&lt; <xsl:value-of select="@name"/>Column()
   </xsl:for-each>
-  return rv;
+  ;
+  return columns;
 }
 
 QStringList <xsl:value-of select="$className"/>::fullColumnNames()
 {
-  QStringList rv;
+  static const QStringList columns = QStringList()
   <xsl:for-each select="column">
-  rv.append( QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@name"/>" ) );
+    &lt;&lt; <xsl:value-of select="@name"/>FullColumnName()
   </xsl:for-each>
-  return rv;
+  ;
+  return columns;
 }
 
 <xsl:for-each select="column">
 QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>Column()
 {
-  return QLatin1String( "<xsl:value-of select="@name"/>" );
+  static const QString column = QLatin1String( "<xsl:value-of select="@name"/>" );
+  return column;
 }
 
 QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>FullColumnName()
 {
-  return tableName() + QLatin1String( ".<xsl:value-of select="@name"/>" );
+  static const QString column = QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@name"/>" );
+  return column;
 }
 </xsl:for-each>
 
@@ -399,7 +404,6 @@ QVector&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"
 <xsl:variable name="relationName"><xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:variable>
 <xsl:variable name="rightSideClass"><xsl:value-of select="@table2"/></xsl:variable>
 <xsl:variable name="rightSideEntity"><xsl:value-of select="@table2"/></xsl:variable>
-<xsl:variable name="rightSideTable"><xsl:value-of select="@table2"/>Table</xsl:variable>
 
 // data retrieval for n:m relations
 QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
@@ -408,14 +412,17 @@ QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$c
   if ( !db.isOpen() )
     return QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
 
-  QueryBuilder qb( QLatin1String("<xsl:value-of select="$rightSideTable"/>"), QueryBuilder::Select );
+  QueryBuilder qb( <xsl:value-of select="$rightSideClass"/>::tableName(), QueryBuilder::Select );
+  static const QStringList columns = QStringList()
   <xsl:for-each select="/database/table[@name = $rightSideEntity]/column">
-    qb.addColumn( QLatin1String("<xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@name"/>" ) );
+    &lt;&lt; <xsl:value-of select="$rightSideClass"/>::<xsl:value-of select="@name"/>FullColumnName()
   </xsl:for-each>
-  qb.addJoin( QueryBuilder::InnerJoin, QLatin1String("<xsl:value-of select="$relationName"/>"),
-              QLatin1String("<xsl:value-of select="$relationName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>"),
-              QLatin1String("<xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@column2"/>") );
-  qb.addValueCondition( QLatin1String("<xsl:value-of select="$relationName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>"), Query::Equals, id() );
+  ;
+  qb.addColumns(columns);
+  qb.addJoin( QueryBuilder::InnerJoin, <xsl:value-of select="$relationName"/>::tableName(),
+              <xsl:value-of select="$relationName"/>::rightFullColumnName(),
+              <xsl:value-of select="$rightSideClass"/>::<xsl:value-of select="@column2"/>FullColumnName() );
+  qb.addValueCondition( <xsl:value-of select="$relationName"/>::leftFullColumnName(), Query::Equals, id() );
 
   if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during selection of records from table <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation"
@@ -546,7 +553,7 @@ bool <xsl:value-of select="$className"/>::update()
   </xsl:for-each>
 
   <xsl:if test="column[@name = 'id']">
-  qb.addValueCondition( QLatin1String("id"), Query::Equals, id() );
+  qb.addValueCondition( idColumn(), Query::Equals, id() );
   </xsl:if>
 
   if ( !qb.exec() ) {
@@ -622,27 +629,32 @@ void <xsl:value-of select="$className"/>::enableCache( bool enable )
 // SQL table information
 QString <xsl:value-of select="$className"/>::tableName()
 {
-  return QLatin1String( "<xsl:value-of select="$tableName"/>" );
+  static const QString table = QLatin1String( "<xsl:value-of select="$tableName"/>" );
+  return table;
 }
 
 QString <xsl:value-of select="$className"/>::leftColumn()
 {
-  return QLatin1String( "<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
+  static const QString column = QLatin1String( "<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
+  return column;
 }
 
 QString <xsl:value-of select="$className"/>::leftFullColumnName()
 {
-  return tableName() + QLatin1String( "." ) + leftColumn();
+  static const QString column = QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
+  return column;
 }
 
 QString <xsl:value-of select="$className"/>::rightColumn()
 {
-  return QLatin1String( "<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
+  static const QString column = QLatin1String( "<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
+  return column;
 }
 
 QString <xsl:value-of select="$className"/>::rightFullColumnName()
 {
-  return tableName() + QLatin1String( "." ) + rightColumn();
+  static const QString column = QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
+  return column;
 }
 </xsl:template>
 
