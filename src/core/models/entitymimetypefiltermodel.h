@@ -136,8 +136,8 @@ public:
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
 protected:
-    virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-    virtual bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

@@ -88,7 +88,7 @@ public:
     void excludeCapabilities(const QString &capability);
 
 protected:
-    bool filterAcceptsRow(int row, const QModelIndex &parent) const;
+    bool filterAcceptsRow(int row, const QModelIndex &parent) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

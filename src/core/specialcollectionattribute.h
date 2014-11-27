@@ -59,10 +59,10 @@ public:
     QByteArray collectionType() const;
 
     /* reimpl */
-    virtual SpecialCollectionAttribute *clone() const;
-    virtual QByteArray type() const;
-    virtual QByteArray serialized() const;
-    virtual void deserialize(const QByteArray &data);
+    SpecialCollectionAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

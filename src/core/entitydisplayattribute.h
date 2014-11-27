@@ -107,10 +107,10 @@ public:
     void setBackgroundColor(const QColor &color);
 
     /* reimpl */
-    QByteArray type() const;
-    EntityDisplayAttribute *clone() const;
-    QByteArray serialized() const;
-    void deserialize(const QByteArray &data);
+    QByteArray type() const Q_DECL_OVERRIDE;
+    EntityDisplayAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

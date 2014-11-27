@@ -99,7 +99,7 @@ public:
                                   Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
 
 protected:
-    virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

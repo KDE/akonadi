@@ -68,7 +68,7 @@ protected:
     /**
      * Sort filter criterias, according to how expensive the operation is
      */
-    virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
