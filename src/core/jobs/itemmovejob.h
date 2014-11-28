@@ -100,7 +100,7 @@ public:
     QList<Item> items() const;
 
 protected:
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(ItemMoveJob)

@@ -44,8 +44,8 @@ public:
 
 protected:
     /* reimp */
-    QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const;
-    /* reimp */ QString indexToConfigString(const QModelIndex &index) const;
+    QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const Q_DECL_OVERRIDE;
+    /* reimp */ QString indexToConfigString(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 };
 

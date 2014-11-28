@@ -47,7 +47,7 @@ public:
     Tag::List tags() const;
 
 protected:
-    virtual void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TagDeleteJob)

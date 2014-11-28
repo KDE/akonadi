@@ -75,7 +75,7 @@ public:
     ~CollectionCopyJob();
 
 protected:
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(CollectionCopyJob)

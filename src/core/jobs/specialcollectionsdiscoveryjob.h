@@ -63,7 +63,7 @@ protected:
     explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = 0);
 
     /* reimpl */
-    virtual void slotResult(KJob *job);
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

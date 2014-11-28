@@ -80,20 +80,20 @@ public:
      * @param parent parent model index
      * @return column count
      */
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**
      * @param index model index
      * @param role data role
      */
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     /**
      * @param section section of header
      * @param orientation of the data
      * @param role data role
      */
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(CollectionStatisticsModel)

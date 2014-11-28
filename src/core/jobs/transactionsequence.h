@@ -116,11 +116,11 @@ public:
     void setAutomaticCommittingEnabled(bool enable);
 
 protected:
-    bool addSubjob(KJob *job);
-    void doStart();
+    bool addSubjob(KJob *job) Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
-    void slotResult(KJob *job);
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TransactionSequence)

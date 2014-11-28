@@ -177,8 +177,8 @@ Q_SIGNALS:
     void collectionsReceived(const Akonadi::Collection::List &collections);
 
 protected:
-    virtual void doStart();
-    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    void doStart() Q_DECL_OVERRIDE;
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     //@cond PRIVATE

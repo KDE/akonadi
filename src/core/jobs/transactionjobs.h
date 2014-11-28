@@ -60,7 +60,7 @@ public:
     ~TransactionBeginJob();
 
 protected:
-    virtual void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TransactionBeginJob)
@@ -96,7 +96,7 @@ public:
     ~TransactionRollbackJob();
 
 protected:
-    virtual void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TransactionRollbackJob)
@@ -128,7 +128,7 @@ public:
     ~TransactionCommitJob();
 
 protected:
-    virtual void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TransactionCommitJob)

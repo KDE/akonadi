@@ -90,13 +90,13 @@ public:
     /**
      * @reimp
      */
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
      * @reimp
      */
-    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
 
 protected:
     bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

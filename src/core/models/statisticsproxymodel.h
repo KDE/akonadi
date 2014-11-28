@@ -98,11 +98,11 @@ public:
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
     virtual void connectNotify(const QMetaMethod & signal);
 
-    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
-    QModelIndex mapToSource(const QModelIndex& sourceIndex) const;
-    QModelIndex buddy(const QModelIndex &index) const;
+    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapToSource(const QModelIndex& sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex buddy(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    QItemSelection mapSelectionToSource(const QItemSelection& selection) const;
+    QItemSelection mapSelectionToSource(const QItemSelection& selection) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

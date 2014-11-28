@@ -67,17 +67,17 @@ public:
     /**
      * Checks if the cache policy page can actually handle the given @p collection.
      */
-    bool canHandle(const Collection &collection) const;
+    bool canHandle(const Collection &collection) const Q_DECL_OVERRIDE;
 
     /**
      * Loads the page content from the given @p collection.
      */
-    void load(const Collection &collection);
+    void load(const Collection &collection) Q_DECL_OVERRIDE;
 
     /**
      * Saves page content to the given @p collection.
      */
-    void save(Collection &collection);
+    void save(Collection &collection) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

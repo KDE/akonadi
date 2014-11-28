@@ -197,8 +197,8 @@ public:
     void disableAutomaticConflictHandling();
 
 protected:
-    virtual void doStart();
-    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    void doStart() Q_DECL_OVERRIDE;
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

@@ -95,7 +95,7 @@ public:
     AgentInstance resource() const;
 
     /* reimpl */
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

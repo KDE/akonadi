@@ -122,8 +122,8 @@ Q_SIGNALS:
     void tagsReceived(const Akonadi::Tag::List &tags);
 
 protected:
-    virtual void doStart();
-    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    void doStart() Q_DECL_OVERRIDE;
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TagFetchJob)

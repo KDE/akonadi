@@ -172,12 +172,12 @@ protected:
     /**
      * Reimplemented from Akonadi::Job
      */
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented from Akonadi::Job
      */
-    void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(SearchCreateJob)

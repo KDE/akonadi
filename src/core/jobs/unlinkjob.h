@@ -83,7 +83,7 @@ public:
     ~UnlinkJob();
 
 protected:
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(UnlinkJob)

@@ -40,7 +40,7 @@ class AKONADI_XML_EXPORT XmlWriteJob : public Job
     ~XmlWriteJob();
 
   protected:
-    /* reimpl. */ void doStart();
+    /* reimpl. */ void doStart() Q_DECL_OVERRIDE;
 
   private:
     friend class XmlWriteJobPrivate;

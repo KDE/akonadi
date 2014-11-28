@@ -92,8 +92,8 @@ public:
     Collection collection() const;
 
 protected:
-    virtual void doStart();
-    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    void doStart() Q_DECL_OVERRIDE;
+    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(CollectionStatisticsJob)

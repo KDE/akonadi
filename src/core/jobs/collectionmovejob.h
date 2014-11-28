@@ -61,7 +61,7 @@ public:
     CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent = 0);
 
 protected:
-    virtual void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(CollectionMoveJob)
