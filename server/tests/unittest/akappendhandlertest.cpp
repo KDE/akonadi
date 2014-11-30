@@ -41,7 +41,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(PimItem);
+Q_DECLARE_METATYPE(PimItem)
 Q_DECLARE_METATYPE(QVector<Flag>)
 Q_DECLARE_METATYPE(QVector<FakePart>)
 Q_DECLARE_METATYPE(QVector<FakeTag>)
