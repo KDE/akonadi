@@ -167,13 +167,11 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
   <xsl:if test="$cache != ''">
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     if ( Private::<xsl:value-of select="$cache"/>.contains( <xsl:value-of select="$key"/> ) ) {
       const <xsl:value-of select="$className"/> tmp = Private::<xsl:value-of select="$cache"/>.value( <xsl:value-of select="$key"/> );
-      Private::cacheMutex.unlock();
       return tmp;
     }
-    Private::cacheMutex.unlock();
   }
   </xsl:if>
   QSqlDatabase db = DataStore::self()->database();

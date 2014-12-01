@@ -125,14 +125,13 @@ void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-
 {
   Q_ASSERT( cacheEnabled );
   Q_UNUSED( entry ); <!-- in case the table has neither an id nor name column -->
-  cacheMutex.lock();
+  QMutexLocker lock(&amp;cacheMutex);
   <xsl:if test="column[@name = 'id']">
   idCache.insert( entry.id(), entry );
   </xsl:if>
   <xsl:if test="column[@name = 'name']">
   nameCache.insert( entry.name(), entry );
   </xsl:if>
-  cacheMutex.unlock();
 }
 
 
@@ -264,12 +263,10 @@ int <xsl:value-of select="$className"/>::count( const QString &amp;column, const
 bool <xsl:value-of select="$className"/>::exists( qint64 id )
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     if ( Private::idCache.contains( id ) ) {
-      Private::cacheMutex.unlock();
       return true;
     }
-    Private::cacheMutex.unlock();
   }
   return count( idColumn(), id ) > 0;
 }
@@ -278,12 +275,10 @@ bool <xsl:value-of select="$className"/>::exists( qint64 id )
 bool <xsl:value-of select="$className"/>::exists( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name )
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     if ( Private::nameCache.contains( name ) ) {
-      Private::cacheMutex.unlock();
       return true;
     }
-    Private::cacheMutex.unlock();
   }
   return count( nameColumn(), name ) > 0;
 }
@@ -588,28 +583,26 @@ bool <xsl:value-of select="$className"/>::remove( qint64 id )
 void <xsl:value-of select="$className"/>::invalidateCache() const
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     <xsl:if test="column[@name = 'id']">
     Private::idCache.remove( id() );
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     Private::nameCache.remove( name() );
     </xsl:if>
-    Private::cacheMutex.unlock();
   }
 }
 
 void <xsl:value-of select="$className"/>::invalidateCompleteCache()
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     <xsl:if test="column[@name = 'id']">
     Private::idCache.clear();
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     Private::nameCache.clear();
     </xsl:if>
-    Private::cacheMutex.unlock();
   }
 }
 
