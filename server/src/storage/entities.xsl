@@ -104,6 +104,12 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 
 using namespace Akonadi::Server;
 
+static QStringList removeEntry(QStringList list, const QString&amp; entry)
+{
+  list.removeOne(entry);
+  return list;
+}
+
 <xsl:for-each select="database/table">
 <xsl:call-template name="table-source"/>
 </xsl:for-each>
@@ -179,7 +185,8 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
     return <xsl:value-of select="$className"/>();
 
   QueryBuilder qb( tableName(), QueryBuilder::Select );
-  qb.addColumns( columnNames() );
+  static const QStringList columns = removeEntry(columnNames(), <xsl:value-of select="$key"/>Column());
+  qb.addColumns( columns );
   qb.addValueCondition( <xsl:value-of select="$key"/>Column(), Query::Equals, <xsl:value-of select="$key"/> );
   if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
@@ -191,21 +198,36 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
     return <xsl:value-of select="$className"/>();
   }
 
+  <!-- this indirection is required to prevent off-by-one access now that we skip the key column -->
+  int valueIndex = 0;
+  <xsl:for-each select="column">
+    const <xsl:value-of select="@type"/> value<xsl:value-of select="position()"/> =
+    <xsl:choose>
+      <xsl:when test="@name=$key">
+        <xsl:value-of select="$key"/>;
+      </xsl:when>
+      <xsl:otherwise>
+        (qb.query().isNull(valueIndex)) ?
+        <xsl:value-of select="@type"/>() :
+        <xsl:choose>
+          <xsl:when test="starts-with(@type,'QString')">
+          Utils::variantToString( qb.query().value( valueIndex ) )
+          </xsl:when>
+          <xsl:when test="starts-with(@type, 'Tristate')">
+          static_cast&lt;Tristate&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
+          </xsl:when>
+          <xsl:otherwise>
+          qb.query().value( valueIndex ).value&lt;<xsl:value-of select="@type"/>&gt;()
+          </xsl:otherwise>
+        </xsl:choose>
+        ; ++valueIndex;
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:for-each>
+
   <xsl:value-of select="$className"/> rv(
   <xsl:for-each select="column">
-    (qb.query().isNull(<xsl:value-of select="position() - 1"/>)) ?
-      <xsl:value-of select="@type"/>() :
-      <xsl:choose>
-        <xsl:when test="starts-with(@type,'QString')">
-      Utils::variantToString( qb.query().value( <xsl:value-of select="position() - 1"/> ) )
-        </xsl:when>
-        <xsl:when test="starts-with(@type, 'Tristate')">
-      static_cast&lt;Tristate&gt;(qb.query().value( <xsl:value-of select="position() - 1"/> ).value&lt;int&gt;())
-        </xsl:when>
-        <xsl:otherwise>
-      qb.query().value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
-        </xsl:otherwise>
-      </xsl:choose>
+    value<xsl:value-of select="position()"/>
     <xsl:if test="position() != last()">,</xsl:if>
   </xsl:for-each>
   );
