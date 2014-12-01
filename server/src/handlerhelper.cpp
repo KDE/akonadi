@@ -123,6 +123,10 @@ int HandlerHelper::itemWithFlagsCount( const Collection &col, const QStringList 
   // it hits an in-memory cache.
   Q_FOREACH ( const QString &flag, flags ) {
     const Flag f = Flag::retrieveByName( flag );
+    if (!f.isValid()) {
+      // since we OR this condition, we can skip invalid flags to speed up the query
+      continue;
+    }
     cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, f.id() );
   }
   qb.addCondition( cond );
