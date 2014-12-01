@@ -31,7 +31,7 @@
 
 using namespace Akonadi::Server;
 
-static QString compareOperatorToString(Query::CompareOperator op)
+static QLatin1String compareOperatorToString(Query::CompareOperator op)
 {
     switch (op) {
     case Query::Equals:
@@ -58,10 +58,10 @@ static QString compareOperatorToString(Query::CompareOperator op)
         return QLatin1String(" LIKE ");
     }
     Q_ASSERT_X(false, "QueryBuilder::compareOperatorToString()", "Unknown compare operator.");
-    return QString();
+    return QLatin1String("");
 }
 
-static QString logicOperatorToString(Query::LogicOperator op)
+static QLatin1String logicOperatorToString(Query::LogicOperator op)
 {
     switch (op) {
     case Query::And:
@@ -70,10 +70,10 @@ static QString logicOperatorToString(Query::LogicOperator op)
         return QLatin1String(" OR ");
     }
     Q_ASSERT_X(false, "QueryBuilder::logicOperatorToString()", "Unknown logic operator.");
-    return QString();
+    return QLatin1String("");
 }
 
-static QString sortOrderToString(Query::SortOrder order)
+static QLatin1String sortOrderToString(Query::SortOrder order)
 {
     switch (order) {
     case Query::Ascending:
@@ -82,7 +82,17 @@ static QString sortOrderToString(Query::SortOrder order)
         return QLatin1String(" DESC");
     }
     Q_ASSERT_X(false, "QueryBuilder::sortOrderToString()", "Unknown sort order.");
-    return QString();
+    return QLatin1String("");
+}
+
+static void appendJoined(QString *statement, const QStringList &strings, const QLatin1String &glue = QLatin1String(", "))
+{
+    for (int i = 0, c = strings.size(); i < c; ++i) {
+        *statement += strings.at(i);
+        if (i + 1 < c) {
+            *statement += glue;
+        }
+    }
 }
 
 QueryBuilder::QueryBuilder(const QString &table, QueryBuilder::QueryType type)
@@ -94,10 +104,12 @@ QueryBuilder::QueryBuilder(const QString &table, QueryBuilder::QueryType type)
     , mDatabaseType(DbType::Unknown)
 #endif
     , mType(type)
-    , mIdentificationColumn(QLatin1String("id"))
+    , mIdentificationColumn()
     , mLimit(-1)
     , mDistinct(false)
 {
+    static const QString defaultIdColumn = QLatin1String("id");
+    mIdentificationColumn = defaultIdColumn;
 }
 
 void QueryBuilder::setDatabaseType(DbType::Type type)
@@ -175,59 +187,65 @@ void QueryBuilder::sqliteAdaptUpdateJoin(Query::Condition &condition)
     qb.addCondition(joinCondition.second);
 
     // Convert the subquery to string
-    condition.mColumn = QLatin1String("( ") + qb.buildQuery() + QLatin1String(" )");
+    condition.mColumn.reserve(1024);
+    condition.mColumn.resize(0);
+    condition.mColumn += QLatin1String("( ");
+    qb.buildQuery(&condition.mColumn);
+    condition.mColumn += QLatin1String(" )");
 }
 
-QString QueryBuilder::buildQuery()
+void QueryBuilder::buildQuery(QString *statement)
 {
-    QString statement;
-
     // we add the ON conditions of Inner Joins in a Update query here
     // but don't want to change the mRootCondition on each exec().
     Query::Condition whereCondition = mRootCondition[WhereCondition];
 
     switch (mType) {
     case Select:
-        statement += QLatin1String("SELECT ");
+        *statement += QLatin1String("SELECT ");
         if (mDistinct) {
-            statement += QLatin1String("DISTINCT ");
+            *statement += QLatin1String("DISTINCT ");
         }
         Q_ASSERT_X(mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified");
-        statement += mColumns.join(QLatin1String(", "));
-        statement += QLatin1String(" FROM ");
-        statement += mTable;
+        appendJoined(statement, mColumns);
+        *statement += QLatin1String(" FROM ");
+        *statement += mTable;
         Q_FOREACH (const QString &joinedTable, mJoinedTables) {
             const QPair<JoinType, Query::Condition> &join = mJoins.value(joinedTable);
             switch (join.first) {
             case LeftJoin:
-                statement += QLatin1String(" LEFT JOIN ");
+                *statement += QLatin1String(" LEFT JOIN ");
                 break;
             case InnerJoin:
-                statement += QLatin1String(" INNER JOIN ");
+                *statement += QLatin1String(" INNER JOIN ");
                 break;
             }
-            statement += joinedTable;
-            statement += QLatin1String(" ON ");
-            statement += buildWhereCondition(join.second);
+            *statement += joinedTable;
+            *statement += QLatin1String(" ON ");
+            buildWhereCondition(statement, join.second);
         }
         break;
     case Insert:
         {
-            statement += QLatin1String("INSERT INTO ");
-            statement += mTable;
-            statement += QLatin1String(" (");
-            typedef QPair<QString, QVariant> StringVariantPair;
-            QStringList cols, vals;
-            Q_FOREACH (const StringVariantPair &p, mColumnValues) {
-                cols.append(p.first);
-                vals.append(bindValue(p.second));
+            *statement += QLatin1String("INSERT INTO ");
+            *statement += mTable;
+            *statement += QLatin1String(" (");
+            for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
+                *statement += mColumnValues.at(i).first;
+                if (i + 1 < c) {
+                    *statement += QLatin1String(", ");
+                }
             }
-            statement += cols.join(QLatin1String(", "));
-            statement += QLatin1String(") VALUES (");
-            statement += vals.join(QLatin1String(", "));
-            statement += QLatin1Char(')');
+            *statement += QLatin1String(") VALUES (");
+            for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
+                bindValue(statement, mColumnValues.at(i).second);
+                if (i + 1 < c) {
+                    *statement += QLatin1String(", ");
+                }
+            }
+            *statement += QLatin1Char(')');
             if (mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty()) {
-                statement += QLatin1String(" RETURNING ") + mIdentificationColumn;
+                *statement += QLatin1String(" RETURNING ") + mIdentificationColumn;
             }
             break;
         }
@@ -245,78 +263,75 @@ QString QueryBuilder::buildQuery()
                 sqliteAdaptUpdateJoin(whereCondition);
             }
 
-            statement += QLatin1String("UPDATE ");
-            statement += mTable;
+            *statement += QLatin1String("UPDATE ");
+            *statement += mTable;
 
             if (mDatabaseType == DbType::MySQL && !mJoinedTables.isEmpty()) {
                 // for mysql we list all tables directly
-                statement += QLatin1String(", ");
-                statement += mJoinedTables.join(QLatin1String(", "));
+                *statement += QLatin1String(", ");
+                appendJoined(statement, mJoinedTables);
             }
 
-            statement += QLatin1String(" SET ");
+            *statement += QLatin1String(" SET ");
             Q_ASSERT_X(mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed");
-            typedef QPair<QString, QVariant> StringVariantPair;
-            QStringList updStmts;
-            Q_FOREACH (const StringVariantPair &p, mColumnValues) {
-                QString updStmt = p.first;
-                updStmt += QLatin1String(" = ");
-                updStmt += bindValue(p.second);
-                updStmts << updStmt;
+            for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
+                const QPair<QString, QVariant> &p = mColumnValues.at(i);
+                *statement += p.first;
+                *statement += QLatin1String(" = ");
+                bindValue(statement, p.second);
+                if (i + 1 < c) {
+                    *statement += QLatin1String(", ");
+                }
             }
-            statement += updStmts.join(QLatin1String(", "));
 
             if (mDatabaseType == DbType::PostgreSQL && !mJoinedTables.isEmpty()) {
                 // PSQL have this syntax
                 // FROM t1 JOIN t2 JOIN ...
-                statement += QLatin1String(" FROM ");
-                statement += mJoinedTables.join(QLatin1String(" JOIN "));
+                *statement += QLatin1String(" FROM ");
+                appendJoined(statement, mJoinedTables, QLatin1String(" JOIN "));
             }
 
             break;
         }
     case Delete:
-        statement += QLatin1String("DELETE FROM ");
-        statement += mTable;
+        *statement += QLatin1String("DELETE FROM ");
+        *statement += mTable;
         break;
     default:
         Q_ASSERT_X(false, "QueryBuilder::exec()", "Unknown enum value");
     }
 
     if (!whereCondition.isEmpty()) {
-        statement += QLatin1String(" WHERE ");
-        statement += buildWhereCondition(whereCondition);
+        *statement += QLatin1String(" WHERE ");
+        buildWhereCondition(statement, whereCondition);
     }
 
     if (!mGroupColumns.isEmpty()) {
-        statement += QLatin1String(" GROUP BY ");
-        statement += mGroupColumns.join(QLatin1String(", "));
+        *statement += QLatin1String(" GROUP BY ");
+        appendJoined(statement, mGroupColumns);
     }
 
     if (!mRootCondition[HavingCondition].isEmpty()) {
-        statement += QLatin1String(" HAVING ");
-        statement += buildWhereCondition(mRootCondition[HavingCondition]);
+        *statement += QLatin1String(" HAVING ");
+        buildWhereCondition(statement, mRootCondition[HavingCondition]);
     }
 
     if (!mSortColumns.isEmpty()) {
         Q_ASSERT_X(mType == Select, "QueryBuilder::exec()", "Order statements are only valid for SELECT queries");
-        QStringList orderStmts;
-        typedef QPair<QString, Query::SortOrder> SortColumnInfo;
-        Q_FOREACH (const SortColumnInfo &order, mSortColumns) {
-            QString orderStmt;
-            orderStmt += order.first;
-            orderStmt += sortOrderToString(order.second);
-            orderStmts << orderStmt;
+        *statement += QLatin1String(" ORDER BY ");
+        for (int i = 0, c = mSortColumns.size(); i < c; ++i) {
+            const QPair<QString, Query::SortOrder> &order = mSortColumns.at(i);
+            *statement += order.first;
+            *statement += sortOrderToString(order.second);
+            if (i + 1 < c) {
+                *statement += QLatin1String(", ");
+            }
         }
-        statement += QLatin1String(" ORDER BY ");
-        statement += orderStmts.join(QLatin1String(", "));
     }
 
     if (mLimit > 0) {
-        statement += QLatin1Literal(" LIMIT ") + QString::number(mLimit);
+        *statement += QLatin1Literal(" LIMIT ") + QString::number(mLimit);
     }
-
-    return statement;
 }
 
 bool QueryBuilder::retryLastTransaction(bool rollback)
@@ -332,7 +347,9 @@ bool QueryBuilder::retryLastTransaction(bool rollback)
 
 bool QueryBuilder::exec()
 {
-    const QString statement = buildQuery();
+    QString statement;
+    statement.reserve(1024);
+    buildQuery(&statement);
 
 #ifndef QUERYBUILDER_UNITTEST
     if (QueryCache::contains(statement)) {
@@ -441,57 +458,54 @@ void QueryBuilder::addColumn(const QString &col)
 
 void QueryBuilder::addAggregation(const QString &col, const QString &aggregate)
 {
-    QString s(aggregate);
-    s += QLatin1Char('(');
-    s += col;
-    s += QLatin1Char(')');
-    mColumns.append(s);
+    mColumns.append(aggregate + QLatin1Char('(') + col + QLatin1Char(')'));
 }
 
-QString QueryBuilder::bindValue(const QVariant &value)
+void QueryBuilder::bindValue(QString *query, const QVariant &value)
 {
-    // TODO: Remove once we support Qt 5 only
-    if (value.type() == QVariant::Bool && mDatabaseType == DbType::Sqlite) {
-        mBindValues << (value.toBool() ? int(1) : int(0));
-    } else {
-        mBindValues << value;
-    }
-    return QLatin1Char(':') + QString::number(mBindValues.count() - 1);
+    mBindValues << value;
+    *query += QLatin1Char(':') + QString::number(mBindValues.count() - 1);
 }
 
-QString QueryBuilder::buildWhereCondition(const Query::Condition &cond)
+void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &cond)
 {
     if (!cond.isEmpty()) {
-        QStringList conds;
-        Q_FOREACH (const Query::Condition &c, cond.subConditions()) {
-            conds << buildWhereCondition(c);
+        *query += QLatin1String("( ");
+        const QLatin1String glue = logicOperatorToString(cond.mCombineOp);
+        const Query::Condition::List &subConditions = cond.subConditions();
+        for (int i = 0, c = subConditions.size(); i < c; ++i) {
+            buildWhereCondition(query, subConditions.at(i));
+            if (i + 1 < c) {
+                *query += glue;
+            }
         }
-        return QLatin1String("( ") + conds.join(logicOperatorToString(cond.mCombineOp)) + QLatin1String(" )");
+        *query += QLatin1String(" )");
     } else {
-        QString stmt = cond.mColumn;
-        stmt += compareOperatorToString(cond.mCompareOp);
+        *query += cond.mColumn;
+        *query += compareOperatorToString(cond.mCompareOp);
         if (cond.mComparedColumn.isEmpty()) {
             if (cond.mComparedValue.isValid()) {
                 if (cond.mComparedValue.canConvert(QVariant::List)) {
-                    stmt += QLatin1String("( ");
-                    QStringList entries;
-                    Q_ASSERT_X(!cond.mComparedValue.toList().isEmpty(),
+                    *query += QLatin1String("( ");
+                    const QVariantList &entries = cond.mComparedValue.toList();
+                    Q_ASSERT_X(!entries.isEmpty(),
                                "QueryBuilder::buildWhereCondition()", "No values given for IN condition.");
-                    Q_FOREACH (const QVariant &entry, cond.mComparedValue.toList()) {
-                        entries << bindValue(entry);
+                    for (int i = 0, c = entries.size(); i < c; ++i) {
+                        bindValue(query, entries.at(i));
+                        if (i + 1 < c) {
+                            *query += QLatin1String(", ");
+                        }
                     }
-                    stmt += entries.join(QLatin1String(", "));
-                    stmt += QLatin1String(" )");
+                    *query += QLatin1String(" )");
                 } else {
-                    stmt += bindValue(cond.mComparedValue);
+                    bindValue(query, cond.mComparedValue);
                 }
             } else {
-                stmt += QLatin1String("NULL");
+                *query += QLatin1String("NULL");
             }
         } else {
-            stmt += cond.mComparedColumn;
+            *query += cond.mComparedColumn;
         }
-        return stmt;
     }
 }
 

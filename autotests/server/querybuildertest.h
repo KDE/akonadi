@@ -36,9 +36,10 @@ class QueryBuilderTest : public QObject
 private Q_SLOTS:
     void testQueryBuilder_data();
     void testQueryBuilder();
+    void benchQueryBuilder();
 
-private:
-    QList< Akonadi::Server::QueryBuilder > mBuilders;
+  private:
+    QList<Akonadi::Server::QueryBuilder> mBuilders;
 };
 
 #endif

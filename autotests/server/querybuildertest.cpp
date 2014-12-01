@@ -29,26 +29,29 @@
 
 QTEST_MAIN(QueryBuilderTest)
 
+Q_DECLARE_METATYPE(QVector<QVariant>)
+
 using namespace Akonadi::Server;
 
 void QueryBuilderTest::testQueryBuilder_data()
 {
+    qRegisterMetaType<QVector<QVariant> >();
     mBuilders.clear();
     QTest::addColumn<int>("qbId");
     QTest::addColumn<QString>("sql");
-    QTest::addColumn<QList<QVariant> >("bindValues");
+    QTest::addColumn<QVector<QVariant> >("bindValues");
 
     QueryBuilder qb("table", QueryBuilder::Select);
     qb.addColumn("col1");
     mBuilders << qb;
-    QTest::newRow("simple select") << mBuilders.count() << QString("SELECT col1 FROM table") << QList<QVariant>();
+    QTest::newRow("simple select") << mBuilders.count() << QString("SELECT col1 FROM table") << QVector<QVariant>();
 
     qb.addColumn("col2");
     mBuilders << qb;
-    QTest::newRow("simple select 2") << mBuilders.count() << QString("SELECT col1, col2 FROM table") << QList<QVariant>();
+    QTest::newRow("simple select 2") << mBuilders.count() << QString("SELECT col1, col2 FROM table") << QVector<QVariant>();
 
     qb.addValueCondition("col1", Query::Equals, QVariant(5));
-    QList<QVariant> bindVals;
+    QVector<QVariant> bindVals;
     bindVals << QVariant(5);
     mBuilders << qb;
     QTest::newRow("single where") << mBuilders.count() << QString("SELECT col1, col2 FROM table WHERE ( col1 = :0 )") << bindVals;
@@ -71,17 +74,17 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb = QueryBuilder("table");
     qb.addAggregation("col1", "count");
     mBuilders << qb;
-    QTest::newRow("single aggregation") << mBuilders.count() << QString("SELECT count(col1) FROM table") << QList<QVariant>();
+    QTest::newRow("single aggregation") << mBuilders.count() << QString("SELECT count(col1) FROM table") << QVector<QVariant>();
 
     qb = QueryBuilder("table");
     qb.addColumn("col1");
     qb.addSortColumn("col1");
     mBuilders << qb;
-    QTest::newRow("single order by") << mBuilders.count() << QString("SELECT col1 FROM table ORDER BY col1 ASC") << QList<QVariant>();
+    QTest::newRow("single order by") << mBuilders.count() << QString("SELECT col1 FROM table ORDER BY col1 ASC") << QVector<QVariant>();
 
     qb.addSortColumn("col2", Query::Descending);
     mBuilders << qb;
-    QTest::newRow("multiple order by") << mBuilders.count() << QString("SELECT col1 FROM table ORDER BY col1 ASC, col2 DESC") << QList<QVariant>();
+    QTest::newRow("multiple order by") << mBuilders.count() << QString("SELECT col1 FROM table ORDER BY col1 ASC, col2 DESC") << QVector<QVariant>();
 
     qb = QueryBuilder("table");
     qb.addColumn("col1");
@@ -98,7 +101,7 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb.addColumn("col1");
     qb.setLimit(1);
     mBuilders << qb;
-    QTest::newRow("SELECT with LIMIT") << mBuilders.count() << QString("SELECT col1 FROM table LIMIT 1") << QList<QVariant>();
+    QTest::newRow("SELECT with LIMIT") << mBuilders.count() << QString("SELECT col1 FROM table LIMIT 1") << QVector<QVariant>();
 
     qb = QueryBuilder("table", QueryBuilder::Update);
     qb.setColumnValue("col1", QString("bla"));
@@ -262,11 +265,48 @@ void QueryBuilderTest::testQueryBuilder()
 {
     QFETCH(int, qbId);
     QFETCH(QString, sql);
-    QFETCH(QList<QVariant>, bindValues);
+    QFETCH(QVector<QVariant>, bindValues);
 
     --qbId;
 
     QVERIFY(mBuilders[qbId].exec());
     QCOMPARE(mBuilders[qbId].mStatement, sql);
     QCOMPARE(mBuilders[qbId].mBindValues, bindValues);
+}
+
+void QueryBuilderTest::benchQueryBuilder()
+{
+    const QString table1 = QLatin1String("Table1");
+    const QString table2 = QLatin1String("Table2");
+    const QString table3 = QLatin1String("Table3");
+    const QString table1_id = QLatin1String("Table1.id");
+    const QString table2_id = QLatin1String("Table2.id");
+    const QString table3_id = QLatin1String("Table3.id");
+    const QString aggregate = QLatin1String("COUNT");
+    const QVariant value = QVariant::fromValue(QString("asdf"));
+
+    const QStringList columns = QStringList()
+        << QLatin1String("Table1.id")
+        << QLatin1String("Table1.fooAsdf")
+        << QLatin1String("Table2.barLala")
+        << QLatin1String("Table3.xyzFsd");
+
+    bool executed = true;
+
+    QBENCHMARK {
+        QueryBuilder builder(table1, QueryBuilder::Select);
+        builder.setDatabaseType(DbType::MySQL);
+        builder.addColumns(columns);
+        builder.addJoin(QueryBuilder::InnerJoin, table2, table2_id, table1_id);
+        builder.addJoin(QueryBuilder::LeftJoin, table3, table1_id, table3_id);
+        builder.addAggregation(columns.first(), aggregate);
+        builder.addColumnCondition(columns.at(1), Query::LessOrEqual, columns.last());
+        builder.addValueCondition(columns.at(3), Query::Equals, value);
+        builder.addSortColumn(columns.at(2));
+        builder.setLimit(10);
+        builder.addGroupColumn(columns.at(3));
+        executed = executed && builder.exec();
+    }
+
+    QVERIFY(executed);
 }

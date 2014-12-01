@@ -114,7 +114,7 @@ using namespace Akonadi::Server;
 
 QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 {
-  static QVector&lt;QString&gt; allTables = QVector&lt;QString&gt;()
+  static const QVector&lt;QString&gt; allTables = QVector&lt;QString&gt;()
   <xsl:for-each select="database/table">
     &lt;&lt; QLatin1String( "<xsl:value-of select="@name"/>Table" )
   </xsl:for-each>
@@ -182,7 +182,7 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 
   QueryBuilder qb( tableName(), QueryBuilder::Select );
   qb.addColumns( columnNames() );
-  qb.addValueCondition( QLatin1String("<xsl:value-of select="$key"/>"), Query::Equals, <xsl:value-of select="$key"/> );
+  qb.addValueCondition( <xsl:value-of select="$key"/>Column(), Query::Equals, <xsl:value-of select="$key"/> );
   if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
       &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()

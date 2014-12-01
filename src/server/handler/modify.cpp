@@ -214,12 +214,11 @@ bool Modify::parseStream()
                     attrs << QString::fromLatin1(key);
                 }
             }
-
             queryAttributes = attrs.join(QLatin1String(" "));
 
-            qDebug() << collection.queryAttributes() << queryAttributes;
-            qDebug() << collection.queryCollections() << queryCollections;
-            qDebug() << collection.queryString() << queryString;
+            akDebug() << collection.queryAttributes() << queryAttributes;
+            akDebug() << collection.queryCollections() << queryCollections;
+            akDebug() << collection.queryString() << queryString;
 
             if (collection.queryAttributes() != queryAttributes
                 || collection.queryCollections() != queryCollections
