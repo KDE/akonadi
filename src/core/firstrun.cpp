@@ -37,6 +37,7 @@
 #include <QtCore/QMetaMethod>
 #include <QtCore/QMetaObject>
 #include <QStandardPaths>
+#include <QCoreApplication>
 
 static const char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
 
@@ -67,7 +68,8 @@ Firstrun::Firstrun(QObject *parent)
 
 Firstrun::~Firstrun()
 {
-    KDBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
+    if (qApp)
+       KDBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
     delete mConfig;
     qDebug() << "done";
 }
