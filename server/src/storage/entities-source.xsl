@@ -99,7 +99,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     static void addToCache( const <xsl:value-of select="$className"/> &amp; entry );
 
     // cache
-    static bool cacheEnabled;
+    static QAtomicInt cacheEnabled;
     static QMutex cacheMutex;
     <xsl:if test="column[@name = 'id']">
     static QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; idCache;
@@ -111,7 +111,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
 
 
 // static members
-bool <xsl:value-of select="$className"/>::Private::cacheEnabled = false;
+QAtomicInt <xsl:value-of select="$className"/>::Private::cacheEnabled(0);
 QMutex <xsl:value-of select="$className"/>::Private::cacheMutex;
 <xsl:if test="column[@name = 'id']">
 QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::idCache;
