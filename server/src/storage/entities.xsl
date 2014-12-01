@@ -168,9 +168,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   <xsl:if test="$cache != ''">
   if ( Private::cacheEnabled ) {
     QMutexLocker lock(&amp;Private::cacheMutex);
-    if ( Private::<xsl:value-of select="$cache"/>.contains( <xsl:value-of select="$key"/> ) ) {
-      const <xsl:value-of select="$className"/> tmp = Private::<xsl:value-of select="$cache"/>.value( <xsl:value-of select="$key"/> );
-      return tmp;
+    QHash&lt;<xsl:value-of select="column[@name = $key]/@type"/>, <xsl:value-of select="$className"/>&gt;::const_iterator it = Private::<xsl:value-of select="$cache"/>.constFind(<xsl:value-of select="$key"/>);
+    if ( it != Private::<xsl:value-of select="$cache"/>.constEnd() ) {
+      return it.value();
     }
   }
   </xsl:if>
