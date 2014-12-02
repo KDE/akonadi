@@ -187,13 +187,13 @@ Q_SIGNALS:
 protected:
     using QListView::currentChanged;
 #ifndef QT_NO_DRAGANDDROP
-    virtual void startDrag(Qt::DropActions supportedActions);
-    virtual void dropEvent(QDropEvent *event);
-    virtual void dragMoveEvent(QDragMoveEvent *event);
+    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
 #endif
 
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent(QContextMenuEvent *event);
+    virtual void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 #endif
 
 private:

@@ -150,7 +150,7 @@ Q_SIGNALS:
 
 protected:
     using QTreeView::currentChanged;
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
