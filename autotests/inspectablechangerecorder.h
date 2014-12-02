@@ -49,7 +49,7 @@ class AKONADITESTFAKE_EXPORT InspectableChangeRecorder : public Akonadi::ChangeR
 {
     Q_OBJECT
 public:
-    InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = 0);
+    InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = Q_NULLPTR);
 
     FakeNotificationSource *notifier() const {
         return qobject_cast<FakeNotificationSource *>(d_ptr->notificationSource->source());

@@ -67,7 +67,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit EntityRightsFilterModel(QObject *parent = 0);
+    explicit EntityRightsFilterModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the entity rights filter model.

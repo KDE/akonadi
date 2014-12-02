@@ -49,7 +49,7 @@ class AKONADITESTFAKE_EXPORT InspectableMonitor : public Akonadi::Monitor
 {
     Q_OBJECT
 public:
-    InspectableMonitor(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = 0);
+    InspectableMonitor(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = Q_NULLPTR);
 
     FakeNotificationSource *notifier() const
     {

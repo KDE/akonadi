@@ -74,7 +74,7 @@ public:
      *
      * @see defaultSession()
      */
-    explicit Session(const QByteArray &sessionId = QByteArray(), QObject *parent = 0);
+    explicit Session(const QByteArray &sessionId = QByteArray(), QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the session.
@@ -116,7 +116,7 @@ protected:
      *
      * @note This constructor is needed for unit testing only.
      */
-    explicit Session(SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = 0);
+    explicit Session(SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = Q_NULLPTR);
 
 private:
     //@cond PRIVATE

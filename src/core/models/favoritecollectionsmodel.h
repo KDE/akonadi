@@ -75,7 +75,7 @@ public:
      *              selection of favorite collections.
      * @param parent The parent object.
      */
-    FavoriteCollectionsModel(QAbstractItemModel *model, const KConfigGroup &group, QObject *parent = 0);
+    FavoriteCollectionsModel(QAbstractItemModel *model, const KConfigGroup &group, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the favorite collections model.

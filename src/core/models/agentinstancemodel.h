@@ -75,7 +75,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit AgentInstanceModel(QObject *parent = 0);
+    explicit AgentInstanceModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent instance model.

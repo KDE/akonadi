@@ -43,7 +43,7 @@ public:
      * @param tag The tag to create.
      * @param parent The parent object.
      */
-    explicit TagCreateJob(const Tag &tag, QObject *parent = 0);
+    explicit TagCreateJob(const Tag &tag, QObject *parent = Q_NULLPTR);
 
     /**
      * Returns the created tag with the new unique id, or an invalid tag if the job failed.

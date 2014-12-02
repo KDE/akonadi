@@ -51,7 +51,7 @@ public:
      *
      * @param parent The parent object.
      */
-    EntityOrderProxyModel(QObject *parent = 0);
+    EntityOrderProxyModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the entity order proxy model.

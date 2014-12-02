@@ -66,7 +66,7 @@ public:
      *
      * @param instance The resource instance to synchronize.
      */
-    explicit ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent = 0);
+    explicit ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the synchronization job.

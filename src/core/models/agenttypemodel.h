@@ -67,7 +67,7 @@ public:
     /**
      * Creates a new agent type model.
      */
-    explicit AgentTypeModel(QObject *parent = 0);
+    explicit AgentTypeModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent type model.

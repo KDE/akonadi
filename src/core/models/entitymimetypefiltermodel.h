@@ -68,7 +68,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit EntityMimeTypeFilterModel(QObject *parent = 0);
+    explicit EntityMimeTypeFilterModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the entity mime type filter model.

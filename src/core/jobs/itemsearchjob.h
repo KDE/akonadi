@@ -77,7 +77,7 @@ public:
      * @param parent The parent object.
      * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    explicit AKONADICORE_DEPRECATED ItemSearchJob(const QString &query, QObject *parent = 0);
+    explicit AKONADICORE_DEPRECATED ItemSearchJob(const QString &query, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates an item search job.
@@ -86,7 +86,7 @@ public:
      * @param parent The parent object.
      * @since 4.13
      */
-    explicit ItemSearchJob(const SearchQuery &query, QObject *parent = 0);
+    explicit ItemSearchJob(const SearchQuery &query, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item search job.

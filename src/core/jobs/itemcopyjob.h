@@ -70,7 +70,7 @@ public:
      * @param target The target collection.
      * @param parent The parent object.
      */
-    ItemCopyJob(const Item &item, const Collection &target, QObject *parent = 0);
+    ItemCopyJob(const Item &item, const Collection &target, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new item copy job.
@@ -79,7 +79,7 @@ public:
      * @param target The target collection.
      * @param parent The parent object.
      */
-    ItemCopyJob(const Item::List &items, const Collection &target, QObject *parent = 0);
+    ItemCopyJob(const Item::List &items, const Collection &target, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item copy job.

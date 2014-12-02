@@ -76,7 +76,7 @@ public:
      * @param item The item to mark as trash.
      * @param parent The parent object.
      */
-    explicit TrashJob(const Item &item, QObject *parent = 0);
+    explicit TrashJob(const Item &item, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new trash job that marks all items in the list
@@ -88,7 +88,7 @@ public:
      * @param items The items to mark as trash.
      * @param parent The parent object.
      */
-    explicit TrashJob(const Item::List &items, QObject *parent = 0);
+    explicit TrashJob(const Item::List &items, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new trash job that marks @p collection as trash, and moves it to the configured trash collection.
@@ -99,7 +99,7 @@ public:
      * @param collection The collection to mark as trash.
      * @param parent The parent object.
      */
-    explicit TrashJob(const Collection &collection, QObject *parent = 0);
+    explicit TrashJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     ~TrashJob();
 

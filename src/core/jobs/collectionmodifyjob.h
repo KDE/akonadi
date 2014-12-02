@@ -93,7 +93,7 @@ public:
      * @param collection The collection to modify.
      * @param parent The parent object.
      */
-    explicit CollectionModifyJob(const Collection &collection, QObject *parent = 0);
+    explicit CollectionModifyJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection modify job.

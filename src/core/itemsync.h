@@ -61,7 +61,7 @@ public:
      * @param collection The collection we are syncing.
      * @param parent The parent object.
      */
-    explicit ItemSync(const Collection &collection, QObject *parent = 0);
+    explicit ItemSync(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item synchronizer.

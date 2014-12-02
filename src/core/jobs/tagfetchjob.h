@@ -35,7 +35,7 @@ class TagFetchJobPrivate;
  * This class is used to fetch tags from the Akonadi storage.
  *
  * If you want to fetch all items with given tag, use ItemFetchJob and the
- * ItemFetchJob(const Tag &tag, QObject *parent = 0) constructor (since 4.14)
+ * ItemFetchJob(const Tag &tag, QObject *parent = Q_NULLPTR) constructor (since 4.14)
  *
  * @since 4.13
  */
@@ -49,7 +49,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit TagFetchJob(QObject *parent = 0);
+    explicit TagFetchJob(QObject *parent = Q_NULLPTR);
 
     /**
      * Constructs a new tag fetch job that retrieves the specified tag.
@@ -61,7 +61,7 @@ public:
      * @param tag The tag to fetch.
      * @param parent The parent object.
      */
-    explicit TagFetchJob(const Tag &tag, QObject *parent = 0);
+    explicit TagFetchJob(const Tag &tag, QObject *parent = Q_NULLPTR);
 
     /**
      * Constructs a new tag fetch job that retrieves specified tags.
@@ -73,15 +73,15 @@ public:
      * @param tags Tags to fetch.
      * @param parent The parent object.
      */
-    explicit TagFetchJob(const Tag::List &tags, QObject *parent = 0);
+    explicit TagFetchJob(const Tag::List &tags, QObject *parent = Q_NULLPTR);
 
     /**
-     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = 0)
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR)
      *
      * @param ids UIDs of tags to fetch.
      * @param parent The parent object.
      */
-    explicit TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = 0);
+    explicit TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = Q_NULLPTR);
 
     /**
      * Sets the tag fetch scope.

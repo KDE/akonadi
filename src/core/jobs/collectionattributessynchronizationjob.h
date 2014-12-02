@@ -61,7 +61,7 @@ public:
      *
      * @param collection The collection to synchronize.
      */
-    explicit CollectionAttributesSynchronizationJob(const Collection &collection, QObject *parent = 0);
+    explicit CollectionAttributesSynchronizationJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the synchronization job.

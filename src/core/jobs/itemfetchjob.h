@@ -91,7 +91,7 @@ public:
      * @param collection The parent collection to fetch all items from.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob(const Collection &collection, QObject *parent = 0);
+    explicit ItemFetchJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new item fetch job that retrieves the specified item.
@@ -109,7 +109,7 @@ public:
      * @param item The item to fetch.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob(const Item &item, QObject *parent = 0);
+    explicit ItemFetchJob(const Item &item, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new item fetch job that retrieves the specified items.
@@ -128,13 +128,13 @@ public:
      * @param parent The parent object.
      * @since 4.4
      */
-    explicit ItemFetchJob(const Item::List &items, QObject *parent = 0);
+    explicit ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR);
 
     /**
-     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = 0)
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR)
      * @since 4.8
      */
-    explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = 0);
+    explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = Q_NULLPTR);
 
 
     /**
@@ -145,7 +145,7 @@ public:
      *
      * @since 4.14
      */
-    explicit ItemFetchJob(const Tag &tag, QObject *parent = 0);
+    explicit ItemFetchJob(const Tag &tag, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item fetch job.

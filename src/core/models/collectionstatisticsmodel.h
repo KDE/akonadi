@@ -74,7 +74,7 @@ public:
      * Creates a new collection statistics model.
      * @param parent The parent object.
      */
-    explicit CollectionStatisticsModel(QObject *parent = 0);
+    explicit CollectionStatisticsModel(QObject *parent = Q_NULLPTR);
 
     /**
      * @param parent parent model index

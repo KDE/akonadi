@@ -73,7 +73,7 @@ public:
      * @param collection The collection to fetch the statistics from.
      * @param parent The parent object.
      */
-    explicit CollectionStatisticsJob(const Collection &collection, QObject *parent = 0);
+    explicit CollectionStatisticsJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection statistics job.

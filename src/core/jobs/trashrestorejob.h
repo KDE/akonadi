@@ -59,11 +59,11 @@ public:
     /**
      * All items need to be from the same resource
      */
-    explicit TrashRestoreJob(const Item &item, QObject *parent = 0);
+    explicit TrashRestoreJob(const Item &item, QObject *parent = Q_NULLPTR);
 
-    explicit TrashRestoreJob(const Item::List &items, QObject *parent = 0);
+    explicit TrashRestoreJob(const Item::List &items, QObject *parent = Q_NULLPTR);
 
-    explicit TrashRestoreJob(const Collection &collection, QObject *parent = 0);
+    explicit TrashRestoreJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     ~TrashRestoreJob();
 

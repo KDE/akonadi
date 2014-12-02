@@ -105,7 +105,7 @@ public:
      * @param item The modified item object to store.
      * @param parent The parent object.
      */
-    explicit ItemModifyJob(const Item &item, QObject *parent = 0);
+    explicit ItemModifyJob(const Item &item, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new item modify job for bulk modifications.
@@ -123,7 +123,7 @@ public:
      * @param items The list of items to modify, must not be empty.
      * @since 4.6
      */
-    explicit ItemModifyJob(const Item::List &items, QObject *parent = 0);
+    explicit ItemModifyJob(const Item::List &items, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item modify job.

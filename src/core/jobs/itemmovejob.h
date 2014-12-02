@@ -58,7 +58,7 @@ public:
      * @param destination The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob(const Item &item, const Collection &destination, QObject *parent = 0);
+    ItemMoveJob(const Item &item, const Collection &destination, QObject *parent = Q_NULLPTR);
 
     /**
      * Move the given items into @p destination.
@@ -67,7 +67,7 @@ public:
      * @param destination The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob(const QList<Item> &items, const Collection &destination, QObject *parent = 0);
+    ItemMoveJob(const QList<Item> &items, const Collection &destination, QObject *parent = Q_NULLPTR);
 
     /**
      * Move the given items from @p sourec to @p destination.
@@ -78,7 +78,7 @@ public:
      *
      * @since 4.14
      */
-    ItemMoveJob(const QList<Item> &items, const Collection &source, const Collection &destination, QObject *parent = 0);
+    ItemMoveJob(const QList<Item> &items, const Collection &source, const Collection &destination, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item move job.

@@ -72,7 +72,7 @@ protected:
     Q_DECLARE_PRIVATE(TagModel)
     TagModelPrivate *d_ptr;
 
-    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = 0);
+    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = Q_NULLPTR);
 
 private:
     bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;

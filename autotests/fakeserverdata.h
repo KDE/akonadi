@@ -36,7 +36,7 @@ class AKONADITESTFAKE_EXPORT FakeServerData : public QObject
 {
     Q_OBJECT
 public:
-    FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = 0);
+    FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = Q_NULLPTR);
 
     void setCommands(QList<FakeAkonadiServerCommand *> list);
 

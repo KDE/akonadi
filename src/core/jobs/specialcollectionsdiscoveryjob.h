@@ -60,7 +60,7 @@ protected:
      * @param collections The SpecialCollections object that shall be used.
      * @param parent The parent object.
      */
-    explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = 0);
+    explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = Q_NULLPTR);
 
     /* reimpl */
     void slotResult(KJob *job) Q_DECL_OVERRIDE;

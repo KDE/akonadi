@@ -29,7 +29,7 @@ class MimeTypeCheckerTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MimeTypeCheckerTest(QObject *parent = 0);
+    explicit MimeTypeCheckerTest(QObject *parent = Q_NULLPTR);
 
 private:
     QStringList mCalendarSubTypes;

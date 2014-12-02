@@ -84,7 +84,7 @@ public:
      * @param collection The parent collection where the new item shall be located in.
      * @param parent The parent object.
      */
-    ItemCreateJob(const Item &item, const Collection &collection, QObject *parent = 0);
+    ItemCreateJob(const Item &item, const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item create job.

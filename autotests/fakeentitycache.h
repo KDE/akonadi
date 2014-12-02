@@ -31,7 +31,7 @@ template<typename T, typename Cache>
 class FakeEntityCache : public Cache
 {
 public:
-    FakeEntityCache(Akonadi::Session *session = 0, QObject *parent = 0)
+    FakeEntityCache(Akonadi::Session *session = 0, QObject *parent = Q_NULLPTR)
         : Cache(0, session, parent)
     {
     }
@@ -78,7 +78,7 @@ class AKONADITESTFAKE_EXPORT FakeNotificationSource : public QObject
 {
     Q_OBJECT
 public:
-    FakeNotificationSource(QObject *parent = 0)
+    FakeNotificationSource(QObject *parent = Q_NULLPTR)
         : QObject(parent)
     {
     }

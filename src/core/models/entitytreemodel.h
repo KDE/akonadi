@@ -392,7 +392,7 @@ public:
      * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    explicit EntityTreeModel(ChangeRecorder *monitor, QObject *parent = 0);
+    explicit EntityTreeModel(ChangeRecorder *monitor, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the entity tree model.
@@ -701,7 +701,7 @@ protected:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(EntityTreeModel)
     EntityTreeModelPrivate *d_ptr;
-    EntityTreeModel(ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject *parent = 0);
+    EntityTreeModel(ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject *parent = Q_NULLPTR);
     //@endcond
 
 private:

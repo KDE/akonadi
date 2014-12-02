@@ -73,7 +73,7 @@ public:
      * @param parent The parent object.
      * @since 4.13
      */
-    SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent = 0);
+    SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent = Q_NULLPTR);
 
     /**
      * Sets list of mime types of items that search results can contain

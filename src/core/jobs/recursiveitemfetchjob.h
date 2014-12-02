@@ -95,7 +95,7 @@ public:
      */
     explicit RecursiveItemFetchJob(const Akonadi::Collection &collection,
                                    const QStringList &mimeTypes,
-                                   QObject *parent = 0);
+                                   QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the recursive item fetch job.

@@ -81,7 +81,7 @@ public:
      * @param type The type of fetch depth.
      * @param parent The parent object.
      */
-    explicit CollectionFetchJob(const Collection &collection, Type type = FirstLevel, QObject *parent = 0);
+    explicit CollectionFetchJob(const Collection &collection, Type type = FirstLevel, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
@@ -98,7 +98,7 @@ public:
      * @param collections A list of collections to fetch. Must not be empty.
      * @param parent The parent object.
      */
-    explicit CollectionFetchJob(const Collection::List &collections, QObject *parent = 0);
+    explicit CollectionFetchJob(const Collection::List &collections, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
@@ -118,16 +118,16 @@ public:
      * @todo KDE5 merge with ctor above.
      * @since 4.7
      */
-    CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = 0);
+    CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = Q_NULLPTR);
 
     /**
-     * Convenience ctor equivalent to CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = 0)
+     * Convenience ctor equivalent to CollectionFetchJob(const Collection::List &collections, Type type, QObject *parent = Q_NULLPTR)
      * @since 4.8
      * @param collections list of collection ids
      * @param type fetch job type
      * @param parent parent object
      */
-    explicit CollectionFetchJob(const QList<Collection::Id> &collections, Type type = Base, QObject *parent = 0);
+    explicit CollectionFetchJob(const QList<Collection::Id> &collections, Type type = Base, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection fetch job.

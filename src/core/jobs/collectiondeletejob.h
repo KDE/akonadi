@@ -75,7 +75,7 @@ public:
      * @param collection The collection to delete.
      * @param parent The parent object.
      */
-    explicit CollectionDeleteJob(const Collection &collection, QObject *parent = 0);
+    explicit CollectionDeleteJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection delete job.

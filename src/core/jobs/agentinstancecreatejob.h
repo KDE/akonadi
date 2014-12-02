@@ -78,7 +78,7 @@ public:
      * @param type The type of the agent to create.
      * @param parent The parent object.
      */
-    explicit AgentInstanceCreateJob(const AgentType &type, QObject *parent = 0);
+    explicit AgentInstanceCreateJob(const AgentType &type, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new agent instance create job.
@@ -87,7 +87,7 @@ public:
      * @param parent The parent object.
      * @since 4.5
      */
-    explicit AgentInstanceCreateJob(const QString &typeId, QObject *parent = 0);
+    explicit AgentInstanceCreateJob(const QString &typeId, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent instance create job.

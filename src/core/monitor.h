@@ -91,7 +91,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit Monitor(QObject *parent = 0);
+    explicit Monitor(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the monitor.
@@ -703,7 +703,7 @@ protected:
     friend class EntityTreeModel;
     friend class EntityTreeModelPrivate;
     MonitorPrivate *d_ptr;
-    explicit Monitor(MonitorPrivate *d, QObject *parent = 0);
+    explicit Monitor(MonitorPrivate *d, QObject *parent = Q_NULLPTR);
     //@endcond
 
 private:

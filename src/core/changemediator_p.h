@@ -40,7 +40,7 @@ class ChangeMediator : public QObject
 {
     Q_OBJECT
 public:
-    explicit ChangeMediator(QObject *parent = 0);
+    explicit ChangeMediator(QObject *parent = Q_NULLPTR);
 
     static ChangeMediator *instance();
 

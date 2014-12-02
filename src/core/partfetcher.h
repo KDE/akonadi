@@ -81,7 +81,7 @@ public:
      * @param partName The name of the payload part to fetch.
      * @param parent The parent object.
      */
-    PartFetcher(const QModelIndex &index, const QByteArray &partName, QObject *parent = 0);
+    PartFetcher(const QModelIndex &index, const QByteArray &partName, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the part fetcher.

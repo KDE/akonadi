@@ -63,7 +63,7 @@ public:
      * identified by its remote identifier as well.
      * @param parent The parent object.
      */
-    explicit CollectionCreateJob(const Collection &collection, QObject *parent = 0);
+    explicit CollectionCreateJob(const Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection create job.

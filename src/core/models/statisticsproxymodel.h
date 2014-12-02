@@ -57,7 +57,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit StatisticsProxyModel( QObject *parent = 0 );
+    explicit StatisticsProxyModel( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the statistics proxy model.
