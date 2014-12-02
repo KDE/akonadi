@@ -70,7 +70,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit CollectionView(QWidget *parent = 0);
+    explicit CollectionView(QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new collection view.
@@ -80,7 +80,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit AKONADIWIDGETS_DEPRECATED CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
+    explicit AKONADIWIDGETS_DEPRECATED CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new collection view.
@@ -90,7 +90,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
+    explicit CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection view.

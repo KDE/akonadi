@@ -190,7 +190,7 @@ public:
      * @param actionCollection The action collection to operate on.
      * @param parent The parent widget.
      */
-    explicit StandardActionManager(KActionCollection *actionCollection, QWidget *parent = 0);
+    explicit StandardActionManager(KActionCollection *actionCollection, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the standard action manager.

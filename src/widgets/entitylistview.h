@@ -81,7 +81,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit EntityListView(QWidget *parent = 0);
+    explicit EntityListView(QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new favorite collections view.
@@ -91,7 +91,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit EntityListView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
+    explicit EntityListView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the favorite collections view.

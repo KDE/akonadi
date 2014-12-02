@@ -99,7 +99,7 @@ public:
      * has been successfully started.
      * @param parent The parent window for the configuration dialog.
      */
-    void configure(QWidget *parent = 0);
+    void configure(QWidget *parent = Q_NULLPTR);
 
     /**
      * Returns the AgentInstance object of the newly created agent instance.

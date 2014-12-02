@@ -44,7 +44,7 @@ class ItemFetchScope;
  * class ContactLabel : public QLabel, public Akonadi::ItemMonitor
  * {
  *   public:
- *     ContactLabel( QWidget *parent = 0 )
+ *     ContactLabel( QWidget *parent = Q_NULLPTR )
  *       : QLabel( parent )
  *     {
  *       setText( "No Name" );

@@ -67,7 +67,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit ItemView(QWidget *parent = 0);
+    explicit ItemView(QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new item view.
@@ -77,7 +77,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit AKONADIWIDGETS_DEPRECATED ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
+    explicit AKONADIWIDGETS_DEPRECATED ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new item view.
@@ -88,7 +88,7 @@ public:
      * @param parent The parent widget.
      * @since 4.3
      */
-    explicit ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
+    explicit ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the item view.

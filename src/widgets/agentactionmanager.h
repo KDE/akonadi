@@ -72,7 +72,7 @@ public:
      * @param actionCollection The action collection to operate on.
      * @param parent The parent widget.
      */
-    explicit AgentActionManager(KActionCollection *actionCollection, QWidget *parent = 0);
+    explicit AgentActionManager(KActionCollection *actionCollection, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent action manager.

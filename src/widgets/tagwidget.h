@@ -40,7 +40,7 @@ class AKONADIWIDGETS_EXPORT TagWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TagWidget(QWidget *parent = 0);
+    explicit TagWidget(QWidget *parent = Q_NULLPTR);
     ~TagWidget();
 
     void setSelection(const Akonadi::Tag::List &tags);

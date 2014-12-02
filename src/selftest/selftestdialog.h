@@ -47,7 +47,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit SelfTestDialog(QWidget *parent = 0);
+    explicit SelfTestDialog(QWidget *parent = Q_NULLPTR);
 
     /**
      * Hides the label with the introduction message.

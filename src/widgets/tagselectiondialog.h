@@ -41,7 +41,7 @@ class AKONADIWIDGETS_EXPORT TagSelectionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TagSelectionDialog(QWidget *parent = 0);
+    explicit TagSelectionDialog(QWidget *parent = Q_NULLPTR);
     virtual ~TagSelectionDialog();
 
     void setSelection(const Akonadi::Tag::List &tags);
