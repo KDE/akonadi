@@ -135,10 +135,10 @@ Q_SIGNALS:
 
 protected:
     using QTreeView::currentChanged;
-    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-    virtual void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
