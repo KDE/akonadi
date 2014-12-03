@@ -61,11 +61,28 @@ public:
     void blockAlarmType(KCalCore::Alarm::Type type, bool block = true);
 
     /**
+     * Blocks or unblocks every alarm type.
+     *
+     * By default, all alarm types are blocked.
+     *
+     * @since 5.0
+     */
+    void blockEverything(bool block = true);
+
+    /**
      * Returns whether given alarm type is blocked or not.
      *
      * @since 4.11
      */
     bool isAlarmTypeBlocked(KCalCore::Alarm::Type type) const;
+
+    /**
+     * Returns whether all alarms are blocked or not.
+     *
+     * @since 5.0
+     */
+
+    bool isEverythingBlocked() const;
 
     /**
       * Reimplemented from Attribute

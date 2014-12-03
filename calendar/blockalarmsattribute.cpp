@@ -74,6 +74,14 @@ void BlockAlarmsAttribute::blockAlarmType(KCalCore::Alarm::Type type, bool block
     }
 }
 
+void BlockAlarmsAttribute::blockEverything(bool block)
+{
+    blockAlarmType(KCalCore::Alarm::Audio, block);
+    blockAlarmType(KCalCore::Alarm::Display, block);
+    blockAlarmType(KCalCore::Alarm::Email, block);
+    blockAlarmType(KCalCore::Alarm::Procedure, block);
+}
+
 bool BlockAlarmsAttribute::isAlarmTypeBlocked(KCalCore::Alarm::Type type) const
 {
     switch (type) {
@@ -88,6 +96,12 @@ bool BlockAlarmsAttribute::isAlarmTypeBlocked(KCalCore::Alarm::Type type) const
     default:
         return false;
     }
+}
+
+bool BlockAlarmsAttribute::isEverythingBlocked() const
+{
+    return isAlarmTypeBlocked(KCalCore::Alarm::Audio) && isAlarmTypeBlocked(KCalCore::Alarm::Display)
+        && isAlarmTypeBlocked(KCalCore::Alarm::Email) && isAlarmTypeBlocked(KCalCore::Alarm::Procedure);
 }
 
 QByteArray BlockAlarmsAttribute::type() const
