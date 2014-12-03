@@ -54,10 +54,10 @@ public:
     QString value(const QByteArray &key);
     bool contains(const QByteArray &key) const;
 
-    QByteArray type() const;
-    Attribute *clone() const;
-    QByteArray serialized() const;
-    void deserialize(const QByteArray &data);
+    QByteArray type() const Q_DECL_OVERRIDE;
+    Attribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     QMap<QByteArray, QByteArray> mAnnotations;
