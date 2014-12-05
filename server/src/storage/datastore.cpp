@@ -183,6 +183,7 @@ bool DataStore::init()
   Flag::enableCache( true );
   Resource::enableCache( true );
   Collection::enableCache( true );
+  PartType::enableCache( true );
 
   return true;
 }
@@ -1025,7 +1026,8 @@ bool DataStore::unhideAllPimItems()
   akDebug() << "DataStore::unhideAllPimItems()";
 
   try {
-    return PartHelper::remove( Part::partTypeIdFullColumnName(), PartTypeHelper::fromName( "ATR", "HIDDEN" ).id() );
+    return PartHelper::remove( Part::partTypeIdFullColumnName(),
+                               PartType::retrieveByFQName( QLatin1String("ATR"), QLatin1String("HIDDEN") ).id() );
   } catch ( ... ) {} // we can live with this failing
 
   return false;

@@ -130,7 +130,15 @@ void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-
   idCache.insert( entry.id(), entry );
   </xsl:if>
   <xsl:if test="column[@name = 'name']">
+    <xsl:choose>
+     <xsl:when test="$className = 'PartType'">
+      <!-- special case for PartType, which is identified as "NS:NAME" -->
+  nameCache.insert( entry.ns() + QLatin1Char(':') + entry.name(), entry );
+      </xsl:when>
+      <xsl:otherwise>
   nameCache.insert( entry.name(), entry );
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:if>
 }
 
@@ -323,11 +331,24 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
 }
 
 </xsl:if>
-<xsl:if test="column[@name = 'name']">
+<xsl:if test="column[@name = 'name'] and $className != 'PartType'">
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveByName( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name )
 {
   <xsl:call-template name="data-retrieval">
   <xsl:with-param name="key">name</xsl:with-param>
+  <xsl:with-param name="cache">nameCache</xsl:with-param>
+  </xsl:call-template>
+}
+</xsl:if>
+
+<xsl:if test="column[@name = 'name'] and $className = 'PartType'">
+<xsl:text>PartType PartType::retrieveByFQName( const QString &amp; ns, const QString &amp; name )</xsl:text>
+{
+  const QString fqname = ns + QLatin1Char(':') + name;
+  <xsl:call-template name="data-retrieval">
+  <xsl:with-param name="key">ns</xsl:with-param>
+  <xsl:with-param name="key2">name</xsl:with-param>
+  <xsl:with-param name="lookupKey">fqname</xsl:with-param>
   <xsl:with-param name="cache">nameCache</xsl:with-param>
   </xsl:call-template>
 }
@@ -588,7 +609,15 @@ void <xsl:value-of select="$className"/>::invalidateCache() const
     Private::idCache.remove( id() );
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
+      <xsl:choose>
+        <xsl:when test="$className = 'PartType'">
+        <!-- Special handling for PartType, which is identified as "NS:NAME" -->
+    Private::nameCache.remove( ns() + QLatin1Char(':') + name() );
+        </xsl:when>
+        <xsl:otherwise>
     Private::nameCache.remove( name() );
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   }
 }

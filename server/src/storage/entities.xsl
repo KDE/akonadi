@@ -169,12 +169,14 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 <!-- data retrieval for a given key field -->
 <xsl:template name="data-retrieval">
 <xsl:param name="key"/>
+<xsl:param name="key2"/>
+<xsl:param name="lookupKey" select="$key"/>
 <xsl:param name="cache"/>
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
   <xsl:if test="$cache != ''">
   if ( Private::cacheEnabled ) {
     QMutexLocker lock(&amp;Private::cacheMutex);
-    QHash&lt;<xsl:value-of select="column[@name = $key]/@type"/>, <xsl:value-of select="$className"/>&gt;::const_iterator it = Private::<xsl:value-of select="$cache"/>.constFind(<xsl:value-of select="$key"/>);
+    QHash&lt;<xsl:value-of select="column[@name = $key]/@type"/>, <xsl:value-of select="$className"/>&gt;::const_iterator it = Private::<xsl:value-of select="$cache"/>.constFind(<xsl:value-of select="$lookupKey"/>);
     if ( it != Private::<xsl:value-of select="$cache"/>.constEnd() ) {
       return it.value();
     }
@@ -188,6 +190,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   static const QStringList columns = removeEntry(columnNames(), <xsl:value-of select="$key"/>Column());
   qb.addColumns( columns );
   qb.addValueCondition( <xsl:value-of select="$key"/>Column(), Query::Equals, <xsl:value-of select="$key"/> );
+  <xsl:if test="$key2 != ''">
+  qb.addValueCondition( <xsl:value-of select="$key2"/>Column(), Query::Equals, <xsl:value-of select="$key2"/> );
+  </xsl:if>
   if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
       &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()

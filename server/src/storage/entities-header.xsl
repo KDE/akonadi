@@ -133,9 +133,14 @@ class <xsl:value-of select="$className"/> : private Entity
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveById( qint64 id );
     </xsl:if>
 
-    <xsl:if test="column[@name = 'name']">
+    <xsl:if test="column[@name = 'name'] and $className != 'PartType'">
     /** Returns the record with name @p name. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name );
+    </xsl:if>
+
+    <xsl:if test="column[@name = 'name'] and $className = 'PartType'">
+    <!-- Special case for PartTypes, which are identified by "NS:NAME" -->
+    <xsl:text>static PartType retrieveByFQName( const QString &amp;ns, const QString &amp;name );</xsl:text>
     </xsl:if>
 
     /** Retrieve all records from this table. */
