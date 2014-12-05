@@ -37,12 +37,26 @@ QPair< QString, QString > PartTypeHelper::parseFqName(const QString& fqName)
 PartType PartTypeHelper::fromFqName(const QString& fqName)
 {
   const QPair<QString, QString> p = parseFqName( fqName );
-  return PartType::retrieveByFQName(p.first, p.second);
+  return fromFqName(p.first, p.second);
+
 }
 
 PartType PartTypeHelper::fromFqName(const QByteArray& fqName)
 {
   return fromFqName( QLatin1String(fqName) );
+}
+
+PartType PartTypeHelper::fromFqName(const QString& ns, const QString& name)
+{
+  PartType partType = PartType::retrieveByFQName(ns, name);
+  if (!partType.isValid()) {
+      PartType pt(name, ns);
+      if (!pt.insert()) {
+        throw PartTypeException( "Failed to append part type" );
+      }
+      partType = pt;
+  }
+  return partType;
 }
 
 Query::Condition PartTypeHelper::conditionFromFqName(const QString& fqName)

@@ -134,7 +134,7 @@ bool Append::commit()
 
     // wrap data into a part
     Part part;
-    part.setPartType( PartType::retrieveByFQName( QLatin1String("PLD"), QLatin1String("RFC822") ) );
+    part.setPartType( PartTypeHelper::fromFqName( QLatin1String("PLD"), QLatin1String("RFC822") ) );
     part.setData( m_data );
     part.setPimItemId( item.id() );
     part.setDatasize( dataSize );
@@ -148,7 +148,7 @@ bool Append::commit()
     //akDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
     if ( doPreprocessing ) {
       Part hiddenAttribute;
-      hiddenAttribute.setPartType( PartType::retrieveByFQName( QLatin1String("ATR"), QLatin1String("HIDDEN") ) );
+      hiddenAttribute.setPartType( PartTypeHelper::fromFqName( QLatin1String("ATR"), QLatin1String("HIDDEN") ) );
       hiddenAttribute.setData( QByteArray() );
       hiddenAttribute.setPimItemId( item.id() );
       hiddenAttribute.setDatasize( 0 );
