@@ -161,6 +161,7 @@ set(libakonadiprivate_SRCS
   src/search/searchmanager.cpp
 
   src/storage/collectionqueryhelper.cpp
+  src/storage/collectionstatistics.cpp
   src/storage/entity.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/akonadischema.cpp

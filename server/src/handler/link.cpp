@@ -25,10 +25,10 @@
 #include "storage/itemqueryhelper.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/collectionqueryhelper.h"
 #include "entities.h"
 
 #include "imapstreamparser.h"
-#include <storage/collectionqueryhelper.h>
 
 using namespace Akonadi::Server;
 

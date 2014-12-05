@@ -41,6 +41,7 @@ class FakeDataStore: public DataStore
     virtual bool setItemsFlags( const PimItem::List &items,
                                 const QVector<Flag> &flags,
                                 bool *flagsChanged = 0,
+                                const Collection &col = Collection(),
                                 bool silent = false );
     virtual bool appendItemsFlags( const PimItem::List &items,
                                    const QVector<Flag> &flags,
@@ -51,6 +52,7 @@ class FakeDataStore: public DataStore
     virtual bool removeItemsFlags( const PimItem::List &items,
                                    const QVector<Flag> &flags,
                                    bool *flagsChanged = 0,
+                                   const Collection &col = Collection(),
                                    bool silent = false );
 
     virtual bool setItemsTags( const PimItem::List &items,

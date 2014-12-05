@@ -119,10 +119,12 @@ class DataStore : public QObject
     static DataStore *self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0, bool silent = false );
+    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
+                                bool *flagsChanged = 0, const Collection &col = Collection(), bool silent = false );
     virtual bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0,
                                    bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
-    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0, bool silent = false );
+    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0,
+                                   const Collection &collection = Collection(), bool silent = false );
 
     /* --- ItemTags ----------------------------------------------------- */
     virtual bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );

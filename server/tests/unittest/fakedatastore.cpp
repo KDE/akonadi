@@ -91,13 +91,15 @@ bool FakeDataStore::init()
 bool FakeDataStore::setItemsFlags( const PimItem::List &items,
                                    const QVector<Flag> &flags,
                                    bool *flagsChanged,
+                                   const Collection &col,
                                    bool silent )
 {
   mChanges.insert( QLatin1String( "setItemsFlags" ),
                    QVariantList() << QVariant::fromValue( items )
                                   << QVariant::fromValue( flags )
+                                  << QVariant::fromValue( col )
                                   << silent );
-  return DataStore::setItemsFlags( items, flags, flagsChanged, silent );
+  return DataStore::setItemsFlags( items, flags, flagsChanged, col, silent );
 }
 
 bool FakeDataStore::appendItemsFlags( const PimItem::List &items,
@@ -119,13 +121,15 @@ bool FakeDataStore::appendItemsFlags( const PimItem::List &items,
 bool FakeDataStore::removeItemsFlags( const PimItem::List &items,
                                       const QVector<Flag> &flags,
                                       bool *flagsChanged,
+                                      const Collection &col,
                                       bool silent )
 {
   mChanges.insert( QLatin1String( "removeItemsFlags" ),
                    QVariantList() << QVariant::fromValue( items )
                                   << QVariant::fromValue( flags )
+                                  << QVariant::fromValue( col )
                                   << silent );
-  return DataStore::removeItemsFlags( items, flags, flagsChanged, silent );
+  return DataStore::removeItemsFlags( items, flags, flagsChanged, col, silent );
 }
 
 

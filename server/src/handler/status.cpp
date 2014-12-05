@@ -25,6 +25,7 @@
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/countquerybuilder.h"
+#include "storage/collectionstatistics.h"
 
 #include "response.h"
 #include "handlerhelper.h"
@@ -62,9 +63,9 @@ bool Status::parseStream()
     // Responses:
     // REQUIRED untagged responses: STATUS
 
-  qint64 itemCount, itemSize;
-  if ( !HandlerHelper::itemStatistics( col, itemCount, itemSize ) ) {
-    return failureResponse( "Failed to query statistics." );
+  const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
+  if (stats.count == -1) {
+      return failureResponse( "Failed to query statistics." );
   }
 
     // build STATUS response
@@ -72,7 +73,7 @@ bool Status::parseStream()
     // MESSAGES - The number of messages in the mailbox
   if ( attributeList.contains( AKONADI_ATTRIBUTE_MESSAGES ) ) {
     statusResponse += AKONADI_ATTRIBUTE_MESSAGES " ";
-    statusResponse += QByteArray::number( itemCount );
+    statusResponse += QByteArray::number( stats.count );
   }
 
   if ( attributeList.contains( AKONADI_ATTRIBUTE_UNSEEN ) ) {
@@ -80,21 +81,14 @@ bool Status::parseStream()
       statusResponse += " ";
     }
     statusResponse += AKONADI_ATTRIBUTE_UNSEEN " ";
-
-    // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
-    const int count = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
-                                                                            << QLatin1String( AKONADI_FLAG_IGNORED ) );
-    if ( count < 0 ) {
-      return failureResponse( "Unable to retrieve unread count" );
-    }
-    statusResponse += QByteArray::number( itemCount - count );
+    statusResponse += QByteArray::number( stats.count - stats.read );
   }
   if ( attributeList.contains( AKONADI_PARAM_SIZE ) ) {
     if ( !statusResponse.isEmpty() ) {
       statusResponse += " ";
     }
     statusResponse += AKONADI_PARAM_SIZE " ";
-    statusResponse += QByteArray::number( itemSize );
+    statusResponse += QByteArray::number( stats.size );
   }
 
   Response response;

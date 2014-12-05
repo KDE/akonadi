@@ -88,7 +88,7 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       if ( !itemFlags.removed.isEmpty() ) {
         const Flag::List removedFlags = HandlerHelper::resolveFlags( itemFlags.removed );
         DataStore::self()->removeItemsFlags( PimItem::List() << currentItem, removedFlags,
-                                             &flagsRemoved, true );
+                                             &flagsRemoved, col, true );
       }
 
       if ( flagsAdded || flagsRemoved ) {
@@ -98,7 +98,7 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       bool flagsChanged = false;
       const Flag::List flags = HandlerHelper::resolveFlags( itemFlags.added );
       DataStore::self()->setItemsFlags( PimItem::List() << currentItem, flags,
-                                        &flagsChanged, true );
+                                        &flagsChanged, col, true );
       if ( flagsChanged ) {
         mChangedParts << AKONADI_PARAM_FLAGS;
       }

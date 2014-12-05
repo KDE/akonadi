@@ -52,28 +52,6 @@ class HandlerHelper
     static QString pathForCollection( const Collection &col );
 
     /**
-      Returns the amount of existing items in the given collection.
-      @return -1 on error
-    */
-    static int itemCount( const Collection &col );
-
-    /**
-     * Queries for collection statistics.
-     * @param col The collection to query.
-     * @param count The total amount of items in this collection.
-     * @param size The size of all items in this collection.
-     * @return @c false on a query error, @c true otherwise
-     */
-    static bool itemStatistics( const Collection &col, qint64 &count, qint64 &size );
-
-    /**
-      Returns the amount of existing items in the given collection
-      which have a given flag set.
-      @return -1 on error.
-    */
-    static int itemWithFlagsCount( const Collection &col, const QStringList &flags );
-
-    /**
       Parse cache policy and update the given Collection object accoordingly.
       @param changed Indicates whether or not the cache policy already available in @p col
       has actually changed

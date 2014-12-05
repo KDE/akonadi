@@ -20,6 +20,7 @@
 #include "notificationcollector.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "storage/collectionstatistics.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
 #include "intervalcheck.h"
@@ -133,6 +134,7 @@ void NotificationCollector::collectionChanged( const Collection &collection,
   if ( AkonadiServer::instance()->intervalChecker() ) {
     AkonadiServer::instance()->intervalChecker()->collectionAdded( collection.id() );
   }
+  CollectionStatistics::instance()->invalidateCollection(collection);
   collectionNotification( NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
 }
 
@@ -159,6 +161,8 @@ void NotificationCollector::collectionRemoved( const Collection &collection,
   if ( AkonadiServer::instance()->intervalChecker() ) {
     AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
   }
+  CollectionStatistics::instance()->invalidateCollection(collection);
+
   collectionNotification( NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource );
 }
 
@@ -183,6 +187,8 @@ void NotificationCollector::collectionUnsubscribed( const Collection &collection
   if ( AkonadiServer::instance()->intervalChecker() ) {
     AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
   }
+  CollectionStatistics::instance()->invalidateCollection(collection);
+
   collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
 
@@ -282,6 +288,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
     copy.setParentCollection( iter.key() );
     copy.setResource( resource );
 
+    CollectionStatistics::instance()->invalidateCollection(Collection::retrieveById(iter.key()));
     dispatchNotification( copy );
   }
 
@@ -304,6 +311,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   }
   msg.setResource( res );
 
+  CollectionStatistics::instance()->invalidateCollection(col);
   dispatchNotification( msg );
 }
 

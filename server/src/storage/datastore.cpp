@@ -209,7 +209,7 @@ DataStore *DataStore::self()
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
-                               bool *flagsChanged, bool silent )
+                               bool *flagsChanged, const Collection &col, bool silent )
 {
   QSet<QByteArray> removedFlags;
   QSet<QByteArray> addedFlags;
@@ -258,7 +258,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   }
 
   if ( !silent && ( !addedFlags.isEmpty() || !removedFlags.isEmpty() ) ) {
-    mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
+    mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags, col );
   }
 
   setBoolPtr( flagsChanged, ( addedFlags != removedFlags ) );
@@ -361,7 +361,7 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
 }
 
 bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
-                                  bool *flagsChanged, bool silent )
+                                  bool *flagsChanged, const Collection &col, bool silent )
 {
   QSet<QByteArray> removedFlags;
   QVariantList itemsIds;
@@ -393,7 +393,7 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
   if ( qb.query().numRowsAffected() != 0 ) {
     setBoolPtr( flagsChanged, true );
     if ( !silent ) {
-      mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
+      mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags, col );
     }
   }
 
