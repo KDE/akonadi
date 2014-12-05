@@ -52,21 +52,21 @@ public:
     explicit TagModel(Monitor *recorder, QObject *parent);
     virtual ~TagModel();
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     /*
     virtual Qt::DropActions supportedDropActions() const;
     virtual QMimeData* mimeData( const QModelIndexList &indexes ) const;
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
     */
 
-    virtual QModelIndex parent(const QModelIndex &child) const;
-    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 protected:
     Q_DECLARE_PRIVATE(TagModel)

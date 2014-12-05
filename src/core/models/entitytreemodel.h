@@ -538,27 +538,27 @@ public:
      */
     CollectionFetchStrategy collectionFetchStrategy() const;
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QStringList mimeTypes() const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
 
-    virtual Qt::DropActions supportedDropActions() const;
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
-    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
+    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &index) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     // TODO: Review the implementations of these. I think they could be better.
-    virtual bool canFetchMore(const QModelIndex &parent) const;
-    virtual void fetchMore(const QModelIndex &parent);
-    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+    bool canFetchMore(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    void fetchMore(const QModelIndex &parent) Q_DECL_OVERRIDE;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**
      * Returns whether the collection tree has been fetched at initialisation.

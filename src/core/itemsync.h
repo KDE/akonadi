@@ -226,8 +226,8 @@ Q_SIGNALS:
     void transactionCommitted();
 
 protected:
-    void doStart();
-    void slotResult(KJob *job);
+    void doStart() Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

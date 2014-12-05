@@ -76,8 +76,8 @@ public:
     Collection collection() const;
 
 protected:
-    virtual void doStart();
-    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    virtual void doStart() Q_DECL_OVERRIDE;
+    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(CollectionCreateJob)

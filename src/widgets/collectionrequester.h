@@ -115,7 +115,7 @@ public:
     void changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options);
 
 protected:
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     /**

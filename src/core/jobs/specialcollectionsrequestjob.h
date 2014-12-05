@@ -113,9 +113,9 @@ protected:
     void setIconForTypeMap(const QMap<QByteArray, QString> &map);
 
     /* reimpl */
-    virtual void doStart();
+    virtual void doStart() Q_DECL_OVERRIDE;
     /* reimpl */
-    virtual void slotResult(KJob *job);
+    virtual void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

@@ -52,10 +52,10 @@ public:
      */
     void setCollectionNamespace(const QByteArray &ns);
     QByteArray collectionNamespace() const;
-    virtual QByteArray type() const Q_DECL_OVERRIDE;
-    virtual Attribute *clone() const Q_DECL_OVERRIDE;
-    virtual QByteArray serialized() const Q_DECL_OVERRIDE;
-    virtual void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+    Attribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
