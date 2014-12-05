@@ -130,6 +130,25 @@ class Condition
 
 }; // class Condition
 
+
+class Case
+{
+  friend class Akonadi::Server::QueryBuilder;
+  public:
+    Case(const Condition &when, const QString &then, const QString &elseBranch = QString());
+    Case(const QString &column, Query::CompareOperator op, const QVariant &value, const QString &when, const QString &elseBranch = QString());
+
+    void addCondition(const Condition &when, const QString &then);
+    void addValueCondition(const QString &column, Query::CompareOperator op, const QVariant &value, const QString &then);
+    void addColumnCondition(const QString &column, Query::CompareOperator op, const QString &column2, const QString &then);
+
+    void setElse(const QString &elseBranch);
+
+  private:
+    QVector<QPair<Condition, QString> > mWhenThen;
+    QString mElse;
+};
+
 } // namespace Query
 } // namespace Server
 } // namespace Akonadi

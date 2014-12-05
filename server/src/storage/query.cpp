@@ -68,3 +68,41 @@ void Query::Condition::addCondition( const Condition &condition )
 {
   mSubConditions << condition;
 }
+
+
+Case::Case(const Condition &when, const QString &then, const QString &elseBranch)
+{
+    addCondition(when, then);
+    setElse(elseBranch);
+}
+
+Case::Case(const QString &column, CompareOperator op, const QVariant &value, const QString &when, const QString &elseBranch)
+{
+    addValueCondition(column, op, value, when);
+    setElse(elseBranch);
+}
+
+void Case::addCondition(const Condition &when, const QString &then)
+{
+    mWhenThen.append(qMakePair(when, then));
+}
+
+void Case::addValueCondition(const QString &column, CompareOperator op, const QVariant &value, const QString &then)
+{
+    Condition when;
+    when.addValueCondition(column, op, value);
+    addCondition(when, then);
+}
+
+void Case::addColumnCondition(const QString &column, CompareOperator op, const QString &column2, const QString &then)
+{
+    Condition when;
+    when.addColumnCondition(column, op, column2);
+    addCondition(when, then);
+}
+
+void Case::setElse(const QString &elseBranch)
+{
+    mElse = elseBranch;
+}
+
