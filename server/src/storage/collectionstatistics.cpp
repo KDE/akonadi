@@ -52,7 +52,7 @@ const CollectionStatistics::Statistics& CollectionStatistics::statistics(const C
 {
     QMutexLocker lock(&mCacheLock);
     auto it = mCache.find(col.id());
-    if (it == mCache.constEnd()) {
+    if (it == mCache.end()) {
         it = mCache.insert(col.id(), getCollectionStatistics(col));
     }
     return it.value();
