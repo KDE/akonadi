@@ -35,6 +35,7 @@
 #include "utils.h"
 #include "debuginterface.h"
 #include "storage/itemretrievalthread.h"
+#include "storage/collectionstatistics.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
 #include "search/searchtaskmanagerthread.h"
@@ -169,6 +170,8 @@ bool AkonadiServer::init()
     new DebugInterface( this );
     ResourceManager::self();
 
+    CollectionStatistics::self();
+
     // Initialize the preprocessor manager
     PreprocessorManager::init();
 
@@ -193,7 +196,6 @@ bool AkonadiServer::init()
 
     mAgentSearchManagerThread = new SearchTaskManagerThread( this );
     mAgentSearchManagerThread->start();
-
 
     const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
                                                        QStringList() << QLatin1String( "Nepomuk" )

@@ -50,7 +50,7 @@ public:
         qint64 read;
     };
 
-    static CollectionStatistics* instance();
+    static CollectionStatistics* self();
 
     const Statistics& statistics(const Collection &col);
     void invalidateCollection(const Collection &col);

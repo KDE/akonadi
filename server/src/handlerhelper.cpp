@@ -166,7 +166,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   b += " " AKONADI_PARAM_VIRTUAL " " + QByteArray::number( col.isVirtual() ) + ' ';
 
   if ( includeStatistics ) {
-    const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
+    const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
     if (stats.count > -1) {
       b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number( stats.count ) + ' ';
       b += AKONADI_ATTRIBUTE_UNSEEN " ";

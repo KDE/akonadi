@@ -31,14 +31,11 @@ using namespace Akonadi::Server;
 
 CollectionStatistics *CollectionStatistics::sInstance = 0;
 
-CollectionStatistics* CollectionStatistics::instance()
+CollectionStatistics* CollectionStatistics::self()
 {
-    static QMutex lock;
-    lock.lock();
     if (sInstance == 0) {
         sInstance = new CollectionStatistics();
     }
-    lock.unlock();
     return sInstance;
 }
 
@@ -60,11 +57,8 @@ const CollectionStatistics::Statistics& CollectionStatistics::statistics(const C
 
 CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(const Collection &col)
 {
-    QueryBuilder qb(PimItem::tableName());
     // COUNT(DISTINCT PimItemTable.id)
-    qb.addAggregation(QString::fromLatin1("DISTINCT %1")
-                          .arg(PimItem::idFullColumnName()),
-                      QLatin1String("count"));
+    CountQueryBuilder qb(PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct);
     // SUM(PimItemTable.size)
     qb.addAggregation(PimItem::sizeFullColumnName(), QLatin1String("sum"));
     // SUM(CASE WHEN FlagTable.name IN ('\SEEN', '$IGNORED') THEN 1 ELSE 0 END)

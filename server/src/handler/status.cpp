@@ -63,7 +63,7 @@ bool Status::parseStream()
     // Responses:
     // REQUIRED untagged responses: STATUS
 
-  const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
+  const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
   if (stats.count == -1) {
       return failureResponse( "Failed to query statistics." );
   }

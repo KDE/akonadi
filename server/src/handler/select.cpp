@@ -97,7 +97,7 @@ bool Select::parseStream()
     response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String( " " ) ).toLatin1() + ")" );
     Q_EMIT responseAvailable( response );
 
-    const CollectionStatistics::Statistics stats = CollectionStatistics::instance()->statistics(col);
+    const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
     if ( stats.count == -1 ) {
       return failureResponse( "Unable to determine item count" );
     }
