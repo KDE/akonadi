@@ -349,6 +349,12 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
             return true;
         }
 
+        if (notification.itemParts().contains("REFERENCED")) {
+            //When we dereference a collection, we have to inform the session about it.
+            //We don't know which session, so we inform all.
+            return true;
+        }
+
         // Now let's see if the collection is referenced - then we still might need
         // to accept it
         Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
