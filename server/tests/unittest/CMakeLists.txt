@@ -77,3 +77,5 @@ add_server_test(listhandlertest.cpp akonadiprivate)
 add_server_test(modifyhandlertest.cpp akonadiprivate)
 add_server_test(createhandlertest.cpp akonadiprivate)
 add_server_test(collectionreferencetest.cpp akonadiprivate)
+
+add_server_test(searchtest.cpp akonadiprivate)

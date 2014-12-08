@@ -296,7 +296,7 @@ void SearchManager::updateSearchImpl( const Collection &collection, QWaitConditi
   }
 
   if ( recursive ) {
-    queryCollections = SearchHelper::listCollectionsRecursive( queryAncestors, queryMimeTypes );
+    queryCollections = SearchHelper::matchSubcollectionsByMimeType( queryAncestors, queryMimeTypes );
   } else {
     queryCollections = queryAncestors;
   }

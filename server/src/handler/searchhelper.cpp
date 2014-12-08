@@ -20,6 +20,7 @@
 
 #include "searchhelper.h"
 #include "storage/countquerybuilder.h"
+#include <storage/queryhelper.h>
 #include "entities.h"
 
 #include <libs/protocol_p.h>
@@ -89,55 +90,77 @@ QString SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start
 }
 
 
-QVector<qint64> SearchHelper::listCollectionsRecursive( const QVector<qint64> &ancestors, const QStringList &mimeTypes )
+static qint64 parentCollectionId(qint64 collectionId)
 {
-  QVector<qint64> recursiveChildren;
-  Q_FOREACH ( qint64 ancestor, ancestors ) {
-    QVector<qint64> searchChildren;
-
-    { // Free the query before entering recursion to prevent too many opened connections
-
-      Query::Condition mimeTypeCondition;
-      mimeTypeCondition.addColumnCondition( CollectionMimeTypeRelation::rightFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-      // Exclude top-level collections and collections that cannot have items!
-      mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::NotEquals, QLatin1String( "inode/directory" ) );
-      if ( !mimeTypes.isEmpty() ) {
-        mimeTypeCondition.addValueCondition( MimeType::nameFullColumnName(), Query::In, mimeTypes );
-      }
-
-      CountQueryBuilder qb( Collection::tableName(), MimeType::nameFullColumnName(), CountQueryBuilder::All );
-      qb.addColumn( Collection::idFullColumnName() );
-      qb.addJoin( QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName() );
-      qb.addJoin( QueryBuilder::LeftJoin, MimeType::tableName(), mimeTypeCondition );
-      if ( ancestor == 0 ) {
-        qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
-      } else {
-        // Also include current ancestor's result, so that we know whether we should search in the ancestor too
-        Query::Condition idCond( Query::Or );
-        idCond.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, ancestor );
-        idCond.addValueCondition( Collection::idFullColumnName(), Query::Equals, ancestor );
-        qb.addCondition( idCond );
-      }
-      qb.addValueCondition( Collection::isVirtualFullColumnName(), Query::Equals, false );
-      qb.addGroupColumn( Collection::idFullColumnName() );
-      qb.exec();
-
-      QSqlQuery query = qb.query();
-      while ( query.next() ) {
-        const qint64 id = query.value( 1 ).toLongLong();
-        // Don't add ancestor into search children, we are resolving it right now
-        if ( id != ancestor ) {
-          searchChildren << id;
-        }
-        if ( query.value( 0 ).toInt() > 0 ) { // count( mimeTypeTable.name ) > 0
-          recursiveChildren << id;
-        }
-      }
+    QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
+    qb.addColumn(Collection::parentIdColumn());
+    qb.addValueCondition(Collection::idColumn(), Query::Equals, collectionId);
+    if (!qb.exec()) {
+        return -1;
     }
-    if ( !searchChildren.isEmpty() ) {
-      recursiveChildren << listCollectionsRecursive( searchChildren, mimeTypes );
+    if (!qb.query().next()) {
+        return -1;
     }
-  }
+    return qb.query().value(0).toLongLong();
+}
 
-  return recursiveChildren;
+
+QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64> &ancestors, const QStringList &mimeTypes)
+{
+    // Get all collections with given mime types
+    QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
+    qb.setDistinct(true);
+    qb.addColumn(Collection::idFullColumnName());
+    qb.addColumn(Collection::parentIdFullColumnName());
+    qb.addJoin(QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(),
+               CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName());
+    qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(),
+               CollectionMimeTypeRelation::rightFullColumnName(), MimeType::idFullColumnName());
+    Query::Condition cond(Query::Or);
+    Q_FOREACH (const QString &mt, mimeTypes) {
+        cond.addValueCondition(MimeType::nameFullColumnName(), Query::Equals, mt);
+    }
+    qb.addCondition(cond);
+
+    if (!qb.exec()) {
+        qWarning() << "Failed to query search collections";
+        return QVector<qint64>();
+    }
+
+    QMap<qint64 /* parentId */, QVector<qint64> /* collectionIds */> candidateCollections;
+    while (qb.query().next()) {
+        candidateCollections[qb.query().value(1).toLongLong()].append(qb.query().value(0).toLongLong());
+    }
+
+    // If the ancestors list contains root, then return what we got, since everything
+    // is sub collection of root
+    QVector<qint64> results;
+    if (ancestors.contains(0)) {
+        Q_FOREACH (const QVector<qint64> &res, candidateCollections.values()) {
+            results += res;
+        }
+        return results;
+    }
+
+    // Try to resolve direct descendants
+    Q_FOREACH (qint64 ancestor, ancestors) {
+        const QVector<qint64> cols = candidateCollections.take(ancestor);
+        if (!cols.isEmpty()) {
+            results += cols;
+        }
+    }
+
+    for (auto iter = candidateCollections.begin(); iter != candidateCollections.end(); ++iter) {
+        // Traverse the collection chain up to root
+        qint64 parentId = iter.key();
+        while (!ancestors.contains(parentId) && parentId > 0) {
+            parentId = parentCollectionId(parentId);
+        }
+        // Ok, we found a requested ancestor in the parent chain
+        if (parentId > 0) {
+            results += iter.value();
+        }
+    }
+
+    return results;
 }
