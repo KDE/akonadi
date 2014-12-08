@@ -220,7 +220,8 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   setBoolPtr( flagsChanged, false );
 
   Q_FOREACH ( const PimItem &item, items ) {
-    Q_FOREACH ( const Flag &flag, item.flags() ) {
+    const Flag::List itemFlags = item.flags();
+    Q_FOREACH ( const Flag &flag, itemFlags ) {
       if ( !flags.contains( flag ) ) {
         removedFlags << flag.name().toLatin1();
         Query::Condition cond;
@@ -231,7 +232,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
     }
 
     Q_FOREACH ( const Flag &flag, flags ) {
-      if ( !item.flags().contains( flag ) ) {
+      if ( !itemFlags.contains( flag ) ) {
         addedFlags << flag.name().toLatin1();
         insIds << item.id();
         insFlags << flag.id();
@@ -414,7 +415,8 @@ bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags,
   setBoolPtr( tagsChanged, false );
 
   Q_FOREACH ( const PimItem &item, items ) {
-    Q_FOREACH ( const Tag &tag, item.tags() ) {
+    const Tag::List itemTags = item.tags();
+    Q_FOREACH ( const Tag &tag, itemTags ) {
       if ( !tags.contains( tag ) ) {
         // Remove tags from items that had it set
         removedTags << tag.id();
@@ -426,7 +428,7 @@ bool DataStore::setItemsTags( const PimItem::List &items, const Tag::List &tags,
     }
 
     Q_FOREACH ( const Tag &tag, tags ) {
-      if ( !item.tags().contains( tag ) ) {
+      if ( !itemTags.contains( tag ) ) {
         // Add tags to items that did not have the tag
         addedTags << tag.id();
         insIds << item.id();
