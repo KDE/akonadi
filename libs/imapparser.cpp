@@ -364,7 +364,8 @@ int ImapParser::parseNumber( const QByteArray &data, qint64 &result, bool *ok, i
 QByteArray ImapParser::quote( const QByteArray &data )
 {
   if ( data.isEmpty() ) {
-    return QByteArray( "\"\"" );
+    static const QByteArray empty( "\"\"" );
+    return empty;
   }
 
   const int inputLength = data.length();
@@ -499,7 +500,7 @@ int ImapParser::parseDateTime( const QByteArray &data, QDateTime &dateTime, int 
   }
 
   pos += 3;
-  const QByteArray shortMonthNames( "janfebmaraprmayjunjulaugsepoctnovdec" );
+  static const QByteArray shortMonthNames( "janfebmaraprmayjunjulaugsepoctnovdec" );
   int month = shortMonthNames.indexOf( data.mid( pos, 3 ).toLower() );
   if ( month == -1 ) {
     return start;
