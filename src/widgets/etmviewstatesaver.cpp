@@ -66,11 +66,11 @@ QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
     }
     const Collection c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
     if (c.isValid()) {
-        return QString::fromLatin1("c%1").arg(c.id());
+        return QStringLiteral("c%1").arg(c.id());
     }
     Entity::Id id = index.data(EntityTreeModel::ItemIdRole).value<Entity::Id>();
     if (id >= 0) {
-        return QString::fromLatin1("i%1").arg(id);
+        return QStringLiteral("i%1").arg(id);
     }
     return QString();
 }
@@ -79,7 +79,7 @@ void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List &list)
 {
     QStringList colStrings;
     foreach (const Collection &col, list) {
-        colStrings << QString::fromLatin1("c%1").arg(col.id());
+        colStrings << QStringLiteral("c%1").arg(col.id());
     }
     restoreSelection(colStrings);
 }
@@ -88,7 +88,7 @@ void ETMViewStateSaver::selectCollections(const QList< Collection::Id > &list)
 {
     QStringList colStrings;
     foreach (const Collection::Id &colId, list) {
-        colStrings << QString::fromLatin1("c%1").arg(colId);
+        colStrings << QStringLiteral("c%1").arg(colId);
     }
     restoreSelection(colStrings);
 }
@@ -97,7 +97,7 @@ void ETMViewStateSaver::selectItems(const Akonadi::Item::List &list)
 {
     QStringList itemStrings;
     foreach (const Item &item, list) {
-        itemStrings << QString::fromLatin1("i%1").arg(item.id());
+        itemStrings << QStringLiteral("i%1").arg(item.id());
     }
     restoreSelection(itemStrings);
 }
@@ -106,7 +106,7 @@ void ETMViewStateSaver::selectItems(const QList< Item::Id > &list)
 {
     QStringList itemStrings;
     foreach (const Item::Id &itemId, list) {
-        itemStrings << QString::fromLatin1("i%1").arg(itemId);
+        itemStrings << QStringLiteral("i%1").arg(itemId);
     }
     restoreSelection(itemStrings);
 }

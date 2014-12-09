@@ -40,7 +40,7 @@ public:
 
     virtual QString jobDebuggingString() const
     {
-        return QString::fromLatin1("Collection Id %1").arg(mCollection.id());
+        return QStringLiteral("Collection Id %1").arg(mCollection.id());
     }
 
     Collection mCollection;

@@ -121,7 +121,7 @@ Tag Tag::fromUrl(const QUrl &url)
 QUrl Tag::url() const
 {
     QUrl url;
-    url.setScheme(QString::fromLatin1("akonadi"));
+    url.setScheme(QStringLiteral("akonadi"));
     url.addQueryItem(QStringLiteral("tag"), QString::number(id()));
     return url;
 }

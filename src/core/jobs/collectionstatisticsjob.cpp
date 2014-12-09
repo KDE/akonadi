@@ -37,7 +37,7 @@ public:
     }
 
     QString jobDebuggingString() const { /*Q_DECL_OVERRIDE*/
-        return QString::fromLatin1("Collection Id %1").arg(mCollection.id());
+        return QStringLiteral("Collection Id %1").arg(mCollection.id());
     }
 
     Collection mCollection;
