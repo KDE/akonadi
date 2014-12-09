@@ -21,8 +21,6 @@
 
 using namespace Akonadi;
 
-static const char s_accessRightsIdentifier[] = "AccessRights";
-
 static Collection::Rights dataToRights(const QByteArray &data)
 {
     Collection::Rights rights = Collection::ReadOnly;
@@ -142,6 +140,7 @@ CollectionRightsAttribute *CollectionRightsAttribute::clone() const
 
 QByteArray CollectionRightsAttribute::type() const
 {
+    static const QByteArray s_accessRightsIdentifier("AccessRights");
     return s_accessRightsIdentifier;
 }
 

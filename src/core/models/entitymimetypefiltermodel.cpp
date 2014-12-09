@@ -108,20 +108,20 @@ bool EntityMimeTypeFilterModel::filterAcceptsRow(int sourceRow, const QModelInde
     Q_D(const EntityMimeTypeFilterModel);
     const QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
 
-    const Akonadi::Item item = idx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
-
-    if (item.isValid() && !item.hasPayload()) {
-        qDebug() << "Item " << item.id() << " doesn't have payload";
-        return false;
-    }
-
     const QString rowMimetype = idx.data(EntityTreeModel::MimeTypeRole).toString();
 
     if (d->excludedMimeTypes.contains(rowMimetype)) {
         return false;
     }
-    if (d->includedMimeTypes.isEmpty() ||
-        d->includedMimeTypes.contains(rowMimetype)) {
+
+    if (d->includedMimeTypes.isEmpty() || d->includedMimeTypes.contains(rowMimetype)) {
+        const Akonadi::Item item = idx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+        if (item.isValid() && !item.hasPayload()) {
+            qDebug() << "Item " << item.id() << " doesn't have payload";
+            return false;
+        }
+
         return true;
     }
 
