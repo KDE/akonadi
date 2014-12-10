@@ -117,6 +117,7 @@ class NotificationSource : public QObject
     Q_SCRIPTABLE QStringList monitoredMimeTypes() const;
     Q_SCRIPTABLE void setAllMonitored( bool allMonitored );
     Q_SCRIPTABLE bool isAllMonitored() const;
+    Q_SCRIPTABLE void setSession( const QByteArray &sessionId );
     Q_SCRIPTABLE void setIgnoredSession( const QByteArray &sessionId, bool ignored );
     Q_SCRIPTABLE QVector<QByteArray> ignoredSessions() const;
     Q_SCRIPTABLE void setMonitoredType( NotificationMessageV2::Type type, bool monitored );
@@ -164,6 +165,7 @@ class NotificationSource : public QObject
     QSet<QString> mMonitoredMimeTypes;
     QSet<QByteArray> mMonitoredResources;
     QSet<QByteArray> mIgnoredSessions;
+    QByteArray mSession;
 
 }; // class NotificationSource
 

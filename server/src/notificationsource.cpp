@@ -259,6 +259,17 @@ bool NotificationSource::isAllMonitored() const
   return mAllMonitored;
 }
 
+void NotificationSource::setSession(const QByteArray &sessionId)
+{
+    if (!isServerSideMonitorEnabled()) {
+        return;
+    }
+
+    if (mSession != sessionId) {
+        mSession = sessionId;
+    }
+}
+
 void NotificationSource::setIgnoredSession( const QByteArray &sessionId, bool ignored )
 {
   if ( !isServerSideMonitorEnabled() ) {
@@ -351,15 +362,19 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
 
         if (notification.itemParts().contains("REFERENCED")) {
             //When we dereference a collection, we have to inform the session about it.
-            //We don't know which session, so we inform all.
+            //The reference manager no longer holds a reference, so we can't check that.
+            //We also don't know which session, so we inform all.
             return true;
         }
 
-        // Now let's see if the collection is referenced - then we still might need
-        // to accept it
         Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+          //Deliver the notification if referenced from this session
+          if ( CollectionReferenceManager::instance()->isReferenced( entity.id, mSession ) ) {
+            return true;
+          }
+          //Exclusive subscribers still want the notification
           if ( CollectionReferenceManager::instance()->isReferenced( entity.id ) ) {
-            return ( mExclusive || isCollectionMonitored( entity.id ) );
+            return mExclusive;
           }
         }
 

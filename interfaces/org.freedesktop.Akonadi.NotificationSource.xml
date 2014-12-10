@@ -114,6 +114,10 @@
     </method>
     <signal name="ignoredSessionsChanged"/>
 
+    <method name="setSession">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QByteArray &amp;"/>
+      <arg name="session" type="ay" direction="in"/>
+    </method>
   </interface>
 </node>
 
