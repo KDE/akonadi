@@ -787,7 +787,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
     }
 
     if (m_listFilter == CollectionFetchScope::Enabled) {
-        if (!collection.enabled()) {
+        if (!collection.enabled() && !collection.referenced()) {
             return false;
         }
     } else if (m_listFilter == CollectionFetchScope::Display) {
