@@ -235,20 +235,6 @@ public:
     CollectionFetchScope &ancestorFetchScope();
 
     /**
-     * Sets wether all attributes should be retrieved (true by default).
-     * 
-     * This is currently only supported for ancestors.
-     */
-    void setFetchAllAttribute(bool fetchAll = true);
-
-    /**
-     * Returns wether all attributes should be retrieved (true by default).
-     * 
-     * This is currently only supported for ancestors.
-     */
-    bool fetchAllAttributes() const;
-
-    /**
      * Returns all explicitly fetched attributes.
      *
      * Undefined if fetchAllAttributes() returns true.
