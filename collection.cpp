@@ -321,7 +321,7 @@ Collection::ListPreference Collection::localListPreference(Collection::ListPurpo
 bool Collection::shouldList(Collection::ListPurpose purpose) const
 {
     if (localListPreference(purpose) == ListDefault) {
-        return enabled();
+        return enabled() || referenced();
     }
     return (localListPreference(purpose) == ListEnabled);
 }
