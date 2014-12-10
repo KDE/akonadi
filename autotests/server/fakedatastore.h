@@ -43,6 +43,7 @@ public:
     virtual bool setItemsFlags(const PimItem::List &items,
                                const QVector<Flag> &flags,
                                bool *flagsChanged = 0,
+                               const Collection &col = Collection(),
                                bool silent = false);
     virtual bool appendItemsFlags(const PimItem::List &items,
                                   const QVector<Flag> &flags,
@@ -53,6 +54,7 @@ public:
     virtual bool removeItemsFlags(const PimItem::List &items,
                                   const QVector<Flag> &flags,
                                   bool *flagsChanged = 0,
+                                  const Collection &col = Collection(),
                                   bool silent = false);
 
     virtual bool setItemsTags(const PimItem::List &items,

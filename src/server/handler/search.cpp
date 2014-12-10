@@ -93,9 +93,7 @@ bool Search::parseStream()
         }
 
         if (recursive) {
-            Q_FOREACH (qint64 collection, collectionIds) {
-                collections << SearchHelper::listCollectionsRecursive(QVector<qint64>() << collection, mimeTypes);
-            }
+            collections << SearchHelper::matchSubcollectionsByMimeType(collectionIds, mimeTypes);
         } else {
             collections = collectionIds;
         }

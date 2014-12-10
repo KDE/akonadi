@@ -217,6 +217,41 @@ void QueryBuilderTest::testQueryBuilder_data()
     }
 
     {
+        /// SELECT with CASE
+        QueryBuilder qbTpl = QueryBuilder("table1", QueryBuilder::Select);
+        qbTpl.setDatabaseType(DbType::MySQL);
+
+        QueryBuilder qb = qbTpl;
+        qb.addColumn("col");
+        qb.addColumn(Query::Case("col1", Query::Greater, 42, "1", "0"));
+        bindVals.clear();
+        bindVals << 42;
+        mBuilders << qb;
+        QTest::newRow("select case simple") << mBuilders.count()
+                                            << QString("SELECT col, CASE WHEN ( col1 > :0 ) THEN 1 ELSE 0 END FROM table1") << bindVals;
+
+        qb = qbTpl;
+        qb.addAggregation("table1.col1", "sum");
+        qb.addAggregation("table1.col2", "count");
+        Query::Condition cond(Query::Or);
+        cond.addValueCondition("table3.col2", Query::Equals, "value1");
+        cond.addValueCondition("table3.col2", Query::Equals, "value2");
+        Query::Case caseStmt(cond, "1", "0");
+        qb.addAggregation(caseStmt, "sum");
+        qb.addJoin(QueryBuilder::LeftJoin, "table2", "table1.col3", "table2.col1");
+        qb.addJoin(QueryBuilder::LeftJoin, "table3", "table2.col2", "table3.col1");
+        bindVals.clear();
+        bindVals << QString("value1") << QString("value2");
+        mBuilders <<qb;
+        QTest::newRow("select case, aggregation and joins") << mBuilders.count()
+                                                            << QString("SELECT sum(table1.col1), count(table1.col2), sum(CASE WHEN ( table3.col2 = :0 OR table3.col2 = :1 ) THEN 1 ELSE 0 END) "
+                                                                       "FROM table1 "
+                                                                       "LEFT JOIN table2 ON ( table1.col3 = table2.col1 ) "
+                                                                       "LEFT JOIN table3 ON ( table2.col2 = table3.col1 )")
+                                                            << bindVals;
+    }
+
+    {
         /// UPDATE with INNER JOIN
         QueryBuilder qbTpl = QueryBuilder("table1", QueryBuilder::Update);
         qbTpl.setColumnValue("col", 42);

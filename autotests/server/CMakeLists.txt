@@ -91,11 +91,11 @@ add_server_test(parttypehelpertest.cpp)
 
 if (SQLITE_FOUND) # tests using the fake server need the QSQLITE3 plugin
 add_server_test(partstreamertest.cpp)
-
 add_server_test(akappendhandlertest.cpp)
 add_server_test(linkhandlertest.cpp)
 add_server_test(listhandlertest.cpp)
 add_server_test(modifyhandlertest.cpp)
 add_server_test(createhandlertest.cpp)
 add_server_test(collectionreferencetest.cpp)
+add_server_test(searchtest.cpp akonadiprivate)
 endif()

@@ -289,10 +289,11 @@ void SearchManager::updateSearchImpl(const Collection &collection, QWaitConditio
     }
 
     if (recursive) {
-        queryCollections = SearchHelper::listCollectionsRecursive(queryAncestors, queryMimeTypes);
+        queryCollections = SearchHelper::matchSubcollectionsByMimeType(queryAncestors, queryMimeTypes);
     } else {
         queryCollections = queryAncestors;
     }
+
 
     //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
     if (queryCollections.isEmpty()) {

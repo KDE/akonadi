@@ -94,6 +94,28 @@ private Q_SLOTS:
             ImapParser::parseParenthesizedList(data, result, 0);
         }
     }
+
+    void parseNumber()
+    {
+      QByteArray data( "123456" );
+      qint64 result;
+      bool ok = false;
+      QBENCHMARK {
+        ImapParser::parseNumber( data, result, &ok );
+      }
+      QVERIFY(ok);
+      QCOMPARE(result, qint64(123456));
+    }
+
+    void parseDateTime()
+    {
+      QByteArray data( "28-May-2006 01:03:35 +0000" );
+      QDateTime result;
+      QBENCHMARK {
+        ImapParser::parseDateTime( data, result );
+      }
+      QCOMPARE(result.toString( QString::fromUtf8( "dd-MMM-yyyy hh:mm:ss +0000" ) ), QString::fromUtf8( data ));
+    }
 };
 
 #include "imapparserbenchmark.moc"

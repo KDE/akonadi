@@ -99,7 +99,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     static void addToCache( const <xsl:value-of select="$className"/> &amp; entry );
 
     // cache
-    static bool cacheEnabled;
+    static QAtomicInt cacheEnabled;
     static QMutex cacheMutex;
     <xsl:if test="column[@name = 'id']">
     static QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; idCache;
@@ -111,7 +111,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
 
 
 // static members
-bool <xsl:value-of select="$className"/>::Private::cacheEnabled = false;
+QAtomicInt <xsl:value-of select="$className"/>::Private::cacheEnabled(0);
 QMutex <xsl:value-of select="$className"/>::Private::cacheMutex;
 <xsl:if test="column[@name = 'id']">
 QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::idCache;
@@ -125,14 +125,21 @@ void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-
 {
   Q_ASSERT( cacheEnabled );
   Q_UNUSED( entry ); <!-- in case the table has neither an id nor name column -->
-  cacheMutex.lock();
+  QMutexLocker lock(&amp;cacheMutex);
   <xsl:if test="column[@name = 'id']">
   idCache.insert( entry.id(), entry );
   </xsl:if>
   <xsl:if test="column[@name = 'name']">
+    <xsl:choose>
+     <xsl:when test="$className = 'PartType'">
+      <!-- special case for PartType, which is identified as "NS:NAME" -->
+  nameCache.insert( entry.ns() + QLatin1Char(':') + entry.name(), entry );
+      </xsl:when>
+      <xsl:otherwise>
   nameCache.insert( entry.name(), entry );
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:if>
-  cacheMutex.unlock();
 }
 
 
@@ -264,12 +271,10 @@ int <xsl:value-of select="$className"/>::count( const QString &amp;column, const
 bool <xsl:value-of select="$className"/>::exists( qint64 id )
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     if ( Private::idCache.contains( id ) ) {
-      Private::cacheMutex.unlock();
       return true;
     }
-    Private::cacheMutex.unlock();
   }
   return count( idColumn(), id ) > 0;
 }
@@ -278,12 +283,10 @@ bool <xsl:value-of select="$className"/>::exists( qint64 id )
 bool <xsl:value-of select="$className"/>::exists( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name )
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     if ( Private::nameCache.contains( name ) ) {
-      Private::cacheMutex.unlock();
       return true;
     }
-    Private::cacheMutex.unlock();
   }
   return count( nameColumn(), name ) > 0;
 }
@@ -328,11 +331,24 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
 }
 
 </xsl:if>
-<xsl:if test="column[@name = 'name']">
+<xsl:if test="column[@name = 'name'] and $className != 'PartType'">
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveByName( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name )
 {
   <xsl:call-template name="data-retrieval">
   <xsl:with-param name="key">name</xsl:with-param>
+  <xsl:with-param name="cache">nameCache</xsl:with-param>
+  </xsl:call-template>
+}
+</xsl:if>
+
+<xsl:if test="column[@name = 'name'] and $className = 'PartType'">
+<xsl:text>PartType PartType::retrieveByFQName( const QString &amp; ns, const QString &amp; name )</xsl:text>
+{
+  const QString fqname = ns + QLatin1Char(':') + name;
+  <xsl:call-template name="data-retrieval">
+  <xsl:with-param name="key">ns</xsl:with-param>
+  <xsl:with-param name="key2">name</xsl:with-param>
+  <xsl:with-param name="lookupKey">fqname</xsl:with-param>
   <xsl:with-param name="cache">nameCache</xsl:with-param>
   </xsl:call-template>
 }
@@ -588,28 +604,34 @@ bool <xsl:value-of select="$className"/>::remove( qint64 id )
 void <xsl:value-of select="$className"/>::invalidateCache() const
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     <xsl:if test="column[@name = 'id']">
     Private::idCache.remove( id() );
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
+      <xsl:choose>
+        <xsl:when test="$className = 'PartType'">
+        <!-- Special handling for PartType, which is identified as "NS:NAME" -->
+    Private::nameCache.remove( ns() + QLatin1Char(':') + name() );
+        </xsl:when>
+        <xsl:otherwise>
     Private::nameCache.remove( name() );
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
-    Private::cacheMutex.unlock();
   }
 }
 
 void <xsl:value-of select="$className"/>::invalidateCompleteCache()
 {
   if ( Private::cacheEnabled ) {
-    Private::cacheMutex.lock();
+    QMutexLocker lock(&amp;Private::cacheMutex);
     <xsl:if test="column[@name = 'id']">
     Private::idCache.clear();
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     Private::nameCache.clear();
     </xsl:if>
-    Private::cacheMutex.unlock();
   }
 }
 

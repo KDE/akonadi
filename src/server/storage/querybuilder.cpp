@@ -456,9 +456,25 @@ void QueryBuilder::addColumn(const QString &col)
     mColumns << col;
 }
 
+void QueryBuilder::addColumn(const Query::Case &caseStmt)
+{
+    QString query;
+    buildCaseStatement(&query, caseStmt);
+    mColumns.append(query);
+}
+
 void QueryBuilder::addAggregation(const QString &col, const QString &aggregate)
 {
     mColumns.append(aggregate + QLatin1Char('(') + col + QLatin1Char(')'));
+}
+
+void QueryBuilder::addAggregation(const Query::Case &caseStmt, const QString &aggregate)
+{
+    QString query(aggregate + QLatin1Char('('));
+    buildCaseStatement(&query, caseStmt);
+    query += QLatin1Char(')');
+
+    mColumns.append(query);
 }
 
 void QueryBuilder::bindValue(QString *query, const QVariant &value)
@@ -507,6 +523,20 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
             *query += cond.mComparedColumn;
         }
     }
+}
+
+void QueryBuilder::buildCaseStatement(QString *query, const Query::Case &caseStmt)
+{
+    *query += QLatin1String("CASE ");
+    for (const auto whenThen : caseStmt.mWhenThen) {
+        *query += QLatin1String("WHEN ");
+        buildWhereCondition(query, whenThen.first);    // When
+        *query += QLatin1String(" THEN ") + whenThen.second; // then
+    }
+    if (!caseStmt.mElse.isEmpty()) {
+        *query += QLatin1String(" ELSE ") + caseStmt.mElse;
+    }
+    *query += QLatin1String(" END");
 }
 
 void QueryBuilder::setSubQueryMode(Query::LogicOperator op, ConditionType type)

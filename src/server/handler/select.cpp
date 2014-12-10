@@ -27,6 +27,7 @@
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/collectionstatistics.h"
 #include "commandcontext.h"
 
 #include "response.h"
@@ -96,19 +97,14 @@ bool Select::parseStream()
         response.setString("FLAGS (" + Flag::joinByName(Flag::retrieveAll(), QLatin1String(" ")).toLatin1() + ")");
         Q_EMIT responseAvailable(response);
 
-        const int itemCount = HandlerHelper::itemCount(col);
-        if (itemCount < 0) {
+        const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
+        if (stats.count == -1) {
             return failureResponse("Unable to determine item count");
         }
-        response.setString(QByteArray::number(itemCount) + " EXISTS");
+        response.setString(QByteArray::number(stats.count) + " EXISTS");
         Q_EMIT responseAvailable(response);
 
-        int readCount = HandlerHelper::itemWithFlagsCount(col, QStringList() << QLatin1String(AKONADI_FLAG_SEEN)
-                                                          << QLatin1String(AKONADI_FLAG_IGNORED));
-        if (readCount < 0 || itemCount < readCount) {
-            return failureResponse("Unable to retrieve unseen count");
-        }
-        response.setString("OK [UNSEEN " + QByteArray::number(itemCount - readCount) + "] Message 0 is first unseen");
+        response.setString("OK [UNSEEN " + QByteArray::number(stats.count - stats.read) + "] Message 0 is first unseen");
         Q_EMIT responseAvailable(response);
     }
 

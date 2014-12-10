@@ -95,6 +95,7 @@ set(libakonadiserver_SRCS
     search/searchmanager.cpp
 
     storage/collectionqueryhelper.cpp
+    storage/collectionstatistics.cpp
     storage/entity.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/akonadischema.cpp

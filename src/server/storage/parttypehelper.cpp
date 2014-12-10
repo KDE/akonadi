@@ -38,7 +38,7 @@ QPair< QString, QString > PartTypeHelper::parseFqName(const QString &fqName)
 PartType PartTypeHelper::fromFqName(const QString &fqName)
 {
     const QPair<QString, QString> p = parseFqName(fqName);
-    return fromName(p.first, p.second);
+    return fromFqName(p.first, p.second);
 }
 
 PartType PartTypeHelper::fromFqName(const QByteArray &fqName)
@@ -46,35 +46,17 @@ PartType PartTypeHelper::fromFqName(const QByteArray &fqName)
     return fromFqName(QLatin1String(fqName));
 }
 
-PartType PartTypeHelper::fromName(const QString &ns, const QString &typeName)
+PartType PartTypeHelper::fromFqName(const QString& ns, const QString& name)
 {
-    SelectQueryBuilder<PartType> qb;
-    qb.addValueCondition(PartType::nsColumn(), Query::Equals, ns);
-    qb.addValueCondition(PartType::nameColumn(), Query::Equals, typeName);
-    if (!qb.exec()) {
-        throw PartTypeException("Unable to query part type table.");
+    PartType partType = PartType::retrieveByFQName(ns, name);
+    if (!partType.isValid()) {
+        PartType pt(name, ns);
+        if (!pt.insert()) {
+            throw PartTypeException( "Failed to append part type" );
+        }
+        partType = pt;
     }
-    const PartType::List result = qb.result();
-    if (result.size() == 1) {
-        return result.first();
-    }
-    if (result.size() > 1) {
-        throw PartTypeException("Part type uniqueness constraint violation.");
-    }
-
-    // doesn't exist yet, so let's create a new one
-    PartType type;
-    type.setName(typeName);
-    type.setNs(ns);
-    if (!type.insert()) {
-        throw PartTypeException("Creating a new part type failed.");
-    }
-    return type;
-}
-
-PartType PartTypeHelper::fromName(const char *ns, const char *typeName)
-{
-    return fromName(QLatin1String(ns), QLatin1String(typeName));
+    return partType;
 }
 
 Query::Condition PartTypeHelper::conditionFromFqName(const QString &fqName)

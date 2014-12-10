@@ -52,12 +52,7 @@ PartType fromFqName(const QByteArray &fqName);
  * @param typeName Part type name.
  * @throws PartTypeException
  */
-PartType fromName(const QString &ns, const QString &typeName);
-
-/**
- * Convenience overload of the above.
- */
-PartType fromName(const char *ns, const char *typeName);
+PartType fromFqName(const QString &ns, const QString &typeName);
 
 /**
  * Returns a query condition that matches the given part.

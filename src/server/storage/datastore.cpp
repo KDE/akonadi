@@ -184,6 +184,7 @@ bool DataStore::init()
     Flag::enableCache(true);
     Resource::enableCache(true);
     Collection::enableCache(true);
+    PartType::enableCache(true);
 
     return true;
 }
@@ -209,7 +210,7 @@ DataStore *DataStore::self()
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
-                              bool *flagsChanged, bool silent)
+                              bool *flagsChanged, const Collection &col, bool silent)
 {
     QSet<QByteArray> removedFlags;
     QSet<QByteArray> addedFlags;
@@ -220,7 +221,8 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     setBoolPtr(flagsChanged, false);
 
     Q_FOREACH (const PimItem &item, items) {
-        Q_FOREACH (const Flag &flag, item.flags()) {
+        const Flag::List itemFlags = item.flags();
+        Q_FOREACH (const Flag &flag, itemFlags) {
             if (!flags.contains(flag)) {
                 removedFlags << flag.name().toLatin1();
                 Query::Condition cond;
@@ -231,7 +233,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
         }
 
         Q_FOREACH (const Flag &flag, flags) {
-            if (!item.flags().contains(flag)) {
+            if (!itemFlags.contains(flag)) {
                 addedFlags << flag.name().toLatin1();
                 insIds << item.id();
                 insFlags << flag.id();
@@ -258,7 +260,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     }
 
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
-        mNotificationCollector->itemsFlagsChanged(items, addedFlags, removedFlags);
+        mNotificationCollector->itemsFlagsChanged(items, addedFlags, removedFlags, col);
     }
 
     setBoolPtr(flagsChanged, (addedFlags != removedFlags));
@@ -360,7 +362,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
 }
 
 bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
-                                 bool *flagsChanged, bool silent)
+                                 bool *flagsChanged, const Collection &col, bool silent)
 {
     QSet<QByteArray> removedFlags;
     QVariantList itemsIds;
@@ -392,7 +394,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
     if (qb.query().numRowsAffected() != 0) {
         setBoolPtr(flagsChanged, true);
         if (!silent) {
-            mNotificationCollector->itemsFlagsChanged(items, QSet<QByteArray>(), removedFlags);
+            mNotificationCollector->itemsFlagsChanged(items, QSet<QByteArray>(), removedFlags, col);
         }
     }
 
@@ -413,7 +415,8 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
     setBoolPtr(tagsChanged, false);
 
     Q_FOREACH (const PimItem &item, items) {
-        Q_FOREACH (const Tag &tag, item.tags()) {
+        const Tag::List itemTags = item.tags();
+        Q_FOREACH (const Tag &tag, itemTags) {
             if (!tags.contains(tag)) {
                 // Remove tags from items that had it set
                 removedTags << tag.id();
@@ -425,7 +428,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
         }
 
         Q_FOREACH (const Tag &tag, tags) {
-            if (!item.tags().contains(tag)) {
+            if (!itemTags.contains(tag)) {
                 // Add tags to items that did not have the tag
                 addedTags << tag.id();
                 insIds << item.id();
@@ -1025,9 +1028,9 @@ bool DataStore::unhideAllPimItems()
     akDebug() << "DataStore::unhideAllPimItems()";
 
     try {
-        return PartHelper::remove(Part::partTypeIdFullColumnName(), PartTypeHelper::fromName("ATR", "HIDDEN").id());
-    } catch (...) {
-    } // we can live with this failing
+        return PartHelper::remove(Part::partTypeIdFullColumnName(),
+                                  PartTypeHelper::fromFqName(QLatin1String("ATR"), QLatin1String("HIDDEN")).id());
+    } catch ( ... ) {} // we can live with this failing
 
     return false;
 }

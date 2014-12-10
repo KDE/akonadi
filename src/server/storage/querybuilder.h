@@ -123,11 +123,24 @@ public:
     void addColumn(const QString &col);
 
     /**
+     * Adds the given case statement to a select query.
+     * @param caseStmt The case statement to add.
+     */
+    void addColumn(const Query::Case &caseStmt);
+
+    /**
      * Adds an aggregation statement.
      * @param col The column to aggregate on
      * @param aggregate The aggregation function.
      */
     void addAggregation(const QString &col, const QString &aggregate);
+
+    /**
+     * Adds and aggregation statement with CASE
+     * @param caseStmt The case statement to aggregate on
+     * @param aggregate The aggregation function.
+     */
+    void addAggregation(const Query::Case &caseStmt, const QString &aggregate);
 
     /**
       Add a WHERE or HAVING condition which compares a column with a given value.
@@ -239,6 +252,7 @@ private:
     void buildQuery(QString *query);
     void bindValue(QString *query, const QVariant &value);
     void buildWhereCondition(QString *query, const Query::Condition &cond);
+    void buildCaseStatement(QString *query, const Query::Case &caseStmt);
 
     /**
      * SQLite does not support JOINs with UPDATE, so we have to convert it into

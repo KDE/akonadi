@@ -22,6 +22,7 @@
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/collectionstatistics.h"
 #include "storage/queryhelper.h"
 #include "commandcontext.h"
 #include "handler.h"
@@ -77,70 +78,6 @@ QString HandlerHelper::pathForCollection(const Collection &col)
         current = current.parent();
     }
     return parts.join(QLatin1String("/"));
-}
-
-bool HandlerHelper::itemStatistics(const Collection &col, qint64 &count, qint64 &size)
-{
-    QueryBuilder qb(PimItem::tableName());
-    qb.addAggregation(PimItem::idColumn(), QLatin1String("count"));
-    qb.addAggregation(PimItem::sizeColumn(), QLatin1String("sum"));
-
-    if (col.isVirtual()) {
-        qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
-                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
-        qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id());
-    } else {
-        qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, col.id());
-    }
-
-    if (!qb.exec()) {
-        return false;
-    }
-    if (!qb.query().next()) {
-        akError() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
-        return false;
-    }
-    count = qb.query().value(0).toLongLong();
-    size = qb.query().value(1).toLongLong();
-    return true;
-}
-
-int HandlerHelper::itemWithFlagsCount(const Collection &col, const QStringList &flags)
-{
-    CountQueryBuilder qb(PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct);
-    qb.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
-               PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());
-    if (col.isVirtual()) {
-        qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
-                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
-        qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id());
-    } else {
-        qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, col.id());
-    }
-    Query::Condition cond(Query::Or);
-    // We use the below instead of an inner join in the query above because postgres seems
-    // to struggle to optimize the two inner joins, despite having indices that should
-    // facilitate that. This exploits the fact that the Flag::retrieveByName is fast because
-    // it hits an in-memory cache.
-    Q_FOREACH (const QString &flag, flags) {
-        const Flag f = Flag::retrieveByName(flag);
-        cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(), Query::Equals, f.id());
-    }
-    qb.addCondition(cond);
-    if (!qb.exec()) {
-        return -1;
-    }
-    return qb.result();
-}
-
-int HandlerHelper::itemCount(const Collection &col)
-{
-    CountQueryBuilder qb(PimItem::tableName());
-    qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, col.id());
-    if (!qb.exec()) {
-        return -1;
-    }
-    return qb.result();
 }
 
 int HandlerHelper::parseCachePolicy(const QByteArray &data, Collection &col, int start, bool *changed)
@@ -231,14 +168,11 @@ QByteArray HandlerHelper::collectionToByteArray(const Collection &col, bool hidd
     b += " " AKONADI_PARAM_VIRTUAL " " + QByteArray::number(col.isVirtual()) + ' ';
 
     if (includeStatistics) {
-        qint64 itemCount, itemSize;
-        if (itemStatistics(col, itemCount, itemSize)) {
-            b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number(itemCount) + ' ';
-            // itemWithFlagCount is twice as fast as itemWithoutFlagCount, so emulated that...
-            b += AKONADI_ATTRIBUTE_UNSEEN " ";
-            b += QByteArray::number(itemCount - itemWithFlagsCount(col, QStringList() << QLatin1String(AKONADI_FLAG_SEEN)
-                                                                   << QLatin1String(AKONADI_FLAG_IGNORED)));
-            b += " " AKONADI_PARAM_SIZE " " + QByteArray::number(itemSize) + ' ';
+        const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
+        if (stats.count > -1) {
+            b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number(stats.count) + ' ';
+            b += AKONADI_ATTRIBUTE_UNSEEN " " +  QByteArray::number(stats.count - stats.read) + ' ';
+            b += AKONADI_PARAM_SIZE " " + QByteArray::number(stats.size) + ' ';
         }
     }
 
