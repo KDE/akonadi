@@ -315,27 +315,30 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     }
 
     //Post filtering that we couldn't do as part of the sql query
-    if (topParent.isValid() && depth > 0) {
+    if (depth > 0) {
         auto it = mCollections.begin();
         while (it != mCollections.end()) {
-            //Check that each collection is linked to the root collection
-            bool foundParent = false;
-            //We iterate over parents to link it to topParent if possible
-            Collection::Id id = it->parentId();
-            while (id > 0) {
-                if (id == parentId) {
-                    foundParent = true;
-                    break;
+
+            if (topParent.isValid()) {
+                //Check that each collection is linked to the root collection
+                bool foundParent = false;
+                //We iterate over parents to link it to topParent if possible
+                Collection::Id id = it->parentId();
+                while (id > 0) {
+                    if (id == parentId) {
+                        foundParent = true;
+                        break;
+                    }
+                    Collection col = mCollections.value(id);
+                    if (!col.isValid()) {
+                        col = Collection::retrieveById(id);
+                    }
+                    id = col.parentId();
                 }
-                Collection col = mCollections.value(id);
-                if (!col.isValid()) {
-                    col = Collection::retrieveById(id);
+                if (!foundParent) {
+                    it = mCollections.erase(it);
+                    continue;
                 }
-                id = col.parentId();
-            }
-            if (!foundParent) {
-                it = mCollections.erase(it);
-                continue;
             }
 
             //If we matched referenced collecions we need to ensure the collection was referenced from this session
