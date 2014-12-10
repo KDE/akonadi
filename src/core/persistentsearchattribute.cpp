@@ -102,7 +102,8 @@ void PersistentSearchAttribute::setRemoteSearchEnabled(bool enabled)
 
 QByteArray PersistentSearchAttribute::type() const
 {
-    return "PERSISTENTSEARCH"; // ### should eventually be AKONADI_PARAM_PERSISTENTSEARCH
+    static const QByteArray sType( "PERSISTENTSEARCH" );
+    return sType;
 }
 
 Attribute *PersistentSearchAttribute::clone() const

@@ -61,7 +61,8 @@ bool EntityAnnotationsAttribute::contains(const QByteArray &key) const
 
 QByteArray EntityAnnotationsAttribute::type() const
 {
-    return "entityannotations";
+    static const QByteArray sType( "entityannotations" );
+    return sType;
 }
 
 Akonadi::Attribute *EntityAnnotationsAttribute::clone() const
