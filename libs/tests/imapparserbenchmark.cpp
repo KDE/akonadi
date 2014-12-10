@@ -95,6 +95,25 @@ class ImapParserBenchmark : public QObject
       }
     }
 
+    void parseString_data()
+    {
+      QTest::addColumn<QByteArray>( "data" );
+      QTest::newRow("plain") << QByteArray("fooobarasdf something more lalala");
+      QTest::newRow("quoted") << QByteArray("\"fooobarasdf\" something more lalala");
+    }
+
+    void parseString()
+    {
+      QFETCH(QByteArray, data);
+      QByteArray result;
+      qint64 sum = 0;
+      QBENCHMARK {
+        sum += ImapParser::parseString( data, result );
+      }
+      QVERIFY(!result.isEmpty());
+      QVERIFY(sum > 0);
+    }
+
     void parseNumber()
     {
       QByteArray data( "123456" );

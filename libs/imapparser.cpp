@@ -186,6 +186,7 @@ int ImapParser::parseQuotedString( const QByteArray &data, QByteArray &result, i
   // quoted string
   if ( data[begin] == '"' ) {
     ++begin;
+    result.reserve(qMin(32, data.size() - begin));
     for ( int i = begin; i < data.length(); ++i ) {
       const char ch = data.at( i );
       if ( foundSlash ) {
