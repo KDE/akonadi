@@ -81,7 +81,8 @@ Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
 
 QByteArray Akonadi::SocialNetworkAttributes::type() const
 {
-  return QByteArray( "socialattributes" );
+    static const QByteArray sType( "socialattributes" );
+    return sType;
 }
 
 QString Akonadi::SocialNetworkAttributes::userName() const

@@ -73,7 +73,8 @@ qint64 CollectionQuotaAttribute::maximumValue() const
 
 QByteArray CollectionQuotaAttribute::type() const
 {
-    return "collectionquota";
+    static const QByteArray sType( "collectionquota" );
+    return sType;
 }
 
 Akonadi::Attribute *CollectionQuotaAttribute::clone() const

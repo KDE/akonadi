@@ -57,7 +57,8 @@ void IndexPolicyAttribute::setIndexingEnabled(bool enable)
 
 QByteArray IndexPolicyAttribute::type() const
 {
-    return "INDEXPOLICY";
+    static const QByteArray sType( "INDEXPOLICY" );
+    return sType;
 }
 
 Attribute *IndexPolicyAttribute::clone() const

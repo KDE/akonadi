@@ -48,7 +48,8 @@ MessageFolderAttribute::~MessageFolderAttribute()
 
 QByteArray MessageFolderAttribute::type() const
 {
-    return "MESSAGEFOLDER";
+    static const QByteArray sType( "MESSAGEFOLDER" );
+    return sType;
 }
 
 MessageFolderAttribute *MessageFolderAttribute::clone() const

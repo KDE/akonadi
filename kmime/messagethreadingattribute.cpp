@@ -47,7 +47,8 @@ MessageThreadingAttribute::~ MessageThreadingAttribute()
 
 QByteArray MessageThreadingAttribute::type() const
 {
-    return "MESSAGETHREADING";
+    static const QByteArray sType( "MESSAGETHREADING" );
+    return sType;
 }
 
 MessageThreadingAttribute *MessageThreadingAttribute::clone() const

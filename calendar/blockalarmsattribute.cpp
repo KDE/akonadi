@@ -92,7 +92,8 @@ bool BlockAlarmsAttribute::isAlarmTypeBlocked(KCalCore::Alarm::Type type) const
 
 QByteArray BlockAlarmsAttribute::type() const
 {
-    return "BlockAlarmsAttribute";
+    static const QByteArray sType( "BlockAlarmsAttribute" );
+    return sType;
 }
 
 BlockAlarmsAttribute *BlockAlarmsAttribute::clone() const
