@@ -375,6 +375,9 @@ void Monitor::setSession(Akonadi::Session *session)
 
     d->itemCache->setSession(d->session);
     d->collectionCache->setSession(d->session);
+    if (d->notificationSource) {
+        d->notificationSource->setSession(d->session->sessionId());
+    }
 }
 
 Session *Monitor::session() const

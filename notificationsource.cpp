@@ -113,6 +113,14 @@ void NotificationSource::setMonitoredType(NotificationMessageV2::Type type, bool
     Q_UNUSED(ok);
 }
 
+void NotificationSource::setSession(const QByteArray &session)
+{
+    const bool ok = QMetaObject::invokeMethod(parent(), "setSession",
+                                              Q_ARG(QByteArray, session));
+    Q_ASSERT(ok);
+    Q_UNUSED(ok);
+}
+
 QObject *NotificationSource::source() const
 {
     return parent();

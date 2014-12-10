@@ -152,6 +152,7 @@ add_akonadi_isolated_test(cachetest.cpp)
 # and the test is not very critical (we'll notice if we can't start the server), so we disable it for now.
 #add_akonadi_isolated_test(servermanagertest.cpp)
 add_akonadi_isolated_test(collectioncreator.cpp)
+add_akonadi_isolated_test(referencetest.cpp)
 
 
 # Having a benchmark is cool if you have any reference to compare against, but this

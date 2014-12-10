@@ -93,6 +93,8 @@ bool MonitorPrivate::connectToNotificationManager()
     QObject::connect(notificationSource, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
                      q_ptr, SLOT(slotNotify(Akonadi::NotificationMessageV3::List)));
 
+    notificationSource->setSession(session->sessionId());
+
     return true;
 }
 
@@ -101,6 +103,7 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
     if (state == ServerManager::Running) {
         connectToNotificationManager();
         notificationSource->setAllMonitored(monitorAll);
+        notificationSource->setSession(session->sessionId());
         Q_FOREACH (const Collection &col, collections) {
             notificationSource->setMonitoredCollection(col.id(), true);
         }

@@ -47,6 +47,7 @@ public:
     void setMonitoredTag(Tag::Id id, bool monitored);
     void setMonitoredType(NotificationMessageV2::Type type, bool monitored);
     void setIgnoredSession(const QByteArray &session, bool monitored);
+    void setSession(const QByteArray &session);
 
     QObject *source() const;
 
