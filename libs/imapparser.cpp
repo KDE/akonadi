@@ -79,6 +79,8 @@ int parseParenthesizedListHelper( const QByteArray &data, T &result, int start )
     return start;
   }
 
+  result.reserve(16);
+
   int count = 0;
   int sublistBegin = start;
   bool insideQuote = false;

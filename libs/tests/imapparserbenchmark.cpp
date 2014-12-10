@@ -27,6 +27,25 @@ Q_DECLARE_METATYPE( QList<QByteArray> )
 class ImapParserBenchmark : public QObject
 {
   Q_OBJECT
+  private:
+    void geneateParseParenthesizedListData()
+    {
+      QTest::addColumn<QByteArray>( "data" );
+      QTest::newRow( "empty" ) << QByteArray();
+      QTest::newRow( "unnested" ) << QByteArray("(\"Foo Bar\" NIL \"foobar\" \"test.com\")");
+      QTest::newRow( "nested" ) << QByteArray("((\"Foo Bar\" NIL \"foobar\" \"test.com\"))");
+      QTest::newRow( "nested-long" ) << QByteArray("(UID 86 REV 0 MIMETYPE \"message/rfc822\" COLLECTIONID 13 SIZE 6114 FLAGS (\\SEEN)"
+                                                   " ANCESTORS ((13 \"/INBOX\") (12 \"imap://mail@mail.test.com/\") (0 \"\")) PLD:ENVELOPE[1] {396}"
+                                                   " (\"Fri, 04 Jun 2010 09:07:54 +0200\" \"Re: [ADMIN] foobar available again!\""
+                                                   " ((\"Foo Bar\" NIL \"foobar\" \"test.com\"))"
+                                                   " NIL NIL"
+                                                   " ((\"Asdf Bla Blub\" NIL \"asdf.bla.blub\" \"123test.org\"))"
+                                                   " ((NIL NIL \"muh.kuh\" \"lalala.com\") (\"Konqi KDE\" NIL \"konqi\" \"kde.org\") (NIL NIL \"all\" \"test.com\"))"
+                                                   " NIL \"<201006040905.33367.foo.bar@test.com>\" \"<4C08A64A.9020205@123test.org>\""
+                                                   " \"<201006040142.56540.muh.kuh@lalala.com> <201006040704.39648.konqi@kde.org> <201006040905.33367.foo.bar@test.com>\""
+                                                   "))");
+    }
+
   private Q_SLOTS:
     void quote_data()
     {
@@ -68,28 +87,29 @@ class ImapParserBenchmark : public QObject
       }
     }
 
-    void parseParenthesizedList_data()
+    void parseParenthesizedQVarLengthArray_data()
     {
-      QTest::addColumn<QByteArray>( "data" );
-      QTest::newRow( "empty" ) << QByteArray();
-      QTest::newRow( "unnested" ) << QByteArray("(\"Foo Bar\" NIL \"foobar\" \"test.com\")");
-      QTest::newRow( "nested" ) << QByteArray("((\"Foo Bar\" NIL \"foobar\" \"test.com\"))");
-      QTest::newRow( "nested-long" ) << QByteArray("(UID 86 REV 0 MIMETYPE \"message/rfc822\" COLLECTIONID 13 SIZE 6114 FLAGS (\\SEEN)"
-                                                   " ANCESTORS ((13 \"/INBOX\") (12 \"imap://mail@mail.test.com/\") (0 \"\")) PLD:ENVELOPE[1] {396}"
-                                                   " (\"Fri, 04 Jun 2010 09:07:54 +0200\" \"Re: [ADMIN] foobar available again!\""
-                                                   " ((\"Foo Bar\" NIL \"foobar\" \"test.com\"))"
-                                                   " NIL NIL"
-                                                   " ((\"Asdf Bla Blub\" NIL \"asdf.bla.blub\" \"123test.org\"))"
-                                                   " ((NIL NIL \"muh.kuh\" \"lalala.com\") (\"Konqi KDE\" NIL \"konqi\" \"kde.org\") (NIL NIL \"all\" \"test.com\"))"
-                                                   " NIL \"<201006040905.33367.foo.bar@test.com>\" \"<4C08A64A.9020205@123test.org>\""
-                                                   " \"<201006040142.56540.muh.kuh@lalala.com> <201006040704.39648.konqi@kde.org> <201006040905.33367.foo.bar@test.com>\""
-                                                   "))");
+      geneateParseParenthesizedListData();
     }
 
-    void parseParenthesizedList()
+    void parseParenthesizedQVarLengthArray()
     {
       QFETCH( QByteArray, data );
       QVarLengthArray<QByteArray, 16> result;
+      QBENCHMARK {
+        ImapParser::parseParenthesizedList( data, result, 0 );
+      }
+    }
+
+    void parseParenthesizedQList_data()
+    {
+      geneateParseParenthesizedListData();
+    }
+
+    void parseParenthesizedQList()
+    {
+      QFETCH( QByteArray, data );
+      QList<QByteArray> result;
       QBENCHMARK {
         ImapParser::parseParenthesizedList( data, result, 0 );
       }
