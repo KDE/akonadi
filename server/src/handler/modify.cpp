@@ -101,6 +101,7 @@ bool Modify::parseStream()
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
   QList<QByteArray> changes;
+  bool referencedChanged = false;
 
   int pos = 0;
   while ( pos < line.length() ) {
@@ -260,11 +261,15 @@ bool Modify::parseStream()
     } else if ( type == AKONADI_PARAM_REFERENCED ) {
       //Not actually a tristate
       const bool reference = ( getTristateValue( line, pos ) == Tristate::True );
+      const bool wasReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(collection.id(), connection()->sessionId());
       connection()->collectionReferenceManager()->referenceCollection(connection()->sessionId(), collection, reference);
       const bool referenced = connection()->collectionReferenceManager()->isReferenced(collection.id());
-      if ( referenced != collection.referenced() ) {
-        collection.setReferenced( referenced );
+      if ( reference != wasReferencedFromSession ) {
         changes.append( AKONADI_PARAM_REFERENCED );
+      }
+      if ( referenced != collection.referenced() ) {
+        referencedChanged = true;
+        collection.setReferenced( referenced );
       }
     } else if ( type.isEmpty() ) {
       break; // input end
@@ -318,7 +323,7 @@ bool Modify::parseStream()
       return failureResponse( "Unable to update collection" );
     }
     //This must be after the collection was updated in the db. The resource will immediately request a copy of the collection.
-    if ( AkonadiServer::instance()->intervalChecker() && collection.referenced() && changes.contains( AKONADI_PARAM_REFERENCED ) ) {
+    if ( AkonadiServer::instance()->intervalChecker() && collection.referenced() && referencedChanged ) {
         AkonadiServer::instance()->intervalChecker()->requestCollectionSync( collection );
     }
     db->notificationCollector()->collectionChanged( collection, changes );

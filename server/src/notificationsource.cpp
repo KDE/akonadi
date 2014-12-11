@@ -360,12 +360,6 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
             return true;
         }
 
-        if (notification.itemParts().contains("REFERENCED")) {
-            //When we dereference a collection, we have to inform the session about it.
-            //The reference manager no longer holds a reference, so we can't check that.
-            //We also don't know which session, so we inform all.
-            return true;
-        }
 
         Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
           //Deliver the notification if referenced from this session
@@ -373,9 +367,15 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV3 &notif
             return true;
           }
           //Exclusive subscribers still want the notification
-          if ( CollectionReferenceManager::instance()->isReferenced( entity.id ) ) {
-            return mExclusive;
+          if ( mExclusive && CollectionReferenceManager::instance()->isReferenced( entity.id ) ) {
+            return true;
           }
+        }
+
+        //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
+        //The referencemanager no longer holds a reference, so we have to check this way.
+        if (notification.itemParts().contains("REFERENCED") && mSession == notification.sessionId()) {
+            return true;
         }
 
         // If the collection is not referenced, monitored or the subscriber is not
