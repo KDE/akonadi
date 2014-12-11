@@ -23,6 +23,7 @@
 #include "imapstreamparser.h"
 #include "response.h"
 #include "storage/datastore.h"
+#include <storage/querybuilder.h>
 #include "libs/protocol_p.h"
 #include "connection.h"
 
@@ -87,7 +88,11 @@ bool TagStore::parseStream()
         if (!connection()->context()->resource().isValid()) {
             throw HandlerException( "Only resources can change the remoteid" );
         }
-        TagRemoteIdResourceRelation::remove(TagRemoteIdResourceRelation::resourceIdFullColumnName(), connection()->context()->resource().id());
+        //Simply using remove() doesn't work since we need two arguments
+        QueryBuilder qb( TagRemoteIdResourceRelation::tableName(), QueryBuilder::Delete );
+        qb.addValueCondition( TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId );
+        qb.addValueCondition( TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals,connection()->context()->resource().id());
+        qb.exec();
 
         if (!remoteId.isEmpty()) {
             TagRemoteIdResourceRelation remoteIdRelation;
