@@ -201,7 +201,6 @@ void ItemFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
 
             // split fetch response into key/value pairs
             QList<QByteArray> fetchResponse;
-            fetchResponse.reserve(16);
             ImapParser::parseParenthesizedList(data, fetchResponse, begin + 6);
 
             Item item;
