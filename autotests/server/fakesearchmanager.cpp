@@ -19,6 +19,8 @@
 
 #include "fakesearchmanager.h"
 
+#include "entities.h"
+
 using namespace Akonadi::Server;
 
 FakeSearchManager::FakeSearchManager(QObject *parent)
