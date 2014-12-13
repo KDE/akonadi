@@ -31,8 +31,6 @@
 #include <private/protocol_p.h>
 #include <shared/akstandarddirs.h>
 
-#include <unistd.h>
-
 #include <QFile>
 #include <QFileInfo>
 
