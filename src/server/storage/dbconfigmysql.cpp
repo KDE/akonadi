@@ -103,7 +103,7 @@ bool DbConfigMysql::init(QSettings &settings)
     akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
 
     mInternalServer = settings.value(QLatin1String("QMYSQL/StartServer"), defaultInternalServer).toBool();
-#if !(defined Q_WS_WIN)
+#ifndef Q_OS_WIN
     if (mInternalServer) {
         defaultOptions = QString::fromLatin1("UNIX_SOCKET=%1/mysql.socket").arg(socketDirectory);
     }
@@ -293,7 +293,7 @@ void DbConfigMysql::startInternalServer()
     QStringList arguments;
     arguments << QString::fromLatin1("--defaults-file=%1/mysql.conf").arg(akDir);
     arguments << QString::fromLatin1("--datadir=%1/").arg(dataDir);
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     arguments << QString::fromLatin1("--socket=%1/mysql.socket").arg(socketDirectory);
 #else
     arguments << QString::fromLatin1("--shared-memory");
