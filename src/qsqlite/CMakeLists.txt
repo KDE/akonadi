@@ -6,11 +6,7 @@ set(QSqlite_SRCS
 
 message(STATUS "Building QSQLITE3 driver")
 
-if(INSTALL_QSQLITE_IN_QT_PREFIX)
-    set(QSQLITE_INSTALL_PREFIX "${QT_PLUGINS_DIR}/sqldrivers")
-else()
-    set(QSQLITE_INSTALL_PREFIX "${LIB_INSTALL_DIR}/plugins/sqldrivers")
-endif()
+set(QSQLITE_INSTALL_PREFIX "${PLUGIN_INSTALL_DIR}/sqldrivers")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src

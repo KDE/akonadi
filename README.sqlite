@@ -7,8 +7,9 @@ these changes should be pushed upstream eventually.
 == INSTALL ==
 When Sqlite is found, the custom driver will be build and installed in:
 
-${CMAKE_INSTALL_PREFIX}/lib/plugins/sqldrivers or ${QT_PLUGINS_DIR}/sqldrivers
-if you enable the INSTALL_QSQLITE_IN_QT_PREFIX option when running CMake.
+${CMAKE_INSTALL_PREFIX}/lib/plugins/sqldrivers or the sqldrivers subdirectory
+of the default Qt plugins path specified at Qt build time if you enable the
+KDE_INSTALL_USE_QT_SYS_PATHS option when running CMake.
 
 The next thing you have to do is add that path (if it isn't already) to your
 QT_PLUGIN_PATH environment variable.

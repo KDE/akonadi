@@ -31,8 +31,9 @@ The following options are available when running CMake:
 
 * AKONADI_BUILD_TESTS (Default: TRUE): Build the Akonadi unit tests
 * AKONADI_BUILD_QSQLITE (Default: TRUE): Build the SQLite backend
-* INSTALL_QSQLITE_IN_QT_PREFIX (Default: FALSE): Useful for distributions.
-  Once enabled, the qsqlite3 backend will be installed in ${QT_PLUGINS_DIR}/sqldrivers
+* KDE_INSTALL_USE_QT_SYS_PATHS (Default: FALSE): Useful for distributions.
+  Once enabled, the qsqlite3 backend will be installed in the sqlbackends subdirectory of the default Qt plugins directory
+  specified at Qt build time.
 * DATABASE_BACKEND (Default: MYSQL, available: MYSQL, POSTGRES, SQLITE): Define which database driver to use by default.
   MYSQL is preferred, SQLITE should be avoided.
 
