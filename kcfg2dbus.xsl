@@ -43,6 +43,9 @@
         <annotation name="org.qtproject.QtDBus.QtTypeName.Out0">
         <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
         </annotation>
+        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0">
+        <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
+        </annotation>
       </xsl:if>
     </method>
     <method>
@@ -54,6 +57,9 @@
       </arg>
       <xsl:if test="$annotation != ''">
         <annotation name="org.qtproject.QtDBus.QtTypeName.In0">
+        <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
+        </annotation>
+        <annotation name="com.trolltech.QtDBus.QtTypeName.In0">
         <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
         </annotation>
       </xsl:if>
