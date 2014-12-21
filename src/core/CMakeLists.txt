@@ -44,6 +44,7 @@ set(akonadicore_base_SRCS
     mimetypechecker.cpp
     monitor.cpp
     monitor_p.cpp
+    newmailnotifierattribute.cpp
     notificationsource.cpp
     partfetcher.cpp
     pastehelper.cpp
@@ -96,6 +97,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     ItemSync
     KDSignalBlocker
     MimeTypeChecker
+    NewMailNotifierAttribute
     Monitor
     PartFetcher
     PersistentSearchAttribute
