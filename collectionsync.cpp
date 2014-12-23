@@ -360,12 +360,17 @@ public:
         execute();
     }
 
+    bool ignoreAttributeChanges(const Akonadi::Collection &col, const QByteArray &attribute) const
+    {
+        return (keepLocalChanges.contains(attribute) || col.keepLocalChanges().contains(attribute));
+    }
+
     /**
       Checks if the given localCollection and remoteCollection are different
     */
     bool collectionNeedsUpdate(const Collection &localCollection, const Collection &remoteCollection) const
     {
-        if (!keepLocalChanges.contains(CONTENTMIMETYPES) && !remoteCollection.keepLocalChanges().contains(CONTENTMIMETYPES)) {
+        if (!ignoreAttributeChanges(remoteCollection, CONTENTMIMETYPES)) {
             if (localCollection.contentMimeTypes().size() != remoteCollection.contentMimeTypes().size()) {
                 return true;
             } else {
@@ -400,7 +405,7 @@ public:
         // CollectionModifyJob adds the remote attributes to the local collection
         Q_FOREACH (const Attribute *attr, remoteCollection.attributes()) {
             const Attribute *localAttr = localCollection.attribute(attr->type());
-            if (localAttr && (keepLocalChanges.contains(attr->type()) || remoteCollection.keepLocalChanges().contains(CONTENTMIMETYPES))) {
+            if (localAttr && ignoreAttributeChanges(remoteCollection, attr->type())) {
                 continue;
             }
             // The attribute must both exist and have equal contents
@@ -542,11 +547,11 @@ public:
             Q_ASSERT(!upd.remoteId().isEmpty());
             Q_ASSERT(currentTransaction);
             upd.setId(local.id());
-            if (keepLocalChanges.contains(CONTENTMIMETYPES) || remote.keepLocalChanges().contains(CONTENTMIMETYPES)) {
+            if (ignoreAttributeChanges(remote, CONTENTMIMETYPES)) {
                 upd.setContentMimeTypes(local.contentMimeTypes());
             }
             Q_FOREACH (Attribute *remoteAttr, upd.attributes()) {
-                if ((keepLocalChanges.contains(remoteAttr->type()) || remote.keepLocalChanges().contains(remoteAttr->type()))&& local.hasAttribute(remoteAttr->type())) {
+                if (ignoreAttributeChanges(remote, remoteAttr->type()) && local.hasAttribute(remoteAttr->type())) {
                     //We don't want to overwrite the attribute changes with the defaults provided by the resource.
                     Attribute *localAttr = local.attribute(remoteAttr->type());
                     upd.removeAttribute(localAttr->type());
