@@ -92,6 +92,7 @@ add_akonadi_test(collectionutilstest.cpp)
 add_akonadi_test(entitydisplayattributetest.cpp)
 add_akonadi_test(proxymodelstest.cpp)
 add_akonadi_test(newmailnotifierattributetest.cpp)
+add_akonadi_test(pop3resourceattributetest.cpp)
 
 add_akonadi_test_widgets(actionstatemanagertest.cpp)
 

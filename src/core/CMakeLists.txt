@@ -50,6 +50,7 @@ set(akonadicore_base_SRCS
     pastehelper.cpp
     persistentsearchattribute.cpp
     pluginloader.cpp
+    pop3resourceattribute.cpp
     protocolhelper.cpp
     searchquery.cpp
     servermanager.cpp
@@ -101,6 +102,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Monitor
     PartFetcher
     PersistentSearchAttribute
+    Pop3ResourceAttribute
     SearchQuery
     ServerManager
     Session
