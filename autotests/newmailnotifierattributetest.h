@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldSetIgnoreNotification();
     void shouldSerializedData();
     void shouldCloneAttribute();
+    void shouldHaveType();
 };
 
 #endif // NEWMAILNOTIFIERATTRIBUTETEST_H
