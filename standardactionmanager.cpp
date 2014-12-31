@@ -136,11 +136,6 @@ static bool canCreateCollection(const Akonadi::Collection &collection)
         return false;
     }
 
-    if (!collection.contentMimeTypes().contains(Akonadi::Collection::mimeType()) &&
-        !collection.contentMimeTypes().contains(Akonadi::Collection::virtualMimeType())) {
-        return false;
-    }
-
     return true;
 }
 

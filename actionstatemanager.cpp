@@ -38,11 +38,6 @@ static bool canCreateSubCollection(const Collection &collection)
         return false;
     }
 
-    if (!collection.contentMimeTypes().contains(Collection::mimeType()) &&
-        !collection.contentMimeTypes().contains(Collection::virtualMimeType())) {
-        return false;
-    }
-
     return true;
 }
 
