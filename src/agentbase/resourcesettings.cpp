@@ -21,7 +21,7 @@
 
 using namespace Akonadi;
 
-ResourceSettings *ResourceSettings::mSelf = 0;
+ResourceSettings *ResourceSettings::mSelf = Q_NULLPTR;
 
 ResourceSettings *ResourceSettings::self()
 {

@@ -102,7 +102,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
     Q_Q(CollectionPathResolver);
 
     CollectionFetchJob *list = static_cast<CollectionFetchJob *>(job);
-    CollectionFetchJob *nextJob = 0;
+    CollectionFetchJob *nextJob = Q_NULLPTR;
     const Collection::List cols = list->collections();
     if (cols.isEmpty()) {
         mColId = -1;
@@ -203,7 +203,7 @@ void CollectionPathResolver::doStart()
 {
     Q_D(CollectionPathResolver);
 
-    CollectionFetchJob *job = 0;
+    CollectionFetchJob *job = Q_NULLPTR;
     if (d->mPathToId) {
         if (d->mPath.isEmpty()) {
             d->mColId = Collection::root().id();

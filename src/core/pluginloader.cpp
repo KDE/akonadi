@@ -42,7 +42,7 @@ PluginMetaData::PluginMetaData(const QString &lib, const QString &name, const QS
 {
 }
 
-PluginLoader *PluginLoader::mSelf = 0;
+PluginLoader *PluginLoader::mSelf = Q_NULLPTR;
 
 PluginLoader::PluginLoader()
 {

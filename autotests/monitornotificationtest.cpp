@@ -36,7 +36,7 @@ class AKONADITESTFAKE_EXPORT MonitorNotificationTest : public QObject
 {
   Q_OBJECT
 public: 
-  MonitorNotificationTest(QObject *parent = 0)
+  MonitorNotificationTest(QObject *parent = Q_NULLPTR)
     : QObject(parent)
   {
     m_sessionName = "MonitorNotificationTest fake session";

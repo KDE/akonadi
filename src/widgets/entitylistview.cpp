@@ -209,7 +209,7 @@ void EntityListView::contextMenuEvent(QContextMenuEvent *event)
 
     const QModelIndex index = indexAt(event->pos());
 
-    QMenu *popup = 0;
+    QMenu *popup = Q_NULLPTR;
 
     // check if the index under the cursor is a collection or item
     const Collection collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();

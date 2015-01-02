@@ -35,9 +35,9 @@ using namespace Akonadi;
 class InspectableETM: public EntityTreeModel
 {
 public:
-  explicit InspectableETM(ChangeRecorder* monitor, QObject* parent = 0)
+  explicit InspectableETM(ChangeRecorder* monitor, QObject* parent = Q_NULLPTR)
   :EntityTreeModel(monitor, parent) {}
-  EntityTreeModelPrivate *etmPrivate() { return d_ptr; };
+  EntityTreeModelPrivate *etmPrivate() { return d_ptr; }
 };
 
 /**

@@ -247,7 +247,7 @@ public:
             if (collection.id() == Collection::root().id() || collection.remoteId() == Collection::root().remoteId()) {
                 return localRoot;
             }
-            LocalNode *localParent = 0;
+            LocalNode *localParent = Q_NULLPTR;
             if (collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty()) {
                 qWarning() << "Remote collection without valid parent found: " << collection;
                 return 0;

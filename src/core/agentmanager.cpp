@@ -350,7 +350,7 @@ void AgentManagerPrivate::createDBusInterface()
     }
 }
 
-AgentManager *AgentManagerPrivate::mSelf = 0;
+AgentManager *AgentManagerPrivate::mSelf = Q_NULLPTR;
 
 AgentManager::AgentManager()
     : QObject(0)

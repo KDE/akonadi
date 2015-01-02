@@ -67,7 +67,7 @@ static const int s_delegatePaddingSize = 7;
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
 public:
-    AgentInstanceWidgetDelegate(QObject *parent = 0);
+    AgentInstanceWidgetDelegate(QObject *parent = Q_NULLPTR);
 
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
