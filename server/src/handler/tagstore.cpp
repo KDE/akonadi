@@ -52,6 +52,8 @@ bool TagStore::parseStream()
     throw HandlerException( "No such tag" );
   }
 
+  QSet<QByteArray> changes;
+
   // Retrieve all tag's attributes
   const TagAttribute::List attributes = TagAttribute::retrieveFiltered( TagAttribute::tagIdFullColumnName(), tagId );
   QMap<QByteArray,TagAttribute> attributesMap;
@@ -67,6 +69,7 @@ bool TagStore::parseStream()
     if ( attr == AKONADI_PARAM_PARENT ) {
       const qint64 parent = m_streamParser->readNumber();
             changedTag.setParentId( parent );
+      changes << AKONADI_PARAM_PARENT;
     } else if ( attr == AKONADI_PARAM_GID ) {
       throw HandlerException( "Changing tag GID is not allowed" );
     } else if ( attr == AKONADI_PARAM_UID ) {
@@ -82,7 +85,10 @@ bool TagStore::parseStream()
             }
             type = newType;
         }
-        changedTag.setTagType(type);
+        if (type.id() != changedTag.typeId()) {
+            changedTag.setTagType(type);
+            changes << AKONADI_PARAM_MIMETYPE;
+        }
     } else if ( attr == AKONADI_PARAM_REMOTEID ) {
         const QString &remoteId = m_streamParser->readUtf8String();
         if (!connection()->context()->resource().isValid()) {
@@ -116,6 +122,7 @@ bool TagStore::parseStream()
                 // We can't break here, we need to finish reading the command
             }
         }
+        //Do not notify about remoteid changes, otherwise we bounce back and forth between resources recording it's change and updating the remote id.
     } else {
       if ( attr.startsWith( '-' ) ) {
         const QByteArray attrName = attr.mid( 1 );
@@ -140,6 +147,7 @@ bool TagStore::parseStream()
             throw HandlerException("Failed to insert attribute");
         }
       }
+      changes << attr;
     }
   }
 
@@ -147,7 +155,9 @@ bool TagStore::parseStream()
       if (!changedTag.update()) {
         throw HandlerException( "Failed to store changes" );
       }
-      DataStore::self()->notificationCollector()->tagChanged( changedTag );
+      if (!changes.isEmpty()) {
+        DataStore::self()->notificationCollector()->tagChanged( changedTag );
+      }
 
       ImapSet set;
       set.add( QVector<qint64>() << tagId );
