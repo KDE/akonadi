@@ -1090,6 +1090,10 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
         validTags = tags;
     }
 
+    if (validTags.isEmpty()) {
+        return false;
+    }
+
     switch (msg.operation()) {
     case NotificationMessageV2::Add:
         if (q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0) {
@@ -1125,6 +1129,10 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
 bool MonitorPrivate::emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations)
 {
     Q_ASSERT(msg.type() == NotificationMessageV2::Relations);
+
+    if (relations.isEmpty()) {
+        return false;
+    }
 
     switch (msg.operation()) {
     case NotificationMessageV2::Add:
