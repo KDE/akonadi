@@ -490,3 +490,15 @@ void ChangeRecorderPrivate::notificationsLoaded()
     m_lastKnownNotificationsCount = pendingNotifications.count();
     m_startOffset = 0;
 }
+
+bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessageV3 &msg)
+{
+    const bool someoneWasListening = MonitorPrivate::emitNotification(msg);
+    if (!someoneWasListening && enableChangeRecording) {
+        //If no signal was emitted (e.g. because no one was connected to it), no one is going to call changeProcessed, so we help ourselves.
+        dequeueNotification();
+        QMetaObject::invokeMethod(q_ptr, "replayNext", Qt::QueuedConnection);
+    }
+    return someoneWasListening;
+}
+
