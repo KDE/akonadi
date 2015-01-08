@@ -53,6 +53,12 @@ void ItemQueryHelper::itemSetToQuery( const ImapSet &set, bool isUid, CommandCon
   }
 
   if ( context->tagId() >= 0 ) {
+    //When querying for items by tag, only return matches from that resource
+    if ( context->resource().isValid() ) {
+        qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
+                    PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+        qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id() );
+    }
     qb.addJoin( QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                 PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName() );
     qb.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId() );
@@ -91,6 +97,12 @@ void ItemQueryHelper::gidToQuery( const QStringList &gids, CommandContext *conte
   }
 
   if ( context->tagId() > 0 ) {
+    //When querying for items by tag, only return matches from that resource
+    if ( context->resource().isValid() ) {
+        qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
+                    PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+        qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id() );
+    }
     qb.addJoin( QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                 PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName() );
     qb.addValueCondition( PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId() );
