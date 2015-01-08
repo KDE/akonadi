@@ -200,6 +200,11 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     //remove = local - remote
     Item::List toRemove;
     Q_FOREACH(const Item &local, items) {
+        //Skip items that have no remote id yet
+        //Trying to them will only result in a conflict
+        if (local.remoteId().isEmpty()) {
+            continue;
+        }
         if (!containsByGidOrRid(remoteMembers, local)) {
             toRemove << local;
         }
