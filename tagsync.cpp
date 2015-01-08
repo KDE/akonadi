@@ -221,7 +221,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     }
 }
 
-void TagSync::onJobDone(KJob *job)
+void TagSync::onJobDone(KJob *)
 {
     checkDone();
 }
@@ -229,7 +229,7 @@ void TagSync::onJobDone(KJob *job)
 void TagSync::slotResult(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Error during CollectionSync: " << job->errorString() << job->metaObject()->className();
+        kWarning() << "Error during TagSync: " << job->errorString() << job->metaObject()->className();
         // pretent there were no errors
         Akonadi::Job::removeSubjob(job);
     } else {
@@ -240,7 +240,6 @@ void TagSync::slotResult(KJob *job)
 void TagSync::checkDone()
 {
     if (hasSubjobs()) {
-        kDebug() << "Still going";
         return;
     }
     kDebug() << "done";
