@@ -14,5 +14,5 @@ add_library(akonadi_test_searchplugin MODULE testsearchplugin.cpp)
 
 target_link_libraries(akonadi_test_searchplugin KF5::AkonadiCore)
 
-install( FILES akonaditestsearchplugin.desktop DESTINATION ${PLUGIN_INSTALL_DIR}/akonadi )
-install( TARGETS akonadi_test_searchplugin DESTINATION ${PLUGIN_INSTALL_DIR}/akonadi )
+install( FILES akonaditestsearchplugin.desktop DESTINATION ${KDE_INSTALL_PLUGINDIR}/akonadi )
+install( TARGETS akonadi_test_searchplugin DESTINATION ${KDE_INSTALL_PLUGINDIR}/akonadi )

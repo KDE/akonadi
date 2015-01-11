@@ -35,7 +35,7 @@ generate_export_header(KF5AkonadiXml BASE_NAME akonadi-xml)
 
 add_library(KF5::AkonadiXml ALIAS KF5AkonadiXml)
 
-target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiXml>")
+target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml>")
 target_include_directories(KF5AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 
 target_link_libraries(KF5AkonadiXml
@@ -69,7 +69,7 @@ install(TARGETS
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-xml_export.h
     ${AkonadiXml_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiXml COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml COMPONENT Devel
 )
 
 install(FILES
@@ -79,5 +79,5 @@ install(FILES
 
 install(FILES
     akonadi-xml.xsd
-    DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi/
+    DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi/
 )

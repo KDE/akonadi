@@ -58,7 +58,7 @@ target_link_libraries(akonadi_knut_resource
   Qt5::Xml
 )
 
-install( TARGETS akonadi_knut_resource DESTINATION ${PLUGIN_INSTALL_DIR}/ )
+install( TARGETS akonadi_knut_resource DESTINATION ${KDE_INSTALL_PLUGINDIR}/ )
 install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
-install( FILES knut-template.xml DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi_knut_resource/ )
+install( FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi_knut_resource/ )
 

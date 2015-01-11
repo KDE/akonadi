@@ -268,7 +268,7 @@ add_library(KF5AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore;${Boost_INCLUDE_DIR};${AKONADI_INCLUDE_DIR};${AKONADI_INCLUDE_DIR}/akonadi/private>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore;${Boost_INCLUDE_DIR};${AKONADI_INCLUDE_DIR};${AKONADI_INCLUDE_DIR}/akonadi/private>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AKONADI_INCLUDE_DIR}>")
@@ -308,7 +308,7 @@ install(FILES
     ${AkonadiCore_HEADERS}
     qtest_akonadi.h
     itempayloadinternals_p.h
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiCore COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore COMPONENT Devel
 )
 
 install(FILES
@@ -318,5 +318,5 @@ install(FILES
 
 install( FILES
     kcfg2dbus.xsl
-    DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi
+    DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi
 )

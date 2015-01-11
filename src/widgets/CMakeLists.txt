@@ -93,7 +93,7 @@ generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
-target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiWidgets
 PUBLIC
@@ -122,13 +122,13 @@ install(TARGETS
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets_export.h
     ${AkonadiWidgets_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/AkonadiWidgets COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets COMPONENT Devel
 )
 
 if (KDEPIM_MOBILE_UI)
     install(FILES
         CollectionDialogMobile.qml
-        DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi/qml
+        DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi/qml
     )
 endif()
 
@@ -161,6 +161,6 @@ if (Qt5Designer_FOUND)
 
     install(TARGETS
         akonadiwidgets
-        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
     )
 endif()
