@@ -104,6 +104,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupExpandJob : public KJob
     class Private;
     Private* const d;
 
+    Q_PRIVATE_SLOT( d, void resolveGroup() )
     Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void searchResult( KJob* ) )
     //@endcond

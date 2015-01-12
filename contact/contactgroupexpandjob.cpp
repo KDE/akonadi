@@ -155,7 +155,7 @@ void ContactGroupExpandJob::start()
     searchJob->setLimit( 1 );
     connect( searchJob, SIGNAL(result(KJob*)), this, SLOT(searchResult(KJob*)) );
   } else {
-    d->resolveGroup();
+    QMetaObject::invokeMethod(this, "resolveGroup", Qt::QueuedConnection);
   }
 }
 
