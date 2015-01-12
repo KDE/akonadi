@@ -28,9 +28,9 @@
 
 #include <kicon.h>
 #include <klocalizedstring.h>
-#include <ksqueezedtextlabel.h>
 
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QToolButton>
 
 using namespace Akonadi;
@@ -50,7 +50,8 @@ TagWidget::TagWidget(QWidget *parent)
     d->mModel = new Akonadi::TagModel(monitor, this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
-    d->mTagLabel = new KSqueezedTextLabel;
+    d->mTagLabel = new QLabel;
+    d->mTagLabel->setWordWrap(true);
     d->mTagLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     layout->addWidget(d->mTagLabel);
 
