@@ -74,6 +74,9 @@ protected:
 
     TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = 0);
 
+Q_SIGNALS:
+    void populated();
+
 private:
     virtual bool insertRows(int, int, const QModelIndex& = QModelIndex());
     virtual bool insertColumns(int, int, const QModelIndex& = QModelIndex());

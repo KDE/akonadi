@@ -62,6 +62,7 @@ TagWidget::TagWidget(QWidget *parent)
     layout->setStretch(0, 10);
 
     connect(editButton, SIGNAL(clicked()), SLOT(editTags()));
+    connect(d->mModel, SIGNAL(populated()), SLOT(updateView()));
 }
 
 TagWidget::~TagWidget()
