@@ -95,9 +95,9 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         {
             dragSourceCollection = parent;
         }
-    }
 
-    kDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
+        kDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
+    }
 
     if (dragSourceCollection.isValid()) {
         // Disable autocommitting, because starting a Link/Unlink/Copy/Move job
