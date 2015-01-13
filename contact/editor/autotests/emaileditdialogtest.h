@@ -32,6 +32,8 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAddItems();
+    void shouldDontAddTwiceItem();
 
 };
 

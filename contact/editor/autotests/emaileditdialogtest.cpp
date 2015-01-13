@@ -37,6 +37,25 @@ void EmailEditDialogTest::shouldHaveDefaultValue()
     EmailEditDialog dlg;
     KListWidget *listwidget = qFindChild<KListWidget *>(&dlg, QLatin1String("emailListBox"));
     QVERIFY(listwidget);
+    QCOMPARE(listwidget->count(), 0);
+}
+
+void EmailEditDialogTest::shouldAddItems()
+{
+    EmailEditDialog dlg;
+    KListWidget *listwidget = qFindChild<KListWidget *>(&dlg, QLatin1String("emailListBox"));
+    const QStringList lst = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
+    dlg.setEmailList(lst);
+    QCOMPARE(listwidget->count(), lst.count());
+}
+
+void EmailEditDialogTest::shouldDontAddTwiceItem()
+{
+    EmailEditDialog dlg;
+    KListWidget *listwidget = qFindChild<KListWidget *>(&dlg, QLatin1String("emailListBox"));
+    const QStringList lst = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli") << QLatin1String("bli");
+    dlg.setEmailList(lst);
+    QCOMPARE(listwidget->count(), (lst.count()-1));
 }
 
 QTEST_KDEMAIN(EmailEditDialogTest, GUI)
