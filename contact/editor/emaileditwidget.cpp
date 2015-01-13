@@ -156,8 +156,8 @@ void EmailEditWidget::storeContact(KABC::Addressee &contact) const
 
 void EmailEditWidget::edit()
 {
-    AutoQPointer<EmailEditDialog> dlg = new EmailEditDialog(mEmailList, this);
-
+    AutoQPointer<EmailEditDialog> dlg = new EmailEditDialog(this);
+    dlg->setEmailList(mEmailList);
     if (dlg->exec()) {
         if (dlg->changed()) {
             mEmailList = dlg->emails();
@@ -179,7 +179,7 @@ void EmailEditWidget::textChanged(const QString &text)
     mEmailList.prepend(text);
 }
 
-EmailEditDialog::EmailEditDialog(const QStringList &list, QWidget *parent)
+EmailEditDialog::EmailEditDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Edit Email Addresses"));
@@ -224,21 +224,6 @@ EmailEditDialog::EmailEditDialog(const QStringList &list, QWidget *parent)
     topLayout->addWidget(mStandardButton, 3, 2);
 
     topLayout->setRowStretch(4, 1);
-
-    QStringList items = list;
-    if (items.removeAll(QLatin1String("")) > 0) {
-        mChanged = true;
-    } else {
-        mChanged = false;
-    }
-
-    QStringList::ConstIterator it;
-    bool preferred = true;
-    QStringList::ConstIterator end(items.constEnd());
-    for (it = items.constBegin(); it != end; ++it) {
-        new EmailItem(*it, mEmailListBox, preferred);
-        preferred = false;
-    }
 
     // set default state
     KAcceleratorManager::manage(this);
@@ -362,6 +347,25 @@ void EmailEditDialog::remove()
 bool EmailEditDialog::changed() const
 {
     return mChanged;
+}
+
+void EmailEditDialog::setEmailList(const QStringList &list)
+{
+    QStringList items = list;
+    if (items.removeAll(QLatin1String("")) > 0) {
+        mChanged = true;
+    } else {
+        mChanged = false;
+    }
+
+    QStringList::ConstIterator it;
+    bool preferred = true;
+    QStringList::ConstIterator end(items.constEnd());
+    for (it = items.constBegin(); it != end; ++it) {
+        new EmailItem(*it, mEmailListBox, preferred);
+        preferred = false;
+    }
+
 }
 
 void EmailEditDialog::standard()
