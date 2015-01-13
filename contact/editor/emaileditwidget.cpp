@@ -384,8 +384,8 @@ void EmailEditDialog::standard()
 
 void EmailEditDialog::selectionChanged()
 {
-    int index = mEmailListBox->currentRow();
-    bool value = (index >= 0);   // An item is selected
+    const int index = mEmailListBox->currentRow();
+    const bool value = (index >= 0);   // An item is selected
 
     mRemoveButton->setEnabled(value);
     mEditButton->setEnabled(value);
