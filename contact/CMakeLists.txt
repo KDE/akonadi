@@ -203,3 +203,5 @@ install( FILES
   editor/im/improtocols.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
 )
+
+add_subdirectory(editor/autotests)
