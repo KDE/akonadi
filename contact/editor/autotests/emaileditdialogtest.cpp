@@ -21,6 +21,7 @@
 #include "../emaileditwidget.h"
 #include <qtest_kde.h>
 #include <KListWidget>
+#include <qpushbutton.h>
 EmailEditDialogTest::EmailEditDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -38,6 +39,15 @@ void EmailEditDialogTest::shouldHaveDefaultValue()
     KListWidget *listwidget = qFindChild<KListWidget *>(&dlg, QLatin1String("emailListBox"));
     QVERIFY(listwidget);
     QCOMPARE(listwidget->count(), 0);
+
+    QPushButton *button = qFindChild<QPushButton *>(&dlg, QLatin1String("add"));
+    QVERIFY(button);
+    button = qFindChild<QPushButton *>(&dlg, QLatin1String("remove"));
+    QVERIFY(button);
+    button = qFindChild<QPushButton *>(&dlg, QLatin1String("edit"));
+    QVERIFY(button);
+    button = qFindChild<QPushButton *>(&dlg, QLatin1String("standard"));
+    QVERIFY(button);
 }
 
 void EmailEditDialogTest::shouldAddItems()
