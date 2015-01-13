@@ -18,7 +18,9 @@
 */
 
 #include "emaileditdialogtest.h"
+#include "../emaileditwidget.h"
 #include <qtest_kde.h>
+#include <KListWidget>
 EmailEditDialogTest::EmailEditDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -28,6 +30,13 @@ EmailEditDialogTest::EmailEditDialogTest(QObject *parent)
 EmailEditDialogTest::~EmailEditDialogTest()
 {
 
+}
+
+void EmailEditDialogTest::shouldHaveDefaultValue()
+{
+    EmailEditDialog dlg;
+    KListWidget *listwidget = qFindChild<KListWidget *>(&dlg, QLatin1String("emailListBox"));
+    QVERIFY(listwidget);
 }
 
 QTEST_KDEMAIN(EmailEditDialogTest, GUI)

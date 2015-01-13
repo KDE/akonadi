@@ -30,6 +30,9 @@ public:
     explicit EmailEditDialogTest(QObject *parent = 0);
     ~EmailEditDialogTest();
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+
 };
 
 #endif // EMAILEDITDIALOGTEST_H

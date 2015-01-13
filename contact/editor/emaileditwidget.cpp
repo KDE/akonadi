@@ -194,6 +194,7 @@ EmailEditDialog::EmailEditDialog(QWidget *parent)
     topLayout->setMargin(0);
 
     mEmailListBox = new KListWidget(page);
+    mEmailListBox->setObjectName(QLatin1String("emailListBox"));
     mEmailListBox->setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Make sure there is room for the scrollbar
