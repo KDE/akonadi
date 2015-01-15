@@ -34,6 +34,7 @@ Name[sv]=Akonadi test-sökinsticksprogram
 Name[tr]=Akonadi Test Arama Eklentisi
 Name[uk]=Тестовий додаток пошуку Akonadi
 Name[x-test]=xxAkonadi Test Search Pluginxx
+Name[zh_CN]=Akonadi 测试搜索插件
 Name[zh_TW]=Akonadi 測試搜尋外掛程式
 X-Akonadi-Library=akonadi_test_searchplugin
 X-Akonadi-ClassName=SearchPlugin
