@@ -73,9 +73,10 @@ add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
 
 add_subdirectory(src)
+if (BUILD_TESTING)
 add_subdirectory(autotests)
 add_subdirectory(tests)
-
+endif()
 ########### CMake Config Files ###########
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")

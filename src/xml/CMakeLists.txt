@@ -5,8 +5,9 @@ if (LIBXML2_FOUND)
     include_directories(${LIBXML2_INCLUDE_DIR})
 endif ()
 
-add_subdirectory(autotests)
-
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()
 set(akonadixml_SRCS
     xmldocument.cpp
     xmlreader.cpp
