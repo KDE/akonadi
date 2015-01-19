@@ -23,7 +23,7 @@
 #define EMAILEDITWIDGET_H
 
 #include <kdialog.h>
-
+#include <kabc/email.h>
 namespace KABC
 {
 class Addressee;
@@ -59,7 +59,7 @@ private Q_SLOTS:
 private:
     KLineEdit *mEmailEdit;
     QToolButton *mEditButton;
-    QStringList mEmailList;
+    KABC::Email::List mList;
 };
 
 class EmailEditDialog : public KDialog
@@ -70,10 +70,11 @@ public:
     explicit EmailEditDialog(QWidget *parent = 0);
     ~EmailEditDialog();
 
-    QStringList emails() const;
     bool changed() const;
 
-    void setEmailList(const QStringList &list);
+
+    KABC::Email::List emailList() const;
+    void setEmailList(const KABC::Email::List &list);
 protected Q_SLOTS:
     void add();
     void edit();
