@@ -31,6 +31,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldReadOnly();
+    void shouldSelectFirstEmail();
+    void shouldChangeEmail();
 };
 
 #endif // EMAILEDITWIDGETTEST_H

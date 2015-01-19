@@ -23,6 +23,7 @@
 #include <KLineEdit>
 #include <QToolButton>
 #include <qtest_kde.h>
+#include <KABC/Addressee>
 EmailEditWidgetTest::EmailEditWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -54,6 +55,39 @@ void EmailEditWidgetTest::shouldReadOnly()
     QToolButton *toolButton = qFindChild<QToolButton *>(&widget, QLatin1String("editbutton"));
     QVERIFY(lineedit->isReadOnly());
     QVERIFY(!toolButton->isEnabled());
+}
+
+void EmailEditWidgetTest::shouldSelectFirstEmail()
+{
+    EmailEditWidget widget;
+    KLineEdit *lineedit = qFindChild<KLineEdit *>(&widget, QLatin1String("emailedit"));
+    KABC::Addressee addr;
+    KABC::Email::List lst;
+    const QString firstEmail(QLatin1String("foo@kde.org"));
+    lst << KABC::Email(firstEmail);
+    lst << KABC::Email(QLatin1String("foo2@kde.org"));
+    addr.setEmailList(lst);
+    widget.loadContact(addr);
+    QCOMPARE(lineedit->text(), firstEmail);
+}
+
+void EmailEditWidgetTest::shouldChangeEmail()
+{
+    EmailEditWidget widget;
+    KLineEdit *lineedit = qFindChild<KLineEdit *>(&widget, QLatin1String("emailedit"));
+    KABC::Addressee addr;
+    KABC::Email::List lst;
+    const QString firstEmail(QLatin1String("foo@kde.org"));
+    lst << KABC::Email(firstEmail);
+    lst << KABC::Email(QLatin1String("foo2@kde.org"));
+    addr.setEmailList(lst);
+    widget.loadContact(addr);
+    const QString changedEmail(QLatin1String("foo3@kde.org"));
+    lineedit->setText(changedEmail);
+    KABC::Addressee result;
+    widget.storeContact(result);
+    QVERIFY(!result.emailList().isEmpty());
+    QCOMPARE(result.emailList().first().mail(), changedEmail);
 }
 
 QTEST_KDEMAIN(EmailEditWidgetTest, GUI)
