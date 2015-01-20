@@ -23,7 +23,7 @@
 #include <KLineEdit>
 #include <QToolButton>
 #include <qtest_kde.h>
-#include <KABC/Addressee>
+#include "kabc/addressee.h"
 EmailEditWidgetTest::EmailEditWidgetTest(QObject *parent)
     : QObject(parent)
 {
