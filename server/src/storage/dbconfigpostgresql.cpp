@@ -29,9 +29,13 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
-#include <unistd.h>
 
+#include <config-akonadi.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+
 
 using namespace Akonadi::Server;
 

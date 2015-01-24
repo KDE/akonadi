@@ -31,7 +31,10 @@
 #include <libs/protocol_p.h>
 #include <shared/akstandarddirs.h>
 
-#include <unistd.h>
+#include <config-akonadi.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 #include <QFile>
 #include <QFileInfo>
