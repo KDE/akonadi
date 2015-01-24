@@ -27,6 +27,7 @@
 #include <QDBusConnection>
 
 #include <libs/notificationmessagev3_p.h>
+#include <entities.h>
 
 class QWaitCondition;
 class QTimer;
@@ -39,7 +40,6 @@ namespace Server {
 
 class NotificationCollector;
 class AbstractSearchEngine;
-class Collection;
 
 
 class SearchManagerThread : public QThread
