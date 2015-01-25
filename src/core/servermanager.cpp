@@ -26,6 +26,8 @@
 #include "session_p.h"
 #include "firstrun_p.h"
 
+#include <Kdelibs4ConfigMigrator>
+
 #include <QDebug>
 
 #include <akonadi/private/protocol_p.h>
@@ -129,6 +131,10 @@ Q_GLOBAL_STATIC(ServerManagerPrivate, sInstance)
 ServerManager::ServerManager(ServerManagerPrivate *dd)
     : d(dd)
 {
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("servermanager"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi-firstrunrc"));
+    migrate.migrate();
+
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Server),
