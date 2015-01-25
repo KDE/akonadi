@@ -116,6 +116,18 @@ void Firstrun::setupNext()
         setupNext();
         return;
     }
+    if (type.capabilities().contains(QLatin1String("Unique"))) {
+        Q_FOREACH (const AgentInstance &agent, AgentManager::self()->instances()) {
+            if (agent.type() == type) {
+                // remember we set this one up already
+                KConfigGroup cfg(mConfig, "ProcessedDefaults");
+                cfg.writeEntry(agentCfg.readEntry("Id", QString()), agent.identifier());
+                cfg.sync();
+                setupNext();
+                return;
+            }
+        }
+    }
 
     AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type);
     connect(job, &AgentInstanceCreateJob::result, this, &Firstrun::instanceCreated);
