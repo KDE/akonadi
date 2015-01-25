@@ -190,7 +190,18 @@ void Firstrun::setupNext()
         setupNext();
         return;
     }
-
+    if (type.capabilities().contains(QLatin1String("Unique"))) {
+        Q_FOREACH (const AgentInstance &agent, AgentManager::self()->instances()) {
+            if (agent.type() == type) {
+                // remember we set this one up already
+                KConfigGroup cfg(mConfig, "ProcessedDefaults");
+                cfg.writeEntry(agentCfg.readEntry("Id", QString()), agent.identifier());
+                cfg.sync();
+                setupNext();
+                return;
+            }
+        }
+    }
 #ifndef KDEPIM_NO_KRESOURCES
     // KDE5: remove me
     // check if there is a kresource setup for this type already
