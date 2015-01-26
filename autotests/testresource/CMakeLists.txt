@@ -44,7 +44,7 @@ qt5_add_dbus_adaptor(knutresource_SRCS
 
 add_library(akonadi_knut_resource MODULE ${knutresource_SRCS})
 
-if (Q_WS_MAC)
+if (APPLE)
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.Knut")
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Knut Resource")
