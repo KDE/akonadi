@@ -29,6 +29,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPointer>
 #include <QPushButton>
 #include <QTreeView>
+#include <QHeaderView>
 
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
@@ -91,12 +92,16 @@ void IMEditorDialog::readConfig()
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
     }
+    const QByteArray header = group.readEntry("Header", QByteArray());
+    if (!header.isEmpty())
+        mView->header()->restoreState(header);
 }
 
 void IMEditorDialog::writeConfig()
 {
     KConfigGroup group(KGlobal::config(), "IMEditorDialog");
     group.writeEntry("Size", size());
+    group.writeEntry("Header", mView->header()->saveState());
 }
 
 void IMEditorDialog::setAddresses(const IMAddress::List &addresses)
