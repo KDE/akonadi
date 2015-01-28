@@ -111,7 +111,7 @@ void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start
 
 void TagEditWidget::Private::slotCreateTag()
 {
-    Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag(m_newTagEdit->text()), this);
+    Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(m_newTagEdit->text()), this);
     connect(createJob, SIGNAL(finished(KJob*)),
             this, SLOT(slotCreateTagFinished(KJob*)));
 
