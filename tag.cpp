@@ -19,10 +19,12 @@
 
 #include "tag.h"
 #include <akonadi/tagattribute.h>
+#include <QUuid>
 
 using namespace Akonadi;
 
 const char *Akonadi::Tag::PLAIN = "PLAIN";
+const char *Akonadi::Tag::GENERIC = "GENERIC";
 
 struct Akonadi::Tag::Private {
     Private()
@@ -212,3 +214,13 @@ QDebug &operator<<(QDebug &debug, const Tag &tag)
     debug << "Akonadi::Tag( ID " << tag.id() << ", GID " << tag.gid() << ", parent" << tag.parent().id() << ")";
     return debug;
 }
+
+Tag Tag::genericTag(QString name)
+{
+  Tag tag;
+  tag.d->type = GENERIC;
+  tag.d->gid = QUuid::createUuid().toByteArray().mid(1, 36);
+  tag.setName(name);
+  return tag;
+}
+

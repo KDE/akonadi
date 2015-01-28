@@ -56,6 +56,16 @@ public:
      */
     static const char *PLAIN;
 
+    /**
+     * The GENERIC type has the following properties:
+     * * mutable
+     * * gid is RFC 4122 compatible
+     * * no hierarchy (no parent)
+     *
+     * GENERIC tags are general purpose tags, that are used, if you can change tag name.
+     */
+    static const char *GENERIC;
+
     Tag();
     explicit Tag(Id id);
     /**
@@ -112,13 +122,16 @@ public:
      */
     bool isImmutable() const;
 
+    /**
+     * Returns a GENERIC tag with the given name and a valid gid
+     */
+    static Tag genericTag(QString name);
 private:
     class Private;
     QSharedPointer<Private> d;
 };
 
 }
-
 AKONADI_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Tag &tag);
 
 Q_DECLARE_METATYPE(Akonadi::Tag)
