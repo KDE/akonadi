@@ -127,7 +127,7 @@ public:
     void select(const Collection::Id &collectionId)
     {
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
-        if (index.isValid()) {
+        if (index.isValid() && !q->selectionModel()->isSelected(index)) {
             q->selectionModel()->select(index, QItemSelectionModel::Select);
         }
     }
