@@ -113,14 +113,6 @@ public:
         }
     }
 
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
-    {
-        for (int row = topLeft.row(); row <= bottomRight.row(); row++) {
-            const QModelIndex idx = topLeft.parent().child(row, 0);
-            insertIfAvailable(idx);
-        }
-    }
-
     /**
      *  Selects the index in the internal selection model to make the collection visible in the model
      */
@@ -275,7 +267,6 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
     connect(source, SIGNAL(modelReset()), this, SLOT(reload()));
     connect(source, SIGNAL(layoutChanged()), this, SLOT(reload()));
     connect(source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)));
-    connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()
