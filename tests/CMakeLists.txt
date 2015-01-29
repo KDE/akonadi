@@ -9,6 +9,8 @@ file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
 option(KDEPIMLIBS_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
 option(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as backend" TRUE)
+option(KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS "Run isolated tests with MySql as backend" FALSE)
+option(KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS "Run isolated tests with PostgreSQL as backend" FALSE)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
