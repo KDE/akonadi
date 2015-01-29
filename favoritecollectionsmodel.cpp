@@ -75,9 +75,6 @@ public:
     {
         if (collectionIds.contains(col)) {
             select(col);
-            if (!referencedCollections.contains(col)) {
-                reference(col);
-            }
         }
     }
 
@@ -121,6 +118,9 @@ public:
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (index.isValid() && !q->selectionModel()->isSelected(index)) {
             q->selectionModel()->select(index, QItemSelectionModel::Select);
+            if (!referencedCollections.contains(collectionId)) {
+                reference(collectionId);
+            }
         }
     }
 
@@ -129,6 +129,9 @@ public:
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (idx.isValid()) {
             q->selectionModel()->select(idx, QItemSelectionModel::Deselect);
+            if (referencedCollections.contains(collectionId)) {
+                dereference(collectionId);
+            }
         }
     }
 
@@ -179,7 +182,6 @@ public:
             return;
         }
         collectionIds << collectionId;
-        reference(collectionId);
         select(collectionId);
     }
 
@@ -187,7 +189,6 @@ public:
     {
         collectionIds.removeAll(collectionId);
         labelMap.remove(collectionId);
-        dereference(collectionId);
         deselect(collectionId);
     }
 
