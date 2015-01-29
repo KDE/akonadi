@@ -28,7 +28,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtCore/QProcessEnvironment>
-#include <QtCore/QRegexp>
+#include <QtCore/QRegExp>
 
 #include <cstdlib>
 
