@@ -419,6 +419,7 @@ install( FILES
   tagfetchscope.h
   tagdeletejob.h
   tagwidget.h
+  tageditwidget.h
   tagmanagementdialog.h
   tagselectiondialog.h
   trashjob.h

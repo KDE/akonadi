@@ -22,7 +22,7 @@
 #include "tagselectiondialog.h"
 #include "tagmodel.h"
 #include "monitor.h"
-#include "tageditwidget_p.h"
+#include "tageditwidget.h"
 #include <KLocalizedString>
 #include <KSharedConfig>
 

@@ -18,7 +18,7 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "tageditwidget_p.h"
+#include "tageditwidget.h"
 
 #include <kicon.h>
 #include <klineedit.h>
@@ -268,7 +268,7 @@ void TagEditWidget::setSelection(const Akonadi::Tag::List &tags)
     d->select(QModelIndex(), 0, d->m_model->rowCount() - 1, QItemSelectionModel::ClearAndSelect);
 }
 
-Akonadi::Tag::List TagEditWidget::selection()
+Akonadi::Tag::List TagEditWidget::selection() const
 {
     Akonadi::Tag::List list;
     for (int i = 0; i < d->m_checkableProxy->rowCount(); ++i) {
