@@ -158,7 +158,6 @@ private:
 
     Q_PRIVATE_SLOT(d, void reload())
     Q_PRIVATE_SLOT(d, void rowsInserted(QModelIndex, int, int))
-    Q_PRIVATE_SLOT(d, void dataChanged(QModelIndex, QModelIndex))
     //@endcond
 };
 
