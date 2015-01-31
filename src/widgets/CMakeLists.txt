@@ -29,6 +29,7 @@ set(akonadiwidgets_SRCS
     tagmanagementdialog.cpp
     tagselectiondialog.cpp
     tagwidget.cpp
+    tagselectwidget.cpp
 )
 
 set(akonadiwidgets_UI
@@ -63,6 +64,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     TagSelectionDialog
     TagEditWidget
     TagWidget
+    TagSelectWidget
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
 )
 

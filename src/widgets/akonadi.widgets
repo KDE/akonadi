@@ -17,3 +17,11 @@ IncludeFile=entitytreeview.h
 ConstructorArgs=(parent)
 Group=Input (KDE-PIM)
 
+[Akonadi::TagSelectWidget]
+ToolTip=A Widget to select tag (Akonadi)
+WhatsThis=A Widget to select tag.
+IncludeFile=tagselectwidget.h
+ConstructorArgs=(parent)
+Group=Input (KDE-PIM)
+
+
