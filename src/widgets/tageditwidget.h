@@ -38,14 +38,14 @@ class AKONADIWIDGETS_EXPORT TagEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TagEditWidget(Akonadi::TagModel *model, QWidget *parent = 0, bool enableSelection = false);
+    explicit TagEditWidget(Akonadi::TagModel *model, QWidget *parent = Q_NULLPTR, bool enableSelection = false);
     virtual ~TagEditWidget();
 
     void setSelection(const Akonadi::Tag::List &tags);
     Akonadi::Tag::List selection() const;
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     class Private;
