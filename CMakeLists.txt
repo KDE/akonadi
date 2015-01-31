@@ -200,6 +200,7 @@ set( akonadikde_LIB_SRC
   tagfetchjob.cpp
   tagdeletejob.cpp
   tageditwidget.cpp
+  tagselectwidget.cpp
   tagmanagementdialog.cpp
   tagselectiondialog.cpp
   tagwidget.cpp
@@ -420,6 +421,7 @@ install( FILES
   tagdeletejob.h
   tagwidget.h
   tageditwidget.h
+  tagselectwidget.h
   tagmanagementdialog.h
   tagselectiondialog.h
   trashjob.h
