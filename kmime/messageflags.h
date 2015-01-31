@@ -23,8 +23,15 @@
 
 #include "akonadi-kmime_export.h"
 
+namespace KMime
+{
+  class Message;
+}
+
 namespace Akonadi
 {
+  class Item;
+
 /**
  * @short Contains predefined message flag identifiers.
  *
@@ -137,6 +144,14 @@ AKONADI_KMIME_EXPORT extern const char *Spam;
  * @since 4.6
  */
 AKONADI_KMIME_EXPORT extern const char *Ham;
+
+
+/**
+ * Copies all message flags from a KMime::Message object
+ * into an Akonadi::Item object
+ * @since 4.14.6
+ */
+AKONADI_KMIME_EXPORT void copyMessageFlags(KMime::Message &from, Akonadi::Item &to);
 }
 }
 

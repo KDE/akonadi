@@ -20,6 +20,10 @@
 
 #include "messageflags.h"
 
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_util.h>
+#include <akonadi/item.h>
+
 const char *Akonadi::MessageFlags::Seen = "\\SEEN";
 const char *Akonadi::MessageFlags::Deleted = "\\DELETED";
 const char *Akonadi::MessageFlags::Answered = "\\ANSWERED";
@@ -38,3 +42,18 @@ const char *Akonadi::MessageFlags::Signed = "$SIGNED";
 const char *Akonadi::MessageFlags::Encrypted = "$ENCRYPTED";
 const char *Akonadi::MessageFlags::Spam = "$JUNK";
 const char *Akonadi::MessageFlags::Ham = "$NOTJUNK";
+
+void Akonadi::MessageFlags::copyMessageFlags(KMime::Message &message, Akonadi::Item &item)
+{
+    if (KMime::isSigned(&message))
+        item.setFlag(Akonadi::MessageFlags::Signed);
+
+    if (KMime::isEncrypted(&message))
+        item.setFlag(Akonadi::MessageFlags::Encrypted);
+
+    if (KMime::hasInvitation(&message))
+        item.setFlag(Akonadi::MessageFlags::HasInvitation);
+
+    if (KMime::hasAttachment(&message))
+        item.setFlag(Akonadi::MessageFlags::HasAttachment);
+}
