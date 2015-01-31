@@ -24,6 +24,7 @@
 
 #include <QWidget>
 #include "tag.h"
+#include "akonadiwidgets_export.h"
 
 namespace Akonadi {
 
@@ -33,7 +34,7 @@ class TagModel;
  *
  * @since 4.13
  */
-class TagEditWidget : public QWidget
+class AKONADIWIDGETS_EXPORT TagEditWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -41,7 +42,7 @@ public:
     virtual ~TagEditWidget();
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Akonadi::Tag::List selection();
+    Akonadi::Tag::List selection() const;
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event);

@@ -61,6 +61,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     SubscriptionDialog
     TagManagementDialog
     TagSelectionDialog
+    TagEditWidget
     TagWidget
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
 )
