@@ -189,7 +189,7 @@ void FavoriteProxyTest::testLoadConfig()
 class Filter: public QSortFilterProxyModel
 {
 public:
-  virtual bool filterAcceptsRow(int, const QModelIndex &) const { return accepts; }
+  bool filterAcceptsRow(int, const QModelIndex &) const  Q_DECL_OVERRIDE { return accepts; }
   bool accepts;
 };
 

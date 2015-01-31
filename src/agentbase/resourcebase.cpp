@@ -116,7 +116,7 @@ public:
         }
     }
 
-    virtual void changeProcessed()
+    void changeProcessed() Q_DECL_OVERRIDE
     {
         if (m_recursiveMover) {
             m_recursiveMover->changeProcessed();

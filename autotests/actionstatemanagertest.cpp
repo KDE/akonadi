@@ -42,7 +42,7 @@ public:
     UnitActionStateManager(ActionStateManagerTest *receiver);
 
 protected:
-    virtual bool hasResourceCapability(const Collection &collection, const QString &capability) const;
+    bool hasResourceCapability(const Collection &collection, const QString &capability) const Q_DECL_OVERRIDE;
 
 private:
     ActionStateManagerTest *mReceiver;

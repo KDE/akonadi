@@ -39,8 +39,8 @@ class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 public:
     AgentTypeWidgetDelegate(QObject *parent = 0);
 
-    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
     void drawFocus(QPainter *, const QStyleOptionViewItem &, const QRect &) const;
