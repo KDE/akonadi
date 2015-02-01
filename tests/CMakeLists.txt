@@ -106,6 +106,7 @@ add_akonadi_test(actionstatemanagertest.cpp)
 add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
 add_akonadi_test(searchquerytest.cpp)
+add_akonadi_test(tagselectwidgettest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
