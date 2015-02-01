@@ -47,6 +47,7 @@ void TagSelectWidget::Private::init()
 
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, mParent);
     mTagEditWidget = new Akonadi::TagEditWidget(model, mParent, true);
+    mainLayout->addWidget(mTagEditWidget);
 }
 
 TagSelectWidget::TagSelectWidget(QWidget *parent)
