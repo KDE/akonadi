@@ -74,3 +74,24 @@ Tag::List TagSelectWidget::selection() const
     return d->mTagEditWidget->selection();
 }
 
+QStringList TagSelectWidget::tagToStringList() const
+{
+    QStringList list;
+    const Akonadi::Tag::List tags = selection();
+    foreach (const Akonadi::Tag &tag, tags) {
+        list.append(tag.url().url());
+    }
+    return list;
+}
+
+void TagSelectWidget::setSelectionFromStringList(const QStringList &lst)
+{
+    Akonadi::Tag::List tags;
+
+    const QStringList categories = lst;
+    foreach (const QString &category, categories) {
+        tags.append(Akonadi::Tag::fromUrl(QUrl(category)));
+    }
+    setSelection(tags);
+}
+
