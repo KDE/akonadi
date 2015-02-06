@@ -49,7 +49,7 @@ class ContactGroupEditorDialog::Private
     void slotGroupNameChanged( const QString& name )
     {
       bool isValid = !( name.contains( QLatin1Char( '@' ) ) || name.contains( QLatin1Char( '.' ) ) );
-      q->button( Ok )->setEnabled( !name.isEmpty() && isValid );
+      q->button( Ok )->setEnabled( !name.trimmed().isEmpty() && isValid );
       mEditor->groupNameIsValid( isValid );
     }
 
@@ -115,7 +115,7 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   connect( d->mEditor->d->mGui.groupName, SIGNAL(textChanged(QString)),
            this, SLOT(slotGroupNameChanged(QString)) );
 
-  button( Ok )->setEnabled( !d->mEditor->d->mGui.groupName->text().isEmpty() );
+  button( Ok )->setEnabled( !d->mEditor->d->mGui.groupName->text().trimmed().isEmpty() );
 
   d->readConfig();
 }
