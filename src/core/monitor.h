@@ -322,15 +322,6 @@ public:
     /**
      * Returns the set of items being monitored.
      *
-     * @since 4.3
-     *
-     * @deprecated Use itemsMonitoredEx() instead.
-     */
-    AKONADICORE_DEPRECATED QList<Item::Id> itemsMonitored() const;
-
-    /**
-     * Returns the set of items being monitored.
-     *
      * Faster version (at least on 32-bit systems) of itemsMonitored().
      *
      * @since 4.6

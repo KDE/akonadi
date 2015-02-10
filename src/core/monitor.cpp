@@ -276,12 +276,6 @@ Akonadi::Collection::List Monitor::collectionsMonitored() const
     return d->collections;
 }
 
-QList<Item::Id> Monitor::itemsMonitored() const
-{
-    Q_D(const Monitor);
-    return d->items.toList();
-}
-
 QVector<Item::Id> Monitor::itemsMonitoredEx() const
 {
     Q_D(const Monitor);
