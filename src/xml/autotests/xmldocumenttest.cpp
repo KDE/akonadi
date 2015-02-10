@@ -39,7 +39,7 @@ class XmlDocumentTest : public QObject
       Collection col = doc.collectionByRemoteId( QLatin1String( "c11" ) );
       QCOMPARE( col.name(), QString::fromLatin1( "Inbox" ) );
       QCOMPARE( col.attributes().count(), 1 );
-      QCOMPARE( col.parentRemoteId(), QString::fromLatin1( "c1" ) );
+      QCOMPARE( col.parentCollection().remoteId(), QString::fromLatin1( "c1" ) );
 
       QCOMPARE( doc.childCollections( col ).count(), 2 );
 

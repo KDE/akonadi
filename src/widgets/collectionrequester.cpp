@@ -107,7 +107,7 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
     Collection currentCollection = names.take(originalId);
     while (currentCollection.isValid()) {
         namesList.prepend(currentCollection.displayName());
-        currentCollection = names.take(currentCollection.parent());
+        currentCollection = names.take(currentCollection.parentCollection().id());
     }
     edit->setText(namesList.join(QLatin1String("/")));
 }

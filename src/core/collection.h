@@ -168,40 +168,6 @@ public:
     void setContentMimeTypes(const QStringList &types);
 
     /**
-     * Returns the identifier of the parent collection.
-     * @deprecated Use parentCollection()
-     */
-    AKONADICORE_DEPRECATED Id parent() const;
-
-    /**
-     * Sets the identifier of the @p parent collection.
-     * @param parent the parent identifier to set
-     * @deprecated Use setParentCollection()
-     */
-    AKONADICORE_DEPRECATED void setParent(Id parent);
-
-    /**
-     * Sets the parent @p collection.
-     * @param collection the parent collection to set
-     * @deprecated Use setParentCollection()
-     */
-    AKONADICORE_DEPRECATED void setParent(const Collection &collection);
-
-    /**
-     * Returns the parent remote identifier.
-     * @note This usually returns nothing for collections retrieved from the backend.
-     * @deprecated Use parentCollection()
-     */
-    AKONADICORE_DEPRECATED QString parentRemoteId() const;
-
-    /**
-     * Sets the parent's remote @p identifier.
-     * @param identifier the parent's remote identifier to set
-     * @deprecated Use setParentCollection()
-     */
-    AKONADICORE_DEPRECATED void setParentRemoteId(const QString &identifier);
-
-    /**
      * Returns the root collection.
      */
     static Collection root();

@@ -125,31 +125,6 @@ void Collection::setContentMimeTypes(const QStringList &types)
     }
 }
 
-Collection::Id Collection::parent() const
-{
-    return parentCollection().id();
-}
-
-void Collection::setParent(Id parent)
-{
-    parentCollection().setId(parent);
-}
-
-void Collection::setParent(const Collection &collection)
-{
-    setParentCollection(collection);
-}
-
-QString Collection::parentRemoteId() const
-{
-    return parentCollection().remoteId();
-}
-
-void Collection::setParentRemoteId(const QString &remoteParent)
-{
-    parentCollection().setRemoteId(remoteParent);
-}
-
 QUrl Collection::url(UrlType type) const
 {
     QUrl url;
