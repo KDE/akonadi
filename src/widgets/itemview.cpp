@@ -143,14 +143,6 @@ ItemView::ItemView(QWidget *parent)
     d->init();
 }
 
-ItemView::ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent)
-    : QTreeView(parent)
-    , d(new Private(this))
-{
-    d->xmlGuiClient = static_cast<KXMLGUIClient *>(xmlGuiWindow);
-    d->init();
-}
-
 ItemView::ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
     : QTreeView(parent)
     , d(new Private(this))
@@ -182,11 +174,6 @@ void ItemView::contextMenuEvent(QContextMenuEvent *event)
     if (popup) {
         popup->exec(event->globalPos());
     }
-}
-
-void ItemView::setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow)
-{
-    d->xmlGuiClient = static_cast<KXMLGUIClient *>(xmlGuiWindow);
 }
 
 void ItemView::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)

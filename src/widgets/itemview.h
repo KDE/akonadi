@@ -72,16 +72,6 @@ public:
     /**
      * Creates a new item view.
      *
-     * @param xmlGuiWindow The KXmlGuiWindow this is used in.
-     *                     This is needed for the XMLGUI based context menu.
-     *                     Passing 0 is ok and will disable the builtin context menu.
-     * @param parent The parent widget.
-     */
-    explicit AKONADIWIDGETS_DEPRECATED ItemView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = Q_NULLPTR);
-
-    /**
-     * Creates a new item view.
-     *
      * @param xmlGuiClient The KXMLGUIClient this is used in.
      *                     This is needed for the XMLGUI based context menu.
      *                     Passing 0 is ok and will disable the builtin context menu.
@@ -94,14 +84,6 @@ public:
      * Destroys the item view.
      */
     virtual ~ItemView();
-
-    /**
-     * Sets the KXmlGuiWindow which this view is used in.
-     * This is needed if you want to use the built-in context menu.
-     *
-     * @param xmlGuiWindow The KXmlGuiWindow this view is used in.
-     */
-    AKONADIWIDGETS_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
 
     /**
      * Sets the KXMLGUIFactory which this view is used in.
