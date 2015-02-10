@@ -16,7 +16,6 @@ set(akonadiwidgets_SRCS
     dragdropmanager.cpp
     entitylistview.cpp
     entitytreeview.cpp
-    entitytreeviewstatesaver.cpp
     erroroverlay.cpp
     etmviewstatesaver.cpp
     itemview.cpp
@@ -54,7 +53,6 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     CollectionView
     EntityListView
     EntityTreeView
-    EntityTreeViewStateSaver
     ETMViewStateSaver
     ItemView
     RenameFavoriteDialog
