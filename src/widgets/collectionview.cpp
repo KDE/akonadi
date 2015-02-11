@@ -149,14 +149,6 @@ CollectionView::CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
     d->init();
 }
 
-CollectionView::CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent)
-    : QTreeView(parent)
-    , d(new Private(this))
-{
-    d->xmlGuiClient = static_cast<KXMLGUIClient *>(xmlGuiWindow);
-    d->init();
-}
-
 CollectionView::~CollectionView()
 {
     delete d;
@@ -264,11 +256,6 @@ void CollectionView::contextMenuEvent(QContextMenuEvent *event)
 void CollectionView::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
 {
     d->xmlGuiClient = xmlGuiClient;
-}
-
-void CollectionView::setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow)
-{
-    d->xmlGuiClient = static_cast<KXMLGUIClient *>(xmlGuiWindow);
 }
 
 #include "moc_collectionview.cpp"

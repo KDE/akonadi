@@ -75,16 +75,6 @@ public:
     /**
      * Creates a new collection view.
      *
-     * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
-     *                     This is needed for the XMLGUI based context menu.
-     *                     Passing 0 is ok and will disable the builtin context menu.
-     * @param parent The parent widget.
-     */
-    explicit AKONADIWIDGETS_DEPRECATED CollectionView(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = Q_NULLPTR);
-
-    /**
-     * Creates a new collection view.
-     *
      * @param xmlGuiClient The KXmlGuiClient the view is used in.
      *                     This is needed for the XMLGUI based context menu.
      *                     Passing 0 is ok and will disable the builtin context menu.
@@ -96,14 +86,6 @@ public:
      * Destroys the collection view.
      */
     virtual ~CollectionView();
-
-    /**
-     * Sets the KXmlGuiWindow which the view is used in.
-     * This is needed if you want to use the built-in context menu.
-     *
-     * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
-     */
-    AKONADIWIDGETS_DEPRECATED void setXmlGuiWindow(KXmlGuiWindow *xmlGuiWindow);
 
     /**
      * Sets the KXMLGUIClient which the view is used in.
