@@ -31,19 +31,19 @@ public:
     TestAttribute()
     {
     }
-    QByteArray type() const
+    QByteArray type() const Q_DECL_OVERRIDE
     {
         return "EXTRA";
     }
-    QByteArray serialized() const
+    QByteArray serialized() const Q_DECL_OVERRIDE
     {
         return data;
     }
-    void deserialize(const QByteArray &ba)
+    void deserialize(const QByteArray &ba) Q_DECL_OVERRIDE
     {
         data = ba;
     }
-    TestAttribute *clone() const
+    TestAttribute *clone() const Q_DECL_OVERRIDE
     {
         TestAttribute *a = new TestAttribute;
         a->data = data;

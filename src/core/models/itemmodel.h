@@ -144,7 +144,7 @@ public:
      */
     QModelIndex indexForItem(const Akonadi::Item &item, const int column) const;
 
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
     /**
      * Returns the collection being displayed in the model.

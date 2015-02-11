@@ -35,7 +35,7 @@ public:
   {
   }
 
-  /* reimp */ bool connectToNotificationManager()
+  /* reimp */ bool connectToNotificationManager() Q_DECL_OVERRIDE
   {
     // Do nothing. This monitor should not connect to the notification manager.
     return true;

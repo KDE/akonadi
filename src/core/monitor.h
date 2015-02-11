@@ -187,7 +187,7 @@ public:
 
     /**
      * Ignores all change notifications caused by the given session. This
-     * overrides all other settings on this session.
+     * Q_DECL_OVERRIDEs all other settings on this session.
      *
      * @param session The session you want to ignore.
      */

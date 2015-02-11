@@ -28,7 +28,7 @@ class KRFPTestModel : public KRecursiveFilterProxyModel
 public:
     KRFPTestModel( QObject* parent ) : KRecursiveFilterProxyModel( parent ) { }
 
-    bool acceptRow( int sourceRow, const QModelIndex& sourceParent ) const
+    bool acceptRow( int sourceRow, const QModelIndex& sourceParent ) const Q_DECL_OVERRIDE
     {
         const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
         return !modelIndex.data().toString().contains(QLatin1String("three"));

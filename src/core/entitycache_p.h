@@ -191,7 +191,7 @@ private:
         return 0;
     }
 
-    void processResult(KJob *job)
+    void processResult(KJob *job) Q_DECL_OVERRIDE
     {
         typename T::Id id = job->property("EntityCacheNode").template value<typename T::Id>();
         // Error handling?
@@ -458,7 +458,7 @@ private:
         return job;
     }
 
-    void processResult(KJob *job)
+    void processResult(KJob *job) Q_DECL_OVERRIDE
     {
         if (job->error()) {
             qWarning() << job->errorString();

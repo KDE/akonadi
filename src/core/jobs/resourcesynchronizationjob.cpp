@@ -43,7 +43,7 @@ public:
     {
     }
 
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
     ResourceSynchronizationJob *q;
     AgentInstance instance;

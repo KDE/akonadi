@@ -590,7 +590,7 @@ public:
     /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
-    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
 
     /**
      * Returns a QModelIndex in @p model which points to @p collection.
@@ -707,10 +707,10 @@ protected:
 private:
     //@cond PRIVATE
     // Make these private, they shouldn't be called by applications
-    virtual bool insertRows(int row, int count, const QModelIndex &index = QModelIndex());
-    virtual bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex());
-    virtual bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex());
-    virtual bool removeRows(int row, int count, const QModelIndex &index = QModelIndex());
+    virtual bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
+    virtual bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
+    virtual bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
+    virtual bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
 
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id,
                                                                        const Akonadi::CollectionStatistics &))

@@ -38,11 +38,11 @@ public:
     QSettings *settings;
     bool enableChangeRecording;
 
-    virtual int pipelineSize() const;
-    virtual void notificationsEnqueued(int count);
-    virtual void notificationsErased();
+    virtual int pipelineSize() const Q_DECL_OVERRIDE;
+    virtual void notificationsEnqueued(int count) Q_DECL_OVERRIDE;
+    virtual void notificationsErased() Q_DECL_OVERRIDE;
 
-    virtual void slotNotify(const NotificationMessageV3::List &msgs);
+    virtual void slotNotify(const NotificationMessageV3::List &msgs) Q_DECL_OVERRIDE;
 
     QString notificationsFileName() const;
 

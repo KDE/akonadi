@@ -33,7 +33,7 @@ class FakeSessionPrivate : public SessionPrivate
     }
 
     /* reimp */
-    void init( const QByteArray &id )
+    void init( const QByteArray &id ) Q_DECL_OVERRIDE
     {
       // trimmed down version of the real SessionPrivate::init(), without any server access
       if ( !id.isEmpty() ) {
@@ -51,7 +51,7 @@ class FakeSessionPrivate : public SessionPrivate
     }
 
     /* reimp */
-    void reconnect()
+    void reconnect() Q_DECL_OVERRIDE
     {
       if ( m_mode == FakeSession::EndJobsImmediately )
         return;
@@ -62,7 +62,7 @@ class FakeSessionPrivate : public SessionPrivate
     }
 
     /* reimp */
-    void addJob( Job *job )
+    void addJob( Job *job ) Q_DECL_OVERRIDE
     {
       emit q_ptr->jobAdded( job );
       // Return immediately so that no actual communication happens with the server and

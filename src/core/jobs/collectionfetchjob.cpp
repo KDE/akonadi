@@ -67,7 +67,7 @@ public:
     bool mBasePrefetch;
     Collection::List mPrefetchList;
 
-    void aboutToFinish()
+    void aboutToFinish() Q_DECL_OVERRIDE
     {
       timeout();
     }
@@ -93,7 +93,7 @@ public:
         }
     }
 
-    QString jobDebuggingString() const
+    QString jobDebuggingString() const Q_DECL_OVERRIDE
     {
         if (mBase.isValid()) {
             return QStringLiteral("Collection Id %1").arg(mBase.id());

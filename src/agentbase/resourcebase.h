@@ -652,7 +652,7 @@ protected:
     /**
      * Inherited from AgentBase.
      */
-    void doSetOnline(bool online);
+    void doSetOnline(bool online) Q_DECL_OVERRIDE;
 
     /**
      * Indicate the use of hierarchical remote identifiers.

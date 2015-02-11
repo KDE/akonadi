@@ -76,12 +76,12 @@ public:
     {
     }
 
-    CollectionPrivate *clone() const
+    CollectionPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new CollectionPrivate(*this);
     }
 
-    void resetChangeLog()
+    void resetChangeLog() Q_DECL_OVERRIDE
     {
         contentTypesChanged = false;
         cachePolicyChanged = false;

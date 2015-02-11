@@ -86,7 +86,7 @@ public:
     {
     }
 
-    QObject *createInstance(const QString &identifier) const
+    QObject *createInstance(const QString &identifier) const Q_DECL_OVERRIDE
     {
         createComponentData(identifier);
         T *instance = new T(identifier);

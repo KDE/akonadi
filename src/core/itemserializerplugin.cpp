@@ -40,9 +40,9 @@ QSet<QByteArray> ItemSerializerPlugin::parts(const Item &item) const
     return set;
 }
 
-void ItemSerializerPlugin::overridePluginLookup(QObject *p)
+void ItemSerializerPlugin::Q_DECL_OVERRIDEPluginLookup(QObject *p)
 {
-    ItemSerializer::overridePluginLookup(p);
+    ItemSerializer::Q_DECL_OVERRIDEPluginLookup(p);
 }
 
 ItemSerializerPluginV2::~ItemSerializerPluginV2()

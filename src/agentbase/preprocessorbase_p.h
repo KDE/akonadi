@@ -36,7 +36,7 @@ class PreprocessorBasePrivate : public AgentBasePrivate
 public:
     explicit PreprocessorBasePrivate(PreprocessorBase *parent);
 
-    void delayedInit();
+    void delayedInit() Q_DECL_OVERRIDE;
 
     void beginProcessItem(qlonglong itemId, qlonglong collectionId, const QString &mimeType);
 

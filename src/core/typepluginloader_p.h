@@ -100,7 +100,7 @@ AKONADICORE_EXPORT QObject *objectForMimeTypeAndClass(const QString &mimetype, c
  *
  * @since 4.12
  */
-AKONADICORE_EXPORT void overridePluginLookup(QObject *plugin);
+AKONADICORE_EXPORT void Q_DECL_OVERRIDEPluginLookup(QObject *plugin);
 
 }
 

@@ -64,7 +64,7 @@ public:
             mPendingItems.clear();
         }
     }
-    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
+    QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/ {
         QStringList flags;
         if ( mRecursive ) {
             flags.append( QLatin1String( "recursive" ) );

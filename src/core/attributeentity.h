@@ -46,7 +46,7 @@ public:
     AttributeEntity(const AttributeEntity &other);
     virtual ~AttributeEntity();
 
-    //Each subclass must override this to avoid slicing
+    //Each subclass must Q_DECL_OVERRIDE this to avoid slicing
     virtual AttributeEntity &operator=(const AttributeEntity &other);
 
     /**

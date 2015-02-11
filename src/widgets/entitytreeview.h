@@ -113,7 +113,7 @@ public:
      * @reimp
      * @param model the model to set
      */
-    virtual void setModel(QAbstractItemModel *model);
+    virtual void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
     /**
      * Sets whether the drop action menu is @p enabled and will

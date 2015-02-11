@@ -317,7 +317,7 @@ public:
     {
     }
 
-    void resetChangeLog()
+    void resetChangeLog() Q_DECL_OVERRIDE
     {
         mFlagsOverwritten = false;
         mAddedFlags.clear();
@@ -328,7 +328,7 @@ public:
         mDeletedTags.clear();
     }
 
-    EntityPrivate *clone() const
+    EntityPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new ItemPrivate(*this);
     }

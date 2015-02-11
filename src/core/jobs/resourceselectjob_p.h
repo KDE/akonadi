@@ -94,7 +94,7 @@ public:
     explicit ResourceSelectJob(const QString &identifier, QObject *parent = 0);
 
 protected:
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

@@ -68,7 +68,7 @@ public:
 
     Tag &operator=(const Tag &);
     //Avoid slicing
-    AttributeEntity &operator=(const AttributeEntity &);
+    AttributeEntity &operator=(const AttributeEntity &) Q_DECL_OVERRIDE;
     bool operator==(const Tag &) const;
 
     static Tag fromUrl(const QUrl &url);

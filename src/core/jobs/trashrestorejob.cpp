@@ -180,7 +180,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
             return;
         }
 
-        //Explicit target overrides the resource
+        //Explicit target Q_DECL_OVERRIDEs the resource
         if (mTargetCollection.isValid()) {
             targetCollection = mTargetCollection;
         }
@@ -223,7 +223,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived(const Akonadi:
         return;
     }
 
-    //Explicit target overrides the resource/configured restore collection
+    //Explicit target Q_DECL_OVERRIDEs the resource/configured restore collection
     if (mTargetCollection.isValid()) {
         targetCollection = mTargetCollection;
     }

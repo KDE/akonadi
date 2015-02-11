@@ -46,9 +46,9 @@ public:
     void conflictResolved();
     void conflictResolveError(const QString &message);
 
-    void doUpdateItemRevision(Entity::Id, int oldRevision, int newRevision);
+    void doUpdateItemRevision(Entity::Id, int oldRevision, int newRevision) Q_DECL_OVERRIDE;
 
-    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
+    QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/;
     QByteArray fullCommand() const;
     QByteArray tagsToCommandParameter(const Tag::List &tags) const;
 

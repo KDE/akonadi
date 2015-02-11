@@ -55,22 +55,22 @@ public:
         return header() + mContent + footer();
     }
 
-    void setPropertyNameTitle(const QString &title)
+    void setPropertyNameTitle(const QString &title) Q_DECL_OVERRIDE
     {
         mNameTitle = title;
     }
 
-    void setLeftPropertyValueTitle(const QString &title)
+    void setLeftPropertyValueTitle(const QString &title) Q_DECL_OVERRIDE
     {
         mLeftTitle = title;
     }
 
-    void setRightPropertyValueTitle(const QString &title)
+    void setRightPropertyValueTitle(const QString &title) Q_DECL_OVERRIDE
     {
         mRightTitle = title;
     }
 
-    void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue)
+    void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) Q_DECL_OVERRIDE
     {
         switch (mode) {
         case NormalMode:

@@ -35,7 +35,7 @@ public:
     {
     }
 
-    QString jobDebuggingString() const { /*Q_DECL_OVERRIDE*/
+    QString jobDebuggingString() const Q_DECL_OVERRIDE { /*Q_DECL_OVERRIDE*/
         if (mCollection.id() > 0) {
             return QString::number(mCollection.id());
         } else {

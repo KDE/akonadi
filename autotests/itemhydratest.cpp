@@ -48,7 +48,7 @@ struct Rudi: public Volker
 {
     Rudi() { who = QLatin1String("Rudi"); }
     virtual ~Rudi() { }
-    /* reimp */ Rudi * clone() const { return new Rudi( *this ); }
+    /* reimp */ Rudi * clone() const Q_DECL_OVERRIDE { return new Rudi( *this ); }
 };
 
 typedef boost::shared_ptr<Rudi> RudiPtr;
@@ -57,7 +57,7 @@ typedef QSharedPointer<Rudi> RudiQPtr;
 struct Gerd: public Volker
 {
     Gerd() { who = QLatin1String("Gerd"); }
-    /* reimp */ Gerd * clone() const { return new Gerd( *this ); }
+    /* reimp */ Gerd * clone() const Q_DECL_OVERRIDE { return new Gerd( *this ); }
 };
 
 typedef std::shared_ptr<Gerd> GerdPtr;

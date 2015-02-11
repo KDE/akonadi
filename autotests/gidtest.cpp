@@ -75,7 +75,7 @@ void GidTest::initTestCase()
   QVERIFY(agent.isValid());
   agent.setIsOnline(true);
 
-  ItemSerializer::overridePluginLookup( new TestSerializer );
+  ItemSerializer::Q_DECL_OVERRIDEPluginLookup( new TestSerializer );
 }
 
 void GidTest::testSetAndFetch_data()

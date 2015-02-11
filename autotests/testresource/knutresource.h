@@ -44,7 +44,7 @@ public:
     ~KnutResource();
 
 public Q_SLOTS:
-    virtual void configure(WId windowId);
+    virtual void configure(WId windowId) Q_DECL_OVERRIDE;
 
 protected:
     void retrieveCollections() Q_DECL_OVERRIDE;

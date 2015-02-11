@@ -91,7 +91,7 @@ public:
     *
     * @since 4.12
     */
-    static void overridePluginLookup(QObject *plugin);
+    static void Q_DECL_OVERRIDEPluginLookup(QObject *plugin);
 };
 
 /**
@@ -105,8 +105,8 @@ class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 public:
     DefaultItemSerializerPlugin();
 
-    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
-    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) Q_DECL_OVERRIDE;
+    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) Q_DECL_OVERRIDE;
 };
 
 /**
@@ -120,8 +120,8 @@ class StdStringItemSerializerPlugin : public QObject, public ItemSerializerPlugi
 public:
     StdStringItemSerializerPlugin();
 
-    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
-    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) Q_DECL_OVERRIDE;
+    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) Q_DECL_OVERRIDE;
 };
 
 }

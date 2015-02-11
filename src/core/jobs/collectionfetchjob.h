@@ -182,7 +182,7 @@ protected:
 
 protected Q_SLOTS:
     //@cond PRIVATE
-    void slotResult(KJob *job);
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
     //@endcond
 
 private:

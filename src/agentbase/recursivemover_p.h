@@ -44,7 +44,7 @@ public:
     /// Set the collection that is actually moved.
     void setCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parentCollection);
 
-    virtual void start();
+    virtual void start() Q_DECL_OVERRIDE;
 
     /// Call once the last replayed change has been processed.
     void changeProcessed();

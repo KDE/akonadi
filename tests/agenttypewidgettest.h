@@ -33,7 +33,7 @@ class Dialog : public QDialog
 public:
     Dialog(QWidget *parent = Q_NULLPTR);
 
-    virtual void done(int);
+    virtual void done(int) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void currentChanged(const Akonadi::AgentType &current, const Akonadi::AgentType &previous);

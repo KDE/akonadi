@@ -437,12 +437,12 @@ struct Payload : public PayloadBase
     {
     }
 
-    PayloadBase *clone() const
+    PayloadBase *clone() const Q_DECL_OVERRIDE
     {
         return new Payload<T>(const_cast<Payload<T> *>(this)->payload);
     }
 
-    const char *typeName() const
+    const char *typeName() const Q_DECL_OVERRIDE
     {
         return typeid (const_cast<Payload<T> *>(this)).name();
     }

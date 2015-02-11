@@ -117,7 +117,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_collectionName;
@@ -139,7 +139,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_collectionName;
@@ -160,7 +160,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_collectionName;
@@ -187,7 +187,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     Akonadi::Collection m_collection;
@@ -210,7 +210,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_itemName;
@@ -232,7 +232,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_itemName;
@@ -253,7 +253,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_itemName;
@@ -275,7 +275,7 @@ public:
     {
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
 private:
     QString m_itemName;
@@ -312,7 +312,7 @@ public:
         m_items.insert(item.id(), item);
     }
 
-    /* reimp */ void doCommand();
+    /* reimp */ void doCommand() Q_DECL_OVERRIDE;
 
     static QList<FakeAkonadiServerCommand *> interpret(FakeServerData *fakeServerData, const QString &input);
 

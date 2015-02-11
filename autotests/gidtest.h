@@ -47,9 +47,9 @@ class TestSerializer : public QObject,
     Q_INTERFACES(Akonadi::GidExtractorInterface)
 
 public:
-    bool deserialize(Akonadi::Item &item, const QByteArray &label, QIODevice &data, int version);
-    void serialize(const Akonadi::Item &item, const QByteArray &label, QIODevice &data, int &version);
-    QString extractGid(const Akonadi::Item &item) const;
+    bool deserialize(Akonadi::Item &item, const QByteArray &label, QIODevice &data, int version) Q_DECL_OVERRIDE;
+    void serialize(const Akonadi::Item &item, const QByteArray &label, QIODevice &data, int &version) Q_DECL_OVERRIDE;
+    QString extractGid(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 };
 
 #endif

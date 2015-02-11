@@ -40,8 +40,8 @@ class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
 public:
     explicit CollectionGeneralPropertiesPage(QWidget *parent = 0);
 
-    void load(const Collection &collection);
-    void save(Collection &collection);
+    void load(const Collection &collection) Q_DECL_OVERRIDE;
+    void save(Collection &collection) Q_DECL_OVERRIDE;
 
 private:
     Ui::CollectionGeneralPropertiesPage ui;
