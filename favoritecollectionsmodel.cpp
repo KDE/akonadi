@@ -232,12 +232,15 @@ public:
     void saveConfig()
     {
         QStringList labels;
-
+        QList<Collection::Id> ids;
         foreach (const Collection::Id &collectionId, collectionIds) {
-            labels << labelForCollection(collectionId);
+            const QModelIndex idx = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
+            if (idx.isValid()) {
+                labels << labelForCollection(collectionId);
+                ids << collectionId;
+            }
         }
-
-        configGroup.writeEntry("FavoriteCollectionIds", collectionIds);
+        configGroup.writeEntry("FavoriteCollectionIds", ids);
         configGroup.writeEntry("FavoriteCollectionLabels", labels);
         configGroup.config()->sync();
     }
