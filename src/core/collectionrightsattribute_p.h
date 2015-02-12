@@ -64,13 +64,13 @@ public:
      */
     Collection::Rights rights() const;
 
-    virtual QByteArray type() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
 
-    virtual CollectionRightsAttribute *clone() const Q_DECL_OVERRIDE;
+    CollectionRightsAttribute *clone() const Q_DECL_OVERRIDE;
 
-    virtual QByteArray serialized() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
 
-    virtual void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

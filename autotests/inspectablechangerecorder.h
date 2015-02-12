@@ -38,7 +38,7 @@ public:
     {
     }
 
-    virtual bool emitNotification(const Akonadi::NotificationMessageV3 &msg) Q_DECL_OVERRIDE
+    bool emitNotification(const Akonadi::NotificationMessageV3 &msg) Q_DECL_OVERRIDE
     {
         // TODO: Check/Log
         return Akonadi::ChangeRecorderPrivate::emitNotification(msg);

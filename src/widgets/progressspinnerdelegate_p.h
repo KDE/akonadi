@@ -61,7 +61,7 @@ public:
     };
 
 protected:
-    virtual void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
+    void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
 
 private:
 
@@ -83,7 +83,7 @@ public:
     explicit ProgressSpinnerDelegate(DelegateAnimator *animator, QObject *parent = 0);
 
 protected:
-    virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
     DelegateAnimator *m_animator;

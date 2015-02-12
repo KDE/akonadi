@@ -44,7 +44,7 @@ public:
     void setResult(const QVector<qint64> &ids);
 
 protected:
-    virtual void doStart() Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(SearchResultJob)

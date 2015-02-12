@@ -139,14 +139,14 @@ public:
         return new Akonadi::NotificationSource(new FakeNotificationSource(parent));
     }
 
-    virtual Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE
+    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE
     {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return collectionCache;
     }
 
-    virtual Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE
+    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE
     {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)

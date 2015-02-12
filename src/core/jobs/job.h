@@ -135,7 +135,7 @@ public:
      * Returns the error string, if there has been an error, an empty
      * string otherwise.
      */
-    virtual QString errorString() const Q_DECL_OVERRIDE;
+    QString errorString() const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     /**
@@ -181,19 +181,19 @@ protected:
      *
      * @param job The new subjob.
      */
-    virtual bool addSubjob(KJob *job) Q_DECL_OVERRIDE;
+    bool addSubjob(KJob *job) Q_DECL_OVERRIDE;
 
     /**
      * Removes the given subjob of this job.
      *
      * @param job The subjob to remove.
      */
-    virtual bool removeSubjob(KJob *job) Q_DECL_OVERRIDE;
+    bool removeSubjob(KJob *job) Q_DECL_OVERRIDE;
 
     /**
      * Kills the execution of the job.
      */
-    virtual bool doKill() Q_DECL_OVERRIDE;
+    bool doKill() Q_DECL_OVERRIDE;
 
     /**
      * Call this method to indicate that this job will not call writeData() again.
@@ -202,7 +202,7 @@ protected:
     void emitWriteFinished();
 
 protected Q_SLOTS:
-    virtual void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 protected:
     //@cond PRIVATE

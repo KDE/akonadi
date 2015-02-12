@@ -51,7 +51,7 @@ public:
      */
     ~SpecialCollectionsDiscoveryJob();
 
-    virtual void start() Q_DECL_OVERRIDE;
+    void start() Q_DECL_OVERRIDE;
 
 protected:
     /**
