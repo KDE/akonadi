@@ -98,7 +98,7 @@ add_akonadi_test_widgets(tagselectwidgettest.cpp)
 add_akonadi_test_widgets(actionstatemanagertest.cpp)
 
 add_akonadi_test(sharedvaluepooltest.cpp)
-#add_akonadi_test(jobtest.cpp)
+add_akonadi_test(jobtest.cpp)
 # PORT FROM QJSON add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from 
