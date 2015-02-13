@@ -81,7 +81,7 @@ target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
-# FIX NAME add_akonadi_test(imapsettest.cpp)
+# It need KIMAP add_akonadi_test(imapsettest.cpp)
 add_akonadi_test(itemhydratest.cpp)
 add_akonadi_test(itemtest.cpp)
 add_akonadi_test(itemserializertest.cpp)
