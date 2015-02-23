@@ -34,7 +34,7 @@ TagSelectWidgetTest::~TagSelectWidgetTest()
 void TagSelectWidgetTest::shouldHaveDefaultValue()
 {
     Akonadi::TagSelectWidget widget;
-    Akonadi::TagEditWidget *edit = qFindChild<Akonadi::TagEditWidget *>(&widget, QLatin1String("tageditwidget"));
+    Akonadi::TagEditWidget *edit = widget.findChild<Akonadi::TagEditWidget *>(QLatin1String("tageditwidget"));
     QVERIFY(edit);
 }
 
