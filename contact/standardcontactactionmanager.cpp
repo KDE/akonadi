@@ -123,6 +123,11 @@ class StandardContactActionManager::Private
             mGenericManager->setContextText(
                         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
                         i18n( "Address book folder creation failed" ) );
+            mGenericManager->action(Akonadi::StandardActionManager::CreateCollection)->setProperty("ContentMimeTypes", QStringList() <<
+                                                                                                   QLatin1String("application/x-vnd.kde.contactgroup") <<
+                                                                                                   QLatin1String("text/directory") <<
+                                                                                                   QLatin1String("application/x-vnd.kde.contactgroup"));
+
 
             break;
         case Akonadi::StandardActionManager::CopyCollections:
