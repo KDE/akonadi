@@ -94,7 +94,6 @@ add_akonadi_test(entitydisplayattributetest.cpp)
 add_akonadi_test(proxymodelstest.cpp)
 add_akonadi_test(newmailnotifierattributetest.cpp)
 add_akonadi_test(pop3resourceattributetest.cpp)
-add_akonadi_test_widgets(tagselectwidgettest.cpp)
 add_akonadi_test_widgets(actionstatemanagertest.cpp)
 
 add_akonadi_test(sharedvaluepooltest.cpp)
@@ -138,6 +137,7 @@ add_akonadi_isolated_test(cachetest.cpp)
 # and the test is not very critical (we'll notice if we can't start the server), so we disable it for now.
 add_akonadi_isolated_test(servermanagertest.cpp)
 add_akonadi_isolated_test(collectioncreator.cpp)
+add_akonadi_isolated_test_advanced(tagselectwidgettest.cpp "" "KF5::AkonadiWidgets")
 
 
 # Having a benchmark is cool if you have any reference to compare against, but this
