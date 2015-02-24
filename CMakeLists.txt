@@ -21,6 +21,12 @@ set(KF5_VERSION "5.6.0")
 set(KDEPIMLIBS_VERSION "4.81.0")
 set(QT_REQUIRED_VERSION "5.2.0")
 
+# Remove it when we split it 
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+   option(KDEPIMLIBS_RUN_ISOLATED_TESTS "Run the isolated tests." FALSE)
+endif()
+
+
 ecm_setup_version(${KDEPIMLIBS_VERSION}
     VARIABLE_PREFIX AKONADILIBRARIES
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
