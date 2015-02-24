@@ -106,7 +106,6 @@ add_akonadi_test(actionstatemanagertest.cpp)
 add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
 add_akonadi_test(searchquerytest.cpp)
-add_akonadi_test(tagselectwidgettest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
@@ -144,6 +143,7 @@ add_akonadi_isolated_test(cachetest.cpp)
 # and the test is not very critical (we'll notice if we can't start the server), so we disable it for now.
 #add_akonadi_isolated_test(servermanagertest.cpp)
 add_akonadi_isolated_test(collectioncreator.cpp)
+add_akonadi_isolated_test(tagselectwidgettest.cpp)
 
 
 # Having a benchmark is cool if you have any reference to compare against, but this
