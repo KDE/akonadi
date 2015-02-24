@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=AkonadiSearchPlugin
 Name=Akonadi Test Search Plugin
+Name[bs]=Priključak za Akonadi test pretrage
 Name[ca]=Connector de cerca de prova per a l'Akonadi
 Name[ca@valencia]=Connector de cerca de prova per a l'Akonadi
 Name[cs]=Modul pro testování hledání v Akonadi
