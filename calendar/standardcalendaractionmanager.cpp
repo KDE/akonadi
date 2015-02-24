@@ -79,6 +79,11 @@ public:
             mGenericManager->setContextText(
                 StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
                 i18n("Calendar folder creation failed"));
+            mGenericManager->action(Akonadi::StandardActionManager::CreateCollection)->setProperty("ContentMimeTypes", QStringList() <<
+                                                                                                   QLatin1String("inode/directory") <<
+                                                                                                   QLatin1String("application/x-vnd.akonadi.calendar.todo") <<
+                                                                                                   QLatin1String("application/x-vnd.akonadi.calendar.event") <<
+                                                                                                   QLatin1String("application/x-vnd.akonadi.calendar.journal") );
 
             break;
         case  Akonadi::StandardActionManager::CopyCollections:
