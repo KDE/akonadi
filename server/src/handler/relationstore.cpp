@@ -126,9 +126,9 @@ bool RelationStore::parseStream()
         throw HandlerException("Couldn't find items for relation");
     }
 
-    if (items[0].collection().resourceId() != items[1].collection().resourceId()) {
+    /* if (items[0].collection().resourceId() != items[1].collection().resourceId()) {
         throw HandlerException("Relations can only be created for items within the same resource");
-    }
+    } */
 
     DataStore::self()->notificationCollector()->relationAdded(insertedRelation);
     DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List() << insertedRelation, Relation::List());
