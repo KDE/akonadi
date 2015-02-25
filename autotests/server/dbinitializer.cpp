@@ -67,13 +67,13 @@ QByteArray DbInitializer::toByteArray(Akonadi::Server::Tristate tristate)
 {
 
     switch (tristate) {
-        case Akonadi::Server::Tristate::True:
-            return "TRUE";
-        case Akonadi::Server::Tristate::False:
-            return "FALSE";
-        case Akonadi::Server::Tristate::Undefined:
-        default:
-            break;
+    case Akonadi::Server::Tristate::True:
+        return "TRUE";
+    case Akonadi::Server::Tristate::False:
+        return "FALSE";
+    case Akonadi::Server::Tristate::Undefined:
+    default:
+        break;
     }
     return "DEFAULT";
 }
@@ -114,7 +114,7 @@ QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bo
     if (col.referenced()) {
         s += " REFERENCED TRUE";
     }
-    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) +" )";
+    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) + " )";
     return s;
 }
 
@@ -125,11 +125,10 @@ Collection DbInitializer::collection(const char *name)
 
 void DbInitializer::cleanup()
 {
-    Q_FOREACH(Collection col, mResource.collections()) {
+    Q_FOREACH (Collection col, mResource.collections()) {
         if (!col.isVirtual()) {
             col.remove();
         }
     }
     mResource.remove();
 }
-

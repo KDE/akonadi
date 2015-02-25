@@ -31,7 +31,6 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(QList<qint64>)
 Q_DECLARE_METATYPE(QList<QString>)
 
-
 class SearchTest : public QObject
 {
     Q_OBJECT

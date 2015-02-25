@@ -86,9 +86,14 @@ public:
         ntf.addEntity(pimItem.id(), pimItem.remoteId(), pimItem.remoteRevision(), pimItem.mimeType().name());
     }
 
-    struct PartHelper {
+    struct PartHelper
+    {
         PartHelper(const QString &type_, const QByteArray &data_, int size_, bool external_ = false, int version_ = 0)
-            : type(type_), data(data_), size(size_), external(external_), version(version_)
+            : type(type_)
+            , data(data_)
+            , size(size_)
+            , external(external_)
+            , version(version_)
         {
         }
         QString type;
@@ -125,9 +130,12 @@ public:
         }
     }
 
-    struct TagHelper {
+    struct TagHelper
+    {
         TagHelper(const QString &tagType_, const QString &gid_, const QString &remoteId_ = QString())
-            : tagType(tagType_), gid(gid_), remoteId(remoteId_)
+            : tagType(tagType_)
+            , gid(gid_)
+            , remoteId(remoteId_)
         {
         }
         QString tagType;
