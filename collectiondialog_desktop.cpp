@@ -170,6 +170,7 @@ public:
     bool mKeepTreeExpanded;
     KRecursiveFilterProxyModel *mFilterCollection;
     QCheckBox *mUseByDefault;
+    QStringList mContentMimeTypes;
 
     void slotDoubleClicked();
     void slotSelectionChanged();
@@ -266,6 +267,9 @@ void CollectionDialog::Private::slotAddChildCollection()
         Akonadi::Collection collection;
         collection.setName(name);
         collection.setParentCollection(parentCollection);
+        if (!mContentMimeTypes.isEmpty()) {
+            collection.setContentMimeTypes(mContentMimeTypes);
+        }
         Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob(collection);
         connect(job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)));
     }
@@ -401,5 +405,11 @@ bool CollectionDialog::useFolderByDefault() const
 {
     return d->mUseByDefault->isChecked();
 }
+
+void CollectionDialog::setContentMimeTypes(const QStringList &mimetypes)
+{
+    d->mContentMimeTypes = mimetypes;
+}
+
 
 #include "moc_collectiondialog.cpp"

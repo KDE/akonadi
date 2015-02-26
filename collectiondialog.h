@@ -201,6 +201,11 @@ public:
       * @since 4.13
       */
     bool useFolderByDefault() const;
+    /**
+     * Allow to specify collection content mimetype when we create new one.
+     * @since 4.14.6
+     */
+    void setContentMimeTypes(const QStringList &mimetypes);
 
 private:
     //@cond PRIVATE
