@@ -114,6 +114,12 @@ public:
      */
     void changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options);
 
+    /**
+     * Allow to specify collection content mimetype when we create new one.
+     * @since 4.14.6
+     */
+    void setContentMimeTypes(const QStringList &mimetypes);
+
 protected:
     void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
 

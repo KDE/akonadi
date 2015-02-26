@@ -241,6 +241,13 @@ void CollectionRequester::changeCollectionDialogOptions(CollectionDialog::Collec
     }
 }
 
+void CollectionRequester::setContentMimeTypes(const QStringList &mimetypes)
+{
+    if (d->collectionDialog) {
+        d->collectionDialog->setContentMimeTypes(mimetypes);
+    }
+}
+
 void CollectionRequester::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {
