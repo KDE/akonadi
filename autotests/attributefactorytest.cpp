@@ -38,7 +38,7 @@ static Collection res1;
 void AttributeFactoryTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
-    CollectionPathResolver *resolver = new CollectionPathResolver(QLatin1String("res1"), this);
+    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
     AKVERIFYEXEC(resolver);
     res1 = Collection(resolver->collection());
 }
@@ -47,7 +47,7 @@ void AttributeFactoryTest::testUnknownAttribute()
 {
     // The attribute is currently not registered.
     Item item;
-    item.setMimeType(QLatin1String("text/directory"));
+    item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
     TestAttribute *ta = new TestAttribute;
     QVERIFY(AttributeFactory::createAttribute(ta->type()));     // DefaultAttribute
@@ -73,7 +73,7 @@ void AttributeFactoryTest::testRegisteredAttribute()
     AttributeFactory::registerAttribute<TestAttribute>();
 
     Item item;
-    item.setMimeType(QLatin1String("text/directory"));
+    item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
     TestAttribute *ta = new TestAttribute;
     QVERIFY(AttributeFactory::createAttribute(ta->type()) != 0);

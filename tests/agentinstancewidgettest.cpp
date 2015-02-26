@@ -65,9 +65,9 @@ void Dialog::currentChanged(const Akonadi::AgentInstance &current, const Akonadi
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QLatin1String("agentinstanceviewtest"),
-                         QLatin1String("agentinstanceviewtest"),
-                         QLatin1String("0.10"));
+    KAboutData aboutData(QStringLiteral("agentinstanceviewtest"),
+                         QStringLiteral("agentinstanceviewtest"),
+                         QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

@@ -39,10 +39,10 @@ Dialog::Dialog(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     mFilter = new KComboBox(this);
-    mFilter->addItem(QLatin1String("None"));
-    mFilter->addItem(QLatin1String("text/calendar"));
-    mFilter->addItem(QLatin1String("text/directory"));
-    mFilter->addItem(QLatin1String("message/rfc822"));
+    mFilter->addItem(QStringLiteral("None"));
+    mFilter->addItem(QStringLiteral("text/calendar"));
+    mFilter->addItem(QStringLiteral("text/directory"));
+    mFilter->addItem(QStringLiteral("message/rfc822"));
     connect(mFilter, SIGNAL(activated(int)),
             this, SLOT(filterChanged(int)));
 
@@ -90,9 +90,9 @@ void Dialog::filterChanged(int index)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QLatin1String("agenttypeviewtest"),
-                         QLatin1String("agenttypeviewtest"),
-                         QLatin1String("0.10"));
+    KAboutData aboutData(QStringLiteral("agenttypeviewtest"),
+                         QStringLiteral("agenttypeviewtest"),
+                         QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

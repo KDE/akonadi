@@ -56,50 +56,50 @@ public:
     ActionStateManagerTest()
     {
         rootCollection = Collection::root();
-        const QString dummyMimeType(QLatin1String("text/dummy"));
+        const QString dummyMimeType(QStringLiteral("text/dummy"));
 
         resourceCollectionOne.setId(1);
-        resourceCollectionOne.setName(QLatin1String("resourceCollectionOne"));
+        resourceCollectionOne.setName(QStringLiteral("resourceCollectionOne"));
         resourceCollectionOne.setRights(Collection::ReadOnly);
         resourceCollectionOne.setParentCollection(rootCollection);
         resourceCollectionOne.setContentMimeTypes(QStringList() << Collection::mimeType() << dummyMimeType);
 
         folderCollectionOne.setId(10);
-        folderCollectionOne.setName(QLatin1String("folderCollectionOne"));
+        folderCollectionOne.setName(QStringLiteral("folderCollectionOne"));
         folderCollectionOne.setRights(Collection::ReadOnly);
         folderCollectionOne.setParentCollection(resourceCollectionOne);
         folderCollectionOne.setContentMimeTypes(QStringList() << Collection::mimeType() << dummyMimeType);
 
         resourceCollectionTwo.setId(2);
-        resourceCollectionTwo.setName(QLatin1String("resourceCollectionTwo"));
+        resourceCollectionTwo.setName(QStringLiteral("resourceCollectionTwo"));
         resourceCollectionTwo.setRights(Collection::AllRights);
         resourceCollectionTwo.setParentCollection(rootCollection);
         resourceCollectionTwo.setContentMimeTypes(QStringList() << Collection::mimeType() << dummyMimeType);
 
         folderCollectionTwo.setId(20);
-        folderCollectionTwo.setName(QLatin1String("folderCollectionTwo"));
+        folderCollectionTwo.setName(QStringLiteral("folderCollectionTwo"));
         folderCollectionTwo.setRights(Collection::AllRights);
         folderCollectionTwo.setParentCollection(resourceCollectionTwo);
         folderCollectionTwo.setContentMimeTypes(QStringList() << Collection::mimeType() << dummyMimeType);
 
         resourceCollectionThree.setId(3);
-        resourceCollectionThree.setName(QLatin1String("resourceCollectionThree"));
+        resourceCollectionThree.setName(QStringLiteral("resourceCollectionThree"));
         resourceCollectionThree.setRights(Collection::AllRights);
         resourceCollectionThree.setParentCollection(rootCollection);
         resourceCollectionThree.setContentMimeTypes(QStringList() << Collection::mimeType() << dummyMimeType);
 
         folderCollectionThree.setId(30);
-        folderCollectionThree.setName(QLatin1String("folderCollectionThree"));
+        folderCollectionThree.setName(QStringLiteral("folderCollectionThree"));
         folderCollectionThree.setRights(Collection::AllRights);
         folderCollectionThree.setParentCollection(resourceCollectionThree);
         folderCollectionThree.setContentMimeTypes(QStringList() << Collection::mimeType() << dummyMimeType);
 
         folderCollectionThree.setId(31);
-        folderCollectionThree.setName(QLatin1String("folderCollectionThreeOne"));
+        folderCollectionThree.setName(QStringLiteral("folderCollectionThreeOne"));
         folderCollectionThree.setRights(Collection::AllRights);
         folderCollectionThree.setParentCollection(resourceCollectionThree);
 
-        mCapabilityMap.insert(QLatin1String("NoConfig"), Collection::List() << resourceCollectionThree);
+        mCapabilityMap.insert(QStringLiteral("NoConfig"), Collection::List() << resourceCollectionThree);
         mFavoriteCollectionMap.insert(folderCollectionThree.id());
     }
 

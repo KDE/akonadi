@@ -61,11 +61,11 @@ class TestEnvironmentTest : public QObject
     void testResources()
     {
       QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_0") ) ) );
+        ServerManager::agentServiceName( ServerManager::Resource, QStringLiteral("akonadi_knut_resource_0") ) ) );
       QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_1") ) ) );
+        ServerManager::agentServiceName( ServerManager::Resource, QStringLiteral("akonadi_knut_resource_1") ) ) );
       QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, QLatin1String("akonadi_knut_resource_2") ) ) );
+        ServerManager::agentServiceName( ServerManager::Resource, QStringLiteral("akonadi_knut_resource_2") ) ) );
     }
 };
 
