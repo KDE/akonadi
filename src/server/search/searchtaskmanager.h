@@ -75,7 +75,8 @@ private Q_SLOTS:
     void searchLoop();
 
 private:
-    class ResourceTask {
+    class ResourceTask
+    {
     public:
         QString resourceId;
         qint64 collectionId;

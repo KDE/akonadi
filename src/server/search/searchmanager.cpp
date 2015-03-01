@@ -294,7 +294,6 @@ void SearchManager::updateSearchImpl(const Collection &collection, QWaitConditio
         queryCollections = queryAncestors;
     }
 
-
     //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
     if (queryCollections.isEmpty()) {
         akDebug() << "No collections to search, you're probably trying to search a virtual collection.";
