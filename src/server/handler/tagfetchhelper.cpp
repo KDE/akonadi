@@ -80,7 +80,7 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     qb.addColumns(Tag::fullColumnNames());
 
     qb.addJoin(QueryBuilder::InnerJoin, TagType::tableName(),
-                       Tag::typeIdFullColumnName(), TagType::idFullColumnName());
+               Tag::typeIdFullColumnName(), TagType::idFullColumnName());
     qb.addColumn(TagType::nameFullColumnName());
 
     // Expose tag's remote ID only to resources
@@ -88,7 +88,7 @@ QSqlQuery TagFetchHelper::buildTagQuery()
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
         Query::Condition joinCondition;
         joinCondition.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(),
-                                         Query::Equals, mConnection->context()->resource().id());
+                                        Query::Equals, mConnection->context()->resource().id());
         joinCondition.addColumnCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(),
                                          Query::Equals, Tag::idFullColumnName());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), joinCondition);

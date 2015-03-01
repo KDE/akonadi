@@ -56,7 +56,7 @@ Q_SIGNALS:
 private:
     QSqlQuery buildTagQuery();
     QSqlQuery buildAttributeQuery() const;
-    static QSqlQuery buildAttributeQuery( qint64 id );
+    static QSqlQuery buildAttributeQuery(qint64 id);
 
 private:
     Connection *mConnection;

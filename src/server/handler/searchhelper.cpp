@@ -102,7 +102,6 @@ static qint64 parentCollectionId(qint64 collectionId)
     return qb.query().value(0).toLongLong();
 }
 
-
 QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64> &ancestors, const QStringList &mimeTypes)
 {
     // Get all collections with given mime types

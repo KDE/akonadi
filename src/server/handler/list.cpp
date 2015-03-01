@@ -116,19 +116,19 @@ bool List::checkFilterCondition(const Collection &col) const
     }
     //Don't include the collection when only looking for collections to display/index/sync
     if (mCollectionsToDisplay &&
-            (((col.displayPref() == Tristate::Undefined) && !col.enabled()) ||
-            (col.displayPref() == Tristate::False))) {
+        (((col.displayPref() == Tristate::Undefined) && !col.enabled()) ||
+         (col.displayPref() == Tristate::False))) {
         return false;
     }
     if (mCollectionsToIndex &&
-            (((col.indexPref() == Tristate::Undefined) && !col.enabled()) ||
-            (col.indexPref() == Tristate::False))) {
+        (((col.indexPref() == Tristate::Undefined) && !col.enabled()) ||
+         (col.indexPref() == Tristate::False))) {
         return false;
     }
     //Single collection sync will still work since that is using a base fetch
     if (mCollectionsToSynchronize &&
-            (((col.syncPref() == Tristate::Undefined) && !col.enabled()) ||
-            (col.syncPref() == Tristate::False))) {
+        (((col.syncPref() == Tristate::Undefined) && !col.enabled()) ||
+         (col.syncPref() == Tristate::False))) {
         return false;
     }
     return true;
