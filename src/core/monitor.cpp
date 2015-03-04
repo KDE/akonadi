@@ -30,7 +30,6 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnection>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <iterator>
 

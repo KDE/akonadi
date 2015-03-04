@@ -26,7 +26,6 @@
 #include "qtest_akonadi.h"
 #include "test_utils.h"
 
-#include <QtCore/QDebug>
 
 using namespace Akonadi;
 

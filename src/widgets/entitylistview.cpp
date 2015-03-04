@@ -24,7 +24,6 @@
 #include "dragdropmanager_p.h"
 #include "favoritecollectionsmodel.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QDragMoveEvent>
 #include <QMenu>

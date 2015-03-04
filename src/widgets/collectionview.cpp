@@ -32,7 +32,6 @@
 #include <kxmlguifactory.h>
 #include <kxmlguiwindow.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QApplication>
 #include <QDragMoveEvent>

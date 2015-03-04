@@ -24,7 +24,6 @@
 #include <klocalizedstring.h>
 #include <KPluginLoader>
 #include <KConfig>
-#include <QtCore/QDebug>
 #include <QDir>
 #include <QStandardPaths>
 using namespace Akonadi;

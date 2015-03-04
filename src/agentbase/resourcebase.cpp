@@ -52,7 +52,6 @@
 #include <qdebug.h>
 #include <klocalizedstring.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QHash>
 #include <QtCore/QSettings>
