@@ -114,6 +114,7 @@ EmailEditWidget::EmailEditWidget(QWidget *parent)
     layout->setSpacing(KDialog::spacingHint());
 
     mEmailEdit = new KLineEdit;
+    mEmailEdit->setTrapReturnKey(true);
     mEmailEdit->setObjectName(QLatin1String("emailedit"));
     new EmailAddressExtracter(mEmailEdit);
     connect(mEmailEdit, SIGNAL(textChanged(QString)),

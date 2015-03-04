@@ -44,10 +44,13 @@ NameEditDialog::NameEditDialog(QWidget *parent)
     mPrefixCombo->setEditable(true);
 
     mGivenNameEdit = new KLineEdit(page);
+    mGivenNameEdit->setTrapReturnKey(true);
 
     mAdditionalNameEdit = new KLineEdit(page);
+    mAdditionalNameEdit->setTrapReturnKey(true);
 
     mFamilyNameEdit = new KLineEdit(page);
+    mFamilyNameEdit->setTrapReturnKey(true);
 
     mSuffixCombo = new KComboBox(page);
     mSuffixCombo->setDuplicatesEnabled(false);

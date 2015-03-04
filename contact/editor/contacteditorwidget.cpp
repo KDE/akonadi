@@ -227,6 +227,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   internetLayout->addWidget( label, 1, 0 );
 
   mHomepageWidget = new KLineEdit;
+  mHomepageWidget->setTrapReturnKey(true);
   label->setBuddy( mHomepageWidget );
   internetLayout->addWidget( mHomepageWidget, 1, 1 );
 
@@ -235,6 +236,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   internetLayout->addWidget( label, 2, 0 );
 
   mBlogWidget = new KLineEdit;
+  mBlogWidget->setTrapReturnKey(true);
   label->setBuddy( mBlogWidget );
   internetLayout->addWidget( mBlogWidget, 2, 1 );
 
@@ -453,6 +455,7 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   familyLayout->addWidget( label, 0, 0 );
 
   mPartnerWidget = new KLineEdit;
+  mPartnerWidget->setTrapReturnKey(true);
   label->setBuddy( mPartnerWidget );
   familyLayout->addWidget( mPartnerWidget, 0, 1 );
 

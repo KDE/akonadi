@@ -40,6 +40,7 @@ IMEditWidget::IMEditWidget(QWidget *parent)
     layout->setMargin(0);
 
     mIMEdit = new KLineEdit;
+    mIMEdit->setTrapReturnKey(true);
     layout->addWidget(mIMEdit);
 
     mEditButton = new QToolButton;
