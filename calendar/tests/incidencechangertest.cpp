@@ -29,6 +29,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/itemdeletejob.h>
 
 #include <kcalcore/event.h>
 #include <kcalcore/journal.h>
@@ -45,6 +46,9 @@ Q_DECLARE_METATYPE(QList<Akonadi::Collection::Right>)
 Q_DECLARE_METATYPE(QList<Akonadi::Collection::Rights>)
 Q_DECLARE_METATYPE(QList<Akonadi::IncidenceChanger::ResultCode>)
 Q_DECLARE_METATYPE(KCalCore::RecurrenceRule::PeriodType)
+
+QString s_ourEmail = QLatin1String("unittests@dev.nul"); // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
+QString s_outEmail2 = QLatin1String("identity2@kde.org");
 
 static Akonadi::Item item()
 {
@@ -373,6 +377,179 @@ private Q_SLOTS:
         }
     }
 
+    void testModifyRescedule_data()
+    {
+        // When a event is resceduled than all attendees part status should set to NEEDS-ACTION
+        // kolab #4533
+        QTest::addColumn<Akonadi::Item>("item");
+        QTest::addColumn<Event::Ptr>("event");
+        QTest::addColumn<bool>("expectReset");
+
+        const Attendee::Ptr us = Attendee::Ptr(new Attendee(QString(), s_ourEmail));
+        us->setStatus(Attendee::Accepted);
+        const Attendee::Ptr mia = Attendee::Ptr(new Attendee(QLatin1String("Mia Wallace"), QLatin1String("mia@dev.nul")));
+        mia->setStatus(Attendee::Declined);
+        mia->setRSVP(false);
+        const Attendee::Ptr vincent = Attendee::Ptr(new Attendee(QLatin1String("Vincent"), QLatin1String("vincent@dev.nul")));
+        vincent->setStatus(Attendee::Delegated);
+        const Attendee::Ptr jules = Attendee::Ptr(new Attendee(QLatin1String("Jules"), QLatin1String("jules@dev.nul")));
+        jules->setStatus(Attendee::Accepted);
+        jules->setRole(Attendee::NonParticipant);
+
+        // we as organizator
+        Item item;
+        item.setMimeType(Event::eventMimeType());
+        Event::Ptr incidence = Event::Ptr(new Event());
+        incidence->setUid(QLatin1String("test123uid"));
+        incidence->setDtStart(KDateTime(QDate(2006, 1, 8), QTime(12, 0, 0), KDateTime::UTC));
+        incidence->setDtEnd(KDateTime(QDate(2006, 1, 8), QTime(14, 0, 0), KDateTime::UTC));
+        incidence->setAllDay(false);
+        incidence->setLocation(QLatin1String("location"));
+        incidence->setOrganizer(Person::Ptr(new Person(QString(), s_ourEmail)));
+        incidence->addAttendee(us);
+        incidence->addAttendee(mia);
+        incidence->addAttendee(vincent);
+        incidence->addAttendee(jules);
+        incidence->setDirtyFields(QSet<IncidenceBase::Field>());
+        item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence));
+            event->setDtStart(KDateTime(QDate(2006, 1, 8), QTime(13, 0, 0), KDateTime::UTC));
+            QCOMPARE(event->dirtyFields().count(), 1);
+            QTest::newRow("organizator:start Date") << item << event << true;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence));
+            event->setDtEnd(KDateTime(QDate(2006, 1, 8), QTime(13, 0, 0), KDateTime::UTC));
+            QCOMPARE(event->dirtyFields().count(), 1);
+            QTest::newRow("organizator:end Date") << item << event << true;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence));
+            event->setAllDay(true);
+            QCOMPARE(event->dirtyFields().count(), 2);
+            QTest::newRow("organizator:allDay") << item << event << true;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence));
+            event->setLocation(QLatin1String("location2"));
+            QCOMPARE(event->dirtyFields().count(), 1);
+            QTest::newRow("organizator:location") << item << event << true;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence));
+            event->setSummary(QLatin1String("summary"));
+            QCOMPARE(event->dirtyFields().count(), 1);
+            QTest::newRow("organizator:summary") << item << event << false;
+        }
+
+        //we are normal attendee
+        Item item2;
+        item2.setMimeType(Event::eventMimeType());
+        Event::Ptr incidence2 = Event::Ptr(new Event());
+        incidence2->setUid(QLatin1String("test123uid"));
+        incidence2->setDtStart(KDateTime(QDate(2006, 1, 8), QTime(12, 0, 0), KDateTime::UTC));
+        incidence2->setDtEnd(KDateTime(QDate(2006, 1, 8), QTime(14, 0, 0), KDateTime::UTC));
+        incidence2->setAllDay(false);
+        incidence2->setLocation(QLatin1String("location"));
+        incidence2->setOrganizer(Person::Ptr(new Person(QLatin1String("External organizator"), QLatin1String("exorga@dev.nul"))));
+        incidence2->addAttendee(us);
+        incidence2->addAttendee(mia);
+        incidence2->addAttendee(vincent);
+        incidence2->addAttendee(jules);
+        incidence2->setDirtyFields(QSet<IncidenceBase::Field>());
+        item2.setPayload<KCalCore::Incidence::Ptr>(incidence2);
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence2));
+            event->setDtStart(KDateTime(QDate(2006, 1, 8), QTime(13, 0, 0), KDateTime::UTC));
+            QTest::newRow("attendee:start Date") << item2 << event << false;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence2));
+            event->setDtEnd(KDateTime(QDate(2006, 1, 8), QTime(13, 0, 0), KDateTime::UTC));
+            QTest::newRow("attendee:end Date") << item2 << event << false;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence2));
+            event->setAllDay(false);
+            QTest::newRow("attendee:allDay") << item2 << event << false;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence2));
+            event->setLocation(QLatin1String("location2"));
+            QTest::newRow("attendee:location") << item2 << event << false;
+        }
+
+        {
+            Event::Ptr event = Event::Ptr(new Event(*incidence2));
+            event->setSummary(QLatin1String("summary"));
+            QTest::newRow("attendee:summary") << item2 << event << false;
+        }
+
+    }
+
+    void testModifyRescedule()
+    {
+        QFETCH(Akonadi::Item, item);
+        QFETCH(Event::Ptr, event);
+        QFETCH(bool, expectReset);
+
+        item.setId(-1);
+        ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+        AKVERIFYEXEC(job);
+        item = job->item();
+        item.setPayload<KCalCore::Incidence::Ptr>(event);
+
+        int revision = event->revision();
+
+        mChanger->setRespectsCollectionRights(true);
+        const int changeId = mChanger->modifyIncidence(item);
+        QVERIFY(changeId != -1);
+
+        mIncidencesToModify = 1;
+        mExpectedResultByChangeId.insert(changeId, IncidenceChanger::ResultCodeSuccess);
+        waitForSignals();
+        ItemFetchJob *fetchJob = new ItemFetchJob(item, this);
+        fetchJob->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC(fetchJob);
+        QVERIFY(fetchJob->items().count() == 1);
+        Item fetchedItem = fetchJob->items().first();
+
+        QVERIFY(fetchedItem.isValid());
+        QVERIFY(fetchedItem.hasPayload<KCalCore::Event::Ptr>());
+        Event::Ptr incidence = fetchedItem.payload<KCalCore::Event::Ptr>();
+
+        QCOMPARE(incidence->revision(), revision + 1);
+
+        if (expectReset) {
+            if (incidence->organizer()->email() == s_ourEmail) {
+                QCOMPARE(incidence->attendeeByMail(s_ourEmail)->status(), Attendee::Accepted);
+            } else {
+                QCOMPARE(incidence->attendeeByMail(s_ourEmail)->status(), Attendee::NeedsAction);
+            }
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("mia@dev.nul"))->status(), Attendee::NeedsAction);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("mia@dev.nul"))->RSVP(), true);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("vincent@dev.nul"))->status(), Attendee::Delegated);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("vincent@dev.nul"))->RSVP(), false);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("jules@dev.nul"))->status(), Attendee::Accepted);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("jules@dev.nul"))->RSVP(), false);
+        } else {
+            QCOMPARE(incidence->attendeeByMail(s_ourEmail)->status(), Attendee::Accepted);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("mia@dev.nul"))->status(), Attendee::Declined);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("vincent@dev.nul"))->status(), Attendee::Delegated);
+            QCOMPARE(incidence->attendeeByMail(QLatin1String("jules@dev.nul"))->status(), Attendee::Accepted);
+        }
+        delete fetchJob;
+    }
     void testMassModifyForConflicts_data()
     {
         QTest::addColumn<Akonadi::Item>("item");

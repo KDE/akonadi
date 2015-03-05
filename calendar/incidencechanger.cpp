@@ -63,6 +63,12 @@ ITIPHandlerDialogDelegate::Action actionFromStatus(ITIPHandlerHelper::SendResult
     }
 }
 
+bool weAreOrganizer(Incidence::Ptr incidence)
+{
+    const QString email = incidence->organizer()->email();
+    return Akonadi::CalendarUtils::thatIsMe(email);
+}
+
 namespace Akonadi {
 // Does a queued emit, with QMetaObject::invokeMethod
 static void emitCreateFinished(IncidenceChanger *changer,
@@ -552,8 +558,7 @@ void IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
                 break;
             }
 
-            const bool weAreOrganizer = Akonadi::CalendarUtils::thatIsMe(newIncidence->organizer()->email());
-            if (RUNNING_UNIT_TESTS && !weAreOrganizer) {
+            if (RUNNING_UNIT_TESTS && !weAreOrganizer(newIncidence)) {
                 // This is a bit of a workaround when running tests. I don't want to show the
                 // "You're not organizer, do you want to modify event?" dialog in unit-tests, but want
                 // to emulate a "yes" and a "no" press.
@@ -1026,6 +1031,25 @@ void IncidenceChanger::Private::performModification2(int changeId, ITIPHandlerHe
     {   // increment revision ( KCalCore revision, not akonadi )
         const int revision = incidence->revision();
         incidence->setRevision(revision + 1);
+
+        //Reset attendee status, when resceduling
+        QSet<IncidenceBase::Field> resetPartStatus;
+        resetPartStatus << IncidenceBase::FieldDtStart
+                        << IncidenceBase::FieldDtEnd
+                        << IncidenceBase::FieldDtStart
+                        << IncidenceBase::FieldLocation
+                        << IncidenceBase::FieldDtDue
+                        << IncidenceBase::FieldDuration
+                        << IncidenceBase::FieldRecurrence;
+        if (!(incidence->dirtyFields() & resetPartStatus).isEmpty() && weAreOrganizer(incidence)) {
+            foreach (const Attendee::Ptr &attendee, incidence->attendees()) {
+                if ( attendee->role() != Attendee::NonParticipant &&
+                    attendee->status() != Attendee::Delegated && !Akonadi::CalendarUtils::thatIsMe(attendee)) {
+                    attendee->setStatus(Attendee::NeedsAction);
+                    attendee->setRSVP(true);
+                }
+            }
+        }
     }
 
     // Dav Fix
