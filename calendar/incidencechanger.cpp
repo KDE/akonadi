@@ -429,8 +429,8 @@ void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
     const Item item = j->item();
     Q_ASSERT(mDirtyFieldsByJob.contains(job));
     Q_ASSERT(item.hasPayload<KCalCore::Incidence::Ptr>());
-    item.payload<KCalCore::Incidence::Ptr>()->setDirtyFields(mDirtyFieldsByJob.value(job));
     const QSet<KCalCore::IncidenceBase::Field> dirtyFields = mDirtyFieldsByJob.value(job);
+    item.payload<KCalCore::Incidence::Ptr>()->setDirtyFields(dirtyFields);
     QString description;
     if (change->atomicOperationId != 0) {
         AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
@@ -658,20 +658,17 @@ void IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
                 if (!Akonadi::CalendarUtils::thatIsMe(incidence->organizer()->email())) {
                     const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
                     bool notifyOrganizer = false;
-                    for (QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it) {
-                        const QString email = *it;
-                        KCalCore::Attendee::Ptr me(incidence->attendeeByMail(email));
-                        if (me) {
-                            if (me->status() == KCalCore::Attendee::Accepted ||
-                                    me->status() == KCalCore::Attendee::Delegated) {
-                                notifyOrganizer = true;
-                            }
-                            KCalCore::Attendee::Ptr newMe(new KCalCore::Attendee(*me));
-                            newMe->setStatus(KCalCore::Attendee::Declined);
-                            incidence->clearAttendees();
-                            incidence->addAttendee(newMe);
-                            break;
+                    KCalCore::Attendee::Ptr me(incidence->attendeeByMails(myEmails));
+                    if (me) {
+                        if (me->status() == KCalCore::Attendee::Accepted ||
+                                me->status() == KCalCore::Attendee::Delegated) {
+                            notifyOrganizer = true;
                         }
+                        KCalCore::Attendee::Ptr newMe(new KCalCore::Attendee(*me));
+                        newMe->setStatus(KCalCore::Attendee::Declined);
+                        incidence->clearAttendees();
+                        incidence->addAttendee(newMe);
+                        break;
                     }
 
                     if (notifyOrganizer) {
