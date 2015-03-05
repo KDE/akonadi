@@ -69,6 +69,20 @@ bool weAreOrganizer(Incidence::Ptr incidence)
     return Akonadi::CalendarUtils::thatIsMe(email);
 }
 
+bool allowedModificationsWithoutRevisionUpdate(Incidence::Ptr incidence)
+{
+    // Modifications that are per user allowd without getting outofsync with organisator
+    // * if only alarm settings are modified.
+    const QSet<KCalCore::IncidenceBase::Field> dirtyFields = incidence->dirtyFields();
+    QSet<KCalCore::IncidenceBase::Field> alarmOnlyModify;
+    alarmOnlyModify << IncidenceBase::FieldAlarms << IncidenceBase::FieldLastModified;
+    if (dirtyFields == alarmOnlyModify) {
+        return true;
+    }
+
+    return false;
+}
+
 namespace Akonadi {
 // Does a queued emit, with QMetaObject::invokeMethod
 static void emitCreateFinished(IncidenceChanger *changer,
@@ -558,6 +572,11 @@ void IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
                 break;
             }
 
+            if (allowedModificationsWithoutRevisionUpdate(newIncidence)) {
+                change->emitUserDialogClosedBeforeChange(ITIPHandlerHelper::ResultSuccess);
+                return;
+            }
+
             if (RUNNING_UNIT_TESTS && !weAreOrganizer(newIncidence)) {
                 // This is a bit of a workaround when running tests. I don't want to show the
                 // "You're not organizer, do you want to modify event?" dialog in unit-tests, but want
@@ -676,6 +695,10 @@ void IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
             if (!newIncidence->supportsGroupwareCommunication() ||
                     !Akonadi::CalendarUtils::thatIsMe(newIncidence->organizer()->email())) {
                 // If we're not the organizer, the user already saw the "Do you really want to do this, incidence will become out of sync"
+                break;
+            }
+
+            if (allowedModificationsWithoutRevisionUpdate(newIncidence)) {
                 break;
             }
 
@@ -1028,9 +1051,11 @@ void IncidenceChanger::Private::performModification2(int changeId, ITIPHandlerHe
     }
 
     Incidence::Ptr incidence = CalendarUtils::incidence(newItem);
-    {   // increment revision ( KCalCore revision, not akonadi )
-        const int revision = incidence->revision();
-        incidence->setRevision(revision + 1);
+    {
+        if (!allowedModificationsWithoutRevisionUpdate(incidence)) {        // increment revision ( KCalCore revision, not akonadi )
+            const int revision = incidence->revision();
+            incidence->setRevision(revision + 1);
+        }
 
         //Reset attendee status, when resceduling
         QSet<IncidenceBase::Field> resetPartStatus;

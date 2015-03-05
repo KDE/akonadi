@@ -377,6 +377,48 @@ private Q_SLOTS:
         }
     }
 
+    void testModifyingAlarmSettings()
+    {
+        // A user should be able to change alarm settings independently
+        // do not trigger a revision increment
+        // kolab #1386
+        Item item;
+        item.setMimeType(Event::eventMimeType());
+        Incidence::Ptr incidence = Incidence::Ptr(new Event());
+        incidence->setUid(QLatin1String("test123uid"));
+        incidence->setSummary(QLatin1String("summary"));
+        incidence->setOrganizer(Person::Ptr(new Person(QLatin1String("orga"), QLatin1String("orga@dev.nul"))));
+        incidence->setDirtyFields(QSet<IncidenceBase::Field>());
+        item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+        ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+        AKVERIFYEXEC(job);
+        item = job->item();
+        Alarm::Ptr alarm = Alarm::Ptr(new Alarm(incidence.data()));
+        alarm->setStartOffset(Duration(-15));
+        alarm->setType(Alarm::Display);
+        incidence->addAlarm(alarm);
+        item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+
+        mChanger->setRespectsCollectionRights(true);
+        const int changeId = mChanger->modifyIncidence(item);
+        QVERIFY(changeId != -1);
+
+        mIncidencesToModify = 1;
+        mExpectedResultByChangeId.insert(changeId, IncidenceChanger::ResultCodeSuccess);
+        waitForSignals();
+        ItemFetchJob *fetchJob = new ItemFetchJob(item, this);
+        fetchJob->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC(fetchJob);
+        QVERIFY(fetchJob->items().count() == 1);
+        Item fetchedItem = fetchJob->items().first();
+        QVERIFY(fetchedItem.isValid());
+        QVERIFY(fetchedItem.hasPayload<KCalCore::Incidence::Ptr>());
+        Incidence::Ptr incidence2 = fetchedItem.payload<KCalCore::Incidence::Ptr>();
+        QCOMPARE(incidence2->alarms().count(), 1);
+        QCOMPARE(incidence2->revision(), 0);
+        delete fetchJob;
+    }
+
     void testModifyRescedule_data()
     {
         // When a event is resceduled than all attendees part status should set to NEEDS-ACTION
