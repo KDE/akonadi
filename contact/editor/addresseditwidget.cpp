@@ -436,24 +436,28 @@ AddressEditDialog::AddressEditDialog(QWidget *parent)
     label = new QLabel(i18nc("<postOfficeBoxLabel>:", "%1:", KABC::Address::postOfficeBoxLabel()), page);
     topLayout->addWidget(label, 2 , 0);
     mPOBoxEdit = new KLineEdit(page);
+    mPOBoxEdit->setTrapReturnKey(true);
     label->setBuddy(mPOBoxEdit);
     topLayout->addWidget(mPOBoxEdit, 2, 1);
 
     label = new QLabel(i18nc("<localityLabel>:", "%1:", KABC::Address::localityLabel()), page);
     topLayout->addWidget(label, 3, 0);
     mLocalityEdit = new KLineEdit(page);
+    mLocalityEdit->setTrapReturnKey(true);
     label->setBuddy(mLocalityEdit);
     topLayout->addWidget(mLocalityEdit, 3, 1);
 
     label = new QLabel(i18nc("<regionLabel>:", "%1:", KABC::Address::regionLabel()), page);
     topLayout->addWidget(label, 4, 0);
     mRegionEdit = new KLineEdit(page);
+    mRegionEdit->setTrapReturnKey(true);
     label->setBuddy(mRegionEdit);
     topLayout->addWidget(mRegionEdit, 4, 1);
 
     label = new QLabel(i18nc("<postalCodeLabel>:", "%1:", KABC::Address::postalCodeLabel()), page);
     topLayout->addWidget(label, 5, 0);
     mPostalCodeEdit = new KLineEdit(page);
+    mPostalCodeEdit->setTrapReturnKey(true);
     label->setBuddy(mPostalCodeEdit);
     topLayout->addWidget(mPostalCodeEdit, 5, 1);
 
