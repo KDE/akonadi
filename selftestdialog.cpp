@@ -610,7 +610,7 @@ void SelfTestDialog::saveReport()
                                     + QDate::currentDate().toString(QLatin1String("yyyyMMdd"))
                                     + QLatin1String(".txt");
     const QString fileName =  KFileDialog::getSaveFileName(QUrl(defaultFileName), QString(), this,
-                                                           i18n("Save Test Report"));
+                                                           i18n("Save Test Report"), KFileDialog::ConfirmOverwrite);
     if (fileName.isEmpty()) {
         return;
     }

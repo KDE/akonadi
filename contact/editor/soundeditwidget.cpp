@@ -196,7 +196,7 @@ void SoundEditWidget::changeSound()
 
 void SoundEditWidget::saveSound()
 {
-    const QString fileName = KFileDialog::getSaveFileName(KUrl(), QLatin1String("*.wav"), this);
+    const QString fileName = KFileDialog::getSaveFileName(KUrl(), QLatin1String("*.wav"), this, QString(), KFileDialog::ConfirmOverwrite);
     if (!fileName.isEmpty()) {
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly)) {
