@@ -34,8 +34,8 @@ Dialog::Dialog(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     mWidget = new Akonadi::AgentInstanceWidget(this);
-    connect(mWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
-            this, SLOT(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)));
+    connect(mWidget, &Akonadi::AgentInstanceWidget::currentChanged,
+            this, &Dialog::currentChanged);
 
     QDialogButtonBox *box = new QDialogButtonBox(this);
 
