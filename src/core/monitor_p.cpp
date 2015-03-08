@@ -97,28 +97,30 @@ bool MonitorPrivate::connectToNotificationManager()
 void MonitorPrivate::serverStateChanged(ServerManager::State state)
 {
     if (state == ServerManager::Running) {
-        connectToNotificationManager();
-        notificationSource->setAllMonitored(monitorAll);
-        Q_FOREACH (const Collection &col, collections) {
-            notificationSource->setMonitoredCollection(col.id(), true);
-        }
-        Q_FOREACH (const Entity::Id id, items) {
-            notificationSource->setMonitoredItem(id, true);
-        }
-        Q_FOREACH (const QByteArray &resource, resources) {
-            notificationSource->setMonitoredResource(resource, true);
-        }
-        Q_FOREACH (const QByteArray &session, sessions) {
-            notificationSource->setIgnoredSession(session, true);
-        }
-        Q_FOREACH (const QString &mimeType, mimetypes) {
-            notificationSource->setMonitoredMimeType(mimeType, true);
-        }
-        Q_FOREACH (Tag::Id tagId, tags) {
-            notificationSource->setMonitoredTag(tagId, true);
-        }
-        Q_FOREACH (Monitor::Type type, types) {
-            notificationSource->setMonitoredType(static_cast<NotificationMessageV2::Type>(type), true);
+        if (connectToNotificationManager()) {
+            notificationSource->setAllMonitored(monitorAll);
+            Q_FOREACH (const Collection &col, collections) {
+                notificationSource->setMonitoredCollection(col.id(), true);
+            }
+            Q_FOREACH (const Entity::Id id, items) {
+                notificationSource->setMonitoredItem(id, true);
+            }
+            Q_FOREACH (const QByteArray &resource, resources) {
+                notificationSource->setMonitoredResource(resource, true);
+            }
+            Q_FOREACH (const QByteArray &session, sessions) {
+                notificationSource->setIgnoredSession(session, true);
+            }
+            Q_FOREACH (const QString &mimeType, mimetypes) {
+                notificationSource->setMonitoredMimeType(mimeType, true);
+            }
+            Q_FOREACH (Tag::Id tagId, tags) {
+                notificationSource->setMonitoredTag(tagId, true);
+            }
+            Q_FOREACH (Monitor::Type type, types) {
+                notificationSource->setMonitoredType(
+                    static_cast<NotificationMessageV2::Type>(type), true);
+            }
         }
     }
 }
