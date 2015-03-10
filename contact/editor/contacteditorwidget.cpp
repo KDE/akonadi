@@ -349,6 +349,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 0, 0 );
 
   mOrganizationWidget = new KLineEdit;
+  mOrganizationWidget->setTrapReturnKey(true);
   label->setBuddy( mOrganizationWidget );
   generalLayout->addWidget( mOrganizationWidget, 0, 1 );
 
@@ -357,6 +358,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 1, 0 );
 
   mProfessionWidget = new KLineEdit;
+  mProfessionWidget->setTrapReturnKey(true);
   label->setBuddy( mProfessionWidget );
   generalLayout->addWidget( mProfessionWidget, 1, 1 );
 
@@ -365,6 +367,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 2, 0 );
 
   mTitleWidget = new KLineEdit;
+  mTitleWidget->setTrapReturnKey(true);
   label->setBuddy( mTitleWidget );
   generalLayout->addWidget( mTitleWidget , 2, 1 );
 
@@ -373,6 +376,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 3, 0 );
 
   mDepartmentWidget = new KLineEdit;
+  mDepartmentWidget->setTrapReturnKey(true);
   label->setBuddy( mDepartmentWidget );
   generalLayout->addWidget( mDepartmentWidget, 3, 1 );
 
@@ -381,6 +385,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 4, 0 );
 
   mOfficeWidget = new KLineEdit;
+  mOfficeWidget->setTrapReturnKey(true);
   label->setBuddy( mOfficeWidget );
   generalLayout->addWidget( mOfficeWidget, 4, 1 );
 
@@ -389,6 +394,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 5, 0 );
 
   mManagerWidget = new KLineEdit;
+  mManagerWidget->setTrapReturnKey(true);
   label->setBuddy( mManagerWidget );
   generalLayout->addWidget( mManagerWidget, 5, 1 );
 
@@ -397,6 +403,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 6, 0 );
 
   mAssistantWidget = new KLineEdit;
+  mAssistantWidget->setTrapReturnKey(true);
   label->setBuddy( mAssistantWidget );
   generalLayout->addWidget( mAssistantWidget, 6, 1 );
 

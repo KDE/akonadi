@@ -26,6 +26,7 @@
 #include <kabc/addressee.h>
 #include <kcalcore/freebusyurlstore.h>
 #include <kurlrequester.h>
+#include <KLineEdit>
 
 FreeBusyEditWidget::FreeBusyEditWidget(QWidget *parent)
     : QWidget(parent)
@@ -35,6 +36,7 @@ FreeBusyEditWidget::FreeBusyEditWidget(QWidget *parent)
     layout->setMargin(0);
 
     mURL = new KUrlRequester;
+    mURL->lineEdit()->setTrapReturnKey(true);
     layout->addWidget(mURL);
     setFocusProxy(mURL);
     setFocusPolicy(Qt::StrongFocus);
