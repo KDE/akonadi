@@ -40,6 +40,7 @@ NameEditWidget::NameEditWidget(QWidget *parent)
     layout->setSpacing(KDialog::spacingHint());
 
     mNameEdit = new KLineEdit;
+    mNameEdit->setTrapReturnKey(true);
     layout->addWidget(mNameEdit);
     setFocusProxy(mNameEdit);
     setFocusPolicy(Qt::StrongFocus);

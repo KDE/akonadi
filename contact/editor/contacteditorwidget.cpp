@@ -200,6 +200,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   nameLayout->addWidget( label, 2, 0 );
 
   mNickNameWidget = new KLineEdit;
+  mNickNameWidget->setTrapReturnKey(true);
   label->setBuddy( mNickNameWidget );
   nameLayout->addWidget( mNickNameWidget, 2, 1 );
 
