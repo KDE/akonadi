@@ -75,7 +75,7 @@ void CollectionAttributeTest::initTestCase()
     Control::start();
     AttributeFactory::registerAttribute<TestAttribute>();
 
-    CollectionPathResolver *resolver = new CollectionPathResolver(QLatin1String("res3"), this);
+    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res3"), this);
     AKVERIFYEXEC(resolver);
     parentColId = resolver->collection();
     QVERIFY(parentColId > 0);
@@ -107,7 +107,7 @@ void CollectionAttributeTest::testAttributes()
     TestAttribute *attr = new TestAttribute();
     attr->deserialize(attr1);
     Collection col;
-    col.setName(QLatin1String("attribute test"));
+    col.setName(QStringLiteral("attribute test"));
     col.setParentCollection(Collection(parentColId));
     col.addAttribute(attr);
     CollectionCreateJob *create = new CollectionCreateJob(col, this);

@@ -99,7 +99,7 @@ void LazyPopulationTest::initTestCase()
   for (int i = 0; i < bufferSize; i++) {
     Collection col;
     col.setParentCollection(res3);
-    col.setName(QString::fromLatin1("col%1").arg(i));
+    col.setName(QStringLiteral("col%1").arg(i));
     CollectionCreateJob *create = new CollectionCreateJob(col, this);
     AKVERIFYEXEC(create);
   }
@@ -132,7 +132,7 @@ bool waitForPopulation(const QModelIndex &idx, EntityTreeModel *model, int count
 
 void referenceCollection(EntityTreeModel *model, int index)
 {
-    QModelIndex idx = getIndex(QString::fromLatin1("col%1").arg(index), model);
+    QModelIndex idx = getIndex(QStringLiteral("col%1").arg(index), model);
     QVERIFY(idx.isValid());
     model->setData(idx, QVariant(), EntityTreeModel::CollectionRefRole);
     model->setData(idx, QVariant(), EntityTreeModel::CollectionDerefRole);

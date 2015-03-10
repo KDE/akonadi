@@ -60,7 +60,7 @@ public:
      *
      * @param parent The parent widget of the dialog.
      */
-    AgentTypeDialog(QWidget *parent = Q_NULLPTR);
+    explicit AgentTypeDialog(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent type dialog.

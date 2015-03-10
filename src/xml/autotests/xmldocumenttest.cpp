@@ -37,14 +37,14 @@ class XmlDocumentTest : public QObject
       QCOMPARE( doc.collections().count(), 9 );
 
       Collection col = doc.collectionByRemoteId( QLatin1String( "c11" ) );
-      QCOMPARE( col.name(), QString::fromLatin1( "Inbox" ) );
+      QCOMPARE( col.name(), QStringLiteral( "Inbox" ) );
       QCOMPARE( col.attributes().count(), 1 );
-      QCOMPARE( col.parentCollection().remoteId(), QString::fromLatin1( "c1" ) );
+      QCOMPARE( col.parentCollection().remoteId(), QStringLiteral( "c1" ) );
 
       QCOMPARE( doc.childCollections( col ).count(), 2 );
 
       Item item = doc.itemByRemoteId( QLatin1String( "contact1" ) );
-      QCOMPARE( item.mimeType(), QString::fromLatin1( "text/directory" ) );
+      QCOMPARE( item.mimeType(), QStringLiteral( "text/directory" ) );
       QVERIFY( item.hasPayload() );
 
       Item::List items = doc.items( col );
