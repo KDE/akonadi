@@ -192,7 +192,6 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     : QDialog(parent), mResolveStrategy(ConflictHandler::UseBothItems)
 {
     setWindowTitle(i18nc("@title:window", "Conflict Resolution"));
-    //PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.
     QDialogButtonBox *buttonBox = new QDialogButtonBox();
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
