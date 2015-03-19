@@ -130,11 +130,10 @@ private:
 
 }; // class Condition
 
-
 class Case
 {
-  friend class Akonadi::Server::QueryBuilder;
-  public:
+    friend class Akonadi::Server::QueryBuilder;
+public:
     Case(const Condition &when, const QString &then, const QString &elseBranch = QString());
     Case(const QString &column, Query::CompareOperator op, const QVariant &value, const QString &when, const QString &elseBranch = QString());
 
@@ -144,7 +143,7 @@ class Case
 
     void setElse(const QString &elseBranch);
 
-  private:
+private:
     QVector<QPair<Condition, QString> > mWhenThen;
     QString mElse;
 };

@@ -164,7 +164,8 @@ namespace _detail {
   \end
 */
 template <template <typename U> class Op>
-struct ById {
+struct ById
+{
     typedef bool result_type;
     bool operator()(Entity::Id lhs, Entity::Id rhs) const
     {
@@ -173,7 +174,7 @@ struct ById {
     template <typename E>
     bool operator()(const E &lhs, const E &rhs) const
     {
-        return this->operator()(lhs.id() , rhs.id());
+        return this->operator()(lhs.id(), rhs.id());
     }
     template <typename E>
     bool operator()(const E &lhs, Entity::Id rhs) const

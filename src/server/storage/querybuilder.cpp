@@ -225,74 +225,71 @@ void QueryBuilder::buildQuery(QString *statement)
             buildWhereCondition(statement, join.second);
         }
         break;
-    case Insert:
-        {
-            *statement += QLatin1String("INSERT INTO ");
-            *statement += mTable;
-            *statement += QLatin1String(" (");
-            for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
-                *statement += mColumnValues.at(i).first;
-                if (i + 1 < c) {
-                    *statement += QLatin1String(", ");
-                }
-            }
-            *statement += QLatin1String(") VALUES (");
-            for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
-                bindValue(statement, mColumnValues.at(i).second);
-                if (i + 1 < c) {
-                    *statement += QLatin1String(", ");
-                }
-            }
-            *statement += QLatin1Char(')');
-            if (mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty()) {
-                *statement += QLatin1String(" RETURNING ") + mIdentificationColumn;
-            }
-            break;
-        }
-    case Update:
-        {
-            // put the ON condition into the WHERE part of the UPDATE query
-            if (mDatabaseType != DbType::Sqlite) {
-                Q_FOREACH (const QString &table, mJoinedTables) {
-                    const QPair< JoinType, Query::Condition > &join = mJoins.value(table);
-                    Q_ASSERT(join.first == InnerJoin);
-                    whereCondition.addCondition(join.second);
-                }
-            } else {
-                // Note: this will modify the whereCondition
-                sqliteAdaptUpdateJoin(whereCondition);
-            }
-
-            *statement += QLatin1String("UPDATE ");
-            *statement += mTable;
-
-            if (mDatabaseType == DbType::MySQL && !mJoinedTables.isEmpty()) {
-                // for mysql we list all tables directly
+    case Insert: {
+        *statement += QLatin1String("INSERT INTO ");
+        *statement += mTable;
+        *statement += QLatin1String(" (");
+        for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
+            *statement += mColumnValues.at(i).first;
+            if (i + 1 < c) {
                 *statement += QLatin1String(", ");
-                appendJoined(statement, mJoinedTables);
             }
-
-            *statement += QLatin1String(" SET ");
-            Q_ASSERT_X(mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed");
-            for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
-                const QPair<QString, QVariant> &p = mColumnValues.at(i);
-                *statement += p.first;
-                *statement += QLatin1String(" = ");
-                bindValue(statement, p.second);
-                if (i + 1 < c) {
-                    *statement += QLatin1String(", ");
-                }
-            }
-
-            if (mDatabaseType == DbType::PostgreSQL && !mJoinedTables.isEmpty()) {
-                // PSQL have this syntax
-                // FROM t1 JOIN t2 JOIN ...
-                *statement += QLatin1String(" FROM ");
-                appendJoined(statement, mJoinedTables, QLatin1String(" JOIN "));
-            }
-
-            break;
         }
+        *statement += QLatin1String(") VALUES (");
+        for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
+            bindValue(statement, mColumnValues.at(i).second);
+            if (i + 1 < c) {
+                *statement += QLatin1String(", ");
+            }
+        }
+        *statement += QLatin1Char(')');
+        if (mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty()) {
+            *statement += QLatin1String(" RETURNING ") + mIdentificationColumn;
+        }
+        break;
+    }
+    case Update: {
+        // put the ON condition into the WHERE part of the UPDATE query
+        if (mDatabaseType != DbType::Sqlite) {
+            Q_FOREACH (const QString &table, mJoinedTables) {
+                const QPair< JoinType, Query::Condition > &join = mJoins.value(table);
+                Q_ASSERT(join.first == InnerJoin);
+                whereCondition.addCondition(join.second);
+            }
+        } else {
+            // Note: this will modify the whereCondition
+            sqliteAdaptUpdateJoin(whereCondition);
+        }
+
+        *statement += QLatin1String("UPDATE ");
+        *statement += mTable;
+
+        if (mDatabaseType == DbType::MySQL && !mJoinedTables.isEmpty()) {
+            // for mysql we list all tables directly
+            *statement += QLatin1String(", ");
+            appendJoined(statement, mJoinedTables);
+        }
+
+        *statement += QLatin1String(" SET ");
+        Q_ASSERT_X(mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed");
+        for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
+            const QPair<QString, QVariant> &p = mColumnValues.at(i);
+            *statement += p.first;
+            *statement += QLatin1String(" = ");
+            bindValue(statement, p.second);
+            if (i + 1 < c) {
+                *statement += QLatin1String(", ");
+            }
+        }
+
+        if (mDatabaseType == DbType::PostgreSQL && !mJoinedTables.isEmpty()) {
+            // PSQL have this syntax
+            // FROM t1 JOIN t2 JOIN ...
+            *statement += QLatin1String(" FROM ");
+            appendJoined(statement, mJoinedTables, QLatin1String(" JOIN "));
+        }
+        break;
+    }
     case Delete:
         *statement += QLatin1String("DELETE FROM ");
         *statement += mTable;

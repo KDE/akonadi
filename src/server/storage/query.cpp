@@ -69,7 +69,6 @@ void Query::Condition::addCondition(const Condition &condition)
     mSubConditions << condition;
 }
 
-
 Case::Case(const Condition &when, const QString &then, const QString &elseBranch)
 {
     addCondition(when, then);
@@ -105,4 +104,3 @@ void Case::setElse(const QString &elseBranch)
 {
     mElse = elseBranch;
 }
-

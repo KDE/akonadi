@@ -31,7 +31,6 @@
 #include <QAtomicInt>
 #endif
 
-
 class QSqlQuery;
 
 namespace Akonadi {

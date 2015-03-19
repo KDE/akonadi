@@ -52,7 +52,7 @@ ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
 
     connect(mDBusConnection.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
-    connect(this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection);
+    connect(this, SIGNAL(requestAdded()), this, SLOT(processRequest()),Qt::QueuedConnection);
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()

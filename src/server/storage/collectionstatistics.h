@@ -44,15 +44,16 @@ class Collection;
 class CollectionStatistics
 {
 public:
-    struct Statistics {
+    struct Statistics
+    {
         qint64 count;
         qint64 size;
         qint64 read;
     };
 
-    static CollectionStatistics* self();
+    static CollectionStatistics *self();
 
-    const Statistics& statistics(const Collection &col);
+    const Statistics &statistics(const Collection &col);
     void invalidateCollection(const Collection &col);
 
 private:

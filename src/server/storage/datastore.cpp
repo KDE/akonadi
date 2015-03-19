@@ -1030,7 +1030,8 @@ bool DataStore::unhideAllPimItems()
     try {
         return PartHelper::remove(Part::partTypeIdFullColumnName(),
                                   PartTypeHelper::fromFqName(QLatin1String("ATR"), QLatin1String("HIDDEN")).id());
-    } catch ( ... ) {} // we can live with this failing
+    } catch (...) {
+    } // we can live with this failing
 
     return false;
 }

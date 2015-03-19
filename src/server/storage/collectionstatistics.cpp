@@ -31,7 +31,7 @@ using namespace Akonadi::Server;
 
 CollectionStatistics *CollectionStatistics::sInstance = 0;
 
-CollectionStatistics* CollectionStatistics::self()
+CollectionStatistics *CollectionStatistics::self()
 {
     if (sInstance == 0) {
         sInstance = new CollectionStatistics();
@@ -45,7 +45,7 @@ void CollectionStatistics::invalidateCollection(const Collection &col)
     mCache.remove(col.id());
 }
 
-const CollectionStatistics::Statistics& CollectionStatistics::statistics(const Collection &col)
+const CollectionStatistics::Statistics &CollectionStatistics::statistics(const Collection &col)
 {
     QMutexLocker lock(&mCacheLock);
     auto it = mCache.find(col.id());

@@ -215,7 +215,6 @@ QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value)
     return Akonadi::Server::DbInitializer::sqlValue(type, value);
 }
 
-
 //END Sqlite
 
 //BEGIN PostgreSQL

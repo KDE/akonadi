@@ -46,13 +46,13 @@ PartType PartTypeHelper::fromFqName(const QByteArray &fqName)
     return fromFqName(QLatin1String(fqName));
 }
 
-PartType PartTypeHelper::fromFqName(const QString& ns, const QString& name)
+PartType PartTypeHelper::fromFqName(const QString &ns, const QString &name)
 {
     PartType partType = PartType::retrieveByFQName(ns, name);
     if (!partType.isValid()) {
         PartType pt(name, ns);
         if (!pt.insert()) {
-            throw PartTypeException( "Failed to append part type" );
+            throw PartTypeException("Failed to append part type");
         }
         partType = pt;
     }
