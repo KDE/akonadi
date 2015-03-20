@@ -48,7 +48,8 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(HandlerException);
 
 /**
 The handler interfaces describes an entity capable of handling an AkonadiIMAP command.*/
-class Handler : public QObject {
+class Handler : public QObject
+{
     Q_OBJECT
 public:
     Handler();
