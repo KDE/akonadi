@@ -122,7 +122,6 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
             }
 
             if (found) {
-                found = d->filterAcceptRegExp(index, filterRegExp());
                 break;
             }
         }
@@ -130,8 +129,6 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
         if (!found) {
             return false;
         }
-    } else {
-        return d->filterAcceptRegExp(index, filterRegExp());
     }
 
     if (!d->capabilities.isEmpty()) {
@@ -157,11 +154,9 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
 
             if (!found) {
                 return false;
-            } else {
-                return d->filterAcceptRegExp(index, filterRegExp());
             }
         }
     }
 
-    return true;
+    return d->filterAcceptRegExp(index, filterRegExp());
 }
