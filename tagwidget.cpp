@@ -50,6 +50,8 @@ TagWidget::TagWidget(QWidget *parent)
     d->mModel = new Akonadi::TagModel(monitor, this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(0);
     d->mTagLabel = new KSqueezedTextLabel;
     d->mTagLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     layout->addWidget(d->mTagLabel);
