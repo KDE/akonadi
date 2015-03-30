@@ -39,7 +39,8 @@ QDebug akError();
 #ifndef QT_NO_DEBUG_OUTPUT
 QDebug akDebug();
 #else
-inline QNoDebug akDebug() {
+inline QNoDebug akDebug()
+{
     return QNoDebug();
 }
 #endif

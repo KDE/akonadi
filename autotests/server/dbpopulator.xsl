@@ -25,7 +25,7 @@
 
 <xsl:output method="text" encoding="utf-8"/>
 
-<xsl:variable name="schema" select="document('../../src/storage/akonadidb.xml')/database"/>
+<xsl:variable name="schema" select="document('../../src/server/storage/akonadidb.xml')/database"/>
 <xsl:variable name="data" select="." />
 
 <xsl:template name="first-upper-case">
