@@ -52,6 +52,8 @@ Connection::Connection(QObject *parent)
     , m_backend(0)
     , m_streamParser(0)
     , m_verifyCacheOnRetrieval(false)
+    , m_totalTime( 0 )
+    , m_reportTime( false )
 {
 }
 
@@ -105,6 +107,7 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
                               Q_ARG(Akonadi::Server::Response, greeting));
 }
 
+
 int Connection::protocolVersion()
 {
     return AKONADI_PROTOCOL_VERSION;
@@ -133,6 +136,10 @@ Connection::~Connection()
     ClientCapabilityAggregator::removeSession(m_clientCapabilities);
     Tracer::self()->endConnection(m_identifier, QString());
     collectionReferenceManager()->removeSession(m_sessionId);
+
+    if (m_reportTime) {
+        reportTime();
+    }
 }
 
 void Connection::slotNewData()
@@ -142,6 +149,7 @@ void Connection::slotNewData()
         return;
     }
 
+    QString currentCommand;
     while (m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty()) {
         try {
             const QByteArray tag = m_streamParser->readString();
@@ -153,12 +161,16 @@ void Connection::slotNewData()
             if (command.isEmpty()) {
                 throw Akonadi::Server::Exception("empty command");
             }
-            // Tag context is not persistent, unlike Collection
-            // FIXME: Collection should not be persistent either, but we need to keep backward compatibility
+            // Tag context and collection context is not persistent.
             //        with SELECT job
             context()->setTag(-1);
+            context()->setCollection(Collection());
             Tracer::self()->connectionInput(m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()));
             m_currentHandler = findHandlerForCommand(command);
+            currentCommand = QString::fromLatin1(command);
+            if (m_reportTime) {
+                startTime();
+            }
             assert(m_currentHandler);
             connect(m_currentHandler, SIGNAL(responseAvailable(Akonadi::Server::Response)),
                     this, SLOT(slotResponseAvailable(Akonadi::Server::Response)), Qt::DirectConnection);
@@ -194,6 +206,9 @@ void Connection::slotNewData()
                 m_streamParser->skipCurrentCommand();
             } catch (...) {
             }
+        }
+        if (m_reportTime) {
+            stopTime(currentCommand);
         }
         delete m_currentHandler;
         m_currentHandler = 0;
@@ -350,3 +365,27 @@ bool Connection::verifyCacheOnRetrieval() const
 {
     return m_verifyCacheOnRetrieval;
 }
+
+void Connection::startTime()
+{
+    m_time.start();
+}
+
+void Connection::stopTime(const QString &identifier)
+{
+    int elapsed = m_time.elapsed();
+    m_totalTime += elapsed;
+    m_totalTimeByHandler[identifier] += elapsed;
+    m_executionsByHandler[identifier]++;
+    qDebug() << identifier <<" time : " << elapsed << " total: " << m_totalTime;
+}
+
+void Connection::reportTime() const
+{
+    qDebug() << "===== Time report for " << m_identifier << " =====";
+    qDebug() << " total: " << m_totalTime;
+    Q_FOREACH (const QString &handler, m_totalTimeByHandler.keys()) {
+        qDebug() << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
+    }
+}
+

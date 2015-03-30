@@ -78,6 +78,15 @@ void FakeClient::dataAvailable()
 void FakeClient::readServerPart()
 {
     while (!mScenario.isEmpty() && mScenario.first().startsWith("S: ")) {
+        if (mScenario.first().startsWith("S: IGNORE")) {
+            QByteArray command = mScenario.takeFirst();
+            command = command.mid(9).trimmed();
+            const int count = command.toInt();
+            for (int i = 0; i < count; i++) {
+                mStreamParser->readUntilCommandEnd();
+            }
+            continue;
+        }
         const QByteArray received = "S: " + mStreamParser->readUntilCommandEnd();
         const QByteArray expected = mScenario.takeFirst() + "\r\n";
         CLIENT_COMPARE(QString::fromUtf8(received), QString::fromUtf8(expected));

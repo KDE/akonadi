@@ -46,6 +46,8 @@ protected:
     bool sendResponse(const QByteArray &response, const PimItem &item);
 
 private:
+    QSet<QByteArray> extractFlagNames(const PimItem &item) const;
+
     QSet<QByteArray> mChangedParts;
 };
 

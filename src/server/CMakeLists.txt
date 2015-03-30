@@ -72,6 +72,9 @@ set(libakonadiserver_SRCS
     handler/move.cpp
     handler/remove.cpp
     handler/resourceselect.cpp
+    handler/relationstore.cpp
+    handler/relationremove.cpp
+    handler/relationfetch.cpp
     handler/scope.cpp
     handler/search.cpp
     handler/searchhelper.cpp

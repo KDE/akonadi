@@ -35,6 +35,7 @@
 #include "akonadischema.h"
 #include "parttypehelper.h"
 #include "querycache.h"
+#include "queryhelper.h"
 
 #include <shared/akdebug.h>
 #include <private/xdgbasedirs_p.h>
@@ -586,8 +587,71 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
             mNotificationCollector->itemsTagsChanged(items, QSet<qint64>(), removedTags);
         }
     }
+
+  return true;
+}
+
+bool DataStore::removeTags(const Tag::List &tags, bool silent)
+{
+    QVariantList removedTagsIds;
+    QSet<qint64> removedTags;
+    Q_FOREACH (const Tag &tag, tags) {
+        removedTagsIds << tag.id();
+        removedTags << tag.id();
+    }
+
+    // Get all PIM items that we will untag
+    SelectQueryBuilder<PimItem> itemsQuery;
+    itemsQuery.addJoin(QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName());
+    itemsQuery.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::In, removedTagsIds);
+
+    if (!itemsQuery.exec()) {
+        qDebug() << "Failed to execute query: " << itemsQuery.query().lastError();
+        return false;
+    }
+    const PimItem::List items = itemsQuery.result();
+
+    if (!items.isEmpty()) {
+        DataStore::self()->notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+    }
+
+    Q_FOREACH (const Tag &tag, tags) {
+        // Emit special tagRemoved notification for each resource that owns the tag
+        QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Select);
+        qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(),
+                    TagRemoteIdResourceRelation::resourceIdFullColumnName(), Resource::idFullColumnName());
+        qb.addColumn(Resource::nameFullColumnName());
+        qb.addValueCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, tag.id());
+        if (!qb.exec()) {
+            qDebug() << "Failed to execute query: " << qb.query().lastError();
+            return false;
+        }
+
+        // Emit specialized notifications for each resource
+        QSqlQuery query = qb.query();
+        while (query.next()) {
+            const QString rid = query.value(0).value<QString>();
+            const QByteArray resource = query.value(1).value<QByteArray>();
+
+            DataStore::self()->notificationCollector()->tagRemoved(tag, resource, rid);
+        }
+
+        // And one for clients - without RID
+        DataStore::self()->notificationCollector()->tagRemoved(tag, QByteArray(), QString());
+    }
+
+    // Just remove the tags, table constraints will take care of the rest
+    QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
+    qb.addValueCondition(Tag::idColumn(), Query::In, removedTagsIds);
+    if (!qb.exec()) {
+        qDebug() << "Failed to execute query: " << itemsQuery.query().lastError();
+        return false;
+    }
+
     return true;
 }
+
 
 /* --- ItemParts ----------------------------------------------------- */
 
@@ -1038,6 +1102,22 @@ bool DataStore::unhideAllPimItems()
 
 bool DataStore::cleanupPimItems(const PimItem::List &items)
 {
+    // generate relation removed notifications
+    Q_FOREACH (const PimItem &item, items) {
+        SelectQueryBuilder<Relation> relationQuery;
+        relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, item.id());
+        relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, item.id());
+        relationQuery.setSubQueryMode(Query::Or);
+
+        if (!relationQuery.exec()) {
+            throw HandlerException("Failed to obtain relations");
+        }
+        const Relation::List relations = relationQuery.result();
+        Q_FOREACH (const Relation &relation, relations) {
+            DataStore::self()->notificationCollector()->relationRemoved(relation);
+        }
+    }
+
     // generate the notification before actually removing the data
     mNotificationCollector->itemsRemoved(items);
 

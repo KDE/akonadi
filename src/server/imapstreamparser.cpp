@@ -240,7 +240,9 @@ ImapSet ImapStreamParser::readSequenceSet()
             if (lower < 0) {
                 lower = value;
             }
-            result.add(ImapInterval(lower, upper));
+            if ( lower >= 0 && upper >= 0 ) {
+                result.add(ImapInterval(lower, upper));
+            }
             lower = -1;
             upper = -1;
             value = -1;
@@ -759,6 +761,7 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
             while (!atLiteralEnd()) {
                 result.append(readLiteralPart());
             }
+            // Read the last character part and possible crlf
             i = m_position;
             do {
                 result.append(m_data[i]);

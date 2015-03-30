@@ -93,6 +93,13 @@
     </method>
     <signal name="isAllMonitoredChanged" />
 
+    <method name="setExclusive">
+      <arg name="exclusive" type="b" direction="in"/>
+    </method>
+    <method name="isExclusive">
+      <arg type="b" direction="out"/>
+    </method>
+
     <method name="setIgnoredSession">
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QByteArray &amp;"/>
       <arg name="session" type="ay" direction="in"/>
@@ -104,6 +111,10 @@
     </method>
     <signal name="ignoredSessionsChanged"/>
 
+    <method name="setSession">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QByteArray &amp;"/>
+      <arg name="session" type="ay" direction="in"/>
+    </method>
   </interface>
 </node>
 

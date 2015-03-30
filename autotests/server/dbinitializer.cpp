@@ -19,6 +19,8 @@
 #include "dbinitializer.h"
 
 #include <shared/akdebug.h>
+#include <storage/querybuilder.h>
+#include <storage/datastore.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -55,6 +57,23 @@ Collection DbInitializer::createCollection(const char *name, const Collection &p
     return col;
 }
 
+PimItem DbInitializer::createItem(const char *name, const Collection &parent)
+{
+    PimItem item;
+    MimeType mimeType = MimeType::retrieveByName(QLatin1String("test"));
+    if (!mimeType.isValid()) {
+        MimeType mt;
+        mt.setName(QLatin1String("test"));
+        mt.insert();
+        mimeType = mt;
+    }
+    item.setMimeType(mimeType);
+    item.setCollection(parent);
+    item.setRemoteId(QLatin1String(name));
+    Q_ASSERT(item.insert());
+    return item;
+}
+
 QByteArray DbInitializer::toByteArray(bool enabled)
 {
     if (enabled) {
@@ -78,7 +97,7 @@ QByteArray DbInitializer::toByteArray(Akonadi::Server::Tristate tristate)
     return "DEFAULT";
 }
 
-QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes)
+QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes, const QStringList &ancestorFetchScope)
 {
     QByteArray s;
     s = "S: * " + QByteArray::number(col.id()) + " " + QByteArray::number(col.parentId()) + " (NAME \"" + col.name().toLatin1() +
@@ -105,7 +124,25 @@ QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bo
         s += " ANCESTORS (";
         Collection parent = col.parent();
         while (parent.isValid()) {
-            s += "(" + QByteArray::number(parent.id()) + " \"" + parent.remoteId().toUtf8() + "\") ";
+            s += "(" + QByteArray::number(parent.id());
+            if (ancestorFetchScope.isEmpty()) {
+                s += " \"" + parent.remoteId().toUtf8() + "\"";
+            } else {
+                s += "  (";
+                if (ancestorFetchScope.contains(QLatin1String("REMOTEID"))) {
+                    s += "REMOTEID \"" + parent.remoteId().toUtf8() + "\" ";
+                }
+                if (ancestorFetchScope.contains(QLatin1String("NAME"))) {
+                    s += "NAME \"" + parent.name().toUtf8() + "\" ";
+                }
+                Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
+                    if (ancestorFetchScope.contains(QString::fromLatin1(attr.type()))) {
+                        s += attr.type() + " \"" + attr.value() + "\" ";
+                    }
+                }
+                s += ")";
+            }
+            s += ") ";
             parent = parent.parent();
         }
         s += "(0 \"\")";
@@ -114,7 +151,14 @@ QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bo
     if (col.referenced()) {
         s += " REFERENCED TRUE";
     }
-    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) + " )";
+    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) + " ";
+    Q_FOREACH(const CollectionAttribute &attr, col.attributes()) {
+        s += attr.type() + " \"" + attr.value() + "\" ";
+    }
+    if (!col.attributes().isEmpty()) {
+        s.chop(1);
+    }
+    s += ")";
     return s;
 }
 
@@ -131,4 +175,23 @@ void DbInitializer::cleanup()
         }
     }
     mResource.remove();
+
+    if (DataStore::self()->database().isOpen()) {
+        {
+            QueryBuilder qb( Relation::tableName(), QueryBuilder::Delete );
+            qb.exec();
+        }
+        {
+            QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
+            qb.exec();
+        }
+        {
+            QueryBuilder qb(TagType::tableName(), QueryBuilder::Delete);
+            qb.exec();
+        }
+    }
+
+    Q_FOREACH(PimItem item, PimItem::retrieveAll()) {
+        item.remove();
+    }
 }

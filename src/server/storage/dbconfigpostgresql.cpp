@@ -30,6 +30,11 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
+#include <config-akonadi.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 using namespace Akonadi::Server;
 
 DbConfigPostgresql::DbConfigPostgresql()

@@ -26,9 +26,10 @@ public:
     ~DbInitializer();
     Akonadi::Server::Resource createResource(const char *name);
     Akonadi::Server::Collection createCollection(const char *name, const Akonadi::Server::Collection &parent = Akonadi::Server::Collection());
+    Akonadi::Server::PimItem createItem(const char *name, const Akonadi::Server::Collection &parent);
     QByteArray toByteArray(bool enabled);
     QByteArray toByteArray(Akonadi::Server::Tristate tristate);
-    QByteArray listResponse(const Akonadi::Server::Collection &col, bool ancestors = false, bool mimetypes = true);
+    QByteArray listResponse(const Akonadi::Server::Collection &col, bool ancestors = false, bool mimetypes = true, const QStringList &ancestorFetchScope = QStringList());
     Akonadi::Server::Collection collection(const char *name);
 
     void cleanup();

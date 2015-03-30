@@ -39,6 +39,12 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATTACHMENT"
+                                                                        << "$INVITATION"
+                                                                        << "$ENCRYPTED"
+                                                                        << "$SIGNED"
+                                                                        << "$WATCHED";
+
 Merge::Merge()
     : AkAppend()
 {
@@ -46,6 +52,15 @@ Merge::Merge()
 
 Merge::~Merge()
 {
+}
+
+QSet<QByteArray> Merge::extractFlagNames(const PimItem &item) const
+{
+    QSet<QByteArray> flagNames;
+    Q_FOREACH (const Flag &flag, item.flags()) {
+        flagNames.insert(flag.name().toLatin1());
+    }
+    return flagNames;
 }
 
 bool Merge::mergeItem(PimItem &newItem, PimItem &currentItem,
@@ -312,6 +327,20 @@ bool Merge::parseStream()
         // Item with matching GID/RID combination exists, so merge this item into it
         // and send itemChanged()
         PimItem existingItem = result.first();
+
+        if (!itemFlags.incremental) {
+            // Make sure we don't overwrite some local-only flags that can't come
+            // through from Resource during ItemSync, like $ATTACHMENT, because the
+            // resource is not aware of them (they are usually assigned by client
+            // upon inspecting the payload)
+            const QSet<QByteArray> existingFlags = extractFlagNames(existingItem);
+            Q_FOREACH (const QByteArray &flag, localFlagsToPreserve) {
+                if (existingFlags.contains(flag)) {
+                    itemFlags.added.append(flag);
+                }
+            }
+        }
+
         if (!mergeItem(item, existingItem, itemFlags, itemTagsRID, itemTagsGID)) {
             return false;
         }

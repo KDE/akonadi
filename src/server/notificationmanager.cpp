@@ -169,7 +169,7 @@ QDBusObjectPath NotificationManager::subscribeV2(const QString &identifier, bool
 
 QDBusObjectPath NotificationManager::subscribeV3(const QString &identifier, bool serverSideMonitor, bool exclusive)
 {
-    akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
+    akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor << exclusive;
 
     NotificationSource *source = mNotificationSources.value(identifier);
     if (source) {

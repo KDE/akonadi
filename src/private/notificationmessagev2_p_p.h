@@ -24,6 +24,56 @@
 
 namespace Akonadi {
 
+class NotificationMessageV2::Private : public QSharedData
+{
+public:
+    Private()
+        : QSharedData()
+        , type(InvalidType)
+        , operation(InvalidOp)
+        , parentCollection(-1)
+        , parentDestCollection(-1)
+    {
+    }
+
+    Private(const Private &other)
+        : QSharedData(other)
+    {
+        sessionId = other.sessionId;
+        type = other.type;
+        operation = other.operation;
+        items = other.items;
+        resource = other.resource;
+        destResource = other.destResource;
+        parentCollection = other.parentCollection;
+        parentDestCollection = other.parentDestCollection;
+        parts = other.parts;
+        addedFlags = other.addedFlags;
+        removedFlags = other.removedFlags;
+        addedTags = other.addedTags;
+        removedTags = other.removedTags;
+    }
+
+    QByteArray sessionId;
+    NotificationMessageV2::Type type;
+    NotificationMessageV2::Operation operation;
+    QMap<Id, NotificationMessageV2::Entity> items;
+    QByteArray resource;
+    QByteArray destResource;
+    Id parentCollection;
+    Id parentDestCollection;
+    QSet<QByteArray> parts;
+    QSet<QByteArray> addedFlags;
+    QSet<QByteArray> removedFlags;
+    QSet<qint64> addedTags;
+    QSet<qint64> removedTags;
+
+    // For internal use only: Akonadi server can add some additional information
+    // that might be useful when evaluating the notification for example, but
+    // it is never transfered to clients
+    QVector<QByteArray> metadata;
+};
+
 class NotificationMessageHelpers
 {
 public:
@@ -42,70 +92,37 @@ public:
     template<typename List, typename Msg>
     static bool appendAndCompressImpl(List &list, const Msg &msg)
     {
-        // fast-path for stuff that is not considered during O(n) compression below
-        if (msg.operation() != NotificationMessageV2::Add
-            && msg.operation() != NotificationMessageV2::Link
-            && msg.operation() != NotificationMessageV2::Unlink
-            && msg.operation() != NotificationMessageV2::Subscribe
-            && msg.operation() != NotificationMessageV2::Unsubscribe
-            && msg.operation() != NotificationMessageV2::Move) {
-
-            typename List::Iterator end = list.end();
-            for (typename List::Iterator it = list.begin(); it != end;) {
-                if (compareWithoutOpAndParts(msg, (*it))) {
-
+        //It is likely that compressable notifications are within the last few notifications, so avoid searching a list that is potentially huge
+        static int maxCompressionSearchLength = 10;
+        int searchCounter = 0;
+        // There are often multiple Collection Modify notifications in the queue,
+        // so we optimize for this case.
+        if (msg.type() == NotificationMessageV2::Collections && msg.operation() == NotificationMessageV2::Modify) {
+            typename List::Iterator iter, begin;
+            // We are iterating from end, since there's higher probability of finding
+            // matching notification
+            for (iter = list.end(), begin = list.begin(); iter != begin; ) {
+                --iter;
+                if (compareWithoutOpAndParts(msg, (*iter))) {
                     // both are modifications, merge them together and drop the new one
-                    if (msg.operation() == NotificationMessageV2::Modify && it->operation() == NotificationMessageV2::Modify) {
-                        (*it).setItemParts((*it).itemParts() + msg.itemParts());
+                    if (msg.operation() == NotificationMessageV2::Modify && iter->operation() == NotificationMessageV2::Modify) {
+                        iter->setItemParts(iter->itemParts() + msg.itemParts());
                         return false;
-                    } else if (msg.operation() == NotificationMessageV2::ModifyFlags
-                               && it->operation() == NotificationMessageV2::ModifyFlags) {
-                        (*it).setAddedFlags((*it).addedFlags() + msg.addedFlags());
-                        (*it).setRemovedFlags((*it).removedFlags() + msg.removedFlags());
-
-                        // If merged notifications result in no-change notification, drop both.
-                        if ((*it).addedFlags() == (*it).removedFlags()) {
-                            it = list.erase(it);
-                            end = list.end();
-                        }
-
-                        return false;
-                    } else if (msg.operation() == NotificationMessageV2::ModifyTags
-                               && it->operation() == NotificationMessageV2::ModifyTags) {
-                        (*it).setAddedTags((*it).addedTags() + msg.addedTags());
-                        (*it).setRemovedTags((*it).removedTags() + msg.removedTags());
-
-                        // If merged notification results in no-change notification, drop both
-                        if ((*it).addedTags() == (*it).removedTags()) {
-                            it = list.erase(it);
-                            end = list.end();
-                        }
-
-                        return false;
-                    } else if (((msg.operation() == NotificationMessageV2::Modify)
-                                || (msg.operation() == NotificationMessageV2::ModifyFlags))
-                               && ((*it).operation() != NotificationMessageV2::Modify)
-                               && (*it).operation() != NotificationMessageV2::ModifyFlags
-                               && (*it).operation() != NotificationMessageV2::ModifyTags) {
-                        // new one is a modification, the existing one not, so drop the new one
-                        return false;
-                    } else if (msg.operation() == NotificationMessageV2::Remove
-                               && ((*it).operation() == NotificationMessageV2::Modify
-                                   || (*it).operation() == NotificationMessageV2::ModifyFlags
-                                   || (*it).operation() == NotificationMessageV2::ModifyTags)) {
-                        // new one is a deletion, erase the existing modification ones (and keep going, in case there are more)
-                        it = list.erase(it);
-                        end = list.end();
-                    } else {
-                        // keep looking
-                        ++it;
                     }
-                } else {
-                    ++it;
+
+                    // we found Add notification, which means we can drop this modification
+                    if (iter->operation() == NotificationMessageV2::Add) {
+                        return false;
+                    }
+                }
+                searchCounter++;
+                if (searchCounter >= maxCompressionSearchLength) {
+                    break;
                 }
             }
         }
 
+        // All other cases are just append, as the compression becomes too expensive in large batches
         list.append(msg);
         return true;
     }
