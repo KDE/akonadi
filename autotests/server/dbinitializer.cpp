@@ -70,7 +70,9 @@ PimItem DbInitializer::createItem(const char *name, const Collection &parent)
     item.setMimeType(mimeType);
     item.setCollection(parent);
     item.setRemoteId(QLatin1String(name));
-    Q_ASSERT(item.insert());
+    const bool ret = item.insert() ;
+    Q_ASSERT(ret);
+    Q_UNUSED(ret);
     return item;
 }
 
