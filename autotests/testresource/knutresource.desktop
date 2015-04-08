@@ -85,4 +85,3 @@ Icon=tools-report-bug
 X-Akonadi-MimeTypes=text/calendar,text/directory
 X-Akonadi-Capabilities=Resource
 X-Akonadi-Identifier=akonadi_knut_resource
-X-Akonadi-LaunchMethod=AgentLauncher

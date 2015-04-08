@@ -42,7 +42,7 @@ qt5_add_dbus_adaptor(knutresource_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h KnutSettings
 )
 
-add_library(akonadi_knut_resource MODULE ${knutresource_SRCS})
+add_executable(akonadi_knut_resource ${knutresource_SRCS})
 
 if (APPLE)
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
@@ -58,7 +58,7 @@ target_link_libraries(akonadi_knut_resource
   Qt5::Xml
 )
 
-install( TARGETS akonadi_knut_resource DESTINATION ${KDE_INSTALL_PLUGINDIR}/ )
+install( TARGETS akonadi_knut_resource ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
 install( FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi_knut_resource/ )
 
