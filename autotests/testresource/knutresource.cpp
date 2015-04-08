@@ -366,3 +366,5 @@ void KnutResource::removeSearch(const Collection &resultCollection)
 {
     qDebug();
 }
+
+AKONADI_RESOURCE_MAIN(KnutResource)
