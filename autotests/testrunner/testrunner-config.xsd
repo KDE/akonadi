@@ -24,7 +24,6 @@
   <xsd:element name="config">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="kdehome"    type="simpleTextTag" minOccurs="1" maxOccurs="1"/>
         <xsd:element name="confighome" type="simpleTextTag" minOccurs="1" maxOccurs="1"/>
         <xsd:element name="datahome"   type="simpleTextTag" minOccurs="1" maxOccurs="1"/>
         <xsd:element name="agent"      type="agentType"     minOccurs="0" maxOccurs="unbounded"/>
