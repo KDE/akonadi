@@ -29,14 +29,13 @@ public:
     ~Config();
     static Config *instance(const QString &pathToConfig = QString());
     static void destroyInstance();
-    QString kdeHome() const;
     QString xdgDataHome() const;
     QString xdgConfigHome() const;
+    QString basePath() const;
     QList<QPair<QString, bool> > agents() const;
     QHash<QString, QString> envVars() const;
 
 protected:
-    void setKdeHome(const QString &home);
     void setXdgDataHome(const QString &dataHome);
     void setXdgConfigHome(const QString &configHome);
     void insertAgent(const QString &agent, bool sync);
@@ -45,7 +44,7 @@ private:
     void readConfiguration(const QString &configFile);
 
 private:
-    QString mKdeHome;
+    QString mBasePath;
     QString mXdgDataHome;
     QString mXdgConfigHome;
     QList<QPair<QString, bool> > mAgents;

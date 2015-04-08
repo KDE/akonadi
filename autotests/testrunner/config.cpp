@@ -65,18 +65,16 @@ void Config::readConfiguration(const QString &configfile)
         qFatal("could not file root tag");
     }
 
-    const QString basePath = QFileInfo(configfile).absolutePath() + QLatin1Char('/');
+    mBasePath = QFileInfo(configfile).absolutePath() + QLatin1Char('/');
 
     QDomNode node = root.firstChild();
     while (!node.isNull()) {
         const QDomElement element = node.toElement();
         if (!element.isNull()) {
-            if (element.tagName() == QLatin1String("kdehome")) {
-                setKdeHome(basePath + element.text());
-            } else if (element.tagName() == QLatin1String("confighome")) {
-                setXdgConfigHome(basePath + element.text());
+            if (element.tagName() == QLatin1String("confighome")) {
+                setXdgConfigHome(mBasePath + element.text());
             } else if (element.tagName() == QLatin1String("datahome")) {
-                setXdgDataHome(basePath + element.text());
+                setXdgDataHome(mBasePath + element.text());
             } else if (element.tagName() == QLatin1String("agent")) {
                 insertAgent(element.text(), element.attribute(QLatin1String("synchronize"), QLatin1String("false")) == QLatin1String("true"));
             } else if (element.tagName() == QLatin1String("envvar")) {
@@ -93,11 +91,6 @@ void Config::readConfiguration(const QString &configfile)
     }
 }
 
-QString Config::kdeHome() const
-{
-    return mKdeHome;
-}
-
 QString Config::xdgDataHome() const
 {
     return mXdgDataHome;
@@ -108,10 +101,9 @@ QString Config::xdgConfigHome() const
     return mXdgConfigHome;
 }
 
-void Config::setKdeHome(const QString &home)
+QString Config::basePath() const
 {
-    const QDir kdeHomeDir(home);
-    mKdeHome = kdeHomeDir.absolutePath();
+    return mBasePath;
 }
 
 void Config::setXdgDataHome(const QString &dataHome)
