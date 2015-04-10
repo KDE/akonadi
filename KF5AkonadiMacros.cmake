@@ -22,7 +22,6 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} ${_additionalsources})
-  add_test( ${_name} ${_name} )
   ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
                         Qt5::Test Qt5::Gui KF5::KIOCore KF5::AkonadiCore
