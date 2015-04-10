@@ -117,7 +117,9 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     Q_FOREACH (const QString &mt, mimeTypes) {
         cond.addValueCondition(MimeType::nameFullColumnName(), Query::Equals, mt);
     }
-    qb.addCondition(cond);
+    if (!cond.isEmpty()) {
+        qb.addCondition(cond);
+    }
 
     if (!qb.exec()) {
         qWarning() << "Failed to query search collections";
