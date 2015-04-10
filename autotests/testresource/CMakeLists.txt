@@ -32,7 +32,7 @@ endmacro()
 # Disabled for now, resourcetester remained in kdepim-runtime
 #add_subdirectory( tests )
 
-set( knutresource_SRCS knutresource.cpp knutresourcefactory.cpp)
+set( knutresource_SRCS knutresource.cpp)
 
 kconfig_add_kcfg_files(knutresource_SRCS settings.kcfgc)
 
