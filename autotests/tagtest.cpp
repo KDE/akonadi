@@ -157,6 +157,9 @@ void TagTest::testRIDIsolation()
     {
         TagFetchJob *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
+        for (Tag tag : fetchJob->tags()) {
+            qDebug() << tag.gid();
+        }
         QCOMPARE(fetchJob->tags().count(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
         QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
@@ -524,13 +527,15 @@ void TagTest::testModifyItemWithTagByRID()
         ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
+
     const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+    Tag tag3;
     {
-        Tag tag;
-        tag.setGid("gid3");
-        tag.setRemoteId("rid3");
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        tag3.setGid("gid3");
+        tag3.setRemoteId("rid3");
+        TagCreateJob *createjob = new TagCreateJob(tag3, this);
         AKVERIFYEXEC(createjob);
+        tag3 = createjob->tag();
     }
 
     Item item1;
@@ -553,8 +558,15 @@ void TagTest::testModifyItemWithTagByRID()
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), this);
-    AKVERIFYEXEC(deleteJob);
+    {
+        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), this);
+        AKVERIFYEXEC(deleteJob);
+    }
+
+    {
+        TagDeleteJob *deleteJob = new TagDeleteJob(tag3, this);
+        AKVERIFYEXEC(deleteJob);
+    }
 
     {
         ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
@@ -578,11 +590,11 @@ void TagTest::testMonitor()
     tag.setType("type2");
     TagCreateJob *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
+    createdTag = createjob->tag();
     //We usually pick up signals from the previous tests as well (due to server-side notification caching)
     QTRY_VERIFY(addedSpy.count() >= 1);
-    QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createjob->tag().id());
+    QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
     QVERIFY(addedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
-    createdTag = createjob->tag();
   }
 
   {
