@@ -34,10 +34,10 @@ int main(int argc, char *argv[])
                          i18n("Test app for EntityTreeModel"),
                          KAboutLicense::GPL,
                          QLatin1String("http://pim.kde.org/akonadi/"));
-    aboutData.setProgramIconName(QLatin1String("akonadi"));
     aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QLatin1String("steveire@gmail.com"));
     KAboutData::setApplicationData(aboutData);
 
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();
