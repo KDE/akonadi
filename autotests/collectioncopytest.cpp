@@ -65,14 +65,13 @@ private Q_SLOTS:
 
         fetch = new CollectionFetchJob(source, CollectionFetchJob::Recursive);
         AKVERIFYEXEC(fetch);
-        QHash<Collection, Item::List> referenceData;
+        QMap<Collection, Item::List> referenceData;
         Collection::List cols = fetch->collections();
         cols << source;
         foreach (const Collection &c, cols) {
             ItemFetchJob *job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
-            //FIX IT with qt 5.4
-            //QT5 referenceData.insert(c, job->items());
+            referenceData.insert(c, job->items());
         }
 
         // actually copy the collection
@@ -84,7 +83,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(list);
         cols = list->collections();
         QCOMPARE(cols.count(), referenceData.count());
-        for (QHash<Collection, Item::List>::ConstIterator it = referenceData.constBegin(); it != referenceData.constEnd(); ++it) {
+        for (QMap<Collection, Item::List>::ConstIterator it = referenceData.constBegin(); it != referenceData.constEnd(); ++it) {
             QVERIFY(!cols.contains(it.key()));
             Collection col;
             foreach (const Collection &c, cols) {
