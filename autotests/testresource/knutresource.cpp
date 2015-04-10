@@ -137,6 +137,13 @@ void KnutResource::configure(WId windowId)
 
 void KnutResource::retrieveCollections()
 {
+    const Collection::List collections = mDocument.collections();
+    collectionsRetrieved(collections);
+    const Tag::List tags = mDocument.tags();
+    Q_FOREACH (const Tag &tag, tags) {
+        TagCreateJob *createjob = new TagCreateJob(tag);
+        createjob->setMergeIfExisting(true);
+    }
 }
 
 void KnutResource::retrieveItems(const Akonadi::Collection &collection)
@@ -168,13 +175,14 @@ bool KnutResource::retrieveItem(const Item &item, const QSet<QByteArray> &parts)
 
 void KnutResource::collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
 {
-#if 0 //PORT QT5
-    QDomElement parentElem = mDocument.collectionElementByRemoteId(parent.remoteId());
-    if (parentElem.isNull()) {
+    const Collection&col = mDocument.collectionByRemoteId(parent.remoteId());
+    if (!col.isValid()) {
         emit error(i18n("Parent collection not found in DOM tree."));
         changeProcessed();
         return;
     }
+    QDomElement parentElem = mDocument.collectionElement(col);
+    Q_ASSERT(!parentElem.isNull());
 
     Collection c(collection);
     c.setRemoteId(QUuid::createUuid().toString());
@@ -185,18 +193,18 @@ void KnutResource::collectionAdded(const Akonadi::Collection &collection, const 
         save();
         changeCommitted(c);
     }
-#endif
 }
 
 void KnutResource::collectionChanged(const Akonadi::Collection &collection)
 {
-#if 0 //PORT QT5
-    QDomElement oldElem = mDocument.collectionElementByRemoteId(collection.remoteId());
-    if (oldElem.isNull()) {
+    const Collection col = mDocument.collectionByRemoteId(collection.remoteId());
+    if (!col.isValid()) {
         emit error(i18n("Modified collection not found in DOM tree."));
         changeProcessed();
         return;
     }
+    QDomElement oldElem = mDocument.collectionElement(col);
+    Q_ASSERT(!oldElem.isNull());
 
     Collection c(collection);
     QDomElement newElem;
@@ -218,34 +226,35 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
     oldElem.parentNode().replaceChild(newElem, oldElem);
     save();
     changeCommitted(c);
-#endif
 }
 
 void KnutResource::collectionRemoved(const Akonadi::Collection &collection)
 {
-#if 0 //PORT QT5
-    const QDomElement colElem = mDocument.collectionElementByRemoteId(collection.remoteId());
-    if (colElem.isNull()) {
+    const Collection col = mDocument.collectionByRemoteId(collection.remoteId());
+    if (!col.isValid()) {
         emit error(i18n("Deleted collection not found in DOM tree."));
         changeProcessed();
         return;
     }
+    const QDomElement colElem = mDocument.collectionElement(col);
+    Q_ASSERT(!colElem.isNull());
 
     colElem.parentNode().removeChild(colElem);
     save();
     changeProcessed();
-#endif
 }
 
 void KnutResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-#if 0 //PORT QT5
-    QDomElement parentElem = mDocument.collectionElementByRemoteId(collection.remoteId());
-    if (parentElem.isNull()) {
+    const Collection col = mDocument.collectionByRemoteId(collection.remoteId());
+    if (!col.isValid()) {
         emit error(i18n("Parent collection '%1' not found in DOM tree." , collection.remoteId()));
         changeProcessed();
         return;
     }
+
+    QDomElement parentElem = mDocument.collectionElement(col);
+    Q_ASSERT(!parentElem.isNull());
 
     Item i(item);
     i.setRemoteId(QUuid::createUuid().toString());
@@ -256,7 +265,6 @@ void KnutResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collectio
         save();
         changeCommitted(i);
     }
-#endif
 }
 
 void KnutResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
@@ -295,24 +303,29 @@ void KnutResource::itemMoved(const Item &item, const Collection &collectionSourc
 {
   const QDomElement oldElem = mDocument.itemElementByRemoteId(item.remoteId());
   if (oldElem.isNull()) {
-    qWarning() << "Moved item not found in DOM tree";
-    changeProcessed();
-    return;
-  }
-#if 0 //PORT QT5
-  QDomElement sourceParentElem = mDocument.collectionElementByRemoteId(collectionSource.remoteId());
-  if (sourceParentElem.isNull()) {
-    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
-    changeProcessed();
-    return;
+        qWarning() << "Moved item not found in DOM tree";
+        changeProcessed();
+        return;
   }
 
-  QDomElement destParentElem = mDocument.collectionElementByRemoteId(collectionDestination.remoteId());
-  if (destParentElem.isNull()) {
+  const Collection srcCol = mDocument.collectionByRemoteId(collectionSource.remoteId());
+  if (!srcCol.isValid()) {
+        emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
+        changeProcessed();
+        return;
+  }
+  QDomElement sourceParentElem = mDocument.collectionElement(srcCol);
+  Q_ASSERT(!sourceParentElem.isNull());
+
+  const Collection destCol = mDocument.collectionByRemoteId(collectionDestination.remoteId());
+  if (!destCol.isValid()) {
     emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionDestination.remoteId()));
     changeProcessed();
     return;
   }
+  QDomElement destParentElem = mDocument.collectionElement(destCol);
+  Q_ASSERT(!destParentElem.isNull());
+
   QDomElement itemElem = mDocument.itemElementByRemoteId(item.remoteId());
   if (itemElem.isNull()) {
     emit error(i18n("No item found for remoteid %1", item.remoteId()));
@@ -327,7 +340,6 @@ void KnutResource::itemMoved(const Item &item, const Collection &collectionSourc
     save();
   }
   changeProcessed();
-#endif
 }
 
 
