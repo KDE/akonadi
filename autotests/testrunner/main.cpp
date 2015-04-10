@@ -65,6 +65,7 @@ int main(int argc, char **argv)
                          i18n("(c) 2008 Igor Trindade Oliveira"));
 
     QApplication app(argc, argv);
+    app.setQuitLockEnabled(false);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutdata);
     parser.addVersionOption();
