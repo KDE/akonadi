@@ -41,12 +41,6 @@ class TestEnvironmentTest : public QObject
     {
       AkonadiTest::checkTestIsIsolated();
     }
-    void testEnvironment()
-    {
-      const QString kdehome = QString::fromUtf8(qgetenv( "KDEHOME" ));
-      QVERIFY( kdehome.startsWith( QDir::tempPath() )
-              || kdehome.startsWith( QStringLiteral("/tmp") ) );
-    }
 
     void testDBus()
     {
