@@ -95,8 +95,8 @@ private Q_SLOTS:
         {
             QList<QByteArray> scenario;
             scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 TAGAPPEND (GID \"tag\" MIMETYPE \"PLAIN\" TAG \"(\"tag4\" \"\" \"\" \"\" \"0\" () () \"-1\")\")"
-            << "S: * 1 TAGFETCH (UID 1 GID \"tag\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\" tag4 \" \"   \" \"   \"0\"  () ()  \"-1\" ) \"\")"
+            << "C: 2 TAGAPPEND (GID \"tag\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag4\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
+            << "S: * 1 TAGFETCH (UID 1 GID \"tag\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag4\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
             << "S: 2 OK Append completed";
 
             Tag tag;
