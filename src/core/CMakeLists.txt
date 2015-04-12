@@ -106,6 +106,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     PartFetcher
     PersistentSearchAttribute
     Pop3ResourceAttribute
+    Relation
     SearchQuery
     ServerManager
     Session
@@ -234,6 +235,9 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     LinkJob
     RecursiveItemFetchJob
     ResourceSynchronizationJob
+    RelationFetchJob
+    RelationCreateJob
+    RelationDeleteJob
     SearchCreateJob
     SpecialCollectionsDiscoveryJob
     SpecialCollectionsRequestJob
