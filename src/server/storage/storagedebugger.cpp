@@ -46,9 +46,9 @@ StorageDebugger *StorageDebugger::instance()
 }
 
 StorageDebugger::StorageDebugger()
-    : mEnabled(false)
+    : mFile(0)
+    , mEnabled(false)
     , mSequence(0)
-  , mFile( 0 )
 {
     qDBusRegisterMetaType<QList< QList<QVariant> > >();
     new StorageDebuggerAdaptor(this);
