@@ -204,6 +204,20 @@
     <index name="TagAndResourceIndex" columns="tagId,resourceId" unique="true"/>
   </table>
 
+  <table name="RelationType">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
+    <data columns="id,name" values="1,'GENERIC'"/>
+  </table>
+
+  <table name="Relation">
+    <column name="leftId" type="qint64" allowNull="false" refTable="PimItem" refColumn="id" onDelete="Cascade" methodName="left" />
+    <column name="rightId"  type="qint64" allowNull="false" refTable="PimItem" refColumn="id" onDelete="Cascade" methodName="right" />
+    <column name="typeId" type="qint64" refTable="RelationType" refColumn="id" onDelete="Restrict" default="1"/>
+    <column name="remoteId" type="QString" />
+    <index name="RelationIndex" columns="leftId,rightId,typeId" unique="true"/>
+  </table>
+
   <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
 
   <relation table1="PimItem" column1="id" table2="Tag" column2="id"/>

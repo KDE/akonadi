@@ -44,16 +44,6 @@ bool TagRemove::parseStream()
 
     mScope.parseScope(m_streamParser);
 
-    // Get all PIM items that we will untag
-    SelectQueryBuilder<PimItem> itemsQuery;
-    itemsQuery.addJoin(QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName());
-    QueryHelper::setToQuery(mScope.uidSet(), PimItemTagRelation::rightColumn(), itemsQuery);
-
-    if (!itemsQuery.exec()) {
-        throw HandlerException("Untagging failed");
-    }
-    const PimItem::List items = itemsQuery.result();
-
     SelectQueryBuilder<Tag> tagQuery;
     QueryHelper::setToQuery(mScope.uidSet(), Tag::idFullColumnName(), tagQuery);
     if (!tagQuery.exec()) {
@@ -61,23 +51,8 @@ bool TagRemove::parseStream()
     }
     const Tag::List tags = tagQuery.result();
 
-    QSet<qint64> removedTags;
-    Q_FOREACH (const Tag &tag, tags) {
-        removedTags << tag.id();
-    }
-    if (!items.isEmpty()) {
-        DataStore::self()->notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
-    }
-
-    Q_FOREACH (const Tag &tag, tags) {
-        DataStore::self()->notificationCollector()->tagRemoved(tag);
-    }
-
-    // Just remove the tags, table constraints will take care of the rest
-    QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
-    QueryHelper::setToQuery(mScope.uidSet(), Tag::idFullColumnName(), qb);
-    if (!qb.exec()) {
-        throw HandlerException("Deletion failed");
+    if (!DataStore::self()->removeTags(tags)) {
+        throw HandlerException( "Failed to remove tags" );
     }
 
     return successResponse("TAGREMOVE complete");

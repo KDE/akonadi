@@ -23,6 +23,7 @@
 #include "notificationsourceadaptor.h"
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
+#include <private/notificationmessagev2_p_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -258,6 +259,17 @@ bool NotificationSource::isAllMonitored() const
     return mAllMonitored;
 }
 
+void NotificationSource::setSession(const QByteArray &sessionId)
+{
+    if (!isServerSideMonitorEnabled()) {
+        return;
+    }
+
+    if (mSession != sessionId) {
+        mSession = sessionId;
+    }
+}
+
 void NotificationSource::setIgnoredSession(const QByteArray &sessionId, bool ignored)
 {
     if (!isServerSideMonitorEnabled()) {
@@ -332,20 +344,79 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
         return false;
     }
 
-    if (notification.entities().count() == 0) {
+    if (notification.entities().count() == 0 && notification.type() != NotificationMessageV2::Relations) {
         return false;
     }
 
     //Only emit notifications for referenced collections if the subscriber is exclusive or monitors the collection
     if (notification.type() == NotificationMessageV2::Collections) {
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
-            if (CollectionReferenceManager::instance()->isReferenced(entity.id)) {
-                return (mExclusive || isCollectionMonitored(entity.id));
+        // HACK: We need to dispatch notifications about disabled collections to SOME
+        // agents (that's what we have the exclusive subscription for) - but because
+        // querying each Collection from database would be expensive, we use the
+        // metadata hack to transfer this information from NotificationCollector
+        if (notification.d->metadata.contains("DISABLED") && (notification.operation() != NotificationMessageV2::Unsubscribe) && !notification.itemParts().contains("ENABLED")) {
+            // Exclusive subscriber always gets it
+            if (mExclusive) {
+                return true;
             }
+
+
+            Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+                //Deliver the notification if referenced from this session
+                if (CollectionReferenceManager::instance()->isReferenced(entity.id, mSession)) {
+                    return true;
+                }
+                //Exclusive subscribers still want the notification
+                if (mExclusive && CollectionReferenceManager::instance()->isReferenced(entity.id)) {
+                    return true;
+                }
+            }
+
+            //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
+            //The referencemanager no longer holds a reference, so we have to check this way.
+            if (notification.itemParts().contains("REFERENCED") && mSession == notification.sessionId()) {
+                return true;
+            }
+
+            // If the collection is not referenced, monitored or the subscriber is not
+            // exclusive (i.e. if we got here), then the subscriber does not care about
+            // this one, so drop it
+            return false;
         }
     } else if (notification.type() == NotificationMessageV2::Items) {
         if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
             return (mExclusive || isCollectionMonitored(notification.parentCollection()) || isMoveDestinationResourceMonitored(notification));
+        }
+    } else if (notification.type() == NotificationMessageV2::Tags) {
+        // Special handling for Tag removal notifications: When a Tag is removed,
+        // a notification is emitted for each Resource that owns the tag (i.e.
+        // each resource that owns a Tag RID - Tag RIDs are resource-specific).
+        // Additionally then we send one more notification without any RID that is
+        // destined for regular applications (which don't know anything about Tag RIDs)
+        if (notification.operation() == NotificationMessageV2::Remove) {
+            // HACK: Since have no way to determine which resource this NotificationSource
+            // belongs to, we are abusing the fact that each resource ignores it's own
+            // main session, which is called the same name as the resource.
+
+            // If there are any ignored sessions, but this notification does not have
+            // a specific resource set, then we ignore it, as this notification is
+            // for clients, not resources (does not have tag RID)
+            if (!mIgnoredSessions.isEmpty() && notification.resource().isEmpty()) {
+                return false;
+            }
+
+            // If this source ignores a session (i.e. we assume it is a resource),
+            // but this notification is for another resource, then we ignore it
+            if (!notification.resource().isEmpty() && !mIgnoredSessions.contains(notification.resource())) {
+                return false;
+            }
+
+            // Now we got here, which means that this notification either has empty
+            // resource, i.e. it is destined for a client applications, or it's
+            // destined for resource that we *think* (see the hack above) this
+            // NotificationSource belongs too. Which means we approve this notification,
+            // but it can still be discarded in the generic Tag notification filter
+            // below
         }
     }
 
@@ -436,6 +507,13 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
         }
 
         return false;
+
+    case NotificationMessageV2::Relations:
+        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(NotificationMessageV2::Relations)) {
+            return false;
+        }
+        return true;
+
     }
 
     return false;

@@ -58,6 +58,9 @@
 #include "handler/tagfetch.h"
 #include "handler/tagremove.h"
 #include "handler/tagstore.h"
+#include "handler/relationstore.h"
+#include "handler/relationremove.h"
+#include "handler/relationfetch.h"
 
 #include "storage/querybuilder.h"
 #include "imapstreamparser.h"
@@ -212,6 +215,15 @@ Handler *Handler::findHandlerForCommandAuthenticated(const QByteArray &_command,
     }
     if (command == AKONADI_CMD_TAGSTORE) {
         return new TagStore();
+    }
+    if (command == AKONADI_CMD_RELATIONSTORE) {
+        return new RelationStore(scope);
+    }
+    if (command == AKONADI_CMD_RELATIONREMOVE) {
+        return new RelationRemove(scope);
+    }
+    if (command == AKONADI_CMD_RELATIONFETCH) {
+        return new RelationFetch(scope);
     }
     if (command == AKONADI_CMD_MERGE) {
         return new Merge();

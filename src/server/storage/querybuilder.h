@@ -248,6 +248,8 @@ public:
     */
     qint64 insertId();
 
+    void setForwardOnly(bool forwardOnly);
+
 private:
     void buildQuery(QString *query);
     void bindValue(QString *query, const QVariant &value);

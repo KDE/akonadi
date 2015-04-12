@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2014 Christian Mollekop <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,26 +17,31 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NOTIFICATIONMESSAGEV2TEST_H
-#define AKONADI_NOTIFICATIONMESSAGEV2TEST_H
 
-#include <QtCore/QObject>
+#ifndef AKONADI_RELATIONSTORE_H
+#define AKONADI_RELATIONSTORE_H
 
-class NotificationMessageV2Test : public QObject
+#include "handler.h"
+#include "scope.h"
+
+namespace Akonadi {
+namespace Server {
+
+class RelationStore : public Handler
 {
     Q_OBJECT
-private Q_SLOTS:
-    // void testCompress();
-    // void testCompress2();
-    // void testCompress3();
-    // void testCompress4();
-    // void testCompress5();
-    // void testCompress6();
-    void testCompress7();
-    // void testCompressWithItemParts();
-    void testNoCompress();
-    // void testPartModificationMerge_data();
-    // void testPartModificationMerge();
+
+public:
+    RelationStore(Scope::SelectionScope scope);
+    ~RelationStore();
+
+    bool parseStream();
+
+private:
+    Scope mScope;
 };
 
-#endif
+} // namespace Server
+} // namespace Akonadi
+
+#endif // AKONADI_RELATIONSTORE_H

@@ -37,7 +37,7 @@
 #include "agentmanagerinterface.h"
 #include "dbusconnectionpool.h"
 #include "tagfetchhelper.h"
-
+#include "relationfetch.h"
 #include <shared/akdebug.h>
 #include <shared/akdbus.h>
 #include <private/imapparser_p.h>
@@ -77,6 +77,8 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
 {
     ///TODO: merge with ItemQuery
     QueryBuilder partQuery(PimItem::tableName());
+    partQuery.setForwardOnly(true);
+
     if (!partList.isEmpty() || allPayload || allAttrs) {
         partQuery.addJoin(QueryBuilder::InnerJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName());
         partQuery.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
@@ -129,6 +131,8 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
 QSqlQuery FetchHelper::buildItemQuery()
 {
     QueryBuilder itemQuery(PimItem::tableName());
+
+    itemQuery.setForwardOnly(true);
 
     itemQuery.addJoin(QueryBuilder::InnerJoin, MimeType::tableName(),
                       PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName());
@@ -316,6 +320,20 @@ QByteArray FetchHelper::tagsToByteArray(const Tag::List &tags)
     return b;
 }
 
+QByteArray FetchHelper::relationsToByteArray(const Relation::List &relations)
+{
+    QByteArray b;
+    b += "(";
+    Q_FOREACH (const Relation &relation, relations) {
+        b += "(" + RelationFetch::relationToByteArray(relation.leftId(),
+                                                      relation.rightId(),
+                                                      relation.relationType().name().toLatin1(),
+                                                      relation.remoteId().toLatin1()) + ") ";
+    }
+    b += ")";
+    return b;
+}
+
 bool FetchHelper::fetchItems(const QByteArray &responseIdentifier)
 {
     // retrieve missing parts
@@ -497,6 +515,20 @@ bool FetchHelper::fetchItems(const QByteArray &responseIdentifier)
             if (!cols.isEmpty()) {
                 attributes.append(AKONADI_PARAM_VIRTREF " " + cols.toImapSequenceSet());
             }
+        }
+        if (mFetchScope.relationsRequested()) {
+            SelectQueryBuilder<Relation> qb;
+            Query::Condition condition;
+            condition.setSubQueryMode(Query::Or);
+            condition.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, pimItemId);
+            condition.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, pimItemId);
+            qb.addCondition(condition);
+            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn());
+            if (!qb.exec()) {
+                throw HandlerException("Unable to list item relations");
+            }
+            const Relation::List relations = qb.result();
+            attributes.append(AKONADI_PARAM_RELATIONS " " + relationsToByteArray(relations));
         }
 
         if (mFetchScope.ancestorDepth() > 0) {

@@ -24,6 +24,14 @@
 #include <QtCore/QMutex>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
+#include <QFile>
+
+#ifdef QT5_BUILD
+#include <QAtomicInteger>
+#else
+#include <QAtomicInt>
+#endif
+
 
 #ifdef Q_ATOMC_INT64_IS_SUPPORTED
 #include <QAtomicInteger>
@@ -58,6 +66,8 @@ public:
         mSequence.ref();
     }
 
+    void writeToFile(const QString &file);
+
 Q_SIGNALS:
     void queryExecuted(double sequence, uint duration, const QString &query,
                        const QMap<QString, QVariant> &values,
@@ -70,6 +80,8 @@ private:
 
     static StorageDebugger *mSelf;
     static QMutex mMutex;
+
+    QFile *mFile;
 
     bool mEnabled;
 #ifdef Q_ATOMC_INT64_IS_SUPPORTED
