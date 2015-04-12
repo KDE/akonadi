@@ -202,6 +202,9 @@ void QueryBuilder::buildQuery(QString *statement)
 
     switch (mType) {
     case Select:
+        // Enable forward-only on all SELECT queries, since we never need to
+        // iterate backwards. This is a memory optimization.
+        mQuery.setForwardOnly(true);
         *statement += QLatin1String("SELECT ");
         if (mDistinct) {
             *statement += QLatin1String("DISTINCT ");
@@ -342,10 +345,6 @@ bool QueryBuilder::retryLastTransaction(bool rollback)
 #endif
 }
 
-void QueryBuilder::setForwardOnly(bool forwardOnly)
-{
-    mQuery.setForwardOnly(forwardOnly);
-}
 bool QueryBuilder::exec()
 {
     QString statement;
