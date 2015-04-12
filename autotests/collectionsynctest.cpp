@@ -49,8 +49,10 @@ private:
         CollectionFetchJob *fetch = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
         fetch->fetchScope().setResource(res);
         fetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-        Q_ASSERT(fetch->exec());
-        Q_ASSERT(!fetch->collections().isEmpty());
+        if (!fetch->exec()) {
+            qWarning() << "CollectionFetchJob failed!";
+            return Collection::List();
+        }
         return fetch->collections();
     }
 
@@ -167,6 +169,7 @@ private:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
+        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -188,6 +191,7 @@ private:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
+        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -235,6 +239,7 @@ private:
         }
 
         Collection::List origCols = fetchCollections(resource);
+        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -244,9 +249,25 @@ private:
         Collection::List resultCols = fetchCollections(resource);
         QCOMPARE(resultCols.count(), origCols.count());
 
+        // Find leaf collections that we can delete
+        Collection::List leafCols = resultCols;
+        for (auto iter = leafCols.begin(); iter != leafCols.end();) {
+            bool found = false;
+            for (const Collection &c : resultCols) {
+                if (c.parentCollection().id() == iter->id()) {
+                    iter = leafCols.erase(iter);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                ++iter;
+            }
+        }
+        QVERIFY(!leafCols.isEmpty());
         Collection::List delCols;
-        delCols << resultCols.last();
-        resultCols.pop_back();
+        delCols << leafCols.first();
+        resultCols.removeOne(leafCols.first());
 
         // ### not implemented yet I guess
 #if 0
@@ -267,6 +288,7 @@ private:
         syncer->setRemoteCollections(resultCols, delCols);
         AKVERIFYEXEC(syncer);
 
+
         Collection::List resultCols2 = fetchCollections(resource);
         QCOMPARE(resultCols2.count(), resultCols.count());
     }
@@ -282,6 +304,7 @@ private:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
+        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -325,6 +348,7 @@ private:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
+        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
