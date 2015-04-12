@@ -3,10 +3,6 @@ include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}/akonadi
-  ${CMAKE_BINARY_DIR}/akonadi
-  ${CMAKE_BINARY_DIR}/akonadi/kmime
-  ${CMAKE_BINARY_DIR}/kmime
 )
 
 kde_enable_exceptions()
