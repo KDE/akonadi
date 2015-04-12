@@ -43,11 +43,12 @@ public:
     void notificationsErased() Q_DECL_OVERRIDE;
 
     void slotNotify(const NotificationMessageV3::List &msgs) Q_DECL_OVERRIDE;
+    virtual bool emitNotification(const Akonadi::NotificationMessageV3& msg);
 
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<NotificationMessageV3> loadFrom(QIODevice *device);
+    QQueue<NotificationMessageV3> loadFrom(QIODevice *device, bool &needsFullSave) const;
     QString dumpNotificationListToString() const;
     void addToStream(QDataStream &stream, const NotificationMessageV3 &msg);
     void saveNotifications();

@@ -24,6 +24,7 @@
 #include "tag.h"
 #include "collection.h"
 #include "item.h"
+#include "relation.h"
 
 #include <QtCore/QObject>
 
@@ -83,7 +84,8 @@ public:
          */
         Collections = 1,
         Items,
-        Tags
+        Tags,
+        Relations
     };
 
     /**
@@ -185,9 +187,12 @@ public:
      */
     void setAllMonitored(bool monitored = true);
 
+    void setExclusive(bool exclusive = true);
+    bool exclusive() const;
+
     /**
      * Ignores all change notifications caused by the given session. This
-     * Q_DECL_OVERRIDEs all other settings on this session.
+     * overrides all other settings on this session.
      *
      * @param session The session you want to ignore.
      */
@@ -440,6 +445,17 @@ Q_SIGNALS:
                           const QSet<Akonadi::Tag> &removedTags);
 
     /**
+     * This signal is emitted if relations of monitored items have changed.
+     *
+     * @param items Items that were changed
+     * @param addedRelations Relations that have been added to each item in @p items.
+     * @param removedRelations Relations that have been removed from each item in @p items
+     * @since 4.15
+     */
+    void itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations,
+                          const Akonadi::Relation::List &removedRelations);
+
+    /**
      * This signal is emitted if a monitored item has been moved between two collections
      *
      * @param item The moved item.
@@ -628,6 +644,28 @@ Q_SIGNALS:
      * @since 4.13
      */
     void tagRemoved(const Akonadi::Tag &tag);
+
+    /**
+     * This signal is emitted if a relation has been added to Akonadi storage.
+     *
+     * The monitor will also emit itemRelationsChanged() signal for all monitored items
+     * hat are affected by @p relation.
+     *
+     * @param relation The added relation
+     * @since 4.13
+     */
+    void relationAdded(const Akonadi::Relation &relation);
+
+    /**
+     * This signal is emitted if a monitored relation is removed from the server storage.
+     *
+     * The monitor will also emit itemRelationsChanged() signal for all monitored items
+     * that were affected by @p relation.
+     *
+     * @param relation The removed relation.
+     * @since 4.13
+     */
+    void relationRemoved(const Akonadi::Relation &relation);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p collection explicitly.

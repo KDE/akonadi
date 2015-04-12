@@ -218,3 +218,13 @@ bool ItemFetchScope::fetchVirtualReferences() const
 {
     return d->mFetchVRefs;
 }
+
+void ItemFetchScope::setFetchRelations(bool fetchRelations)
+{
+    d->mFetchRelations = fetchRelations;
+}
+
+bool ItemFetchScope::fetchRelations() const
+{
+    return d->mFetchRelations;
+}

@@ -95,7 +95,6 @@ void SetupTest::setupAgents()
 
 void SetupTest::agentCreationResult(KJob *job)
 {
-    qDebug() << "Agent created";
     --mSetupJobCount;
     if (job->error()) {
         qCritical() << job->errorString();
@@ -105,7 +104,6 @@ void SetupTest::agentCreationResult(KJob *job)
     const bool needsSync = job->property("sync").toBool();
     if (needsSync) {
         ++mSetupJobCount;
-        qDebug() << "Scheduling Agent sync";
         Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(
             qobject_cast<Akonadi::AgentInstanceCreateJob *>(job)->instance(), this);
         connect(sync, &Akonadi::ResourceSynchronizationJob::result, this, &SetupTest::synchronizationResult);
@@ -119,7 +117,6 @@ void SetupTest::agentCreationResult(KJob *job)
 
 void SetupTest::synchronizationResult(KJob *job)
 {
-    qDebug() << "Sync done";
     --mSetupJobCount;
     if (job->error()) {
         qCritical() << job->errorString();
@@ -153,6 +150,20 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
                 copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
             }
         } else {
+            QFile::copy(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
+        }
+    }
+}
+
+void SetupTest::copyKdeHomeDirectory(const QString &src, const QString &dst)
+{
+    const QDir srcDir(src);
+    QDir::root().mkpath(dst);
+
+    foreach (const QFileInfo &fi, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot)) {
+        if (fi.isDir()) {
+            copyKdeHomeDirectory(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
+        } else {
             if (fi.fileName().startsWith(QStringLiteral("akonadi_")) && fi.fileName().endsWith(QStringLiteral("rc"))) {
                 // namespace according to instance identifier
                 const QString baseName = fi.fileName().left(fi.fileName().size() - 2);
@@ -183,20 +194,22 @@ void SetupTest::createTempEnvironment()
     qDebug() << "Creating test environment in" << basePath();
 
     const QDir tmpDir(basePath());
+    const QString testRunnerKdeHomeDir = QLatin1String("kdehome");
     const QString testRunnerDataDir = QLatin1String("data");
     const QString testRunnerConfigDir = QLatin1String("config");
     const QString testRunnerTmpDir = QLatin1String("tmp");
 
+    tmpDir.mkdir(testRunnerKdeHomeDir);
     tmpDir.mkdir(testRunnerConfigDir);
     tmpDir.mkdir(testRunnerDataDir);
     tmpDir.mkdir(testRunnerTmpDir);
 
     const Config *config = Config::instance();
-    // Always copy the generic xdgconfig dir
-    copyXdgDirectory(config->basePath() + QLatin1String("/xdgconfig"), basePath() + testRunnerConfigDir);
+    copyKdeHomeDirectory(config->kdeHome(), basePath() + testRunnerKdeHomeDir);
     copyXdgDirectory(config->xdgConfigHome(), basePath() + testRunnerConfigDir);
     copyXdgDirectory(config->xdgDataHome(), basePath() + testRunnerDataDir);
 
+    setEnvironmentVariable("KDEHOME", basePath() + testRunnerKdeHomeDir);
     setEnvironmentVariable("XDG_DATA_HOME", basePath() + testRunnerDataDir);
     setEnvironmentVariable("XDG_CONFIG_HOME", basePath() + testRunnerConfigDir);
     setEnvironmentVariable("TMPDIR", basePath() + testRunnerTmpDir);
@@ -231,7 +244,7 @@ SetupTest::SetupTest()
     }
 
     // No kres-migrator please
-    KConfig migratorConfig(basePath() + QLatin1String("config/kres-migratorrc"));
+    KConfig migratorConfig(basePath() + QLatin1String("kdehome/share/config/kres-migratorrc"));
     KConfigGroup migrationCfg(&migratorConfig, "Migration");
     migrationCfg.writeEntry("Enabled", false);
 
@@ -345,7 +358,6 @@ void SetupTest::setupInstanceId()
 
 bool SetupTest::isSetupDone() const
 {
-    qDebug() << "isSetupDone:" << mSetupJobCount << mExitCode;
     return mSetupJobCount == 0 && mExitCode == 0;
 }
 

@@ -27,6 +27,7 @@
 #include <transactionjobs.h>
 #include <tagcreatejob.h>
 #include <itemmodifyjob.h>
+#include <resourceselectjob_p.h>
 #include "test_utils.h"
 
 #include <QtCore/QObject>
@@ -98,11 +99,15 @@ class ItemDeleteTest : public QObject
 
     void testRidDelete()
     {
-      const Collection col ( collectionIdFromPath( QLatin1String("res1/foo") ) );
-      QVERIFY( col.isValid() );
+      {
+          ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+          AKVERIFYEXEC(select);
+      }
+      const Collection col (collectionIdFromPath(QStringLiteral("res1/foo")));
+      QVERIFY(col.isValid());
 
       CollectionSelectJob *sel = new CollectionSelectJob( col );
-      AKVERIFYEXEC( sel );
+      AKVERIFYEXEC(sel);
 
       Item i;
       i.setRemoteId( QLatin1String("C") );
@@ -118,6 +123,10 @@ class ItemDeleteTest : public QObject
       fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
       QVERIFY( !fjob->exec() );
+      {
+          ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
+          AKVERIFYEXEC(select);
+      }
     }
 
     void testTagDelete()

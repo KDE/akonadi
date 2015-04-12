@@ -34,7 +34,8 @@
 class AKONADICORE_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute
 {
 public:
-    explicit CollectionIdentificationAttribute(const QByteArray &identifier = QByteArray(), const QByteArray &folderNamespace = QByteArray());
+    explicit CollectionIdentificationAttribute(const QByteArray &identifier = QByteArray(), const QByteArray &folderNamespace = QByteArray(),
+                                               const QByteArray &name = QByteArray(), const QByteArray &organizationUnit = QByteArray(), const QByteArray &mail = QByteArray());
     ~CollectionIdentificationAttribute();
 
     /**
@@ -42,6 +43,15 @@ public:
      */
     void setIdentifier(const QByteArray &identifier);
     QByteArray identifier() const;
+
+    void setMail(const QByteArray &);
+    QByteArray mail() const;
+
+    void setOu(const QByteArray &);
+    QByteArray ou() const;
+
+    void setName(const QByteArray &);
+    QByteArray name() const;
 
     /**
      * Sets a namespace the collection is in.

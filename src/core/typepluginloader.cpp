@@ -329,7 +329,7 @@ public:
         return plugin;
     }
 
-    void Q_DECL_OVERRIDEDefaultPlugin(QObject *p)
+    void overrideDefaultPlugin(QObject *p)
     {
         mOverridePlugin = p;
     }
@@ -485,9 +485,9 @@ ItemSerializerPlugin *TypePluginLoader::defaultPluginForMimeType(const QString &
     return plugin;
 }
 
-void TypePluginLoader::Q_DECL_OVERRIDEPluginLookup(QObject *p)
+void TypePluginLoader::overridePluginLookup(QObject *p)
 {
-    s_pluginRegistry->Q_DECL_OVERRIDEDefaultPlugin(p);
+    s_pluginRegistry->overrideDefaultPlugin(p);
 }
 
 }

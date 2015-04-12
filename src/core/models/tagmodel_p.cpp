@@ -210,6 +210,8 @@ void TagModelPrivate::tagsFetched(const Tag::List &tags)
 
 void TagModelPrivate::tagsFetchDone(KJob *job)
 {
+    Q_Q(TagModel);
+
     if (job->error()) {
         qWarning() << job->errorString();
         return;
@@ -219,4 +221,6 @@ void TagModelPrivate::tagsFetchDone(KJob *job)
         qWarning() << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags";
         return;
     }
+
+    emit q->populated();
 }

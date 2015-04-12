@@ -47,7 +47,7 @@ void TagModifyJob::doStart()
     Q_D(TagModifyJob);
 
     QList<QByteArray> list;
-    if (!d->mTag.remoteId().isEmpty()) {
+    if (!d->mTag.remoteId().isNull()) {
         list << "REMOTEID";
         list << ImapParser::quote(d->mTag.remoteId());
     }

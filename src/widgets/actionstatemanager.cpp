@@ -272,6 +272,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     enableAction(StandardActionManager::DeleteResources, canDeleteResources);
     enableAction(StandardActionManager::ResourceProperties, canConfigureResource);
     enableAction(StandardActionManager::SynchronizeResources, canSynchronizeResources);
+    enableAction(StandardActionManager::SynchronizeCollectionTree, canSynchronizeResources);
 
     if (collectionsAreInTrash) {
         updateAlternatingAction(StandardActionManager::MoveToTrashRestoreCollectionAlternative);
@@ -342,6 +343,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     updatePluralLabel(StandardActionManager::SynchronizeCollectionsRecursive, collectionCount);
     updatePluralLabel(StandardActionManager::DeleteResources, resourceCollectionCount);
     updatePluralLabel(StandardActionManager::SynchronizeResources, resourceCollectionCount);
+    updatePluralLabel(StandardActionManager::SynchronizeCollectionTree, resourceCollectionCount);
 
 }
 

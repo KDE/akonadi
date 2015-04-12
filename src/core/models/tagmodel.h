@@ -74,6 +74,9 @@ protected:
 
     TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = Q_NULLPTR);
 
+Q_SIGNALS:
+    void populated();
+
 private:
     bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
     bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;

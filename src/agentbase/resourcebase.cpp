@@ -27,6 +27,8 @@
 #include "KDBusConnectionPool"
 #include "itemsync.h"
 #include "akonadi_version.h"
+#include "tagsync.h"
+#include "relationsync.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
 #include <akonadi/private/xdgbasedirs_p.h>
@@ -52,6 +54,7 @@
 #include <qdebug.h>
 #include <klocalizedstring.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QHash>
 #include <QtCore/QSettings>
@@ -74,12 +77,15 @@ public:
         , mItemSyncFetchScope(0)
         , mItemTransactionMode(ItemSync::SingleTransaction)
         , mCollectionSyncer(0)
+        , mTagSyncer(0)
+        , mRelationSyncer(0)
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
         , mDisableAutomaticItemDeliveryDone(false)
         , mItemSyncBatchSize(10)
         , mCurrentCollectionFetchJob(0)
+        , mScheduleAttributeSyncBeforeCollectionSync(false)
     {
         Internal::setClientType(Internal::Resource);
         mStatusMessage = defaultReadyMessage();
@@ -141,6 +147,8 @@ public:
     void slotSynchronizeCollectionAttributes(const Collection &col);
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
+    void slotSynchronizeTags();
+    void slotSynchronizeRelations();
     void slotAttributeRetrievalCollectionFetchDone(KJob *job);
 
     void slotItemSyncDone(KJob *job);
@@ -160,6 +168,9 @@ public:
 
     void slotRecursiveMoveReplay(RecursiveMover *mover);
     void slotRecursiveMoveReplayResult(KJob *job);
+
+    void slotTagSyncDone(KJob *job);
+    void slotRelationSyncDone(KJob *job);
 
     void slotSessionReconnected()
     {
@@ -311,11 +322,6 @@ protected Q_SLOTS:
             changeProcessed();
             return;
         }
-        if (!item.parentCollection().isValid()) {
-            qWarning() << "Invalid parent collection for item" << item.id();
-            changeProcessed();
-            return;
-        }
         AgentBasePrivate::itemRemoved(item);
     }
 
@@ -323,10 +329,6 @@ protected Q_SLOTS:
     {
         Item::List validItems;
         foreach (const Akonadi::Item &item, items) {
-            if (!item.parentCollection().isValid()) {
-                qWarning() << "Invalid parent collection for item" << item.id();
-                continue;
-            }
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
             }
@@ -445,6 +447,8 @@ public:
     ItemFetchScope *mItemSyncFetchScope;
     ItemSync::TransactionMode mItemTransactionMode;
     CollectionSync *mCollectionSyncer;
+    TagSync *mTagSyncer;
+    RelationSync *mRelationSyncer;
     bool mHierarchicalRid;
     QTimer mProgressEmissionCompressor;
     int mUnemittedProgress;
@@ -455,6 +459,7 @@ public:
     int mItemSyncBatchSize;
     QSet<QByteArray> mKeepLocalCollectionChanges;
     KJob *mCurrentCollectionFetchJob;
+    bool mScheduleAttributeSyncBeforeCollectionSync;
 };
 
 ResourceBase::ResourceBase(const QString &id)
@@ -482,6 +487,10 @@ ResourceBase::ResourceBase(const QString &id)
             SLOT(slotSynchronizeCollection(Akonadi::Collection)));
     connect(d->scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)),
             SLOT(slotSynchronizeCollectionAttributes(Akonadi::Collection)));
+    connect(d->scheduler, SIGNAL(executeTagSync()),
+            SLOT(slotSynchronizeTags()));
+    connect(d->scheduler, SIGNAL(executeRelationSync()),
+            SLOT(slotSynchronizeRelations()));
     connect(d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
             SLOT(slotPrepareItemRetrieval(Akonadi::Item)));
     connect(d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
@@ -713,7 +722,6 @@ void ResourceBase::changesCommitted(const Item::List &items)
         job->d_func()->setClean();
         job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
         job->setIgnorePayload(true);   // we only want to reset the dirty flag and update the remote id
-        job->setUpdateGid(true);   // allow resources to update GID too
     }
 }
 
@@ -945,6 +953,12 @@ void ResourceBase::setItemSyncBatchSize(int batchSize)
     d->mItemSyncBatchSize = batchSize;
 }
 
+void ResourceBase::setScheduleAttributeSyncBeforeItemSync(bool enable)
+{
+    Q_D(ResourceBase);
+    d->mScheduleAttributeSyncBeforeCollectionSync = enable;
+}
+
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
 {
     Q_Q(ResourceBase);
@@ -966,6 +980,18 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
     QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().first()));
+}
+
+void ResourceBasePrivate::slotSynchronizeTags()
+{
+    Q_Q(ResourceBase);
+    QMetaObject::invokeMethod(q, "retrieveTags");
+}
+
+void ResourceBasePrivate::slotSynchronizeRelations()
+{
+    Q_Q(ResourceBase);
+    QMetaObject::invokeMethod(q, "retrieveRelations");
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Akonadi::Item &item)
@@ -1076,6 +1102,16 @@ void ResourceBase::synchronizeCollectionTree()
     d_func()->scheduler->scheduleCollectionTreeSync();
 }
 
+void ResourceBase::synchronizeTags()
+{
+    d_func()->scheduler->scheduleTagSync();
+}
+
+void ResourceBase::synchronizeRelations()
+{
+    d_func()->scheduler->scheduleRelationSync();
+}
+
 void ResourceBase::cancelTask()
 {
     Q_D(ResourceBase);
@@ -1148,15 +1184,22 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
         const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
         Q_FOREACH (const Collection &collection, list) {
             //We also get collections that should not be synced but are part of the tree.
-            if (collection.shouldList(Collection::ListSync)) {
-                // Schedule attribute sync before each collection sync
-                scheduler->scheduleAttributesSync(collection);
+            if (collection.shouldList(Collection::ListSync) || collection.referenced()) {
+                if (mScheduleAttributeSyncBeforeCollectionSync) {
+                    scheduler->scheduleAttributesSync(collection);
+                }
                 scheduler->scheduleSync(collection);
             }
         }
     } else {
         qWarning() << "Failed to fetch collection for collection sync: " << job->errorString();
     }
+}
+
+void ResourceBase::synchronizeCollectionAttributes(const Akonadi::Collection &col)
+{
+    Q_D(ResourceBase);
+    d->scheduler->scheduleAttributesSync(col);
 }
 
 void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
@@ -1292,6 +1335,18 @@ void ResourceBase::retrieveCollectionAttributes(const Collection &collection)
     collectionAttributesRetrieved(collection);
 }
 
+void ResourceBase::retrieveTags()
+{
+    Q_D(ResourceBase);
+    d->scheduler->taskDone();
+}
+
+void ResourceBase::retrieveRelations()
+{
+    Q_D(ResourceBase);
+    d->scheduler->taskDone();
+}
+
 void Akonadi::ResourceBase::abortActivity()
 {
 }
@@ -1340,6 +1395,68 @@ QString ResourceBase::dumpMemoryInfoToString() const
     Q_D(const ResourceBase);
     return d->dumpMemoryInfoToString();
 }
+
+void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers)
+{
+    Q_D(ResourceBase);
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncTags ||
+               d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
+               d->scheduler->currentTask().type == ResourceScheduler::Custom,
+               "ResourceBase::tagsRetrieved()",
+               "Calling tagsRetrieved() although no tag retrieval is in progress");
+    if (!d->mTagSyncer) {
+        d->mTagSyncer = new TagSync(this);
+        connect(d->mTagSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
+        connect(d->mTagSyncer, SIGNAL(result(KJob*)), SLOT(slotTagSyncDone(KJob*)));
+    }
+    d->mTagSyncer->setFullTagList(tags);
+    d->mTagSyncer->setTagMembers(tagMembers);
+}
+
+void ResourceBasePrivate::slotTagSyncDone(KJob *job)
+{
+    Q_Q(ResourceBase);
+    mTagSyncer = 0;
+    if (job->error()) {
+        if (job->error() != Job::UserCanceled) {
+            qWarning() << "TagSync failed: " << job->errorString();
+            emit q->error(job->errorString());
+        }
+    }
+
+    scheduler->taskDone();
+}
+
+void ResourceBase::relationsRetrieved(const Relation::List &relations)
+{
+    Q_D(ResourceBase);
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations ||
+               d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
+               d->scheduler->currentTask().type == ResourceScheduler::Custom,
+               "ResourceBase::relationsRetrieved()",
+               "Calling relationsRetrieved() although no relation retrieval is in progress");
+    if (!d->mRelationSyncer) {
+        d->mRelationSyncer = new RelationSync(this);
+        connect(d->mRelationSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
+        connect(d->mRelationSyncer, SIGNAL(result(KJob*)), SLOT(slotRelationSyncDone(KJob*)));
+    }
+    d->mRelationSyncer->setRemoteRelations(relations);
+}
+
+void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
+{
+    Q_Q(ResourceBase);
+    mRelationSyncer = 0;
+    if (job->error()) {
+        if (job->error() != Job::UserCanceled) {
+            qWarning() << "RelationSync failed: " << job->errorString();
+            emit q->error(job->errorString());
+        }
+    }
+
+    scheduler->taskDone();
+}
+
 
 #include "resourcebase.moc"
 #include "moc_resourcebase.cpp"

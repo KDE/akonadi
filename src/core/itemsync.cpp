@@ -81,7 +81,7 @@ public:
     void requestTransaction();
     Job *subjobParent() const;
     void fetchLocalItemsToDelete();
-    QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/;
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
     bool allProcessed() const;
 
     Q_DECLARE_PUBLIC(ItemSync)

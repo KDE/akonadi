@@ -75,6 +75,9 @@ public:
     {
         if (collectionIds.contains(col)) {
             select(col);
+            if (!referencedCollections.contains(col)) {
+                reference(col);
+            }
         }
     }
 
@@ -110,17 +113,22 @@ public:
         }
     }
 
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+    {
+        for (int row = topLeft.row(); row <= bottomRight.row(); row++) {
+            const QModelIndex idx = topLeft.parent().child(row, 0);
+            insertIfAvailable(idx);
+        }
+    }
+
     /**
      *  Selects the index in the internal selection model to make the collection visible in the model
      */
     void select(const Collection::Id &collectionId)
     {
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
-        if (index.isValid() && !q->selectionModel()->isSelected(index)) {
+        if (index.isValid()) {
             q->selectionModel()->select(index, QItemSelectionModel::Select);
-            if (!referencedCollections.contains(collectionId)) {
-                reference(collectionId);
-            }
         }
     }
 
@@ -129,9 +137,6 @@ public:
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (idx.isValid()) {
             q->selectionModel()->select(idx, QItemSelectionModel::Deselect);
-            if (referencedCollections.contains(collectionId)) {
-                dereference(collectionId);
-            }
         }
     }
 
@@ -161,8 +166,8 @@ public:
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (index.isValid()) {
             q->sourceModel()->setData(index, QVariant(), EntityTreeModel::CollectionDerefRole);
+            referencedCollections.remove(collectionId);
         }
-        referencedCollections.remove(collectionId);
     }
 
     void clearReferences()
@@ -182,6 +187,7 @@ public:
             return;
         }
         collectionIds << collectionId;
+        reference(collectionId);
         select(collectionId);
     }
 
@@ -189,6 +195,7 @@ public:
     {
         collectionIds.removeAll(collectionId);
         labelMap.remove(collectionId);
+        dereference(collectionId);
         deselect(collectionId);
     }
 
@@ -233,15 +240,12 @@ public:
     void saveConfig()
     {
         QStringList labels;
-        QList<Collection::Id> ids;
+
         foreach (const Collection::Id &collectionId, collectionIds) {
-            const QModelIndex idx = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
-            if (idx.isValid()) {
-                labels << labelForCollection(collectionId);
-                ids << collectionId;
-            }
+            labels << labelForCollection(collectionId);
         }
-        configGroup.writeEntry("FavoriteCollectionIds", ids);
+
+        configGroup.writeEntry("FavoriteCollectionIds", collectionIds);
         configGroup.writeEntry("FavoriteCollectionLabels", labels);
         configGroup.config()->sync();
     }
@@ -271,6 +275,7 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
     connect(source, SIGNAL(modelReset()), this, SLOT(reload()));
     connect(source, SIGNAL(layoutChanged()), this, SLOT(reload()));
     connect(source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)));
+    connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()

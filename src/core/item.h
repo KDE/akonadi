@@ -26,6 +26,7 @@
 #include "exception.h"
 #include "tag.h"
 #include "collection.h"
+#include "relation.h"
 #include "itempayloadinternals_p.h"
 
 #include <QtCore/QByteArray>
@@ -223,6 +224,13 @@ public:
     void clearTag(const Tag &tag);
 
     void clearTags();
+
+    /**
+     * Returns all relations of this item.
+     * @since 4.15
+     * @see RelationCreateJob, RelationDeleteJob to modify relations
+     */
+    Relation::List relations() const;
 
     /**
      * Sets the payload based on the canonical representation normally

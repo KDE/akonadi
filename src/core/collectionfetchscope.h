@@ -24,6 +24,7 @@
 #include "akonadicore_export.h"
 
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QSet>
 
 class QStringList;
 
@@ -208,6 +209,86 @@ public:
      * @see setAncestorRetrieval()
      */
     AncestorRetrieval ancestorRetrieval() const;
+
+    /**
+     * Sets the fetch scope for ancestor retrieval.
+     *
+     * @see setAncestorRetrieval()
+     */
+    void setAncestorFetchScope(const CollectionFetchScope &scope);
+
+    /**
+     * Returns the fetch scope for ancestor retrieval.
+     */
+    CollectionFetchScope ancestorFetchScope() const;
+
+    /**
+     * Returns the fetch scope for ancestor retrieval.
+     */
+    CollectionFetchScope &ancestorFetchScope();
+
+    /**
+     * Returns all explicitly fetched attributes.
+     *
+     * Undefined if fetchAllAttributes() returns true.
+     *
+     * @see fetchAttribute()
+     */
+    QSet<QByteArray> attributes() const;
+
+    /**
+     * Sets whether the attribute of the given @p type should be fetched.
+     *
+     * @param type The attribute type to fetch.
+     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     */
+    void fetchAttribute(const QByteArray &type, bool fetch = true);
+
+    /**
+     * Sets whether the attribute of the requested type should be fetched.
+     *
+     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     */
+    template <typename T> inline void fetchAttribute(bool fetch = true)
+    {
+        T dummy;
+        fetchAttribute(dummy.type(), fetch);
+    }
+
+    /**
+     * Sets wether only the id or the complete tag should be fetched.
+     *
+     * The default is @c false.
+     *
+     * @since 4.15
+     */
+    void setFetchIdOnly(bool fetchIdOnly);
+
+    /**
+     * Sets wether only the id of the tags should be retieved or the complete tag.
+     *
+     * @see tagFetchScope()
+     * @since 4.15
+     */
+    bool fetchIdOnly() const;
+
+    /**
+     * Ignore retrieval errors while fetching collections, and always deliver what is available.
+     *
+     * This flag is useful to fetch a list of collections, where some might no longer be available.
+     *
+     * @since KF5
+     */
+    void setIgnoreRetrievalErrors(bool enabled);
+
+    /**
+     * Returns whether retrieval errors should be ignored.
+     *
+     * @see setIgnoreRetrievalErrors()
+     * @since KF5
+     */
+    bool ignoreRetrievalErrors() const;
+
 
     /**
      * Returns @c true if there is nothing to fetch.

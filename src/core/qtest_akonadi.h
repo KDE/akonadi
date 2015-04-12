@@ -61,6 +61,9 @@ void checkTestIsIsolated() {
     Q_ASSERT_X(!qgetenv("TESTRUNNER_DB_ENVIRONMENT").isEmpty(),
                "AkonadiTest::checkTestIsIsolated",
                "This test must be run using ctest, in order to use the testrunner environment. Aborting, to avoid messing up your real akonadi");
+    Q_ASSERT_X(qgetenv("XDG_DATA_HOME").contains("testrunner"),
+               "AkonadiTest::checkTestIsIsolated",
+               "Did you forget to run the test using QTEST_AKONADIMAIN?");
 }
 
 /**

@@ -377,3 +377,32 @@ ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &
 {
     return contactSearchFieldMapping.key(key);
 }
+
+QMap<IncidenceSearchTerm::IncidenceSearchField, QString> initializeIncidenceMapping()
+{
+  QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
+  mapping.insert(IncidenceSearchTerm::All, QLatin1String("all"));
+  mapping.insert(IncidenceSearchTerm::PartStatus, QLatin1String("partstatus"));
+  mapping.insert(IncidenceSearchTerm::Organizer, QLatin1String("organizer"));
+  mapping.insert(IncidenceSearchTerm::Summary, QLatin1String("summary"));
+  mapping.insert(IncidenceSearchTerm::Location, QLatin1String("location"));
+  return mapping;
+}
+
+static QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMapping = initializeIncidenceMapping();
+
+IncidenceSearchTerm::IncidenceSearchTerm(IncidenceSearchTerm::IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition)
+: SearchTerm(toKey(field), value, condition)
+{
+
+}
+
+QString IncidenceSearchTerm::toKey(IncidenceSearchTerm::IncidenceSearchField field)
+{
+  return incidenceSearchFieldMapping.value(field);
+}
+
+IncidenceSearchTerm::IncidenceSearchField IncidenceSearchTerm::fromKey(const QString &key)
+{
+  return incidenceSearchFieldMapping.key(key);
+}

@@ -32,7 +32,7 @@ endmacro()
 # Disabled for now, resourcetester remained in kdepim-runtime
 #add_subdirectory( tests )
 
-set( knutresource_SRCS knutresource.cpp)
+set( knutresource_SRCS knutresource.cpp knutresourcefactory.cpp)
 
 kconfig_add_kcfg_files(knutresource_SRCS settings.kcfgc)
 
@@ -42,10 +42,10 @@ qt5_add_dbus_adaptor(knutresource_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h KnutSettings
 )
 
-add_executable(akonadi_knut_resource ${knutresource_SRCS})
+add_library(akonadi_knut_resource MODULE ${knutresource_SRCS})
 
 if (APPLE)
-  set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.template)
+  set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.Knut")
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Knut Resource")
 endif ()
@@ -58,7 +58,7 @@ target_link_libraries(akonadi_knut_resource
   Qt5::Xml
 )
 
-install( TARGETS akonadi_knut_resource ${INSTALL_TARGETS_DEFAULT_ARGS})
+install( TARGETS akonadi_knut_resource DESTINATION ${KDE_INSTALL_PLUGINDIR}/ )
 install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
 install( FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi_knut_resource/ )
 

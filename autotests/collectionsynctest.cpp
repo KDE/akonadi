@@ -33,12 +33,12 @@
 
 #include <QtCore/QObject>
 #include <QSignalSpy>
+#include <QEventLoop>
 
 #include <qtest_akonadi.h>
+#include <resourceselectjob_p.h>
 
 using namespace Akonadi;
-
-//Q_DECLARE_METATYPE( KJob* )
 
 class CollectionSyncTest : public QObject
 {
@@ -49,10 +49,8 @@ private:
         CollectionFetchJob *fetch = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
         fetch->fetchScope().setResource(res);
         fetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-        if (!fetch->exec()) {
-            qWarning() << "CollectionFetchJob failed!";
-            return Collection::List();
-        }
+        Q_ASSERT(fetch->exec());
+        Q_ASSERT(!fetch->collections().isEmpty());
         return fetch->collections();
     }
 
@@ -70,7 +68,86 @@ private:
         QTest::newRow("akonadi_knut_resource_2 hierarchical RID") << true << "akonadi_knut_resource_2";
     }
 
-private Q_SLOTS:
+    Collection createCollection(const QString &name, const QString &remoteId, const Collection &parent)
+    {
+        Collection c;
+        c.setName(name);
+        c.setRemoteId(remoteId);
+        c.setParentCollection(parent);
+        c.setResource(QStringLiteral("akonadi_knut_resource_0"));
+        c.setContentMimeTypes(QStringList() << Collection::mimeType());
+        return c;
+    }
+
+    Collection::List prepareBenchmark()
+    {
+        Collection::List collections = fetchCollections(QLatin1String("akonadi_knut_resource_0"));
+
+        ResourceSelectJob *resJob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        Q_ASSERT(resJob->exec());
+
+        Collection root;
+        Q_FOREACH (const Collection &col, collections) {
+            if (col.parentCollection() == Collection::root()) {
+                root = col;
+                break;
+            }
+        }
+        Q_ASSERT(root.isValid());
+
+        // we must build on top of existing collections, because only resource is
+        // allowed to create top-level collection
+        Collection::List baseCollections;
+        for (int i = 0; i < 20; ++i) {
+            baseCollections << createCollection(QString::fromLatin1("Base Col %1").arg(i), QString::fromLatin1("/baseCol%1").arg(i), root);
+        }
+        collections += baseCollections;
+
+        const Collection shared = createCollection(QLatin1String("Shared collections"), QLatin1String("/shared"), root);
+        baseCollections << shared;
+        collections << shared;
+        for (int i = 0; i < 10000; ++i) {
+            const Collection col = createCollection(QString::fromLatin1("Shared Col %1").arg(i), QString::fromLatin1("/shared%1").arg(i), shared);
+              collections << col;
+              for (int j = 0; j < 6; ++j) {
+                  collections << createCollection(QString::fromLatin1("Shared Subcol %1-%2").arg(i).arg(j), QString::fromLatin1("/shared%1-%2").arg(i).arg(j), col);
+              }
+        }
+        return collections;
+    }
+
+    CollectionSync *prepareBenchmarkSyncer(const Collection::List &collections)
+    {
+        CollectionSync *syncer = new CollectionSync(QStringLiteral("akonadi_knut_resource_0"));
+        connect(syncer, SIGNAL(percent(KJob*,ulong)), this, SLOT(syncBenchmarkProgress(KJob*,ulong)));
+        syncer->setHierarchicalRemoteIds(false);
+        syncer->setRemoteCollections(collections);
+        return syncer;
+    }
+
+    void cleanupBenchmark(const Collection::List &collections)
+    {
+        Collection::List baseCols;
+        Q_FOREACH(const Collection &col, collections) {
+            if (col.remoteId().startsWith(QLatin1String("/baseCol")) || col.remoteId() == QLatin1String("/shared")) {
+                baseCols << col;
+            }
+        }
+        Q_FOREACH (const Collection &col, baseCols) {
+            CollectionDeleteJob *del = new CollectionDeleteJob(col);
+            AKVERIFYEXEC(del);
+        }
+    }
+
+
+  public Q_SLOTS:
+    void syncBenchmarkProgress(KJob *job, ulong percent)
+    {
+        Q_UNUSED(job);
+        qDebug() << "CollectionSync progress:" <<  percent << "%";
+    }
+
+  private Q_SLOTS:
     void initTestCase()
     {
         AkonadiTest::checkTestIsIsolated();
@@ -90,7 +167,6 @@ private Q_SLOTS:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
-        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -112,7 +188,6 @@ private Q_SLOTS:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
-        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -160,7 +235,6 @@ private Q_SLOTS:
         }
 
         Collection::List origCols = fetchCollections(resource);
-        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -170,25 +244,9 @@ private Q_SLOTS:
         Collection::List resultCols = fetchCollections(resource);
         QCOMPARE(resultCols.count(), origCols.count());
 
-        // Find leaf collections that we can delete
-        Collection::List leafCols = resultCols;
-        for (auto iter = leafCols.begin(); iter != leafCols.end();) {
-            bool found = false;
-            for (const Collection &c : resultCols) {
-                if (c.parentCollection().id() == iter->id()) {
-                    iter = leafCols.erase(iter);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                ++iter;
-            }
-        }
-        QVERIFY(!leafCols.isEmpty());
         Collection::List delCols;
-        delCols << leafCols.first();
-        resultCols.removeOne(leafCols.first());
+        delCols << resultCols.last();
+        resultCols.pop_back();
 
         // ### not implemented yet I guess
 #if 0
@@ -209,7 +267,6 @@ private Q_SLOTS:
         syncer->setRemoteCollections(resultCols, delCols);
         AKVERIFYEXEC(syncer);
 
-
         Collection::List resultCols2 = fetchCollections(resource);
         QCOMPARE(resultCols2.count(), resultCols.count());
     }
@@ -225,7 +282,6 @@ private Q_SLOTS:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
-        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -269,7 +325,6 @@ private Q_SLOTS:
         QFETCH(QString, resource);
 
         Collection::List origCols = fetchCollections(resource);
-        QVERIFY(!origCols.isEmpty());
 
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
@@ -289,45 +344,76 @@ private Q_SLOTS:
 
     void testAttributeChanges()
     {
-        QFETCH(bool, keepLocalChanges);
-        const QString resource(QLatin1String("akonadi_knut_resource_0"));
-        Collection::List cols = fetchCollections(resource);
-        QVERIFY(!cols.isEmpty());
+      QFETCH(bool, keepLocalChanges);
+      const QString resource(QStringLiteral("akonadi_knut_resource_0"));
+      Collection col = fetchCollections( resource ).first();
+      col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
+      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("foo"));
+      {
+        CollectionModifyJob *job = new CollectionModifyJob(col);
+        AKVERIFYEXEC(job);
+      }
 
-        Collection col = cols.first();
-        col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName(QLatin1String("foo"));
-        col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QLatin1String("foo"));
-        {
-            CollectionModifyJob *job = new CollectionModifyJob(col);
-            AKVERIFYEXEC(job);
-        }
+      col.attribute<EntityDisplayAttribute>()->setDisplayName(QStringLiteral("default"));
+      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("default"));
 
-        col.attribute<EntityDisplayAttribute>()->setDisplayName(QLatin1String("default"));
-        col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QLatin1String("default"));
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      if (keepLocalChanges) {
+          syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY" << "CONTENTMIMETYPES");
+      } else {
+          syncer->setKeepLocalChanges(QSet<QByteArray>());
+      }
 
-        CollectionSync *syncer = new CollectionSync(resource, this);
+      syncer->setRemoteCollections( Collection::List() << col, Collection::List() );
+      AKVERIFYEXEC( syncer );
+
+      {
+        CollectionFetchJob *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
+        AKVERIFYEXEC(job);
+        Collection resultCol = job->collections().first();
         if (keepLocalChanges) {
-            syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY" << "CONTENTMIMETYPES");
+          QCOMPARE( resultCol.displayName(), QString::fromLatin1("foo") );
+          QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("foo")));
         } else {
-            syncer->setKeepLocalChanges(QSet<QByteArray>());
+          QCOMPARE( resultCol.displayName(), QString::fromLatin1("default") );
+          QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("default")));
+        }
+      }
+    }
+
+// Disabled by default, because they take ~15 minutes to complete
+#if 0
+    void benchmarkInitialSync()
+    {
+        const Collection::List collections = prepareBenchmark();
+
+        CollectionSync *syncer = prepareBenchmarkSyncer(collections);
+
+        QBENCHMARK_ONCE {
+            AKVERIFYEXEC(syncer);
         }
 
-        syncer->setRemoteCollections(Collection::List() << col, Collection::List());
+        cleanupBenchmark(collections);
+    }
+
+    void benchmarkIncrementalSync()
+    {
+        const Collection::List collections = prepareBenchmark();
+
+        // First populate Akonadi with Collections
+        CollectionSync *syncer = prepareBenchmarkSyncer(collections);
         AKVERIFYEXEC(syncer);
 
-        {
-            CollectionFetchJob *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
-            AKVERIFYEXEC(job);
-            Collection resultCol = job->collections().first();
-            if (keepLocalChanges) {
-                QCOMPARE(resultCol.displayName(), QString::fromLatin1("foo"));
-                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("foo")));
-            } else {
-                QCOMPARE(resultCol.displayName(), QString::fromLatin1("default"));
-                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("default")));
-            }
+        // Now create a new syncer to benchmark the incremental sync
+        syncer = prepareBenchmarkSyncer(collections);
+
+        QBENCHMARK_ONCE {
+            AKVERIFYEXEC(syncer);
         }
+
+        cleanupBenchmark(collections);
     }
+#endif
 };
 
 QTEST_AKONADIMAIN(CollectionSyncTest)

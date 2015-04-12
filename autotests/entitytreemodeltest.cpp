@@ -323,6 +323,8 @@ void EntityTreeModelTest::testCollectionAdded()
 
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, parentCollection, QVariantList() << addedCollection );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 0, parentCollection, QVariantList() << addedCollection );
+  //The data changed signal comes from the item fetch job that is triggered because we have ImmediatePopulation enabled
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, parentCollection, QVariantList() << addedCollection );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
   serverData->processNotifications();

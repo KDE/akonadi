@@ -90,6 +90,7 @@ public:
 
             EntityTreeModel *model = new EntityTreeModel(mMonitor, mParent);
             model->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
+            model->setListFilter(CollectionFetchScope::Display);
             baseModel = model;
         }
 

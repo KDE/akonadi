@@ -290,7 +290,7 @@ Collection::ListPreference Collection::localListPreference(Collection::ListPurpo
 bool Collection::shouldList(Collection::ListPurpose purpose) const
 {
     if (localListPreference(purpose) == ListDefault) {
-        return enabled();
+        return enabled() || referenced();
     }
     return (localListPreference(purpose) == ListEnabled);
 }
@@ -317,6 +317,20 @@ bool Collection::referenced() const
     Q_D(const Collection);
 
     return d->referenced;
+}
+
+void Collection::setKeepLocalChanges(const QSet<QByteArray> &parts)
+{
+    Q_D(Collection);
+
+    d->keepLocalChanges = parts;
+}
+
+QSet<QByteArray> Collection::keepLocalChanges() const
+{
+    Q_D(const Collection);
+
+    return d->keepLocalChanges;
 }
 
 AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

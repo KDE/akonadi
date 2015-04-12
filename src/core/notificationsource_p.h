@@ -39,6 +39,7 @@ public:
     ~NotificationSource();
 
     void setAllMonitored(bool allMonitored);
+    void setExclusive(bool exclusive);
     void setMonitoredCollection(Entity::Id id, bool monitored);
     void setMonitoredItem(Entity::Id id, bool monitored);
     void setMonitoredResource(const QByteArray &resource, bool monitored);
@@ -46,6 +47,7 @@ public:
     void setMonitoredTag(Tag::Id id, bool monitored);
     void setMonitoredType(NotificationMessageV2::Type type, bool monitored);
     void setIgnoredSession(const QByteArray &session, bool monitored);
+    void setSession(const QByteArray &session);
 
     QObject *source() const;
 

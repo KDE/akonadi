@@ -78,7 +78,7 @@ public:
 
         mEmitTimer->stop(); // in case we are called by result()
         if (!mPendingCollections.isEmpty()) {
-            if (!q->error()) {
+            if (!q->error() || mScope.ignoreRetrievalErrors()) {
                 emit q->collectionsReceived(mPendingCollections);
             }
             mPendingCollections.clear();
@@ -100,7 +100,28 @@ public:
         } else if (CollectionUtils::hasValidHierarchicalRID(mBase)) {
             return QString::fromUtf8(QByteArray(QByteArray("(") + ProtocolHelper::hierarchicalRidToByteArray(mBase) + QByteArray(")")));
         } else {
-            return QStringLiteral("Collection RemoteId %1").arg(mBase.remoteId());
+            return QString::fromLatin1("Collection RemoteId %1").arg(mBase.remoteId());
+        }
+    }
+
+    bool jobFailed(KJob *job)
+    {
+        Q_Q(CollectionFetchJob);
+        if (mScope.ignoreRetrievalErrors()) {
+           int error = job->error();
+           if (error && !q->error()) {
+               q->setError(error);
+               q->setErrorText(job->errorText());
+           }
+
+           if (error == Job::ConnectionFailed ||
+               error == Job::ProtocolVersionMismatch ||
+               error == Job::UserCanceled) {
+               return true;
+           }
+           return false;
+        } else {
+            return job->error();
         }
     }
 };
@@ -288,18 +309,44 @@ void CollectionFetchJob::doStart()
     }
     if (d->mScope.ancestorRetrieval() != CollectionFetchScope::None) {
         options.append("ANCESTORS");
-        switch (d->mScope.ancestorRetrieval()) {
-        case CollectionFetchScope::None:
-            options.append("0");
-            break;
-        case CollectionFetchScope::Parent:
-            options.append("1");
-            break;
-        case CollectionFetchScope::All:
-            options.append("INF");
-            break;
-        default:
-            Q_ASSERT(false);
+
+        if (d->mScope.ancestorFetchScope().fetchIdOnly()) {
+            switch (d->mScope.ancestorRetrieval()) {
+            case CollectionFetchScope::None:
+                options.append("0");
+                break;
+            case CollectionFetchScope::Parent:
+                options.append("1");
+                break;
+            case CollectionFetchScope::All:
+                options.append("INF");
+                break;
+            default:
+                Q_ASSERT(false);
+            }
+        } else {
+            QByteArray ancestorFetchScope = "(";
+            ancestorFetchScope += "DEPTH ";
+            switch (d->mScope.ancestorRetrieval()) {
+            case CollectionFetchScope::None:
+                ancestorFetchScope += "0 ";
+                break;
+            case CollectionFetchScope::Parent:
+                ancestorFetchScope += "1 ";
+                break;
+            case CollectionFetchScope::All:
+                ancestorFetchScope += "INF ";
+                break;
+            default:
+                Q_ASSERT(false);
+            }
+            ancestorFetchScope += "NAME ";
+            ancestorFetchScope += "REMOTEID ";
+            Q_FOREACH (const QByteArray &ancestorAttribute, d->mScope.ancestorFetchScope().attributes()) {
+                ancestorFetchScope += ancestorAttribute + " ";
+            }
+            ancestorFetchScope += ")";
+            options.append(ancestorFetchScope);
         }
     }
 
@@ -378,10 +425,27 @@ void CollectionFetchJob::slotResult(KJob *job)
 
     CollectionFetchJob *list = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(job);
+
+    if (d->mType == NonOverlappingRoots) {
+        d->mPrefetchList += list->collections();
+    } else if (!d->mBasePrefetch) {
+        d->mCollections += list->collections();
+    }
+
+    if (d_ptr->mCurrentSubJob == job && !d->jobFailed(job)) {
+        if (job->error()) {
+            qWarning() << "Error during CollectionFetchJob: " << job->errorString();
+        }
+        d_ptr->mCurrentSubJob = 0;
+        removeSubjob(job);
+        QTimer::singleShot(0, this, SLOT(startNext()));
+    } else {
+        Job::slotResult(job);
+    }
+
     if (d->mBasePrefetch) {
         d->mBasePrefetch = false;
         const Collection::List roots = list->collections();
-        Job::slotResult(job);
         Q_ASSERT(!hasSubjobs());
         if (!job->error()) {
             foreach (const Collection &col, roots) {
@@ -392,18 +456,14 @@ void CollectionFetchJob::slotResult(KJob *job)
         }
         // No result yet.
     } else if (d->mType == NonOverlappingRoots) {
-        d->mPrefetchList += list->collections();
-        Job::slotResult(job);
-        if (!job->error() && !hasSubjobs()) {
+        if (!d->jobFailed(job) && !hasSubjobs()) {
             const Collection::List result = filterDescendants(d->mPrefetchList);
             d->mPendingCollections += result;
             d->mCollections = result;
             d->delayedEmitResult();
         }
     } else {
-        d->mCollections += list->collections();
-        Job::slotResult(job);
-        if (!job->error() && !hasSubjobs()) {
+        if (!d->jobFailed(job) && !hasSubjobs()) {
             d->delayedEmitResult();
         }
     }

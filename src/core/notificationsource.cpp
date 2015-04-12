@@ -42,6 +42,14 @@ void NotificationSource::setAllMonitored(bool allMonitored)
     Q_UNUSED(ok);
 }
 
+void NotificationSource::setExclusive(bool exclusive)
+{
+    const bool ok = QMetaObject::invokeMethod(parent(), "setExclusive",
+                                              Q_ARG(bool, exclusive));
+    Q_ASSERT(ok);
+    Q_UNUSED(ok);
+}
+
 void NotificationSource::setMonitoredCollection(Entity::Id id, bool monitored)
 {
     const bool ok = QMetaObject::invokeMethod(parent(), "setMonitoredCollection",
@@ -101,6 +109,14 @@ void NotificationSource::setMonitoredType(NotificationMessageV2::Type type, bool
     const bool ok = QMetaObject::invokeMethod(parent(), "setMonitoredType",
                                               Q_ARG(Akonadi::NotificationMessageV2::Type, type),
                                               Q_ARG(bool, monitored));
+    Q_ASSERT(ok);
+    Q_UNUSED(ok);
+}
+
+void NotificationSource::setSession(const QByteArray &session)
+{
+    const bool ok = QMetaObject::invokeMethod(parent(), "setSession",
+                                              Q_ARG(QByteArray, session));
     Q_ASSERT(ok);
     Q_UNUSED(ok);
 }

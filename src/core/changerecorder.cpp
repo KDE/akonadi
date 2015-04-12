@@ -65,11 +65,7 @@ void ChangeRecorder::replayNext()
     if (!d->pendingNotifications.isEmpty()) {
         const NotificationMessageV3 msg = d->pendingNotifications.head();
         if (d->ensureDataAvailable(msg)) {
-            if (!d->emitNotification(msg)) {
-                //If no signal was emitted (e.g. because noone was connected to it), noone is going to call changeProcessed, so we help ourselves
-                d->dequeueNotification();
-                return replayNext();
-            }
+            d->emitNotification(msg);
         } else if (d->translateAndCompress(d->pipeline, msg)) {
             // The msg is now in both pipeline and pendingNotifications.
             // When data is available, MonitorPrivate::flushPipeline will emitNotification.

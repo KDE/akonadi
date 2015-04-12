@@ -28,6 +28,7 @@
 #include <itemfetchscope.h>
 #include <itemsync.h>
 #include <itemcreatejob.h>
+#include <resourceselectjob_p.h>
 
 #include <krandom.h>
 
@@ -189,6 +190,10 @@ class ItemsyncTest : public QObject
 
     void testIncrementalSync()
     {
+      {
+          ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+          AKVERIFYEXEC(select);
+      }
 
       const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
       QVERIFY( col.isValid() );
@@ -233,6 +238,7 @@ class ItemsyncTest : public QObject
       delItems << itemWithOnlyRemoteId;
       resultItems.takeFirst();
 
+      //This item will not be removed since it isn't existing locally
       Item itemWithRandomRemoteId;
       itemWithRandomRemoteId.setRemoteId( KRandom::randomString( 100 ) );
       delItems << itemWithRandomRemoteId;
@@ -254,6 +260,11 @@ class ItemsyncTest : public QObject
       QTRY_COMPARE(deletedSpy.count(), 2);
       QCOMPARE(addedSpy.count(), 0);
       QTRY_COMPARE(changedSpy.count(), 0);
+
+      {
+          ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
+          AKVERIFYEXEC(select);
+      }
     }
 
     void testIncrementalStreamingSync()

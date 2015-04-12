@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Akonadi)
 
 # ECM setup
-find_package(ECM 5.9.0 CONFIG REQUIRED)
+find_package(ECM 1.7.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
-set(KF5_VERSION "5.9.0")
+set(KF5_VERSION "5.7.0")
 set(KDEPIMLIBS_VERSION "4.82.0")
 set(QT_REQUIRED_VERSION "5.2.0")
 

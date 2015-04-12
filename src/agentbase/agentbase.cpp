@@ -290,6 +290,46 @@ void AgentBase::ObserverV4::itemsTagsChanged(const Item::List &items, const QSet
     }
 }
 
+void AgentBase::ObserverV4::relationAdded(const Akonadi::Relation &relation)
+{
+    Q_UNUSED(relation)
+
+    if (sAgentBase) {
+        // not implementation, let's disconnect the signal to enable optimization in Monitor
+        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(relationAdded(Akonadi::Relation)),
+                            sAgentBase->d_ptr, SLOT(relationAdded(Akonadi::Relation)));
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
+
+void AgentBase::ObserverV4::relationRemoved(const Akonadi::Relation &relation)
+{
+    Q_UNUSED(relation)
+
+    if (sAgentBase) {
+        // not implementation, let's disconnect the signal to enable optimization in Monitor
+        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(relationRemoved(Akonadi::Relation)),
+                            sAgentBase->d_ptr, SLOT(relationRemoved(Akonadi::Relation)));
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
+
+void AgentBase::ObserverV4::itemsRelationsChanged(const Akonadi::Item::List &items,
+                                                  const Akonadi::Relation::List &addedRelations,
+                                                  const Akonadi::Relation::List &removedRelations)
+{
+    Q_UNUSED(items)
+    Q_UNUSED(addedRelations)
+    Q_UNUSED(removedRelations)
+
+    if (sAgentBase) {
+        // not implementation, let's disconnect the signal to enable optimization in Monitor
+        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsRelationsChanged(Akonadi::Item::List,Akonadi::Relation::List,Akonadi::Relation::List)),
+                            sAgentBase, SLOT(itemsRelationsChanged(Akonadi::Item::List,Akonadi::Relation::List,Akonadi::Relation::List)));
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
+
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
@@ -618,6 +658,50 @@ void AgentBasePrivate::itemsTagsChanged(const Akonadi::Item::List &items, const 
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->itemsTagsChanged(items, addedTags, removedTags);
+    } else {
+        changeProcessed();
+    }
+}
+
+void AgentBasePrivate::relationAdded(const Akonadi::Relation &relation)
+{
+    if (!mObserver) {
+        return;
+    }
+
+    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    if (observer4) {
+        observer4->relationAdded(relation);
+    } else {
+        changeProcessed();
+    }
+}
+
+void AgentBasePrivate::relationRemoved(const Akonadi::Relation &relation)
+{
+    if (!mObserver) {
+        return;
+    }
+
+    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    if (observer4) {
+        observer4->relationRemoved(relation);
+    } else {
+        changeProcessed();
+    }
+}
+
+void AgentBasePrivate::itemsRelationsChanged(const Akonadi::Item::List &items,
+                                             const Akonadi::Relation::List &addedRelations,
+                                             const Akonadi::Relation::List &removedRelations)
+{
+    if (!mObserver) {
+        return;
+    }
+
+    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    if (observer4) {
+        observer4->itemsRelationsChanged(items, addedRelations, removedRelations);
     } else {
         changeProcessed();
     }

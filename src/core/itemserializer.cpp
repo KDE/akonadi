@@ -220,9 +220,9 @@ Item ItemSerializer::convert(const Item &item, int mtid)
     return Item();
 }
 
-void ItemSerializer::Q_DECL_OVERRIDEPluginLookup(QObject *p)
+void ItemSerializer::overridePluginLookup(QObject *p)
 {
-    TypePluginLoader::Q_DECL_OVERRIDEPluginLookup(p);
+    TypePluginLoader::overridePluginLookup(p);
 }
 
 }

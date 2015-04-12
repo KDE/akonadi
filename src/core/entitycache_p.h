@@ -193,11 +193,10 @@ private:
 
     void processResult(KJob *job) Q_DECL_OVERRIDE
     {
-        typename T::Id id = job->property("EntityCacheNode").template value<typename T::Id>();
-        // Error handling?
         if (job->error()) {
-            qWarning() << job->errorString();
+            //This can happen if we have stale notifications for items that have already been removed
         }
+        typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
         EntityCacheNode<T> *node = cacheNodeForId(id);
         if (!node) {
             return; // got replaced in the meantime

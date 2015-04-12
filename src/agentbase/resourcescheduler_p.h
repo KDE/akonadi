@@ -54,6 +54,7 @@ public:
         SyncCollectionTree,
         SyncCollection,
         SyncCollectionAttributes,
+        SyncTags,
         FetchItem,
         ChangeReplay,
         RecursiveMoveReplay,
@@ -61,6 +62,7 @@ public:
         InvalideCacheForCollection,
         SyncAllDone,
         SyncCollectionTreeDone,
+        SyncRelations,
         Custom
     };
 
@@ -121,6 +123,9 @@ public:
       @param collection The collection to synchronize attributes from.
     */
     void scheduleAttributesSync(const Collection &collection);
+
+    void scheduleTagSync();
+    void scheduleRelationSync();
 
     /**
       Schedules fetching of a single PIM item.
@@ -227,6 +232,8 @@ Q_SIGNALS:
     void executeCollectionAttributesSync(const Akonadi::Collection &col);
     void executeCollectionSync(const Akonadi::Collection &col);
     void executeCollectionTreeSync();
+    void executeTagSync();
+    void executeRelationSync();
     void executeItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts);
     void executeResourceCollectionDeletion();
     void executeCacheInvalidation(const Akonadi::Collection &collection);

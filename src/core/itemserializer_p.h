@@ -91,7 +91,7 @@ public:
     *
     * @since 4.12
     */
-    static void Q_DECL_OVERRIDEPluginLookup(QObject *plugin);
+    static void overridePluginLookup(QObject *plugin);
 };
 
 /**

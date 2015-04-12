@@ -22,6 +22,7 @@
 #include "attributefactory.h"
 #include "collectionstatistics.h"
 #include "entity_p.h"
+#include "item_p.h"
 #include "exception.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
@@ -110,14 +111,14 @@ void ProtocolHelper::parseAncestors(const QByteArray &data, Entity *entity, int 
 
     static const Collection::Id rootCollectionId = Collection::root().id();
     QVarLengthArray<QByteArray, 16> ancestors;
-    QVarLengthArray<QByteArray, 16> parentIds;
+    QList<QByteArray> parentIds;
 
     ImapParser::parseParenthesizedList(data, ancestors);
     Entity *current = entity;
     for (int i = 0; i < ancestors.count(); ++i) {
         parentIds.clear();
         ImapParser::parseParenthesizedList(ancestors[i], parentIds);
-        if (parentIds.size() != 2) {
+        if (parentIds.size() < 2) {
             break;
         }
 
@@ -127,8 +128,14 @@ void ProtocolHelper::parseAncestors(const QByteArray &data, Entity *entity, int 
             break;
         }
 
-        current->parentCollection().setId(uid);
-        current->parentCollection().setRemoteId(QString::fromUtf8(parentIds[1]));
+        Akonadi::Collection parentCollection(uid);
+        if (!parentIds[1].isEmpty() && (parentIds[1].at(0) == '(')) {
+            parseCollection(ImapParser::join(parentIds, " "), parentCollection, 0, false);
+        } else {
+            parentCollection.setRemoteId(QString::fromLatin1(parentIds[1]));
+        }
+        current->setParentCollection(parentCollection);
+
         current = &current->parentCollection();
     }
 }
@@ -144,7 +151,7 @@ static Collection::ListPreference parsePreference(const QByteArray &value)
     return Collection::ListDefault;
 }
 
-int ProtocolHelper::parseCollection(const QByteArray &data, Collection &collection, int start)
+int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collection, int start, bool requireParent)
 {
     int pos = start;
 
@@ -156,16 +163,17 @@ int ProtocolHelper::parseCollection(const QByteArray &data, Collection &collecti
         qDebug() << "Could not parse collection id from response:" << data;
         return start;
     }
-
-    Collection::Id parentId = -1;
-    pos = ImapParser::parseNumber(data, parentId, &ok, pos);
-    if (!ok || parentId < 0) {
-        qDebug() << "Could not parse parent id from response:" << data;
-        return start;
-    }
-
     collection = Collection(colId);
-    collection.setParentCollection(Collection(parentId));
+
+    if (requireParent) {
+        Collection::Id parentId = -1;
+        pos = ImapParser::parseNumber(data, parentId, &ok, pos);
+        if (!ok || parentId < 0) {
+            qDebug() << "Could not parse parent id from response:" << data;
+            return start;
+        }
+        collection.setParentCollection(Collection(parentId));
+    }
 
     // attributes
     QVarLengthArray<QByteArray, 16> attributes;
@@ -320,14 +328,10 @@ QByteArray ProtocolHelper::entitySetToByteArray(const QList<Item> &_objects, con
 
 QByteArray ProtocolHelper::tagSetToImapSequenceSet(const Akonadi::Tag::List &_objects)
 {
-    if (_objects.isEmpty()) {
-        throw Exception("No objects specified");
-    }
-
     Tag::List objects(_objects);
 
     std::sort(objects.begin(), objects.end(), boost::bind(&Tag::id, _1) < boost::bind(&Tag::id, _2));
-    if (!objects.first().isValid()) {
+    if (!objects.isEmpty() && !objects.first().isValid()) {
         throw Exception("Not all tags have a uid");
     }
     // all items have a uid set
@@ -473,6 +477,9 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray(const ItemFetchScope &fetch
     if (fetchScope.fetchModificationTime()) {
         command += " DATETIME";
     }
+    if (fetchScope.fetchRelations()) {
+        command += " RELATIONS";
+    }
     foreach (const QByteArray &part, fetchScope.payloadParts()) {
         command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
     }
@@ -616,6 +623,18 @@ void ProtocolHelper::parseItemFetchResult(const QList<QByteArray> &lineTokens, I
                 }
             }
             item.setTags(tags);
+        } else if (key == "RELATIONS") {
+            Relation::List relations;
+            QList<QByteArray> data;
+            ImapParser::parseParenthesizedList(lineTokens[i + 1], data);
+            Q_FOREACH (const QByteArray &d, data) {
+                QList<QByteArray> parts;
+                ImapParser::parseParenthesizedList(d, parts);
+                Relation relation;
+                parseRelationFetchResult(parts, relation);
+                relations << relation;
+            }
+            item.d_func()->mRelations = relations;
         } else if (key == "VIRTREF") {
             ImapSet set;
             ImapParser::parseSequenceSet(lineTokens[i + 1], set);
@@ -720,6 +739,26 @@ void ProtocolHelper::parseTagFetchResult(const QList<QByteArray> &lineTokens, Ta
             }
             attr->deserialize(value);
             tag.addAttribute(attr);
+        }
+    }
+}
+
+void ProtocolHelper::parseRelationFetchResult(const QList<QByteArray> &lineTokens, Relation &relation)
+{
+    for (int i = 0; i < lineTokens.count() - 1; i += 2) {
+        const QByteArray key = lineTokens.value(i);
+        const QByteArray value = lineTokens.value(i + 1);
+
+        if (key == "LEFT") {
+            relation.setLeft(Akonadi::Item(value.toLongLong()));
+        } else if (key == "RIGHT") {
+            relation.setRight(Akonadi::Item(value.toLongLong()));
+        } else if (key == "REMOTEID") {
+            relation.setRemoteId(value);
+        } else if (key == "TYPE") {
+            relation.setType(value);
+        } else {
+            qWarning() << "Unknown relation attribute " << key;
         }
     }
 }

@@ -119,7 +119,8 @@ static const struct {
     { 0, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", 0, 0, ActionAlternative },
     { "akonadi_item_trash_restore", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "user-trash", 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative },
     { 0, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", 0, 0, ActionAlternative },
-    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL + Qt::SHIFT + Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction }
+    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL + Qt::SHIFT + Qt::Key_L , SLOT(slotSynchronizeFavoriteCollections()), NormalAction },
+    { "akonadi_resource_synchronize_collectiontree", I18N_NOOP("Synchronize Folder Tree"), I18N_NOOP("Synchronize"), "view-refresh", 0, SLOT(slotSynchronizeCollectionTree()), NormalAction }
 
 };
 static const int numStandardActionData = sizeof standardActionData / sizeof * standardActionData;
@@ -129,11 +130,6 @@ BOOST_STATIC_ASSERT(numStandardActionData == StandardActionManager::LastType);
 static bool canCreateCollection(const Akonadi::Collection &collection)
 {
     if (!(collection.rights() & Akonadi::Collection::CanCreateCollection)) {
-        return false;
-    }
-
-    if (!collection.contentMimeTypes().contains(Akonadi::Collection::mimeType()) &&
-        !collection.contentMimeTypes().contains(Akonadi::Collection::virtualMimeType())) {
         return false;
     }
 
@@ -1177,6 +1173,18 @@ public:
 
         foreach (AgentInstance instance, instances) {    //krazy:exclude=foreach
             instance.synchronize();
+        }
+    }
+
+    void slotSynchronizeCollectionTree()
+    {
+        const AgentInstance::List instances = selectedAgentInstances();
+        if (instances.isEmpty()) {
+            return;
+        }
+
+        foreach (AgentInstance instance, instances) {    //krazy:exclude=foreach
+            instance.synchronizeCollectionTree();
         }
     }
 

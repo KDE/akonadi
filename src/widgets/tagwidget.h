@@ -51,8 +51,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void editTags();
-
-private:
     void updateView();
 
 private:

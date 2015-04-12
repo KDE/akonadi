@@ -270,6 +270,38 @@ public:
     static ContactSearchField fromKey(const QString &key);
 };
 
+/**
+ * A search term for a incidence field.
+ *
+ * This class can be used to create queries that akonadi incidence search backends understand.
+ *
+ * @since 5.0
+ */
+class AKONADICORE_EXPORT IncidenceSearchTerm : public SearchTerm
+{
+public:
+    enum IncidenceSearchField {
+        Unknown,
+        All,
+        PartStatus,                                         // Own PartStatus
+        Organizer,
+        Summary,
+        Location
+      };
+
+    IncidenceSearchTerm(IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
+
+    /**
+     * Translates field to key
+     */
+    static QString toKey(IncidenceSearchField);
+
+    /**
+     * Translates key to field
+     */
+    static IncidenceSearchField fromKey(const QString &key);
+};
+
 }
 
 #endif // AKONADI_SEARCHQUERY_H

@@ -41,6 +41,7 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory)
     , notificationSource(0)
     , monitorAll(false)
+    , exclusive(false)
     , mFetchChangedOnly(false)
     , session(Session::defaultSession())
     , collectionCache(0)
@@ -91,6 +92,8 @@ bool MonitorPrivate::connectToNotificationManager()
     QObject::connect(notificationSource, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
                      q_ptr, SLOT(slotNotify(Akonadi::NotificationMessageV3::List)));
 
+    notificationSource->setSession(session->sessionId());
+
     return true;
 }
 
@@ -99,6 +102,7 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
     if (state == ServerManager::Running) {
         if (connectToNotificationManager()) {
             notificationSource->setAllMonitored(monitorAll);
+            notificationSource->setSession(session->sessionId());
             Q_FOREACH (const Collection &col, collections) {
                 notificationSource->setMonitoredCollection(col.id(), true);
             }
@@ -233,6 +237,11 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &n
             batchSupported = true;
             needsSplit = false;
             return;
+        case NotificationMessageV2::ModifyRelations:
+            // Relations were added after batch notifications, so they are always supported
+            batchSupported = true;
+            needsSplit = false;
+            return;
         case NotificationMessageV2::Move:
             needsSplit = isBatch && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) > 0;
             batchSupported = q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) > 0;
@@ -259,6 +268,9 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &n
         needsSplit = isBatch;
         batchSupported = false;
     } else if (msg.type() == NotificationMessageV2::Tags) {
+        needsSplit = isBatch;
+        batchSupported = false;
+    } else if (msg.type() == NotificationMessageV2::Relations) {
         needsSplit = isBatch;
         batchSupported = false;
     }
@@ -304,7 +316,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
         return false;
     }
 
-    if (msg.entities().count() == 0) {
+    if (msg.entities().count() == 0 && msg.type() != NotificationMessageV2::Relations) {
         return false;
     }
 
@@ -379,6 +391,8 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
             return false;
         }
         return true;
+    case NotificationMessageV2::Relations:
+        return true;
     }
     Q_ASSERT(false);
     return false;
@@ -409,6 +423,16 @@ void MonitorPrivate::cleanOldNotifications()
     }
 }
 
+bool MonitorPrivate::fetchCollections() const
+{
+    return fetchCollection;
+}
+
+bool MonitorPrivate::fetchItems() const
+{
+    return !mItemFetchScope.isEmpty();
+}
+
 bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
 {
     if (msg.type() == NotificationMessageV2::Tags) {
@@ -419,9 +443,17 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         }
         return true;
     }
+    if (msg.type() == NotificationMessageV2::Relations) {
+        return true;
+    }
+
+    if (msg.operation() == NotificationMessageV2::Remove && msg.type() == NotificationMessageV2::Collections) {
+        //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
+        return true;
+    }
 
     bool allCached = true;
-    if (fetchCollection) {
+    if (fetchCollections()) {
         if (!collectionCache->ensureCached(msg.parentCollection(), mCollectionFetchScope)) {
             allCached = false;
         }
@@ -433,7 +465,7 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         return allCached; // the actual object is gone already, nothing to fetch there
     }
 
-    if (msg.type() == NotificationMessageV2::Items && !mItemFetchScope.isEmpty()) {
+    if (msg.type() == NotificationMessageV2::Items && fetchItems()) {
         ItemFetchScope scope(mItemFetchScope);
         if (mFetchChangedOnly && (msg.operation() == NotificationMessageV2::Modify || msg.operation() == NotificationMessageV2::ModifyFlags)) {
             bool fullPayloadWasRequested = scope.fullPayload();
@@ -473,7 +505,7 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
             }
         }
 
-    } else if (msg.type() == NotificationMessageV2::Collections && fetchCollection) {
+    } else if (msg.type() == NotificationMessageV2::Collections && fetchCollections()) {
         Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
             if (!collectionCache->ensureCached(entity.id, mCollectionFetchScope)) {
                 allCached = false;
@@ -487,10 +519,29 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
 bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
 {
     bool someoneWasListening = false;
+    bool shouldCleanOldNotifications = false;
     if (msg.type() == NotificationMessageV2::Tags) {
         //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
         const Tag::List tags = tagCache->retrieve(msg.uids());
         someoneWasListening = emitTagsNotification(msg, tags);
+        shouldCleanOldNotifications = !someoneWasListening;
+    } else if (msg.type() == NotificationMessageV2::Relations) {
+        Relation rel;
+        Q_FOREACH (const QByteArray & part, msg.itemParts()) {
+            QList<QByteArray> splitPart = part.split(' ');
+            Q_ASSERT(splitPart.size() == 2);
+            if (splitPart.first() == "LEFT") {
+                rel.setLeft(Akonadi::Item(splitPart.at(1).toLongLong()));
+            } else if (splitPart.first() == "RIGHT") {
+                rel.setRight(Akonadi::Item(splitPart.at(1).toLongLong()));
+            } else if (splitPart.first() == "TYPE") {
+                rel.setType(splitPart.at(1));
+            } else if (splitPart.first() == "RID") {
+                rel.setRemoteId(splitPart.at(1));
+            }
+        }
+        someoneWasListening = emitRelationsNotification(msg, Relation::List() << rel);
+        shouldCleanOldNotifications = !someoneWasListening;
     } else {
         const Collection parent = collectionCache->retrieve(msg.parentCollection());
         Collection destParent;
@@ -501,19 +552,28 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
         if (msg.type() == NotificationMessageV2::Collections) {
             Collection col;
             Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+                //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
                 col = collectionCache->retrieve(entity.id);
-                if (emitCollectionNotification(msg, col, parent, destParent) && !someoneWasListening) {
-                    someoneWasListening = true;
+                //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
+                //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
+                if (col.isValid() || msg.operation() == NotificationMessageV2::Remove || !fetchCollections()) {
+                    someoneWasListening = emitCollectionNotification(msg, col, parent, destParent);
+                    shouldCleanOldNotifications = !someoneWasListening;
                 }
             }
         } else if (msg.type() == NotificationMessageV2::Items) {
-            //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
+            //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
             const Item::List items = itemCache->retrieve(msg.uids());
-            someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+            //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
+            //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
+            if (!items.isEmpty() || msg.operation() == NotificationMessageV2::Remove || !fetchItems()) {
+                someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
+                shouldCleanOldNotifications = !someoneWasListening;
+            }
         }
     }
 
-    if (!someoneWasListening) {
+    if (shouldCleanOldNotifications) {
         cleanOldNotifications(); // probably someone disconnected a signal in the meantime, get rid of the no longer interesting stuff
     }
 
@@ -576,12 +636,14 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     // We have to split moves into insert or remove if the source or destination
     // is not monitored.
     if (msg.operation() != NotificationMessageV2::Move) {
-        return NotificationMessageV3::appendAndCompress(notificationQueue, msg) ? 1 : 0;
+        notificationQueue.enqueue(msg);
+        return 1;
     }
 
     // Always handle tags
     if (msg.type() == NotificationMessageV2::Tags) {
-        return NotificationMessageV3::appendAndCompress(notificationQueue, msg);
+        notificationQueue.enqueue(msg);
+        return 1;
     }
 
     bool sourceWatched = false;
@@ -608,7 +670,8 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     }
 
     if ((sourceWatched && destWatched) || (!collectionMoveTranslationEnabled && msg.type() == NotificationMessageV2::Collections)) {
-        return NotificationMessageV3::appendAndCompress(notificationQueue, msg) ? 1 : 0;
+        notificationQueue.enqueue(msg);
+        return 1;
     }
 
     if (sourceWatched) {
@@ -616,7 +679,8 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
         NotificationMessageV3 removalMessage = msg;
         removalMessage.setOperation(NotificationMessageV2::Remove);
         removalMessage.setParentDestCollection(-1);
-        return NotificationMessageV3::appendAndCompress(notificationQueue, removalMessage) ? 1 : 0;
+        notificationQueue.enqueue(removalMessage);
+        return 1;
     }
 
     // Transform into an insertion
@@ -626,13 +690,10 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     insertionMessage.setParentDestCollection(-1);
     // We don't support batch insertion, so we have to do it one by one
     const NotificationMessageV3::List split = splitMessage(insertionMessage, false);
-    int appended = 0;
     Q_FOREACH (const NotificationMessageV3 &insertion, split) {
-        if (NotificationMessageV3::appendAndCompress(notificationQueue, insertion)) {
-            ++appended;
-        }
+        notificationQueue.enqueue(insertion);
     }
-    return appended;
+    return split.count();
 }
 
 /*
@@ -742,8 +803,23 @@ void MonitorPrivate::dispatchNotifications()
     }
 }
 
-bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+static Relation::List extractRelations(QSet<QByteArray> &flags)
 {
+    Relation::List relations;
+    Q_FOREACH (const QByteArray &flag, flags) {
+        if (flag.startsWith("RELATION")) {
+            flags.remove(flag);
+            const QList<QByteArray> parts = flag.split(' ');
+            Q_ASSERT(parts.size() == 4);
+            relations << Relation(parts[1], Item(parts[2].toLongLong()), Item(parts[3].toLongLong()));
+        }
+    }
+    return relations;
+}
+
+bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+{
+    NotificationMessageV3 msg = msg_;
     Q_ASSERT(msg.type() == NotificationMessageV2::Items);
     Collection col = collection;
     Collection colDest = collectionDest;
@@ -757,6 +833,17 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, con
         if (!msg.itemParts().isEmpty()) {
             colDest.setResource(QString::fromLatin1(*(msg.itemParts().begin())));
         }
+    }
+
+    Relation::List addedRelations, removedRelations;
+    if (msg.operation() == NotificationMessageV2::ModifyRelations) {
+        QSet<QByteArray> addedFlags = msg.addedFlags();
+        addedRelations = extractRelations(addedFlags);
+        msg.setAddedFlags(addedFlags);
+
+        QSet<QByteArray> removedFlags = msg.removedFlags();
+        removedRelations = extractRelations(removedFlags);
+        msg.setRemovedFlags(removedFlags);
     }
 
     Tag::List addedTags, removedTags;
@@ -896,6 +983,12 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg, con
             return true;
         }
         return false;
+    case NotificationMessageV2::ModifyRelations:
+        if (q_ptr->receivers(SIGNAL(itemsRelationsChanged(Akonadi::Item::List,Akonadi::Relation::List,Akonadi::Relation::List))) > 0) {
+            emit q_ptr->itemsRelationsChanged(its, addedRelations, removedRelations);
+            return true;
+        }
+        return false;
     default:
         qDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
     }
@@ -988,11 +1081,17 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
     Tag::List validTags;
     if (msg.operation() == NotificationMessageV2::Remove) {
         //In case of a removed signal the cache entry was already invalidated, and we therefore received an empty list of tags
-        Q_FOREACH (const Entity::Id &uid, msg.uids()) {
-            validTags << Tag(uid);
+        Q_FOREACH (const Akonadi::NotificationMessageV2::Entity &entity, msg.entities()) {
+            Tag tag(entity.id);
+            tag.setRemoteId(entity.remoteId.toLatin1());
+            validTags << tag;
         }
     } else {
         validTags = tags;
+    }
+
+    if (validTags.isEmpty()) {
+        return false;
     }
 
     switch (msg.operation()) {
@@ -1018,6 +1117,38 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
         }
         Q_FOREACH (const Tag &tag, validTags) {
             Q_EMIT q_ptr->tagRemoved(tag);
+        }
+        return true;
+    default:
+        qDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
+    }
+
+    return false;
+}
+
+bool MonitorPrivate::emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations)
+{
+    Q_ASSERT(msg.type() == NotificationMessageV2::Relations);
+
+    if (relations.isEmpty()) {
+        return false;
+    }
+
+    switch (msg.operation()) {
+    case NotificationMessageV2::Add:
+        if (q_ptr->receivers(SIGNAL(relationAdded(Akonadi::Relation))) == 0) {
+            return false;
+        }
+        Q_FOREACH (const Relation &relation, relations) {
+            Q_EMIT q_ptr->relationAdded(relation);
+        }
+        return true;
+    case NotificationMessageV2::Remove:
+        if (q_ptr->receivers(SIGNAL(relationRemoved(Akonadi::Relation))) == 0) {
+            return false;
+        }
+        Q_FOREACH (const Relation &relation, relations) {
+            Q_EMIT q_ptr->relationRemoved(relation);
         }
         return true;
     default:

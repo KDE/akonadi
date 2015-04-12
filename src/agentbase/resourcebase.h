@@ -270,6 +270,18 @@ protected Q_SLOTS:
     virtual void retrieveCollections() = 0;
 
     /**
+     * Retreive all tags from the backend
+     * @see tagsRetrieved()
+     */
+    virtual void retrieveTags();
+
+    /**
+     * Retreive all relations from the backend
+     * @see relationsRetrieved()
+     */
+    virtual void retrieveRelations();
+
+    /**
      * Retrieve the attributes of a single collection from the backend. The
      * collection to retrieve attributes for is provided as @p collection.
      * Add the attributes parts and call collectionAttributesRetrieved()
@@ -314,6 +326,14 @@ protected Q_SLOTS:
      * @since 4.14
      */
     void setItemSyncBatchSize(int batchSize);
+
+    /**
+     * Set to true to scheudle an attribute sync before every item sync.
+     * The default is false.
+     *
+     * @since 4.15
+     */
+    void setScheduleAttributeSyncBeforeItemSync(bool);
 
     /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
@@ -419,6 +439,9 @@ protected:
      * @see collectionsRetrievedIncremental()
     */
     void collectionsRetrieved(const Collection::List &collections);
+
+    void tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers);
+    void relationsRetrieved(const Relation::List &relations);
 
     /**
      * Call this to supply incrementally retrieved collections from the remote server.
@@ -619,9 +642,27 @@ protected:
     void synchronizeCollectionAttributes(qint64 id);
 
     /**
+     * Synchronizes the collection attributes.
+     *
+     * @param col The id of the collection to synchronize
+     * @since 4.15
+     */
+    void synchronizeCollectionAttributes(const Akonadi::Collection &col);
+
+    /**
      * Refetches the Collections.
      */
     void synchronizeCollectionTree();
+
+    /**
+     * Refetches Tags.
+     */
+    void synchronizeTags();
+
+    /**
+     * Refetches Relations.
+     */
+    void synchronizeRelations();
 
     /**
      * Stops the execution of the current task and continues with the next one.
@@ -774,8 +815,12 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplayResult(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void slotItemRetrievalCollectionFetchDone(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void slotAttributeRetrievalCollectionFetchDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotTagSyncDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotRelationSyncDone(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void slotSynchronizeTags())
+    Q_PRIVATE_SLOT(d_func(), void slotSynchronizeRelations())
+    Q_PRIVATE_SLOT(d_func(), void slotItemRetrievalCollectionFetchDone(KJob *));
+    Q_PRIVATE_SLOT(d_func(), void slotAttributeRetrievalCollectionFetchDone(KJob *));
 };
 
 }

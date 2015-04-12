@@ -1,4 +1,0 @@
-[General]
-DataFile[$e]=$XDG_DATA_HOME/testdata-res1.xml
-FileWatchingEnabled=false
-

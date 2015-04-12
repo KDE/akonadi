@@ -202,6 +202,21 @@ void Akonadi::Monitor::setAllMonitored(bool monitored)
     emit allMonitored(monitored);
 }
 
+void Monitor::setExclusive(bool exclusive)
+{
+    Q_D(Monitor);
+    d->exclusive = exclusive;
+    if (d->notificationSource) {
+        d->notificationSource->setExclusive(exclusive);
+    }
+}
+
+bool Monitor::exclusive() const
+{
+    Q_D(const Monitor);
+    return d->exclusive;
+}
+
 void Monitor::ignoreSession(Session *session)
 {
     Q_D(Monitor);
@@ -353,6 +368,9 @@ void Monitor::setSession(Akonadi::Session *session)
 
     d->itemCache->setSession(d->session);
     d->collectionCache->setSession(d->session);
+    if (d->notificationSource) {
+        d->notificationSource->setSession(d->session->sessionId());
+    }
 }
 
 Session *Monitor::session() const

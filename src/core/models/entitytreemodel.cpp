@@ -132,7 +132,6 @@ void EntityTreeModel::setCollectionMonitored(const Collection &col, bool monitor
 void EntityTreeModel::setCollectionReferenced(const Akonadi::Collection &col, bool referenced)
 {
     Q_D(EntityTreeModel);
-    d->m_monitor->setCollectionMonitored(col, referenced);
     Akonadi::Collection referencedCollection = col;
     referencedCollection.setReferenced(referenced);
     //We have to use the same session as the monitor, so the monitor can fetch the collection afterwards

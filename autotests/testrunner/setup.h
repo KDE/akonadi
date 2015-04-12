@@ -75,6 +75,7 @@ private Q_SLOTS:
 private:
     void setupAgents();
     void copyXdgDirectory(const QString &src, const QString &dst);
+    void copyKdeHomeDirectory(const QString &src, const QString &dst);
     void copyDirectory(const QString &src, const QString &dst);
     void createTempEnvironment();
     void cleanTempEnvironment();

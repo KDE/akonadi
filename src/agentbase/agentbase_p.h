@@ -143,6 +143,12 @@ public Q_SLOTS:
     virtual void tagChanged(const Akonadi::Tag &tag);
     virtual void tagRemoved(const Akonadi::Tag &tag);
     virtual void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags);
+
+    virtual void relationAdded(const Akonadi::Relation &relation);
+    virtual void relationRemoved(const Akonadi::Relation &relation);
+    virtual void itemsRelationsChanged(const Akonadi::Item::List &items,
+                                       const Akonadi::Relation::List &addedRelations,
+                                       const Akonadi::Relation::List &removedRelations);
 };
 
 }

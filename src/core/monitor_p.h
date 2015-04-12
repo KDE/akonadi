@@ -71,6 +71,7 @@ public:
     QSet<Monitor::Type> types;
     QSet<QString> mimetypes;
     bool monitorAll;
+    bool exclusive;
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
     TagFetchScope mTagFetchScope;
@@ -159,6 +160,8 @@ public:
                                     const Collection &par = Collection(), const Collection &dest = Collection());
 
     bool emitTagsNotification(const NotificationMessageV3 &msg, const Tag::List &tags);
+
+    bool emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations);
 
     void serverStateChanged(Akonadi::ServerManager::State state);
 
@@ -305,6 +308,8 @@ private:
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);
+    bool fetchCollections() const;
+    bool fetchItems() const;
 };
 
 }

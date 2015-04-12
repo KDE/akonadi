@@ -32,6 +32,9 @@ public:
         : ancestorDepth(CollectionFetchScope::None)
         , statistics(false)
         , listFilter(CollectionFetchScope::Enabled)
+        , fetchAllAttributes(false)
+        , fetchIdOnly(true)
+        , mIgnoreRetrievalErrors(false)
     {
     }
 
@@ -43,6 +46,16 @@ public:
         ancestorDepth = other.ancestorDepth;
         statistics = other.statistics;
         listFilter = other.listFilter;
+        attributes = other.attributes;
+        if (!ancestorFetchScope && other.ancestorFetchScope) {
+            ancestorFetchScope.reset(new CollectionFetchScope());
+            *ancestorFetchScope = *other.ancestorFetchScope;
+        } else if (ancestorFetchScope && !other.ancestorFetchScope) {
+            ancestorFetchScope.reset(0);
+        }
+        fetchAllAttributes = other.fetchAllAttributes;
+        fetchIdOnly = other.fetchIdOnly;
+        mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
     }
 
 public:
@@ -51,6 +64,11 @@ public:
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
     bool statistics;
     CollectionFetchScope::ListFilter listFilter;
+    QSet<QByteArray> attributes;
+    QScopedPointer<CollectionFetchScope> ancestorFetchScope;
+    bool fetchAllAttributes;
+    bool fetchIdOnly;
+    bool mIgnoreRetrievalErrors;
 };
 
 CollectionFetchScope::CollectionFetchScope()
@@ -144,5 +162,62 @@ void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFi
 {
     d->listFilter = listFilter;
 }
+
+QSet<QByteArray> CollectionFetchScope::attributes() const
+{
+    return d->attributes;
+}
+
+void CollectionFetchScope::fetchAttribute(const QByteArray &type, bool fetch)
+{
+    d->fetchIdOnly = false;
+    if (fetch) {
+        d->attributes.insert(type);
+    } else {
+        d->attributes.remove(type);
+    }
+}
+
+void CollectionFetchScope::setFetchIdOnly(bool fetchIdOnly)
+{
+    d->fetchIdOnly = fetchIdOnly;
+}
+
+bool CollectionFetchScope::fetchIdOnly() const
+{
+    return d->fetchIdOnly;
+}
+
+void CollectionFetchScope::setIgnoreRetrievalErrors(bool enable)
+{
+    d->mIgnoreRetrievalErrors = enable;
+}
+
+bool CollectionFetchScope::ignoreRetrievalErrors() const
+{
+    return d->mIgnoreRetrievalErrors;
+}
+
+void CollectionFetchScope::setAncestorFetchScope(const CollectionFetchScope &scope)
+{
+    *d->ancestorFetchScope = scope;
+}
+
+CollectionFetchScope CollectionFetchScope::ancestorFetchScope() const
+{
+    if (!d->ancestorFetchScope) {
+        return CollectionFetchScope();
+    }
+    return *d->ancestorFetchScope;
+}
+
+CollectionFetchScope &CollectionFetchScope::ancestorFetchScope()
+{
+    if (!d->ancestorFetchScope) {
+        d->ancestorFetchScope.reset(new CollectionFetchScope());
+    }
+    return *d->ancestorFetchScope;
+}
+
 
 }

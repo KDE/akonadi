@@ -26,10 +26,11 @@
 #include "changerecorder.h"
 #include "tagselectiondialog.h"
 
+#include <kicon.h>
 #include <klocalizedstring.h>
-#include <ksqueezedtextlabel.h>
 
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QToolButton>
 
 using namespace Akonadi;
@@ -49,9 +50,8 @@ TagWidget::TagWidget(QWidget *parent)
     d->mModel = new Akonadi::TagModel(monitor, this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
-    layout->setSpacing(0);
-    d->mTagLabel = new KSqueezedTextLabel;
+    d->mTagLabel = new QLabel;
+    d->mTagLabel->setWordWrap(true);
     d->mTagLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     layout->addWidget(d->mTagLabel);
 
@@ -61,7 +61,8 @@ TagWidget::TagWidget(QWidget *parent)
 
     layout->setStretch(0, 10);
 
-    connect(editButton, &QToolButton::clicked, this, &TagWidget::editTags);
+    connect(editButton, SIGNAL(clicked()), SLOT(editTags()));
+    connect(d->mModel, SIGNAL(populated()), SLOT(updateView()));
 }
 
 TagWidget::~TagWidget()

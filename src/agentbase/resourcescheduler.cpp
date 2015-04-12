@@ -69,12 +69,38 @@ void ResourceScheduler::scheduleCollectionTreeSync()
     scheduleNext();
 }
 
-void ResourceScheduler::scheduleSync(const Collection &col)
+void ResourceScheduler::scheduleTagSync()
+{
+    Task t;
+    t.type = SyncTags;
+    TaskList& queue = queueForTaskType(t.type);
+    if (queue.contains(t) || mCurrentTask == t) {
+        return;
+    }
+    queue << t;
+    signalTaskToTracker(t, "SyncTags");
+    scheduleNext();
+}
+
+void ResourceScheduler::scheduleRelationSync()
+{
+    Task t;
+    t.type = SyncRelations;
+    TaskList& queue = queueForTaskType(t.type);
+    if (queue.contains(t) || mCurrentTask == t) {
+        return;
+    }
+    queue << t;
+    signalTaskToTracker(t, "SyncRelations");
+    scheduleNext();
+}
+
+void ResourceScheduler::scheduleSync(const Collection & col)
 {
     Task t;
     t.type = SyncCollection;
     t.collection = col;
-    TaskList &queue = queueForTaskType(t.type);
+    TaskList& queue = queueForTaskType(t.type);
     if (queue.contains(t) || mCurrentTask == t) {
         return;
     }
@@ -89,7 +115,7 @@ void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
     t.type = SyncCollectionAttributes;
     t.collection = collection;
 
-    TaskList &queue = queueForTaskType(t.type);
+    TaskList& queue = queueForTaskType(t.type);
     if (queue.contains(t) || mCurrentTask == t) {
         return;
     }
@@ -98,7 +124,7 @@ void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
     scheduleNext();
 }
 
-void ResourceScheduler::scheduleItemFetch(const Item &item, const QSet<QByteArray> &parts, const QDBusMessage &msg)
+void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArray> &parts, const QDBusMessage & msg)
 {
     Task t;
     t.type = FetchItem;
@@ -113,10 +139,10 @@ void ResourceScheduler::scheduleItemFetch(const Item &item, const QSet<QByteArra
     }
 
     // If this task is already in the queue, merge with it.
-    TaskList &queue = queueForTaskType(t.type);
+    TaskList& queue = queueForTaskType(t.type);
     const int idx = queue.indexOf(t);
     if (idx != -1) {
-        queue[idx].dbusMsgs << msg;
+        queue[ idx ].dbusMsgs << msg;
         return;
     }
 
@@ -330,7 +356,10 @@ void ResourceScheduler::executeNext()
         emit executeCollectionSync(mCurrentTask.collection);
         break;
     case SyncCollectionAttributes:
-        emit executeCollectionAttributesSync(mCurrentTask.collection);
+        emit executeCollectionAttributesSync( mCurrentTask.collection );
+        break;
+    case SyncTags:
+        emit executeTagSync();
         break;
     case FetchItem:
         emit executeItemFetch(mCurrentTask.item, mCurrentTask.itemParts);
@@ -353,20 +382,24 @@ void ResourceScheduler::executeNext()
     case SyncCollectionTreeDone:
         emit collectionTreeSyncComplete();
         break;
-    case Custom: {
-        const QByteArray methodSig = mCurrentTask.methodName + "(QVariant)";
+    case SyncRelations:
+        emit executeRelationSync();
+        break;
+    case Custom:
+    {
+        const QByteArray methodSig = mCurrentTask.methodName + QByteArray("(QVariant)");
         const bool hasSlotWithVariant = mCurrentTask.receiver->metaObject()->indexOfMethod(methodSig.constData()) != -1;
         bool success = false;
         if (hasSlotWithVariant) {
             success = QMetaObject::invokeMethod(mCurrentTask.receiver, mCurrentTask.methodName.constData(), Q_ARG(QVariant, mCurrentTask.argument));
-            Q_ASSERT_X(success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found");
+            Q_ASSERT_X( success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found" );
         }
         if (!success) {
             success = QMetaObject::invokeMethod(mCurrentTask.receiver, mCurrentTask.methodName.constData());
         }
 
         if (!success) {
-            qCritical() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
+                qCritical() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
         }
         break;
     }
@@ -550,6 +583,7 @@ static const char s_taskTypes[][27] = {
     "SyncCollectionTree",
     "SyncCollection",
     "SyncCollectionAttributes",
+    "SyncTags",
     "FetchItem",
     "ChangeReplay",
     "RecursiveMoveReplay",
@@ -557,6 +591,7 @@ static const char s_taskTypes[][27] = {
     "InvalideCacheForCollection",
     "SyncAllDone",
     "SyncCollectionTreeDone",
+    "SyncRelations",
     "Custom"
 };
 

@@ -52,6 +52,8 @@ set(akonadicore_base_SRCS
     pluginloader.cpp
     pop3resourceattribute.cpp
     protocolhelper.cpp
+    relation.cpp
+    relationsync.cpp
     searchquery.cpp
     servermanager.cpp
     session.cpp
@@ -60,6 +62,7 @@ set(akonadicore_base_SRCS
     tag.cpp
     tagattribute.cpp
     tagfetchscope.cpp
+    tagsync.cpp
     trashsettings.cpp
     typepluginloader.cpp
 )
@@ -189,6 +192,9 @@ set(akonadicore_jobs_SRCS
     jobs/recursiveitemfetchjob.cpp
     jobs/resourceselectjob.cpp
     jobs/resourcesynchronizationjob.cpp
+    jobs/relationfetchjob.cpp
+    jobs/relationcreatejob.cpp
+    jobs/relationdeletejob.cpp
     jobs/searchcreatejob.cpp
     jobs/searchresultjob.cpp
     jobs/specialcollectionsdiscoveryjob.cpp
