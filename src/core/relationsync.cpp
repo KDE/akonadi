@@ -124,4 +124,3 @@ void RelationSync::checkDone()
     emitResult();
 }
 
-#include "relationsync.moc"

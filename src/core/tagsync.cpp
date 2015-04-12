@@ -251,4 +251,3 @@ void TagSync::checkDone()
     emitResult();
 }
 
-#include "tagsync.moc"
