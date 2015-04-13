@@ -216,11 +216,11 @@ void EntityTreeModelTest::testInitialFetch()
   expectedSignals << getExpectedSignal( RowsInserted, 0, 3, QLatin1String("Col 7") );
   expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 1") );
   expectedSignals << getExpectedSignal( DataChanged, 3, 3, QVariantList() << QLatin1String("Col 3") );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 4") );
   expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 5") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 4") );
   expectedSignals << getExpectedSignal( DataChanged, 2, 2, QVariantList() << QLatin1String("Col 2") );
-  expectedSignals << getExpectedSignal( DataChanged, 1, 1, QVariantList() << QLatin1String("Col 6") );
-  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 7") );
+  expectedSignals << getExpectedSignal( DataChanged, 1, 1, QVariantList() << QLatin1String("Col 7") );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << QLatin1String("Col 6") );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
