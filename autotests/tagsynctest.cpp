@@ -105,7 +105,7 @@ private Q_SLOTS:
     void newTagWithItems()
     {
         const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
 
         Tag::List remoteTags;
@@ -175,7 +175,7 @@ private Q_SLOTS:
     {
         const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
 
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
+        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
 
         Tag tag1(QStringLiteral("tag1"));
