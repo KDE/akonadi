@@ -63,7 +63,7 @@ private Q_SLOTS:
         QTest::newRow("nothingToReplay") << (QStringList() << QLatin1String("rn"));
         QTest::newRow("nothingOneNothing") << (QStringList() << QLatin1String("rn") << QLatin1String("c2") << QLatin1String("r2") << QLatin1String("rn"));
         QTest::newRow("multipleItems") << (QStringList() << QLatin1String("c1") << QLatin1String("c2") << QLatin1String("c3") << QLatin1String("r1") << QLatin1String("c4") << QLatin1String("r2") << QLatin1String("r3") << QLatin1String("r4") << QLatin1String("rn"));
-        QTest::newRow("reload") << (QStringList() << QLatin1String("c1") << QLatin1String("c1") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("r3") << QLatin1String("rn"));
+        QTest::newRow("reload") << (QStringList() << QLatin1String("c1") << QLatin1String("c1") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("r1") << QLatin1String("r3") << QLatin1String("rn"));
         QTest::newRow("more") << (QStringList() << QLatin1String("c1") << QLatin1String("c2") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("reload") << QLatin1String("c4") << QLatin1String("reload") << QLatin1String("r2") << QLatin1String("reload") << QLatin1String("r3") << QLatin1String("r4") << QLatin1String("rn"));
       //FIXME: Due to the event compression in the server we simply expect a removal signal
       // QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
@@ -134,8 +134,6 @@ private:
 
     void replayNextAndProcess(ChangeRecorder *rec, Akonadi::Item::Id expectedUid)
     {
-        qDebug();
-
         QSignalSpy nothingSpy(rec, SIGNAL(nothingToReplay()));
         QVERIFY(nothingSpy.isValid());
         QSignalSpy itemChangedSpy(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
@@ -155,8 +153,6 @@ private:
 
     void replayNextAndExpectNothing(ChangeRecorder *rec)
     {
-        qDebug();
-
         QSignalSpy nothingSpy(rec, SIGNAL(nothingToReplay()));
         QVERIFY(nothingSpy.isValid());
         QSignalSpy itemChangedSpy(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
