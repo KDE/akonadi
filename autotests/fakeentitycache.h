@@ -119,6 +119,11 @@ public Q_SLOTS:
         Q_UNUSED(ignored)
     }
 
+    void setSession(const QByteArray &session)
+    {
+        Q_UNUSED(session);
+    }
+
 Q_SIGNALS:
     void notifyV3(const Akonadi::NotificationMessageV3::List &msgs);
 };
