@@ -52,6 +52,7 @@ private Q_SLOTS:
         Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance(QLatin1String("akonadi_knut_resource_0"));
         QVERIFY(agent.isValid());
         agent.setIsOnline(true);
+        QTRY_VERIFY(agent.isOnline());
     }
 
     void testItemSearch_data()
