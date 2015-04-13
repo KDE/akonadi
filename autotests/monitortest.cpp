@@ -37,6 +37,7 @@
 #include <itemmodifyjob.h>
 #include <itemmovejob.h>
 #include <searchcreatejob.h>
+#include <searchquery.h>
 #include <subscriptionjob_p.h>
 
 #include <QtCore/QVariant>
@@ -225,10 +226,13 @@ void MonitorTest::testMonitor()
   AKVERIFYEXEC( move );
   QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
   QCOMPARE( cstatspy.count(), 2 );
-  arg = cstatspy.takeFirst();       // the destination collection
-  QCOMPARE( arg.at(0).value<Collection::Id>(), res3.id() );
-  arg = cstatspy.takeLast();        // the source collection
-  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
+  // NOTE: We don't make any assumptions about the order of the collectionStatisticsChanged
+  // signals, they seem to arrive in random order
+  QList<Collection::Id> notifiedCols;
+  notifiedCols << cstatspy.takeFirst().at(0).value<Collection::Id>()
+               << cstatspy.takeFirst().at(0).value<Collection::Id>();
+  QVERIFY(notifiedCols.contains(res3.id()));  // destination
+  QVERIFY(notifiedCols.contains(monitorCol.id())); // source
 
   QCOMPARE( imvspy.count(), 1 );
   arg = imvspy.takeFirst();
@@ -405,17 +409,15 @@ void MonitorTest::testMonitor()
 
 void MonitorTest::testVirtualCollectionsMonitoring()
 {
-#if 0 //QT5 port
   Monitor *monitor = new Monitor( this );
   monitor->setCollectionMonitored( Collection( 1 ) );   // top-level 'Search' collection
 
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QVERIFY( caddspy.isValid() );
 
-  SearchCreateJob *job = new SearchCreateJob( QLatin1String("Test search collection"), QLatin1String("test-search-query"), this );
+  SearchCreateJob *job = new SearchCreateJob( QLatin1String("Test search collection"), Akonadi::SearchQuery(), this );
   AKVERIFYEXEC( job );
   QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
   QCOMPARE( caddspy.count(), 1 );
-#endif
 }
 
