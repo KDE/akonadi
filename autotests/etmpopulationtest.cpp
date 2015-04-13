@@ -112,7 +112,6 @@ Akonadi::Collection createCollection(const QString &name, const Akonadi::Collect
     if (create->error()) {
         qWarning() << create->errorString();
     }
-    Q_ASSERT(!create->error());
     return create->collection();
 }
 
@@ -155,10 +154,15 @@ void EtmPopulationTest::initTestCase()
 
     mainCollectionName = QLatin1String("main");
     monitorCol = createCollection(mainCollectionName, res);
+    QVERIFY(monitorCol.isValid());
     col1 = createCollection(QLatin1String("col1"), monitorCol);
+    QVERIFY(col1.isValid());
     col2 = createCollection(QLatin1String("col2"), monitorCol);
+    QVERIFY(col2.isValid());
     col3 = createCollection(QLatin1String("col3"), monitorCol);
+    QVERIFY(col3.isValid());
     col4 = createCollection(QLatin1String("col4"), col2);
+    QVERIFY(col4.isValid());
 }
 
 void EtmPopulationTest::testMonitoringCollectionsPreset()
@@ -287,6 +291,7 @@ void EtmPopulationTest::testRemoveMonitoringCollections()
 void EtmPopulationTest::testDisplayFilter()
 {
     Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false);
+    QVERIFY(col5.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
@@ -309,6 +314,7 @@ void EtmPopulationTest::testDisplayFilter()
 void EtmPopulationTest::testReferenceCollection()
 {
     Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false);
+    QVERIFY(col5.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
@@ -355,6 +361,7 @@ void EtmPopulationTest::testReferenceCollection()
 void EtmPopulationTest::testLoadingOfHiddenCollection()
 {
     Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false, QStringList() << QLatin1String("application/test"));
+    QVERIFY(col5.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setMimeTypeMonitored(QLatin1String("application/test"), true);
@@ -372,7 +379,9 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 void EtmPopulationTest::testSwitchFromReferenceToEnabled()
 {
     Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false, QStringList() << QLatin1String("application/test") << Collection::mimeType());
+    QVERIFY(col5.isValid());
     Collection col6 = createCollection(QLatin1String("col6"), col5, true, QStringList() << QLatin1String("application/test"));
+    QVERIFY(col6.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
