@@ -140,8 +140,9 @@ private Q_SLOTS:
 
         ItemFetchJob *fetchJob = new ItemFetchJob(tag1);
         AKVERIFYEXEC(fetchJob);
-        QCOMPARE(tagMembers.value(QString::fromLatin1(tag1.remoteId())).count(), fetchJob->items().count());
-        QCOMPARE(tagMembers.value(QString::fromLatin1(tag1.remoteId())), fetchJob->items());
+        QCOMPARE(fetchJob->items().count(), tagMembers.value(QString::fromLatin1(tag1.remoteId())).count());
+        QCOMPARE(fetchJob->items(), tagMembers.value(QString::fromLatin1(tag1.remoteId())));
+
 
         cleanTags();
     }
