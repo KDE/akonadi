@@ -31,7 +31,7 @@ QTEST_MAIN(CollectionTest)
 
 QByteArray collection1(
 "<test>\n"
-" <collection content=\"inode/directory,message/rfc822\" rid=\"c11\" name=\"Inbox\">\n"
+" <collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">\n"
 "  <attribute type=\"ENTITYDISPLAY\">(\"Posteingang\" \"mail-folder-inbox\" \"\" ())</attribute>\n"
 " </collection>\n"
 "</test>\n");
