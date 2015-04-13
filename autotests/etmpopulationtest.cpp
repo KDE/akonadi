@@ -52,14 +52,14 @@ public:
 
 public Q_SLOTS:
     void onRowsInserted(QModelIndex p, int s, int e) {
-        qDebug() << p << s << e;
-        qDebug() << p.data().toString();
+        qDebug() << "rowsInserted( parent =" << p << ", start = " << s << ", end = " << e << ", data = " << p.data().toString() << ")";
         mSignals << QLatin1String("rowsInserted");
         parent = p;
         start = s;
         end = e;
     }
     void onRowsRemoved(QModelIndex p, int s, int e) {
+        qDebug() << "rowsRemoved( parent = " << p << ", start = " << s << ", end = " << e << ")";
         mSignals << QLatin1String("rowsRemoved");
         parent = p;
         start = s;
@@ -68,10 +68,8 @@ public Q_SLOTS:
     void onRowsMoved(QModelIndex,int,int,QModelIndex,int) {
         mSignals << QLatin1String("rowsMoved");
     }
-    void onDataChanged(QModelIndex s, QModelIndex e) {
-        qDebug() << s << e;
-        qDebug() << s.data().toString();
-        qDebug() << e.data().toString();
+    void onDataChanged(QModelIndex tl, QModelIndex br) {
+        qDebug() << "dataChanged( topLeft =" << tl << "(" << tl.data().toString() << "), bottomRight =" << br << "(" << br.data().toString() << ") )";
         mSignals << QLatin1String("dataChanged");
     }
     void onLayoutChanged() {
@@ -342,8 +340,8 @@ void EtmPopulationTest::testReferenceCollection()
     //Ensure all signals have been delivered to the spy
     QTest::qWait(0);
     QCOMPARE(spy.mSignals.count(QLatin1String("rowsInserted")), 1);
-    //Signals for item fetch state and a data-changed signal from the referencing
-    QCOMPARE(spy.mSignals.count(QLatin1String("dataChanged")), 3);
+    //Signals for data-changed signal from the referencing
+    QCOMPARE(spy.mSignals.count(QLatin1String("dataChanged")), 2);
 
     //Dereference the collection and it should dissapear again
     model->setCollectionReferenced(col5, false);
