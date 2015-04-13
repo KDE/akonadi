@@ -133,17 +133,16 @@ add_akonadi_isolated_test(collectionsynctest.cpp)
 add_akonadi_isolated_test(itemsynctest.cpp)
 add_akonadi_isolated_test(linktest.cpp)
 add_akonadi_isolated_test(cachetest.cpp)
-# starting/stopping the server in the testenvironment doesn't seem to work, 
-# and the test is not very critical (we'll notice if we can't start the server), so we disable it for now.
 add_akonadi_isolated_test(servermanagertest.cpp)
-add_akonadi_isolated_test(collectioncreator.cpp)
 add_akonadi_isolated_test_advanced(tagselectwidgettest.cpp "" "KF5::AkonadiWidgets")
 
 
 # Having a benchmark is cool if you have any reference to compare against, but this
 # benchmark takes over 40 seconds and does not have any real value to us atm. Major
 # performance regressions would be spotted by devs anyway, so disabling for now.
-add_akonadi_isolated_test(itembenchmark.cpp)
+#add_akonadi_isolated_test(itembenchmark.cpp)
+#add_akonadi_isolated_test(collectioncreator.cpp)
+
 add_akonadi_isolated_test(gidtest.cpp)
 add_akonadi_isolated_test(lazypopulationtest.cpp)
 add_akonadi_isolated_test(favoriteproxytest.cpp)
