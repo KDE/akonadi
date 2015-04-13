@@ -27,11 +27,12 @@
 #include <qdebug.h>
 #include <QStringList>
 using namespace Akonadi;
+
 QTEST_MAIN(CollectionTest)
 
 QByteArray collection1(
 "<test>\n"
-" <collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">\n"
+" <collection content=\"inode/directory,message/rfc822\" name=\"Inbox\" rid=\"c11\">\n"
 "  <attribute type=\"ENTITYDISPLAY\">(\"Posteingang\" \"mail-folder-inbox\" \"\" ())</attribute>\n"
 " </collection>\n"
 "</test>\n");
