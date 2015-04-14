@@ -31,6 +31,10 @@
 
 #include "akonadiprivate_export.h"
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(DebugETM)
+
 namespace Akonadi {
 class ItemFetchJob;
 class ChangeRecorder;

@@ -49,15 +49,9 @@
 
 #include <qdebug.h>
 
-/// comment this out to track time spent on jobs created by the ETM
-// #define DBG_TRACK_JOB_TIMES
-
-#ifdef DBG_TRACK_JOB_TIMES
 QMap<KJob *, QTime> jobTimeTracker;
-#define ifDebug(x) x
-#else
-#define ifDebug(x)
-#endif
+
+Q_LOGGING_CATEGORY(DebugETM, "org.kde.akonadi.ETM")
 
 using namespace Akonadi;
 
@@ -245,7 +239,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
                q, SLOT(itemsFetched(Akonadi::Item::List)));
     q->connect(itemFetchJob, SIGNAL(result(KJob*)),
                q, SLOT(itemFetchJobDone(KJob*)));
-    ifDebug(qDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
+    qCDebug(DebugETM) << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();
 }
 
 void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
@@ -267,7 +261,8 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
     }
     q->connect(job, SIGNAL(result(KJob*)),
                 q, SLOT(collectionFetchJobDone(KJob*)));
-    ifDebug(qDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
+
+    qCDebug(DebugETM) << "collection:" << job->collections(); jobTimeTracker[job].start();
 }
 
 void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type)
@@ -447,7 +442,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         collectionIt.next();
 
         const Collection::Id topCollectionId = collectionIt.key();
-        qDebug() << "Subtree: " << topCollectionId << collectionIt.value();
+        qCDebug(DebugETM) << "Subtree: " << topCollectionId << collectionIt.value();
 
         Q_ASSERT(!m_collections.contains(topCollectionId));
         Collection topCollection = collectionsToInsert.value(topCollectionId);
@@ -1333,13 +1328,11 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
         emit q_ptr->collectionTreeFetched(m_collections.values());
     }
 
-#ifdef DBG_TRACK_JOB_TIMES
-    qDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    qDebug() << "was collection fetch job: collections:" << cJob->collections().size();
+    qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
+    qCDebug(DebugETM) << "was collection fetch job: collections:" << cJob->collections().size();
     if (!cJob->collections().isEmpty()) {
-        qDebug() << "first fetched collection:" << cJob->collections().first().name();
+        qCDebug(DebugETM) << "first fetched collection:" << cJob->collections().first().name();
     }
-#endif
 }
 
 void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
@@ -1357,13 +1350,11 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     }
     ItemFetchJob *iJob = static_cast<ItemFetchJob *>(job);
 
-#ifdef DBG_TRACK_JOB_TIMES
-    qDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    qDebug() << "was item fetch job: items:" << iJob->items().size();
+    qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
+    qCDebug(DebugETM) << "was item fetch job: items:" << iJob->items().size();
     if (!iJob->items().isEmpty()) {
-        qDebug() << "first item collection:" << iJob->items().first().parentCollection().name();
+        qCDebug(DebugETM) << "first item collection:" << iJob->items().first().parentCollection().name();
     }
-#endif
 
     if (!iJob->count()) {
         m_collectionsWithoutItems.insert(collectionId);
@@ -1492,7 +1483,7 @@ void EntityTreeModelPrivate::startFirstListJob()
         return;
     }
 
-    qDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
+    qCDebug(DebugETM) << "GEN" << generalPopulation << noMimetypes << noResources;
     if (generalPopulation) {
         fetchCollections(m_rootCollection, fetchType);
     }
@@ -1525,7 +1516,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
                q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
     q->connect(job, SIGNAL(result(KJob*)),
                q, SLOT(collectionFetchJobDone(KJob*)));
-    ifDebug(qDebug() << ""; jobTimeTracker[job].start();)
+    qCDebug(DebugETM) << ""; jobTimeTracker[job].start();
 }
 
 void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collection::List &list)
@@ -1907,7 +1898,7 @@ void EntityTreeModelPrivate::fillModel()
         CollectionFetchJob *rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
         q->connect(rootFetchJob, SIGNAL(result(KJob*)),
                    SLOT(rootFetchJobDone(KJob*)));
-        ifDebug(qDebug() << ""; jobTimeTracker[rootFetchJob].start();)
+        qCDebug(DebugETM) << ""; jobTimeTracker[rootFetchJob].start();
     }
 }
 
