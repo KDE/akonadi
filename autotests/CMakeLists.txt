@@ -135,7 +135,10 @@ add_akonadi_isolated_test(collectionsynctest.cpp)
 add_akonadi_isolated_test(itemsynctest.cpp)
 add_akonadi_isolated_test(linktest.cpp)
 add_akonadi_isolated_test(cachetest.cpp)
-add_akonadi_isolated_test(servermanagertest.cpp)
+
+# FIXME: This is very unstable on Jenkins
+#add_akonadi_isolated_test(servermanagertest.cpp)
+
 add_akonadi_isolated_test_advanced(tagselectwidgettest.cpp "" "KF5::AkonadiWidgets")
 
 
