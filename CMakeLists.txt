@@ -19,7 +19,7 @@ include(CheckIncludeFiles)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.2.0")
-set(AKONADI_VERSION "5.0.40")
+set(AKONADI_VERSION "5.0.41")
 
 ecm_setup_version(${AKONADI_VERSION}
     VARIABLE_PREFIX AKONADI
