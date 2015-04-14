@@ -30,6 +30,7 @@ class CollectionTest : public QObject {
                            const QString &remoteId, const QString &name,
                            const QStringList &mimeType );
   private Q_SLOTS:
+    void initTestCase();
     void serializeCollection();
     void testBuildCollection();
 };

@@ -49,6 +49,17 @@ QByteArray collection2(
     </collection>                                                                              \
 <test>");
 
+
+// from qhash.cp
+extern QBasicAtomicInt qt_qhash_seed;
+
+void CollectionTest::initTestCase()
+{
+    // Verify that the QT_HASH_SEED is normalized
+    QCOMPARE(qt_qhash_seed.load(), 1);
+}
+
+
 void CollectionTest::testBuildCollection()
 {
   QDomDocument mDocument;
