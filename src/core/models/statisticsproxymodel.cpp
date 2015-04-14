@@ -221,8 +221,9 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
         // so that recursive totals can be updated.
         while ( parent.isValid() )
         {
-            emit mParent->dataChanged( parent.sibling( parent.row(), parentColumnCount - 1 - 3 ),
-                                       parent.sibling( parent.row(), parentColumnCount - 1 ) );
+            const QModelIndex left = mParent->index(parent.row(), parentColumnCount - 1 - 3, parent.parent());
+            const QModelIndex right = mParent->index(parent.row(), parentColumnCount -1, parent.parent());
+            emit mParent->dataChanged(left, right);
             parent = parent.parent();
             parentColumnCount = mParent->columnCount( parent );
         }
