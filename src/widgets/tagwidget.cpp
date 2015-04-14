@@ -71,8 +71,10 @@ TagWidget::~TagWidget()
 
 void TagWidget::setSelection(const Akonadi::Tag::List &tags)
 {
-    d->mTags = tags;
-    updateView();
+    if (d->mTags != tags) {
+        d->mTags = tags;
+        updateView();
+    }
 }
 
 Akonadi::Tag::List TagWidget::selection() const
