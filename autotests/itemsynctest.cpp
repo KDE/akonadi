@@ -78,7 +78,7 @@ class ItemsyncTest : public QObject
 
     void testFullSync()
     {
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
 
@@ -127,7 +127,7 @@ class ItemsyncTest : public QObject
       QFETCH(ItemSync::TransactionMode, transactionMode);
       QFETCH(bool, goToEventLoopAfterAddingItems);
 
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
       QCOMPARE(origItems.size(), 15);
@@ -195,7 +195,7 @@ class ItemsyncTest : public QObject
           AKVERIFYEXEC(select);
       }
 
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
       QCOMPARE(origItems.size(), 15);
@@ -269,7 +269,7 @@ class ItemsyncTest : public QObject
 
     void testIncrementalStreamingSync()
     {
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
 
@@ -323,7 +323,7 @@ class ItemsyncTest : public QObject
 
     void testEmptyIncrementalSync()
     {
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
 
@@ -356,7 +356,7 @@ class ItemsyncTest : public QObject
 
     void testIncrementalStreamingSyncBatchProcessing()
     {
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
 
@@ -421,26 +421,26 @@ class ItemsyncTest : public QObject
 
     void testGidMerge()
     {
-       Collection col(collectionIdFromPath(QLatin1String("res3")));
+       Collection col(collectionIdFromPath(QStringLiteral("res3")));
        {
-          Item item(QLatin1String("application/octet-stream"));
-          item.setRemoteId(QLatin1String("rid1"));
-          item.setGid(QLatin1String("gid1"));
+          Item item(QStringLiteral("application/octet-stream"));
+          item.setRemoteId(QStringLiteral("rid1"));
+          item.setGid(QStringLiteral("gid1"));
           item.setPayload<QByteArray>("payload1");
           ItemCreateJob *job = new ItemCreateJob(item, col);
           AKVERIFYEXEC(job);
        }
        {
-          Item item(QLatin1String("application/octet-stream"));
-          item.setRemoteId(QLatin1String("rid2"));
-          item.setGid(QLatin1String("gid2"));
+          Item item(QStringLiteral("application/octet-stream"));
+          item.setRemoteId(QStringLiteral("rid2"));
+          item.setGid(QStringLiteral("gid2"));
           item.setPayload<QByteArray>("payload1");
           ItemCreateJob *job = new ItemCreateJob(item, col);
           AKVERIFYEXEC(job);
        }
-       Item modifiedItem(QLatin1String("application/octet-stream"));
-       modifiedItem.setRemoteId(QLatin1String("rid3"));
-       modifiedItem.setGid(QLatin1String("gid2"));
+       Item modifiedItem(QStringLiteral("application/octet-stream"));
+       modifiedItem.setRemoteId(QStringLiteral("rid3"));
+       modifiedItem.setGid(QStringLiteral("gid2"));
        modifiedItem.setPayload<QByteArray>("payload2");
 
        ItemSync* syncer = new ItemSync(col);
@@ -465,7 +465,7 @@ class ItemsyncTest : public QObject
      */
     void testFailingJob()
     {
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
 
@@ -518,7 +518,7 @@ class ItemsyncTest : public QObject
      */
     void testFailingDueToDuplicateJob()
     {
-      const Collection col = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
       Item::List origItems = fetchItems( col );
 

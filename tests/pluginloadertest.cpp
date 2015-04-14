@@ -39,7 +39,7 @@ int main()
         qDebug("%s", qPrintable(types.at(i)));
     }
 
-    QObject *object = loader->createForName(QLatin1String("text/vcard@KContacts::Addressee"));
+    QObject *object = loader->createForName(QStringLiteral("text/vcard@KContacts::Addressee"));
     if (qobject_cast<ItemSerializerPlugin *>(object) != 0) {
         qDebug("Loaded plugin for mimetype 'text/vcard@KContacts::Addressee' successfully");
     } else {

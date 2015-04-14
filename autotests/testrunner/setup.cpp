@@ -47,7 +47,7 @@ bool SetupTest::startAkonadiDaemon()
                 this, SLOT(slotAkonadiDaemonProcessFinished(int)));
     }
 
-    mAkonadiDaemonProcess->setProgram(QLatin1String("akonadi_control"), QStringList() << QStringLiteral("--instance") << instanceId());
+    mAkonadiDaemonProcess->setProgram(QStringLiteral("akonadi_control"), QStringList() << QStringLiteral("--instance") << instanceId());
     mAkonadiDaemonProcess->start();
     const bool started = mAkonadiDaemonProcess->waitForStarted(5000);
     qDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
@@ -145,7 +145,7 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
     const QDir srcDir(src);
     foreach (const QFileInfo &fi, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot)) {
         if (fi.isDir()) {
-            if (fi.fileName() == QLatin1String("akonadi")) {
+            if (fi.fileName() == QStringLiteral("akonadi")) {
                 // namespace according to instance identifier
                 copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + QStringLiteral("akonadi") + QDir::separator()
                               + QStringLiteral("instance") + QDir::separator() + instanceId());
@@ -183,9 +183,9 @@ void SetupTest::createTempEnvironment()
     qDebug() << "Creating test environment in" << basePath();
 
     const QDir tmpDir(basePath());
-    const QString testRunnerDataDir = QLatin1String("data");
-    const QString testRunnerConfigDir = QLatin1String("config");
-    const QString testRunnerTmpDir = QLatin1String("tmp");
+    const QString testRunnerDataDir = QStringLiteral("data");
+    const QString testRunnerConfigDir = QStringLiteral("config");
+    const QString testRunnerTmpDir = QStringLiteral("tmp");
 
     tmpDir.mkdir(testRunnerConfigDir);
     tmpDir.mkdir(testRunnerDataDir);
@@ -193,7 +193,7 @@ void SetupTest::createTempEnvironment()
 
     const Config *config = Config::instance();
     // Always copy the generic xdgconfig dir
-    copyXdgDirectory(config->basePath() + QLatin1String("/xdgconfig"), basePath() + testRunnerConfigDir);
+    copyXdgDirectory(config->basePath() + QStringLiteral("/xdgconfig"), basePath() + testRunnerConfigDir);
     copyXdgDirectory(config->xdgConfigHome(), basePath() + testRunnerConfigDir);
     copyXdgDirectory(config->xdgDataHome(), basePath() + testRunnerDataDir);
 
@@ -220,7 +220,7 @@ SetupTest::SetupTest()
     createTempEnvironment();
 
     // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
-    setEnvironmentVariable("AKONADI_DISABLE_AGENT_AUTOSTART", QLatin1String("true"));
+    setEnvironmentVariable("AKONADI_DISABLE_AGENT_AUTOSTART", QStringLiteral("true"));
     setEnvironmentVariable("AKONADI_TESTRUNNER_PID", QString::number(QCoreApplication::instance()->applicationPid()));
 
     QHashIterator<QString, QString> iter(Config::instance()->envVars());
@@ -231,15 +231,15 @@ SetupTest::SetupTest()
     }
 
     // No kres-migrator please
-    KConfig migratorConfig(basePath() + QLatin1String("config/kres-migratorrc"));
+    KConfig migratorConfig(basePath() + QStringLiteral("config/kres-migratorrc"));
     KConfigGroup migrationCfg(&migratorConfig, "Migration");
     migrationCfg.writeEntry("Enabled", false);
 
     connect(Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
             SLOT(serverStateChanged(Akonadi::ServerManager::State)));
 
-    QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.Akonadi.Testrunner-") + QString::number(QCoreApplication::instance()->applicationPid()));
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this, QDBusConnection::ExportScriptableSlots);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.Akonadi.Testrunner-") + QString::number(QCoreApplication::instance()->applicationPid()));
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), this, QDBusConnection::ExportScriptableSlots);
 }
 
 SetupTest::~SetupTest()

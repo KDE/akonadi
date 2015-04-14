@@ -33,14 +33,14 @@ class SearchQueryTest : public QObject
     {
       *ok = false;
       QCOMPARE( term.subTerms().count(), 0 );
-      QVERIFY( json.contains( QLatin1String( "key" ) ) );
-      QCOMPARE( json[QLatin1String( "key" )].toString(), term.key() );
-      QVERIFY( json.contains( QLatin1String( "value" ) ) );
-      QCOMPARE( json[QLatin1String( "value" )], term.value() );
-      QVERIFY( json.contains( QLatin1String( "cond" ) ) );
-      QCOMPARE( static_cast<SearchTerm::Condition>( json[QLatin1String( "cond" )].toInt() ), term.condition() );
-      QVERIFY( json.contains( QLatin1String( "negated" ) ) );
-      QCOMPARE( json[QLatin1String( "negated" )].toBool(), term.isNegated() );
+      QVERIFY( json.contains( QStringLiteral( "key" ) ) );
+      QCOMPARE( json[QStringLiteral( "key" )].toString(), term.key() );
+      QVERIFY( json.contains( QStringLiteral( "value" ) ) );
+      QCOMPARE( json[QStringLiteral( "value" )], term.value() );
+      QVERIFY( json.contains( QStringLiteral( "cond" ) ) );
+      QCOMPARE( static_cast<SearchTerm::Condition>( json[QStringLiteral( "cond" )].toInt() ), term.condition() );
+      QVERIFY( json.contains( QStringLiteral( "negated" ) ) );
+      QCOMPARE( json[QStringLiteral( "negated" )].toBool(), term.isNegated() );
       *ok = true;
     }
 
@@ -52,14 +52,14 @@ class SearchQueryTest : public QObject
 
       {
         SearchQuery query;
-        query.addTerm( QLatin1String( "body" ), QLatin1String( "test string"), SearchTerm::CondContains );
+        query.addTerm( QStringLiteral( "body" ), QStringLiteral( "test string"), SearchTerm::CondContains );
 
         ok = false;
         QVariantMap map = parser.parse( query.toJSON(), &ok ).toMap();
         QVERIFY( ok );
 
-        QCOMPARE( static_cast<SearchTerm::Relation>( map[QLatin1String( "rel" )].toInt() ), SearchTerm::RelAnd );
-        const QVariantList subTerms = map[QLatin1String( "subTerms" )].toList();
+        QCOMPARE( static_cast<SearchTerm::Relation>( map[QStringLiteral( "rel" )].toInt() ), SearchTerm::RelAnd );
+        const QVariantList subTerms = map[QStringLiteral( "subTerms" )].toList();
         QCOMPARE( subTerms.size(), 1 );
 
         ok = false;
@@ -69,8 +69,8 @@ class SearchQueryTest : public QObject
 
       {
         SearchQuery query( SearchTerm::RelOr );
-        query.addTerm( SearchTerm( QLatin1String( "to" ), QLatin1String( "test@test.user" ), SearchTerm::CondEqual ) );
-        SearchTerm term2( QLatin1String( "subject"), QLatin1String( "Hello" ), SearchTerm::CondContains );
+        query.addTerm( SearchTerm( QStringLiteral( "to" ), QStringLiteral( "test@test.user" ), SearchTerm::CondEqual ) );
+        SearchTerm term2( QStringLiteral( "subject"), QStringLiteral( "Hello" ), SearchTerm::CondContains );
         term2.setIsNegated( true );
         query.addTerm( term2 );
 
@@ -78,8 +78,8 @@ class SearchQueryTest : public QObject
         QVariantMap map = parser.parse( query.toJSON(), &ok ).toMap();
         QVERIFY( ok );
 
-        QCOMPARE( static_cast<SearchTerm::Relation>( map[QLatin1String( "rel" )].toInt() ), query.term().relation() );
-        const QVariantList subTerms = map[QLatin1String( "subTerms" )].toList();
+        QCOMPARE( static_cast<SearchTerm::Relation>( map[QStringLiteral( "rel" )].toInt() ), query.term().relation() );
+        const QVariantList subTerms = map[QStringLiteral( "subTerms" )].toList();
         QCOMPARE( subTerms.size(), query.term().subTerms().count() );
 
         for ( int i = 0; i < subTerms.size(); ++i ) {
@@ -98,21 +98,21 @@ class SearchQueryTest : public QObject
       {
         QVariantList subTerms;
         QVariantMap termJSON;
-        termJSON[QLatin1String( "key" )] = QLatin1String( "created" );
-        termJSON[QLatin1String( "value" )] = QDateTime( QDate( 2014, 01, 24 ), QTime( 17, 49, 00 ) );
-        termJSON[QLatin1String( "cond" )] = static_cast<int>( SearchTerm::CondGreaterOrEqual );
-        termJSON[QLatin1String( "negated" )] = true;
+        termJSON[QStringLiteral( "key" )] = QStringLiteral( "created" );
+        termJSON[QStringLiteral( "value" )] = QDateTime( QDate( 2014, 01, 24 ), QTime( 17, 49, 00 ) );
+        termJSON[QStringLiteral( "cond" )] = static_cast<int>( SearchTerm::CondGreaterOrEqual );
+        termJSON[QStringLiteral( "negated" )] = true;
         subTerms << termJSON;
 
-        termJSON[QLatin1String( "key" )] = QLatin1String( "subject" );
-        termJSON[QLatin1String( "value" )] = QLatin1String( "Hello" );
-        termJSON[QLatin1String( "cond" )] = static_cast<int>( SearchTerm::CondEqual );
-        termJSON[QLatin1String( "negated" )] = false;
+        termJSON[QStringLiteral( "key" )] = QStringLiteral( "subject" );
+        termJSON[QStringLiteral( "value" )] = QStringLiteral( "Hello" );
+        termJSON[QStringLiteral( "cond" )] = static_cast<int>( SearchTerm::CondEqual );
+        termJSON[QStringLiteral( "negated" )] = false;
         subTerms << termJSON;
 
         QVariantMap map;
-        map[QLatin1String( "rel" )] = static_cast<int>( SearchTerm::RelAnd );
-        map[QLatin1String( "subTerms" )] = subTerms;
+        map[QStringLiteral( "rel" )] = static_cast<int>( SearchTerm::RelAnd );
+        map[QStringLiteral( "subTerms" )] = subTerms;
 
 #if !defined( USE_QJSON_0_8 )
         const QByteArray json = serializer.serialize( map );
@@ -127,7 +127,7 @@ class SearchQueryTest : public QObject
         QVERIFY( !query.isNull() );
         const SearchTerm term = query.term();
 
-        QCOMPARE( static_cast<SearchTerm::Relation>( map[QLatin1String( "rel" )].toInt() ), term.relation() );
+        QCOMPARE( static_cast<SearchTerm::Relation>( map[QStringLiteral( "rel" )].toInt() ), term.relation() );
         QCOMPARE( subTerms.count(), term.subTerms().count() );
 
         for ( int i = 0; i < subTerms.count(); ++i ) {

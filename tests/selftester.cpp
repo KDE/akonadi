@@ -26,9 +26,9 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QLatin1String("akonadi-selftester"),
-                         QLatin1String("akonadi-selftester"),
-                         QLatin1String("0.10"));
+    KAboutData aboutData(QStringLiteral("akonadi-selftester"),
+                         QStringLiteral("akonadi-selftester"),
+                         QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

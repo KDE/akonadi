@@ -71,7 +71,7 @@ void GidTest::initTestCase()
   Control::start();
 
   AkonadiTest::setAllResourcesOffline();
-  Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance(QLatin1String("akonadi_knut_resource_0"));
+  Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance(QStringLiteral("akonadi_knut_resource_0"));
   QVERIFY(agent.isValid());
   agent.setIsOnline(true);
 
@@ -85,16 +85,16 @@ void GidTest::testSetAndFetch_data()
   QTest::addColumn<Akonadi::Item::List>("expected");
 
     Item item1(1);
-    item1.setGid(QLatin1String("gid1"));
+    item1.setGid(QStringLiteral("gid1"));
     Item item2(2);
-    item2.setGid(QLatin1String("gid2"));
+    item2.setGid(QStringLiteral("gid2"));
     Item toFetch;
-    toFetch.setGid(QLatin1String("gid1"));
+    toFetch.setGid(QStringLiteral("gid1"));
     QTest::newRow("single") << (Item::List() << item1) << toFetch << (Item::List() << item1);
     QTest::newRow("multi") << (Item::List() << item1 << item2) << toFetch << (Item::List() << item1);
   {
     Item item3(3);
-    item2.setGid(QLatin1String("gid1"));
+    item2.setGid(QStringLiteral("gid1"));
     QTest::newRow("multi") << (Item::List() << item1 << item2 << item3) << toFetch << (Item::List() << item1 << item3);
   }
 }
@@ -135,14 +135,14 @@ void GidTest::testSetAndFetch()
 
 void GidTest::testCreate()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res1/foo/bar"), this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QStringLiteral("res1/foo/bar"), this );
   AKVERIFYEXEC( resolver );
   int colId = resolver->collection();
 
   Item item;
-  item.setMimeType(QLatin1String("application/octet-stream"));
+  item.setMimeType(QStringLiteral("application/octet-stream"));
   item.setPayload<QByteArray>(QByteArray("test"));
-  item.setGid(QLatin1String("createGid"));
+  item.setGid(QStringLiteral("createGid"));
   ItemCreateJob *createJob = new ItemCreateJob(item, Collection(colId), this);
   AKVERIFYEXEC(createJob);
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
@@ -161,13 +161,13 @@ void GidTest::testSetWithIgnorePayload()
   QVERIFY( fetchedItem.gid().isEmpty() );
 
   //Write the gid to the db
-  fetchedItem.setGid( QLatin1String("gid5") );
+  fetchedItem.setGid( QStringLiteral("gid5") );
   ItemModifyJob *store = new ItemModifyJob( fetchedItem );
   store->setIgnorePayload( true );
   store->setUpdateGid( true );
   AKVERIFYEXEC( store );
   Item toFetch;
-  toFetch.setGid( QLatin1String("gid5") );
+  toFetch.setGid( QStringLiteral("gid5") );
   ItemFetchJob *fetch = new ItemFetchJob( toFetch, this );
   AKVERIFYEXEC( fetch );
   Item::List fetched = fetch->items();
@@ -178,14 +178,14 @@ void GidTest::testSetWithIgnorePayload()
 void GidTest::testFetchScope()
 {
 
-  CollectionPathResolver *resolver = new CollectionPathResolver( QLatin1String("res1/foo/bar"), this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( QStringLiteral("res1/foo/bar"), this );
   AKVERIFYEXEC( resolver );
   int colId = resolver->collection();
 
   Item item;
-  item.setMimeType(QLatin1String("application/octet-stream"));
+  item.setMimeType(QStringLiteral("application/octet-stream"));
   item.setPayload<QByteArray>(QByteArray("test"));
-  item.setGid(QLatin1String("createGid2"));
+  item.setGid(QStringLiteral("createGid2"));
   ItemCreateJob *createJob = new ItemCreateJob(item, Collection(colId), this);
   AKVERIFYEXEC(createJob);
   {

@@ -106,7 +106,7 @@ void CollectionJobTest::testTopLevelList( )
   QVERIFY( res1ColId > 0 );
   QVERIFY( CollectionUtils::isResource( col ) );
   QCOMPARE( col.parentCollection(), Collection::root() );
-  QCOMPARE( col.resource(), QLatin1String("akonadi_knut_resource_0") );
+  QCOMPARE( col.resource(), QStringLiteral("akonadi_knut_resource_0") );
 
   QVERIFY( findCol( list, "res2" ).isValid() );
   res2ColId = findCol( list, "res2" ).id();
@@ -119,7 +119,7 @@ void CollectionJobTest::testTopLevelList( )
   searchColId = col.id();
   QVERIFY( col.isValid() );
   QVERIFY( CollectionUtils::isVirtualParent( col ) );
-  QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource") );
+  QCOMPARE( col.resource(), QStringLiteral("akonadi_search_resource") );
 }
 
 void CollectionJobTest::testFolderList( )
@@ -168,12 +168,12 @@ public:
 public Q_SLOTS:
   void onCollectionsReceived( const Akonadi::Collection::List & )
   {
-    receivedSignals << QLatin1String( "collectionsReceived" );
+    receivedSignals << QStringLiteral( "collectionsReceived" );
   }
 
   void onCollectionRetrievalDone( KJob* )
   {
-    receivedSignals << QLatin1String( "result" );
+    receivedSignals << QStringLiteral( "result" );
   }
 };
 
@@ -189,8 +189,8 @@ void CollectionJobTest::testSignalOrder()
   AKVERIFYEXEC( job );
 
   QCOMPARE( spy.receivedSignals.size(), 2 );
-  QCOMPARE( spy.receivedSignals.at( 0 ), QLatin1String( "collectionsReceived" ) );
-  QCOMPARE( spy.receivedSignals.at( 1 ), QLatin1String( "result" ) );
+  QCOMPARE( spy.receivedSignals.at( 0 ), QStringLiteral( "collectionsReceived" ) );
+  QCOMPARE( spy.receivedSignals.at( 1 ), QStringLiteral( "result" ) );
 }
 
 void CollectionJobTest::testNonRecursiveFolderList( )

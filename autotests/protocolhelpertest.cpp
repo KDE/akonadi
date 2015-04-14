@@ -36,11 +36,11 @@ class ProtocolHelperTest : public QObject
       Item u1; u1.setId( 1 );
       Item u2; u2.setId( 2 );
       Item u3; u3.setId( 3 );
-      Item r1; r1.setRemoteId( QLatin1String("A") );
-      Item r2; r2.setRemoteId( QLatin1String("B") );
-      Item h1; h1.setRemoteId( QLatin1String("H1") ); h1.setParentCollection( Collection::root() );
-      Item h2; h2.setRemoteId( QLatin1String("H2a") ); h2.parentCollection().setRemoteId( QLatin1String("H2b") ); h2.parentCollection().setParentCollection( Collection::root() );
-      Item h3; h3.setRemoteId( QLatin1String("H3a") ); h3.parentCollection().setRemoteId( QLatin1String("H3b") );
+      Item r1; r1.setRemoteId( QStringLiteral("A") );
+      Item r2; r2.setRemoteId( QStringLiteral("B") );
+      Item h1; h1.setRemoteId( QStringLiteral("H1") ); h1.setParentCollection( Collection::root() );
+      Item h2; h2.setRemoteId( QStringLiteral("H2a") ); h2.parentCollection().setRemoteId( QStringLiteral("H2b") ); h2.parentCollection().setParentCollection( Collection::root() );
+      Item h3; h3.setRemoteId( QStringLiteral("H3a") ); h3.parentCollection().setRemoteId( QStringLiteral("H3b") );
 
       QTest::newRow( "empty" ) << Item::List() << QByteArray( "CMD" ) << QByteArray() << true;
       QTest::newRow( "single uid" ) << (Item::List() << u1) << QByteArray( "CMD" ) << QByteArray( " UID CMD 1" ) << false;
@@ -87,7 +87,7 @@ class ProtocolHelperTest : public QObject
 
       const QByteArray b1 = "((42 \"net)\") (0 \"\"))";
       Collection c1;
-      c1.setRemoteId( QLatin1String("net)") );
+      c1.setRemoteId( QStringLiteral("net)") );
       c1.setId( 42 );
       c1.setParentCollection( Collection::root() );
       QTest::newRow( "till's obscure folder" ) << b1 << c1;
@@ -112,19 +112,19 @@ class ProtocolHelperTest : public QObject
       const QByteArray b1 = "2 1 (REMOTEID \"r2\" NAME \"n2\")";
       Collection c1;
       c1.setId( 2 );
-      c1.setRemoteId( QLatin1String("r2") );
+      c1.setRemoteId( QStringLiteral("r2") );
       c1.parentCollection().setId( 1 );
-      c1.setName( QLatin1String("n2") );
+      c1.setName( QStringLiteral("n2") );
       QTest::newRow( "no ancestors" ) << b1 << c1;
 
       const QByteArray b2 = "3 2 (REMOTEID \"r3\" ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\")))";
       Collection c2;
       c2.setId( 3 );
-      c2.setRemoteId( QLatin1String("r3") );
+      c2.setRemoteId( QStringLiteral("r3") );
       c2.parentCollection().setId( 2 );
-      c2.parentCollection().setRemoteId( QLatin1String("r2") );
+      c2.parentCollection().setRemoteId( QStringLiteral("r2") );
       c2.parentCollection().parentCollection().setId( 1 );
-      c2.parentCollection().parentCollection().setRemoteId( QLatin1String("r1") );
+      c2.parentCollection().parentCollection().setRemoteId( QStringLiteral("r1") );
       c2.parentCollection().parentCollection().setParentCollection( Collection::root() );
       QTest::newRow( "ancestors" ) << b2 << c2;
     }

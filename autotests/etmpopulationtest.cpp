@@ -53,30 +53,30 @@ public:
 public Q_SLOTS:
     void onRowsInserted(QModelIndex p, int s, int e) {
         qDebug() << "rowsInserted( parent =" << p << ", start = " << s << ", end = " << e << ", data = " << p.data().toString() << ")";
-        mSignals << QLatin1String("rowsInserted");
+        mSignals << QStringLiteral("rowsInserted");
         parent = p;
         start = s;
         end = e;
     }
     void onRowsRemoved(QModelIndex p, int s, int e) {
         qDebug() << "rowsRemoved( parent = " << p << ", start = " << s << ", end = " << e << ")";
-        mSignals << QLatin1String("rowsRemoved");
+        mSignals << QStringLiteral("rowsRemoved");
         parent = p;
         start = s;
         end = e;
     }
     void onRowsMoved(QModelIndex,int,int,QModelIndex,int) {
-        mSignals << QLatin1String("rowsMoved");
+        mSignals << QStringLiteral("rowsMoved");
     }
     void onDataChanged(QModelIndex tl, QModelIndex br) {
         qDebug() << "dataChanged( topLeft =" << tl << "(" << tl.data().toString() << "), bottomRight =" << br << "(" << br.data().toString() << ") )";
-        mSignals << QLatin1String("dataChanged");
+        mSignals << QStringLiteral("dataChanged");
     }
     void onLayoutChanged() {
-        mSignals << QLatin1String("layoutChanged");
+        mSignals << QStringLiteral("layoutChanged");
     }
     void onModelReset() {
-        mSignals << QLatin1String("modelReset");
+        mSignals << QStringLiteral("modelReset");
     }
 };
 
@@ -148,18 +148,18 @@ void EtmPopulationTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
 
-    res = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+    res = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
 
-    mainCollectionName = QLatin1String("main");
+    mainCollectionName = QStringLiteral("main");
     monitorCol = createCollection(mainCollectionName, res);
     QVERIFY(monitorCol.isValid());
-    col1 = createCollection(QLatin1String("col1"), monitorCol);
+    col1 = createCollection(QStringLiteral("col1"), monitorCol);
     QVERIFY(col1.isValid());
-    col2 = createCollection(QLatin1String("col2"), monitorCol);
+    col2 = createCollection(QStringLiteral("col2"), monitorCol);
     QVERIFY(col2.isValid());
-    col3 = createCollection(QLatin1String("col3"), monitorCol);
+    col3 = createCollection(QStringLiteral("col3"), monitorCol);
     QVERIFY(col3.isValid());
-    col4 = createCollection(QLatin1String("col4"), col2);
+    col4 = createCollection(QStringLiteral("col4"), col2);
     QVERIFY(col4.isValid());
 }
 
@@ -173,16 +173,16 @@ void EtmPopulationTest::testMonitoringCollectionsPreset()
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
-    QTRY_VERIFY(getIndex(QLatin1String("col1"), model).isValid());
-    QTRY_VERIFY(getIndex(QLatin1String("col2"), model).isValid());
+    QTRY_VERIFY(getIndex(QStringLiteral("col1"), model).isValid());
+    QTRY_VERIFY(getIndex(QStringLiteral("col2"), model).isValid());
     QTRY_VERIFY(getIndex(mainCollectionName, model).isValid());
-    QVERIFY(!getIndex(QLatin1String("col3"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col4"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col3"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col4"), model).isValid());
 
-    QTRY_VERIFY(getIndex(QLatin1String("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(!getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
 
 
@@ -197,16 +197,16 @@ void EtmPopulationTest::testMonitoringCollections()
     model->setCollectionsMonitored(monitored);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col2"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col2"), model).isValid());
     QTRY_VERIFY(getIndex(mainCollectionName, model).isValid());
-    QVERIFY(!getIndex(QLatin1String("col3"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col4"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col3"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col4"), model).isValid());
 
-    QTRY_VERIFY(getIndex(QLatin1String("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(!getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
 
 void EtmPopulationTest::testFullPopulation()
@@ -219,16 +219,16 @@ void EtmPopulationTest::testFullPopulation()
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col2"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col2"), model).isValid());
     QVERIFY(getIndex(mainCollectionName, model).isValid());
-    QVERIFY(getIndex(QLatin1String("col3"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col4"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col3"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col4"), model).isValid());
 
-    QTRY_VERIFY(getIndex(QLatin1String("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
 
 void EtmPopulationTest::testAddMonitoringCollections()
@@ -246,17 +246,17 @@ void EtmPopulationTest::testAddMonitoringCollections()
 
     model->setCollectionMonitored(col3, true);
 
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col2"), model).isValid());
-    QTRY_VERIFY(getIndex(QLatin1String("col3"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col4"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col2"), model).isValid());
+    QTRY_VERIFY(getIndex(QStringLiteral("col3"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col4"), model).isValid());
     QVERIFY(getIndex(mainCollectionName, model).isValid());
 
-    QTRY_VERIFY(getIndex(QLatin1String("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col3"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col3"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(!getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(getIndex(QLatin1String("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
 
 void EtmPopulationTest::testRemoveMonitoringCollections()
@@ -274,21 +274,21 @@ void EtmPopulationTest::testRemoveMonitoringCollections()
 
     model->setCollectionMonitored(col2, false);
 
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
-    QVERIFY(!getIndex(QLatin1String("col2"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col2"), model).isValid());
     QVERIFY(getIndex(mainCollectionName, model).isValid());
-    QVERIFY(!getIndex(QLatin1String("col3"), model).isValid());
-    QVERIFY(!getIndex(QLatin1String("col4"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col3"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col4"), model).isValid());
 
-    QTRY_VERIFY(getIndex(QLatin1String("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(!getIndex(QLatin1String("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col1"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(!getIndex(QStringLiteral("col2"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(!getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    QTRY_VERIFY(!getIndex(QLatin1String("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(!getIndex(QStringLiteral("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
 
 void EtmPopulationTest::testDisplayFilter()
 {
-    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false);
+    Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false);
     QVERIFY(col5.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
@@ -299,11 +299,11 @@ void EtmPopulationTest::testDisplayFilter()
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
     QVERIFY(getIndex(mainCollectionName, model).isValid());
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col2"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col3"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col4"), model).isValid());
-    QVERIFY(!getIndex(QLatin1String("col5"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col2"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col3"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col4"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
 
     Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);
@@ -311,7 +311,7 @@ void EtmPopulationTest::testDisplayFilter()
 
 void EtmPopulationTest::testReferenceCollection()
 {
-    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false);
+    Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false);
     QVERIFY(col5.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
@@ -321,33 +321,33 @@ void EtmPopulationTest::testReferenceCollection()
     model->setListFilter(Akonadi::CollectionFetchScope::Display);
 
     QTRY_VERIFY(model->isFullyPopulated());
-    QVERIFY(!getIndex(QLatin1String("col5"), model).isValid());
+    QVERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
     //Check that this random other collection is actually available
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
 
     ModelSignalSpy spy(*model);
 
     //Reference the collection and it should appear in the model
     model->setCollectionReferenced(col5, true);
 
-    QTRY_VERIFY(getIndex(QLatin1String("col5"), model).isValid());
-    QTRY_VERIFY(getIndex(QLatin1String("col5"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
+    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).isValid());
+    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     //Check that this random other collection is still available
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
     //Verify the etms collection has been updated accordingly
-    QTRY_VERIFY(getIndex(QLatin1String("col5"), model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
+    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
 
     //Ensure all signals have been delivered to the spy
     QTest::qWait(0);
-    QCOMPARE(spy.mSignals.count(QLatin1String("rowsInserted")), 1);
+    QCOMPARE(spy.mSignals.count(QStringLiteral("rowsInserted")), 1);
     //Signals for data-changed signal from the referencing
-    QCOMPARE(spy.mSignals.count(QLatin1String("dataChanged")), 2);
+    QCOMPARE(spy.mSignals.count(QStringLiteral("dataChanged")), 2);
 
     //Dereference the collection and it should dissapear again
     model->setCollectionReferenced(col5, false);
-    QTRY_VERIFY(!getIndex(QLatin1String("col5"), model).isValid());
+    QTRY_VERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
     //Check that this random other collection is still available
-    QVERIFY(getIndex(QLatin1String("col1"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
 
     Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);
@@ -358,17 +358,17 @@ void EtmPopulationTest::testReferenceCollection()
  */
 void EtmPopulationTest::testLoadingOfHiddenCollection()
 {
-    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false, QStringList() << QLatin1String("application/test"));
+    Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false, QStringList() << QStringLiteral("application/test"));
     QVERIFY(col5.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
-    changeRecorder->setMimeTypeMonitored(QLatin1String("application/test"), true);
+    changeRecorder->setMimeTypeMonitored(QStringLiteral("application/test"), true);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
-    QVERIFY(getIndex(QLatin1String("col5"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col5"), model).isValid());
 
     Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);
@@ -376,9 +376,9 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 
 void EtmPopulationTest::testSwitchFromReferenceToEnabled()
 {
-    Collection col5 = createCollection(QLatin1String("col5"), monitorCol, false, QStringList() << QLatin1String("application/test") << Collection::mimeType());
+    Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false, QStringList() << QStringLiteral("application/test") << Collection::mimeType());
     QVERIFY(col5.isValid());
-    Collection col6 = createCollection(QLatin1String("col6"), col5, true, QStringList() << QLatin1String("application/test"));
+    Collection col6 = createCollection(QStringLiteral("col6"), col5, true, QStringList() << QStringLiteral("application/test"));
     QVERIFY(col6.isValid());
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
@@ -388,15 +388,15 @@ void EtmPopulationTest::testSwitchFromReferenceToEnabled()
     model->setListFilter(Akonadi::CollectionFetchScope::Display);
     QTRY_VERIFY(model->isFullyPopulated());
     model->setCollectionReferenced(col5, true);
-    QTRY_VERIFY(getIndex(QLatin1String("col5"), model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
+    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
 
     //Dereference and enable the collection
     col5.setEnabled(true);
     model->setCollectionReferenced(col5, false);
 
     //Index and child should stay in model since both are enabled
-    QVERIFY(getIndex(QLatin1String("col5"), model).isValid());
-    QVERIFY(getIndex(QLatin1String("col6"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col5"), model).isValid());
+    QVERIFY(getIndex(QStringLiteral("col6"), model).isValid());
 
     Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);

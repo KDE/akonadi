@@ -46,7 +46,7 @@ typedef QSharedPointer<Volker> VolkerQPtr;
 
 struct Rudi: public Volker
 {
-    Rudi() { who = QLatin1String("Rudi"); }
+    Rudi() { who = QStringLiteral("Rudi"); }
     virtual ~Rudi() { }
     Rudi * clone() const Q_DECL_OVERRIDE { return new Rudi( *this ); }
 };
@@ -56,7 +56,7 @@ typedef QSharedPointer<Rudi> RudiQPtr;
 
 struct Gerd: public Volker
 {
-    Gerd() { who = QLatin1String("Gerd"); }
+    Gerd() { who = QStringLiteral("Gerd"); }
     Gerd * clone() const Q_DECL_OVERRIDE { return new Gerd( *this ); }
 };
 
@@ -224,13 +224,13 @@ void ItemHydra::testPolymorphicPayload()
       {
         RudiPtr p2 = boost::dynamic_pointer_cast<Rudi, Volker>( i1.payload< VolkerPtr >() );
         QCOMPARE( p.use_count(), (long)3 );
-        QCOMPARE( p2->who, QLatin1String("Rudi") );
+        QCOMPARE( p2->who, QStringLiteral("Rudi") );
       }
 
       {
         RudiPtr p2 = i1.payload< RudiPtr >();
         QCOMPARE( p.use_count(), (long)3 );
-        QCOMPARE( p2->who, QLatin1String("Rudi") );
+        QCOMPARE( p2->who, QStringLiteral("Rudi") );
       }
 
       bool caughtException = false;
@@ -273,12 +273,12 @@ void ItemHydra::testQSharedPointerPayload()
 
   {
     VolkerQPtr p2 = i.payload< VolkerQPtr >();
-    QCOMPARE( p2->who, QLatin1String("Rudi") );
+    QCOMPARE( p2->who, QStringLiteral("Rudi") );
   }
 
   {
     RudiQPtr p2 = i.payload< RudiQPtr >();
-    QCOMPARE( p2->who, QLatin1String("Rudi") );
+    QCOMPARE( p2->who, QStringLiteral("Rudi") );
   }
 
   bool caughtException = false;

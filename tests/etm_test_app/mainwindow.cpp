@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     m_model = new EntityTreeModel(monitor, this);
     m_serverData = new FakeServerData(m_model, session, monitor);
 
-    QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(m_serverData, QLatin1String(
+    QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(m_serverData, QStringLiteral(
         "- C (inode/directory) 'Col 1' 4"
         "- - C (text/directory, message/rfc822) 'Col 2' 3"
         // Items just have the mimetype they contain in the payload.
@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 void MainWindow::moveCollection()
 {
     // Move Col 3 from Col 4 to Col 7
-    FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand(QLatin1String("Col 4"), QLatin1String("Col 3"), QLatin1String("Col 7"), m_serverData);
+    FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand(QStringLiteral("Col 4"), QStringLiteral("Col 3"), QStringLiteral("Col 7"), m_serverData);
 
     m_serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
     m_serverData->processNotifications();

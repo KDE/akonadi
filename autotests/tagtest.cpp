@@ -113,7 +113,7 @@ void TagTest::testCreateFetch()
 void TagTest::testRID()
 {
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
     Tag tag;
@@ -136,7 +136,7 @@ void TagTest::testRID()
         AKVERIFYEXEC(deleteJob);
     }
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
         AKVERIFYEXEC(select);
     }
 }
@@ -144,7 +144,7 @@ void TagTest::testRID()
 void TagTest::testRIDIsolation()
 {
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
 
@@ -172,7 +172,7 @@ void TagTest::testRIDIsolation()
     }
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_1"));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_1"));
         AKVERIFYEXEC(select);
     }
 
@@ -198,7 +198,7 @@ void TagTest::testRIDIsolation()
     AKVERIFYEXEC(deleteJob);
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
         AKVERIFYEXEC(select);
     }
 }
@@ -311,7 +311,7 @@ void TagTest::testModify()
     //We can add an attribute
     {
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
-        attr->setDisplayName(QLatin1String("display name"));
+        attr->setDisplayName(QStringLiteral("display name"));
         tag.addAttribute(attr);
         tag.setParent(Tag(0));
         tag.setType("mytype");
@@ -327,7 +327,7 @@ void TagTest::testModify()
     //We can update an attribute
     {
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
-        attr->setDisplayName(QLatin1String("display name2"));
+        attr->setDisplayName(QStringLiteral("display name2"));
         TagModifyJob *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
@@ -357,7 +357,7 @@ void TagTest::testModify()
 
 void TagTest::testModifyFromResource()
 {
-    ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
+    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
     AKVERIFYEXEC(select);
 
     Tag tag;
@@ -413,7 +413,7 @@ void TagTest::testAttributes()
     {
       tag.setGid("gid2");
       TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-      attr->setDisplayName(QLatin1String("name"));
+      attr->setDisplayName(QStringLiteral("name"));
       attr->setInToolbar(true);
       tag.addAttribute(attr);
       TagCreateJob *createjob = new TagCreateJob(tag, this);
@@ -440,7 +440,7 @@ void TagTest::testAttributes()
     {
       tag2.setGid("gid22");
       TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-      attr->setDisplayName(QLatin1String("name2"));
+      attr->setDisplayName(QStringLiteral("name2"));
       attr->setInToolbar(true);
       tag2.addAttribute(attr);
       TagCreateJob *createjob = new TagCreateJob(tag2, this);
@@ -467,17 +467,17 @@ void TagTest::testTagItem()
     Akonadi::Monitor monitor;
     monitor.itemFetchScope().setFetchTags(true);
     monitor.setAllMonitored(true);
-    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
     Tag tag;
     {
-        TagCreateJob *createjob = new TagCreateJob(Tag(QLatin1String("gid1")), this);
+        TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
         AKVERIFYEXEC(createjob);
         tag = createjob->tag();
     }
 
     Item item1;
     {
-        item1.setMimeType( QLatin1String("application/octet-stream") );
+        item1.setMimeType( QStringLiteral("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -579,17 +579,17 @@ void TagTest::testFetchTagIdWithItem()
 
 void TagTest::testFetchFullTagWithItem()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
     Tag tag;
     {
-        TagCreateJob *createjob = new TagCreateJob(Tag(QLatin1String("gid1")), this);
+        TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
         AKVERIFYEXEC(createjob);
         tag = createjob->tag();
     }
 
     Item item1;
     {
-        item1.setMimeType( QLatin1String("application/octet-stream") );
+        item1.setMimeType( QStringLiteral("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -615,7 +615,7 @@ void TagTest::testFetchFullTagWithItem()
 
 void TagTest::testModifyItemWithTagByGID()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
     {
         Tag tag;
         tag.setGid("gid2");
@@ -625,7 +625,7 @@ void TagTest::testModifyItemWithTagByGID()
 
     Item item1;
     {
-        item1.setMimeType( QLatin1String("application/octet-stream") );
+        item1.setMimeType( QStringLiteral("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -651,11 +651,11 @@ void TagTest::testModifyItemWithTagByGID()
 void TagTest::testModifyItemWithTagByRID()
 {
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
     }
 
-    const Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
     Tag tag3;
     {
         tag3.setGid("gid3");
@@ -667,7 +667,7 @@ void TagTest::testModifyItemWithTagByRID()
 
     Item item1;
     {
-        item1.setMimeType( QLatin1String("application/octet-stream") );
+        item1.setMimeType( QStringLiteral("application/octet-stream") );
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -696,7 +696,7 @@ void TagTest::testModifyItemWithTagByRID()
     }
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QLatin1String(""));
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
         AKVERIFYEXEC(select);
     }
 }
@@ -713,7 +713,7 @@ void TagTest::testMonitor()
     QVERIFY(addedSpy.isValid());
     Tag tag;
     tag.setGid("gid2");
-    tag.setName(QLatin1String("name2"));
+    tag.setName(QStringLiteral("name2"));
     tag.setType("type2");
     TagCreateJob *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
@@ -727,7 +727,7 @@ void TagTest::testMonitor()
   {
     QSignalSpy modifedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
     QVERIFY(modifedSpy.isValid());
-    createdTag.setName(QLatin1String("name3"));
+    createdTag.setName(QStringLiteral("name3"));
 
     TagModifyJob *modJob = new TagModifyJob(createdTag, this);
     AKVERIFYEXEC(modJob);

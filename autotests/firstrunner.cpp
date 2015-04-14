@@ -27,9 +27,9 @@ int main( int argc, char** argv )
 {
   QApplication app( argc, argv );
 
-  KAboutData aboutData( QLatin1String("akonadi-firstrun"),
-                        QLatin1String( "Test akonadi-firstrun" ),
-                        QLatin1String("0.10"));
+  KAboutData aboutData( QStringLiteral("akonadi-firstrun"),
+                        QStringLiteral( "Test akonadi-firstrun" ),
+                        QStringLiteral("0.10"));
   KAboutData::setApplicationData(aboutData);
 
   QCommandLineParser parser;

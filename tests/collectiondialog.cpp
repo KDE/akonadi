@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("test"),
                          i18n("Test Application"),
-                         QLatin1String("1.0"));
+                         QStringLiteral("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     CollectionDialog dlg;
-    dlg.setMimeTypeFilter(QStringList() << QLatin1String("text/directory"));
+    dlg.setMimeTypeFilter(QStringList() << QStringLiteral("text/directory"));
     dlg.setAccessRightsFilter(Collection::CanCreateItem);
     dlg.setDescription(i18n("Select an address book for saving:"));
     dlg.setSelectionMode(QAbstractItemView::ExtendedSelection);

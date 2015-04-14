@@ -43,9 +43,9 @@ private Q_SLOTS:
         QTest::addColumn<Collection>("source");
         QTest::addColumn<Collection>("destination");
 
-        const Collection res1(collectionIdFromPath(QLatin1String("res1")));
-        const Collection res1foo(collectionIdFromPath(QLatin1String("res1/foo")));
-        const Collection res1bla(collectionIdFromPath(QLatin1String("res1/foo/bar/bla")));
+        const Collection res1(collectionIdFromPath(QStringLiteral("res1")));
+        const Collection res1foo(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection res1bla(collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")));
 
         QTest::newRow("non-existing-target") << res1 << Collection(INT_MAX);
         QTest::newRow("root") << Collection::root() << res1;
@@ -71,11 +71,11 @@ private Q_SLOTS:
         QTest::addColumn<Collection>("destination");
         QTest::addColumn<bool>("crossResource");
 
-        QTest::newRow("inter-resource") << Collection(collectionIdFromPath(QLatin1String("res1")))
-                                        << Collection(collectionIdFromPath(QLatin1String("res2")))
+        QTest::newRow("inter-resource") << Collection(collectionIdFromPath(QStringLiteral("res1")))
+                                        << Collection(collectionIdFromPath(QStringLiteral("res2")))
                                         << true;
-        QTest::newRow("intra-resource") << Collection(collectionIdFromPath(QLatin1String("res1/foo/bla")))
-                                        << Collection(collectionIdFromPath(QLatin1String("res1/foo/bar/bla")))
+        QTest::newRow("intra-resource") << Collection(collectionIdFromPath(QStringLiteral("res1/foo/bla")))
+                                        << Collection(collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")))
                                         << false;
     }
 

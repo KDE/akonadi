@@ -46,25 +46,25 @@ private Q_SLOTS:
         AkonadiTest::checkTestIsIsolated();
         AkonadiTest::setAllResourcesOffline();
 
-        settings = new QSettings(QLatin1String("kde.org"), QLatin1String("akonadi-changerecordertest"), this);
+        settings = new QSettings(QStringLiteral("kde.org"), QStringLiteral("akonadi-changerecordertest"), this);
     }
 
     // After each test
     void cleanup()
     {
         // See ChangeRecorderPrivate::notificationsFileName()
-        QFile::remove(settings->fileName() + QLatin1String("_changes.dat"));
+        QFile::remove(settings->fileName() + QStringLiteral("_changes.dat"));
     }
 
     void testChangeRecorder_data()
     {
         QTest::addColumn<QStringList>("actions");
 
-        QTest::newRow("nothingToReplay") << (QStringList() << QLatin1String("rn"));
-        QTest::newRow("nothingOneNothing") << (QStringList() << QLatin1String("rn") << QLatin1String("c2") << QLatin1String("r2") << QLatin1String("rn"));
-        QTest::newRow("multipleItems") << (QStringList() << QLatin1String("c1") << QLatin1String("c2") << QLatin1String("c3") << QLatin1String("r1") << QLatin1String("c4") << QLatin1String("r2") << QLatin1String("r3") << QLatin1String("r4") << QLatin1String("rn"));
-        QTest::newRow("reload") << (QStringList() << QLatin1String("c1") << QLatin1String("c1") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("r1") << QLatin1String("r3") << QLatin1String("rn"));
-        QTest::newRow("more") << (QStringList() << QLatin1String("c1") << QLatin1String("c2") << QLatin1String("c3") << QLatin1String("reload") << QLatin1String("r1") << QLatin1String("reload") << QLatin1String("c4") << QLatin1String("reload") << QLatin1String("r2") << QLatin1String("reload") << QLatin1String("r3") << QLatin1String("r4") << QLatin1String("rn"));
+        QTest::newRow("nothingToReplay") << (QStringList() << QStringLiteral("rn"));
+        QTest::newRow("nothingOneNothing") << (QStringList() << QStringLiteral("rn") << QStringLiteral("c2") << QStringLiteral("r2") << QStringLiteral("rn"));
+        QTest::newRow("multipleItems") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("r1") << QStringLiteral("c4") << QStringLiteral("r2") << QStringLiteral("r3") << QStringLiteral("r4") << QStringLiteral("rn"));
+        QTest::newRow("reload") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c1") << QStringLiteral("c3") << QStringLiteral("reload") << QStringLiteral("r1") << QStringLiteral("r1") << QStringLiteral("r3") << QStringLiteral("rn"));
+        QTest::newRow("more") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("reload") << QStringLiteral("r1") << QStringLiteral("reload") << QStringLiteral("c4") << QStringLiteral("reload") << QStringLiteral("r2") << QStringLiteral("reload") << QStringLiteral("r3") << QStringLiteral("r4") << QStringLiteral("rn"));
       //FIXME: Due to the event compression in the server we simply expect a removal signal
       // QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
     }
@@ -78,9 +78,9 @@ private Q_SLOTS:
         QVERIFY(rec->isEmpty());
         Q_FOREACH (const QString &action, actions) {
             qDebug() << action;
-            if (action == QLatin1String("rn")) {
+            if (action == QStringLiteral("rn")) {
                 replayNextAndExpectNothing(rec);
-            } else if (action == QLatin1String("reload")) {
+            } else if (action == QStringLiteral("reload")) {
                 // Check saving and loading from disk
                 delete rec;
                 rec = createChangeRecorder();
@@ -105,7 +105,7 @@ private Q_SLOTS:
                 Q_ASSERT(id);
                 replayNextAndProcess(rec, id);
             } else {
-                QVERIFY2(false, qPrintable(QLatin1String("Unsupported: ") + action));
+                QVERIFY2(false, qPrintable(QStringLiteral("Unsupported: ") + action));
             }
             lastAction = action;
         }

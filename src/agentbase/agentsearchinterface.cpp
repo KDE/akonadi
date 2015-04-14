@@ -70,7 +70,7 @@ void AgentSearchInterfacePrivate::search(const QByteArray &searchId,
     CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection(mCollectionId), CollectionFetchJob::Base, this);
     fetchJob->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
     fetchJob->setProperty("query", query);
-    connect(fetchJob, SIGNAL(finished(KJob*)), this, SLOT(collectionReceived(KJob*)));
+    connect(fetchJob, &KJob::finished, this, &AgentSearchInterfacePrivate::collectionReceived);
 }
 
 void AgentSearchInterfacePrivate::collectionReceived(KJob *job)

@@ -43,14 +43,14 @@ class ItemCopyTest : public QObject
       Control::start();
       // switch target resources offline to reduce interference from them
       foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
-        if ( agent.identifier() == QLatin1String("akonadi_knut_resource_2") )
+        if ( agent.identifier() == QStringLiteral("akonadi_knut_resource_2") )
           agent.setIsOnline( false );
       }
     }
 
     void testCopy()
     {
-      const Collection target( collectionIdFromPath( QLatin1String("res3") ) );
+      const Collection target( collectionIdFromPath( QStringLiteral("res3") ) );
       QVERIFY( target.isValid() );
 
       ItemCopyJob *copy = new ItemCopyJob( Item( 1 ), target );

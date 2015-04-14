@@ -105,7 +105,7 @@ InspectableETM *FavoriteProxyTest::createETM()
  */
 void FavoriteProxyTest::testItemAdded()
 {
-  Collection res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+  Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
 
   InspectableETM *model = createETM();
 
@@ -117,7 +117,7 @@ void FavoriteProxyTest::testItemAdded()
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
-  const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
+  const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
   QVERIFY(res3Index.isValid());
 
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
@@ -167,14 +167,14 @@ void FavoriteProxyTest::testLoadConfig()
   const int numberOfRootCollections = 4;
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
-  const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
+  const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
   QVERIFY(res3Index.isValid());
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
   QVERIFY(favoriteCollection.isValid());
 
   KConfigGroup configGroup( KSharedConfig::openConfig(), "favoritecollectionsmodeltest" );
   configGroup.writeEntry( "FavoriteCollectionIds", QList<Akonadi::Collection::Id>() << favoriteCollection.id() );
-  configGroup.writeEntry( "FavoriteCollectionLabels", QStringList() << QLatin1String("label1") );
+  configGroup.writeEntry( "FavoriteCollectionLabels", QStringList() << QStringLiteral("label1") );
 
   FavoriteCollectionsModel *favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
@@ -203,7 +203,7 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
   const int numberOfRootCollections = 4;
   //Wait for initial listing to complete
   QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
-  const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
+  const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
   QVERIFY(res3Index.isValid());
   const Akonadi::Collection favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
   QVERIFY(favoriteCollection.isValid());

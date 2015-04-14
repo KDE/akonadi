@@ -71,9 +71,9 @@ class ItemDeleteTest : public QObject
 
     void testDeleteFromUnselectedCollection()
     {
-      const QString path = QLatin1String( "res1" ) +
+      const QString path = QStringLiteral( "res1" ) +
                            CollectionPathResolver::pathDelimiter() +
-                           QLatin1String( "foo" );
+                           QStringLiteral( "foo" );
       CollectionPathResolver *rjob = new CollectionPathResolver( path, this );
       AKVERIFYEXEC( rjob );
 
@@ -110,7 +110,7 @@ class ItemDeleteTest : public QObject
       AKVERIFYEXEC(sel);
 
       Item i;
-      i.setRemoteId( QLatin1String("C") );
+      i.setRemoteId( QStringLiteral("C") );
 
       ItemFetchJob *fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
@@ -133,17 +133,17 @@ class ItemDeleteTest : public QObject
     {
       // Create tag
       Tag tag;
-      tag.setName( QLatin1String( "Tag1" ) );
+      tag.setName( QStringLiteral( "Tag1" ) );
       tag.setGid( "Tag1" );
       TagCreateJob *tjob = new TagCreateJob( tag, this );
       AKVERIFYEXEC( tjob );
       tag = tjob->tag();
 
-      const Collection col( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( col.isValid() );
 
       Item i;
-      i.setRemoteId( QLatin1String("D") );
+      i.setRemoteId( QStringLiteral("D") );
 
       ItemFetchJob *fjob = new ItemFetchJob( i, this );
       fjob->setCollection( col );
@@ -166,7 +166,7 @@ class ItemDeleteTest : public QObject
 
     void testCollectionDelete()
     {
-      const Collection col( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection col( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       ItemFetchJob *fjob = new ItemFetchJob( col, this );
       AKVERIFYEXEC( fjob );
       QVERIFY( fjob->items().count() > 0 );

@@ -83,10 +83,10 @@ class ItemBenchmark : public QObject
       QFETCH( int, count );
       QFETCH( int, size );
 
-      const Collection parent( collectionIdFromPath( QLatin1String("res1/foo") ) );
+      const Collection parent( collectionIdFromPath( QStringLiteral("res1/foo") ) );
       QVERIFY( parent.isValid() );
 
-      Item item(QLatin1String( "application/octet-stream") );
+      Item item(QStringLiteral( "application/octet-stream") );
       item.setPayload( QByteArray( size, 'X' ) );
       item.setSize( size );
 

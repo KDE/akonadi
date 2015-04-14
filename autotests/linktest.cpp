@@ -46,7 +46,7 @@ class LinkTest : public QObject
 
     void testLink()
     {
-      SearchCreateJob *create = new SearchCreateJob( QLatin1String("linkTestFolder"), SearchQuery(), this );
+      SearchCreateJob *create = new SearchCreateJob( QStringLiteral("linkTestFolder"), SearchQuery(), this );
       AKVERIFYEXEC( create );
 
 
@@ -54,7 +54,7 @@ class LinkTest : public QObject
       AKVERIFYEXEC( list );
       Collection col;
       foreach ( const Collection &c, list->collections() ) {
-        if ( c.name() == QLatin1String("linkTestFolder") ) {
+        if ( c.name() == QStringLiteral("linkTestFolder") ) {
           col = c;
         }
       }

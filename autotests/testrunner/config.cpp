@@ -61,7 +61,7 @@ void Config::readConfiguration(const QString &configfile)
     }
 
     const QDomElement root = doc.documentElement();
-    if (root.tagName() != QLatin1String("config")) {
+    if (root.tagName() != QStringLiteral("config")) {
         qFatal("could not file root tag");
     }
 
@@ -71,14 +71,14 @@ void Config::readConfiguration(const QString &configfile)
     while (!node.isNull()) {
         const QDomElement element = node.toElement();
         if (!element.isNull()) {
-            if (element.tagName() == QLatin1String("confighome")) {
+            if (element.tagName() == QStringLiteral("confighome")) {
                 setXdgConfigHome(mBasePath + element.text());
-            } else if (element.tagName() == QLatin1String("datahome")) {
+            } else if (element.tagName() == QStringLiteral("datahome")) {
                 setXdgDataHome(mBasePath + element.text());
-            } else if (element.tagName() == QLatin1String("agent")) {
-                insertAgent(element.text(), element.attribute(QLatin1String("synchronize"), QLatin1String("false")) == QLatin1String("true"));
-            } else if (element.tagName() == QLatin1String("envvar")) {
-                const QString name = element.attribute(QLatin1String("name"));
+            } else if (element.tagName() == QStringLiteral("agent")) {
+                insertAgent(element.text(), element.attribute(QStringLiteral("synchronize"), QStringLiteral("false")) == QStringLiteral("true"));
+            } else if (element.tagName() == QStringLiteral("envvar")) {
+                const QString name = element.attribute(QStringLiteral("name"));
                 if (name.isEmpty()) {
                     qWarning() << "Given envvar with no name.";
                 } else {

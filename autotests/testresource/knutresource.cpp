@@ -55,7 +55,7 @@ KnutResource::KnutResource(const QString &id)
     changeRecorder()->fetchCollection(true);
 
     new SettingsAdaptor(mSettings);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/Settings"),
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Settings"),
                                                           mSettings, QDBusConnection::ExportAdaptors);
     connect(this, &KnutResource::reloadConfiguration, this, &KnutResource::load);
     connect(mWatcher, &QFileSystemWatcher::fileChanged, this, &KnutResource::load);
@@ -81,7 +81,7 @@ void KnutResource::load()
     }
 
     if (!QFile::exists(fileName)) {
-        fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kf5/akonadi_knut_resource/knut-template.xml"));
+        fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf5/akonadi_knut_resource/knut-template.xml"));
     }
 
     if (!mDocument.loadFile(fileName)) {
@@ -217,7 +217,7 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
         if (child.isNull()) {
             continue;
         }
-        if (child.tagName() == QLatin1String("item") || child.tagName() == QLatin1String("collection")) {
+        if (child.tagName() == QStringLiteral("item") || child.tagName() == QStringLiteral("collection")) {
             newElem.appendChild(child);   // reparents
             --i; // children, despite being const is modified by the reparenting
         }
@@ -344,7 +344,7 @@ QSet<qint64> KnutResource::parseQuery(const QString &queryString)
     QSet<qint64> resultSet;
     Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
     foreach (const Akonadi::SearchTerm &term, query.term().subTerms()) {
-        if (term.key() == QLatin1String("resource")) {
+        if (term.key() == QStringLiteral("resource")) {
             resultSet << term.value().toInt();
         }
     }

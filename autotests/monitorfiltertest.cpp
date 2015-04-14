@@ -190,7 +190,7 @@ class MonitorFilterTest : public QObject
       QVERIFY( m.acceptNotification( msg ) );
 
       // filtering out the mimetype does not overwrite resources
-      msg.addEntity( 1, QString(), QString(), QLatin1String("my/type") );
+      msg.addEntity( 1, QString(), QString(), QStringLiteral("my/type") );
       QVERIFY( m.acceptNotification( msg ) );
 
       // filtering out the session overwrites the resource
@@ -232,7 +232,7 @@ class MonitorFilterTest : public QObject
       QVERIFY( spy.isValid() );
 
       NotificationMessageV3 msg;
-      msg.addEntity( 1, QString(), QString(), QLatin1String("my/type") );
+      msg.addEntity( 1, QString(), QString(), QStringLiteral("my/type") );
       msg.setOperation( op );
       msg.setParentCollection( 2 );
       msg.setType( type );
@@ -241,9 +241,9 @@ class MonitorFilterTest : public QObject
 
       // using the right resource makes it pass
       QVERIFY( !m.acceptNotification( msg ) );
-      m.mimetypes.insert( QLatin1String("your/type") );
+      m.mimetypes.insert( QStringLiteral("your/type") );
       QVERIFY( !m.acceptNotification( msg ) );
-      m.mimetypes.insert( QLatin1String("my/type") );
+      m.mimetypes.insert( QStringLiteral("my/type") );
       QCOMPARE( m.acceptNotification( msg ), type == NotificationMessageV2::Items );
 
       // filter out the resource does not overwrite mimetype
@@ -289,7 +289,7 @@ class MonitorFilterTest : public QObject
       QVERIFY( spy.isValid() );
 
       NotificationMessageV3 msg;
-      msg.addEntity( 1, QString(), QString(), QLatin1String("my/type") );
+      msg.addEntity( 1, QString(), QString(), QStringLiteral("my/type") );
       msg.setOperation( op );
       msg.setParentCollection( 2 );
       msg.setType( type );
@@ -316,7 +316,7 @@ class MonitorFilterTest : public QObject
         m.resources.clear();
 
         // filter out the mimetype does overwrite collection, for item operations (mimetype filter has no effect on collections)
-        m.mimetypes.insert( QLatin1String("your/type") );
+        m.mimetypes.insert( QStringLiteral("your/type") );
         QCOMPARE( !m.acceptNotification( msg ), type == NotificationMessageV2::Items );
         m.mimetypes.clear();
 
@@ -327,7 +327,7 @@ class MonitorFilterTest : public QObject
 
         // filter non-matching resource and matching mimetype make it pass
         m.resources.insert( "bar" );
-        m.mimetypes.insert( QLatin1String("my/type") );
+        m.mimetypes.insert( QStringLiteral("my/type") );
         QVERIFY( m.acceptNotification( msg ) );
         m.resources.clear();
         m.mimetypes.clear();

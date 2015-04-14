@@ -58,7 +58,7 @@ void MonitorTest::initTestCase()
   AkonadiTest::checkTestIsIsolated();
   Control::start();
 
-  res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+  res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
 
   AkonadiTest::setAllResourcesOffline();
 }
@@ -134,7 +134,7 @@ void MonitorTest::testMonitor()
   // create a collection
   Collection monitorCol;
   monitorCol.setParentCollection( res3 );
-  monitorCol.setName( QLatin1String("monitor") );
+  monitorCol.setName( QStringLiteral("monitor") );
   CollectionCreateJob *create = new CollectionCreateJob( monitorCol, this );
   AKVERIFYEXEC( create );
   monitorCol = create->collection();
@@ -146,7 +146,7 @@ void MonitorTest::testMonitor()
   Collection col = arg.at(0).value<Collection>();
   QCOMPARE( col, monitorCol );
   if ( fetchCol )
-    QCOMPARE( col.name(), QLatin1String("monitor") );
+    QCOMPARE( col.name(), QStringLiteral("monitor") );
   Collection parent = arg.at(1).value<Collection>();
   QCOMPARE( parent, res3 );
 
@@ -163,7 +163,7 @@ void MonitorTest::testMonitor()
 
   // add an item
   Item newItem;
-  newItem.setMimeType( QLatin1String("application/octet-stream") );
+  newItem.setMimeType( QStringLiteral("application/octet-stream") );
   ItemCreateJob *append = new ItemCreateJob( newItem, monitorCol, this );
   AKVERIFYEXEC( append );
   Item monitorRef = append->item();
@@ -281,8 +281,8 @@ void MonitorTest::testMonitor()
   imvspy.clear();
 
   // Unsubscribe and re-subscribed a collection that existed before the monitor was created.
-  Collection subCollection = Collection( collectionIdFromPath( QLatin1String("res2/foo2") ) );
-  subCollection.setName( QLatin1String("foo2") );
+  Collection subCollection = Collection( collectionIdFromPath( QStringLiteral("res2/foo2") ) );
+  subCollection.setName( QStringLiteral("foo2") );
   QVERIFY( subCollection.isValid() );
 
   SubscriptionJob *subscribeJob = new SubscriptionJob( this );
@@ -332,7 +332,7 @@ void MonitorTest::testMonitor()
   QVERIFY( irmspy.isEmpty() );
 
   // modify a collection
-  monitorCol.setName( QLatin1String("changed name") );
+  monitorCol.setName( QStringLiteral("changed name") );
   CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
   AKVERIFYEXEC( mod );
   QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000 ) );
@@ -342,7 +342,7 @@ void MonitorTest::testMonitor()
   col = arg.at(0).value<Collection>();
   QCOMPARE( col, monitorCol );
   if ( fetchCol )
-    QCOMPARE( col.name(), QLatin1String("changed name") );
+    QCOMPARE( col.name(), QStringLiteral("changed name") );
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
@@ -356,7 +356,7 @@ void MonitorTest::testMonitor()
   QVERIFY( irmspy.isEmpty() );
 
   // move a collection
-  Collection dest = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+  Collection dest = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
   CollectionMoveJob *cmove = new CollectionMoveJob( monitorCol, dest, this );
   AKVERIFYEXEC( cmove );
   QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000 ) );
@@ -415,7 +415,7 @@ void MonitorTest::testVirtualCollectionsMonitoring()
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QVERIFY( caddspy.isValid() );
 
-  SearchCreateJob *job = new SearchCreateJob( QLatin1String("Test search collection"), Akonadi::SearchQuery(), this );
+  SearchCreateJob *job = new SearchCreateJob( QStringLiteral("Test search collection"), Akonadi::SearchQuery(), this );
   AKVERIFYEXEC( job );
   QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
   QCOMPARE( caddspy.count(), 1 );

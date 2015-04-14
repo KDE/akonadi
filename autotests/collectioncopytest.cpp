@@ -43,7 +43,7 @@ private Q_SLOTS:
         Control::start();
         // switch target resources offline to reduce interference from them
         foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {   //krazy:exclude=foreach
-            if (agent.identifier() == QLatin1String("akonadi_knut_resource_2")) {
+            if (agent.identifier() == QStringLiteral("akonadi_knut_resource_2")) {
                 agent.setIsOnline(false);
             }
         }
@@ -51,8 +51,8 @@ private Q_SLOTS:
 
     void testCopy()
     {
-        const Collection target(collectionIdFromPath(QLatin1String("res3")));
-        Collection source(collectionIdFromPath(QLatin1String("res1/foo")));
+        const Collection target(collectionIdFromPath(QStringLiteral("res3")));
+        Collection source(collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(target.isValid());
         QVERIFY(source.isValid());
 

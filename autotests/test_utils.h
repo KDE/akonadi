@@ -44,20 +44,20 @@ QString testrunnerServiceName()
 {
     const QString pid = QString::fromLocal8Bit(qgetenv("AKONADI_TESTRUNNER_PID"));
     Q_ASSERT(!pid.isEmpty());
-    return QLatin1String("org.kde.Akonadi.Testrunner-") + pid;
+    return QStringLiteral("org.kde.Akonadi.Testrunner-") + pid;
 }
 
 bool restartAkonadiServer()
 {
     QDBusInterface testrunnerIface(testrunnerServiceName(),
-                                   QLatin1String("/"),
-                                   QLatin1String("org.kde.Akonadi.Testrunner"),
+                                   QStringLiteral("/"),
+                                   QStringLiteral("org.kde.Akonadi.Testrunner"),
                                    KDBusConnectionPool::threadConnection());
     if (!testrunnerIface.isValid()) {
         qWarning() << "Unable to get a dbus interface to the testrunner!";
     }
 
-    QDBusReply<void> reply = testrunnerIface.call(QLatin1String("restartAkonadiServer"));
+    QDBusReply<void> reply = testrunnerIface.call(QStringLiteral("restartAkonadiServer"));
     if (!reply.isValid()) {
         qWarning() << reply.error();
         return false;
@@ -77,14 +77,14 @@ bool restartAkonadiServer()
 bool trackAkonadiProcess(bool track)
 {
     QDBusInterface testrunnerIface(testrunnerServiceName(),
-                                   QLatin1String("/"),
-                                   QLatin1String("org.kde.Akonadi.Testrunner"),
+                                   QStringLiteral("/"),
+                                   QStringLiteral("org.kde.Akonadi.Testrunner"),
                                    KDBusConnectionPool::threadConnection());
     if (!testrunnerIface.isValid()) {
         qWarning() << "Unable to get a dbus interface to the testrunner!";
     }
 
-    QDBusReply<void> reply = testrunnerIface.call(QLatin1String("trackAkonadiProcess"), track);
+    QDBusReply<void> reply = testrunnerIface.call(QStringLiteral("trackAkonadiProcess"), track);
     if (!reply.isValid()) {
         qWarning() << reply.error();
         return false;

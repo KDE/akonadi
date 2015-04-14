@@ -28,13 +28,13 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    KAboutData aboutData(QLatin1String("etm_test_app"),
+    KAboutData aboutData(QStringLiteral("etm_test_app"),
                          i18n("ETM Test application"),
-                         QLatin1String("0.99"),
+                         QStringLiteral("0.99"),
                          i18n("Test app for EntityTreeModel"),
                          KAboutLicense::GPL,
-                         QLatin1String("http://pim.kde.org/akonadi/"));
-    aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QLatin1String("steveire@gmail.com"));
+                         QStringLiteral("http://pim.kde.org/akonadi/"));
+    aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QStringLiteral("steveire@gmail.com"));
     KAboutData::setApplicationData(aboutData);
 
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));

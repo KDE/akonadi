@@ -53,10 +53,10 @@ private Q_SLOTS:
     }
     void testRetrievalErrorBurst() // caused rare server crashs with old item retrieval code
     {
-        Collection col(collectionIdFromPath(QLatin1String("res1/foo")));
+        Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
 
-        enableAgent(QLatin1String("akonadi_knut_resource_0"), false);
+        enableAgent(QStringLiteral("akonadi_knut_resource_0"), false);
 
         ItemFetchJob *fetch = new ItemFetchJob(col, this);
         fetch->fetchScope().fetchFullPayload(true);
@@ -86,7 +86,7 @@ private Q_SLOTS:
         QVERIFY(item.isValid());
         QVERIFY(!item.hasPayload());
 
-        enableAgent(QLatin1String("akonadi_knut_resource_0"), resourceEnabled);
+        enableAgent(QStringLiteral("akonadi_knut_resource_0"), resourceEnabled);
 
         fetch = new ItemFetchJob(item, this);
         fetch->fetchScope().fetchFullPayload();
@@ -132,9 +132,9 @@ private Q_SLOTS:
         QVERIFY(item.isValid());
         QVERIFY(!item.hasPayload());
 
-        enableAgent(QLatin1String("akonadi_knut_resource_0"), resourceEnabled);
+        enableAgent(QStringLiteral("akonadi_knut_resource_0"), resourceEnabled);
 
-        Collection dest(collectionIdFromPath(QLatin1String("res3")));
+        Collection dest(collectionIdFromPath(QStringLiteral("res3")));
         QVERIFY(dest.isValid());
 
         ItemCopyJob *copy = new ItemCopyJob(item, dest, this);

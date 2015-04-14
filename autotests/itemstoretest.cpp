@@ -52,11 +52,11 @@ void ItemStoreTest::initTestCase()
   AttributeFactory::registerAttribute<TestAttribute>();
 
   // get the collections we run the tests on
-  res1_foo = Collection( collectionIdFromPath( QLatin1String("res1/foo") ) );
+  res1_foo = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
   QVERIFY( res1_foo.isValid() );
-  res2 = Collection( collectionIdFromPath( QLatin1String("res2") ) );
+  res2 = Collection( collectionIdFromPath( QStringLiteral("res2") ) );
   QVERIFY( res2.isValid() );
-  res3 = Collection( collectionIdFromPath( QLatin1String("res3") ) );
+  res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
   QVERIFY( res3.isValid() );
 
   AkonadiTest::setAllResourcesOffline();
@@ -141,7 +141,7 @@ void ItemStoreTest::testDataChange()
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   AKVERIFYEXEC( prefetchjob );
   item = prefetchjob->items()[0];
-  item.setMimeType( QLatin1String("application/octet-stream") );
+  item.setMimeType( QStringLiteral("application/octet-stream") );
   item.setPayload( data );
   QCOMPARE( item.payload<QByteArray>(), data );
 
@@ -180,7 +180,7 @@ void ItemStoreTest::testRemoteId()
   QFETCH( QString, exprid );
 
   // pretend to be a resource, we cannot change remote identifiers otherwise
-  ResourceSelectJob *rsel = new ResourceSelectJob( QLatin1String("akonadi_knut_resource_0"), this );
+  ResourceSelectJob *rsel = new ResourceSelectJob( QStringLiteral("akonadi_knut_resource_0"), this );
   AKVERIFYEXEC( rsel );
 
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
@@ -210,7 +210,7 @@ void ItemStoreTest::testMultiPart()
   AKVERIFYEXEC( prefetchjob );
   QCOMPARE( prefetchjob->items().count(), 1 );
   Item item = prefetchjob->items()[0];
-  item.setMimeType( QLatin1String("application/octet-stream") );
+  item.setMimeType( QStringLiteral("application/octet-stream") );
   item.setPayload<QByteArray>( "testmailbody" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
@@ -240,7 +240,7 @@ void ItemStoreTest::testPartRemove()
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 2 ) );
   AKVERIFYEXEC( prefetchjob );
   Item item = prefetchjob->items()[0];
-  item.setMimeType( QLatin1String("application/octet-stream") );
+  item.setMimeType( QStringLiteral("application/octet-stream") );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
   // store item
@@ -323,7 +323,7 @@ void ItemStoreTest::testRevisionCheck()
 void ItemStoreTest::testModificationTime()
 {
   Item item;
-  item.setMimeType( QLatin1String("text/directory") );
+  item.setMimeType( QStringLiteral("text/directory") );
   QVERIFY( item.modificationTime().isNull() );
 
   ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
@@ -373,7 +373,7 @@ void ItemStoreTest::testRemoteIdRace()
 {
   // Create an item and store it
   Item item;
-  item.setMimeType( QLatin1String("text/directory") );
+  item.setMimeType( QStringLiteral("text/directory") );
   ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
   AKVERIFYEXEC( job );
 

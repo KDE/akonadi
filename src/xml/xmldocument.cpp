@@ -272,7 +272,7 @@ Collection::List XmlDocument::childCollections( const Collection &parentCollecti
   QDomElement parentElem = collectionElement( parentCollection );
 
   if ( parentElem.isNull() ) {
-    d->lastError = QLatin1String( "Parent node not found." );
+    d->lastError = QStringLiteral( "Parent node not found." );
     return Collection::List();
   }
 
