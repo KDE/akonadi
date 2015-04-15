@@ -22,7 +22,7 @@
 #include "collectionstatisticsmodel.h"
 
 #include <kcolorscheme.h>
-#include <qdebug.h>
+#include "akonadiwidgets_debug.h"
 #include <kio/global.h>
 
 #include <QPainter>
@@ -259,7 +259,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         // Construct the string which will appear after the foldername (with the
         // unread count)
         QString unread;
-//     qDebug() << expanded << unreadCount << unreadRecursiveCount;
+//     qCDebug(AKONADIWIDGETS_LOG) << expanded << unreadCount << unreadRecursiveCount;
         if (expanded && unreadCount > 0) {
             unread = QString::fromLatin1(" (%1)").arg(unreadCount);
         } else if (!expanded) {

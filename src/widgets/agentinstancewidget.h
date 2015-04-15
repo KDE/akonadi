@@ -56,7 +56,7 @@ class AgentFilterProxyModel;
  *
  * MyWidget::slotInstanceSelected( Akonadi::AgentInstance &instance )
  * {
- *   qDebug() << "Selected instance" << instance.name();
+ *   qCDebug(AKONADIWIDGETS_LOG) << "Selected instance" << instance.name();
  * }
  *
  * @endcode

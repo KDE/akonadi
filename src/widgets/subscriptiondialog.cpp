@@ -24,7 +24,7 @@
 #include "subscriptionjob_p.h"
 #include "subscriptionmodel_p.h"
 
-#include <qdebug.h>
+#include "akonadiwidgets_debug.h"
 #include <ksharedconfig.h>
 
 #include <klocalizedstring.h>
@@ -89,7 +89,7 @@ public:
     {
         if (job->error()) {
             // TODO
-            qWarning() << job->errorString();
+            qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
         }
         q->deleteLater();
     }

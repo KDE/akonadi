@@ -20,7 +20,7 @@
 #include "dragdropmanager_p.h"
 #include "specialcollectionattribute.h"
 #include "collectionutils.h"
-
+#include "akonadiwidgets_debug.h"
 #include <QApplication>
 #include <QDropEvent>
 #include <QMenu>
@@ -161,7 +161,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     }
 
     if (!moveAllowed && !copyAllowed && !linkAllowed) {
-        qDebug() << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
+        qCDebug(AKONADIWIDGETS_LOG) << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
         return false;
     }
 
@@ -191,7 +191,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     }
 
     if (actionCount == 1) {
-        qDebug() << "Selecting drop action" << defaultAction << ", there are no other possibilities";
+        qCDebug(AKONADIWIDGETS_LOG) << "Selecting drop action" << defaultAction << ", there are no other possibilities";
         event->setDropAction(defaultAction);
         return true;
     }

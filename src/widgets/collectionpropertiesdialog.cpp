@@ -25,7 +25,7 @@
 #include "collectiongeneralpropertiespage_p.h"
 #include "collectionmodifyjob.h"
 
-#include <qdebug.h>
+#include "akonadiwidgets_debug.h"
 
 #include <ksharedconfig.h>
 #include <KConfigGroup>
@@ -62,7 +62,7 @@ public:
     {
         if (job->error()) {
             // TODO
-            qWarning() << job->errorString();
+            qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
         }
         q->deleteLater();
     }

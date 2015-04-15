@@ -28,7 +28,7 @@
 #include <QDragMoveEvent>
 #include <QMenu>
 
-#include <qdebug.h>
+#include "akonadiwidgets_debug.h"
 #include <kxmlguiclient.h>
 #include <KXMLGUIFactory>
 

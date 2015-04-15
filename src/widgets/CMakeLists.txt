@@ -1,4 +1,5 @@
 set(akonadiwidgets_SRCS
+    akonadiwidgets_debug.cpp
     actionstatemanager.cpp
     agentactionmanager.cpp
     agentinstancewidget.cpp
