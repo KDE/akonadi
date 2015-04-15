@@ -51,7 +51,7 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <qdebug.h>
+#include "akonadiagentbase_debug.h"
 #include <klocalizedstring.h>
 
 #include <QtCore/QDebug>
@@ -550,7 +550,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
 {
     QString identifier;
     if (argc < 3) {
-        qDebug() << "Not enough arguments passed...";
+        qCDebug(AKONADIAGENTBASE_LOG) << "Not enough arguments passed...";
         exit(1);
     }
 
@@ -561,7 +561,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     }
 
     if (identifier.isEmpty()) {
-        qDebug() << "Identifier argument missing";
+        qCDebug(AKONADIAGENTBASE_LOG) << "Identifier argument missing";
         exit(1);
     }
 
@@ -613,7 +613,7 @@ void ResourceBase::itemRetrieved(const Item &item)
     QSet<QByteArray> requestedParts = d->scheduler->currentTask().itemParts;
     foreach (const QByteArray &part, requestedParts) {
         if (!item.loadedPayloadParts().contains(part)) {
-            qWarning() << "Item does not provide part" << part;
+            qCWarning(AKONADIAGENTBASE_LOG) << "Item does not provide part" << part;
         }
     }
 
@@ -734,7 +734,7 @@ void ResourceBase::changeCommitted(const Collection &collection)
 void ResourceBasePrivate::changeCommittedResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADIAGENTBASE_LOG) << job->errorText();
     }
 
     Q_Q(ResourceBase);
@@ -933,7 +933,7 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
     Q_Q(ResourceBase);
     mCurrentCollectionFetchJob = 0;
     if (job->error()) {
-        qWarning() << "Failed to retrieve collection for sync: " << job->errorString();
+        qCWarning(AKONADIAGENTBASE_LOG) << "Failed to retrieve collection for sync: " << job->errorString();
         q->cancelTask(i18n("Failed to retrieve collection for sync."));
         return;
     }
@@ -974,7 +974,7 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
     mCurrentCollectionFetchJob = 0;
     Q_Q(ResourceBase);
     if (job->error()) {
-        qWarning() << "Failed to retrieve collection for attribute sync: " << job->errorString();
+        qCWarning(AKONADIAGENTBASE_LOG) << "Failed to retrieve collection for attribute sync: " << job->errorString();
         q->cancelTask(i18n("Failed to retrieve collection for attribute sync."));
         return;
     }
@@ -1192,7 +1192,7 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
             }
         }
     } else {
-        qWarning() << "Failed to fetch collection for collection sync: " << job->errorString();
+        qCWarning(AKONADIAGENTBASE_LOG) << "Failed to fetch collection for collection sync: " << job->errorString();
     }
 }
 
@@ -1224,7 +1224,7 @@ void ResourceBasePrivate::slotCollectionListForAttributesDone(KJob *job)
 
 void ResourceBase::setTotalItems(int amount)
 {
-    qDebug() << amount;
+    qCDebug(AKONADIAGENTBASE_LOG) << amount;
     Q_D(ResourceBase);
     setItemStreamingEnabled(true);
     if (d->mItemSyncer) {
@@ -1419,7 +1419,7 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
     mTagSyncer = 0;
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
-            qWarning() << "TagSync failed: " << job->errorString();
+            qCWarning(AKONADIAGENTBASE_LOG) << "TagSync failed: " << job->errorString();
             emit q->error(job->errorString());
         }
     }
@@ -1449,7 +1449,7 @@ void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
     mRelationSyncer = 0;
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
-            qWarning() << "RelationSync failed: " << job->errorString();
+            qCWarning(AKONADIAGENTBASE_LOG) << "RelationSync failed: " << job->errorString();
             emit q->error(job->errorString());
         }
     }

@@ -23,7 +23,7 @@
 
 #include "preprocessorbase_p.h"
 
-#include <qdebug.h>
+#include "akonadiagentbase_debug.h"
 
 using namespace Akonadi;
 

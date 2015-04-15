@@ -37,7 +37,7 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <qdebug.h>
+#include "akonadiagentbase_debug.h"
 #include <kglobal.h>
 #include <klocalizedstring.h>
 
@@ -912,7 +912,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
 {
     QString identifier;
     if (argc < 3) {
-        qDebug() << "Not enough arguments passed...";
+        qCDebug(AKONADIAGENTBASE_LOG) << "Not enough arguments passed...";
         exit(1);
     }
 
@@ -923,7 +923,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     }
 
     if (identifier.isEmpty()) {
-        qDebug() << "Identifier argument missing";
+        qCDebug(AKONADIAGENTBASE_LOG) << "Identifier argument missing";
         exit(1);
     }
 

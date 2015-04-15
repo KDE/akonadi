@@ -25,7 +25,7 @@
 #include "servermanager.h"
 
 #include "itemfetchjob.h"
-#include <QDebug>
+#include "akonadiagentbase_debug.h"
 
 using namespace Akonadi;
 
@@ -54,7 +54,7 @@ void PreprocessorBasePrivate::delayedInit()
 
 void PreprocessorBasePrivate::beginProcessItem(qlonglong itemId, qlonglong collectionId, const QString &mimeType)
 {
-    qDebug() << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " with mimeType " << mimeType;
+    qCDebug(AKONADIAGENTBASE_LOG) << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " with mimeType " << mimeType;
 
     ItemFetchJob *fetchJob = new ItemFetchJob(Item(itemId), this);
     fetchJob->setFetchScope(mFetchScope);
@@ -83,16 +83,16 @@ void PreprocessorBasePrivate::itemFetched(KJob *job)
     case PreprocessorBase::ProcessingFailed:
     case PreprocessorBase::ProcessingRefused:
     case PreprocessorBase::ProcessingCompleted:
-        qDebug() << "PreprocessorBase: item processed, emitting signal (" << item.id() << ")";
+        qCDebug(AKONADIAGENTBASE_LOG) << "PreprocessorBase: item processed, emitting signal (" << item.id() << ")";
 
         // TODO: Handle the different status codes appropriately
 
         emit itemProcessed(item.id());
 
-        qDebug() << "PreprocessorBase: item processed, signal emitted (" << item.id() << ")";
+        qCDebug(AKONADIAGENTBASE_LOG) << "PreprocessorBase: item processed, signal emitted (" << item.id() << ")";
         break;
     case PreprocessorBase::ProcessingDelayed:
-        qDebug() << "PreprocessorBase: item processing delayed (" << item.id() << ")";
+        qCDebug(AKONADIAGENTBASE_LOG) << "PreprocessorBase: item processing delayed (" << item.id() << ")";
 
         mInDelayedProcessing = true;
         mDelayedProcessingItemId = item.id();

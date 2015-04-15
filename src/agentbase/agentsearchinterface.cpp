@@ -18,6 +18,7 @@
 */
 
 #include "agentsearchinterface.h"
+#include "akonadiagentbase_debug.h"
 #include "agentsearchinterface_p.h"
 #include "collection.h"
 #include "KDBusConnectionPool"
@@ -83,7 +84,7 @@ void AgentSearchInterfacePrivate::collectionReceived(KJob *job)
     }
 
     if (fetchJob->collections().count() != 1) {
-        qDebug() << "Server requested search in invalid collection, or collection was removed in the meanwhile";
+        qCDebug(AKONADIAGENTBASE_LOG) << "Server requested search in invalid collection, or collection was removed in the meanwhile";
         // Tell server we are done
         new SearchResultJob(fetchJob->property("searchId").toByteArray(), Collection(mCollectionId), this);
         return;

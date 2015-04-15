@@ -140,7 +140,7 @@ public:
      * void ExampleObserver::itemChanged( const Item &item )
      * {
      *   // do something with item
-     *   qDebug() << "Item id=" << item.id();
+     *   qCDebug(AKONADIAGENTBASE_LOG) << "Item id=" << item.id();
      *
      *   // let base implementation tell the change recorder that we
      *   // have processed the change
@@ -170,7 +170,7 @@ public:
      * void ExampleAgent::itemChanged( const Item &item )
      * {
      *   // do something with item
-     *   qDebug() << "Item id=" << item.id();
+     *   qCDebug(AKONADIAGENTBASE_LOG) << "Item id=" << item.id();
      *
      *   // let base implementation tell the change recorder that we
      *   // have processed the change

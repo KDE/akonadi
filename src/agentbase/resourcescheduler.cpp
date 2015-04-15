@@ -22,7 +22,7 @@
 #include "KDBusConnectionPool"
 #include "recursivemover_p.h"
 
-#include <qdebug.h>
+#include "akonadiagentbase_debug.h"
 #include <klocalizedstring.h>
 
 #include <QtCore/QTimer>
@@ -481,7 +481,7 @@ void ResourceScheduler::collectionRemoved(const Akonadi::Collection &collection)
     for (QList<Task>::iterator it = queue.begin(); it != queue.end();) {
         if ((*it).type == SyncCollection && (*it).collection == collection) {
             it = queue.erase(it);
-            qDebug() << " erasing";
+            qCDebug(AKONADIAGENTBASE_LOG) << " erasing";
         } else {
             ++it;
         }
@@ -528,7 +528,7 @@ ResourceScheduler::TaskList &ResourceScheduler::queueForTaskType(TaskType type)
 
 void ResourceScheduler::dump()
 {
-    qDebug() << dumpToString();
+    qCDebug(AKONADIAGENTBASE_LOG) << dumpToString();
 }
 
 QString ResourceScheduler::dumpToString() const
@@ -553,7 +553,7 @@ QString ResourceScheduler::dumpToString() const
 
 void ResourceScheduler::clear()
 {
-    qDebug() << "Clearing ResourceScheduler queues:";
+    qCDebug(AKONADIAGENTBASE_LOG) << "Clearing ResourceScheduler queues:";
     for (int i = 0; i < NQueueCount; ++i) {
         TaskList &queue = mTaskList[i];
         queue.clear();

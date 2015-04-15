@@ -1,4 +1,5 @@
 set(akonadiagentbase_SRCS
+    akonadiagentbase_debug.cpp
     agentbase.cpp
     agentfactory.cpp
     agentsearchinterface.cpp
