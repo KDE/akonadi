@@ -60,10 +60,9 @@ public:
 
         QModelIndex idx = collectionIdx.parent();
         while (idx != QModelIndex()) {
-            accountName = idx.data().toString();
+            accountName = idx.data(EntityTreeModel::OriginalCollectionNameRole).toString();
             idx = idx.parent();
         }
-
         if (accountName.isEmpty()) {
             return nameOfCollection;
         } else {

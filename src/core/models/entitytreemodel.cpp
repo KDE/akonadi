@@ -317,6 +317,9 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         case IsPopulatedRole: {
             return d->m_populatedCols.contains(collection.id());
         }
+        case OriginalCollectionNameRole: {
+            return entityData(collection, index.column(), Qt::DisplayRole);
+        }
         case Qt::BackgroundRole: {
             if (collection.hasAttribute<EntityDisplayAttribute>()) {
                 EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>();
