@@ -69,12 +69,8 @@ public:
         }
 
         qt_message_output(mType,
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                           QMessageLogContext(),
                           QString::fromLatin1(buf.trimmed()));
-#else
-                          buf.trimmed().constData());
-#endif
         return len;
     }
 
