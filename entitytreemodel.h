@@ -351,6 +351,7 @@ public:
         FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
         CollectionSyncProgressRole,             ///< Returns the progress of synchronization in percent for a particular collection. @since 4.6. Deprecated since 4.14.3.
         IsPopulatedRole,                        ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
+        OriginalCollectionNameRole,             ///< Returns original name for collection @since 4.14
         UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
         TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
         EndRole = 65535
