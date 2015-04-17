@@ -32,6 +32,8 @@ using namespace Akonadi;
 
 int main( int argc, char *argv[] )
 {
+  QApplication app(argc, argv);
+
   KAboutData aboutData( QStringLiteral("akonadi2xml"),
                         i18n( "Akonadi To XML converter" ),
                         QStringLiteral("1.0"),
@@ -40,7 +42,6 @@ int main( int argc, char *argv[] )
                         i18n( "(c) 2009 Volker Krause <vkrause@kde.org>" ) );
 
   QCommandLineParser parser;
-  QApplication app(argc, argv);
   KAboutData::setApplicationData(aboutData);
 
   parser.addVersionOption();
