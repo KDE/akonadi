@@ -74,13 +74,12 @@ private Q_SLOTS:
 private:
     ImageLoader *imageLoader();
 
-    Type mType;
     KABC::Picture mPicture;
-    bool mHasImage;
-    bool mReadOnly;
-
     QPoint mDragStartPos;
     ImageLoader *mImageLoader;
+    Type mType;
+    bool mHasImage;
+    bool mReadOnly;
 };
 
 #endif

@@ -37,10 +37,10 @@ struct GroupMember
   {
   }
 
-  bool isReference;
   KABC::ContactGroup::ContactReference reference;
   KABC::ContactGroup::Data data;
   KABC::Addressee referencedContact;
+  bool isReference;
   bool loadingError;
 };
 
