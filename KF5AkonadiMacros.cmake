@@ -28,19 +28,19 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                         ${_linklibraries})
 
   # Set the akonaditest path when the macro is used in kdepimlibs
-  if(NOT KDEPIMLIBS_BIN_DIR)
-    set(_testrunner_BIN_DIR "${_akonaditest_DIR}")
-  else()
-    set(_testrunner_BIN_DIR "${KDEPIMLIBS_BIN_DIR}")
+  find_program(_testrunner
+               NAMES akonaditest akonaditest.exe
+               PATHS ${CMAKE_CURRENT_BINARY_DIR} ${_akonaditest_DIR} ENV PATH)
+  if (_testrunner-NOTFOUND)
+    message(WARNING "Could not locate akonaditest executable, isolated Akonadi tests will fail!")
   endif()
+
   # based on kde4_add_unit_test
   if (WIN32)
     get_target_property( _loc ${_name} LOCATION )
     set(_executable ${_loc}.bat)
-    set(_testrunner ${_testrunner_BIN_DIR}/akonaditest.exe)
   else()
     set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_name})
-    set(_testrunner ${_testrunner_BIN_DIR}/akonaditest)
   endif()
   if (UNIX)
     if (APPLE)
@@ -48,7 +48,6 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     else()
       set(_executable ${_executable})
     endif()
-    set(_testrunner ${_testrunner})
   endif()
 
   if ( KDEPIMLIBS_TESTS_XML )
