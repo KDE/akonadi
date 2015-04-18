@@ -451,13 +451,6 @@ QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, co
     return s_pluginRegistry->findBestMatch(mimetype, metaTypeIds, opt);
 }
 
-#if 0
-QObject *TypePluginLoader::legacyObjectForMimeType(const QString &mimetype)
-{
-    // ### impl specifically - only works b/c vector isn't used in impl ###
-    return objectForMimeTypeAndClass(mimetype, QVector<int>(1, 0));
-}
-#endif
 
 QObject *TypePluginLoader::defaultObjectForMimeType(const QString &mimetype)
 {
@@ -468,15 +461,6 @@ ItemSerializerPlugin *TypePluginLoader::pluginForMimeTypeAndClass(const QString 
 {
     return qobject_cast<ItemSerializerPlugin *>(objectForMimeTypeAndClass(mimetype, metaTypeIds, opt));
 }
-
-#if 0
-ItemSerializerPlugin *TypePluginLoader::legacyPluginForMimeType(const QString &mimetype)
-{
-    ItemSerializerPlugin *plugin = qobject_cast<ItemSerializerPlugin *>(legacyObjectForMimeType(mimetype));
-    Q_ASSERT(plugin);
-    return plugin;
-}
-#endif
 
 ItemSerializerPlugin *TypePluginLoader::defaultPluginForMimeType(const QString &mimetype)
 {

@@ -55,13 +55,6 @@ enum Option {
 };
 Q_DECLARE_FLAGS(Options, Option)
 
-#if 0
-/**
- * Returns the legacy (pre-KDE-4.6) item serializer plugin that matches the given @p mimetype.
- */
-ItemSerializerPlugin *legacyPluginForMimeType(const QString &mimetype);
-#endif
-
 /**
  * Returns the default item serializer plugin that matches the given @p mimetype.
  */
@@ -72,13 +65,6 @@ AKONADICORE_EXPORT ItemSerializerPlugin *defaultPluginForMimeType(const QString 
  * @p mimetype, and any of the classes described by @p metaTypeIds.
  */
 AKONADICORE_EXPORT ItemSerializerPlugin *pluginForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options options = NoOptions);
-
-#if 0
-/**
- * Returns the legacy (pre-KDE-4.6) type plugin object that matches the given @p mimetype.
- */
-QObject *legacyObjectForMimeType(const QString &mimetype);
-#endif
 
 /**
  * Returns the default type plugin object that matches the given @p mimetype.
