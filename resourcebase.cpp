@@ -1193,7 +1193,7 @@ void ResourceBase::setDisableAutomaticItemDeliveryDone(bool disable)
 {
     Q_D(ResourceBase);
     if (d->mItemSyncer) {
-        d->mItemSyncer->setDisableAutomaticItemDeliveryDone(disable);
+        d->mItemSyncer->setDisableAutomaticDeliveryDone(disable);
     }
     d->mDisableAutomaticItemDeliveryDone = disable;
 }
