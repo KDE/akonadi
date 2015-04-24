@@ -625,8 +625,6 @@ void AgentManager::save()
     }
 
     file.endGroup();
-
-    file.sync();
 }
 
 void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
