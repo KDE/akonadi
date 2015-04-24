@@ -36,7 +36,6 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <KUser>
-#include <QUrl>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>

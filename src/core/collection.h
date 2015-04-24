@@ -326,7 +326,7 @@ public:
     bool shouldList(ListPurpose purpose) const;
 
     /**
-     * Sets wether the collection should be listed or not for the specified purpose.
+     * Sets whether the collection should be listed or not for the specified purpose.
      * Takes enabled state and local preference into account.
      *
      * Use this instead of sestEnabled and setLocalListPreference to automatically set

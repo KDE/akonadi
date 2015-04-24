@@ -22,7 +22,6 @@
 
 #include "item.h"
 #include "collection.h"
-#include "item.h"
 #include "agentbase_p.h"
 
 #include <kcompositejob.h>

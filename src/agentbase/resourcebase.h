@@ -270,13 +270,13 @@ protected Q_SLOTS:
     virtual void retrieveCollections() = 0;
 
     /**
-     * Retreive all tags from the backend
+     * Retrieve all tags from the backend
      * @see tagsRetrieved()
      */
     virtual void retrieveTags();
 
     /**
-     * Retreive all relations from the backend
+     * Retrieve all relations from the backend
      * @see relationsRetrieved()
      */
     virtual void retrieveRelations();

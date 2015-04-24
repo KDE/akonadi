@@ -198,7 +198,7 @@ public:
         }
     }
 
-    /* Compares collections by remoteId and falls back to name comparision in case
+    /* Compares collections by remoteId and falls back to name comparison in case
      * local collection does not have remoteId (which can happen in some cases)
      */
     bool matchLocalAndRemoteCollection(const Collection &local, const Collection &remote)

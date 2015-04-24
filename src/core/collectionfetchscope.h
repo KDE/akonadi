@@ -256,7 +256,7 @@ public:
     }
 
     /**
-     * Sets wether only the id or the complete tag should be fetched.
+     * Sets whether only the id or the complete tag should be fetched.
      *
      * The default is @c false.
      *
@@ -265,7 +265,7 @@ public:
     void setFetchIdOnly(bool fetchIdOnly);
 
     /**
-     * Sets wether only the id of the tags should be retieved or the complete tag.
+     * Sets whether only the id of the tags should be retieved or the complete tag.
      *
      * @see tagFetchScope()
      * @since 4.15

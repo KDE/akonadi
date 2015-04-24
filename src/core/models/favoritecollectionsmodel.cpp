@@ -261,7 +261,7 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
     : Akonadi::SelectionProxyModel(new QItemSelectionModel(source, parent), parent)
     , d(new Private(group, this))
 {
-    //This should only be a KRecursiveFilterProxyModel, but remains a SelectionProxyModel for backwards compatiblity.
+    //This should only be a KRecursiveFilterProxyModel, but remains a SelectionProxyModel for backwards compatibility.
     // We therefore disable what we anyways don't want (the referencing is handled separately).
     disconnect(this, SIGNAL(rootIndexAdded(QModelIndex)), this, SLOT(rootIndexAdded(QModelIndex)));
     disconnect(this, SIGNAL(rootIndexAboutToBeRemoved(QModelIndex)), this, SLOT(rootIndexAboutToBeRemoved(QModelIndex)));

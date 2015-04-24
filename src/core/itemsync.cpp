@@ -195,7 +195,7 @@ void ItemSync::setFullSyncItems(const Item::List &items)
     /*
      * We received a list of items from the server:
      * * fetch all local id's + rid's only
-     * * check each full sync item wether it's locally available
+     * * check each full sync item whether it's locally available
      * * if it is modify the item
      * * if it's not create it
      * * delete all superfluous items

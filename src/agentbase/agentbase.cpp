@@ -856,7 +856,7 @@ QString AgentBasePrivate::dumpNotificationListToString() const
 void AgentBasePrivate::dumpMemoryInfo() const
 {
     // Send it to stdout, so we can debug user problems.
-    // since you have to explicitely call this
+    // since you have to explicitly call this
     // it won't flood users with release builds.
     QTextStream stream(stdout);
     stream << dumpMemoryInfoToString();
