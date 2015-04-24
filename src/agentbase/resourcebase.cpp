@@ -1235,6 +1235,9 @@ void ResourceBase::setTotalItems(int amount)
 void ResourceBase::setDisableAutomaticItemDeliveryDone(bool disable)
 {
     Q_D(ResourceBase);
+    if (d->mItemSyncer) {
+        d->mItemSyncer->setDisableAutomaticItemDeliveryDone(disable);
+    }
     d->mDisableAutomaticItemDeliveryDone = disable;
 }
 
