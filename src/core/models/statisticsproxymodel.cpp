@@ -83,7 +83,7 @@ public:
         QString tip = QString::fromLatin1(
                     "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
                     );
-        const QString textDirection =  ( QApplication::layoutDirection() == Qt::LeftToRight ) ? QLatin1String( "left" ) : QLatin1String( "right" );
+        const QString textDirection =  ( QApplication::layoutDirection() == Qt::LeftToRight ) ? QStringLiteral( "left" ) : QStringLiteral( "right" );
         tip += QString::fromLatin1(
                     "  <tr>\n"
                     "    <td bgcolor=\"%1\" colspan=\"2\" align=\"%4\" valign=\"middle\">\n"
@@ -161,7 +161,7 @@ public:
         }
 
         if ( iconPath.isEmpty() ) {
-            iconPath = KIconLoader::global()->iconPath( QLatin1String( "folder" ), -32, false );
+            iconPath = KIconLoader::global()->iconPath( QStringLiteral( "folder" ), -32, false );
         }
 
         QString tipIcon = QString::fromLatin1(

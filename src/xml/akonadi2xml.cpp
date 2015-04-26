@@ -52,7 +52,7 @@ int main( int argc, char *argv[] )
 
 
   Collection root;
-  if ( parser.isSet( QLatin1String("collection") ) ) {
+  if ( parser.isSet( QStringLiteral("collection") ) ) {
     const QString path = parser.value( QLatin1String("collection") );
     CollectionPathResolver resolver( path );
     if ( !resolver.exec() ) {
@@ -63,7 +63,7 @@ int main( int argc, char *argv[] )
   } else
     return -1;
 
-  XmlWriteJob writer( root, parser.value( QLatin1String("output") ) );
+  XmlWriteJob writer( root, parser.value( QStringLiteral("output") ) );
   if ( !writer.exec() ) {
     qCritical() << writer.exec();
     return -1;

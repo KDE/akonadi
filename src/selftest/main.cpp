@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("akonadiselftest"));
-    QCoreApplication::setApplicationVersion(QLatin1String("1.0"));
+    QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
     parser.process(app);
 
     SelfTestDialog dlg;
