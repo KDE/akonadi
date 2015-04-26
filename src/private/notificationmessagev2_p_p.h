@@ -93,7 +93,7 @@ public:
     static bool appendAndCompressImpl(List &list, const Msg &msg)
     {
         //It is likely that compressable notifications are within the last few notifications, so avoid searching a list that is potentially huge
-        static int maxCompressionSearchLength = 10;
+        static const int maxCompressionSearchLength = 10;
         int searchCounter = 0;
         // There are often multiple Collection Modify notifications in the queue,
         // so we optimize for this case.
