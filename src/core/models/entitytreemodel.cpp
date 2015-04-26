@@ -773,7 +773,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
         } else if (Node::Item == node->type) {
             QUrl url = d->m_items.value(node->id).url(Item::Item::UrlWithMimeType);
             // Encode the "virtual" parent
-            url.addQueryItem(QLatin1String("parent"), QString::number(node->parent));
+            url.addQueryItem(QStringLiteral("parent"), QString::number(node->parent));
             urls << url;
         } else { // if that happens something went horrible wrong
             Q_ASSERT(false);

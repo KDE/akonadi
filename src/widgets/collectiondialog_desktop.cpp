@@ -144,8 +144,8 @@ public:
 
     void readConfig()
     {
-        KConfig config(QLatin1String("akonadi_contactrc"));
-        KConfigGroup group(&config, QLatin1String("CollectionDialog"));
+        KConfig config(QStringLiteral("akonadi_contactrc"));
+        KConfigGroup group(&config, QStringLiteral("CollectionDialog"));
         const QSize size = group.readEntry("Size", QSize(800,  500));
         if (size.isValid()) {
             mParent->resize(size);
@@ -154,8 +154,8 @@ public:
 
     void writeConfig()
     {
-        KConfig config(QLatin1String("akonadi_contactrc"));
-        KConfigGroup group(&config, QLatin1String("CollectionDialog"));
+        KConfig config(QStringLiteral("akonadi_contactrc"));
+        KConfigGroup group(&config, QStringLiteral("CollectionDialog"));
         group.writeEntry("Size", mParent->size());
         group.sync();
     }

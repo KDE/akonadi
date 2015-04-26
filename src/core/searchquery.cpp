@@ -381,11 +381,11 @@ ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &
 QMap<IncidenceSearchTerm::IncidenceSearchField, QString> initializeIncidenceMapping()
 {
   QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
-  mapping.insert(IncidenceSearchTerm::All, QLatin1String("all"));
-  mapping.insert(IncidenceSearchTerm::PartStatus, QLatin1String("partstatus"));
-  mapping.insert(IncidenceSearchTerm::Organizer, QLatin1String("organizer"));
-  mapping.insert(IncidenceSearchTerm::Summary, QLatin1String("summary"));
-  mapping.insert(IncidenceSearchTerm::Location, QLatin1String("location"));
+  mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
+  mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
+  mapping.insert(IncidenceSearchTerm::Organizer, QStringLiteral("organizer"));
+  mapping.insert(IncidenceSearchTerm::Summary, QStringLiteral("summary"));
+  mapping.insert(IncidenceSearchTerm::Location, QStringLiteral("location"));
   return mapping;
 }
 

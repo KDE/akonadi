@@ -67,17 +67,17 @@ public:
     QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/ {
         QStringList flags;
         if ( mRecursive ) {
-            flags.append( QLatin1String( "recursive" ) );
+            flags.append( QStringLiteral( "recursive" ) );
         }
         if ( mRemote ) {
-            flags.append( QLatin1String( "remote" ) );
+            flags.append( QStringLiteral( "remote" ) );
         }
         if ( mCollections.isEmpty() ) {
-            flags.append( QLatin1String( "all collections" ) );
+            flags.append( QStringLiteral( "all collections" ) );
         } else {
             flags.append( QString::fromLatin1( "%1 collections" ).arg( mCollections.count() ) );
         }
-        return QString::fromLatin1( "%1,json=%2" ).arg( flags.join(QLatin1String(","))).arg(QString::fromUtf8(mQuery.toJSON()));
+        return QString::fromLatin1( "%1,json=%2" ).arg( flags.join(QStringLiteral(","))).arg(QString::fromUtf8(mQuery.toJSON()));
     }
 
 

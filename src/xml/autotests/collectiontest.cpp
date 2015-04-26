@@ -66,17 +66,17 @@ void CollectionTest::testBuildCollection()
 
   QStringList mimeType;
 
-  mimeType << QLatin1String( "inode/directory" ) << QLatin1String( "message/rfc822" );
+  mimeType << QStringLiteral( "inode/directory" ) << QStringLiteral( "message/rfc822" );
   QCOMPARE( colist.size(), 1 );
-  verifyCollection( colist, 0, QLatin1String( "c11" ), QLatin1String( "Inbox" ), mimeType );
+  verifyCollection( colist, 0, QStringLiteral( "c11" ), QStringLiteral( "Inbox" ), mimeType );
 
   mDocument.setContent( collection2, true, 0 );
   colist = XmlReader::readCollections( mDocument.documentElement() );
 
   QCOMPARE( colist.size(), 3 );
-  verifyCollection( colist, 0, QLatin1String( "c11" ), QLatin1String( "Inbox" ), mimeType );
-  verifyCollection( colist, 1, QLatin1String( "c111" ), QLatin1String( "KDE PIM" ), mimeType );
-  verifyCollection( colist, 2, QLatin1String( "c112" ), QLatin1String( "Akonadi" ), mimeType );
+  verifyCollection( colist, 0, QStringLiteral( "c11" ), QStringLiteral( "Inbox" ), mimeType );
+  verifyCollection( colist, 1, QStringLiteral( "c111" ), QStringLiteral( "KDE PIM" ), mimeType );
+  verifyCollection( colist, 2, QStringLiteral( "c112" ), QStringLiteral( "Akonadi" ), mimeType );
 
   QVERIFY( colist.at( 0 ).hasAttribute<EntityDisplayAttribute>() );
   EntityDisplayAttribute *attr = colist.at( 0 ).attribute<EntityDisplayAttribute>();
@@ -86,14 +86,14 @@ void CollectionTest::testBuildCollection()
 void CollectionTest::serializeCollection()
 {
   Collection c;
-  c.setRemoteId( QLatin1String( "c11" ) );
-  c.setName( QLatin1String( "Inbox" ) );
-  c.setContentMimeTypes( QStringList() << Collection::mimeType() << QLatin1String( "message/rfc822" ) );
-  c.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( QLatin1String( "Posteingang" ) );
-  c.attribute<EntityDisplayAttribute>()->setIconName( QLatin1String( "mail-folder-inbox" ) );
+  c.setRemoteId( QStringLiteral( "c11" ) );
+  c.setName( QStringLiteral( "Inbox" ) );
+  c.setContentMimeTypes( QStringList() << Collection::mimeType() << QStringLiteral( "message/rfc822" ) );
+  c.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( QStringLiteral( "Posteingang" ) );
+  c.attribute<EntityDisplayAttribute>()->setIconName( QStringLiteral( "mail-folder-inbox" ) );
 
   QDomDocument doc;
-  QDomElement root = doc.createElement( QLatin1String( "test" ) );
+  QDomElement root = doc.createElement( QStringLiteral( "test" ) );
   doc.appendChild( root );
   XmlWriter::writeCollection( c, root );
 
