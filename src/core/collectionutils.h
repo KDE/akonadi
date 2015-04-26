@@ -69,40 +69,40 @@ inline bool isFolder(const Collection &collection)
 inline QString defaultIconName(const Collection &col)
 {
     if (CollectionUtils::isVirtualParent(col)) {
-        return QLatin1String("edit-find");
+        return QStringLiteral("edit-find");
     }
     if (col.isVirtual()) {
-        return QLatin1String("document-preview");
+        return QStringLiteral("document-preview");
     }
     if (CollectionUtils::isResource(col)) {
-        return QLatin1String("network-server");
+        return QStringLiteral("network-server");
     }
     if (CollectionUtils::isStructural(col)) {
-        return QLatin1String("folder-grey");
+        return QStringLiteral("folder-grey");
     }
     if (CollectionUtils::isReadOnly(col)) {
-        return QLatin1String("folder-grey");
+        return QStringLiteral("folder-grey");
     }
 
     const QStringList content = col.contentMimeTypes();
     if ((content.size() == 1) ||
         (content.size() == 2 && content.contains(Collection::mimeType()))) {
-        if (content.contains(QLatin1String("text/x-vcard")) ||
-            content.contains(QLatin1String("text/directory")) ||
-            content.contains(QLatin1String("text/vcard"))) {
-            return QLatin1String("x-office-address-book");
+        if (content.contains(QStringLiteral("text/x-vcard")) ||
+            content.contains(QStringLiteral("text/directory")) ||
+            content.contains(QStringLiteral("text/vcard"))) {
+            return QStringLiteral("x-office-address-book");
         }
         // TODO: add all other content types and/or fix their mimetypes
-        if (content.contains(QLatin1String("akonadi/event")) || content.contains(QLatin1String("text/ical"))) {
-            return QLatin1String("view-pim-calendar");
+        if (content.contains(QStringLiteral("akonadi/event")) || content.contains(QStringLiteral("text/ical"))) {
+            return QStringLiteral("view-pim-calendar");
         }
-        if (content.contains(QLatin1String("akonadi/task"))) {
-            return QLatin1String("view-pim-tasks");
+        if (content.contains(QStringLiteral("akonadi/task"))) {
+            return QStringLiteral("view-pim-tasks");
         }
     } else if (content.isEmpty()) {
-        return QLatin1String("folder-grey");
+        return QStringLiteral("folder-grey");
     }
-    return QLatin1String("folder");
+    return QStringLiteral("folder");
 }
 inline QString displayIconName(const Collection &col)
 {
