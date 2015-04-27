@@ -80,7 +80,6 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     QPushButton *user2Button = new QPushButton;
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelfTestDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelfTestDialog::reject);
     mainLayout->addWidget(buttonBox);
     user1Button->setText(i18n("Save Report..."));
