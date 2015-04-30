@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Knut
+Name[ast]=Knut
 Name[bs]=Knut
 Name[ca]=Knut
 Name[ca@valencia]=Knut
@@ -40,6 +41,7 @@ Name[x-test]=xxKnutxx
 Name[zh_CN]=Knut
 Name[zh_TW]=Knut
 Comment=An agent for debugging purpose
+Comment[ast]=Un axente pa propósitos de depuración
 Comment[bs]=Agent za svrhe debagiranja
 Comment[ca]=Un agent amb la finalitat de depuració
 Comment[ca@valencia]=Un agent amb la finalitat de depuració
