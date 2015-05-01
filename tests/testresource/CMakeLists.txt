@@ -56,6 +56,6 @@ target_link_libraries(akonadi_knut_resource
 )
 
 install( TARGETS akonadi_knut_resource DESTINATION ${PLUGIN_INSTALL_DIR}/ )
-install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
+install( FILES knutresource.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents" )
 install( FILES knut-template.xml DESTINATION ${DATA_INSTALL_DIR}/akonadi_knut_resource/ )
 
