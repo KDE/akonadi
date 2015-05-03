@@ -34,6 +34,8 @@ namespace Server {
  */
 class PauseableTimer : public QTimer
 {
+    Q_OBJECT
+
 public:
     PauseableTimer(QObject *parent = 0)
         : QTimer(parent)
@@ -60,7 +62,7 @@ public:
         QTimer::stop();
     }
 
-    void pause()
+    Q_INVOKABLE void pause()
     {
         if (!isActive()) {
             akError() << "Cannot pause an inactive timer";
@@ -75,7 +77,7 @@ public:
         QTimer::stop();
     }
 
-    void resume()
+    Q_INVOKABLE void resume()
     {
         if (!isPaused()) {
             akError() << "Cannot resume a timer that is not paused.";
@@ -134,9 +136,11 @@ void CollectionScheduler::run()
 void CollectionScheduler::inhibit(bool inhibit)
 {
     if (inhibit && mScheduler->isActive() && !mScheduler->isPaused()) {
-        mScheduler->pause();
+        const bool success = QMetaObject::invokeMethod(mScheduler, "pause", Qt::QueuedConnection);
+        Q_ASSERT(success);
     } else if (!inhibit && mScheduler->isPaused()) {
-        mScheduler->resume();
+        const bool success = QMetaObject::invokeMethod(mScheduler, "resume", Qt::QueuedConnection);
+        Q_ASSERT(success);
     }
 }
 
@@ -316,3 +320,5 @@ void CollectionScheduler::schedulerTimeout()
 
     startScheduler();
 }
+
+#include "collectionscheduler.moc"
