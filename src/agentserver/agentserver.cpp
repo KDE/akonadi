@@ -18,8 +18,9 @@
 */
 
 #include "agentserver.h"
-
+#include "akonadiagentserver_debug.h"
 #include "agentthread.h"
+
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
 #include <shared/akdebug.h>
@@ -43,7 +44,7 @@ AgentServer::AgentServer(QObject *parent)
 
 AgentServer::~AgentServer()
 {
-    qDebug() << Q_FUNC_INFO;
+    qCDebug(AKONADIAGENTSERVER_LOG) << Q_FUNC_INFO;
     if (!m_quiting) {
         quit();
     }

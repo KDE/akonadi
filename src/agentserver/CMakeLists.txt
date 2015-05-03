@@ -4,6 +4,7 @@ set(akonadi_agent_server_srcs
     agentserver.cpp
     agentthread.cpp
     main.cpp
+    akonadiagentserver_debug.cpp
 )
 
 add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
@@ -20,6 +21,7 @@ target_link_libraries(akonadi_agent_server
 set(akonadi_agent_launcher_SRCS
     agentpluginloader.cpp
     agentlauncher.cpp
+    akonadiagentserver_debug.cpp
 )
 
 add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})

@@ -18,6 +18,7 @@
 */
 
 #include "agentthread.h"
+#include "akonadiagentserver_debug.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -45,9 +46,9 @@ void AgentThread::run()
                                                            Q_RETURN_ARG(QObject *, m_instance),
                                                            Q_ARG(QString, m_identifier));
     if (invokeSucceeded) {
-        qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
+        qCDebug(AKONADIAGENTSERVER_LOG) << Q_FUNC_INFO << "agent instance created: " << m_instance;
     } else {
-        qDebug() << Q_FUNC_INFO << "agent instance creation failed";
+        qCDebug(AKONADIAGENTSERVER_LOG) << Q_FUNC_INFO << "agent instance creation failed";
     }
 
     exec();

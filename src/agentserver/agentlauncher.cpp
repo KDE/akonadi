@@ -18,8 +18,8 @@
 */
 
 #include "agentpluginloader.h"
+#include "akonadiagentserver_debug.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QStringList>
 #include <QApplication>
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
     if (app.arguments().size() != 3) {   // Expected usage: ./agent_launcher ${plugin_name} ${identifier}
-        qDebug() << "Invalid usage: expected: ./agent_launcher pluginName agentIdentifier";
+        qCDebug(AKONADIAGENTSERVER_LOG) << "Invalid usage: expected: ./agent_launcher pluginName agentIdentifier";
         return 1;
     }
 
@@ -49,9 +49,9 @@ int main(int argc, char *argv[])
                                                            Q_RETURN_ARG(QObject *, instance),
                                                            Q_ARG(QString, agentIdentifier));
     if (invokeSucceeded) {
-        qDebug() << "Agent instance created in separate process.";
+        qCDebug(AKONADIAGENTSERVER_LOG) << "Agent instance created in separate process.";
     } else {
-        qDebug() << "Agent instance creation in separate process failed";
+        qCDebug(AKONADIAGENTSERVER_LOG) << "Agent instance creation in separate process failed";
         return 2;
     }
 
