@@ -21,6 +21,7 @@
 #include "searchmanager.h"
 #include "abstractsearchplugin.h"
 #include "searchmanageradaptor.h"
+#include "akonadiserver_debug.h"
 
 #include "agentsearchengine.h"
 #include "notificationmanager.h"
@@ -260,7 +261,7 @@ void SearchManager::updateSearch(const Collection &collection)
 void SearchManager::updateSearchImpl(const Collection &collection, QWaitCondition *cond)
 {
     if (collection.queryString().size() >= 32768) {
-        qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
+        qCWarning(AKONADISERVER_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
         wakeUpCaller(cond);
         return;
     }

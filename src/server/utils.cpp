@@ -20,6 +20,7 @@
  */
 
 #include "utils.h"
+#include "akonadiserver_debug.h"
 
 #include <shared/akdebug.h>
 #include <shared/akstandarddirs.h>
@@ -97,14 +98,14 @@ QString akonadiSocketDirectory()
     const QString hostname = QHostInfo::localHostName();
 
     if (hostname.isEmpty()) {
-        qCritical() << "QHostInfo::localHostName() failed";
+        qCCritical(AKONADISERVER_LOG) << "QHostInfo::localHostName() failed";
         return QString();
     }
 
     const uid_t uid = getuid();
     const struct passwd *pw_ent = getpwuid(uid);
     if (!pw_ent) {
-        qCritical() << "Could not get passwd entry for user id" << uid;
+        qCCritical(AKONADISERVER_LOG) << "Could not get passwd entry for user id" << uid;
         return QString();
     }
 
@@ -119,7 +120,7 @@ QString akonadiSocketDirectory()
         return QFileInfo(link).symLinkTarget();
     }
 
-    qCritical() << "Could not create socket directory for Akonadi.";
+    qCCritical(AKONADISERVER_LOG) << "Could not create socket directory for Akonadi.";
     return QString();
 }
 
@@ -153,7 +154,7 @@ static bool createSocketDirectory(const QString &link, const QString &tmpl)
     QByteArray directoryString = directory.toLocal8Bit().data();
 
     if (!mkdtemp(directoryString.data())) {
-        qCritical() << "Creating socket directory with template" << directoryString << "failed:" << strerror(errno);
+        qCCritical(AKONADISERVER_LOG) << "Creating socket directory with template" << directoryString << "failed:" << strerror(errno);
         return false;
     }
 
@@ -162,7 +163,7 @@ static bool createSocketDirectory(const QString &link, const QString &tmpl)
     QFile::remove(link);
 
     if (!QFile::link(directory, link)) {
-        qCritical() << "Creating symlink from" << directory << "to" << link << "failed";
+        qCCritical(AKONADISERVER_LOG) << "Creating symlink from" << directory << "to" << link << "failed";
         return false;
     }
 
@@ -207,7 +208,7 @@ void Utils::disableCoW(const QString &path)
 #ifndef Q_OS_LINUX
     Q_UNUSED(path);
 #else
-    qDebug() << "Detected Btrfs, disabling copy-on-write on database files";
+    qCDebug(AKONADISERVER_LOG) << "Detected Btrfs, disabling copy-on-write on database files";
 
     // from linux/fs.h, so that Akonadi does not depend on Linux header files
 #ifndef FS_IOC_GETFLAGS
@@ -225,19 +226,19 @@ void Utils::disableCoW(const QString &path)
     ulong flags = 0;
     const int fd = open(qPrintable(path), O_RDONLY);
     if (fd == -1) {
-        qWarning() << "Failed to open" << path << "to modify flags (" << errno << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed to open" << path << "to modify flags (" << errno << ")";
         return;
     }
 
     if (ioctl(fd, FS_IOC_GETFLAGS, &flags) == -1) {
-        qWarning() << "ioctl error: failed to get file flags (" << errno << ")";
+        qCWarning(AKONADISERVER_LOG) << "ioctl error: failed to get file flags (" << errno << ")";
         close(fd);
         return;
     }
     if (!(flags & FS_NOCOW_FL)) {
         flags |= FS_NOCOW_FL;
         if (ioctl(fd, FS_IOC_SETFLAGS, &flags) == -1) {
-            qWarning() << "ioctl error: failed to set file flags (" << errno << ")";
+            qCWarning(AKONADISERVER_LOG) << "ioctl error: failed to set file flags (" << errno << ")";
             close(fd);
             return;
         }

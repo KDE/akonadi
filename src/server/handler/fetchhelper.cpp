@@ -640,7 +640,7 @@ void FetchHelper::updateItemAccessTime()
     ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
 
     if (!qb.exec()) {
-        qWarning() << "Unable to update item access time";
+        qCWarning(AKONADISERVER_LOG) << "Unable to update item access time";
     } else {
         transaction.commit();
     }

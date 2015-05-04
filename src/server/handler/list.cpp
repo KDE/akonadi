@@ -18,7 +18,7 @@
 */
 
 #include "list.h"
-
+#include "akonadiserver_debug.h"
 #include <QtCore/QDebug>
 
 #include "storage/datastore.h"
@@ -77,7 +77,7 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
             parent = mCollections.value(parent.parentId());
         }
         if (!parent.isValid()) {
-            qWarning() << col.id();
+            qCWarning(AKONADISERVER_LOG) << col.id();
             throw HandlerException("Found invalid parent in ancestors");
         }
         ancestors.prepend(parent);
@@ -215,7 +215,7 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
             CollectionAttribute attr;
             attr.setType(attributeQuery.value(1).toByteArray());
             attr.setValue(attributeQuery.value(2).toByteArray());
-            // qDebug() << "found attribute " << attr.type() << attr.value();
+            // qCDebug(AKONADISERVER_LOG) << "found attribute " << attr.type() << attr.value();
             mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
         start += size;
@@ -281,7 +281,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             if (mCollectionsToSynchronize) {
                 qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
             } else if (mCollectionsToDisplay) {
-                    qDebug() << "only display";
+                    qCDebug(AKONADISERVER_LOG) << "only display";
                 qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
             } else if (mCollectionsToIndex) {
                 qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
@@ -399,8 +399,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     }
     }
 
-    // qDebug() << "HAS:" << knownIds;
-    // qDebug() << "MISSING:" << missingCollections;
+    // qCDebug(AKONADISERVER_LOG) << "HAS:" << knownIds;
+    // qCDebug(AKONADISERVER_LOG) << "MISSING:" << missingCollections;
 
     //Fetch missing collections that are part of the tree
     while (!missingCollections.isEmpty()) {
@@ -442,7 +442,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     auto it = mCollections.begin();
     while (it != mCollections.end()) {
         const Collection col = it.value();
-        // qDebug() << "col " << col.id();
+        // qCDebug(AKONADISERVER_LOG) << "col " << col.id();
 
         QList<QByteArray> mimeTypes;
         {
@@ -454,9 +454,9 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 mimeTypeQuery.next(); //place at first record
             }
 
-            // qDebug() << mimeTypeQuery.isValid() << mimeTypeQuery.value(0).toLongLong();
+            // qCDebug(AKONADISERVER_LOG) << mimeTypeQuery.isValid() << mimeTypeQuery.value(0).toLongLong();
             while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() < col.id()) {
-                qDebug() << "skipped: " << mimeTypeQuery.value(0).toLongLong() << mimeTypeQuery.value(2).toString();
+                qCDebug(AKONADISERVER_LOG) << "skipped: " << mimeTypeQuery.value(0).toLongLong() << mimeTypeQuery.value(2).toString();
                 if (!mimeTypeQuery.next()) {
                     break;
                 }
@@ -480,9 +480,9 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 attributeQuery.next(); //place at first record
             }
 
-            // qDebug() << attributeQuery.isValid() << attributeQuery.value(0).toLongLong();
+            // qCDebug(AKONADISERVER_LOG) << attributeQuery.isValid() << attributeQuery.value(0).toLongLong();
             while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() < col.id()) {
-                qDebug() << "skipped: " << attributeQuery.value(0).toLongLong() << attributeQuery.value(1).toByteArray();
+                qCDebug(AKONADISERVER_LOG) << "skipped: " << attributeQuery.value(0).toLongLong() << attributeQuery.value(1).toByteArray();
                 if (!attributeQuery.next()) {
                     break;
                 }

@@ -23,6 +23,7 @@
 #include "imapstreamparser.h"
 #include "clientcapabilities.h"
 #include "connection.h"
+#include "akonadiserver_debug.h"
 
 #include <private/protocol_p.h>
 
@@ -61,7 +62,7 @@ bool Capability::parseStream()
         } else if (capability == AKONADI_PARAM_CAPABILITY_DIRECTSTREAMING) {
             capabilities.setDirectStreaming(true);
         } else {
-            qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
+            qCDebug(AKONADISERVER_LOG) << Q_FUNC_INFO << "Unknown client capability:" << capability;
         }
     }
 

@@ -148,6 +148,7 @@ set(libakonadiserver_SRCS
 
 set(akonadiserver_SRCS
     main.cpp
+    akonadiserver_debug.cpp
 )
 
 qt5_generate_dbus_interface(debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml)

@@ -23,6 +23,7 @@
  *****************************************************************************/
 
 #include "preprocessormanager.h"
+#include "akonadiserver_debug.h"
 #include <shared/akdebug.h>
 
 #include "entities.h" // Akonadi::Server::PimItem
@@ -221,7 +222,7 @@ void PreprocessorManager::beginHandleItem(const PimItem &item, const DataStore *
         // However, since setEnabled() may be called concurrently
         // then this might not be the caller's fault. Just drop a warning.
 
-        qWarning() << "PreprocessorManager::beginHandleItem(" << item.id() << ") called with a disabled preprocessor";
+        qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::beginHandleItem(" << item.id() << ") called with a disabled preprocessor";
 
         lockedEndHandleItem(item.id());
         return;
@@ -285,7 +286,7 @@ void PreprocessorManager::lockedKillWaitQueue(const DataStore *dataStore, bool d
 {
     std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, 0);
     if (!waitQueue) {
-        qWarning() << "PreprocessorManager::lockedKillWaitQueue(): called for dataStore which has no wait queue";
+        qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::lockedKillWaitQueue(): called for dataStore which has no wait queue";
         return;
     }
 
@@ -311,7 +312,7 @@ void PreprocessorManager::dataStoreDestroyed()
 
     const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
-        qWarning() << "PreprocessorManager::dataStoreDestroyed(): got the signal from a non DataStore object";
+        qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreDestroyed(): got the signal from a non DataStore object";
         return;
     }
 
@@ -326,13 +327,13 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 
     const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
-        qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
+        qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
         return;
     }
 
     std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, 0);
     if (!waitQueue) {
-        qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): called for dataStore which has no wait queue";
+        qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): called for dataStore which has no wait queue";
         return;
     }
 
@@ -358,7 +359,7 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
 
     const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
-        qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
+        qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
         return;
     }
 

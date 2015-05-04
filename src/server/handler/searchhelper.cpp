@@ -122,7 +122,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     }
 
     if (!qb.exec()) {
-        qWarning() << "Failed to query search collections";
+        qCWarning(AKONADISERVER_LOG) << "Failed to query search collections";
         return QVector<qint64>();
     }
 

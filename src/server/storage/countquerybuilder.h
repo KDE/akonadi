@@ -24,7 +24,7 @@
 
 #include <shared/akdebug.h>
 
-#include <QDebug>
+#include "akonadiserver_debug.h"
 #include <QSqlError>
 
 namespace Akonadi {

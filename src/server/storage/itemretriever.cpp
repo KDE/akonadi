@@ -34,7 +34,7 @@
 #include <shared/akdebug.h>
 #include <private/protocol_p.h>
 
-#include <QDebug>
+#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

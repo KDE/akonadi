@@ -18,6 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 #include "connection.h"
+#include "akonadiserver_debug.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
@@ -70,7 +71,7 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     QLocalSocket *socket = new QLocalSocket();
 
     if (!socket->setSocketDescriptor(m_socketDescriptor)) {
-        qWarning() << "Connection(" << m_identifier
+        qCWarning(AKONADISERVER_LOG) << "Connection(" << m_identifier
                    << ")::run: failed to set socket descriptor: "
                    << socket->error() << "(" << socket->errorString() << ")";
         delete socket;
@@ -377,15 +378,15 @@ void Connection::stopTime(const QString &identifier)
     m_totalTime += elapsed;
     m_totalTimeByHandler[identifier] += elapsed;
     m_executionsByHandler[identifier]++;
-    qDebug() << identifier <<" time : " << elapsed << " total: " << m_totalTime;
+    qCDebug(AKONADISERVER_LOG) << identifier <<" time : " << elapsed << " total: " << m_totalTime;
 }
 
 void Connection::reportTime() const
 {
-    qDebug() << "===== Time report for " << m_identifier << " =====";
-    qDebug() << " total: " << m_totalTime;
+    qCDebug(AKONADISERVER_LOG) << "===== Time report for " << m_identifier << " =====";
+    qCDebug(AKONADISERVER_LOG) << " total: " << m_totalTime;
     Q_FOREACH (const QString &handler, m_totalTimeByHandler.keys()) {
-        qDebug() << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
+        qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
     }
 }
 

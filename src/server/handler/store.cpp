@@ -40,7 +40,7 @@
 
 #include <QtCore/QStringList>
 #include <QLocale>
-#include <QDebug>
+#include "akonadiserver_debug.h"
 #include <QFile>
 
 #include <algorithm>

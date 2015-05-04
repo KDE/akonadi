@@ -21,6 +21,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include <QDateTime>
 #include <QCoreApplication>
@@ -290,8 +291,8 @@ void CollectionScheduler::initScheduler()
     orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
     qb.addCondition(orCondition);
     if (!qb.exec()) {
-        qWarning() << "Failed to query initial collections for scheduler!";
-        qWarning() << "Not a fatal error, no collections will be scheduled for sync or cache expiration!";
+        qCWarning(AKONADISERVER_LOG) << "Failed to query initial collections for scheduler!";
+        qCWarning(AKONADISERVER_LOG) << "Not a fatal error, no collections will be scheduled for sync or cache expiration!";
     }
 
     const Collection::List collections = qb.result();

@@ -22,7 +22,7 @@
 #include "dbexception.h"
 #include "querybuilder.h"
 
-#include <QDebug>
+#include "akonadiserver_debug.h"
 #include <QSqlQuery>
 
 using namespace Akonadi::Server;

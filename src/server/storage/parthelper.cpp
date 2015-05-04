@@ -33,7 +33,7 @@
 
 #include <QDir>
 #include <QFile>
-#include <QDebug>
+#include "akonadiserver_debug.h"
 #include <QFileInfo>
 
 #include <QSqlError>

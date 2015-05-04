@@ -172,7 +172,7 @@ bool DataStore::init()
             return false;
         }
     } else {
-        qWarning() << "Warning: dbupdate.xml not found, skipping updates";
+        qCWarning(AKONADISERVER_LOG) << "Warning: dbupdate.xml not found, skipping updates";
     }
 
     if (!initializer->updateIndexesAndConstraints()) {
@@ -606,7 +606,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     itemsQuery.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::In, removedTagsIds);
 
     if (!itemsQuery.exec()) {
-        qDebug() << "Failed to execute query: " << itemsQuery.query().lastError();
+        qCDebug(AKONADISERVER_LOG) << "Failed to execute query: " << itemsQuery.query().lastError();
         return false;
     }
     const PimItem::List items = itemsQuery.result();
@@ -624,7 +624,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         qb.addColumn(Resource::nameFullColumnName());
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, tag.id());
         if (!qb.exec()) {
-            qDebug() << "Failed to execute query: " << qb.query().lastError();
+            qCDebug(AKONADISERVER_LOG) << "Failed to execute query: " << qb.query().lastError();
             return false;
         }
 
@@ -645,7 +645,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
     qb.addValueCondition(Tag::idColumn(), Query::In, removedTagsIds);
     if (!qb.exec()) {
-        qDebug() << "Failed to execute query: " << itemsQuery.query().lastError();
+        qCDebug(AKONADISERVER_LOG) << "Failed to execute query: " << itemsQuery.query().lastError();
         return false;
     }
 
@@ -1352,7 +1352,7 @@ bool DataStore::rollbackTransaction()
     }
 
     if (m_transactionLevel == 0) {
-        qWarning() << "DataStore::rollbackTransaction(): No transaction in progress!";
+        qCWarning(AKONADISERVER_LOG) << "DataStore::rollbackTransaction(): No transaction in progress!";
         return false;
     }
 
@@ -1381,7 +1381,7 @@ bool DataStore::commitTransaction()
     }
 
     if (m_transactionLevel == 0) {
-        qWarning() << "DataStore::commitTransaction(): No transaction in progress!";
+        qCWarning(AKONADISERVER_LOG) << "DataStore::commitTransaction(): No transaction in progress!";
         return false;
     }
 
