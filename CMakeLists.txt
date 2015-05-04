@@ -267,3 +267,4 @@ install(EXPORT
     FILE KF5AkonadiServerTargets.cmake
     NAMESPACE KF5::)
 
+install( FILES akonadi.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
