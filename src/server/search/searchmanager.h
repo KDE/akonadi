@@ -30,6 +30,7 @@
 
 class QWaitCondition;
 class QTimer;
+class QPluginLoader;
 
 namespace Akonadi {
 
@@ -50,6 +51,9 @@ public:
     void run();
 
 private:
+    void loadSearchPlugins();
+
+    QList<QPluginLoader*> mPluginLoaders;
     QStringList mSearchEngines;
 };
 
@@ -120,10 +124,11 @@ private Q_SLOTS:
     void updateSearchImpl(const Collection &collection, QWaitCondition *cond);
 
 protected:
-    void init(const QStringList &searchEngines);
+    void init(const QStringList &searchEngines, const QList<QPluginLoader*> &loaders);
 
 private:
-    void loadSearchPlugins();
+    // Runs in SearchManagerThread
+    void initSearchPlugins(const QList<QPluginLoader*> &loaders);
 
     static SearchManager *sInstance;
 

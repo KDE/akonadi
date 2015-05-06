@@ -59,16 +59,73 @@ SearchManagerThread::SearchManagerThread(const QStringList &searchEngines, QObje
     , mSearchEngines(searchEngines)
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+
+    // We load search plugins (as in QLibrary::load()) in the main thread so that
+    // static initialization happens in the QApplication thread
+    loadSearchPlugins();
 }
 
 SearchManagerThread::~SearchManagerThread()
 {
+    qDeleteAll(mPluginLoaders);
 }
+
+void SearchManagerThread::loadSearchPlugins()
+{
+    QStringList loadedPlugins;
+    const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
+    if (!pluginOverride.isEmpty()) {
+        akDebug() << "Overriding the search plugins with: " << pluginOverride;
+    }
+
+    const QStringList dirs = XdgBaseDirs::findPluginDirs();
+    Q_FOREACH (const QString &pluginDir, dirs) {
+        QDir dir(pluginDir + QLatin1String("/akonadi"));
+        const QStringList desktopFiles = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files);
+        akDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << desktopFiles;
+
+        Q_FOREACH (const QString &desktopFileName, desktopFiles) {
+            QSettings desktop(pluginDir + QLatin1String("/akonadi/") + desktopFileName, QSettings::IniFormat);
+            desktop.beginGroup(QLatin1String("Desktop Entry"));
+            if (desktop.value(QLatin1String("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
+                continue;
+            }
+
+            const QString libraryName = desktop.value(QLatin1String("X-Akonadi-Library")).toString();
+            if (loadedPlugins.contains(libraryName)) {
+                akDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
+                continue;
+            }
+            // When search plugin override is active, ignore all plugins except for the override
+            if (!pluginOverride.isEmpty()) {
+                if (libraryName != pluginOverride) {
+                    akDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+                    continue;
+                }
+
+                // When there's no override, only load plugins enabled by default
+            } else if (!desktop.value(QLatin1String("X-Akonadi-LoadByDefault"), true).toBool()) {
+                continue;
+            }
+
+            const QString pluginFile = XdgBaseDirs::findPluginFile(libraryName, QStringList() << pluginDir + QLatin1String("/akonadi"));
+            QPluginLoader *loader = new QPluginLoader(pluginFile);
+            if (!loader->load()) {
+                akError() << "Failed to load search plugin" << libraryName << ":" << loader->errorString();
+                continue;
+            }
+
+            mPluginLoaders << loader;
+            loadedPlugins << libraryName;
+        }
+    }
+}
+
 
 void SearchManagerThread::run()
 {
     SearchManager *manager = new SearchManager();
-    manager->init(mSearchEngines);
+    manager->init(mSearchEngines, mPluginLoaders);
     exec();
     delete manager;
 }
@@ -86,7 +143,7 @@ SearchManager::SearchManager(QObject *parent)
     DataStore::self();
 }
 
-void SearchManager::init(const QStringList &searchEngines)
+void SearchManager::init(const QStringList &searchEngines, const QList<QPluginLoader*> &loaders)
 {
     mEngines.reserve(searchEngines.size());
     Q_FOREACH (const QString &engineName, searchEngines) {
@@ -97,7 +154,7 @@ void SearchManager::init(const QStringList &searchEngines)
         }
     }
 
-    loadSearchPlugins();
+    initSearchPlugins(loaders);
 
     new SearchManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(
@@ -142,61 +199,22 @@ QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
     return mPlugins;
 }
 
-void SearchManager::loadSearchPlugins()
+void SearchManager::initSearchPlugins(const QList<QPluginLoader*> &loaders)
 {
-    QStringList loadedPlugins;
-    const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
-    if (!pluginOverride.isEmpty()) {
-        akDebug() << "Overriding the search plugins with: " << pluginOverride;
-    }
-
-    const QStringList dirs = XdgBaseDirs::findPluginDirs();
-    Q_FOREACH (const QString &pluginDir, dirs) {
-        QDir dir(pluginDir + QLatin1String("/akonadi"));
-        const QStringList desktopFiles = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files);
-        akDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << desktopFiles;
-
-        Q_FOREACH (const QString &desktopFileName, desktopFiles) {
-            QSettings desktop(pluginDir + QLatin1String("/akonadi/") + desktopFileName, QSettings::IniFormat);
-            desktop.beginGroup(QLatin1String("Desktop Entry"));
-            if (desktop.value(QLatin1String("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
-                continue;
-            }
-
-            const QString libraryName = desktop.value(QLatin1String("X-Akonadi-Library")).toString();
-            if (loadedPlugins.contains(libraryName)) {
-                akDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
-                continue;
-            }
-            // When search plugin override is active, ignore all plugins except for the override
-            if (!pluginOverride.isEmpty()) {
-                if (libraryName != pluginOverride) {
-                    akDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
-                    continue;
-                }
-
-                // When there's no override, only load plugins enabled by default
-            } else if (!desktop.value(QLatin1String("X-Akonadi-LoadByDefault"), true).toBool()) {
-                continue;
-            }
-
-            const QString pluginFile = XdgBaseDirs::findPluginFile(libraryName, QStringList() << pluginDir + QLatin1String("/akonadi"));
-            QPluginLoader loader(pluginFile);
-            if (!loader.load()) {
-                akError() << "Failed to load search plugin" << libraryName << ":" << loader.errorString();
-                continue;
-            }
-
-            AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin *>(loader.instance());
-            if (!plugin) {
-                akError() << libraryName << "is not a valid Akonadi search plugin";
-                continue;
-            }
-
-            akDebug() << "SearchManager: loaded search plugin" << libraryName;
-            mPlugins << plugin;
-            loadedPlugins << libraryName;
+    for (QPluginLoader *loader : loaders) {
+        if (!loader->load()) {
+            akError() << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
+            continue;
         }
+
+        AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin *>(loader->instance());
+        if (!plugin) {
+            akError() << loader->fileName() << "is not a valid Akonadi search plugin";
+            continue;
+        }
+
+        akDebug() << "SearchManager: loaded search plugin" << loader->fileName();
+        mPlugins << plugin;
     }
 }
 
