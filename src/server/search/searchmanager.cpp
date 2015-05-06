@@ -43,6 +43,8 @@
 #include <QDBusConnection>
 #include <QTimer>
 
+#include <memory>
+
 Q_DECLARE_METATYPE(Akonadi::Server::NotificationCollector *)
 
 using namespace Akonadi;
@@ -81,41 +83,41 @@ void SearchManagerThread::loadSearchPlugins()
     const QStringList dirs = XdgBaseDirs::findPluginDirs();
     Q_FOREACH (const QString &pluginDir, dirs) {
         QDir dir(pluginDir + QLatin1String("/akonadi"));
-        const QStringList desktopFiles = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files);
-        akDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << desktopFiles;
+        const QStringList fileNames = dir.entryList(QDir::Files);
+        akDebug() << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << fileNames;
+        Q_FOREACH (const QString &fileName, fileNames) {
+            const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
+            std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
+            const QVariantMap metadata = loader->metaData().value(QLatin1String("MetaData")).toVariant().toMap();
 
-        Q_FOREACH (const QString &desktopFileName, desktopFiles) {
-            QSettings desktop(pluginDir + QLatin1String("/akonadi/") + desktopFileName, QSettings::IniFormat);
-            desktop.beginGroup(QLatin1String("Desktop Entry"));
-            if (desktop.value(QLatin1String("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
+            if (metadata.value(QLatin1String("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
                 continue;
             }
 
-            const QString libraryName = desktop.value(QLatin1String("X-Akonadi-Library")).toString();
+            const QString libraryName = metadata.value(QLatin1String("X-Akonadi-Library")).toString();
             if (loadedPlugins.contains(libraryName)) {
                 akDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
                 continue;
             }
+
             // When search plugin override is active, ignore all plugins except for the override
             if (!pluginOverride.isEmpty()) {
                 if (libraryName != pluginOverride) {
-                    akDebug() << desktopFileName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+                    akDebug() << libraryName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
                     continue;
                 }
 
-                // When there's no override, only load plugins enabled by default
-            } else if (!desktop.value(QLatin1String("X-Akonadi-LoadByDefault"), true).toBool()) {
+            // When there's no override, only load plugins enabled by default
+            } else if (metadata.value(QLatin1String("X-Akonadi-LoadByDefault"), true).toBool() == false) {
                 continue;
             }
 
-            const QString pluginFile = XdgBaseDirs::findPluginFile(libraryName, QStringList() << pluginDir + QLatin1String("/akonadi"));
-            QPluginLoader *loader = new QPluginLoader(pluginFile);
             if (!loader->load()) {
                 akError() << "Failed to load search plugin" << libraryName << ":" << loader->errorString();
                 continue;
             }
 
-            mPluginLoaders << loader;
+            mPluginLoaders << loader.release();
             loadedPlugins << libraryName;
         }
     }
