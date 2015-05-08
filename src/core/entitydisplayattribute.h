@@ -24,6 +24,7 @@
 #include "attribute.h"
 
 #include <QColor>
+#include <QIcon>
 
 namespace Akonadi {
 

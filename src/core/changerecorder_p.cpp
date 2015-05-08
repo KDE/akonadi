@@ -23,6 +23,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
+#include <QtCore/QDataStream>
 
 using namespace Akonadi;
 
