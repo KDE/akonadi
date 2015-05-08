@@ -43,7 +43,7 @@ public:
     void notificationsErased() Q_DECL_OVERRIDE;
 
     void slotNotify(const NotificationMessageV3::List &msgs) Q_DECL_OVERRIDE;
-    virtual bool emitNotification(const Akonadi::NotificationMessageV3& msg);
+    bool emitNotification(const Akonadi::NotificationMessageV3& msg) Q_DECL_OVERRIDE;
 
     QString notificationsFileName() const;
 

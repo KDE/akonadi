@@ -40,7 +40,7 @@ public:
                        EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel);
 
 protected:
-    virtual bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void openDialog();

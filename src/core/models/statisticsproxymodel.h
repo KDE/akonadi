@@ -85,18 +85,18 @@ public:
     bool isExtraColumnsEnabled() const;
 
 
-    virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-    virtual QModelIndex parent(const QModelIndex& child) const;
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-    virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
+    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags ( const QModelIndex & index ) const Q_DECL_OVERRIDE;
+    int columnCount( const QModelIndex & parent = QModelIndex() ) const Q_DECL_OVERRIDE;
 
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const Q_DECL_OVERRIDE;
 
-    virtual void setSourceModel(QAbstractItemModel* sourceModel);
-    virtual void connectNotify(const QMetaMethod & signal);
+    void setSourceModel(QAbstractItemModel* sourceModel) Q_DECL_OVERRIDE;
+    void connectNotify(const QMetaMethod & signal) Q_DECL_OVERRIDE;
 
     QModelIndex mapFromSource(const QModelIndex& sourceIndex) const Q_DECL_OVERRIDE;
     QModelIndex mapToSource(const QModelIndex& sourceIndex) const Q_DECL_OVERRIDE;

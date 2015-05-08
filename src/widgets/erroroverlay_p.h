@@ -53,7 +53,7 @@ public:
     ~ErrorOverlay();
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void reposition();

@@ -96,7 +96,7 @@ public:
      */
     void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
-    virtual void setModel(QAbstractItemModel *model);
+    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     /**

@@ -91,7 +91,7 @@ public:
     /**
      * Starts the fetch operation.
      */
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     /**
      * Returns the index of the item the part was fetched from.

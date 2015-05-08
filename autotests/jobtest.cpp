@@ -34,7 +34,7 @@ class FakeJob : public Job
     explicit FakeJob(QObject* parent = 0) : Job(parent) {};
     void done() { emitResult(); }
   protected:
-    virtual void doStart() { emitWriteFinished(); };
+    void doStart() Q_DECL_OVERRIDE { emitWriteFinished(); };
 };
 
 class JobTest : public QObject
