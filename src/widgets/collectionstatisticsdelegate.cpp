@@ -200,6 +200,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     Q_D(const CollectionStatisticsDelegate);
     PainterStateSaver stateSaver(painter);
 
+    qDebug() << index.column() << index.flags();
     const QColor textColor = index.data(Qt::ForegroundRole).value<QColor>();
     // First, paint the basic, but without the text. We remove the text
     // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
@@ -224,6 +225,8 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
 
     if (option.state & QStyle::State_Selected) {
         painter->setPen(textColor.isValid() ? textColor : option.palette.highlightedText().color());
+    } else {
+        painter->setPen(textColor.isValid() ? textColor : option.palette.text().color());
     }
 
     Collection collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
@@ -300,9 +303,6 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
             QRect unreadRect = textRect;
             folderRect.setRight(textRect.left() + folderWidth);
             unreadRect = QRect(folderRect.right(), folderRect.top(), unreadRect.width(), unreadRect.height());
-            if (textColor.isValid()) {
-                painter->setPen(textColor);
-            }
 
             // Draw folder name and unread count
             painter->drawText(folderRect, Qt::AlignLeft | Qt::AlignVCenter, folderName);
@@ -344,16 +344,10 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
 
     //total size
     if (index.column() == 3 && !expanded) {
-        if (textColor.isValid()) {
-            painter->setPen(textColor);
-        }
         painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter, KIO::convertSize((KIO::filesize_t)totalSize));
         return;
     }
 
-    if (textColor.isValid()) {
-        painter->setPen(textColor);
-    }
     painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter, text);
 }
 
