@@ -454,15 +454,15 @@ QVariant StatisticsProxyModel::headerData( int section, Qt::Orientation orientat
     return QIdentityProxyModel::headerData( section, orientation, role );
 }
 
-Qt::ItemFlags StatisticsProxyModel::flags( const QModelIndex & index ) const
+Qt::ItemFlags StatisticsProxyModel::flags( const QModelIndex & index_ ) const
 {
-    if ( index.column() >= d->sourceColumnCount() ) {
-        return QIdentityProxyModel::flags( index.sibling( index.row(), 0 ) )
+    if ( index_.column() >= d->sourceColumnCount() ) {
+        return QIdentityProxyModel::flags( index(index_.row(), 0, index_.parent() ) )
                 & ( Qt::ItemIsSelectable | Qt::ItemIsDragEnabled // Allowed flags
                     | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled );
     }
 
-    return QIdentityProxyModel::flags( index );
+    return QIdentityProxyModel::flags( index_ );
 }
 
 int StatisticsProxyModel::columnCount( const QModelIndex & /*parent*/ ) const
