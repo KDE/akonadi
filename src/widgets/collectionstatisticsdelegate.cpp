@@ -200,7 +200,6 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     Q_D(const CollectionStatisticsDelegate);
     PainterStateSaver stateSaver(painter);
 
-    qDebug() << index.column() << index.flags();
     const QColor textColor = index.data(Qt::ForegroundRole).value<QColor>();
     // First, paint the basic, but without the text. We remove the text
     // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
