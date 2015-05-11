@@ -78,7 +78,8 @@ class ContactViewer::Private
     void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList(), const QString &addressBookName = QString() )
     {
       static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 100 ) );
-
+      static QPixmap defaultMapPixmap = KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) );
+      static QPixmap defaultSmsPixmap = KIcon( IMProtocols::self()->icon( QString::fromLatin1( "messaging/sms" ) ) ).pixmap( QSize( 16, 16 ) );
       mParent->setWindowTitle( i18n( "Contact %1", mCurrentContact.assembledName() ) );
 
       if ( mCurrentContact.photo().isIntern() ) {
@@ -99,11 +100,11 @@ class ContactViewer::Private
 
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "map_icon" ) ),
-                                         KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) ) );
+                                         defaultMapPixmap );
 
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "sms_icon" ) ),
-                                         KIcon( IMProtocols::self()->icon( QString::fromLatin1( "messaging/sms" ) ) ).pixmap( QSize( 16, 16 ) ) );
+                                         defaultSmsPixmap);
 
 #ifdef HAVE_PRISON
       KConfig config( QLatin1String( "akonadi_contactrc" ) );
