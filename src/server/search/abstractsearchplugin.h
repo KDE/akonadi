@@ -21,7 +21,9 @@
 #define AKONADI_ABSTRACTSEARCHPLUGIN
 
 #include <QtCore/QSet>
+#include <QObject>
 #include <QStringList>
+
 namespace Akonadi {
 
 /**
