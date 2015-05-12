@@ -140,7 +140,7 @@ Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, 
 {
     // root
     if ((scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1) {
-        const ImapInterval i = scope.uidSet().intervals().first();
+        const ImapInterval i = scope.uidSet().intervals().at(0);
         if (!i.size()) {   // ### why do we need this hack for 0, shouldn't that be size() == 1?
             Collection root;
             root.setId(0);
