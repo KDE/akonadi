@@ -243,7 +243,7 @@ template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFet
     if (fetch->collections().isEmpty()) {
         node->entity = Collection();
     } else {
-        node->entity = fetch->collections().first();
+        node->entity = fetch->collections().at(0);
     }
 }
 
@@ -254,7 +254,7 @@ template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractR
     if (fetch->items().isEmpty()) {
         node->entity = Item();
     } else {
-        node->entity = fetch->items().first();
+        node->entity = fetch->items().at(0);
     }
 }
 
@@ -265,7 +265,7 @@ template<> inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResu
     if (fetch->tags().isEmpty()) {
         node->entity = Tag();
     } else {
-        node->entity = fetch->tags().first();
+        node->entity = fetch->tags().at(0);
     }
 }
 

@@ -58,7 +58,7 @@ void TransportResourceBasePrivate::fetchResult(KJob *job)
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
 
-    const Item item = fetchJob->items().first();
+    const Item item = fetchJob->items().at(0);
     q->sendItem(item);
 }
 

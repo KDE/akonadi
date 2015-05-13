@@ -53,7 +53,7 @@ class ItemModifyJobPrivate;
  *
  *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
  *
- *   Akonadi::Item item = fetchJob->items().first();
+ *   Akonadi::Item item = fetchJob->items().at(0);
  *
  *   // Set a custom flag
  *   item.setFlag( "\GotIt" );

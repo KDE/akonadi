@@ -57,7 +57,7 @@ void InvalidateCacheJobPrivate::collectionFetchResult(KJob *job)
     CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetchJob);
     if (fetchJob->collections().size() == 1) {
-        collection = fetchJob->collections().first();
+        collection = fetchJob->collections().at(0);
     }
 
     if (!collection.isValid()) {

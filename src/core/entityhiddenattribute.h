@@ -42,7 +42,7 @@ namespace Akonadi {
  *
  * ...
  * // hide a collection by setting the hidden attribute
- * Collection collection = collectionFetchJob->collections().first();
+ * Collection collection = collectionFetchJob->collections().at(0);
  * collection.attribute<EntityHiddenAttribute>( Entity::AddIfMissing );
  * new CollectionModifyJob( collection, this ); // save back to storage
  *

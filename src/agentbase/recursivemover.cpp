@@ -99,7 +99,7 @@ void RecursiveMover::collectionFetchResult(KJob *job)
 
     CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     if (fetchJob->collections().size() == 1) {
-        m_currentCollection = fetchJob->collections().first();
+        m_currentCollection = fetchJob->collections().at(0);
         m_currentCollection.setParentCollection(m_collections.value(m_currentCollection.parentCollection().id()));
         m_collections.insert(m_currentCollection.id(), m_currentCollection);
     } else {
@@ -142,7 +142,7 @@ void RecursiveMover::itemFetchResult(KJob *job)
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
     if (fetchJob->items().size() == 1) {
         m_currentAction = AddItem;
-        m_agentBase->itemAdded(fetchJob->items().first(), m_currentCollection);
+        m_agentBase->itemAdded(fetchJob->items().at(0), m_currentCollection);
     } else {
         // deleted since we started, skip
         m_currentItem = Item();

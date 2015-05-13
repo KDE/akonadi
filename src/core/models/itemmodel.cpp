@@ -143,7 +143,7 @@ void ItemModel::Private::collectionFetchResult(KJob *job)
     }
 
     Q_ASSERT(fetch->collections().count() == 1);   // we only listed base
-    Collection c = fetch->collections().first();
+    Collection c = fetch->collections().at(0);
     // avoid recursion, if this fails for some reason
     if (!c.contentMimeTypes().isEmpty()) {
         mParent->setCollection(c);

@@ -78,7 +78,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
     CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
     Collection::List chain;
     if (fetch->collections().size() == 1) {
-        Collection currentCollection = fetch->collections().first();
+        Collection currentCollection = fetch->collections().at(0);
         while (currentCollection.isValid()) {
             chain << currentCollection;
             currentCollection = Collection(currentCollection.parentCollection());

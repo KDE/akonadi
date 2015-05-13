@@ -77,7 +77,7 @@ private Q_SLOTS:
         ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
         if (!fetchJob->items().isEmpty()) {
-            mItem = fetchJob->items().first();
+            mItem = fetchJob->items().at(0);
             mParent->itemChanged(mItem);
         }
     }

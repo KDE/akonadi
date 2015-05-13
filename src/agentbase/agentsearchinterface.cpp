@@ -90,7 +90,7 @@ void AgentSearchInterfacePrivate::collectionReceived(KJob *job)
         return;
     }
 
-    const Collection collection = fetchJob->collections().first();
+    const Collection collection = fetchJob->collections().at(0);
     q->search(fetchJob->property("query").toString(),
               collection);
 }

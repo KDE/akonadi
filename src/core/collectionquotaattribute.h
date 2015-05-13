@@ -37,7 +37,7 @@ namespace Akonadi {
  *
  * using namespace Akonadi;
  *
- * const Collection collection = collectionFetchJob->collections().first();
+ * const Collection collection = collectionFetchJob->collections().at(0);
  * if ( collection.hasAttribute<CollectionQuotaAttribute>() ) {
  *   const CollectionQuotaAttribute *attribute = collection.attribute<CollectionQuotaAttribute>();
  *   qDebug() << "current value" << attribute->currentValue();

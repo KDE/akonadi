@@ -199,7 +199,7 @@ void JobPrivate::startNext()
     Q_Q(Job);
 
     if (mStarted && !mCurrentSubJob && q->hasSubjobs()) {
-        Job *job = dynamic_cast<Akonadi::Job *>(q->subjobs().first());
+        Job *job = dynamic_cast<Akonadi::Job *>(q->subjobs().at(0));
         Q_ASSERT(job);
         job->d_ptr->startQueued();
     }

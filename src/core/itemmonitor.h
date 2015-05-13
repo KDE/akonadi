@@ -70,7 +70,7 @@ class ItemFetchScope;
  *
  * ContactLabel *label = new ContactLabel( this );
  *
- * const Akonadi::Item item = fetchJob->items().first();
+ * const Akonadi::Item item = fetchJob->items().at(0);
  * label->setItem( item );
  *
  * @endcode

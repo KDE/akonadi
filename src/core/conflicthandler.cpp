@@ -69,7 +69,7 @@ void ConflictHandler::slotOtherItemFetched(KJob *job)
         return;
     }
 
-    mConflictingItem = fetchJob->items().first();
+    mConflictingItem = fetchJob->items().at(0);
     QMetaObject::invokeMethod(this, "resolve", Qt::QueuedConnection);
 }
 

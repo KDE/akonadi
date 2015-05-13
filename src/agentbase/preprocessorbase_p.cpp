@@ -77,7 +77,7 @@ void PreprocessorBasePrivate::itemFetched(KJob *job)
         return;
     }
 
-    const Item item = fetchJob->items().first();
+    const Item item = fetchJob->items().at(0);
 
     switch (q->processItem(item)) {
     case PreprocessorBase::ProcessingFailed:

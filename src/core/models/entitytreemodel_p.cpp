@@ -1330,7 +1330,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     qCDebug(DebugETM) << "was collection fetch job: collections:" << cJob->collections().size();
     if (!cJob->collections().isEmpty()) {
-        qCDebug(DebugETM) << "first fetched collection:" << cJob->collections().first().name();
+        qCDebug(DebugETM) << "first fetched collection:" << cJob->collections().at(0).name();
     }
 }
 
@@ -1352,7 +1352,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     qCDebug(DebugETM) << "was item fetch job: items:" << iJob->items().size();
     if (!iJob->items().isEmpty()) {
-        qCDebug(DebugETM) << "first item collection:" << iJob->items().first().parentCollection().name();
+        qCDebug(DebugETM) << "first item collection:" << iJob->items().at(0).parentCollection().name();
     }
 
     if (!iJob->count()) {

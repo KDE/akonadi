@@ -70,7 +70,7 @@ class ResourceSelectJobPrivate;
  *   if ( job->error() )
  *     return;
  *
- *   const Item item = job->items().first();
+ *   const Item item = job->items().at(0);
  *
  *   qDebug() << "Remote id" << item.remoteId() << "has akonadi id" << item.id();
  * }

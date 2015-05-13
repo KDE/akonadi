@@ -679,7 +679,7 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
         const CollectionFetchJob *fetchJob = static_cast<const CollectionFetchJob *>(job);
 
         if (!fetchJob->collections().isEmpty()) {
-            CollectionDeleteJob *job = new CollectionDeleteJob(fetchJob->collections().first());
+            CollectionDeleteJob *job = new CollectionDeleteJob(fetchJob->collections().at(0));
             connect(job, SIGNAL(result(KJob*)), q, SLOT(slotCollectionDeletionDone(KJob*)));
         } else {
             // there is no resource collection, so just ignore the request
@@ -938,7 +938,7 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
-    q->retrieveItems(fetchJob->collections().first());
+    q->retrieveItems(fetchJob->collections().at(0));
 }
 
 int ResourceBase::itemSyncBatchSize() const
@@ -979,7 +979,7 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
-    QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().first()));
+    QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().at(0)));
 }
 
 void ResourceBasePrivate::slotSynchronizeTags()
@@ -1025,7 +1025,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
         q->cancelTask(i18n("The requested item no longer exists"));
         return;
     }
-    const Item item = fetch->items().first();
+    const Item item = fetch->items().at(0);
     const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
     if (!q->retrieveItem(item, parts)) {
         q->cancelTask();

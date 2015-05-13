@@ -127,7 +127,7 @@ void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
     }
 
     // If the source collection is virtual, treat copy and move actions differently
-    const Collection sourceCollection = fetch->collections().first();
+    const Collection sourceCollection = fetch->collections().at(0);
     qDebug() << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
     qDebug() << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
     qDebug() << "ACTN:" << mAction;
