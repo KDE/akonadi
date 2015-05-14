@@ -22,7 +22,7 @@
 #include "fakesession.h"
 #include "job.h"
 
-Q_DECLARE_METATYPE( KJob* );
+Q_DECLARE_METATYPE( KJob* )
 Q_DECLARE_METATYPE( Akonadi::Job* )
 
 using namespace Akonadi;

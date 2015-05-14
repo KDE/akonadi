@@ -87,7 +87,7 @@ public:
 
 RemoteId RemoteId::rootRid = RemoteId(QStringList() << QString::fromAscii(ROOTPARENTRID));
 
-Q_DECLARE_METATYPE(RemoteId);
+Q_DECLARE_METATYPE(RemoteId)
 
 
 uint qHash(const RemoteId &rid)
