@@ -170,6 +170,8 @@ int EntityTreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant EntityTreeModel::entityData(const Item &item, int column, int role) const
 {
+    Q_D(const EntityTreeModel);
+
     if (column == 0) {
         switch (role) {
         case Qt::DisplayRole:
@@ -187,7 +189,7 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
         case Qt::DecorationRole:
             if (item.hasAttribute<EntityDisplayAttribute>() &&
                 !item.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
-                return item.attribute<EntityDisplayAttribute>()->icon();
+                return d->iconForName(item.attribute<EntityDisplayAttribute>()->iconName());
             }
             break;
         default:
@@ -232,9 +234,9 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
     case Qt::DecorationRole:
         if (collection.hasAttribute<EntityDisplayAttribute>() &&
             !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
-            return collection.attribute<EntityDisplayAttribute>()->icon();
+            return d->iconForName(collection.attribute<EntityDisplayAttribute>()->iconName());
         }
-        return QIcon::fromTheme(CollectionUtils::defaultIconName(collection));
+        return d->iconForName(CollectionUtils::defaultIconName(collection));
     default:
         break;
     }

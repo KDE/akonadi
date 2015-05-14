@@ -130,6 +130,8 @@ public:
     void changeFetchState(const Collection &parent);
     void agentInstanceRemoved(const Akonadi::AgentInstance &instace);
 
+    QIcon iconForName(const QString &name) const;
+
     QHash<Collection::Id, Collection> m_collections;
     QHash<Entity::Id, Item> m_items;
     QHash<Collection::Id, QList<Node *> > m_childEntities;
@@ -140,6 +142,10 @@ public:
     QVector<Entity::Id> m_pendingCutCollections;
     mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
     mutable QSet<KJob*> m_pendingCollectionFetchJobs;
+
+    // Icon cache to workaround QIcon::fromTheme being very slow (bug #346644)
+    mutable QHash<QString, QIcon> m_iconCache;
+    mutable QString m_iconThemeName;
 
     ChangeRecorder *m_monitor;
     Collection m_rootCollection;

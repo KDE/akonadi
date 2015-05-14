@@ -47,6 +47,7 @@
 #include <akonadi/private/protocol_p.h>
 
 #include <qdebug.h>
+#include <QtGui/QIcon>
 
 QMap<KJob *, QTime> jobTimeTracker;
 
@@ -1947,4 +1948,18 @@ bool EntityTreeModelPrivate::canFetchMore(const QModelIndex &parent) const
 
         return true;
     }
+}
+
+QIcon EntityTreeModelPrivate::iconForName(const QString &name) const
+{
+    if (m_iconThemeName != QIcon::themeName()) {
+        m_iconThemeName = QIcon::themeName();
+        m_iconCache.clear();
+    }
+
+    QIcon &icon = m_iconCache[name];
+    if (icon.isNull()) {
+        icon = QIcon::fromTheme(name);
+    }
+    return icon;
 }

@@ -422,11 +422,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
 
     } else if ( role == Qt::DecorationRole && index.column() == 0 ) {
         const QModelIndex sourceIndex = mapToSource( index );
-        Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
-        if ( collection.isValid() )
-            return QIcon::fromTheme( CollectionUtils::displayIconName( collection ) );
-        else
-            return QVariant();
+        return sourceModel()->data(sourceIndex, Qt::DecorationRole);
     }
 
     if ( index.column() >= sourceColumnCount )
