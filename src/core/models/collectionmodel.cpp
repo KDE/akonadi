@@ -92,11 +92,7 @@ QVariant CollectionModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case Qt::DecorationRole:
         if (index.column() == 0) {
-            if (col.hasAttribute<EntityDisplayAttribute>() &&
-                !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
-                return col.attribute<EntityDisplayAttribute>()->icon();
-            }
-            return QIcon::fromTheme(CollectionUtils::defaultIconName(col));
+            return d->iconForCollection(col);
         }
         break;
     case OldCollectionIdRole: // fall-through

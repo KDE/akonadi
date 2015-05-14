@@ -28,6 +28,7 @@
 #include <QtCore/QList>
 #include <QtCore/QModelIndex>
 #include <QtCore/QStringList>
+#include <QtGui/QIcon>
 
 class KJob;
 
@@ -84,11 +85,18 @@ public:
     void dropResult(KJob *job);
     void collectionsChanged(const Akonadi::Collection::List &cols);
 
+    QIcon iconForCollection(const Collection &collection) const;
+
     QModelIndex indexForId(Collection::Id id, int column = 0) const;
     bool removeRowFromModel(int row, const QModelIndex &parent = QModelIndex());
     bool supportsContentType(const QModelIndex &index, const QStringList &contentTypes);
 
 private:
+    // FIXME: This cache is a workaround for extremly slow QIcon::fromTheme()
+    // caused by bottleneck in FrameworkIntegration. See bug #346644 for details.
+    mutable QHash<QString, QIcon> mIconCache;
+    mutable QString mIconThemeName;
+
     void updateSupportedMimeTypes(Collection col)
     {
         const QStringList l = col.contentMimeTypes();

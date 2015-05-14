@@ -318,6 +318,30 @@ void CollectionModelPrivate::init()
                q, SLOT(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)));
 }
 
+QIcon CollectionModelPrivate::iconForCollection(const Collection &col) const
+{
+    // Reset the cache when icon theme changes
+    if (mIconThemeName != QIcon::themeName()) {
+        mIconThemeName = QIcon::themeName();
+        mIconCache.clear();
+    }
+
+    QString iconName;
+    if (col.hasAttribute<EntityDisplayAttribute>()) {
+        iconName = col.attribute<EntityDisplayAttribute>()->iconName();
+    }
+    if (iconName.isEmpty()) {
+        iconName = CollectionUtils::defaultIconName(col);
+    }
+
+    QIcon &icon = mIconCache[iconName];
+    if (icon.isNull()) {
+        icon = QIcon::fromTheme(iconName);
+    }
+    return icon;
+}
+
+
 void CollectionModelPrivate::startFirstListJob()
 {
     Q_Q(CollectionModel);
