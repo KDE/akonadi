@@ -101,6 +101,7 @@ target_link_libraries(KF5AkonadiWidgets
 PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
+    KF5::KDELibs4Support # for KDialog
 PRIVATE
    KF5::ItemViews
 )

@@ -13,7 +13,12 @@ add_executable(akonadiselftest ${selftest_SRCS})
 
 target_link_libraries(akonadiselftest
     KF5::AkonadiCore
+    KF5::AkonadiPrivate
+    KF5::DBusAddons
+    KF5::I18n
+    KF5::KDELibs4Support # for KFileDialog
     Qt5::Sql
+    Qt5::Widgets
 )
 
 install(TARGETS

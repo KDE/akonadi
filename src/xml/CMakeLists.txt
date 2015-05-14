@@ -28,6 +28,8 @@ add_executable(akonadi2xml akonadi2xml.cpp)
 
 target_link_libraries(akonadi2xml
     KF5::AkonadiXml
+    KF5::I18n
+    Qt5::Widgets # for QApplication
 )
 
 add_library(KF5AkonadiXml ${akonadixml_SRCS})
@@ -44,6 +46,7 @@ PUBLIC
     KF5::AkonadiCore
     Qt5::Xml
 PRIVATE
+    KF5::I18n
     ${LIBXML2_LIBRARIES}
 )
 

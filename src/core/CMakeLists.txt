@@ -287,11 +287,14 @@ kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
 
 target_link_libraries(KF5AkonadiCore
 PUBLIC
+    KF5::CoreAddons # for KJob
     KF5::ItemModels
-    KF5::KIOCore
-    KF5::KDELibs4Support
+    Qt5::Gui # for QColor
+PRIVATE
     KF5::AkonadiPrivate
+    KF5::KIOCore
     KF5::DBusAddons
+    KF5::KDELibs4Support
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES

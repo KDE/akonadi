@@ -24,7 +24,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   add_executable( ${_name} ${_test} ${_additionalsources})
   ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
-                        Qt5::Test Qt5::Gui KF5::KIOCore KF5::AkonadiCore
+                        Qt5::Test Qt5::Gui Qt5::Widgets KF5::KIOCore KF5::AkonadiCore KF5::DBusAddons
                         ${_linklibraries})
 
   # Set the akonaditest path when the macro is used in kdepimlibs
