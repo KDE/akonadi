@@ -254,6 +254,19 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     RELATIVE jobs
 )
 
+# This is a workaround for conflict between our "Exception" fancy header and
+# C++ stdlib's "exception" header which occurs in case-insensitive systems.
+# For that reason we generate std_exception.h file, which contains an absolute
+# path to the stdlib's exception header file, which resolves the ambiguity
+# when including <exception> from within Akonadi.
+include(FindStdlibInclude)
+findStdlibInclude("exception" std_exception_file)
+if (NOT "${std_exception_file}" STREQUAL "")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/std_exception.h.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/std_exception.h
+    )
+endif()
+
 set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
 set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/notificationmessagev3_p.h" )
 qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface)
@@ -315,6 +328,7 @@ install(TARGETS
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/std_exception.h
     ${AkonadiCore_base_HEADERS}
     ${AkonadiCore_models_HEADERS}
     ${AkonadiCore_jobs_HEADERS}

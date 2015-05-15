@@ -4,7 +4,7 @@ project(Akonadi)
 
 # ECM setup
 find_package(ECM 1.7.0 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${ECM_MODULE_PATH} ${CMAKE_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)

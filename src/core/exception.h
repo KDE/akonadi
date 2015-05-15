@@ -20,10 +20,15 @@
 #ifndef AKONADI_EXCEPTION_H
 #define AKONADI_EXCEPTION_H
 
-#include "akonadicore_export.h"
+// The std_exception.h file is generated at build-time and #includes C++ stdlib
+// header "exception" by aboslute path. This is to workaround an include loop on
+// case-insensitive systems, where #include <exception> includes our "Exception"
+// fancy header instead of stdlib's exception, causing an endless loop of
+// includes between "Exception" and "exception.h".
+#include "std_exception.h"
 
+#include "akonadicore_export.h"
 #include <QtCore/QByteArray>
-#include <exception>
 
 class QString;
 
