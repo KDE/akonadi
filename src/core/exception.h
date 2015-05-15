@@ -28,8 +28,8 @@
 #include "std_exception.h"
 
 #include "akonadicore_export.h"
-#include <QtCore/QByteArray>
 
+class QByteArray;
 class QString;
 
 namespace Akonadi {
