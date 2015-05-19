@@ -34,7 +34,6 @@
 #include "handler/colmove.h"
 #include "handler/create.h"
 #include "handler/delete.h"
-#include "handler/expunge.h"
 #include "handler/fetch.h"
 #include "handler/link.h"
 #include "handler/list.h"
@@ -142,9 +141,6 @@ Handler *Handler::findHandlerForCommandAuthenticated(const QByteArray &_command,
     }
     if (command == AKONADI_CMD_ITEMFETCH) {
         return new Fetch(scope);
-    }
-    if (command == AKONADI_CMD_EXPUNGE) {   //TODO: remove EXPUNGE support in Akonadi 2.0
-        return new Expunge();
     }
     if (command == AKONADI_CMD_ITEMMODIFY) {
         return new Store(scope);

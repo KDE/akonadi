@@ -47,7 +47,6 @@ private:
         MAKE_CMD_ROW(SEARCH_STORE, SearchPersistent)
         MAKE_CMD_ROW(SEARCH, Search)
         MAKE_CMD_ROW(FETCH, Fetch)
-        MAKE_CMD_ROW(EXPUNGE, Expunge)
         MAKE_CMD_ROW(STORE, Store)
         MAKE_CMD_ROW(STATUS, Status)
         MAKE_CMD_ROW(DELETE, Delete)
