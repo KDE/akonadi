@@ -52,7 +52,6 @@ set(libakonadiserver_SRCS
     response.cpp
     collectionreferencemanager.cpp
     handler/akappend.cpp
-    handler/append.cpp
     handler/copy.cpp
     handler/colcopy.cpp
     handler/colmove.cpp

@@ -28,7 +28,6 @@
 #include "response.h"
 #include "handler/scope.h"
 #include "handler/akappend.h"
-#include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/copy.h"
 #include "handler/colcopy.h"
@@ -120,9 +119,6 @@ Handler *Handler::findHandlerForCommandAuthenticated(const QByteArray &_command,
     }
 
     // allowed commands are listed below ;-).
-    if (command == AKONADI_CMD_APPEND) {
-        return new Append();
-    }
     if (command == AKONADI_CMD_COLLECTIONCREATE) {
         return new Create(scope);
     }

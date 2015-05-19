@@ -40,7 +40,6 @@ private:
 
     void addAuthCommands()
     {
-        MAKE_CMD_ROW(APPEND, Append)
         MAKE_CMD_ROW(CREATE, Create)
         MAKE_CMD_ROW(LIST, List)
         MAKE_CMD_ROW(LSUB, List)

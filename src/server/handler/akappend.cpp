@@ -24,7 +24,6 @@
 
 #include "imapstreamparser.h"
 
-#include "append.h"
 #include "response.h"
 #include "handlerhelper.h"
 
