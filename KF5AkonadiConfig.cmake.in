@@ -15,4 +15,4 @@ include("${CMAKE_CURRENT_LIST_DIR}/KF5AkonadiTargets.cmake")
 include(${CMAKE_CURRENT_LIST_DIR}/KF5AkonadiMacros.cmake)
 
 # The directory where akonadi-xml.xsd and kcfg2dbus.xsl are installed
-set(KF5Akonadi_DATA_DIR "@KDE_INSTALL_DATADIR_KF5@/akonadi")
+set(KF5Akonadi_DATA_DIR "@KF5Akonadi_DATA_DIR@")
