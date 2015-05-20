@@ -21,7 +21,7 @@ set(KF5_VERSION "5.7.0")
 set(KDEPIMLIBS_VERSION "4.82.0")
 set(QT_REQUIRED_VERSION "5.2.0")
 
-# Remove it when we split it 
+# Remove it when we split it
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
    option(KDEPIMLIBS_RUN_ISOLATED_TESTS "Run the isolated tests." FALSE)
 endif()
@@ -33,6 +33,14 @@ ecm_setup_version(${KDEPIMLIBS_VERSION}
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
     SOVERSION 5
 )
+
+# Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
+# otherwise build fails either on OSX CI, or for normal users
+if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF5}")
+    set(KF5Akonadi_DATA_DIR "${KDE_INSTALL_DATADIR_KF5}/akonadi")
+else()
+    set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF5}/akonadi")
+endif()
 
 ########### Find packages ###########
 find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
