@@ -47,7 +47,6 @@
 #include "handler/searchpersistent.h"
 #include "handler/searchresult.h"
 #include "handler/select.h"
-#include "handler/subscribe.h"
 #include "handler/status.h"
 #include "handler/store.h"
 #include "handler/transaction.h"
@@ -161,12 +160,6 @@ Handler *Handler::findHandlerForCommandAuthenticated(const QByteArray &_command,
     }
     if (command == AKONADI_CMD_ITEMCREATE) {
         return new AkAppend();
-    }
-    if (command == AKONADI_CMD_SUBSCRIBE) {
-        return new Subscribe(true);
-    }
-    if (command == AKONADI_CMD_UNSUBSCRIBE) {
-        return new Subscribe(false);
     }
     if (command == AKONADI_CMD_ITEMCOPY) {
         return new Copy();

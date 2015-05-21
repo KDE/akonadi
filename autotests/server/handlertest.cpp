@@ -55,8 +55,6 @@ private:
         MAKE_CMD_ROW(ROLLBACK, TransactionHandler)
         MAKE_CMD_ROW(COMMIT, TransactionHandler)
         MAKE_CMD_ROW(X-AKAPPEND, AkAppend)
-        MAKE_CMD_ROW(SUBSCRIBE, Subscribe)
-        MAKE_CMD_ROW(UNSUBSCRIBE, Subscribe)
         MAKE_CMD_ROW(COPY, Copy)
         MAKE_CMD_ROW(COLCOPY, ColCopy)
         MAKE_CMD_ROW(LINK, Link)

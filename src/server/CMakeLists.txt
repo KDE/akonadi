@@ -78,7 +78,6 @@ set(libakonadiserver_SRCS
     handler/searchpersistent.cpp
     handler/searchresult.cpp
     handler/select.cpp
-    handler/subscribe.cpp
     handler/status.cpp
     handler/store.cpp
     handler/tagappend.cpp
