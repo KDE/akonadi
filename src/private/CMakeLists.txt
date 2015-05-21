@@ -4,6 +4,8 @@ set(akonadiprivate_SRCS
     notificationmessage.cpp
     notificationmessagev2.cpp
     notificationmessagev3.cpp
+    protocol.cpp
+    scope.cpp
     xdgbasedirs.cpp
 )
 
