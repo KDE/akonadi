@@ -30,13 +30,7 @@ class RelationRemove : public Handler
 {
     Q_OBJECT
 public:
-    RelationRemove(Scope::SelectionScope scope);
-    ~RelationRemove();
-
-    virtual bool parseStream();
-
-private:
-    Scope mScope;
+    bool parseStream();
 };
 
 } // namespace Server

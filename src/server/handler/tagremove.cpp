@@ -23,37 +23,35 @@
 #include "storage/queryhelper.h"
 #include "storage/datastore.h"
 
+#include <private/protocol_p.h>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagRemove::TagRemove(Scope::SelectionScope scope)
-    : Handler()
-    , mScope(scope)
-{
-}
-
-TagRemove::~TagRemove()
-{
-}
-
 bool TagRemove::parseStream()
 {
-    if (mScope.scope() != Scope::Uid) {
-        throw HandlerException("Only UID-based TAGREMOVE is supported");
-    }
+    Protocol::DeleteTagCommand cmd;
+    mInStream >> cmd;
 
-    mScope.parseScope(m_streamParser);
+    if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
+        return failureResponse<Protocol::DeleteTagResponse>(
+            QStringLiteral("Only UID-based TAGREMOVE is supported"));
+    }
 
     SelectQueryBuilder<Tag> tagQuery;
-    QueryHelper::setToQuery(mScope.uidSet(), Tag::idFullColumnName(), tagQuery);
+    QueryHelper::setToQuery(cmd.scope(), Tag::idFullColumnName(), tagQuery);
     if (!tagQuery.exec()) {
-        throw HandlerException("Failed to obtain tags");
+        return failureResponse<Protocol::DeleteTagResponse>(
+            QStringLiteral("Failed to obtain tags"));
     }
+
     const Tag::List tags = tagQuery.result();
 
     if (!DataStore::self()->removeTags(tags)) {
-        throw HandlerException( "Failed to remove tags" );
+        return failureResponse<Protocol::DeleteTagResponse>(
+            QStringLiteral("Failed to remove tags"));
     }
 
-    return successResponse("TAGREMOVE complete");
+    mOutStream << Protocol::DeleteTagResponse();
+    return true;
 }

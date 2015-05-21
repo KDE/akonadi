@@ -32,26 +32,15 @@ namespace Server {
   @ingroup akonadi_server_handler
 
   Handler for the search_result command
-
-  @verbatim
-  tag " " scope-selector " SEARCH_RESULT " searchId " " result
-  scope-selector = ["UID" / "RID"]
-  result = [scope / "DONE"]
-  @endverbatim
 */
 class SearchResult : public Handler
 {
     Q_OBJECT
 public:
-    SearchResult(Scope::SelectionScope scope);
-    ~SearchResult();
-
     bool parseStream();
 
 private:
-    void fail(const QByteArray &searchId, const char *error);
-
-    Scope mScope;
+    bool fail(const QByteArray &searchId, const QString &error);
 };
 
 } // namespace Server

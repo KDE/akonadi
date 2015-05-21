@@ -36,17 +36,7 @@ class TransactionHandler : public Handler
     Q_ENUMS(Mode)
 
 public:
-    enum Mode {
-        Begin,
-        Commit,
-        Rollback
-    };
-
-    TransactionHandler(Mode mode);
     bool parseStream();
-
-private:
-    Mode mMode;
 };
 
 } // namespace Server

@@ -32,13 +32,7 @@ class RelationStore : public Handler
     Q_OBJECT
 
 public:
-    RelationStore(Scope::SelectionScope scope);
-    ~RelationStore();
-
     bool parseStream();
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

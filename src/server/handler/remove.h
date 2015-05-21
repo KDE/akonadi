@@ -49,11 +49,7 @@ class  Remove : public Handler
 {
     Q_OBJECT
 public:
-    Remove(Scope::SelectionScope scope);
     bool parseStream();
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

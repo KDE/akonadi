@@ -30,11 +30,6 @@ namespace Server {
 
   Handler for the resource selection command.
 
-  <h4>Syntax</h4>
-  @verbatim
-  <tag> RESSELECT <RESOURCEIDENTIFIER>
-  @endverbatim
-
   <h4>Semantics</h4>
   Limits the scope of remote id based operations. Remote ids of collections are only guaranteed
   to be unique per resource, so this command should be issued before running any RID based
@@ -44,7 +39,6 @@ class  ResourceSelect : public Handler
 {
     Q_OBJECT
 public:
-    ResourceSelect();
     bool parseStream();
 };
 

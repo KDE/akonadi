@@ -318,96 +318,98 @@ QDataStream &operator>>(QDataStream &stream, LinkItemsCommand &command)
 
 QDataStream &operator<<(QDataStream &stream, const ModifyItemsCommand &command)
 {
-    return stream << command.mScope
-                  << command.mModifiedParts
-                  << command.mUndirty
-                  << command.mInvalidate
-                  << command.mNoResponse
-                  << command.mNoNotify;
+    stream << command.mScope
+           << command.mModifiedParts
+           << command.mUndirty
+           << command.mInvalidate
+           << command.mNoResponse
+           << command.mNoNotify;
 
     if (command.mModifiedParts & ModifyItemsCommand::Flags) {
-        return stream << command.mFlags;
+        stream << command.mFlags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::AddedFlags) {
-        return stream << command.mAddedFlags;
+        stream << command.mAddedFlags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemovedFlags) {
-        return stream << command.mRemovedFlags;
+        stream << command.mRemovedFlags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::Tags) {
-        return stream << command.mTags;
+        stream << command.mTags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::AddedTags) {
-        return stream << command.mAddedTags;
+        stream << command.mAddedTags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemovedTags) {
-        return stream << command.mRemovedTags;
+        stream << command.mRemovedTags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemoteID) {
-        return stream << command.mRemoteId;
+        stream << command.mRemoteId;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemoteRevision) {
-        return stream << command.mRemoteRev;
+        stream << command.mRemoteRev;
     }
     if (command.mModifiedParts & ModifyItemsCommand::GID) {
-        return stream << command.mGid;
+        stream << command.mGid;
     }
     if (command.mModifiedParts & ModifyItemsCommand::Size) {
-        return stream << command.mSize;
+        stream << command.mSize;
     }
     if (command.mModifiedParts & ModifyItemsCommand::Parts) {
-        return stream << command.mParts;
+        stream << command.mParts;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemovedParts) {
-        return stream << command.mRemovedParts;
+        stream << command.mRemovedParts;
     }
+    return stream;
 }
 
 QDataStream &operator>>(QDataStream &stream, ModifyItemsCommand &command)
 {
-    return stream >> command.mScope
-                  >> command.mModifiedParts
-                  >> command.mUndirty
-                  >> command.mInvalidate
-                  >> command.mNoResponse
-                  >> command.mNoNotify;
+    stream >> command.mScope
+           >> command.mModifiedParts
+           >> command.mUndirty
+           >> command.mInvalidate
+           >> command.mNoResponse
+           >> command.mNoNotify;
 
     if (command.mModifiedParts & ModifyItemsCommand::Flags) {
-        return stream >> command.mFlags;
+        stream >> command.mFlags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::AddedFlags) {
-        return stream >> command.mAddedFlags;
+        stream >> command.mAddedFlags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemovedFlags) {
-        return stream >> command.mRemovedFlags;
+        stream >> command.mRemovedFlags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::Tags) {
-        return stream >> command.mTags;
+        stream >> command.mTags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::AddedTags) {
-        return stream >> command.mAddedTags;
+        stream >> command.mAddedTags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemovedTags) {
-        return stream >> command.mRemovedTags;
+        stream >> command.mRemovedTags;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemoteID) {
-        return stream >> command.mRemoteId;
+        stream >> command.mRemoteId;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemoteRevision) {
-        return stream >> command.mRemoteRev;
+        stream >> command.mRemoteRev;
     }
     if (command.mModifiedParts & ModifyItemsCommand::GID) {
-        return stream >> command.mGid;
+        stream >> command.mGid;
     }
     if (command.mModifiedParts & ModifyItemsCommand::Size) {
-        return stream >> command.mSize;
+        stream >> command.mSize;
     }
     if (command.mModifiedParts & ModifyItemsCommand::Parts) {
-        return stream >> command.mParts;
+        stream >> command.mParts;
     }
     if (command.mModifiedParts & ModifyItemsCommand::RemovedParts) {
-        return stream >> command.mRemovedParts;
+        stream >> command.mRemovedParts;
     }
+    return stream;
 }
 
 
@@ -559,94 +561,96 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionsResponse &command)
 
 QDataStream &operator<<(QDataStream &stream, const ModifyCollectionCommand &command)
 {
-    return stream << command.mScope
-                  << command.mModifiedParts;
+    stream << command.mScope
+           << command.mModifiedParts;
 
     if (command.mModifiedParts & ModifyCollectionCommand::Name) {
-        return stream << command.mName;
+        stream << command.mName;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::RemoteID) {
-        return stream << command.mRemoteId;
+        stream << command.mRemoteId;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::RemoteRevision) {
-        return stream << command.mRemoteRev;
+        stream << command.mRemoteRev;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::ParentID) {
-        return stream << command.mParentId;
+        stream << command.mParentId;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::MimeTypes) {
-        return stream << command.mMimeTypes;
+        stream << command.mMimeTypes;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::CachePolicy) {
-        return stream << command.mCachePolicy;
+        stream << command.mCachePolicy;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::PersistentSearch) {
-        return stream << command.mPersistentSearchQuery
-                      << command.mPersistentSearchCols
-                      << command.mPersistentSearchRemote
-                      << command.mPersistentSearchRecursive;
+        stream << command.mPersistentSearchQuery
+               << command.mPersistentSearchCols
+               << command.mPersistentSearchRemote
+               << command.mPersistentSearchRecursive;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::RemovedAttributes) {
-        return stream << command.mRemovedAttributes;
+        stream << command.mRemovedAttributes;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::Attributes) {
-        return stream << command.mAttributes;
+        stream << command.mAttributes;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::ListPreferences) {
-        stream         << command.mEnabled
-                       << command.mSync
-                       << command.mDisplay
-                       << command.mIndex;
+        stream << command.mEnabled
+               << command.mSync
+               << command.mDisplay
+               << command.mIndex;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::Referenced) {
-        return stream << command.mReferenced;
+        stream << command.mReferenced;
     }
+    return stream;
 }
 
 QDataStream &operator>>(QDataStream &stream, ModifyCollectionCommand &command)
 {
-    return stream >> command.mScope
-                  >> command.mModifiedParts;
+    stream >> command.mScope
+           >> command.mModifiedParts;
 
     if (command.mModifiedParts & ModifyCollectionCommand::Name) {
-        return stream >> command.mName;
+        stream >> command.mName;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::RemoteID) {
-        return stream >> command.mRemoteId;
+        stream >> command.mRemoteId;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::RemoteRevision) {
-        return stream >> command.mRemoteRev;
+        stream >> command.mRemoteRev;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::ParentID) {
-        return stream >> command.mParentId;
+        stream >> command.mParentId;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::MimeTypes) {
-        return stream >> command.mMimeTypes;
+        stream >> command.mMimeTypes;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::CachePolicy) {
-        return stream >> command.mCachePolicy;
+        stream >> command.mCachePolicy;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::PersistentSearch) {
-        return stream >> command.mPersistentSearchQuery
-                      >> command.mPersistentSearchCols
-                      >> command.mPersistentSearchRemote
-                      >> command.mPersistentSearchRecursive;
+        stream >> command.mPersistentSearchQuery
+               >> command.mPersistentSearchCols
+               >> command.mPersistentSearchRemote
+               >> command.mPersistentSearchRecursive;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::RemovedAttributes) {
-        return stream >> command.mRemovedAttributes;
+        stream >> command.mRemovedAttributes;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::Attributes) {
-        return stream >> command.mAttributes;
+        stream >> command.mAttributes;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::ListPreferences) {
-        stream         >> command.mEnabled
-                       >> command.mSync
-                       >> command.mDisplay
-                       >> command.mIndex;
+        stream >> command.mEnabled
+               >> command.mSync
+               >> command.mDisplay
+               >> command.mIndex;
     }
     if (command.mModifiedParts & ModifyCollectionCommand::Referenced) {
-        return stream >> command.mReferenced;
+        stream >> command.mReferenced;
     }
+    return stream;
 }
 
 
@@ -724,12 +728,16 @@ QDataStream &operator>>(QDataStream &stream, SearchCommand &command)
 
 QDataStream &operator<<(QDataStream &stream, const SearchResultCommand &command)
 {
-    return stream << command.mResult;
+    return stream << command.mSearchId
+                  << command.mCollectionId
+                  << command.mResult;
 }
 
 QDataStream &operator>>(QDataStream &stream, SearchResultCommand &command)
 {
-    return stream >> command.mResult;
+    return stream >> command.mSearchId
+                  >> command.mCollectionId
+                  >> command.mResult;
 }
 
 
@@ -820,22 +828,46 @@ QDataStream &operator>>(QDataStream &stream, FetchTagsResponse &command)
 
 QDataStream &operator<<(QDataStream &stream, const ModifyTagCommand &command)
 {
-    return stream << command.mTagId
-                  << command.mParentId
-                  << command.mType
-                  << command.mRemoteId
-                  << command.mRemovedAttributes
-                  << command.mAttributes;
+    stream << command.mTagId
+           << command.mModifiedParts;
+    if (command.mModifiedParts & ModifyTagCommand::ParentId) {
+        stream << command.mParentId;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::Type) {
+        stream << command.mType;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::RemoteId) {
+        stream << command.mRemoteId;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::RemovedAttributes) {
+        stream << command.mRemovedAttributes;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::Attributes) {
+        stream << command.mAttributes;
+    }
+    return stream;
 }
 
 QDataStream &operator>>(QDataStream &stream, ModifyTagCommand &command)
 {
-    return stream >> command.mTagId
-                  >> command.mParentId
-                  >> command.mType
-                  >> command.mRemoteId
-                  >> command.mRemovedAttributes
-                  >> command.mAttributes;
+    stream >> command.mTagId
+           >> command.mModifiedParts;
+    if (command.mModifiedParts & ModifyTagCommand::ParentId) {
+        stream >> command.mParentId;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::Type) {
+        stream >> command.mType;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::RemoteId) {
+        stream >> command.mRemoteId;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::RemovedAttributes) {
+        stream >> command.mRemovedAttributes;
+    }
+    if (command.mModifiedParts & ModifyTagCommand::Attributes) {
+        stream >> command.mAttributes;
+    }
+    return stream;
 }
 
 
@@ -843,6 +875,7 @@ QDataStream &operator<<(QDataStream &stream, const FetchRelationsCommand &comman
 {
     return stream << command.mLeft
                   << command.mRight
+                  << command.mSide
                   << command.mType
                   << command.mResource;
 }
@@ -851,6 +884,7 @@ QDataStream &operator>>(QDataStream &stream, FetchRelationsCommand &command)
 {
     return stream >> command.mLeft
                   >> command.mRight
+                  >> command.mSide
                   >> command.mType
                   >> command.mResource;
 }

@@ -30,13 +30,7 @@ class TagRemove : public Handler
 {
     Q_OBJECT
 public:
-    TagRemove(Scope::SelectionScope scope);
-    ~TagRemove();
-
-    virtual bool parseStream();
-
-private:
-    Scope mScope;
+    bool parseStream();
 };
 
 } // namespace Server

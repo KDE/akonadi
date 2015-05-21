@@ -33,21 +33,12 @@ namespace Server {
   @ingroup akonadi_server_handler
 
   Handler for the search commands.
-
-  A search has the following forms:
-  @verbatim
-  <tag> SEARCH [MIMETYPE (mimetype-list)] [COLLECTIONS (collections-list) [RECURSIVE]] QUERY <SPARQL-query> <fetch scope>
-  @endverbatim
 */
 class Search : public Handler
 {
     Q_OBJECT
 
 public:
-    Search();
-
-    ~Search();
-
     bool parseStream();
 
 private Q_SLOTS:

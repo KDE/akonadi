@@ -29,69 +29,39 @@
 
 #include <private/protocol_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-TagAppend::TagAppend()
-    : Handler()
-{
-}
-
-TagAppend::~TagAppend()
-{
-}
 
 bool TagAppend::parseStream()
 {
-    m_streamParser->beginList();
+    Protocol::CreateTagCommand cmd;
+    mInStream >> cmd;
 
-    typedef QPair<QByteArray, QByteArray> AttributePair;
-    QList<AttributePair> attributes;
-    QString remoteId;
-    bool merge = false;
-    QString gid;
-    QByteArray type;
-    qint64 parentId = -1;
-
-    while (!m_streamParser->atListEnd()) {
-        const QByteArray param = m_streamParser->readString();
-
-        if (param == AKONADI_PARAM_GID) {
-            gid = QString::fromLatin1(m_streamParser->readString());
-        } else if (param == AKONADI_PARAM_PARENT) {
-            parentId = m_streamParser->readNumber();
-        } else if (param == AKONADI_PARAM_REMOTEID) {
-            if (!connection()->context()->resource().isValid()) {
-                throw HandlerException("Only resource can create tag with remote ID");
-            }
-            remoteId = QString::fromLatin1(m_streamParser->readString());
-        } else if (param == AKONADI_PARAM_MERGE) {
-            merge = true;
-        } else if (param == AKONADI_PARAM_MIMETYPE) {
-            type = m_streamParser->readString();
-        } else {
-            attributes << qMakePair(param, m_streamParser->readString());
-        }
+    if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
+        return failureResponse<Protocol::CreateTagResponse>(
+            QStringLiteral("Only resources can create tags with remote ID");
     }
 
     TagType tagType;
-    if (!type.isEmpty()) {
-        tagType = TagType::retrieveByName(QString::fromLatin1(type));
+    if (!cmd.type().isEmpty()) {
+        tagType = TagType::retrieveByName(cmd.type());
         if (!tagType.isValid()) {
-            TagType t(QString::fromLatin1(type));
+            TagType t(cmd.type());
             if (!t.insert()) {
-                return failureResponse(QByteArray("Unable to create tagtype '") + type + QByteArray("'."));
+                return failureResponse<Protocol::CreateTagResponse>(
+                    QStringLiteral("Unable to create tagtype '") % cmd.type() % QStringLiteral("'"));
             }
             tagType = t;
         }
     }
 
     qint64 tagId = -1;
-    if (merge) {
+    if (cmd.merge()) {
         QueryBuilder qb(Tag::tableName());
         qb.addColumn(Tag::idColumn());
-        qb.addValueCondition(Tag::gidColumn(), Query::Equals, gid);
+        qb.addValueCondition(Tag::gidColumn(), Query::Equals, cmd.gid());
         if (!qb.exec()) {
-            throw HandlerException("Unable to list tags");
+            return failureResponse<Protocol::CreateTagResponse>(QStringLiteral("Unable to list tags"));
         }
         if (qb.query().next()) {
             tagId = qb.query().value(0).toLongLong();
@@ -99,38 +69,41 @@ bool TagAppend::parseStream()
     }
     if (tagId < 0) {
         Tag insertedTag;
-        insertedTag.setGid(gid);
-        if (parentId >= 0) {
-            insertedTag.setParentId(parentId);
+        insertedTag.setGid(cmd.gid());
+        if (cmd.parentId() >= 0) {
+            insertedTag.setParentId(cmd.parentId());
         }
         if (tagType.isValid()) {
             insertedTag.setTypeId(tagType.id());
         }
         if (!insertedTag.insert(&tagId)) {
-            throw HandlerException("Failed to store tag");
+            return failureResponse<Protocol::CreateTagResponse>(
+                QStringLiteral("Failed to store tag"));
         }
 
-        Q_FOREACH (const AttributePair &pair, attributes) {
+        for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
             TagAttribute attribute;
             attribute.setTagId(tagId);
-            attribute.setType(pair.first);
-            attribute.setValue(pair.second);
+            attribute.setType(attr.first);
+            attribute.setValue(attr.second);
             if (!attribute.insert()) {
-                throw HandlerException("Failed to store tag attribute");
+                return failureResponse<Protocol::CreateTagResponse>(
+                    QStringLiteral("Failed to store tag attribute"));
             }
         }
 
         DataStore::self()->notificationCollector()->tagAdded(insertedTag);
     }
 
-    if (!remoteId.isEmpty()) {
+    if (!cmd.remoteId().isEmpty()) {
         const qint64 resourceId = connection()->context()->resource().id();
 
         CountQueryBuilder qb(TagRemoteIdResourceRelation::tableName());
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId);
         qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId);
         if (!qb.exec()) {
-            throw HandlerException("Failed to query for existing TagRemoteIdResourceRelation entries");
+            return failureResponse<Protocol::CreateTagResponse>(
+                QStringLiteral("Failed to query for existing TagRemoteIdResourceRelation entries"));
         }
         const bool exists = (qb.result() > 0);
 
@@ -141,20 +114,22 @@ bool TagAppend::parseStream()
             QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Update);
             qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId);
             qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId);
-            qb.setColumnValue(TagRemoteIdResourceRelation::remoteIdColumn(), remoteId);
+            qb.setColumnValue(TagRemoteIdResourceRelation::remoteIdColumn(), cmd.remoteId());
             ret = qb.exec();
         } else {
             TagRemoteIdResourceRelation rel;
             rel.setTagId(tagId);
             rel.setResourceId(resourceId);
-            rel.setRemoteId(remoteId);
+            rel.setRemoteId(cmd.remoteId());
             ret = rel.insert();
         }
         if (!ret) {
-            throw HandlerException("Failed to store tag remote ID");
+            return failureResponse<Protocol::CreateTagResponse>(
+                QStringLiteral("Failed to store tag remote ID"));
         }
     }
 
+    // FIXME BIN
     ImapSet set;
     set.add(QVector<qint64>() << tagId);
     TagFetchHelper helper(connection(), set);
@@ -165,10 +140,6 @@ bool TagAppend::parseStream()
         return false;
     }
 
-    Response response;
-    response.setTag(tag());
-    response.setSuccess();
-    response.setString("Append completed");
-    Q_EMIT responseAvailable(response);
+    mOutStream << Protocol::CreateTagResponse();
     return true;
 }

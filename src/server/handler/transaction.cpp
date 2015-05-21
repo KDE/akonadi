@@ -23,43 +23,46 @@
 #include "response.h"
 #include "imapstreamparser.h"
 
-#include <QMetaEnum>
+#include <private/protocol_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-TransactionHandler::TransactionHandler(Mode mode)
-    : mMode(mode)
-{
-}
 
 bool TransactionHandler::parseStream()
 {
+    Protocol::TransactionCommand cmd;
+    mInStream >> cmd;
+
     DataStore *store = connection()->storageBackend();
 
-    if (mMode == Begin) {
+    switch (cmd.mode()) {
+    case Protocol::TransactionCommand::Begin:
         if (!store->beginTransaction()) {
-            return failureResponse("Unable to begin transaction.");
+            return failureResponse<Protocol::TransactionResponse>(
+                QStringLiteral("Unable to begin transaction."));
         }
-    }
-
-    if (mMode == Rollback) {
+        break;
+    case Protocol::TransactionCommand::Rollback:
         if (!store->inTransaction()) {
-            return failureResponse("There is no transaction in progress.");
+            return failureResponse<Protocol::TransactionResponse>(
+                QStringLiteral("There is no transaction in progress."));
         }
         if (!store->rollbackTransaction()) {
-            return failureResponse("Unable to roll back transaction.");
+            return failureResponse<Protocol::TransactionResponse>(
+                QStringLiteral("Unable to roll back transaction."));
         }
-    }
-
-    if (mMode == Commit) {
+        break;
+    case Protocol::TransactionCommand::Commit:
         if (!store->inTransaction()) {
-            return failureResponse("There is no transaction in progress.");
+            return failureResponse<Protocol::TransactionResponse>(
+                QStringLiteral("There is no transaction in progress."));
         }
         if (!store->commitTransaction()) {
-            return failureResponse("Unable to commit transaction.");
+            return failureResponse<Protocol::TransactionResponse>(
+                QStringLiteral("Unable to commit transaction."));
         }
     }
 
-    const QMetaEnum me = metaObject()->enumerator(metaObject()->indexOfEnumerator("Mode"));
-    return successResponse(me.valueToKey(mMode) + QByteArray(" completed"));
+    mOutStream << Protocol::TransactionResponse();
+    return true;
 }

@@ -31,105 +31,61 @@
 
 #include <private/protocol_p.h>
 
-#include <QtCore/QStringList>
-
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-Search::Search()
-    : Handler()
-{
-}
-
-Search::~Search()
-{
-}
 
 bool Search::parseStream()
 {
-    QStringList mimeTypes;
-    QVector<qint64> collectionIds;
-    bool recursive = false, remote = false;
-    QString queryString;
+    Protocol::SearchCommand cmd;
+    mInStream >> cmd;
 
-    // Backward compatibility
-    if (!connection()->capabilities().serverSideSearch()) {
-        throw HandlerException("Akonadi has been built without Nepomuk support!");
-    } else {
-        while (m_streamParser->hasString()) {
-            const QByteArray param = m_streamParser->readString();
-            if (param == AKONADI_PARAM_MIMETYPE) {
-                const QList<QByteArray> mt = m_streamParser->readParenthesizedList();
-                mimeTypes.reserve(mt.size());
-                Q_FOREACH (const QByteArray &ba, mt) {
-                    mimeTypes.append(QString::fromLatin1(ba));
-                }
-            } else if (param == AKONADI_PARAM_COLLECTIONS) {
-                QList<QByteArray> list = m_streamParser->readParenthesizedList();
-                Q_FOREACH (const QByteArray &col, list) {
-                    collectionIds << col.toLongLong();
-                }
-            } else if (param == AKONADI_PARAM_RECURSIVE) {
-                recursive = true;
-            } else if (param == AKONADI_PARAM_REMOTE) {
-                remote = true;
-            } else if (param == AKONADI_PARAM_QUERY) {
-                queryString = m_streamParser->readUtf8String();
-                // TODO: This is an ugly hack, but we assume QUERY is the last parameter,
-                // followed only by fetch scope, which we parse separately below
-                break;
-            } else {
-                return failureResponse("Invalid parameter");
-            }
-        }
-
-        if (queryString.isEmpty()) {
-            return failureResponse("No query specified");
-        }
-
-        QVector<qint64> collections;
-        if (collectionIds.isEmpty()) {
-            collectionIds << 0;
-            recursive = true;
-        }
-
-        if (recursive) {
-            collections << SearchHelper::matchSubcollectionsByMimeType(collectionIds, mimeTypes);
-        } else {
-            collections = collectionIds;
-        }
-
-        akDebug() << "SEARCH:";
-        akDebug() << "\tQuery:" << queryString;
-        akDebug() << "\tMimeTypes:" << mimeTypes;
-        akDebug() << "\tCollections:" << collections;
-        akDebug() << "\tRemote:" << remote;
-        akDebug() << "\tRecursive" << recursive;
-
-        if (collections.isEmpty()) {
-            m_streamParser->readUntilCommandEnd();
-            return successResponse("Search done");
-        }
-
-        // Read the fetch scope
-        mFetchScope = FetchScope(m_streamParser);
-        // Read any newlines
-        m_streamParser->readUntilCommandEnd();
-
-        SearchRequest request(connection()->sessionId());
-        request.setCollections(collections);
-        request.setMimeTypes(mimeTypes);
-        request.setQuery(queryString);
-        request.setRemoteSearch(remote);
-        connect(&request, SIGNAL(resultsAvailable(QSet<qint64>)),
-                this, SLOT(slotResultsAvailable(QSet<qint64>)));
-        request.exec();
-
+    if (cmd.query().isEmpty()) {
+        return failureResponse<Protocol::SearchResponse>(
+            QStringLiteral("No query specified"));
     }
+
+    QVector<qint64> collectionIds, collections;
+    bool recursive = cmd.recursive();
+
+    if (cmd.collections().isEmpty()) {
+        collectionIds << 0;
+        recursive = true;
+    }
+
+    if (recursive) {
+        collections << SearchHelper::matchSubcollectionsByMimeType(collectionIds, cmd.mimeTypes());
+    } else {
+        collections = collectionIds;
+    }
+
+    akDebug() << "SEARCH:";
+    akDebug() << "\tQuery:" << cmd.query();
+    akDebug() << "\tMimeTypes:" << cmd.mimeTypes();
+    akDebug() << "\tCollections:" << collections;
+    akDebug() << "\tRemote:" << cmd.remote();
+    akDebug() << "\tRecursive" << recursive;
+
+    if (collections.isEmpty()) {
+        mOutStream << Protocol::SearchResponse();
+        return true;
+    }
+
+    mFetchScope = cmd.fetchScope();
+
+    SearchRequest request(connection()->sessionId());
+    request.setCollections(collections);
+    request.setMimeTypes(cmd.mimeTypes());
+    request.setQuery(cmd.query());
+    request.setRemoteSearch(cmd.remote());
+    connect(&request, SIGNAL(resultsAvailable(QSet<qint64>)),
+            this, SLOT(slotResultsAvailable(QSet<qint64>)));
+    request.exec();
 
     //akDebug() << "\tResult:" << uids;
     akDebug() << "\tResult:" << mAllResults.count() << "matches";
 
-    return successResponse("Search done");
+    mOutStream << Protocol::SearchResponse();
+    return true;
 }
 
 void Search::slotResultsAvailable(const QSet<qint64> &results)
@@ -142,12 +98,15 @@ void Search::slotResultsAvailable(const QSet<qint64> &results)
         return;
     }
 
-    // create imap query
-    ImapSet itemSet;
-    itemSet.add(newResults);
+    QVector<qint64> fetchResults;
+    fetchResults.reserve(newResults.size());
+    for (qint64 id : newResults) {
+        fetchResults.append(id);
+    }
     Scope scope(Scope::Uid);
-    scope.setUidSet(itemSet);
+    scope.setUidSet(fetchResults);
 
+    // FIXME BIN: This ....
     FetchHelper fetchHelper(connection(), scope, mFetchScope);
     connect(&fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
             this, SIGNAL(responseAvailable(Akonadi::Server::Response)));

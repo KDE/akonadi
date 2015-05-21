@@ -32,39 +32,43 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Remove::Remove(Scope::SelectionScope scope)
-    : mScope(scope)
-{
-}
-
 bool Remove::parseStream()
 {
-    mScope.parseScope(m_streamParser);
+    Protocol::DeleteItemsCommand cmd;
+    mInStream >> cmd;
+
+    /* FIXME BIN
     connection()->context()->parseContext(m_streamParser);
     akDebug() << "Tag context:" << connection()->context()->tagId();
     akDebug() << "Collection context: " << connection()->context()->collectionId();
+    */
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(mScope, connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.scope(), connection()->context(), qb);
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
 
-    if (qb.exec()) {
-        const QVector<PimItem> items = qb.result();
-        if (items.isEmpty()) {
-            throw HandlerException("No items found");
-        }
-        if (!store->cleanupPimItems(items)) {
-            throw HandlerException("Deletion failed");
-        }
-    } else {
-        throw HandlerException("Unable to execute query");
+    if (!qb.exec()) {
+        return failureResponse<Protocol::DeleteItemsResponse>(
+            QStringLiteral("Unable to execute query"));
+    }
+
+    const QVector<PimItem> items = qb.result();
+    if (items.isEmpty()) {
+        return failureResponse<Protocol::DeleteItemsResponse>(
+            QStringLiteral("No items found"));
+    }
+    if (!store->cleanupPimItems(items)) {
+        return failureResponse<Protocol::DeleteItemsResponse>(
+            QStringLiteral("Deletion failed"));
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction.");
+        return failureResponse<Protocol::DeleteItemsResponse>(
+            QStringLiteral("Unable to commit transaction"));
     }
 
-    return successResponse("REMOVE complete");
+    mOutStream << Protocol::DeleteItemsResponse();
+    return true;
 }

@@ -28,156 +28,141 @@
 #include <private/protocol_p.h>
 #include "connection.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-TagStore::TagStore()
-    : Handler()
-{
-}
-
-TagStore::~TagStore()
-{
-}
 
 bool TagStore::parseStream()
 {
-    const qint64 tagId = m_streamParser->readNumber();
+    Protocol::ModifyTagCommand cmd;
+    mInStream >> cmd;
 
-    if (!m_streamParser->hasList()) {
-        failureResponse("No changes to store");
-        return false;
-    }
-
-    Tag changedTag = Tag::retrieveById(tagId);
+    Tag changedTag = Tag::retrieveById(cmd.tagId());
     if (!changedTag.isValid()) {
-        throw HandlerException("No such tag");
+        return failureResponse<Protocol::ModifyTagResponse>(QStringLiteral("No such tag"));
     }
 
     QSet<QByteArray> changes;
 
     // Retrieve all tag's attributes
-    const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), tagId);
+    const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), cmd.tagId());
     QMap<QByteArray, TagAttribute> attributesMap;
     Q_FOREACH (const TagAttribute &attribute, attributes) {
         attributesMap.insert(attribute.type(), attribute);
     }
 
-    bool tagRemoved = false;
-    m_streamParser->beginList();
-    while (!m_streamParser->atListEnd()) {
-        const QByteArray attr = m_streamParser->readString();
-
-        if (attr == AKONADI_PARAM_PARENT) {
-            const qint64 parent = m_streamParser->readNumber();
-            changedTag.setParentId(parent);
+    if (cmd.modifiedParts() & Protocol::ModifyTagCommand::ParentId) {
+        if (cmd.parentId() != changedTag.parentId()) {
+            changedTag.setParentId(cmd.parentId());
             changes << AKONADI_PARAM_PARENT;
-        } else if (attr == AKONADI_PARAM_GID) {
-            throw HandlerException("Changing tag GID is not allowed");
-        } else if (attr == AKONADI_PARAM_UID) {
-            throw HandlerException("Changing tag UID is not allowed");
-        } else if ( attr == AKONADI_PARAM_MIMETYPE ) {
-            const QString &typeName = m_streamParser->readUtf8String();
-            TagType type = TagType::retrieveByName(typeName);
-            if (!type.isValid()) {
-                TagType newType;
-                newType.setName(typeName);
+        }
+    }
+
+    if (cmd.modifiedParts() & Protocol::ModifyTagCommand::Type) {
+        TagType type = TagType::retrieveById(changedTag.typeId());
+        if (cmd.type() != type.name()) {
+            TagType newType = TagType::retrieveByName(cmd.type());
+            if (!newType.isValid()) {
+                newType.setName(cmd.type());
                 if (!newType.insert()) {
-                    throw HandlerException( "Failed to insert type" );
+                    return failureResponse<Protocol::ModifyTagResponse>(
+                        QStringLiteral("Failed to create new tag type"));
                 }
-                type = newType;
             }
-            if (type.id() != changedTag.typeId()) {
-                changedTag.setTagType(type);
-                changes << AKONADI_PARAM_MIMETYPE;
-            }
-        } else if ( attr == AKONADI_PARAM_REMOTEID ) {
-            const QString &remoteId = m_streamParser->readUtf8String();
-            if (!connection()->context()->resource().isValid()) {
-                throw HandlerException( "Only resources can change the remoteid" );
-            }
-            //Simply using remove() doesn't work since we need two arguments
-            QueryBuilder qb( TagRemoteIdResourceRelation::tableName(), QueryBuilder::Delete );
-            qb.addValueCondition( TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId );
-            qb.addValueCondition( TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals,connection()->context()->resource().id());
-            qb.exec();
+            changedTag.setTagType(newType);
+            changes << AKONADI_PARAM_MIMETYPE;
+        }
+    }
 
-            if (!remoteId.isEmpty()) {
-                TagRemoteIdResourceRelation remoteIdRelation;
-                remoteIdRelation.setRemoteId(remoteId);
-                remoteIdRelation.setResourceId(connection()->context()->resource().id());
-                remoteIdRelation.setTag(changedTag);
-                if (!remoteIdRelation.insert()) {
-                    throw HandlerException( "Failed to insert remotedid resource relation" );
-                }
-            } else {
-                const int tagRidsCount = TagRemoteIdResourceRelation::count(TagRemoteIdResourceRelation::tagIdColumn(), changedTag.id());
-                // We just removed the last RID of the tag, which means that no other
-                // resource owns this tag, so we have to remove it to simulate tag
-                // removal
-                if (tagRidsCount == 0) {
-                    if (!DataStore::self()->removeTags(Tag::List() << changedTag)) {
-                        throw HandlerException( "Failed to remove tag" );
-                    }
-                    tagRemoved = true;
+    bool tagRemoved = false;
+    if (cmd.modifiedParts() & Protocol::ModifyTagCommand::RemoteId) {
+        if (!connection()->context()->resource().isValid()) {
+            return failureResponse<Protocol::ModifyTagResponse>(
+                QStringLiteral("Only resources can change tag remote ID"));
+        }
 
-                    // We can't break here, we need to finish reading the command
-                }
+        //Simply using remove() doesn't work since we need two arguments
+        QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Delete);
+        qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, cmd.tagId());
+        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals,connection()->context()->resource().id());
+        qb.exec();
+
+        if (!cmd.remoteId().isEmpty()) {
+            TagRemoteIdResourceRelation remoteIdRelation;
+            remoteIdRelation.setRemoteId(cmd.remoteId());
+            remoteIdRelation.setResourceId(connection()->context()->resource().id());
+            remoteIdRelation.setTag(changedTag);
+            if (!remoteIdRelation.insert()) {
+                throw HandlerException( "Failed to insert remotedid resource relation" );
             }
-            //Do not notify about remoteid changes, otherwise we bounce back and forth between resources recording it's change and updating the remote id.
         } else {
-            if (attr.startsWith('-')) {
-                const QByteArray attrName = attr.mid(1);
-                if (attributesMap.contains(attrName)) {
-                    TagAttribute attribute = attributesMap.value(attrName);
-                    TagAttribute::remove(attribute.id());
+            const int tagRidsCount = TagRemoteIdResourceRelation::count(TagRemoteIdResourceRelation::tagIdColumn(), changedTag.id());
+            // We just removed the last RID of the tag, which means that no other
+            // resource owns this tag, so we have to remove it to simulate tag
+            // removal
+            if (tagRidsCount == 0) {
+                if (!DataStore::self()->removeTags(Tag::List() << changedTag)) {
+                    throw HandlerException( "Failed to remove tag" );
                 }
-            } else if (attributesMap.contains(attr)) {
+                tagRemoved = true;
+            }
+        }
+        //Do not notify about remoteid changes, otherwise we bounce back and forth
+        // between resources recording it's change and updating the remote id.
+    }
+
+    if (cmd.modifiedParts() & Protocol::ModifyTagCommand::RemovedAttributes) {
+        for (const QByteArray &attrName : cmd.removedAttributes()) {
+            TagAttribute attribute = attributesMap.value(attrName);
+            TagAttribute::remove(attribute.id());
+            changes << attrName;
+        }
+    }
+
+    if (cmd.modifiedParts() & Protocol::ModifyTagCommand::Attributes) {
+        for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
+            if (attributesMap.contains(attr.first)) {
                 TagAttribute attribute = attributesMap.value(attr);
-                attribute.setValue(m_streamParser->readString());
+                attribute.setValue(attr.second);
                 if (!attribute.update()) {
-                    throw HandlerException("Failed to update attribute");
+                    return failureResponse<Protocol::ModifyTagResponse>(
+                        QStringLiteral(("Failed to update attribute"));
                 }
             } else {
                 TagAttribute attribute;
-                attribute.setTagId(tagId);
-                attribute.setType(attr);
-                attribute.setValue(m_streamParser->readString());
+                attribute.setTagId(cmd.tagId());
+                attribute.setType(attr.first);
+                attribute.setValue(attr.second);
                 if (!attribute.insert()) {
-                    throw HandlerException("Failed to insert attribute");
+                    return failureResponse<Protocol::ModifyTagResponse>(
+                        QStringLiteral("Failed to insert attribute"));
                 }
             }
+            changes << attr.first;
         }
-        changes << attr;
     }
 
     if (!tagRemoved) {
         if (!changedTag.update()) {
-            throw HandlerException("Failed to store changes");
+            return failureResponse<Protocol::ModifyTagResponse>(
+                QStringLiteral("Failed to store changes")();
         }
         if (!changes.isEmpty()) {
             DataStore::self()->notificationCollector()->tagChanged(changedTag);
         }
 
-        ImapSet set;
-        set.add(QVector<qint64>() << tagId);
-        TagFetchHelper helper(connection(), set);
+        Scope scope(Scope::Uid);
+        scope.setUidSet(QVector<qint64>() << cmd.tagId());
+        TagFetchHelper helper(connection(), scope);
+        // FIXME BIN: No notify
         connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
                 this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
         if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
             return false;
         }
     } else {
-        QByteArray str = QByteArray::number(tagId) + " TAGREMOVE";
-        Response response;
-        response.setUntagged();
-        response.setString(str);
-        Q_EMIT responseAvailable(response);
+        mOutStream << Protocol::DeleteTagResponse();
     }
 
-    Response response;
-    response.setTag(tag());
-    response.setSuccess();
-    response.setString("TAGSTORE completed");
-    Q_EMIT responseAvailable(response);
+    mOutStream << Protocol::ModifyTagResponse();
     return true;
 }

@@ -28,31 +28,25 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagFetch::TagFetch(Scope::SelectionScope scope)
-    : Handler()
-    , mScope(scope)
-{
-}
-
-TagFetch::~TagFetch()
-{
-}
-
 bool TagFetch::parseStream()
 {
-    if (mScope.scope() != Scope::Uid) {
-        throw HandlerException("Only UID-based TAGFETCH is supported");
+    Protocol::FetchTagsCommand cmd;
+    mInStream >> cmd;
+
+    if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
+        return failureResponse<Protocol::FetchTagsResponse>(
+            QStringLiteral("Only UID-based TAGFETCH is supported"));
     }
 
-    mScope.parseScope(m_streamParser);
-
-    TagFetchHelper helper(connection(),  mScope.uidSet());
+    TagFetchHelper helper(connection(),  cmd.scope());
     connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
             this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
 
+    // FIXME BIN
     if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
         return false;
     }
 
-    return successResponse("UID TAGFETCH completed");
+    mOutStream << Protocol::FetchTagsResponse();
+    return true;
 }

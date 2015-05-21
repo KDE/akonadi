@@ -35,13 +35,7 @@ class TagFetch : public Handler
 {
     Q_OBJECT
 public:
-    TagFetch(Scope::SelectionScope scope);
-    ~TagFetch();
-
     bool parseStream();
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

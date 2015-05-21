@@ -27,103 +27,88 @@
 #include "entities.h"
 #include <private/protocol_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-RelationStore::RelationStore(Scope::SelectionScope scope)
-    :Handler()
-    ,mScope(scope)
-{
-}
-
-RelationStore::~RelationStore()
-{
-}
 
 bool RelationStore::parseStream()
 {
-    QString type;
-    QString remoteId;
-    qint64 left = -1;
-    qint64 right = -1;
+    Protocol::ModifyRelationCommand cmd;
+    mInStream >> cmd;
 
-    if (mScope.scope() != Scope::Uid) {
-        return failureResponse(QByteArray("Only uid based parents are supported.'"));
+    if (cmd.type().isEmpty()) {
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("Relation type not specified"));
     }
 
-    while (!m_streamParser->atCommandEnd()) {
-        const QByteArray param = m_streamParser->readString();
-
-        if (param == AKONADI_PARAM_LEFT) {
-            if (mScope.scope() == Scope::Uid) {
-                left = m_streamParser->readNumber();
-            }
-        } else if (param == AKONADI_PARAM_RIGHT) {
-            if (mScope.scope() == Scope::Uid) {
-                right = m_streamParser->readNumber();
-            }
-        } else if (param == AKONADI_PARAM_TYPE) {
-            type = m_streamParser->readUtf8String();
-        } else if (param == AKONADI_PARAM_REMOTEID) {
-            if (!connection()->context()->resource().isValid()) {
-                throw HandlerException("remote id can only be set in resource context");
-            }
-            remoteId = m_streamParser->readUtf8String();
-        } else {
-            return failureResponse(QByteArray("Unknown parameter while creating relation '") + type.toLatin1() + QByteArray("'."));
-        }
+    if (cmd.left() < 0 || cmd.right() < 0) {
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("Invalid relation specified"));
     }
 
-    RelationType relationType = RelationType::retrieveByName(type);
+    if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("RemoteID can only be set by Resources"));
+    }
+
+    RelationType relationType = RelationType::retrieveByName(cmd.type());
     if (!relationType.isValid()) {
-        RelationType t(type);
+        RelationType t(cmd.type());
         if (!t.insert()) {
-            return failureResponse(QByteArray("Unable to create relationtype '") + type.toLatin1() + QByteArray("'."));
+            return failureResponse<Protocol::ModifyRelationResponse>(
+                QStringLiteral("Unable to create relation type '") % cmd.type % QStringLiteral("'"));
         }
         relationType = t;
     }
 
     SelectQueryBuilder<Relation> relationQuery;
-    relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, left);
-    relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, right);
+    relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, cmd.left());
+    relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, cmd.right());
     relationQuery.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, relationType.id());
     if (!relationQuery.exec()) {
-        throw HandlerException("Failed to query for existing relation");
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("Failed to query for existing relation"));
     }
     const Relation::List existingRelations = relationQuery.result();
     if (!existingRelations.isEmpty()) {
         if (existingRelations.size() == 1) {
             Relation rel = existingRelations.first();
-            rel.setRemoteId(remoteId);
+            if (rel.remoteId() != cmd.remoteId())
+            rel.setRemoteId(cmd.remoteId());
             if (!rel.update()) {
-                throw HandlerException("Failed to update relation");
+                return failureResponse<Protocol::ModifyRelationResponse>(
+                    QStringLiteral("Failed to update relation");
             }
         } else {
-            throw HandlerException("Matched more than 1 relation");
+            return failureResponse<Protocol::ModifyRelationResponse>(
+                QStringLiteral("Matched more than one relation"));
         }
-        throw HandlerException("Relation is already existing");
+        //throw HandlerException("Relation is already existing");
     }
 
     Relation insertedRelation;
-    insertedRelation.setLeftId(left);
-    insertedRelation.setRightId(right);
+    insertedRelation.setLeftId(cmd.left());
+    insertedRelation.setRightId(cmd.right());
     insertedRelation.setTypeId(relationType.id());
     if  (!insertedRelation.insert()) {
-        throw HandlerException("Failed to store relation");
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("Failed to store relation"));
     }
 
     // Get all PIM items that are part of the relation
     SelectQueryBuilder<PimItem> itemsQuery;
     itemsQuery.setSubQueryMode(Query::Or);
-    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, left);
-    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, right);
+    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.left());
+    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.right());
 
     if (!itemsQuery.exec()) {
-        throw HandlerException("Adding relation failed");
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("Adding relation failed"));
     }
     const PimItem::List items = itemsQuery.result();
 
     if (items.size() != 2) {
-        throw HandlerException("Couldn't find items for relation");
+        return failureResponse<Protocol::ModifyRelationResponse>(
+            QStringLiteral("Couldn't find items for relation"));
     }
 
     /* if (items[0].collection().resourceId() != items[1].collection().resourceId()) {
@@ -133,11 +118,7 @@ bool RelationStore::parseStream()
     DataStore::self()->notificationCollector()->relationAdded(insertedRelation);
     DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List() << insertedRelation, Relation::List());
 
-    Response response;
-    response.setTag(tag());
-    response.setSuccess();
-    response.setString("Store completed");
-    Q_EMIT responseAvailable(response);
+    mOutStream << Protocol::ModifyRelationResponse();
     return true;
 }
 

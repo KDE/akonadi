@@ -993,6 +993,11 @@ public:
         , mScope(scope)
     {}
 
+    Scope scope() const
+    {
+        return mScope;
+    }
+
 private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
@@ -1014,6 +1019,9 @@ class AKONADIPRIVATE_EXPORT FetchRelationsCommand : public Command
 public:
     FetchRelationsCommand()
         : Command(FetchRelations)
+        , mLeft(-1)
+        , mRight(-1)
+        , mSide(-1)
     {}
 
     void setLeft(qint64 left)
@@ -1031,6 +1039,14 @@ public:
     qint64 right() const
     {
         return mRight;
+    }
+    void setSide(qint64 side)
+    {
+        mSide = side;
+    }
+    qint64 side() const
+    {
+        return mSide;
     }
     void setType(const QString &type)
     {
@@ -1055,6 +1071,7 @@ private:
 
     qint64 mLeft;
     qint64 mRight;
+    qint64 mSide;
     QString mType;
     QString mResource;
 };
@@ -2712,22 +2729,34 @@ class AKONADIPRIVATE_EXPORT SearchResultCommand : public Command
 public:
     SearchResultCommand()
         : Command(SearchResult)
+        , mCollectionId(-1)
     {}
 
-    SearchResultCommand(const Scope &result)
+    SearchResultCommand(const QByteArray &searchId, qint64 collectionId, const Scope &result)
         : Command(SearchResult)
         , mResult(result)
+        , mCollectionId(collectionId)
     {}
 
     Scope result() const
     {
         return mResult;
     }
+    qint64 collectionId() const
+    {
+        return mCollectionId;
+    }
+    QByteArray  searchId() const
+    {
+        return mSearchId;
+    }
 private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::SearchResultCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::SearchResultCommand &command);
 
+    QByteArray mSearchId;
     Scope mResult;
+    qint64 mCollectionId;
 };
 
 class AKONADIPRIVATE_EXPORT SearchResultResponse : public Response
@@ -2927,22 +2956,42 @@ public:
 class AKONADIPRIVATE_EXPORT ModifyTagCommand : public Command
 {
 public:
+    enum ModifiedTagPart {
+        None            = 0,
+        ParentId        = 1 << 0,
+        Type            = 1 << 1,
+        RemoteId        = 1 << 2,
+        RemovedAttributes = 1 << 3,
+        Attributes      = 1 << 4
+    };
+    Q_DECLARE_FLAGS(ModifiedTagParts, ModifiedTagPart)
+
     ModifyTagCommand()
         : Command(ModifyTag)
+        , mTagId(-1)
+        , mParentId(-1)
+        , mModifiedParts(None)
     {}
 
 
     ModifyTagCommand(qint64 tagId)
         : Command(ModifyTag)
         , mTagId(tagId)
+        , mParentId(-1)
+        , mModifiedParts(None)
     {}
 
     qint64 tagId() const
     {
         return mTagId;
     }
+    ModifiedTagParts modifiedParts() const
+    {
+        return mModifiedParts;
+    }
     void setParentId(qint64 parentId)
     {
+        mModifiedParts |= ParentId;
         mParentId = parentId;
     }
     qint64 parentId() const
@@ -2951,6 +3000,7 @@ public:
     }
     void setType(const QString &type)
     {
+        mModifiedParts |= Type;
         mType = type;
     }
     QString type() const
@@ -2959,6 +3009,7 @@ public:
     }
     void setRemoteId(const QString &remoteId)
     {
+        mModifiedParts |= RemoteId;
         mRemoteId = remoteId;
     }
     QString remoteId() const
@@ -2967,6 +3018,7 @@ public:
     }
     void setRemovedAttributes(const QSet<QByteArray> &removed)
     {
+        mModifiedParts |= RemovedAttributes;
         mRemovedAttributes = removed;
     }
     QSet<QByteArray> removedAttributes() const
@@ -2975,6 +3027,7 @@ public:
     }
     void setAttributes(const QMap<QByteArray, QByteArray> &attrs)
     {
+        mModifiedParts |= Attributes;
         mAttributes = attrs;
     }
     QMap<QByteArray, QByteArray> attributes() const
@@ -2986,12 +3039,13 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyTagCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyTagCommand &command);
 
-    qint64 mTagId;
-    qint64 mParentId;
     QString mType;
     QString mRemoteId;
     QSet<QByteArray> mRemovedAttributes;
     QMap<QByteArray, QByteArray> mAttributes;
+    qint64 mTagId;
+    qint64 mParentId;
+    ModifiedTagParts mModifiedParts;
 };
 
 class AKONADIPRIVATE_EXPORT ModifyTagResponse : public Response
