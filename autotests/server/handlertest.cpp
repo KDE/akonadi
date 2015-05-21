@@ -75,7 +75,6 @@ private:
     void addAlwaysCommands()
     {
         MAKE_CMD_ROW(LOGOUT, Logout)
-        MAKE_CMD_ROW(CAPABILITY, Capability)
     }
 
     void addInvalidCommands()

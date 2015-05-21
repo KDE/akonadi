@@ -56,7 +56,6 @@ set(libakonadiserver_SRCS
     handler/colcopy.cpp
     handler/colmove.cpp
     handler/create.cpp
-    handler/capability.cpp
     handler/delete.cpp
     handler/fetch.cpp
     handler/fetchhelper.cpp

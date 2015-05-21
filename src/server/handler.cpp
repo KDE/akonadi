@@ -28,7 +28,6 @@
 #include "response.h"
 #include "handler/scope.h"
 #include "handler/akappend.h"
-#include "handler/capability.h"
 #include "handler/copy.h"
 #include "handler/colcopy.h"
 #include "handler/colmove.h"
@@ -88,12 +87,9 @@ Handler *Handler::findHandlerForCommandNonAuthenticated(const QByteArray &comman
 
 Handler *Handler::findHandlerForCommandAlwaysAllowed(const QByteArray &command)
 {
-    // allowed commands CAPABILITY and LOGOUT
+    // allowed is LOGOUT
     if (command == AKONADI_CMD_LOGOUT) {
         return new Logout();
-    }
-    if (command == AKONADI_CMD_CAPABILITY) {
-        return new Capability();
     }
     return 0;
 }
