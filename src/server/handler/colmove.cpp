@@ -29,38 +29,22 @@
 #include "cachecleaner.h"
 
 #include <shared/akdebug.h>
+#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ColMove::ColMove(Scope::SelectionScope scope)
-    : m_scope(scope)
-{
-}
-
 bool ColMove::parseStream()
 {
-    m_scope.parseScope(m_streamParser);
-    SelectQueryBuilder<Collection> qb;
-    CollectionQueryHelper::scopeToQuery(m_scope, connection(), qb);
-    if (!qb.exec()) {
-        throw HandlerException("Unable to execute collection query");
-    }
-    const Collection::List sources = qb.result();
-    if (sources.isEmpty()) {
-        throw HandlerException("No source collection specified");
-    } else if (sources.size() > 1) {   // TODO
-        throw HandlerException("Moving multiple collections is not yet implemented");
-    }
-    Collection source = sources.first();
+    Protocol::MoveCollectionCommand cmd;
+    mInStream >> cmd;
 
-    Scope destScope(m_scope.scope());
-    destScope.parseScope(m_streamParser);
-    akDebug() << destScope.uidSet().toImapSequenceSet();
-    const Collection target = CollectionQueryHelper::singleCollectionFromScope(destScope, connection());
+    Collection source = HandlerHelper::collectionFromScope(cmd.collection());
+    Collection target = HandlerHelper::collectionFromScope(cmd.destination());
 
     if (source.parentId() == target.id()) {
-        return successResponse("COLMOVE complete - nothing to do");
+        mOutStream << Protocol::MoveCollectionResponse();
+        return true;
     }
 
     CacheCleanerInhibitor inhibitor;
@@ -77,12 +61,13 @@ bool ColMove::parseStream()
     Transaction transaction(store);
 
     if (!store->moveCollection(source, target)) {
-        return failureResponse("Unable to reparent collection");
+        return failureResponse<Protocol::MoveCollectionResponse>(QStringLiteral("Unable to reparent collection"));
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Cannot commit transaction.");
+        return failureResponse<Protocol::MoveCollectionResponse>(QStringLiteral("Cannot commit transaction."));
     }
 
-    return successResponse("COLMOVE complete");
+    mOutStream << Protocol::MoveCollectionResponse();
+    return true;
 }

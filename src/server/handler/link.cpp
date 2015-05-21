@@ -29,24 +29,23 @@
 #include "entities.h"
 #include "imapstreamparser.h"
 
-using namespace Akonadi::Server;
+#include <private/protocol_p.h>
 
-Link::Link(Scope::SelectionScope scope, bool create)
-    : Handler()
-    , mDestinationScope(scope)
-    , mCreateLinks(create)
-{
-}
+using namespace Akonadi;
+using namespace Akonadi::Server;
 
 bool Link::parseStream()
 {
-    mDestinationScope.parseScope(m_streamParser);
-    const Collection collection = CollectionQueryHelper::singleCollectionFromScope(mDestinationScope, connection());
+    Protocol::LinkItemsCommand cmd;
+    mInStream >> cmd;
 
+    const Collection collection = HandlerHelper::collectionFromScope(cmd.destination());
     if (!collection.isVirtual()) {
-        return failureResponse("Can't link items to non-virtual collections");
+        return failureResponse<Protocol::LinkItemsResponse>(
+            QStringLiteral("Can't link items to non-virtual collections"));
     }
 
+    /* FIXME BIN
     Resource originalContext;
     Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray(m_streamParser->peekString());
     if (itemSelectionScope != Scope::None) {
@@ -61,16 +60,20 @@ bool Link::parseStream()
     }
     Scope itemScope(itemSelectionScope);
     itemScope.parseScope(m_streamParser);
+    */
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(itemScope, connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.scope(), connection()->context(), qb);
 
+    /*
     if (originalContext.isValid()) {
         connection()->context()->setResource(originalContext);
     }
+    */
 
     if (!qb.exec()) {
-        return failureResponse("Unable to execute item query");
+        return failureResponse<Protocol::LinkItemsResponse>(
+            QStringLiteral("Unable to execute item query"));
     }
 
     const PimItem::List items = qb.result();
@@ -79,18 +82,20 @@ bool Link::parseStream()
     Transaction transaction(store);
 
     PimItem::List toLink, toUnlink;
-    Q_FOREACH (const PimItem &item, items) {
+    const bool createLinks = (cmd.action() == Protocol::LinkItemsCommand::Link);
+    for (const PimItem &item : items) {
         const bool alreadyLinked = collection.relatesToPimItem(item);
         bool result = true;
-        if (mCreateLinks && !alreadyLinked) {
+        if (createLinks && !alreadyLinked) {
             result = collection.addPimItem(item);
             toLink << item;
-        } else if (!mCreateLinks && alreadyLinked) {
+        } else if (!createLinks && alreadyLinked) {
             result = collection.removePimItem(item);
             toUnlink << item;
         }
         if (!result) {
-            return failureResponse("Failed to modify item reference");
+            return failureResponse<Protocol::LinkItemsResponse>(
+                QStringLiteral("Failed to modify item reference"));
         }
     }
 
@@ -101,8 +106,10 @@ bool Link::parseStream()
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Cannot commit transaction.");
+        return failureResponse<Protocol::LinkItemsResponse>(
+            QStringLiteral("Cannot commit transaction."));
     }
 
-    return successResponse("LINK complete");
+    mOutStream << Protocol::LinkItemsResponse();
+    return true;
 }

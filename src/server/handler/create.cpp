@@ -36,203 +36,106 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Create::Create(Scope::SelectionScope scope)
-    : Handler()
-    , m_scope(scope)
-{
-}
-
-static Tristate getTristateValue(const QByteArray &value)
-{
-    if (value == "TRUE") {
-        return Tristate::True;
-    } else if (value == "FALSE") {
-        return Tristate::False;
-    }
-    return Tristate::Undefined;
-}
-
 bool Create::parseStream()
 {
-    QString name = m_streamParser->readUtf8String();
-    if (name.isEmpty()) {
-        return failureResponse("Invalid collection name");
+    Protocol::CreateCollectionCommand cmd;
+    mInStream >> cmd;
+
+    if (cmd.name().isEmpty()) {
+        return failureResponse<Protocol::CreateCollectionResponse>(QStringLiteral("Invalid collection name"));
     }
 
     bool ok = false;
-    Collection parent;
-
-    if (m_scope == Scope::Uid || m_scope == Scope::None) {
-        qint64 parentId = m_streamParser->readNumber(&ok);
-        if (!ok) {   // RFC 3501 compat
-            QString parentPath;
-            int index = name.lastIndexOf(QLatin1Char('/'));
-            if (index > 0) {
-                parentPath = name.left(index);
-                name = name.mid(index + 1);
-                parent = HandlerHelper::collectionFromIdOrName(parentPath.toUtf8());
-            } else {
-                parentId = 0;
-            }
-        } else {
-            if (parentId > 0) {
-                parent = Collection::retrieveById(parentId);
-            }
-        }
-
-        if (parentId != 0 && !parent.isValid()) {
-            return failureResponse("Parent collection not found");
-        }
-    } else if (m_scope == Scope::Rid) {
-        const QString rid = m_streamParser->readUtf8String();
-        if (rid.isEmpty()) {
-            throw HandlerException("Empty parent remote identifier");
-        }
-        if (!connection()->context()->resource().isValid()) {
-            throw HandlerException("Invalid resource context");
-        }
-        SelectQueryBuilder<Collection> qb;
-        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, rid);
-        qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, connection()->context()->resource().id());
-        if (!qb.exec()) {
-            throw HandlerException("Unable to execute collection query");
-        }
-        const Collection::List cols = qb.result();
-        if (cols.size() == 0) {
-            throw HandlerException("Parent collection not found");
-        } else if (cols.size() > 1) {
-            throw HandlerException("Parent collection is not unique");
-        }
-        parent = cols.first();
+    Collection parent = HandlerHelper::collectionFromScope(cmd.parent());
+    if (!parent.isValid()) {
+        return failureResponse<Protocol::CreateCollectionResponse>(QStringLiteral("Invalid parent collection"));
     }
 
     qint64 resourceId = 0;
     bool forceVirtual = false;
-    MimeType::List parentContentTypes;
-    if (parent.isValid()) {
-        // check if parent can contain a sub-folder
-        parentContentTypes = parent.mimeTypes();
-        bool found = false, foundVirtual = false;
-        Q_FOREACH (const MimeType &mt, parentContentTypes) {
-            if (mt.name() == QLatin1String("inode/directory")) {
-                found = true;
-                if (foundVirtual) {
-                    break;
-                }
-            } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
-                foundVirtual = true;
-                if (found) {
-                    break;
-                }
-            }
-        }
-        if (!found && !foundVirtual) {
-            return failureResponse("Parent collection can not contain sub-collections");
-        }
 
-        // If only virtual collections are supported, force every new collection to
-        // be virtual. Otherwise depend on VIRTUAL attribute in the command
-        if (foundVirtual && !found) {
-            forceVirtual = true;
+    // check if parent can contain a sub-folder
+    const MimeType::List parentContentTypes = parent.mimeTypes();
+    bool found = false, foundVirtual = false;
+    for (const MimeType &mt : parentContentTypes) {
+        if (mt.name() == QLatin1String("inode/directory")) {
+            found = true;
+        } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
+            foundVirtual = true;
         }
-
-        // inherit resource
-        resourceId = parent.resourceId();
-    } else {
-        // deduce owning resource from current session id
-        QString sessionId = QString::fromUtf8(connection()->sessionId());
-        Resource res = Resource::retrieveByName(sessionId);
-        if (!res.isValid()) {
-            return failureResponse("Cannot create top-level collection");
+        if (found && foundVirtual) {
+            break;
         }
-        resourceId = res.id();
     }
+    if (!found && !foundVirtual) {
+        return failureResponse<CreateCollectionCommand>(QStringLiteral("Parent collection can not contain sub-collections"));
+    }
+
+    // If only virtual collections are supported, force every new collection to
+    // be virtual. Otherwise depend on VIRTUAL attribute in the command
+    if (foundVirtual && !found) {
+        forceVirtual = true;
+    }
+
+    // inherit resource
+    resourceId = parent.resourceId();
 
     Collection collection;
     if (parent.isValid()) {
         collection.setParentId(parent.id());
     }
-    collection.setName(name);
+    collection.setName(cmd.name());
     collection.setResourceId(resourceId);
-
-    // attributes
-    QList<QByteArray> attributes;
-    QList<QByteArray> mimeTypes;
-    QVector< QPair<QByteArray, QByteArray> > userDefAttrs;
-    bool mimeTypesSet = false;
-    attributes = m_streamParser->readParenthesizedList();
-    for (int i = 0; i < attributes.count() - 1; i += 2) {
-        const QByteArray key = attributes.at(i);
-        const QByteArray value = attributes.at(i + 1);
-        if (key == AKONADI_PARAM_REMOTEID) {
-            collection.setRemoteId(QString::fromUtf8(value));
-        } else if (key == AKONADI_PARAM_REMOTEREVISION) {
-            collection.setRemoteRevision(QString::fromUtf8(value));
-        } else if (key == AKONADI_PARAM_MIMETYPE) {
-            ImapParser::parseParenthesizedList(value, mimeTypes);
-            mimeTypesSet = true;
-        } else if (key == AKONADI_PARAM_CACHEPOLICY) {
-            HandlerHelper::parseCachePolicy(value, collection);
-        } else if (key == AKONADI_PARAM_VIRTUAL) {
-            collection.setIsVirtual(value.toUInt() != 0);
-        } else if (key == AKONADI_PARAM_ENABLED) {
-            collection.setEnabled(getTristateValue(value) == Server::True);
-        } else if (key == AKONADI_PARAM_SYNC) {
-            collection.setSyncPref(getTristateValue(value));
-        } else if (key == AKONADI_PARAM_DISPLAY) {
-            collection.setDisplayPref(getTristateValue(value));
-        } else if (key == AKONADI_PARAM_INDEX) {
-            collection.setIndexPref(getTristateValue(value));
-        } else {
-            userDefAttrs << qMakePair(key, value);
-        }
-    }
-
-    if (forceVirtual) {
-        collection.setIsVirtual(true);
-    }
+    collection.setRemoteId(cmd.remoteId());
+    collection.setRemoteRevision(cmd.remoteRevision());
+    collection.setIsVirtual(cmd.isVirtual() || forceVirtual);
+    collection.setEnabled(cmd.enabled());
+    collection.setSyncPref(cmd.syncPref());
+    collection.setDisplayPref(cmd.displayPref());
+    collection.setIndexPref(cmd.indexPref());
+    const Protocol::CachePolicy &cp = cmd.cachePolicy();
+    collection.setCachePolicyCacheTimeout(cp.cacheTimeout());
+    collection.setCachePolicyCheckInterval(cp.checkInterval());
+    collection.setCachePolicyInherit(cp.inherit());
+    collection.setCachePolicyLocalParts(cp.localParts());
+    collection.setCachePolicySyncOnDemand(cp.syncOnDemand());
 
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db);
 
     if (!db->appendCollection(collection)) {
-        return failureResponse("Could not create collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number(resourceId));
+        return failureResponse<Protocol::CreateCollectionResponse>(
+            QStringLiteral("Could not create collection ") % cmd.name()
+                % QStringLiteral(", resourceId: ") % QString::number(resourceId));
     }
 
-    QStringList effectiveMimeTypes;
-    if (mimeTypesSet) {
-        Q_FOREACH (const QByteArray &b, mimeTypes) {
-            effectiveMimeTypes << QString::fromUtf8(b);
-        }
-    } else {
-        Q_FOREACH (const MimeType &mt, parentContentTypes) {
+    QStringList effectiveMimeTypes = cmd.mimeTypes();
+    if (effectiveMimeTypes.isEmpty()) {
+        for (const MimeType &mt : parentContentTypes) {
             effectiveMimeTypes << mt.name();
         }
     }
     if (!db->appendMimeTypeForCollection(collection.id(), effectiveMimeTypes)) {
-        return failureResponse("Unable to append mimetype for collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number(resourceId));
+        return failureResponse<Protocol::CreateCollectionResponse>(
+            QStringLiteral("Unable to append mimetype for collection ") % cmd.name()
+                % QStringLiteral(" resourceId: ") % QString::number(resourceId));
     }
 
     // store user defined attributes
-    typedef QPair<QByteArray, QByteArray> QByteArrayPair;
-    Q_FOREACH (const QByteArrayPair &attr, userDefAttrs) {
+    for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
         if (!db->addCollectionAttribute(collection, attr.first, attr.second)) {
-            return failureResponse("Unable to add collection attribute.");
+            return failureResponse<Protocol::CreateCollectionResponse>(
+                QStringLiteral("Unable to add collection attribute."));
         }
     }
 
-    Response response;
-    response.setUntagged();
-
-    // write out collection details
-    db->activeCachePolicy(collection);
-    const QByteArray b = HandlerHelper::collectionToByteArray(collection);
-    response.setString(b);
-    Q_EMIT responseAvailable(response);
-
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction.");
+        return failureResponse<Protocol::CreateCollectionResponse>(
+            QStringLiteral("Unable to commit transaction."));
     }
 
-    return successResponse("CREATE completed");
+    db->activeCachePolicy(collection);
+    mOutStream << HandlerHelper::collectionResponse(collection);
+    mOutStream << Protocol::CreateCollectionResponse();
+    return true;
 }

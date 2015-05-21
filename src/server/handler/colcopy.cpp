@@ -19,6 +19,8 @@
 
 #include "colcopy.h"
 
+#include <private/protocol_p.h>
+
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
@@ -87,16 +89,17 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
 
 bool ColCopy::parseStream()
 {
-    QByteArray tmp = m_streamParser->readString();
-    const Collection source = HandlerHelper::collectionFromIdOrName(tmp);
+    Protocol::CopyCollectionCommand cmd;
+    mInStream >> cmd;
+
+    const Collection source = HandlerHelper::collectionFromScope(cmd.collection());
     if (!source.isValid()) {
-        return failureResponse("No valid source specified");
+        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("No valid source specified"));
     }
 
-    tmp = m_streamParser->readString();
-    const Collection target = HandlerHelper::collectionFromIdOrName(tmp);
+    const Collection target = HandlerHelper::collectionFromScope(cmd.destination());
     if (!target.isValid()) {
-        return failureResponse("No valid target specified");
+        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("No valid target specified"));
     }
 
     CacheCleanerInhibitor inhibitor;
@@ -113,12 +116,13 @@ bool ColCopy::parseStream()
     Transaction transaction(store);
 
     if (!copyCollection(source, target)) {
-        return failureResponse("Failed to copy collection");
+        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("Failed to copy collection"));
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Cannot commit transaction.");
+        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("Cannot commit transaction."));
     }
 
-    return successResponse("COLCOPY complete");
+    mOutStream << Protocol::CopyCollectionResponse();
+    return true;
 }

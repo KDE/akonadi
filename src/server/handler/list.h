@@ -87,7 +87,7 @@ class List : public Handler
     Q_OBJECT
 
 public:
-    List(Scope::SelectionScope scope, bool onlySubscribed);
+    List();
 
     bool parseStream();
 
@@ -104,9 +104,7 @@ private:
 
     Resource mResource;
     QVector<MimeType::Id> mMimeTypes;
-    Scope mScope;
     int mAncestorDepth;
-    bool mOnlySubscribed;
     bool mIncludeStatistics;
     bool mEnabledCollections;
     bool mCollectionsToDisplay;

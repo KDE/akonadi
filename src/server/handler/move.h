@@ -31,14 +31,6 @@ namespace Server {
 
   Handler for the item move command.
 
-  <h4>Syntax</h4>
-  One of the following three:
-  @verbatim
-  <tag> MOVE <uid-set> <destination>
-  <tag> UID MOVE <uid-set> <destination>
-  <tag> RID MOVE <remote-identifiers> <destination>
-  @endverbatim
-
   <h4>Semantics</h4>
   Moves the selected items. Item selection can happen within the usual three scopes:
   - based on a uid set relative to the currently selected collection
@@ -51,11 +43,7 @@ class  Move : public Handler
 {
     Q_OBJECT
 public:
-    Move(Scope::SelectionScope scope);
     bool parseStream();
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

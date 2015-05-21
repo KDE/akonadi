@@ -27,6 +27,8 @@
 #include "global.h"
 #include "exception.h"
 
+#include <private/protocol_p.h>
+
 namespace Akonadi {
 
 class ImapSet;
@@ -93,17 +95,14 @@ public:
     Connection *connection() const;
 
     /** Send a failure response with the given message. */
-    bool failureResponse(const QByteArray &failureMessage);
-    /**
-      Convenience method to compile with QT_NO_CAST_FROM_ASCII without
-      typing too much ;-)
-     */
-    bool failureResponse(const char *failureMessage);
-
-    /** Send a success response with the given message. */
-    bool successResponse(const QByteArray &successMessage);
-    /** Send a success response with the given message. */
-    bool successResponse(const char *successMessage);
+    template<typename ResponseType>
+    bool failureResponse(const QString &failureMessage)
+    {
+        ResponseType response;
+        response.setError(1, failureMessage);
+        mOutStream << response;
+        return false;
+    }
 
     /**
      * Assigns the streaming IMAP parser to the handler. Useful only if supportsStreamParser() returns true.
@@ -117,6 +116,7 @@ public:
      */
     virtual bool parseStream() = 0;
 
+    bool checkScopeConstraints(const Scope &scope, int permittedScopes);
 Q_SIGNALS:
 
     /**
@@ -139,7 +139,9 @@ private:
     Connection *m_connection;
 
 protected:
-    ImapStreamParser *m_streamParser;
+    QDataStream mInStream;
+    QDataStream mOutStream;
+
 };
 
 class UnknownCommandHandler : public Handler

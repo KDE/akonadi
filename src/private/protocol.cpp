@@ -189,12 +189,13 @@ QDataStream &operator>>(QDataStream &stream, TransactionCommand &command)
 QDataStream &operator<<(QDataStream &stream, const CreateItemCommand &command)
 {
     return stream << command.mMergeMode
-                  << command.mCollectionId
+                  << command.mCollection
                   << command.mItemSize
                   << command.mMimeType
                   << command.mGid
                   << command.mRemoteId
                   << command.mRemoteRev
+                  << command.mDateTime
                   << command.mFlags
                   << command.mAddedFlags
                   << command.mRemovedFlags
@@ -206,12 +207,13 @@ QDataStream &operator<<(QDataStream &stream, const CreateItemCommand &command)
 QDataStream &operator>>(QDataStream &stream, CreateItemCommand &command)
 {
     return stream >> command.mMergeMode
-                  >> command.mCollectionId
+                  >> command.mCollection
                   >> command.mItemSize
                   >> command.mMimeType
                   >> command.mGid
                   >> command.mRemoteId
                   >> command.mRemoteRev
+                  >> command.mDateTime
                   >> command.mFlags
                   >> command.mAddedFlags
                   >> command.mRemovedFlags
@@ -486,6 +488,7 @@ QDataStream &operator<<(QDataStream &stream, const FetchCollectionsCommand &comm
                   << command.mMimeTypes
                   << command.mDepth
                   << command.mAncestorsDepth
+                  << command.mAncestorsAttributes
                   << command.mEnabled
                   << command.mSync
                   << command.mDisplay
@@ -500,6 +503,7 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionsCommand &command)
                   >> command.mMimeTypes
                   >> command.mDepth
                   >> command.mAncestorsDepth
+                  >> command.mAncestorsAttributes
                   >> command.mEnabled
                   >> command.mSync
                   >> command.mDisplay
@@ -597,9 +601,6 @@ QDataStream &operator<<(QDataStream &stream, const ModifyCollectionCommand &comm
     if (command.mModifiedParts & ModifyCollectionCommand::Referenced) {
         return stream << command.mReferenced;
     }
-    if (command.mModifiedParts & ModifyCollectionCommand::Virtual) {
-        return stream << command.mVirtual;
-    }
 }
 
 QDataStream &operator>>(QDataStream &stream, ModifyCollectionCommand &command)
@@ -646,21 +647,18 @@ QDataStream &operator>>(QDataStream &stream, ModifyCollectionCommand &command)
     if (command.mModifiedParts & ModifyCollectionCommand::Referenced) {
         return stream >> command.mReferenced;
     }
-    if (command.mModifiedParts & ModifyCollectionCommand::Virtual) {
-        return stream >> command.mVirtual;
-    }
 }
 
 
 QDataStream &operator<<(QDataStream &stream, const MoveCollectionCommand &command)
 {
-    return stream << command.mCol
+    return stream << command.mCols
                   << command.mDest;
 }
 
 QDataStream &operator>>(QDataStream &stream, MoveCollectionCommand &command)
 {
-    return stream >> command.mCol
+    return stream >> command.mCols
                   >> command.mDest;
 }
 

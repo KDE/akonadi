@@ -25,13 +25,33 @@
 using namespace Akonadi;
 
 Scope::Scope()
-    : mScope(Invalid)
+    : mRidContext(-1)
+    , mScope(Invalid)
 {
 }
 
 Scope::SelectionScope Scope::scope() const
 {
     return mScope;
+}
+
+bool Scope::isEmpty() const
+{
+    switch (mScope) {
+    case Invalid:
+        return true;
+    case Uid:
+        return mUidSet.isEmpty();
+    case Rid:
+        return mRidSet.isEmpty();
+    case HierarchicalRid:
+        return mRidChain.isEmpty();
+    case Gid:
+        return mGidSet.isEmpty();
+    }
+
+    Q_ASSERT(false);
+    return true;
 }
 
 
@@ -68,6 +88,16 @@ QStringList Scope::ridChain() const
     return mRidChain;
 }
 
+void Scope::setRidContext(qint64 context)
+{
+    mRidContext = context;
+}
+
+qint64 Scope::ridContext() const
+{
+    return mRidContext;
+}
+
 void Scope::setGidSet(const QStringList &gidSet)
 {
     mScope = Gid;
@@ -77,6 +107,36 @@ void Scope::setGidSet(const QStringList &gidSet)
 QStringList Scope::gidSet() const
 {
     return mGidSet;
+}
+
+qint64 Scope::uid() const
+{
+    if (mUidSet.size() != 1) {
+        // TODO: Error handling!
+        Q_ASSERT(mUidSet.size() == 1);
+        return -1;
+    }
+    return mUidSet.at(0);
+}
+
+QString Scope::rid() const
+{
+    if (mRidSet.size() != 1) {
+        // TODO: Error handling!
+        Q_ASSERT(mRidSet.size() == 1);
+        return QString();
+    }
+    return mRidSet.at(0);
+}
+
+QString Scope::gid() const
+{
+    if (mGidSet.size() != 1) {
+        // TODO: Error hanlding!
+        Q_ASSERT(mGidSet.size() == 1);
+        return QString();
+    }
+    return mGidSet.at(0);
 }
 
 QDataStream &operator<<(QDataStream &stream, const Scope &scope)
@@ -90,6 +150,7 @@ QDataStream &operator<<(QDataStream &stream, const Scope &scope)
         return stream;
     case Scope::Rid:
         stream << scope.mRidSet;
+        stream << scope.mRidContext;
         return stream;
     case Scope::HierarchicalRid:
         stream << scope.mRidChain;
@@ -121,6 +182,7 @@ QDataStream &operator>>(QDataStream &stream, Scope &scope)
         return stream;
     case Scope::Rid:
         stream >> scope.mRidSet;
+        stream >> scope.mRidContext;
         return stream;
     case Scope::HierarchicalRid:
         stream >> scope.mRidChain;

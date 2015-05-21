@@ -31,53 +31,46 @@
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
 
-using namespace Akonadi::Server;
+#include <private/protocol_p.h>
 
-Move::Move(Scope::SelectionScope scope)
-    : mScope(scope)
-{
-}
+using namespace Akonadi;
+using namespace Akonadi::Server;
 
 bool Move::parseStream()
 {
-    mScope.parseScope(m_streamParser);
+    Protocol::MoveItemsCommand cmd;
+    mInStream >> cmd;
 
-    Scope destScope(mScope.scope());
-    destScope.parseScope(m_streamParser);
-    const Collection destination = CollectionQueryHelper::singleCollectionFromScope(destScope, connection());
-    const Resource destResource = destination.resource();
-
+    const Collection destination = HandlerHelper::collectionFromScope(cmd.destination());
     if (destination.isVirtual()) {
-        return failureResponse("Moving items into virtual collection is not allowed");
+        return failureResponse<Protocol::MoveItemsResponse>(
+            QStringLiteral("Moving items into virtual collection is not allowed"));
     }
 
-    Collection source;
-    if (!m_streamParser->atCommandEnd()) {
-        Scope sourceScope(mScope.scope());
-        sourceScope.parseScope(m_streamParser);
-        source = CollectionQueryHelper::singleCollectionFromScope(sourceScope, connection());
-    }
+    if (cmd.scope().scope() == Scope::Rid) {
+        if (cmd.scope().ridContext() <= 0) {
+            return failureResponse<Protocol::MoveItemsResponse>(
+                QStringLiteral("RID move requires valid source collection"));
+        }
 
-    if (mScope.scope() == Scope::Rid && !source.isValid()) {
-        throw HandlerException("RID move requires valid source collection");
+        connection()->context()->setCollection(Collection::retrieveById(cmd.scope().ridContext()));
     }
-    connection()->context()->setCollection(source);
 
     CacheCleanerInhibitor inhibitor;
 
     // make sure all the items we want to move are in the cache
     ItemRetriever retriever(connection());
-    retriever.setScope(mScope);
+    retriever.setScope(cmd.scope());
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {
-        return failureResponse(retriever.lastError());
+        return failureResponse<Protocol::MoveItemsResponse>(retriever.lastError());
     }
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(mScope, connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.scope(), connection()->context(), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, destination.id());
 
     const QDateTime mtime = QDateTime::currentDateTime();
@@ -85,7 +78,7 @@ bool Move::parseStream()
     if (qb.exec()) {
         const QVector<PimItem> items = qb.result();
         if (items.isEmpty()) {
-            throw HandlerException("No items found");
+            return failureResponse<Protocol::MoveItemsResponse>(QStringLiteral("No items found"));
         }
 
         // Split the list by source collection
@@ -94,14 +87,16 @@ bool Move::parseStream()
         Q_FOREACH (/*sic!*/ PimItem item, items) {
             const Collection source = items.first().collection();
             if (!source.isValid()) {
-                throw HandlerException("Item without collection found!?");
+                return failureResponse<Protocol::MoveItemsResponse>(
+                    QStringLiteral("Item without collection found!?"));
             }
             if (!sources.contains(source.id())) {
                 sources.insert(source.id(), source);
             }
 
             if (!item.isValid()) {
-                throw HandlerException("Invalid item in result set!?");
+                return failureResponse<Protocol::MoveItemsResponse>(
+                    QStringLiteral("Invalid item in result set!?"));
             }
             Q_ASSERT(item.collectionId() != destination.id());
 
@@ -109,7 +104,7 @@ bool Move::parseStream()
             item.setAtime(mtime);
             item.setDatetime(mtime);
             // if the resource moved itself, we assume it did so because the change happend in the backend
-            if (connection()->context()->resource().id() != destResource.id()) {
+            if (connection()->context()->resource().id() != destination.resourceId()) {
                 item.setDirty(true);
             }
 
@@ -117,12 +112,12 @@ bool Move::parseStream()
         }
 
         // Emit notification for each source collection separately
-        Q_FOREACH (const Entity::Id &sourceId, toMove.uniqueKeys()) {
+        for (const Entity::Id &sourceId : toMove.uniqueKeys()) {
             const PimItem::List &itemsToMove = toMove.values(sourceId).toVector();
             const Collection &source = sources.value(sourceId);
             store->notificationCollector()->itemsMoved(itemsToMove, source, destination);
 
-            Q_FOREACH (PimItem moved, toMove.values(sourceId)) {
+            for (PimItem &moved : toMove.values(sourceId)) {
                 // reset RID on inter-resource moves, but only after generating the change notification
                 // so that this still contains the old one for the source resource
                 const bool isInterResourceMove = moved.collection().resource().id() != source.resource().id();
@@ -132,17 +127,21 @@ bool Move::parseStream()
 
                 // FIXME Could we aggregate the changes to a single SQL query?
                 if (!moved.update()) {
-                    throw HandlerException("Unable to update item");
+                    return failureResponse<Protocol::MoveItemsResponse>(
+                        QStringLiteral("Unable to update item"));
                 }
             }
         }
     } else {
-        throw HandlerException("Unable to execute query");
+        return failureResponse<Protocol::MoveItemsResponse>(
+            QStringLiteral("Unable to execute query"));
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction.");
+        return failureResponse<Protocol::MoveItemsResponse>(
+            QStringLiteral("Unable to commit transaction."));
     }
 
-    return successResponse("MOVE complete");
+    mOutStream << Protocol::MoveItemsResponse();
+    return true;
 }

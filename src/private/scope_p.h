@@ -43,19 +43,24 @@ class AKONADIPRIVATE_EXPORT Scope
 {
 public:
     enum SelectionScope : char {
-        Invalid,
-        Uid,
-        Rid,
-        HierarchicalRid,
-        Gid
+        Invalid = 0,
+        Uid = 1 << 0,
+        Rid = 1 << 1,
+        HierarchicalRid = 1 << 2,
+        Gid = 1 << 3
     };
 
     Scope();
 
     SelectionScope scope() const;
 
+    bool isEmpty() const;
+
     QVector<qint64> uidSet() const;
     void setUidSet(const QVector<qint64> &uidSet);
+
+    void setRidContext(qint64 context);
+    qint64 ridContext() const;
 
     void setRidSet(const QStringList &ridSet);
     QStringList ridSet() const;
@@ -66,11 +71,15 @@ public:
     void setGidSet(const QStringList &gidChain);
     QStringList gidSet() const;
 
+    qint64 uid() const;
+    QString rid() const;
+    QString gid() const;
 private:
     QVector<qint64> mUidSet;
     QStringList mRidSet;
     QStringList mRidChain;
     QStringList mGidSet;
+    qint64 mRidContext;
     SelectionScope mScope;
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Scope &scope);

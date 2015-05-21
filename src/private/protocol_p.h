@@ -718,6 +718,22 @@ public:
     {}
 };
 
+class AKONADIPRIVATE_EXPORT LogoutCommand : public Command
+{
+public:
+    LogoutCommand()
+        : Command(Logout)
+    {}
+};
+
+class AKONADIPRIVATE_EXPORT LogoutResponse : public Response
+{
+public:
+    LogoutResponse()
+        : Response(Logout)
+    {}
+};
+
 class AKONADIPRIVATE_EXPORT TransactionCommand : public Command
 {
 public:
@@ -785,13 +801,13 @@ public:
         return mMergeMode;
     }
 
-    void setCollectionId(qint64 collectionId)
+    void setCollection(const Scope &collection)
     {
-        mCollectionId = collectionId;
+        mCollection = collection;
     }
-    qint64 collectionId() const
+    Scope collection() const
     {
-        return mCollectionId;
+        return mCollection;
     }
 
     void setItemSize(qint64 size)
@@ -840,6 +856,15 @@ public:
         return mRemoteRev;
     }
 
+    void setDateTime(const QDateTime &dateTime)
+    {
+        mDateTime = dateTime;
+    }
+    QDateTime dateTime() const
+    {
+        return mDateTime;
+    }
+
     void setFlags(const QSet<QByteArray> &flags)
     {
         mFlags = flags;
@@ -869,11 +894,11 @@ public:
     {
         mTags = tags;
     }
-    QSet<QByteArray> tags() const
+    Scope tags() const
     {
         return mTags;
     }
-    void setAddedTags(const QSet<QByteArray> &tags)
+    void setAddedTags(const Scope &tags)
     {
         mAddedTags = tags;
     }
@@ -894,19 +919,20 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CreateItemCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CreateItemCommand &command);
 
-    qint64 mCollectionId;
-    qint64 mItemSize;
+    Scope mCollection;
     QString mMimeType;
     QString mGid;
     QString mRemoteId;
     QString mRemoteRev;
+    QDateTime mDateTime;
+    Scope mTags;
     QSet<QByteArray> mFlags;
     QSet<QByteArray> mAddedFlags;
     QSet<QByteArray> mRemovedFlags;
-    QSet<QByteArray> mTags;
     QSet<QByteArray> mAddedTags;
     QSet<QByteArray> mRemovedTags;
     MergeModes mMergeMode;
+    qint64 mItemSize;
 };
 
 class AKONADIPRIVATE_EXPORT CreateItemResponse : public Response
@@ -2017,11 +2043,11 @@ public:
     {
         return mScope;
     }
-    void setResource(const QByteArray &resourceId)
+    void setResource(const QString &resourceId)
     {
         mResource = resourceId;
     }
-    QByteArray resource() const
+    QString resource() const
     {
         return mResource;
     }
@@ -2040,6 +2066,14 @@ public:
     int ancestorsDepth() const
     {
         return mAncestorsDepth;
+    }
+    void setAncestorsAttributes(const QStringList &attributes)
+    {
+        mAncestorsAttributes = attributes;
+    }
+    QStringList ancestorsAttributes() const
+    {
+        return mAncestorsAttributes;
     }
     void setEnabled(bool enabled)
     {
@@ -2087,8 +2121,9 @@ private:
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsCommand &command);
 
     Scope mScope;
-    QByteArray mResource;
+    QString mResource;
     QStringList mMimeTypes;
+    QStringList mAncestorsAttributes;
     int mDepth;
     int mAncestorsDepth;
     bool mEnabled;
@@ -2292,8 +2327,7 @@ public:
         RemovedAttributes = 1 << 7,
         Attributes      = 1 << 8,
         ListPreferences = 1 << 9,
-        Referenced      = 1 << 10,
-        Virtual         = 1 << 11
+        Referenced      = 1 << 10
     };
     Q_DECLARE_FLAGS(ModifiedCollectionParts, ModifiedCollectionPart)
 
@@ -2307,7 +2341,6 @@ public:
         , mReferenced(false)
         , mPersistentSearchRemote(false)
         , mPersistentSearchRecursive(false)
-        , mVirtual(false)
         , mModifiedParts(None)
     {}
 
@@ -2322,17 +2355,30 @@ public:
         , mReferenced(false)
         , mPersistentSearchRemote(false)
         , mPersistentSearchRecursive(false)
-        , mVirtual(false)
         , mModifiedParts(None)
     {}
+
+    ModifiedCollectionParts modifiedParts() const
+    {
+        return mModifiedParts;
+    }
 
     Scope scope() const
     {
         return mScope;
     }
+    void setParentId(qint64 parentId)
+    {
+        mParentId = parentId;
+    }
+    qint64 parentId() const
+    {
+        return mParentId;
+    }
     void setMimeTypes(const QStringList &mimeTypes)
     {
         mModifiedParts |= MimeTypes;
+        mModifiedParts |= PersistentSearch;
         mMimeTypes = mimeTypes;
     }
     QStringList mimeTypes() const
@@ -2475,15 +2521,6 @@ public:
         return mReferenced;
     }
 
-    void setIsVirtual(bool isVirtual)
-    {
-        mModifiedParts |= Virtual;
-        mVirtual = isVirtual;
-    }
-    bool isVirtual() const
-    {
-        return mVirtual;
-    }
 private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyCollectionCommand &command);
@@ -2507,7 +2544,6 @@ private:
     bool mReferenced;
     bool mPersistentSearchRemote;
     bool mPersistentSearchRecursive;
-    bool mVirtual;
 
     ModifiedCollectionParts mModifiedParts;
 };

@@ -265,6 +265,12 @@ void Handler::setStreamParser(ImapStreamParser *parser)
     m_streamParser = parser;
 }
 
+bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedScopes)
+{
+    return scope.scope() & permittedScopes;
+}
+
+
 UnknownCommandHandler::UnknownCommandHandler(const QByteArray &command)
     : mCommand(command)
 {

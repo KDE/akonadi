@@ -43,22 +43,12 @@ namespace Server {
   - new unique id
   - empty remote id
   - owning resource is the same as the one of the target collection
-
-  <h4>Syntax</h4>
-
-  Request:
-  @verbatim
-  request = tag " COLCOPY " collection-id " " collection-id
-  @endverbatim
-
-  There is only the usual status response indicating success or failure of the
-  COLCOPY command
  */
 class ColCopy : public Copy
 {
     Q_OBJECT
 public:
-    bool parseStream();
+    bool parseStream() Q_DECL_OVERRIDE;
 
 private:
     bool copyCollection(const Collection &source, const Collection &target);

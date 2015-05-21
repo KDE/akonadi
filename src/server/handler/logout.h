@@ -33,10 +33,6 @@ class Logout : public Handler
 {
     Q_OBJECT
 public:
-    Logout();
-
-    ~Logout();
-
     bool parseStream();
 
 };
