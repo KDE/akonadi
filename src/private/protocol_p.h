@@ -172,13 +172,13 @@ class RemoveRelationsResponse;
 class SelectResourceCommand;
 class SelectResourceResponse;
 class StreamPayloadCommand;
-class PayloadStreamResponse;
+class StreamPayloadResponse;
 }
 }
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchScope &scope);
 QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
-QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Part &part);
-QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Part &part);
+QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PartMetaData &part);
+QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PartMetaData &part);
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
 QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CachePolicy &policy);
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
@@ -186,8 +186,8 @@ QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Ancestor &ancest
 
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchScope &scope);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Part &part);
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Part &part);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PartMetaData &part);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PartMetaData &part);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CachePolicy &policy);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
@@ -264,10 +264,10 @@ AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PayloadStreamCommand &command);
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PayloadStreamCommand &command);
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PayloadStreamResponse&command);
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PayloadStreamResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
 
 namespace Akonadi
 {
@@ -469,6 +469,10 @@ public:
         return mVersion;
     }
 
+    bool operator<(const PartMetaData &other) const
+    {
+        return mName < other.mName;
+    }
 private:
     QByteArray mName;
     qint64 mSize;
@@ -842,8 +846,8 @@ public:
 
     CreateItemCommand()
         : Command(CreateItem)
-        , mItemSize(-1)
         , mMergeMode(None)
+        , mItemSize(-1)
     {}
 
     void setMergeMode(const MergeModes &mode)
@@ -944,7 +948,7 @@ public:
         return mRemovedFlags;
     }
 
-    void setTags(const QVector<QByteArray> &tags)
+    void setTags(const Scope &tags)
     {
         mTags = tags;
     }
@@ -956,15 +960,15 @@ public:
     {
         mAddedTags = tags;
     }
-    QVector<QByteArray> addedTags() const
+    Scope addedTags() const
     {
         return mAddedTags;
     }
-    void setRemovedTags(const QVector<QByteArray> &tags)
+    void setRemovedTags(const Scope &tags)
     {
         mRemovedTags = tags;
     }
-    QVector<QByteArray> removedTags() const
+    Scope removedTags() const
     {
         return mRemovedTags;
     }
@@ -996,11 +1000,11 @@ private:
     QString mRemoteRev;
     QDateTime mDateTime;
     Scope mTags;
+    Scope mAddedTags;
+    Scope mRemovedTags;
     QVector<QByteArray> mFlags;
     QVector<QByteArray> mAddedFlags;
     QVector<QByteArray> mRemovedFlags;
-    QVector<QByteArray> mAddedTags;
-    QVector<QByteArray> mRemovedTags;
     QVector<QByteArray> mRemovedParts;
     QVector<PartMetaData> mParts;
     MergeModes mMergeMode;
@@ -1589,8 +1593,8 @@ public:
     ModifyItemsCommand(const Scope &scope)
         : Command(ModifyItems)
         , mScope(scope)
-        , mOldRevision(-1)
         , mSize(0)
+        , mOldRevision(-1)
         , mDirty(true)
         , mInvalidate(false)
         , mNoResponse(false)
@@ -2818,6 +2822,7 @@ public:
 
     SearchResultCommand(const QByteArray &searchId, qint64 collectionId, const Scope &result)
         : Command(SearchResult)
+        , mSearchId(searchId)
         , mResult(result)
         , mCollectionId(collectionId)
     {}

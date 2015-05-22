@@ -660,13 +660,13 @@ QDataStream &operator>>(QDataStream &stream, ModifyCollectionCommand &command)
 
 QDataStream &operator<<(QDataStream &stream, const MoveCollectionCommand &command)
 {
-    return stream << command.mCols
+    return stream << command.mCol
                   << command.mDest;
 }
 
 QDataStream &operator>>(QDataStream &stream, MoveCollectionCommand &command)
 {
-    return stream >> command.mCols
+    return stream >> command.mCol
                   >> command.mDest;
 }
 
