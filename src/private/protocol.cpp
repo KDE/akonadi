@@ -22,9 +22,115 @@
 #include <type_traits>
 
 #include <QDataStream>
+#include <QGlobalStatic>
+#include <QHash>
 
 using namespace Akonadi;
 using namespace Akonadi::Protocol;
+
+class FactoryPrivate
+{
+public:
+    typedef Command (*CommandFactoryFunc)();
+    typedef Response (*ResponseFactoryFunc)();
+
+    FactoryPrivate()
+    {
+        // Session management
+        registerType<Command::Hello, HelloResponse, HelloResponse>();
+        registerType<Command::Login, LoginCommand, LoginResponse>();
+        registerType<Command::Logout, LogoutCommand, LogoutResponse>();
+
+        // Transactions
+        registerType<Command::Transaction, TransactionCommand, TransactionResponse>();
+
+        // Items
+        registerType<Command::CreateItem, CreateItemCommand, CreateItemResponse>();
+        registerType<Command::CopyItems, CopyItemsCommand, CopyItemsResponse>();
+        registerType<Command::DeleteItems, DeleteItemsCommand, DeleteItemsResponse>();
+        registerType<Command::FetchItems, FetchItemsCommand, FetchItemsResponse>();
+        registerType<Command::LinkItems, LinkItemsCommand, LinkItemsResponse>();
+        registerType<Command::ModifyItems, ModifyItemsCommand, ModifyItemsResponse>();
+        registerType<Command::MoveItems, MoveItemsCommand, MoveItemsResponse>();
+
+        // Collections
+        registerType<Command::CreateCollection, CreateCollectionCommand, CreateCollectionResponse>();
+        registerType<Command::CopyCollection, CopyCollectionCommand, CopyCollectionResponse>();
+        registerType<Command::DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse>();
+        registerType<Command::FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse>();
+        registerType<Command::FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse>();
+        registerType<Command::ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse>();
+        registerType<Command::MoveCollection, MoveCollectionCommand, MoveCollectionResponse>();
+        registerType<Command::SelectCollection, SelectCollectionCommand, SelectCollectionResponse>();
+
+        // Search
+        registerType<Command::Search, SearchCommand, SearchResponse>();
+        registerType<Command::SearchResult, SearchResultCommand, SearchResultResponse>();
+        registerType<Command::StoreSearch, StoreSearchCommand, StoreSearchResponse>();
+
+        // Tag
+        registerType<Command::CreateTag, CreateTagCommand, CreateTagResponse>();
+        registerType<Command::DeleteTag, DeleteTagCommand, DeleteTagResponse>();
+        registerType<Command::FetchTags, FetchTagsCommand, FetchTagsResponse>();
+        registerType<Command::ModifyTag, ModifyTagCommand, ModifyTagResponse>();
+
+        // Relation
+        registerType<Command::FetchRelations, FetchRelationsCommand, FetchRelationsResponse>();
+        registerType<Command::ModifyRelation, ModifyRelationCommand, ModifyRelationResponse>();
+        registerType<Command::RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse>();
+
+        // Resources
+        registerType<Command::SelectResource, SelectResourceCommand, SelectResourceResponse>();
+
+        // Other...?
+        registerType<Command::StreamPayload, StreamPayloadCommand, StreamPayloadResponse>();
+    }
+
+    QHash<Command::Type, QPair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
+
+private:
+    template<typename T>
+    static Command commandFactoryFunc()
+    {
+        return T();
+    }
+    template<typename T>
+    static Response responseFactoryFunc()
+    {
+        return T();
+    }
+
+    template<Command::Type T,typename CmdType, typename RespType>
+    void registerType() {
+        CommandFactoryFunc cmdFunc = &commandFactoryFunc<CmdType>;
+        ResponseFactoryFunc respFunc = &responseFactoryFunc<RespType>;
+        registrar.insert(T, qMakePair<CommandFactoryFunc, ResponseFactoryFunc>(cmdFunc, respFunc));
+    }
+};
+
+Q_GLOBAL_STATIC(FactoryPrivate, sFactoryPrivate)
+
+Command Factory::command(Command::Type type)
+{
+    auto iter = sFactoryPrivate->registrar.constFind(type);
+    if (iter == sFactoryPrivate->registrar.constEnd()) {
+        Q_ASSERT_X(iter != sFactoryPrivate->registrar.constEnd(),
+                    "Aknadi::Protocol::Factory::command()", "Invalid command");
+    }
+    return iter.value().first();
+}
+
+Response Factory::response(Command::Type type)
+{
+    auto iter = sFactoryPrivate->registrar.constFind(type);
+    if (iter == sFactoryPrivate->registrar.constEnd()) {
+        Q_ASSERT_X(iter != sFactoryPrivate->registrar.constEnd(),
+                    "Akonadi::Protocol::Factory::response()", "Invalid response");
+    }
+    return iter.value().second();
+}
+
+
 
 // Generic code for effective streaming of enums
 template<typename T>

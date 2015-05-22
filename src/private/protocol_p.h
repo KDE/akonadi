@@ -284,6 +284,98 @@ enum class Tristate : qint8
 namespace Protocol
 {
 
+class AKONADIPRIVATE_EXPORT Command
+{
+public:
+    enum Type : qint8 {
+        Invalid = 0,
+
+        // Session management
+        Hello = 1,
+        Login,
+        Logout,
+
+        // Transactions
+        Transaction = 10,
+
+        // Items
+        CreateItem = 20,
+        CopyItems,
+        DeleteItems,
+        FetchItems,
+        LinkItems,
+        ModifyItems,
+        MoveItems,
+
+        // Collections
+        CreateCollection = 40,
+        CopyCollection,
+        DeleteCollection,
+        FetchCollections,
+        FetchCollectionStats,
+        ModifyCollection,
+        MoveCollection,
+        SelectCollection,
+
+        // Search
+        Search = 60,
+        SearchResult,
+        StoreSearch,
+
+        // Tag
+        CreateTag = 70,
+        DeleteTag,
+        FetchTags,
+        ModifyTag,
+
+        // Relation
+        FetchRelations = 80,
+        ModifyRelation,
+        RemoveRelations,
+
+        // Resources
+        SelectResource = 90,
+
+        // Other...?
+        StreamPayload = 100
+    };
+
+    virtual ~Command()
+    {}
+
+    Type type() const
+    {
+        return mCommandType;
+    }
+
+    bool isValid() const
+    {
+        return mCommandType != Invalid;
+    }
+
+protected:
+    Command(Type type)
+        : mCommandType(type)
+    {}
+
+private:
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
+
+    Type mCommandType;
+};
+
+
+
+class AKONADIPRIVATE_EXPORT Factory
+{
+public:
+    static Command command(Command::Type type);
+    static Response response(Command::Type type);
+};
+
+
+
 class AKONADIPRIVATE_EXPORT FetchScope
 {
 public:
@@ -591,86 +683,7 @@ private:
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
 };
 
-class AKONADIPRIVATE_EXPORT Command
-{
-public:
-    enum Type : qint8 {
-        Invalid = 0,
 
-        // Session management
-        Hello = 1,
-        Login,
-        Logout,
-
-        // Transactions
-        Transaction = 10,
-
-        // Items
-        CreateItem = 20,
-        CopyItems,
-        DeleteItems,
-        FetchItems,
-        LinkItems,
-        ModifyItems,
-        MoveItems,
-
-        // Collections
-        CreateCollection = 40,
-        CopyCollection,
-        DeleteCollection,
-        FetchCollections,
-        FetchCollectionStats,
-        ModifyCollection,
-        MoveCollection,
-        SelectCollection,
-
-        // Search
-        Search = 60,
-        SearchResult,
-        StoreSearch,
-
-        // Tag
-        CreateTag = 70,
-        DeleteTag,
-        FetchTags,
-        ModifyTag,
-
-        // Relation
-        FetchRelations = 80,
-        ModifyRelation,
-        RemoveRelations,
-
-        // Resources
-        SelectResource = 90,
-
-        // Other...?
-        StreamPayload = 100
-    };
-
-    virtual ~Command()
-    {}
-
-    Type type() const
-    {
-        return mCommandType;
-    }
-
-    bool isValid() const
-    {
-        return mCommandType != Invalid;
-    }
-
-protected:
-    Command(Type type)
-        : mCommandType(type)
-    {}
-
-private:
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
-
-    Type mCommandType;
-};
 
 class AKONADIPRIVATE_EXPORT Response : public Command
 {
