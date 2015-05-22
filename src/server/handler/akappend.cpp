@@ -50,23 +50,21 @@ static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATT
                                                                         << "$SIGNED"
                                                                         << "$WATCHED";
 
-bool AkAppend::buildPimItem(Protocol::CreateItemCommand &cmd, PimItem &item,
+bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                             Collection &parentCol)
 {
     MimeType mimeType = MimeType::retrieveByName(cmd.mimeType());
     if (!mimeType.isValid()) {
         MimeType m(cmd.mimeType());
         if (!m.insert()) {
-            return failureResponse<Protocol::CreateItemResponse>(
-                QStringLiteral("Unable to create mimetype '") % cmd.mimeType() % QStringLiteral("'."));
+            return failureResponse(QStringLiteral("Unable to create mimetype '") % cmd.mimeType() % QStringLiteral("'."));
         }
         mimeType = m;
     }
 
     parentCol = HandlerHelper::collectionFromScope(cmd.collection());
     if (!parentCol.isValid()) {
-        return failureResponse<Protocol::CreateItemResponse>(
-            QStringLiteral("Invalid parent collection"));
+        return failureResponse("Invalid parent collection");
     }
 
     item.setRev(0);
@@ -93,8 +91,7 @@ bool AkAppend::insertItem(Protocol::CreateItemCommand &cmd, PimItem &item,
                           const Collection &parentCol)
 {
     if (!item.insert()) {
-        return failureResponse<Protocol::CreateItemResponse>(
-            QStringLiteral("Failed to append item"));
+        return failureResponse("Failed to append item");
     }
 
     // set message flags
@@ -117,7 +114,7 @@ bool AkAppend::insertItem(Protocol::CreateItemCommand &cmd, PimItem &item,
 
     for (Protocol::PartMetaData part : cmd.parts()) {
         if (!streamer.stream(true, part)) {
-            return failureResponse<Protocol::CreateItemResponse>(streamer.error());
+            return failureResponse(streamer.error());
         }
         partSizes += part.size();
     }
@@ -174,7 +171,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     // Only mark dirty when merged from application
     currentItem.setDirty(!connection()->context()->resource().isValid());
 
-    const Collection col = Collection::retrieveById(newItem.collectionId());
+    const Collection col = Collection::retrieveById(parentCol.id());
     if (cmd.flags().isEmpty()) {
         bool flagsAdded = false, flagsRemoved = false;
         if (!cmd.addedFlags().isEmpty()) {
@@ -243,9 +240,11 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     if (!cmd.removedParts().isEmpty()) {
         DataStore::self()->removeItemParts(currentItem, cmd.removedParts());
-        changedParts << cmd.removedParts();
+        for (const QByteArray &part : cmd.removedParts()) {
+            changedParts.insert(part);
+        }
         for (const QByteArray &removedPart : cmd.removedParts()) {
-            partSizes.remove(removedPart);
+            partsSizes.remove(removedPart);
         }
     }
 
@@ -254,11 +253,11 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     for (Protocol::PartMetaData part : cmd.parts()) {
         bool changed = false;
         if (!streamer.stream(true, part, &changed)) {
-            return failureResponse<Protocol::CreateItemResponse>(streamer.error());
+            return failureResponse(streamer.error());
         }
 
         if (changed) {
-            changedParts << part.name();
+            changedParts.insert(part.name());
             partsSizes.insert(part.name(), part.size());
         }
     }
@@ -268,8 +267,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     // Store all changes
     if (!currentItem.update()) {
-        return failureResponse<Protocol::CreateItemResponse>(
-            QStringLiteral("Failed to store merged item"));
+        return failureResponse("Failed to store merged item");
     }
 
 
@@ -305,7 +303,7 @@ bool AkAppend::notify(const PimItem &item, const Collection &collection,
 bool AkAppend::parseStream()
 {
     Protocol::CreateItemCommand cmd;
-    cmd << mInStream;
+    mInStream >> cmd;
 
     // FIXME: The streaming/reading of all item parts can hold the transaction for
     // unnecessary long time -> should we wrap the PimItem into one transaction
@@ -325,8 +323,7 @@ bool AkAppend::parseStream()
             return false;
         }
         if (!transaction.commit()) {
-            return failureResponse<Protocol::CreateItemResponse>(
-                QStringLiteral("Failed to commit transaction"));
+            return failureResponse("Failed to commit transaction");
         }
     } else {
         // Merging is always restricted to the same collection and mimetype
@@ -335,13 +332,13 @@ bool AkAppend::parseStream()
         qb.addValueCondition(PimItem::mimeTypeIdColumn(), Query::Equals, item.mimeTypeId());
         if (cmd.mergeMode() & Protocol::CreateItemCommand::GID) {
             qb.addValueCondition(PimItem::gidColumn(), Query::Equals, item.gid());
+        }
         if (cmd.mergeMode() & Protocol::CreateItemCommand::RemoteID) {
             qb.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
         }
 
         if (!qb.exec()) {
-            return failureResponse<Protocol::CreateItemResponse>(
-                QStringLiteral("Failed to query database for item"));
+            return failureResponse("Failed to query database for item");
         }
 
         const QVector<PimItem> result = qb.result();
@@ -352,8 +349,7 @@ bool AkAppend::parseStream()
                 return false;
             }
             if (!transaction.commit()) {
-                return failureResponse<Protocol::CreateItemResponse>(
-                    QStringLiteral("Failed to commit transaction"));
+                return failureResponse("Failed to commit transaction");
             }
         } else if (result.count() == 1) {
             // Item with matching GID/RID combination exists, so merge this item into it
@@ -364,8 +360,7 @@ bool AkAppend::parseStream()
                 return false;
             }
             if (!transaction.commit()) {
-                return failureResponse<Protocol::CreateItemResponse>(
-                    QStringLiteral("Failed to commit transaction"));
+                return failureResponse("Failed to commit transaction");
             }
         } else {
             akDebug() << "Multiple merge candidates:";
@@ -374,11 +369,9 @@ bool AkAppend::parseStream()
             }
             // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
             // something we don't want
-            return failureResponse<Protocol::CreateItemResponse>(
-                QStringLiteral("Multiple merge candidates, aborting"));
+            return failureResponse("Multiple merge candidates, aborting");
         }
     }
 
-    mOutStream << Protocol::CreateItemResponse();
-    return true;
+    return successResponse<Protocol::CreateItemResponse>();
 }

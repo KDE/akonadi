@@ -36,6 +36,7 @@
 #include "parttypehelper.h"
 #include "querycache.h"
 #include "queryhelper.h"
+#include <utils.h>
 
 #include <shared/akdebug.h>
 #include <private/xdgbasedirs_p.h>
@@ -655,7 +656,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 
 /* --- ItemParts ----------------------------------------------------- */
 
-bool DataStore::removeItemParts(const PimItem &item, const QList<QByteArray> &parts)
+bool DataStore::removeItemParts(const PimItem &item, const QVector<QByteArray> &parts)
 {
     SelectQueryBuilder<Part> qb;
     qb.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
@@ -670,7 +671,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QList<QByteArray> &pa
         }
     }
 
-    mNotificationCollector->itemChanged(item, parts.toSet());
+    mNotificationCollector->itemChanged(item, Utils::vectorToSet(parts));
     return true;
 }
 
