@@ -60,12 +60,12 @@
 #include "storage/querybuilder.h"
 #include "imapstreamparser.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Handler::Handler()
     : QObject()
     , m_connection(0)
-    , m_streamParser(0)
 {
 }
 
@@ -73,145 +73,147 @@ Handler::~Handler()
 {
 }
 
-Handler *Handler::findHandlerForCommandNonAuthenticated(const QByteArray &command)
+Handler *Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd)
 {
     // allowed are LOGIN
-    if (command == AKONADI_CMD_LOGIN) {
+    if (cmd == Protocol::Command::Login) {
         return new Login();
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
-Handler *Handler::findHandlerForCommandAlwaysAllowed(const QByteArray &command)
+Handler *Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd)
 {
     // allowed is LOGOUT
-    if (command == AKONADI_CMD_LOGOUT) {
+    if (cmd == Protocol::Command::Logout) {
         return new Logout();
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
-void Handler::setTag(const QByteArray &tag)
+void Handler::setTag(quint64 tag)
 {
     m_tag = tag;
 }
 
-QByteArray Handler::tag() const
+quint64 Handler::tag() const
 {
     return m_tag;
 }
 
-Handler *Handler::findHandlerForCommandAuthenticated(const QByteArray &_command, ImapStreamParser *streamParser)
+void Handler::setCommand(Protocol::Command::Type cmd)
 {
-    QByteArray command(_command);
-    // deal with command prefixes
-    Scope::SelectionScope scope = Scope::selectionScopeFromByteArray(command);
-    if (scope != Scope::None) {
-        command = streamParser->readString();
-    }
+    m_command = cmd;
+}
 
-    // allowed commands are listed below ;-).
-    if (command == AKONADI_CMD_COLLECTIONCREATE) {
-        return new Create(scope);
-    }
-    if (command == AKONADI_CMD_LIST || command == AKONADI_CMD_X_AKLIST) {   //TODO: remove X-AKLIST support in Akonadi 2.0
-        return new List(scope, false);
-    }
-    if (command == AKONADI_CMD_LSUB || command == AKONADI_CMD_X_AKLSUB) {   //TODO: remove X-AKLSUB support in Akonadi 2.0
-        return new List(scope, true);
-    }
-    if (command == AKONADI_CMD_SELECT) {
-        return new Select(scope);
-    }
-    if (command == AKONADI_CMD_SEARCH_STORE) {
-        return new SearchPersistent();
-    }
-    if (command == AKONADI_CMD_SEARCH) {
-        return new Search();
-    }
-    if (command == AKONADI_CMD_SEARCH_RESULT) {
-        return new SearchResult(scope);
-    }
-    if (command == AKONADI_CMD_ITEMFETCH) {
-        return new Fetch(scope);
-    }
-    if (command == AKONADI_CMD_ITEMMODIFY) {
-        return new Store(scope);
-    }
-    if (command == AKONADI_CMD_STATUS) {
-        return new Status();
-    }
-    if (command == AKONADI_CMD_COLLECTIONDELETE) {
-        return new Delete(scope);
-    }
-    if (command == AKONADI_CMD_COLLECTIONMODIFY) {
-        return new Modify(scope);
-    }
-    if (command == AKONADI_CMD_BEGIN) {
-        return new TransactionHandler(TransactionHandler::Begin);
-    }
-    if (command == AKONADI_CMD_ROLLBACK) {
-        return new TransactionHandler(TransactionHandler::Rollback);
-    }
-    if (command == AKONADI_CMD_COMMIT) {
-        return new TransactionHandler(TransactionHandler::Commit);
-    }
-    if (command == AKONADI_CMD_ITEMCREATE) {
+Protocol::Command::Type Handler::command() const
+{
+    return m_command;
+}
+
+
+Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd)
+{
+    switch (cmd)
+    {
+    case Protocol::Command::Invalid:
+        Q_ASSERT_X(cmd != Protocol::Command::Invalid,
+                   "Handler::findHandlerForCommandAuthenticated()",
+                   "Invalid command is not allowed");
+        return Q_NULLPTR;
+    case Protocol::Command::Hello:
+        Q_ASSERT_X(cmd != Protocol::Command::Hello,
+                    "Handler::findHandlerForCommandAuthenticated()",
+                    "Hello command is not allowed in this context");
+        return Q_NULLPTR;
+    case Protocol::Command::Login:
+        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload,
+                    "Handler::findHandlerForCommandAuthenticated()",
+                    "Login command is not allowed in this context");
+        return Q_NULLPTR;
+    case Protocol::Command::Logout:
+        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload,
+            "Handler::findHandlerForCommandAuthenticated()",
+            "Logout command is not allowed in this context");
+        return Q_NULLPTR;
+
+    case Protocol::Command::Transaction:
+        return new TransactionHandler();
+
+    case Protocol::Command::CreateItem:
         return new AkAppend();
-    }
-    if (command == AKONADI_CMD_ITEMCOPY) {
+    case Protocol::Command::CopyItems:
         return new Copy();
-    }
-    if (command == AKONADI_CMD_COLLECTIONCOPY) {
+    case Protocol::Command::DeleteItems:
+        return new Remove();
+    case Protocol::Command::FetchItems:
+        return new Fetch();
+    case Protocol::Command::LinkItems:
+        return new Link();
+    case Protocol::Command::ModifyItems:
+        return new Store();
+    case Protocol::Command::MoveItems:
+        return new Move();
+
+    case Protocol::Command::CreateCollection:
+        return new Create();
+    case Protocol::Command::CopyCollection:
         return new ColCopy();
-    }
-    if (command == AKONADI_CMD_ITEMLINK) {
-        return new Link(scope, true);
-    }
-    if (command == AKONADI_CMD_ITEMUNLINK) {
-        return new Link(scope, false);
-    }
-    if (command == AKONADI_CMD_RESOURCESELECT) {
-        return new ResourceSelect();
-    }
-    if (command == AKONADI_CMD_ITEMDELETE) {
-        return new Remove(scope);
-    }
-    if (command == AKONADI_CMD_ITEMMOVE) {
-        return new Move(scope);
-    }
-    if (command == AKONADI_CMD_COLLECTIONMOVE) {
-        return new ColMove(scope);
-    }
-    if (command == AKONADI_CMD_TAGAPPEND) {
+    case Protocol::Command::DeleteCollection:
+        return new Delete();
+    case Protocol::Command::FetchCollections:
+        return new List();
+    case Protocol::Command::FetchCollectionStats:
+        return new Status();
+    case Protocol::Command::ModifyCollection:
+        return new Modify();
+    case Protocol::Command::MoveCollection:
+        return new ColMove();
+    case Protocol::Command::SelectCollection:
+        return new Select();
+
+    case Protocol::Command::Search:
+        return new Search();
+    case Protocol::Command::SearchResult:
+        return new SearchResult();
+    case Protocol::Command::StoreSearch:
+        return new SearchPersistent();
+
+    case Protocol::Command::CreateTag:
         return new TagAppend();
-    }
-    if (command == AKONADI_CMD_TAGFETCH) {
-        return new TagFetch(scope);
-    }
-    if (command == AKONADI_CMD_TAGREMOVE) {
-        return new TagRemove(scope);
-    }
-    if (command == AKONADI_CMD_TAGSTORE) {
+    case Protocol::Command::DeleteTag:
+        return new TagRemove();
+    case Protocol::Command::FetchTags:
+        return new TagFetch();
+    case Protocol::Command::ModifyTag:
         return new TagStore();
-    }
-    if (command == AKONADI_CMD_RELATIONSTORE) {
-        return new RelationStore(scope);
-    }
-    if (command == AKONADI_CMD_RELATIONREMOVE) {
-        return new RelationRemove(scope);
-    }
-    if (command == AKONADI_CMD_RELATIONFETCH) {
-        return new RelationFetch(scope);
+
+    case Protocol::Command::FetchRelations:
+        return new RelationFetch();
+    case Protocol::Command::ModifyRelation:
+        return new RelationStore();
+    case Protocol::Command::RemoveRelations:
+        return new RelationRemove();
+
+    case Protocol::Command::SelectResource:
+        return new ResourceSelect();
+
+    case Protocol::Command::StreamPayload:
+        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload,
+                    "Handler::findHandlerForCommandAuthenticated()",
+                    "StreamPayload command is not allowed in this context");
+        return Q_NULLPTR;
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
 void Handler::setConnection(Connection *connection)
 {
     m_connection = connection;
+    mInStream.setDevice(m_connection->socket());
+    mOutStream.setDevice(m_connection->socket());
 }
 
 Connection *Handler::connection() const
@@ -221,37 +223,23 @@ Connection *Handler::connection() const
 
 bool Handler::failureResponse(const QByteArray &failureMessage)
 {
-    Response response;
-    response.setTag(tag());
-    response.setFailure();
-    response.setString(failureMessage);
-    Q_EMIT responseAvailable(response);
-    return false;
+    return failureResponse(QString::fromUtf8(failureMessage));
 }
 
 bool Handler::failureResponse(const char *failureMessage)
 {
-    return failureResponse(QByteArray(failureMessage));
+    return failureResponse(QString::fromUtf8(failureMessage));
 }
 
-bool Handler::successResponse(const QByteArray &successMessage)
+bool Handler::failureResponse(const QString &failureMessage)
 {
-    Response response;
-    response.setTag(tag());
-    response.setSuccess();
-    response.setString(successMessage);
-    Q_EMIT responseAvailable(response);
-    return true;
-}
+    Protocol::Response r = Protocol::Factory::response(m_command);
+    // FIXME: Error enums?
+    r.setError(1, failureMessage);
 
-bool Handler::successResponse(const char *successMessage)
-{
-    return successResponse(QByteArray(successMessage));
-}
+    sendResponse<Protocol::Response>(r);
 
-void Handler::setStreamParser(ImapStreamParser *parser)
-{
-    m_streamParser = parser;
+    return false;
 }
 
 bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedScopes)
@@ -260,23 +248,20 @@ bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedSc
 }
 
 
-UnknownCommandHandler::UnknownCommandHandler(const QByteArray &command)
-    : mCommand(command)
+void Handler::sendResponseImpl(const Protocol::Response *response)
 {
-}
+    // FIXME: This is a dirty hack, really. Ideally we would want to be able
+    // to serialize the entire response implementation including all of it's
+    // superclasses. At the same time however we use certain responses as parts
+    // of different responses, so we need to be able to serialize only the
+    // implementations too.
 
-bool UnknownCommandHandler::parseStream()
-{
-    Response response;
-    response.setError();
-    response.setTag(tag());
-    if (mCommand.isEmpty()) {
-        response.setString("No command specified");
-    } else {
-        response.setString("Unrecognized command: " + mCommand);
-    }
-    m_streamParser->readUntilCommandEnd();
+    // Send tag first
+    mOutStream << m_tag;
+    // Serialize Command baseclass
+    mOutStream << *static_cast<const Protocol::Command*>(response);
+    // Serialize Response baseclass
+    mOutStream << *response;
 
-    Q_EMIT responseAvailable(response);
-    return true;
+    // Payload of the actual implementation is serialized in sendResponse() template
 }

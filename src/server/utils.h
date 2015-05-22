@@ -22,6 +22,8 @@
 #define UTILS_H
 
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
+#include <QtCore/QSet>
 
 namespace Akonadi {
 namespace Server {
@@ -57,6 +59,17 @@ static inline QByteArray variantToByteArray(const QVariant &variant)
         Q_ASSERT(false);
         return QByteArray();
     }
+}
+
+template<typename T>
+static inline QSet<T> vectorToSet(const QVector<T> &v)
+{
+    QSet<T> set;
+    set.reserve(v.size());
+    for (const T &t : v) {
+        set.insert(t);
+    }
+    return set;
 }
 
 /**

@@ -160,6 +160,18 @@ typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
     return stream;
 }
 
+QDataStream &operator<<(QDataStream &stream, Command::Type type)
+{
+    return stream << static_cast<typename std::underlying_type<Command::Type>::type>(type);
+}
+
+QDataStream &operator>>(QDataStream &stream, Command::Type &type)
+{
+    typename std::underlying_type<Command::Type>::type tmp;
+    stream >> tmp;
+    type = static_cast<Command::Type>(tmp);
+    return stream;
+}
 
 QDataStream &operator<<(QDataStream &stream, const FetchScope &scope)
 {

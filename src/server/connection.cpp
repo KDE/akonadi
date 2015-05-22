@@ -32,16 +32,17 @@
 #include "clientcapabilityaggregator.h"
 #include "collectionreferencemanager.h"
 
-#include "imapstreamparser.h"
-
 #include <shared/akdebug.h>
 #include <shared/akcrash.h>
 #include <shared/akstandarddirs.h>
 
 #include <assert.h>
 
-#define AKONADI_PROTOCOL_VERSION 44
+#include <private/protocol_p.h>
 
+#define AKONADI_PROTOCOL_VERSION 50
+
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Connection::Connection(QObject *parent)
@@ -51,7 +52,6 @@ Connection::Connection(QObject *parent)
     , m_currentHandler(0)
     , m_connectionState(NonAuthenticated)
     , m_backend(0)
-    , m_streamParser(0)
     , m_verifyCacheOnRetrieval(false)
     , m_totalTime( 0 )
     , m_reportTime( false )
@@ -94,20 +94,22 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     connect(socket, SIGNAL(disconnected()),
             this, SIGNAL(disconnected()));
 
-    m_streamParser = new ImapStreamParser(m_socket);
-    m_streamParser->setTracerIdentifier(m_identifier);
+    m_stream.setDevice(m_socket);
 
-    Response greeting;
-    greeting.setUntagged();
-    greeting.setString("OK Akonadi Almost IMAP Server [PROTOCOL " + QByteArray::number(AKONADI_PROTOCOL_VERSION) + "]");
+
     // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
     // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
     // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
-    QMetaObject::invokeMethod(this, "slotResponseAvailable",
-                              Qt::DirectConnection,
-                              Q_ARG(Akonadi::Server::Response, greeting));
+    QMetaObject::invokeMethod(this, "slotSendHello", Qt::DirectConnection);
 }
 
+void Connection::slotSendHello()
+{
+    Protocol::HelloResponse hello(QStringLiteral("Akonadi"),
+                                  QStringLiteral("Not Really IMAP server"),
+                                  protocolVersion());
+    m_stream << hello;
+}
 
 int Connection::protocolVersion()
 {
@@ -131,8 +133,6 @@ Connection::~Connection()
 {
     delete m_socket;
     m_socket = 0;
-    delete m_streamParser;
-    m_streamParser = 0;
 
     ClientCapabilityAggregator::removeSession(m_clientCapabilities);
     Tracer::self()->endConnection(m_identifier, QString());
@@ -151,61 +151,53 @@ void Connection::slotNewData()
     }
 
     QString currentCommand;
-    while (m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty()) {
+    while (m_socket->bytesAvailable() > 0) {
+        quint64 tag = -1;
+        m_stream >> tag;
+        // TODO: Check tag is incremental sequence
+
+        Protocol::Command::Type cmd;
+        m_stream >> cmd;
+        if (cmd == Protocol::Command::Invalid) {
+            // TODO: Don't so harsh, just send back an error
+            slotConnectionStateChange(Server::LoggingOut);
+            return;
+        }
+
+        // Tag context and collection context is not persistent.
+        //        with SELECT job
+        context()->setTag(-1);
+        context()->setCollection(Collection());
+        //Tracer::self()->connectionInput(m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()));
+
+        m_currentHandler = findHandlerForCommand(cmd);
+        assert(m_currentHandler);
+        if (m_reportTime) {
+            startTime();
+        }
+        connect(m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
+                this, SLOT(slotConnectionStateChange(ConnectionState)),
+                Qt::DirectConnection);
+
+        m_currentHandler->setConnection(this);
+        m_currentHandler->setTag(tag);
+        m_currentHandler->setCommand(cmd);
         try {
-            const QByteArray tag = m_streamParser->readString();
-            // deal with stray newlines
-            if (tag.isEmpty() && m_streamParser->atCommandEnd()) {
-                continue;
-            }
-            const QByteArray command = m_streamParser->readString();
-            if (command.isEmpty()) {
-                throw Akonadi::Server::Exception("empty command");
-            }
-            // Tag context and collection context is not persistent.
-            //        with SELECT job
-            context()->setTag(-1);
-            context()->setCollection(Collection());
-            Tracer::self()->connectionInput(m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()));
-            m_currentHandler = findHandlerForCommand(command);
-            currentCommand = QString::fromLatin1(command);
-            if (m_reportTime) {
-                startTime();
-            }
-            assert(m_currentHandler);
-            connect(m_currentHandler, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-                    this, SLOT(slotResponseAvailable(Akonadi::Server::Response)), Qt::DirectConnection);
-            connect(m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
-                    this, SLOT(slotConnectionStateChange(ConnectionState)),
-                    Qt::DirectConnection);
-            m_currentHandler->setConnection(this);
-            m_currentHandler->setTag(tag);
-            m_currentHandler->setStreamParser(m_streamParser);
             if (!m_currentHandler->parseStream()) {
-                m_streamParser->skipCurrentCommand();
+                // TODO: What to do? How do we know we reached the end of command?
             }
         } catch (const Akonadi::Server::HandlerException &e) {
-            m_currentHandler->failureResponse(e.what());
-            try {
-                m_streamParser->skipCurrentCommand();
-            } catch (...) {
+            if (m_currentHandler) {
+                m_currentHandler->failureResponse(e.what());
             }
         } catch (const Akonadi::Server::Exception &e) {
             if (m_currentHandler) {
-                m_currentHandler->failureResponse(QByteArray(e.type()) + QByteArray(": ") + QByteArray(e.what()));
-            }
-            try {
-                m_streamParser->skipCurrentCommand();
-            } catch (...) {
+                m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
             }
         } catch (...) {
             akError() << "Unknown exception caught: " << akBacktrace();
             if (m_currentHandler) {
                 m_currentHandler->failureResponse("Unknown exception caught");
-            }
-            try {
-                m_streamParser->skipCurrentCommand();
-            } catch (...) {
             }
         }
         if (m_reportTime) {
@@ -213,23 +205,7 @@ void Connection::slotNewData()
         }
         delete m_currentHandler;
         m_currentHandler = 0;
-
-        if (m_streamParser->readRemainingData().startsWith('\n') || m_streamParser->readRemainingData().startsWith("\r\n")) {
-            try {
-                m_streamParser->readUntilCommandEnd(); //just eat the ending newline
-            } catch (...) {
-            }
-        }
     }
-}
-
-void Connection::writeOut(const QByteArray &data)
-{
-    QByteArray block = data + "\r\n";
-    m_socket->write(block);
-    m_socket->waitForBytesWritten(30 * 1000);
-
-    Tracer::self()->connectionOutput(m_identifier, block);
 }
 
 CommandContext *Connection::context() const
@@ -237,7 +213,7 @@ CommandContext *Connection::context() const
     return const_cast<CommandContext *>(&m_context);
 }
 
-Handler *Connection::findHandlerForCommand(const QByteArray &command)
+Handler *Connection::findHandlerForCommand(Protocol::Command::Type command)
 {
     Handler *handler = Handler::findHandlerForCommandAlwaysAllowed(command);
     if (handler) {
@@ -249,25 +225,15 @@ Handler *Connection::findHandlerForCommand(const QByteArray &command)
         handler =  Handler::findHandlerForCommandNonAuthenticated(command);
         break;
     case Authenticated:
-        handler =  Handler::findHandlerForCommandAuthenticated(command, m_streamParser);
+        handler =  Handler::findHandlerForCommandAuthenticated(command);
         break;
     case Selected:
         break;
     case LoggingOut:
         break;
     }
-    // we didn't have a handler for this, let the default one do its thing
-    if (!handler) {
-        handler = new UnknownCommandHandler(command);
-    }
-    return handler;
-}
 
-void Connection::slotResponseAvailable(const Response &response)
-{
-    // FIXME handle reentrancy in the presence of continuation. Something like:
-    // "if continuation pending, queue responses, once continuation is done, replay them"
-    writeOut(response.asString());
+    return handler;
 }
 
 void Connection::slotConnectionStateChange(ConnectionState state)
@@ -314,7 +280,7 @@ void Connection::setSessionId(const QByteArray &id)
 {
     m_identifier.sprintf("%s (%p)", id.data(), static_cast<void *>(this));
     Tracer::self()->beginConnection(m_identifier, QString());
-    m_streamParser->setTracerIdentifier(m_identifier);
+    //m_streamParser->setTracerIdentifier(m_identifier);
 
     m_sessionId = id;
     setObjectName(QString::fromLatin1(id));
@@ -389,4 +355,3 @@ void Connection::reportTime() const
         qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
     }
 }
-

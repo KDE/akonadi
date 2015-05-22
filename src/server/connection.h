@@ -23,11 +23,14 @@
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
 #include <QtNetwork/QLocalSocket>
+#include <QtCore/QDataStream>
 
 #include "entities.h"
 #include "global.h"
 #include "clientcapabilities.h"
 #include "commandcontext.h"
+
+#include <private/protocol_p.h>
 
 namespace Akonadi {
 namespace Server {
@@ -36,7 +39,6 @@ class Handler;
 class Response;
 class DataStore;
 class Collection;
-class ImapStreamParser;
 class CollectionReferenceManager;
 
 /**
@@ -92,14 +94,16 @@ protected Q_SLOTS:
 
     virtual void slotResponseAvailable(const Akonadi::Server::Response &response);
 
+    void slotSendHello();
+
 protected:
     Connection(QObject *parent = 0); // used for testing
 
-    void writeOut(const QByteArray &data);
-    virtual Handler *findHandlerForCommand(const QByteArray &command);
+    virtual Handler *findHandlerForCommand(Protocol::Command::Type cmd);
 
 protected:
     quintptr m_socketDescriptor;
+    QDataStream m_stream;
     QIODevice *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
@@ -107,10 +111,10 @@ protected:
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
-    ImapStreamParser *m_streamParser;
     ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
+
     QTime m_time;
     qint64 m_totalTime;
     QHash<QString, qint64> m_totalTimeByHandler;

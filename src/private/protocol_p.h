@@ -365,8 +365,6 @@ private:
     Type mCommandType;
 };
 
-
-
 class AKONADIPRIVATE_EXPORT Factory
 {
 public:
@@ -3379,6 +3377,9 @@ private:
 
 } // namespace Protocol
 } // namespace Akonadi
+
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type);
 
 
 // Command parameters
