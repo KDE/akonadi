@@ -75,6 +75,11 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
+
+    QIODevice *socket() const
+    {
+        return m_socket;
+    }
 Q_SIGNALS:
     void disconnected();
 

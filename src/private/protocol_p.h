@@ -171,6 +171,8 @@ class RemoveRelationsCommand;
 class RemoveRelationsResponse;
 class SelectResourceCommand;
 class SelectResourceResponse;
+class StreamPayloadCommand;
+class PayloadStreamResponse;
 }
 }
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchScope &scope);
@@ -262,7 +264,10 @@ AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
-
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PayloadStreamCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PayloadStreamCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PayloadStreamResponse&command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PayloadStreamResponse &command);
 
 namespace Akonadi
 {
@@ -377,7 +382,7 @@ class AKONADIPRIVATE_EXPORT Part
 public:
     Part()
         : mSize(0)
-        , mExternal(false)
+        , mVersion(0)
     {}
 
     void setName(const QByteArray &name)
@@ -389,15 +394,6 @@ public:
         return mName;
     }
 
-    void setData(const QByteArray &data)
-    {
-        mData = data;
-    }
-    QByteArray data() const
-    {
-        return mData;
-    }
-
     void setSize(qint64 size)
     {
         mSize = size;
@@ -407,20 +403,19 @@ public:
         return mSize;
     }
 
-    void setExternal(bool external)
+    void setVersion(int version)
     {
-        mExternal = external;
+        mVersion = version;
     }
-    bool external() const
+    int version() const
     {
-        return mExternal;
+        return mVersion;
     }
 
 private:
     QByteArray mName;
-    QByteArray mData;
     qint64 mSize;
-    bool mExternal;
+    int mVersion;
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Part &part);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Part &part);
@@ -585,7 +580,10 @@ public:
         RemoveRelations,
 
         // Resources
-        SelectResource = 90
+        SelectResource = 90,
+
+        // Other...?
+        StreamPayload = 100
     };
 
     virtual ~Command()
@@ -787,7 +785,6 @@ public:
 
     CreateItemCommand()
         : Command(CreateItem)
-        , mCollectionId(-1)
         , mItemSize(-1)
         , mMergeMode(None)
     {}
@@ -865,32 +862,32 @@ public:
         return mDateTime;
     }
 
-    void setFlags(const QSet<QByteArray> &flags)
+    void setFlags(const QVector<QByteArray> &flags)
     {
         mFlags = flags;
     }
-    QSet<QByteArray> flags() const
+    QVector<QByteArray> flags() const
     {
         return mFlags;
     }
-    void setAddedFlags(const QSet<QByteArray> &flags)
+    void setAddedFlags(const QVector<QByteArray> &flags)
     {
         mAddedFlags = flags;
     }
-    QSet<QByteArray> addedFlags() const
+    QVector<QByteArray> addedFlags() const
     {
         return mAddedFlags;
     }
-    void setRemovedFlags(const QSet<QByteArray> &flags)
+    void setRemovedFlags(const QVector<QByteArray> &flags)
     {
         mRemovedFlags = flags;
     }
-    QSet<QByteArray> removedFlags() const
+    QVector<QByteArray> removedFlags() const
     {
         return mRemovedFlags;
     }
 
-    void setTags(const QSet<QByteArray> &tags)
+    void setTags(const QVector<QByteArray> &tags)
     {
         mTags = tags;
     }
@@ -902,17 +899,33 @@ public:
     {
         mAddedTags = tags;
     }
-    QSet<QByteArray> addedTags() const
+    QVector<QByteArray> addedTags() const
     {
         return mAddedTags;
     }
-    void setRemovedTags(const QSet<QByteArray> &tags)
+    void setRemovedTags(const QVector<QByteArray> &tags)
     {
         mRemovedTags = tags;
     }
-    QSet<QByteArray> removedTags() const
+    QVector<QByteArray> removedTags() const
     {
         return mRemovedTags;
+    }
+    void setRemovedParts(const QVector<QByteArray> &removedParts)
+    {
+        mRemovedParts = removedParts;
+    }
+    QVector<QByteArray> removedParts() const
+    {
+        return mRemovedParts;
+    }
+    void setParts(const QVector<Part> &parts)
+    {
+        mParts = parts;
+    }
+    QVector<Part> parts() const
+    {
+        return mParts;
     }
 
 private:
@@ -926,11 +939,13 @@ private:
     QString mRemoteRev;
     QDateTime mDateTime;
     Scope mTags;
-    QSet<QByteArray> mFlags;
-    QSet<QByteArray> mAddedFlags;
-    QSet<QByteArray> mRemovedFlags;
-    QSet<QByteArray> mAddedTags;
-    QSet<QByteArray> mRemovedTags;
+    QVector<QByteArray> mFlags;
+    QVector<QByteArray> mAddedFlags;
+    QVector<QByteArray> mRemovedFlags;
+    QVector<QByteArray> mAddedTags;
+    QVector<QByteArray> mRemovedTags;
+    QVector<QByteArray> mRemovedParts;
+    QVector<Part> mParts;
     MergeModes mMergeMode;
     qint64 mItemSize;
 };
@@ -3199,6 +3214,89 @@ public:
     SelectResourceResponse()
         : Response(SelectResource)
     {}
+};
+
+class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
+{
+public:
+    StreamPayloadCommand()
+        : Command(StreamPayload)
+        , mExpectedSize(0)
+    {}
+
+    void setPayloadName(const QString &name)
+    {
+        mPayloadName = name;
+    }
+    QString payloadName() const
+    {
+        return mPayloadName;
+    }
+
+    void setExpectedSize(qint64 size)
+    {
+        mExpectedSize = size;
+    }
+    qint64 expectedSize() const
+    {
+        return mExpectedSize;
+    }
+
+    void setExternalFile(const QString &externalFile)
+    {
+        mExternalFile = externalFile;
+    }
+    QString externalFile() const
+    {
+        return mExternalFile;
+    }
+private:
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
+
+    QString mPayloadName;
+    QString mExternalFile;
+    qint64 mExpectedSize;
+};
+
+class AKONADIPRIVATE_EXPORT StreamPayloadResponse : public Response
+{
+public:
+    StreamPayloadResponse()
+        : Response(StreamPayload)
+    {}
+
+    void setPayloadName(const QString &payloadName)
+    {
+        mPayloadName = payloadName;
+    }
+    QString payloadName() const
+    {
+        return mPayloadName;
+    }
+    void setIsExternal(bool external)
+    {
+        mIsExternal = external;
+    }
+    bool isExternal() const
+    {
+        return mIsExternal;
+    }
+    void setData(const QByteArray &data)
+    {
+        mData = data;
+    }
+    QByteArray data() const
+    {
+        return mData;
+    }
+private:
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
+
+    QString mPayloadName;
+    QByteArray mData;
+    bool mIsExternal;
 };
 
 } // namespace Protocol

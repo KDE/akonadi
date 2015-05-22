@@ -41,46 +41,25 @@ class AkAppend : public Handler
 {
     Q_OBJECT
 public:
-    AkAppend();
-
-    virtual ~AkAppend();
-
-    virtual bool parseStream();
-
-protected:
-    class ChangedAttributes
-    {
-    public:
-        ChangedAttributes()
-            : incremental(false)
-        {
-        }
-
-        bool incremental;
-        QVector<QByteArray> added;
-        QVector<QByteArray> removed;
-    };
-
-    bool buildPimItem(PimItem &item,
-                      Collection &parentCollection,
-                      ChangedAttributes &flags,
-                      ChangedAttributes &tagsRID,
-                      ChangedAttributes &tagsGID);
-
-    bool insertItem(PimItem &item,
-                    const Collection &parentCollection,
-                    const QVector<QByteArray> &itemFlags,
-                    const QVector<QByteArray> &itemTagsRID,
-                    const QVector<QByteArray> &itemTagsGID);
-
-    bool readParts(PimItem &item);
-
-    virtual bool notify(const PimItem &item, const Collection &collection);
-    virtual bool sendResponse(const QByteArray &response, const PimItem &item);
+    bool parseStream();
 
 private:
-    QByteArray parseFlag(const QByteArray &flag) const;
+    bool buildPimItem(const Protocol::CreateItemCommand &cmd,
+                      PimItem &item,
+                      Collection &parentCollection);
 
+    bool inserItem(const Protocol::CreateItemCommand &cmd,
+                   PimItem &item,
+                   const Collection &parentCollection);
+
+    bool mergeItem(const Protocol::CreateItemCommand &cmd,
+                   PimItem &newItem,
+                   PimItem &currentItem,
+                   const Collection &parentCollection);
+
+    bool notify(const PimItem &item, const Collection &collection);
+    bool notify(const PimItem &item, const Collection &collection,
+                const QSet<QByteArray> &changedParts);
 };
 
 } // namespace Server

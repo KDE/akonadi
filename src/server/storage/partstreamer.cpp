@@ -42,15 +42,14 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-PartStreamer::PartStreamer(Connection *connection, ImapStreamParser *parser,
+PartStreamer::PartStreamer(Connection *connection,
                            const PimItem &pimItem, QObject *parent)
     : QObject(parent)
     , mConnection(connection)
-    , mStreamParser(parser)
     , mItem(pimItem)
 {
     // Make sure the file_db_data path exists
-    AkStandardDirs::saveDir("data", QLatin1String("file_db_data"));
+    AkStandardDirs::saveDir("data", QStringLiteral("file_db_data"));
 }
 
 PartStreamer::~PartStreamer()
@@ -62,68 +61,44 @@ QByteArray PartStreamer::error() const
     return mError;
 }
 
-bool PartStreamer::streamNonliteral(Part &part, qint64 &partSize, QByteArray &value)
+bool PartStreamer::streamPayload(Part &part, Protocol::Part &metaPart)
 {
-    value = mStreamParser->readString();
-    if (part.partType().ns() == QLatin1String("PLD")) {
-        partSize = value.size();
-    }
-    if (!mDataChanged) {
-        mDataChanged = (value.size() != part.datasize());
-    }
-
-    // only relevant for non-literals or non-external literals
-    // only fallback to data comparision if part already exists and sizes match
-    if (!mDataChanged) {
-        mDataChanged = (value != PartHelper::translateData(part));
-    }
-
-    if (mDataChanged) {
-        if (part.isValid()) {
-            PartHelper::update(&part, value, value.size());
-        } else {
-//           akDebug() << "insert from Store::handleLine: " << value.left(100);
-            part.setData(value);
-            part.setDatasize(value.size());
-            if (!PartHelper::insert(&part)) {
-                mError = "Unable to add item part";
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-bool PartStreamer::streamLiteral(Part &part, qint64 &partSize, QByteArray &value)
-{
-    const qint64 dataSize = mStreamParser->remainingLiteralSize();
-    if (part.partType().ns() == QLatin1String("PLD")) {
-        partSize = dataSize;
+    if (part.datasize() != metaPart.size()) {
+        part.setDatasize(metaPart.size());
         // Shortcut: if sizes differ, we don't need to compare data later no in order
         // to detect whether the part has changed
-        if (!mDataChanged) {
-            mDataChanged = (partSize != part.datasize());
-        }
+        mDataChanged = mDataChanged || (metaPart.size() != part.datasize());
     }
 
     //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
-    const bool storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
+    const bool storeInFile = part.datasize() > DbConfig::configuredDatabase()->sizeThreshold();
     if (storeInFile) {
-        return streamLiteralToFile(dataSize, part, value);
+        return streamPayloadToFile(part, metaPart);
     } else {
-        mStreamParser->sendContinuationResponse(dataSize);
-        //don't write in streaming way as the data goes to the database
-        while (!mStreamParser->atLiteralEnd()) {
-            value += mStreamParser->readLiteralPart();
+        QDataStream stream(mConnection->socket());
+        Protocol::StreamPayloadCommand cmd;
+        cmd.setExpectedSize(metaPart.size());
+        cmd.setPayloadName(metaPart.name());
+        stream << cmd;
+
+        Protocol::StreamPayloadResponse response;
+        stream >> response;
+        if (response.isError()) {
+            mError = QStringLiteral("Client failed to store payload into file");
+            akError() << mError;
+            return false;
         }
+        const QByteArray newData = response.data();
         if (part.isValid()) {
-            PartHelper::update(&part, value, value.size());
+            if (!mDataChanged) {
+                mDataChanged = mDataChanged || (newData != part.data());
+            }
+            PartHelper::update(&part, newData, newData.size());
         } else {
-            part.setData(value);
-            part.setDatasize(value.size());
+            part.setData(newData);
+            part.setDatasize(newData.size());
             if (!part.insert()) {
-                mError = "Failed to insert part to database";
+                mError = QStringLiteral("Failed to insert part to database");
                 return false;
             }
         }
@@ -132,49 +107,80 @@ bool PartStreamer::streamLiteral(Part &part, qint64 &partSize, QByteArray &value
     return true;
 }
 
-bool PartStreamer::streamLiteralToFile(qint64 dataSize, Part &part, QByteArray &value)
+bool PartStreamer::streamPayloadToFile(Part &part, Protocol::Part &metaPart)
 {
-    const bool directStreaming = mConnection->capabilities().directStreaming();
-
     QByteArray origData;
     if (!mDataChanged && mCheckChanged) {
         origData = PartHelper::translateData(part);
     }
 
-    if (directStreaming) {
-        bool ok = streamLiteralToFileDirectly(dataSize, part);
-        if (!ok) {
+    QString filename;
+    if (part.isValid()) {
+        if (part.external()) {
+            // Part was external and is still external
+            filename = QString::fromLatin1(part.data());
+        } else {
+            // Part wasn't external, but is now
+            filename = PartHelper::fileNameForPart(&part);
+        }
+        // FIXME: This leaks the original part!
+        filename = PartHelper::updateFileNameRevision(filename);
+    }
+
+    QFileInfo finfo(filename);
+    if (finfo.isAbsolute()) {
+        filename = finfo.fileName();
+    }
+
+    part.setExternal(true);
+    part.setDatasize(metaPart.size());
+    part.setData(filename.toLatin1());
+
+    if (part.isValid()) {
+        if (!part.update()) {
+            mError = QStringLiteral("Failed to update part in database");
             return false;
         }
     } else {
-        mStreamParser->sendContinuationResponse(dataSize);
-
-        // use first part as value for the initial insert into / update to the database.
-        // this will give us a proper filename to stream the rest of the parts contents into
-        // NOTE: we have to set the correct size (== dataSize) directly
-        value = mStreamParser->readLiteralPart();
-        // akDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
-
-        if (part.isValid()) {
-            PartHelper::update(&part, value, dataSize);
-        } else {
-            part.setData(value);
-            part.setDatasize(dataSize);
-            if (!PartHelper::insert(&part)) {
-                mError = "Unable to add item part";
-                return false;
-            }
-        }
-
-        //the actual streaming code for the remaining parts:
-        // reads from the parser, writes immediately to the file
-        QFile partFile(PartHelper::resolveAbsolutePath(part.data()));
-        try {
-            PartHelper::streamToFile(mStreamParser, partFile, QIODevice::WriteOnly | QIODevice::Append);
-        } catch (const PartHelperException &e) {
-            mError = e.what();
+        if (!part.insert()) {
+            mError = QStringLiteral("Failed to insert part into database");
             return false;
         }
+
+        filename = PartHelper::updateFileNameRevision(PartHelper::fileNameForPart(&part));
+        part.setData(filename.toLatin1());
+        if (!part.update()) {
+            mError = QStringLiteral("Failed to update part in database");
+            return false;
+        }
+    }
+
+    QDataStream stream(mConnection->socket());
+    Protocol::StreamPayloadCommand cmd;
+    cmd.setPayloadName(metaPart.name());
+    cmd.setExpectedSize(metaPart.size());
+    cmd.setExternalFile(filename);
+    stream << cmd;
+
+    Protocol::StreamPayloadResponse response;
+    stream >> response;
+    if (response.isError()) {
+        mError = QStringLiteral("Client failed to store payload into file");
+        akError() << mError;
+        return false;
+    }
+
+    QFile file(PartHelper::resolveAbsolutePath(filename.toLatin1()), this);
+    if (!file.exists()) {
+        mError = QStringLiteral("External payload file does not exist");
+        akError() << mError;
+        return false;
+    }
+
+    if (file.size() != metaPart.size()) {
+        mError = QStringLiteral("Payload size mismatch");
+        akError() << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
+        return false;
     }
 
     if (mCheckChanged && !mDataChanged) {
@@ -186,87 +192,15 @@ bool PartStreamer::streamLiteralToFile(qint64 dataSize, Part &part, QByteArray &
     return true;
 }
 
-bool PartStreamer::streamLiteralToFileDirectly(qint64 dataSize, Part &part)
+bool PartStreamer::stream(bool checkExists, Protocol::Part &metaPart, bool *changed)
 {
-    QString filename;
-    if (part.isValid()) {
-        if (part.external()) {
-            // Part was external and is still external
-            filename = QString::fromLatin1(part.data());
-        } else {
-            // Part wasn't external, but is now
-            filename = PartHelper::fileNameForPart(&part);
-        }
-        filename = PartHelper::updateFileNameRevision(filename);
-    }
-
-    QFileInfo finfo(filename);
-    if (finfo.isAbsolute()) {
-        filename = finfo.fileName();
-    }
-
-    part.setExternal(true);
-    part.setDatasize(dataSize);
-    part.setData(filename.toLatin1());
-
-    if (part.isValid()) {
-        if (!part.update()) {
-            mError = "Failed to update part in database";
-            return false;
-        }
-    } else {
-        if (!part.insert()) {
-            mError = "Failed to insert part into database";
-            return false;
-        }
-
-        filename = PartHelper::updateFileNameRevision(PartHelper::fileNameForPart(&part));
-        part.setData(filename.toLatin1());
-        part.update();
-    }
-
-    Response response;
-    response.setContinuation();
-    response.setString("STREAM [FILE " + part.data() + "]");
-    Q_EMIT responseAvailable(response);
-
-    const QByteArray reply = mStreamParser->peekString();
-    if (reply.startsWith("NO")) {
-        akError() << "Client failed to store payload into file";
-        mError = "Client failed to store payload into file";
-        return false;
-    }
-
-    QFile file(PartHelper::resolveAbsolutePath(filename.toLatin1()), this);
-    if (!file.exists()) {
-        akError() << "External payload file does not exist";
-        mError = "External payload file does not exist";
-        return false;
-    }
-
-    if (file.size() != dataSize) {
-        akError() << "Size mismatch! Client advertised" << dataSize << "bytes, but the file is" << file.size() << "bytes!";
-        mError = "Payload size mismatch";
-        return false;
-    }
-
-    return true;
-}
-
-bool PartStreamer::stream(const QByteArray &command, bool checkExists,
-                          QByteArray &partName, qint64 &partSize, bool *changed)
-{
-    int partVersion = 0;
-    partSize = 0;
     mError.clear();
     mDataChanged = false;
     mCheckChanged = (changed != 0);
     if (changed != 0) {
         *changed = false;
     }
-
-    ImapParser::splitVersionedKey(command, partName, partVersion);
-    const PartType partType = PartTypeHelper::fromFqName(partName);
+    const PartType partType = PartTypeHelper::fromFqName(metaPart.name());
 
     Part part;
 
@@ -275,7 +209,7 @@ bool PartStreamer::stream(const QByteArray &command, bool checkExists,
         qb.addValueCondition(Part::pimItemIdColumn(), Query::Equals, mItem.id());
         qb.addValueCondition(Part::partTypeIdColumn(), Query::Equals, partType.id());
         if (!qb.exec()) {
-            mError = "Unable to check item part existence";
+            mError = QStringLiteral("Unable to check item part existence");
             return false;
         }
 
@@ -291,17 +225,10 @@ bool PartStreamer::stream(const QByteArray &command, bool checkExists,
     }
 
     part.setPartType(partType);
-    part.setVersion(partVersion);
+    part.setVersion(metaPart.version());
     part.setPimItemId(mItem.id());
 
-    QByteArray value;
-    bool ok;
-    if (mStreamParser->hasLiteral(false)) {
-        ok = streamLiteral(part, partSize, value);
-    } else {
-        ok = streamNonliteral(part, partSize, value);
-    }
-
+    bool ok = streamPayload(part, metaPart);
     if (ok && mCheckChanged) {
         *changed = mDataChanged;
     }

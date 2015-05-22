@@ -25,6 +25,11 @@
 #include "entities.h"
 
 namespace Akonadi {
+
+namespace Protocol {
+class Part;
+}
+
 namespace Server {
 
 class PimItem;
@@ -38,22 +43,16 @@ class PartStreamer : public  QObject
     Q_OBJECT
 
 public:
-    explicit PartStreamer(Connection *connection, ImapStreamParser *parser,
-                          const PimItem &pimItem, QObject *parent = 0);
+    explicit PartStreamer(Connection *connection, const PimItem &pimItem, QObject *parent = 0);
     ~PartStreamer();
 
-    bool stream(const QByteArray &command, bool checkExists, QByteArray &partName,
-                qint64 &partSize, bool *changed = 0);
+    bool stream(bool checkExists, Protocol::Part &part, bool *changed = 0);
 
-    QByteArray error() const;
-
-Q_SIGNALS:
-    void responseAvailable(const Akonadi::Server::Response &response);
+    QString error() const;
 
 private:
-    bool streamNonliteral(Part &part, qint64 &partSize, QByteArray &value);
-    bool streamLiteral(Part &part, qint64 &partSize, QByteArray &value);
-    bool streamLiteralToFile(qint64 dataSize, Part &part, QByteArray &value);
+    bool streamPayload(Part &part, Protocol::Part &metaPart);
+    bool streamPayloadToFile(Part &part, Protocol::Part &metaPart);
     bool streamLiteralToFileDirectly(qint64 dataSize, Part &part);
 
     Connection *mConnection;
@@ -61,7 +60,7 @@ private:
     PimItem mItem;
     bool mCheckChanged;
     bool mDataChanged;
-    QByteArray mError;
+    QString mError;
 };
 
 } // namespace Server

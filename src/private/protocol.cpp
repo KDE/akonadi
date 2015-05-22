@@ -80,16 +80,14 @@ QDataStream &operator<<(QDataStream &stream, const Part &part)
 {
     return stream << part.mName
                   << part.mSize
-                  << part.mExternal
-                  << part.mData;
+                  << part.mVersion;
 }
 
 QDataStream &operator>>(QDataStream &stream, Part &part)
 {
     return stream >> part.mName
                   >> part.mSize
-                  >> part.mExternal
-                  >> part.mData;
+                  >> part.mVersion;
 }
 
 
@@ -201,7 +199,9 @@ QDataStream &operator<<(QDataStream &stream, const CreateItemCommand &command)
                   << command.mRemovedFlags
                   << command.mTags
                   << command.mAddedTags
-                  << command.mRemovedTags;
+                  << command.mRemovedTags
+                  << command.mRemovedParts
+                  << command.mParts;
 }
 
 QDataStream &operator>>(QDataStream &stream, CreateItemCommand &command)
@@ -219,7 +219,9 @@ QDataStream &operator>>(QDataStream &stream, CreateItemCommand &command)
                   >> command.mRemovedFlags
                   >> command.mTags
                   >> command.mAddedTags
-                  >> command.mRemovedTags;
+                  >> command.mRemovedTags
+                  >> command.mRemovedParts
+                  >> command.mParts;
 }
 
 
@@ -949,3 +951,35 @@ QDataStream &operator>>(QDataStream &stream, SelectResourceCommand &command)
 {
     return stream >> command.mResourceId;
 }
+
+
+QDataStream &operator<<(QDataStream &stream, const StreamPayloadCommand &command)
+{
+    return stream << command.mPayloadName
+                  << command.mExpectedSize
+                  << command.mExternalFile;
+}
+
+QDataStream &operator>>(QDataStream &stream, StreamPayloadCommand &command)
+{
+    return stream >> command.mPayloadName
+                  >> command.mExpectedSize
+                  >> command.mExternalFile;
+}
+
+
+QDataStream &operator<<(QDataStream &stream, const StreamPayloadResponse &command)
+{
+    return stream << command.mPayloadName
+                  << command.mIsExternal
+                  << command.mData;
+}
+
+QDataStream &operator>>(QDataStream &stream, StreamPayloadResponse &command)
+{
+    return stream >> command.mPayloadName
+                  >> command.mIsExternal
+                  >> command.mData;
+}
+
+

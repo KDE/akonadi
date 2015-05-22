@@ -64,7 +64,6 @@ set(libakonadiserver_SRCS
     handler/list.cpp
     handler/login.cpp
     handler/logout.cpp
-    handler/merge.cpp
     handler/modify.cpp
     handler/move.cpp
     handler/remove.cpp
