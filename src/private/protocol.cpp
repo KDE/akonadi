@@ -76,14 +76,14 @@ QDataStream &operator>>(QDataStream &stream, FetchScope &scope)
 }
 
 
-QDataStream &operator<<(QDataStream &stream, const Part &part)
+QDataStream &operator<<(QDataStream &stream, const PartMetaData &part)
 {
     return stream << part.mName
                   << part.mSize
                   << part.mVersion;
 }
 
-QDataStream &operator>>(QDataStream &stream, Part &part)
+QDataStream &operator>>(QDataStream &stream, PartMetaData &part)
 {
     return stream >> part.mName
                   >> part.mSize
@@ -970,15 +970,13 @@ QDataStream &operator>>(QDataStream &stream, StreamPayloadCommand &command)
 
 QDataStream &operator<<(QDataStream &stream, const StreamPayloadResponse &command)
 {
-    return stream << command.mPayloadName
-                  << command.mIsExternal
+    return stream << command.mIsExternal
                   << command.mData;
 }
 
 QDataStream &operator>>(QDataStream &stream, StreamPayloadResponse &command)
 {
-    return stream >> command.mPayloadName
-                  >> command.mIsExternal
+    return stream >> command.mIsExternal
                   >> command.mData;
 }
 

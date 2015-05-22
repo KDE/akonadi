@@ -106,10 +106,6 @@ void Search::slotResultsAvailable(const QSet<qint64> &results)
     Scope scope(Scope::Uid);
     scope.setUidSet(fetchResults);
 
-    // FIXME BIN: This ....
     FetchHelper fetchHelper(connection(), scope, mFetchScope);
-    connect(&fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-
-    fetchHelper.fetchItems(AKONADI_CMD_SEARCH);
+    fetchHelper.fetchItems();
 }

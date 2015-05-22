@@ -61,7 +61,7 @@ QByteArray PartStreamer::error() const
     return mError;
 }
 
-bool PartStreamer::streamPayload(Part &part, Protocol::Part &metaPart)
+bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
 {
     if (part.datasize() != metaPart.size()) {
         part.setDatasize(metaPart.size());
@@ -107,7 +107,7 @@ bool PartStreamer::streamPayload(Part &part, Protocol::Part &metaPart)
     return true;
 }
 
-bool PartStreamer::streamPayloadToFile(Part &part, Protocol::Part &metaPart)
+bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaPart)
 {
     QByteArray origData;
     if (!mDataChanged && mCheckChanged) {
@@ -192,7 +192,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::Part &metaPart)
     return true;
 }
 
-bool PartStreamer::stream(bool checkExists, Protocol::Part &metaPart, bool *changed)
+bool PartStreamer::stream(bool checkExists, Protocol::PartMetaData &metaPart, bool *changed)
 {
     mError.clear();
     mDataChanged = false;

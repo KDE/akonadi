@@ -46,10 +46,6 @@ bool Fetch::parseStream()
     CacheCleanerInhibitor inhibitor;
 
     FetchHelper fetchHelper(connection(), cmd.scope(), cmd.fetchScope());
-    /* FIXME BIN: This is not needed */
-    connect(&fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-
     if (!fetchHelper.fetchItems()) {
         return failureResponse<Protocol::FetchItemsResponse>(
             QStringLiteral("Failed to fetch items"));

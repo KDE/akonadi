@@ -27,7 +27,7 @@
 namespace Akonadi {
 
 namespace Protocol {
-class Part;
+class PartMetaData;
 }
 
 namespace Server {
@@ -46,13 +46,13 @@ public:
     explicit PartStreamer(Connection *connection, const PimItem &pimItem, QObject *parent = 0);
     ~PartStreamer();
 
-    bool stream(bool checkExists, Protocol::Part &part, bool *changed = 0);
+    bool stream(bool checkExists, Protocol::PartMetaData &part, bool *changed = 0);
 
     QString error() const;
 
 private:
-    bool streamPayload(Part &part, Protocol::Part &metaPart);
-    bool streamPayloadToFile(Part &part, Protocol::Part &metaPart);
+    bool streamPayload(Part &part, Protocol::PartMetaData &metaPart);
+    bool streamPayloadToFile(Part &part, Protocol::PartMetaData &metaPart);
     bool streamLiteralToFileDirectly(qint64 dataSize, Part &part);
 
     Connection *mConnection;

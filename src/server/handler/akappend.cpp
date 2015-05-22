@@ -115,7 +115,7 @@ bool AkAppend::insertItem(Protocol::CreateItemCommand &cmd, PimItem &item,
     qint64 partSizes = 0;
     PartStreamer streamer(connection(), item, this);
 
-    for (Protocol::Part part : cmd.parts()) {
+    for (Protocol::PartMetaData part : cmd.parts()) {
         if (!streamer.stream(true, part)) {
             return failureResponse<Protocol::CreateItemResponse>(streamer.error());
         }
@@ -251,7 +251,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     PartStreamer streamer(connection(), currentItem);
 
-    for (Protocol::Part part : cmd.parts()) {
+    for (Protocol::PartMetaData part : cmd.parts()) {
         bool changed = false;
         if (!streamer.stream(true, part, &changed)) {
             return failureResponse<Protocol::CreateItemResponse>(streamer.error());

@@ -108,7 +108,7 @@ namespace Akonadi
 namespace Protocol
 {
 class FetchScope;
-class Part;
+class PartMetaData;
 class CachePolicy;
 class Ancestor;
 
@@ -351,6 +351,63 @@ public:
         return mAncestorDepth;
     }
 
+    bool cacheOnly() const
+    {
+        return mFetchFlags & CacheOnly;
+    }
+    bool checkCachedPayloadPartsOnly() const
+    {
+        return mFetchFlags & CheckCachedPayloadPartsOnly;
+    }
+    bool fullPayload() const
+    {
+        return mFetchFlags & FullPayload;
+    }
+    bool allAttributes() const
+    {
+        return mFetchFlags & AllAttributes;
+    }
+    bool fetchSize() const
+    {
+        return mFetchFlags & Size;
+    }
+    bool fetchMTime() const
+    {
+        return mFetchFlags & MTime;
+    }
+    bool fetchRemoteRevision() const
+    {
+        return mFetchFlags & RemoteRevision;
+    }
+    bool ignoreErrors() const
+    {
+        return mFetchFlags & IgnoreErrors;
+    }
+    bool fetchFlags() const
+    {
+        return mFetchFlags & Flags;
+    }
+    bool fetchRemoteId() const
+    {
+        return mFetchFlags & RemoteID;
+    }
+    bool fetchGID() const
+    {
+        return mFetchFlags & GID;
+    }
+    bool fetchTags() const
+    {
+        return mFetchFlags & Tags;
+    }
+    bool fetchRelations() const
+    {
+        return mFetchFlags & Relations;
+    }
+    bool fetchVirtualReferences() const
+    {
+        return mFetchFlags & VirtReferences;
+    }
+
     void setFetch(FetchFlag attribute, bool fetch = true)
     {
         if (fetch) {
@@ -377,10 +434,10 @@ private:
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
 };
 
-class AKONADIPRIVATE_EXPORT Part
+class AKONADIPRIVATE_EXPORT PartMetaData
 {
 public:
-    Part()
+    PartMetaData()
         : mSize(0)
         , mVersion(0)
     {}
@@ -417,8 +474,8 @@ private:
     qint64 mSize;
     int mVersion;
 
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Part &part);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Part &part);
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::PartMetaData &part);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::PartMetaData &part);
 };
 
 class AKONADIPRIVATE_EXPORT CachePolicy
@@ -919,11 +976,11 @@ public:
     {
         return mRemovedParts;
     }
-    void setParts(const QVector<Part> &parts)
+    void setParts(const QVector<PartMetaData> &parts)
     {
         mParts = parts;
     }
-    QVector<Part> parts() const
+    QVector<PartMetaData> parts() const
     {
         return mParts;
     }
@@ -945,7 +1002,7 @@ private:
     QVector<QByteArray> mAddedTags;
     QVector<QByteArray> mRemovedTags;
     QVector<QByteArray> mRemovedParts;
-    QVector<Part> mParts;
+    QVector<PartMetaData> mParts;
     MergeModes mMergeMode;
     qint64 mItemSize;
 };
@@ -1363,11 +1420,11 @@ public:
         return mTime;
     }
 
-    void setFlags(const QSet<QByteArray> &flags)
+    void setFlags(const QVector<QByteArray> &flags)
     {
         mFlags = flags;
     }
-    QSet<QByteArray> flags() const
+    QVector<QByteArray> flags() const
     {
         return mFlags;
     }
@@ -1408,19 +1465,19 @@ public:
         return mAncestors;
     }
 
-    void setParts(const QVector<Part> &parts)
+    void setParts(const QMap<PartMetaData, StreamPayloadResponse> &parts)
     {
         mParts = parts;
     }
-    QVector<Part> parts() const
+    QMap<PartMetaData, StreamPayloadResponse> parts() const
     {
         return mParts;
     }
-    void setCachedParts(const QStringList &cachedParts)
+    void setCachedParts(const QVector<QByteArray> &cachedParts)
     {
         mCachedParts = cachedParts;
     }
-    QStringList cachedParts() const
+    QVector<QByteArray> cachedParts() const
     {
         return mCachedParts;
     }
@@ -1434,13 +1491,13 @@ private:
     QString mGid;
     QString mMimeType;
     QDateTime mTime;
-    QSet<QByteArray> mFlags;
+    QVector<QByteArray> mFlags;
     QVector<FetchTagsResponse> mTags;
     QVector<qint64> mVirtRefs;
     QVector<FetchRelationsResponse> mRelations;
     QVector<Ancestor> mAncestors;
-    QVector<Part> mParts;
-    QStringList mCachedParts;
+    QMap<PartMetaData, StreamPayloadResponse> mParts;
+    QVector<QByteArray> mCachedParts;
     qint64 mId;
     qint64 mCollectionId;
     qint64 mSize;
@@ -1686,12 +1743,12 @@ public:
     {
         return mRemovedParts;
     }
-    void setParts(const QVector<Part> &parts)
+    void setParts(const QVector<PartMetaData> &parts)
     {
         mModifiedParts |= Parts;
         mParts = parts;
     }
-    QVector<Part> parts() const
+    QVector<PartMetaData> parts() const
     {
         return mParts;
     }
@@ -1711,7 +1768,7 @@ private:
     QString mGid;
     QString mRemoteRev;
     QSet<QByteArray> mRemovedParts;
-    QVector<Part> mParts;
+    QVector<PartMetaData> mParts;
     qint64 mSize;
     bool mUndirty;
     bool mInvalidate;
@@ -3266,14 +3323,6 @@ public:
         : Response(StreamPayload)
     {}
 
-    void setPayloadName(const QString &payloadName)
-    {
-        mPayloadName = payloadName;
-    }
-    QString payloadName() const
-    {
-        return mPayloadName;
-    }
     void setIsExternal(bool external)
     {
         mIsExternal = external;
@@ -3294,7 +3343,6 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
 
-    QString mPayloadName;
     QByteArray mData;
     bool mIsExternal;
 };
