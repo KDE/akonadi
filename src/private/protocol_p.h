@@ -1578,21 +1578,23 @@ public:
     ModifyItemsCommand()
         : Command(ModifyItems)
         , mSize(0)
-        , mUndirty(false)
+        , mOldRevision(-1)
+        , mDirty(true)
         , mInvalidate(false)
         , mNoResponse(false)
-        , mNoNotify(false)
+        , mNotify(true)
         , mModifiedParts(None)
     {}
 
     ModifyItemsCommand(const Scope &scope)
         : Command(ModifyItems)
         , mScope(scope)
+        , mOldRevision(-1)
         , mSize(0)
-        , mUndirty(false)
+        , mDirty(true)
         , mInvalidate(false)
         , mNoResponse(false)
-        , mNoNotify(false)
+        , mNotify(true)
         , mModifiedParts(None)
     {}
 
@@ -1610,30 +1612,39 @@ public:
         return mScope;
     }
 
-    void setFlags(const QSet<QByteArray> &flags)
+    void setOldRevision(int oldRevision)
+    {
+        mOldRevision = oldRevision;
+    }
+    int oldRevision() const
+    {
+        return mOldRevision;
+    }
+
+    void setFlags(const QVector<QByteArray> &flags)
     {
         mModifiedParts |= Flags;
         mFlags = flags;
     }
-    QSet<QByteArray> flags() const
+    QVector<QByteArray> flags() const
     {
         return mFlags;
     }
-    void setAddedFlags(const QSet<QByteArray> &flags)
+    void setAddedFlags(const QVector<QByteArray> &flags)
     {
         mModifiedParts |= AddedFlags;
         mAddedFlags = flags;
     }
-    QSet<QByteArray> addedFlags() const
+    QVector<QByteArray> addedFlags() const
     {
         return mAddedFlags;
     }
-    void setRemovedFlags(const QSet<QByteArray> &flags)
+    void setRemovedFlags(const QVector<QByteArray> &flags)
     {
         mModifiedParts |= RemovedFlags;
         mRemovedFlags = flags;
     }
-    QSet<QByteArray> removedFlags() const
+    QVector<QByteArray> removedFlags() const
     {
         return mRemovedFlags;
     }
@@ -1693,13 +1704,13 @@ public:
     {
         return mRemoteRev;
     }
-    void setUndirty(bool undirty)
+    void setDirty(bool dirty)
     {
-        mUndirty = undirty;
+        mDirty = dirty;
     }
-    bool undirty() const
+    bool dirty() const
     {
-        return mUndirty;
+        return mDirty;
     }
     void setInvalidateCache(bool invalidate)
     {
@@ -1717,13 +1728,13 @@ public:
     {
         return mNoResponse;
     }
-    void setNoNotify(bool noNotify)
+    void setNotify(bool notify)
     {
-        mNoNotify = noNotify;
+        mNotify = notify;
     }
-    bool noNotify() const
+    bool notify() const
     {
-        return mNoNotify;
+        return mNotify;
     }
     void setItemSize(qint64 size)
     {
@@ -1734,12 +1745,12 @@ public:
     {
         return mSize;
     }
-    void setRemovedParts(const QSet<QByteArray> &removedParts)
+    void setRemovedParts(const QVector<QByteArray> &removedParts)
     {
         mModifiedParts |= RemovedParts;
         mRemovedParts = removedParts;
     }
-    QSet<QByteArray> removedParts() const
+    QVector<QByteArray> removedParts() const
     {
         return mRemovedParts;
     }
@@ -1757,9 +1768,9 @@ private:
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
 
     Scope mScope;
-    QSet<QByteArray> mFlags;
-    QSet<QByteArray> mAddedFlags;
-    QSet<QByteArray> mRemovedFlags;
+    QVector<QByteArray> mFlags;
+    QVector<QByteArray> mAddedFlags;
+    QVector<QByteArray> mRemovedFlags;
     Scope mTags;
     Scope mAddedTags;
     Scope mRemovedTags;
@@ -1767,13 +1778,14 @@ private:
     QString mRemoteId;
     QString mGid;
     QString mRemoteRev;
-    QSet<QByteArray> mRemovedParts;
+    QVector<QByteArray> mRemovedParts;
     QVector<PartMetaData> mParts;
     qint64 mSize;
-    bool mUndirty;
+    int mOldRevision;
+    bool mDirty;
     bool mInvalidate;
     bool mNoResponse;
-    bool mNoNotify;
+    bool mNotify;
 
     ModifiedParts mModifiedParts;
 };

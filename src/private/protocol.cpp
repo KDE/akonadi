@@ -321,11 +321,12 @@ QDataStream &operator>>(QDataStream &stream, LinkItemsCommand &command)
 QDataStream &operator<<(QDataStream &stream, const ModifyItemsCommand &command)
 {
     stream << command.mScope
+           << command.mOldRevision
            << command.mModifiedParts
-           << command.mUndirty
+           << command.mDirty
            << command.mInvalidate
            << command.mNoResponse
-           << command.mNoNotify;
+           << command.mNotify;
 
     if (command.mModifiedParts & ModifyItemsCommand::Flags) {
         stream << command.mFlags;
@@ -369,11 +370,12 @@ QDataStream &operator<<(QDataStream &stream, const ModifyItemsCommand &command)
 QDataStream &operator>>(QDataStream &stream, ModifyItemsCommand &command)
 {
     stream >> command.mScope
+           >> command.mOldRevision
            >> command.mModifiedParts
-           >> command.mUndirty
+           >> command.mDirty
            >> command.mInvalidate
            >> command.mNoResponse
-           >> command.mNoNotify;
+           >> command.mNotify;
 
     if (command.mModifiedParts & ModifyItemsCommand::Flags) {
         stream >> command.mFlags;
