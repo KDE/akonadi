@@ -43,5 +43,6 @@ install(FILES
     protocol_p.h
     xdgbasedirs_p.h
     capabilities_p.h
+    tristate_p.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/private
 )

@@ -24,6 +24,7 @@
 #include "akonadiprivate_export.h"
 
 #include "scope_p.h"
+#include "tristate_p.h"
 
 #include <QtCore/QFlags>
 #include <QtCore/QMap>
@@ -271,15 +272,6 @@ AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Prot
 
 namespace Akonadi
 {
-
-// TODO: Move to elswhere so we don't have to include whole protocol_p.h
-// everywhere
-enum class Tristate : qint8
-{
-    False     = 0,
-    True      = 1,
-    Undefined = 2
-};
 
 namespace Protocol
 {

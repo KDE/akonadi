@@ -20,8 +20,9 @@
 #include "collectionscheduler.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
-#include <shared/akdebug.h>
 #include "akonadiserver_debug.h"
+
+#include <private/tristate_p.h>
 
 #include <QDateTime>
 #include <QCoreApplication>
@@ -283,9 +284,9 @@ void CollectionScheduler::initScheduler()
     // about anything else
     SelectQueryBuilder<Collection> qb;
     Query::Condition orCondition(Query::Or);
-    orCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, Akonadi::Server::Tristate::True);
+    orCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, (int)Akonadi::Tristate::True);
     Query::Condition andCondition(Query::And);
-    andCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, Akonadi::Server::Tristate::Undefined);
+    andCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, (int)Akonadi::Tristate::Undefined);
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
     orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);

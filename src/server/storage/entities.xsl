@@ -39,6 +39,8 @@
 #define AKONADI_ENTITIES_H
 #include "storage/entity.h"
 
+#include &lt;private/tristate_p.h&gt;
+
 #include &lt;shared/akdebug.h&gt;
 #include &lt;QtCore/QDebug&gt;
 #include &lt;QtCore/QSharedDataPointer&gt;
