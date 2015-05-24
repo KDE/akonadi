@@ -24,8 +24,10 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionstatistics.h"
 #include "storage/queryhelper.h"
+#include "storage/collectionqueryhelper.h"
 #include "commandcontext.h"
 #include "handler.h"
+#include "connection.h"
 
 #include <private/imapparser_p.h>
 #include <private/protocol_p.h>
@@ -294,7 +296,7 @@ Flag::List HandlerHelper::resolveFlags(const QVector<QByteArray> &flagNames)
     return flagList;
 }
 
-Tag::List HandlerHelper::resolveTags(const ImapSet &tags)
+Tag::List HandlerHelper::resolveTagsByUID(const ImapSet &tags)
 {
     if (tags.isEmpty()) {
         return Tag::List();
@@ -311,18 +313,18 @@ Tag::List HandlerHelper::resolveTags(const ImapSet &tags)
     return result;
 }
 
-Tag::List HandlerHelper::resolveTagsByGID(const QVector<QByteArray> &tagsGIDs)
+Tag::List HandlerHelper::resolveTagsByGID(const QStringList &tagsGIDs)
 {
     Tag::List tagList;
     if (tagsGIDs.isEmpty()) {
         return tagList;
     }
 
-    Q_FOREACH (const QByteArray &tagGID, tagsGIDs) {
-        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), QString::fromLatin1(tagGID));
+    for (const QString &tagGID : tagsGIDs) {
+        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), tagGID);
         Tag tag;
         if (tags.isEmpty()) {
-            tag.setGid(QString::fromUtf8(tagGID));
+            tag.setGid(tagGID);
             tag.setParentId(0);
 
             TagType type = TagType::retrieveByName(QLatin1String("PLAIN"));
@@ -349,7 +351,7 @@ Tag::List HandlerHelper::resolveTagsByGID(const QVector<QByteArray> &tagsGIDs)
     return tagList;
 }
 
-Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs, CommandContext *context)
+Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandContext *context)
 {
     Tag::List tags;
     if (tagsRIDs.isEmpty()) {
@@ -360,13 +362,13 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs,
         throw HandlerException("Tags can be resolved by their RID only in resource context");
     }
 
-    Q_FOREACH (const QByteArray &tagRID, tagsRIDs) {
+    for (const QString &tagRID : tagsRIDs) {
         SelectQueryBuilder<Tag> qb;
         Query::Condition cond;
         cond.addColumnCondition(Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName());
         cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond);
-        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, QString::fromLatin1(tagRID));
+        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
         if (!qb.exec()) {
             throw HandlerException("Unable to resolve tags");
         }
@@ -375,13 +377,13 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs,
         Tag::List results = qb.result();
         if (results.isEmpty()) {
             // If the tag does not exist, we create a new one with GID matching RID
-            Tag::List tags = resolveTagsByGID(QVector<QByteArray>() << tagRID);
+            Tag::List tags = resolveTagsByGID(QStringList() << tagRID);
             if (tags.count() != 1) {
                 throw HandlerException("Unable to resolve tag");
             }
             tag = tags[0];
             TagRemoteIdResourceRelation rel;
-            rel.setRemoteId(QString::fromUtf8(tagRID));
+            rel.setRemoteId(tagRID);
             rel.setTagId(tag.id());
             rel.setResourceId(context->resource().id());
             if (!rel.insert()) {
@@ -397,4 +399,44 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs,
     }
 
     return tags;
+}
+
+Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *connection)
+{
+    if (scope.scope() == Scope::Invalid || scope.scope() == Scope::Gid) {
+        throw HandlerException("Invalid collection scope");
+    }
+
+    SelectQueryBuilder<Collection> qb;
+    CollectionQueryHelper::scopeToQuery(scope, connection, qb);
+    if (!qb.exec()) {
+        throw HandlerException("Failed to execute SQL query");
+    }
+
+    const Collection::List c = qb.result();
+    if (c.count() == 0) {
+        return Collection();
+    } else if (c.count() > 0) {
+        throw HandlerException("Query returned more than one reslut");
+    } else  {
+        return c.at(0);
+    }
+}
+
+Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection* connection)
+{
+    if (scope.scope() == Scope::Invalid || scope.scope() == Scope::HierarchicalRid) {
+        throw HandlerException("Invalid tag scope");
+    }
+
+    if (scope.scope() == Scope::Uid) {
+        return resolveTagsByUID(scope.uidSet());
+    } else if (scope.scope() == Scope::Gid) {
+        return resolveTagsByGID(scope.gidSet());
+    } else if (scope.scope() == Scope::Uid) {
+        return resolveTagsByRID(scope.ridSet(), connection->context());
+    }
+
+    Q_ASSERT(false);
+    return Tag::List();
 }

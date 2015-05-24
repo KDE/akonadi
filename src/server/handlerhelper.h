@@ -105,11 +105,15 @@ public:
       Converts a imap set of tags into tag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Tag::List resolveTags(const ImapSet &tags);
+    static Tag::List resolveTagsByUID(const ImapSet &tags);
 
-    static Tag::List resolveTagsByGID(const QVector<QByteArray> &tagsGIDs);
+    static Tag::List resolveTagsByGID(const QStringList &tagsGIDs);
 
-    static Tag::List resolveTagsByRID(const QVector<QByteArray> &tagsRIDs, CommandContext *context);
+    static Tag::List resolveTagsByRID(const QStringList &tagsRIDs, CommandContext *context);
+
+    static Collection collectionFromScope(const Scope &scope, Connection *connection);
+
+    static Tag::List tagsFromScope(const Scope &scope, Connection *connection);
 };
 
 } // namespace Server

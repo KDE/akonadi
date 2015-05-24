@@ -498,12 +498,12 @@ public:
         return mFetchFlags & VirtReferences;
     }
 
-    void setFetch(FetchFlag attribute, bool fetch = true)
+    void setFetch(FetchFlags attributes, bool fetch = true)
     {
         if (fetch) {
-            mFetchFlags |= attribute;
+            mFetchFlags |= attributes;
         } else {
-            mFetchFlags &= ~attribute;
+            mFetchFlags &= ~attributes;
         }
     }
 
@@ -3377,6 +3377,8 @@ private:
 
 } // namespace Protocol
 } // namespace Akonadi
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
 
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type);

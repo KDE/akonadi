@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "akappend.h"
+#include "fetchhelper.h"
 
 #include <private/imapparser_p.h>
 #include <private/protocol_p.h>
@@ -62,7 +63,7 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
         mimeType = m;
     }
 
-    parentCol = HandlerHelper::collectionFromScope(cmd.collection());
+    parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!parentCol.isValid()) {
         return failureResponse("Invalid parent collection");
     }
@@ -87,7 +88,7 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
     return true;
 }
 
-bool AkAppend::insertItem(Protocol::CreateItemCommand &cmd, PimItem &item,
+bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                           const Collection &parentCol)
 {
     if (!item.insert()) {
@@ -102,7 +103,7 @@ bool AkAppend::insertItem(Protocol::CreateItemCommand &cmd, PimItem &item,
         return failureResponse("Unable to append item flags.");
     }
 
-    const Tag::List tagList = HandlerHelper::resolveTags(cmd.tags(), connection()->context());
+    const Tag::List tagList = HandlerHelper::tagsFromScope(cmd.tags(), connection());
     bool tagsChanged = false;
     if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
         return failureResponse("Unable to append item tags.");
@@ -137,7 +138,7 @@ bool AkAppend::insertItem(Protocol::CreateItemCommand &cmd, PimItem &item,
     }
 
     notify(item, item.collection());
-    mOutStream << HandlerHelper::itemFetchResponse(item);
+    sendResponse(item);
 
     return true;
 }
@@ -209,12 +210,12 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     if (cmd.tags().isEmpty()) {
         bool tagsAdded = false, tagsRemoved = false;
         if (!cmd.addedTags().isEmpty()) {
-            const Tag::List addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection()->context());
+            const Tag::List addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection());
             DataStore::self()->appendItemsTags(PimItem::List() << currentItem, addedTags,
                                                &tagsAdded, true, col, true);
         }
         if (!cmd.removedTags().isEmpty()) {
-            const Tag::List removedTags = HandlerHelper::tagsFromScope(cmd.removedTags(), connection()->context());
+            const Tag::List removedTags = HandlerHelper::tagsFromScope(cmd.removedTags(), connection());
             DataStore::self()->removeItemsTags(PimItem::List() << currentItem, removedTags,
                                                &tagsRemoved, true);
         }
@@ -224,7 +225,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         }
     } else if (!cmd.tags().isEmpty()) {
         bool tagsChanged = false;
-        const Tag::List tags = HandlerHelper::tagsFromScope(cmd.tags(), connection()->context());
+        const Tag::List tags = HandlerHelper::tagsFromScope(cmd.tags(), connection());
         DataStore::self()->setItemsTags(PimItem::List() << currentItem, tags,
                                         &tagsChanged, true);
         if (tagsChanged) {
@@ -273,11 +274,40 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     notify(currentItem, currentItem.collection(), changedParts);
     if (!(cmd.mergeMode() & Protocol::CreateItemCommand::Silent)) {
-        mOutStream << HandlerHelper::itemFetchResponse(currentItem);
+        sendResponse(currentItem);
     }
 
     return true;
 }
+
+bool AkAppend::sendResponse(const PimItem& item)
+{
+    Protocol::FetchScope fetchScope;
+    fetchScope.setAncestorDepth(1);
+    fetchScope.setFetch(Protocol::FetchScope::AllAttributes |
+                        Protocol::FetchScope::FullPayload |
+                        Protocol::FetchScope::CacheOnly |
+                        Protocol::FetchScope::Flags |
+                        Protocol::FetchScope::GID |
+                        Protocol::FetchScope::MTime |
+                        Protocol::FetchScope::RemoteID |
+                        Protocol::FetchScope::RemoteRevision |
+                        Protocol::FetchScope::Size |
+                        Protocol::FetchScope::Tags);
+
+    ImapSet set;
+    set.add(QVector<qint64>() << item.id());
+    Scope scope;
+    scope.setUidSet(set);
+
+    FetchHelper fetchHelper(connection(), scope, fetchScope);
+    if (!fetchHelper.fetchItems()) {
+        return failureResponse("Failed to retrieve item");
+    }
+
+    return true;
+}
+
 
 bool AkAppend::notify(const PimItem &item, const Collection &collection)
 {
@@ -319,7 +349,7 @@ bool AkAppend::parseStream()
     }
 
     if (cmd.mergeMode() == Protocol::CreateItemCommand::None) {
-        if (!inserItem(cmd, item, parentCol)) {
+        if (!insertItem(cmd, item, parentCol)) {
             return false;
         }
         if (!transaction.commit()) {
@@ -345,7 +375,7 @@ bool AkAppend::parseStream()
         if (result.count() == 0) {
             // No item with such GID/RID exists, so call AkAppend::insert() and behave
             // like if this was a new item
-            if (!inserItem(cmd, item, parentCol)) {
+            if (!insertItem(cmd, item, parentCol)) {
                 return false;
             }
             if (!transaction.commit()) {

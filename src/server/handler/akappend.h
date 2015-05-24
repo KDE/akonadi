@@ -48,14 +48,16 @@ private:
                       PimItem &item,
                       Collection &parentCollection);
 
-    bool inserItem(const Protocol::CreateItemCommand &cmd,
-                   PimItem &item,
-                   const Collection &parentCollection);
+    bool insertItem(const Protocol::CreateItemCommand &cmd,
+                    PimItem &item,
+                    const Collection &parentCollection);
 
     bool mergeItem(const Protocol::CreateItemCommand &cmd,
                    PimItem &newItem,
                    PimItem &currentItem,
                    const Collection &parentCollection);
+
+    bool sendResponse(const PimItem &item);
 
     bool notify(const PimItem &item, const Collection &collection);
     bool notify(const PimItem &item, const Collection &collection,
