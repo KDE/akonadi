@@ -40,17 +40,15 @@ bool Fetch::parseStream()
 
     // We require context in case we do RID fetch
     if (connection()->context()->isEmpty() && cmd.scope().scope() == Scope::Rid) {
-        return failureResponse<Protocol::FetchItemsResponse>(QStringLiteral("No FETCH context specified"));
+        return failureResponse("No FETCH context specified");
     }
 
     CacheCleanerInhibitor inhibitor;
 
     FetchHelper fetchHelper(connection(), cmd.scope(), cmd.fetchScope());
     if (!fetchHelper.fetchItems()) {
-        return failureResponse<Protocol::FetchItemsResponse>(
-            QStringLiteral("Failed to fetch items"));
+        return failureResponse("Failed to fetch items");
     }
 
-    mOutStream << Protocol::FetchItemsResponse();
-    return true;
+    return successResponse<Protocol::FetchItemsResponse>();
 }

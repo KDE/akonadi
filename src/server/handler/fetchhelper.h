@@ -78,8 +78,6 @@ private:
     static QByteArray relationsToByteArray(const Relation::List &relations);
 
 private:
-    ImapStreamParser *mStreamParser;
-
     Connection *mConnection;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;

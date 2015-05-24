@@ -23,7 +23,6 @@
 #include "connection.h"
 #include "handler.h"
 #include "handlerhelper.h"
-#include "imapstreamparser.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/itemqueryhelper.h"
@@ -57,8 +56,7 @@ using namespace Akonadi::Server;
 
 FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
                          const Protocol::FetchScope &fetchScope)
-    : mStreamParser(0)
-    , mConnection(connection)
+    : mConnection(connection)
     , mScope(scope)
     , mFetchScope(fetchScope)
 {
@@ -442,7 +440,7 @@ bool FetchHelper::fetchItems()
                 }
             } else {
                 for (qint64 tagId : tagIds) {
-                    tags << HandlerHelper::tagFetchResponse(Tag::retrieveById(tagId));
+                    tags << HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
                 }
             }
             response.setTags(tags);
@@ -464,7 +462,7 @@ bool FetchHelper::fetchItems()
             response.setVirtualReferences(vRefs);
         }
 
-        if (mFetchScope.tagFetchResponse()) {
+        if (mFetchScope.fetchRelations()) {
             SelectQueryBuilder<Relation> qb;
             Query::Condition condition;
             condition.setSubQueryMode(Query::Or);
@@ -477,7 +475,7 @@ bool FetchHelper::fetchItems()
             }
             QVector<Protocol::FetchRelationsResponse> relations;
             for (const Relation &rel : qb.result()) {
-                relations << FetchHelper::relationFetchResponse(rel);
+                relations << HandlerHelper::fetchRelationsResponse(rel);
             }
             response.setRelations(relations);
         }
@@ -488,7 +486,7 @@ bool FetchHelper::fetchItems()
 
         bool skipItem = false;
 
-        QList<QByteArray> cachedParts;
+        QVector<QByteArray> cachedParts;
         QMap<Protocol::PartMetaData, Protocol::StreamPayloadResponse> parts;
         while (partQuery.isValid()) {
             const qint64 id = partQuery.value(PartQueryPimIdColumn).toLongLong();
@@ -499,9 +497,9 @@ bool FetchHelper::fetchItems()
                 break;
             }
 
-            const QByteArray partName = partQuery.value(PartQueryTypeNamespaceColumn).toByteArray()
-                    % QLatin1Char(':')
-                    % partQuery.value(PartQueryTypeNameColumn).toByteArray();
+            const QByteArray partName
+                = Utils::variantToByteArray(partQuery.value(PartQueryTypeNamespaceColumn))
+                    + ":"+ Utils::variantToByteArray(partQuery.value(PartQueryTypeNameColumn));
 
             Protocol::PartMetaData metaPart;
             Protocol::StreamPayloadResponse partData;

@@ -56,32 +56,29 @@ bool Delete::parseStream()
     Protocol::DeleteCollectionCommand cmd;
     mInStream >> cmd;
 
-    const Collection collection = HandlerHelper::collectionFromScope(cmd.scope(), connection()->context());
+    Collection collection = HandlerHelper::collectionFromScope(cmd.scope(), connection());
     if (!collection.isValid()) {
-        return failureResponse<Protocol::DeleteCollectionResponse>(QStringLiteral("No such collection."));
+        return failureResponse("No such collection.");
     }
 
     // handle virtual folders
     if (collection.resource().name() == QLatin1String(AKONADI_SEARCH_RESOURCE)) {
         // don't delete virtual root
         if (collection.parentId() == 0) {
-            return failureResponse<Protocol::DeleteCollectionResponse>(
-                QStringLiteral("Cannot delete virtual root collection"));
+            return failureResponse("Cannot delete virtual root collection");
         }
     }
 
-    Transaction transaction;
+    Transaction transaction(DataStore::self());
 
     if (!deleteRecursive(collection)) {
-        return failureResponse<Protocol::DeleteCollectionResponse>(
-            QStringLiteral("Unable to delete collection"));
+        return failureResponse("Unable to delete collection");
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::DeleteCollectionResponse>(
-            QStringLiteral("Unable to commit transaction"));
+        return failureResponse("Unable to commit transaction");
     }
 
-    mOutStream << Protocol::DeleteCollectionResponse();
+    return successResponse<Protocol::DeleteCollectionResponse>();
     return true;
 }

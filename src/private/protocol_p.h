@@ -637,6 +637,11 @@ public:
         : mId(-1)
     {}
 
+    Ancestor(qint64 id)
+        : mId(id)
+    {
+    }
+
     void setId(qint64 id)
     {
         mId = id;
@@ -1851,10 +1856,10 @@ class AKONADIPRIVATE_EXPORT CreateCollectionCommand : public Command
 public:
     CreateCollectionCommand()
         : Command(CreateCollection)
-        , mEnabled(Tristate::Undefined)
         , mSync(Tristate::Undefined)
         , mDisplay(Tristate::Undefined)
         , mIndex(Tristate::Undefined)
+        , mEnabled(true)
         , mVirtual(false)
     {}
 
@@ -1922,11 +1927,11 @@ public:
     {
         return mVirtual;
     }
-    void setEnabled(Tristate enabled)
+    void setEnabled(bool enabled)
     {
         mEnabled = enabled;
     }
-    Tristate enabled() const
+    bool enabled() const
     {
         return mEnabled;
     }
@@ -1966,10 +1971,10 @@ private:
     QStringList mMimeTypes;
     CachePolicy mCachePolicy;
     QMap<QByteArray, QByteArray> mAttributes;
-    Tristate mEnabled;
     Tristate mSync;
     Tristate mDisplay;
     Tristate mIndex;
+    bool mEnabled;
     bool mVirtual;
 };
 
@@ -2259,6 +2264,14 @@ public:
     {
         return mId;
     }
+    void setParentId(qint64 id)
+    {
+        mParentId = id;
+    }
+    qint64 parentId() const
+    {
+        return mParentId;
+    }
     void setName(const QString &name)
     {
         mName = name;
@@ -2267,11 +2280,11 @@ public:
     {
         return mName;
     }
-    void setMimeType(const QString &mimeType)
+    void setMimeTypes(const QStringList &mimeType)
     {
         mMimeType = mimeType;
     }
-    QString mimeType() const
+    QStringList mimeTypes() const
     {
         return mMimeType;
     }
@@ -2291,11 +2304,11 @@ public:
     {
         return mRemoteRev;
     }
-    void setResource(const QByteArray &resourceId)
+    void setResource(const QString &resourceId)
     {
         mResource = resourceId;
     }
-    QByteArray resource() const
+    QString resource() const
     {
         return mResource;
     }
@@ -2401,10 +2414,10 @@ private:
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsResponse &command);
 
     QString mName;
-    QString mMimeType;
     QString mRemoteId;
     QString mRemoteRev;
-    QByteArray mResource;
+    QString mResource;
+    QStringList mMimeType;
     FetchCollectionStatsResponse mStats;
     QString mSearchQuery;
     QVector<qint64> mSearchCols;
@@ -2412,6 +2425,7 @@ private:
     CachePolicy mCachePolicy;
     QMap<QByteArray, QByteArray> mAttributes;
     qint64 mId;
+    qint64 mParentId;
     Tristate mDisplay;
     Tristate mSync;
     Tristate mIndex;

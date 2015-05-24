@@ -92,14 +92,14 @@ bool ColCopy::parseStream()
     Protocol::CopyCollectionCommand cmd;
     mInStream >> cmd;
 
-    const Collection source = HandlerHelper::collectionFromScope(cmd.collection());
+    const Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!source.isValid()) {
-        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("No valid source specified"));
+        return failureResponse("No valid source specified");
     }
 
-    const Collection target = HandlerHelper::collectionFromScope(cmd.destination());
+    const Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!target.isValid()) {
-        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("No valid target specified"));
+        return failureResponse("No valid target specified");
     }
 
     CacheCleanerInhibitor inhibitor;
@@ -116,13 +116,12 @@ bool ColCopy::parseStream()
     Transaction transaction(store);
 
     if (!copyCollection(source, target)) {
-        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("Failed to copy collection"));
+        return failureResponse("Failed to copy collection");
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::CopyCollectionResponse>(QStringLiteral("Cannot commit transaction."));
+        return failureResponse("Cannot commit transaction.");
     }
 
-    mOutStream << Protocol::CopyCollectionResponse();
-    return true;
+    return successResponse<Protocol::CopyCollectionResponse>();
 }

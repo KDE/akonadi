@@ -39,12 +39,11 @@ bool ColMove::parseStream()
     Protocol::MoveCollectionCommand cmd;
     mInStream >> cmd;
 
-    Collection source = HandlerHelper::collectionFromScope(cmd.collection());
-    Collection target = HandlerHelper::collectionFromScope(cmd.destination());
+    Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
 
     if (source.parentId() == target.id()) {
-        mOutStream << Protocol::MoveCollectionResponse();
-        return true;
+        return successResponse<Protocol::MoveCollectionResponse>();
     }
 
     CacheCleanerInhibitor inhibitor;
@@ -61,13 +60,12 @@ bool ColMove::parseStream()
     Transaction transaction(store);
 
     if (!store->moveCollection(source, target)) {
-        return failureResponse<Protocol::MoveCollectionResponse>(QStringLiteral("Unable to reparent collection"));
+        return failureResponse("Unable to reparent collection");
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::MoveCollectionResponse>(QStringLiteral("Cannot commit transaction."));
+        return failureResponse("Cannot commit transaction.");
     }
 
-    mOutStream << Protocol::MoveCollectionResponse();
-    return true;
+    return successResponse<Protocol::MoveCollectionResponse>();
 }

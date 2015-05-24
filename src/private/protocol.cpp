@@ -639,6 +639,7 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionsCommand &command)
 QDataStream &operator<<(QDataStream &stream, const FetchCollectionsResponse &command)
 {
     return stream << command.mId
+                  << command.mParentId
                   << command.mName
                   << command.mMimeType
                   << command.mRemoteId
@@ -660,24 +661,25 @@ QDataStream &operator<<(QDataStream &stream, const FetchCollectionsResponse &com
 
 QDataStream &operator>>(QDataStream &stream, FetchCollectionsResponse &command)
 {
-    return stream << command.mId
-                  << command.mName
-                  << command.mMimeType
-                  << command.mRemoteId
-                  << command.mRemoteRev
-                  << command.mResource
-                  << command.mStats
-                  << command.mSearchQuery
-                  << command.mSearchCols
-                  << command.mAncestors
-                  << command.mCachePolicy
-                  << command.mAttributes
-                  << command.mDisplay
-                  << command.mSync
-                  << command.mIndex
-                  << command.mIsVirtual
-                  << command.mReferenced
-                  << command.mEnabled;
+    return stream >> command.mId
+                  >> command.mParentId
+                  >> command.mName
+                  >> command.mMimeType
+                  >> command.mRemoteId
+                  >> command.mRemoteRev
+                  >> command.mResource
+                  >> command.mStats
+                  >> command.mSearchQuery
+                  >> command.mSearchCols
+                  >> command.mAncestors
+                  >> command.mCachePolicy
+                  >> command.mAttributes
+                  >> command.mDisplay
+                  >> command.mSync
+                  >> command.mIndex
+                  >> command.mIsVirtual
+                  >> command.mReferenced
+                  >> command.mEnabled;
 }
 
 

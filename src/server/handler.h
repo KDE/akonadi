@@ -134,10 +134,10 @@ private:
     Protocol::Command::Type m_command;
     Connection *m_connection;
 
-protected:
-    QDataStream mInStream;
     QDataStream mOutStream;
 
+protected:
+    QDataStream mInStream;
 };
 
 template<typename T>

@@ -75,11 +75,11 @@ bool Copy::parseStream()
     mInStream >> cmd;
 
     if (!checkScopeConstraints(cmd.items(), Scope::Uid)) {
-        return failureResponse<Protocol::CopyItemsResponse>(QStringLiteral("Only UID copy is allowed"));
+        return failureResponse("Only UID copy is allowed");
     }
 
     if (cmd.items().isEmpty()) {
-        return failureResponse(QStringLiteral("No items specified"));
+        return failureResponse("No items specified");
     }
 
     CacheCleanerInhibitor inhibitor;
@@ -91,18 +91,18 @@ bool Copy::parseStream()
         return failureResponse(retriever.lastError());
     }
 
-    const Collection targetCollection = HandlerHelper::collectionFromScope(cmd.destination());
+    const Collection targetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!targetCollection.isValid()) {
-        return failureResponse<Protocol::CopyItemsResponse>(QStringLiteral("No valid target specified"));
+        return failureResponse("No valid target specified");
     }
     if (targetCollection.isVirtual()) {
-        return failureResponse<Protocol::CopyItemsResponse>(QStringLiteral("Copying items into virtual collections is not allowed"));
+        return failureResponse("Copying items into virtual collections is not allowed");
     }
 
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::itemSetToQuery(cmd.items().uidSet(), qb);
     if (!qb.exec()) {
-        return failureResponse(QStringLiteral("Unable to retrieve items"));
+        return failureResponse("Unable to retrieve items");
     }
     PimItem::List items = qb.result();
     qb.query().finish();
@@ -112,14 +112,14 @@ bool Copy::parseStream()
 
     Q_FOREACH (const PimItem &item, items) {
         if (!copyItem(item, targetCollection)) {
-            return failureResponse<Protocol::CopyItemsResponse>(QStringLiteral("Unable to copy item"));
+            return failureResponse("Unable to copy item");
         }
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::CopyItemsResponse>(QStringLiteral("Cannot commit transaction."));
+        return failureResponse("Cannot commit transaction.");
     }
 
-    mOutStream << Protocol::CopyItemsResponse();
+    return successResponse<Protocol::CopyItemsResponse>();
     return true;
 }

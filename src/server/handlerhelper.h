@@ -32,6 +32,14 @@ namespace Akonadi {
 
 class Scope;
 
+namespace Protocol {
+class Ancestor;
+class CachePolicy;
+class FetchCollectionsResponse;
+class FetchTagsResponse;
+class FetchRelationsResponse;
+}
+
 namespace Server {
 
 class CommandContext;
@@ -66,29 +74,41 @@ public:
       Returns the protocol representation of the cache policy of the given
       Collection object.
     */
-    static QByteArray cachePolicyToByteArray(const Collection &col);
-
-    static QByteArray tristateToByteArray(const Tristate &tristate);
+    static Protocol::CachePolicy cachePolicyResponse(const Collection &col);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray(const Collection &col);
+    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray(const Collection &col, const CollectionAttribute::List &attributeList, bool includeStatistics = false,
-                                            int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(), bool isReferenced = false, const QList<QByteArray> &mimeTypes = QList<QByteArray>());
+    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col,
+                                                                       const CollectionAttribute::List &attributeList,
+                                                                       bool includeStatistics = false,
+                                                                       int ancestorDepth = 0,
+                                                                       const QStack<Collection> &ancestors = QStack<Collection>(),
+                                                                       const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(),
+                                                                       bool isReferenced = false,
+                                                                       const QStringList &mimeTypes = QStringList());
 
     /**
       Returns the protocol representation of a collection ancestor chain.
     */
-    static QByteArray ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
+    static QVector<Protocol::Ancestor> ancestorsResponse(int ancestorDepth,
+                                                         const QStack<Collection> &ancestors,
+                                                         const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
+
+    static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag,
+                                                         bool withRID = false,
+                                                         Connection *connection = Q_NULLPTR);
+
+    static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
 
     /**
       Parses the listing/ancestor depth parameter.

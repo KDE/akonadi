@@ -42,13 +42,12 @@ bool Create::parseStream()
     mInStream >> cmd;
 
     if (cmd.name().isEmpty()) {
-        return failureResponse<Protocol::CreateCollectionResponse>(QStringLiteral("Invalid collection name"));
+        return failureResponse("Invalid collection name");
     }
 
-    bool ok = false;
-    Collection parent = HandlerHelper::collectionFromScope(cmd.parent());
+    Collection parent = HandlerHelper::collectionFromScope(cmd.parent(), connection());
     if (!parent.isValid()) {
-        return failureResponse<Protocol::CreateCollectionResponse>(QStringLiteral("Invalid parent collection"));
+        return failureResponse("Invalid parent collection");
     }
 
     qint64 resourceId = 0;
@@ -68,7 +67,7 @@ bool Create::parseStream()
         }
     }
     if (!found && !foundVirtual) {
-        return failureResponse<CreateCollectionCommand>(QStringLiteral("Parent collection can not contain sub-collections"));
+        return failureResponse("Parent collection can not contain sub-collections");
     }
 
     // If only virtual collections are supported, force every new collection to
@@ -79,6 +78,7 @@ bool Create::parseStream()
 
     // inherit resource
     resourceId = parent.resourceId();
+
 
     Collection collection;
     if (parent.isValid()) {
@@ -97,16 +97,15 @@ bool Create::parseStream()
     collection.setCachePolicyCacheTimeout(cp.cacheTimeout());
     collection.setCachePolicyCheckInterval(cp.checkInterval());
     collection.setCachePolicyInherit(cp.inherit());
-    collection.setCachePolicyLocalParts(cp.localParts());
+    collection.setCachePolicyLocalParts(cp.localParts().join(QLatin1Char(' ')));
     collection.setCachePolicySyncOnDemand(cp.syncOnDemand());
 
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db);
 
     if (!db->appendCollection(collection)) {
-        return failureResponse<Protocol::CreateCollectionResponse>(
-            QStringLiteral("Could not create collection ") % cmd.name()
-                % QStringLiteral(", resourceId: ") % QString::number(resourceId));
+        return failureResponse(QStringLiteral("Could not create collection ") % cmd.name()
+                               % QStringLiteral(", resourceId: ") % QString::number(resourceId));
     }
 
     QStringList effectiveMimeTypes = cmd.mimeTypes();
@@ -116,26 +115,27 @@ bool Create::parseStream()
         }
     }
     if (!db->appendMimeTypeForCollection(collection.id(), effectiveMimeTypes)) {
-        return failureResponse<Protocol::CreateCollectionResponse>(
-            QStringLiteral("Unable to append mimetype for collection ") % cmd.name()
-                % QStringLiteral(" resourceId: ") % QString::number(resourceId));
+        return failureResponse(QStringLiteral("Unable to append mimetype for collection ") % cmd.name()
+                               % QStringLiteral(" resourceId: ") % QString::number(resourceId));
     }
 
     // store user defined attributes
-    for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
-        if (!db->addCollectionAttribute(collection, attr.first, attr.second)) {
-            return failureResponse<Protocol::CreateCollectionResponse>(
-                QStringLiteral("Unable to add collection attribute."));
+    const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
+    for (auto iter = attrs.constBegin(), end = attrs.constEnd(); iter != end; --iter) {
+        if (!db->addCollectionAttribute(collection, iter.key(), iter.value())) {
+            return failureResponse("Unable to add collection attribute.");
         }
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::CreateCollectionResponse>(
-            QStringLiteral("Unable to commit transaction."));
+        return failureResponse("Unable to commit transaction.");
     }
 
     db->activeCachePolicy(collection);
-    mOutStream << HandlerHelper::collectionResponse(collection);
-    mOutStream << Protocol::CreateCollectionResponse();
-    return true;
+
+
+    sendResponse<Protocol::FetchCollectionsResponse>(
+        HandlerHelper::fetchCollectionsResponse(collection));
+
+    return successResponse<Protocol::CreateCollectionResponse>();
 }
