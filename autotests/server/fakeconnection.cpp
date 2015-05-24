@@ -22,7 +22,6 @@
 #include "response.h"
 #include "fakedatastore.h"
 #include "fakeakonadiserver.h"
-#include "handler/scope.h"
 
 #include <QBuffer>
 

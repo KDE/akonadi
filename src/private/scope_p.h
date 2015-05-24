@@ -28,6 +28,8 @@ class QDataStream;
 #include <QStringList>
 #include <QVector>
 
+#include "imapset_p.h"
+
 namespace Akonadi
 {
 class Scope;
@@ -56,8 +58,8 @@ public:
 
     bool isEmpty() const;
 
-    QVector<qint64> uidSet() const;
-    void setUidSet(const QVector<qint64> &uidSet);
+    ImapSet uidSet() const;
+    void setUidSet(const ImapSet &uidSet);
 
     void setRidContext(qint64 context);
     qint64 ridContext() const;
@@ -75,7 +77,7 @@ public:
     QString rid() const;
     QString gid() const;
 private:
-    QVector<qint64> mUidSet;
+    ImapSet mUidSet;
     QStringList mRidSet;
     QStringList mRidChain;
     QStringList mGidSet;

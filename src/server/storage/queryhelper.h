@@ -20,13 +20,13 @@
 #ifndef AKONADI_QUERYHELPER_H
 #define AKONADI_QUERYHELPER_H
 
-#include "handler/scope.h"
-
 namespace Akonadi {
+
+class ImapSet;
+
 namespace Server {
 
 class QueryBuilder;
-class Scope;
 
 /**
   Helper methods for common query tasks.

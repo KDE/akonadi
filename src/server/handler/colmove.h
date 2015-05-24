@@ -21,7 +21,6 @@
 #define AKONADI_COLMOVE_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {

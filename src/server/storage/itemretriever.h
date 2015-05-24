@@ -22,8 +22,8 @@
 
 #include "../exception.h"
 #include "entities.h"
-#include "handler/scope.h"
 
+#include <private/scope_p.h>
 #include <private/imapset_p.h>
 
 #include <QStringList>

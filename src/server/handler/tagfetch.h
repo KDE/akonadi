@@ -21,7 +21,6 @@
 #define AKONADIFETCHTAG_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {

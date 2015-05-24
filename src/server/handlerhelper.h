@@ -29,11 +29,14 @@
 #include <QtCore/QStack>
 
 namespace Akonadi {
+
+class Scope;
+
 namespace Server {
 
 class CommandContext;
-
 class ImapStreamParser;
+class Connection;
 
 /**
   Helper functions for command handlers.

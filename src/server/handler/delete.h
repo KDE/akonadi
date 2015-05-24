@@ -21,11 +21,11 @@
 #define AKONADI_DELETE_H
 
 #include "handler.h"
-#include "entities.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
+
+class Collection;
 
 /**
   @ingroup akonadi_server_handler

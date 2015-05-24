@@ -22,11 +22,11 @@
 #include "commandcontext.h"
 #include "entities.h"
 #include "storage/querybuilder.h"
-#include "handler/scope.h"
 #include "handler.h"
 #include "storage/queryhelper.h"
 #include "collectionqueryhelper.h"
 
+#include <private/scope_p.h>
 #include <private/imapset_p.h>
 
 using namespace Akonadi;

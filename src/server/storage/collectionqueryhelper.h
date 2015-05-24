@@ -21,17 +21,16 @@
 #define AKONADI_COLLECTIONQUERYHELPER_H
 
 #include "entities.h"
-#include "handler/scope.h"
 
 namespace Akonadi {
 
 class ImapSet;
+class Scope;
 
 namespace Server {
 
 class Connection;
 class QueryBuilder;
-class Scope;
 
 /**
   Helper methods to generate WHERE clauses for collection queries based on a Scope object.

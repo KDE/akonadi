@@ -267,3 +267,25 @@ QDebug operator<<(QDebug d, const Akonadi::ImapSet &set)
     d << set.toImapSequenceSet();
     return d;
 }
+
+QDataStream &operator<<(QDataStream &stream, const Akonadi::ImapInterval &interval)
+{
+    return stream << interval.d->begin
+                  << interval.d->end;
+}
+
+QDataStream &operator>>(QDataStream &stream, Akonadi::ImapInterval &interval)
+{
+    return stream >> interval.d->begin
+                  >> interval.d->end;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Akonadi::ImapSet &set)
+{
+    return stream << set.d->intervals;
+}
+
+QDataStream &operator>>(QDataStream &stream, Akonadi::ImapSet &set)
+{
+    return stream >> set.d->intervals;
+}

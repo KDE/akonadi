@@ -71,7 +71,6 @@ set(libakonadiserver_SRCS
     handler/relationstore.cpp
     handler/relationremove.cpp
     handler/relationfetch.cpp
-    handler/scope.cpp
     handler/search.cpp
     handler/searchhelper.cpp
     handler/searchpersistent.cpp

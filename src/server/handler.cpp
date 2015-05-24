@@ -26,7 +26,6 @@
 
 #include "connection.h"
 #include "response.h"
-#include "handler/scope.h"
 #include "handler/akappend.h"
 #include "handler/copy.h"
 #include "handler/colcopy.h"

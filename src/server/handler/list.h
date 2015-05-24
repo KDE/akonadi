@@ -22,7 +22,6 @@
 
 #include "entities.h"
 #include "handler.h"
-#include "scope.h"
 
 template <typename T> class QStack;
 

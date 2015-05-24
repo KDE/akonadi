@@ -55,13 +55,13 @@ bool Scope::isEmpty() const
 }
 
 
-void Scope::setUidSet(const QVector<qint64> &uidSet)
+void Scope::setUidSet(const ImapSet &uidSet)
 {
     mScope = Uid;
     mUidSet = uidSet;
 }
 
-QVector<qint64> Scope::uidSet() const
+ImapSet Scope::uidSet() const
 {
     return mUidSet;
 }
@@ -111,12 +111,13 @@ QStringList Scope::gidSet() const
 
 qint64 Scope::uid() const
 {
-    if (mUidSet.size() != 1) {
-        // TODO: Error handling!
-        Q_ASSERT(mUidSet.size() == 1);
-        return -1;
+    if (mUidSet.intervals().size() == 1 &&
+        mUidSet.intervals().at(0).size() == 1) {
+        return mUidSet.intervals().at(0).begin();
     }
-    return mUidSet.at(0);
+
+    // TODO: Error handling!
+    return -1;
 }
 
 QString Scope::rid() const
@@ -166,7 +167,7 @@ QDataStream &operator<<(QDataStream &stream, const Scope &scope)
 
 QDataStream &operator>>(QDataStream &stream, Scope &scope)
 {
-    scope.mUidSet.clear();
+    scope.mUidSet = ImapSet();
     scope.mRidSet.clear();
     scope.mRidChain.clear();
     scope.mGidSet.clear();

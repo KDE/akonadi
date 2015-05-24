@@ -22,7 +22,6 @@
 #define AKONADISTORE_H
 
 #include "handler.h"
-#include "scope.h"
 #include "entities.h"
 #include "storage/entity.h"
 

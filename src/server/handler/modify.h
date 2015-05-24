@@ -21,7 +21,6 @@
 #define AKONADI_MODIFY_H
 
 #include "handler.h"
-#include "handler/scope.h"
 
 namespace Akonadi {
 namespace Server {
