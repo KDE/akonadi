@@ -56,7 +56,7 @@ PartStreamer::~PartStreamer()
 {
 }
 
-QByteArray PartStreamer::error() const
+QString PartStreamer::error() const
 {
     return mError;
 }

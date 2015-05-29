@@ -46,7 +46,7 @@ void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection 
 
 void CollectionQueryHelper::scopeToQuery(const Scope &scope, Connection *connection, QueryBuilder &qb)
 {
-    if (scope.scope() == Scope::None || scope.scope() == Scope::Uid) {
+    if (scope.scope() == Scope::Uid) {
         QueryHelper::setToQuery(scope.uidSet(), Collection::idFullColumnName(), qb);
     } else if (scope.scope() == Scope::Rid) {
         if (connection->context()->collectionId() <= 0 && !connection->context()->resource().isValid()) {
@@ -139,7 +139,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridC
 Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, Connection *connection)
 {
     // root
-    if ((scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1) {
+    if (scope.scope() == Scope::Uid && scope.uidSet().intervals().count() == 1) {
         const ImapInterval i = scope.uidSet().intervals().at(0);
         if (!i.size()) {   // ### why do we need this hack for 0, shouldn't that be size() == 1?
             Collection root;

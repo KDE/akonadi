@@ -246,7 +246,6 @@ bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedSc
     return scope.scope() & permittedScopes;
 }
 
-
 void Handler::sendResponseImpl(const Protocol::Response *response)
 {
     // FIXME: This is a dirty hack, really. Ideally we would want to be able

@@ -65,9 +65,6 @@ public:
     bool isOwnerResource(const PimItem &item) const;
     bool isOwnerResource(const Collection &collection) const;
 
-    void addStatusMessage(const QByteArray &msg);
-    void flushStatusMessageQueue();
-
     void setSessionId(const QByteArray &id);
     QByteArray sessionId() const;
 
@@ -91,8 +88,6 @@ protected Q_SLOTS:
      */
     void slotNewData();
     void slotConnectionStateChange(ConnectionState state);
-
-    virtual void slotResponseAvailable(const Akonadi::Server::Response &response);
 
     void slotSendHello();
 

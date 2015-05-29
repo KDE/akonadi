@@ -1078,7 +1078,7 @@ bool DataStore::unhidePimItem(PimItem &pimItem)
     akDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
 
     // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
-    QList< QByteArray > parts;
+    QVector<QByteArray> parts;
     parts << AKONADI_ATTRIBUTE_HIDDEN;
 
     return removeItemParts(pimItem, parts);

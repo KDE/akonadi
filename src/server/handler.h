@@ -107,9 +107,12 @@ public:
     template<typename T>
     bool successResponse(const T &response = T());
 
+    void sendResponse(const Protocol::Response &response);
+
     // TODO: Validate T is Protocol::Response
     template<typename T>
     void sendResponse(const T &response = T());
+
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -153,13 +156,6 @@ void Handler::sendResponse(const T &response)
     sendResponseImpl(&response);
     mOutStream << response;
 }
-
-template<>
-void Handler::sendResponse(const Protocol::Response &response)
-{
-    sendResponseImpl(&response);
-}
-
 
 
 } // namespace Server

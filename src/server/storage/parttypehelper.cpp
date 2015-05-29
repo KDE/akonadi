@@ -79,7 +79,7 @@ Query::Condition PartTypeHelper::conditionFromFqNames(const QStringList &fqNames
     return c;
 }
 
-Query::Condition PartTypeHelper::conditionFromFqNames(const QList< QByteArray > &fqNames)
+Query::Condition PartTypeHelper::conditionFromFqNames(const QVector<QByteArray> &fqNames)
 {
     Query::Condition c;
     c.setSubQueryMode(Query::Or);

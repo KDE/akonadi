@@ -20,6 +20,7 @@
 #include "queryhelper.h"
 
 #include "storage/querybuilder.h"
+
 #include <private/imapset_p.h>
 
 using namespace Akonadi;

@@ -20,6 +20,8 @@
 #ifndef AKONADI_QUERYHELPER_H
 #define AKONADI_QUERYHELPER_H
 
+class QString;
+
 namespace Akonadi {
 
 class ImapSet;

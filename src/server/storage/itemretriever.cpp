@@ -40,7 +40,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 ItemRetriever::ItemRetriever(Connection *connection)
-    : mScope(Scope::Invalid)
+    : mScope()
     , mConnection(connection)
     , mFullPayload(false)
     , mRecursive(false)

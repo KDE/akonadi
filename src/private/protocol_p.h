@@ -3342,11 +3342,11 @@ public:
         , mExpectedSize(0)
     {}
 
-    void setPayloadName(const QString &name)
+    void setPayloadName(const QByteArray &name)
     {
         mPayloadName = name;
     }
-    QString payloadName() const
+    QByteArray payloadName() const
     {
         return mPayloadName;
     }
@@ -3372,7 +3372,7 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
 
-    QString mPayloadName;
+    QByteArray mPayloadName;
     QString mExternalFile;
     qint64 mExpectedSize;
 };

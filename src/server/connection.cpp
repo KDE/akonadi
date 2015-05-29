@@ -258,24 +258,6 @@ void Connection::slotConnectionStateChange(ConnectionState state)
     }
 }
 
-void Connection::addStatusMessage(const QByteArray &msg)
-{
-    m_statusMessageQueue.append(msg);
-}
-
-void Connection::flushStatusMessageQueue()
-{
-    for (int i = 0; i < m_statusMessageQueue.count(); ++i) {
-        Response response;
-        response.setUntagged();
-        response.setString(m_statusMessageQueue[i]);
-
-        slotResponseAvailable(response);
-    }
-
-    m_statusMessageQueue.clear();
-}
-
 void Connection::setSessionId(const QByteArray &id)
 {
     m_identifier.sprintf("%s (%p)", id.data(), static_cast<void *>(this));

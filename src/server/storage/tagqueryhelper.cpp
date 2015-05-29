@@ -67,7 +67,7 @@ void TagQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, Q
     }
 
     if (scope.scope() == Scope::Gid) {
-        TagQueryHelper::gidToQuery(scope.gidSet(), qb);
+        TagQueryHelper::gidToQuery(scope.gidSet(), context, qb);
         return;
     }
 

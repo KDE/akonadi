@@ -113,7 +113,7 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
 
 void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
 {
-    if (scope.scope() == Scope::None || scope.scope() == Scope::Uid) {
+    if (scope.scope() == Scope::Uid) {
         itemSetToQuery(scope.uidSet(), scope.scope() == Scope::Uid, context, qb);
         return;
     }

@@ -71,7 +71,7 @@ Query::Condition conditionFromFqNames(const QStringList &fqNames);
 /**
  * Convenience overload for the above.
  */
-Query::Condition conditionFromFqNames(const QList<QByteArray> &fqNames);
+Query::Condition conditionFromFqNames(const QVector<QByteArray> &fqNames);
 
 /**
  * Parses a fully qualified part type name into namespace/name.
