@@ -36,33 +36,29 @@ bool TransactionHandler::parseStream()
     DataStore *store = connection()->storageBackend();
 
     switch (cmd.mode()) {
+    case Protocol::TransactionCommand::Invalid:
+        return failureResponse("Invalid operation");
     case Protocol::TransactionCommand::Begin:
         if (!store->beginTransaction()) {
-            return failureResponse<Protocol::TransactionResponse>(
-                QStringLiteral("Unable to begin transaction."));
+            return failureResponse("Unable to begin transaction.");
         }
         break;
     case Protocol::TransactionCommand::Rollback:
         if (!store->inTransaction()) {
-            return failureResponse<Protocol::TransactionResponse>(
-                QStringLiteral("There is no transaction in progress."));
+            return failureResponse("There is no transaction in progress.");
         }
         if (!store->rollbackTransaction()) {
-            return failureResponse<Protocol::TransactionResponse>(
-                QStringLiteral("Unable to roll back transaction."));
+            return failureResponse("Unable to roll back transaction.");
         }
         break;
     case Protocol::TransactionCommand::Commit:
         if (!store->inTransaction()) {
-            return failureResponse<Protocol::TransactionResponse>(
-                QStringLiteral("There is no transaction in progress."));
+            return failureResponse("There is no transaction in progress.");
         }
         if (!store->commitTransaction()) {
-            return failureResponse<Protocol::TransactionResponse>(
-                QStringLiteral("Unable to commit transaction."));
+            return failureResponse("Unable to commit transaction.");
         }
     }
 
-    mOutStream << Protocol::TransactionResponse();
-    return true;
+    return successResponse<Protocol::TransactionResponse>();
 }

@@ -23,7 +23,7 @@
 #include <QtCore/QObject>
 #include <QtSql/QSqlQuery>
 
-#include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 namespace Akonadi {
 
@@ -41,17 +41,11 @@ class TagFetchHelper : public QObject
     Q_OBJECT
 
 public:
-    TagFetchHelper(Connection *connection, const ImapSet &set);
+    TagFetchHelper(Connection *connection, const Scope &scope);
 
-    bool fetchTags(const QByteArray &responseIdentifier);
+    bool fetchTags();
 
-    static QList<QByteArray> fetchTagAttributes(qint64 tagId);
-    static QByteArray tagToByteArray(qint64 tagId, const QByteArray &gid, qint64 parentId,
-                                     const QByteArray &type, const QByteArray &remoteId,
-                                     const QList<QByteArray> &tagAttributes);
-
-Q_SIGNALS:
-    void responseAvailable(const Akonadi::Server::Response &response);
+    static QMap<QByteArray, QByteArray> fetchTagAttributes(qint64 tagId);
 
 private:
     QSqlQuery buildTagQuery();
@@ -60,7 +54,7 @@ private:
 
 private:
     Connection *mConnection;
-    ImapSet mSet;
+    Scope mScope;
 };
 
 } // namespace Server

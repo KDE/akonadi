@@ -225,6 +225,8 @@ AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::LinkItemsCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::MoveItemsCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::MoveItemsCommand &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateCollectionCommand &command);
@@ -757,7 +759,7 @@ private:
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
 public:
-    LoginCommand(const QString &sessionId)
+    LoginCommand(const QByteArray &sessionId)
         : Command(Login)
         , mSession(sessionId)
     {}
@@ -765,7 +767,7 @@ public:
         : Command(Login)
     {}
 
-    QString sessionId() const
+    QByteArray sessionId() const
     {
         return mSession;
     }
@@ -774,7 +776,7 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::LoginCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::LoginCommand &command);
 
-    QString mSession;
+    QByteArray mSession;
 };
 
 class AKONADIPRIVATE_EXPORT LoginResponse : public Response
@@ -1807,7 +1809,32 @@ class AKONADIPRIVATE_EXPORT ModifyItemsResponse : public Response
 public:
     ModifyItemsResponse()
         : Response(ModifyItems)
+        , mId(-1)
+        , mNewRevision(-1)
     {}
+
+    ModifyItemsResponse(qint64 id, int newRevision)
+        : Response(ModifyItems)
+        , mId(id)
+        , mNewRevision(newRevision)
+    {}
+
+    qint64 id() const
+    {
+        return mId;
+    }
+
+    int newRevision() const
+    {
+        return mNewRevision;
+    }
+
+private:
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
+
+    qint64 mId;
+    int mNewRevision;
 };
 
 
@@ -2180,11 +2207,11 @@ public:
     {
         return mAncestorsDepth;
     }
-    void setAncestorsAttributes(const QStringList &attributes)
+    void setAncestorsAttributes(const QVector<QByteArray> &attributes)
     {
         mAncestorsAttributes = attributes;
     }
-    QStringList ancestorsAttributes() const
+    QVector<QByteArray> ancestorsAttributes() const
     {
         return mAncestorsAttributes;
     }
@@ -2236,7 +2263,7 @@ private:
     Scope mScope;
     QString mResource;
     QStringList mMimeTypes;
-    QStringList mAncestorsAttributes;
+    QVector<QByteArray> mAncestorsAttributes;
     int mDepth;
     int mAncestorsDepth;
     bool mEnabled;
@@ -2455,11 +2482,11 @@ public:
 
     ModifyCollectionCommand()
         : Command(ModifyCollection)
-        , mEnabled(Tristate::Undefined)
+        , mParentId(-1)
         , mSync(Tristate::Undefined)
         , mDisplay(Tristate::Undefined)
         , mIndex(Tristate::Undefined)
-        , mParentId(-1)
+        , mEnabled(true)
         , mReferenced(false)
         , mPersistentSearchRemote(false)
         , mPersistentSearchRecursive(false)
@@ -2469,11 +2496,11 @@ public:
     ModifyCollectionCommand(const Scope &scope)
         : Command(ModifyCollection)
         , mScope(scope)
-        , mEnabled(Tristate::Undefined)
+        , mParentId(-1)
         , mSync(Tristate::Undefined)
         , mDisplay(Tristate::Undefined)
         , mIndex(Tristate::Undefined)
-        , mParentId(-1)
+        , mEnabled(true)
         , mReferenced(false)
         , mPersistentSearchRemote(false)
         , mPersistentSearchRecursive(false)
@@ -2597,12 +2624,12 @@ public:
     {
         return mAttributes;
     }
-    void setEnabled(Tristate enabled)
+    void setEnabled(bool enabled)
     {
         mModifiedParts |= ListPreferences;
         mEnabled = enabled;
     }
-    Tristate enabled() const
+    bool enabled() const
     {
         return mEnabled;
     }
@@ -2658,11 +2685,11 @@ private:
     QVector<qint64> mPersistentSearchCols;
     QSet<QByteArray> mRemovedAttributes;
     QMap<QByteArray, QByteArray> mAttributes;
-    Tristate mEnabled;
+    qint64 mParentId;
     Tristate mSync;
     Tristate mDisplay;
     Tristate mIndex;
-    qint64 mParentId;
+    bool mEnabled;
     bool mReferenced;
     bool mPersistentSearchRemote;
     bool mPersistentSearchRecursive;
@@ -3282,12 +3309,12 @@ public:
         : Command(SelectResource)
     {}
 
-    SelectResourceCommand(const QByteArray &resourceId)
+    SelectResourceCommand(const QString &resourceId)
         : Command(SelectResource)
         , mResourceId(resourceId)
     {}
 
-    QByteArray resourceId() const
+    QString resourceId() const
     {
         return mResourceId;
     }
@@ -3296,7 +3323,7 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
 
-    QByteArray mResourceId;
+    QString mResourceId;
 };
 
 class AKONADIPRIVATE_EXPORT SelectResourceResponse : public Response

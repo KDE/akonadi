@@ -121,6 +121,7 @@ set(libakonadiserver_SRCS
     storage/querycache.cpp
     storage/queryhelper.cpp
     storage/schematypes.cpp
+    storage/tagqueryhelper.cpp
     storage/transaction.cpp
     storage/parthelper.cpp
     storage/partstreamer.cpp

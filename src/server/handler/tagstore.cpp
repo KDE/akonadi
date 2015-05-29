@@ -18,7 +18,6 @@
 */
 
 #include "tagstore.h"
-#include "scope.h"
 #include "tagfetchhelper.h"
 #include "imapstreamparser.h"
 #include "response.h"
@@ -38,7 +37,7 @@ bool TagStore::parseStream()
 
     Tag changedTag = Tag::retrieveById(cmd.tagId());
     if (!changedTag.isValid()) {
-        return failureResponse<Protocol::ModifyTagResponse>(QStringLiteral("No such tag"));
+        return failureResponse("No such tag");
     }
 
     QSet<QByteArray> changes;
@@ -64,8 +63,7 @@ bool TagStore::parseStream()
             if (!newType.isValid()) {
                 newType.setName(cmd.type());
                 if (!newType.insert()) {
-                    return failureResponse<Protocol::ModifyTagResponse>(
-                        QStringLiteral("Failed to create new tag type"));
+                    return failureResponse("Failed to create new tag type");
                 }
             }
             changedTag.setTagType(newType);
@@ -76,8 +74,7 @@ bool TagStore::parseStream()
     bool tagRemoved = false;
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::RemoteId) {
         if (!connection()->context()->resource().isValid()) {
-            return failureResponse<Protocol::ModifyTagResponse>(
-                QStringLiteral("Only resources can change tag remote ID"));
+            return failureResponse("Only resources can change tag remote ID");
         }
 
         //Simply using remove() doesn't work since we need two arguments
@@ -92,7 +89,7 @@ bool TagStore::parseStream()
             remoteIdRelation.setResourceId(connection()->context()->resource().id());
             remoteIdRelation.setTag(changedTag);
             if (!remoteIdRelation.insert()) {
-                throw HandlerException( "Failed to insert remotedid resource relation" );
+                return failureResponse("Failed to insert remotedid resource relation");
             }
         } else {
             const int tagRidsCount = TagRemoteIdResourceRelation::count(TagRemoteIdResourceRelation::tagIdColumn(), changedTag.id());
@@ -101,7 +98,7 @@ bool TagStore::parseStream()
             // removal
             if (tagRidsCount == 0) {
                 if (!DataStore::self()->removeTags(Tag::List() << changedTag)) {
-                    throw HandlerException( "Failed to remove tag" );
+                    return failureResponse("Failed to remove tag");
                 }
                 tagRemoved = true;
             }
@@ -119,50 +116,47 @@ bool TagStore::parseStream()
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::Attributes) {
-        for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
-            if (attributesMap.contains(attr.first)) {
-                TagAttribute attribute = attributesMap.value(attr);
-                attribute.setValue(attr.second);
+        const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
+        for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
+            if (attributesMap.contains(iter.key())) {
+                TagAttribute attribute = attributesMap.value(iter.key());
+                attribute.setValue(iter.value());
                 if (!attribute.update()) {
-                    return failureResponse<Protocol::ModifyTagResponse>(
-                        QStringLiteral(("Failed to update attribute"));
+                    return failureResponse("Failed to update attribute");
                 }
             } else {
                 TagAttribute attribute;
                 attribute.setTagId(cmd.tagId());
-                attribute.setType(attr.first);
-                attribute.setValue(attr.second);
+                attribute.setType(iter.key());
+                attribute.setValue(iter.value());
                 if (!attribute.insert()) {
-                    return failureResponse<Protocol::ModifyTagResponse>(
-                        QStringLiteral("Failed to insert attribute"));
+                    return failureResponse("Failed to insert attribute");
                 }
             }
-            changes << attr.first;
+            changes << iter.key();
         }
     }
 
     if (!tagRemoved) {
         if (!changedTag.update()) {
-            return failureResponse<Protocol::ModifyTagResponse>(
-                QStringLiteral("Failed to store changes")();
+            return failureResponse("Failed to store changes");
         }
         if (!changes.isEmpty()) {
             DataStore::self()->notificationCollector()->tagChanged(changedTag);
         }
 
-        Scope scope(Scope::Uid);
-        scope.setUidSet(QVector<qint64>() << cmd.tagId());
+        ImapSet set;
+        set.add(QVector<qint64>() << cmd.tagId());
+
+        Scope scope;
+        scope.setUidSet(set);
         TagFetchHelper helper(connection(), scope);
-        // FIXME BIN: No notify
-        connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-                this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-        if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
-            return false;
+        if (!helper.fetchTags()) {
+            return failureResponse("Failed to fetch response");
         }
     } else {
-        mOutStream << Protocol::DeleteTagResponse();
+        return successResponse<Protocol::DeleteTagResponse>();
     }
 
-    mOutStream << Protocol::ModifyTagResponse();
-    return true;
+    return successResponse<Protocol::ModifyTagResponse>();
 }

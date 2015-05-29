@@ -41,16 +41,14 @@ bool Move::parseStream()
     Protocol::MoveItemsCommand cmd;
     mInStream >> cmd;
 
-    const Collection destination = HandlerHelper::collectionFromScope(cmd.destination());
+    const Collection destination = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (destination.isVirtual()) {
-        return failureResponse<Protocol::MoveItemsResponse>(
-            QStringLiteral("Moving items into virtual collection is not allowed"));
+        return failureResponse("Moving items into virtual collection is not allowed");
     }
 
     if (cmd.scope().scope() == Scope::Rid) {
         if (cmd.scope().ridContext() <= 0) {
-            return failureResponse<Protocol::MoveItemsResponse>(
-                QStringLiteral("RID move requires valid source collection"));
+            return failureResponse("RID move requires valid source collection");
         }
 
         connection()->context()->setCollection(Collection::retrieveById(cmd.scope().ridContext()));
@@ -63,7 +61,7 @@ bool Move::parseStream()
     retriever.setScope(cmd.scope());
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {
-        return failureResponse<Protocol::MoveItemsResponse>(retriever.lastError());
+        return failureResponse(retriever.lastError());
     }
 
     DataStore *store = connection()->storageBackend();
@@ -78,7 +76,7 @@ bool Move::parseStream()
     if (qb.exec()) {
         const QVector<PimItem> items = qb.result();
         if (items.isEmpty()) {
-            return failureResponse<Protocol::MoveItemsResponse>(QStringLiteral("No items found"));
+            return failureResponse("No items found");
         }
 
         // Split the list by source collection
@@ -87,16 +85,14 @@ bool Move::parseStream()
         Q_FOREACH (/*sic!*/ PimItem item, items) {
             const Collection source = items.first().collection();
             if (!source.isValid()) {
-                return failureResponse<Protocol::MoveItemsResponse>(
-                    QStringLiteral("Item without collection found!?"));
+                return failureResponse("Item without collection found!?");
             }
             if (!sources.contains(source.id())) {
                 sources.insert(source.id(), source);
             }
 
             if (!item.isValid()) {
-                return failureResponse<Protocol::MoveItemsResponse>(
-                    QStringLiteral("Invalid item in result set!?"));
+                return failureResponse("Invalid item in result set!?");
             }
             Q_ASSERT(item.collectionId() != destination.id());
 
@@ -127,21 +123,17 @@ bool Move::parseStream()
 
                 // FIXME Could we aggregate the changes to a single SQL query?
                 if (!moved.update()) {
-                    return failureResponse<Protocol::MoveItemsResponse>(
-                        QStringLiteral("Unable to update item"));
+                    return failureResponse("Unable to update item");
                 }
             }
         }
     } else {
-        return failureResponse<Protocol::MoveItemsResponse>(
-            QStringLiteral("Unable to execute query"));
+        return failureResponse("Unable to execute query");
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::MoveItemsResponse>(
-            QStringLiteral("Unable to commit transaction."));
+        return failureResponse("Unable to commit transaction.");
     }
 
-    mOutStream << Protocol::MoveItemsResponse();
-    return true;
+    return successResponse<Protocol::MoveItemsResponse>();
 }

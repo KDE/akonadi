@@ -32,11 +32,9 @@ bool Login::parseStream()
     mInStream >> cmd;
 
     if (cmd.sessionId().isEmpty()) {
-        return failureResponse<Protocol::LoginResponse>(
-            QStringLiteral("Missing session identifier"));
+        return failureResponse("Missing session identifier");
     }
     connection()->setSessionId(cmd.sessionId());
 
-    mOutStream << Protocol::LoginResponse();
-    return true;
+    return successResponse<Protocol::LoginResponse>();
 }

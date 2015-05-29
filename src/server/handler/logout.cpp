@@ -24,20 +24,13 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Logout::Logout()
-    : Handler()
-{
-}
-
-Logout::~Logout()
-{
-}
-
 bool Logout::parseStream()
 {
     Protocol::LogoutCommand cmd;
     mInStream >> cmd;
-    mOutStream << Protocol::LogoutResponse();
+
+    sendResponse<Protocol::LogoutResponse>();
+
     Q_EMIT connectionStateChange(LoggingOut);
     return true;
 }

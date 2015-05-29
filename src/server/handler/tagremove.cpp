@@ -34,24 +34,20 @@ bool TagRemove::parseStream()
     mInStream >> cmd;
 
     if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
-        return failureResponse<Protocol::DeleteTagResponse>(
-            QStringLiteral("Only UID-based TAGREMOVE is supported"));
+        return failureResponse("Only UID-based TAGREMOVE is supported");
     }
 
     SelectQueryBuilder<Tag> tagQuery;
-    QueryHelper::setToQuery(cmd.scope(), Tag::idFullColumnName(), tagQuery);
+    QueryHelper::setToQuery(cmd.scope().uidSet(), Tag::idFullColumnName(), tagQuery);
     if (!tagQuery.exec()) {
-        return failureResponse<Protocol::DeleteTagResponse>(
-            QStringLiteral("Failed to obtain tags"));
+        return failureResponse("Failed to obtain tags");
     }
 
     const Tag::List tags = tagQuery.result();
 
     if (!DataStore::self()->removeTags(tags)) {
-        return failureResponse<Protocol::DeleteTagResponse>(
-            QStringLiteral("Failed to remove tags"));
+        return failureResponse("Failed to remove tags");
     }
 
-    mOutStream << Protocol::DeleteTagResponse();
-    return true;
+    return successResponse<Protocol::DeleteTagResponse>();
 }

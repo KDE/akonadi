@@ -50,25 +50,20 @@ bool Remove::parseStream()
     Transaction transaction(store);
 
     if (!qb.exec()) {
-        return failureResponse<Protocol::DeleteItemsResponse>(
-            QStringLiteral("Unable to execute query"));
+        return failureResponse("Unable to execute query");
     }
 
     const QVector<PimItem> items = qb.result();
     if (items.isEmpty()) {
-        return failureResponse<Protocol::DeleteItemsResponse>(
-            QStringLiteral("No items found"));
+        return failureResponse("No items found");
     }
     if (!store->cleanupPimItems(items)) {
-        return failureResponse<Protocol::DeleteItemsResponse>(
-            QStringLiteral("Deletion failed"));
+        return failureResponse("Deletion failed");
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::DeleteItemsResponse>(
-            QStringLiteral("Unable to commit transaction"));
+        return failureResponse("Unable to commit transaction");
     }
 
-    mOutStream << Protocol::DeleteItemsResponse();
-    return true;
+    return successResponse<Protocol::DeleteItemsResponse>();
 }

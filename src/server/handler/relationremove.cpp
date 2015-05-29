@@ -35,16 +35,14 @@ bool RelationRemove::parseStream()
     mInStream >> cmd;
 
     if (cmd.left() < 0 || cmd.right() < 0) {
-        return failureResponse<Protocol::RemoveRelationsResponse>(
-            QStringLiteral("Invalid relation id's provided"));
+        return failureResponse("Invalid relation id's provided");
     }
 
     RelationType relType;
     if (!cmd.type().isEmpty()) {
         relType = RelationType::retrieveByName(cmd.type());
         if (!relType.isValid()) {
-            return failureResponse<Protocol::RemoveRelationsResponse>(
-                QStringLiteral("Failed to load relation type"));
+            return failureResponse("Failed to load relation type");
         }
     }
 
@@ -56,7 +54,7 @@ bool RelationRemove::parseStream()
     }
 
     if (!relationQuery.exec()) {
-        throw HandlerException("Failed to obtain relations");
+        return failureResponse("Failed to obtain relations");
     }
     const Relation::List relations = relationQuery.result();
     for (const Relation &relation : relations) {
@@ -70,7 +68,7 @@ bool RelationRemove::parseStream()
     itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.right());
 
     if (!itemsQuery.exec()) {
-        throw HandlerException("Removing relation failed");
+        throw failureResponse("Removing relation failed");
     }
     const PimItem::List items = itemsQuery.result();
     if (!items.isEmpty()) {
@@ -84,11 +82,9 @@ bool RelationRemove::parseStream()
         qb.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, relType.id());
     }
     if (!qb.exec()) {
-        return failureResponse<Protocol::RemoveRelationsResponse>()
-            QStringLiteral("Failed to remove relations");
+        return failureResponse("Failed to remove relations");
     }
 
-    mOutStream << Protocol::RemoveRelationsResponse();
-    return true;
+    return successResponse<Protocol::RemoveRelationsResponse>();
 }
 

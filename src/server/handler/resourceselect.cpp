@@ -36,18 +36,15 @@ bool ResourceSelect::parseStream()
 
     if (cmd.resourceId().isEmpty()) {
         connection()->context()->setResource(Resource());
-        mOutStream << Protocol::SelectResourceResponse();
-        return true;
+        return successResponse<Protocol::SelectResourceResponse>();
     }
 
     const Resource res = Resource::retrieveByName(cmd.resourceId());
     if (!res.isValid()) {
-        return failureResponse<Protocol::SelectResourceResponse>(
-            cmd.resourceId() % QStringLiteral(" is not a valid resource identifier"));
+        return failureResponse(cmd.resourceId() % QStringLiteral(" is not a valid resource identifier"));
     }
 
     connection()->context()->setResource(res);
 
-    mOutStream << Protocol::SelectResourceResponse();
-    return true;
+    return successResponse<Protocol::SelectResourceResponse>();
 }

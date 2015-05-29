@@ -36,26 +36,22 @@ bool RelationStore::parseStream()
     mInStream >> cmd;
 
     if (cmd.type().isEmpty()) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("Relation type not specified"));
+        return failureResponse("Relation type not specified");
     }
 
     if (cmd.left() < 0 || cmd.right() < 0) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("Invalid relation specified"));
+        return failureResponse("Invalid relation specified");
     }
 
     if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("RemoteID can only be set by Resources"));
+        return failureResponse("RemoteID can only be set by Resources");
     }
 
     RelationType relationType = RelationType::retrieveByName(cmd.type());
     if (!relationType.isValid()) {
         RelationType t(cmd.type());
         if (!t.insert()) {
-            return failureResponse<Protocol::ModifyRelationResponse>(
-                QStringLiteral("Unable to create relation type '") % cmd.type % QStringLiteral("'"));
+            return failureResponse(QStringLiteral("Unable to create relation type '") % cmd.type() % QStringLiteral("'"));
         }
         relationType = t;
     }
@@ -65,8 +61,7 @@ bool RelationStore::parseStream()
     relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, cmd.right());
     relationQuery.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, relationType.id());
     if (!relationQuery.exec()) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("Failed to query for existing relation"));
+        return failureResponse("Failed to query for existing relation");
     }
     const Relation::List existingRelations = relationQuery.result();
     if (!existingRelations.isEmpty()) {
@@ -75,12 +70,10 @@ bool RelationStore::parseStream()
             if (rel.remoteId() != cmd.remoteId())
             rel.setRemoteId(cmd.remoteId());
             if (!rel.update()) {
-                return failureResponse<Protocol::ModifyRelationResponse>(
-                    QStringLiteral("Failed to update relation");
+                return failureResponse("Failed to update relation");
             }
         } else {
-            return failureResponse<Protocol::ModifyRelationResponse>(
-                QStringLiteral("Matched more than one relation"));
+            return failureResponse("Matched more than one relation");
         }
         //throw HandlerException("Relation is already existing");
     }
@@ -90,8 +83,7 @@ bool RelationStore::parseStream()
     insertedRelation.setRightId(cmd.right());
     insertedRelation.setTypeId(relationType.id());
     if  (!insertedRelation.insert()) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("Failed to store relation"));
+        return failureResponse("Failed to store relation");
     }
 
     // Get all PIM items that are part of the relation
@@ -101,14 +93,12 @@ bool RelationStore::parseStream()
     itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.right());
 
     if (!itemsQuery.exec()) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("Adding relation failed"));
+        return failureResponse("Adding relation failed");
     }
     const PimItem::List items = itemsQuery.result();
 
     if (items.size() != 2) {
-        return failureResponse<Protocol::ModifyRelationResponse>(
-            QStringLiteral("Couldn't find items for relation"));
+        return failureResponse("Couldn't find items for relation");
     }
 
     /* if (items[0].collection().resourceId() != items[1].collection().resourceId()) {
@@ -118,7 +108,6 @@ bool RelationStore::parseStream()
     DataStore::self()->notificationCollector()->relationAdded(insertedRelation);
     DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List() << insertedRelation, Relation::List());
 
-    mOutStream << Protocol::ModifyRelationResponse();
-    return true;
+    return successResponse<Protocol::ModifyRelationResponse>();
 }
 

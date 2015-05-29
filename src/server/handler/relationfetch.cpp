@@ -56,8 +56,7 @@ bool RelationFetch::parseStream()
     if (!cmd.resource().isEmpty()) {
         Resource res = Resource::retrieveByName(cmd.resource());
         if (!res.isValid()) {
-            return failureResponse<Protocol::FetchRelationsResponse>(
-                QStringLiteral("Invalid resource"));
+            return failureResponse("Invalid resource");
         }
         Query::Condition condition;
         condition.setSubQueryMode(Query::Or);
@@ -72,16 +71,14 @@ bool RelationFetch::parseStream()
     }
 
     if (!relationQuery.exec()) {
-        return failureResponse<Protocol::FetchRelationsResponse>(
-            QStringLiteral("Failed to query for existing relation"));
+        return failureResponse("Failed to query for existing relation");
     }
     const Relation::List existingRelations = relationQuery.result();
     for (const Relation &relation : existingRelations) {
         Protocol::FetchRelationsResponse response(relation.leftId(), relation.rightId(), relation.relationType().name());
         response.setRemoteId(relation.remoteId());
-        mOutStream << response;
+        sendResponse(response);
     }
 
-    mOutStream << Protocol::FetchRelationsResponse();
-    return true;
+    return successResponse<Protocol::FetchRelationsResponse>();
 }

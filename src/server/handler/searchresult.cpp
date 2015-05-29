@@ -57,20 +57,20 @@ bool SearchResult::parseStream()
             ids << query.value(0).toLongLong();
         }
     } else if (cmd.result().scope() == Scope::Uid && !cmd.result().isEmpty()) {
-        const QVector<qint64> result = cmd.result().uidSet();
-        ids.reserve(result.size());
-        for (qint64 id : result) {
-            ids.insert(id);
+        const ImapSet result = cmd.result().uidSet();
+        for (const ImapInterval &interval : result.intervals()) {
+            for (qint64 i = interval.begin(); i <= interval.end(); ++i) {
+                ids.insert(i);
+            }
         }
     }
     SearchTaskManager::instance()->pushResults(cmd.searchId(), ids, connection());
 
-    mOutStream << Protocol::SearchResultResponse();
-    return true;
+    return successResponse<Protocol::SearchResultResponse>();
 }
 
 bool SearchResult::fail(const QByteArray &searchId, const QString &error)
 {
     SearchTaskManager::instance()->pushResults(searchId, QSet<qint64>(), connection());
-    return failureResponse<Protocol::SearchResultResponse>(error);
+    return failureResponse(error);
 }

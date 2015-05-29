@@ -21,7 +21,6 @@
 #define AKONADISEARCH_H
 
 #include "handler.h"
-#include "fetchscope.h"
 
 #include <QtCore/QVector>
 #include <QtCore/QSet>
@@ -45,7 +44,7 @@ private Q_SLOTS:
     void slotResultsAvailable(const QSet<qint64> &results);
 
 private:
-    FetchScope mFetchScope;
+    Protocol::FetchScope mFetchScope;
     QSet<qint64> mAllResults;
 };
 

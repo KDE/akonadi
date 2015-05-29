@@ -91,14 +91,18 @@ public:
     bool parseStream();
 
 private:
-    void listCollection(const Collection &root, const QStack<Collection> &ancestors, const QList<QByteArray> &mimeTypes, const CollectionAttribute::List &attributes);
+    void listCollection(const Collection &root,
+                        const QStack<Collection> &ancestors,
+                        const QStringList &mimeTypes,
+                        const CollectionAttribute::List &attributes);
     QStack<Collection> ancestorsForCollection(const Collection &col);
     void retrieveCollections(const Collection &topParent, int depth);
     bool checkFilterCondition(const Collection &col) const;
     bool checkChildrenForMimeTypes(const QHash<qint64, Collection> &collectionsMap,
                                    const QHash<qint64, qint64> &parentMap,
                                    const Collection &col);
-    CollectionAttribute::List getAttributes(const Collection &colId, const QVector<QByteArray> &filter = QVector<QByteArray>());
+    CollectionAttribute::List getAttributes(const Collection &colId,
+                                            const QVector<QByteArray> &filter = QVector<QByteArray>());
     void retrieveAttributes(const QVariantList &collectionIds);
 
     Resource mResource;

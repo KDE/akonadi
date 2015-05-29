@@ -47,10 +47,9 @@ bool Modify::parseStream()
     Protocol::ModifyCollectionCommand cmd;
     mInStream >> cmd;
 
-    Collection collection = HandlerHelper::collectionFromScope(cmd.scope());
+    Collection collection = HandlerHelper::collectionFromScope(cmd.scope(), connection());
     if (!collection.isValid()) {
-        return failureResponse<Protocol::ModifyCollectionResponse>(
-            QStringLiteral("No such collection"));
+        return failureResponse("No such collection");
     }
 
     CacheCleanerInhibitor inhibitor(false);
@@ -85,13 +84,11 @@ bool Modify::parseStream()
             }
             equal = false;
             if (!collection.removeMimeType(currentMt)) {
-                return failureResponse<Protocol::ModifyCollectionResponse>(
-                    QStringLiteral("Unable to remove collection mimetype"));
+                return failureResponse("Unable to remove collection mimetype");
             }
         }
         if (!db->appendMimeTypeForCollection(collection.id(), mts)) {
-            return failureResponse<Protocol::ModifyCollectionResponse>(
-                QStringLiteral("Unable to add collection mimetypes"));
+            return failureResponse("Unable to add collection mimetypes");
         }
         if (!equal || !mts.isEmpty()) {
             changes.append(AKONADI_PARAM_MIMETYPE);
@@ -113,8 +110,12 @@ bool Modify::parseStream()
             collection.setCachePolicyInherit(newCp.inherit());
             changed = true;
         }
-        if (collection.cachePolicyLocalParts() != newCp.localParts()) {
-            collection.setCachePolicyLocalParts(newCp.localParts());
+
+        QStringList parts = newCp.localParts();
+        qSort(parts);
+        const QString localParts = parts.join(QLatin1Char(' '));
+        if (collection.cachePolicyLocalParts() != localParts) {
+            collection.setCachePolicyLocalParts(localParts);
             changed = true;
         }
         if (collection.cachePolicySyncOnDemand() != newCp.syncOnDemand()) {
@@ -130,8 +131,7 @@ bool Modify::parseStream()
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::Name) {
         if (cmd.name() != collection.name()) {
             if (!CollectionQueryHelper::hasAllowedName(collection, cmd.name(), collection.parentId())) {
-                return failureResponse<Protocol::ModifyCollectionResponse>(
-                    QStringLiteral("Collection with the same name exists already"));
+                return failureResponse("Collection with the same name exists already");
             }
             collection.setName(cmd.name());
             changes.append(AKONADI_PARAM_NAME);
@@ -141,8 +141,7 @@ bool Modify::parseStream()
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::ParentID) {
         if (collection.parentId() != cmd.parentId()) {
             if (!db->moveCollection(collection, Collection::retrieveById(cmd.parentId()))) {
-                return failureResponse<Protocol::ModifyCollectionResponse>(
-                    QStringLiteral("Unable to reparent collection"));
+                return failureResponse("Unable to reparent collection");
             }
             changes.append(AKONADI_PARAM_PARENT);
         }
@@ -152,8 +151,7 @@ bool Modify::parseStream()
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemoteID) {
         if (cmd.remoteId() != collection.remoteId()) {
             if (!connection()->isOwnerResource(collection)) {
-                return failureResponse<Protocol::ModifyCollectionResponse>(
-                    QStringLiteral("Only resources can modify remote identifiers"));
+                return failureResponse("Only resources can modify remote identifiers");
             }
             collection.setRemoteId(cmd.remoteId());
             changes.append(AKONADI_PARAM_REMOTEID);
@@ -174,7 +172,7 @@ bool Modify::parseStream()
             changed = true;
         }
 
-        QList<QByteArray> queryAttributes = collection.queryAttributes().split(' ');
+        QList<QByteArray> queryAttributes = collection.queryAttributes().toUtf8().split(' ');
         if (cmd.persistentSearchRemote() != queryAttributes.contains(AKONADI_PARAM_REMOTE)) {
             if (cmd.persistentSearchRemote()) {
                 queryAttributes.append(AKONADI_PARAM_REMOTE);
@@ -199,7 +197,7 @@ bool Modify::parseStream()
         for (qint64 col : cmd.persistentSearchCollections()) {
             cols.append(QString::number(col));
         }
-        QString colStr = cols.join(' ');
+        const QString colStr = cols.join(QLatin1Char(' '));
         if (colStr != collection.queryCollections()) {
             collection.setQueryCollections(colStr);
             changed = true;
@@ -254,13 +252,13 @@ bool Modify::parseStream()
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::Attributes) {
-        for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
+        const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
+        for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             SelectQueryBuilder<CollectionAttribute> qb;
             qb.addValueCondition(CollectionAttribute::collectionIdColumn(), Query::Equals, collection.id());
-            qb.addValueCondition(CollectionAttribute::typeColumn(), Query::Equals, attr.first);
+            qb.addValueCondition(CollectionAttribute::typeColumn(), Query::Equals, iter.value());
             if (!qb.exec()) {
-                return failureResponse<Protocol::ModifyCollectionResponse>(
-                    QStringLiteral("Unable to retrieve collection attribute"));
+                return failureResponse("Unable to retrieve collection attribute");
             }
 
 
@@ -268,35 +266,31 @@ bool Modify::parseStream()
             if (attrs.isEmpty()) {
                 CollectionAttribute newAttr;
                 newAttr.setCollectionId(collection.id());
-                newAttr.setType(attr.first);
-                newAttr.setValue(attr.second);
+                newAttr.setType(iter.key());
+                newAttr.setValue(iter.value());
                 if (!newAttr.insert()) {
-                    return failureResponse<Protocol::ModifyCollectionResponse>(
-                        QStringLiteral("Unable to add collection attribute"));
+                    return failureResponse("Unable to add collection attribute");
                 }
-                changes.append(attr.first);
+                changes.append(iter.key());
             } else if (attrs.size() == 1) {
                 CollectionAttribute currAttr = attrs.first();
-                if (currAttr.value() == attr.second) {
+                if (currAttr.value() == iter.value()) {
                     continue;
                 }
-                currAttr.setValue(attr.second);
+                currAttr.setValue(iter.value());
                 if (!currAttr.update()) {
-                    return failureResponse<Protocol::ModifyCollectionResponse>(
-                        QStringLiteral("Unable to update collection attribute"));
+                    return failureResponse("Unable to update collection attribute");
                 }
-                changes.append(attr.first);
+                changes.append(iter.key());
             } else {
-                return failureResponse<Protocol::ModifyCollectionResponse>(
-                    QStringLiteral("WTF: more than one attribute with the same name"));
+                return failureResponse("WTF: more than one attribute with the same name");
             }
         }
     }
 
     if (!changes.isEmpty()) {
         if (collection.hasPendingChanges() && !collection.update()) {
-            return failureResponse<Protocol::ModifyCollectionResponse>(
-                QStringLiteral("Unable to update collection"));
+            return failureResponse("Unable to update collection");
         }
         //This must be after the collection was updated in the db. The resource will immediately request a copy of the collection.
         if (AkonadiServer::instance()->intervalChecker() && collection.referenced() && referencedChanged) {
@@ -312,11 +306,9 @@ bool Modify::parseStream()
             }
         }
         if (!transaction.commit()) {
-            return failureResponse<Protocol::ModifyCollectionResponse>(
-                QStringLiteral("Unable to commit transaction"));
+            return failureResponse("Unable to commit transaction");
         }
     }
 
-    mOutStream << Protocol::ModifyCollectionResponse();
-    return true;
+    return successResponse<Protocol::ModifyCollectionResponse>();
 }

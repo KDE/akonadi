@@ -534,6 +534,17 @@ QDataStream &operator>>(QDataStream &stream, ModifyItemsCommand &command)
     return stream;
 }
 
+QDataStream &operator<<(QDataStream &stream, const ModifyItemsResponse &command)
+{
+    return stream << command.mId
+                  << command.mNewRevision;
+}
+
+QDataStream &operator>>(QDataStream &stream, ModifyItemsResponse &command)
+{
+    return stream >> command.mId
+                  >> command.mNewRevision;
+}
 
 QDataStream &operator<<(QDataStream &stream, const MoveItemsCommand &command)
 {

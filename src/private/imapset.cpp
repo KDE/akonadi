@@ -22,6 +22,7 @@
 #include "imapparser_p.h"
 
 #include <QtCore/QSharedData>
+#include <QDataStream>
 
 #include <limits>
 

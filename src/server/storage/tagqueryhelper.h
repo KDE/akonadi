@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2015  Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,14 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMQUERYHELPER_H
-#define AKONADI_ITEMQUERYHELPER_H
+#ifndef AKONADI_TAGQUERYHELPER_H
+#define AKONADI_TAGQUERYHELPER_H
 
 #include "entities.h"
 
 namespace Akonadi {
 
-class ImapSet;
 class Scope;
 
 namespace Server {
@@ -36,17 +35,7 @@ class QueryBuilder;
   Helper methods to generate WHERE clauses for item queries based on the item set
   used in the protocol.
 */
-namespace ItemQueryHelper {
-/**
-  Add conditions to @p qb for the given item set @p set. If @p collection is valid,
-  only items in this collection are considered.
-*/
-void itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection = Collection());
-
-/**
-  Convenience method, does essentially the same as the one above.
-*/
-void itemSetToQuery(const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb);
+namespace TagQueryHelper {
 
 /**
   Add conditions to @p qb for the given remote identifier @p rid.

@@ -45,11 +45,11 @@ bool SearchPersistent::parseStream()
     mInStream >> cmd;
 
     if (cmd.name().isEmpty()) {
-        return failureResponse<Protocol::StoreSearchResponse>(QStringLiteral("No name specified"));
+        return failureResponse("No name specified");
     }
 
     if (cmd.query().isEmpty()) {
-        return failureResponse<Protocol::StoreSearchResponse(QStringLiteral("No query specified"));
+        return failureResponse("No query specified");
     }
 
     DataStore *db = connection()->storageBackend();
@@ -69,7 +69,7 @@ bool SearchPersistent::parseStream()
     QVector<qint64> queryColIds = cmd.queryCollections();
     qSort(queryColIds);
     for (qint64 col : queryColIds) {
-        cols.append(QString::number(col));
+        queryCollections.append(QString::number(col));
     }
 
     Collection col;
@@ -81,13 +81,11 @@ bool SearchPersistent::parseStream()
     col.setName(cmd.name());
     col.setIsVirtual(true);
     if (!db->appendCollection(col)) {
-        return failureResponse<Protocol::StoreSearchResponse>(
-            QStringLiteral("Unable to create persistent search"));
+        return failureResponse("Unable to create persistent search");
     }
 
     if (!db->addCollectionAttribute(col, "AccessRights", "luD")) {
-        return failureResponse<Protocol::StoreSearchResponse>(
-            QStringLiteral("Unable to set rights attribute on persistent search"));
+        return failureResponse("Unable to set rights attribute on persistent search");
     }
 
     for (const QString &mimeType : cmd.mimeTypes()) {
@@ -95,21 +93,18 @@ bool SearchPersistent::parseStream()
         if (!mt.isValid()) {
             mt.setName(mimeType);
             if (!mt.insert()) {
-                return failureResponse<Protocol::StoreSearchResponse>(
-                    QStringLiteral("Failed to create new mimetype"));
+                return failureResponse("Failed to create new mimetype");
             }
         }
         col.addMimeType(mt);
     }
 
     if (!transaction.commit()) {
-        return failureResponse<Protocol::StoreSearchResponse(
-            QStringLiteral("Unable to commit transaction"));
+        return failureResponse("Unable to commit transaction");
     }
 
     SearchManager::instance()->updateSearch(col);
 
-    mOutStream << HandlerHelper::collectionFetchResponse(col);
-    mOutStream << Protocol::StoreSearchResponse();
-    return true;
+    sendResponse(HandlerHelper::fetchCollectionsResponse(col));
+    return successResponse<Protocol::StoreSearchResponse>();
 }

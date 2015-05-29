@@ -38,8 +38,7 @@ bool TagAppend::parseStream()
     mInStream >> cmd;
 
     if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
-        return failureResponse<Protocol::CreateTagResponse>(
-            QStringLiteral("Only resources can create tags with remote ID");
+        return failureResponse("Only resources can create tags with remote ID");
     }
 
     TagType tagType;
@@ -48,8 +47,7 @@ bool TagAppend::parseStream()
         if (!tagType.isValid()) {
             TagType t(cmd.type());
             if (!t.insert()) {
-                return failureResponse<Protocol::CreateTagResponse>(
-                    QStringLiteral("Unable to create tagtype '") % cmd.type() % QStringLiteral("'"));
+                return failureResponse(QStringLiteral("Unable to create tagtype '") % cmd.type() % QStringLiteral("'"));
             }
             tagType = t;
         }
@@ -61,7 +59,7 @@ bool TagAppend::parseStream()
         qb.addColumn(Tag::idColumn());
         qb.addValueCondition(Tag::gidColumn(), Query::Equals, cmd.gid());
         if (!qb.exec()) {
-            return failureResponse<Protocol::CreateTagResponse>(QStringLiteral("Unable to list tags"));
+            return failureResponse("Unable to list tags");
         }
         if (qb.query().next()) {
             tagId = qb.query().value(0).toLongLong();
@@ -77,18 +75,17 @@ bool TagAppend::parseStream()
             insertedTag.setTypeId(tagType.id());
         }
         if (!insertedTag.insert(&tagId)) {
-            return failureResponse<Protocol::CreateTagResponse>(
-                QStringLiteral("Failed to store tag"));
+            return failureResponse("Failed to store tag");
         }
 
-        for (const QPair<QByteArray, QByteArray> &attr : cmd.attributes()) {
+        const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
+        for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             TagAttribute attribute;
             attribute.setTagId(tagId);
-            attribute.setType(attr.first);
-            attribute.setValue(attr.second);
+            attribute.setType(iter.key());
+            attribute.setValue(iter.value());
             if (!attribute.insert()) {
-                return failureResponse<Protocol::CreateTagResponse>(
-                    QStringLiteral("Failed to store tag attribute"));
+                return failureResponse("Failed to store tag attribute");
             }
         }
 
@@ -102,8 +99,7 @@ bool TagAppend::parseStream()
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId);
         qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId);
         if (!qb.exec()) {
-            return failureResponse<Protocol::CreateTagResponse>(
-                QStringLiteral("Failed to query for existing TagRemoteIdResourceRelation entries"));
+            return failureResponse("Failed to query for existing TagRemoteIdResourceRelation entries");
         }
         const bool exists = (qb.result() > 0);
 
@@ -124,22 +120,19 @@ bool TagAppend::parseStream()
             ret = rel.insert();
         }
         if (!ret) {
-            return failureResponse<Protocol::CreateTagResponse>(
-                QStringLiteral("Failed to store tag remote ID"));
+            return failureResponse("Failed to store tag remote ID");
         }
     }
 
     // FIXME BIN
+    Scope scope;
     ImapSet set;
     set.add(QVector<qint64>() << tagId);
-    TagFetchHelper helper(connection(), set);
-    connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-
-    if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
-        return false;
+    scope.setUidSet(set);
+    TagFetchHelper helper(connection(), scope);
+    if (!helper.fetchTags()) {
+        return failureResponse("Failed to fetch the new tag");
     }
 
-    mOutStream << Protocol::CreateTagResponse();
-    return true;
+    return successResponse<Protocol::CreateTagResponse>();
 }

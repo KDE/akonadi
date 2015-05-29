@@ -45,14 +45,12 @@ bool Select::parseStream()
     // as per rfc, even if the following select fails, we need to reset
     connection()->context()->setCollection(Collection());
 
-    const Collection col = HandlerHelper::collectionFromScope(cmd.collection());
+    const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!col.isValid()) {
-        return failureResponse<Protocol::SelectCollectionResponse>(
-            QStringLiteral("No such collection");
+        return failureResponse("No such collection");
     }
 
     connection()->context()->setCollection(col);
 
-    mOutStream << Protocol::SelectCollectionResponse();
-    return true;
+    return successResponse<Protocol::SelectCollectionResponse>();
 }

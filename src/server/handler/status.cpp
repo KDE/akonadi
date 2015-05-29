@@ -41,20 +41,17 @@ bool Status::parseStream()
     Protocol::FetchCollectionStatsCommand cmd;
     mInStream >> cmd;
 
-    const Collection col = HandlerHelper::collectionFromScope(cmd.collection());
+    const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!col.isValid()) {
-        return failureResponse<Protocol::FetchCollectionStatsResponse>(
-            QStringLiteral("No status for this folder"));
+        return failureResponse("No status for this folder");
     }
 
     const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
     if (stats.count == -1) {
-        return failureResponse<Protocol::FetchCollectionStatsResponse>(
-            QStringLiteral("Failed to query statistics."));
+        return failureResponse("Failed to query statistics.");
     }
 
-    mOutStream << Protocol::FetchCollectionStatsResponse(stats.count,
-                                                         stats.count - stats.read,
-                                                         stats.size);
-    return true;
+    return successResponse(Protocol::FetchCollectionStatsResponse(stats.count,
+                                                                  stats.count - stats.read,
+                                                                  stats.size));
 }

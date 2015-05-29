@@ -109,7 +109,7 @@ bool Store::deleteFlags(const PimItem::List &items, const QVector<QByteArray> &f
 
 bool Store::replaceTags(const PimItem::List &item, const Scope &tags, bool &tagsChanged)
 {
-    const Tag::List tagList = HandlerHelper::tagsFromScope(tags);
+    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->setItemsTags(item, tagList, &tagsChanged)) {
         akDebug() << "Store::replaceTags: unable to replace tags";
         return false;
@@ -119,8 +119,8 @@ bool Store::replaceTags(const PimItem::List &item, const Scope &tags, bool &tags
 
 bool Store::addTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged)
 {
-    const Tag::List tagList = HandlerHelper::tagsFromScope(tags);
-    if (!connection()->storageBackend()->appendItemsTags(items, tags, &tagsChanged)) {
+    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+    if (!connection()->storageBackend()->appendItemsTags(items, tagList, &tagsChanged)) {
         akDebug() << "Store::addTags: Unable to add new item tags";
         return false;
     }
@@ -129,8 +129,8 @@ bool Store::addTags(const PimItem::List &items, const Scope &tags, bool &tagsCha
 
 bool Store::deleteTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged)
 {
-    const Tag::List tagList = HandlerHelper::tagsFromScope(tags);
-    if (!connection()->storageBackend()->removeItemsTags(items, tags, &tagsChanged)) {
+    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+    if (!connection()->storageBackend()->removeItemsTags(items, tagList, &tagsChanged)) {
         akDebug() << "Store::deleteTags: Unable to remove item tags";
         return false;
     }
@@ -153,13 +153,11 @@ bool Store::parseStream()
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::scopeToQuery(cmd.scope(), connection()->context(), qb);
     if (!qb.exec()) {
-        return failureResponse<Protocol::ModifyItemsResponse>(
-            QStringLiteral("Unable to retrieve items"));
+        return failureResponse("Unable to retrieve items");
     }
     PimItem::List pimItems = qb.result();
     if (pimItems.isEmpty()) {
-        return failureResponse<Protocol::ModifyItemsResponse>(
-            QStringLiteral("No items found"));
+        return failureResponse("No items found");
     }
 
     for (int i = 0; i < pimItems.size(); ++i) {
@@ -169,7 +167,7 @@ bool Store::parseStream()
             if (connection()->isOwnerResource(pimItem)) {
                 if (pimItem.dirty()) {
                     const QString error = QStringLiteral("[LRCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with dirty payload, aborting STORE.");
-                    return failureResponse<Protocol::ModifyItemsResponse>(
+                    return failureResponse(
                         error.arg(pimItem.collection().resource().name())
                              .arg(pimItem.id())
                              .arg(pimItem.remoteId()).arg(pimItem.collectionId()));
@@ -178,8 +176,7 @@ bool Store::parseStream()
 
             // check and update revisions
             if (pimItems.at(i).rev() != (int) cmd.oldRevision()) {
-                return failureResponse<Protocol::ModifyItemsResponse>(
-                    QStringLiteral("[LLCONFLICT] Item was modified elsewhere, aborting STORE."));
+                return failureResponse("[LLCONFLICT] Item was modified elsewhere, aborting STORE.");
             }
         }
     }
@@ -198,51 +195,44 @@ bool Store::parseStream()
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::AddedFlags) {
         if (!addFlags(pimItems, cmd.addedFlags(), flagsChanged)) {
-            return failureResponse<Protocol::ModifyItemsResponse>(
-                QStringLiteral("Unable to add item flags"));
+            return failureResponse("Unable to add item flags");
         }
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemovedFlags) {
         if (!deleteFlags(pimItems, cmd.removedFlags(), flagsChanged)) {
-            return failureResponse<Protocol::ModifyItemsResponse>(
-                QStringLiteral("Unable to remove item flags"));
+            return failureResponse("Unable to remove item flags");
         }
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::Flags) {
         if (!replaceFlags(pimItems, cmd.flags(), flagsChanged)) {
-            return failureResponse<Protocol::ModifyItemsResponse>(
-                QStringLiteral("Unable to reset flags"));
+            return failureResponse("Unable to reset flags");
         }
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::AddedTags) {
         if (!addTags(pimItems, cmd.addedTags(), tagsChanged)) {
-            return failureResponse<Protocol::ModifyItemsResponse>(
-                QStringLiteral("Unable to add item tags"));
+            return failureResponse("Unable to add item tags");
         }
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemovedTags) {
         if (!deleteTags(pimItems, cmd.removedTags(), tagsChanged)) {
-            return failureResponse<Protocol::ModifyItemsResponse>(
-                QStringLiteral("Unabel to remove item tags"));
+            return failureResponse("Unabel to remove item tags");
         }
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::Tags) {
         if (!replaceTags(pimItems, cmd.tags(), tagsChanged)) {
-            return failureResponse<Protocol::ModifyItemsResponse>(
-                QStringLiteral("Unable to reset item tags"));
+            return failureResponse("Unable to reset item tags");
         }
     }
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemoteID) {
         if (item.remoteId() != cmd.remoteId()) {
             if (!connection()->isOwnerResource(item)) {
-                return failureResponse<Protocol::ModifyItemsResponse>(
-                    QStringLiteral("Only resources can modify remote identifiers"));
+                return failureResponse("Only resources can modify remote identifiers");
             }
             item.setRemoteId(cmd.remoteId());
             changes << AKONADI_PARAM_REMOTEID;
@@ -259,8 +249,7 @@ bool Store::parseStream()
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemoteRevision) {
         if (item.remoteRevision() != cmd.remoteRevision()) {
             if (!connection()->isOwnerResource(item)) {
-                return failureResponse<Protocol::ModifyItemsResponse>(
-                    QStringLiteral("Only resources can modify remote revisions"));
+                return failureResponse("Only resources can modify remote revisions");
             }
             item.setRemoteRevision(cmd.remoteRevision());
             changes << AKONADI_PARAM_REMOTEREVISION;
@@ -271,29 +260,30 @@ bool Store::parseStream()
         item.setDirty(false);
     }
 
-    if (item.isValid && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Size) {
+    if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Size) {
         size = cmd.itemSize();
         changes << AKONADI_PARAM_SIZE;
     }
 
-    if (item.isValid && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemovedParts) {
+    if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemovedParts) {
         if (!cmd.removedParts().isEmpty()) {
             if (!store->removeItemParts(item, cmd.removedParts())) {
-                return failureResponse<Protocol::ModifyItemsResponse>(
-                    QStringLiteral("Unable to remove item parts"));
-                changes += cmd.removedParts();
+                return failureResponse("Unable to remove item parts");
+                for (const QByteArray &part : cmd.removedParts()) {
+                    changes.insert(part);
+                }
             }
         }
     }
 
-    if (item.isValid && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Parts) {
+    if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Parts) {
         PartStreamer streamer(connection(), item, this);
         for (Protocol::PartMetaData part : cmd.parts()) {
             if (!streamer.stream(true, part)) {
-                return failureResponse<Protocol::ModifyItemsResponse>(streamer.error());
+                return failureResponse(streamer.error());
             }
 
-            changes << part.name();
+            changes.insert(part.name());
             partSizes += part.size();
         }
     }
@@ -330,14 +320,12 @@ bool Store::parseStream()
                 item.setDirty(true);
             }
             if (!item.update()) {
-                return failureResponse<Protocol::ModifyItemsResponse>(
-                    QStringLiteral("Unable to write item changes into the database"));
+                return failureResponse("Unable to write item changes into the database");
             }
 
             if (cmd.invalidateCache()) {
                 if (!store->invalidateItemCache(item)) {
-                    return failureResponse<Protocol::ModifyItemsResponse>(
-                        QStringLiteral("Unable to invalidate item cache in the database"));
+                    return failureResponse("Unable to invalidate item cache in the database");
                 }
             }
 
@@ -350,7 +338,7 @@ bool Store::parseStream()
             }
 
             if (!cmd.noResponse()) {
-                mOutStream << HandlerHelper::itemFetchResponse(item);
+                sendResponse(Protocol::ModifyItemsResponse(item.id(), item.rev()));
             }
         }
 
@@ -363,6 +351,5 @@ bool Store::parseStream()
         datetime = QLocale::c().toString(pimItems.first().datetime(), QLatin1String("dd-MMM-yyyy hh:mm:ss +0000"));
     }
 
-    mOutStream << Protocol::ModifyItemsResponse();
-    return true;
+    return successResponse<Protocol::ModifyItemsResponse>();
 }

@@ -34,19 +34,13 @@ bool TagFetch::parseStream()
     mInStream >> cmd;
 
     if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
-        return failureResponse<Protocol::FetchTagsResponse>(
-            QStringLiteral("Only UID-based TAGFETCH is supported"));
+        return failureResponse("Only UID-based TAGFETCH is supported");
     }
 
     TagFetchHelper helper(connection(),  cmd.scope());
-    connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-
-    // FIXME BIN
-    if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
-        return false;
+    if (!helper.fetchTags()) {
+        return failureResponse("Failed to fetch tags");
     }
 
-    mOutStream << Protocol::FetchTagsResponse();
-    return true;
+    return successResponse<Protocol::FetchTagsResponse>();
 }

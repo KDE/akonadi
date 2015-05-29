@@ -40,8 +40,7 @@ bool Search::parseStream()
     mInStream >> cmd;
 
     if (cmd.query().isEmpty()) {
-        return failureResponse<Protocol::SearchResponse>(
-            QStringLiteral("No query specified"));
+        return failureResponse("No query specified");
     }
 
     QVector<qint64> collectionIds, collections;
@@ -66,8 +65,7 @@ bool Search::parseStream()
     akDebug() << "\tRecursive" << recursive;
 
     if (collections.isEmpty()) {
-        mOutStream << Protocol::SearchResponse();
-        return true;
+        return successResponse<Protocol::SearchResponse>();
     }
 
     mFetchScope = cmd.fetchScope();
@@ -84,8 +82,7 @@ bool Search::parseStream()
     //akDebug() << "\tResult:" << uids;
     akDebug() << "\tResult:" << mAllResults.count() << "matches";
 
-    mOutStream << Protocol::SearchResponse();
-    return true;
+    return successResponse<Protocol::SearchResponse>();
 }
 
 void Search::slotResultsAvailable(const QSet<qint64> &results)
@@ -98,13 +95,11 @@ void Search::slotResultsAvailable(const QSet<qint64> &results)
         return;
     }
 
-    QVector<qint64> fetchResults;
-    fetchResults.reserve(newResults.size());
-    for (qint64 id : newResults) {
-        fetchResults.append(id);
-    }
-    Scope scope(Scope::Uid);
-    scope.setUidSet(fetchResults);
+    ImapSet imapSet;
+    imapSet.add(newResults);
+
+    Scope scope;
+    scope.setUidSet(imapSet);
 
     FetchHelper fetchHelper(connection(), scope, mFetchScope);
     fetchHelper.fetchItems();

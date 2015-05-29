@@ -112,7 +112,7 @@ CollectionAttribute::List List::getAttributes(const Collection &col, const QVect
 }
 
 void List::listCollection(const Collection &root, const QStack<Collection> &ancestors,
-                          const QList<QByteArray> &mimeTypes,
+                          const QStringList &mimeTypes,
                           const CollectionAttribute::List &attributes)
 {
     const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(root.id(), connection()->sessionId());
@@ -133,19 +133,19 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     DataStore *db = connection()->storageBackend();
     db->activeCachePolicy(dummy);
 
-    mOutStream << HandlerHelper::collectionFetchResponse(dummy, attributes, mIncludeStatistics,
+    sendResponse(HandlerHelper::fetchCollectionsResponse(dummy, attributes, mIncludeStatistics,
                                                          mAncestorDepth, ancestors,
                                                          ancestorAttributes,
                                                          isReferencedFromSession || resourceIsSynchronizing,
-                                                         mimeTypes);
+                                                         mimeTypes));
 }
 
 static Query::Condition filterCondition(const QString &column)
 {
     Query::Condition orCondition(Query::Or);
-    orCondition.addValueCondition(column, Query::Equals, Akonadi::Server::Tristate::True);
+    orCondition.addValueCondition(column, Query::Equals, (int)Tristate::True);
     Query::Condition andCondition(Query::And);
-    andCondition.addValueCondition(column, Query::Equals, Akonadi::Server::Tristate::Undefined);
+    andCondition.addValueCondition(column, Query::Equals, (int)Tristate::Undefined);
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
     orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
@@ -445,7 +445,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         const Collection col = it.value();
         // qCDebug(AKONADISERVER_LOG) << "col " << col.id();
 
-        QList<QByteArray> mimeTypes;
+        QStringList mimeTypes;
         {
             //Get new query if necessary
             if (!mimeTypeQuery.isValid() && mimetypeQueryStart < mimeTypeIds.size()) {
@@ -464,7 +464,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             }
             //Advance query while a mimetype for this collection is returned
             while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() == col.id()) {
-                mimeTypes << mimeTypeQuery.value(2).toString().toUtf8();
+                mimeTypes << mimeTypeQuery.value(2).toString();
                 if (!mimeTypeQuery.next()) {
                     break;
         }
@@ -514,8 +514,7 @@ bool List::parseStream()
     if (!cmd.resource().isEmpty()) {
         mResource = Resource::retrieveByName(cmd.resource());
         if (!mResource.isValid()) {
-            return failureResponse<Protocol::FetchCollectionsResponse>(
-                QStringLiteral("Unknown resource"));
+            return failureResponse("Unknown resource");
         }
     }
     for (const QString &mtName : cmd.mimeTypes()) {
@@ -525,8 +524,7 @@ bool List::parseStream()
         } else {
             MimeType mt(mtName);
             if (!mt.insert()) {
-                return failureResponse<Protocol::FetchCollectionsResponse>(
-                    QStringLiteral("Failed to create mimetype record"));
+                return failureResponse("Failed to create mimetype record");
             }
             mMimeTypes.append(mt.id());
         }
@@ -540,7 +538,6 @@ bool List::parseStream()
     mAncestorDepth = cmd.ancestorsDepth();
     mAncestorAttributes = cmd.ancestorsAttributes();
 
-    qint64 baseCollection = -1;
     Scope scope = cmd.scope();
     if (!scope.isEmpty()) { // not root
         Collection col;
@@ -563,33 +560,27 @@ bool List::parseStream()
             } else if (connection()->context()->resource().isValid()) {
                 qb.addValueCondition(Resource::idFullColumnName(), Query::Equals, connection()->context()->resource().id());
             } else {
-                return failureResponse<Protocol::FetchCollectionsResponse>(
-                    QStringLiteral("Cannot retrieve collection based on remote identifier without a resource context"));
+                return failureResponse("Cannot retrieve collection based on remote identifier without a resource context");
             }
             if (!qb.exec()) {
-                return failureResponse<Protocol::FetchCollectionsResponse>(
-                    QStringLiteral("Unable to retrieve collection for listing"));
+                return failureResponse("Unable to retrieve collection for listing");
             }
             Collection::List results = qb.result();
             if (results.count() != 1) {
-                return failureResponse<Protocol::FetchCollectionsResponse>(
-                    QString::number(results.count()) + QStringLiteral(" collections found"));
+                return failureResponse(QString::number(results.count()) + QStringLiteral(" collections found"));
             }
             col = results.first();
         } else if (scope.scope() == Scope::HierarchicalRid) {
             if (!connection()->context()->resource().isValid()) {
-                return failureResponse<Protocol::FetchCollectionsResponse>(
-                        QStringLiteral("Cannot retrieve collection based on hierarchical remote identifier without a resource context"));
+                return failureResponse("Cannot retrieve collection based on hierarchical remote identifier without a resource context");
             }
             col = CollectionQueryHelper::resolveHierarchicalRID(scope.ridChain(), connection()->context()->resource().id());
         } else {
-            return failureResponse<Protocol::FetchCollectionsResponse>(
-                QStringLiteral("Unexpected error"));
+            return failureResponse("Unexpected error");
         }
 
         if (!col.isValid()) {
-            return failureResponse<Protocol::FetchCollectionsResponse>(
-                QStringLiteral("Collection does not exist"));
+            return failureResponse("Collection does not exist");
         }
 
         retrieveCollections(col, cmd.depth());
@@ -599,6 +590,5 @@ bool List::parseStream()
     }
     }
 
-    mOutStream << Protocol::FetchCollectionsResponse();
-    return true;
+    return successResponse<Protocol::FetchCollectionsResponse>();
 }
