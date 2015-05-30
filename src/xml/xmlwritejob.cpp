@@ -59,7 +59,7 @@ void XmlWriteJobPrivate::collectionFetchResult(KJob* job)
 {
   if ( job->error() )
     return;
-  CollectionFetchJob *fetch = dynamic_cast<CollectionFetchJob*>( job );
+  CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
   Q_ASSERT( fetch );
   if ( fetch->collections().isEmpty() ) {
     processItems();
@@ -106,7 +106,7 @@ void XmlWriteJobPrivate::itemFetchResult(KJob* job)
 {
   if ( job->error() )
     return;
-  ItemFetchJob *fetch = dynamic_cast<ItemFetchJob*>( job );
+  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   Q_ASSERT( fetch );
   foreach ( const Item &item, fetch->items() )
     XmlWriter::writeItem( item, elementStack.top() );

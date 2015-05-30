@@ -83,8 +83,8 @@ void JobPrivate::init(QObject *parent)
 {
     Q_Q(Job);
 
-    mParentJob = dynamic_cast<Job *>(parent);
-    mSession = dynamic_cast<Session *>(parent);
+    mParentJob = qobject_cast<Job *>(parent);
+    mSession = qobject_cast<Session *>(parent);
 
     if (!mSession) {
         if (!mParentJob) {
@@ -199,7 +199,7 @@ void JobPrivate::startNext()
     Q_Q(Job);
 
     if (mStarted && !mCurrentSubJob && q->hasSubjobs()) {
-        Job *job = dynamic_cast<Akonadi::Job *>(q->subjobs().at(0));
+        Job *job = qobject_cast<Akonadi::Job *>(q->subjobs().at(0));
         Q_ASSERT(job);
         job->d_ptr->startQueued();
     }
