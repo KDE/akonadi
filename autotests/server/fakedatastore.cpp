@@ -171,7 +171,7 @@ bool FakeDataStore::removeItemsTags(const PimItem::List &items,
 }
 
 bool FakeDataStore::removeItemParts(const PimItem &item,
-                                    const QList<QByteArray> &parts)
+                                    const QVector<QByteArray> &parts)
 {
     mChanges.insert(QLatin1String("remoteItemParts"),
                     QVariantList() << QVariant::fromValue(item)

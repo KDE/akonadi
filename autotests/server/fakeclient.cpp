@@ -19,7 +19,7 @@
 
 #include "fakeclient.h"
 #include "fakeakonadiserver.h"
-#include "imapstreamparser.h"
+
 #include <shared/akdebug.h>
 
 #include <QTest>
@@ -133,12 +133,11 @@ void FakeClient::run()
     if (!mSocket->waitForConnected()) {
         akFatal() << "Failed to connect to FakeAkonadiServer";
     }
-    mStreamParser = new ImapStreamParser(mSocket);
+    mStream.setDevice(mSocket);
 
     exec();
 
-    delete mStreamParser;
-    mStreamParser = 0;
+    mStream.setDevice(Q_NULLPTR);
     mSocket->close();
     delete mSocket;
     mSocket = 0;

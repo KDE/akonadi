@@ -22,13 +22,12 @@
 
 #include <QThread>
 #include <QMutex>
+#include <QDataStream>
 
 class QLocalSocket;
 
 namespace Akonadi {
 namespace Server {
-
-class ImapStreamParser;
 
 class FakeClient : public QThread
 {
@@ -55,8 +54,8 @@ private:
     mutable QMutex mMutex;
 
     QList<QByteArray> mScenario;
-    ImapStreamParser *mStreamParser;
     QLocalSocket *mSocket;
+    QDataStream mStream;
 };
 }
 }
