@@ -21,33 +21,82 @@
 #include "scope_p.h"
 
 #include <QtCore/QDataStream>
+#include <QtCore/QStringList>
+
+#include "imapset_p.h"
 
 using namespace Akonadi;
 
-Scope::Scope()
-    : mRidContext(-1)
-    , mScope(Invalid)
+namespace Akonadi
 {
+
+class ScopePrivate : public QSharedData
+{
+public:
+    ScopePrivate()
+        : ridContext(-1)
+        , scope(Scope::Invalid)
+    {}
+
+    ImapSet uidSet;
+    QStringList ridSet;
+    QStringList ridChain;
+    QStringList gidSet;
+    qint64 ridContext;
+    Scope::SelectionScope scope;
+};
+
+}
+
+Scope::Scope()
+    : d(new ScopePrivate)
+{
+}
+
+Scope::Scope(const Scope &other)
+    : d(other.d)
+{
+}
+
+Scope::Scope(Scope &&other)
+{
+    d.swap(other.d);
+}
+
+Scope::~Scope()
+{
+}
+
+Scope &Scope::operator=(const Scope &other)
+{
+    d = other.d;
+    return *this;
+}
+
+Scope &Scope::operator=(Scope &&other)
+{
+    d.swap(other.d);
+    return *this;
 }
 
 Scope::SelectionScope Scope::scope() const
 {
-    return mScope;
+    return d->scope;
 }
 
 bool Scope::isEmpty() const
 {
-    switch (mScope) {
+    switch (d->scope) {
     case Invalid:
         return true;
     case Uid:
-        return mUidSet.isEmpty();
+        return d->uidSet.isEmpty();
     case Rid:
-        return mRidSet.isEmpty();
+        return d->ridSet.isEmpty();
     case HierarchicalRid:
-        return mRidChain.isEmpty();
+        return d->ridChain.isEmpty();
     case Gid:
-        return mGidSet.isEmpty();
+        return d->gidSet.isEmpty();
     }
 
     Q_ASSERT(false);
@@ -57,63 +106,63 @@ bool Scope::isEmpty() const
 
 void Scope::setUidSet(const ImapSet &uidSet)
 {
-    mScope = Uid;
-    mUidSet = uidSet;
+    d->scope = Uid;
+    d->uidSet = uidSet;
 }
 
 ImapSet Scope::uidSet() const
 {
-    return mUidSet;
+    return d->uidSet;
 }
 
 void Scope::setRidSet(const QStringList &ridSet)
 {
-    mScope = Rid;
-    mRidSet = ridSet;
+    d->scope = Rid;
+    d->ridSet = ridSet;
 }
 
 QStringList Scope::ridSet() const
 {
-    return mRidSet;
+    return d->ridSet;
 }
 
 void Scope::setRidChain(const QStringList &ridChain)
 {
-    mScope = HierarchicalRid;
-    mRidChain = ridChain;
+    d->scope = HierarchicalRid;
+    d->ridChain = ridChain;
 }
 
 QStringList Scope::ridChain() const
 {
-    return mRidChain;
+    return d->ridChain;
 }
 
 void Scope::setRidContext(qint64 context)
 {
-    mRidContext = context;
+    d->ridContext = context;
 }
 
 qint64 Scope::ridContext() const
 {
-    return mRidContext;
+    return d->ridContext;
 }
 
 void Scope::setGidSet(const QStringList &gidSet)
 {
-    mScope = Gid;
-    mGidSet = gidSet;
+    d->scope = Gid;
+    d->gidSet = gidSet;
 }
 
 QStringList Scope::gidSet() const
 {
-    return mGidSet;
+    return d->gidSet;
 }
 
 qint64 Scope::uid() const
 {
-    if (mUidSet.intervals().size() == 1 &&
-        mUidSet.intervals().at(0).size() == 1) {
-        return mUidSet.intervals().at(0).begin();
+    if (d->uidSet.intervals().size() == 1 &&
+        d->uidSet.intervals().at(0).size() == 1) {
+        return d->uidSet.intervals().at(0).begin();
     }
 
     // TODO: Error handling!
@@ -122,42 +171,42 @@ qint64 Scope::uid() const
 
 QString Scope::rid() const
 {
-    if (mRidSet.size() != 1) {
+    if (d->ridSet.size() != 1) {
         // TODO: Error handling!
-        Q_ASSERT(mRidSet.size() == 1);
+        Q_ASSERT(d->ridSet.size() == 1);
         return QString();
     }
-    return mRidSet.at(0);
+    return d->ridSet.at(0);
 }
 
 QString Scope::gid() const
 {
-    if (mGidSet.size() != 1) {
+    if (d->gidSet.size() != 1) {
         // TODO: Error hanlding!
-        Q_ASSERT(mGidSet.size() == 1);
+        Q_ASSERT(d->gidSet.size() == 1);
         return QString();
     }
-    return mGidSet.at(0);
+    return d->gidSet.at(0);
 }
 
 QDataStream &operator<<(QDataStream &stream, const Scope &scope)
 {
-    stream << static_cast<qint8>(scope.mScope);
-    switch (scope.mScope) {
+    stream << static_cast<qint8>(scope.d->scope);
+    switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;
     case Scope::Uid:
-        stream << scope.mUidSet;
+        stream << scope.d->uidSet;
         return stream;
     case Scope::Rid:
-        stream << scope.mRidSet;
-        stream << scope.mRidContext;
+        stream << scope.d->ridSet;
+        stream << scope.d->ridContext;
         return stream;
     case Scope::HierarchicalRid:
-        stream << scope.mRidChain;
+        stream << scope.d->ridChain;
         return stream;
     case Scope::Gid:
-        stream << scope.mGidSet;
+        stream << scope.d->gidSet;
         return stream;
     }
 
@@ -167,29 +216,29 @@ QDataStream &operator<<(QDataStream &stream, const Scope &scope)
 
 QDataStream &operator>>(QDataStream &stream, Scope &scope)
 {
-    scope.mUidSet = ImapSet();
-    scope.mRidSet.clear();
-    scope.mRidChain.clear();
-    scope.mGidSet.clear();
+    scope.d->uidSet = ImapSet();
+    scope.d->ridSet.clear();
+    scope.d->ridChain.clear();
+    scope.d->gidSet.clear();
 
     qint8 c;
     stream >> c;
-    scope.mScope = static_cast<Scope::SelectionScope>(c);
-    switch (scope.mScope) {
+    scope.d->scope = static_cast<Scope::SelectionScope>(c);
+    switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;
     case Scope::Uid:
-        stream >> scope.mUidSet;
+        stream >> scope.d->uidSet;
         return stream;
     case Scope::Rid:
-        stream >> scope.mRidSet;
-        stream >> scope.mRidContext;
+        stream >> scope.d->ridSet;
+        stream >> scope.d->ridContext;
         return stream;
     case Scope::HierarchicalRid:
-        stream >> scope.mRidChain;
+        stream >> scope.d->ridChain;
         return stream;
     case Scope::Gid:
-        stream >> scope.mGidSet;
+        stream >> scope.d->gidSet;
         return stream;
     }
 

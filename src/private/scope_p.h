@@ -23,17 +23,18 @@
 
 #include "akonadiprivate_export.h"
 
+#include <QtCore/QSharedDataPointer>
+
 class QDataStream;
-
-#include <QStringList>
-#include <QVector>
-
-#include "imapset_p.h"
+class QString;
+class QStringList;
 
 namespace Akonadi
 {
+class ImapSet;
 class Scope;
 }
+
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope);
 
@@ -41,6 +42,7 @@ AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Scop
 namespace Akonadi
 {
 
+class ScopePrivate;
 class AKONADIPRIVATE_EXPORT Scope
 {
 public:
@@ -53,6 +55,12 @@ public:
     };
 
     Scope();
+    Scope(const Scope &other);
+    Scope(Scope &&other);
+    ~Scope();
+
+    Scope &operator=(const Scope &other);
+    Scope &operator=(Scope &&other);
 
     SelectionScope scope() const;
 
@@ -76,13 +84,10 @@ public:
     qint64 uid() const;
     QString rid() const;
     QString gid() const;
+
 private:
-    ImapSet mUidSet;
-    QStringList mRidSet;
-    QStringList mRidChain;
-    QStringList mGidSet;
-    qint64 mRidContext;
-    SelectionScope mScope;
+    QSharedDataPointer<ScopePrivate> d;
+    friend class ScopePrivate;
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Scope &scope);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Scope &scope);
