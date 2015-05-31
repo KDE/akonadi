@@ -18,7 +18,6 @@
  ***************************************************************************/
 
 #include "handlerhelper.h"
-#include "imapstreamparser.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
@@ -29,10 +28,9 @@
 #include "handler.h"
 #include "connection.h"
 
-#include <private/imapparser_p.h>
+#include <private/imapset_p.h>
+#include <private/scope_p.h>
 #include <private/protocol_p.h>
-
-#include <QtSql/QSqlError>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -80,53 +78,6 @@ QString HandlerHelper::pathForCollection(const Collection &col)
         current = current.parent();
     }
     return parts.join(QLatin1String("/"));
-}
-
-int HandlerHelper::parseCachePolicy(const QByteArray &data, Collection &col, int start, bool *changed)
-{
-    bool inheritChanged = false;
-    bool somethingElseChanged = false;
-
-    QList<QByteArray> params;
-    int end = ImapParser::parseParenthesizedList(data, params, start);
-    for (int i = 0; i < params.count() - 1; i += 2) {
-        const QByteArray key = params[i];
-        const QByteArray value = params[i + 1];
-
-        if (key == AKONADI_PARAM_INHERIT) {
-            const bool inherit = value == "true";
-            inheritChanged = col.cachePolicyInherit() != inherit;
-            col.setCachePolicyInherit(inherit);
-        } else if (key == AKONADI_PARAM_INTERVAL) {
-            const int interval = value.toInt();
-            somethingElseChanged = somethingElseChanged || interval != col.cachePolicyCheckInterval();
-            col.setCachePolicyCheckInterval(interval);
-        } else if (key == AKONADI_PARAM_CACHETIMEOUT) {
-            const int timeout = value.toInt();
-            somethingElseChanged = somethingElseChanged || timeout != col.cachePolicyCacheTimeout();
-            col.setCachePolicyCacheTimeout(timeout);
-        } else if (key == AKONADI_PARAM_SYNCONDEMAND) {
-            const bool syncOnDemand = value == "true";
-            somethingElseChanged = somethingElseChanged || syncOnDemand != col.cachePolicySyncOnDemand();
-            col.setCachePolicySyncOnDemand(syncOnDemand);
-        } else if (key == AKONADI_PARAM_LOCALPARTS) {
-            QList<QByteArray> tmp;
-            QStringList partsList;
-            ImapParser::parseParenthesizedList(value, tmp);
-            Q_FOREACH (const QByteArray &ba, tmp) {
-                partsList << QString::fromLatin1(ba);
-            }
-            const QString parts = partsList.join(QLatin1String(" "));
-            somethingElseChanged = somethingElseChanged || col.cachePolicyLocalParts() != parts;
-            col.setCachePolicyLocalParts(parts);
-        }
-    }
-
-    if (changed && (inheritChanged || (!col.cachePolicyInherit() && somethingElseChanged))) {
-        *changed = true;
-    }
-
-    return end;
 }
 
 Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection& col)

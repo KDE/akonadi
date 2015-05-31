@@ -18,12 +18,8 @@
 */
 
 #include "transaction.h"
-#include "storage/datastore.h"
 #include "connection.h"
-#include "response.h"
-#include "imapstreamparser.h"
-
-#include <private/protocol_p.h>
+#include "storage/datastore.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

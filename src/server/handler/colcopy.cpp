@@ -19,8 +19,6 @@
 
 #include "colcopy.h"
 
-#include <private/protocol_p.h>
-
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
@@ -28,7 +26,6 @@
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
 #include "storage/collectionqueryhelper.h"
-#include "imapstreamparser.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

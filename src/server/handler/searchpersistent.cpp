@@ -19,22 +19,14 @@
 
 #include "searchpersistent.h"
 
-#include "akonadi.h"
 #include "connection.h"
-#include "response.h"
+#include "handlerhelper.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
-#include "handlerhelper.h"
 #include "search/searchmanager.h"
-#include "imapstreamparser.h"
-
-#include <private/protocol_p.h>
-#include <private/imapparser_p.h>
 
 #include <shared/akdebug.h>
-
-#include <QtCore/QStringList>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

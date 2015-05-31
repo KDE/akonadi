@@ -24,7 +24,6 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/queryhelper.h"
 #include "storage/datastore.h"
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

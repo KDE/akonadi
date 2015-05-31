@@ -19,15 +19,10 @@
 
 #include "tagfetchhelper.h"
 #include "handler.h"
-#include "response.h"
-#include "storage/querybuilder.h"
-#include "storage/tagqueryhelper.h"
-#include "entities.h"
 #include "connection.h"
 #include "utils.h"
-
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
+#include "storage/querybuilder.h"
+#include "storage/tagqueryhelper.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -126,8 +121,6 @@ bool TagFetchHelper::fetchTags()
 
     QDataStream stream(mConnection->socket());
 
-    Response response;
-    response.setUntagged();
     while (tagQuery.isValid()) {
         const qint64 tagId = tagQuery.value(0).toLongLong();
         Protocol::FetchTagsResponse response(tagId);

@@ -18,29 +18,18 @@
  ***************************************************************************/
 
 #include "akappend.h"
+
 #include "fetchhelper.h"
-
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
-
-#include "imapstreamparser.h"
-
-#include "response.h"
-#include "handlerhelper.h"
-
-#include "akonadi.h"
 #include "connection.h"
 #include "preprocessormanager.h"
+#include "handlerhelper.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/transaction.h"
 #include "storage/parttypehelper.h"
 #include "storage/dbconfig.h"
 #include "storage/partstreamer.h"
 #include "storage/parthelper.h"
 #include "storage/selectquerybuilder.h"
-
-#include <QtCore/QDebug>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

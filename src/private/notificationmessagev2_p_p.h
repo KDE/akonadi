@@ -126,8 +126,22 @@ public:
         list.append(msg);
         return true;
     }
+
+    template<template<typename> class Container>
+    static QByteArray join(const Container<QByteArray> &v, const QByteArray &separator)
+    {
+        QByteArray rv;
+        for (auto iter = v.cbegin(), end = v.cend(); iter != end; ++iter) {
+            if (iter != v.cbegin()) {
+                rv += separator;
+            }
+            rv += (*iter);
+        }
+        return rv;
+    }
+
 };
 
-}
+} // namespace Akonadi
 
 #endif

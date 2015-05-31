@@ -18,10 +18,7 @@
  ***************************************************************************/
 #include "handler.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QLatin1String>
-
-#include <private/imapset_p.h>
+#include <private/scope_p.h>
 #include <private/protocol_p.h>
 
 #include "connection.h"
@@ -57,7 +54,7 @@
 #include "handler/relationfetch.h"
 
 #include "storage/querybuilder.h"
-#include "imapstreamparser.h"
+
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -19,9 +19,7 @@
 
 #include "imapset_p.h"
 
-#include "imapparser_p.h"
-
-#include <QtCore/QSharedData>
+#include <QSharedData>
 #include <QDataStream>
 
 #include <limits>
@@ -239,12 +237,15 @@ void ImapSet::add(const ImapInterval &interval)
 
 QByteArray ImapSet::toImapSequenceSet() const
 {
-    QList<QByteArray> rv;
-    Q_FOREACH (const ImapInterval &interval, d->intervals) {
-        rv << interval.toImapSequence();
+    QByteArray rv;
+    for (auto iter = d->intervals.cbegin(), end = d->intervals.cend(); iter != end; ++iter) {
+        if (iter != d->intervals.cbegin()) {
+            rv += ",";
+        }
+        rv += iter->toImapSequence();
     }
 
-    return ImapParser::join(rv, ",");
+    return rv;
 }
 
 ImapInterval::List ImapSet::intervals() const

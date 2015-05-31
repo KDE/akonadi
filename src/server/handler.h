@@ -19,10 +19,7 @@
 #ifndef AKONADIHANDLER_H
 #define AKONADIHANDLER_H
 
-#include <QtCore/QByteArray>
-#include <QtCore/QHash>
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
 #include <QtCore/QDataStream>
 
 #include "global.h"

@@ -21,12 +21,11 @@
 #include "notificationmessagev2_p.h"
 #include "notificationmessagev2_p_p.h"
 #include "notificationmessage_p.h"
-#include "imapparser_p.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
 #include <QtDBus/QDBusMetaType>
-#include <qdbusconnection.h>
+#include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
 
@@ -274,7 +273,7 @@ QString NotificationMessageV2::toString() const
         itemStr += QLatin1String(")");
         items << itemStr.toLatin1();
     }
-    rv += QLatin1String("(") + QString::fromLatin1(ImapParser::join(items, ", ")) + QLatin1String(")");
+    rv += QLatin1String("(") + QString::fromLatin1(NotificationMessageHelpers::join(items, ", ")) + QLatin1String(")");
 
     if (d->parentDestCollection >= 0) {
         rv += QLatin1String(" from ");
@@ -294,16 +293,16 @@ QString NotificationMessageV2::toString() const
         break;
     case Modify:
         rv += QLatin1String("modified parts (");
-        rv += QString::fromLatin1(ImapParser::join(d->parts.toList(), ", "));
+        rv += QString::fromLatin1(NotificationMessageHelpers::join(d->parts, ", "));
         rv += QLatin1String(")");
         break;
     case ModifyFlags:
         rv += QLatin1String("added flags (");
-        rv += QString::fromLatin1(ImapParser::join(d->addedFlags.toList(), ", "));
+        rv += QString::fromLatin1(NotificationMessageHelpers::join(d->addedFlags, ", "));
         rv += QLatin1String(") ");
 
         rv += QLatin1String("removed flags (");
-        rv += QString::fromLatin1(ImapParser::join(d->removedFlags.toList(), ", "));
+        rv += QString::fromLatin1(NotificationMessageHelpers::join(d->removedFlags, ", "));
         rv += QLatin1String(") ");
         break;
     case ModifyTags: {
@@ -312,7 +311,7 @@ QString NotificationMessageV2::toString() const
             Q_FOREACH (qint64 tagId, d->addedTags) {
                 tags << QByteArray::number(tagId);
             }
-            rv += QString::fromLatin1(ImapParser::join(tags, ", "));
+            rv += QString::fromLatin1(NotificationMessageHelpers::join(tags, ", "));
             rv += QLatin1String(") ");
 
             tags.clear();
@@ -320,17 +319,17 @@ QString NotificationMessageV2::toString() const
                 tags << QByteArray::number(tagId);
             }
             rv += QLatin1String("removed tags (");
-            rv += QString::fromLatin1(ImapParser::join(tags, ", "));
+            rv += QString::fromLatin1(NotificationMessageHelpers::join(tags, ", "));
             rv += QLatin1String(") ");
             break;
         }
     case ModifyRelations: {
             rv += QLatin1String( "added relations (" );
-            rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
+            rv += QString::fromLatin1(NotificationMessageHelpers::join(d->addedFlags, ", "));
             rv += QLatin1String( ") " );
 
             rv += QLatin1String( "removed relations (" );
-            rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
+            rv += QString::fromLatin1(NotificationMessageHelpers::join(d->removedFlags, ", "));
             rv += QLatin1String( ") " );
             break;
         }

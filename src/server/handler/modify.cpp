@@ -19,25 +19,18 @@
 
 #include "modify.h"
 
+#include "akonadi.h"
 #include "connection.h"
-#include "storage/datastore.h"
-#include "storage/entity.h"
-#include "storage/transaction.h"
-#include "imapstreamparser.h"
 #include "handlerhelper.h"
-#include "response.h"
+#include "cachecleaner.h"
+#include "collectionreferencemanager.h"
+#include "intervalcheck.h"
+#include "storage/datastore.h"
+#include "storage/transaction.h"
 #include "storage/itemretriever.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
 #include "search/searchmanager.h"
-#include "cachecleaner.h"
-#include "collectionreferencemanager.h"
-#include "akonadi.h"
-#include "intervalcheck.h"
-
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
-#include <shared/akdebug.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

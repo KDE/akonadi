@@ -18,18 +18,15 @@
 */
 
 #include "colmove.h"
+
 #include "handlerhelper.h"
-#include "storage/datastore.h"
 #include "connection.h"
+#include "cachecleaner.h"
+#include "storage/datastore.h"
 #include "storage/itemretriever.h"
-#include "imapstreamparser.h"
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
 #include "storage/selectquerybuilder.h"
-#include "cachecleaner.h"
-
-#include <shared/akdebug.h>
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

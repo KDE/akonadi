@@ -18,13 +18,11 @@
  ***************************************************************************/
 
 #include "relationfetch.h"
-#include "imapstreamparser.h"
+
 #include "connection.h"
-#include "response.h"
-#include <private/imapset_p.h>
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
 #include "storage/selectquerybuilder.h"
+
+#include <private/imapset_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

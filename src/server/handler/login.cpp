@@ -21,8 +21,6 @@
 
 #include "connection.h"
 
-#include <private/protocol_p.h>
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

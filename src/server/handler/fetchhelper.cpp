@@ -23,7 +23,6 @@
 #include "connection.h"
 #include "handler.h"
 #include "handlerhelper.h"
-#include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
@@ -37,10 +36,11 @@
 #include "dbusconnectionpool.h"
 #include "tagfetchhelper.h"
 #include "relationfetch.h"
+
+#include <private/scope_p.h>
+
 #include <shared/akdebug.h>
 #include <shared/akdbus.h>
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>

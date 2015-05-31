@@ -16,22 +16,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+
 #include "status.h"
 
-#include <QtCore/QDebug>
-
-#include "akonadi.h"
 #include "connection.h"
+#include "handlerhelper.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/countquerybuilder.h"
 #include "storage/collectionstatistics.h"
 
-#include "response.h"
-#include "handlerhelper.h"
-#include "imapstreamparser.h"
-
-#include <private/protocol_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

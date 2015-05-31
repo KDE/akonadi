@@ -19,10 +19,8 @@
 
 #include "store.h"
 
-#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "response.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/itemqueryhelper.h"
@@ -32,16 +30,11 @@
 #include "storage/itemretriever.h"
 #include "storage/parttypehelper.h"
 #include "storage/partstreamer.h"
-#include "imapstreamparser.h"
 
-#include <shared/akdebug.h>
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
-
-#include <QtCore/QStringList>
 #include <QLocale>
-#include "akonadiserver_debug.h"
 #include <QFile>
+
+#include "akonadiserver_debug.h"
 
 #include <algorithm>
 #include <functional>

@@ -19,20 +19,15 @@
 
 #include "list.h"
 #include "akonadiserver_debug.h"
-#include <QtCore/QDebug>
 
+#include "connection.h"
+#include "handlerhelper.h"
+#include "collectionreferencemanager.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
 
-#include "connection.h"
-#include "response.h"
-#include "handlerhelper.h"
-#include "imapstreamparser.h"
-#include "collectionreferencemanager.h"
-
-#include <private/protocol_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

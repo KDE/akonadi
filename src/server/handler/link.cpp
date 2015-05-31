@@ -26,10 +26,8 @@
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
-#include "entities.h"
-#include "imapstreamparser.h"
 
-#include <private/protocol_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

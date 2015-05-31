@@ -25,8 +25,6 @@
 namespace Akonadi {
 namespace Server {
 
-class ImapStreamParser;
-
 class CommandContext
 {
 public:
@@ -45,8 +43,6 @@ public:
     Tag tag() const;
 
     bool isEmpty() const;
-
-    void parseContext(ImapStreamParser *parser);
 
 private:
     Resource mResource;

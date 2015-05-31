@@ -34,6 +34,7 @@
 #include <shared/akdebug.h>
 #include <shared/akstandarddirs.h>
 
+#include <private/imapset_p.h>
 #include <private/protocol_p.h>
 #include <private/xdgbasedirs_p.h>
 

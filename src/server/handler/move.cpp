@@ -20,8 +20,6 @@
 #include "move.h"
 
 #include "connection.h"
-#include "entities.h"
-#include "imapstreamparser.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
 #include "storage/datastore.h"
@@ -30,8 +28,6 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
-
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

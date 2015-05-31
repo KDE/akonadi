@@ -18,21 +18,11 @@
  ***************************************************************************/
 #include "select.h"
 
-#include <QtCore/QDebug>
-
-#include "akonadi.h"
 #include "connection.h"
-#include "storage/datastore.h"
-#include "storage/entity.h"
 #include "handlerhelper.h"
-#include "imapstreamparser.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/collectionstatistics.h"
 #include "commandcontext.h"
 
-#include "response.h"
-
-#include <private/protocol_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

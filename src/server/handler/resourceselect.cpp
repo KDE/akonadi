@@ -20,10 +20,6 @@
 #include "resourceselect.h"
 
 #include "connection.h"
-#include "entities.h"
-#include "imapstreamparser.h"
-
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

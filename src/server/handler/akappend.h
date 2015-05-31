@@ -22,10 +22,6 @@
 #include "handler.h"
 #include "entities.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QVector>
-
-class QTemporaryFile;
 namespace Akonadi {
 namespace Server {
 

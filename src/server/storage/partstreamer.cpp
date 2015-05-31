@@ -24,10 +24,7 @@
 #include "dbconfig.h"
 #include "connection.h"
 #include "capabilities_p.h"
-#include "imapstreamparser.h"
-#include "response.h"
 
-#include <private/imapparser_p.h>
 #include <private/protocol_p.h>
 #include <shared/akstandarddirs.h>
 

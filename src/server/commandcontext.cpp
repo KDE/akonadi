@@ -18,11 +18,6 @@
  */
 
 #include "commandcontext.h"
-#include "imapstreamparser.h"
-#include "handler.h"
-#include "storage/selectquerybuilder.h"
-
-#include <private/protocol_p.h>
 
 using namespace Akonadi::Server;
 
@@ -82,58 +77,4 @@ Tag CommandContext::tag() const
 bool CommandContext::isEmpty() const
 {
     return !mCollection.isValid() && mTagId < 0;
-}
-
-void CommandContext::parseContext(ImapStreamParser *parser)
-{
-    // Context
-    if (!parser->hasString()) {
-        return;
-    }
-
-    const QByteArray param = parser->peekString();
-
-    if (param == AKONADI_PARAM_COLLECTIONID) {
-        parser->readString(); // Read the param
-        bool ok = false;
-        const qint64 colId = parser->readNumber(&ok);
-        if (!ok) {
-            throw HandlerException("Invalid FETCH collection ID");
-        }
-        const Collection col = Collection::retrieveById(colId);
-        if (!col.isValid()) {
-            throw HandlerException("No such collection");
-        }
-        setCollection(col);
-    } else if (param == AKONADI_PARAM_COLLECTION) {
-        if (!resource().isValid()) {
-            throw HandlerException("Only resources can use REMOTEID");
-        }
-        parser->readString(); // Read the param
-        const QByteArray rid = parser->readString();
-        SelectQueryBuilder<Collection> qb;
-        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8(rid));
-        qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, resource().id());
-        if (!qb.exec()) {
-            throw HandlerException("Failed to select collection");
-        }
-        Collection::List results = qb.result();
-        if (results.count() != 1) {
-            throw HandlerException(QByteArray::number(results.count()) + " collections found");
-        }
-        setCollection(results.first());
-    }
-
-    if (param == AKONADI_PARAM_TAGID) {
-        parser->readString(); // Read the param
-        bool ok = false;
-        const qint64 tagId = parser->readNumber(&ok);
-        if (!ok) {
-            throw HandlerException("Invalid FETCH tag");
-        }
-        if (!Tag::exists(tagId)) {
-            throw HandlerException("No such tag");
-        }
-        setTag(tagId);
-    }
 }

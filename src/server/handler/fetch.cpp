@@ -19,15 +19,10 @@
 
 #include "fetch.h"
 
-#include "akonadi.h"
 #include "connection.h"
 #include "fetchhelper.h"
-#include "response.h"
-#include "storage/selectquerybuilder.h"
-#include "imapstreamparser.h"
 #include "cachecleaner.h"
-
-#include <private/protocol_p.h>
+#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

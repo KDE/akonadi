@@ -1,5 +1,4 @@
 set(akonadiprivate_SRCS
-    imapparser.cpp
     imapset.cpp
     notificationmessage.cpp
     notificationmessagev2.cpp
@@ -35,7 +34,6 @@ install(TARGETS
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h
-    imapparser_p.h
     imapset_p.h
     notificationmessage_p.h
     notificationmessagev2_p.h

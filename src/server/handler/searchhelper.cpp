@@ -19,8 +19,9 @@
  ***************************************************************************/
 
 #include "searchhelper.h"
-#include "storage/countquerybuilder.h"
+
 #include "entities.h"
+#include "storage/countquerybuilder.h"
 
 #include <private/protocol_p.h>
 

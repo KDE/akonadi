@@ -18,14 +18,11 @@
 */
 
 #include "relationstore.h"
+
 #include "connection.h"
-#include "imapstreamparser.h"
-#include "response.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
-#include "entities.h"
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

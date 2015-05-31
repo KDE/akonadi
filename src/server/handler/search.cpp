@@ -19,17 +19,12 @@
 
 #include "search.h"
 
-#include "akonadi.h"
 #include "connection.h"
 #include "fetchhelper.h"
 #include "handlerhelper.h"
 #include "searchhelper.h"
-#include "imapstreamparser.h"
-#include "response.h"
 #include "search/searchrequest.h"
 #include "search/searchmanager.h"
-
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

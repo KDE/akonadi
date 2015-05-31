@@ -18,12 +18,8 @@
  ***************************************************************************/
 
 #include "tagfetch.h"
-#include "imapstreamparser.h"
 #include "connection.h"
 #include "tagfetchhelper.h"
-
-#include <private/imapset_p.h>
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

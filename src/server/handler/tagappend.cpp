@@ -18,16 +18,15 @@
 */
 
 #include "tagappend.h"
+
 #include "tagfetchhelper.h"
 #include "connection.h"
-#include "imapstreamparser.h"
-#include "response.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/countquerybuilder.h"
-#include "entities.h"
 
-#include <private/protocol_p.h>
+#include <private/scope_p.h>
+#include <private/imapset_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -78,7 +77,7 @@ bool TagAppend::parseStream()
             return failureResponse("Failed to store tag");
         }
 
-        const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
+        const Protocol::Attributes attrs = cmd.attributes();
         for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             TagAttribute attribute;
             attribute.setTagId(tagId);

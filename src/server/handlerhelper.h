@@ -21,7 +21,6 @@
 #define AKONADIHANDLERHELPER_H
 
 #include "entities.h"
-#include "imapset_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -31,6 +30,7 @@
 namespace Akonadi {
 
 class Scope;
+class ImapSet;
 
 namespace Protocol {
 class Ancestor;
@@ -43,7 +43,6 @@ class FetchRelationsResponse;
 namespace Server {
 
 class CommandContext;
-class ImapStreamParser;
 class Connection;
 
 /**
@@ -61,14 +60,6 @@ public:
       Returns the full path for the given collection.
     */
     static QString pathForCollection(const Collection &col);
-
-    /**
-      Parse cache policy and update the given Collection object accoordingly.
-      @param changed Indicates whether or not the cache policy already available in @p col
-      has actually changed
-      @todo Error handling.
-    */
-    static int parseCachePolicy(const QByteArray &data, Collection &col, int start = 0, bool *changed = 0);
 
     /**
       Returns the protocol representation of the cache policy of the given
@@ -109,11 +100,6 @@ public:
                                                          Connection *connection = Q_NULLPTR);
 
     static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
-
-    /**
-      Parses the listing/ancestor depth parameter.
-    */
-    static int parseDepth(const QByteArray &depth);
 
     /**
       Converts a bytearray list of flag names into flag records.

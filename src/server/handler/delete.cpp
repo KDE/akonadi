@@ -21,19 +21,13 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
-#include "response.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/transaction.h"
-#include "search/searchmanager.h"
-#include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
+#include "search/searchmanager.h"
 
-#include <private/protocol_p.h>
-#include <shared/akdebug.h>
-
-#include <QDBusInterface>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

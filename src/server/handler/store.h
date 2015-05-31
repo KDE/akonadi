@@ -23,9 +23,6 @@
 
 #include "handler.h"
 #include "entities.h"
-#include "storage/entity.h"
-
-#include <private/imapset_p.h>
 
 namespace Akonadi {
 namespace Server {

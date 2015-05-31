@@ -18,12 +18,13 @@
 */
 
 #include "tagremove.h"
-#include "storage/querybuilder.h"
+
 #include "storage/selectquerybuilder.h"
 #include "storage/queryhelper.h"
 #include "storage/datastore.h"
 
-#include <private/protocol_p.h>
+#include <private/scope_p.h>
+#include <private/imapset_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

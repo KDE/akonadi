@@ -22,8 +22,6 @@
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
-#include "imapstreamparser.h"
-
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretriever.h"
@@ -32,7 +30,6 @@
 #include "storage/parthelper.h"
 
 #include <private/imapset_p.h>
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

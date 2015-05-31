@@ -18,7 +18,6 @@
 */
 
 #include "notificationmessage_p.h"
-#include "imapparser_p.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
@@ -278,11 +277,18 @@ QString NotificationMessage::toString() const
     case Add:
         rv += QLatin1String("added");
         break;
-    case Modify:
+    case Modify: {
         rv += QLatin1String("modified parts (");
-        rv += QString::fromLatin1(ImapParser::join(itemParts().toList(), ", "));
+        QSet<QByteArray> parts = itemParts();
+        for (auto iter = parts.cbegin(), end = parts.cend(); iter != end; ++iter) {
+            if (iter != parts.cbegin()) {
+                rv += QLatin1String(", ");
+            }
+            rv += QString::fromLatin1(*iter);
+        }
         rv += QLatin1String(")");
         break;
+    }
     case Move:
         rv += QLatin1String("moved");
         break;

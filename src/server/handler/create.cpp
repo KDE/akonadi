@@ -18,20 +18,13 @@
  ***************************************************************************/
 #include "create.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QStringList>
-
 #include "connection.h"
-#include "storage/datastore.h"
-#include "storage/entity.h"
-#include "storage/transaction.h"
 #include "handlerhelper.h"
+#include "storage/datastore.h"
+#include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
-#include "response.h"
-#include "imapstreamparser.h"
 
-#include <private/protocol_p.h>
-#include <private/imapparser_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

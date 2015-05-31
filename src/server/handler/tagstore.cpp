@@ -18,14 +18,13 @@
 */
 
 #include "tagstore.h"
+
 #include "tagfetchhelper.h"
-#include "imapstreamparser.h"
-#include "response.h"
+#include "connection.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 
-#include <private/protocol_p.h>
-#include "connection.h"
+#include <private/imapset_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

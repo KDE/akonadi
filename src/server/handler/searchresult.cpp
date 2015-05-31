@@ -20,14 +20,14 @@
  */
 
 #include "searchresult.h"
+
 #include "connection.h"
-#include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/itemqueryhelper.h"
 #include "search/searchtaskmanager.h"
 
-#include <private/protocol_p.h>
-#include <shared/akdebug.h>
+#include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

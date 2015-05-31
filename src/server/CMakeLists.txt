@@ -134,7 +134,6 @@ set(libakonadiserver_SRCS
     resourcemanager.cpp
     cachecleaner.cpp
     debuginterface.cpp
-    imapstreamparser.cpp
     preprocessorinstance.cpp
     preprocessormanager.cpp
     storagejanitor.cpp
