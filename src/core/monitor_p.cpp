@@ -299,6 +299,7 @@ NotificationMessageV3::List MonitorPrivate::splitMessage(const NotificationMessa
     baseMsg.setAddedTags(msg.addedTags());
     baseMsg.setRemovedTags(msg.removedTags());
 
+    list.reserve(msg.entities().count());
     Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
         NotificationMessageV3 copy = baseMsg;
         copy.addEntity(entity.id, entity.remoteId, entity.remoteRevision, entity.mimeType);

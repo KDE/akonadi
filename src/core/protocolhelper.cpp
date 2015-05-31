@@ -336,6 +336,7 @@ QByteArray ProtocolHelper::tagSetToImapSequenceSet(const Akonadi::Tag::List &_ob
     }
     // all items have a uid set
     QVector<Tag::Id>  uids;
+    uids.reserve(objects.count());
     foreach (const Tag &object, objects) {
         uids << object.id();
     }
@@ -362,6 +363,7 @@ QByteArray ProtocolHelper::tagSetToByteArray(const Tag::List &_objects, const QB
             rv += ' ';
         }
         QVector<Tag::Id>  uids;
+        uids.reserve(objects.count());
         foreach (const Tag &object, objects) {
             uids << object.id();
         }

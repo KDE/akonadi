@@ -64,6 +64,7 @@ void ItemCopyJob::doStart()
     Q_D(ItemCopyJob);
 
     QVector<Item::Id> ids;
+    ids.reserve(d->mItems.count());
     foreach (const Item &item, d->mItems) {
         ids << item.id();
     }
