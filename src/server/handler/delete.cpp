@@ -56,7 +56,7 @@ bool Delete::parseStream()
     Protocol::DeleteCollectionCommand cmd;
     mInStream >> cmd;
 
-    Collection collection = HandlerHelper::collectionFromScope(cmd.scope(), connection());
+    Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!collection.isValid()) {
         return failureResponse("No such collection.");
     }

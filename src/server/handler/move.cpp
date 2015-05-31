@@ -46,19 +46,19 @@ bool Move::parseStream()
         return failureResponse("Moving items into virtual collection is not allowed");
     }
 
-    if (cmd.scope().scope() == Scope::Rid) {
-        if (cmd.scope().ridContext() <= 0) {
+    if (cmd.items().scope() == Scope::Rid) {
+        if (cmd.items().ridContext() <= 0) {
             return failureResponse("RID move requires valid source collection");
         }
 
-        connection()->context()->setCollection(Collection::retrieveById(cmd.scope().ridContext()));
+        connection()->context()->setCollection(Collection::retrieveById(cmd.items().ridContext()));
     }
 
     CacheCleanerInhibitor inhibitor;
 
     // make sure all the items we want to move are in the cache
     ItemRetriever retriever(connection());
-    retriever.setScope(cmd.scope());
+    retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
@@ -68,7 +68,7 @@ bool Move::parseStream()
     Transaction transaction(store);
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(cmd.scope(), connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, destination.id());
 
     const QDateTime mtime = QDateTime::currentDateTime();

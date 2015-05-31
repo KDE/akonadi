@@ -273,7 +273,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
 
     notify(currentItem, currentItem.collection(), changedParts);
-    if (!(cmd.mergeMode() & Protocol::CreateItemCommand::Silent)) {
+    if (!(cmd.mergeModes() & Protocol::CreateItemCommand::Silent)) {
         sendResponse(currentItem);
     }
 
@@ -348,7 +348,7 @@ bool AkAppend::parseStream()
         return false;
     }
 
-    if (cmd.mergeMode() == Protocol::CreateItemCommand::None) {
+    if (cmd.mergeModes() == Protocol::CreateItemCommand::None) {
         if (!insertItem(cmd, item, parentCol)) {
             return false;
         }
@@ -360,10 +360,10 @@ bool AkAppend::parseStream()
         SelectQueryBuilder<PimItem> qb;
         qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, parentCol.id());
         qb.addValueCondition(PimItem::mimeTypeIdColumn(), Query::Equals, item.mimeTypeId());
-        if (cmd.mergeMode() & Protocol::CreateItemCommand::GID) {
+        if (cmd.mergeModes() & Protocol::CreateItemCommand::GID) {
             qb.addValueCondition(PimItem::gidColumn(), Query::Equals, item.gid());
         }
-        if (cmd.mergeMode() & Protocol::CreateItemCommand::RemoteID) {
+        if (cmd.mergeModes() & Protocol::CreateItemCommand::RemoteID) {
             qb.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
         }
 

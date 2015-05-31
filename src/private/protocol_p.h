@@ -32,6 +32,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
+#include <QtCore/QSharedDataPointer>
 
 class QDataStream;
 
@@ -104,6 +105,166 @@ class QDataStream;
 #define AKONADI_CMD_X_AKLIST         "X-AKLIST"
 #define AKONADI_CMD_X_AKLSUB         "X-AKLSUB"
 
+namespace Akonadi {
+namespace Protocol {
+class Command;
+class Response;
+class Factory;
+class FetchScope;
+class PartMetaData;
+class CachePolicy;
+class Ancestor;
+class HelloResponse;
+class LoginCommand;
+class LoginResponse;
+class LogoutCommand;
+class LogoutResponse;
+class TransactionCommand;
+class TransactionResponse;
+class CreateItemCommand;
+class CreateItemResponse;
+class CopyItemsCommand;
+class CopyItemsResponse;
+class DeleteItemsCommand;
+class DeleteItemsResponse;
+class FetchRelationsCommand;
+class FetchRelationsResponse;
+class FetchTagsCommand;
+class FetchTagsResponse;
+class FetchItemsCommand;
+class FetchItemsResponse;
+class LinkItemsCommand;
+class LinkItemsResponse;
+class ModifyItemsCommand;
+class ModifyItemsResponse;
+class MoveItemsCommand;
+class MoveItemsResponse;
+class CreateCollectionCommand;
+class CreateCollectionResponse;
+class CopyCollectionCommand;
+class CopyCollectionResponse;
+class DeleteCollectionCommand;
+class DeleteCollectionResponse;
+class FetchCollectionStatsCommand;
+class FetchCollectionStatsResponse;
+class FetchCollectionsCommand;
+class FetchCollectionsResponse;
+class ModifyCollectionCommand;
+class ModifyCollectionResponse;
+class MoveCollectionCommand;
+class MoveCollectionResponse;
+class SelectCollectionCommand;
+class SelectCollectionResponse;
+class SearchCommand;
+class SearchResponse;
+class SearchResultCommand;
+class SearchResultResponse;
+class StoreSearchCommand;
+class StoreSearchResponse;
+class CreateTagCommand;
+class CreateTagResponse;
+class DeleteTagCommand;
+class DeleteTagResponse;
+class ModifyTagCommand;
+class ModifyTagResponse;
+class ModifyRelationCommand;
+class ModifyRelationResponse;
+class RemoveRelationsCommand;
+class RemoveRelationsResponse;
+class SelectResourceCommand;
+class SelectResourceResponse;
+class StreamPayloadCommand;
+class StreamPayloadResponse;
+}
+}
+
+
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Response &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Response &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchScope &scope);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PartMetaData &part);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PartMetaData &part);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CachePolicy &policy);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::HelloResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::HelloResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::LoginCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::LoginCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::TransactionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::TransactionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateItemCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CreateItemCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CopyItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CopyItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchRelationsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchRelationsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchRelationsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchRelationsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchTagsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchTagsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchTagsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchTagsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchItemsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchItemsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::LinkItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::LinkItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::MoveItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::MoveItemsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CreateCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CopyCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CopyCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::DeleteCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionStatsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionStatsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionStatsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionStatsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::MoveCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::MoveCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SelectCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SelectCollectionCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SearchCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SearchCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SearchResultCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SearchResultCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StoreSearchCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StoreSearchCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateTagCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CreateTagCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteTagCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::DeleteTagCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyTagCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyTagCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyRelationCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyRelationCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::RemoveRelationsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
 
 namespace Akonadi
 {
@@ -111,6 +272,15 @@ namespace Akonadi
 namespace Protocol
 {
 
+// NOTE: Q_DECLARE_PRIVATE does not work with QSharedDataPointer<T> when T
+// is incomplete (???)
+#define AKONADI_DECLARE_PRIVATE(Class) \
+Class##Private* d_func(); \
+const Class##Private* d_func() const; \
+friend class Class##Private;
+
+
+typedef QMap<QByteArray, QByteArray> Attributes;
 
 class CommandPrivate;
 class AKONADIPRIVATE_EXPORT Command
@@ -172,8 +342,8 @@ public:
     Command(Command &&other);
     Command(const Command &other);
 
-    Command& operator=(Command &&other);
-    Command& operator=(const Command &other);
+    Command &operator=(Command &&other);
+    Command &operator=(const Command &other);
 
     virtual ~Command();
 
@@ -184,13 +354,37 @@ protected:
     Command(CommandPrivate *dd);
 
     QSharedDataPointer<CommandPrivate> d_ptr;
-    Q_DECLARE_PRIVATE(Command)
+    AKONADI_DECLARE_PRIVATE(Command)
 
 private:
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
-
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
 };
+
+
+
+
+
+class ResponsePrivate;
+class AKONADIPRIVATE_EXPORT Response : public Command
+{
+public:
+    void setError(int code, const QString &message);
+    bool isError() const;
+
+    int errorCode() const;
+    QString errorMessage() const;
+
+protected:
+    explicit Response(ResponsePrivate *dd);
+
+private:
+    AKONADI_DECLARE_PRIVATE(Response)
+
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Response &command);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Response &command);
+};
+
 
 
 
@@ -370,8 +564,8 @@ public:
     void setRemoteId(const QString &remoteId);
     QString remoteId() const;
 
-    void setAttributes(const QMap<QByteArray, QByteArray> &attrs);
-    QMap<QByteArray, QByteArray> attributes() const;
+    void setAttributes(const Attributes &attrs);
+    Attributes attributes() const;
 
 private:
     QSharedDataPointer<AncestorPrivate> d;
@@ -383,33 +577,7 @@ private:
 
 
 
-
-class AKONADIPRIVATE_EXPORT Response : public Command
-{
-public:
-    virtual ~Response() Q_DECL_OVERRIDE;
-
-    void setError(int code, const QString &message);
-    bool isError() const;
-
-    int errorCode() const;
-    QString errorMessage() const;
-
-protected:
-    explicit Response(ResponsePrivate *dd);
-
-
-private:
-    Q_DECLARE_PRIVATE(Response)
-
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Response &command);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Response &command);
-};
-
-
-
-
-
+class HelloResponsePrivate;
 class AKONADIPRIVATE_EXPORT HelloResponse : public Response
 {
 public:
@@ -421,7 +589,7 @@ public:
     int protocolVersion() const;
 
 private:
-    Q_DECLARE_PRIVATE(HelloResponse);
+    AKONADI_DECLARE_PRIVATE(HelloResponse);
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::HelloResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::HelloResponse &command);
@@ -430,7 +598,7 @@ private:
 
 
 
-
+class LoginCommandPrivate;
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
 public:
@@ -440,7 +608,7 @@ public:
     QByteArray sessionId() const;
 
 private:
-    Q_DECLARE_PRIVATE(LoginCommand)
+    AKONADI_DECLARE_PRIVATE(LoginCommand)
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::LoginCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::LoginCommand &command);
@@ -478,7 +646,7 @@ public:
 
 
 
-
+class TransactionCommandPrivate;
 class AKONADIPRIVATE_EXPORT TransactionCommand : public Command
 {
 public:
@@ -495,7 +663,7 @@ public:
     Mode mode() const;
 
 private:
-    Q_DECLARE_PRIVATE(TransactionCommand);
+    AKONADI_DECLARE_PRIVATE(TransactionCommand);
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::TransactionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::TransactionCommand &command);
@@ -528,8 +696,8 @@ public:
 
     explicit CreateItemCommand();
 
-    void setMergeMode(const MergeModes &mode);
-    MergeModes mergeMode() const;
+    void setMergeModes(const MergeModes &mode);
+    MergeModes mergeModes() const;
 
     void setCollection(const Scope &collection);
     Scope collection() const;
@@ -572,7 +740,7 @@ public:
     QVector<PartMetaData> parts() const;
 
 private:
-    Q_DECLARE_PRIVATE(CreateItemCommand)
+    AKONADI_DECLARE_PRIVATE(CreateItemCommand)
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CreateItemCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CreateItemCommand &command);
@@ -589,7 +757,7 @@ public:
 
 
 
-
+class CopyItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT CopyItemsCommand : public Command
 {
 public:
@@ -600,7 +768,7 @@ public:
     Scope destination() const;
 
 private:
-    Q_DECLARE_PRIVATE(CopyItemsCommand)
+    AKONADI_DECLARE_PRIVATE(CopyItemsCommand)
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CopyItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CopyItemsCommand &command);
@@ -619,17 +787,17 @@ public:
 
 
 
-
+class DeleteItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT DeleteItemsCommand : public Command
 {
 public:
     explicit DeleteItemsCommand();
     explicit DeleteItemsCommand(const Scope &scope);
 
-    Scope scope() const;
+    Scope items() const;
 
 private:
-    Q_DECLARE_PRIVATE(DeleteItemsCommand);
+    AKONADI_DECLARE_PRIVATE(DeleteItemsCommand);
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
@@ -649,7 +817,7 @@ public:
 
 
 
-
+class FetchRelationsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchRelationsCommand : public Command
 {
 public:
@@ -671,7 +839,7 @@ public:
     QString resource() const;
 
 private:
-    Q_DECLARE_PRIVATE(FetchRelationsCommand)
+    AKONADI_DECLARE_PRIVATE(FetchRelationsCommand)
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchRelationsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchRelationsCommand &command);
@@ -680,7 +848,7 @@ private:
 
 
 
-
+class FetchRelationsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchRelationsResponse : public Response
 {
 public:
@@ -692,324 +860,157 @@ public:
     QString type() const;
 
     void setRemoteId(const QString &remoteId);
-    QString remoteId();
+    QString remoteId() const;
 
 private:
-    Q_DECLARE_PRIVATE(FetchRelationsResponse)
+    AKONADI_DECLARE_PRIVATE(FetchRelationsResponse)
 
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchRelationsResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchRelationsResponse &command);
 };
 
 
+
+
+class FetchTagsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchTagsCommand : public Command
 {
 public:
-    FetchTagsCommand()
-        : Command(FetchTags)
-    {}
+    explicit FetchTagsCommand();
+    explicit FetchTagsCommand(const Scope &scope);
 
-    FetchTagsCommand(const Scope &scope)
-        : Command(FetchTags)
-        , mScope(scope)
-    {}
-
-    Scope scope() const
-    {
-        return mScope;
-    }
+    Scope scope() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchTagsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchTagsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchTagsCommand &command);
-
-    Scope mScope;
 };
 
+
+
+
+class FetchTagsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchTagsResponse : public Response
 {
 public:
-    FetchTagsResponse()
-        : Response(FetchTags)
-        , mId(-1)
-        , mParentId(-1)
-    {}
+    explicit FetchTagsResponse();
+    explicit FetchTagsResponse(qint64 id);
 
-    FetchTagsResponse(qint64 id)
-        : Response(FetchTags)
-        , mId(id)
-    {}
+    qint64 id() const;
 
-    qint64 id() const
-    {
-        return mId;
-    }
-    void setParentId(qint64 parentId)
-    {
-        mParentId = parentId;
-    }
-    qint64 parentId() const
-    {
-        return mParentId;
-    }
-    void setGid(const QString &gid)
-    {
-        mGid = gid;
-    }
-    QString gid() const
-    {
-        return mGid;
-    }
-    void setType(const QString &type)
-    {
-        mType = type;
-    }
-    QString type() const
-    {
-        return mType;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setAttributes(const QMap<QByteArray, QByteArray> &attributes)
-    {
-        mAttributes = attributes;
-    }
-    QMap<QByteArray, QByteArray> attributes() const
-    {
-        return mAttributes;
-    }
+    void setParentId(qint64 parentId);
+    qint64 parentId() const;
+
+    void setGid(const QString &gid);
+    QString gid() const;
+
+    void setType(const QString &type);
+    QString type() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setAttributes(const Attributes &attributes);
+    Attributes attributes() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchTagsResponse)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchTagsResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchTagsResponse &command);
-
-    qint64 mId;
-    qint64 mParentId;
-    QString mGid;
-    QString mType;
-    QString mRemoteId;
-    QMap<QByteArray, QByteArray> mAttributes;
 };
 
 
+
+
+class FetchItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchItemsCommand : public Command
 {
 public:
-    FetchItemsCommand()
-        : Command(FetchItems)
-    {}
+    explicit FetchItemsCommand();
+    explicit FetchItemsCommand(const Scope &scope, const FetchScope &fetchScope);
 
-    FetchItemsCommand(const Scope &scope, const FetchScope &fetchScope)
-        : Command(FetchItems)
-        , mScope(scope)
-        , mFetchScope(fetchScope)
-    {}
-
-    Scope scope() const
-    {
-        return mScope;
-    }
-
-    FetchScope fetchScope() const
-    {
-        return mFetchScope;
-    }
+    Scope scope() const;
+    FetchScope fetchScope() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchItemsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchItemsCommand &command);
-
-    Scope mScope;
-    FetchScope mFetchScope;
 };
 
 
+
+class StreamPayloadResponse;
+class FetchItemsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchItemsResponse : public Response
 {
 public:
-    FetchItemsResponse()
-        : Response(FetchItems)
-        , mId(-1)
-        , mCollectionId(-1)
-        , mSize(0)
-        , mRevision(0)
-    {}
+    explicit FetchItemsResponse();
+    explicit FetchItemsResponse(qint64 id);
 
-    FetchItemsResponse(qint64 id)
-        : Response(FetchItems)
-        , mId(id)
-        , mCollectionId(-1)
-        , mSize(0)
-        , mRevision(0)
-    {}
+    qint64 id() const;
 
-    qint64 id() const
-    {
-        return mId;
-    }
+    void setRevision(int revision);
+    int revision() const;
 
-    void setRevision(int revision)
-    {
-        mRevision = revision;
-    }
-    int revision() const
-    {
-        return mRevision;
-    }
+    void setParentId(qint64 parent);
+    qint64 parentId() const;
 
-    void setParentId(qint64 parent)
-    {
-        mCollectionId = parent;
-    }
-    qint64 parentId() const
-    {
-        return mCollectionId;
-    }
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
 
-    void setRemoteId(const QString &remoteId)
-    {
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
+    void setRemoteRevision(const QString &remoteRev);
+    QString remoteRevision() const;
 
-    void setRemoteRevision(const QString &remoteRev)
-    {
-        mRemoteRev = remoteRev;
-    }
-    QString remoteRevision() const
-    {
-        return mRemoteRev;
-    }
+    void setGid(const QString &gid);
+    QString gid() const;
 
-    void setGid(const QString &gid)
-    {
-        mGid = gid;
-    }
-    QString gid() const
-    {
-        return mGid;
-    }
+    void setSize(qint64 size);
+    qint64 size() const;
 
-    void setSize(qint64 size)
-    {
-        mSize = size;
-    }
-    qint64 size() const
-    {
-        return mSize;
-    }
+    void setMimeType(const QString &mimeType);
+    QString mimeType() const;
 
-    void setMimeType(const QString &mimeType)
-    {
-        mMimeType = mimeType;
-    }
-    QString mimeType() const
-    {
-        return mMimeType;
-    }
+    void setMTime(const QDateTime &mtime);
+    QDateTime MTime() const;
 
-    void setMTime(const QDateTime &mtime)
-    {
-        mTime = mtime;
-    }
-    QDateTime MTime() const
-    {
-        return mTime;
-    }
+    void setFlags(const QVector<QByteArray> &flags);
+    QVector<QByteArray> flags() const;
 
-    void setFlags(const QVector<QByteArray> &flags)
-    {
-        mFlags = flags;
-    }
-    QVector<QByteArray> flags() const
-    {
-        return mFlags;
-    }
+    void setTags(const QVector<FetchTagsResponse> &tags);
+    QVector<FetchTagsResponse> tags() const;
 
-    void setTags(const QVector<FetchTagsResponse> &tags)
-    {
-        mTags = tags;
-    }
-    QVector<FetchTagsResponse> tags() const
-    {
-        return mTags;
-    }
+    void setVirtualReferences(const QVector<qint64> &virtRefs);
+    QVector<qint64> virtualReferences() const;
 
-    void setVirtualReferences(const QVector<qint64> &virtRefs)
-    {
-        mVirtRefs = virtRefs;
-    }
-    QVector<qint64> virtualReferences() const
-    {
-        return mVirtRefs;
-    }
+    void setRelations(const QVector<FetchRelationsResponse> &relations);
+    QVector<FetchRelationsResponse> relations() const;
 
-    void setRelations(const QVector<FetchRelationsResponse> &relations)
-    {
-        mRelations = relations;
-    }
-    QVector<FetchRelationsResponse> relations() const
-    {
-        return mRelations;
-    }
+    void setAncestors(const QVector<Ancestor> &ancestors);
+    QVector<Ancestor> ancestors() const;
 
-    void setAncestors(const QVector<Ancestor> &ancestors)
-    {
-        mAncestors = ancestors;
-    }
-    QVector<Ancestor> ancestors() const
-    {
-        return mAncestors;
-    }
+    void setParts(const QMap<PartMetaData, StreamPayloadResponse> &parts);
+    QMap<PartMetaData, StreamPayloadResponse> parts() const;
 
-    void setParts(const QMap<PartMetaData, StreamPayloadResponse> &parts)
-    {
-        mParts = parts;
-    }
-    QMap<PartMetaData, StreamPayloadResponse> parts() const
-    {
-        return mParts;
-    }
-    void setCachedParts(const QVector<QByteArray> &cachedParts)
-    {
-        mCachedParts = cachedParts;
-    }
-    QVector<QByteArray> cachedParts() const
-    {
-        return mCachedParts;
-    }
+    void setCachedParts(const QVector<QByteArray> &cachedParts);
+    QVector<QByteArray> cachedParts() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchItemsResponse)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchItemsResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchItemsResponse &command);
-
-    QString mRemoteId;
-    QString mRemoteRev;
-    QString mGid;
-    QString mMimeType;
-    QDateTime mTime;
-    QVector<QByteArray> mFlags;
-    QVector<FetchTagsResponse> mTags;
-    QVector<qint64> mVirtRefs;
-    QVector<FetchRelationsResponse> mRelations;
-    QVector<Ancestor> mAncestors;
-    QMap<PartMetaData, StreamPayloadResponse> mParts;
-    QVector<QByteArray> mCachedParts;
-    qint64 mId;
-    qint64 mCollectionId;
-    qint64 mSize;
-    int mRevision;
 };
 
+
+
+
+
+class LinkItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT LinkItemsCommand : public Command
 {
 public:
@@ -1018,49 +1019,34 @@ public:
         Unlink
     };
 
-    LinkItemsCommand()
-        : Command(LinkItems)
-        , mAction(Link)
-    {}
+    explicit LinkItemsCommand();
+    explicit LinkItemsCommand(Action action, const Scope &items, const Scope &dest);
 
-    LinkItemsCommand(Action action, Scope &scope, Scope &dest)
-        : Command(LinkItems)
-        , mAction(action)
-        , mScope(scope)
-        , mDest(dest)
-    {}
-
-    Action action() const
-    {
-        return mAction;
-    }
-    Scope scope() const
-    {
-        return mScope;
-    }
-    Scope destination() const
-    {
-        return mDest;
-    }
+    Action action() const;
+    Scope items() const;
+    Scope destination() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(LinkItemsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::LinkItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::LinkItemsCommand &command);
-
-    Action mAction;
-    Scope mScope;
-    Scope mDest;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT LinkItemsResponse : public Response
 {
 public:
-    LinkItemsResponse()
-        : Response(LinkItems)
-    {}
+    explicit LinkItemsResponse();
 };
 
 
+
+
+class ModifyItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyItemsCommand : public Command
 {
 public:
@@ -1081,882 +1067,412 @@ public:
     };
     Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart);
 
-    ModifyItemsCommand()
-        : Command(ModifyItems)
-        , mSize(0)
-        , mOldRevision(-1)
-        , mDirty(true)
-        , mInvalidate(false)
-        , mNoResponse(false)
-        , mNotify(true)
-        , mModifiedParts(None)
-    {}
+    explicit ModifyItemsCommand();
+    explicit ModifyItemsCommand(const Scope &scope);
 
-    ModifyItemsCommand(const Scope &scope)
-        : Command(ModifyItems)
-        , mScope(scope)
-        , mSize(0)
-        , mOldRevision(-1)
-        , mDirty(true)
-        , mInvalidate(false)
-        , mNoResponse(false)
-        , mNotify(true)
-        , mModifiedParts(None)
-    {}
+    ModifiedParts modifiedParts() const;
 
-    ModifiedParts modifiedParts() const
-    {
-        return mModifiedParts;
-    }
+    void setItems(const Scope &scope);
+    Scope items() const;
 
-    void setScope(const Scope &scope)
-    {
-        mScope = scope;
-    }
-    Scope scope() const
-    {
-        return mScope;
-    }
+    void setOldRevision(int oldRevision);
+    int oldRevision() const;
 
-    void setOldRevision(int oldRevision)
-    {
-        mOldRevision = oldRevision;
-    }
-    int oldRevision() const
-    {
-        return mOldRevision;
-    }
+    void setFlags(const QVector<QByteArray> &flags);
+    QVector<QByteArray> flags() const;
+    void setAddedFlags(const QVector<QByteArray> &flags);
+    QVector<QByteArray> addedFlags() const;
+    void setRemovedFlags(const QVector<QByteArray> &flags);
+    QVector<QByteArray> removedFlags() const;
 
-    void setFlags(const QVector<QByteArray> &flags)
-    {
-        mModifiedParts |= Flags;
-        mFlags = flags;
-    }
-    QVector<QByteArray> flags() const
-    {
-        return mFlags;
-    }
-    void setAddedFlags(const QVector<QByteArray> &flags)
-    {
-        mModifiedParts |= AddedFlags;
-        mAddedFlags = flags;
-    }
-    QVector<QByteArray> addedFlags() const
-    {
-        return mAddedFlags;
-    }
-    void setRemovedFlags(const QVector<QByteArray> &flags)
-    {
-        mModifiedParts |= RemovedFlags;
-        mRemovedFlags = flags;
-    }
-    QVector<QByteArray> removedFlags() const
-    {
-        return mRemovedFlags;
-    }
+    void setTags(const Scope &tags);
+    Scope tags() const;
+    void setAddedTags(const Scope &tags);
+    Scope addedTags() const;
+    void setRemovedTags(const Scope &tags);
+    Scope removedTags() const;
 
-    void setTags(const Scope &tags)
-    {
-        mModifiedParts |= Tags;
-        mTags = tags;
-    }
-    Scope tags() const
-    {
-        return mTags;
-    }
-    void setAddedTags(const Scope &tags)
-    {
-        mModifiedParts |= AddedTags;
-        mAddedTags = tags;
-    }
-    Scope addedTags() const
-    {
-        return mAddedTags;
-    }
-    void setRemovedTags(const Scope &tags)
-    {
-        mModifiedParts |= RemovedTags;
-        mRemovedTags = tags;
-    }
-    Scope removedTags() const
-    {
-        return mRemovedTags;
-    }
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
 
-    void setRemoteId(const QString &remoteId)
-    {
-        mModifiedParts |= RemoteID;
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setGid(const QString &gid)
-    {
-        mModifiedParts |= GID;
-        mGid = gid;
-    }
-    QString gid() const
-    {
-        return mGid;
-    }
-    void setRemoteRevision(const QString &remoteRevision)
-    {
-        mModifiedParts |= RemoteRevision;
-        mRemoteRev = remoteRevision;
-    }
-    QString remoteRevision() const
-    {
-        return mRemoteRev;
-    }
-    void setDirty(bool dirty)
-    {
-        mDirty = dirty;
-    }
-    bool dirty() const
-    {
-        return mDirty;
-    }
-    void setInvalidateCache(bool invalidate)
-    {
-        mInvalidate = invalidate;
-    }
-    bool invalidateCache() const
-    {
-        return mInvalidate;
-    }
-    void setNoResponse(bool noResponse)
-    {
-        mNoResponse = noResponse;
-    }
-    bool noResponse() const
-    {
-        return mNoResponse;
-    }
-    void setNotify(bool notify)
-    {
-        mNotify = notify;
-    }
-    bool notify() const
-    {
-        return mNotify;
-    }
-    void setItemSize(qint64 size)
-    {
-        mModifiedParts |= Size;
-        mSize = size;
-    }
-    qint64 itemSize() const
-    {
-        return mSize;
-    }
-    void setRemovedParts(const QVector<QByteArray> &removedParts)
-    {
-        mModifiedParts |= RemovedParts;
-        mRemovedParts = removedParts;
-    }
-    QVector<QByteArray> removedParts() const
-    {
-        return mRemovedParts;
-    }
-    void setParts(const QVector<PartMetaData> &parts)
-    {
-        mModifiedParts |= Parts;
-        mParts = parts;
-    }
-    QVector<PartMetaData> parts() const
-    {
-        return mParts;
-    }
+    void setGid(const QString &gid);
+    QString gid() const;
+
+    void setRemoteRevision(const QString &remoteRevision);
+    QString remoteRevision() const;
+
+    void setDirty(bool dirty);
+    bool dirty() const;
+
+    void setInvalidateCache(bool invalidate);
+    bool invalidateCache() const;
+
+    void setNoResponse(bool noResponse);
+    bool noResponse() const;
+
+    void setNotify(bool notify);
+    bool notify() const;
+
+    void setItemSize(qint64 size);
+    qint64 itemSize() const;
+
+    void setRemovedParts(const QVector<QByteArray> &removedParts);
+    QVector<QByteArray> removedParts() const;
+
+    void setParts(const QVector<PartMetaData> &parts);
+    QVector<PartMetaData> parts() const;
+
 private:
+    AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
-
-    Scope mScope;
-    QVector<QByteArray> mFlags;
-    QVector<QByteArray> mAddedFlags;
-    QVector<QByteArray> mRemovedFlags;
-    Scope mTags;
-    Scope mAddedTags;
-    Scope mRemovedTags;
-
-    QString mRemoteId;
-    QString mGid;
-    QString mRemoteRev;
-    QVector<QByteArray> mRemovedParts;
-    QVector<PartMetaData> mParts;
-    qint64 mSize;
-    int mOldRevision;
-    bool mDirty;
-    bool mInvalidate;
-    bool mNoResponse;
-    bool mNotify;
-
-    ModifiedParts mModifiedParts;
 };
 
+
+
+
+class ModifyItemsResponsePrivate;
 class AKONADIPRIVATE_EXPORT ModifyItemsResponse : public Response
 {
 public:
-    ModifyItemsResponse()
-        : Response(ModifyItems)
-        , mId(-1)
-        , mNewRevision(-1)
-    {}
+    explicit ModifyItemsResponse();
+    explicit ModifyItemsResponse(qint64 id, int newRevision);
 
-    ModifyItemsResponse(qint64 id, int newRevision)
-        : Response(ModifyItems)
-        , mId(id)
-        , mNewRevision(newRevision)
-    {}
-
-    qint64 id() const
-    {
-        return mId;
-    }
-
-    int newRevision() const
-    {
-        return mNewRevision;
-    }
+    qint64 id() const;
+    int newRevision() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(ModifyItemsResponse)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
-
-    qint64 mId;
-    int mNewRevision;
 };
 
 
+
+
+class MoveItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT MoveItemsCommand : public Command
 {
 public:
-    MoveItemsCommand()
-        : Command(MoveItems)
-    {}
+    explicit MoveItemsCommand();
+    explicit MoveItemsCommand(const Scope &items, const Scope &dest);
 
-    MoveItemsCommand(const Scope &scope, const Scope &dest)
-        : Command(MoveItems)
-        , mScope(scope)
-        , mDest(dest)
-    {}
-
-    Scope scope() const
-    {
-        return mScope;
-    }
-    Scope destination() const
-    {
-        return mDest;
-    }
+    Scope items() const;
+    Scope destination() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(MoveItemsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::MoveItemsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::MoveItemsCommand &command);
-
-    Scope mScope;
-    Scope mDest;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT MoveItemsResponse : public Response
 {
 public:
-    MoveItemsResponse()
-        : Response(MoveItems)
-    {}
+    explicit MoveItemsResponse();
 };
 
 
 
+
+class CreateCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateCollectionCommand : public Command
 {
 public:
-    CreateCollectionCommand()
-        : Command(CreateCollection)
-        , mSync(Tristate::Undefined)
-        , mDisplay(Tristate::Undefined)
-        , mIndex(Tristate::Undefined)
-        , mEnabled(true)
-        , mVirtual(false)
-    {}
+    explicit CreateCollectionCommand();
 
-    void setParent(const Scope &scope)
-    {
-        mParent = scope;
-    }
-    Scope parent() const
-    {
-        return mParent;
-    }
-    void setName(const QString &name)
-    {
-        mName = name;
-    }
-    QString name() const
-    {
-        return mName;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setRemoteRevision(const QString &remoteRevision)
-    {
-        mRemoteRev = remoteRevision;
-    }
-    QString remoteRevision() const
-    {
-        return mRemoteRev;
-    }
-    void setMimeTypes(const QStringList &mimeTypes)
-    {
-        mMimeTypes = mimeTypes;
-    }
-    QStringList mimeTypes() const
-    {
-        return mMimeTypes;
-    }
-    void setCachePolicy(const CachePolicy &cachePolicy)
-    {
-        mCachePolicy = cachePolicy;
-    }
-    CachePolicy cachePolicy() const
-    {
-        return mCachePolicy;
-    }
-    void setAttributes(const QMap<QByteArray, QByteArray> &attributes)
-    {
-        mAttributes = attributes;
-    }
-    QMap<QByteArray, QByteArray> attributes() const
-    {
-        return mAttributes;
-    }
-    void setIsVirtual(bool isVirtual)
-    {
-        mVirtual = isVirtual;
-    }
-    bool isVirtual() const
-    {
-        return mVirtual;
-    }
-    void setEnabled(bool enabled)
-    {
-        mEnabled = enabled;
-    }
-    bool enabled() const
-    {
-        return mEnabled;
-    }
-    void setSyncPref(Tristate sync)
-    {
-        mSync = sync;
-    }
-    Tristate syncPref() const
-    {
-        return mSync;
-    }
-    void setDisplayPref(Tristate display)
-    {
-        mDisplay = display;
-    }
-    Tristate displayPref() const
-    {
-        return mDisplay;
-    }
-    void setIndexPref(Tristate index)
-    {
-        mIndex = index;
-    }
-    Tristate indexPref() const
-    {
-        return mIndex;
-    }
+    void setParent(const Scope &scope);
+    Scope parent() const;
+
+    void setName(const QString &name);
+    QString name() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setRemoteRevision(const QString &remoteRevision);
+    QString remoteRevision() const;
+
+    void setMimeTypes(const QStringList &mimeTypes);
+    QStringList mimeTypes() const;
+
+    void setCachePolicy(const CachePolicy &cachePolicy);
+    CachePolicy cachePolicy() const;
+
+    void setAttributes(const Attributes &attributes);
+    Attributes attributes() const;
+
+    void setIsVirtual(bool isVirtual);
+    bool isVirtual() const;
+
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
+    void setSyncPref(Tristate sync);
+    Tristate syncPref() const;
+
+    void setDisplayPref(Tristate display);
+    Tristate displayPref() const;
+
+    void setIndexPref(Tristate index);
+    Tristate indexPref() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(CreateCollectionCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CreateCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CreateCollectionCommand &command);
-
-    Scope mParent;
-    QString mName;
-    QString mRemoteId;
-    QString mRemoteRev;
-    QStringList mMimeTypes;
-    CachePolicy mCachePolicy;
-    QMap<QByteArray, QByteArray> mAttributes;
-    Tristate mSync;
-    Tristate mDisplay;
-    Tristate mIndex;
-    bool mEnabled;
-    bool mVirtual;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT CreateCollectionResponse : public Response
 {
 public:
-    CreateCollectionResponse()
-        : Response(CreateCollection)
-    {}
+    explicit CreateCollectionResponse();
 };
 
+
+
+
+class CopyCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT CopyCollectionCommand : public Command
 {
 public:
-    CopyCollectionCommand()
-        : Command(CopyCollection)
-    {}
+    explicit CopyCollectionCommand();
+    explicit CopyCollectionCommand(const Scope &collection, const Scope &dest);
 
-    CopyCollectionCommand(const Scope &collection, const Scope &dest)
-        : Command(CopyCollection)
-        , mScope(collection)
-        , mDest(dest)
-    {}
-
-    Scope collection() const
-    {
-        return mScope;
-    }
-    Scope destination() const
-    {
-        return mDest;
-    }
+    Scope collection() const;
+    Scope destination() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(CopyCollectionCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CopyCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CopyCollectionCommand &command);
-
-    Scope mScope;
-    Scope mDest;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT CopyCollectionResponse : public Response
 {
 public:
-    CopyCollectionResponse()
-        : Response(CopyCollection)
-    {}
+    explicit CopyCollectionResponse();
 };
 
+
+
+
+class DeleteCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT DeleteCollectionCommand : public Command
 {
 public:
-    DeleteCollectionCommand()
-        : Command(DeleteCollection)
-    {}
-    DeleteCollectionCommand(const Scope &scope)
-        : Command(DeleteCollection)
-        , mScope(scope)
-    {}
+    explicit DeleteCollectionCommand();
+    explicit DeleteCollectionCommand(const Scope &scope);
 
-    Scope scope() const
-    {
-        return mScope;
-    }
+    Scope collection() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(DeleteCollectionCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::DeleteCollectionCommand &command);
-
-    Scope mScope;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT DeleteCollectionResponse : public Response
 {
 public:
-    DeleteCollectionResponse()
-        : Response(DeleteCollection)
-    {}
+    explicit DeleteCollectionResponse();
 };
 
 
 
+
+class FetchCollectionStatsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionStatsCommand : public Command
 {
 public:
-    FetchCollectionStatsCommand()
-        : Command(FetchCollectionStats)
-    {}
+    explicit FetchCollectionStatsCommand();
+    explicit FetchCollectionStatsCommand(const Scope &col);
 
-    FetchCollectionStatsCommand(const Scope &col)
-        : Command(FetchCollectionStats)
-        , mScope(col)
-    {}
+    Scope collection() const;
 
-    Scope collection() const
-    {
-        return mScope;
-    }
 private:
+    AKONADI_DECLARE_PRIVATE(FetchCollectionStatsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionStatsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionStatsCommand &command);
-
-    Scope mScope;
 };
 
+
+
+
+
+class FetchCollectionStatsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionStatsResponse : public Response
 {
 public:
-    FetchCollectionStatsResponse()
-        : Response(FetchCollectionStats)
-    {}
+    explicit FetchCollectionStatsResponse();
+    explicit FetchCollectionStatsResponse(qint64 count, qint64 unseen, qint64 size);
 
-    FetchCollectionStatsResponse(qint64 count, qint64 unseen, qint64 size)
-        : Response(FetchCollectionStats)
-        , mCount(count)
-        , mUnseen(unseen)
-        , mSize(size)
-    {}
-
-    qint64 count() const
-    {
-        return mCount;
-    }
-    qint64 unseen() const
-    {
-        return mUnseen;
-    }
-    qint64 size() const
-    {
-        return mSize;
-    }
+    qint64 count() const;
+    qint64 unseen() const;
+    qint64 size() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchCollectionStatsResponse)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionStatsResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionStatsResponse &command);
-
-    qint64 mCount;
-    qint64 mUnseen;
-    qint64 mSize;
 };
 
 
+
+
+class FetchCollectionsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsCommand : public Command
 {
 public:
-    FetchCollectionsCommand()
-        : Command(FetchCollections)
-        , mDepth(0)
-        , mAncestorsDepth(-1)
-        , mEnabled(false)
-        , mSync(false)
-        , mDisplay(false)
-        , mIndex(false)
-        , mStats(false)
-    {}
+    explicit FetchCollectionsCommand();
+    explicit FetchCollectionsCommand(const Scope &scope);
 
-    FetchCollectionsCommand(const Scope &scope)
-        : Command(FetchCollections)
-        , mScope(scope)
-        , mDepth(0)
-        , mAncestorsDepth(-1)
-        , mEnabled(false)
-        , mSync(false)
-        , mDisplay(false)
-        , mIndex(false)
-        , mStats(false)
-    {}
+    Scope collections() const;
 
-    void setDepth(int depth)
-    {
-        mDepth = depth;
-    }
-    int depth() const
-    {
-        return mDepth;
-    }
+    void setDepth(int depth);
+    int depth() const;
 
-    Scope scope() const
-    {
-        return mScope;
-    }
-    void setResource(const QString &resourceId)
-    {
-        mResource = resourceId;
-    }
-    QString resource() const
-    {
-        return mResource;
-    }
-    void setMimeTypes(const QStringList &mimeTypes)
-    {
-        mMimeTypes = mimeTypes;
-    }
-    QStringList mimeTypes() const
-    {
-        return mMimeTypes;
-    }
-    void setAncestorsDepth(int depth)
-    {
-        mAncestorsDepth = depth;
-    }
-    int ancestorsDepth() const
-    {
-        return mAncestorsDepth;
-    }
-    void setAncestorsAttributes(const QVector<QByteArray> &attributes)
-    {
-        mAncestorsAttributes = attributes;
-    }
-    QVector<QByteArray> ancestorsAttributes() const
-    {
-        return mAncestorsAttributes;
-    }
-    void setEnabled(bool enabled)
-    {
-        mEnabled = enabled;
-    }
-    bool enabled() const
-    {
-        return mEnabled;
-    }
-    void setSyncPref(bool sync)
-    {
-        mSync = sync;
-    }
-    bool syncPref() const
-    {
-        return mSync;
-    }
-    void setDisplayPref(bool display)
-    {
-        mDisplay = display;
-    }
-    bool displayPref() const
-    {
-        return mDisplay;
-    }
-    void setIndexPref(bool index)
-    {
-        mIndex = index;
-    }
-    bool indexPref() const
-    {
-        return mIndex;
-    }
-    void setFetchStats(bool stats)
-    {
-        mStats = stats;
-    }
-    bool fetchStats() const
-    {
-        return mStats;
-    }
+    void setResource(const QString &resourceId);
+    QString resource() const;
+
+    void setMimeTypes(const QStringList &mimeTypes);
+    QStringList mimeTypes() const;
+
+    void setAncestorsDepth(int depth);
+    int ancestorsDepth() const;
+
+    void setAncestorsAttributes(const QVector<QByteArray> &attributes);
+    QVector<QByteArray> ancestorsAttributes() const;
+
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
+    void setSyncPref(bool sync);
+    bool syncPref() const;
+
+    void setDisplayPref(bool display);
+    bool displayPref() const;
+
+    void setIndexPref(bool index);
+    bool indexPref() const;
+
+    void setFetchStats(bool stats);
+    bool fetchStats() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchCollectionsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsCommand &command);
-
-    Scope mScope;
-    QString mResource;
-    QStringList mMimeTypes;
-    QVector<QByteArray> mAncestorsAttributes;
-    int mDepth;
-    int mAncestorsDepth;
-    bool mEnabled;
-    bool mSync;
-    bool mDisplay;
-    bool mIndex;
-    bool mStats;
 };
 
 
-class FetchCollectionStatistics;
+
+
+
+class FetchCollectionsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsResponse : public Response
 {
 public:
-    FetchCollectionsResponse()
-        : Response(FetchCollections)
-    {}
+    explicit FetchCollectionsResponse();
+    explicit FetchCollectionsResponse(qint64 id);
 
-    FetchCollectionsResponse(qint64 id)
-        : Response(FetchCollections)
-        , mId(id)
-    {}
+    qint64 id() const;
 
-    qint64 id() const
-    {
-        return mId;
-    }
-    void setParentId(qint64 id)
-    {
-        mParentId = id;
-    }
-    qint64 parentId() const
-    {
-        return mParentId;
-    }
-    void setName(const QString &name)
-    {
-        mName = name;
-    }
-    QString name() const
-    {
-        return mName;
-    }
-    void setMimeTypes(const QStringList &mimeType)
-    {
-        mMimeType = mimeType;
-    }
-    QStringList mimeTypes() const
-    {
-        return mMimeType;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setRemoteRevision(const QString &remoteRev)
-    {
-        mRemoteRev = remoteRev;
-    }
-    QString remoteRevision() const
-    {
-        return mRemoteRev;
-    }
-    void setResource(const QString &resourceId)
-    {
-        mResource = resourceId;
-    }
-    QString resource() const
-    {
-        return mResource;
-    }
-    void setStatistics(const FetchCollectionStatsResponse &stats)
-    {
-        mStats = stats;
-    }
-    FetchCollectionStatsResponse statistics() const
-    {
-        return mStats;
-    }
-    void setSearchQuery(const QString &searchQuery)
-    {
-        mSearchQuery = searchQuery;
-    }
-    QString searchQuery() const
-    {
-        return mSearchQuery;
-    }
-    void setSearchCollections(const QVector<qint64> &searchCols)
-    {
-        mSearchCols = searchCols;
-    }
-    QVector<qint64> searchCollections() const
-    {
-        return mSearchCols;
-    }
-    void setAncestors(const QVector<Ancestor> &ancestors)
-    {
-        mAncestors = ancestors;
-    }
-    QVector<Ancestor> ancestors() const
-    {
-        return mAncestors;
-    }
-    void setCachePolicy(const CachePolicy &cachePolicy)
-    {
-        mCachePolicy = cachePolicy;
-    }
-    CachePolicy cachePolicy() const
-    {
-        return mCachePolicy;
-    }
-    void setAttributes(const QMap<QByteArray, QByteArray> &attrs)
-    {
-        mAttributes = attrs;
-    }
-    QMap<QByteArray, QByteArray> attributes() const
-    {
-        return mAttributes;
-    }
-    void setEnabled(bool enabled)
-    {
-        mEnabled = enabled;
-    }
-    bool enabled() const
-    {
-        return mEnabled;
-    }
-    void setDisplayPref(Tristate displayPref)
-    {
-        mDisplay = displayPref;
-    }
-    Tristate displayPref() const
-    {
-        return mDisplay;
-    }
-    void setSyncPref(Tristate syncPref)
-    {
-        mSync = syncPref;
-    }
-    Tristate syncPref() const
-    {
-        return mSync;
-    }
-    void setIndexPref(Tristate indexPref)
-    {
-        mIndex = indexPref;
-    }
-    Tristate indexPref() const
-    {
-        return mIndex;
-    }
-    void setReferenced(bool ref)
-    {
-        mReferenced = ref;
-    }
-    bool referenced() const
-    {
-        return mReferenced;
-    }
-    void setIsVirtual(bool isVirtual)
-    {
-        mIsVirtual = isVirtual;
-    }
-    bool isVirtual() const
-    {
-        return mIsVirtual;
-    }
+    void setParentId(qint64 id);
+    qint64 parentId() const;
+
+    void setName(const QString &name);
+    QString name() const;
+
+    void setMimeTypes(const QStringList &mimeType);
+    QStringList mimeTypes() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setRemoteRevision(const QString &remoteRev);
+    QString remoteRevision() const;
+
+    void setResource(const QString &resourceId);
+    QString resource() const;
+
+    void setStatistics(const FetchCollectionStatsResponse &stats);
+    FetchCollectionStatsResponse statistics() const;
+
+    void setSearchQuery(const QString &searchQuery);
+    QString searchQuery() const;
+
+    void setSearchCollections(const QVector<qint64> &searchCols);
+    QVector<qint64> searchCollections() const;
+
+    void setAncestors(const QVector<Ancestor> &ancestors);
+    QVector<Ancestor> ancestors() const;
+
+    void setCachePolicy(const CachePolicy &cachePolicy);
+    CachePolicy cachePolicy() const;
+
+    void setAttributes(const Attributes &attrs);
+    Attributes attributes() const;
+
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
+    void setDisplayPref(Tristate displayPref);
+    Tristate displayPref() const;
+
+    void setSyncPref(Tristate syncPref);
+    Tristate syncPref() const;
+
+    void setIndexPref(Tristate indexPref);
+    Tristate indexPref() const;
+
+    void setReferenced(bool ref);
+    bool referenced() const;
+
+    void setIsVirtual(bool isVirtual);
+    bool isVirtual() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(FetchCollectionsResponse)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionsResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsResponse &command);
-
-    QString mName;
-    QString mRemoteId;
-    QString mRemoteRev;
-    QString mResource;
-    QStringList mMimeType;
-    FetchCollectionStatsResponse mStats;
-    QString mSearchQuery;
-    QVector<qint64> mSearchCols;
-    QVector<Ancestor> mAncestors;
-    CachePolicy mCachePolicy;
-    QMap<QByteArray, QByteArray> mAttributes;
-    qint64 mId;
-    qint64 mParentId;
-    Tristate mDisplay;
-    Tristate mSync;
-    Tristate mIndex;
-    bool mIsVirtual;
-    bool mReferenced;
-    bool mEnabled;
 };
 
+
+
+
+
+class ModifyCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyCollectionCommand : public Command
 {
 public:
-    enum ModifiedCollectionPart {
+    enum ModifiedPart {
         None            = 0,
         Name            = 1 << 0,
         RemoteID        = 1 << 1,
@@ -1970,618 +1486,346 @@ public:
         ListPreferences = 1 << 9,
         Referenced      = 1 << 10
     };
-    Q_DECLARE_FLAGS(ModifiedCollectionParts, ModifiedCollectionPart)
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
 
-    ModifyCollectionCommand()
-        : Command(ModifyCollection)
-        , mParentId(-1)
-        , mSync(Tristate::Undefined)
-        , mDisplay(Tristate::Undefined)
-        , mIndex(Tristate::Undefined)
-        , mEnabled(true)
-        , mReferenced(false)
-        , mPersistentSearchRemote(false)
-        , mPersistentSearchRecursive(false)
-        , mModifiedParts(None)
-    {}
+    explicit ModifyCollectionCommand();
+    explicit ModifyCollectionCommand(const Scope &scope);
 
-    ModifyCollectionCommand(const Scope &scope)
-        : Command(ModifyCollection)
-        , mScope(scope)
-        , mParentId(-1)
-        , mSync(Tristate::Undefined)
-        , mDisplay(Tristate::Undefined)
-        , mIndex(Tristate::Undefined)
-        , mEnabled(true)
-        , mReferenced(false)
-        , mPersistentSearchRemote(false)
-        , mPersistentSearchRecursive(false)
-        , mModifiedParts(None)
-    {}
+    ModifiedParts modifiedParts() const;
 
-    ModifiedCollectionParts modifiedParts() const
-    {
-        return mModifiedParts;
-    }
+    Scope collection() const;
 
-    Scope scope() const
-    {
-        return mScope;
-    }
-    void setParentId(qint64 parentId)
-    {
-        mParentId = parentId;
-    }
-    qint64 parentId() const
-    {
-        return mParentId;
-    }
-    void setMimeTypes(const QStringList &mimeTypes)
-    {
-        mModifiedParts |= MimeTypes;
-        mModifiedParts |= PersistentSearch;
-        mMimeTypes = mimeTypes;
-    }
-    QStringList mimeTypes() const
-    {
-        return mMimeTypes;
-    }
-    void setCachePolicy(const Protocol::CachePolicy &cachePolicy)
-    {
-        mModifiedParts |= CachePolicy;
-        mCachePolicy = cachePolicy;
-    }
-    Protocol::CachePolicy cachePolicy() const
-    {
-        return mCachePolicy;
-    }
-    void setName(const QString &name)
-    {
-        mModifiedParts |= Name;
-        mName = name;
-    }
-    QString name() const
-    {
-        return mName;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mModifiedParts |= RemoteID;
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setRemoteRevision(const QString &remoteRevision)
-    {
-        mModifiedParts |= RemoteRevision;
-        mRemoteRev = remoteRevision;
-    }
-    QString remoteRevision() const
-    {
-        return mRemoteRev;
-    }
-    void setPersistentSearchQuery(const QString &query)
-    {
-        mModifiedParts |= PersistentSearch;
-        mPersistentSearchQuery = query;
-    }
-    QString persistentSearchQuery() const
-    {
-        return mPersistentSearchQuery;
-    }
-    void setPersistentSearchCollectins(const QVector<qint64> &cols)
-    {
-        mModifiedParts |= PersistentSearch;
-        mPersistentSearchCols = cols;
-    }
-    QVector<qint64> persistentSearchCollections() const
-    {
-        return mPersistentSearchCols;
-    }
-    void setPersistentSearchRemote(bool remote)
-    {
-        mModifiedParts |= PersistentSearch;
-        mPersistentSearchRemote = remote;
-    }
-    bool persistentSearchRemote() const
-    {
-        return mPersistentSearchRemote;
-    }
-    void setPersistentSearchRecursive(bool recursive)
-    {
-        mModifiedParts |= PersistentSearch;
-        mPersistentSearchRecursive = recursive;
-    }
-    bool persistentSearchRecursive() const
-    {
-        return mPersistentSearchRecursive;
-    }
-    void setRemovedAttributes(const QSet<QByteArray> &removedAttributes)
-    {
-        mModifiedParts |= RemovedAttributes;
-        mRemovedAttributes = removedAttributes;
-    }
-    QSet<QByteArray> removedAttributes() const
-    {
-        return mRemovedAttributes;
-    }
-    void setAttributes(const QMap<QByteArray, QByteArray> &attributes)
-    {
-        mModifiedParts |= Attributes;
-        mAttributes = attributes;
-    }
-    QMap<QByteArray, QByteArray> attributes() const
-    {
-        return mAttributes;
-    }
-    void setEnabled(bool enabled)
-    {
-        mModifiedParts |= ListPreferences;
-        mEnabled = enabled;
-    }
-    bool enabled() const
-    {
-        return mEnabled;
-    }
-    void setSyncPref(Tristate sync)
-    {
-        mModifiedParts |= ListPreferences;
-        mSync = sync;
-    }
-    Tristate syncPref() const
-    {
-        return mSync;
-    }
-    void setDisplayPref(Tristate display)
-    {
-        mModifiedParts |= ListPreferences;
-        mDisplay = display;
-    }
-    Tristate displayPref() const
-    {
-        return mDisplay;
-    }
-    void setIndexPref(Tristate index)
-    {
-        mModifiedParts |= ListPreferences;
-        mIndex = index;
-    }
-    Tristate indexPref() const
-    {
-        return mIndex;
-    }
-    void setReferenced(bool referenced)
-    {
-        mModifiedParts |= Referenced;
-        mReferenced = referenced;
-    }
-    bool referenced() const
-    {
-        return mReferenced;
-    }
+    void setParentId(qint64 parentId);
+    qint64 parentId() const;
+
+    void setMimeTypes(const QStringList &mimeTypes);
+    QStringList mimeTypes() const;
+
+    void setCachePolicy(const Protocol::CachePolicy &cachePolicy);
+    Protocol::CachePolicy cachePolicy() const;
+
+    void setName(const QString &name);
+    QString name() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setRemoteRevision(const QString &remoteRevision);
+    QString remoteRevision() const;
+
+    void setPersistentSearchQuery(const QString &query);
+    QString persistentSearchQuery() const;
+
+    void setPersistentSearchCollections(const QVector<qint64> &cols);
+    QVector<qint64> persistentSearchCollections() const;
+
+    void setPersistentSearchRemote(bool remote);
+    bool persistentSearchRemote() const;
+
+    void setPersistentSearchRecursive(bool recursive);
+    bool persistentSearchRecursive() const;
+
+    void setRemovedAttributes(const QSet<QByteArray> &removedAttributes);
+    QSet<QByteArray> removedAttributes() const;
+
+    void setAttributes(const Protocol::Attributes &attributes);
+    Protocol::Attributes attributes() const;
+
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
+    void setSyncPref(Tristate sync);
+    Tristate syncPref() const;
+
+    void setDisplayPref(Tristate display);
+    Tristate displayPref() const;
+
+    void setIndexPref(Tristate index);
+    Tristate indexPref() const;
+
+    void setReferenced(bool referenced);
+    bool referenced() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(ModifyCollectionCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyCollectionCommand &command);
-
-
-    Scope mScope;
-    QStringList mMimeTypes;
-    Protocol::CachePolicy mCachePolicy;
-    QString mName;
-    QString mRemoteId;
-    QString mRemoteRev;
-    QString mPersistentSearchQuery;
-    QVector<qint64> mPersistentSearchCols;
-    QSet<QByteArray> mRemovedAttributes;
-    QMap<QByteArray, QByteArray> mAttributes;
-    qint64 mParentId;
-    Tristate mSync;
-    Tristate mDisplay;
-    Tristate mIndex;
-    bool mEnabled;
-    bool mReferenced;
-    bool mPersistentSearchRemote;
-    bool mPersistentSearchRecursive;
-
-    ModifiedCollectionParts mModifiedParts;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT ModifyCollectionResponse : public Response
 {
 public:
-    ModifyCollectionResponse()
-        : Response(ModifyCollection)
-    {}
+    explicit ModifyCollectionResponse();
 };
 
 
+
+
+
+class MoveCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT MoveCollectionCommand : public Command
 {
 public:
-    MoveCollectionCommand()
-        : Command(MoveCollection)
-    {}
+    explicit MoveCollectionCommand();
+    explicit MoveCollectionCommand(const Scope &col, const Scope &dest);
 
-    MoveCollectionCommand(const Scope &col, const Scope &dest)
-        : Command(MoveCollection)
-        , mCol(col)
-        , mDest(dest)
-    {}
-
-    Scope collection() const
-    {
-        return mCol;
-    }
-    Scope destination() const
-    {
-        return mDest;
-    }
+    Scope collection() const;
+    Scope destination() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(MoveCollectionCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::MoveCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::MoveCollectionCommand &command);
-
-    Scope mCol;
-    Scope mDest;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT MoveCollectionResponse : public Response
 {
 public:
-    MoveCollectionResponse()
-        : Response(MoveCollection)
-    {}
+    explicit MoveCollectionResponse();
 };
 
+
+
+
+class SelectCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT SelectCollectionCommand : public Command
 {
 public:
-    SelectCollectionCommand()
-        : Command(SelectCollection)
-    {}
+    explicit SelectCollectionCommand();
+    explicit SelectCollectionCommand(const Scope &col);
 
-    SelectCollectionCommand(const Scope &col)
-        : Command(SelectCollection)
-        , mScope(col)
-    {}
-
-    Scope collection() const
-    {
-        return mScope;
-    }
+    Scope collection() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(SelectCollectionCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::SelectCollectionCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::SelectCollectionCommand &command);
-
-    Scope mScope;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT SelectCollectionResponse : public Response
 {
 public:
-    SelectCollectionResponse()
-        : Response(SelectCollection)
-    {}
+    explicit SelectCollectionResponse();
 };
 
 
+
+
+class SearchCommandPrivate;
 class AKONADIPRIVATE_EXPORT SearchCommand : public Command
 {
 public:
-    SearchCommand()
-        : Command(Search)
-        , mRecursive(false)
-        , mRemote(false)
-    {}
+    explicit SearchCommand();
 
-    void setMimeTypes(const QStringList &mimeTypes)
-    {
-        mMimeTypes = mimeTypes;
-    }
-    QStringList mimeTypes() const
-    {
-        return mMimeTypes;
-    }
-    void setCollections(const QVector<qint64> &collections)
-    {
-        mCollections = collections;
-    }
-    QVector<qint64> collections() const
-    {
-        return mCollections;
-    }
-    void setQuery(const QString &query)
-    {
-        mQuery = query;
-    }
-    QString query() const
-    {
-        return mQuery;
-    }
-    void setFetchScope(const FetchScope &fetchScope)
-    {
-        mFetchScope = fetchScope;
-    }
-    FetchScope fetchScope() const
-    {
-        return mFetchScope;
-    }
-    void setRecursive(bool recursive)
-    {
-        mRecursive = recursive;
-    }
-    bool recursive() const
-    {
-        return mRecursive;
-    }
-    void setRemote(bool remote)
-    {
-        mRemote = remote;
-    }
-    bool remote() const
-    {
-        return mRemote;
-    }
+    void setMimeTypes(const QStringList &mimeTypes);
+    QStringList mimeTypes() const;
+
+    void setCollections(const QVector<qint64> &collections);
+    QVector<qint64> collections() const;
+
+    void setQuery(const QString &query);
+    QString query() const;
+
+    void setFetchScope(const FetchScope &fetchScope);
+    FetchScope fetchScope() const;
+
+    void setRecursive(bool recursive);
+    bool recursive() const;
+
+    void setRemote(bool remote);
+    bool remote() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(SearchCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::SearchCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::SearchCommand &command);
-
-    QStringList mMimeTypes;
-    QVector<qint64> mCollections;
-    QString mQuery;
-    FetchScope mFetchScope;
-    bool mRecursive;
-    bool mRemote;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT SearchResponse : public Response
 {
 public:
-    SearchResponse()
-        : Response(Search)
-    {}
+    explicit SearchResponse();
 };
 
 
+
+
+
+class SearchResultCommandPrivate;
 class AKONADIPRIVATE_EXPORT SearchResultCommand : public Command
 {
 public:
-    SearchResultCommand()
-        : Command(SearchResult)
-        , mCollectionId(-1)
-    {}
+    explicit SearchResultCommand();
+    explicit SearchResultCommand(const QByteArray &searchId, qint64 collectionId, const Scope &result);
 
-    SearchResultCommand(const QByteArray &searchId, qint64 collectionId, const Scope &result)
-        : Command(SearchResult)
-        , mSearchId(searchId)
-        , mResult(result)
-        , mCollectionId(collectionId)
-    {}
+    QByteArray searchId() const;
+    qint64 collectionId() const;
+    Scope result() const;
 
-    Scope result() const
-    {
-        return mResult;
-    }
-    qint64 collectionId() const
-    {
-        return mCollectionId;
-    }
-    QByteArray  searchId() const
-    {
-        return mSearchId;
-    }
 private:
+    AKONADI_DECLARE_PRIVATE(SearchResultCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::SearchResultCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::SearchResultCommand &command);
-
-    QByteArray mSearchId;
-    Scope mResult;
-    qint64 mCollectionId;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT SearchResultResponse : public Response
 {
 public:
-    SearchResultResponse()
-        : Response(SearchResult)
-    {}
+    explicit SearchResultResponse();
 };
 
+
+
+
+class StoreSearchCommandPrivate;
 class AKONADIPRIVATE_EXPORT StoreSearchCommand : public Command
 {
 public:
-    StoreSearchCommand()
-        : Command(StoreSearch)
-    {}
+    explicit StoreSearchCommand();
 
-    void setName(const QString &name)
-    {
-        mName = name;
-    }
-    QString name() const
-    {
-        return mName;
-    }
-    void setQuery(const QString &query)
-    {
-        mQuery = query;
-    }
-    QString query() const
-    {
-        return mQuery;
-    }
-    void setMimeTypes(const QStringList &mimeTypes)
-    {
-        mMimeTypes = mimeTypes;
-    }
-    QStringList mimeTypes() const
-    {
-        return mMimeTypes;
-    }
-    void setQueryCollections(const QVector<qint64> &queryCols)
-    {
-        mQueryCols = queryCols;
-    }
-    QVector<qint64> queryCollections() const
-    {
-        return mQueryCols;
-    }
-    void setRemote(bool remote)
-    {
-        mRemote = remote;
-    }
-    bool remote() const
-    {
-        return mRemote;
-    }
-    void setRecursive(bool recursive)
-    {
-        mRecursive = recursive;
-    }
-    bool recursive() const
-    {
-        return mRecursive;
-    }
+    void setName(const QString &name);
+    QString name() const;
+
+    void setQuery(const QString &query);
+    QString query() const;
+
+    void setMimeTypes(const QStringList &mimeTypes);
+    QStringList mimeTypes() const;
+
+    void setQueryCollections(const QVector<qint64> &queryCols);
+    QVector<qint64> queryCollections() const;
+
+    void setRemote(bool remote);
+    bool remote() const;
+
+    void setRecursive(bool recursive);
+    bool recursive() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(StoreSearchCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StoreSearchCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StoreSearchCommand &command);
-
-    QString mName;
-    QString mQuery;
-    QStringList mMimeTypes;
-    QVector<qint64> mQueryCols;
-    bool mRemote;
-    bool mRecursive;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT StoreSearchResponse : public Response
 {
 public:
-    StoreSearchResponse()
-        : Response(StoreSearch)
-    {}
+    explicit StoreSearchResponse();
 };
 
+
+
+
+class CreateTagCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateTagCommand : public Command
 {
 public:
-    CreateTagCommand()
-        : Command(CreateTag)
-    {}
+    explicit CreateTagCommand();
 
-    void setGid(const QString &gid)
-    {
-        mGid = gid;
-    }
-    QString gid() const
-    {
-        return mGid;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setType(const QString &type)
-    {
-        mType = type;
-    }
-    QString type() const
-    {
-        return mType;
-    }
-    void setAttributes(const QMap<QByteArray, QByteArray> &attributes)
-    {
-        mAttributes = attributes;
-    }
-    QMap<QByteArray, QByteArray> attributes() const
-    {
-        return mAttributes;
-    }
-    void setParentId(qint64 parentId)
-    {
-        mParentId = parentId;
-    }
-    qint64 parentId() const
-    {
-        return mParentId;
-    }
-    void setMerge(bool merge)
-    {
-        mMerge = merge;
-    }
-    bool merge() const
-    {
-        return mMerge;
-    }
+    void setGid(const QString &gid);
+    QString gid() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setType(const QString &type);
+    QString type() const;
+
+    void setAttributes(const Attributes &attributes);
+    Attributes attributes() const;
+
+    void setParentId(qint64 parentId);
+    qint64 parentId() const;
+
+    void setMerge(bool merge);
+    bool merge() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(CreateTagCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CreateTagCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CreateTagCommand &command);
-
-    QString mGid;
-    QString mRemoteId;
-    QString mType;
-    QMap<QByteArray, QByteArray> mAttributes;
-    qint64 mParentId;
-    bool mMerge;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT CreateTagResponse : public Response
 {
 public:
-    CreateTagResponse()
-        : Response(CreateTag)
-    {}
+    explicit CreateTagResponse();
 };
 
 
+
+
+
+class DeleteTagCommandPrivate;
 class AKONADIPRIVATE_EXPORT DeleteTagCommand : public Command
 {
 public:
-    DeleteTagCommand()
-        : Command(DeleteTag)
-    {}
+    explicit DeleteTagCommand();
+    explicit DeleteTagCommand(const Scope &scope);
 
-    DeleteTagCommand(const Scope &scope)
-        : Command(DeleteTag)
-        , mScope(scope)
-    {}
-
-    Scope scope() const
-    {
-        return mScope;
-    }
+    Scope tag() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(DeleteTagCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteTagCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::DeleteTagCommand &command);
-
-    Scope mScope;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT DeleteTagResponse : public Response
 {
 public:
-    DeleteTagResponse()
-        : Response(DeleteTag)
-    {}
+    explicit DeleteTagResponse();
 };
 
 
+
+
+
+class ModifyTagCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyTagCommand : public Command
 {
 public:
-    enum ModifiedTagPart {
+    enum ModifiedPart {
         None            = 0,
         ParentId        = 1 << 0,
         Type            = 1 << 1,
@@ -2589,324 +1833,206 @@ public:
         RemovedAttributes = 1 << 3,
         Attributes      = 1 << 4
     };
-    Q_DECLARE_FLAGS(ModifiedTagParts, ModifiedTagPart)
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
 
-    ModifyTagCommand()
-        : Command(ModifyTag)
-        , mTagId(-1)
-        , mParentId(-1)
-        , mModifiedParts(None)
-    {}
+    explicit ModifyTagCommand();
+    explicit ModifyTagCommand(qint64 tagId);
 
+    qint64 tagId() const;
 
-    ModifyTagCommand(qint64 tagId)
-        : Command(ModifyTag)
-        , mTagId(tagId)
-        , mParentId(-1)
-        , mModifiedParts(None)
-    {}
+    ModifiedParts modifiedParts() const;
 
-    qint64 tagId() const
-    {
-        return mTagId;
-    }
-    ModifiedTagParts modifiedParts() const
-    {
-        return mModifiedParts;
-    }
-    void setParentId(qint64 parentId)
-    {
-        mModifiedParts |= ParentId;
-        mParentId = parentId;
-    }
-    qint64 parentId() const
-    {
-        return mParentId;
-    }
-    void setType(const QString &type)
-    {
-        mModifiedParts |= Type;
-        mType = type;
-    }
-    QString type() const
-    {
-        return mType;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mModifiedParts |= RemoteId;
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
-    void setRemovedAttributes(const QSet<QByteArray> &removed)
-    {
-        mModifiedParts |= RemovedAttributes;
-        mRemovedAttributes = removed;
-    }
-    QSet<QByteArray> removedAttributes() const
-    {
-        return mRemovedAttributes;
-    }
-    void setAttributes(const QMap<QByteArray, QByteArray> &attrs)
-    {
-        mModifiedParts |= Attributes;
-        mAttributes = attrs;
-    }
-    QMap<QByteArray, QByteArray> attributes() const
-    {
-        return mAttributes;
-    }
+    void setParentId(qint64 parentId);
+    qint64 parentId() const;
+
+    void setType(const QString &type);
+    QString type() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setRemovedAttributes(const QSet<QByteArray> &removed);
+    QSet<QByteArray> removedAttributes() const;
+
+    void setAttributes(const Protocol::Attributes &attrs);
+    Protocol::Attributes attributes() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(ModifyTagCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyTagCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyTagCommand &command);
-
-    QString mType;
-    QString mRemoteId;
-    QSet<QByteArray> mRemovedAttributes;
-    QMap<QByteArray, QByteArray> mAttributes;
-    qint64 mTagId;
-    qint64 mParentId;
-    ModifiedTagParts mModifiedParts;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT ModifyTagResponse : public Response
 {
 public:
-    ModifyTagResponse()
-        : Response(ModifyTag)
-    {}
+    explicit ModifyTagResponse();
 };
 
 
+
+
+class ModifyRelationCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyRelationCommand : public Command
 {
 public:
-    ModifyRelationCommand()
-        : Command(ModifyRelation)
-        , mLeft(-1)
-        , mRight(-1)
-    {}
+    explicit ModifyRelationCommand();
 
-    void setLeft(qint64 left)
-    {
-        mLeft = left;
-    }
-    qint64 left() const
-    {
-        return mLeft;
-    }
-    void setRight(qint64 right)
-    {
-        mRight = right;
-    }
-    qint64 right() const
-    {
-        return mRight;
-    }
-    void setType(const QString &type)
-    {
-        mType = type;
-    }
-    QString type() const
-    {
-        return mType;
-    }
-    void setRemoteId(const QString &remoteId)
-    {
-        mRemoteId = remoteId;
-    }
-    QString remoteId() const
-    {
-        return mRemoteId;
-    }
+    void setLeft(qint64 left);
+    qint64 left() const;
+
+    void setRight(qint64 right);
+    qint64 right() const;
+
+    void setType(const QString &type);
+    QString type() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyRelationCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ModifyRelationCommand &command);
-
-    qint64 mLeft;
-    qint64 mRight;
-    QString mType;
-    QString mRemoteId;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT ModifyRelationResponse : public Response
 {
 public:
-    ModifyRelationResponse()
-        : Response(ModifyRelation)
-    {}
+    explicit ModifyRelationResponse();
 };
 
+
+
+
+class RemoveRelationsCommandPrivate;
 class AKONADIPRIVATE_EXPORT RemoveRelationsCommand : public Command
 {
 public:
-    RemoveRelationsCommand()
-        : Command(RemoveRelations)
-        , mLeft(-1)
-        , mRight(-1)
-    {}
+    explicit RemoveRelationsCommand();
 
-    void setLeft(qint64 left)
-    {
-        mLeft = left;
-    }
-    qint64 left() const
-    {
-        return mLeft;
-    }
-    void setRight(qint64 right)
-    {
-        mRight = right;
-    }
-    qint64 right() const
-    {
-        return mRight;
-    }
-    void setType(const QString &type)
-    {
-        mType = type;
-    }
-    QString type() const
-    {
-        return mType;
-    }
+    void setLeft(qint64 left);
+    qint64 left() const;
+
+    void setRight(qint64 right);
+    qint64 right() const;
+
+    void setType(const QString &type);
+    QString type() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::RemoveRelationsCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
-
-    qint64 mLeft;
-    qint64 mRight;
-    QString mType;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT RemoveRelationsResponse : public Response
 {
 public:
-    RemoveRelationsResponse()
-        : Response(RemoveRelations)
-    {}
+    explicit RemoveRelationsResponse();
 };
 
 
+
+
+class SelectResourceCommandPrivate;
 class AKONADIPRIVATE_EXPORT SelectResourceCommand : public Command
 {
 public:
-    SelectResourceCommand()
-        : Command(SelectResource)
-    {}
+    explicit SelectResourceCommand();
+    explicit SelectResourceCommand(const QString &resourceId);
 
-    SelectResourceCommand(const QString &resourceId)
-        : Command(SelectResource)
-        , mResourceId(resourceId)
-    {}
-
-    QString resourceId() const
-    {
-        return mResourceId;
-    }
+    QString resourceId() const;
 
 private:
+    AKONADI_DECLARE_PRIVATE(SelectResourceCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
-
-    QString mResourceId;
 };
+
+
+
+
 
 class AKONADIPRIVATE_EXPORT SelectResourceResponse : public Response
 {
 public:
-    SelectResourceResponse()
-        : Response(SelectResource)
-    {}
+    explicit SelectResourceResponse();
 };
 
+
+
+
+class StreamPayloadCommandPrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
 {
 public:
-    StreamPayloadCommand()
-        : Command(StreamPayload)
-        , mExpectedSize(0)
-    {}
+    explicit StreamPayloadCommand();
 
-    void setPayloadName(const QByteArray &name)
-    {
-        mPayloadName = name;
-    }
-    QByteArray payloadName() const
-    {
-        return mPayloadName;
-    }
+    void setPayloadName(const QByteArray &name);
+    QByteArray payloadName() const;
 
-    void setExpectedSize(qint64 size)
-    {
-        mExpectedSize = size;
-    }
-    qint64 expectedSize() const
-    {
-        return mExpectedSize;
-    }
+    void setExpectedSize(qint64 size);
+    qint64 expectedSize() const;
 
-    void setExternalFile(const QString &externalFile)
-    {
-        mExternalFile = externalFile;
-    }
-    QString externalFile() const
-    {
-        return mExternalFile;
-    }
+    void setExternalFile(const QString &externalFile);
+    QString externalFile() const;
+
 private:
+    AKONADI_DECLARE_PRIVATE(StreamPayloadCommand)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
-
-    QByteArray mPayloadName;
-    QString mExternalFile;
-    qint64 mExpectedSize;
 };
 
+
+
+
+class StreamPayloadResponsePrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadResponse : public Response
 {
 public:
-    StreamPayloadResponse()
-        : Response(StreamPayload)
-    {}
+    explicit StreamPayloadResponse();
 
-    void setIsExternal(bool external)
-    {
-        mIsExternal = external;
-    }
-    bool isExternal() const
-    {
-        return mIsExternal;
-    }
-    void setData(const QByteArray &data)
-    {
-        mData = data;
-    }
-    QByteArray data() const
-    {
-        return mData;
-    }
+    void setIsExternal(bool external);
+    bool isExternal() const;
+
+    void setData(const QByteArray &data);
+    QByteArray data() const;
+
 private:
+    AKONADI_DECLARE_PRIVATE(StreamPayloadResponse)
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
-
-    QByteArray mData;
-    bool mIsExternal;
 };
+
+#undef AKONADI_DECLARE_PRIVATE
 
 } // namespace Protocol
 } // namespace Akonadi
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
 
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
+
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
 
 
 // Command parameters

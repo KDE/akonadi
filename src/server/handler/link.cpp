@@ -62,7 +62,7 @@ bool Link::parseStream()
     */
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(cmd.scope(), connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
 
     /*
     if (originalContext.isValid()) {

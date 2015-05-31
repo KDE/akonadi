@@ -33,12 +33,12 @@ bool TagRemove::parseStream()
     Protocol::DeleteTagCommand cmd;
     mInStream >> cmd;
 
-    if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
+    if (!checkScopeConstraints(cmd.tag(), Scope::Uid)) {
         return failureResponse("Only UID-based TAGREMOVE is supported");
     }
 
     SelectQueryBuilder<Tag> tagQuery;
-    QueryHelper::setToQuery(cmd.scope().uidSet(), Tag::idFullColumnName(), tagQuery);
+    QueryHelper::setToQuery(cmd.tag().uidSet(), Tag::idFullColumnName(), tagQuery);
     if (!tagQuery.exec()) {
         return failureResponse("Failed to obtain tags");
     }

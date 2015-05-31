@@ -538,7 +538,7 @@ bool List::parseStream()
     mAncestorDepth = cmd.ancestorsDepth();
     mAncestorAttributes = cmd.ancestorsAttributes();
 
-    Scope scope = cmd.scope();
+    Scope scope = cmd.collections();
     if (!scope.isEmpty()) { // not root
         Collection col;
         if (scope.scope() == Scope::Uid) {
