@@ -59,7 +59,6 @@ set(libakonadiserver_SRCS
     handler/delete.cpp
     handler/fetch.cpp
     handler/fetchhelper.cpp
-    handler/fetchscope.cpp
     handler/link.cpp
     handler/list.cpp
     handler/login.cpp
