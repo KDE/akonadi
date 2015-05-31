@@ -71,7 +71,6 @@ macro(add_server_test _source)
     )
 endmacro()
 
-add_server_test(imapstreamparsertest.cpp)
 add_server_test(scopetest.cpp)
 add_server_test(handlerhelpertest.cpp)
 add_server_test(dbtypetest.cpp)
