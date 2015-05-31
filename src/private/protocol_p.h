@@ -23,18 +23,23 @@
 
 #include "akonadiprivate_export.h"
 
-#include "scope_p.h"
-#include "tristate_p.h"
 
 #include <QtCore/QFlags>
-#include <QtCore/QMap>
-#include <QtCore/QSet>
-#include <QtCore/QByteArray>
-#include <QtCore/QString>
-#include <QtCore/QDateTime>
 #include <QtCore/QSharedDataPointer>
 
+#include "tristate_p.h"
+
 class QDataStream;
+class QString;
+class QByteArray;
+template<typename T1, typename T2> class QMap;
+template<typename T1> class QSet;
+class QDateTime;
+
+namespace Akonadi
+{
+class Scope;
+}
 
 /**
   @file protocol_p.h Shared constants used in the communication protocol between
@@ -57,8 +62,10 @@ class QDataStream;
 #define AKONADI_DBUS_STORAGEJANITOR_PATH "/Janitor"
 
 
-namespace Akonadi {
-namespace Protocol {
+namespace Akonadi
+{
+namespace Protocol
+{
 class Command;
 class Response;
 class Factory;

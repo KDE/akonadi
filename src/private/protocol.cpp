@@ -18,12 +18,16 @@
  */
 
 #include "protocol_p.h"
+#include "scope_p.h"
+#include "imapset_p.h"
 
 #include <type_traits>
 
 #include <QDataStream>
 #include <QGlobalStatic>
 #include <QHash>
+#include <QMap>
+#include <QDateTime>
 
 using namespace Akonadi;
 using namespace Akonadi::Protocol;

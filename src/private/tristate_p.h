@@ -20,7 +20,7 @@
 #ifndef AKONADI_PRIVATE_TRISTATE_P_H_
 #define AKONADI_PRIVATE_TRISTATE_P_H_
 
-#include <QMetaType>
+#include <QtCore/QMetaType>
 
 namespace Akonadi
 {
