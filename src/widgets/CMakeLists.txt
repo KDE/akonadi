@@ -55,6 +55,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     CollectionRequester
     CollectionStatisticsDelegate
     CollectionView
+    ControlGui
     EntityListView
     EntityTreeView
     ETMViewStateSaver
