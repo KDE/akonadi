@@ -12,6 +12,7 @@ ki18n_wrap_ui(selftest_SRCS ${selftest_UI})
 add_executable(akonadiselftest ${selftest_SRCS})
 
 target_link_libraries(akonadiselftest
+PRIVATE
     KF5::AkonadiCore
     KF5::AkonadiPrivate
     KF5::DBusAddons

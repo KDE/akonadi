@@ -23,7 +23,6 @@
 #include "ui_selftestdialog.h"
 
 #include <QDialog>
-#include <KLocalizedString>
 
 class QStandardItem;
 class QStandardItemModel;
