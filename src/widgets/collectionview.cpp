@@ -21,7 +21,7 @@
 
 #include "collection.h"
 #include "collectionmodel.h"
-#include "control.h"
+#include "controlgui.h"
 
 #include <QAction>
 #include <QMimeData>
@@ -83,7 +83,7 @@ void CollectionView::Private::init()
 
     mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
 
-    Control::widgetNeedsAkonadi(mParent);
+    ControlGui::widgetNeedsAkonadi(mParent);
 }
 
 bool CollectionView::Private::hasParent(const QModelIndex &idx, Collection::Id parentId)

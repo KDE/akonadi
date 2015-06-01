@@ -14,6 +14,7 @@ set(akonadiwidgets_SRCS
     collectionstatisticsdelegate.cpp
     collectionview.cpp
     conflictresolvedialog.cpp
+    controlgui.cpp
     dragdropmanager.cpp
     entitylistview.cpp
     entitytreeview.cpp
@@ -24,6 +25,7 @@ set(akonadiwidgets_SRCS
     recentcollectionaction.cpp
     renamefavoritedialog.cpp
     standardactionmanager.cpp
+    selftestdialog.cpp
     subscriptiondialog.cpp
     tageditwidget.cpp
     tagmanagementdialog.cpp
@@ -36,6 +38,7 @@ set(akonadiwidgets_UI
     cachepolicypage.ui
     controlprogressindicator.ui
     erroroverlay.ui
+    selftestdialog.ui 
 )
 
 
@@ -103,7 +106,10 @@ PUBLIC
     KF5::ItemModels
     KF5::KDELibs4Support # for KDialog
 PRIVATE
-   KF5::ItemViews
+    KF5::ItemViews
+    KF5::DBusAddons
+    Qt5::Sql
+    KF5::AkonadiPrivate
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES

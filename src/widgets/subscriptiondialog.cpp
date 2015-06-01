@@ -19,7 +19,7 @@
 
 #include "subscriptiondialog.h"
 
-#include "control.h"
+#include "controlgui.h"
 #include "recursivecollectionfilterproxymodel.h"
 #include "subscriptionjob_p.h"
 #include "subscriptionmodel_p.h"
@@ -287,7 +287,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
     connect(d->mOkButton, SIGNAL(clicked()), SLOT(done()));
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &SubscriptionDialog::deleteLater);
-    Control::widgetNeedsAkonadi(mainWidget);
+    ControlGui::widgetNeedsAkonadi(mainWidget);
     d->readConfig();
 }
 

@@ -33,7 +33,7 @@
 #include <KXMLGUIFactory>
 
 #include "collection.h"
-#include "control.h"
+#include "controlgui.h"
 #include "item.h"
 #include "entitytreemodel.h"
 #include "progressspinnerdelegate_p.h"
@@ -81,7 +81,7 @@ void EntityListView::Private::init()
     ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
     mParent->setItemDelegate(customDelegate);
 
-    Control::widgetNeedsAkonadi(mParent);
+    ControlGui::widgetNeedsAkonadi(mParent);
 }
 
 void EntityListView::Private::itemClicked(const QModelIndex &index)

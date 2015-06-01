@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
     parser.process(app);
 
-    SelfTestDialog dlg;
+    Akonadi::SelfTestDialog dlg;
     dlg.show();
 
     return app.exec();

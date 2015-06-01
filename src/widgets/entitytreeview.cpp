@@ -31,7 +31,7 @@
 #include <QMenu>
 
 #include "collection.h"
-#include "control.h"
+#include "controlgui.h"
 #include "item.h"
 #include "entitytreemodel.h"
 
@@ -101,7 +101,7 @@ void EntityTreeView::Private::init()
     mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
     mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)), mParent, SLOT(itemDoubleClicked(QModelIndex)));
 
-    Control::widgetNeedsAkonadi(mParent);
+    ControlGui::widgetNeedsAkonadi(mParent);
 }
 
 void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)

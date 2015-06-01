@@ -19,7 +19,7 @@
 
 #include "itemview.h"
 
-#include "control.h"
+#include "controlgui.h"
 #include "itemmodel.h"
 
 #include <KXMLGUIFactory>
@@ -68,7 +68,7 @@ void ItemView::Private::init()
     mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
     mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)), mParent, SLOT(itemDoubleClicked(QModelIndex)));
 
-    Control::widgetNeedsAkonadi(mParent);
+    ControlGui::widgetNeedsAkonadi(mParent);
 }
 
 Item ItemView::Private::itemForIndex(const QModelIndex &index)

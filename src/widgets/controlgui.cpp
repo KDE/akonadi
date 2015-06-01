@@ -17,45 +17,73 @@
     02110-1301, USA.
 */
 
-#include "control.h"
+#include "controlgui.h"
 #include "servermanager.h"
+#include "ui_controlprogressindicator.h"
+#include "selftestdialog.h"
+#include "erroroverlay_p.h"
 
 #include <qdebug.h>
 #include <kglobal.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtCore/QPointer>
+#include <QFrame>
 
 using namespace Akonadi;
 
 namespace Akonadi {
 namespace Internal {
 
-
-class StaticControl : public Control
+class ControlProgressIndicator : public QFrame
 {
 public:
-    StaticControl()
-        : Control()
+    ControlProgressIndicator(QWidget *parent = 0)
+        : QFrame(parent)
+    {
+        setWindowModality(Qt::ApplicationModal);
+        resize(400, 100);
+        setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+        ui.setupUi(this);
+
+        setFrameShadow(QFrame::Plain);
+        setFrameShape(QFrame::Box);
+    }
+
+    void setMessage(const QString &msg)
+    {
+        ui.statusLabel->setText(msg);
+    }
+
+    Ui::ControlProgressIndicator ui;
+};
+
+class StaticControlGui : public ControlGui
+{
+public:
+    StaticControlGui()
+        : ControlGui()
     {
     }
 };
 
 }
 
-K_GLOBAL_STATIC(Internal::StaticControl, s_instance)
+K_GLOBAL_STATIC(Internal::StaticControlGui, s_instance)
 
 /**
  * @internal
  */
-class Control::Private
+class ControlGui::Private
 {
 public:
-    Private(Control *parent)
+    Private(ControlGui *parent)
         : mParent(parent)
         , mEventLoop(0)
+        , mProgressIndicator(0)
         , mSuccess(false)
         , mStarting(false)
         , mStopping(false)
@@ -64,6 +92,26 @@ public:
 
     ~Private()
     {
+        delete mProgressIndicator;
+    }
+
+    void setupProgressIndicator(const QString &msg, QWidget *parent = 0)
+    {
+        if (!mProgressIndicator) {
+            mProgressIndicator = new Internal::ControlProgressIndicator(parent);
+        }
+
+        mProgressIndicator->setMessage(msg);
+    }
+
+    void createErrorOverlays()
+    {
+        foreach (QWidget *widget, mPendingOverlays) {
+            if (widget) {
+                new ErrorOverlay(widget);
+            }
+        }
+        mPendingOverlays.clear();
     }
 
     void cleanup()
@@ -74,16 +122,21 @@ public:
     bool exec();
     void serverStateChanged(ServerManager::State state);
 
-    QPointer<Control> mParent;
+    QPointer<ControlGui> mParent;
     QEventLoop *mEventLoop;
+    QPointer<Internal::ControlProgressIndicator> mProgressIndicator;
+    QList<QPointer<QWidget> > mPendingOverlays;
     bool mSuccess;
 
     bool mStarting;
     bool mStopping;
 };
 
-bool Control::Private::exec()
+bool ControlGui::Private::exec()
 {
+    if (mProgressIndicator) {
+        mProgressIndicator->show();
+    }
     qDebug() << "Starting/Stopping Akonadi (using an event loop).";
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
@@ -92,8 +145,18 @@ bool Control::Private::exec()
 
     if (!mSuccess) {
         qWarning() << "Could not start/stop Akonadi!";
+        if (mProgressIndicator && mStarting) {
+            QPointer<SelfTestDialog> dlg = new SelfTestDialog(mProgressIndicator->parentWidget());
+            dlg->exec();
+            delete dlg;
+            if (!mParent) {
+                return false;
+            }
+        }
     }
 
+    delete mProgressIndicator;
+    mProgressIndicator = 0;
     mStarting = false;
     mStopping = false;
 
@@ -102,7 +165,7 @@ bool Control::Private::exec()
     return rv;
 }
 
-void Control::Private::serverStateChanged(ServerManager::State state)
+void ControlGui::Private::serverStateChanged(ServerManager::State state)
 {
     qDebug() << state;
     if (mEventLoop && mEventLoop->isRunning()) {
@@ -116,7 +179,7 @@ void Control::Private::serverStateChanged(ServerManager::State state)
     }
 }
 
-Control::Control()
+ControlGui::ControlGui()
     : d(new Private(this))
 {
     connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
@@ -128,12 +191,12 @@ Control::Control()
     }
 }
 
-Control::~Control()
+ControlGui::~ControlGui()
 {
     delete d;
 }
 
-bool Control::start()
+bool ControlGui::start()
 {
     if (ServerManager::state() == ServerManager::Stopping) {
         qDebug() << "Server is currently being stopped, wont try to start it now";
@@ -151,7 +214,7 @@ bool Control::start()
     return s_instance->d->exec();
 }
 
-bool Control::stop()
+bool ControlGui::stop()
 {
     if (ServerManager::state() == ServerManager::Starting) {
         return false;
@@ -166,7 +229,7 @@ bool Control::stop()
     return s_instance->d->exec();
 }
 
-bool Control::restart()
+bool ControlGui::restart()
 {
     if (ServerManager::isRunning()) {
         if (!stop()) {
@@ -176,6 +239,36 @@ bool Control::restart()
     return start();
 }
 
+bool ControlGui::start(QWidget *parent)
+{
+    s_instance->d->setupProgressIndicator(i18n("Starting Akonadi server..."), parent);
+    return start();
 }
 
-#include "moc_control.cpp"
+bool ControlGui::stop(QWidget *parent)
+{
+    s_instance->d->setupProgressIndicator(i18n("Stopping Akonadi server..."), parent);
+    return stop();
+}
+
+bool ControlGui::restart(QWidget *parent)
+{
+    if (ServerManager::isRunning()) {
+        if (!stop(parent)) {
+            return false;
+        }
+    }
+    return start(parent);
+}
+
+void ControlGui::widgetNeedsAkonadi(QWidget *widget)
+{
+    s_instance->d->mPendingOverlays.append(widget);
+    // delay the overlay creation since we rely on widget being reparented
+    // correctly already
+    QTimer::singleShot(0, s_instance, SLOT(createErrorOverlays()));
+}
+
+}
+
+#include "moc_controlgui.cpp"
