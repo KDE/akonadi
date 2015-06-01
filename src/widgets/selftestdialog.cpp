@@ -28,7 +28,7 @@
 
 #include <QUrl>
 #include <QIcon>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KRun>
@@ -620,8 +620,7 @@ void SelfTestDialog::saveReport()
     const QString defaultFileName = QStringLiteral("akonadi-selftest-report-")
                                     + QDate::currentDate().toString(QStringLiteral("yyyyMMdd"))
                                     + QStringLiteral(".txt");
-    const QString fileName =  KFileDialog::getSaveFileName(QUrl(defaultFileName), QString(), this,
-                                                           i18n("Save Test Report"), KFileDialog::ConfirmOverwrite);
+    const QString fileName =  QFileDialog::getSaveFileName(this, i18n("Save Test Report"), defaultFileName);
     if (fileName.isEmpty()) {
         return;
     }
