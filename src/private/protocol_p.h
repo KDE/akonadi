@@ -300,6 +300,7 @@ public:
         _ResponseBit = 0x80 // reserved
     };
 
+    explicit Command();
     Command(Command &&other);
     Command(const Command &other);
 
@@ -316,7 +317,7 @@ public:
     virtual void deserialize(QDataStream &stream);
 
 protected:
-    Command(CommandPrivate *dd);
+    explicit Command(CommandPrivate *dd);
 
     QSharedDataPointer<CommandPrivate> d_ptr;
     AKONADI_DECLARE_PRIVATE(Command)

@@ -220,6 +220,11 @@ public:
 
 AKONADI_DECLARE_PRIVATE(Command)
 
+Command::Command()
+    : d_ptr(new CommandPrivate(Invalid))
+{
+}
+
 Command::Command(CommandPrivate *dd)
     : d_ptr(dd)
 {

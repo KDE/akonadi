@@ -133,6 +133,11 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
             "Handler::findHandlerForCommandAuthenticated()",
             "Logout command is not allowed in this context");
         return Q_NULLPTR;
+    case Protocol::Command::_ResponseBit:
+        Q_ASSERT_X(cmd != Protocol::Command::_ResponseBit,
+            "Handler::findHandlerForCommandAuthenticated()",
+            "ResponseBit is not a valid command type");
+        return Q_NULLPTR;
 
     case Protocol::Command::Transaction:
         return new TransactionHandler();
