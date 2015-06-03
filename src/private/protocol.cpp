@@ -88,7 +88,6 @@ namespace Akonadi
 namespace Protocol
 {
 
-
 class FactoryPrivate
 {
 public:
@@ -208,12 +207,12 @@ namespace Protocol
 class CommandPrivate : public QSharedData
 {
 public:
-    CommandPrivate(Command::Type type)
+    CommandPrivate(qint8 type)
         : commandType(type)
     {}
 
 
-    Command::Type commandType;
+    qint8 commandType;
 };
 
 } // namespace Protocol
@@ -254,12 +253,17 @@ Command& Command::operator=(const Command &other)
 
 Command::Type Command::type() const
 {
-    return d_func()->commandType;
+    return static_cast<Command::Type>(d_func()->commandType & ~_ResponseBit);
 }
 
 bool Command::isValid() const
 {
     return d_func()->commandType != Invalid;
+}
+
+bool Command::isResponse() const
+{
+    return d_func()->commandType & _ResponseBit;
 }
 
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command)
@@ -289,7 +293,7 @@ class ResponsePrivate : public CommandPrivate
 {
 public:
     ResponsePrivate(Command::Type type)
-    : CommandPrivate(type)
+    : CommandPrivate(type & Command::_ResponseBit)
     , errorCode(0)
     {}
 

@@ -156,9 +156,9 @@ void Connection::slotNewData()
         m_stream >> tag;
         // TODO: Check tag is incremental sequence
 
-        Protocol::Command::Type cmd;
+        Protocol::Command cmd;
         m_stream >> cmd;
-        if (cmd == Protocol::Command::Invalid) {
+        if (cmd.type() == Protocol::Command::Invalid) {
             // TODO: Don't so harsh, just send back an error
             slotConnectionStateChange(Server::LoggingOut);
             return;
@@ -170,7 +170,7 @@ void Connection::slotNewData()
         context()->setCollection(Collection());
         //Tracer::self()->connectionInput(m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()));
 
-        m_currentHandler = findHandlerForCommand(cmd);
+        m_currentHandler = findHandlerForCommand(cmd.type());
         assert(m_currentHandler);
         if (m_reportTime) {
             startTime();
@@ -181,7 +181,7 @@ void Connection::slotNewData()
 
         m_currentHandler->setConnection(this);
         m_currentHandler->setTag(tag);
-        m_currentHandler->setCommand(cmd);
+        m_currentHandler->setCommand(cmd.type());
         try {
             if (!m_currentHandler->parseStream()) {
                 // TODO: What to do? How do we know we reached the end of command?

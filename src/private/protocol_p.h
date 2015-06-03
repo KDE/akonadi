@@ -245,7 +245,7 @@ class CommandPrivate;
 class AKONADIPRIVATE_EXPORT Command
 {
 public:
-    enum Type : qint8 {
+    enum Type : quint8 {
         Invalid = 0,
 
         // Session management
@@ -295,7 +295,9 @@ public:
         SelectResource = 90,
 
         // Other...?
-        StreamPayload = 100
+        StreamPayload = 100,
+
+        _ResponseBit = 0x80 // reserved
     };
 
     Command(Command &&other);
@@ -308,6 +310,7 @@ public:
 
     Type type() const;
     bool isValid() const;
+    bool isResponse() const;
 
 protected:
     Command(CommandPrivate *dd);
