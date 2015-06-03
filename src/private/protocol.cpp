@@ -266,6 +266,15 @@ bool Command::isResponse() const
     return d_func()->commandType & _ResponseBit;
 }
 
+void Command::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void Command::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command)
 {
     return stream << command.d_func()->commandType;
@@ -330,6 +339,15 @@ int Response::errorCode() const
 QString Response::errorMessage() const
 {
     return d_func()->errorMsg;
+}
+
+void Response::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void Response::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const Response &command)
@@ -943,6 +961,15 @@ int HelloResponse::protocolVersion() const
     return d_func()->protocol;
 }
 
+void HelloResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void HelloResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const HelloResponse &command)
 {
     return stream << command.d_func()->server
@@ -1001,6 +1028,15 @@ LoginCommand::LoginCommand(const QByteArray &sessionId)
 QByteArray LoginCommand::sessionId() const
 {
     return d_func()->sessionId;
+}
+
+void LoginCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void LoginCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const LoginCommand &command)
@@ -1091,6 +1127,15 @@ TransactionCommand::TransactionCommand(TransactionCommand::Mode mode)
 TransactionCommand::Mode TransactionCommand::mode() const
 {
     return d_func()->mode;
+}
+
+void TransactionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void TransactionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const TransactionCommand &command)
@@ -1304,6 +1349,15 @@ QVector<PartMetaData> CreateItemCommand::parts() const
     return d_func()->parts;
 }
 
+void CreateItemCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void CreateItemCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const CreateItemCommand &command)
 {
     return stream << command.d_func()->mergeMode
@@ -1410,6 +1464,15 @@ Scope CopyItemsCommand::destination() const
     return d_func()->dest;
 }
 
+void CopyItemsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void CopyItemsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const CopyItemsCommand &command)
 {
     return stream << command.d_func()->items
@@ -1478,6 +1541,15 @@ DeleteItemsCommand::DeleteItemsCommand(const Scope &items)
 Scope DeleteItemsCommand::items() const
 {
     return d_func()->items;
+}
+
+void DeleteItemsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void DeleteItemsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const DeleteItemsCommand &command)
@@ -1588,6 +1660,15 @@ QString FetchRelationsCommand::resource() const
     return d_func()->resource;
 }
 
+void FetchRelationsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchRelationsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const FetchRelationsCommand &command)
 {
     return stream << command.d_func()->left
@@ -1670,6 +1751,15 @@ QString FetchRelationsResponse::remoteId() const
     return d_func()->remoteId;
 }
 
+void FetchRelationsResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchRelationsResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const FetchRelationsResponse &command)
 {
     return stream << command.d_func()->left
@@ -1727,6 +1817,15 @@ FetchTagsCommand::FetchTagsCommand(const Scope &scope)
 Scope FetchTagsCommand::scope() const
 {
     return d_func()->scope;
+}
+
+void FetchTagsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchTagsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchTagsCommand &command)
@@ -1832,6 +1931,15 @@ Attributes FetchTagsResponse::attributes() const
     return d_func()->attributes;
 }
 
+void FetchTagsResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchTagsResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const FetchTagsResponse &command)
 {
     return stream << command.d_func()->id
@@ -1901,6 +2009,15 @@ Scope FetchItemsCommand::scope() const
 FetchScope FetchItemsCommand::fetchScope() const
 {
     return d_func()->fetchScope;
+}
+
+void FetchItemsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchItemsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchItemsCommand &command)
@@ -2112,6 +2229,15 @@ QVector<QByteArray> FetchItemsResponse::cachedParts() const
     return d_func()->cachedParts;
 }
 
+void FetchItemsResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchItemsResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const FetchItemsResponse &command)
 {
     return stream << command.d_func()->id
@@ -2207,6 +2333,15 @@ Scope LinkItemsCommand::items() const
 Scope LinkItemsCommand::destination() const
 {
     return d_func()->dest;
+}
+
+void LinkItemsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void LinkItemsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const LinkItemsCommand &command)
@@ -2480,6 +2615,14 @@ QVector<PartMetaData> ModifyItemsCommand::parts() const
     return d_func()->parts;
 }
 
+void ModifyItemsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void ModifyItemsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
 
 QDataStream &operator<<(QDataStream &stream, const ModifyItemsCommand &command)
 {
@@ -2627,6 +2770,15 @@ int ModifyItemsResponse::newRevision() const
     return d_func()->newRevision;
 }
 
+void ModifyItemsResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void ModifyItemsResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const ModifyItemsResponse &command)
 {
     return stream << command.d_func()->id
@@ -2684,6 +2836,15 @@ Scope MoveItemsCommand::items() const
 Scope MoveItemsCommand::destination() const
 {
     return d_func()->dest;
+}
+
+void MoveItemsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void MoveItemsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const MoveItemsCommand &command)
@@ -2864,6 +3025,15 @@ Tristate CreateCollectionCommand::indexPref() const
     return d_func()->index;
 }
 
+void CreateCollectionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void CreateCollectionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const CreateCollectionCommand &command)
 {
     return stream << command.d_func()->parent
@@ -2959,6 +3129,15 @@ Scope CopyCollectionCommand::destination() const
     return d_func()->dest;
 }
 
+void CopyCollectionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void CopyCollectionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const CopyCollectionCommand &command)
 {
     return stream << command.d_func()->collection
@@ -3025,6 +3204,15 @@ Scope DeleteCollectionCommand::collection() const
     return d_func()->collection;
 }
 
+void DeleteCollectionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void DeleteCollectionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const DeleteCollectionCommand &command)
 {
     return stream << command.d_func()->collection;
@@ -3087,6 +3275,15 @@ FetchCollectionStatsCommand::FetchCollectionStatsCommand(const Scope &collection
 Scope FetchCollectionStatsCommand::collection() const
 {
     return d_func()->collection;
+}
+
+void FetchCollectionStatsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchCollectionStatsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchCollectionStatsCommand &command)
@@ -3155,6 +3352,15 @@ qint64 FetchCollectionStatsResponse::unseen() const
 qint64 FetchCollectionStatsResponse::size() const
 {
     return d_func()->size;
+}
+
+void FetchCollectionStatsResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchCollectionStatsResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchCollectionStatsResponse &command)
@@ -3319,6 +3525,15 @@ void FetchCollectionsCommand::setFetchStats(bool stats)
 bool FetchCollectionsCommand::fetchStats() const
 {
     return d_func()->stats;
+}
+
+void FetchCollectionsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchCollectionsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchCollectionsCommand &command)
@@ -3577,6 +3792,15 @@ void FetchCollectionsResponse::setIsVirtual(bool isVirtual)
 bool FetchCollectionsResponse::isVirtual() const
 {
     return d_func()->isVirtual;
+}
+
+void FetchCollectionsResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void FetchCollectionsResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchCollectionsResponse &command)
@@ -3870,6 +4094,15 @@ bool ModifyCollectionCommand::referenced() const
     return d_func()->referenced;
 }
 
+void ModifyCollectionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void ModifyCollectionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const ModifyCollectionCommand &command)
 {
     stream << command.d_func()->collection
@@ -4026,6 +4259,15 @@ Scope MoveCollectionCommand::destination() const
     return d_func()->dest;
 }
 
+void MoveCollectionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void MoveCollectionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const MoveCollectionCommand &command)
 {
     return stream << command.d_func()->collection
@@ -4090,6 +4332,15 @@ SelectCollectionCommand::SelectCollectionCommand(const Scope &collection)
 Scope SelectCollectionCommand::collection() const
 {
     return d_func()->collection;
+}
+
+void SelectCollectionCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void SelectCollectionCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const SelectCollectionCommand &command)
@@ -4205,6 +4456,15 @@ bool SearchCommand::remote() const
     return d_func()->remote;
 }
 
+void SearchCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void SearchCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const SearchCommand &command)
 {
     return stream << command.d_func()->mimeTypes
@@ -4294,6 +4554,15 @@ qint64 SearchResultCommand::collectionId() const
 Scope SearchResultCommand::result() const
 {
     return d_func()->result;
+}
+
+void SearchResultCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void SearchResultCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const SearchResultCommand &command)
@@ -4413,6 +4682,15 @@ void StoreSearchCommand::setRecursive(bool recursive)
 bool StoreSearchCommand::recursive() const
 {
     return d_func()->recursive;
+}
+
+void StoreSearchCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void StoreSearchCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const StoreSearchCommand &command)
@@ -4539,6 +4817,15 @@ Attributes CreateTagCommand::attributes() const
     return d_func()->attributes;
 }
 
+void CreateTagCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void CreateTagCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const CreateTagCommand &command)
 {
     return stream << command.d_func()->gid
@@ -4612,6 +4899,15 @@ DeleteTagCommand::DeleteTagCommand(const Scope &tag)
 Scope DeleteTagCommand::tag() const
 {
     return d_func()->tag;
+}
+
+void DeleteTagCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void DeleteTagCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const DeleteTagCommand &command)
@@ -4740,6 +5036,15 @@ void ModifyTagCommand::setAttributes(const Protocol::Attributes &attributes)
 Attributes ModifyTagCommand::attributes() const
 {
     return d_func()->attributes;
+}
+
+void ModifyTagCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void ModifyTagCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const ModifyTagCommand &command)
@@ -4872,6 +5177,15 @@ QString ModifyRelationCommand::remoteId() const
     return d_func()->remoteId;
 }
 
+void ModifyRelationCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void ModifyRelationCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const ModifyRelationCommand &command)
 {
     return stream << command.d_func()->left
@@ -4962,6 +5276,15 @@ QString RemoveRelationsCommand::type() const
     return d_func()->type;
 }
 
+void RemoveRelationsCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void RemoveRelationsCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const RemoveRelationsCommand &command)
 {
     return stream << command.d_func()->left
@@ -5028,6 +5351,15 @@ SelectResourceCommand::SelectResourceCommand(const QString &resourceId)
 QString SelectResourceCommand::resourceId() const
 {
     return d_func()->resourceId;
+}
+
+void SelectResourceCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void SelectResourceCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const SelectResourceCommand &command)
@@ -5113,6 +5445,15 @@ QString StreamPayloadCommand::externalFile() const
     return d_func()->externalFile;
 }
 
+void StreamPayloadCommand::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void StreamPayloadCommand::deserialize(QDataStream &stream)
+{
+    stream >> *this;
+}
+
 QDataStream &operator<<(QDataStream &stream, const StreamPayloadCommand &command)
 {
     return stream << command.d_func()->payloadName
@@ -5178,6 +5519,15 @@ void StreamPayloadResponse::setData(const QByteArray &data)
 QByteArray StreamPayloadResponse::data() const
 {
     return d_func()->data;
+}
+
+void StreamPayloadResponse::serialize(QDataStream &stream) const
+{
+    stream << *this;
+}
+void StreamPayloadResponse::deserialize(QDataStream &stream)
+{
+    stream >> *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const StreamPayloadResponse &command)
