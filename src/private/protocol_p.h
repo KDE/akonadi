@@ -238,8 +238,8 @@ Class##Private* d_func(); \
 const Class##Private* d_func() const; \
 friend class Class##Private;
 
-
 typedef QMap<QByteArray, QByteArray> Attributes;
+class Factory;
 
 class CommandPrivate;
 class AKONADIPRIVATE_EXPORT Command
@@ -307,14 +307,14 @@ public:
     Command &operator=(Command &&other);
     Command &operator=(const Command &other);
 
+    bool operator==(const Command &other) const;
+    bool operator!=(const Command &other) const;
+
     virtual ~Command();
 
     Type type() const;
     bool isValid() const;
     bool isResponse() const;
-
-    virtual void serialize(QDataStream &stream) const;
-    virtual void deserialize(QDataStream &stream);
 
 protected:
     explicit Command(CommandPrivate *dd);
@@ -323,6 +323,8 @@ protected:
     AKONADI_DECLARE_PRIVATE(Command)
 
 private:
+    friend class Factory;
+
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
 };
@@ -335,21 +337,20 @@ class ResponsePrivate;
 class AKONADIPRIVATE_EXPORT Response : public Command
 {
 public:
+    explicit Response();
+    explicit Response(const Command &other);
+
     void setError(int code, const QString &message);
     bool isError() const;
 
     int errorCode() const;
     QString errorMessage() const;
 
-    virtual void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    virtual void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
-
 protected:
     explicit Response(ResponsePrivate *dd);
-
-private:
     AKONADI_DECLARE_PRIVATE(Response)
 
+private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Response &command);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Response &command);
 };
@@ -364,6 +365,8 @@ class AKONADIPRIVATE_EXPORT Factory
 public:
     static Command command(Command::Type type);
     static Response response(Command::Type type);
+
+    static Command fromStream(QDataStream &stream);
 };
 
 
@@ -399,6 +402,9 @@ public:
 
     FetchScope &operator=(FetchScope &&other);
     FetchScope &operator=(const FetchScope &other);
+
+    bool operator==(const FetchScope &other) const;
+    bool operator!=(const FetchScope &other) const;
 
     void setRequestedParts(const QVector<QByteArray> &requestedParts);
     QVector<QByteArray> requestedParts() const;
@@ -448,12 +454,16 @@ class AKONADIPRIVATE_EXPORT PartMetaData
 {
 public:
     explicit PartMetaData();
+    PartMetaData(const QByteArray &name, qint64 size, int version = 0);
     PartMetaData(PartMetaData &&other);
     PartMetaData(const PartMetaData &other);
     ~PartMetaData();
 
     PartMetaData &operator=(PartMetaData &&other);
     PartMetaData &operator=(const PartMetaData &other);
+
+    bool operator==(const PartMetaData &other) const;
+    bool operator!=(const PartMetaData &other) const;
 
     bool operator<(const PartMetaData &other) const;
 
@@ -487,6 +497,9 @@ public:
 
     CachePolicy &operator=(CachePolicy &&other);
     CachePolicy &operator=(const CachePolicy &other);
+
+    bool operator==(const CachePolicy &other) const;
+    bool operator!=(const CachePolicy &other) const;
 
     void setInherit(bool inherit);
     bool inherit() const;
@@ -527,6 +540,9 @@ public:
     Ancestor &operator=(Ancestor &&other);
     Ancestor &operator=(const Ancestor &other);
 
+    bool operator==(const Ancestor &other) const;
+    bool operator!=(const Ancestor &other) const;
+
     void setId(qint64 id);
     qint64 id() const;
 
@@ -551,14 +567,13 @@ class AKONADIPRIVATE_EXPORT HelloResponse : public Response
 {
 public:
     explicit HelloResponse();
+    explicit HelloResponse(const Command &command);
     HelloResponse(const QString &server, const QString &message, int protocol);
 
     QString serverName() const;
     QString message() const;
     int protocolVersion() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(HelloResponse);
 
@@ -575,11 +590,10 @@ class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 public:
     explicit LoginCommand();
     explicit LoginCommand(const QByteArray &sessionId);
+    LoginCommand(const Command &command);
 
     QByteArray sessionId() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(LoginCommand)
 
@@ -595,6 +609,7 @@ class AKONADIPRIVATE_EXPORT LoginResponse : public Response
 {
 public:
     explicit LoginResponse();
+    LoginResponse(const Command &command);
 };
 
 
@@ -604,6 +619,7 @@ class AKONADIPRIVATE_EXPORT LogoutCommand : public Command
 {
 public:
     explicit LogoutCommand();
+    LogoutCommand(const Command &command);
 };
 
 
@@ -614,6 +630,7 @@ class AKONADIPRIVATE_EXPORT LogoutResponse : public Response
 {
 public:
     explicit LogoutResponse();
+    LogoutResponse(const Command &command);
 };
 
 
@@ -632,11 +649,10 @@ public:
 
     explicit TransactionCommand();
     explicit TransactionCommand(Mode mode);
+    TransactionCommand(const Command &command);
 
     Mode mode() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(TransactionCommand);
 
@@ -652,6 +668,7 @@ class AKONADIPRIVATE_EXPORT TransactionResponse : public Response
 {
 public:
     explicit TransactionResponse();
+    TransactionResponse(const Command &command);
 };
 
 
@@ -670,6 +687,7 @@ public:
     Q_DECLARE_FLAGS(MergeModes, MergeMode);
 
     explicit CreateItemCommand();
+    explicit CreateItemCommand(const Command &command);
 
     void setMergeModes(const MergeModes &mode);
     MergeModes mergeModes() const;
@@ -714,8 +732,6 @@ public:
     void setParts(const QVector<PartMetaData> &parts);
     QVector<PartMetaData> parts() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(CreateItemCommand)
 
@@ -730,6 +746,7 @@ class AKONADIPRIVATE_EXPORT CreateItemResponse : public Response
 {
 public:
     explicit CreateItemResponse();
+    CreateItemResponse(const Command &command);
 };
 
 
@@ -740,12 +757,11 @@ class AKONADIPRIVATE_EXPORT CopyItemsCommand : public Command
 public:
     explicit CopyItemsCommand();
     explicit CopyItemsCommand(const Scope &items, const Scope &destination);
+    CopyItemsCommand(const Command &command);
 
     Scope items() const;
     Scope destination() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(CopyItemsCommand)
 
@@ -761,6 +777,7 @@ class AKONADIPRIVATE_EXPORT CopyItemsResponse : public Response
 {
 public:
     explicit CopyItemsResponse();
+    CopyItemsResponse(const Command &command);
 };
 
 
@@ -772,11 +789,10 @@ class AKONADIPRIVATE_EXPORT DeleteItemsCommand : public Command
 public:
     explicit DeleteItemsCommand();
     explicit DeleteItemsCommand(const Scope &scope);
+    DeleteItemsCommand(const Command &command);
 
     Scope items() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(DeleteItemsCommand);
 
@@ -792,6 +808,7 @@ class AKONADIPRIVATE_EXPORT DeleteItemsResponse : public Response
 {
 public:
     explicit DeleteItemsResponse();
+    DeleteItemsResponse(const Command &command);
 };
 
 
@@ -803,6 +820,7 @@ class AKONADIPRIVATE_EXPORT FetchRelationsCommand : public Command
 {
 public:
     explicit FetchRelationsCommand();
+    FetchRelationsCommand(const Command &command);
 
     void setLeft(qint64 left);
     qint64 left() const;
@@ -819,8 +837,6 @@ public:
     void setResource(const QString &resource);
     QString resource() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchRelationsCommand)
 
@@ -837,6 +853,7 @@ class AKONADIPRIVATE_EXPORT FetchRelationsResponse : public Response
 public:
     explicit FetchRelationsResponse();
     explicit FetchRelationsResponse(qint64 left, qint64 right, const QString &type);
+    FetchRelationsResponse(const Command &command);
 
     qint64 left() const;
     qint64 right() const;
@@ -845,8 +862,6 @@ public:
     void setRemoteId(const QString &remoteId);
     QString remoteId() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchRelationsResponse)
 
@@ -863,11 +878,10 @@ class AKONADIPRIVATE_EXPORT FetchTagsCommand : public Command
 public:
     explicit FetchTagsCommand();
     explicit FetchTagsCommand(const Scope &scope);
+    FetchTagsCommand(const Command &command);
 
     Scope scope() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchTagsCommand)
 
@@ -884,6 +898,7 @@ class AKONADIPRIVATE_EXPORT FetchTagsResponse : public Response
 public:
     explicit FetchTagsResponse();
     explicit FetchTagsResponse(qint64 id);
+    FetchTagsResponse(const Command &command);
 
     qint64 id() const;
 
@@ -902,8 +917,6 @@ public:
     void setAttributes(const Attributes &attributes);
     Attributes attributes() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchTagsResponse)
 
@@ -920,12 +933,11 @@ class AKONADIPRIVATE_EXPORT FetchItemsCommand : public Command
 public:
     explicit FetchItemsCommand();
     explicit FetchItemsCommand(const Scope &scope, const FetchScope &fetchScope);
+    FetchItemsCommand(const Command &command);
 
     Scope scope() const;
     FetchScope fetchScope() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchItemsCommand)
 
@@ -942,6 +954,7 @@ class AKONADIPRIVATE_EXPORT FetchItemsResponse : public Response
 public:
     explicit FetchItemsResponse();
     explicit FetchItemsResponse(qint64 id);
+    FetchItemsResponse(const Command &command);
 
     qint64 id() const;
 
@@ -990,8 +1003,6 @@ public:
     void setCachedParts(const QVector<QByteArray> &cachedParts);
     QVector<QByteArray> cachedParts() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchItemsResponse)
 
@@ -1014,13 +1025,12 @@ public:
 
     explicit LinkItemsCommand();
     explicit LinkItemsCommand(Action action, const Scope &items, const Scope &dest);
+    LinkItemsCommand(const Command &command);
 
     Action action() const;
     Scope items() const;
     Scope destination() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(LinkItemsCommand)
 
@@ -1036,6 +1046,7 @@ class AKONADIPRIVATE_EXPORT LinkItemsResponse : public Response
 {
 public:
     explicit LinkItemsResponse();
+    LinkItemsResponse(const Command &command);
 };
 
 
@@ -1064,6 +1075,7 @@ public:
 
     explicit ModifyItemsCommand();
     explicit ModifyItemsCommand(const Scope &scope);
+    ModifyItemsCommand(const Command &command);
 
     ModifiedParts modifiedParts() const;
 
@@ -1117,8 +1129,6 @@ public:
     void setParts(const QVector<PartMetaData> &parts);
     QVector<PartMetaData> parts() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
 
@@ -1135,12 +1145,11 @@ class AKONADIPRIVATE_EXPORT ModifyItemsResponse : public Response
 public:
     explicit ModifyItemsResponse();
     explicit ModifyItemsResponse(qint64 id, int newRevision);
+    ModifyItemsResponse(const Command &command);
 
     qint64 id() const;
     int newRevision() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsResponse)
 
@@ -1157,12 +1166,11 @@ class AKONADIPRIVATE_EXPORT MoveItemsCommand : public Command
 public:
     explicit MoveItemsCommand();
     explicit MoveItemsCommand(const Scope &items, const Scope &dest);
+    MoveItemsCommand(const Command &command);
 
     Scope items() const;
     Scope destination() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(MoveItemsCommand)
 
@@ -1178,6 +1186,7 @@ class AKONADIPRIVATE_EXPORT MoveItemsResponse : public Response
 {
 public:
     explicit MoveItemsResponse();
+    MoveItemsResponse(const Command &command);
 };
 
 
@@ -1188,6 +1197,7 @@ class AKONADIPRIVATE_EXPORT CreateCollectionCommand : public Command
 {
 public:
     explicit CreateCollectionCommand();
+    CreateCollectionCommand(const Command &command);
 
     void setParent(const Scope &scope);
     Scope parent() const;
@@ -1225,8 +1235,6 @@ public:
     void setIndexPref(Tristate index);
     Tristate indexPref() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(CreateCollectionCommand)
 
@@ -1242,6 +1250,7 @@ class AKONADIPRIVATE_EXPORT CreateCollectionResponse : public Response
 {
 public:
     explicit CreateCollectionResponse();
+    CreateCollectionResponse(const Command &command);
 };
 
 
@@ -1253,12 +1262,11 @@ class AKONADIPRIVATE_EXPORT CopyCollectionCommand : public Command
 public:
     explicit CopyCollectionCommand();
     explicit CopyCollectionCommand(const Scope &collection, const Scope &dest);
+    CopyCollectionCommand(const Command &command);
 
     Scope collection() const;
     Scope destination() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(CopyCollectionCommand)
 
@@ -1274,6 +1282,7 @@ class AKONADIPRIVATE_EXPORT CopyCollectionResponse : public Response
 {
 public:
     explicit CopyCollectionResponse();
+    CopyCollectionResponse(const Command &command);
 };
 
 
@@ -1285,11 +1294,10 @@ class AKONADIPRIVATE_EXPORT DeleteCollectionCommand : public Command
 public:
     explicit DeleteCollectionCommand();
     explicit DeleteCollectionCommand(const Scope &scope);
+    DeleteCollectionCommand(const Command &command);
 
     Scope collection() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(DeleteCollectionCommand)
 
@@ -1305,6 +1313,7 @@ class AKONADIPRIVATE_EXPORT DeleteCollectionResponse : public Response
 {
 public:
     explicit DeleteCollectionResponse();
+    DeleteCollectionResponse(const Command &command);
 };
 
 
@@ -1316,11 +1325,10 @@ class AKONADIPRIVATE_EXPORT FetchCollectionStatsCommand : public Command
 public:
     explicit FetchCollectionStatsCommand();
     explicit FetchCollectionStatsCommand(const Scope &col);
+    FetchCollectionStatsCommand(const Command &command);
 
     Scope collection() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionStatsCommand)
 
@@ -1338,13 +1346,12 @@ class AKONADIPRIVATE_EXPORT FetchCollectionStatsResponse : public Response
 public:
     explicit FetchCollectionStatsResponse();
     explicit FetchCollectionStatsResponse(qint64 count, qint64 unseen, qint64 size);
+    FetchCollectionStatsResponse(const Command &command);
 
     qint64 count() const;
     qint64 unseen() const;
     qint64 size() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionStatsResponse)
 
@@ -1361,6 +1368,7 @@ class AKONADIPRIVATE_EXPORT FetchCollectionsCommand : public Command
 public:
     explicit FetchCollectionsCommand();
     explicit FetchCollectionsCommand(const Scope &scope);
+    FetchCollectionsCommand(const Command &command);
 
     Scope collections() const;
 
@@ -1394,8 +1402,6 @@ public:
     void setFetchStats(bool stats);
     bool fetchStats() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionsCommand)
 
@@ -1413,6 +1419,7 @@ class AKONADIPRIVATE_EXPORT FetchCollectionsResponse : public Response
 public:
     explicit FetchCollectionsResponse();
     explicit FetchCollectionsResponse(qint64 id);
+    FetchCollectionsResponse(const Command &command);
 
     qint64 id() const;
 
@@ -1470,8 +1477,6 @@ public:
     void setIsVirtual(bool isVirtual);
     bool isVirtual() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionsResponse)
 
@@ -1505,6 +1510,7 @@ public:
 
     explicit ModifyCollectionCommand();
     explicit ModifyCollectionCommand(const Scope &scope);
+    ModifyCollectionCommand(const Command &command);
 
     ModifiedParts modifiedParts() const;
 
@@ -1561,8 +1567,6 @@ public:
     void setReferenced(bool referenced);
     bool referenced() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(ModifyCollectionCommand)
 
@@ -1578,6 +1582,7 @@ class AKONADIPRIVATE_EXPORT ModifyCollectionResponse : public Response
 {
 public:
     explicit ModifyCollectionResponse();
+    ModifyCollectionResponse(const Command &command);
 };
 
 
@@ -1590,12 +1595,11 @@ class AKONADIPRIVATE_EXPORT MoveCollectionCommand : public Command
 public:
     explicit MoveCollectionCommand();
     explicit MoveCollectionCommand(const Scope &col, const Scope &dest);
+    MoveCollectionCommand(const Command &command);
 
     Scope collection() const;
     Scope destination() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(MoveCollectionCommand)
 
@@ -1611,6 +1615,7 @@ class AKONADIPRIVATE_EXPORT MoveCollectionResponse : public Response
 {
 public:
     explicit MoveCollectionResponse();
+    MoveCollectionResponse(const Command &command);
 };
 
 
@@ -1622,11 +1627,10 @@ class AKONADIPRIVATE_EXPORT SelectCollectionCommand : public Command
 public:
     explicit SelectCollectionCommand();
     explicit SelectCollectionCommand(const Scope &col);
+    SelectCollectionCommand(const Command &command);
 
     Scope collection() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(SelectCollectionCommand)
 
@@ -1642,6 +1646,7 @@ class AKONADIPRIVATE_EXPORT SelectCollectionResponse : public Response
 {
 public:
     explicit SelectCollectionResponse();
+    SelectCollectionResponse(const Command &command);
 };
 
 
@@ -1652,6 +1657,7 @@ class AKONADIPRIVATE_EXPORT SearchCommand : public Command
 {
 public:
     explicit SearchCommand();
+    SearchCommand(const Command &command);
 
     void setMimeTypes(const QStringList &mimeTypes);
     QStringList mimeTypes() const;
@@ -1671,8 +1677,6 @@ public:
     void setRemote(bool remote);
     bool remote() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(SearchCommand)
 
@@ -1688,6 +1692,7 @@ class AKONADIPRIVATE_EXPORT SearchResponse : public Response
 {
 public:
     explicit SearchResponse();
+    SearchResponse(const Command &command);
 };
 
 
@@ -1700,13 +1705,12 @@ class AKONADIPRIVATE_EXPORT SearchResultCommand : public Command
 public:
     explicit SearchResultCommand();
     explicit SearchResultCommand(const QByteArray &searchId, qint64 collectionId, const Scope &result);
+    SearchResultCommand(const Command &command);
 
     QByteArray searchId() const;
     qint64 collectionId() const;
     Scope result() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(SearchResultCommand)
 
@@ -1722,6 +1726,7 @@ class AKONADIPRIVATE_EXPORT SearchResultResponse : public Response
 {
 public:
     explicit SearchResultResponse();
+    SearchResultResponse(const Command &command);
 };
 
 
@@ -1732,6 +1737,7 @@ class AKONADIPRIVATE_EXPORT StoreSearchCommand : public Command
 {
 public:
     explicit StoreSearchCommand();
+    StoreSearchCommand(const Command &command);
 
     void setName(const QString &name);
     QString name() const;
@@ -1751,8 +1757,6 @@ public:
     void setRecursive(bool recursive);
     bool recursive() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(StoreSearchCommand)
 
@@ -1768,6 +1772,7 @@ class AKONADIPRIVATE_EXPORT StoreSearchResponse : public Response
 {
 public:
     explicit StoreSearchResponse();
+    StoreSearchResponse(const Command &command);
 };
 
 
@@ -1778,6 +1783,7 @@ class AKONADIPRIVATE_EXPORT CreateTagCommand : public Command
 {
 public:
     explicit CreateTagCommand();
+    CreateTagCommand(const Command &command);
 
     void setGid(const QString &gid);
     QString gid() const;
@@ -1797,8 +1803,6 @@ public:
     void setMerge(bool merge);
     bool merge() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(CreateTagCommand)
 
@@ -1814,6 +1818,7 @@ class AKONADIPRIVATE_EXPORT CreateTagResponse : public Response
 {
 public:
     explicit CreateTagResponse();
+    CreateTagResponse(const Command &command);
 };
 
 
@@ -1826,11 +1831,10 @@ class AKONADIPRIVATE_EXPORT DeleteTagCommand : public Command
 public:
     explicit DeleteTagCommand();
     explicit DeleteTagCommand(const Scope &scope);
+    DeleteTagCommand(const Command &command);
 
     Scope tag() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(DeleteTagCommand)
 
@@ -1846,6 +1850,7 @@ class AKONADIPRIVATE_EXPORT DeleteTagResponse : public Response
 {
 public:
     explicit DeleteTagResponse();
+    DeleteTagResponse(const Command &command);
 };
 
 
@@ -1868,6 +1873,7 @@ public:
 
     explicit ModifyTagCommand();
     explicit ModifyTagCommand(qint64 tagId);
+    ModifyTagCommand(const Command &command);
 
     qint64 tagId() const;
 
@@ -1888,8 +1894,6 @@ public:
     void setAttributes(const Protocol::Attributes &attrs);
     Protocol::Attributes attributes() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(ModifyTagCommand)
 
@@ -1905,6 +1909,7 @@ class AKONADIPRIVATE_EXPORT ModifyTagResponse : public Response
 {
 public:
     explicit ModifyTagResponse();
+    ModifyTagResponse(const Command &command);
 };
 
 
@@ -1915,6 +1920,7 @@ class AKONADIPRIVATE_EXPORT ModifyRelationCommand : public Command
 {
 public:
     explicit ModifyRelationCommand();
+    ModifyRelationCommand(const Command &command);
 
     void setLeft(qint64 left);
     qint64 left() const;
@@ -1928,8 +1934,6 @@ public:
     void setRemoteId(const QString &remoteId);
     QString remoteId() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
 
@@ -1945,6 +1949,7 @@ class AKONADIPRIVATE_EXPORT ModifyRelationResponse : public Response
 {
 public:
     explicit ModifyRelationResponse();
+    ModifyRelationResponse(const Command &command);
 };
 
 
@@ -1955,6 +1960,7 @@ class AKONADIPRIVATE_EXPORT RemoveRelationsCommand : public Command
 {
 public:
     explicit RemoveRelationsCommand();
+    RemoveRelationsCommand(const Command &command);
 
     void setLeft(qint64 left);
     qint64 left() const;
@@ -1965,8 +1971,6 @@ public:
     void setType(const QString &type);
     QString type() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)
 
@@ -1982,6 +1986,7 @@ class AKONADIPRIVATE_EXPORT RemoveRelationsResponse : public Response
 {
 public:
     explicit RemoveRelationsResponse();
+    RemoveRelationsResponse(const Command &command);
 };
 
 
@@ -1993,11 +1998,10 @@ class AKONADIPRIVATE_EXPORT SelectResourceCommand : public Command
 public:
     explicit SelectResourceCommand();
     explicit SelectResourceCommand(const QString &resourceId);
+    SelectResourceCommand(const Command &command);
 
     QString resourceId() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(SelectResourceCommand)
 
@@ -2013,6 +2017,7 @@ class AKONADIPRIVATE_EXPORT SelectResourceResponse : public Response
 {
 public:
     explicit SelectResourceResponse();
+    SelectResourceResponse(const Command &command);
 };
 
 
@@ -2023,6 +2028,9 @@ class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
 {
 public:
     explicit StreamPayloadCommand();
+    StreamPayloadCommand(const QByteArray &payloadName, qint64 size,
+                         const QString &extFile = QString());
+    StreamPayloadCommand(const Command &command);
 
     void setPayloadName(const QByteArray &name);
     QByteArray payloadName() const;
@@ -2033,8 +2041,6 @@ public:
     void setExternalFile(const QString &externalFile);
     QString externalFile() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(StreamPayloadCommand)
 
@@ -2050,6 +2056,8 @@ class AKONADIPRIVATE_EXPORT StreamPayloadResponse : public Response
 {
 public:
     explicit StreamPayloadResponse();
+    StreamPayloadResponse(const QByteArray &data, bool isExternal = false);
+    StreamPayloadResponse(const Command &command);
 
     void setIsExternal(bool external);
     bool isExternal() const;
@@ -2057,8 +2065,6 @@ public:
     void setData(const QByteArray &data);
     QByteArray data() const;
 
-    void serialize(QDataStream &stream) const Q_DECL_OVERRIDE;
-    void deserialize(QDataStream &stream) Q_DECL_OVERRIDE;
 private:
     AKONADI_DECLARE_PRIVATE(StreamPayloadResponse)
 

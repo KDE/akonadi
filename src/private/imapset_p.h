@@ -158,6 +158,8 @@ public:
     */
     ImapSet();
 
+    ImapSet(qint64 Id);
+
     /**
       Copy constructor.
     */
@@ -172,6 +174,8 @@ public:
       Assignment operator.
     */
     ImapSet &operator=(const ImapSet &other);
+
+    bool operator==(const ImapSet &other) const;
 
     /**
       Adds the given list of positive integer numbers to the set.

@@ -54,13 +54,18 @@ public:
         Gid = 1 << 3
     };
 
-    Scope();
+    explicit Scope();
+    Scope(qint64 id);
+    Scope(SelectionScope scope, const QStringList &ids);
     Scope(const Scope &other);
     Scope(Scope &&other);
     ~Scope();
 
     Scope &operator=(const Scope &other);
     Scope &operator=(Scope &&other);
+
+    bool operator==(const Scope &other) const;
+    bool operator!=(const Scope &other) const;
 
     SelectionScope scope() const;
 

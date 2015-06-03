@@ -321,8 +321,7 @@ bool AkAppend::notify(const PimItem &item, const Collection &collection,
 
 bool AkAppend::parseStream()
 {
-    Protocol::CreateItemCommand cmd;
-    mInStream >> cmd;
+    Protocol::CreateItemCommand cmd(m_command);
 
     // FIXME: The streaming/reading of all item parts can hold the transaction for
     // unnecessary long time -> should we wrap the PimItem into one transaction

@@ -98,12 +98,12 @@ quint64 Handler::tag() const
     return m_tag;
 }
 
-void Handler::setCommand(Protocol::Command::Type cmd)
+void Handler::setCommand(const Protocol::Command &cmd)
 {
     m_command = cmd;
 }
 
-Protocol::Command::Type Handler::command() const
+Protocol::Command Handler::command() const
 {
     return m_command;
 }
@@ -234,7 +234,7 @@ bool Handler::failureResponse(const char *failureMessage)
 
 bool Handler::failureResponse(const QString &failureMessage)
 {
-    Protocol::Response r = Protocol::Factory::response(m_command);
+    Protocol::Response r = Protocol::Factory::response(m_command.type());
     // FIXME: Error enums?
     r.setError(1, failureMessage);
 
@@ -250,18 +250,8 @@ bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedSc
 
 void Handler::sendResponseImpl(const Protocol::Response *response)
 {
-    // FIXME: This is a dirty hack, really. Ideally we would want to be able
-    // to serialize the entire response implementation including all of it's
-    // superclasses. At the same time however we use certain responses as parts
-    // of different responses, so we need to be able to serialize only the
-    // implementations too.
-
     // Send tag first
     mOutStream << m_tag;
-    // Serialize Command baseclass
-    mOutStream << *static_cast<const Protocol::Command*>(response);
     // Serialize Response baseclass
     mOutStream << *response;
-
-    // Payload of the actual implementation is serialized in sendResponse() template
 }

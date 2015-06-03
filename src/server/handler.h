@@ -68,9 +68,9 @@ public:
      */
     quint64 tag() const;
 
-    void setCommand(Protocol::Command::Type cmd);
+    void setCommand(const Protocol::Command &cmd);
 
-    Protocol::Command::Type command() const;
+    Protocol::Command command() const;
 
     /**
      * Find a handler for a command that is always allowed, like LOGOUT.
@@ -131,12 +131,12 @@ private:
     void sendResponseImpl(const Protocol::Response *response);
 
     quint64 m_tag;
-    Protocol::Command::Type m_command;
     Connection *m_connection;
 
     QDataStream mOutStream;
 
 protected:
+    Protocol::Command m_command;
     QDataStream mInStream;
 };
 
@@ -151,7 +151,6 @@ template<typename T>
 void Handler::sendResponse(const T &response)
 {
     sendResponseImpl(&response);
-    mOutStream << response;
 }
 
 

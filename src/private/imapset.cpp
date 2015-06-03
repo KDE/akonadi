@@ -173,6 +173,12 @@ ImapSet::ImapSet()
 {
 }
 
+ImapSet::ImapSet(Id id)
+    : d(new Private)
+{
+    add(QVector<Id>() << id);
+}
+
 ImapSet::ImapSet(const ImapSet &other)
     : d(other.d)
 {
@@ -189,6 +195,11 @@ ImapSet &ImapSet::operator=(const ImapSet &other)
     }
 
     return *this;
+}
+
+bool ImapSet::operator==(const ImapSet &other) const
+{
+    return d->intervals == other.d->intervals;
 }
 
 void ImapSet::add(const QList<Id> &values)

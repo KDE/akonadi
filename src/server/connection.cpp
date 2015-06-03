@@ -108,7 +108,8 @@ void Connection::slotSendHello()
     Protocol::HelloResponse hello(QStringLiteral("Akonadi"),
                                   QStringLiteral("Not Really IMAP server"),
                                   protocolVersion());
-    m_stream << hello;
+    m_stream << (qint64) 0
+             << hello;
 }
 
 int Connection::protocolVersion()
@@ -156,8 +157,7 @@ void Connection::slotNewData()
         m_stream >> tag;
         // TODO: Check tag is incremental sequence
 
-        Protocol::Command cmd;
-        m_stream >> cmd;
+        Protocol::Command cmd = Protocol::Factory::fromStream(m_stream);
         if (cmd.type() == Protocol::Command::Invalid) {
             // TODO: Don't so harsh, just send back an error
             slotConnectionStateChange(Server::LoggingOut);
@@ -181,7 +181,7 @@ void Connection::slotNewData()
 
         m_currentHandler->setConnection(this);
         m_currentHandler->setTag(tag);
-        m_currentHandler->setCommand(cmd.type());
+        m_currentHandler->setCommand(cmd);
         try {
             if (!m_currentHandler->parseStream()) {
                 // TODO: What to do? How do we know we reached the end of command?

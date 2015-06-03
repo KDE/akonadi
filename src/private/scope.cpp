@@ -53,6 +53,28 @@ Scope::Scope()
 {
 }
 
+Scope::Scope(qint64 id)
+    : d(new ScopePrivate)
+{
+    setUidSet(id);
+}
+
+Scope::Scope(SelectionScope scope, const QStringList &ids)
+    : d(new ScopePrivate)
+{
+    Q_ASSERT(scope == Rid || scope == Gid || scope == Akonadi::Scope::HierarchicalRid);
+    if (scope == Rid) {
+        d->scope = scope;
+        d->ridSet = ids;
+    } else if (scope == Gid) {
+        d->scope = scope;
+        d->gidSet = ids;
+    } else if (scope == HierarchicalRid) {
+        d->scope = scope;
+        d->ridChain = ids;
+    }
+}
+
 Scope::Scope(const Scope &other)
     : d(other.d)
 {
@@ -77,6 +99,33 @@ Scope &Scope::operator=(Scope &&other)
 {
     d.swap(other.d);
     return *this;
+}
+
+bool Scope::operator==(const Scope &other) const
+{
+    if (d->scope != other.d->scope) {
+        return false;
+    }
+
+    switch (d->scope) {
+    case Uid:
+        return d->uidSet == other.d->uidSet;
+    case Gid:
+        return d->gidSet == other.d->gidSet;
+    case Rid:
+        return d->ridSet == other.d->ridSet && d->ridContext == other.d->ridContext;
+    case HierarchicalRid:
+        return d->ridChain == other.d->ridChain && d->ridContext == other.d->ridContext;
+    case Invalid:
+        return true;
+    }
+
+    return false;
+}
+
+bool Scope::operator!=(const Scope &other) const
+{
+    return !(*this == other);
 }
 
 Scope::SelectionScope Scope::scope() const

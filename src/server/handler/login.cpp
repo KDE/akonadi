@@ -26,8 +26,7 @@ using namespace Akonadi::Server;
 
 bool Login::parseStream()
 {
-    Protocol::LoginCommand cmd;
-    mInStream >> cmd;
+    Protocol::LoginCommand cmd(m_command);
 
     if (cmd.sessionId().isEmpty()) {
         return failureResponse("Missing session identifier");
