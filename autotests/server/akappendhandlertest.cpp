@@ -21,16 +21,15 @@
 #include <QSettings>
 
 #include <handler/akappend.h>
-#include <imapstreamparser.h>
-#include <response.h>
 #include <storage/selectquerybuilder.h>
 
 #include <private/notificationmessagev3_p.h>
 #include <private/notificationmessagev2_p.h>
-#include <private/imapparser_p.h>
+#include <private/scope_p.h>
 
 #include "fakeakonadiserver.h"
 #include "fakeentities.h"
+
 #include <shared/aktest.h>
 #include <shared/akstandarddirs.h>
 
@@ -158,23 +157,37 @@ public:
         }
     }
 
-    QByteArray createCommand(const PimItem &pimItem, const QDateTime &dt,
-                             qint64 overrideSize = -1)
+    Protocol::CreateItemCommand createCommand(const PimItem &pimItem,
+                                              const QDateTime &dt,
+                                              const QVector<Protocol::PartMetaData> &parts,
+                                              qint64 overrideSize = -1)
     {
         const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();
-        return "C: 2 X-AKAPPEND " + QByteArray::number(pimItem.collectionId()) + " "
-               + QByteArray::number(size) + " "
-               + "(\\RemoteId[" + pimItem.remoteId().toLatin1() + "] "
-               +  "\\MimeType[" + pimItem.mimeType().name().toLatin1() + "] "
-               +  "\\RemoteRevision[" + pimItem.remoteRevision().toLatin1() + "] "
-               +  "\\Gid[" + pimItem.gid().toLatin1() + "]) "
-               + "\"" + dt.toString(QLatin1String("dd-MMM-yyyy hh:mm:ss")).toLatin1() + " +0000\"";
+
+        Protocol::CreateItemCommand cmd;
+        cmd.setCollection(Scope(pimItem.collectionId()));
+        cmd.setItemSize(size);
+        cmd.setRemoteId(pimItem.remoteId());
+        cmd.setRemoteRevision(pimItem.remoteRevision());
+        cmd.setMimeType(pimItem.mimeType().name());
+        cmd.setGID(pimItem.gid());
+        cmd.setDateTime(dt);
+        cmd.setParts(parts);
+
+        return cmd;
+    }
+
+    TestScenario errorResponse(const QString &errorMsg)
+    {
+        Protocol::CreateItemResponse response;
+        response.setError(1, errorMsg);
+        return TestScenario::create(5, TestScenario::ServerCmd, response);
     }
 
 private Q_SLOTS:
     void testAkAppend_data()
     {
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<NotificationMessageV3>("notification");
         QTest::addColumn<PimItem>("pimItem");
         QTest::addColumn<QVector<FakePart> >("parts");
@@ -184,7 +197,7 @@ private Q_SLOTS:
         QTest::addColumn<QDateTime>("datetime");
         QTest::addColumn<bool>("expectFail");
 
-        QList<QByteArray> scenario;
+        TestScenario::List scenarios;
         NotificationMessageV3 notification;
         qint64 uidnext = 0;
         QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00));
@@ -208,13 +221,12 @@ private Q_SLOTS:
         notification.addEntity(-1, QLatin1String("TEST-1"), QLatin1String("1"), QLatin1String("application/octet-stream"));
         notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
         uidnext = 13;
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {10}"
-                 << "S: + Ready for literal data (expecting 10 bytes)"
-                 << "C: 0123456789)"
-                 << "S: 2 [UIDNEXT 13 DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("single-part") << scenario << notification << pimItem << parts
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 10, 0) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 10))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("0123456789"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("single-part") << scenarios << notification << pimItem << parts
                                      << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-2"), 20);
@@ -222,32 +234,45 @@ private Q_SLOTS:
                              { QLatin1String("PLD:PLDTEST"), "Test Data", 9 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {11}"
-                 << "S: + Ready for literal data (expecting 11 bytes)"
-                 << "C: Random Data PLD:PLDTEST {9}"
-                 << "S: + Ready for literal data (expecting 9 bytes)"
-                 << "C: Test Data)"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("multi-part") << scenario << notification << pimItem << parts
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime,
+                                   { Protocol::PartMetaData("PLD:DATA", 11, 0),
+                                     Protocol::PartMetaData("PLD:PLDTEST", 9, 0)
+                                   }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 11))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("Random Data"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:PDTEST", 9))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("Test Data"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("multi-part") << scenarios << notification << pimItem << parts
                                     << flags << tags << uidnext << datetime << false;
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 100 0 () ()"
-                 << "S: 2 NO Unknown collection for '100'.";
-        QTest::newRow("invalid collection") << scenario << NotificationMessageV3()
+        TestScenario scenario;
+        {
+            Protocol::CreateItemCommand cmd;
+            cmd.setCollection(Scope(100));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << errorResponse(QLatin1String("Unknown collection for '100'."));
+        QTest::newRow("invalid collection") << scenarios << NotificationMessageV3()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 6 0 () ()"
-                 << "S: 2 NO Cannot append item into virtual collection";
-        QTest::newRow("virtual collection") << scenario << NotificationMessageV3()
+        {
+            Protocol::CreateItemCommand cmd;
+            cmd.setCollection(Scope(6));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << errorResponse(QLatin1String("Cannot append item into virtual collection"));
+        QTest::newRow("virtual collection") << scenarios << NotificationMessageV3()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
@@ -256,49 +281,47 @@ private Q_SLOTS:
         updateParts(parts, { { QLatin1String("PLD:DATA"), "12345", 5 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime, 1) + " (PLD:DATA[0] {5}"
-                 << "S: + Ready for literal data (expecting 5 bytes)"
-                 << "C: 12345)"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("mismatch item sizes (smaller)") << scenario << notification << pimItem
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }, 1))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("12345"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("mismatch item sizes (smaller)") << scenarios << notification << pimItem
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-4"), 1000);
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {5}"
-                 << "S: + Ready for literal data (expecting 5 bytes)"
-                 << "C: 12345)"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("mismatch item sizes (bigger)") << scenario << notification << pimItem
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }, 10))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("12345"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("mismatch item sizes (bigger)") << scenarios << notification << pimItem
                                                       << parts << flags << tags << uidnext
                                                       << datetime << false;
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {4}"
-                 << "S: + Ready for literal data (expecting 4 bytes)"
-                 << "C: 123"
-                 << "S: 2 NO ImapParserException: Unable to read more data";
-        QTest::newRow("incomplete part data") << scenario << NotificationMessageV3()
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("123"))
+                  << errorResponse(QLatin1String("Unable to read more data"));
+        QTest::newRow("incomplete part data") << scenarios << NotificationMessageV3()
                                               << PimItem() << QVector<FakePart>()
                                               << QVector<Flag>() << QVector<FakeTag>()
                                               << -1ll << QDateTime() << true;
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {4}"
-                 << "S: + Ready for literal data (expecting 4 bytes)"
-                 << "C: 12345678910"
-                 << "S: 2 NO PartTypeException: Invalid part type name.";
-        QTest::newRow("part data larger than advertised") << scenario << NotificationMessageV3()
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 4, 0) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 4))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("1234567890"))
+                  << errorResponse(QLatin1String("PartTypeException: Invalid part type name."));
+        QTest::newRow("part data larger than advertised") << scenarios << NotificationMessageV3()
                                                           << PimItem() << QVector<FakePart>()
                                                           << QVector<Flag>() << QVector<FakeTag>()
                                                           << -1ll << QDateTime() << true;
@@ -307,39 +330,26 @@ private Q_SLOTS:
         updateParts(parts, { { QLatin1String("PLD:DATA"), QByteArray(), 0 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] NIL)"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("empty payload part") << scenario << notification << pimItem << parts
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 0, 0) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 0))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse())
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("empty payload part") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
-
-        updatePimItem(pimItem, QLatin1String("TEST-7"), 0);
-        updateNotifcationEntity(notification, pimItem);
-        ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {0}"
-                 << "S: + Ready for literal data (expecting 0 bytes)"
-                 << "C: )"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("empty part data") << scenario << notification << pimItem << parts
-                                         << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-8"), 1);
         updateParts(parts, { { QLatin1String("PLD:DATA"), QByteArray("\0", 1), 1 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem,  datetime) + " (PLD:DATA[0] {1}"
-                 << "S: + Ready for literal data (expecting 1 bytes)"
-                 << "C: " + QByteArray("\0", 1) + ")"   // otherwise QByteArray trims the string before"\0"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("part data will null character") << scenario << notification << pimItem
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem,  datetime, { Protocol::PartMetaData("PLD:DATA", 1, 0) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 1))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(QByteArray("\0", 1)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("part data will null character") << scenarios << notification << pimItem
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
@@ -348,14 +358,13 @@ private Q_SLOTS:
         updateParts(parts, { { QLatin1String("PLD:DATA"), utf8String.toUtf8(), utf8String.toUtf8().size() } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {" + QByteArray::number(parts.first().datasize()) + "}"
-                 << "S: + Ready for literal data (expecting " + QByteArray::number(parts.first().datasize()) + " bytes)"
-                 << "C: " + utf8String.toUtf8() + ")"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("utf8 part data") << scenario << notification << pimItem << parts
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(utf8String.toUtf8()))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("utf8 part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
         const QByteArray hugeData = QByteArray("a").repeated(1 << 20);
@@ -363,14 +372,13 @@ private Q_SLOTS:
         updateParts(parts, { { QLatin1String("PLD:DATA"), hugeData, 1 << 20 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {" + QByteArray::number(parts.first().datasize()) + "}"
-                 << "S: + Ready for literal data (expecting " + QByteArray::number(parts.first().datasize()) + " bytes)"
-                 << "C: " + hugeData + ")"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("huge part data") << scenario << notification << pimItem << parts
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(hugeData))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("huge part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
         const QByteArray dataWithNewLines = "Bernard, Bernard, Bernard, Bernard, look, look Bernard!\nWHAT!!!!!!!\nI'm a prostitute robot from the future!";
@@ -378,14 +386,13 @@ private Q_SLOTS:
         updateParts(parts, { { QLatin1String("PLD:DATA"), dataWithNewLines, dataWithNewLines.size() } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + " (PLD:DATA[0] {" + QByteArray::number(parts.first().datasize()) + "}"
-                 << "S: + Ready for literal data (expecting " + QByteArray::number(parts.first().datasize()) + " bytes)"
-                 << "C: " + dataWithNewLines + ")"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("data with newlines") << scenario << notification << pimItem << parts
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(dataWithNewLines))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("data with newlines") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
 
         const QByteArray lotsOfNewlines = QByteArray("\n").repeated(1 << 20);
@@ -393,14 +400,13 @@ private Q_SLOTS:
         updateParts(parts, { { QLatin1String("PLD:DATA"), lotsOfNewlines, lotsOfNewlines.size() } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + "(PLD:DATA[0] {" + QByteArray::number(parts.first().datasize()) + "}"
-                 << "S: + Ready for literal data (expecting " + QByteArray::number(parts.first().datasize()) + " bytes)"
-                 << "C: " + lotsOfNewlines + ")"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("data with lots of newlines") << scenario << notification << pimItem
+        scenarios.clear();
+          scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(lotsOfNewlines))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("data with lots of newlines") << scenarios << notification << pimItem
                                                     << parts << flags << tags << uidnext
                                                     << datetime << false;
 
@@ -409,16 +415,17 @@ private Q_SLOTS:
                              { QLatin1String("PLD:NEWPARTTYPE2"), "9876543210", 10 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << createCommand(pimItem, datetime) + "(PLD:NEWPARTTYPE1[0] {10}"
-                 << "S: + Ready for literal data (expecting 10 bytes)"
-                 << "C: 0123456789 PLD:NEWPARTTYPE2[0] {10}"
-                 << "S: + Ready for literal data (expecting 10 bytes)"
-                 << "C: 9876543210)"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("non-existent part types") << scenario << notification << pimItem
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime,
+                                   { Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10, 0),
+                                     Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10, 0) }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", 10))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("0123456789"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", 10))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("9876543210"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("non-existent part types") << scenarios << notification << pimItem
                                                  << parts << flags << tags << uidnext
                                                  << datetime << false;
 
@@ -427,12 +434,16 @@ private Q_SLOTS:
         updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("\\RANDOM"));
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 4 0 (\\RemoteId[TEST-14] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-14] \\SEEN \\RANDOM) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("item with flags") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setFlags({ "\\SEEN", "\\RANDOM" });
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with flags") << scenarios << notification << pimItem << parts
                                          << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-15"), 0);
@@ -441,12 +452,16 @@ private Q_SLOTS:
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 4 0 (\\RemoteId[TEST-15] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-15] \\Tag[TAG-1] \\Tag[TAG-2]) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("item with non-existent tags (GID)") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with non-existent tags (GID)") << scenarios << notification << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-16"), 0);
@@ -454,13 +469,17 @@ private Q_SLOTS:
                            { QLatin1String("PLAIN"), QLatin1String("TAG-4") } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
-                 << "C: 3 X-AKAPPEND 4 0 (\\RemoteId[TEST-16] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-16] \\RTag[TAG-3] \\RTag[TAG-4]) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 3 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 3 OK Append completed";
-        QTest::newRow("item with non-existent tags (RID)") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-3"), QLatin1String("TAG-4") }));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with non-existent tags (RID)") << scenarios << notification << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-17"), 0);
@@ -468,13 +487,17 @@ private Q_SLOTS:
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-1") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
-                 << "C: 3 X-AKAPPEND 4 0 (\\RemoteId[TEST-17] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-17] \\RTag[TAG-1] \\RTag[TAG-2]) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 3 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 3 OK Append completed";
-        QTest::newRow("item with existing tags (RID)") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with existing tags (RID)") << scenarios << notification << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-18"), 0);
@@ -482,12 +505,16 @@ private Q_SLOTS:
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-3") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-4") } });
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 4 0 (\\RemoteId[TEST-18] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-18] \\Tag[TAG-3] \\Tag[TAG-4]) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("item with existing tags (GID)") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-3"), QLatin1String("TAG-4") }));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with existing tags (GID)") << scenarios << notification << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-19"), 0);
@@ -496,12 +523,17 @@ private Q_SLOTS:
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 4 0 (\\RemoteId[TEST-19] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-19] \\Tag[TAG-1] \\SEEN \\Tag[TAG-2] $FLAG) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("item with flags and tags") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
+            cmd.setFlags({ "\\SEEN", "$FLAG" });
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with flags and tags") << scenarios << notification << pimItem << parts
                                                   << flags << tags << uidnext << datetime << false;
 
         updatePimItem(pimItem, QLatin1String("TEST-20"), 0);
@@ -509,18 +541,22 @@ private Q_SLOTS:
         updateTags(tags, { { QLatin1String("PLAIN"), utf8String } });
         updateNotifcationEntity(notification, pimItem);;
         ++uidnext;
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 X-AKAPPEND 4 0 (\\RemoteId[TEST-20] \\MimeType[application/octet-stream] \\RemoteRevision[1] \\Gid[TEST-20] \\Tag[äöüß@€µøđ¢©®]) \"12-May-2014 14:46:00 +0000\" ()"
-                 << "S: 2 [UIDNEXT " + QByteArray::number(uidnext) + " DATETIME \"12-May-2014 14:46:00 +0000\"]"
-                 << "S: 2 OK Append completed";
-        QTest::newRow("item with UTF-8 tag") << scenario << notification << pimItem << parts
+        {
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd.setTags(Scope(Scope::Rid, { utf8String }));
+            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+        }
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << scenario
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
+        QTest::newRow("item with UTF-8 tag") << scenarios << notification << pimItem << parts
                                              << flags << tags << uidnext << datetime << false;
     }
 
     void testAkAppend()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(NotificationMessageV3, notification);
         QFETCH(PimItem, pimItem);
         QFETCH(QVector<FakePart>, parts);
@@ -529,7 +565,7 @@ private Q_SLOTS:
         QFETCH(qint64, uidnext);
         QFETCH(bool, expectFail);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();

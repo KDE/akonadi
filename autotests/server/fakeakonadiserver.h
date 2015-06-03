@@ -24,19 +24,81 @@
 #include "exception.h"
 
 #include <QSignalSpy>
+#include <QBuffer>
+#include <QDataStream>
+
+#include <type_traits>
+
+#include <private/protocol_p.h>
 
 class QLocalServer;
 class QEventLoop;
 
-Q_DECLARE_METATYPE(QList<QByteArray>)
-
 namespace Akonadi {
 namespace Server {
 
-class FakeClient;
 class FakeSearchManager;
 class FakeDataStore;
 class FakeConnection;
+class FakeClient;
+
+class TestScenario {
+public:
+    typedef QList<TestScenario> List;
+
+    enum Action {
+        ServerCmd,
+        ClientCmd,
+        Wait,
+        Quit
+    };
+
+    Action action;
+    QByteArray data;
+
+    template<typename T>
+    static typename std::enable_if<std::is_base_of<Protocol::Response, T>::value, TestScenario>::type
+    create(qint64 tag, Action action, const T &response) {
+        TestScenario sc;
+        sc.action = action;
+        QDataStream stream(&sc.data, QIODevice::WriteOnly);
+        stream << tag
+               << response;
+
+        QDataStream os(sc.data);
+        qint64 vTag;
+        os >> vTag;
+        Protocol::Command cmd = Protocol::Factory::fromStream(os);
+
+        Q_ASSERT(vTag == tag);
+        Q_ASSERT(cmd.type() == response.type());
+        Q_ASSERT(cmd.isResponse() == response.isResponse());
+        Q_ASSERT(cmd == response);
+        return sc;
+    }
+
+    template<typename T>
+    static typename std::enable_if<std::is_base_of<Protocol::Response, T>::value == false, TestScenario>::type
+    create(qint64 tag, Action action, const T &command, int */* dummy */ = 0)
+    {
+        TestScenario sc;
+        sc.action = action;
+        QDataStream stream(&sc.data, QIODevice::WriteOnly);
+        stream << tag
+               << command;
+        return sc;
+    }
+
+    static TestScenario wait(int timeout)
+    {
+        return TestScenario { Wait, QByteArray::number(timeout) };
+    }
+
+    static TestScenario quit()
+    {
+        return TestScenario { Quit, QByteArray() };
+    }
+};
 
 /**
  * A fake server used for testing. Losely based on KIMAP::FakeServer
@@ -61,13 +123,12 @@ public:
     static QString basePath();
     static QString socketFile();
     static QString instanceName();
-    static QList<QByteArray> loginScenario();
-    static QList<QByteArray> defaultScenario();
-    static QList<QByteArray> customCapabilitiesScenario(const QList<QByteArray> &capabilities);
-    static QList<QByteArray> selectCollectionScenario(const QString &name);
-    static QList<QByteArray> selectResourceScenario(const QString &name);
 
-    void setScenario(const QList<QByteArray> &scenario);
+    static TestScenario::List loginScenario();
+    static TestScenario::List selectCollectionScenario(const QString &name);
+    static TestScenario::List selectResourceScenario(const QString &name);
+
+    void setScenarios(const TestScenario::List &scenarios);
 
     void runTest();
 
@@ -102,5 +163,8 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);
 
 }
 }
+
+Q_DECLARE_METATYPE(Akonadi::Server::TestScenario)
+Q_DECLARE_METATYPE(Akonadi::Server::TestScenario::List)
 
 #endif // FAKEAKONADISERVER_H

@@ -24,6 +24,8 @@
 #include <QMutex>
 #include <QDataStream>
 
+#include "fakeakonadiserver.h"
+
 class QLocalSocket;
 
 namespace Akonadi {
@@ -34,10 +36,11 @@ class FakeClient : public QThread
     Q_OBJECT
 
 public:
+
     FakeClient(QObject *parent = 0);
     ~FakeClient();
 
-    void setScenario(const QList<QByteArray> &scenario);
+    void setScenarios(const TestScenario::List &scenarios);
 
     bool isScenarioDone() const;
 
@@ -53,11 +56,12 @@ private Q_SLOTS:
 private:
     mutable QMutex mMutex;
 
-    QList<QByteArray> mScenario;
+    TestScenario::List mScenarios;
     QLocalSocket *mSocket;
     QDataStream mStream;
 };
 }
 }
+
 
 #endif // AKONADI_SERVER_FAKECLIENT_H

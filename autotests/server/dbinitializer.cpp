@@ -84,15 +84,15 @@ QByteArray DbInitializer::toByteArray(bool enabled)
     return "FALSE";
 }
 
-QByteArray DbInitializer::toByteArray(Akonadi::Server::Tristate tristate)
+QByteArray DbInitializer::toByteArray(Akonadi::Tristate tristate)
 {
 
     switch (tristate) {
-    case Akonadi::Server::Tristate::True:
+    case Akonadi::Tristate::True:
         return "TRUE";
-    case Akonadi::Server::Tristate::False:
+    case Akonadi::Tristate::False:
         return "FALSE";
-    case Akonadi::Server::Tristate::Undefined:
+    case Akonadi::Tristate::Undefined:
     default:
         break;
     }
