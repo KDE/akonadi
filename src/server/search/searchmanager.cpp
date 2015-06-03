@@ -304,7 +304,9 @@ void SearchManager::updateSearchImpl(const Collection &collection, QWaitConditio
         queryAncestors << 0;
         recursive = true;
     } else {
-        Q_FOREACH (const QString &colId, collection.queryCollections().split(QLatin1Char(' '))) {
+        const QStringList collectionIds = collection.queryCollections().split(QLatin1Char(' '));
+        queryAncestors.reserve(collectionIds.count());
+        Q_FOREACH (const QString &colId, collectionIds) {
             queryAncestors << colId.toLongLong();
         }
     }

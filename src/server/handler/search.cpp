@@ -65,6 +65,7 @@ bool Search::parseStream()
                 }
             } else if (param == AKONADI_PARAM_COLLECTIONS) {
                 QList<QByteArray> list = m_streamParser->readParenthesizedList();
+                collectionIds.reserve(list.count());
                 Q_FOREACH (const QByteArray &col, list) {
                     collectionIds << col.toLongLong();
                 }

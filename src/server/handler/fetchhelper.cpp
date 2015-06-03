@@ -488,6 +488,7 @@ bool FetchHelper::fetchItems(const QByteArray &responseIdentifier)
                 }
             } else {
                 Tag::List tagList;
+                tagList.reserve(tagIds.count());
                 Q_FOREACH (qint64 t, tagIds) {
                     tagList << Tag::retrieveById(t);
                 }

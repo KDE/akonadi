@@ -490,6 +490,7 @@ uint qHash(const Akonadi::NotificationMessageV2 &msg)
 QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
 {
     QVector<NotificationMessage> v1;
+    v1.reserve(d->items.count());
 
     Q_FOREACH (const Entity &item, d->items) {
         NotificationMessage msgv1;

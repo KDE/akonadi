@@ -49,6 +49,7 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     newItem.setRemoteRevision(QString());
     newItem.setCollectionId(target.id());
     Part::List parts;
+    parts.reserve(item.parts().count());
     Q_FOREACH (const Part &part, item.parts()) {
         Part newPart(part);
         newPart.setData(PartHelper::translateData(newPart.data(), part.external()));
