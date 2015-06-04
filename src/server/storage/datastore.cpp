@@ -631,8 +631,8 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         // Emit specialized notifications for each resource
         QSqlQuery query = qb.query();
         while (query.next()) {
-            const QString rid = query.value(0).value<QString>();
-            const QByteArray resource = query.value(1).value<QByteArray>();
+            const QString rid = query.value(0).toString();
+            const QByteArray resource = query.value(1).toByteArray();
 
             DataStore::self()->notificationCollector()->tagRemoved(tag, resource, rid);
         }
@@ -744,7 +744,7 @@ bool DataStore::cleanupCollection(Collection &collection)
 
     try {
         while (qb.query().next()) {
-            PartHelper::removeFile(PartHelper::resolveAbsolutePath(qb.query().value(0).value<QByteArray>()));
+            PartHelper::removeFile(PartHelper::resolveAbsolutePath(qb.query().value(0).toByteArray()));
         }
     } catch (const PartHelperException &e) {
         akDebug() << e.what();
