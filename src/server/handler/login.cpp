@@ -32,6 +32,7 @@ bool Login::parseStream()
         return failureResponse("Missing session identifier");
     }
     connection()->setSessionId(cmd.sessionId());
+    Q_EMIT connectionStateChange(Server::Authenticated);
 
     return successResponse<Protocol::LoginResponse>();
 }
