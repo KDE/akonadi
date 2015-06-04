@@ -26,6 +26,7 @@
 
 #include <QtCore/QFlags>
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QDebug>
 
 #include "tristate_p.h"
 
@@ -231,8 +232,7 @@ namespace Akonadi
 namespace Protocol
 {
 
-// NOTE: Q_DECLARE_PRIVATE does not work with QSharedDataPointer<T> when T
-// is incomplete (???)
+// NOTE: Q_DECLARE_PRIVATE does not work with QSharedDataPointer<T> when T is incomplete
 #define AKONADI_DECLARE_PRIVATE(Class) \
 Class##Private* d_func(); \
 const Class##Private* d_func() const; \
@@ -315,6 +315,8 @@ public:
     Type type() const;
     bool isValid() const;
     bool isResponse() const;
+
+    QString debugString() const;
 
 protected:
     explicit Command(CommandPrivate *dd);
@@ -2082,7 +2084,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
 
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
-
+AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Protocol::Command::Type type);
 
 // Command parameters
 #define AKONADI_PARAM_CAPABILITY_AKAPPENDSTREAMING "AKAPPENDSTREAMING"

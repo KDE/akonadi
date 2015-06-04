@@ -269,7 +269,7 @@ bool ImapSet::isEmpty() const
     return d->intervals.isEmpty();
 }
 
-QDebug &operator<<(QDebug &d, const Akonadi::ImapInterval &interval)
+QDebug operator<<(QDebug d, const Akonadi::ImapInterval &interval)
 {
     d << interval.toImapSequence();
     return d;

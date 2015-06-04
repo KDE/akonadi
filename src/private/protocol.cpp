@@ -29,6 +29,7 @@
 #include <QHash>
 #include <QMap>
 #include <QDateTime>
+#include <QStack>
 
 #include <tuple>
 #include <cassert>
@@ -46,6 +47,7 @@ inline const Class##Private* Class::d_func() const {\
 
 #define COMPARE(prop) \
     (prop == ((decltype(this)) other)->prop)
+
 
 
 // Generic code for effective streaming of enums
@@ -89,6 +91,153 @@ QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type ty
     return stream << static_cast<qint8>(type);
 }
 
+QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
+{
+    QDebug dbg(_dbg.noquote());
+
+    switch (type)
+    {
+    case Akonadi::Protocol::Command::Invalid:
+        return dbg << "Invalid";
+
+    case Akonadi::Protocol::Command::Hello:
+        return dbg << "Hello";
+    case Akonadi::Protocol::Command::Login:
+        return dbg << "Login";
+    case Akonadi::Protocol::Command::Logout:
+        return dbg << "Logout";
+
+    case Akonadi::Protocol::Command::Transaction:
+        return dbg << "Transaction";
+
+    case Akonadi::Protocol::Command::CreateItem:
+        return dbg << "CreateItem";
+    case Akonadi::Protocol::Command::CopyItems:
+        return dbg << "CopyItems";
+    case Akonadi::Protocol::Command::DeleteItems:
+        return dbg << "DeleteItems";
+    case Akonadi::Protocol::Command::FetchItems:
+        return dbg << "FetchItems";
+    case Akonadi::Protocol::Command::LinkItems:
+        return dbg << "LinkItems";
+    case Akonadi::Protocol::Command::ModifyItems:
+        return dbg << "ModifyItems";
+    case Akonadi::Protocol::Command::MoveItems:
+        return dbg << "MoveItems";
+
+    case Akonadi::Protocol::Command::CreateCollection:
+        return dbg << "CreateCollection";
+    case Akonadi::Protocol::Command::CopyCollection:
+        return dbg << "CopyCollection";
+    case Akonadi::Protocol::Command::DeleteCollection:
+        return dbg << "DeleteCollection";
+    case Akonadi::Protocol::Command::FetchCollections:
+        return dbg << "FetchCollections";
+    case Akonadi::Protocol::Command::FetchCollectionStats:
+        return dbg << "FetchCollectionStats";
+    case Akonadi::Protocol::Command::ModifyCollection:
+        return dbg << "ModifyCollection";
+    case Akonadi::Protocol::Command::MoveCollection:
+        return dbg << "MoveCollection";
+    case Akonadi::Protocol::Command::SelectCollection:
+        return dbg << "SelectCollection";
+
+    case Akonadi::Protocol::Command::Search:
+        return dbg << "Search";
+    case Akonadi::Protocol::Command::SearchResult:
+        return dbg << "SearchResult";
+    case Akonadi::Protocol::Command::StoreSearch:
+        return dbg << "StoreSearch";
+
+    case Akonadi::Protocol::Command::CreateTag:
+        return dbg << "CreateTag";
+    case Akonadi::Protocol::Command::DeleteTag:
+        return dbg << "DeleteTag";
+    case Akonadi::Protocol::Command::FetchTags:
+        return dbg << "FetchTags";
+    case Akonadi::Protocol::Command::ModifyTag:
+        return dbg << "ModifyTag";
+
+    case Akonadi::Protocol::Command::FetchRelations:
+        return dbg << "FetchRelations";
+    case Akonadi::Protocol::Command::ModifyRelation:
+        return dbg << "ModifyRelation";
+    case Akonadi::Protocol::Command::RemoveRelations:
+        return dbg << "RemoveRelations";
+
+    case Akonadi::Protocol::Command::SelectResource:
+        return dbg << "SelectResource";
+
+    case Akonadi::Protocol::Command::StreamPayload:
+        return dbg << "StreamPayload";
+
+    case Akonadi::Protocol::Command::_ResponseBit:
+        Q_ASSERT(false);
+        return dbg;
+    }
+
+    Q_ASSERT(false);
+}
+
+namespace Akonadi
+{
+namespace Protocol
+{
+class DebugBlock
+{
+public:
+    DebugBlock(QDebug &dbg)
+        : mIndent(0)
+        , mDbg(dbg)
+    {
+        beginBlock();
+    }
+
+    ~DebugBlock()
+    {
+        endBlock();
+    }
+
+    void beginBlock(const QByteArray &name = QByteArray())
+    {
+        if (!name.isNull()) {
+            mBlocks.push(name.size());
+            mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": { ";
+            mIndent += mBlocks.top();
+        } else {
+            mDbg << QString::fromLatin1(" ").repeated(mIndent) << "{ ";
+        }
+        mBlockInit.push(false);
+    }
+
+    void endBlock()
+    {
+        mDbg << " }";
+        mIndent -= mBlocks.pop();
+        mBlockInit.pop();
+    }
+
+    template<typename T>
+    void write(const char *name, const T &val)
+    {
+        if (mBlockInit.top()) {
+            mDbg << '\n';
+        } else {
+            mBlockInit.top() = true;
+        }
+
+        mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": " << val;
+    }
+
+private:
+    QStack<int> mBlocks;
+    QStack<bool> mBlockInit;
+    int mIndent;
+    QDebug &mDbg;
+};
+}
+}
+
 /******************************************************************************/
 
 
@@ -101,8 +250,14 @@ namespace Protocol
 class CommandPrivate : public QSharedData
 {
 public:
-    CommandPrivate(qint8 type)
-        : commandType(type)
+    CommandPrivate(quint8 type)
+        : QSharedData()
+        , commandType(type)
+    {}
+
+    CommandPrivate(const CommandPrivate &other)
+        : QSharedData(other)
+        , commandType(other.commandType)
     {}
 
     virtual ~CommandPrivate()
@@ -124,11 +279,31 @@ public:
         stream >> commandType;
     }
 
-    qint8 commandType;
+    virtual CommandPrivate *clone() const
+    {
+        return new CommandPrivate(*this);
+    }
+
+    virtual void debugString(QDebug &dbg) const
+    {
+        DebugBlock blck(dbg);
+        blck.write("Command", commandType);
+    }
+
+    quint8 commandType;
 };
 
 } // namespace Protocol
 } // namespace Akonadi
+
+
+template <>
+Akonadi::Protocol::CommandPrivate *QSharedDataPointer<Akonadi::Protocol::CommandPrivate>::clone()
+{
+    return d->clone();
+}
+
+
 
 AKONADI_DECLARE_PRIVATE(Command)
 
@@ -148,8 +323,8 @@ Command::Command(Command &&other)
 }
 
 Command::Command(const Command &other)
+    : d_ptr(other.d_ptr)
 {
-    d_ptr = other.d_ptr;
 }
 
 Command::~Command()
@@ -193,6 +368,14 @@ bool Command::isResponse() const
     return d_func()->commandType & _ResponseBit;
 }
 
+QString Command::debugString() const
+{
+    QString out;
+    QDebug dbg(&out);
+    d_func()->debugString(dbg.noquote());
+    return out;
+}
+
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command)
 {
     command.d_func()->serialize(stream);
@@ -221,8 +404,14 @@ class ResponsePrivate : public CommandPrivate
 {
 public:
     ResponsePrivate(Command::Type type)
-    : CommandPrivate(type | Command::_ResponseBit)
-    , errorCode(0)
+        : CommandPrivate(type | Command::_ResponseBit)
+        , errorCode(0)
+    {}
+
+    ResponsePrivate(const ResponsePrivate &other)
+        : CommandPrivate(other)
+        , errorMsg(other.errorMsg)
+        , errorCode(other.errorCode)
     {}
 
     virtual ~ResponsePrivate() Q_DECL_OVERRIDE
@@ -245,6 +434,19 @@ public:
     {
         stream >> errorCode
                >> errorMsg;
+    }
+
+    virtual CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ResponsePrivate(*this);
+    }
+
+    virtual void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        DebugBlock blck(dbg);
+        blck.write("Response", commandType);
+        blck.write("Error Code", errorCode);
+        blck.write("Error Msg", errorMsg);
     }
 
     QString errorMsg;
@@ -1072,6 +1274,13 @@ public:
         , protocol(protocol)
     {}
 
+    HelloResponsePrivate(const HelloResponsePrivate &other)
+        : ResponsePrivate(other)
+        , server(other.server)
+        , message(other.message)
+        , protocol(other.protocol)
+    {}
+
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
@@ -1092,6 +1301,20 @@ public:
         stream >> server
                >> message
                >> protocol;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        dbg << "{ Response: " << (commandType & ~Command::_ResponseBit) << "\n"
+            << "  Error: " << errorCode << ", " << errorMsg << ", \n"
+            << "  Server: " << server << "\n"
+            << "  Protocol Version: " << protocol << "\n"
+            << "  Message: " << message << " }";
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new HelloResponsePrivate(*this);
     }
 
     QString server;
@@ -1174,6 +1397,11 @@ public:
         , sessionId(sessionId)
     {}
 
+    LoginCommandPrivate(const LoginCommandPrivate &other)
+        : CommandPrivate(other)
+        , sessionId(other.sessionId)
+    {}
+
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
@@ -1188,6 +1416,18 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> sessionId;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        DebugBlock blck(dbg);
+        blck.write("Command", commandType);
+        blck.write("Session ID", sessionId);
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new LoginCommandPrivate(*this);
     }
 
     QByteArray sessionId;
@@ -1211,7 +1451,7 @@ LoginCommand::LoginCommand(const QByteArray &sessionId)
 LoginCommand::LoginCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(LoginCommandPrivate));
+    assert(d_func()->commandType == Command::Login);
 }
 
 QByteArray LoginCommand::sessionId() const
@@ -1249,7 +1489,7 @@ LoginResponse::LoginResponse()
 LoginResponse::LoginResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::Login | Command::_ResponseBit));
 }
 
 
@@ -1268,7 +1508,7 @@ LogoutCommand::LogoutCommand()
 LogoutCommand::LogoutCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(CommandPrivate));
+    assert(d_func()->commandType == Command::Logout);
 }
 
 
@@ -1285,7 +1525,7 @@ LogoutResponse::LogoutResponse()
 LogoutResponse::LogoutResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::Logout | Command::_ResponseBit));
 }
 
 
@@ -1308,6 +1548,29 @@ public:
         , mode(mode)
     {}
 
+    TransactionCommandPrivate(const TransactionCommandPrivate &other)
+        : CommandPrivate(other)
+        , mode(other.mode)
+    {}
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        DebugBlock blck(dbg);
+        blck.write("Command", commandType);
+        blck.write("Mode", [this]() -> const char* {
+            switch (mode) {
+            case TransactionCommand::Begin:
+                return "Begin";
+            case TransactionCommand::Commit:
+                return "Commit";
+            case TransactionCommand::Rollback:
+                return "Rollback";
+            default:
+                return "Invalid";
+            }
+        }());
+    }
+
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
@@ -1322,6 +1585,11 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> mode;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new TransactionCommandPrivate(*this);
     }
 
     TransactionCommand::Mode mode;
@@ -1345,7 +1613,7 @@ TransactionCommand::TransactionCommand(TransactionCommand::Mode mode)
 TransactionCommand::TransactionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(TransactionCommandPrivate));
+    assert(d_func()->commandType == Command::Transaction);
 }
 
 TransactionCommand::Mode TransactionCommand::mode() const
@@ -1382,7 +1650,7 @@ TransactionResponse::TransactionResponse()
 TransactionResponse::TransactionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::Transaction | Command::_ResponseBit));
 }
 
 
@@ -1406,9 +1674,31 @@ public:
         , itemSize(0)
     {}
 
+    CreateItemCommandPrivate(const CreateItemCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+        , mimeType(other.mimeType)
+        , gid(other.gid)
+        , remoteId(other.remoteId)
+        , remoteRev(other.remoteRev)
+        , dateTime(other.dateTime)
+        , tags(other.tags)
+        , addedTags(other.addedTags)
+        , removedTags(other.removedTags)
+        , flags(other.flags)
+        , addedFlags(other.addedFlags)
+        , removedFlags(other.removedFlags)
+        , removedParts(other.removedParts)
+        , parts(other.parts)
+        , mergeMode(other.mergeMode)
+        , itemSize(other.itemSize)
+    {}
+
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
+            && COMPARE(mergeMode)
+            && COMPARE(itemSize)
             && COMPARE(collection)
             && COMPARE(mimeType)
             && COMPARE(gid)
@@ -1422,9 +1712,7 @@ public:
             && COMPARE(addedFlags)
             && COMPARE(removedFlags)
             && COMPARE(removedParts)
-            && COMPARE(parts)
-            && COMPARE(mergeMode)
-            && COMPARE(itemSize);
+            && COMPARE(parts);
     }
 
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
@@ -1467,6 +1755,56 @@ public:
                >> parts;
     }
 
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        DebugBlock blck(dbg);
+        blck.write("Command", commandType);
+        blck.write("Merge mode", [this]() {
+            QStringList mm;
+            if (mergeMode == CreateItemCommand::None) {
+                mm << QLatin1String("None");
+            } else {
+                if (mergeMode & CreateItemCommand::GID) {
+                    mm << QLatin1String("GID");
+                }
+                if (mergeMode & CreateItemCommand::RemoteID) {
+                    mm << QLatin1String("Remote ID");
+                }
+                if (mergeMode & CreateItemCommand::Silent) {
+                    mm << QLatin1String("Silent");
+                }
+            }
+            return mm;
+        }());
+        blck.write("Collection", collection);
+        blck.write("MimeType", mimeType);
+        blck.write("GID", gid);
+        blck.write("Remote ID", remoteId);
+        blck.write("Remote Revision", remoteRev);
+        blck.write("Size", itemSize);
+        blck.write("Time", dateTime);
+        blck.write("Tags", tags);
+        blck.write("Added Tags", addedTags);
+        blck.write("Removed Tags", removedTags);
+        blck.write("Flags", flags);
+        blck.write("Added Flags", addedFlags);
+        blck.write("Removed Flags", removedFlags);
+        blck.write("Removed Parts", removedParts);
+        blck.beginBlock("Parts");
+        for (const PartMetaData &md : parts) {
+            blck.beginBlock(md.name());
+            blck.write("Size", md.size());
+            blck.write("Version", md.version());
+            blck.endBlock();
+        }
+        blck.endBlock();
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CreateItemCommandPrivate(*this);
+    }
+
     Scope collection;
     QString mimeType;
     QString gid;
@@ -1498,7 +1836,7 @@ CreateItemCommand::CreateItemCommand()
 CreateItemCommand::CreateItemCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(CreateItemCommandPrivate));
+    assert(d_func()->commandType == Command::CreateItem);
 }
 
 void CreateItemCommand::setMergeModes(const MergeModes &mode)
@@ -1668,6 +2006,12 @@ CreateItemResponse::CreateItemResponse()
 {
 }
 
+CreateItemResponse::CreateItemResponse(const Command &other)
+    : Response(other)
+{
+    assert(d_func()->commandType == (Command::CreateItem | Command::_ResponseBit));
+}
+
 
 
 
@@ -1691,6 +2035,11 @@ public:
         , items(items)
         , dest(dest)
     {}
+    CopyItemsCommandPrivate(const CopyItemsCommandPrivate &other)
+        : CommandPrivate(other)
+        , items(other.items)
+        , dest(other.dest)
+    {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
@@ -1702,13 +2051,26 @@ public:
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         stream << items
-                      << dest;
+               << dest;
     }
 
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> items
-                      >> dest;
+               >> dest;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        DebugBlock blck(dbg);
+        blck.write("Command", commandType);
+        blck.write("Items", items);
+        blck.write("Destination", dest);
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CopyItemsCommandPrivate(*this);
     }
 
     Scope items;
@@ -1733,7 +2095,7 @@ CopyItemsCommand::CopyItemsCommand(const Scope &items, const Scope &dest)
 CopyItemsCommand::CopyItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(CopyItemsCommandPrivate));
+    assert(d_func()->commandType == Command::CopyItems);
 }
 
 Scope CopyItemsCommand::items() const
@@ -1776,7 +2138,7 @@ CopyItemsResponse::CopyItemsResponse()
 CopyItemsResponse::CopyItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::CopyItems | Command::_ResponseBit));
 }
 
 
@@ -1800,6 +2162,10 @@ public:
         : CommandPrivate(Command::DeleteItems)
         , items(items)
     {}
+    DeleteItemsCommandPrivate(const DeleteItemsCommandPrivate &other)
+        : CommandPrivate(other)
+        , items(other.items)
+    {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
@@ -1815,6 +2181,17 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> items;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        dbg << "{ Command: " << commandType << "\n"
+            << "  Items: " << items << " }";
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new DeleteItemsCommandPrivate(*this);
     }
 
     Scope items;
@@ -1838,7 +2215,7 @@ DeleteItemsCommand::DeleteItemsCommand(const Scope &items)
 DeleteItemsCommand::DeleteItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(DeleteItemsCommandPrivate));
+    assert(d_func()->commandType == Command::DeleteItems);
 }
 
 Scope DeleteItemsCommand::items() const
@@ -1876,7 +2253,7 @@ DeleteItemsResponse::DeleteItemsResponse()
 DeleteItemsResponse::DeleteItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::DeleteItems | Command::_ResponseBit));
 }
 
 
@@ -1901,6 +2278,14 @@ public:
         , right(-1)
         , side(-1)
     {}
+    FetchRelationsCommandPrivate(const FetchRelationsCommandPrivate &other)
+        : CommandPrivate(other)
+        , left(other.left)
+        , right(other.right)
+        , side(other.side)
+        , type(other.type)
+        , resource(other.resource)
+    {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
@@ -1915,19 +2300,34 @@ public:
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         stream << left
-                      << right
-                      << side
-                      << type
-                      << resource;
+               << right
+               << side
+               << type
+               << resource;
     }
 
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> left
-                      >> right
-                      >> side
-                      >> type
-                      >> resource;
+               >> right
+               >> side
+               >> type
+               >> resource;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        dbg << "{ Command: " << commandType << "\n"
+            << "  Left: " << left << "\n"
+            << "  Right: " << right << "\n"
+            << "  Side: " << side << "\n"
+            << "  Type: " << type << "\n"
+            << "  Resource: " << resource << " }";
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchRelationsCommandPrivate(*this);
     }
 
     qint64 left;
@@ -1950,7 +2350,7 @@ FetchRelationsCommand::FetchRelationsCommand()
 FetchRelationsCommand::FetchRelationsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchRelationsCommandPrivate));
+    assert(d_func()->commandType == Command::FetchRelations);
 }
 
 void FetchRelationsCommand::setLeft(qint64 left)
@@ -2033,6 +2433,13 @@ public:
         , right(right)
         , type(type)
     {}
+    FetchRelationsResponsePrivate(const FetchRelationsResponsePrivate &other)
+        : ResponsePrivate(other)
+        , left(other.left)
+        , right(other.right)
+        , type(other.type)
+        , remoteId(other.remoteId)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -2046,17 +2453,22 @@ public:
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         stream << left
-                      << right
-                      << type
-                      << remoteId;
+               << right
+               << type
+               << remoteId;
     }
 
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> left
-                      >> right
-                      >> type
-                      >> remoteId;
+               >> right
+               >> type
+               >> remoteId;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchRelationsResponsePrivate(*this);
     }
 
     qint64 left;
@@ -2083,7 +2495,7 @@ FetchRelationsResponse::FetchRelationsResponse(qint64 left, qint64 right, const 
 FetchRelationsResponse::FetchRelationsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchRelationsResponsePrivate));
+    assert(d_func()->commandType == (Command::FetchRelations | Command::_ResponseBit));
 }
 
 qint64 FetchRelationsResponse::left() const
@@ -2142,6 +2554,10 @@ public:
         : CommandPrivate(Command::FetchTags)
         , scope(scope)
     {}
+    FetchTagsCommandPrivate(const FetchTagsCommandPrivate &other)
+        : CommandPrivate(other)
+        , scope(other.scope)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -2157,6 +2573,17 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> scope;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        dbg << "{ Command: " << commandType << "\n"
+            << "  Tags: " << scope << " }";
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchTagsCommandPrivate(*this);
     }
 
     Scope scope;
@@ -2180,7 +2607,7 @@ FetchTagsCommand::FetchTagsCommand(const Scope &scope)
 FetchTagsCommand::FetchTagsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchTagsCommandPrivate));
+    assert(d_func()->commandType == Command::FetchTags);
 }
 
 Scope FetchTagsCommand::scope() const
@@ -2221,6 +2648,15 @@ public:
         , id(id)
         , parentId(-1)
     {}
+    FetchTagsResponsePrivate(const FetchTagsResponsePrivate &other)
+        : ResponsePrivate(other)
+        , id(other.id)
+        , parentId(other.parentId)
+        , gid(other.gid)
+        , type(other.type)
+        , remoteId(other.remoteId)
+        , attributes(other.attributes)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -2253,6 +2689,11 @@ public:
                >> attributes;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchTagsResponsePrivate(*this);
+    }
+
     qint64 id;
     qint64 parentId;
     QString gid;
@@ -2279,7 +2720,7 @@ FetchTagsResponse::FetchTagsResponse(qint64 id)
 FetchTagsResponse::FetchTagsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchTagsResponsePrivate));
+    assert(d_func()->commandType == (Command::FetchTags | Command::_ResponseBit));
 }
 
 qint64 FetchTagsResponse::id() const
@@ -2370,6 +2811,12 @@ public:
         , fetchScope(fetchScope)
     {}
 
+    FetchItemsCommandPrivate(const FetchItemsCommandPrivate &other)
+        : CommandPrivate(other)
+        , scope(other.scope)
+        , fetchScope(other.fetchScope)
+    {}
+
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
@@ -2387,6 +2834,15 @@ public:
     {
         stream >> scope
                >> fetchScope;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchItemsCommandPrivate(*this);
     }
 
     Scope scope;
@@ -2411,7 +2867,7 @@ FetchItemsCommand::FetchItemsCommand(const Scope &scope, const FetchScope &fetch
 FetchItemsCommand::FetchItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchItemsCommandPrivate));
+    assert(d_func()->commandType == Command::FetchItems);
 }
 
 Scope FetchItemsCommand::scope() const
@@ -2460,6 +2916,25 @@ public:
         , collectionId(-1)
         , size(0)
         , revision(0)
+    {}
+    FetchItemsResponsePrivate(const FetchItemsResponsePrivate &other)
+        : ResponsePrivate(other)
+        , remoteId(other.remoteId)
+        , remoteRev(other.remoteRev)
+        , gid(other.gid)
+        , mimeType(other.mimeType)
+        , time(other.time)
+        , flags(other.flags)
+        , tags(other.tags)
+        , virtRefs(other.virtRefs)
+        , relations(other.relations)
+        , ancestors(other.ancestors)
+        , parts(other.parts)
+        , cachedParts(other.cachedParts)
+        , id(other.id)
+        , collectionId(other.collectionId)
+        , size(other.size)
+        , revision(other.revision)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -2523,6 +2998,11 @@ public:
                >> cachedParts;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchItemsResponsePrivate(*this);
+    }
+
     QString remoteId;
     QString remoteRev;
     QString gid;
@@ -2559,7 +3039,7 @@ FetchItemsResponse::FetchItemsResponse(qint64 id)
 FetchItemsResponse::FetchItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchItemsResponsePrivate));
+    assert(d_func()->commandType == (Command::FetchItems | Command::_ResponseBit));
 }
 
 qint64 FetchItemsResponse::id() const
@@ -2741,6 +3221,12 @@ public:
         , dest(dest)
         , action(action)
     {}
+    LinkItemsCommandPrivate(const LinkItemsCommandPrivate &other)
+        : CommandPrivate(other)
+        , items(other.items)
+        , dest(other.dest)
+        , action(other.action)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -2762,6 +3248,19 @@ public:
         stream >> action
                >> items
                >> dest;
+    }
+
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        dbg << "{ Command: " << commandType << "\n"
+            << "  Action: " << (action == LinkItemsCommand::Link ? "Link" : "Unlink") << "\n"
+            << "  Items: " << items << "\n"
+            << "  Destination: " << dest << " }";
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new LinkItemsCommandPrivate(*this);
     }
 
     Scope items;
@@ -2787,7 +3286,7 @@ LinkItemsCommand::LinkItemsCommand(Action action, const Scope &items, const Scop
 LinkItemsCommand::LinkItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(LinkItemsCommandPrivate));
+    assert(d_func()->commandType == Command::LinkItems);
 }
 
 LinkItemsCommand::Action LinkItemsCommand::action() const
@@ -2833,7 +3332,7 @@ LinkItemsResponse::LinkItemsResponse()
 LinkItemsResponse::LinkItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::LinkItems | Command::_ResponseBit));
 }
 
 
@@ -2861,6 +3360,27 @@ public:
         , noResponse(false)
         , notify(true)
         , modifiedParts(ModifyItemsCommand::None)
+    {}
+    ModifyItemsCommandPrivate(const ModifyItemsCommandPrivate &other)
+        : CommandPrivate(other)
+        , items(other.items)
+        , flags(other.flags)
+        , addedFlags(other.addedFlags)
+        , removedFlags(other.removedFlags)
+        , tags(other.tags)
+        , addedTags(other.addedTags)
+        , removedTags(other.removedTags)
+        , remoteId(other.remoteId)
+        , remoteRev(other.remoteRev)
+        , gid(other.gid)
+        , removedParts(other.removedParts)
+        , parts(other.parts)
+        , size(other.size)
+        , oldRevision(other.oldRevision)
+        , dirty(other.dirty)
+        , invalidate(other.invalidate)
+        , noResponse(other.noResponse)
+        , notify(other.notify)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -2977,6 +3497,97 @@ public:
         }
     }
 
+    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    {
+        QStringList mps;
+        if (modifiedParts & ModifyItemsCommand::Flags) {
+            mps << QLatin1String("Flags");
+        }
+        if (modifiedParts & ModifyItemsCommand::AddedFlags) {
+            mps << QLatin1String("Added Flags");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemovedFlags) {
+            mps << QLatin1String("Removed Flags");
+        }
+        if (modifiedParts & ModifyItemsCommand::Tags) {
+            mps << QLatin1String("Tags");
+        }
+        if (modifiedParts & ModifyItemsCommand::AddedTags) {
+            mps << QLatin1String("Added Tags");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemovedTags) {
+            mps << QLatin1String("Removed Tags");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemoteID) {
+            mps << QLatin1String("Remote ID");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemoteRevision) {
+            mps << QLatin1String("Remote Revision");
+        }
+        if (modifiedParts & ModifyItemsCommand::GID) {
+            mps << QLatin1String("GID");
+        }
+        if (modifiedParts & ModifyItemsCommand::Size) {
+            mps << QLatin1String("Size");
+        }
+        if (modifiedParts & ModifyItemsCommand::Parts) {
+            mps << QLatin1String("Parts");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemovedParts) {
+            mps << QLatin1String("Removed Parts");
+        }
+
+        dbg << "{ Command: " << commandType << "\n"
+            << "  Modified Parts: " << mps << "\n"
+            << "  Items: " << items << "\n"
+            << "  Old Revision: " << oldRevision << "\n"
+            << "  Dirty: " << dirty << "\n"
+            << "  Invalidate Cache: " << invalidate << "\n"
+            << "  No Response: " << noResponse << "\n"
+            << "  Notify: " << notify << "\n";
+        if (modifiedParts & ModifyItemsCommand::Flags) {
+            dbg << "  Flags: " << flags << "\n";
+        }
+        if (modifiedParts & ModifyItemsCommand::AddedFlags) {
+            dbg << "  Added Flags: " << addedFlags << "\n";
+        }
+        if (modifiedParts & ModifyItemsCommand::RemovedFlags) {
+            dbg << "  Removed Flags: " << removedFlags << "\n";
+        }
+        if (modifiedParts & ModifyItemsCommand::Tags) {
+            dbg << "  Tags: " << tags << "\n";
+        }
+        if (modifiedParts & ModifyItemsCommand::AddedTags) {
+            mps << QLatin1String("Added Tags");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemovedTags) {
+            mps << QLatin1String("Removed Tags");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemoteID) {
+            mps << QLatin1String("Remote ID");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemoteRevision) {
+            mps << QLatin1String("Remote Revision");
+        }
+        if (modifiedParts & ModifyItemsCommand::GID) {
+            mps << QLatin1String("GID");
+        }
+        if (modifiedParts & ModifyItemsCommand::Size) {
+            mps << QLatin1String("Size");
+        }
+        if (modifiedParts & ModifyItemsCommand::Parts) {
+            mps << QLatin1String("Parts");
+        }
+        if (modifiedParts & ModifyItemsCommand::RemovedParts) {
+            mps << QLatin1String("Removed Parts");
+        }
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ModifyItemsCommandPrivate(*this);
+    }
+
     Scope items;
     QVector<QByteArray> flags;
     QVector<QByteArray> addedFlags;
@@ -3018,7 +3629,7 @@ ModifyItemsCommand::ModifyItemsCommand(const Scope &items)
 ModifyItemsCommand::ModifyItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(ModifyItemsCommandPrivate));
+    assert(d_func()->commandType == Command::ModifyItems);
 }
 
 ModifyItemsCommand::ModifiedParts ModifyItemsCommand::modifiedParts() const
@@ -3233,6 +3844,11 @@ public:
         , id(id)
         , newRevision(newRevision)
     {}
+    ModifyItemsResponsePrivate(const ModifyItemsResponsePrivate &other)
+        : ResponsePrivate(other)
+        , id(other.id)
+        , newRevision(other.newRevision)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -3251,6 +3867,11 @@ public:
     {
         stream >> id
                >> newRevision;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ModifyItemsResponsePrivate(*this);
     }
 
     qint64 id;
@@ -3275,7 +3896,7 @@ ModifyItemsResponse::ModifyItemsResponse(qint64 id, int newRevision)
 ModifyItemsResponse::ModifyItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ModifyItemsResponsePrivate));
+    assert(d_func()->commandType == (Command::ModifyItems | Command::_ResponseBit));
 }
 
 qint64 ModifyItemsResponse::id() const
@@ -3321,6 +3942,11 @@ public:
         , items(items)
         , dest(dest)
     {}
+    MoveItemsCommandPrivate(const MoveItemsCommandPrivate &other)
+        : CommandPrivate(other)
+        , items(other.items)
+        , dest(other.dest)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -3339,6 +3965,11 @@ public:
     {
         stream >> items
                >> dest;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new MoveItemsCommandPrivate(*this);
     }
 
     Scope items;
@@ -3363,7 +3994,7 @@ MoveItemsCommand::MoveItemsCommand(const Scope &items, const Scope &dest)
 MoveItemsCommand::MoveItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(MoveItemsCommandPrivate));
+    assert(d_func()->commandType == Command::MoveItems);
 }
 
 Scope MoveItemsCommand::items() const
@@ -3403,7 +4034,7 @@ MoveItemsResponse::MoveItemsResponse()
 MoveItemsResponse::MoveItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::MoveItems | Command::_ResponseBit));
 }
 
 
@@ -3427,6 +4058,21 @@ public:
         , index(Tristate::Undefined)
         , enabled(true)
         , isVirtual(false)
+    {}
+    CreateCollectionCommandPrivate(const CreateCollectionCommandPrivate &other)
+        : CommandPrivate(other)
+        , parent(other.parent)
+        , name(other.name)
+        , remoteId(other.remoteId)
+        , remoteRev(other.remoteRev)
+        , mimeTypes(other.mimeTypes)
+        , cachePolicy(other.cachePolicy)
+        , attributes(other.attributes)
+        , sync(other.sync)
+        , display(other.display)
+        , index(other.index)
+        , enabled(other.enabled)
+        , isVirtual(other.isVirtual)
     {}
 
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
@@ -3478,6 +4124,11 @@ public:
             && COMPARE(attributes);
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CreateCollectionCommandPrivate(*this);
+    }
+
     Scope parent;
     QString name;
     QString remoteId;
@@ -3505,7 +4156,7 @@ CreateCollectionCommand::CreateCollectionCommand()
 CreateCollectionCommand::CreateCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(CreateCollectionCommandPrivate));
+    assert(d_func()->commandType == Command::CreateCollection);
 }
 
 void CreateCollectionCommand::setParent(const Scope &parent)
@@ -3646,7 +4297,7 @@ CreateCollectionResponse::CreateCollectionResponse()
 CreateCollectionResponse::CreateCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::CreateCollection | Command::_ResponseBit));
 }
 
 
@@ -3669,6 +4320,11 @@ public:
         , collection(collection)
         , dest(dest)
     {}
+    CopyCollectionCommandPrivate(const CopyCollectionCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+        , dest(other.dest)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -3687,6 +4343,11 @@ public:
     {
         stream >> collection
                >> dest;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CopyCollectionCommandPrivate(*this);
     }
 
     Scope collection;
@@ -3712,7 +4373,7 @@ CopyCollectionCommand::CopyCollectionCommand(const Scope &collection,
 CopyCollectionCommand::CopyCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(CopyCollectionCommandPrivate));
+    assert(d_func()->commandType == Command::CopyCollection);
 }
 
 Scope CopyCollectionCommand::collection() const
@@ -3753,7 +4414,7 @@ CopyCollectionResponse::CopyCollectionResponse()
 CopyCollectionResponse::CopyCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::CopyCollection | Command::_ResponseBit));
 }
 
 
@@ -3774,6 +4435,10 @@ public:
         : CommandPrivate(Command::DeleteCollection)
         , collection(col)
     {}
+    DeleteCollectionCommandPrivate(const DeleteCollectionCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -3789,6 +4454,11 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> collection;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new DeleteCollectionCommandPrivate(*this);
     }
 
     Scope collection;
@@ -3812,7 +4482,7 @@ DeleteCollectionCommand::DeleteCollectionCommand(const Scope &collection)
 DeleteCollectionCommand::DeleteCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(DeleteCollectionCommandPrivate));
+    assert(d_func()->commandType == Command::DeleteCollection);
 }
 
 Scope DeleteCollectionCommand::collection() const
@@ -3849,7 +4519,7 @@ DeleteCollectionResponse::DeleteCollectionResponse()
 DeleteCollectionResponse::DeleteCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::DeleteCollection | Command::_ResponseBit));
 }
 
 
@@ -3870,6 +4540,10 @@ public:
         : CommandPrivate(Command::FetchCollectionStats)
         , collection(collection)
     {}
+    FetchCollectionStatsCommandPrivate(const FetchCollectionStatsCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -3885,6 +4559,11 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> collection;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchCollectionStatsCommandPrivate(*this);
     }
 
     Scope collection;
@@ -3908,7 +4587,7 @@ FetchCollectionStatsCommand::FetchCollectionStatsCommand(const Scope &collection
 FetchCollectionStatsCommand::FetchCollectionStatsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchCollectionStatsCommandPrivate));
+    assert(d_func()->commandType == Command::FetchCollectionStats);
 }
 
 Scope FetchCollectionStatsCommand::collection() const
@@ -3952,6 +4631,12 @@ public:
         , unseen(unseen)
         , size(size)
     {}
+    FetchCollectionStatsResponsePrivate(const FetchCollectionStatsResponsePrivate &other)
+        : ResponsePrivate(other)
+        , count(other.count)
+        , unseen(other.unseen)
+        , size(other.size)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -3973,6 +4658,11 @@ public:
         stream >> count
                >> unseen
                >> size;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchCollectionStatsResponsePrivate(*this);
     }
 
     qint64 count;
@@ -4000,7 +4690,7 @@ FetchCollectionStatsResponse::FetchCollectionStatsResponse(qint64 count,
 FetchCollectionStatsResponse::FetchCollectionStatsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchCollectionStatsResponsePrivate));
+    assert(d_func()->commandType == (Command::FetchCollectionStats || Command::_ResponseBit));
 }
 
 qint64 FetchCollectionStatsResponse::count() const
@@ -4058,6 +4748,20 @@ public:
         , index(false)
         , stats(false)
     {}
+    FetchCollectionsCommandPrivate(const FetchCollectionsCommandPrivate &other)
+        : CommandPrivate(other)
+        , collections(other.collections)
+        , resource(other.resource)
+        , mimeTypes(other.mimeTypes)
+        , ancestorsAttributes(other.ancestorsAttributes)
+        , depth(other.depth)
+        , ancestorsDepth(other.ancestorsDepth)
+        , enabled(other.enabled)
+        , sync(other.sync)
+        , display(other.display)
+        , index(other.index)
+        , stats(other.stats)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -4105,6 +4809,11 @@ public:
                >> stats;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchCollectionsCommandPrivate(*this);
+    }
+
     Scope collections;
     QString resource;
     QStringList mimeTypes;
@@ -4136,7 +4845,7 @@ FetchCollectionsCommand::FetchCollectionsCommand(const Scope &collections)
 FetchCollectionsCommand::FetchCollectionsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchCollectionsCommandPrivate));
+    assert(d_func()->commandType == Command::FetchCollections);
 }
 
 Scope FetchCollectionsCommand::collections() const
@@ -4272,6 +4981,27 @@ public:
         , referenced(false)
         , enabled(true)
     {}
+    FetchCollectionsResponsePrivate(const FetchCollectionsResponsePrivate &other)
+        : ResponsePrivate(other)
+        , name(other.name)
+        , remoteId(other.remoteId)
+        , remoteRev(other.remoteRev)
+        , resource(other.resource)
+        , mimeTypes(other.mimeTypes)
+        , stats(other.stats)
+        , searchQuery(other.searchQuery)
+        , searchCols(other.searchCols)
+        , ancestors(other.ancestors)
+        , cachePolicy(other.cachePolicy)
+        , attributes(other.attributes)
+        , id(other.id)
+        , parentId(other.parentId)
+        , display(other.display)
+        , sync(other.sync)
+        , index(other.index)
+        , isVirtual(other.isVirtual)
+        , referenced(other.referenced)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -4337,6 +5067,11 @@ public:
                >> enabled;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new FetchCollectionsResponsePrivate(*this);
+    }
+
     QString name;
     QString remoteId;
     QString remoteRev;
@@ -4376,7 +5111,7 @@ FetchCollectionsResponse::FetchCollectionsResponse(qint64 id)
 FetchCollectionsResponse::FetchCollectionsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(FetchCollectionsResponsePrivate));
+    assert(d_func()->commandType == (Command::FetchCollections | Command::_ResponseBit));
 }
 
 qint64 FetchCollectionsResponse::id() const
@@ -4589,6 +5324,28 @@ public:
         , persistentSearchRecursive(false)
         , modifiedParts(ModifyCollectionCommand::None)
     {}
+    ModifyCollectionCommandPrivate(const ModifyCollectionCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+        , mimeTypes(other.mimeTypes)
+        , cachePolicy(other.cachePolicy)
+        , name(other.name)
+        , remoteId(other.remoteId)
+        , remoteRev(other.remoteRev)
+        , persistentSearchQuery(other.persistentSearchQuery)
+        , persistentSearchCols(other.persistentSearchCols)
+        , removedAttributes(other.removedAttributes)
+        , attributes(other.attributes)
+        , parentId(other.parentId)
+        , sync(other.sync)
+        , display(other.display)
+        , index(other.index)
+        , enabled(other.enabled)
+        , referenced(other.referenced)
+        , persistentSearchRemote(other.persistentSearchRemote)
+        , persistentSearchRecursive(other.persistentSearchRecursive)
+        , modifiedParts(other.modifiedParts)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -4699,6 +5456,11 @@ public:
         }
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ModifyCollectionCommandPrivate(*this);
+    }
+
     Scope collection;
     QStringList mimeTypes;
     Protocol::CachePolicy cachePolicy;
@@ -4739,7 +5501,7 @@ ModifyCollectionCommand::ModifyCollectionCommand(const Scope &collection)
 ModifyCollectionCommand::ModifyCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(ModifyCollectionCommandPrivate));
+    assert(d_func()->commandType == Command::ModifyCollection);
 }
 
 Scope ModifyCollectionCommand::collection() const
@@ -4951,7 +5713,7 @@ ModifyCollectionResponse::ModifyCollectionResponse()
 ModifyCollectionResponse::ModifyCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::ModifyCollection | Command::_ResponseBit));
 }
 
 
@@ -4974,6 +5736,11 @@ public:
         , collection(collection)
         , dest(dest)
     {}
+    MoveCollectionCommandPrivate(const MoveCollectionCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+        , dest(other.dest)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -4992,6 +5759,11 @@ public:
     {
         stream >> collection
                >> dest;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new MoveCollectionCommandPrivate(*this);
     }
 
     Scope collection;
@@ -5017,7 +5789,7 @@ MoveCollectionCommand::MoveCollectionCommand(const Scope &collection,
 MoveCollectionCommand::MoveCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(MoveCollectionCommandPrivate));
+    assert(d_func()->commandType == Command::MoveCollection);
 }
 
 Scope MoveCollectionCommand::collection() const
@@ -5058,7 +5830,7 @@ MoveCollectionResponse::MoveCollectionResponse()
 MoveCollectionResponse::MoveCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::MoveCollection | Command::_ResponseBit));
 }
 
 
@@ -5079,6 +5851,10 @@ public:
         : CommandPrivate(Command::SelectCollection)
         , collection(collection)
     {}
+    SelectCollectionCommandPrivate(const SelectCollectionCommandPrivate &other)
+        : CommandPrivate(other)
+        , collection(other.collection)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -5094,6 +5870,11 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> collection;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new SelectCollectionCommandPrivate(*this);
     }
 
     Scope collection;
@@ -5117,7 +5898,7 @@ SelectCollectionCommand::SelectCollectionCommand(const Scope &collection)
 SelectCollectionCommand::SelectCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(SelectCollectionCommandPrivate));
+    assert(d_func()->commandType == Command::SelectCollection);
 }
 
 Scope SelectCollectionCommand::collection() const
@@ -5153,7 +5934,7 @@ SelectCollectionResponse::SelectCollectionResponse()
 SelectCollectionResponse::SelectCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::SelectCollection | Command::_ResponseBit));
 }
 
 
@@ -5174,6 +5955,15 @@ public:
         : CommandPrivate(Command::Search)
         , recursive(false)
         , remote(false)
+    {}
+    SearchCommandPrivate(const SearchCommandPrivate &other)
+        : CommandPrivate(other)
+        , mimeTypes(other.mimeTypes)
+        , collections(other.collections)
+        , query(other.query)
+        , fetchScope(other.fetchScope)
+        , recursive(other.recursive)
+        , remote(other.remote)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -5206,6 +5996,11 @@ public:
                >> remote;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new SearchCommandPrivate(*this);
+    }
+
     QStringList mimeTypes;
     QVector<qint64> collections;
     QString query;
@@ -5227,7 +6022,7 @@ SearchCommand::SearchCommand()
 SearchCommand::SearchCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(SearchCommandPrivate));
+    assert(d_func()->commandType == Command::Search);
 }
 
 void SearchCommand::setMimeTypes(const QStringList &mimeTypes)
@@ -5312,7 +6107,7 @@ SearchResponse::SearchResponse()
 SearchResponse::SearchResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::Search | Command::_ResponseBit));
 }
 
 
@@ -5337,6 +6132,12 @@ public:
         , result(result)
         , collectionId(collectionId)
     {}
+    SearchResultCommandPrivate(const SearchResultCommandPrivate &other)
+        : CommandPrivate(other)
+        , searchId(other.searchId)
+        , result(other.result)
+        , collectionId(other.collectionId)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -5358,6 +6159,11 @@ public:
         stream >> searchId
                >> collectionId
                >> result;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new SearchResultCommandPrivate(*this);
     }
 
     QByteArray searchId;
@@ -5385,7 +6191,7 @@ SearchResultCommand::SearchResultCommand(const QByteArray &searchId,
 SearchResultCommand::SearchResultCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(SearchResultCommandPrivate));
+    assert(d_func()->commandType == Command::SearchResult);
 }
 
 QByteArray SearchResultCommand::searchId() const
@@ -5433,7 +6239,7 @@ SearchResultResponse::SearchResultResponse()
 SearchResultResponse::SearchResultResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::SearchResult | Command::_ResponseBit));
 }
 
 
@@ -5454,6 +6260,15 @@ public:
         : CommandPrivate(Command::StoreSearch)
         , remote(false)
         , recursive(false)
+    {}
+    StoreSearchCommandPrivate(const StoreSearchCommandPrivate &other)
+        : CommandPrivate(other)
+        , name(other.name)
+        , query(other.query)
+        , mimeTypes(other.mimeTypes)
+        , queryCols(other.queryCols)
+        , remote(other.remote)
+        , recursive(other.recursive)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -5486,6 +6301,11 @@ public:
                >> recursive;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new StoreSearchCommandPrivate(*this);
+    }
+
     QString name;
     QString query;
     QStringList mimeTypes;
@@ -5507,7 +6327,7 @@ StoreSearchCommand::StoreSearchCommand()
 StoreSearchCommand::StoreSearchCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(StoreSearchCommandPrivate));
+    assert(d_func()->commandType == Command::StoreSearch);
 }
 
 void StoreSearchCommand::setName(const QString &name)
@@ -5593,7 +6413,7 @@ StoreSearchResponse::StoreSearchResponse()
 StoreSearchResponse::StoreSearchResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::StoreSearch | Command::_ResponseBit));
 }
 
 
@@ -5614,6 +6434,15 @@ public:
         : CommandPrivate(Command::CreateTag)
         , parentId(-1)
         , merge(false)
+    {}
+    CreateTagCommandPrivate(const CreateTagCommandPrivate &other)
+        : CommandPrivate(other)
+        , gid(other.gid)
+        , remoteId(other.remoteId)
+        , type(other.type)
+        , attributes(other.attributes)
+        , parentId(other.parentId)
+        , merge(other.merge)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -5647,6 +6476,11 @@ public:
                >> merge;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CreateTagCommandPrivate(*this);
+    }
+
     QString gid;
     QString remoteId;
     QString type;
@@ -5668,7 +6502,7 @@ CreateTagCommand::CreateTagCommand()
 CreateTagCommand::CreateTagCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(CreateTagCommandPrivate));
+    assert(d_func()->commandType == Command::CreateTag);
 }
 
 void CreateTagCommand::setGid(const QString &gid)
@@ -5754,7 +6588,7 @@ CreateTagResponse::CreateTagResponse()
 CreateTagResponse::CreateTagResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::CreateTag | Command::_ResponseBit));
 }
 
 
@@ -5776,6 +6610,10 @@ public:
         : CommandPrivate(Command::DeleteTag)
         , tag(tag)
     {}
+    DeleteTagCommandPrivate(const DeleteTagCommandPrivate &other)
+        : CommandPrivate(other)
+        , tag(other.tag)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -5791,6 +6629,11 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> tag;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new DeleteTagCommandPrivate(*this);
     }
 
     Scope tag;
@@ -5814,7 +6657,7 @@ DeleteTagCommand::DeleteTagCommand(const Scope &tag)
 DeleteTagCommand::DeleteTagCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(DeleteTagCommandPrivate));
+    assert(d_func()->commandType == Command::DeleteTag);
 }
 
 Scope DeleteTagCommand::tag() const
@@ -5851,7 +6694,7 @@ DeleteTagResponse::DeleteTagResponse()
 DeleteTagResponse::DeleteTagResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::DeleteTag | Command::_ResponseBit));
 }
 
 
@@ -5875,6 +6718,16 @@ public:
         , tagId(tagId)
         , parentId(-1)
         , modifiedParts(ModifyTagCommand::None)
+    {}
+    ModifyTagCommandPrivate(const ModifyTagCommandPrivate &other)
+        : CommandPrivate(other)
+        , type(other.type)
+        , remoteId(other.remoteId)
+        , removedAttributes(other.removedAttributes)
+        , attributes(other.attributes)
+        , tagId(other.tagId)
+        , parentId(other.parentId)
+        , modifiedParts(other.modifiedParts)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -5930,6 +6783,11 @@ public:
         }
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ModifyTagCommandPrivate(*this);
+    }
+
     QString type;
     QString remoteId;
     QSet<QByteArray> removedAttributes;
@@ -5957,7 +6815,7 @@ ModifyTagCommand::ModifyTagCommand(qint64 id)
 ModifyTagCommand::ModifyTagCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(ModifyTagCommandPrivate));
+    assert(d_func()->commandType == Command::ModifyTag);
 }
 
 qint64 ModifyTagCommand::tagId() const
@@ -6050,7 +6908,7 @@ ModifyTagResponse::ModifyTagResponse()
 ModifyTagResponse::ModifyTagResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::ModifyTag | Command::_ResponseBit));
 }
 
 
@@ -6072,6 +6930,13 @@ public:
         : CommandPrivate(Command::ModifyRelation)
         , left(-1)
         , right(-1)
+    {}
+    ModifyRelationCommandPrivate(const ModifyRelationCommandPrivate &other)
+        : CommandPrivate(other)
+        , type(other.type)
+        , remoteId(other.remoteId)
+        , left(other.left)
+        , right(other.right)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -6099,6 +6964,11 @@ public:
                >> remoteId;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ModifyRelationCommandPrivate(*this);
+    }
+
     QString type;
     QString remoteId;
     qint64 left;
@@ -6118,7 +6988,7 @@ ModifyRelationCommand::ModifyRelationCommand()
 ModifyRelationCommand::ModifyRelationCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(ModifyRelationCommandPrivate));
+    assert(d_func()->commandType == Command::ModifyRelation);
 }
 
 void ModifyRelationCommand::setLeft(qint64 left)
@@ -6186,7 +7056,7 @@ ModifyRelationResponse::ModifyRelationResponse()
 ModifyRelationResponse::ModifyRelationResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::ModifyRelation | Command::_ResponseBit));
 }
 
 
@@ -6207,6 +7077,12 @@ public:
         : CommandPrivate(Command::RemoveRelations)
         , left(-1)
         , right(-1)
+    {}
+    RemoveRelationsCommandPrivate(const RemoveRelationsCommandPrivate &other)
+        : CommandPrivate(other)
+        , left(other.left)
+        , right(other.right)
+        , type(other.type)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
@@ -6231,6 +7107,11 @@ public:
                >> type;
     }
 
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new RemoveRelationsCommandPrivate(*this);
+    }
+
     qint64 left;
     qint64 right;
     QString type;
@@ -6249,7 +7130,7 @@ RemoveRelationsCommand::RemoveRelationsCommand()
 RemoveRelationsCommand::RemoveRelationsCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(RemoveRelationsCommandPrivate));
+    assert(d_func()->commandType == Command::RemoveRelations);
 }
 
 void RemoveRelationsCommand::setLeft(qint64 left)
@@ -6308,7 +7189,7 @@ RemoveRelationsResponse::RemoveRelationsResponse()
 RemoveRelationsResponse::RemoveRelationsResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::RemoveRelations | Command::_ResponseBit));
 }
 
 
@@ -6329,6 +7210,10 @@ public:
         : CommandPrivate(Command::SelectResource)
         , resourceId(resourceId)
     {}
+    SelectResourceCommandPrivate(const SelectResourceCommandPrivate &other)
+        : CommandPrivate(other)
+        , resourceId(other.resourceId)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -6344,6 +7229,11 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> resourceId;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new SelectResourceCommandPrivate(*this);
     }
 
     QString resourceId;
@@ -6367,7 +7257,7 @@ SelectResourceCommand::SelectResourceCommand(const QString &resourceId)
 SelectResourceCommand::SelectResourceCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(SelectResourceCommandPrivate));
+    assert(d_func()->commandType == Command::SelectResource);
 }
 
 QString SelectResourceCommand::resourceId() const
@@ -6404,7 +7294,7 @@ SelectResourceResponse::SelectResourceResponse()
 SelectResourceResponse::SelectResourceResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(ResponsePrivate));
+    assert(d_func()->commandType == (Command::SelectResource | Command::_ResponseBit));
 }
 
 
@@ -6429,6 +7319,12 @@ public:
         , externalFile(extFile)
         , expectedSize(expectedSize)
     {}
+    StreamPayloadCommandPrivate(const StreamPayloadCommandPrivate &other)
+        : CommandPrivate(other)
+        , payloadName(other.payloadName)
+        , externalFile(other.externalFile)
+        , expectedSize(other.expectedSize)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -6450,6 +7346,11 @@ public:
         stream >> payloadName
                >> expectedSize
                >> externalFile;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new StreamPayloadCommandPrivate(*this);
     }
 
     QByteArray payloadName;
@@ -6476,7 +7377,7 @@ StreamPayloadCommand::StreamPayloadCommand(const QByteArray &name, qint64 size,
 StreamPayloadCommand::StreamPayloadCommand(const Command &other)
     : Command(other)
 {
-    assert(typeid(*d_func()) == typeid(StreamPayloadCommandPrivate));
+    assert(d_func()->commandType == Command::StreamPayload);
 }
 
 void StreamPayloadCommand::setPayloadName(const QByteArray &name)
@@ -6540,6 +7441,11 @@ public:
         , data(data)
         , isExternal(isExternal)
     {}
+    StreamPayloadResponsePrivate(const StreamPayloadResponsePrivate &other)
+        : ResponsePrivate(other)
+        , data(other.data)
+        , isExternal(other.isExternal)
+    {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
@@ -6558,6 +7464,11 @@ public:
     {
         stream >> isExternal
                >> data;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new StreamPayloadResponsePrivate(*this);
     }
 
     QByteArray data;
@@ -6582,7 +7493,7 @@ StreamPayloadResponse::StreamPayloadResponse(const QByteArray &data, bool isExte
 StreamPayloadResponse::StreamPayloadResponse(const Command &other)
     : Response(other)
 {
-    assert(typeid(*d_func()) == typeid(StreamPayloadResponsePrivate));
+    assert(d_func()->commandType == (Command::StreamPayload | Command::_ResponseBit));
 }
 
 void StreamPayloadResponse::setIsExternal(bool isExternal)

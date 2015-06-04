@@ -294,3 +294,23 @@ QDataStream &operator>>(QDataStream &stream, Scope &scope)
     Q_ASSERT(false);
     return stream;
 }
+
+QDebug operator<<(QDebug dbg, const Scope &scope)
+{
+    switch (scope.scope()) {
+    case Scope::Uid:
+        return dbg.nospace() << "UID " << scope.uidSet();
+    case Scope::Rid:
+        dbg.nospace() << "RID ";
+        if (scope.ridContext() > -1) {
+            dbg.nospace() << "(context = " << scope.ridContext() << ") ";
+        }
+        return dbg << scope.ridSet();
+    case Scope::Gid:
+        return dbg.nospace() << "GID " << scope.gidSet();
+    case Scope::HierarchicalRid:
+        return dbg.nospace() << "HRID " << scope.ridChain();
+    default:
+        return dbg.nospace() << "Invalid scope";
+    }
+}
