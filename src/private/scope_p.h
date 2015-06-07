@@ -46,7 +46,7 @@ class ScopePrivate;
 class AKONADIPRIVATE_EXPORT Scope
 {
 public:
-    enum SelectionScope : char {
+    enum SelectionScope : uchar {
         Invalid = 0,
         Uid = 1 << 0,
         Rid = 1 << 1,

@@ -240,7 +240,7 @@ QString Scope::gid() const
 
 QDataStream &operator<<(QDataStream &stream, const Scope &scope)
 {
-    stream << static_cast<qint8>(scope.d->scope);
+    stream << static_cast<uchar>(scope.d->scope);
     switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;
@@ -270,7 +270,7 @@ QDataStream &operator>>(QDataStream &stream, Scope &scope)
     scope.d->ridChain.clear();
     scope.d->gidSet.clear();
 
-    qint8 c;
+    uchar c;
     stream >> c;
     scope.d->scope = static_cast<Scope::SelectionScope>(c);
     switch (scope.d->scope) {
