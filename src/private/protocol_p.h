@@ -241,6 +241,7 @@ friend class Class##Private;
 typedef QMap<QByteArray, QByteArray> Attributes;
 class Factory;
 
+class DebugBlock;
 class CommandPrivate;
 class AKONADIPRIVATE_EXPORT Command
 {
@@ -317,6 +318,7 @@ public:
     bool isResponse() const;
 
     QString debugString() const;
+    QString debugString(DebugBlock &blck) const;
 
 protected:
     explicit Command(CommandPrivate *dd);
@@ -441,6 +443,7 @@ public:
     void setFetch(FetchFlags attributes, bool fetch = true);
     bool fetch(FetchFlags flags) const;
 
+    void debugString(DebugBlock &blck) const;
 private:
     QSharedDataPointer<FetchScopePrivate> d;
 
@@ -518,6 +521,7 @@ public:
     void setLocalParts(const QStringList &parts);
     QStringList localParts() const;
 
+    void debugString(DebugBlock &blck) const;
 private:
     QSharedDataPointer<CachePolicyPrivate> d;
 
@@ -554,6 +558,7 @@ public:
     void setAttributes(const Attributes &attrs);
     Attributes attributes() const;
 
+    void debugString(DebugBlock &blck) const;
 private:
     QSharedDataPointer<AncestorPrivate> d;
 

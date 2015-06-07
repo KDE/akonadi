@@ -284,9 +284,8 @@ public:
         return new CommandPrivate(*this);
     }
 
-    virtual void debugString(QDebug &dbg) const
+    virtual void debugString(DebugBlock &blck) const
     {
-        DebugBlock blck(dbg);
         blck.write("Command", commandType);
     }
 
@@ -372,8 +371,15 @@ QString Command::debugString() const
 {
     QString out;
     QDebug dbg(&out);
-    d_func()->debugString(dbg.noquote());
+    DebugBlock blck(dbg);
+    d_func()->debugString(blck);
     return out;
+}
+
+QString Command::debugString(DebugBlock &blck) const
+{
+    d_func()->debugString(blck);
+    return QString();
 }
 
 QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command)
@@ -441,10 +447,9 @@ public:
         return new ResponsePrivate(*this);
     }
 
-    virtual void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    virtual void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        DebugBlock blck(dbg);
-        blck.write("Response", commandType);
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
         blck.write("Error Code", errorCode);
         blck.write("Error Msg", errorMsg);
     }
@@ -845,6 +850,16 @@ bool FetchScope::fetch(FetchFlags flags) const
     return d->fetchFlags & flags;
 }
 
+void FetchScope::debugString(DebugBlock &blck) const
+{
+    blck.write("Fetch Flags", d->fetchFlags);
+    blck.write("Requested Payloads", d->requestedPayloads);
+    blck.write("Tag Fetch Scope", d->tagFetchScope);
+    blck.write("Changed Since", d->changedSince);
+    blck.write("Ancestor Depth", d->ancestorDepth);
+    blck.write("Requested Parts", d->requestedParts);
+}
+
 QDataStream &operator<<(QDataStream &stream, const FetchScope &scope)
 {
     return stream << scope.d->requestedParts
@@ -1107,6 +1122,14 @@ QStringList CachePolicy::localParts() const
     return d->localParts;
 }
 
+void CachePolicy::debugString(DebugBlock &blck) const
+{
+    blck.write("Inherit", d->inherit);
+    blck.write("Interval", d->interval);
+    blck.write("Cache Timeout", d->cacheTimeout);
+    blck.write("Sync on Demand", d->syncOnDemand);
+    blck.write("Local Parts", d->localParts);
+}
 
 QDataStream &operator<<(QDataStream &stream, const CachePolicy &policy)
 {
@@ -1232,6 +1255,12 @@ Attributes Ancestor::attributes() const
     return d->attrs;
 }
 
+void Ancestor::debugString(DebugBlock &blck) const
+{
+    blck.write("ID", d->id);
+    blck.write("Remote ID", d->remoteId);
+    blck.write("Attributes", d->attrs);
+}
 
 QDataStream &operator<<(QDataStream &stream, const Ancestor &ancestor)
 {
@@ -1303,13 +1332,14 @@ public:
                >> protocol;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        dbg << "{ Response: " << (commandType & ~Command::_ResponseBit) << "\n"
-            << "  Error: " << errorCode << ", " << errorMsg << ", \n"
-            << "  Server: " << server << "\n"
-            << "  Protocol Version: " << protocol << "\n"
-            << "  Message: " << message << " }";
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("Error Code", errorCode);
+        blck.write("Error Msg", errorMsg);
+        blck.write("Server", server);
+        blck.write("Protocol Version", protocol);
+        blck.write("Message", message);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -1418,9 +1448,8 @@ public:
         stream >> sessionId;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        DebugBlock blck(dbg);
         blck.write("Command", commandType);
         blck.write("Session ID", sessionId);
     }
@@ -1553,9 +1582,8 @@ public:
         , mode(other.mode)
     {}
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        DebugBlock blck(dbg);
         blck.write("Command", commandType);
         blck.write("Mode", [this]() -> const char* {
             switch (mode) {
@@ -1755,9 +1783,8 @@ public:
                >> parts;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        DebugBlock blck(dbg);
         blck.write("Command", commandType);
         blck.write("Merge mode", [this]() {
             QStringList mm;
@@ -2060,9 +2087,8 @@ public:
                >> dest;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        DebugBlock blck(dbg);
         blck.write("Command", commandType);
         blck.write("Items", items);
         blck.write("Destination", dest);
@@ -2183,10 +2209,10 @@ public:
         stream >> items;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        dbg << "{ Command: " << commandType << "\n"
-            << "  Items: " << items << " }";
+        blck.write("Command", commandType);
+        blck.write("Items", items);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2315,14 +2341,14 @@ public:
                >> resource;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        dbg << "{ Command: " << commandType << "\n"
-            << "  Left: " << left << "\n"
-            << "  Right: " << right << "\n"
-            << "  Side: " << side << "\n"
-            << "  Type: " << type << "\n"
-            << "  Resource: " << resource << " }";
+        blck.write("Command", commandType);
+        blck.write("Left", left);
+        blck.write("Right", right);
+        blck.write("Side", side);
+        blck.write("Type", type);
+        blck.write("Resource", resource);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2466,6 +2492,15 @@ public:
                >> remoteId;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("Left", left);
+        blck.write("Right", right);
+        blck.write("Type", type);
+        blck.write("Remote ID", remoteId);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new FetchRelationsResponsePrivate(*this);
@@ -2575,10 +2610,10 @@ public:
         stream >> scope;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        dbg << "{ Command: " << commandType << "\n"
-            << "  Tags: " << scope << " }";
+        blck.write("Command", commandType);
+        blck.write("Tags", scope);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2687,6 +2722,17 @@ public:
                >> type
                >> remoteId
                >> attributes;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("ID", id);
+        blck.write("Parent ID", parentId);
+        blck.write("GID", gid);
+        blck.write("Type", type);
+        blck.write("Remote ID", remoteId);
+        blck.write("Attributes", attributes);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2836,8 +2882,13 @@ public:
                >> fetchScope;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
+        blck.write("Command", commandType);
+        blck.write("Items", scope);
+        blck.beginBlock("Fetch Scope");
+        fetchScope.debugString(blck);
+        blck.endBlock();
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2996,6 +3047,54 @@ public:
                >> ancestors
                >> parts
                >> cachedParts;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("ID", id);
+        blck.write("Revision", revision);
+        blck.write("Collection ID", collectionId);
+        blck.write("Remote ID", remoteId);
+        blck.write("Remote Revision", remoteRev);
+        blck.write("GID", gid);
+        blck.write("Size", size);
+        blck.write("Mimetype", mimeType);
+        blck.write("Time", time);
+        blck.write("Flags", flags);
+        blck.beginBlock("Tags");
+        for (const FetchTagsResponse &tag : tags) {
+            blck.beginBlock();
+            tag.debugString(blck);
+            blck.endBlock();
+        }
+        blck.endBlock();
+        blck.beginBlock("Relations");
+        for (const FetchRelationsResponse &rel : relations) {
+            blck.beginBlock();
+            rel.debugString(blck);
+            blck.endBlock();
+        }
+        blck.endBlock();
+        blck.write("Virtual References", virtRefs);
+        blck.beginBlock("Ancestors");
+        for (const Ancestor &anc : ancestors) {
+            blck.beginBlock();
+            anc.debugString(blck);
+            blck.endBlock();
+        }
+        blck.endBlock();
+        blck.write("Cached Parts", cachedParts);
+        blck.beginBlock("Parts");
+        for (auto iter = parts.cbegin(), end = parts.cend(); iter != end; ++iter) {
+            blck.beginBlock(iter.key().name());
+            blck.write("Size", iter.key().size());
+            blck.write("Version", iter.key().version());
+            blck.write("External", iter.value().isExternal());
+            blck.write("Data", iter.value().data());
+            blck.endBlock();
+        }
+        blck.endBlock();
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -3250,12 +3349,12 @@ public:
                >> dest;
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        dbg << "{ Command: " << commandType << "\n"
-            << "  Action: " << (action == LinkItemsCommand::Link ? "Link" : "Unlink") << "\n"
-            << "  Items: " << items << "\n"
-            << "  Destination: " << dest << " }";
+        blck.write("Command", commandType);
+        blck.write("Action", (action == LinkItemsCommand::Link ? "Link" : "Unlink"));
+        blck.write("Items", items);
+        blck.write("Destination", dest);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -3497,7 +3596,7 @@ public:
         }
     }
 
-    void debugString(QDebug &dbg) const Q_DECL_OVERRIDE
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         QStringList mps;
         if (modifiedParts & ModifyItemsCommand::Flags) {
@@ -3537,49 +3636,56 @@ public:
             mps << QLatin1String("Removed Parts");
         }
 
-        dbg << "{ Command: " << commandType << "\n"
-            << "  Modified Parts: " << mps << "\n"
-            << "  Items: " << items << "\n"
-            << "  Old Revision: " << oldRevision << "\n"
-            << "  Dirty: " << dirty << "\n"
-            << "  Invalidate Cache: " << invalidate << "\n"
-            << "  No Response: " << noResponse << "\n"
-            << "  Notify: " << notify << "\n";
+        blck.write("Command", commandType);
+        blck.write("Modified PartS", mps);
+        blck.write("Items", items);
+        blck.write("Old Revision", oldRevision);
+        blck.write("Dirty", dirty);
+        blck.write("Invalidate Cache", invalidate);
+        blck.write("No Response", noResponse);
+        blck.write("Notify", notify);
         if (modifiedParts & ModifyItemsCommand::Flags) {
-            dbg << "  Flags: " << flags << "\n";
+            blck.write("Flags", flags);
         }
         if (modifiedParts & ModifyItemsCommand::AddedFlags) {
-            dbg << "  Added Flags: " << addedFlags << "\n";
+            blck.write("Added Flags", addedFlags);
         }
         if (modifiedParts & ModifyItemsCommand::RemovedFlags) {
-            dbg << "  Removed Flags: " << removedFlags << "\n";
+            blck.write("Removed Flags", removedFlags);
         }
         if (modifiedParts & ModifyItemsCommand::Tags) {
-            dbg << "  Tags: " << tags << "\n";
+            blck.write("Tags", tags);
         }
         if (modifiedParts & ModifyItemsCommand::AddedTags) {
-            mps << QLatin1String("Added Tags");
+            blck.write("Added Tags", addedTags);
         }
         if (modifiedParts & ModifyItemsCommand::RemovedTags) {
-            mps << QLatin1String("Removed Tags");
+            blck.write("Removed Tags", removedTags);
         }
         if (modifiedParts & ModifyItemsCommand::RemoteID) {
-            mps << QLatin1String("Remote ID");
+            blck.write("Remote ID", remoteId);
         }
         if (modifiedParts & ModifyItemsCommand::RemoteRevision) {
-            mps << QLatin1String("Remote Revision");
+            blck.write("Remote Revision", remoteRev);
         }
         if (modifiedParts & ModifyItemsCommand::GID) {
-            mps << QLatin1String("GID");
+            blck.write("GID", gid);
         }
         if (modifiedParts & ModifyItemsCommand::Size) {
-            mps << QLatin1String("Size");
+            blck.write("Size", size);
         }
         if (modifiedParts & ModifyItemsCommand::Parts) {
-            mps << QLatin1String("Parts");
+            blck.beginBlock("Parts");
+            for (const PartMetaData &part : parts) {
+                blck.beginBlock(part.name());
+                blck.write("Size", part.size());
+                blck.write("Version", part.version());
+                blck.endBlock();
+            }
+            blck.endBlock();
         }
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
-            mps << QLatin1String("Removed Parts");
+            blck.write("Removed Parts", removedParts);
         }
     }
 
@@ -3869,6 +3975,13 @@ public:
                >> newRevision;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("ID", id);
+        blck.write("New Revision", newRevision);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new ModifyItemsResponsePrivate(*this);
@@ -3965,6 +4078,13 @@ public:
     {
         stream >> items
                >> dest;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Items", items);
+        blck.write("Destination", dest);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -4122,6 +4242,25 @@ public:
             && COMPARE(mimeTypes)
             && COMPARE(cachePolicy)
             && COMPARE(attributes);
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Name", name);
+        blck.write("Parent", parent);
+        blck.write("Remote ID", remoteId);
+        blck.write("Remote Revision", remoteRev);
+        blck.write("Mimetypes", mimeTypes);
+        blck.write("Sync", sync);
+        blck.write("Display", display);
+        blck.write("Index", index);
+        blck.write("Enabled", enabled);
+        blck.write("Virtual", isVirtual);
+        blck.beginBlock("CachePolicy");
+        cachePolicy.debugString(blck);
+        blck.endBlock();
+        blck.write("Attributes", attributes);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -4345,6 +4484,13 @@ public:
                >> dest;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Collection", collection);
+        blck.write("Destination", dest);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new CopyCollectionCommandPrivate(*this);
@@ -4456,6 +4602,12 @@ public:
         stream >> collection;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Collection", collection);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new DeleteCollectionCommandPrivate(*this);
@@ -4561,6 +4713,12 @@ public:
         stream >> collection;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Collection", collection);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new FetchCollectionStatsCommandPrivate(*this);
@@ -4658,6 +4816,14 @@ public:
         stream >> count
                >> unseen
                >> size;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("Count", count);
+        blck.write("Unseen", unseen);
+        blck.write("Size", size);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -4807,6 +4973,22 @@ public:
                >> display
                >> index
                >> stats;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Collections", collections);
+        blck.write("Depth", depth);
+        blck.write("Resource", resource);
+        blck.write("Mimetypes", mimeTypes);
+        blck.write("Ancestors Depth", ancestorsDepth);
+        blck.write("Ancestors Attributes", ancestorsAttributes);
+        blck.write("Enabled", enabled);
+        blck.write("Sync", sync);
+        blck.write("Display", display);
+        blck.write("Index", index);
+        blck.write("Status", stats);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -5065,6 +5247,42 @@ public:
                >> isVirtual
                >> referenced
                >> enabled;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("ID", id);
+        blck.write("Name", name);
+        blck.write("Parent ID", parentId);
+        blck.write("Remote ID", remoteId);
+        blck.write("Remote Revision", remoteRev);
+        blck.write("Resource", resource);
+        blck.write("Mimetypes", mimeTypes);
+        blck.beginBlock("Statistics");
+        blck.write("Count", stats.count());
+        blck.write("Unseen", stats.unseen());
+        blck.write("Size", stats.size());
+        blck.endBlock();
+        blck.write("Search Query", searchQuery);
+        blck.write("Search Collections", searchCols);
+        blck.beginBlock("Cache Policy");
+        cachePolicy.debugString(blck);
+        blck.endBlock();
+        blck.beginBlock("Ancestors");
+        for (const Ancestor &anc: ancestors) {
+            blck.beginBlock();
+            anc.debugString(blck);
+            blck.endBlock();
+        }
+        blck.endBlock();
+        blck.write("Attributes", attributes);
+        blck.write("Display", display);
+        blck.write("Sync", sync);
+        blck.write("Index", index);
+        blck.write("Enabled", enabled);
+        blck.write("Virtual", isVirtual);
+        blck.write("Referenced", referenced);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -5456,6 +5674,92 @@ public:
         }
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        QStringList mps;
+
+        if (modifiedParts & ModifyCollectionCommand::Name) {
+            mps << QLatin1String("Name");
+        }
+        if (modifiedParts & ModifyCollectionCommand::RemoteID) {
+            mps << QLatin1String("Remote ID");
+        }
+        if (modifiedParts & ModifyCollectionCommand::RemoteRevision) {
+            mps << QLatin1String("Remote Revision");
+        }
+        if (modifiedParts & ModifyCollectionCommand::ParentID) {
+            mps << QLatin1String("Parent ID");
+        }
+        if (modifiedParts & ModifyCollectionCommand::MimeTypes) {
+            mps << QLatin1String("Mimetypes");
+        }
+        if (modifiedParts & ModifyCollectionCommand::CachePolicy) {
+            mps << QLatin1String("Cache Policy");
+        }
+        if (modifiedParts & ModifyCollectionCommand::PersistentSearch) {
+            mps << QLatin1String("Persistent Search");
+        }
+        if (modifiedParts & ModifyCollectionCommand::RemovedAttributes) {
+            mps << QLatin1String("Remote Attributes");
+        }
+        if (modifiedParts & ModifyCollectionCommand::Attributes) {
+            mps << QLatin1String("Attributes");
+        }
+        if (modifiedParts & ModifyCollectionCommand::ListPreferences) {
+            mps << QLatin1String("List Preferences");
+        }
+        if (modifiedParts & ModifyCollectionCommand::Referenced) {
+            mps << QLatin1String("Referenced");
+        }
+
+        blck.write("Command", commandType);
+        blck.write("Collection", collection);
+        blck.write("Modified Parts", mps);
+        if (modifiedParts & ModifyCollectionCommand::Name) {
+            blck.write("Name", name);
+        }
+        if (modifiedParts & ModifyCollectionCommand::RemoteID) {
+            blck.write("Remote ID", remoteId);
+        }
+        if (modifiedParts & ModifyCollectionCommand::RemoteRevision) {
+            blck.write("Remote Revision", remoteRev);
+        }
+        if (modifiedParts & ModifyCollectionCommand::ParentID) {
+            blck.write("Parent ID", parentId);
+        }
+        if (modifiedParts & ModifyCollectionCommand::MimeTypes) {
+            blck.write("Mimetypes", mimeTypes);
+        }
+        if (modifiedParts & ModifyCollectionCommand::CachePolicy) {
+            blck.beginBlock("Cache Policy");
+            cachePolicy.debugString(blck);
+            blck.endBlock();
+        }
+        if (modifiedParts & ModifyCollectionCommand::PersistentSearch) {
+            blck.beginBlock("Persistent Search");
+            blck.write("Query", persistentSearchQuery);
+            blck.write("Cols", persistentSearchCols);
+            blck.write("Remote", persistentSearchRemote);
+            blck.write("Recursive", persistentSearchRecursive);
+            blck.endBlock();
+        }
+        if (modifiedParts & ModifyCollectionCommand::RemovedAttributes) {
+            blck.write("Removed Attributes", removedAttributes);
+        }
+        if (modifiedParts & ModifyCollectionCommand::Attributes) {
+            blck.write("Attributes", attributes);
+        }
+        if (modifiedParts & ModifyCollectionCommand::ListPreferences) {
+            blck.write("Sync", sync);
+            blck.write("Display", display);
+            blck.write("Index", index);
+            blck.write("Enabled", enabled);
+        }
+        if (modifiedParts & ModifyCollectionCommand::Referenced) {
+            blck.write("Referenced", referenced);
+        }
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new ModifyCollectionCommandPrivate(*this);
@@ -5761,6 +6065,13 @@ public:
                >> dest;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Collection", collection);
+        blck.write("Destination", dest);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new MoveCollectionCommandPrivate(*this);
@@ -5870,6 +6181,12 @@ public:
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> collection;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Collection", collection);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -5994,6 +6311,19 @@ public:
                >> fetchScope
                >> recursive
                >> remote;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Query", query);
+        blck.write("Collections", collections);
+        blck.write("Mimetypes", mimeTypes);
+        blck.beginBlock("Fetch Scope");
+        fetchScope.debugString(blck);
+        blck.endBlock();
+        blck.write("Recursive", recursive);
+        blck.write("Remote", remote);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -6161,6 +6491,14 @@ public:
                >> result;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Search ID", searchId);
+        blck.write("Collection ID", collectionId);
+        blck.write("Result", result);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new SearchResultCommandPrivate(*this);
@@ -6299,6 +6637,17 @@ public:
                >> queryCols
                >> remote
                >> recursive;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Name", name);
+        blck.write("Query", query);
+        blck.write("Mimetypes", mimeTypes);
+        blck.write("Query Collections", queryCols);
+        blck.write("Remote", remote);
+        blck.write("Recursive", recursive);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -6476,6 +6825,17 @@ public:
                >> merge;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Merge", merge);
+        blck.write("GID", gid);
+        blck.write("Remote ID", remoteId);
+        blck.write("Parnet ID", parentId);
+        blck.write("Type", type);
+        blck.write("Attributes", attributes);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new CreateTagCommandPrivate(*this);
@@ -6631,6 +6991,12 @@ public:
         stream >> tag;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Tag", tag);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new DeleteTagCommandPrivate(*this);
@@ -6780,6 +7146,45 @@ public:
         }
         if (modifiedParts & ModifyTagCommand::Attributes) {
             stream >> attributes;
+        }
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        QStringList mps;
+        if (modifiedParts & ModifyTagCommand::ParentId) {
+            mps << QLatin1String("Parent ID");
+        }
+        if (modifiedParts & ModifyTagCommand::Type) {
+            mps << QLatin1String("Type");
+        }
+        if (modifiedParts & ModifyTagCommand::RemoteId) {
+            mps << QLatin1String("Remote ID");
+        }
+        if (modifiedParts & ModifyTagCommand::RemovedAttributes) {
+            mps << QLatin1String("Removed Attributes");
+        }
+        if (modifiedParts & ModifyTagCommand::Attributes) {
+            mps << QLatin1String("Attributes");
+        }
+
+        blck.write("Command", commandType);
+        blck.write("Tag ID", tagId);
+        blck.write("Modified Parts", mps);
+        if (modifiedParts & ModifyTagCommand::ParentId) {
+            blck.write("Parent ID", parentId);
+        }
+        if (modifiedParts & ModifyTagCommand::Type) {
+            blck.write("Type", type);
+        }
+        if (modifiedParts & ModifyTagCommand::RemoteId) {
+            blck.write("Remote ID", remoteId);
+        }
+        if (modifiedParts & ModifyTagCommand::RemovedAttributes) {
+            blck.write("Removed Attributes", removedAttributes);
+        }
+        if (modifiedParts & ModifyTagCommand::Attributes) {
+            blck.write("Attributes", attributes);
         }
     }
 
@@ -6964,6 +7369,15 @@ public:
                >> remoteId;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Left", left);
+        blck.write("Right", right);
+        blck.write("Type", type);
+        blck.write("Remote ID", remoteId);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new ModifyRelationCommandPrivate(*this);
@@ -7107,6 +7521,14 @@ public:
                >> type;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Left", left);
+        blck.write("Right", right);
+        blck.write("Type", type);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new RemoveRelationsCommandPrivate(*this);
@@ -7231,6 +7653,12 @@ public:
         stream >> resourceId;
     }
 
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Resource ID", resourceId);
+    }
+
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new SelectResourceCommandPrivate(*this);
@@ -7346,6 +7774,14 @@ public:
         stream >> payloadName
                >> expectedSize
                >> externalFile;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Command", commandType);
+        blck.write("Payload Name", payloadName);
+        blck.write("External File", externalFile);
+        blck.write("Expected Size", expectedSize);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -7464,6 +7900,13 @@ public:
     {
         stream >> isExternal
                >> data;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("External", isExternal);
+        blck.write("Data", data);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE

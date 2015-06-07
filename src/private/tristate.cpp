@@ -17,28 +17,22 @@
  *    02110-1301, USA.
  */
 
-#ifndef AKONADI_PRIVATE_TRISTATE_P_H_
-#define AKONADI_PRIVATE_TRISTATE_P_H_
+#include "tristate_p.h"
 
-#include <QtCore/QMetaType>
-#include <QtCore/QDebug>
+using namespace Akonadi;
 
-#include "akonadiprivate_export.h"
-
-namespace Akonadi
+QDebug operator<<(QDebug dbg, Tristate tristate)
 {
+    switch (tristate)
+    {
+    case Tristate::True:
+        return dbg << "True";
+    case Tristate::False:
+        return dbg << "False";
+    case Tristate::Undefined:
+        return dbg << "Undefined";
+    }
 
-enum class Tristate : qint8
-{
-    False     = 0,
-    True      = 1,
-    Undefined = 2
-};
-
+    Q_ASSERT(false);
+    return dbg;
 }
-
-Q_DECLARE_METATYPE(Akonadi::Tristate)
-
-AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Tristate tristate);
-
-#endif
