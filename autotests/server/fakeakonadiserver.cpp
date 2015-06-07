@@ -46,42 +46,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TestScenario TestScenario::create(qint64 tag, TestScenario::Action action, const Protocol::Command &cmd)
-{
-    TestScenario sc;
-    sc.action = action;
-    QDataStream stream(&sc.data, QIODevice::WriteOnly);
-    stream << tag
-           << cmd;
-
-    qDebug() << cmd.debugString();
-    /*
-    QDataStream os(sc.data);
-    qint64 vTag;
-    os >> vTag;
-    Protocol::Command vCmd = Protocol::Factory::fromStream(os);
-
-    Q_ASSERT(vTag == tag);
-    Q_ASSERT(vCmd.type() == cmd.type());
-    Q_ASSERT(vCmd.isResponse() == cmd.isResponse());
-    Q_ASSERT(vCmd == cmd);
-    */
-
-    return sc;
-}
-
-TestScenario TestScenario::wait(int timeout)
-{
-    return TestScenario { Wait, QByteArray::number(timeout) };
-}
-
-TestScenario TestScenario::quit()
-{
-    return TestScenario { Quit, QByteArray() };
-}
-
-
-
 FakeAkonadiServer *FakeAkonadiServer::instance()
 {
     if (!AkonadiServer::s_instance) {
