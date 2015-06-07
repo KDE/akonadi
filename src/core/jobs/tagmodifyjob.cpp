@@ -76,9 +76,12 @@ void TagModifyJob::doStart()
     if (!d->mTag.attributes().isEmpty()) {
         command += ProtocolHelper::attributesToByteArray(d->mTag, false);
     }
-    if (!d->mTag.removedAttributes().isEmpty()) {
+
+    const QSet<QByteArray> removedAttributes = d->mTag.removedAttributes();
+    if (!removedAttributes.isEmpty()) {
         QList<QByteArray> l;
-        Q_FOREACH (const QByteArray &attr, d->mTag.removedAttributes()) {
+        l.reserve(removedAttributes.count());
+        Q_FOREACH (const QByteArray &attr, removedAttributes) {
             l << '-' + attr;
         }
         command += ImapParser::join(l, " ");

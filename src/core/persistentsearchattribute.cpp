@@ -119,6 +119,7 @@ Attribute *PersistentSearchAttribute::clone() const
 QByteArray PersistentSearchAttribute::serialized() const
 {
     QStringList cols;
+    cols.reserve(d->queryCollections.count());
     Q_FOREACH (qint64 colId, d->queryCollections) {
         cols << QString::number(colId);
     }

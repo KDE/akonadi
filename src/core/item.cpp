@@ -482,6 +482,7 @@ static QString format_type(int spid, int mtid)
 static QString format_types(const PayloadContainer &c)
 {
     QStringList result;
+    result.reserve(c.size());
     for (PayloadContainer::const_iterator it = c.begin(), end = c.end() ; it != end ; ++it) {
         result.push_back(format_type(it->sharedPointerId, it->metaTypeId));
     }
@@ -590,6 +591,7 @@ void Item::apply(const Item &other)
     setStorageCollectionId(other.storageCollectionId());
 
     QList<QByteArray> attrs;
+    attrs.reserve(other.attributes().count());
     foreach (Attribute *attribute, other.attributes()) {
         addAttribute(attribute->clone());
         attrs.append(attribute->type());

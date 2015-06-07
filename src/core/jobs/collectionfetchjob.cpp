@@ -273,10 +273,12 @@ void CollectionFetchJob::doStart()
         filter.append(d->mScope.resource().toUtf8());
     }
 
-    if (!d->mScope.contentMimeTypes().isEmpty()) {
+    const QStringList mimeTypes = d->mScope.contentMimeTypes();
+    if (!mimeTypes.isEmpty()) {
         filter.append("MIMETYPE");
         QList<QByteArray> mts;
-        foreach (const QString &mt, d->mScope.contentMimeTypes()) {
+        mts.reserve(mimeTypes.count());
+        foreach (const QString &mt, mimeTypes) {
             // FIXME: Does this need to be quoted??
             mts.append(mt.toUtf8());
         }
@@ -385,6 +387,7 @@ static Collection::List filterDescendants(const Collection::List &list)
     Collection::List result;
 
     QVector<QList<Collection::Id> > ids;
+    ids.reserve(list.count());
     foreach (const Collection &collection, list) {
         QList<Collection::Id> ancestors;
         Collection parent = collection.parentCollection();

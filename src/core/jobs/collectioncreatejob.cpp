@@ -73,7 +73,9 @@ void CollectionCreateJob::doStart()
     command += " (";
     if (!d->mCollection.contentMimeTypes().isEmpty()) {
         QList<QByteArray> cList;
-        foreach (const QString &s, d->mCollection.contentMimeTypes()) {
+        const QStringList mimeTypes = d->mCollection.contentMimeTypes();
+        cList.reserve(mimeTypes.count());
+        foreach (const QString &s, mimeTypes) {
             cList << s.toLatin1();
         }
         command += "MIMETYPE (" + ImapParser::join(cList, QByteArray(" ")) + ')';

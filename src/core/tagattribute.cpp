@@ -132,6 +132,7 @@ static QColor parseColor(const QByteArray &data)
         return QColor();
     }
     QList<int> components;
+    components.reserve(4);
     bool ok;
     for (int i = 0; i <= 3; ++i) {
         components << componentData.at(i).toInt(&ok);

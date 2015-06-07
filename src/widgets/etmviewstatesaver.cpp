@@ -78,6 +78,7 @@ QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
 void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List &list)
 {
     QStringList colStrings;
+    colStrings.reserve(list.count());
     foreach (const Collection &col, list) {
         colStrings << QStringLiteral("c%1").arg(col.id());
     }
@@ -87,6 +88,7 @@ void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List &list)
 void ETMViewStateSaver::selectCollections(const QList< Collection::Id > &list)
 {
     QStringList colStrings;
+    colStrings.reserve(list.count());
     foreach (const Collection::Id &colId, list) {
         colStrings << QStringLiteral("c%1").arg(colId);
     }
@@ -96,6 +98,7 @@ void ETMViewStateSaver::selectCollections(const QList< Collection::Id > &list)
 void ETMViewStateSaver::selectItems(const Akonadi::Item::List &list)
 {
     QStringList itemStrings;
+    itemStrings.reserve(list.count());
     foreach (const Item &item, list) {
         itemStrings << QStringLiteral("i%1").arg(item.id());
     }
@@ -105,6 +108,7 @@ void ETMViewStateSaver::selectItems(const Akonadi::Item::List &list)
 void ETMViewStateSaver::selectItems(const QList< Item::Id > &list)
 {
     QStringList itemStrings;
+    itemStrings.reserve(list.count());
     foreach (const Item::Id &itemId, list) {
         itemStrings << QStringLiteral("i%1").arg(itemId);
     }

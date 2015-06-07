@@ -137,11 +137,13 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
 
     if (localItem.flags() != otherItem.flags()) {
         QStringList localFlags;
+        localFlags.reserve(localItem.flags().count());
         foreach (const QByteArray &localFlag, localItem.flags()) {
             localFlags.append(QString::fromUtf8(localFlag));
         }
 
         QStringList otherFlags;
+        otherFlags.reserve(otherItem.flags().count());
         foreach (const QByteArray &otherFlag, otherItem.flags()) {
             otherFlags.append(QString::fromUtf8(otherFlag));
         }

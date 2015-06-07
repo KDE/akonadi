@@ -1082,6 +1082,7 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
     Tag::List validTags;
     if (msg.operation() == NotificationMessageV2::Remove) {
         //In case of a removed signal the cache entry was already invalidated, and we therefore received an empty list of tags
+        validTags.reserve(msg.entities().count());
         Q_FOREACH (const Akonadi::NotificationMessageV2::Entity &entity, msg.entities()) {
             Tag tag(entity.id);
             tag.setRemoteId(entity.remoteId.toLatin1());

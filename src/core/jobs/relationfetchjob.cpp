@@ -101,6 +101,7 @@ void RelationFetchJob::doStart()
     if (!d->mTypes.isEmpty()) {
         filter.append("TYPE");
         QList<QByteArray> types;
+        types.reserve(d->mTypes.count());
         foreach (const QString &t, d->mTypes) {
             types.append(t.toUtf8());
         }

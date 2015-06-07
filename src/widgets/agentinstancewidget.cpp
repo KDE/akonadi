@@ -197,7 +197,7 @@ QList<AgentInstance> AgentInstanceWidget::selectedAgentInstances() const
     }
 
     const QModelIndexList indexes = selectionModel->selection().indexes();
-
+    list.reserve(indexes.count());
     foreach (const QModelIndex &index, indexes) {
         list.append(index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>());
     }

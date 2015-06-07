@@ -217,6 +217,7 @@ public:
     void set(const Akonadi::Collection::List &collections)
     {
         QList<Akonadi::Collection::Id> colIds;
+        colIds.reserve(collections.count());
         foreach (const Akonadi::Collection &col, collections) {
             colIds << col.id();
         }
@@ -239,7 +240,7 @@ public:
     void saveConfig()
     {
         QStringList labels;
-
+        labels.reserve(collectionIds.count());
         foreach (const Collection::Id &collectionId, collectionIds) {
             labels << labelForCollection(collectionId);
         }
@@ -303,6 +304,7 @@ void FavoriteCollectionsModel::removeCollection(const Collection &collection)
 Akonadi::Collection::List FavoriteCollectionsModel::collections() const
 {
     Collection::List cols;
+    cols.reserve(d->collectionIds.count());
     foreach (const Collection::Id &colId, d->collectionIds) {
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(sourceModel(), Collection(colId));
         const Collection collection = sourceModel()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();

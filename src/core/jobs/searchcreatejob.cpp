@@ -121,6 +121,7 @@ void SearchCreateJob::doStart()
     if (!d->mCollections.isEmpty()) {
         command += QByteArray(AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS) + " (";
         QList<QByteArray> ids;
+        ids.reserve(d->mCollections.count());
         Q_FOREACH (const Collection &col, d->mCollections) {
             ids << QByteArray::number(col.id());
         }

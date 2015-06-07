@@ -246,7 +246,7 @@ void EntityOrderProxyModelPrivate::saveOrder(const QModelIndex &parent)
 
     list << q->configString(childIndex);
     saveOrder(childIndex);
-
+    list.reserve(rowCount);
     for (int row = 1; row < rowCount; ++row) {
         childIndex = q->index(row, column, parent);
         list << q->configString(childIndex);

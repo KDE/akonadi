@@ -666,8 +666,10 @@ public:
         Collection::List collections;
 
         Q_ASSERT(collectionSelectionModel);
+        const QModelIndexList indexes = safeSelectedRows(collectionSelectionModel);
+        collections.reserve(indexes.count());
 
-        foreach (const QModelIndex &index, safeSelectedRows(collectionSelectionModel)) {
+        foreach (const QModelIndex &index, indexes) {
             Q_ASSERT(index.isValid());
             const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
@@ -733,8 +735,10 @@ public:
         Item::List items;
 
         Q_ASSERT(itemSelectionModel);
+        const QModelIndexList indexes = safeSelectedRows(itemSelectionModel);
+        items.reserve(indexes.count());
 
-        foreach (const QModelIndex &index, safeSelectedRows(itemSelectionModel)) {
+        foreach (const QModelIndex &index, indexes) {
             Q_ASSERT(index.isValid());
             const Item item = index.data(ItemModel::ItemRole).value<Item>();
             Q_ASSERT(item.isValid());
@@ -933,7 +937,9 @@ public:
         Q_ASSERT(itemSelectionModel);
 
         Item::List items;
-        foreach (const QModelIndex &index, safeSelectedRows(itemSelectionModel)) {
+        const QModelIndexList indexes = safeSelectedRows(itemSelectionModel);
+        items.reserve(indexes.count());
+        foreach (const QModelIndex &index, indexes) {
             bool ok;
             const qlonglong id = index.data(ItemModel::IdRole).toLongLong(&ok);
             Q_ASSERT(ok);
@@ -1342,6 +1348,7 @@ public:
 
         if (isItemAction) {
             list = safeSelectedRows(itemSelectionModel);
+            mimeTypes.reserve(list.count());
             foreach (const QModelIndex &index, list) {
                 mimeTypes << index.data(EntityTreeModel::MimeTypeRole).toString();
             }

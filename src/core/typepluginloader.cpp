@@ -241,6 +241,7 @@ static QString format(const QString &mimeType, const QVector<int> &metaTypeIds)
         return QStringLiteral("default for ") + mimeType;
     }
     QStringList classTypes;
+    classTypes.reserve(metaTypeIds.count());
     Q_FOREACH (int metaTypeId, metaTypeIds) {
         classTypes.push_back(QString::fromLatin1(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME));
     }

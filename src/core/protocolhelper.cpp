@@ -61,7 +61,9 @@ int ProtocolHelper::parseCachePolicy(const QByteArray &data, CachePolicy &policy
             QVarLengthArray<QByteArray, 16> tmp;
             QStringList parts;
             Akonadi::ImapParser::parseParenthesizedList(value, tmp);
-            for (int j = 0; j < tmp.size(); j++) {
+            const int tmpSize = tmp.size();
+            parts.reserve(tmpSize);
+            for (int j = 0; j < tmpSize; j++) {
                 parts << QString::fromLatin1(tmp[j]);
             }
             policy.setLocalParts(parts);
@@ -195,7 +197,9 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
             QVarLengthArray<QByteArray, 16> ct;
             ImapParser::parseParenthesizedList(value, ct);
             QStringList ct2;
-            for (int j = 0; j < ct.size(); j++) {
+            const int ctSize = ct.size();
+            ct2.reserve(ctSize);
+            for (int j = 0; j < ctSize; j++) {
                 ct2 << QString::fromLatin1(ct[j]);
             }
             collection.setContentMimeTypes(ct2);
@@ -243,6 +247,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
 QByteArray ProtocolHelper::attributesToByteArray(const Entity &entity, bool ns)
 {
     QList<QByteArray> l;
+    l.reserve(entity.attributes().count() * 2);
     foreach (const Attribute *attr, entity.attributes()) {
         l << encodePartIdentifier(ns ? PartAttribute : PartGlobal, attr->type());
         l << ImapParser::quote(attr->serialized());
@@ -253,6 +258,7 @@ QByteArray ProtocolHelper::attributesToByteArray(const Entity &entity, bool ns)
 QByteArray ProtocolHelper::attributesToByteArray(const AttributeEntity &entity, bool ns)
 {
     QList<QByteArray> l;
+    l.reserve(entity.attributes().count() * 2);
     foreach (const Attribute *attr, entity.attributes()) {
         l << encodePartIdentifier(ns ? PartAttribute : PartGlobal, attr->type());
         l << ImapParser::quote(attr->serialized());
@@ -605,6 +611,7 @@ void ProtocolHelper::parseItemFetchResult(const QList<QByteArray> &lineTokens, I
             if (lineTokens[i + 1].startsWith("(")) {
                 QList<QByteArray> tagsData;
                 ImapParser::parseParenthesizedList(lineTokens[i + 1], tagsData);
+                tags.reserve(tagsData.count());
                 Q_FOREACH (const QByteArray &t, tagsData) {
                     QList<QByteArray> tagParts;
                     ImapParser::parseParenthesizedList(t, tagParts);

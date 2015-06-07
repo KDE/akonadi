@@ -128,6 +128,7 @@ QByteArray ItemModifyJobPrivate::tagsToCommandParameter(const Tag::List &tags) c
         //All items have a remoteId
         c += "RTAGS";
         QList<QByteArray> rids;
+        rids.reserve(tags.count());
         Q_FOREACH (const Tag &object, tags) {
             rids << ImapParser::quote(object.remoteId());
         }
@@ -142,6 +143,7 @@ QByteArray ItemModifyJobPrivate::tagsToCommandParameter(const Tag::List &tags) c
         //All items have a gid
         c += "GTAGS";
         QList<QByteArray> gids;
+        gids.reserve(tags.count());
         Q_FOREACH (const Tag &object, tags) {
             gids << ImapParser::quote(object.gid());
         }
@@ -257,6 +259,7 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
     if (!item.d_func()->mDeletedAttributes.isEmpty()) {
         changes << "-PARTS";
         QList<QByteArray> attrs;
+        attrs.reserve(item.d_func()->mDeletedAttributes.count());
         foreach (const QByteArray &attr, item.d_func()->mDeletedAttributes) {
             attrs << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, attr);
         }

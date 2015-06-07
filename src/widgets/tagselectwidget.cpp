@@ -78,6 +78,7 @@ QStringList TagSelectWidget::tagToStringList() const
 {
     QStringList list;
     const Akonadi::Tag::List tags = selection();
+    list.reserve(tags.count());
     foreach (const Akonadi::Tag &tag, tags) {
         list.append(tag.url().url());
     }
@@ -89,6 +90,7 @@ void TagSelectWidget::setSelectionFromStringList(const QStringList &lst)
     Akonadi::Tag::List tags;
 
     const QStringList categories = lst;
+    tags.reserve(categories.count());
     foreach (const QString &category, categories) {
         tags.append(Akonadi::Tag::fromUrl(QUrl(category)));
     }

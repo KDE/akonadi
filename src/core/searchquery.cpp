@@ -100,6 +100,7 @@ public:
         } else {
             termJSON.insert(QStringLiteral("rel"), static_cast<int>(term.relation()));
             QVariantList subTermsJSON;
+            subTermsJSON.reserve(subTerms.count());
             Q_FOREACH (const SearchTerm &term, subTerms) {
                 subTermsJSON.append(termToJSON(term));
             }

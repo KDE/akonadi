@@ -126,6 +126,7 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
                 return;
             }
             QList<int> components;
+            components.reserve(4);
 
             bool ok;
             for (int i = 0; i <= 3; ++i) {
