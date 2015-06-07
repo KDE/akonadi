@@ -56,48 +56,10 @@ public:
     Action action;
     QByteArray data;
 
-    template<typename T>
-    static typename std::enable_if<std::is_base_of<Protocol::Response, T>::value, TestScenario>::type
-    create(qint64 tag, Action action, const T &response) {
-        TestScenario sc;
-        sc.action = action;
-        QDataStream stream(&sc.data, QIODevice::WriteOnly);
-        stream << tag
-               << response;
+    static TestScenario create(qint64 tag, Action action, const Protocol::Command &cmd);
+    static TestScenario wait(int timeout);
+    static TestScenario quit();
 
-        QDataStream os(sc.data);
-        qint64 vTag;
-        os >> vTag;
-        Protocol::Command cmd = Protocol::Factory::fromStream(os);
-
-        Q_ASSERT(vTag == tag);
-        Q_ASSERT(cmd.type() == response.type());
-        Q_ASSERT(cmd.isResponse() == response.isResponse());
-        Q_ASSERT(cmd == response);
-        return sc;
-    }
-
-    template<typename T>
-    static typename std::enable_if<std::is_base_of<Protocol::Response, T>::value == false, TestScenario>::type
-    create(qint64 tag, Action action, const T &command, int */* dummy */ = 0)
-    {
-        TestScenario sc;
-        sc.action = action;
-        QDataStream stream(&sc.data, QIODevice::WriteOnly);
-        stream << tag
-               << command;
-        return sc;
-    }
-
-    static TestScenario wait(int timeout)
-    {
-        return TestScenario { Wait, QByteArray::number(timeout) };
-    }
-
-    static TestScenario quit()
-    {
-        return TestScenario { Quit, QByteArray() };
-    }
 };
 
 /**
