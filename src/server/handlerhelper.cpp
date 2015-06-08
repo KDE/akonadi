@@ -375,10 +375,10 @@ Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *co
     const Collection::List c = qb.result();
     if (c.count() == 0) {
         return Collection();
-    } else if (c.count() > 0) {
-        throw HandlerException("Query returned more than one reslut");
-    } else  {
+    } else if (c.count() == 1) {
         return c.at(0);
+    } else  {
+        throw HandlerException("Query returned more than one reslut");
     }
 }
 
