@@ -92,8 +92,16 @@ void FakeClient::readServerPart()
         expectedCommand = Protocol::Factory::fromStream(expectedStream);
         actualCommand = Protocol::Factory::fromStream(mStream);
 
+        if (actualCommand.type() != expectedCommand.type()) {
+            qDebug() << "Actual command:" << actualCommand.debugString();
+            qDebug() << "Expected Command:" << expectedCommand.debugString();
+        }
         CLIENT_COMPARE(actualCommand.type(), expectedCommand.type());
         CLIENT_COMPARE(actualCommand.isResponse(), expectedCommand.isResponse());
+        if (actualCommand != expectedCommand) {
+            qDebug() << "Actual command:" << actualCommand.debugString();
+            qDebug() << "Expected Command:" << expectedCommand.debugString();
+        }
         CLIENT_COMPARE(actualCommand, expectedCommand);
     }
 
