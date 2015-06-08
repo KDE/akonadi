@@ -108,7 +108,7 @@ void Connection::slotSendHello()
     Protocol::HelloResponse hello(QStringLiteral("Akonadi"),
                                   QStringLiteral("Not Really IMAP server"),
                                   protocolVersion());
-    m_stream << (qint64) 0
+    m_stream << qint64(0)
              << hello;
 }
 
@@ -153,11 +153,12 @@ void Connection::slotNewData()
 
     QString currentCommand;
     while (m_socket->bytesAvailable() > 0) {
-        quint64 tag = -1;
+        qint64 tag = -1;
         m_stream >> tag;
         // TODO: Check tag is incremental sequence
 
         Protocol::Command cmd = Protocol::Factory::fromStream(m_stream);
+
         if (cmd.type() == Protocol::Command::Invalid) {
             // TODO: Don't so harsh, just send back an error
             slotConnectionStateChange(Server::LoggingOut);
@@ -205,6 +206,7 @@ void Connection::slotNewData()
         }
         delete m_currentHandler;
         m_currentHandler = 0;
+        m_stream.unsetDevice();
     }
 }
 

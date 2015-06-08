@@ -1419,10 +1419,7 @@ namespace Protocol
 class LoginCommandPrivate : public CommandPrivate
 {
 public:
-    LoginCommandPrivate()
-        : CommandPrivate(Command::Login)
-    {}
-    LoginCommandPrivate(const QByteArray &sessionId)
+    LoginCommandPrivate(const QByteArray &sessionId = QByteArray())
         : CommandPrivate(Command::Login)
         , sessionId(sessionId)
     {}

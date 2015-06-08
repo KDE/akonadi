@@ -73,7 +73,6 @@ void FakeClient::dataAvailable()
 
     CLIENT_VERIFY(!mScenarios.isEmpty());
 
-    qDebug() << mSocket->bytesAvailable();
     readServerPart();
     writeClientPart();
 }

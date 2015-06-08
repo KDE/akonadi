@@ -238,9 +238,9 @@ QString Scope::gid() const
     return d->gidSet.at(0);
 }
 
-QDataStream &operator<<(QDataStream &stream, const Scope &scope)
+QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope)
 {
-    stream << static_cast<uchar>(scope.d->scope);
+    stream << (quint8) scope.d->scope;
     switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;
@@ -263,16 +263,14 @@ QDataStream &operator<<(QDataStream &stream, const Scope &scope)
     return stream;
 }
 
-QDataStream &operator>>(QDataStream &stream, Scope &scope)
+QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
 {
     scope.d->uidSet = ImapSet();
     scope.d->ridSet.clear();
     scope.d->ridChain.clear();
     scope.d->gidSet.clear();
 
-    uchar c;
-    stream >> c;
-    scope.d->scope = static_cast<Scope::SelectionScope>(c);
+    stream >> reinterpret_cast<quint8&>(scope.d->scope);
     switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;
@@ -295,7 +293,7 @@ QDataStream &operator>>(QDataStream &stream, Scope &scope)
     return stream;
 }
 
-QDebug operator<<(QDebug dbg, const Scope &scope)
+QDebug operator<<(QDebug dbg, const Akonadi::Scope &scope)
 {
     switch (scope.scope()) {
     case Scope::Uid:
