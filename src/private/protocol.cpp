@@ -636,7 +636,7 @@ Command Factory::fromStream(QDataStream &stream)
     Command cmd;
     if (cmdType & Command::_ResponseBit) {
         cmd = response(static_cast<Command::Type>(cmdType & ~Command::_ResponseBit));
-        dynamic_cast<ResponsePrivate*>(cmd.d_ptr.data())->ResponsePrivate::deserialize(stream);
+        static_cast<ResponsePrivate*>(cmd.d_ptr.data())->ResponsePrivate::deserialize(stream);
         if (typeid(*cmd.d_ptr.data()) != typeid(ResponsePrivate)) {
             cmd.d_ptr->deserialize(stream);
         }
