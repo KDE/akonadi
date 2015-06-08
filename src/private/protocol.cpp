@@ -2675,10 +2675,18 @@ namespace Protocol
 class FetchTagsResponsePrivate : public ResponsePrivate
 {
 public:
-    FetchTagsResponsePrivate(qint64 id = -1)
+    FetchTagsResponsePrivate(qint64 id = -1, const QString &gid = QString(),
+                             const QString &type = QString(),
+                             const QString &remoteId = QString(),
+                             qint64 parentId = -1,
+                             const Attributes &attrs = Attributes())
         : ResponsePrivate(Command::FetchTags)
         , id(id)
-        , parentId(-1)
+        , parentId(parentId)
+        , gid(gid)
+        , type(type)
+        , remoteId(remoteId)
+        , attributes(attrs)
     {}
     FetchTagsResponsePrivate(const FetchTagsResponsePrivate &other)
         : ResponsePrivate(other)
@@ -2757,6 +2765,13 @@ FetchTagsResponse::FetchTagsResponse()
 
 FetchTagsResponse::FetchTagsResponse(qint64 id)
     : Response(new FetchTagsResponsePrivate(id))
+{
+}
+
+FetchTagsResponse::FetchTagsResponse(qint64 id, const QString &gid, const QString &type,
+                                     const QString &remoteId,
+                                     qint64 parentId, const Attributes &attrs)
+    : Response(new FetchTagsResponsePrivate(id, gid, type, remoteId, parentId, attrs))
 {
 }
 

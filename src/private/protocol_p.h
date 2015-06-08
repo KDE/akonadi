@@ -905,6 +905,10 @@ class AKONADIPRIVATE_EXPORT FetchTagsResponse : public Response
 public:
     explicit FetchTagsResponse();
     explicit FetchTagsResponse(qint64 id);
+    FetchTagsResponse(qint64 id, const QString &gid, const QString &type,
+                      const QString &remoteId = QString(),
+                      qint64 parentId = 0,
+                      const Attributes &attrs = Attributes());
     FetchTagsResponse(const Command &command);
 
     qint64 id() const;

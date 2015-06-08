@@ -56,6 +56,9 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
     if (!parentCol.isValid()) {
         return failureResponse("Invalid parent collection");
     }
+    if (parentCol.isVirtual()) {
+        return failureResponse("Cannot append item into virtual collection");
+    }
 
     item.setRev(0);
     item.setSize(cmd.itemSize());
@@ -287,6 +290,7 @@ bool AkAppend::sendResponse(const PimItem& item)
                         Protocol::FetchScope::RemoteRevision |
                         Protocol::FetchScope::Size |
                         Protocol::FetchScope::Tags);
+    fetchScope.setTagFetchScope({ "GID" });
 
     ImapSet set;
     set.add(QVector<qint64>() << item.id());

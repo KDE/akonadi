@@ -392,7 +392,7 @@ Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection* connectio
         return resolveTagsByUID(scope.uidSet());
     } else if (scope.scope() == Scope::Gid) {
         return resolveTagsByGID(scope.gidSet());
-    } else if (scope.scope() == Scope::Uid) {
+    } else if (scope.scope() == Scope::Rid) {
         return resolveTagsByRID(scope.ridSet(), connection->context());
     }
 

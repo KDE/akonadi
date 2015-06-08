@@ -177,6 +177,28 @@ public:
         return cmd;
     }
 
+    Protocol::FetchItemsResponse createResponse(qint64 expectedId,
+                                                const PimItem &pimItem,
+                                                const QDateTime &datetime,
+                                                const QMap<Protocol::PartMetaData, Protocol::StreamPayloadResponse> &parts,
+                                                qint64 overrideSize = -1)
+    {
+        const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();
+
+        Protocol::FetchItemsResponse resp(expectedId);
+        resp.setParentId(pimItem.collectionId());
+        resp.setSize(size);
+        resp.setRemoteId(pimItem.remoteId());
+        resp.setRemoteRevision(pimItem.remoteRevision());
+        resp.setMimeType(pimItem.mimeType().name());
+        resp.setGid(pimItem.gid());
+        resp.setMTime(datetime);
+        resp.setParts(parts);
+
+        return resp;
+    }
+
+
     TestScenario errorResponse(const QString &errorMsg)
     {
         Protocol::CreateItemResponse response;
@@ -225,6 +247,8 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 10, 0) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 10))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("0123456789"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", 10, 0), Protocol::StreamPayloadResponse("0123456789") } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("single-part") << scenarios << notification << pimItem << parts
                                      << flags << tags << uidnext << datetime << false;
@@ -238,26 +262,28 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime,
                                    { Protocol::PartMetaData("PLD:DATA", 11, 0),
-                                     Protocol::PartMetaData("PLD:PLDTEST", 9, 0)
-                                   }))
+                                     Protocol::PartMetaData("PLD:PLDTEST", 9, 0) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 11))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("Random Data"))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:PDTEST", 9))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:PLDTEST", 9))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("Test Data"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", 11, 0), Protocol::StreamPayloadResponse("Random Data") },
+                          { Protocol::PartMetaData("PLD:PLDTEST", 9, 0), Protocol::StreamPayloadResponse("Test Data") } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("multi-part") << scenarios << notification << pimItem << parts
                                     << flags << tags << uidnext << datetime << false;
 
-        TestScenario scenario;
+        TestScenario inScenario, outScenario;
         {
             Protocol::CreateItemCommand cmd;
             cmd.setCollection(Scope(100));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
-                  << errorResponse(QLatin1String("Unknown collection for '100'."));
+                  << inScenario
+                  << errorResponse(QLatin1String("Invalid parent collection"));
         QTest::newRow("invalid collection") << scenarios << NotificationMessageV3()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
@@ -266,11 +292,11 @@ private Q_SLOTS:
         {
             Protocol::CreateItemCommand cmd;
             cmd.setCollection(Scope(6));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
+                  << inScenario
                   << errorResponse(QLatin1String("Cannot append item into virtual collection"));
         QTest::newRow("virtual collection") << scenarios << NotificationMessageV3()
                                             << PimItem() << QVector<FakePart>()
@@ -286,12 +312,14 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }, 1))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("12345"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", 5, 0), Protocol::StreamPayloadResponse("12345") } }, 5))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("mismatch item sizes (smaller)") << scenarios << notification << pimItem
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
-        updatePimItem(pimItem, QLatin1String("TEST-4"), 1000);
+        updatePimItem(pimItem, QLatin1String("TEST-4"), 10);
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenarios.clear();
@@ -299,6 +327,8 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }, 10))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("12345"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", 5, 0), Protocol::StreamPayloadResponse("12345") } }, 10))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("mismatch item sizes (bigger)") << scenarios << notification << pimItem
                                                       << parts << flags << tags << uidnext
@@ -309,7 +339,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("123"))
-                  << errorResponse(QLatin1String("Unable to read more data"));
+                  << errorResponse(QLatin1String("Payload size mismatch"));
         QTest::newRow("incomplete part data") << scenarios << NotificationMessageV3()
                                               << PimItem() << QVector<FakePart>()
                                               << QVector<Flag>() << QVector<FakeTag>()
@@ -320,7 +350,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 4, 0) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 4))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("1234567890"))
-                  << errorResponse(QLatin1String("PartTypeException: Invalid part type name."));
+                  << errorResponse(QLatin1String("Payload size mismatch"));
         QTest::newRow("part data larger than advertised") << scenarios << NotificationMessageV3()
                                                           << PimItem() << QVector<FakePart>()
                                                           << QVector<Flag>() << QVector<FakeTag>()
@@ -335,6 +365,8 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 0, 0) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 0))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse())
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem ,datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", 0, 0), Protocol::StreamPayloadResponse() } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("empty payload part") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
@@ -348,6 +380,8 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem,  datetime, { Protocol::PartMetaData("PLD:DATA", 1, 0) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 1))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(QByteArray("\0", 1)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", 1, 0), Protocol::StreamPayloadResponse(QByteArray("\0", 1)) } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("part data will null character") << scenarios << notification << pimItem
                                                        << parts << flags << tags << uidnext
@@ -363,10 +397,13 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(utf8String.toUtf8()))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", utf8String.toUtf8().size(), 0), Protocol::StreamPayloadResponse(utf8String.toUtf8()) } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("utf8 part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
+#if 0
         const QByteArray hugeData = QByteArray("a").repeated(1 << 20);
         updatePimItem(pimItem, QLatin1String("TEST-10"), 1 << 20);
         updateParts(parts, { { QLatin1String("PLD:DATA"), hugeData, 1 << 20 } });
@@ -377,9 +414,13 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(hugeData))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem ,datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), Protocol::StreamPayloadResponse(hugeData) } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("huge part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
+
+#endif
 
         const QByteArray dataWithNewLines = "Bernard, Bernard, Bernard, Bernard, look, look Bernard!\nWHAT!!!!!!!\nI'm a prostitute robot from the future!";
         updatePimItem(pimItem, QLatin1String("TEST-11"), dataWithNewLines.size());
@@ -391,10 +432,13 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(dataWithNewLines))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", dataWithNewLines.size()), Protocol::StreamPayloadResponse(dataWithNewLines) } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("data with newlines") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
 
+#if 0
         const QByteArray lotsOfNewlines = QByteArray("\n").repeated(1 << 20);
         updatePimItem(pimItem, QLatin1String("TEST-12"), lotsOfNewlines.size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), lotsOfNewlines, lotsOfNewlines.size() } });
@@ -405,10 +449,13 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(lotsOfNewlines))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), Protocol::StreamPayloadResponse(lotsOfNewlines) } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("data with lots of newlines") << scenarios << notification << pimItem
                                                     << parts << flags << tags << uidnext
                                                     << datetime << false;
+#endif
 
         updatePimItem(pimItem, QLatin1String("TEST-13"), 20);
         updateParts(parts, { { QLatin1String("PLD:NEWPARTTYPE1"), "0123456789", 10 },
@@ -424,6 +471,9 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("0123456789"))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", 10))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("9876543210"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
+                        { { Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10, 0), Protocol::StreamPayloadResponse("0123456789") },
+                          { Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10, 0), Protocol::StreamPayloadResponse("9876543210") } }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("non-existent part types") << scenarios << notification << pimItem
                                                  << parts << flags << tags << uidnext
@@ -437,11 +487,16 @@ private Q_SLOTS:
         {
             auto cmd = createCommand(pimItem, datetime, {});
             cmd.setFlags({ "\\SEEN", "\\RANDOM" });
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setFlags({ "\\SEEN", "\\RANDOM" });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with flags") << scenarios << notification << pimItem << parts
                                          << flags << tags << uidnext << datetime << false;
@@ -454,12 +509,20 @@ private Q_SLOTS:
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            cmd.setTags(Scope(Scope::Gid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setTags({
+                Protocol::FetchTagsResponse(2, QLatin1String("TAG-1"), QLatin1String("PLAIN")),
+                Protocol::FetchTagsResponse(3, QLatin1String("TAG-2"), QLatin1String("PLAIN")) });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
+
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with non-existent tags (GID)") << scenarios << notification << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
@@ -472,12 +535,19 @@ private Q_SLOTS:
         {
             auto cmd = createCommand(pimItem, datetime, {});
             cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-3"), QLatin1String("TAG-4") }));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setTags({
+                Protocol::FetchTagsResponse(4, QLatin1String("TAG-3"), QLatin1String("PLAIN")),
+                Protocol::FetchTagsResponse(5, QLatin1String("TAG-4"), QLatin1String("PLAIN")) });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with non-existent tags (RID)") << scenarios << notification << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
@@ -490,12 +560,19 @@ private Q_SLOTS:
         {
             auto cmd = createCommand(pimItem, datetime, {});
             cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setTags({
+                Protocol::FetchTagsResponse(2, QLatin1String("TAG-1"), QLatin1String("PLAIN")),
+                Protocol::FetchTagsResponse(3, QLatin1String("TAG-2"), QLatin1String("PLAIN")) });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with existing tags (RID)") << scenarios << notification << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
@@ -507,12 +584,19 @@ private Q_SLOTS:
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-3"), QLatin1String("TAG-4") }));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            cmd.setTags(Scope(Scope::Gid, { QLatin1String("TAG-3"), QLatin1String("TAG-4") }));
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setTags({
+                Protocol::FetchTagsResponse(4, QLatin1String("TAG-3"), QLatin1String("PLAIN")),
+                Protocol::FetchTagsResponse(5, QLatin1String("TAG-4"), QLatin1String("PLAIN")) });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with existing tags (GID)") << scenarios << notification << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
@@ -525,13 +609,21 @@ private Q_SLOTS:
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd.setTags(Scope(Scope::Rid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
+            cmd.setTags(Scope(Scope::Gid, { QLatin1String("TAG-1"), QLatin1String("TAG-2") }));
             cmd.setFlags({ "\\SEEN", "$FLAG" });
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setTags({
+                Protocol::FetchTagsResponse(2, QLatin1String("TAG-1"), QLatin1String("PLAIN")),
+                Protocol::FetchTagsResponse(3, QLatin1String("TAG-2"), QLatin1String("PLAIN")) });
+            rsp.setFlags({ "\\SEEN", "$FLAG" });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with flags and tags") << scenarios << notification << pimItem << parts
                                                   << flags << tags << uidnext << datetime << false;
@@ -543,12 +635,18 @@ private Q_SLOTS:
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd.setTags(Scope(Scope::Rid, { utf8String }));
-            scenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            cmd.setTags(Scope(Scope::Gid, { utf8String }));
+            inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
+
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            rsp.setTags({
+                Protocol::FetchTagsResponse(6, utf8String, QLatin1String("PLAIN")) });
+            outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << scenario
+                  << inScenario
+                  << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("item with UTF-8 tag") << scenarios << notification << pimItem << parts
                                              << flags << tags << uidnext << datetime << false;
@@ -654,3 +752,4 @@ private Q_SLOTS:
 AKTEST_FAKESERVER_MAIN(AkAppendHandlerTest)
 
 #include "akappendhandlertest.moc"
+

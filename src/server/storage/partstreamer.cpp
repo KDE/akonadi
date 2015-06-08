@@ -84,6 +84,11 @@ bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
             return false;
         }
         const QByteArray newData = response.data();
+        if (newData.size() != metaPart.size()) {
+            mError = QStringLiteral("Payload size mismatch");
+            return false;
+        }
+
         if (part.isValid()) {
             if (!mDataChanged) {
                 mDataChanged = mDataChanged || (newData != part.data());
@@ -172,7 +177,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
 
     if (file.size() != metaPart.size()) {
         mError = QStringLiteral("Payload size mismatch");
-        akError() << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
+        akDebug() << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
         return false;
     }
 
