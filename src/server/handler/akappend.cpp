@@ -86,16 +86,20 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
 
     // set message flags
     // This will hit an entry in cache inserted there in buildPimItem()
-    const Flag::List flagList = HandlerHelper::resolveFlags(cmd.flags());
-    bool flagsChanged = false;
-    if (!DataStore::self()->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true)) {
-        return failureResponse("Unable to append item flags.");
+    if (!cmd.flags().isEmpty()) {
+        const Flag::List flagList = HandlerHelper::resolveFlags(cmd.flags());
+        bool flagsChanged = false;
+        if (!DataStore::self()->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true)) {
+            return failureResponse("Unable to append item flags.");
+        }
     }
 
-    const Tag::List tagList = HandlerHelper::tagsFromScope(cmd.tags(), connection());
-    bool tagsChanged = false;
-    if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
-        return failureResponse("Unable to append item tags.");
+    if (!cmd.tags().isEmpty()) {
+        const Tag::List tagList = HandlerHelper::tagsFromScope(cmd.tags(), connection());
+        bool tagsChanged = false;
+        if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
+            return failureResponse("Unable to append item tags.");
+        }
     }
 
     // Handle individual parts
