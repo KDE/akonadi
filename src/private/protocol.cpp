@@ -1745,7 +1745,7 @@ public:
 
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
-        stream << mergeMode
+        stream << (qint8) mergeMode
                << collection
                << itemSize
                << mimeType
@@ -1765,7 +1765,7 @@ public:
 
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
-        stream >> mergeMode
+        stream >> reinterpret_cast<qint8&>(mergeMode)
                >> collection
                >> itemSize
                >> mimeType
