@@ -375,8 +375,6 @@ bool FetchHelper::fetchItems()
         vRefQuery = buildVRefQuery();
     }
 
-    QDataStream stream(mConnection->socket());
-
     while (itemQuery.isValid()) {
         const qint64 pimItemId = extractQueryResult(itemQuery, ItemQueryPimItemIdColumn).toLongLong();
         const int pimItemRev = extractQueryResult(itemQuery, ItemQueryRevColumn).toInt();
@@ -551,7 +549,7 @@ bool FetchHelper::fetchItems()
             response.setCachedParts(cachedParts);
         }
 
-        stream << response;
+        mConnection->sendResponse(response);
 
         itemQuery.next();
     }

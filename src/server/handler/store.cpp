@@ -132,8 +132,7 @@ bool Store::deleteTags(const PimItem::List &items, const Scope &tags, bool &tags
 
 bool Store::parseStream()
 {
-    Protocol::ModifyItemsCommand cmd;
-    mInStream >> cmd;
+    Protocol::ModifyItemsCommand cmd(m_command);
 
     //parseCommand();
 

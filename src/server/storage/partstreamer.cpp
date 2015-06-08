@@ -72,14 +72,12 @@ bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
     if (storeInFile) {
         return streamPayloadToFile(part, metaPart);
     } else {
-        QDataStream stream(mConnection->socket());
         Protocol::StreamPayloadCommand cmd;
         cmd.setExpectedSize(metaPart.size());
         cmd.setPayloadName(metaPart.name());
-        stream << cmd;
+        mConnection->sendResponse(cmd);
 
-        Protocol::StreamPayloadResponse response;
-        stream >> response;
+        Protocol::StreamPayloadResponse response = mConnection->readCommand();
         if (response.isError()) {
             mError = QStringLiteral("Client failed to store payload into file");
             akError() << mError;
@@ -152,15 +150,13 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
         }
     }
 
-    QDataStream stream(mConnection->socket());
     Protocol::StreamPayloadCommand cmd;
     cmd.setPayloadName(metaPart.name());
     cmd.setExpectedSize(metaPart.size());
     cmd.setExternalFile(filename);
-    stream << cmd;
+    mConnection->sendResponse(cmd);
 
-    Protocol::StreamPayloadResponse response;
-    stream >> response;
+    Protocol::StreamPayloadResponse response = mConnection->readCommand();
     if (response.isError()) {
         mError = QStringLiteral("Client failed to store payload into file");
         akError() << mError;

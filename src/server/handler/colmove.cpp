@@ -33,8 +33,7 @@ using namespace Akonadi::Server;
 
 bool ColMove::parseStream()
 {
-    Protocol::MoveCollectionCommand cmd;
-    mInStream >> cmd;
+    Protocol::MoveCollectionCommand cmd(m_command);
 
     Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection());

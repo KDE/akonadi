@@ -34,8 +34,7 @@ using namespace Akonadi::Server;
 
 bool Link::parseStream()
 {
-    Protocol::LinkItemsCommand cmd;
-    mInStream >> cmd;
+    Protocol::LinkItemsCommand cmd(m_command);
 
     const Collection collection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!collection.isVirtual()) {

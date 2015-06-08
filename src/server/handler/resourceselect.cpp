@@ -27,8 +27,7 @@ using namespace Akonadi::Server;
 
 bool ResourceSelect::parseStream()
 {
-    Protocol::SelectResourceCommand cmd;
-    mInStream >> cmd;
+    Protocol::SelectResourceCommand cmd(m_command);
 
     if (cmd.resourceId().isEmpty()) {
         connection()->context()->setResource(Resource());

@@ -34,8 +34,7 @@ using namespace Akonadi::Server;
 
 bool SearchResult::parseStream()
 {
-    Protocol::SearchResultCommand cmd;
-    mInStream >> cmd;
+    Protocol::SearchResultCommand cmd(m_command);
 
     if (!checkScopeConstraints(cmd.result(), Scope::Uid | Scope::Rid)) {
         return fail(cmd.searchId(), QStringLiteral("Only UID or RID scopes are allowed in SEARECH_RESULT"));

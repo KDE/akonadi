@@ -74,11 +74,11 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
+    template<typename T>
+    void sendResponse(const T &response);
 
-    QIODevice *socket() const
-    {
-        return m_socket;
-    }
+    Protocol::Command readCommand();
+
 Q_SIGNALS:
     void disconnected();
 
@@ -98,7 +98,6 @@ protected:
 
 protected:
     quintptr m_socketDescriptor;
-    QDataStream m_stream;
     QIODevice *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
@@ -116,6 +115,10 @@ protected:
     QHash<QString, qint64> m_executionsByHandler;
 
 private:
+    void sendResponseImpl(QDataStream &stream);
+    template<typename T>
+    void sendResponse(qint64 tag, const T &response);
+
     /** For debugging */
     void startTime();
     void stopTime(const QString &identifier);
@@ -124,7 +127,26 @@ private:
 
 };
 
+template<typename T>
+void Connection::sendResponse(const T& response)
+{
+    QDataStream stream(m_socket);
+    sendResponseImpl(stream);
+    stream << response;
+}
+
+template<typename T>
+void Connection::sendResponse(qint64 tag, const T &response)
+{
+    QDataStream stream(m_socket);
+    stream << tag;
+    stream << response;
+}
+
+
 } // namespace Server
 } // namespace Akonadi
+
+
 
 #endif

@@ -31,8 +31,7 @@ using namespace Akonadi::Server;
 
 bool TagRemove::parseStream()
 {
-    Protocol::DeleteTagCommand cmd;
-    mInStream >> cmd;
+    Protocol::DeleteTagCommand cmd(m_command);
 
     if (!checkScopeConstraints(cmd.tag(), Scope::Uid)) {
         return failureResponse("Only UID-based TAGREMOVE is supported");

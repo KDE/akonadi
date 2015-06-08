@@ -30,8 +30,7 @@ using namespace Akonadi::Server;
 
 bool RelationRemove::parseStream()
 {
-    Protocol::RemoveRelationsCommand cmd;
-    mInStream >> cmd;
+    Protocol::RemoveRelationsCommand cmd(m_command);
 
     if (cmd.left() < 0 || cmd.right() < 0) {
         return failureResponse("Invalid relation id's provided");

@@ -29,8 +29,7 @@ using namespace Akonadi::Server;
 
 bool RelationFetch::parseStream()
 {
-    Protocol::FetchRelationsCommand cmd;
-    mInStream >> cmd;
+    Protocol::FetchRelationsCommand cmd(m_command);
 
     SelectQueryBuilder<Relation> relationQuery;
     if (cmd.side() > 0) {

@@ -68,8 +68,7 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
 
 bool Copy::parseStream()
 {
-    Protocol::CopyItemsCommand cmd;
-    mInStream >> cmd;
+    Protocol::CopyItemsCommand cmd(m_command);
 
     if (!checkScopeConstraints(cmd.items(), Scope::Uid)) {
         return failureResponse("Only UID copy is allowed");

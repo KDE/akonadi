@@ -32,8 +32,7 @@ using namespace Akonadi::Server;
 
 bool Status::parseStream()
 {
-    Protocol::FetchCollectionStatsCommand cmd;
-    mInStream >> cmd;
+    Protocol::FetchCollectionStatsCommand cmd(m_command);
 
     const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!col.isValid()) {

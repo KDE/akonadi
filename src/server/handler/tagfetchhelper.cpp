@@ -119,8 +119,6 @@ bool TagFetchHelper::fetchTags()
     QSqlQuery tagQuery = buildTagQuery();
     QSqlQuery attributeQuery = buildAttributeQuery();
 
-    QDataStream stream(mConnection->socket());
-
     while (tagQuery.isValid()) {
         const qint64 tagId = tagQuery.value(0).toLongLong();
         Protocol::FetchTagsResponse response(tagId);
@@ -148,7 +146,7 @@ bool TagFetchHelper::fetchTags()
 
         response.setAttributes(tagAttributes);
 
-        stream << response;
+        mConnection->sendResponse(response);
 
         tagQuery.next();
     }

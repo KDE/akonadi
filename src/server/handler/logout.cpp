@@ -24,8 +24,7 @@ using namespace Akonadi::Server;
 
 bool Logout::parseStream()
 {
-    Protocol::LogoutCommand cmd;
-    mInStream >> cmd;
+    Protocol::LogoutCommand cmd(m_command);
 
     sendResponse<Protocol::LogoutResponse>();
 

@@ -94,9 +94,6 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     connect(socket, SIGNAL(disconnected()),
             this, SIGNAL(disconnected()));
 
-    m_stream.setDevice(m_socket);
-
-
     // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
     // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
     // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
@@ -105,11 +102,9 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
 
 void Connection::slotSendHello()
 {
-    Protocol::HelloResponse hello(QStringLiteral("Akonadi"),
-                                  QStringLiteral("Not Really IMAP server"),
-                                  protocolVersion());
-    m_stream << qint64(0)
-             << hello;
+    sendResponse(0, Protocol::HelloResponse(QStringLiteral("Akonadi"),
+                                            QStringLiteral("Not Really IMAP server"),
+                                            protocolVersion()));
 }
 
 int Connection::protocolVersion()
@@ -153,11 +148,13 @@ void Connection::slotNewData()
 
     QString currentCommand;
     while (m_socket->bytesAvailable() > 0) {
+        QDataStream stream(m_socket);
+
         qint64 tag = -1;
-        m_stream >> tag;
+        stream >> tag;
         // TODO: Check tag is incremental sequence
 
-        Protocol::Command cmd = Protocol::Factory::fromStream(m_stream);
+        Protocol::Command cmd = Protocol::Factory::fromStream(stream);
 
         if (cmd.type() == Protocol::Command::Invalid) {
             // TODO: Don't so harsh, just send back an error
@@ -206,7 +203,6 @@ void Connection::slotNewData()
         }
         delete m_currentHandler;
         m_currentHandler = 0;
-        m_stream.unsetDevice();
     }
 }
 
@@ -338,4 +334,22 @@ void Connection::reportTime() const
     Q_FOREACH (const QString &handler, m_totalTimeByHandler.keys()) {
         qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
     }
+}
+
+void Connection::sendResponseImpl(QDataStream &stream)
+{
+    // We can't have this in the header due to circular include between
+    // connection.h and handler.h
+    stream << m_currentHandler->tag();
+}
+
+Protocol::Command Connection::readCommand()
+{
+    m_socket->waitForReadyRead(500);
+
+    QDataStream stream(m_socket);
+    qint64 tag;
+    stream >> tag;
+    // TODO: compare tag with m_currentHandler->tag() ?
+    return Protocol::Factory::fromStream(stream);
 }

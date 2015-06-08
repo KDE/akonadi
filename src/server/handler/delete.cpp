@@ -47,8 +47,7 @@ bool Delete::deleteRecursive(Collection &col)
 
 bool Delete::parseStream()
 {
-    Protocol::DeleteCollectionCommand cmd;
-    mInStream >> cmd;
+    Protocol::DeleteCollectionCommand cmd(m_command);
 
     Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!collection.isValid()) {

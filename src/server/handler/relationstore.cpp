@@ -29,8 +29,7 @@ using namespace Akonadi::Server;
 
 bool RelationStore::parseStream()
 {
-    Protocol::ModifyRelationCommand cmd;
-    mInStream >> cmd;
+    Protocol::ModifyRelationCommand cmd(m_command);
 
     if (cmd.type().isEmpty()) {
         return failureResponse("Relation type not specified");

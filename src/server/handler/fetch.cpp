@@ -30,8 +30,7 @@ using namespace Akonadi::Server;
 
 bool Fetch::parseStream()
 {
-    Protocol::FetchItemsCommand cmd;
-    mInStream >> cmd;
+    Protocol::FetchItemsCommand cmd(m_command);
 
     // We require context in case we do RID fetch
     if (connection()->context()->isEmpty() && cmd.scope().scope() == Scope::Rid) {

@@ -24,6 +24,7 @@
 
 #include "global.h"
 #include "exception.h"
+#include "connection.h"
 
 #include <private/protocol_p.h>
 
@@ -104,8 +105,6 @@ public:
     template<typename T>
     bool successResponse(const T &response = T());
 
-    void sendResponse(const Protocol::Response &response);
-
     // TODO: Validate T is Protocol::Response
     template<typename T>
     void sendResponse(const T &response = T());
@@ -128,16 +127,11 @@ Q_SIGNALS:
     void connectionStateChange(ConnectionState state);
 
 private:
-    void sendResponseImpl(const Protocol::Response *response);
-
     quint64 m_tag;
     Connection *m_connection;
 
-    QDataStream mOutStream;
-
 protected:
     Protocol::Command m_command;
-    QDataStream mInStream;
 };
 
 template<typename T>
@@ -150,7 +144,7 @@ bool Handler::successResponse(const T &response)
 template<typename T>
 void Handler::sendResponse(const T &response)
 {
-    sendResponseImpl(&response);
+    m_connection->sendResponse(response);
 }
 
 

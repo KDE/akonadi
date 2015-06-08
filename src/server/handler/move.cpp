@@ -34,8 +34,7 @@ using namespace Akonadi::Server;
 
 bool Move::parseStream()
 {
-    Protocol::MoveItemsCommand cmd;
-    mInStream >> cmd;
+    Protocol::MoveItemsCommand cmd(m_command);
 
     const Collection destination = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (destination.isVirtual()) {

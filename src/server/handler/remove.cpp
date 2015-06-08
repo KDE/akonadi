@@ -32,8 +32,7 @@ using namespace Akonadi::Server;
 
 bool Remove::parseStream()
 {
-    Protocol::DeleteItemsCommand cmd;
-    mInStream >> cmd;
+    Protocol::DeleteItemsCommand cmd(m_command);
 
     /* FIXME BIN
     connection()->context()->parseContext(m_streamParser);

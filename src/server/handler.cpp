@@ -213,8 +213,6 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
 void Handler::setConnection(Connection *connection)
 {
     m_connection = connection;
-    mInStream.setDevice(m_connection->socket());
-    mOutStream.setDevice(m_connection->socket());
 }
 
 Connection *Handler::connection() const
@@ -246,12 +244,4 @@ bool Handler::failureResponse(const QString &failureMessage)
 bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedScopes)
 {
     return scope.scope() & permittedScopes;
-}
-
-void Handler::sendResponseImpl(const Protocol::Response *response)
-{
-    // Send tag first
-    mOutStream << m_tag;
-    // Serialize Response baseclass
-    mOutStream << *response;
 }

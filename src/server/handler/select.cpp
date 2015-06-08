@@ -29,8 +29,7 @@ using namespace Akonadi::Server;
 
 bool Select::parseStream()
 {
-    Protocol::SelectCollectionCommand cmd;
-    mInStream >> cmd;
+    Protocol::SelectCollectionCommand cmd(m_command);
 
     // as per rfc, even if the following select fails, we need to reset
     connection()->context()->setCollection(Collection());
