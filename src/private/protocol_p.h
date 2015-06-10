@@ -555,6 +555,9 @@ public:
     void setRemoteId(const QString &remoteId);
     QString remoteId() const;
 
+    void setName(const QString &name);
+    QString name() const;
+
     void setAttributes(const Attributes &attrs);
     Attributes attributes() const;
 

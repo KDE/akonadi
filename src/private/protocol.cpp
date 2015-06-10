@@ -1225,6 +1225,7 @@ public:
 
     qint64 id;
     QString remoteId;
+    QString name;
     Attributes attrs;
 };
 
@@ -1273,6 +1274,7 @@ bool Ancestor::operator==(const Ancestor &other) const
     return (d == other.d)
         || (d->id == other.d->id
             && d->remoteId == other.d->remoteId
+            && d->name == other.d->name
             && d->attrs == other.d->attrs);
 }
 
@@ -1299,6 +1301,15 @@ QString Ancestor::remoteId() const
     return d->remoteId;
 }
 
+void Ancestor::setName(const QString &name)
+{
+    d->name = name;
+}
+QString Ancestor::name() const
+{
+    return d->name;
+}
+
 void Ancestor::setAttributes(const Attributes &attributes)
 {
     d->attrs = attributes;
@@ -1312,6 +1323,7 @@ void Ancestor::debugString(DebugBlock &blck) const
 {
     blck.write("ID", d->id);
     blck.write("Remote ID", d->remoteId);
+    blck.write("Name", d->name);
     blck.write("Attributes", d->attrs);
 }
 
@@ -1319,6 +1331,7 @@ QDataStream &operator<<(QDataStream &stream, const Ancestor &ancestor)
 {
     return stream << ancestor.d->id
                   << ancestor.d->remoteId
+                  << ancestor.d->name
                   << ancestor.d->attrs;
 }
 
@@ -1326,6 +1339,7 @@ QDataStream &operator>>(QDataStream &stream, Ancestor &ancestor)
 {
     return stream >> ancestor.d->id
                   >> ancestor.d->remoteId
+                  >> ancestor.d->name
                   >> ancestor.d->attrs;
 }
 

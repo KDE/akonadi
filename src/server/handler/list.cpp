@@ -462,8 +462,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 mimeTypes << mimeTypeQuery.value(2).toString();
                 if (!mimeTypeQuery.next()) {
                     break;
-        }
-    }
+                }
+            }
         }
 
         CollectionAttribute::List attributes;
