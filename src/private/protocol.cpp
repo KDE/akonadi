@@ -49,6 +49,59 @@ inline const Class##Private* Class::d_func() const {\
     (prop == ((decltype(this)) other)->prop)
 
 
+// StreamableByteArray provides modified version of operator>>() specialization
+// for QDataStream. Unlike QByteArray version this one can correctly handle
+// read past data end (by simply using QIODevice::waitForReadyRead())
+class StreamableByteArray : public QByteArray
+{
+public:
+    explicit StreamableByteArray()
+        : QByteArray()
+    {}
+
+    StreamableByteArray(const QByteArray &other)
+        : QByteArray(other)
+    {}
+
+    StreamableByteArray(const char *data)
+        : QByteArray(data)
+    {}
+
+    operator QByteArray() const
+    {
+        return *static_cast<const QByteArray*>(this);
+    }
+};
+
+QDataStream &operator<<(QDataStream &stream, const StreamableByteArray &ba)
+{
+    return stream << static_cast<const QByteArray&>(ba);
+}
+
+QDataStream &operator>>(QDataStream &stream, StreamableByteArray &ba)
+{
+    ba.clear();
+    quint32 len;
+    stream >> len;
+    if (len == 0xffffffff) {
+        return stream;
+    }
+
+    const quint32 step = 1024 * 1024;
+    quint32 allocated = 0;
+
+    do {
+        int blockSize = qMin(step, len - allocated);
+        ba.resize(allocated + blockSize);
+        int read = stream.readRawData(ba.data() + allocated, blockSize);
+        if (read != blockSize) {
+            stream.device()->waitForReadyRead(30000);
+        }
+        allocated += read;
+    } while (allocated < len);
+
+    return stream;
+}
 
 // Generic code for effective streaming of enums
 template<typename T>
@@ -7926,7 +7979,7 @@ public:
         return new StreamPayloadResponsePrivate(*this);
     }
 
-    QByteArray data;
+    StreamableByteArray data;
     bool isExternal;
 };
 

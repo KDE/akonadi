@@ -403,7 +403,6 @@ private Q_SLOTS:
         QTest::newRow("utf8 part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
-#if 0
         const QByteArray hugeData = QByteArray("a").repeated(1 << 20);
         updatePimItem(pimItem, QLatin1String("TEST-10"), 1 << 20);
         updateParts(parts, { { QLatin1String("PLD:DATA"), hugeData, 1 << 20 } });
@@ -419,8 +418,6 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("huge part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
-
-#endif
 
         const QByteArray dataWithNewLines = "Bernard, Bernard, Bernard, Bernard, look, look Bernard!\nWHAT!!!!!!!\nI'm a prostitute robot from the future!";
         updatePimItem(pimItem, QLatin1String("TEST-11"), dataWithNewLines.size());
@@ -438,7 +435,6 @@ private Q_SLOTS:
         QTest::newRow("data with newlines") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
 
-#if 0
         const QByteArray lotsOfNewlines = QByteArray("\n").repeated(1 << 20);
         updatePimItem(pimItem, QLatin1String("TEST-12"), lotsOfNewlines.size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), lotsOfNewlines, lotsOfNewlines.size() } });
@@ -455,7 +451,6 @@ private Q_SLOTS:
         QTest::newRow("data with lots of newlines") << scenarios << notification << pimItem
                                                     << parts << flags << tags << uidnext
                                                     << datetime << false;
-#endif
 
         updatePimItem(pimItem, QLatin1String("TEST-13"), 20);
         updateParts(parts, { { QLatin1String("PLD:NEWPARTTYPE1"), "0123456789", 10 },

@@ -98,7 +98,7 @@ protected:
 
 protected:
     quintptr m_socketDescriptor;
-    QIODevice *m_socket;
+    QLocalSocket *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore *m_backend;

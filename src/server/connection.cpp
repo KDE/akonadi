@@ -156,6 +156,19 @@ void Connection::slotNewData()
 
         Protocol::Command cmd = Protocol::Factory::fromStream(stream);
 
+        // TODO: The resend-on-read-past-end is not really a solution, because
+        // the same will probably happen again. We should send overall size of the
+        // message as first argument and ensure we have buffered enough data.
+        // That however requires some larger changes to the protocol and the way
+        // we (de)serialize data.
+        if (stream.status() == QDataStream::ReadCorruptData || stream.status() == QDataStream::ReadPastEnd) {
+            // TODO: Create a proper Protocol::ResendDataResponse class
+            Protocol::Response resp;
+            resp.setError(1, QLatin1String("Corrupted data or incomplete data, please resend"));
+            sendResponse(resp);
+            return;
+        }
+
         if (cmd.type() == Protocol::Command::Invalid) {
             // TODO: Don't so harsh, just send back an error
             slotConnectionStateChange(Server::LoggingOut);
