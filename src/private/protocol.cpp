@@ -274,12 +274,12 @@ public:
     void write(const char *name, const T &val)
     {
         if (mBlockInit.top()) {
-            mDbg << '\n';
+            mDbg.noquote() << QByteArray("\n");
         } else {
             mBlockInit.top() = true;
         }
 
-        mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": " << val;
+        mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": \"" << val << "\"";
     }
 
 private:
@@ -424,7 +424,7 @@ QString Command::debugString() const
 {
     QString out;
     QDebug dbg(&out);
-    DebugBlock blck(dbg);
+    DebugBlock blck(dbg.noquote().nospace());
     d_func()->debugString(blck);
     return out;
 }
