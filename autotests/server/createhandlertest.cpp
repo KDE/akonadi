@@ -18,14 +18,16 @@
 */
 #include <QObject>
 #include <handler/create.h>
-#include <imapstreamparser.h>
 #include <response.h>
 #include <storage/entity.h>
 
 #include "fakeakonadiserver.h"
+#include "dbinitializer.h"
 #include "aktest.h"
 #include "akdebug.h"
 #include "entities.h"
+
+#include <private/scope_p.h>
 
 #include <QtTest/QTest>
 
@@ -57,7 +59,9 @@ public:
 private Q_SLOTS:
     void testCreate_data()
     {
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        DbInitializer dbInitializer;
+
+        QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
 
         Akonadi::NotificationMessageV3 notificationTemplate;
@@ -68,37 +72,72 @@ private Q_SLOTS:
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 CREATE \"New Name\" 3 (MYRANDOMATTRIBUTE \"\")"
-                     << "S: * 8 3 (NAME \"New Name\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED TRUE DISPLAY DEFAULT SYNC DEFAULT INDEX DEFAULT MYRANDOMATTRIBUTE \"\")"
-                     << "S: 2 OK CREATE completed";
+            Protocol::CreateCollectionCommand cmd;
+            cmd.setName(QLatin1String("New Name"));
+            cmd.setParent(Scope(3));
+            cmd.setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
+
+            Protocol::FetchCollectionsResponse resp(8);
+            resp.setName(QLatin1String("New Name"));
+            resp.setParentId(3);
+            resp.setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
+            resp.setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp.cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp.setMimeTypes({ QLatin1String("application/octet-stream"),
+                                QLatin1String("inode/directory") });
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, resp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.addEntity(8, QLatin1String(""), QLatin1String(""));
 
-            QTest::newRow("create collection") << scenario <<  notification;
+            QTest::newRow("create collection") << scenarios <<  notification;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 CREATE \"Name2\" 3 (ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE)"
-                     << "S: * 9 3 (NAME \"Name2\" MIMETYPE (application/octet-stream inode/directory) REMOTEID \"\" REMOTEREVISION \"\" RESOURCE \"akonadi_fake_resource_0\" VIRTUAL 0 CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL)) ENABLED FALSE DISPLAY TRUE SYNC TRUE INDEX TRUE )"
-                     << "S: 2 OK CREATE completed";
+            Protocol::CreateCollectionCommand cmd;
+            cmd.setName(QLatin1String("Name 2"));
+            cmd.setParent(Scope(3));
+            cmd.setEnabled(false);
+            cmd.setDisplayPref(Tristate::True);
+            cmd.setSyncPref(Tristate::True);
+            cmd.setIndexPref(Tristate::True);
+
+            Protocol::FetchCollectionsResponse resp(9);
+            resp.setName(QLatin1String("Name 2"));
+            resp.setParentId(3);
+            resp.setEnabled(false);
+            resp.setDisplayPref(Tristate::True);
+            resp.setSyncPref(Tristate::True);
+            resp.setIndexPref(Tristate::True);
+            resp.setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp.cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp.setMimeTypes({ QLatin1String("application/octet-stream"),
+                                QLatin1String("inode/directory") });
+
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, resp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.addEntity(9, QLatin1String(""), QLatin1String(""));
 
-            QTest::newRow("create collection with local override") << scenario <<  notification;
+            QTest::newRow("create collection with local override") << scenarios <<  notification;
         }
     }
 
     void testCreate()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(NotificationMessageV3, notification);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();

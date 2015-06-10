@@ -5515,6 +5515,11 @@ CachePolicy FetchCollectionsResponse::cachePolicy() const
     return d_func()->cachePolicy;
 }
 
+CachePolicy &FetchCollectionsResponse::cachePolicy()
+{
+    return d_func()->cachePolicy;
+}
+
 void FetchCollectionsResponse::setAttributes(const Attributes &attrs)
 {
     d_func()->attributes = attrs;

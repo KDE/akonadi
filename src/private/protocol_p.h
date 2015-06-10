@@ -1469,6 +1469,7 @@ public:
 
     void setCachePolicy(const CachePolicy &cachePolicy);
     CachePolicy cachePolicy() const;
+    CachePolicy &cachePolicy();
 
     void setAttributes(const Attributes &attrs);
     Attributes attributes() const;

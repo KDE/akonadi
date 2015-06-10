@@ -113,7 +113,7 @@ bool Create::parseStream()
 
     // store user defined attributes
     const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
-    for (auto iter = attrs.constBegin(), end = attrs.constEnd(); iter != end; --iter) {
+    for (auto iter = attrs.constBegin(), end = attrs.constEnd(); iter != end; ++iter) {
         if (!db->addCollectionAttribute(collection, iter.key(), iter.value())) {
             return failureResponse("Unable to add collection attribute.");
         }
