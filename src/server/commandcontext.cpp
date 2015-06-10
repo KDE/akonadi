@@ -19,6 +19,9 @@
 
 #include "commandcontext.h"
 
+#include <private/protocol_p.h>
+
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 CommandContext::CommandContext()
@@ -38,6 +41,15 @@ void CommandContext::setResource(const Resource &resource)
 Resource CommandContext::resource() const
 {
     return mResource;
+}
+
+void CommandContext::setScopeContext(const Protocol::ScopeContext &scopeContext)
+{
+    if (scopeContext.type() == Protocol::ScopeContext::Collection) {
+        mCollection = Collection::retrieveById(scopeContext.id());
+    } else if (scopeContext.type() == Protocol::ScopeContext::Tag) {
+        mTagId = scopeContext.id();
+    }
 }
 
 void CommandContext::setCollection(const Collection &collection)

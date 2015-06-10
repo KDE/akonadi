@@ -46,9 +46,9 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const
     }
 }
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb)
+void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context, QueryBuilder &qb)
 {
-    if (!isUid && context->collectionId() >= 0) {
+    if (context->collectionId() >= 0) {
         itemSetToQuery(set, qb, context->collection());
     } else {
         itemSetToQuery(set, qb);
@@ -114,7 +114,7 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
 void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
 {
     if (scope.scope() == Scope::Uid) {
-        itemSetToQuery(scope.uidSet(), scope.scope() == Scope::Uid, context, qb);
+        itemSetToQuery(scope.uidSet(), context, qb);
         return;
     }
 

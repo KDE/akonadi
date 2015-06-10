@@ -933,6 +933,128 @@ QDataStream &operator>>(QDataStream &stream, FetchScope &scope)
                   >> scope.d->fetchFlags;
 }
 
+/******************************************************************************/
+
+
+namespace Akonadi
+{
+namespace Protocol
+{
+
+class ScopeContextPrivate : public QSharedData
+{
+public:
+    ScopeContextPrivate(ScopeContext::Type type = ScopeContext::Any, qint64 id = -1)
+        : id(id)
+        , type(type)
+    {}
+
+    ScopeContextPrivate(const ScopeContextPrivate &other)
+        : QSharedData(other)
+        , id(other.id)
+        , type(other.type)
+    {}
+
+    qint64 id;
+    ScopeContext::Type type;
+};
+
+}
+}
+
+ScopeContext::ScopeContext()
+    : d(new ScopeContextPrivate)
+{
+}
+
+ScopeContext::ScopeContext(Type type, qint64 id)
+    : d(new ScopeContextPrivate(type, id))
+{
+}
+
+ScopeContext::ScopeContext(const ScopeContext &other)
+    : d(other.d)
+{
+}
+
+ScopeContext::ScopeContext(ScopeContext &&other)
+{
+    d.swap(other.d);
+}
+
+ScopeContext::~ScopeContext()
+{
+}
+
+ScopeContext &ScopeContext::operator=(const ScopeContext &other)
+{
+    d = other.d;
+    return *this;
+}
+
+ScopeContext &ScopeContext::operator=(ScopeContext &&other)
+{
+    d.swap(other.d);
+    return *this;
+}
+
+bool ScopeContext::operator==(const ScopeContext &other) const
+{
+    return d == other.d ||
+        (d->id == other.d->id &&
+         d->type == other.d->type);
+}
+
+bool ScopeContext::operator!=(const ScopeContext &other) const
+{
+    return !(*this == other);
+}
+
+void ScopeContext::setType(Type type)
+{
+    d->type = type;
+}
+ScopeContext::Type ScopeContext::type() const
+{
+    return d->type;
+}
+
+void ScopeContext::setId(qint64 id)
+{
+    d->id = id;
+}
+qint64 ScopeContext::id() const
+{
+    return d->id;
+}
+
+void ScopeContext::debugString(DebugBlock &blck) const
+{
+    blck.write("Type", [](Type type) {
+            switch (type) {
+            case ScopeContext::Any:
+                return "Any";
+            case ScopeContext::Collection:
+                return "Collection";
+            case ScopeContext::Tag:
+                return "Tag";
+            }
+            return "";
+        }(d->type));
+    blck.write("ID", d->id);
+}
+
+QDataStream &operator<<(QDataStream &stream, const ScopeContext &context)
+{
+    return stream << context.d->type
+                  << context.d->id;
+}
+
+QDataStream &operator>>(QDataStream &stream, ScopeContext &context)
+{
+    return stream >> context.d->type
+                  >> context.d->id;
+}
 
 
 /******************************************************************************/
@@ -2930,15 +3052,18 @@ class FetchItemsCommandPrivate : public CommandPrivate
 {
 public:
     FetchItemsCommandPrivate(const Scope &scope = Scope(),
-                                const FetchScope &fetchScope = FetchScope())
+                             const ScopeContext &context = ScopeContext(),
+                             const FetchScope &fetchScope = FetchScope())
         : CommandPrivate(Command::FetchItems)
         , scope(scope)
+        , scopeContext(context)
         , fetchScope(fetchScope)
     {}
 
     FetchItemsCommandPrivate(const FetchItemsCommandPrivate &other)
         : CommandPrivate(other)
         , scope(other.scope)
+        , scopeContext(other.scopeContext)
         , fetchScope(other.fetchScope)
     {}
 
@@ -2946,18 +3071,21 @@ public:
     {
         return CommandPrivate::compare(other)
             && COMPARE(scope)
+            && COMPARE(scopeContext)
             && COMPARE(fetchScope);
     }
 
     void serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         stream << scope
+               << scopeContext
                << fetchScope;
     }
 
     void deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         stream >> scope
+               >> scopeContext
                >> fetchScope;
     }
 
@@ -2965,6 +3093,9 @@ public:
     {
         blck.write("Command", commandType);
         blck.write("Items", scope);
+        blck.beginBlock("Scope Context");
+        scopeContext.debugString(blck);
+        blck.endBlock();
         blck.beginBlock("Fetch Scope");
         fetchScope.debugString(blck);
         blck.endBlock();
@@ -2976,6 +3107,7 @@ public:
     }
 
     Scope scope;
+    ScopeContext scopeContext;
     FetchScope fetchScope;
 };
 
@@ -2990,7 +3122,13 @@ FetchItemsCommand::FetchItemsCommand()
 }
 
 FetchItemsCommand::FetchItemsCommand(const Scope &scope, const FetchScope &fetchScope)
-    : Command(new FetchItemsCommandPrivate(scope, fetchScope))
+    : Command(new FetchItemsCommandPrivate(scope, ScopeContext(), fetchScope))
+{
+}
+
+FetchItemsCommand::FetchItemsCommand(const Scope &scope, const ScopeContext &context,
+                                     const FetchScope &fetchScope)
+    : Command(new FetchItemsCommandPrivate(scope, context, fetchScope))
 {
 }
 
@@ -3005,7 +3143,17 @@ Scope FetchItemsCommand::scope() const
     return d_func()->scope;
 }
 
+ScopeContext FetchItemsCommand::scopeContext() const
+{
+    return d_func()->scopeContext;
+}
+
 FetchScope FetchItemsCommand::fetchScope() const
+{
+    return d_func()->fetchScope;
+}
+
+FetchScope &FetchItemsCommand::fetchScope()
 {
     return d_func()->fetchScope;
 }

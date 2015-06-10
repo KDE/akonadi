@@ -188,6 +188,13 @@ ImapSet::~ImapSet()
 {
 }
 
+ImapSet ImapSet::all()
+{
+    ImapSet set;
+    set.add(ImapInterval(1, 0));
+    return set;
+}
+
 ImapSet &ImapSet::operator=(const ImapSet &other)
 {
     if (this != &other) {

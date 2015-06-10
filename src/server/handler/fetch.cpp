@@ -37,6 +37,8 @@ bool Fetch::parseStream()
         return failureResponse("No FETCH context specified");
     }
 
+    connection()->context()->setScopeContext(cmd.scopeContext());
+
     CacheCleanerInhibitor inhibitor;
 
     FetchHelper fetchHelper(connection(), cmd.scope(), cmd.fetchScope());

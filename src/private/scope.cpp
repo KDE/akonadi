@@ -59,6 +59,12 @@ Scope::Scope(qint64 id)
     setUidSet(id);
 }
 
+Scope::Scope(const ImapSet &set)
+    : d(new ScopePrivate)
+{
+    setUidSet(set);
+}
+
 Scope::Scope(SelectionScope scope, const QStringList &ids)
     : d(new ScopePrivate)
 {
@@ -74,6 +80,7 @@ Scope::Scope(SelectionScope scope, const QStringList &ids)
         d->ridChain = ids;
     }
 }
+
 
 Scope::Scope(const Scope &other)
     : d(other.d)

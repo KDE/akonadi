@@ -171,6 +171,11 @@ public:
     ~ImapSet();
 
     /**
+     * Returns ImapSet representing 1:*
+     * */
+    static ImapSet all();
+
+    /**
       Assignment operator.
     */
     ImapSet &operator=(const ImapSet &other);

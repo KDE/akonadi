@@ -46,7 +46,7 @@ void itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &coll
 /**
   Convenience method, does essentially the same as the one above.
 */
-void itemSetToQuery(const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb);
+void itemSetToQuery(const ImapSet &set, CommandContext *context, QueryBuilder &qb);
 
 /**
   Add conditions to @p qb for the given remote identifier @p rid.

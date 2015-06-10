@@ -71,6 +71,7 @@ class Command;
 class Response;
 class Factory;
 class FetchScope;
+class ScopeContext;
 class PartMetaData;
 class CachePolicy;
 class Ancestor;
@@ -145,6 +146,8 @@ AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Response &command);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchScope &scope);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
+AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ScopeContext &context);
+AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ScopeContext &context);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PartMetaData &part);
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PartMetaData &part);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
@@ -451,6 +454,44 @@ private:
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
 };
 
+
+
+
+class ScopeContextPrivate;
+class AKONADIPRIVATE_EXPORT ScopeContext
+{
+public:
+    enum Type {
+        Any = 0,
+        Collection,
+        Tag
+    };
+
+    explicit ScopeContext();
+    explicit ScopeContext(Type type, qint64 id);
+    ScopeContext(const ScopeContext &other);
+    ScopeContext(ScopeContext &&other);
+    ~ScopeContext();
+
+    ScopeContext &operator=(const ScopeContext &other);
+    ScopeContext &operator=(ScopeContext &&other);
+
+    bool operator==(const ScopeContext &other) const;
+    bool operator!=(const ScopeContext &other) const;
+
+    void setType(Type type);
+    Type type() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void debugString(DebugBlock &blck) const;
+private:
+    QSharedDataPointer<ScopeContextPrivate> d;
+
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::ScopeContext &context);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::ScopeContext &context);
+};
 
 
 
@@ -946,11 +987,15 @@ class AKONADIPRIVATE_EXPORT FetchItemsCommand : public Command
 {
 public:
     explicit FetchItemsCommand();
-    explicit FetchItemsCommand(const Scope &scope, const FetchScope &fetchScope);
+    explicit FetchItemsCommand(const Scope &scope, const FetchScope &fetchScope = FetchScope());
+    explicit FetchItemsCommand(const Scope &scope, const ScopeContext &ctx,
+                               const FetchScope &fetchScope = FetchScope());
     FetchItemsCommand(const Command &command);
 
     Scope scope() const;
+    ScopeContext scopeContext() const;
     FetchScope fetchScope() const;
+    FetchScope &fetchScope();
 
 private:
     AKONADI_DECLARE_PRIVATE(FetchItemsCommand)

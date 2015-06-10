@@ -57,6 +57,7 @@ public:
     explicit Scope();
     Scope(qint64 id);
     Scope(SelectionScope scope, const QStringList &ids);
+    Scope(const ImapSet &uidSet);
     Scope(const Scope &other);
     Scope(Scope &&other);
     ~Scope();
