@@ -160,6 +160,10 @@ public:
 
     ImapSet(qint64 Id);
 
+    ImapSet(const QVector<qint64> &ids);
+
+    ImapSet(const ImapInterval &interval);
+
     /**
       Copy constructor.
     */

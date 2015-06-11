@@ -179,6 +179,18 @@ ImapSet::ImapSet(Id id)
     add(QVector<Id>() << id);
 }
 
+ImapSet::ImapSet(const QVector<qint64> &ids)
+    : d(new Private)
+{
+    add(ids);
+}
+
+ImapSet::ImapSet(const ImapInterval &interval)
+    :d (new Private)
+{
+    add(interval);
+}
+
 ImapSet::ImapSet(const ImapSet &other)
     : d(other.d)
 {

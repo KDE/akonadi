@@ -82,26 +82,12 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
 CollectionAttribute::List List::getAttributes(const Collection &col, const QVector<QByteArray> &filter)
 {
     CollectionAttribute::List attributes;
-    if (filter.contains("REMOTEID")) {
-        CollectionAttribute attr;
-        attr.setType("REMOTEID");
-        attr.setValue(col.remoteId().toUtf8());
-        attributes << attr;
-    }
-    if (filter.contains("NAME")) {
-        CollectionAttribute attr;
-        attr.setType("NAME");
-        attr.setValue(col.name().toUtf8());
-        attributes << attr;
-    }
-    {
-        auto it = mCollectionAttributes.find(col.id());
-        while (it != mCollectionAttributes.end() && it.key() == col.id()) {
-            if (filter.isEmpty() || filter.contains(it.value().type())) {
-                attributes << it.value();
-            }
-            ++it;
+    auto it = mCollectionAttributes.find(col.id());
+    while (it != mCollectionAttributes.end() && it.key() == col.id()) {
+        if (filter.isEmpty() || filter.contains(it.value().type())) {
+            attributes << it.value();
         }
+        ++it;
     }
     return attributes;
 }
@@ -337,7 +323,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 }
             }
 
-    //If we matched referenced collecions we need to ensure the collection was referenced from this session
+            //If we matched referenced collecions we need to ensure the collection was referenced from this session
             const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
             //The collection is referenced, but not from this session. We need to reevaluate the filter condition
             if (it->referenced() && !isReferencedFromSession) {
@@ -395,8 +381,14 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     }
     }
 
-    // qCDebug(AKONADISERVER_LOG) << "HAS:" << knownIds;
-    // qCDebug(AKONADISERVER_LOG) << "MISSING:" << missingCollections;
+    /*
+    QSet<qint64> knownIds;
+    for (const Collection &col : mCollections) {
+        knownIds.insert(col.id());
+    }
+    qCDebug(AKONADISERVER_LOG) << "HAS:" << knownIds;
+    qCDebug(AKONADISERVER_LOG) << "MISSING:" << missingCollections;
+    */
 
     //Fetch missing collections that are part of the tree
     while (!missingCollections.isEmpty()) {
@@ -529,7 +521,31 @@ bool List::parseStream()
     mCollectionsToDisplay = cmd.displayPref();
     mCollectionsToIndex = cmd.indexPref();
     mIncludeStatistics = cmd.fetchStats();
-    mAncestorDepth = cmd.ancestorsDepth();
+
+    int depth;
+    switch (cmd.depth()) {
+    case Protocol::FetchCollectionsCommand::BaseCollection:
+        depth = 0;
+        break;
+    case Protocol::FetchCollectionsCommand::ParentCollection:
+        depth = 1;
+        break;
+    case Protocol::FetchCollectionsCommand::AllCollections:
+        depth = INT_MAX;
+        break;
+    }
+
+    switch (cmd.ancestorsDepth()) {
+    case Protocol::FetchCollectionsCommand::NoAncestor:
+        mAncestorDepth = 0;
+        break;
+    case Protocol::FetchCollectionsCommand::ParentAncestor:
+        mAncestorDepth = 1;
+        break;
+    case Protocol::FetchCollectionsCommand::AllAncestors:
+        mAncestorDepth = INT_MAX;
+        break;
+    }
     mAncestorAttributes = cmd.ancestorsAttributes();
 
     Scope scope = cmd.collections();
@@ -577,10 +593,10 @@ bool List::parseStream()
             return failureResponse("Collection does not exist");
         }
 
-        retrieveCollections(col, cmd.depth());
+        retrieveCollections(col, depth);
     } else { //Root folder listing
-        if (cmd.depth() != 0) {
-            retrieveCollections(Collection(), cmd.depth());
+        if (depth != 0) {
+            retrieveCollections(Collection(), depth);
     }
     }
 

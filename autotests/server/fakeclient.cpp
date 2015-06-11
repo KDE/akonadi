@@ -79,34 +79,49 @@ void FakeClient::dataAvailable()
 
 void FakeClient::readServerPart()
 {
-    while (!mScenarios.isEmpty() && mScenarios.at(0).action == TestScenario::ServerCmd) {
+    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ServerCmd
+            || mScenarios.at(0).action == TestScenario::Ignore)) {
         TestScenario scenario = mScenarios.takeFirst();
-        QDataStream expectedStream(scenario.data);
-        qint64 expectedTag, actualTag;
-        Protocol::Command expectedCommand, actualCommand;
+        if (scenario.action == TestScenario::Ignore) {
+            const int count = scenario.data.toInt();
 
-        expectedStream >> expectedTag;
-        mStream >> actualTag;
-        CLIENT_COMPARE(actualTag, expectedTag);
+            // Read and throw away all "count" responses. Useful for scenarios
+            // with thousands of responses
+            qint64 tag;
+            for (int i = 0; i < count; ++i) {
+                mStream >> tag;
+                Protocol::deserialize(mStream.device());
+            }
+        } else {
+            QDataStream expectedStream(scenario.data);
+            qint64 expectedTag, actualTag;
+            Protocol::Command expectedCommand, actualCommand;
 
-        expectedCommand = Protocol::deserialize(expectedStream.device());
-        actualCommand = Protocol::deserialize(mStream.device());
+            expectedStream >> expectedTag;
+            mStream >> actualTag;
+            CLIENT_COMPARE(actualTag, expectedTag);
 
-        if (actualCommand.type() != expectedCommand.type()) {
-            qDebug() << "Actual command:  " << actualCommand.debugString();
-            qDebug() << "Expected Command:" << expectedCommand.debugString();
+            expectedCommand = Protocol::deserialize(expectedStream.device());
+            actualCommand = Protocol::deserialize(mStream.device());
+
+            if (actualCommand.type() != expectedCommand.type()) {
+                qDebug() << "Actual command:  " << actualCommand.debugString();
+                qDebug() << "Expected Command:" << expectedCommand.debugString();
+            }
+            CLIENT_COMPARE(actualCommand.type(), expectedCommand.type());
+            CLIENT_COMPARE(actualCommand.isResponse(), expectedCommand.isResponse());
+            if (actualCommand != expectedCommand) {
+                qDebug() << "Actual command:  " << actualCommand.debugString();
+                qDebug() << "Expected Command:" << expectedCommand.debugString();
+            }
+            CLIENT_COMPARE(actualCommand, expectedCommand);
         }
-        CLIENT_COMPARE(actualCommand.type(), expectedCommand.type());
-        CLIENT_COMPARE(actualCommand.isResponse(), expectedCommand.isResponse());
-        if (actualCommand != expectedCommand) {
-            qDebug() << "Actual command:  " << actualCommand.debugString();
-            qDebug() << "Expected Command:" << expectedCommand.debugString();
-        }
-        CLIENT_COMPARE(actualCommand, expectedCommand);
     }
 
     if (!mScenarios.isEmpty()) {
-        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ClientCmd);
+        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ClientCmd
+                        || mScenarios.at(0).action == TestScenario::Wait
+                        || mScenarios.at(0).action ==TestScenario::Quit);
     } else {
         // Server replied and there's nothing else to send, then quit
         quit();
@@ -132,7 +147,8 @@ void FakeClient::writeClientPart()
     }
 
     if (!mScenarios.isEmpty()) {
-        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ServerCmd);
+        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ServerCmd
+                        || mScenarios.at(0).action == TestScenario::Ignore);
     }
 }
 

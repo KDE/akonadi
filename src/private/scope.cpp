@@ -65,6 +65,18 @@ Scope::Scope(const ImapSet &set)
     setUidSet(set);
 }
 
+Scope::Scope(const ImapInterval &interval)
+    : d(new ScopePrivate)
+{
+    setUidSet(interval);
+}
+
+Scope::Scope(const QVector<qint64> &interval)
+    : d(new ScopePrivate)
+{
+    setUidSet(interval);
+}
+
 Scope::Scope(SelectionScope scope, const QStringList &ids)
     : d(new ScopePrivate)
 {

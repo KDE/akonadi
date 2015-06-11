@@ -85,7 +85,7 @@ private Q_SLOTS:
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
         {
             Protocol::FetchCollectionsCommand cmd;
-            cmd.setDepth(-1);
+            cmd.setDepth(Protocol::FetchCollectionsCommand::AllCollections);
             cmd.setResource(QLatin1String("testresource"));
             cmd.setEnabled(true);
 
@@ -117,7 +117,7 @@ private Q_SLOTS:
             cmd.setReferenced(true);
 
             Protocol::FetchCollectionsCommand listCmd(initializer.collection("col2").id());
-            listCmd.setDepth(0);
+            listCmd.setDepth(Protocol::FetchCollectionsCommand::BaseCollection);
             listCmd.setEnabled(true);
 
             Collection col2 = initializer.collection("col2");
@@ -142,7 +142,7 @@ private Q_SLOTS:
             Protocol::FetchCollectionsCommand listCmd;
             listCmd.setResource(QLatin1String("testresource"));
             listCmd.setEnabled(true);
-            listCmd.setDepth(1);
+            listCmd.setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
 
             Collection col2 = initializer.collection("col2");
             col2.setReferenced(true);

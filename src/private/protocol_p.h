@@ -1426,14 +1426,26 @@ class FetchCollectionsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsCommand : public Command
 {
 public:
+    enum AncestorsDepth : quint8 {
+        NoAncestor,
+        ParentAncestor,
+        AllAncestors
+    };
+
+    enum Depth : quint8 {
+        BaseCollection,
+        ParentCollection,
+        AllCollections
+    };
+
     explicit FetchCollectionsCommand();
     explicit FetchCollectionsCommand(const Scope &scope);
     FetchCollectionsCommand(const Command &command);
 
     Scope collections() const;
 
-    void setDepth(int depth);
-    int depth() const;
+    void setDepth(Depth depth);
+    Depth depth() const;
 
     void setResource(const QString &resourceId);
     QString resource() const;
@@ -1441,8 +1453,8 @@ public:
     void setMimeTypes(const QStringList &mimeTypes);
     QStringList mimeTypes() const;
 
-    void setAncestorsDepth(int depth);
-    int ancestorsDepth() const;
+    void setAncestorsDepth(AncestorsDepth depth);
+    AncestorsDepth ancestorsDepth() const;
 
     void setAncestorsAttributes(const QVector<QByteArray> &attributes);
     QVector<QByteArray> ancestorsAttributes() const;

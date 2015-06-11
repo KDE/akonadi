@@ -142,7 +142,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
     Protocol::CachePolicy cachePolicy = cachePolicyResponse(col);
     response.setCachePolicy(cachePolicy);
 
-    if (ancestorDepth > 0) {
+    if (ancestorDepth) {
         QVector<Protocol::Ancestor> ancestorList
             = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
         response.setAncestors(ancestorList);
@@ -179,6 +179,7 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
             const Collection c = ancestors.pop();
             Protocol::Ancestor a(c.id());
             a.setRemoteId(c.remoteId());
+            a.setName(c.name());
             if (!ancestorAttributes.isEmpty()) {
                 QMap<QByteArray, QByteArray> attrs;
                 for (const CollectionAttribute &attr : ancestorAttributes.pop()) {

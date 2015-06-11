@@ -128,15 +128,10 @@ Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Co
         while (parent.isValid()) {
             Akonadi::Protocol::Ancestor anc;
             anc.setId(parent.id());
-            if (ancestorFetchScope.isEmpty()) {
+            anc.setRemoteId(parent.remoteId());
+            anc.setName(parent.name());
+            if (!ancestorFetchScope.isEmpty()) {
                 anc.setRemoteId(parent.remoteId());
-            } else {
-                if (ancestorFetchScope.contains(QLatin1String("REMOTEID"))) {
-                    anc.setRemoteId(parent.remoteId());
-                }
-                if (ancestorFetchScope.contains(QLatin1String("NAME"))) {
-                    anc.setName(parent.name());
-                }
                 Akonadi::Protocol::Attributes attrs;
                 Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
                     if (ancestorFetchScope.contains(QString::fromLatin1(attr.type()))) {
@@ -148,6 +143,8 @@ Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Co
             parent = parent.parent();
             ancs.push_back(anc);
         }
+        // Root
+        ancs.push_back(Akonadi::Protocol::Ancestor(0));
         resp.setAncestors(ancs);
     }
     resp.setReferenced(col.referenced());

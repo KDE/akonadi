@@ -51,7 +51,8 @@ public:
         ServerCmd,
         ClientCmd,
         Wait,
-        Quit
+        Quit,
+        Ignore
     };
 
     Action action;
@@ -67,6 +68,11 @@ public:
     static TestScenario quit()
     {
         return TestScenario { Quit, QByteArray() };
+    }
+
+    static TestScenario ignore(int count)
+    {
+        return TestScenario { Ignore, QByteArray::number(count) };
     }
 };
 

@@ -5073,8 +5073,8 @@ public:
     FetchCollectionsCommandPrivate(const Scope &collections = Scope())
         : CommandPrivate(Command::FetchCollections)
         , collections(collections)
-        , depth(0)
-        , ancestorsDepth(-1)
+        , depth(Akonadi::Protocol::FetchCollectionsCommand::BaseCollection)
+        , ancestorsDepth(Akonadi::Protocol::FetchCollectionsCommand::NoAncestor)
         , enabled(false)
         , sync(false)
         , display(false)
@@ -5169,8 +5169,8 @@ public:
     QString resource;
     QStringList mimeTypes;
     QVector<QByteArray> ancestorsAttributes;
-    int depth;
-    int ancestorsDepth;
+    FetchCollectionsCommand::Depth depth;
+    FetchCollectionsCommand::AncestorsDepth ancestorsDepth;
     bool enabled;
     bool sync;
     bool display;
@@ -5204,11 +5204,11 @@ Scope FetchCollectionsCommand::collections() const
     return d_func()->collections;
 }
 
-void FetchCollectionsCommand::setDepth(int depth)
+void FetchCollectionsCommand::setDepth(Depth depth)
 {
     d_func()->depth = depth;
 }
-int FetchCollectionsCommand::depth() const
+FetchCollectionsCommand::Depth FetchCollectionsCommand::depth() const
 {
     return d_func()->depth;
 }
@@ -5231,11 +5231,11 @@ QStringList FetchCollectionsCommand::mimeTypes() const
     return d_func()->mimeTypes;
 }
 
-void FetchCollectionsCommand::setAncestorsDepth(int depth)
+void FetchCollectionsCommand::setAncestorsDepth(AncestorsDepth depth)
 {
     d_func()->ancestorsDepth = depth;
 }
-int FetchCollectionsCommand::ancestorsDepth() const
+FetchCollectionsCommand::AncestorsDepth FetchCollectionsCommand::ancestorsDepth() const
 {
     return d_func()->ancestorsDepth;
 }

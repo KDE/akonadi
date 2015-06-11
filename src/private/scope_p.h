@@ -32,6 +32,7 @@ class QStringList;
 namespace Akonadi
 {
 class ImapSet;
+class ImapInterval;
 class Scope;
 }
 
@@ -55,9 +56,14 @@ public:
     };
 
     explicit Scope();
-    Scope(qint64 id);
     Scope(SelectionScope scope, const QStringList &ids);
+
+    /* UID */
+    Scope(qint64 id);
     Scope(const ImapSet &uidSet);
+    Scope(const ImapInterval &interval);
+    Scope(const QVector<qint64> &interval);
+
     Scope(const Scope &other);
     Scope(Scope &&other);
     ~Scope();
