@@ -74,8 +74,7 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
-    template<typename T>
-    void sendResponse(const T &response);
+    void sendResponse(const Protocol::Command &response);
 
     Protocol::Command readCommand();
 
@@ -115,9 +114,7 @@ protected:
     QHash<QString, qint64> m_executionsByHandler;
 
 private:
-    void sendResponseImpl(QDataStream &stream);
-    template<typename T>
-    void sendResponse(qint64 tag, const T &response);
+    void sendResponse(qint64 tag, const Protocol::Command &response);
 
     /** For debugging */
     void startTime();
@@ -126,23 +123,6 @@ private:
     bool m_reportTime;
 
 };
-
-template<typename T>
-void Connection::sendResponse(const T& response)
-{
-    QDataStream stream(m_socket);
-    sendResponseImpl(stream);
-    stream << response;
-}
-
-template<typename T>
-void Connection::sendResponse(qint64 tag, const T &response)
-{
-    QDataStream stream(m_socket);
-    stream << tag;
-    stream << response;
-}
-
 
 } // namespace Server
 } // namespace Akonadi

@@ -46,6 +46,48 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+
+TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
+                                  const Protocol::Command &response)
+{
+    TestScenario sc;
+    sc.action = action;
+
+    QBuffer buffer(&sc.data);
+    buffer.open(QIODevice::ReadWrite);
+    {
+        QDataStream stream(&buffer);
+        stream << tag;
+        Protocol::serialize(&buffer, response);
+    }
+
+    {
+        buffer.seek(0);
+        QDataStream os(&buffer);
+        qint64 cmpTag;
+        os >> cmpTag;
+        Q_ASSERT(cmpTag == tag);
+        Protocol::Command cmpResp = Protocol::deserialize(os.device());
+
+        bool ok = false;
+        [cmpTag, tag, cmpResp, response, &ok]() {
+            QCOMPARE(cmpTag, tag);
+            QCOMPARE(cmpResp.type(), response.type());
+            QCOMPARE(cmpResp.isResponse(), response.isResponse());
+            QCOMPARE(cmpResp.debugString(), response.debugString());
+            QCOMPARE(cmpResp, response);
+            ok = true;
+        }();
+        if (!ok) {
+            sc.data.clear();
+            return sc;
+        }
+    }
+    return sc;
+}
+
+
+
 FakeAkonadiServer *FakeAkonadiServer::instance()
 {
     if (!AkonadiServer::s_instance) {

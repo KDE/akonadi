@@ -154,7 +154,7 @@ void Connection::slotNewData()
         stream >> tag;
         // TODO: Check tag is incremental sequence
 
-        Protocol::Command cmd = Protocol::Factory::fromStream(stream);
+        Protocol::Command cmd = Protocol::deserialize(m_socket);
 
         // TODO: The resend-on-read-past-end is not really a solution, because
         // the same will probably happen again. We should send overall size of the
@@ -349,11 +349,16 @@ void Connection::reportTime() const
     }
 }
 
-void Connection::sendResponseImpl(QDataStream &stream)
+void Connection::sendResponse(qint64 tag, const Protocol::Command &response)
 {
-    // We can't have this in the header due to circular include between
-    // connection.h and handler.h
-    stream << m_currentHandler->tag();
+    QDataStream stream(m_socket);
+    stream << tag;
+    Protocol::serialize(m_socket, response);
+}
+
+void Connection::sendResponse(const Protocol::Command &response)
+{
+    sendResponse(m_currentHandler->tag(), response);
 }
 
 Protocol::Command Connection::readCommand()
@@ -363,6 +368,7 @@ Protocol::Command Connection::readCommand()
     QDataStream stream(m_socket);
     qint64 tag;
     stream >> tag;
+
     // TODO: compare tag with m_currentHandler->tag() ?
-    return Protocol::Factory::fromStream(stream);
+    return Protocol::deserialize(m_socket);
 }

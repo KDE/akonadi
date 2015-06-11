@@ -89,8 +89,8 @@ void FakeClient::readServerPart()
         mStream >> actualTag;
         CLIENT_COMPARE(actualTag, expectedTag);
 
-        expectedCommand = Protocol::Factory::fromStream(expectedStream);
-        actualCommand = Protocol::Factory::fromStream(mStream);
+        expectedCommand = Protocol::deserialize(expectedStream.device());
+        actualCommand = Protocol::deserialize(mStream.device());
 
         if (actualCommand.type() != expectedCommand.type()) {
             qDebug() << "Actual command:  " << actualCommand.debugString();

@@ -101,14 +101,15 @@ public:
     bool failureResponse(const QByteArray &response);
     bool failureResponse(const QString &response);
 
-    // TODO: Validate T is Protocol::Response
     template<typename T>
-    bool successResponse(const T &response = T());
+    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, bool>::type
+    successResponse(const T &response = T());
 
-    // TODO: Validate T is Protocol::Response
     template<typename T>
-    void sendResponse(const T &response = T());
+    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
+    sendResponse(const T&response = T());
 
+    void sendResponse(const Protocol::Command &response);
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -135,18 +136,19 @@ protected:
 };
 
 template<typename T>
-bool Handler::successResponse(const T &response)
+typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, bool>::type
+Handler::successResponse(const T &response)
 {
-    sendResponse<T>(response);
+    sendResponse(response);
     return true;
 }
 
 template<typename T>
-void Handler::sendResponse(const T &response)
+typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
+Handler::sendResponse(const T &response)
 {
-    m_connection->sendResponse(response);
+    sendResponse(static_cast<const Protocol::Command&>(response));
 }
-
 
 } // namespace Server
 } // namespace Akonadi

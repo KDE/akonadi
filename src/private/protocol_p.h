@@ -366,16 +366,17 @@ private:
 
 
 
-
 class AKONADIPRIVATE_EXPORT Factory
 {
 public:
     static Command command(Command::Type type);
     static Response response(Command::Type type);
-
-    static Command fromStream(QDataStream &stream);
 };
 
+
+
+AKONADIPRIVATE_EXPORT void serialize(QIODevice *device, const Command &command);
+AKONADIPRIVATE_EXPORT Command deserialize(QIODevice *device);
 
 
 
