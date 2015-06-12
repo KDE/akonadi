@@ -872,6 +872,10 @@ class AKONADIPRIVATE_EXPORT FetchRelationsCommand : public Command
 {
 public:
     explicit FetchRelationsCommand();
+    FetchRelationsCommand(qint64 side, const QString &type = QString(),
+                          const QString &resource = QString());
+    FetchRelationsCommand(qint64 left, qint64 right, const QString &type = QString(),
+                          const QString &resource = QString());
     FetchRelationsCommand(const Command &command);
 
     void setLeft(qint64 left);
@@ -904,7 +908,8 @@ class AKONADIPRIVATE_EXPORT FetchRelationsResponse : public Response
 {
 public:
     explicit FetchRelationsResponse();
-    explicit FetchRelationsResponse(qint64 left, qint64 right, const QString &type);
+    explicit FetchRelationsResponse(qint64 left, qint64 right, const QString &type,
+                                    const QString &remoteId = QString());
     FetchRelationsResponse(const Command &command);
 
     qint64 left() const;
@@ -1993,6 +1998,7 @@ class AKONADIPRIVATE_EXPORT ModifyRelationCommand : public Command
 {
 public:
     explicit ModifyRelationCommand();
+    ModifyRelationCommand(qint64 left, qint64 right, const QString &type);
     ModifyRelationCommand(const Command &command);
 
     void setLeft(qint64 left);
@@ -2033,6 +2039,7 @@ class AKONADIPRIVATE_EXPORT RemoveRelationsCommand : public Command
 {
 public:
     explicit RemoveRelationsCommand();
+    RemoveRelationsCommand(qint64 left, qint64 right, const QString &type = QString());
     RemoveRelationsCommand(const Command &command);
 
     void setLeft(qint64 left);

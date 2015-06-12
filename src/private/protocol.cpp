@@ -2463,11 +2463,14 @@ namespace Protocol
 class FetchRelationsCommandPrivate : public CommandPrivate
 {
 public:
-    FetchRelationsCommandPrivate()
+    FetchRelationsCommandPrivate(qint64 left = -1, qint64 right = -1, qint64 side = -1,
+                                 const QString &type = QString(), const QString &resource = QString())
         : CommandPrivate(Command::FetchRelations)
-        , left(-1)
-        , right(-1)
-        , side(-1)
+        , left(left)
+        , right(right)
+        , side(side)
+        , type(type)
+        , resource(resource)
     {}
     FetchRelationsCommandPrivate(const FetchRelationsCommandPrivate &other)
         : CommandPrivate(other)
@@ -2537,6 +2540,19 @@ AKONADI_DECLARE_PRIVATE(FetchRelationsCommand)
 
 FetchRelationsCommand::FetchRelationsCommand()
     : Command(new FetchRelationsCommandPrivate)
+{
+}
+
+FetchRelationsCommand::FetchRelationsCommand(qint64 side, const QString &type,
+                                             const QString &resource)
+    : Command(new FetchRelationsCommandPrivate(-1, -1, side, type, resource))
+{
+}
+
+FetchRelationsCommand::FetchRelationsCommand(qint64 left, qint64 right,
+                                             const QString &type,
+                                             const QString &resource)
+    : Command(new FetchRelationsCommandPrivate(left, right, -1, type, resource))
 {
 }
 
@@ -2616,11 +2632,13 @@ namespace Protocol
 class FetchRelationsResponsePrivate : public ResponsePrivate
 {
 public:
-    FetchRelationsResponsePrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString())
+    FetchRelationsResponsePrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString(),
+                                  const QString &remoteId = QString())
         : ResponsePrivate(Command::FetchRelations)
         , left(left)
         , right(right)
         , type(type)
+        , remoteId(remoteId)
     {}
     FetchRelationsResponsePrivate(const FetchRelationsResponsePrivate &other)
         : ResponsePrivate(other)
@@ -2687,8 +2705,10 @@ FetchRelationsResponse::FetchRelationsResponse()
 {
 }
 
-FetchRelationsResponse::FetchRelationsResponse(qint64 left, qint64 right, const QString &type)
-    : Response(new FetchRelationsResponsePrivate(left, right, type))
+FetchRelationsResponse::FetchRelationsResponse(qint64 left, qint64 right,
+                                               const QString &type,
+                                               const QString &remoteId)
+    : Response(new FetchRelationsResponsePrivate(left, right, type, remoteId))
 {
 }
 
@@ -7483,10 +7503,11 @@ namespace Protocol
 class ModifyRelationCommandPrivate : public CommandPrivate
 {
 public:
-    ModifyRelationCommandPrivate()
+    ModifyRelationCommandPrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString())
         : CommandPrivate(Command::ModifyRelation)
-        , left(-1)
-        , right(-1)
+        , type(type)
+        , left(left)
+        , right(right)
     {}
     ModifyRelationCommandPrivate(const ModifyRelationCommandPrivate &other)
         : CommandPrivate(other)
@@ -7550,6 +7571,11 @@ AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
 
 ModifyRelationCommand::ModifyRelationCommand()
     : Command(new ModifyRelationCommandPrivate)
+{
+}
+
+ModifyRelationCommand::ModifyRelationCommand(qint64 left, qint64 right, const QString &type)
+    : Command(new ModifyRelationCommandPrivate(left, right, type))
 {
 }
 
@@ -7637,10 +7663,11 @@ namespace Protocol
 class RemoveRelationsCommandPrivate : public CommandPrivate
 {
 public:
-    RemoveRelationsCommandPrivate()
+    RemoveRelationsCommandPrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString())
         : CommandPrivate(Command::RemoveRelations)
-        , left(-1)
-        , right(-1)
+        , left(left)
+        , right(right)
+        , type(type)
     {}
     RemoveRelationsCommandPrivate(const RemoveRelationsCommandPrivate &other)
         : CommandPrivate(other)
@@ -7698,6 +7725,11 @@ AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)
 
 RemoveRelationsCommand::RemoveRelationsCommand()
     : Command(new RemoveRelationsCommandPrivate)
+{
+}
+
+RemoveRelationsCommand::RemoveRelationsCommand(qint64 left, qint64 right, const QString &type)
+    : Command(new RemoveRelationsCommandPrivate(left, right, type))
 {
 }
 
