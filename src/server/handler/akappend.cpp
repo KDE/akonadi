@@ -281,7 +281,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 bool AkAppend::sendResponse(const PimItem& item)
 {
     Protocol::FetchScope fetchScope;
-    fetchScope.setAncestorDepth(1);
+    fetchScope.setAncestorDepth(Protocol::Ancestor::ParentAncestor);
     fetchScope.setFetch(Protocol::FetchScope::AllAttributes |
                         Protocol::FetchScope::FullPayload |
                         Protocol::FetchScope::CacheOnly |

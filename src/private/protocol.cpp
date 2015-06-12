@@ -718,14 +718,15 @@ class FetchScopePrivate : public QSharedData
 {
 public:
     FetchScopePrivate()
-        : fetchFlags(FetchScope::None)
+        : ancestorDepth(Ancestor::NoAncestor)
+        , fetchFlags(FetchScope::None)
     {}
 
     QVector<QByteArray> requestedParts;
     QStringList requestedPayloads;
     QDateTime changedSince;
     QVector<QByteArray> tagFetchScope;
-    int ancestorDepth;
+    Ancestor::Depth ancestorDepth;
     FetchScope::FetchFlags fetchFlags;
 };
 
@@ -820,12 +821,12 @@ QVector<QByteArray> FetchScope::tagFetchScope() const
     return d->tagFetchScope;
 }
 
-void FetchScope::setAncestorDepth(int depth)
+void FetchScope::setAncestorDepth(Ancestor::Depth depth)
 {
     d->ancestorDepth = depth;
 }
 
-int FetchScope::ancestorDepth() const
+Ancestor::Depth FetchScope::ancestorDepth() const
 {
     return d->ancestorDepth;
 }
@@ -943,23 +944,30 @@ namespace Protocol
 class ScopeContextPrivate : public QSharedData
 {
 public:
-    ScopeContextPrivate(ScopeContext::Type type = ScopeContext::Any, qint64 id = -1)
-        : id(id)
-        , type(type)
-    {}
+    ScopeContextPrivate(ScopeContext::Type type = ScopeContext::Collection, const QVariant &ctx = QVariant())
+    {
+        if (type == ScopeContext::Tag) {
+            tagCtx = ctx;
+        } else {
+            collectionCtx = ctx;
+        }
+    }
 
     ScopeContextPrivate(const ScopeContextPrivate &other)
         : QSharedData(other)
-        , id(other.id)
-        , type(other.type)
+        , collectionCtx(other.collectionCtx)
+        , tagCtx(other.tagCtx)
     {}
 
-    qint64 id;
-    ScopeContext::Type type;
+    QVariant collectionCtx;
+    QVariant tagCtx;
 };
 
 }
 }
+
+#define CTX(type) \
+    ((type == Collection) ? d->collectionCtx : d->tagCtx)
 
 ScopeContext::ScopeContext()
     : d(new ScopeContextPrivate)
@@ -968,6 +976,11 @@ ScopeContext::ScopeContext()
 
 ScopeContext::ScopeContext(Type type, qint64 id)
     : d(new ScopeContextPrivate(type, id))
+{
+}
+
+ScopeContext::ScopeContext(Type type, const QString &rid)
+    : d(new ScopeContextPrivate(type, rid))
 {
 }
 
@@ -1000,8 +1013,8 @@ ScopeContext &ScopeContext::operator=(ScopeContext &&other)
 bool ScopeContext::operator==(const ScopeContext &other) const
 {
     return d == other.d ||
-        (d->id == other.d->id &&
-         d->type == other.d->type);
+        (d->collectionCtx == other.d->collectionCtx &&
+         d->tagCtx == other.d->tagCtx);
 }
 
 bool ScopeContext::operator!=(const ScopeContext &other) const
@@ -1009,51 +1022,65 @@ bool ScopeContext::operator!=(const ScopeContext &other) const
     return !(*this == other);
 }
 
-void ScopeContext::setType(Type type)
+bool ScopeContext::isEmpty() const
 {
-    d->type = type;
-}
-ScopeContext::Type ScopeContext::type() const
-{
-    return d->type;
+    return d->collectionCtx.isNull() && d->tagCtx.isNull();
 }
 
-void ScopeContext::setId(qint64 id)
+void ScopeContext::setContext(Type type, qint64 id)
 {
-    d->id = id;
+    CTX(type) = id;
 }
-qint64 ScopeContext::id() const
+
+void ScopeContext::setContext(Type type, const QString &rid)
 {
-    return d->id;
+    CTX(type) == rid;
+}
+
+void ScopeContext::clearContext(Type type)
+{
+    CTX(type).clear();
+}
+
+bool ScopeContext::hasContextId(Type type) const
+{
+    return CTX(type).canConvert(QVariant::LongLong);
+}
+
+qint64 ScopeContext::contextId(Type type) const
+{
+    return CTX(type).toLongLong();
+}
+
+bool ScopeContext::hasContextRID(Type type) const
+{
+    return CTX(type).canConvert(QVariant::String);
+}
+
+QString ScopeContext::contextRID(Type type) const
+{
+    return CTX(type).toString();
 }
 
 void ScopeContext::debugString(DebugBlock &blck) const
 {
-    blck.write("Type", [](Type type) {
-            switch (type) {
-            case ScopeContext::Any:
-                return "Any";
-            case ScopeContext::Collection:
-                return "Collection";
-            case ScopeContext::Tag:
-                return "Tag";
-            }
-            return "";
-        }(d->type));
-    blck.write("ID", d->id);
+    blck.write("Tag", d->tagCtx);
+    blck.write("Collection", d->collectionCtx);
 }
 
 QDataStream &operator<<(QDataStream &stream, const ScopeContext &context)
 {
-    return stream << context.d->type
-                  << context.d->id;
+    return stream << context.d->collectionCtx
+                  << context.d->tagCtx;
 }
 
 QDataStream &operator>>(QDataStream &stream, ScopeContext &context)
 {
-    return stream >> context.d->type
-                  >> context.d->id;
+    return stream >> context.d->collectionCtx
+                  >> context.d->tagCtx;
 }
+
+#undef CTX
 
 
 /******************************************************************************/
@@ -5102,8 +5129,8 @@ public:
     FetchCollectionsCommandPrivate(const Scope &collections = Scope())
         : CommandPrivate(Command::FetchCollections)
         , collections(collections)
-        , depth(Akonadi::Protocol::FetchCollectionsCommand::BaseCollection)
-        , ancestorsDepth(Akonadi::Protocol::FetchCollectionsCommand::NoAncestor)
+        , depth(FetchCollectionsCommand::BaseCollection)
+        , ancestorsDepth(Ancestor::NoAncestor)
         , enabled(false)
         , sync(false)
         , display(false)
@@ -5199,7 +5226,7 @@ public:
     QStringList mimeTypes;
     QVector<QByteArray> ancestorsAttributes;
     FetchCollectionsCommand::Depth depth;
-    FetchCollectionsCommand::AncestorsDepth ancestorsDepth;
+    Ancestor::Depth ancestorsDepth;
     bool enabled;
     bool sync;
     bool display;
@@ -5260,11 +5287,11 @@ QStringList FetchCollectionsCommand::mimeTypes() const
     return d_func()->mimeTypes;
 }
 
-void FetchCollectionsCommand::setAncestorsDepth(AncestorsDepth depth)
+void FetchCollectionsCommand::setAncestorsDepth(Ancestor::Depth depth)
 {
     d_func()->ancestorsDepth = depth;
 }
-FetchCollectionsCommand::AncestorsDepth FetchCollectionsCommand::ancestorsDepth() const
+Ancestor::Depth FetchCollectionsCommand::ancestorsDepth() const
 {
     return d_func()->ancestorsDepth;
 }

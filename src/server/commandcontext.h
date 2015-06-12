@@ -40,7 +40,7 @@ public:
     void setResource(const Resource &resource);
     Resource resource() const;
 
-    void setScopeContext(const Protocol::ScopeContext &scopeContext);
+    bool setScopeContext(const Protocol::ScopeContext &scopeContext);
 
     void setCollection(const Collection &collection);
     qint64 collectionId() const;

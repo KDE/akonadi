@@ -18,6 +18,7 @@
  */
 
 #include "commandcontext.h"
+#include "storage/selectquerybuilder.h"
 
 #include <private/protocol_p.h>
 
@@ -43,13 +44,32 @@ Resource CommandContext::resource() const
     return mResource;
 }
 
-void CommandContext::setScopeContext(const Protocol::ScopeContext &scopeContext)
+bool CommandContext::setScopeContext(const Protocol::ScopeContext &scopeContext)
 {
-    if (scopeContext.type() == Protocol::ScopeContext::Collection) {
-        mCollection = Collection::retrieveById(scopeContext.id());
-    } else if (scopeContext.type() == Protocol::ScopeContext::Tag) {
-        mTagId = scopeContext.id();
+    if (scopeContext.hasContextId(Protocol::ScopeContext::Collection)) {
+        mCollection = Collection::retrieveById(scopeContext.contextId(Protocol::ScopeContext::Collection));
+    } else if (scopeContext.hasContextRID(Protocol::ScopeContext::Collection)) {
+        if (mResource.isValid()) {
+            SelectQueryBuilder<Collection> qb;
+            qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, scopeContext.contextRID(Protocol::ScopeContext::Collection));
+            qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, mResource.id());
+            qb.exec();
+            Collection::List cols = qb.result();
+            if (cols.isEmpty()) {
+                // error
+                return false;
+            }
+            mCollection = cols.at(0);
+        } else {
+            return false;
+        }
     }
+
+    if (scopeContext.hasContextId(Protocol::ScopeContext::Tag)) {
+        mTagId = scopeContext.contextId(Protocol::ScopeContext::Tag);
+    }
+
+    return true;
 }
 
 void CommandContext::setCollection(const Collection &collection)

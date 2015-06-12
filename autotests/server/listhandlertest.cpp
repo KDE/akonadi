@@ -76,7 +76,7 @@ public:
 
     Protocol::FetchCollectionsCommand createCommand(const Scope &scope,
                                                     Protocol::FetchCollectionsCommand::Depth depth = Akonadi::Protocol::FetchCollectionsCommand::BaseCollection,
-                                                    Protocol::FetchCollectionsCommand::AncestorsDepth ancDepth = Protocol::FetchCollectionsCommand::NoAncestor,
+                                                    Protocol::Ancestor::Depth ancDepth = Protocol::Ancestor::NoAncestor,
                                                     const QStringList &mimeTypes = QStringList(),
                                                     const QString &resource = QString())
     {
@@ -143,7 +143,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection,
-                                                                                        Protocol::FetchCollectionsCommand::AllAncestors))
+                                                                                        Protocol::Ancestor::AllAncestors))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             QTest::newRow("base ancestors") << scenarios;
@@ -152,7 +152,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection,
-                                                                                        Protocol::FetchCollectionsCommand::AllAncestors))
+                                                                                        Protocol::Ancestor::AllAncestors))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             QTest::newRow("first level ancestors") << scenarios;
@@ -161,7 +161,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::AllCollections,
-                                                                                        Protocol::FetchCollectionsCommand::AllAncestors))
+                                                                                        Protocol::Ancestor::AllAncestors))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3, true))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
@@ -207,7 +207,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections,
-                                                                                        Protocol::FetchCollectionsCommand::NoAncestor,
+                                                                                        Protocol::Ancestor::NoAncestor,
                                 { QLatin1String("text/calendar") }))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1, false, false))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
@@ -245,7 +245,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(),
                             Protocol::FetchCollectionsCommand::AllCollections,
-                            Protocol::FetchCollectionsCommand::NoAncestor, {}, QLatin1String("testresource")))
+                            Protocol::Ancestor::NoAncestor, {}, QLatin1String("testresource")))
                   << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
 
@@ -418,7 +418,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
 
-            auto cmd = createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection, Protocol::FetchCollectionsCommand::AllAncestors);
+            auto cmd = createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection, Protocol::Ancestor::AllAncestors);
             cmd.setAncestorsAttributes({ "type" });
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
@@ -460,7 +460,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections,
-                                Protocol::FetchCollectionsCommand::NoAncestor, { QLatin1String("mimetype1") }))
+                                Protocol::Ancestor::NoAncestor, { QLatin1String("mimetype1") }))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
@@ -472,7 +472,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::AllCollections,
-                                Protocol::FetchCollectionsCommand::NoAncestor, { QLatin1String("mimetype1") }))
+                                Protocol::Ancestor::NoAncestor, { QLatin1String("mimetype1") }))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
@@ -564,7 +564,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(toplevel.id(), Protocol::FetchCollectionsCommand::AllCollections,
-                                Protocol::FetchCollectionsCommand::AllAncestors, { QLatin1String("mimetype1") }, QLatin1String("testresource")))
+                                Protocol::Ancestor::AllAncestors, { QLatin1String("mimetype1") }, QLatin1String("testresource")))
                       << TestScenario::ignore(101005)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             QTest::newRow("recursive list filtered by mimetype with ancestors") << scenarios;

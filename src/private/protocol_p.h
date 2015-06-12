@@ -380,6 +380,55 @@ AKONADIPRIVATE_EXPORT Command deserialize(QIODevice *device);
 
 
 
+
+
+
+class AncestorPrivate;
+class AKONADIPRIVATE_EXPORT Ancestor
+{
+public:
+    enum Depth : quint8 {
+        NoAncestor,
+        ParentAncestor,
+        AllAncestors
+    };
+
+    explicit Ancestor();
+    explicit Ancestor(qint64 id);
+    Ancestor(Ancestor &&other);
+    Ancestor(const Ancestor &other);
+    ~Ancestor();
+
+    Ancestor &operator=(Ancestor &&other);
+    Ancestor &operator=(const Ancestor &other);
+
+    bool operator==(const Ancestor &other) const;
+    bool operator!=(const Ancestor &other) const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
+
+    void setName(const QString &name);
+    QString name() const;
+
+    void setAttributes(const Attributes &attrs);
+    Attributes attributes() const;
+
+    void debugString(DebugBlock &blck) const;
+private:
+    QSharedDataPointer<AncestorPrivate> d;
+
+    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
+    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
+};
+
+
+
+
+
 class FetchScopePrivate;
 class AKONADIPRIVATE_EXPORT FetchScope
 {
@@ -426,8 +475,8 @@ public:
     void setTagFetchScope(const QVector<QByteArray> &tagFetchScope);
     QVector<QByteArray> tagFetchScope() const;
 
-    void setAncestorDepth(int depth);
-    int ancestorDepth() const;
+    void setAncestorDepth(Ancestor::Depth depth);
+    Ancestor::Depth ancestorDepth() const;
 
     bool cacheOnly() const;
     bool checkCachedPayloadPartsOnly() const;
@@ -469,7 +518,8 @@ public:
     };
 
     explicit ScopeContext();
-    explicit ScopeContext(Type type, qint64 id);
+    ScopeContext(Type type, qint64 id);
+    ScopeContext(Type type, const QString &id);
     ScopeContext(const ScopeContext &other);
     ScopeContext(ScopeContext &&other);
     ~ScopeContext();
@@ -480,11 +530,17 @@ public:
     bool operator==(const ScopeContext &other) const;
     bool operator!=(const ScopeContext &other) const;
 
-    void setType(Type type);
-    Type type() const;
+    bool isEmpty() const;
 
-    void setId(qint64 id);
-    qint64 id() const;
+    void setContext(Type type, qint64 id);
+    void setContext(Type type, const QString &id);
+    void clearContext(Type type);
+
+    bool hasContextId(Type type) const;
+    qint64 contextId(Type type) const;
+
+    bool hasContextRID(Type type) const;
+    QString contextRID(Type type) const;
 
     void debugString(DebugBlock &blck) const;
 private:
@@ -570,47 +626,6 @@ private:
     friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
     friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::CachePolicy &policy);
 };
-
-
-
-
-
-class AncestorPrivate;
-class AKONADIPRIVATE_EXPORT Ancestor
-{
-public:
-    explicit Ancestor();
-    explicit Ancestor(qint64 id);
-    Ancestor(Ancestor &&other);
-    Ancestor(const Ancestor &other);
-    ~Ancestor();
-
-    Ancestor &operator=(Ancestor &&other);
-    Ancestor &operator=(const Ancestor &other);
-
-    bool operator==(const Ancestor &other) const;
-    bool operator!=(const Ancestor &other) const;
-
-    void setId(qint64 id);
-    qint64 id() const;
-
-    void setRemoteId(const QString &remoteId);
-    QString remoteId() const;
-
-    void setName(const QString &name);
-    QString name() const;
-
-    void setAttributes(const Attributes &attrs);
-    Attributes attributes() const;
-
-    void debugString(DebugBlock &blck) const;
-private:
-    QSharedDataPointer<AncestorPrivate> d;
-
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
-};
-
 
 
 
@@ -1431,12 +1446,6 @@ class FetchCollectionsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsCommand : public Command
 {
 public:
-    enum AncestorsDepth : quint8 {
-        NoAncestor,
-        ParentAncestor,
-        AllAncestors
-    };
-
     enum Depth : quint8 {
         BaseCollection,
         ParentCollection,
@@ -1458,8 +1467,8 @@ public:
     void setMimeTypes(const QStringList &mimeTypes);
     QStringList mimeTypes() const;
 
-    void setAncestorsDepth(AncestorsDepth depth);
-    AncestorsDepth ancestorsDepth() const;
+    void setAncestorsDepth(Ancestor::Depth depth);
+    Ancestor::Depth ancestorsDepth() const;
 
     void setAncestorsAttributes(const QVector<QByteArray> &attributes);
     QVector<QByteArray> ancestorsAttributes() const;

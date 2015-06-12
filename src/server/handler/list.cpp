@@ -536,13 +536,13 @@ bool List::parseStream()
     }
 
     switch (cmd.ancestorsDepth()) {
-    case Protocol::FetchCollectionsCommand::NoAncestor:
+    case Protocol::Ancestor::NoAncestor:
         mAncestorDepth = 0;
         break;
-    case Protocol::FetchCollectionsCommand::ParentAncestor:
+    case Protocol::Ancestor::ParentAncestor:
         mAncestorDepth = 1;
         break;
-    case Protocol::FetchCollectionsCommand::AllAncestors:
+    case Protocol::Ancestor::AllAncestors:
         mAncestorDepth = INT_MAX;
         break;
     }
