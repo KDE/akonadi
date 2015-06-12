@@ -45,7 +45,6 @@ public:
     FetchHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
         try {

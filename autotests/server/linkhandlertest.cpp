@@ -20,7 +20,7 @@
 #include <QObject>
 
 #include <handler/link.h>
-#include <response.h>
+
 
 #include <private/notificationmessagev3_p.h>
 #include <private/notificationmessagev2_p.h>
@@ -46,8 +46,6 @@ class LinkHandlerTest : public QObject
 public:
     LinkHandlerTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {

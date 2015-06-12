@@ -27,7 +27,7 @@
 
 #include "storage/datastore.h"
 #include "handler.h"
-#include "response.h"
+
 #include "tracer.h"
 #include "clientcapabilityaggregator.h"
 #include "collectionreferencemanager.h"

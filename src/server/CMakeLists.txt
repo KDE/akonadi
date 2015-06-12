@@ -49,7 +49,6 @@ set(libakonadiserver_SRCS
     handler.cpp
     handlerhelper.cpp
     intervalcheck.cpp
-    response.cpp
     collectionreferencemanager.cpp
     handler/akappend.cpp
     handler/copy.cpp

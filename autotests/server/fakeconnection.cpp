@@ -18,7 +18,7 @@
 */
 
 #include "fakeconnection.h"
-#include "response.h"
+
 #include "fakedatastore.h"
 #include "fakeakonadiserver.h"
 

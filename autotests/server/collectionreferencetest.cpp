@@ -18,7 +18,7 @@
 */
 #include <QObject>
 #include <handler/modify.h>
-#include <response.h>
+
 #include <storage/entity.h>
 
 #include "fakeakonadiserver.h"
@@ -48,8 +48,6 @@ class CollectionReferenceTest : public QObject
 public:
     CollectionReferenceTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->setPopulateDb(false);
             FakeAkonadiServer::instance()->init();

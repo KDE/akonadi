@@ -19,7 +19,7 @@
 
 #include <QObject>
 
-#include <response.h>
+
 #include <storage/selectquerybuilder.h>
 
 #include "fakeakonadiserver.h"
@@ -62,7 +62,6 @@ public:
     RelationHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
         qRegisterMetaType<Akonadi::Server::Relation::List>();
 
         try {

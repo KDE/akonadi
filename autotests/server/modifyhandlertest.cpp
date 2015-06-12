@@ -18,7 +18,7 @@
 */
 #include <QObject>
 #include <handler/modify.h>
-#include <response.h>
+
 #include <storage/entity.h>
 
 #include "fakeakonadiserver.h"
@@ -43,8 +43,6 @@ class ModifyHandlerTest : public QObject
 public:
     ModifyHandlerTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {

@@ -19,7 +19,7 @@
 
 #include <QObject>
 
-#include <response.h>
+
 #include <storage/selectquerybuilder.h>
 
 #include "fakeakonadiserver.h"
@@ -64,7 +64,6 @@ public:
     TagHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
         try {

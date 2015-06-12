@@ -51,8 +51,6 @@ class AkAppendHandlerTest : public QObject
 public:
     AkAppendHandlerTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         // Effectively disable external payload parts, we have a dedicated unit-test
         // for that
         const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);

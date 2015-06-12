@@ -18,7 +18,7 @@
 */
 #include <QObject>
 #include <handler/create.h>
-#include <response.h>
+
 #include <storage/entity.h>
 
 #include "fakeakonadiserver.h"
@@ -41,8 +41,6 @@ class CreateHandlerTest : public QObject
 public:
     CreateHandlerTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {

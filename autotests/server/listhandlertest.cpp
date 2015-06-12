@@ -20,7 +20,7 @@
 #include <QObject>
 
 #include <handler/list.h>
-#include <response.h>
+
 
 #include <private/scope_p.h>
 
@@ -44,8 +44,6 @@ public:
     ListHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->setPopulateDb(false);
             FakeAkonadiServer::instance()->init();
