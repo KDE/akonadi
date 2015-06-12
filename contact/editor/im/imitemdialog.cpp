@@ -81,5 +81,5 @@ IMAddress IMItemDialog::address() const
 
 void IMItemDialog::slotUpdateButtons()
 {
-    enableButtonOk(mProtocolCombo->currentIndex() > 0 && !mNameEdit->text().isEmpty());
+    enableButtonOk(mProtocolCombo->currentIndex() > 0 && !mNameEdit->text().trimmed().isEmpty());
 }
