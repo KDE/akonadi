@@ -71,7 +71,6 @@ macro(add_server_test _source)
     )
 endmacro()
 
-add_server_test(scopetest.cpp)
 add_server_test(dbtypetest.cpp)
 add_server_test(dbintrospectortest.cpp)
 add_server_test(querybuildertest.cpp)
