@@ -72,6 +72,12 @@ bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
     if (storeInFile) {
         return streamPayloadToFile(part, metaPart);
     } else {
+        // If the part WAS external previously, remove data file
+        QString origFilename;
+        if (part.external()) {
+            origFilename = PartHelper::resolveAbsolutePath(part.data());
+        }
+
         Protocol::StreamPayloadCommand cmd;
         cmd.setExpectedSize(metaPart.size());
         cmd.setPayloadName(metaPart.name());
@@ -102,6 +108,10 @@ bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
                 return false;
             }
         }
+
+        if (!origFilename.isEmpty()) {
+            PartHelper::removeFile(origFilename);
+        }
     }
 
     return true;
@@ -115,15 +125,16 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
     }
 
     QString filename;
+    QString origFilename;
     if (part.isValid()) {
         if (part.external()) {
             // Part was external and is still external
             filename = QString::fromLatin1(part.data());
+            origFilename = PartHelper::resolveAbsolutePath(filename.toUtf8());
         } else {
             // Part wasn't external, but is now
             filename = PartHelper::fileNameForPart(&part);
         }
-        // FIXME: This leaks the original part!
         filename = PartHelper::updateFileNameRevision(filename);
     }
 
@@ -179,6 +190,11 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
         mError = QStringLiteral("Payload size mismatch");
         akDebug() << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
         return false;
+    }
+
+    // Remove the old part file (if there was any)
+    if (!origFilename.isEmpty()) {
+        PartHelper::removeFile(origFilename);
     }
 
     if (mCheckChanged && !mDataChanged) {
