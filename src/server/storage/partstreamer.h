@@ -28,6 +28,7 @@ namespace Akonadi {
 
 namespace Protocol {
 class PartMetaData;
+class Command;
 }
 
 namespace Server {
@@ -49,6 +50,9 @@ public:
     bool stream(bool checkExists, Protocol::PartMetaData &part, bool *changed = 0);
 
     QString error() const;
+
+Q_SIGNALS:
+    void responseAvailable(const Protocol::Command &response);
 
 private:
     bool streamPayload(Part &part, Protocol::PartMetaData &metaPart);

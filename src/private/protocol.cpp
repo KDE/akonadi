@@ -60,6 +60,13 @@ typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
 }
 
 template<typename T>
+QDataStream &operator<<(QDataStream &stream, const QFlags<T> &flags)
+{
+    return stream << static_cast<typename std::underlying_type<T>::type>(flags);
+}
+
+
+template<typename T>
 typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
 &operator>>(QDataStream &stream, T &val)
 {
@@ -70,8 +77,7 @@ typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
 }
 
 template<typename T>
-typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
-&operator>>(QDataStream &stream, QFlags<T> &flags)
+QDataStream &operator>>(QDataStream &stream, QFlags<T> &flags)
 {
     typename std::underlying_type<T>::type t;
     stream >> t;
@@ -3686,11 +3692,13 @@ public:
         , invalidate(other.invalidate)
         , noResponse(other.noResponse)
         , notify(other.notify)
+        , modifiedParts(other.modifiedParts)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
+            && COMPARE(modifiedParts)
             && COMPARE(size)
             && COMPARE(oldRevision)
             && COMPARE(dirty)
@@ -3709,6 +3717,7 @@ public:
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
+               << items
                << oldRevision
                << modifiedParts
                << dirty
@@ -4184,7 +4193,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.write("ID", id);
         blck.write("New Revision", newRevision);
     }

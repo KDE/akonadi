@@ -109,7 +109,6 @@ public:
     typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
     sendResponse(const T&response = T());
 
-    void sendResponse(const Protocol::Command &response);
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -118,6 +117,10 @@ public:
     virtual bool parseStream() = 0;
 
     bool checkScopeConstraints(const Scope &scope, int permittedScopes);
+
+public Q_SLOTS:
+    void sendResponse(const Protocol::Command &response);
+
 Q_SIGNALS:
     /**
      * Emitted whenever a handler wants the connection to change into a

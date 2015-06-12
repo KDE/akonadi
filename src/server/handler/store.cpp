@@ -270,6 +270,8 @@ bool Store::parseStream()
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Parts) {
         PartStreamer streamer(connection(), item, this);
+        connect(&streamer, &PartStreamer::responseAvailable,
+                this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
         for (Protocol::PartMetaData part : cmd.parts()) {
             if (!streamer.stream(true, part)) {
                 return failureResponse(streamer.error());

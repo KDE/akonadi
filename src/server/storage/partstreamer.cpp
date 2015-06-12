@@ -75,7 +75,7 @@ bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
         Protocol::StreamPayloadCommand cmd;
         cmd.setExpectedSize(metaPart.size());
         cmd.setPayloadName(metaPart.name());
-        mConnection->sendResponse(cmd);
+        Q_EMIT responseAvailable(cmd);
 
         Protocol::StreamPayloadResponse response = mConnection->readCommand();
         if (response.isError()) {
@@ -159,7 +159,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
     cmd.setPayloadName(metaPart.name());
     cmd.setExpectedSize(metaPart.size());
     cmd.setExternalFile(filename);
-    mConnection->sendResponse(cmd);
+    Q_EMIT responseAvailable(cmd);
 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
     if (response.isError()) {
