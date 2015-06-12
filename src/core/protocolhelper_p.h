@@ -31,6 +31,7 @@
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
+#include <akonadi/private/scope_p.h>
 
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -67,22 +68,20 @@ public:
 
     /**
       Parse a cache policy definition.
-      @param data The input data.
       @param policy The parsed cache policy.
-      @param start Start of the data, ie. postion after the label.
-      @returns Position in data after the cache policy description.
+      @returns Akonadi::CachePolicy
     */
-    static int parseCachePolicy(const QByteArray &data, CachePolicy &policy, int start = 0);
+    static CachePolicy parseCachePolicy(const Protocol::CachePolicy &policy);
 
     /**
       Convert a cache policy object into its protocol representation.
     */
-    static QByteArray cachePolicyToByteArray(const CachePolicy &policy);
+    static Protocol::CachePolicy cachePolicyToProtocol(const CachePolicy &policy);
 
     /**
       Convert a ancestor chain from its protocol representation into an Entity object.
     */
-    static void parseAncestors(const QByteArray &data, Entity *entity, int start = 0);
+    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Entity *entity);
 
     /**
       Convert a ancestor chain from its protocol representation into an Entity object.
@@ -90,28 +89,31 @@ public:
       This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
       same @p parentCollection don't have to be parsed twice.
     */
-    static void parseAncestorsCached(const QByteArray &data, Entity *entity, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = 0, int start = 0);
+    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors, Entity *entity, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = 0, int start = 0);
 
     /**
       Parse a collection description.
       @param data The input data.
-      @param collection The parsed collection.
-      @param start Start of the data.
       @param requireParent Whether or not we require a parent as part of the data.
-      @returns Position in data after the collection description.
+      @returns The parsed collection
     */
-    static int parseCollection(const QByteArray &data, Collection &collection, int start = 0, bool requireParent = true);
+    static Collection parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent = true);
+
+    static void parseAttributes(const Protocol::Attributes &attributes, Entity *entity);
+    static void parseAttributes(const Protocol::Attributes &attributes, AttributeEntity *entity);
+
+    static CollectionStatistics parseCollectionStatistics(const Protocol::FetchCollectionStatsResponse &stats);
 
     /**
       Convert attributes to their protocol representation.
     */
-    static QByteArray attributesToByteArray(const Entity &entity, bool ns = false);
-    static QByteArray attributesToByteArray(const AttributeEntity &entity, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const Entity &entity, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const AttributeEntity &entity, bool ns = false);
 
     /**
       Encodes part label and namespace.
     */
-    static QByteArray encodePartIdentifier(PartNamespace ns, const QByteArray &label, int version = 0);
+    static QByteArray encodePartIdentifier(PartNamespace ns, const QByteArray &label);
 
     /**
       Decode part label and namespace.
@@ -123,7 +125,7 @@ public:
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     template <typename T>
-    static QByteArray entitySetToByteArray(const QList<T> &_objects, const QByteArray &command)
+    static Scope entitySetToScope(const QVector<T> &_objects)
     {
         if (_objects.isEmpty()) {
             throw Exception("No objects specified");
@@ -134,20 +136,14 @@ public:
         QByteArray rv;
         std::sort(objects.begin(), objects.end(), boost::bind(&T::id, _1) < boost::bind(&T::id, _2));
         if (objects.first().isValid()) {
-            // all items have a uid set
-            rv += " " AKONADI_CMD_UID " ";
-            if (!command.isEmpty()) {
-                rv += command;
-                rv += ' ';
-            }
             QVector<typename T::Id>  uids;
-            foreach (const T &object, objects) {
+            uids.reserve(objects.size());
+            for (const T &object : objects) {
                 uids << object.id();
             }
             ImapSet set;
             set.add(uids);
-            rv += set.toImapSequenceSet();
-            return rv;
+            return Scope(set);
         }
 
         // check if all items have a remote id
@@ -161,88 +157,65 @@ public:
         if (std::find_if(objects.constBegin(), objects.constEnd(),
                          !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
             == objects.constEnd() && objects.size() == 1) {  // ### HRID sets are not yet specified
-            // HRIDs
-            rv += " " AKONADI_CMD_HRID " ";
-            if (!command.isEmpty()) {
-                rv += command;
-                rv += ' ';
-            }
-            rv += '(' + hierarchicalRidToByteArray(objects.first()) + ')';
-            return rv;
+            return hierarchicalRidToScope(objects.first());
         }
 
         // RIDs
-        QList<QByteArray> rids;
-        foreach (const T &object, objects) {
-            rids << ImapParser::quote(object.remoteId().toUtf8());
+        QStringList rids;
+        rids.reserve(objects.size());
+        for (const T &object : objects) {
+            rids << object.remoteId();
         }
 
-        rv += " " AKONADI_CMD_RID " ";
-        if (!command.isEmpty()) {
-            rv += command;
-            rv += ' ';
-        }
-        rv += '(';
-        rv += ImapParser::join(rids, " ");
-        rv += ')';
-        return rv;
+        return Scope(Scope::Rid, rids);
     }
 
-    static QByteArray entitySetToByteArray(const QList<Akonadi::Item> &_objects, const QByteArray &command);
-
-    static QByteArray tagSetToImapSequenceSet(const Akonadi::Tag::List &_objects);
-    static QByteArray tagSetToByteArray(const Akonadi::Tag::List &_objects, const QByteArray &command);
-
-    static QByteArray commandContextToByteArray(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
-                                                const Item::List &requestedItems, const QByteArray &command);
+    static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
+                                                           const Item::List &requestedItems, const QByteArray &command);
 
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     template <typename T>
-    static QByteArray entityIdToByteArray(const T &object, const QByteArray &command)
+    static Scope entityIdToScope(const T &object, const QByteArray &command)
     {
-        return entitySetToByteArray(typename T::List() << object, command);
+        return entitySetToScope(typename T::List() << object, command);
     }
 
     /**
       Converts the given collection's hierarchical RID into a protocol representation.
       Assumes @p col has a valid hierarchical RID, so check that before!
     */
-    static QByteArray hierarchicalRidToByteArray(const Collection &col);
+    static Scope hierarchicalRidToScope(const Collection &col);
 
     /**
       Converts the HRID of the given item into an ASAP protocol representation.
       Assumes @p item has a valid HRID.
     */
-    static QByteArray hierarchicalRidToByteArray(const Item &item);
+    static Scope hierarchicalRidToScope(const Item &item);
 
     /**
       Converts a given ItemFetchScope object into a protocol representation.
     */
-    static QByteArray itemFetchScopeToByteArray(const ItemFetchScope &fetchScope);
+    static Protocol::FetchScope itemFetchScopeToProtocol(const ItemFetchScope &fetchScope);
 
     /**
       Converts a given TagFetchScope object into a protocol representation.
     */
-    static QByteArray tagFetchScopeToByteArray(const TagFetchScope &fetchScope);
+    static QVector<QByteArray> tagFetchScopeToProtocol(const TagFetchScope &fetchScope);
 
     /**
       Parses a single line from an item fetch job result into an Item object.
      */
-    static void parseItemFetchResult(const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0);
-    static void parseTagFetchResult(const QList<QByteArray> &lineTokens, Tag &tag);
-    static void parseRelationFetchResult(const QList<QByteArray> &lineTokens, Relation &tag);
+    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, ProtocolHelperValuePool *valuePool = 0);
+    static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
+    static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 
     static QString akonadiStoragePath();
     static QString absolutePayloadFilePath(const QString &fileName);
 
     static bool streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error);
-
-    static QByteArray listPreference(Collection::ListPurpose purpose, Collection::ListPreference preference);
-    static QByteArray enabled(bool);
-    static QByteArray referenced(bool);
 };
 
 }
