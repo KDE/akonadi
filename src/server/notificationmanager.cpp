@@ -23,7 +23,6 @@
 #include "notificationsource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
-#include "clientcapabilityaggregator.h"
 
 #include <shared/akdebug.h>
 #include <shared/akstandarddirs.h>
@@ -100,17 +99,6 @@ void NotificationManager::emitPendingNotifications()
     NotificationMessage::List legacyNotifications;
     Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
         Tracer::self()->signal("NotificationManager::notify", notification.toString());
-
-        if (ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2) {
-            const NotificationMessage::List tmp = notification.toNotificationV1().toList();
-            Q_FOREACH (const NotificationMessage &legacyNotification, tmp) {
-                bool appended = false;
-                NotificationMessage::appendAndCompress(legacyNotifications, legacyNotification, &appended);
-                if (!appended) {
-                    legacyNotifications << legacyNotification;
-                }
-            }
-        }
     }
 
     if (!legacyNotifications.isEmpty()) {
@@ -119,38 +107,24 @@ void NotificationManager::emitPendingNotifications()
         }
     }
 
-    NotificationMessageV2::List v2List;
-    if (ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2) {
-        v2List = NotificationMessageV3::toV2List(mNotifications);
-    }
+    Q_FOREACH (NotificationSource *source, mNotificationSources) {
+        if (!source->isServerSideMonitorEnabled()) {
+            source->emitNotification(mNotifications);
+            continue;
+        }
 
-    if (ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1) {
-        Q_FOREACH (NotificationSource *source, mNotificationSources) {
-            if (!source->isServerSideMonitorEnabled()) {
-                if (ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2) {
-                    source->emitNotification(v2List);
-                } else {
-                    source->emitNotification(mNotifications);
-                }
-                continue;
-            }
-
-            NotificationMessageV3::List acceptedNotifications;
-            Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
-                if (source->acceptsNotification(notification)) {
-                    acceptedNotifications << notification;
-                }
-            }
-
-            if (!acceptedNotifications.isEmpty()) {
-                if (ClientCapabilityAggregator::maximumNotificationMessageVersion() == 2) {
-                    source->emitNotification(NotificationMessageV3::toV2List(acceptedNotifications));
-                } else {
-                    source->emitNotification(acceptedNotifications);
-                }
+        NotificationMessageV3::List acceptedNotifications;
+        Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
+            if (source->acceptsNotification(notification)) {
+                acceptedNotifications << notification;
             }
         }
+
+        if (!acceptedNotifications.isEmpty()) {
+            source->emitNotification(acceptedNotifications);
+        }
     }
+
 
     // backward compatibility with the old non-subcription interface
     // FIXME: Can we drop this already?

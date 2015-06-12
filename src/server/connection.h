@@ -27,7 +27,6 @@
 
 #include "entities.h"
 #include "global.h"
-#include "clientcapabilities.h"
 #include "commandcontext.h"
 
 #include <private/protocol_p.h>
@@ -68,9 +67,6 @@ public:
     void setSessionId(const QByteArray &id);
     QByteArray sessionId() const;
 
-    const ClientCapabilities &capabilities() const;
-    void setCapabilities(const ClientCapabilities &capabilities);
-
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
@@ -104,7 +100,6 @@ protected:
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
-    ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
 

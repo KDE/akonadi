@@ -43,8 +43,6 @@ set(libakonadiserver_SRCS
     connection.cpp
     connectionthread.cpp
     collectionscheduler.cpp
-    clientcapabilities.cpp
-    clientcapabilityaggregator.cpp
     dbusconnectionpool.cpp
     handler.cpp
     handlerhelper.cpp

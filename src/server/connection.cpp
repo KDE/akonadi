@@ -29,7 +29,6 @@
 #include "handler.h"
 
 #include "tracer.h"
-#include "clientcapabilityaggregator.h"
 #include "collectionreferencemanager.h"
 
 #include <shared/akdebug.h>
@@ -63,7 +62,6 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
 {
     m_socketDescriptor = socketDescriptor;
     m_identifier.sprintf("%p", static_cast<void *>(this));
-    ClientCapabilityAggregator::addSession(m_clientCapabilities);
 
     const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
     m_verifyCacheOnRetrieval = settings.value(QLatin1String("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
@@ -130,7 +128,6 @@ Connection::~Connection()
     delete m_socket;
     m_socket = 0;
 
-    ClientCapabilityAggregator::removeSession(m_clientCapabilities);
     Tracer::self()->endConnection(m_identifier, QString());
     collectionReferenceManager()->removeSession(m_sessionId);
 
@@ -307,18 +304,6 @@ bool Connection::isOwnerResource(const Collection &collection) const
         return true;
     }
     return false;
-}
-
-const ClientCapabilities &Connection::capabilities() const
-{
-    return m_clientCapabilities;
-}
-
-void Connection::setCapabilities(const ClientCapabilities &capabilities)
-{
-    ClientCapabilityAggregator::removeSession(m_clientCapabilities);
-    m_clientCapabilities = capabilities;
-    ClientCapabilityAggregator::addSession(m_clientCapabilities);
 }
 
 bool Connection::verifyCacheOnRetrieval() const
