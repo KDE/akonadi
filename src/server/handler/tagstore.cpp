@@ -101,7 +101,7 @@ bool TagStore::parseStream()
                 tagRemoved = true;
             }
         }
-        //Do not notify about remoteid changes, otherwise we bounce back and forth
+        // Do not notify about remoteid changes, otherwise we bounce back and forth
         // between resources recording it's change and updating the remote id.
     }
 
@@ -153,7 +153,7 @@ bool TagStore::parseStream()
             return failureResponse("Failed to fetch response");
         }
     } else {
-        return successResponse<Protocol::DeleteTagResponse>();
+        successResponse<Protocol::DeleteTagResponse>();
     }
 
     return successResponse<Protocol::ModifyTagResponse>();

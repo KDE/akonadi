@@ -37,11 +37,12 @@ TagFetchHelper::TagFetchHelper(Connection *connection, const Scope &scope)
 QSqlQuery TagFetchHelper::buildAttributeQuery() const
 {
     QueryBuilder qb(TagAttribute::tableName());
-    qb.addColumn(TagAttribute::tagIdColumn());
-    qb.addColumn(TagAttribute::typeColumn());
-    qb.addColumn(TagAttribute::valueColumn());
-    qb.addSortColumn(TagAttribute::tagIdColumn(), Query::Descending);
-
+    qb.addColumn(TagAttribute::tagIdFullColumnName());
+    qb.addColumn(TagAttribute::typeFullColumnName());
+    qb.addColumn(TagAttribute::valueFullColumnName());
+    qb.addSortColumn(TagAttribute::tagIdFullColumnName(), Query::Descending);
+    qb.addJoin(QueryBuilder::InnerJoin, Tag::tableName(),
+               TagAttribute::tagIdFullColumnName(), Tag::idFullColumnName());
     TagQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
 
     if (!qb.exec()) {
