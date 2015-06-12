@@ -2151,7 +2151,7 @@ private:
 } // namespace Akonadi
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
-
+Q_DECLARE_METATYPE(Akonadi::Protocol::Command::Type)
 
 AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type);
 AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
