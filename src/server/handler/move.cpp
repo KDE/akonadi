@@ -92,7 +92,7 @@ bool Move::parseStream()
         QMap<Entity::Id /* collection */, PimItem> toMove;
         QMap<Entity::Id /* collection */, Collection> sources;
         Q_FOREACH (/*sic!*/ PimItem item, items) {
-            const Collection source = items.first().collection();
+            const Collection source = items.at(0).collection();
             if (!source.isValid()) {
                 throw HandlerException("Item without collection found!?");
             }
