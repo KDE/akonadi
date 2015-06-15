@@ -24,8 +24,11 @@
 #include "handler.h"
 #include "scope.h"
 
+
 namespace Akonadi {
 namespace Server {
+
+class Relation;
 
 class RelationStore : public Handler
 {
@@ -38,6 +41,8 @@ public:
     bool parseStream();
 
 private:
+    Relation fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId);
+
     Scope mScope;
 };
 

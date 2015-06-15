@@ -39,6 +39,28 @@ RelationStore::~RelationStore()
 {
 }
 
+Relation RelationStore::fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId)
+{
+   SelectQueryBuilder<Relation> relationQuery;
+    relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, leftId);
+    relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, rightId);
+    relationQuery.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, typeId);
+    if (!relationQuery.exec()) {
+        throw HandlerException("Failed to query for existing relation");
+    }
+    const Relation::List existingRelations = relationQuery.result();
+    if (!existingRelations.isEmpty()) {
+        if (existingRelations.size() == 1) {
+            return existingRelations.at(0);
+        } else {
+            throw HandlerException("Matched more than 1 relation");
+        }
+    }
+
+    return Relation();
+}
+
+
 bool RelationStore::parseStream()
 {
     QString type;
@@ -82,34 +104,27 @@ bool RelationStore::parseStream()
         relationType = t;
     }
 
-    SelectQueryBuilder<Relation> relationQuery;
-    relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, left);
-    relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, right);
-    relationQuery.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, relationType.id());
-    if (!relationQuery.exec()) {
-        throw HandlerException("Failed to query for existing relation");
-    }
-    const Relation::List existingRelations = relationQuery.result();
-    if (!existingRelations.isEmpty()) {
-        if (existingRelations.size() == 1) {
-            Relation rel = existingRelations.first();
-            rel.setRemoteId(remoteId);
-            if (!rel.update()) {
-                throw HandlerException("Failed to update relation");
-            }
-        } else {
-            throw HandlerException("Matched more than 1 relation");
+    Relation existingRelation = fetchRelation(left, right, relationType.id());
+    if (existingRelation.isValid()) {
+        existingRelation.setRemoteId(remoteId);
+        if (!existingRelation.update()) {
+            throw HandlerException("Failed to update relation");
         }
-        throw HandlerException("Relation is already existing");
+        // FIXME: Are we actually throwing exception for a valid case?
+        throw HandlerException("Relation already exists");
     }
 
-    Relation insertedRelation;
-    insertedRelation.setLeftId(left);
-    insertedRelation.setRightId(right);
-    insertedRelation.setTypeId(relationType.id());
-    if  (!insertedRelation.insert()) {
+    // Can't use insert(), does not work here (no "id" column)
+    QueryBuilder inQb(Relation::tableName(), QueryBuilder::Insert);
+    inQb.setIdentificationColumn(QString()); // omit "RETURING xyz" with PSQL
+    inQb.setColumnValue(Relation::leftIdColumn(), left);
+    inQb.setColumnValue(Relation::rightIdColumn(), right);
+    inQb.setColumnValue(Relation::typeIdColumn(), relationType.id());
+    if (!inQb.exec()) {
         throw HandlerException("Failed to store relation");
     }
+
+    Relation insertedRelation = fetchRelation(left, right, relationType.id());
 
     // Get all PIM items that are part of the relation
     SelectQueryBuilder<PimItem> itemsQuery;
