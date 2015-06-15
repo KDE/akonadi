@@ -521,7 +521,7 @@ bool FetchHelper::fetchItems(const QByteArray &responseIdentifier)
             condition.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, pimItemId);
             condition.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, pimItemId);
             qb.addCondition(condition);
-            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn());
+            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn() << Relation::remoteIdColumn());
             if (!qb.exec()) {
                 throw HandlerException("Unable to list item relations");
             }
