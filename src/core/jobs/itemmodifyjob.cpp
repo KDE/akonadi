@@ -24,14 +24,13 @@
 #include "collection.h"
 #include "conflicthandler_p.h"
 #include "entity_p.h"
-#include <akonadi/private/imapparser_p.h>
 #include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
 
-#include <qdebug.h>
+#include <functional>
 
 using namespace Akonadi;
 
@@ -49,32 +48,18 @@ void ItemModifyJobPrivate::setClean()
     mOperations.insert(Dirty);
 }
 
-QByteArray ItemModifyJobPrivate::nextPartHeader()
+Protocol::PartMetaData ItemModifyJobPrivate::preparePart(const QByteArray &partName)
 {
-    QByteArray command;
-    if (!mParts.isEmpty()) {
-        QSetIterator<QByteArray> it(mParts);
-        const QByteArray label = it.next();
-        mParts.remove(label);
-
-        mPendingData.clear();
-        int version = 0;
-        ItemSerializer::serialize(mItems.first(), label, mPendingData, version);
-        command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, label, version);
-        if (mPendingData.size() > 0) {
-            command += " {" + QByteArray::number(mPendingData.size()) + "}\n";
-        } else {
-            if (mPendingData.isNull()) {
-                command += " NIL";
-            } else {
-                command += " \"\"";
-            }
-            command += nextPartHeader();
-        }
-    } else {
-        command += ")\n";
+    if (!mParts.remove(partName)) {
+        // Error?
+        return Protocol::PartMetaData();
     }
-    return command;
+
+    mPendingData.clear();
+    int version = 0;
+    ItemSerializer::serialize(mItems.first(), partName, mPendingData, version);
+
+    return Protocol::PartMetaData(partName, mPendingData.size(), version);
 }
 
 void ItemModifyJobPrivate::conflictResolved()
@@ -96,7 +81,8 @@ void ItemModifyJobPrivate::conflictResolveError(const QString &message)
 
 void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
-    Item::List::iterator it = std::find_if(mItems.begin(), mItems.end(), boost::bind(&Item::id, _1) == itemId);
+    using namespace std::placeholders;
+    Item::List::iterator it = std::find_if(mItems.begin(), mItems.end(), std::bind(&Item::id, _1) == itemId);
     if (it != mItems.end() && (*it).revision() == oldRevision) {
         (*it).setRevision(newRevision);
     }
@@ -114,47 +100,6 @@ QString ItemModifyJobPrivate::jobDebuggingString() const
 void ItemModifyJobPrivate::setSilent( bool silent )
 {
   mSilent = silent;
-}
-
-QByteArray ItemModifyJobPrivate::tagsToCommandParameter(const Tag::List &tags) const
-{
-    QByteArray c;
-    if (tags.isEmpty() || tags.first().id() >= 0) {
-        c += "TAGS";
-        c += ' ' + ProtocolHelper::tagSetToImapSequenceSet(tags);
-    } else if (std::find_if(tags.constBegin(), tags.constEnd(),
-                        boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::remoteId, _1)))
-        == tags.constEnd()) {
-        //All items have a remoteId
-        c += "RTAGS";
-        QList<QByteArray> rids;
-        rids.reserve(tags.count());
-        Q_FOREACH (const Tag &object, tags) {
-            rids << ImapParser::quote(object.remoteId());
-        }
-
-        c += '(';
-        c += ImapParser::join(rids, " ");
-        c += ')';
-
-    } else if (std::find_if(tags.constBegin(), tags.constEnd(),
-                        boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::gid, _1)))
-        == tags.constEnd()) {
-        //All items have a gid
-        c += "GTAGS";
-        QList<QByteArray> gids;
-        gids.reserve(tags.count());
-        Q_FOREACH (const Tag &object, tags) {
-            gids << ImapParser::quote(object.gid());
-        }
-
-        c += '(';
-        c += ImapParser::join(gids, " ");
-        c += ')';
-    } else {
-        throw Exception("Cannot identify all tags");
-    }
-    return c;
 }
 
 ItemModifyJob::ItemModifyJob(const Item &item, QObject *parent)
@@ -193,110 +138,91 @@ ItemModifyJob::~ItemModifyJob()
 
 QByteArray ItemModifyJobPrivate::fullCommand() const
 {
+    Protocol::ModifyItemsCommand cmd;
+
     const Akonadi::Item item = mItems.first();
     QList<QByteArray> changes;
     foreach (int op, mOperations) {
         switch (op) {
         case ItemModifyJobPrivate::RemoteId:
             if (!item.remoteId().isNull()) {
-                changes << "REMOTEID";
-                changes << ImapParser::quote(item.remoteId().toUtf8());
+                cmd.setRemoteId(item.remoteId());
             }
             break;
         case ItemModifyJobPrivate::Gid: {
             const QString gid = GidExtractor::getGid(item);
             if (!gid.isNull()) {
-                changes << "GID";
-                changes << ImapParser::quote(gid.toUtf8());
+                cmd.setGid(gid);
             }
             break;
         }
         case ItemModifyJobPrivate::RemoteRevision:
             if (!item.remoteRevision().isNull()) {
-                changes << "REMOTEREVISION";
-                changes << ImapParser::quote(item.remoteRevision().toUtf8());
+                cmd.setRemoteRevision(item.remoteRevision());
             }
             break;
         case ItemModifyJobPrivate::Dirty:
-            changes << "DIRTY";
-            changes << "false";
+            cmd.setDirty(false);
             break;
         }
     }
 
     if (item.d_func()->mClearPayload) {
-        changes << "INVALIDATECACHE";
+        cmd.setInvalidateCache(true);
     }
-  if ( mSilent ) {
-    changes << "SILENT";
-  }
+    if (mSilent) {
+        cmd.setNotify(true);
+    }
 
     if (item.d_func()->mFlagsOverwritten) {
-        changes << "FLAGS";
-        changes << '(' + ImapParser::join(item.flags(), " ") + ')';
+        cmd.setFlags(item.flags());
     } else {
         if (!item.d_func()->mAddedFlags.isEmpty()) {
-            changes << "+FLAGS";
-            changes << '(' + ImapParser::join(item.d_func()->mAddedFlags, " ") + ')';
+            cmd.setAddedFlags(item.d_func()->mAddedFlags);
         }
         if (!item.d_func()->mDeletedFlags.isEmpty()) {
-            changes << "-FLAGS";
-            changes << '(' + ImapParser::join(item.d_func()->mDeletedFlags, " ") + ')';
+            cmd.setRemovedFlags(item.d_func()->mDeletedFlags);
         }
     }
 
     if (item.d_func()->mTagsOverwritten) {
-        changes << tagsToCommandParameter(item.tags());
+        cmd.setTags(ProtocolHelper::entitySetToScope(item.tags()));
     } else {
         if (!item.d_func()->mAddedTags.isEmpty()) {
-            changes << "+" + tagsToCommandParameter(item.d_func()->mAddedTags);
+            cmd.setAddedTags(ProtocolHelper::entitySetToScope(item.d_func()->mAddedTags));
         }
         if (!item.d_func()->mDeletedTags.isEmpty()) {
-            changes << "-" + tagsToCommandParameter(item.d_func()->mDeletedTags);
+            cmd.setRemovedFlags(ProtocolHelper::entitySetToScope(item.d_func()->mDeletedTags));
         }
     }
 
     if (!item.d_func()->mDeletedAttributes.isEmpty()) {
-        changes << "-PARTS";
-        QList<QByteArray> attrs;
-        attrs.reserve(item.d_func()->mDeletedAttributes.count());
-        foreach (const QByteArray &attr, item.d_func()->mDeletedAttributes) {
-            attrs << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, attr);
-        }
-        changes << '(' + ImapParser::join(attrs, " ") + ')';
+        cmd.setRemovedParts(item.d_func()->mDeletedAttributes);
     }
 
     // nothing to do
-    if (changes.isEmpty() && mParts.isEmpty() && item.attributes().isEmpty()) {
-        return QByteArray();
+    if (cmd.modifiedParts() == Protocol::ModifyItemsCommand::None) {
+        return cmd;
     }
 
-    QByteArray command;
-    command += ProtocolHelper::entitySetToByteArray(mItems, "STORE");   // can throw an exception
-    command += ' ';
-    if (!mRevCheck || item.revision() < 0) {
-        command += "NOREV ";
-    } else {
-        command += "REV " + QByteArray::number(item.revision()) + ' ';
+    cmd.setItems(ProtocolHelper::entitySetToScope(mItems));
+    if (mRevCheck || item.revision() >= 0) {
+        cmd.setOldRevision(item.revision());
     }
 
     if (item.d_func()->mSizeChanged) {
-        command += "SIZE " + QByteArray::number(item.size());
+        cmd.setItemSize(item.size());
     }
 
-    command += " (" + ImapParser::join(changes, " ");
-    const QByteArray attrs = ProtocolHelper::attributesToByteArray(item, true);
-    if (!attrs.isEmpty()) {
-        command += ' ' + attrs;
-    }
-    return command;
+    cmd.setAttributes(ProtocolHelper::attributesToProtocol(item));
+    return cmd;
 }
 
 void ItemModifyJob::doStart()
 {
     Q_D(ItemModifyJob);
 
-    QByteArray command;
+    Protocol::ModifyItemsCommand command;
     try {
         command = d->fullCommand();
     } catch (const Exception &e) {
@@ -305,53 +231,35 @@ void ItemModifyJob::doStart()
         emitResult();
         return;
     }
-    if (command.isEmpty()) {
+
+    if (command.modifiedParts() == Protocol::ModifyItemsCommand::None) {
         emitResult();
         return;
     }
 
-    d->mTag = d->newTag();
-    command.prepend(d->mTag);
-
-    command += d->nextPartHeader();
-
-    d->writeData(command);
-    d->newTag(); // hack to circumvent automatic response handling
+    d->sendCommand(command);
 }
 
-void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray &data)
+void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemModifyJob);
 
-    if (_tag == "+") {   // ready for literal data
-        if (data.startsWith("STREAM")) {
-            QByteArray error;
-            if (!ProtocolHelper::streamPayloadToFile(data, d->mPendingData, error)) {
-                d->writeData("* NO " + error);
-                return;
-            }
+    if (!response.isResponse() && response.type() == Protocol::Command::StreamPayload) {
+        const Protocol::StreamPayloadCommand streamCmd(response);
+        Protocol::StreamPayloadResponse streamResp;
+        if (streamCmd.request() == Protocol::StreamPayloadCommand::MetaData) {
+            streamResp.setMetaData(d->preparePart(streamCmd.payloadName());
         } else {
-            d->writeData(d->mPendingData);
+            if (streamCmd.destination().isEmpty()) {
+                streamResp.setData(d->mPendingData);
+            } else {
+                ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error);
+            }
         }
-        d->writeData(d->nextPartHeader());
-        return;
-    }
-
-    if (_tag == d->mTag) {
-        if (data.startsWith("OK")) {     //krazy:exclude=strings
-            QDateTime modificationDateTime;
-            int dateTimePos = data.indexOf("DATETIME");
-            if (dateTimePos != -1) {
-                int resultPos = ImapParser::parseDateTime(data, modificationDateTime, dateTimePos + 8);
-                if (resultPos == (dateTimePos + 8)) {
-                    qDebug() << "Invalid DATETIME response to STORE command: " << _tag << data;
-                }
-            }
-
-            Item &item = d->mItems.first();
-            item.setModificationTime(modificationDateTime);
-            item.d_ptr->resetChangeLog();
-        } else {
+        d->sendCommand(streamResp);
+    } else if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
+        // FIXME: Conflict handling
+        /*
             setError(Unknown);
             setErrorText(QString::fromUtf8(data));
 
@@ -366,47 +274,39 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray &d
                     return;
                 }
             }
+        */
+
+        Protocol::ModifyItemsResponse resp(response);
+        if (resp.modificationDateTime().isValid()) {
+            Item &item = d->mItems.first();
+            item.setModificationTime(resp.modificationDateTime());
+            item.d_ptr->resetChangeLog();
+        } else if (resp.id() > -1) {
+            using namespace std::placeholders;
+            Item::List::Iterator it = std::find_if(d->mItems.constBegin(), d->mItems.constEnd(),
+                                                   std::bind(&Item::id, _1) == resp.id());
+            if (it == d->mItems.constEnd()) {
+                qDebug() << "Received STORE response for an item we did not modify: " << tag << response.debugString();
+                return;
+            }
+
+            const int newRev = resp.newRevision();
+            const int oldRev = (*it).revision();
+            if (newRev < oldRev || newRev < 0) {
+                continue;
+            }
+            d->itemRevisionChanged((*it).id(), oldRev, newRev);
+            (*it).setRevision(newRev);
         }
 
-        foreach (const Item &item, d->mItems) {
+        for (const Item &item : d->mItems) {
             ChangeMediator::invalidateItem(item);
         }
 
         emitResult();
-        return;
+    } else {
+        Job::doHandleResponse(tag, response);
     }
-
-    if (_tag == "*") {
-        Akonadi::Item::Id id;
-        ImapParser::parseNumber(data, id);
-        int pos = data.indexOf('(');
-        if (pos <= 0 || id <= 0) {
-            qDebug() << "Ignoring strange response: " << _tag << data;
-            return;
-        }
-        Item::List::iterator it = std::find_if(d->mItems.begin(), d->mItems.end(), boost::bind(&Item::id, _1) == id);
-        if (it == d->mItems.end()) {
-            qDebug() << "Received STORE response for an item we did not modify: " << _tag << data;
-            return;
-        }
-        QList<QByteArray> attrs;
-        ImapParser::parseParenthesizedList(data, attrs, pos);
-        for (int i = 0; i < attrs.size() - 1; i += 2) {
-            const QByteArray key = attrs.at(i);
-            if (key == "REV") {
-                const int newRev = attrs.at(i + 1).toInt();
-                const int oldRev = (*it).revision();
-                if (newRev < oldRev || newRev < 0) {
-                    continue;
-                }
-                d->itemRevisionChanged((*it).id(), oldRev, newRev);
-                (*it).setRevision(newRev);
-            }
-        }
-        return;
-    }
-
-    qDebug() << "Unhandled response: " << _tag << data;
 }
 
 void ItemModifyJob::setIgnorePayload(bool ignore)

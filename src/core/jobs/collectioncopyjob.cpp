@@ -18,9 +18,11 @@
 */
 
 #include "collectioncopyjob.h"
-
 #include "collection.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
+
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -53,11 +55,14 @@ void CollectionCopyJob::doStart()
 {
     Q_D(CollectionCopyJob);
 
-    QByteArray command = d->newTag();
-    command += " COLCOPY ";
-    command += QByteArray::number(d->mSource.id());
-    command += ' ';
-    command += QByteArray::number(d->mTarget.id());
-    command += '\n';
-    d->writeData(command);
+    d->sendCommand(Protocol::CopyCollectionCommand(d->mSource.id(), d->mTarget.id()));
+}
+
+void CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::CreateCollection) {
+        Job::doHandleResponse(tag, response);
+    }
+
+    emitResult();
 }

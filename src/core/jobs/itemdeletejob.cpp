@@ -25,8 +25,6 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
-#include <akonadi/private/imapparser_p.h>
-#include <akonadi/private/imapset_p.h>
 #include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
@@ -93,11 +91,19 @@ void ItemDeleteJob::doStart()
 {
     Q_D(ItemDeleteJob);
 
-    QByteArray command = d->newTag();
-    command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mItems, AKONADI_CMD_ITEMDELETE);
-    command += '\n';
+    // FIXME: Context?
+    //command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mItems, AKONADI_CMD_ITEMDELETE);
+    d->sendCommand(Protocol::DeleteItemsCommand(ProtocolHelper::entitySetToScope(d->mItems)));
+}
 
-    d->writeData(command);
+void ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::DeleteItems) {
+        Job::doHandleResponse(tag, response);
+        return;
+    }
+
+    emitResult();
 }
 
 #include "moc_itemdeletejob.cpp"

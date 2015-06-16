@@ -62,10 +62,10 @@ public:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
+    void doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(CollectionMoveJob)
-    template <typename T, typename MoveJob> friend class MoveJobImpl;
 };
 
 }

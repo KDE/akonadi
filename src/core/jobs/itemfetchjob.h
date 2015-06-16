@@ -248,7 +248,7 @@ Q_SIGNALS:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
-    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
+    void doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(ItemFetchJob)

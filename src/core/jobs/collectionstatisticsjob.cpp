@@ -21,10 +21,10 @@
 
 #include "collection.h"
 #include "collectionstatistics.h"
-#include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
+#include "protocolhelper_p.h"
 
-#include <qdebug.h>
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -60,39 +60,27 @@ void CollectionStatisticsJob::doStart()
 {
     Q_D(CollectionStatisticsJob);
 
-    d->writeData(d->newTag() + " STATUS " + QByteArray::number(d->mCollection.id()) + " (MESSAGES UNSEEN SIZE)\n");
+    try {
+        d->sendCommand(Protocol::FetchCollectionStatsCommand(ProtocolHelper::entityToScope(d->mCollection)));
+    } catch (const std::exception &e) {
+        setError(Unknown);
+        setErrorText(QString::fromUtf8(e.what()));
+        emitResult();
+        return;
+    }
 }
 
-void CollectionStatisticsJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+void CollectionStatisticsJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(CollectionStatisticsJob);
 
-    if (tag == "*") {
-        QByteArray token;
-        int current = ImapParser::parseString(data, token);
-        if (token == "STATUS") {
-            // folder path
-            current = ImapParser::parseString(data, token, current);
-            // result list
-            QList<QByteArray> list;
-            current = ImapParser::parseParenthesizedList(data, list, current);
-            for (int i = 0; i < list.count() - 1; i += 2) {
-                if (list[i] == "MESSAGES") {
-                    d->mStatistics.setCount(list[i + 1].toLongLong());
-                } else if (list[i] == "UNSEEN") {
-                    d->mStatistics.setUnreadCount(list[i + 1].toLongLong());
-                } else if (list[i] == "SIZE") {
-                    d->mStatistics.setSize(list[i + 1].toLongLong());
-                } else {
-                    qDebug() << "Unknown STATUS response: " << list[i];
-                }
-            }
-
-            d->mCollection.setStatistics(d->mStatistics);
-            return;
-        }
+    if (!response.isResponse() || response.type() != Protocol::Command::FetchCollectionStats) {
+        Job::doHandleResponse(tag, response);
+        return;
     }
-    qDebug() << "Unhandled response: " << tag << data;
+
+    d->mStatistics = ProtocolHelper::parseCollectionStatistics(response);
+    emitResult();
 }
 
 Collection CollectionStatisticsJob::collection() const

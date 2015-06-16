@@ -20,17 +20,23 @@
 #include "collectionmovejob.h"
 #include "collection.h"
 #include "job_p.h"
-#include "movejobimpl_p.h"
+#include "protocolhelper_p.h"
+
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
-class Akonadi::CollectionMoveJobPrivate : public MoveJobImpl<Collection, CollectionMoveJob>
+class Akonadi::CollectionMoveJobPrivate : public JobPrivate
 {
 public:
     CollectionMoveJobPrivate(CollectionMoveJob *parent)
-        : MoveJobImpl<Collection, CollectionMoveJob>(parent)
+        : JobPrivate(parent)
     {
     }
+
+    Collection destination;
+    Collection collection;
+
     Q_DECLARE_PUBLIC(CollectionMoveJob)
 };
 
@@ -39,11 +45,39 @@ CollectionMoveJob::CollectionMoveJob(const Collection &collection, const Collect
 {
     Q_D(CollectionMoveJob);
     d->destination = destination;
-    d->objectsToMove.append(collection);
+    d->collection = collection;
 }
 
 void CollectionMoveJob::doStart()
 {
     Q_D(CollectionMoveJob);
-    d->sendCommand("COLMOVE");
+
+    if (!d->collection.isValid()) {
+        setError(Job::Unknown);
+        setErrorText(i18n("No objects specified for moving"));
+        emitResult();
+        return;
+    }
+
+    if (!d->destination.isValid() && d->destination.remoteId().isEmpty()) {
+        setError(Job::Unknown);
+        setErrorText(i18n("No valid destination specified"));
+        emitResult();
+        return;
+    }
+
+    const Scope colScope = ProtocolHelper::entitySetToScope(Collection::List() << d->collection);
+    const Scope destScope = ProtocolHelper::entitySetToScope(Collection::List() << d->destination);
+
+    d->sendCommand(Protocol::MoveCollectionCommand(colScope, destScope));
+}
+
+void CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::MoveCollection) {
+        Job::doHandleResponse(tag, response);
+        return;
+    }
+
+    emitResult();
 }

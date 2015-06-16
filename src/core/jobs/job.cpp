@@ -23,7 +23,7 @@
 #include "job_p.h"
 #include "KDBusConnectionPool"
 #include <QTime>
-#include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/protocol_p.h>
 #include "session.h"
 #include "session_p.h"
 
@@ -345,9 +345,12 @@ bool Job::removeSubjob(KJob *job)
     return rv;
 }
 
-void Job::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+void Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
 {
-    qDebug() << "Unhandled response: " << tag << data;
+    qDebug() << "Unhandled response: " << tag << command.debugString();
+    setError(Unknown);
+    setErrorText(i18n("Unexpected response"));
+    emitResult();
 }
 
 void Job::slotResult(KJob *job)

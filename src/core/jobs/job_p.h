@@ -25,6 +25,10 @@
 
 namespace Akonadi {
 
+namespace Protocol {
+class Command;
+}
+
 /**
  * @internal
  */
@@ -71,9 +75,9 @@ public:
     QByteArray tag() const;
 
     /**
-      Sends raw data to the backend.
-    */
-    void writeData(const QByteArray &data);
+      Sends the @p command to the backend
+     */
+    void sendCommand(const Protocol::Command &command);
 
     /**
      * Notify following jobs about item revision changes.

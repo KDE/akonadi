@@ -20,8 +20,10 @@
 #include "itemcopyjob.h"
 
 #include "collection.h"
-#include <akonadi/private/imapset_p.h>
 #include "job_p.h"
+#include "protocolhelper_p.h"
+
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -63,18 +65,22 @@ void ItemCopyJob::doStart()
 {
     Q_D(ItemCopyJob);
 
-    QVector<Item::Id> ids;
-    ids.reserve(d->mItems.count());
-    foreach (const Item &item, d->mItems) {
-        ids << item.id();
+    try {
+        d->sendCommand(Protocol::CopyItemsCommand(ProtocolHelper::entitySetToScope(d->mItems),
+                                                  ProtocolHelper::entityToScope(d->mTarget)));
+    } catch (std::exception &e) {
+        setError(Unknown);
+        setErrorText(QString::fromUtf8(e.what()));
+        emitResult();
     }
-    ImapSet set;
-    set.add(ids);
-    QByteArray cmd(d->newTag());
-    cmd += " COPY ";
-    cmd += set.toImapSequenceSet();
-    cmd += ' ';
-    cmd += QByteArray::number(d->mTarget.id());
-    cmd += '\n';
-    d->writeData(cmd);
+}
+
+void ItemCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::CopyItems) {
+        Job::doHandleResponse(tag, response);
+        return;
+    }
+
+    emitResult();
 }

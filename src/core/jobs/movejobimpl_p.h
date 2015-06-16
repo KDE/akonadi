@@ -25,6 +25,8 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
+#include <akonadi/private/protocol_p.h>
+
 #include <KLocalizedString>
 
 namespace Akonadi {
@@ -54,6 +56,7 @@ public:
             return;
         }
 
+        
         QByteArray command = newTag();
         try {
             command += ProtocolHelper::entitySetToByteArray(objectsToMove, asapCommand);

@@ -19,17 +19,18 @@
 
 #include "collectionfetchjob.h"
 
-#include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
-#include <akonadi/private/protocol_p.h>
 #include "protocolhelper_p.h"
 #include "entity_p.h"
 #include "collectionfetchscope.h"
 #include "collectionutils.h"
+#include "protocolhelper_p.h"
+#include <akonadi/private/protocol_p.h>
 
 #include <qdebug.h>
 #include <KLocalizedString>
 
+#include <QtCore/QObject>
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
@@ -233,70 +234,35 @@ void CollectionFetchJob::doStart()
         return;
     }
 
-    QByteArray command = d->newTag();
-    if (!d->mBase.isValid()) {
-        if (CollectionUtils::hasValidHierarchicalRID(d->mBase)) {
-            command += " HRID";
-        } else {
-            command += " " AKONADI_CMD_RID;
-        }
-    }
-    command += " LIST ";
-
-    if (d->mBase.isValid()) {
-        command += QByteArray::number(d->mBase.id());
-    } else if (CollectionUtils::hasValidHierarchicalRID(d->mBase)) {
-        command += '(' + ProtocolHelper::hierarchicalRidToByteArray(d->mBase) + ')';
-    } else {
-        command += ImapParser::quote(d->mBase.remoteId().toUtf8());
-    }
-
-    command += ' ';
+    Protocol::FetchCollectionsCommand cmd(ProtocolHelper::entityToScope(d->mBase));
     switch (d->mType) {
     case Base:
-        command += "0 (";
+        cmd.setDepth(Protocol::FetchCollectionsCommand::BaseCollection);
         break;
-    case FirstLevel:
-        command += "1 (";
+    case Akonadi::CollectionFetchJob::FirstLevel:
+        cmd.setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
         break;
-    case Recursive:
-        command += "INF (";
+    case Akonadi::CollectionFetchJob::Recursive:
+        cmd.setDepth(Protocol::FetchCollectionsCommand::AllCollections);
         break;
     default:
         Q_ASSERT(false);
     }
-
-    QList<QByteArray> filter;
-    if (!d->mScope.resource().isEmpty()) {
-        filter.append("RESOURCE");
-        // FIXME: Does this need to be quoted??
-        filter.append(d->mScope.resource().toUtf8());
-    }
-
-    const QStringList mimeTypes = d->mScope.contentMimeTypes();
-    if (!mimeTypes.isEmpty()) {
-        filter.append("MIMETYPE");
-        QList<QByteArray> mts;
-        mts.reserve(mimeTypes.count());
-        foreach (const QString &mt, mimeTypes) {
-            // FIXME: Does this need to be quoted??
-            mts.append(mt.toUtf8());
-        }
-        filter.append('(' + ImapParser::join(mts, " ") + ')');
-    }
+    cmd.setResource(d->mScope.resource());
+    cmd.setMimeTypes(d->mScope.contentMimeTypes());
 
     switch (d->mScope.listFilter()) {
     case CollectionFetchScope::Display:
-        filter.append("DISPLAY TRUE");
+        cmd.setDisplayPref(true);
         break;
     case CollectionFetchScope::Sync:
-        filter.append("SYNC TRUE");
+        cmd.setSyncPref(true);
         break;
     case CollectionFetchScope::Index:
-        filter.append("INDEX TRUE");
+        cmd.setIndexPref(true);
         break;
     case CollectionFetchScope::Enabled:
-        filter.append("ENABLED TRUE");
+        cmd.setEnabled(true);
         break;
     case CollectionFetchScope::NoFilter:
         break;
@@ -304,59 +270,26 @@ void CollectionFetchJob::doStart()
         Q_ASSERT(false);
     }
 
-    QList<QByteArray> options;
-    if (d->mScope.includeStatistics()) {
-        options.append("STATISTICS");
-        options.append("true");
+    cmd.setFetchStats(d->mScope.includeStatistics());
+    switch (d->mScope.ancestorRetrieval()) {
+    case CollectionFetchScope::None:
+        cmd.setAncestorsDepth(Protocol::Ancestor::NoAncestor);
+        break;
+    case CollectionFetchScope::Parent:
+        cmd.setAncestorsDepth(Protocol::Ancestor::ParentAncestor);
+        break;
+    case CollectionFetchScope::All:
+        cmd.setAncestorsDepth(Protocol::Ancestor::AllAncestors);
+        break;
     }
     if (d->mScope.ancestorRetrieval() != CollectionFetchScope::None) {
-        options.append("ANCESTORS");
-
-        if (d->mScope.ancestorFetchScope().fetchIdOnly()) {
-            switch (d->mScope.ancestorRetrieval()) {
-            case CollectionFetchScope::None:
-                options.append("0");
-                break;
-            case CollectionFetchScope::Parent:
-                options.append("1");
-                break;
-            case CollectionFetchScope::All:
-                options.append("INF");
-                break;
-            default:
-                Q_ASSERT(false);
-            }
-        } else {
-            QByteArray ancestorFetchScope = "(";
-            ancestorFetchScope += "DEPTH ";
-            switch (d->mScope.ancestorRetrieval()) {
-            case CollectionFetchScope::None:
-                ancestorFetchScope += "0 ";
-                break;
-            case CollectionFetchScope::Parent:
-                ancestorFetchScope += "1 ";
-                break;
-            case CollectionFetchScope::All:
-                ancestorFetchScope += "INF ";
-                break;
-            default:
-                Q_ASSERT(false);
-            }
-            ancestorFetchScope += "NAME ";
-            ancestorFetchScope += "REMOTEID ";
-            Q_FOREACH (const QByteArray &ancestorAttribute, d->mScope.ancestorFetchScope().attributes()) {
-                ancestorFetchScope += ancestorAttribute + " ";
-            }
-            ancestorFetchScope += ")";
-            options.append(ancestorFetchScope);
-        }
+        cmd.setAncestorsAttributes(d->mScope.ancestorFetchScope().attributes());
     }
 
-    command += ImapParser::join(filter, " ") + ") (" + ImapParser::join(options, " ") + ")\n";
-    d->writeData(command);
+    d->sendCommand(cmd);
 }
 
-void CollectionFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+void CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(CollectionFetchJob);
 
@@ -364,22 +297,29 @@ void CollectionFetchJob::doHandleResponse(const QByteArray &tag, const QByteArra
         return;
     }
 
-    if (tag == "*") {
-        Collection collection;
-        ProtocolHelper::parseCollection(data, collection);
-        if (!collection.isValid()) {
-            return;
-        }
-
-        collection.d_ptr->resetChangeLog();
-        d->mCollections.append(collection);
-        d->mPendingCollections.append(collection);
-        if (!d->mEmitTimer->isActive()) {
-            d->mEmitTimer->start();
-        }
+    if (!response.isResponse() || response.type() != Protocol::Command::FetchCollections) {
+        Job::doHandleResponse(tag, response);
         return;
     }
-    qDebug() << "Unhandled server response" << tag << data;
+
+    Protocol::FetchCollectionsResponse resp(response);
+    // Invalid response (no ID) means this was the last response
+    if (resp.id() = -1) {
+        emitResult();
+        return;
+    }
+
+    Collection collection = ProtocolHelper::parseCollection(resp, true);
+    if (!collection.isValid()) {
+        return;
+    }
+
+    collection.d_ptr->resetChangeLog();
+    d->mCollections.append(collection);
+    d->mPendingCollections.append(collection);
+    if (!d->mEmitTimer->isActive()) {
+        d->mEmitTimer->start();
+    }
 }
 
 static Collection::List filterDescendants(const Collection::List &list)

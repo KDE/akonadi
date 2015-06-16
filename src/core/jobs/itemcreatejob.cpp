@@ -22,7 +22,6 @@
 #include "itemcreatejob.h"
 
 #include "collection.h"
-#include <akonadi/private/imapparser_p.h>
 #include "item.h"
 #include "item_p.h"
 #include "itemserializer_p.h"
@@ -33,7 +32,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 
-#include <qdebug.h>
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -47,7 +46,7 @@ public:
     {
     }
 
-    QByteArray nextPartHeader();
+    Protocol::PartMetaData preparePart(const QByteArray &part);
 
     Collection mCollection;
     Item mItem;
@@ -59,32 +58,18 @@ public:
     bool mItemReceived;
 };
 
-QByteArray ItemCreateJobPrivate::nextPartHeader()
+Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partName)
 {
-    QByteArray command;
-    if (!mParts.isEmpty()) {
-        QSetIterator<QByteArray> it(mParts);
-        const QByteArray label = it.next();
-        mParts.remove(label);
-
-        mPendingData.clear();
-        int version = 0;
-        ItemSerializer::serialize(mItem, label, mPendingData, version);
-        command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, label, version);
-        if (mPendingData.size() > 0) {
-            command += " {" + QByteArray::number(mPendingData.size()) + "}\n";
-        } else {
-            if (mPendingData.isNull()) {
-                command += " NIL";
-            } else {
-                command += " \"\"";
-            }
-            command += nextPartHeader();
-        }
-    } else {
-        command += ")\n";
+    if (!mParts.remove(partName)) {
+        // ERROR?
+        return Protocol::PartMetaData();
     }
-    return command;
+
+    mPendingData.clear();
+    int version = 0;
+    ItemSerializer::serialize(mItem, partName, mPendingData, version);
+
+    return Protocol::PartMetaData(partName, mPendingData.size(), version);
 }
 
 ItemCreateJob::ItemCreateJob(const Item &item, const Collection &collection, QObject *parent)
@@ -106,142 +91,81 @@ void ItemCreateJob::doStart()
 {
     Q_D(ItemCreateJob);
 
-    QByteArray remoteId;
+    Protocol::CreateItemCommand cmd;
+    cmd.setMimeType(d->mItem.mimeType());
+    cmd.setGID(d->mItem.gid());
+    cmd.setRemoteId(d->mItem.remoteId());
+    cmd.setRemoteRevision(d->mItem.remoteRevision());
 
-    QList<QByteArray> flags;
-    flags.append("\\MimeType[" + d->mItem.mimeType().toLatin1() + ']');
-    const QString gid = GidExtractor::getGid(d->mItem);
-    if (!gid.isNull()) {
-        flags.append(ImapParser::quote("\\Gid[" + gid.toUtf8() + ']'));
+    Protocol::CreateItemCommand::MergeModes mergeModes = Protocol::CreateItemCommand::None;
+    if ((d->mMergeOptions & GID) && !d->mItem.gid().isEmpty()) {
+        mergeModes |= Protocol::CreateItemCommand::GID;
     }
-    if (!d->mItem.remoteId().isEmpty()) {
-        flags.append(ImapParser::quote("\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']'));
+    if ((d->mMergeOptions & RID) && !d->mItem.remoteId().isEmpty()) {
+        mergeModes |= Protocol::CreateItemCommand::RemoteID;
     }
-    if (!d->mItem.remoteRevision().isEmpty()) {
-        flags.append(ImapParser::quote("\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']'));
+    if ((d->mMergeOptions & Silent)) {
+        mergeModes |= Protocol::CreateItemCommand::Silent;
     }
-    const bool mergeByGid = (d->mMergeOptions & GID) && !d->mItem.gid().isEmpty();
-    const bool mergeByRid = (d->mMergeOptions & RID) && !d->mItem.remoteId().isEmpty();
-    const bool mergeSilent = (d->mMergeOptions & Silent);
-    const bool merge = mergeByGid || mergeByRid;
+    const bool merge = (mergeModes & Protocol::CreateItemCommand::GID)
+                        || (mergeModes & Protocol::CreateItemCommand::RemoteID);
+    cmd.setMergeModes(mergeModes);
+
+
     if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
-        flags += d->mItem.flags().toList();
+        cmd.setFlags(d->mItem.flags());
     } else {
-        Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mAddedFlags.toList()) {
-            flags += "+" + flag;
-        }
-        Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mDeletedFlags.toList()) {
-            flags += "-" + flag;
-        }
+        cmd.setAddedFlags(d->mItem.d_func()->mAddedFlags);
+        cmd.setRemovedFlags(d->mItem.d_func()->mDeletedFlags);
     }
     if (d->mItem.d_func()->mTagsOverwritten || !merge) {
-        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
-            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
-                flags += "\\RTag[" + tag.remoteId() + ']';
-            } else if (!tag.gid().isEmpty()) {
-                flags += "\\Tag[" + tag.gid() + ']';
-            }
-        }
+        cmd.setTags(ProtocolHelper::entitySetToScope(d->mItem.d_func()->mAddedTags));
     } else {
-        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
-            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
-                flags += "+\\RTag[" + tag.remoteId() + ']';
-            } else if (!tag.gid().isEmpty()) {
-                flags += "+\\Tag[" + tag.gid() + ']';
-            }
-        }
-        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mDeletedTags) {
-            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
-                flags += "-\\RTag[" + tag.remoteId() + ']';
-            } else if (!tag.gid().isEmpty()) {
-                flags += "-\\Tag[" + tag.gid() + ']';
-            }
-        }
+        cmd.setAddedTags(ProtocolHelper::entitySetToScope(d->mItem.d_func()->mAddedTags));
+        cmd.setRemovedTags(ProtocolHelper::entitySetToScope(d->mItem.d_func()->mDeletedTags));
     }
 
-    QByteArray command = d->newTag();
-    if (merge) {
-        QList<QByteArray> mergeArgs;
-        if (mergeByGid) {
-            mergeArgs << "GID";
-        }
-        if (mergeByRid) {
-            mergeArgs << "REMOTEID";
-        }
-        if (mergeSilent) {
-            mergeArgs << "SILENT";
-        }
-        command += " MERGE (" + ImapParser::join(mergeArgs, " ") + ") ";
-    } else {
-        command += " X-AKAPPEND ";
-    }
+    cmd.setCollection(ProtocolHelper::entityToScope(d->mCollection));
+    cmd.setItemSize(d->mItem.size());
 
-    command += QByteArray::number(d->mCollection.id())
-            + ' ' + QByteArray::number(d->mItem.size())
-            + " (" + ImapParser::join(flags, " ") + ")"
-            + " ("; // list of parts
-    const QByteArray attrs = ProtocolHelper::attributesToByteArray(d->mItem, true);
-    if (!attrs.isEmpty()) {
-        command += attrs;
-    }
+    cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mItem));
+    cmd.setParts(d->mParts);
 
-    command += d->nextPartHeader();
-
-    d->writeData(command);
+    d->sendCommand(cmd);
 }
 
-void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+void ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemCreateJob);
 
-    if (tag == "+") {   // ready for literal data
-        if (data.startsWith("STREAM")) {
-            QByteArray error;
-            if (!ProtocolHelper::streamPayloadToFile(data, d->mPendingData, error)) {
-                d->writeData("* NO " + error);
-                return;
-            }
+    if (!response.isResponse() && response.type() == Protocol::Command::StreamPayload) {
+        const Protocol::StreamPayloadCommand streamCmd(response);
+        Protocol::StreamPayloadResponse streamResp;
+        streamResp.setPayloadName(streamCmd.payloadName());
+        if (streamCmd.request() == Protocol::StreamPayloadCommand::MetaData) {
+            streamResp.setMetaData(d->preparePart(streamCmd.payloadName()));
         } else {
-            d->writeData(d->mPendingData);
+            if (streamCmd.destination().isEmpty()) {
+                streamResp.setData(d->mPendingData);
+            } else {
+                ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error);
+            }
         }
-        d->writeData(d->nextPartHeader());
-        return;
-    }
-    if (tag == "*") {
-        int begin = data.indexOf("FETCH");
-        if (begin >= 0) {
-          QList<QByteArray> fetchResponse;
-          ImapParser::parseParenthesizedList(data, fetchResponse, begin + 6);
-
-          Item item;
-          ProtocolHelper::parseItemFetchResult(fetchResponse, item);
-          if (!item.isValid()) {
+        d->sendCommand(streamResp);
+    } else if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
+        Protocol::FetchItemsResponse fetchResp(response);
+        Item item = ProtocolHelper::parseItemFetchResult(fetchResp);
+        if (!item.isValid()) {
             // Error, maybe?
             return;
-          }
-          d->mItemReceived = true;
-          d->mItem = item;
         }
-        return;
-    }
-    if (tag == d->tag()) {
-        int uidNextPos = data.indexOf("UIDNEXT");
-        if (uidNextPos != -1) {
-            bool ok = false;
-            ImapParser::parseNumber(data, d->mUid, &ok, uidNextPos + 7);
-            if (!ok) {
-                qDebug() << "Invalid UIDNEXT response to APPEND command: "
-                         << tag << data;
-            }
-        }
-        int dateTimePos = data.indexOf("DATETIME");
-        if (dateTimePos != -1) {
-            int resultPos = ImapParser::parseDateTime(data, d->mDatetime, dateTimePos + 8);
-            if (resultPos == (dateTimePos + 8)) {
-                qDebug() << "Invalid DATETIME response to APPEND command: "
-                         << tag << data;
-            }
-        }
+        d->mItemReceived = true;
+        d->mItem = item;
+    } else if (response.isResponse() && response.type() == Protocol::Command::CreateItem) {
+        Protocol::CreateItemResponse createResp(response);
+        emitResult();
+    } else {
+        Job::doHandleResponse(tag, response);
     }
 }
 

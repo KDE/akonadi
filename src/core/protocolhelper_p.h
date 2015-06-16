@@ -32,6 +32,7 @@
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
 #include <akonadi/private/scope_p.h>
+#include <akonadi/private/tristate_p.h>
 
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -178,7 +179,7 @@ public:
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     template <typename T>
-    static Scope entityIdToScope(const T &object, const QByteArray &command)
+    static Scope entityToScope(const T &object, const QByteArray &command)
     {
         return entitySetToScope(typename T::List() << object, command);
     }
@@ -216,6 +217,8 @@ public:
     static QString absolutePayloadFilePath(const QString &fileName);
 
     static bool streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error);
+
+    Akonadi::Tristate listPreference(const Collection::ListPreference pref);
 };
 
 }

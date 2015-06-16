@@ -551,3 +551,19 @@ bool ProtocolHelper::streamPayloadToFile(const QByteArray &command, const QByteA
     file.close();
     return true;
 }
+
+Akonadi::Tristate ProtocolHelper::listPreference(Collection::ListPreference pref)
+{
+    switch (pref)
+    {
+    case Collection::ListEnabled:
+        return Tristate::True;
+    case Collection::ListDisabled:
+        return Tristate::False;
+    case Collection::ListDefault:
+        return Tristate::Undefined;
+    }
+
+    Q_ASSERT(false);
+    return Tristate::Undefined;
+}
