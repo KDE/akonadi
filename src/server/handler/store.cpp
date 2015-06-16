@@ -283,7 +283,7 @@ bool Store::parseStream()
         }
     }
 
-    QString datetime;
+    QDateTime datetime;
     if (!changes.isEmpty() || cmd.invalidateCache() || !cmd.dirty()) {
 
         // update item size
@@ -341,10 +341,10 @@ bool Store::parseStream()
             return failureResponse("Cannot commit transaction.");
         }
 
-        datetime = QLocale::c().toString(modificationtime, QLatin1String("dd-MMM-yyyy hh:mm:ss +0000"));
+        datetime = modificationtime;
     } else {
-        datetime = QLocale::c().toString(pimItems.first().datetime(), QLatin1String("dd-MMM-yyyy hh:mm:ss +0000"));
+        datetime = pimItems.first().datetime();
     }
 
-    return successResponse<Protocol::ModifyItemsResponse>();
+    return successResponse<Protocol::ModifyItemsResponse>(datetime);
 }

@@ -1154,7 +1154,8 @@ public:
         GID             = 1 << 9,
         Size            = 1 << 10,
         Parts           = 1 << 11,
-        RemovedParts    = 1 << 12
+        RemovedParts    = 1 << 12,
+        Attributes      = 1 << 13
     };
     Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart);
 
@@ -1214,6 +1215,8 @@ public:
     void setParts(const QVector<QByteArray> &parts);
     QVector<QByteArray> parts() const;
 
+    void setAttributes(const Protocol::Attributes &attributes);
+    Protocol::Attributes attributes() const;
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
 
@@ -1229,11 +1232,13 @@ class AKONADIPRIVATE_EXPORT ModifyItemsResponse : public Response
 {
 public:
     explicit ModifyItemsResponse();
-    explicit ModifyItemsResponse(qint64 id, int newRevision);
+    ModifyItemsResponse(qint64 id, int newRevision);
+    ModifyItemsResponse(const QDateTime &modificationDT);
     ModifyItemsResponse(const Command &command);
 
     qint64 id() const;
     int newRevision() const;
+    QDateTime modificationDateTime() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsResponse)

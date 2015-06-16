@@ -1095,14 +1095,16 @@ class PartMetaDataPrivate : public QSharedData
 public:
     PartMetaDataPrivate(const QByteArray &name = QByteArray(), qint64 size = 0,
                         int version = 0, bool external = false)
-        : name(name)
+        : QSharedData()
+        , name(name)
         , size(size)
         , version(version)
         , external(external)
     {}
 
     PartMetaDataPrivate(const PartMetaDataPrivate &other)
-        : name(other.name)
+        : QSharedData(other)
+        , name(other.name)
         , size(other.size)
         , version(other.version)
         , external(other.external)
@@ -3731,6 +3733,7 @@ public:
         , gid(other.gid)
         , removedParts(other.removedParts)
         , parts(other.parts)
+        , attributes(other.attributes)
         , size(other.size)
         , oldRevision(other.oldRevision)
         , dirty(other.dirty)
@@ -3756,7 +3759,8 @@ public:
             && COMPARE(remoteId)
             && COMPARE(remoteRev)
             && COMPARE(gid)
-            && COMPARE(removedParts) && COMPARE(parts);
+            && COMPARE(removedParts) && COMPARE(parts)
+            && COMPARE(attributes);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
@@ -3805,6 +3809,9 @@ public:
         }
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
             stream << removedParts;
+        }
+        if (modifiedParts & ModifyItemsCommand::Attributes) {
+            stream << attributes;
         }
         return stream;
     }
@@ -3856,6 +3863,9 @@ public:
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
             stream >> removedParts;
         }
+        if (modifiedParts & ModifyItemsCommand::Attributes) {
+            stream >> attributes;
+        }
         return stream;
     }
 
@@ -3897,6 +3907,9 @@ public:
         }
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
             mps << QLatin1String("Removed Parts");
+        }
+        if (modifiedParts & ModifyItemsCommand::Attributes) {
+            mps << QLatin1String("Attributes");
         }
 
         blck.write("Command", commandType);
@@ -3943,6 +3956,13 @@ public:
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
             blck.write("Removed Parts", removedParts);
         }
+        if (modifiedParts & ModifyItemsCommand::Attributes) {
+            blck.beginBlock("Attributes");
+            for (auto iter = attributes.constBegin(); iter != attributes.constEnd(); ++iter) {
+                blck.write(iter.key().constData(), iter.value());
+            }
+            blck.endBlock();
+        }
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -3963,6 +3983,7 @@ public:
     QString gid;
     QVector<QByteArray> removedParts;
     QVector<QByteArray> parts;
+    Attributes attributes;
     qint64 size;
     int oldRevision;
     bool dirty;
@@ -4173,6 +4194,16 @@ QVector<QByteArray> ModifyItemsCommand::parts() const
     return d_func()->parts;
 }
 
+void ModifyItemsCommand::setAttributes(const Protocol::Attributes &attributes)
+{
+    d_func()->modifiedParts |= Attributes;
+    d_func()->attributes = attributes;
+}
+Attributes ModifyItemsCommand::attributes() const
+{
+    return d_func()->attributes;
+}
+
 QDataStream &operator<<(QDataStream &stream, const ModifyItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
@@ -4197,36 +4228,41 @@ namespace Protocol
 class ModifyItemsResponsePrivate : public ResponsePrivate
 {
 public:
-    ModifyItemsResponsePrivate(qint64 id = -1, int newRevision = -1)
+    ModifyItemsResponsePrivate(qint64 id = -1, int newRevision = -1, const QDateTime &modifyDt = QDateTime())
         : ResponsePrivate(Command::ModifyItems)
         , id(id)
         , newRevision(newRevision)
+        , modificationDt(modifyDt)
     {}
     ModifyItemsResponsePrivate(const ModifyItemsResponsePrivate &other)
         : ResponsePrivate(other)
         , id(other.id)
         , newRevision(other.newRevision)
+        , modificationDt(other.modificationDt)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
             && COMPARE(id)
-            && COMPARE(newRevision);
+            && COMPARE(newRevision)
+            && COMPARE(modificationDt);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << id
-               << newRevision;
+               << newRevision
+               << modificationDt;
     }
 
     QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> id
-               >> newRevision;
+               >> newRevision
+               >> modificationDt;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -4234,6 +4270,7 @@ public:
         ResponsePrivate::debugString(blck);
         blck.write("ID", id);
         blck.write("New Revision", newRevision);
+        blck.write("Modification datetime", modificationDt);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -4243,6 +4280,7 @@ public:
 
     qint64 id;
     int newRevision;
+    QDateTime modificationDt;
 };
 
 } // namespace Protocol
@@ -4260,6 +4298,11 @@ ModifyItemsResponse::ModifyItemsResponse(qint64 id, int newRevision)
 {
 }
 
+ModifyItemsResponse::ModifyItemsResponse(const QDateTime &modificationDt)
+    : Response(new ModifyItemsResponsePrivate(-1, -1, modificationDt))
+{
+}
+
 ModifyItemsResponse::ModifyItemsResponse(const Command &other)
     : Response(other)
 {
@@ -4273,6 +4316,11 @@ qint64 ModifyItemsResponse::id() const
 int ModifyItemsResponse::newRevision() const
 {
     return d_func()->newRevision;
+}
+
+QDateTime ModifyItemsResponse::modificationDateTime() const
+{
+    return d_func()->modificationDt;
 }
 
 QDataStream &operator<<(QDataStream &stream, const ModifyItemsResponse &command)
