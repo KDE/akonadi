@@ -207,8 +207,8 @@ public:
 
     void beginBlock(const QByteArray &name = QByteArray())
     {
+        mBlocks.push(name.size());
         if (!name.isNull()) {
-            mBlocks.push(name.size());
             mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": { ";
             mIndent += mBlocks.top();
         } else {
@@ -1093,15 +1093,25 @@ namespace Protocol
 class PartMetaDataPrivate : public QSharedData
 {
 public:
-    PartMetaDataPrivate(const QByteArray &name = QByteArray(), qint64 size = 0, int version = 0)
+    PartMetaDataPrivate(const QByteArray &name = QByteArray(), qint64 size = 0,
+                        int version = 0, bool external = false)
         : name(name)
         , size(size)
         , version(version)
+        , external(external)
+    {}
+
+    PartMetaDataPrivate(const PartMetaDataPrivate &other)
+        : name(other.name)
+        , size(other.size)
+        , version(other.version)
+        , external(other.external)
     {}
 
     QByteArray name;
     qint64 size;
     int version;
+    bool external;
 };
 
 } // namespace Protocol
@@ -1112,8 +1122,8 @@ PartMetaData::PartMetaData()
 {
 }
 
-PartMetaData::PartMetaData(const QByteArray &name, qint64 size, int version)
-    : d(new PartMetaDataPrivate(name, size, version))
+PartMetaData::PartMetaData(const QByteArray &name, qint64 size, int version, bool external)
+    : d(new PartMetaDataPrivate(name, size, version, external))
 {
 }
 
@@ -1148,7 +1158,8 @@ bool PartMetaData::operator==(const PartMetaData &other) const
     return (d == other.d)
         || (d->name == other.d->name
             && d->size == other.d->size
-            && d->version == other.d->version);
+            && d->version == other.d->version
+            && d->external == other.d->external);
 }
 
 bool PartMetaData::operator!=(const PartMetaData &other) const
@@ -1188,18 +1199,29 @@ int PartMetaData::version() const
     return d->version;
 }
 
+void PartMetaData::setIsExternal(bool external)
+{
+    d->external = external;
+}
+bool PartMetaData::isExternal() const
+{
+    return d->external;
+}
+
 QDataStream &operator<<(QDataStream &stream, const PartMetaData &part)
 {
     return stream << part.d->name
                   << part.d->size
-                  << part.d->version;
+                  << part.d->version
+                  << part.d->external;
 }
 
 QDataStream &operator>>(QDataStream &stream, PartMetaData &part)
 {
     return stream >> part.d->name
                   >> part.d->size
-                  >> part.d->version;
+                  >> part.d->version
+                  >> part.d->external;
 }
 
 
@@ -1920,8 +1942,8 @@ public:
         , flags(other.flags)
         , addedFlags(other.addedFlags)
         , removedFlags(other.removedFlags)
-        , removedParts(other.removedParts)
         , parts(other.parts)
+        , attributes(other.attributes)
         , mergeMode(other.mergeMode)
         , itemSize(other.itemSize)
     {}
@@ -1943,7 +1965,7 @@ public:
             && COMPARE(flags)
             && COMPARE(addedFlags)
             && COMPARE(removedFlags)
-            && COMPARE(removedParts)
+            && COMPARE(attributes)
             && COMPARE(parts);
     }
 
@@ -1964,7 +1986,7 @@ public:
                << tags
                << addedTags
                << removedTags
-               << removedParts
+               << attributes
                << parts;
     }
 
@@ -1985,7 +2007,7 @@ public:
                >> tags
                >> addedTags
                >> removedTags
-               >> removedParts
+               >> attributes
                >> parts;
     }
 
@@ -2022,15 +2044,12 @@ public:
         blck.write("Flags", flags);
         blck.write("Added Flags", addedFlags);
         blck.write("Removed Flags", removedFlags);
-        blck.write("Removed Parts", removedParts);
-        blck.beginBlock("Parts");
-        for (const PartMetaData &md : parts) {
-            blck.beginBlock(md.name());
-            blck.write("Size", md.size());
-            blck.write("Version", md.version());
-            blck.endBlock();
+        blck.beginBlock("Attributes");
+        for (auto iter = attributes.constBegin(); iter != attributes.constEnd(); ++iter) {
+            blck.write(iter.key().constData(), iter.value());
         }
         blck.endBlock();
+        blck.write("Parts", parts);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2050,8 +2069,8 @@ public:
     QVector<QByteArray> flags;
     QVector<QByteArray> addedFlags;
     QVector<QByteArray> removedFlags;
-    QVector<QByteArray> removedParts;
-    QVector<PartMetaData> parts;
+    QVector<QByteArray> parts;
+    Attributes attributes;
     CreateItemCommand::MergeModes mergeMode;
     qint64 itemSize;
 };
@@ -2194,20 +2213,19 @@ Scope CreateItemCommand::removedTags() const
 {
     return d_func()->removedTags;
 }
-
-void CreateItemCommand::setRemovedParts(const QVector<QByteArray> &removedParts)
+void CreateItemCommand::setAttributes(const Attributes &attrs)
 {
-    d_func()->removedParts = removedParts;
+    d_func()->attributes = attrs;
 }
-QVector<QByteArray> CreateItemCommand::removedParts() const
+Attributes CreateItemCommand::attributes() const
 {
-    return d_func()->removedParts;
+    return d_func()->attributes;
 }
-void CreateItemCommand::setParts(const QVector<PartMetaData> &parts)
+void CreateItemCommand::setParts(const QVector<QByteArray> &parts)
 {
     d_func()->parts = parts;
 }
-QVector<PartMetaData> CreateItemCommand::parts() const
+QVector<QByteArray> CreateItemCommand::parts() const
 {
     return d_func()->parts;
 }
@@ -3333,12 +3351,12 @@ public:
         blck.endBlock();
         blck.write("Cached Parts", cachedParts);
         blck.beginBlock("Parts");
-        for (auto iter = parts.cbegin(), end = parts.cend(); iter != end; ++iter) {
-            blck.beginBlock(iter.key().name());
-            blck.write("Size", iter.key().size());
-            blck.write("Version", iter.key().version());
-            blck.write("External", iter.value().isExternal());
-            blck.write("Data", iter.value().data());
+        for (const StreamPayloadResponse &part : parts) {
+            blck.beginBlock(part.payloadName());
+            blck.write("Size", part.metaData().size());
+            blck.write("External", part.metaData().isExternal());
+            blck.write("Version", part.metaData().version());
+            blck.write("Data", part.data());
             blck.endBlock();
         }
         blck.endBlock();
@@ -3359,7 +3377,7 @@ public:
     QVector<qint64> virtRefs;
     QVector<FetchRelationsResponse> relations;
     QVector<Ancestor> ancestors;
-    QMap<PartMetaData, StreamPayloadResponse> parts;
+    QVector<StreamPayloadResponse> parts;
     QVector<QByteArray> cachedParts;
     qint64 id;
     qint64 collectionId;
@@ -3510,11 +3528,11 @@ QVector<Ancestor> FetchItemsResponse::ancestors() const
     return d_func()->ancestors;
 }
 
-void FetchItemsResponse::setParts(const QMap<PartMetaData, StreamPayloadResponse> &parts)
+void FetchItemsResponse::setParts(const QVector<StreamPayloadResponse> &parts)
 {
     d_func()->parts = parts;
 }
-QMap<PartMetaData, StreamPayloadResponse> FetchItemsResponse::parts() const
+QVector<StreamPayloadResponse> FetchItemsResponse::parts() const
 {
     return d_func()->parts;
 }
@@ -3920,14 +3938,7 @@ public:
             blck.write("Size", size);
         }
         if (modifiedParts & ModifyItemsCommand::Parts) {
-            blck.beginBlock("Parts");
-            for (const PartMetaData &part : parts) {
-                blck.beginBlock(part.name());
-                blck.write("Size", part.size());
-                blck.write("Version", part.version());
-                blck.endBlock();
-            }
-            blck.endBlock();
+            blck.write("Parts", parts);
         }
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
             blck.write("Removed Parts", removedParts);
@@ -3951,7 +3962,7 @@ public:
     QString remoteRev;
     QString gid;
     QVector<QByteArray> removedParts;
-    QVector<PartMetaData> parts;
+    QVector<QByteArray> parts;
     qint64 size;
     int oldRevision;
     bool dirty;
@@ -4152,12 +4163,12 @@ QVector<QByteArray> ModifyItemsCommand::removedParts() const
     return d_func()->removedParts;
 }
 
-void ModifyItemsCommand::setParts(const QVector<PartMetaData> &parts)
+void ModifyItemsCommand::setParts(const QVector<QByteArray> &parts)
 {
     d_func()->modifiedParts |= Parts;
     d_func()->parts = parts;
 }
-QVector<PartMetaData> ModifyItemsCommand::parts() const
+QVector<QByteArray> ModifyItemsCommand::parts() const
 {
     return d_func()->parts;
 }
@@ -7954,50 +7965,50 @@ class StreamPayloadCommandPrivate : public CommandPrivate
 {
 public:
     StreamPayloadCommandPrivate(const QByteArray &name = QByteArray(),
-                                qint64 expectedSize = 0,
-                                const QString &extFile = QString())
+                                StreamPayloadCommand::Request request = StreamPayloadCommand::MetaData,
+                                const QString &dest = QString())
         : CommandPrivate(Command::StreamPayload)
         , payloadName(name)
-        , externalFile(extFile)
-        , expectedSize(expectedSize)
+        , dest(dest)
+        , request(request)
     {}
     StreamPayloadCommandPrivate(const StreamPayloadCommandPrivate &other)
         : CommandPrivate(other)
         , payloadName(other.payloadName)
-        , externalFile(other.externalFile)
-        , expectedSize(other.expectedSize)
+        , dest(other.dest)
+        , request(other.request)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(expectedSize)
+            && COMPARE(request)
             && COMPARE(payloadName)
-            && COMPARE(externalFile);
+            && COMPARE(dest);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << payloadName
-               << expectedSize
-               << externalFile;
+               << request
+               << dest;
     }
 
     QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> payloadName
-               >> expectedSize
-               >> externalFile;
+               >> request
+               >> dest;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Command", commandType);
         blck.write("Payload Name", payloadName);
-        blck.write("External File", externalFile);
-        blck.write("Expected Size", expectedSize);
+        blck.write("Request", request);
+        blck.write("Detination", dest);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -8006,8 +8017,8 @@ public:
     }
 
     QByteArray payloadName;
-    QString externalFile;
-    qint64 expectedSize;
+    QString dest;
+    StreamPayloadCommand::Request request;
 };
 
 } // namespace Protocol
@@ -8020,9 +8031,9 @@ StreamPayloadCommand::StreamPayloadCommand()
 {
 }
 
-StreamPayloadCommand::StreamPayloadCommand(const QByteArray &name, qint64 size,
-                                           const QString &extFile)
-    : Command(new StreamPayloadCommandPrivate(name, size, extFile))
+StreamPayloadCommand::StreamPayloadCommand(const QByteArray &name, Request request,
+                                           const QString &dest)
+    : Command(new StreamPayloadCommandPrivate(name, request, dest))
 {
 }
 
@@ -8041,22 +8052,22 @@ QByteArray StreamPayloadCommand::payloadName() const
     return d_func()->payloadName;
 }
 
-void StreamPayloadCommand::setExpectedSize(qint64 size)
+void StreamPayloadCommand::setRequest(Request request)
 {
-    d_func()->expectedSize = size;
+    d_func()->request = request;
 }
-qint64 StreamPayloadCommand::expectedSize() const
+StreamPayloadCommand::Request StreamPayloadCommand::request() const
 {
-    return d_func()->expectedSize;
+    return d_func()->request;
 }
 
-void StreamPayloadCommand::setExternalFile(const QString &externalFile)
+void StreamPayloadCommand::setDestination(const QString &dest)
 {
-    d_func()->externalFile = externalFile;
+    d_func()->dest = dest;
 }
-QString StreamPayloadCommand::externalFile() const
+QString StreamPayloadCommand::destination() const
 {
-    return d_func()->externalFile;
+    return d_func()->dest;
 }
 
 QDataStream &operator<<(QDataStream &stream, const StreamPayloadCommand &command)
@@ -8086,42 +8097,52 @@ namespace Protocol
 class StreamPayloadResponsePrivate : public ResponsePrivate
 {
 public:
-    StreamPayloadResponsePrivate(const QByteArray &data = QByteArray(), bool isExternal = false)
+    StreamPayloadResponsePrivate(const QByteArray &payloadName = QByteArray(),
+                                 const PartMetaData &metaData = PartMetaData(),
+                                 const QByteArray &data = QByteArray())
         : ResponsePrivate(Command::StreamPayload)
+        , payloadName(payloadName)
         , data(data)
-        , isExternal(isExternal)
+        , metaData(metaData)
     {}
     StreamPayloadResponsePrivate(const StreamPayloadResponsePrivate &other)
         : ResponsePrivate(other)
+        , payloadName(other.payloadName)
         , data(other.data)
-        , isExternal(other.isExternal)
+        , metaData(other.metaData)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(isExternal)
+            && COMPARE(metaData)
+            && COMPARE(payloadName)
             && COMPARE(data);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
-               << isExternal
+               << payloadName
+               << metaData
                << data;
     }
 
     QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
-               >> isExternal
+               >> payloadName
+               >> metaData
                >> data;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Response", (commandType & ~Command::_ResponseBit));
-        blck.write("External", isExternal);
+        blck.beginBlock("MetaData");
+        blck.write("Size", metaData.size());
+        blck.write("Version", metaData.version());
+        blck.endBlock();
         blck.write("Data", data);
     }
 
@@ -8130,8 +8151,9 @@ public:
         return new StreamPayloadResponsePrivate(*this);
     }
 
+    QByteArray payloadName;
     QByteArray data;
-    bool isExternal;
+    PartMetaData metaData;
 };
 
 } // namespace Protocol
@@ -8144,8 +8166,22 @@ StreamPayloadResponse::StreamPayloadResponse()
 {
 }
 
-StreamPayloadResponse::StreamPayloadResponse(const QByteArray &data, bool isExternal)
-    : Response(new StreamPayloadResponsePrivate(data, isExternal))
+StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
+                                             const PartMetaData &metaData)
+    : Response(new StreamPayloadResponsePrivate(payloadName, metaData))
+{
+}
+
+StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
+                                             const QByteArray &data)
+    : Response(new StreamPayloadResponsePrivate(payloadName, PartMetaData(), data))
+{
+}
+
+StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
+                                             const PartMetaData &metaData,
+                                             const QByteArray &data)
+    : Response(new StreamPayloadResponsePrivate(payloadName, metaData, data))
 {
 }
 
@@ -8155,20 +8191,26 @@ StreamPayloadResponse::StreamPayloadResponse(const Command &other)
     assert(d_func()->commandType == (Command::StreamPayload | Command::_ResponseBit));
 }
 
-void StreamPayloadResponse::setIsExternal(bool isExternal)
+void StreamPayloadResponse::setPayloadName(const QByteArray &payloadName)
 {
-    d_func()->isExternal = isExternal;
+    d_func()->payloadName = payloadName;
 }
-bool StreamPayloadResponse::isExternal() const
+QByteArray StreamPayloadResponse::payloadName() const
 {
-    return d_func()->isExternal;
+    return d_func()->payloadName;
 }
-
+void StreamPayloadResponse::setMetaData(const PartMetaData &metaData)
+{
+    d_func()->metaData = metaData;
+}
+PartMetaData StreamPayloadResponse::metaData() const
+{
+    return d_func()->metaData;
+}
 void StreamPayloadResponse::setData(const QByteArray &data)
 {
     d_func()->data = data;
 }
-
 QByteArray StreamPayloadResponse::data() const
 {
     return d_func()->data;

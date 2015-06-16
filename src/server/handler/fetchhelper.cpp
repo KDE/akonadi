@@ -69,7 +69,8 @@ enum PartQueryColumns {
     PartQueryTypeNameColumn,
     PartQueryDataColumn,
     PartQueryExternalColumn,
-    PartQueryVersionColumn
+    PartQueryVersionColumn,
+    PartQueryDataSizeColumn
 };
 
 QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool allPayload, bool allAttrs)
@@ -85,8 +86,8 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
         partQuery.addColumn(PartType::nameFullColumnName());
         partQuery.addColumn(Part::dataFullColumnName());
         partQuery.addColumn(Part::externalFullColumnName());
-
         partQuery.addColumn(Part::versionFullColumnName());
+        partQuery.addColumn(Part::datasizeFullColumnName());
 
         partQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
@@ -485,7 +486,7 @@ bool FetchHelper::fetchItems()
         bool skipItem = false;
 
         QVector<QByteArray> cachedParts;
-        QMap<Protocol::PartMetaData, Protocol::StreamPayloadResponse> parts;
+        QVector<Protocol::StreamPayloadResponse> parts;
         while (partQuery.isValid()) {
             const qint64 id = partQuery.value(PartQueryPimIdColumn).toLongLong();
             if (id > pimItemId) {
@@ -501,9 +502,12 @@ bool FetchHelper::fetchItems()
 
             Protocol::PartMetaData metaPart;
             Protocol::StreamPayloadResponse partData;
+            partData.setPayloadName(partName);
             metaPart.setName(partName);
-            QByteArray data = Utils::variantToByteArray(partQuery.value(PartQueryDataColumn));
+            metaPart.setVersion(partQuery.value(PartQueryVersionColumn).toInt());
+            metaPart.setSize(partQuery.value(PartQueryDataSizeColumn).toLongLong());
 
+            const QByteArray data = Utils::variantToByteArray(partQuery.value(PartQueryDataColumn));
             if (mFetchScope.checkCachedPayloadPartsOnly()) {
                 if (!data.isEmpty()) {
                     cachedParts << partName;
@@ -517,22 +521,16 @@ bool FetchHelper::fetchItems()
                     skipItem = true;
                     break;
                 }
-                const bool partIsExternal = partQuery.value(PartQueryExternalColumn).toBool();
-                int version = partQuery.value(PartQueryVersionColumn).toInt();
-                if (version != 0) {   // '0' is the default, so don't send it
-                    metaPart.setVersion(version);
-                }
-                if (partIsExternal) {    // external data and this is supported by the client
-                    partData.setData(data);
-                    partData.setIsExternal(true);
-                } else if (data.isEmpty()) {
+                metaPart.setIsExternal(partQuery.value(PartQueryExternalColumn).toBool());
+                if (data.isEmpty()) {
                     partData.setData(QByteArray(""));
                 } else {
                     partData.setData(data);
                 }
+                partData.setMetaData(metaPart);
 
                 if (mFetchScope.requestedParts().contains(partName) || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
-                    parts.insert(metaPart, partData);
+                    parts.append(partData);
                 }
 
                 partQuery.next();

@@ -58,8 +58,28 @@ QString PartStreamer::error() const
     return mError;
 }
 
-bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
+Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partName)
 {
+    Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(partName, Protocol::StreamPayloadCommand::MetaData));
+
+    Protocol::StreamPayloadResponse response = mConnection->readCommand();
+    if (response.isError()) {
+        mError = QStringLiteral("Client failed to provide part metadata");
+        return Protocol::PartMetaData();
+    }
+
+    return response.metaData();
+}
+
+
+bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
+{
+    Protocol::PartMetaData metaPart = requestPartMetaData(partName);
+    if (metaPart.name().isEmpty()) {
+        return false;
+    }
+    part.setVersion(metaPart.version());
+
     if (part.datasize() != metaPart.size()) {
         part.setDatasize(metaPart.size());
         // Shortcut: if sizes differ, we don't need to compare data later no in order
@@ -72,52 +92,55 @@ bool PartStreamer::streamPayload(Part &part, Protocol::PartMetaData &metaPart)
     if (storeInFile) {
         return streamPayloadToFile(part, metaPart);
     } else {
-        // If the part WAS external previously, remove data file
-        QString origFilename;
-        if (part.external()) {
-            origFilename = PartHelper::resolveAbsolutePath(part.data());
+        return streamPayloadData(part, metaPart);
+    }
+}
+
+bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart)
+{
+    // If the part WAS external previously, remove data file
+    QString origFilename;
+    if (part.external()) {
+        origFilename = PartHelper::resolveAbsolutePath(part.data());
+    }
+
+    // Request the actual data
+    Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(metaPart.name(), Protocol::StreamPayloadCommand::Data));
+
+    Protocol::StreamPayloadResponse response = mConnection->readCommand();
+    if (response.isError()) {
+        mError = QStringLiteral("Client failed to provide payload data");
+        akError() << mError;
+        return false;
+    }
+    const QByteArray newData = response.data();
+    if (newData.size() != metaPart.size()) {
+        mError = QStringLiteral("Payload size mismatch");
+        return false;
+    }
+
+    if (part.isValid()) {
+        if (!mDataChanged) {
+            mDataChanged = mDataChanged || (newData != part.data());
         }
-
-        Protocol::StreamPayloadCommand cmd;
-        cmd.setExpectedSize(metaPart.size());
-        cmd.setPayloadName(metaPart.name());
-        Q_EMIT responseAvailable(cmd);
-
-        Protocol::StreamPayloadResponse response = mConnection->readCommand();
-        if (response.isError()) {
-            mError = QStringLiteral("Client failed to store payload into file");
-            akError() << mError;
+        PartHelper::update(&part, newData, newData.size());
+    } else {
+        part.setData(newData);
+        part.setDatasize(newData.size());
+        if (!part.insert()) {
+            mError = QStringLiteral("Failed to insert part to database");
             return false;
         }
-        const QByteArray newData = response.data();
-        if (newData.size() != metaPart.size()) {
-            mError = QStringLiteral("Payload size mismatch");
-            return false;
-        }
+    }
 
-        if (part.isValid()) {
-            if (!mDataChanged) {
-                mDataChanged = mDataChanged || (newData != part.data());
-            }
-            PartHelper::update(&part, newData, newData.size());
-        } else {
-            part.setData(newData);
-            part.setDatasize(newData.size());
-            if (!part.insert()) {
-                mError = QStringLiteral("Failed to insert part to database");
-                return false;
-            }
-        }
-
-        if (!origFilename.isEmpty()) {
-            PartHelper::removeFile(origFilename);
-        }
+    if (!origFilename.isEmpty()) {
+        PartHelper::removeFile(origFilename);
     }
 
     return true;
 }
 
-bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaPart)
+bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart)
 {
     QByteArray origData;
     if (!mDataChanged && mCheckChanged) {
@@ -166,10 +189,8 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
         }
     }
 
-    Protocol::StreamPayloadCommand cmd;
-    cmd.setPayloadName(metaPart.name());
-    cmd.setExpectedSize(metaPart.size());
-    cmd.setExternalFile(filename);
+    Protocol::StreamPayloadCommand cmd(metaPart.name(), Protocol::StreamPayloadCommand::Data);
+    cmd.setDestination(filename);
     Q_EMIT responseAvailable(cmd);
 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
@@ -206,7 +227,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, Protocol::PartMetaData &metaP
     return true;
 }
 
-bool PartStreamer::stream(bool checkExists, Protocol::PartMetaData &metaPart, bool *changed)
+bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed)
 {
     mError.clear();
     mDataChanged = false;
@@ -214,7 +235,7 @@ bool PartStreamer::stream(bool checkExists, Protocol::PartMetaData &metaPart, bo
     if (changed != 0) {
         *changed = false;
     }
-    const PartType partType = PartTypeHelper::fromFqName(metaPart.name());
+    const PartType partType = PartTypeHelper::fromFqName(partName);
 
     Part part;
 
@@ -239,13 +260,14 @@ bool PartStreamer::stream(bool checkExists, Protocol::PartMetaData &metaPart, bo
     }
 
     part.setPartType(partType);
-    part.setVersion(metaPart.version());
     part.setPimItemId(mItem.id());
 
-    bool ok = streamPayload(part, metaPart);
+    bool ok = streamPayload(part, partName);
     if (ok && mCheckChanged) {
         *changed = mDataChanged;
     }
+
+    partSize = part.datasize();
 
     return ok;
 }

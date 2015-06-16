@@ -557,7 +557,8 @@ class AKONADIPRIVATE_EXPORT PartMetaData
 {
 public:
     explicit PartMetaData();
-    PartMetaData(const QByteArray &name, qint64 size, int version = 0);
+    PartMetaData(const QByteArray &name, qint64 size, int version = 0,
+                 bool external = false);
     PartMetaData(PartMetaData &&other);
     PartMetaData(const PartMetaData &other);
     ~PartMetaData();
@@ -578,6 +579,9 @@ public:
 
     void setVersion(int version);
     int version() const;
+
+    void setIsExternal(bool isExternal);
+    bool isExternal() const;
 
 private:
     QSharedDataPointer<PartMetaDataPrivate> d;
@@ -794,10 +798,11 @@ public:
     void setRemovedTags(const Scope &tags);
     Scope removedTags() const;
 
-    void setRemovedParts(const QVector<QByteArray> &removedParts);
-    QVector<QByteArray> removedParts() const;
-    void setParts(const QVector<PartMetaData> &parts);
-    QVector<PartMetaData> parts() const;
+    void setAttributes(const Attributes &attributes);
+    Attributes attributes() const;
+
+    void setParts(const QVector<QByteArray> &parts);
+    QVector<QByteArray> parts() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(CreateItemCommand)
@@ -1077,8 +1082,8 @@ public:
     void setAncestors(const QVector<Ancestor> &ancestors);
     QVector<Ancestor> ancestors() const;
 
-    void setParts(const QMap<PartMetaData, StreamPayloadResponse> &parts);
-    QMap<PartMetaData, StreamPayloadResponse> parts() const;
+    void setParts(const QVector<StreamPayloadResponse> &parts);
+    QVector<StreamPayloadResponse> parts() const;
 
     void setCachedParts(const QVector<QByteArray> &cachedParts);
     QVector<QByteArray> cachedParts() const;
@@ -1206,8 +1211,8 @@ public:
     void setRemovedParts(const QVector<QByteArray> &removedParts);
     QVector<QByteArray> removedParts() const;
 
-    void setParts(const QVector<PartMetaData> &parts);
-    QVector<PartMetaData> parts() const;
+    void setParts(const QVector<QByteArray> &parts);
+    QVector<QByteArray> parts() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
@@ -2116,19 +2121,24 @@ class StreamPayloadCommandPrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
 {
 public:
+    enum Request {
+        MetaData,
+        Data
+    };
+
     explicit StreamPayloadCommand();
-    StreamPayloadCommand(const QByteArray &payloadName, qint64 size,
-                         const QString &extFile = QString());
+    StreamPayloadCommand(const QByteArray &payloadName, Request request,
+                         const QString &dest = QString());
     StreamPayloadCommand(const Command &command);
 
     void setPayloadName(const QByteArray &name);
     QByteArray payloadName() const;
 
-    void setExpectedSize(qint64 size);
-    qint64 expectedSize() const;
+    void setDestination(const QString &dest);
+    QString destination() const;
 
-    void setExternalFile(const QString &externalFile);
-    QString externalFile() const;
+    void setRequest(Request request);
+    Request request() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(StreamPayloadCommand)
@@ -2145,11 +2155,20 @@ class AKONADIPRIVATE_EXPORT StreamPayloadResponse : public Response
 {
 public:
     explicit StreamPayloadResponse();
-    StreamPayloadResponse(const QByteArray &data, bool isExternal = false);
+    StreamPayloadResponse(const QByteArray &payloadName,
+                          const PartMetaData &metadata = PartMetaData());
+    StreamPayloadResponse(const QByteArray &payloadName,
+                          const QByteArray &data);
+    StreamPayloadResponse(const QByteArray &payloadName,
+                          const PartMetaData &metaData,
+                          const QByteArray &data);
     StreamPayloadResponse(const Command &command);
 
-    void setIsExternal(bool external);
-    bool isExternal() const;
+    void setPayloadName(const QByteArray &payloadName);
+    QByteArray payloadName() const;
+
+    void setMetaData(const PartMetaData &metaData);
+    PartMetaData metaData() const;
 
     void setData(const QByteArray &data);
     QByteArray data() const;

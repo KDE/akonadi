@@ -272,13 +272,14 @@ bool Store::parseStream()
         PartStreamer streamer(connection(), item, this);
         connect(&streamer, &PartStreamer::responseAvailable,
                 this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
-        for (Protocol::PartMetaData part : cmd.parts()) {
-            if (!streamer.stream(true, part)) {
+        for (const QByteArray &partName : cmd.parts()) {
+            qint64 partSize = 0;
+            if (!streamer.stream(true, partName, partSize)) {
                 return failureResponse(streamer.error());
             }
 
-            changes.insert(part.name());
-            partSizes += part.size();
+            changes.insert(partName);
+            partSizes += partSize;
         }
     }
 

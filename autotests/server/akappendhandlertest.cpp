@@ -157,7 +157,7 @@ public:
 
     Protocol::CreateItemCommand createCommand(const PimItem &pimItem,
                                               const QDateTime &dt,
-                                              const QVector<Protocol::PartMetaData> &parts,
+                                              const QVector<QByteArray> &parts,
                                               qint64 overrideSize = -1)
     {
         const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();
@@ -178,7 +178,7 @@ public:
     Protocol::FetchItemsResponse createResponse(qint64 expectedId,
                                                 const PimItem &pimItem,
                                                 const QDateTime &datetime,
-                                                const QMap<Protocol::PartMetaData, Protocol::StreamPayloadResponse> &parts,
+                                                const QVector<Protocol::StreamPayloadResponse> &parts,
                                                 qint64 overrideSize = -1)
     {
         const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();
@@ -195,7 +195,6 @@ public:
 
         return resp;
     }
-
 
     TestScenario errorResponse(const QString &errorMsg)
     {
@@ -242,11 +241,13 @@ private Q_SLOTS:
         notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
         uidnext = 13;
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 10, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 10))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("0123456789"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 10)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "0123456789"))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", 10, 0), Protocol::StreamPayloadResponse("0123456789") } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 10), "0123456789") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("single-part") << scenarios << notification << pimItem << parts
                                      << flags << tags << uidnext << datetime << false;
@@ -258,16 +259,18 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime,
-                                   { Protocol::PartMetaData("PLD:DATA", 11, 0),
-                                     Protocol::PartMetaData("PLD:PLDTEST", 9, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 11))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("Random Data"))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:PLDTEST", 9))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("Test Data"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA", "PLD:PLDTEST" } ))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 11, 0)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "Random Data"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:PLDTEST", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:PLDTEST", Protocol::PartMetaData("PLD:PLDTEST", 9, 0)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:PLDTEST", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:PLDTEST", "Test Data"))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", 11, 0), Protocol::StreamPayloadResponse("Random Data") },
-                          { Protocol::PartMetaData("PLD:PLDTEST", 9, 0), Protocol::StreamPayloadResponse("Test Data") } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 11), "Random Data"),
+                          Protocol::StreamPayloadResponse("PLD:PLDTEST", Protocol::PartMetaData("PLD:PLDTEST", 9), "Test Data") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("multi-part") << scenarios << notification << pimItem << parts
                                     << flags << tags << uidnext << datetime << false;
@@ -307,11 +310,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }, 1))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("12345"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }, 1))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "12345"))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", 5, 0), Protocol::StreamPayloadResponse("12345") } }, 5))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5), "12345") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("mismatch item sizes (smaller)") << scenarios << notification << pimItem
                                                        << parts << flags << tags << uidnext
@@ -322,11 +327,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }, 10))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("12345"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }, 10))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "12345"))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", 5, 0), Protocol::StreamPayloadResponse("12345") } }, 10))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5), "12345") }, 10))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("mismatch item sizes (bigger)") << scenarios << notification << pimItem
                                                       << parts << flags << tags << uidnext
@@ -334,9 +341,11 @@ private Q_SLOTS:
 
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 5, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 5))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("123"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "123"))
                   << errorResponse(QLatin1String("Payload size mismatch"));
         QTest::newRow("incomplete part data") << scenarios << NotificationMessageV3()
                                               << PimItem() << QVector<FakePart>()
@@ -345,9 +354,11 @@ private Q_SLOTS:
 
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 4, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 4))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("1234567890"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 4)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "1234567890"))
                   << errorResponse(QLatin1String("Payload size mismatch"));
         QTest::newRow("part data larger than advertised") << scenarios << NotificationMessageV3()
                                                           << PimItem() << QVector<FakePart>()
@@ -360,11 +371,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", 0, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 0))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse())
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 0)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", QByteArray()))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem ,datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", 0, 0), Protocol::StreamPayloadResponse() } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 0), QByteArray()) } ))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("empty payload part") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
@@ -375,11 +388,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem,  datetime, { Protocol::PartMetaData("PLD:DATA", 1, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", 1))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(QByteArray("\0", 1)))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem,  datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 1)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", QByteArray("\0", 1)))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", 1, 0), Protocol::StreamPayloadResponse(QByteArray("\0", 1)) } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 1), QByteArray("\0", 1)) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("part data will null character") << scenarios << notification << pimItem
                                                        << parts << flags << tags << uidnext
@@ -392,11 +407,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(utf8String.toUtf8()))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize())))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", utf8String.toUtf8()))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", utf8String.toUtf8().size(), 0), Protocol::StreamPayloadResponse(utf8String.toUtf8()) } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", utf8String.toUtf8().size()), utf8String.toUtf8()) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("utf8 part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
@@ -408,11 +425,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(hugeData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize())))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", hugeData))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem ,datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), Protocol::StreamPayloadResponse(hugeData) } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), hugeData) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("huge part data") << scenarios << notification << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
@@ -424,11 +443,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(dataWithNewLines))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize())))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", dataWithNewLines))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", dataWithNewLines.size()), Protocol::StreamPayloadResponse(dataWithNewLines) } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", dataWithNewLines.size()), dataWithNewLines) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("data with newlines") << scenarios << notification << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
@@ -440,11 +461,13 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
           scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", parts.first().datasize()))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse(lotsOfNewlines))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:DATA" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize())))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", lotsOfNewlines))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), Protocol::StreamPayloadResponse(lotsOfNewlines) } }))
+                        { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), lotsOfNewlines) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("data with lots of newlines") << scenarios << notification << pimItem
                                                     << parts << flags << tags << uidnext
@@ -457,16 +480,18 @@ private Q_SLOTS:
         ++uidnext;
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime,
-                                   { Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10, 0),
-                                     Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10, 0) }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", 10))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("0123456789"))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", 10))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("9876543210"))
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:NEWPARTTYPE1", "PLD:NEWPARTTYPE2" }))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", "0123456789"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", "9876543210"))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { { Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10, 0), Protocol::StreamPayloadResponse("0123456789") },
-                          { Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10, 0), Protocol::StreamPayloadResponse("9876543210") } }))
+                        { Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10), "0123456789"),
+                          Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10), "9876543210") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("non-existent part types") << scenarios << notification << pimItem
                                                  << parts << flags << tags << uidnext

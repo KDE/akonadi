@@ -43,6 +43,14 @@ static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATT
 bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                             Collection &parentCol)
 {
+    parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    if (!parentCol.isValid()) {
+        return failureResponse("Invalid parent collection");
+    }
+    if (parentCol.isVirtual()) {
+        return failureResponse("Cannot append item into virtual collection");
+    }
+
     MimeType mimeType = MimeType::retrieveByName(cmd.mimeType());
     if (!mimeType.isValid()) {
         MimeType m(cmd.mimeType());
@@ -50,14 +58,6 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
             return failureResponse(QStringLiteral("Unable to create mimetype '") % cmd.mimeType() % QStringLiteral("'."));
         }
         mimeType = m;
-    }
-
-    parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection());
-    if (!parentCol.isValid()) {
-        return failureResponse("Invalid parent collection");
-    }
-    if (parentCol.isVirtual()) {
-        return failureResponse("Cannot append item into virtual collection");
     }
 
     item.setRev(0);
@@ -110,11 +110,12 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     PartStreamer streamer(connection(), item, this);
     connect(&streamer, &PartStreamer::responseAvailable,
             this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
-    for (Protocol::PartMetaData part : cmd.parts()) {
-        if (!streamer.stream(true, part)) {
+    for (const QByteArray &partName : cmd.parts()) {
+        qint64 partSize = 0;
+        if (!streamer.stream(true, partName, partSize)) {
             return failureResponse(streamer.error());
         }
-        partSizes += part.size();
+        partSizes += partSize;
     }
 
     // TODO: Try to avoid this addition query
@@ -236,28 +237,19 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         partsSizes.insert(part.partType().name().toLatin1(), part.datasize());
     }
 
-    if (!cmd.removedParts().isEmpty()) {
-        DataStore::self()->removeItemParts(currentItem, cmd.removedParts());
-        for (const QByteArray &part : cmd.removedParts()) {
-            changedParts.insert(part);
-        }
-        for (const QByteArray &removedPart : cmd.removedParts()) {
-            partsSizes.remove(removedPart);
-        }
-    }
-
     PartStreamer streamer(connection(), currentItem);
     connect(&streamer, &PartStreamer::responseAvailable,
             this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
-    for (Protocol::PartMetaData part : cmd.parts()) {
+    for (const QByteArray &partName : cmd.parts()) {
         bool changed = false;
-        if (!streamer.stream(true, part, &changed)) {
+        qint64 partSize = 0;
+        if (!streamer.stream(true, partName, partSize, &changed)) {
             return failureResponse(streamer.error());
         }
 
         if (changed) {
-            changedParts.insert(part.name());
-            partsSizes.insert(part.name(), part.size());
+            changedParts.insert(partName);
+            partsSizes.insert(partName, partSize);
         }
     }
 
