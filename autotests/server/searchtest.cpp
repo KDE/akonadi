@@ -118,21 +118,21 @@ private Q_SLOTS:
         QTest::addColumn<QStringList>("mimetypes");
         QTest::addColumn<QVector<qint64>>("expectedResults");
 
-        QTest::newRow("") << QVector<qint64>({ 0 })
-                          << QStringList({ QLatin1String("text/plain") })
-                          << QVector<qint64>({ col4.id(), col5.id(), col7.id() });
-        QTest::newRow("") << QVector<qint64>({ 0 })
-                          << QStringList({ QLatin1String("application/octet-stream") })
-                          << QVector<qint64>({ col2.id(), col3.id(), col6.id(), col8.id() });
-        QTest::newRow("") << QVector<qint64>({ col1.id() })
-                          << QStringList({ QLatin1String("text/plain") })
-                          << QVector<qint64>({ col4.id() });
-        QTest::newRow("") << QVector<qint64>({ col1.id() })
-                          << QStringList({ QLatin1String("unique/mime-type") })
+        QTest::newRow("") << (QVector<qint64>() << 0)
+                          << (QStringList() << QLatin1String("text/plain"))
+                          << (QVector<qint64>() << col4.id() << col5.id() << col7.id());
+        QTest::newRow("") << (QVector<qint64>() << 0)
+                          << (QStringList() << QLatin1String("application/octet-stream"))
+                          << (QVector<qint64>() << col2.id() << col3.id() << col6.id() << col8.id());
+        QTest::newRow("") << (QVector<qint64>() << col1.id())
+                          << (QStringList() << QLatin1String("text/plain"))
+                          << (QVector<qint64>() << col4.id());
+        QTest::newRow("") << (QVector<qint64>() << col1.id())
+                          << (QStringList() << QLatin1String("unique/mime-type"))
                           << QVector<qint64>();
-        QTest::newRow("") << QVector<qint64>({ col2.id(), col7.id() })
-                          << QStringList({ QLatin1String("application/octet-stream") })
-                          << QVector<qint64>({ col3.id(), col8.id() });
+        QTest::newRow("") << (QVector<qint64>() << col2.id() << col7.id())
+                          << (QStringList() << QLatin1String("application/octet-stream"))
+                          << (QVector<qint64>() << col3.id() << col8.id());
     }
 
     void testSearchHelperCollectionListing()

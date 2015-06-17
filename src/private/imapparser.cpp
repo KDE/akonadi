@@ -79,6 +79,8 @@ int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)
         return start;
     }
 
+    result.reserve(16);
+
     int count = 0;
     int sublistBegin = start;
     bool insideQuote = false;
@@ -186,6 +188,7 @@ int ImapParser::parseQuotedString(const QByteArray &data, QByteArray &result, in
     // quoted string
     if (data[begin] == '"') {
         ++begin;
+        result.reserve(qMin(32, data.size() - begin));
         for (int i = begin; i < data.length(); ++i) {
             const char ch = data.at(i);
             if (foundSlash) {
