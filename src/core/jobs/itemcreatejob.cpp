@@ -148,7 +148,10 @@ void ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             if (streamCmd.destination().isEmpty()) {
                 streamResp.setData(d->mPendingData);
             } else {
-                ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error);
+                QByteArray error;
+                if (!ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error)) {
+                    // Error?
+                }
             }
         }
         d->sendCommand(streamResp);

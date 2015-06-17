@@ -61,7 +61,7 @@ void CollectionSelectJob::doStart()
     Q_D(CollectionSelectJob);
 
     try {
-        d->sendCommand(ProtocolHelper::entityToScope(d->mCollection));
+        d->sendCommand(Protocol::SelectCollectionCommand(ProtocolHelper::entityToScope(d->mCollection)));
     } catch (const std::exception &e) {
         setError(Unknown);
         setErrorText(QString::fromUtf8(e.what()));

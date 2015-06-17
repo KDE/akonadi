@@ -99,7 +99,7 @@ public:
         if (mBase.isValid()) {
             return QStringLiteral("Collection Id %1").arg(mBase.id());
         } else if (CollectionUtils::hasValidHierarchicalRID(mBase)) {
-            return QString::fromUtf8(QByteArray(QByteArray("(") + ProtocolHelper::hierarchicalRidToByteArray(mBase) + QByteArray(")")));
+            return QLatin1String("(") + ProtocolHelper::hierarchicalRidToScope(mBase).ridChain().join(QLatin1String(", ")) + QLatin1String(")");
         } else {
             return QString::fromLatin1("Collection RemoteId %1").arg(mBase.remoteId());
         }
@@ -304,7 +304,7 @@ void CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &r
 
     Protocol::FetchCollectionsResponse resp(response);
     // Invalid response (no ID) means this was the last response
-    if (resp.id() = -1) {
+    if (resp.id() == -1) {
         emitResult();
         return;
     }

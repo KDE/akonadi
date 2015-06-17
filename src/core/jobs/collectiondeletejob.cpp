@@ -62,7 +62,7 @@ void CollectionDeleteJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::DeleteCollectionCommand(ProtocolHelper::entitySetToScope({ d->mCollection })));
+    d->sendCommand(Protocol::DeleteCollectionCommand(ProtocolHelper::entityToScope(d->mCollection)));
 }
 
 void CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

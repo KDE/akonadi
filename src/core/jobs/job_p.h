@@ -50,7 +50,7 @@ public:
 
     void init(QObject *parent);
 
-    void handleResponse(const QByteArray &tag, const QByteArray &data);
+    void handleResponse(qint64 tag, const Protocol::Command &response);
     void startQueued();
     void lostConnection();
     void slotSubJobAboutToStart(Akonadi::Job *job);

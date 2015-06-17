@@ -102,7 +102,7 @@ public:
     /**
       Returns the next IMAP tag.
     */
-    int nextTag();
+    qint64 nextTag();
 
     /**
       Sends the given command to server
@@ -128,7 +128,7 @@ public:
     QByteArray sessionId;
     QIODevice *socket;
     bool connected;
-    int theNextTag;
+    qint64 theNextTag;
     int protocolVersion;
 
     // job management

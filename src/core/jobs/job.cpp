@@ -41,42 +41,28 @@ using namespace Akonadi;
 static QDBusAbstractInterface *s_jobtracker = 0;
 
 //@cond PRIVATE
-void JobPrivate::handleResponse(const QByteArray &tag, const QByteArray &data)
+void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_Q(Job);
 
     if (mCurrentSubJob) {
-        mCurrentSubJob->d_ptr->handleResponse(tag, data);
+        mCurrentSubJob->d_ptr->handleResponse(tag, response);
         return;
     }
 
     if (tag == mTag) {
-        if (data.startsWith("NO ") || data.startsWith("BAD ")) {       //krazy:exclude=strings
-            QString msg = QString::fromUtf8(data);
-
-            msg.remove(0, msg.startsWith(QStringLiteral("NO ")) ? 3 : 4);
-
-            if (msg.endsWith(QStringLiteral("\r\n"))) {
-                msg.chop(2);
+        if (response.isResponse()) {
+            Protocol::Response resp(response);
+            if (resp.isError()) {
+                q->setError(Job::Unknown);
+                q->setErrorText(resp.errorMessage());
+                q->emitResult();
+                return;
             }
-
-            q->setError(Job::Unknown);
-            q->setErrorText(msg);
-            q->emitResult();
-            return;
-        } else if (data.startsWith("OK")) {     //krazy:exclude=strings
-
-            // We can't use emitResult() here: The slot connected to the result signal might exec()
-            // another job, and therefore this method would never return. That causes the session
-            // to deadlock, since it calls this method and does not continue starting new jobs until
-            // this method finishes. Which would also mean the exec()'d job is never started,, and there-
-            // fore everything deadlocks.
-            QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
-            return;
         }
     }
 
-    q->doHandleResponse(tag, data);
+    q->doHandleResponse(tag, response);
 }
 
 void JobPrivate::init(QObject *parent)

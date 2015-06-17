@@ -62,7 +62,7 @@ void CollectionCreateJob::doStart()
 
     Protocol::CreateCollectionCommand cmd;
     cmd.setName(d->mCollection.name());
-    cmd.setParent(ProtocolHelper::entitySetToScope(Collection::List() << d->mCollection.parentCollection()));
+    cmd.setParent(ProtocolHelper::entityToScope(d->mCollection.parentCollection()));
     cmd.setMimeTypes(d->mCollection.contentMimeTypes());
     cmd.setRemoteId(d->mCollection.remoteId());
     cmd.setRemoteRevision(d->mCollection.remoteRevision());
@@ -94,16 +94,16 @@ void CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &
     Q_D(CollectionCreateJob);
 
     if (!response.isResponse()) {
-        Job::doHandleResponse(tag, data);
+        Job::doHandleResponse(tag, response);
         return;
     }
 
     if (response.type() == Protocol::Command::FetchCollections) {
         Protocol::FetchCollectionsResponse resp(response);
         d->mCollection = ProtocolHelper::parseCollection(resp);
-        if (!d->mCollection) {
+        if (!d->mCollection.isValid()) {
             setError(Unknown);
-            setErrorText(i18n("Failed to parse Collection from response");
+            setErrorText(i18n("Failed to parse Collection from response"));
             emitResult();
         }
         return;
@@ -112,5 +112,5 @@ void CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &
         return;
     }
 
-    Job::doHandleResponse(tag, data);
+    Job::doHandleResponse(tag, response);
 }

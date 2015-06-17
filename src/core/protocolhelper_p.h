@@ -90,7 +90,10 @@ public:
       This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
       same @p parentCollection don't have to be parsed twice.
     */
-    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors, Entity *entity, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = 0, int start = 0);
+    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+                                     Entity *entity,
+                                     Collection::Id parentCollection,
+                                     ProtocolHelperValuePool *valuePool = 0);
 
     /**
       Parse a collection description.
@@ -125,14 +128,14 @@ public:
       Converts the given set of items into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    template <typename T>
-    static Scope entitySetToScope(const QVector<T> &_objects)
+    template<typename T, template<typename> class Container>
+    static Scope entitySetToScope(const Container<T> &_objects)
     {
         if (_objects.isEmpty()) {
             throw Exception("No objects specified");
         }
 
-        typename T::List objects(_objects);
+        Container<T> objects(_objects);
 
         QByteArray rv;
         std::sort(objects.begin(), objects.end(), boost::bind(&T::id, _1) < boost::bind(&T::id, _2));
@@ -157,7 +160,7 @@ public:
         // check if we have RIDs or HRIDs
         if (std::find_if(objects.constBegin(), objects.constEnd(),
                          !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
-            == objects.constEnd() && objects.size() == 1) {  // ### HRID sets are not yet specified
+                == objects.constEnd() && objects.size() == 1) {  // ### HRID sets are not yet specified
             return hierarchicalRidToScope(objects.first());
         }
 
@@ -181,7 +184,7 @@ public:
     template <typename T>
     static Scope entityToScope(const T &object)
     {
-        return entitySetToScope(typename T::List() << object);
+        return entitySetToScope(QVector<T>() << object);
     }
 
     /**
@@ -216,9 +219,9 @@ public:
     static QString akonadiStoragePath();
     static QString absolutePayloadFilePath(const QString &fileName);
 
-    static bool streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error);
+    static bool streamPayloadToFile(const QString &file, const QByteArray &data, QByteArray &error);
 
-    Akonadi::Tristate listPreference(const Collection::ListPreference pref);
+    static Akonadi::Tristate listPreference(const Collection::ListPreference pref);
 };
 
 }

@@ -78,7 +78,7 @@ void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &anc
         entity->setParentCollection(pool->ancestorCollections.value(parentCollection));
     } else {
         // not cached yet, parse the chain
-        parseAncestors(data, entity);
+        parseAncestors(ancestors, entity);
         pool->ancestorCollections.insert(parentCollection, entity->parentCollection());
     }
 }
@@ -231,33 +231,6 @@ QByteArray ProtocolHelper::decodePartIdentifier(const QByteArray &data, PartName
     }
 }
 
-Scope ProtocolHelper::entitySetToScope(const QList<Item> &_objects, const QByteArray &command)
-{
-    if (_objects.isEmpty()) {
-        throw Exception("No objects specified");
-    }
-
-    Item::List objects(_objects);
-    std::sort(objects.begin(), objects.end(), boost::bind(&Item::id, _1) < boost::bind(&Item::id, _2));
-    if (objects.first().isValid()) {
-        // all items have a uid set
-        return entitySetToScope<Item>(objects, command);
-    }
-    // check if all items have a gid
-    if (std::find_if(objects.constBegin(), objects.constEnd(),
-                     boost::bind(&QString::isEmpty, boost::bind(&Item::gid, _1)))
-        == objects.constEnd()) {
-        QStringList gids;
-        gids.reserve(objects.count());
-        for (const Item &object : objects) {
-            gids << object.gid();
-        }
-
-        return Scope(Scope::Gid, gids);
-    }
-    return entitySetToScope<Item>(objects, command);
-}
-
 Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection,
                                                                 const Akonadi::Tag &tag,
                                                                 const Item::List &requestedItems)
@@ -302,10 +275,10 @@ Scope ProtocolHelper::hierarchicalRidToScope(const Collection &col)
 
 Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
 {
-    return Scope(Scope::HierarchicalRid, item.remoteId() + hierarchicalRidToScope(item.parentCollection()));
+    return Scope(Scope::HierarchicalRid, (QStringList() << item.remoteId()) + hierarchicalRidToScope(item.parentCollection()).ridChain());
 }
 
-Protocol::FetchScope ProtocolHelper::itemFetchScopeProtocol(const ItemFetchScope &fetchScope)
+Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
 {
     Protocol::FetchScope fs;
     fs.setFetch(Protocol::FetchScope::FullPayload, fetchScope.fullPayload());
@@ -336,7 +309,7 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeProtocol(const ItemFetchScope
     fs.setFetch(Protocol::FetchScope::RemoteRevision, fetchScope.fetchRemoteIdentification());
     fs.setFetch(Protocol::FetchScope::GID, fetchScope.fetchGid());
     if (fetchScope.fetchTags()) {
-        fs.setFetch(Protocol::FetchScope::fetchTags());
+        fs.setFetch(Protocol::FetchScope::Tags);
         if (!fetchScope.tagFetchScope().fetchIdOnly()) {
             fs.setTagFetchScope(fetchScope.tagFetchScope().attributes());
         }
@@ -346,17 +319,17 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeProtocol(const ItemFetchScope
     fs.setFetch(Protocol::FetchScope::MTime, fetchScope.fetchModificationTime());
     fs.setFetch(Protocol::FetchScope::Relations, fetchScope.fetchRelations());
 
-    foreach (const QByteArray &part, fetchScope.payloadParts()) {
-        fs.setRequestedPayloads(QString::fromLatin1(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part)));
+    for (const QByteArray &part : fetchScope.payloadParts()) {
+        fs.setRequestedPayloads({ ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part) });
     }
-    foreach (const QByteArray &part, fetchScope.attributes()) {
-        fs.setRequestedParts(QString::fromLatin1(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part)));
+    for (const QByteArray &part : fetchScope.attributes()) {
+        fs.setRequestedParts({ ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part) });
     }
 
     return fs;
 }
 
-static Item::Flags convertFlags(const QList<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
+static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
 {
 #if __cplusplus >= 201103L || defined(__GNUC__) || defined(__clang__)
     // When the compiler supports thread-safe static initialization (mandated by the C++11 memory model)
@@ -390,16 +363,16 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     item.setStorageCollectionId(data.parentId());
 
     if (valuePool) {
-        item.setMimeType(valuePool->mimeTypePool.sharedValue(data.mimeType());
+        item.setMimeType(valuePool->mimeTypePool.sharedValue(data.mimeType()));
     } else {
         item.setMimeType(data.mimeType());
     }
 
     if (!item.isValid()) {
-        return;
+        return Item();
     }
 
-    item.setFlag(convertFlags(data.flags(), valuePool));
+    item.setFlags(convertFlags(data.flags(), valuePool));
 
     if (!data.tags().isEmpty()) {
         Tag::List tags;
@@ -441,20 +414,19 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     item.setModificationTime(data.MTime());
     parseAncestorsCached(data.ancestors(), &item, data.parentId(), valuePool);
 
-    const auto parts = data.parts();
-    for (auto iter = parts.constBegin(), end = parts.constEnd(); iter != end; ++iter) {
+    for (const Protocol::StreamPayloadResponse &part : data.parts()) {
         ProtocolHelper::PartNamespace ns;
-        const QByteArray plainKey = decodePartIdentifier(iter.key().name(), ns);
+        const QByteArray plainKey = decodePartIdentifier(part.payloadName(), ns);
         switch (ns) {
         case ProtocolHelper::PartPayload:
-            ItemSerializer::deserialize(item, plainKey, iter.value().data(), iter.key().version(), iter.value().isExternal());
+            ItemSerializer::deserialize(item, plainKey, part.data(), part.metaData().version(), part.metaData().isExternal());
             break;
         case ProtocolHelper::PartAttribute: {
             Attribute *attr = AttributeFactory::createAttribute(plainKey);
             Q_ASSERT(attr);
-            if (iter.value().isExternal()) {
-                const QString filename = ProtocolHelper::absolutePayloadFilePath(QString::fromUtf8(iter.value().data()));
-                QFile file(QString::fromUtf8(filename);
+            if (part.metaData().isExternal()) {
+                const QString filename = ProtocolHelper::absolutePayloadFilePath(QString::fromUtf8(part.data()));
+                QFile file(filename);
                 if (file.open(QFile::ReadOnly)) {
                     attr->deserialize(file.readAll());
                 } else {
@@ -463,7 +435,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
                     attr = 0;
                 }
             } else {
-                attr->deserialize(iter.value().data());
+                attr->deserialize(part.data());
             }
             if (attr) {
                 item.addAttribute(attr);
@@ -472,20 +444,21 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         }
         case ProtocolHelper::PartGlobal:
         default:
-            qWarning() << "Unknown item part type:" << iter.key().name();
+            qWarning() << "Unknown item part type:" << part.payloadName();
         }
     }
 
     item.d_ptr->resetChangeLog();
+    return item;
 }
 
 Tag ProtocolHelper::parseTagFetchResult(const Protocol::FetchTagsResponse &data)
 {
     Tag tag;
     tag.setId(data.id());
-    tag.setGid(data.gid());
-    tag.setRemoteId(data.remoteId());
-    tag.setType(data.type());
+    tag.setGid(data.gid().toLatin1());
+    tag.setRemoteId(data.remoteId().toLatin1());
+    tag.setType(data.type().toLatin1());
 
     parseAttributes(data.attributes(), &tag);
     return tag;
@@ -494,10 +467,10 @@ Tag ProtocolHelper::parseTagFetchResult(const Protocol::FetchTagsResponse &data)
 Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelationsResponse &data)
 {
     Relation relation;
-    relation.setLeft(data.left());
-    relation.setRight(data.right());
-    relation.setRemoteId(data.remoteId());
-    relation.setType(data.type());
+    relation.setLeft(Item(data.left()));
+    relation.setRight(Item(data.right()));
+    relation.setRemoteId(data.remoteId().toLatin1());
+    relation.setType(data.type().toLatin1());
     return relation;
 }
 
@@ -520,22 +493,15 @@ QString ProtocolHelper::absolutePayloadFilePath(const QString &fileName)
     return fileName;
 }
 
-bool ProtocolHelper::streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error)
+bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArray &data, QByteArray &error)
 {
-    const int fnStart = command.indexOf("[FILE ") + 6;
-    if (fnStart == -1) {
-        qDebug() << "Unexpected response";
-        return false;
-    }
-    const int fnEnd = command.indexOf("]", fnStart);
-    const QByteArray fn = command.mid(fnStart, fnEnd - fnStart);
-    const QString fileName = ProtocolHelper::absolutePayloadFilePath(QString::fromLatin1(fn));
-    if (!fileName.startsWith(akonadiStoragePath())) {
+    const QString filePath = ProtocolHelper::absolutePayloadFilePath(fileName);
+    if (!filePath.startsWith(akonadiStoragePath())) {
         qWarning() << "Invalid file path" << fileName;
         error = "Invalid file path";
         return false;
     }
-    QFile file(fileName);
+    QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         qWarning() << "Failed to open destination payload file" << file.errorString();
         error = "Failed to store payload into file";

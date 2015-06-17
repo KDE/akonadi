@@ -184,7 +184,7 @@ void SessionPrivate::dataReceived()
     while (socket->bytesAvailable() > 0) {
         QDataStream stream(socket);
         qint64 tag;
-        // TODO: Verify the tag matches the last tag we send
+        // TODO: Verify the tag matches the last tag we sent
         stream >> tag;
 
         Protocol::Command cmd = Protocol::deserialize(socket);
@@ -195,7 +195,7 @@ void SessionPrivate::dataReceived()
 
 
         if (logFile) {
-            logFile->write("S: " + cmd.debugString());
+            logFile->write("S: " + cmd.debugString().toUtf8());
             logFile->flush();
         }
 
@@ -205,7 +205,7 @@ void SessionPrivate::dataReceived()
             if (hello.isError()) {
                 qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
                 socket->close();
-                QTimer::singleShot(1000, mParent, &Session::reconnect);
+                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
                 break;
             }
 
@@ -216,7 +216,7 @@ void SessionPrivate::dataReceived()
             protocolVersion = hello.protocolVersion();
 
             Protocol::LoginCommand login(sessionId);
-            sendCommand(login);
+            sendCommand(nextTag(), login);
             continue;
         }
 
@@ -226,7 +226,7 @@ void SessionPrivate::dataReceived()
             if (login.isError()) {
                 qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
                 socket->close();
-                QTimer::singleShot(1000, mParent, &Session::reconnect);
+                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
                 break;
             }
 
@@ -346,7 +346,7 @@ void SessionPrivate::addJob(Job *job)
     startNext();
 }
 
-int SessionPrivate::nextTag()
+qint64 SessionPrivate::nextTag()
 {
     return theNextTag++;
 }
@@ -354,7 +354,7 @@ int SessionPrivate::nextTag()
 void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 {
     if (logFile) {
-        logFile->write("C: " + command.debugString());
+        logFile->write("C: " + command.debugString().toUtf8());
         logFile->write("\n");
         logFile->flush();
     }
