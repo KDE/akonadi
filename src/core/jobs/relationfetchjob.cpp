@@ -23,6 +23,8 @@
 #include "protocolhelper_p.h"
 #include <QTimer>
 
+#include <akonadi/private/protocol_p.h>
+
 using namespace Akonadi;
 
 class Akonadi::RelationFetchJobPrivate : public JobPrivate
@@ -90,64 +92,32 @@ void RelationFetchJob::doStart()
 {
     Q_D(RelationFetchJob);
 
-    QByteArray command = d->newTag();
-    command += " UID RELATIONFETCH ";
-
-    QList<QByteArray> filter;
-    if (!d->mResource.isEmpty()) {
-        filter.append("RESOURCE");
-        filter.append(d->mResource.toUtf8());
-    }
-    if (!d->mTypes.isEmpty()) {
-        filter.append("TYPE");
-        QList<QByteArray> types;
-        types.reserve(d->mTypes.count());
-        foreach (const QString &t, d->mTypes) {
-            types.append(t.toUtf8());
-        }
-        filter.append('(' + ImapParser::join(types, " ") + ')');
-    } else if (!d->mRequestedRelation.type().isEmpty()) {
-        filter.append("TYPE");
-        filter.append('(' + d->mRequestedRelation.type() + ')');
-    }
-    if (d->mRequestedRelation.left().id() >= 0) {
-        filter << "LEFT" << QByteArray::number(d->mRequestedRelation.left().id());
-    }
-    if (d->mRequestedRelation.right().id() >= 0) {
-        filter << "RIGHT" << QByteArray::number(d->mRequestedRelation.right().id());
-    }
-
-    command += "(" + ImapParser::join(filter, " ") + ")\n";
-
-    qDebug() << command;
-    d->writeData(command);
+    d->sendCommand(Protocol::FetchRelationsCommand(
+        d->mRequestedRelation.left().id(),
+        d->mRequestedRelation.right().id(),
+        d->mResource,
+        d->mTypes.isEmpty() ? QStringList() << d->mRequestedRelation.type() : d->mTypes));
 }
 
-void RelationFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+void RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(RelationFetchJob);
 
-    if (tag == "*") {
-        int begin = data.indexOf("RELATIONFETCH");
-        if (begin >= 0) {
-            // split fetch response into key/value pairs
-            QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
-
-            Relation rel;
-            ProtocolHelper::parseRelationFetchResult(fetchResponse, rel);
-
-            if (rel.isValid()) {
-                d->mResultRelations.append(rel);
-                d->mPendingRelations.append(rel);
-                if (!d->mEmitTimer->isActive()) {
-                    d->mEmitTimer->start();
-                }
-            }
-            return;
-        }
+    if (!response.isResponse() || response.type() != Protocol::Command::FetchRelations) {
+        Job::doHandleResponse(tag, response);
+        return;
     }
-    qDebug() << "Unhandled response: " << tag << data;
+
+    const Relation rel = ProtocolHelper::parseRelationFetchResult(response);
+    if (rel.isValid() {
+        d->mResultRelations.append(rel);
+        d->mPendingRelations.append(rel);
+        if (!d->mEmitTimer->isActive()) {
+            d->mEmitTimer->start();
+        }
+    } else {
+        emitResult();
+    }
 }
 
 Relation::List RelationFetchJob::relations() const

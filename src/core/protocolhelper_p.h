@@ -172,16 +172,16 @@ public:
     }
 
     static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
-                                                           const Item::List &requestedItems, const QByteArray &command);
+                                                           const Item::List &requestedItems);
 
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     template <typename T>
-    static Scope entityToScope(const T &object, const QByteArray &command)
+    static Scope entityToScope(const T &object)
     {
-        return entitySetToScope(typename T::List() << object, command);
+        return entitySetToScope(typename T::List() << object);
     }
 
     /**

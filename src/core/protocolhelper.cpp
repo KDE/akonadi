@@ -258,8 +258,9 @@ Scope ProtocolHelper::entitySetToScope(const QList<Item> &_objects, const QByteA
     return entitySetToScope<Item>(objects, command);
 }
 
-Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
-                                                                const Item::List &requestedItems, const QByteArray &command)
+Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection,
+                                                                const Akonadi::Tag &tag,
+                                                                const Item::List &requestedItems)
 {
     Protocol::ScopeContext ctx;
     if (tag.isValid()) {

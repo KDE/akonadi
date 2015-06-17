@@ -20,6 +20,7 @@
 #include "subscriptionjob_p.h"
 
 #include "job_p.h"
+#include "collectionmodifyjob.h"
 
 using namespace Akonadi;
 
@@ -31,37 +32,8 @@ public:
     {
     }
 
-    void sendCommand(const QByteArray &cmd, const Collection::List &list)
-    {
-        mTag = newTag();
-        QByteArray line = mTag + ' ' + cmd;
-        foreach (const Collection &col, list) {
-            line += ' ' + QByteArray::number(col.id());
-        }
-        line += '\n';
-        writeData(line);
-        newTag(); // prevent automatic response handling
-    }
-
-    void sendNextCommand()
-    {
-        Q_Q(SubscriptionJob);
-
-        QByteArray cmd;
-        if (!mSub.isEmpty()) {
-            sendCommand("SUBSCRIBE", mSub);
-            mSub.clear();
-        } else if (!mUnsub.isEmpty()) {
-            sendCommand("UNSUBSCRIBE", mUnsub);
-            mUnsub.clear();
-        } else {
-            q->emitResult();
-        }
-    }
-
     Q_DECLARE_PUBLIC(SubscriptionJob)
 
-    QByteArray mTag;
     Collection::List mSub, mUnsub;
 };
 
@@ -92,22 +64,33 @@ void SubscriptionJob::doStart()
 {
     Q_D(SubscriptionJob);
 
-    d->sendNextCommand();
+    if (d->mSub.isEmpty() && d->mUnsub.isEmpty()) {
+        emitResult();
+    }
+
+    for (Collection col : d->mSub) {
+        col.setEnabled(true);
+        new CollectionModifyJob(col, this);
+    }
+    for (Collection col : d->mUnsub) {
+        col.setEnabled(false);
+        new CollectionModifyJob(col, this);
+    }
 }
 
-void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray &data)
+void SubscriptionJob::slotResult(KJob *job)
 {
-    Q_D(SubscriptionJob);
-
-    if (_tag == d->mTag) {
-        if (data.startsWith("OK")) {     //krazy:exclude=strings
-            d->sendNextCommand();
-        } else {
-            setError(Unknown);
-            setErrorText(QString::fromUtf8(data));
+    if (job->error()) {
+        setError(job->error());
+        setErrorText(job->errorText());
+        for (KJob *subjob : subjobs()) {
+            removeSubjob(subjob);
+        }
+        emitResult();
+    } else {
+        if (!hasSubjobs()) {
             emitResult();
         }
-        return;
     }
 }
 

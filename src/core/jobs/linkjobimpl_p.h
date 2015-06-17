@@ -26,6 +26,8 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
+#include <akonadi/private/protocol_p.h>
+
 #include <qdebug.h>
 #include <KLocalizedString>
 
@@ -40,7 +42,7 @@ public:
     {
     }
 
-    inline void sendCommand(const char *asapCommand)
+    inline void sendCommand(Protocol::LinkItemsCommand::Action action)
     {
         LinkJob *q = static_cast<LinkJob *>(q_func());  // Job would be enough already, but then we don't have access to the non-public stuff...
         if (objectsToLink.isEmpty()) {
@@ -54,27 +56,26 @@ public:
             return;
         }
 
-        QByteArray command = newTag();
         try {
-            command += ProtocolHelper::entitySetToByteArray(Collection::List() << destination, asapCommand);
+            sendCommand(Protocol::LinkItemsCommand(action,
+                ProtocolHelper::entitySetToScope(objectsToLink),
+                ProtocolHelper::entityToScope(destination)));
         } catch (const std::exception &e) {
             q->setError(Job::Unknown);
             q->setErrorText(QString::fromUtf8(e.what()));
             q->emitResult();
             return;
         }
+    }
 
-        try {
-            command += ProtocolHelper::entitySetToByteArray(objectsToLink, QByteArray());
-        } catch (const std::exception &e) {
-            q->setError(Job::Unknown);
-            q->setErrorText(QString::fromUtf8(e.what()));
+    inline void handleResponse(qint64 tag, const Protocol::Command &response)
+    {
+        LinkJob *q = static_cast<LinkJob *>(q_func());
+        if (!response.isResponse() || response.type() != Protocol::Command::LinkItems) {
+            q->Job::doHandleResponse(tag, response);
+        } else {
             q->emitResult();
-            return;
         }
-        command += '\n';
-
-        writeData(command);
     }
 
     Item::List objectsToLink;

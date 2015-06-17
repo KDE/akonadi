@@ -50,18 +50,17 @@ TagDeleteJob::TagDeleteJob(const Tag::List &tags, QObject *parent)
 void TagDeleteJob::doStart()
 {
     Q_D(TagDeleteJob);
-    QByteArray command = d->newTag();
-    try {
-        command += ProtocolHelper::tagSetToByteArray(d->mTagsToRemove, "TAGREMOVE");
-    } catch (const std::exception &e) {
-        setError(Unknown);
-        setErrorText(QString::fromUtf8(e.what()));
-        emitResult();
-        return;
-    }
-    command += "\n";
 
-    d->writeData(command);
+    d->sendCommand(Protocol::DeleteTagCommand(ProtocolHelper::entitySetToScope(d->mTagsToRemove)));
+}
+
+void TagDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::DeleteTag) {
+        Job::doHandleResponse(tag, response);
+    } else {
+        emitResult();
+    }
 }
 
 Tag::List TagDeleteJob::tags() const

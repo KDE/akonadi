@@ -65,7 +65,7 @@ public:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
-    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
+    void slotResult(KJob* job) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(SubscriptionJob)

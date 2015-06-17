@@ -22,7 +22,6 @@
 #include "searchcreatejob.h"
 
 #include "collection.h"
-#include <akonadi/private/imapparser_p.h>
 #include "protocolhelper_p.h"
 #include "job_p.h"
 #include "searchquery.h"
@@ -112,33 +111,22 @@ void SearchCreateJob::doStart()
 {
     Q_D(SearchCreateJob);
 
-    QByteArray command = d->newTag() + " SEARCH_STORE ";
-    command += ImapParser::quote(d->mName.toUtf8());
-    command += ' ';
-    command += ImapParser::quote(d->mQuery.toJSON());
-    command += " (";
-    command += QByteArray(AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG) + " \"ASQL\" ";   // Akonadi Search Query Language ;-)
+    Protocol::StoreSearchCommand cmd;
+    cmd.setName(d->mName);
+    cmd.setQuery(d->mQuery.toJSON());
+    cmd.setMimeTypes(d->mMimeTypes);
+    cmd.setRecursive(d->mRecursive);
+    cmd.setRemote(d->mRemote);
     if (!d->mCollections.isEmpty()) {
-        command += QByteArray(AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS) + " (";
-        QList<QByteArray> ids;
-        ids.reserve(d->mCollections.count());
-        Q_FOREACH (const Collection &col, d->mCollections) {
-            ids << QByteArray::number(col.id());
+        QVector<qint64> ids;
+        ids.reserve(d->mCollections.size());
+        for (const Collection &col : d->mCollections) {
+            ids << col.id();
         }
-        command += ImapParser::join(ids, " ");
-        command += ") ";
+        cmd.setQueryCollections(ids);
     }
-    if (d->mRecursive) {
-        command += QByteArray(AKONADI_PARAM_RECURSIVE) + " ";
-    }
-    if (d->mRemote) {
-        command += QByteArray(AKONADI_PARAM_REMOTE) + " ";
-    }
-    command += QByteArray(AKONADI_PARAM_MIMETYPE) + " (";
-    command += d->mMimeTypes.join(QStringLiteral(" ")).toLatin1();
-    command += ") )";
-    command += '\n';
-    d->writeData(command);
+
+    d->sendCommand(cmd);
 }
 
 Akonadi::Collection SearchCreateJob::createdCollection() const
@@ -147,12 +135,13 @@ Akonadi::Collection SearchCreateJob::createdCollection() const
     return d->mCreatedCollection;
 }
 
-void SearchCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+void SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
-    Q_D(SearchCreateJob);
-    if (tag == "*") {
-        ProtocolHelper::parseCollection(data, d->mCreatedCollection);
-        return;
+    if (response.isResponse() && response.type() == Protocol::Command::CreateCollection) {
+        d->mCreatedCollection = ProtocolHelper::parseCollection(response);
+    } else if (response.isResponse() && response.type() == Protocol::Command::StoreSearch) {
+        emitResult();
+    } else {
+        Job::doHandleResponse(tag, response);
     }
-    qDebug() << "Unhandled response: " << tag << data;
 }
