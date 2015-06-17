@@ -102,7 +102,7 @@ private:
                                    const QHash<qint64, qint64> &parentMap,
                                    const Collection &col);
     CollectionAttribute::List getAttributes(const Collection &colId,
-                                            const QVector<QByteArray> &filter = QVector<QByteArray>());
+                                            const QSet<QByteArray> &filter = QSet<QByteArray>());
     void retrieveAttributes(const QVariantList &collectionIds);
 
     Resource mResource;
@@ -113,7 +113,7 @@ private:
     bool mCollectionsToDisplay;
     bool mCollectionsToSynchronize;
     bool mCollectionsToIndex;
-    QVector<QByteArray> mAncestorAttributes;
+    QSet<QByteArray> mAncestorAttributes;
     QMap<qint64 /*id*/, Collection> mCollections;
     QHash<qint64 /*id*/, Collection> mAncestors;
     QMultiHash<qint64 /*collectionId*/, CollectionAttribute /*mimetypeId*/> mCollectionAttributes;

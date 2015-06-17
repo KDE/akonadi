@@ -79,7 +79,7 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
     return ancestors;
 }
 
-CollectionAttribute::List List::getAttributes(const Collection &col, const QVector<QByteArray> &filter)
+CollectionAttribute::List List::getAttributes(const Collection &col, const QSet<QByteArray> &filter)
 {
     CollectionAttribute::List attributes;
     auto it = mCollectionAttributes.find(col.id());
@@ -159,7 +159,7 @@ bool List::checkFilterCondition(const Collection &col) const
     return true;
 }
 
-static QSqlQuery getAttributeQuery(const QVariantList &ids, const QVector<QByteArray> &requestedAttributes)
+static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArray> &requestedAttributes)
 {
     QueryBuilder qb(CollectionAttribute::tableName());
 
@@ -464,7 +464,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             if (!attributeQuery.isValid() && attributeQueryStart < attributeIds.size()) {
                 const QVariantList ids = attributeIds.mid(attributeQueryStart, querySizeLimit);
                 attributeQueryStart += querySizeLimit;
-                attributeQuery = getAttributeQuery(ids, QVector<QByteArray>());
+                attributeQuery = getAttributeQuery(ids, QSet<QByteArray>());
                 attributeQuery.next(); //place at first record
             }
 

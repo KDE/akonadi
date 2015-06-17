@@ -240,7 +240,7 @@ Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Rel
 }
 
 
-Flag::List HandlerHelper::resolveFlags(const QVector<QByteArray> &flagNames)
+Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
 {
     Flag::List flagList;
     Q_FOREACH (const QByteArray &flagName, flagNames) {

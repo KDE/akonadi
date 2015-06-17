@@ -105,7 +105,7 @@ public:
       Converts a bytearray list of flag names into flag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Flag::List resolveFlags(const QVector<QByteArray> &flagNames);
+    static Flag::List resolveFlags(const QSet<QByteArray> &flagNames);
 
     /**
       Converts a imap set of tags into tag records.

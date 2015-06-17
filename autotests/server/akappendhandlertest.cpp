@@ -157,7 +157,7 @@ public:
 
     Protocol::CreateItemCommand createCommand(const PimItem &pimItem,
                                               const QDateTime &dt,
-                                              const QVector<QByteArray> &parts,
+                                              const QSet<QByteArray> &parts,
                                               qint64 overrideSize = -1)
     {
         const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();

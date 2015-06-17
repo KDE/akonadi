@@ -99,9 +99,9 @@ public:
     bool parseStream();
 
 private:
-    bool replaceFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged);
-    bool addFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged);
-    bool deleteFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged);
+    bool replaceFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);
+    bool addFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);
+    bool deleteFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);
     bool replaceTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged);
     bool addTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged);
     bool deleteTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged);

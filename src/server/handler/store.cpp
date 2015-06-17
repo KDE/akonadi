@@ -53,7 +53,7 @@ static bool payloadChanged(const QSet<QByteArray> &changes)
 }
 
 
-bool Store::replaceFlags(const PimItem::List &item, const QVector<QByteArray> &flags, bool &flagsChanged)
+bool Store::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
     Flag::List flagList = HandlerHelper::resolveFlags(flags);
     DataStore *store = connection()->storageBackend();
@@ -66,7 +66,7 @@ bool Store::replaceFlags(const PimItem::List &item, const QVector<QByteArray> &f
     return true;
 }
 
-bool Store::addFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged)
+bool Store::addFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
     const Flag::List flagList = HandlerHelper::resolveFlags(flags);
     DataStore *store = connection()->storageBackend();
@@ -78,14 +78,14 @@ bool Store::addFlags(const PimItem::List &items, const QVector<QByteArray> &flag
     return true;
 }
 
-bool Store::deleteFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged)
+bool Store::deleteFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
     DataStore *store = connection()->storageBackend();
 
     QVector<Flag> flagList;
     flagList.reserve(flags.size());
-    for (int i = 0; i < flags.count(); ++i) {
-        Flag flag = Flag::retrieveByName(QString::fromUtf8(flags[i]));
+    for (auto iter = flags.cbegin(), end = flags.cend(); iter != end; ++iter) {
+        Flag flag = Flag::retrieveByName(QString::fromUtf8(*iter));
         if (!flag.isValid()) {
             continue;
         }

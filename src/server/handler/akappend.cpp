@@ -188,14 +188,14 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         }
     } else if (!cmd.flags().isEmpty()) {
         bool flagsChanged = false;
-        QVector<QByteArray> flagNames = cmd.flags();
+        QSet<QByteArray> flagNames = cmd.flags();
 
         // Make sure we don't overwrite some local-only flags that can't come
         // through from Resource during ItemSync, like $ATTACHMENT, because the
         // resource is not aware of them (they are usually assigned by client
         // upon inspecting the payload)
         for (const QByteArray &preserve : localFlagsToPreserve) {
-            flagNames.removeOne(preserve);
+            flagNames.remove(preserve);
         }
         const Flag::List flags = HandlerHelper::resolveFlags(flagNames);
         DataStore::self()->setItemsFlags(PimItem::List() << currentItem, flags,

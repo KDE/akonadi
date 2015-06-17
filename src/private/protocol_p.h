@@ -784,12 +784,12 @@ public:
     void setDateTime(const QDateTime &dateTime);
     QDateTime dateTime() const;
 
-    void setFlags(const QVector<QByteArray> &flags);
-    QVector<QByteArray> flags() const;
-    void setAddedFlags(const QVector<QByteArray> &flags);
-    QVector<QByteArray> addedFlags() const;
-    void setRemovedFlags(const QVector<QByteArray> &flags);
-    QVector<QByteArray> removedFlags() const;
+    void setFlags(const QSet<QByteArray> &flags);
+    QSet<QByteArray> flags() const;
+    void setAddedFlags(const QSet<QByteArray> &flags);
+    QSet<QByteArray> addedFlags() const;
+    void setRemovedFlags(const QSet<QByteArray> &flags);
+    QSet<QByteArray> removedFlags() const;
 
     void setTags(const Scope &tags);
     Scope tags() const;
@@ -801,8 +801,8 @@ public:
     void setAttributes(const Attributes &attributes);
     Attributes attributes() const;
 
-    void setParts(const QVector<QByteArray> &parts);
-    QVector<QByteArray> parts() const;
+    void setParts(const QSet<QByteArray> &parts);
+    QSet<QByteArray> parts() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(CreateItemCommand)
@@ -1177,12 +1177,12 @@ public:
     void setOldRevision(int oldRevision);
     int oldRevision() const;
 
-    void setFlags(const QVector<QByteArray> &flags);
-    QVector<QByteArray> flags() const;
-    void setAddedFlags(const QVector<QByteArray> &flags);
-    QVector<QByteArray> addedFlags() const;
-    void setRemovedFlags(const QVector<QByteArray> &flags);
-    QVector<QByteArray> removedFlags() const;
+    void setFlags(const QSet<QByteArray> &flags);
+    QSet<QByteArray> flags() const;
+    void setAddedFlags(const QSet<QByteArray> &flags);
+    QSet<QByteArray> addedFlags() const;
+    void setRemovedFlags(const QSet<QByteArray> &flags);
+    QSet<QByteArray> removedFlags() const;
 
     void setTags(const Scope &tags);
     Scope tags() const;
@@ -1218,8 +1218,8 @@ public:
     void setRemovedParts(const QVector<QByteArray> &removedParts);
     QVector<QByteArray> removedParts() const;
 
-    void setParts(const QVector<QByteArray> &parts);
-    QVector<QByteArray> parts() const;
+    void setParts(const QSet<QByteArray> &parts);
+    QSet<QByteArray> parts() const;
 
     void setAttributes(const Protocol::Attributes &attributes);
     Protocol::Attributes attributes() const;
@@ -1486,8 +1486,8 @@ public:
     void setAncestorsDepth(Ancestor::Depth depth);
     Ancestor::Depth ancestorsDepth() const;
 
-    void setAncestorsAttributes(const QVector<QByteArray> &attributes);
-    QVector<QByteArray> ancestorsAttributes() const;
+    void setAncestorsAttributes(const QSet<QByteArray> &attributes);
+    QSet<QByteArray> ancestorsAttributes() const;
 
     void setEnabled(bool enabled);
     bool enabled() const;

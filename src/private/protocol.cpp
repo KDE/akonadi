@@ -2068,10 +2068,10 @@ public:
     Scope tags;
     Scope addedTags;
     Scope removedTags;
-    QVector<QByteArray> flags;
-    QVector<QByteArray> addedFlags;
-    QVector<QByteArray> removedFlags;
-    QVector<QByteArray> parts;
+    QSet<QByteArray> flags;
+    QSet<QByteArray> addedFlags;
+    QSet<QByteArray> removedFlags;
+    QSet<QByteArray> parts;
     Attributes attributes;
     CreateItemCommand::MergeModes mergeMode;
     qint64 itemSize;
@@ -2166,27 +2166,27 @@ QDateTime CreateItemCommand::dateTime() const
     return d_func()->dateTime;
 }
 
-void CreateItemCommand::setFlags(const QVector<QByteArray> &flags)
+void CreateItemCommand::setFlags(const QSet<QByteArray> &flags)
 {
     d_func()->flags = flags;
 }
-QVector<QByteArray> CreateItemCommand::flags() const
+QSet<QByteArray> CreateItemCommand::flags() const
 {
     return d_func()->flags;
 }
-void CreateItemCommand::setAddedFlags(const QVector<QByteArray> &flags)
+void CreateItemCommand::setAddedFlags(const QSet<QByteArray> &flags)
 {
     d_func()->addedFlags = flags;
 }
-QVector<QByteArray> CreateItemCommand::addedFlags() const
+QSet<QByteArray> CreateItemCommand::addedFlags() const
 {
     return d_func()->addedFlags;
 }
-void CreateItemCommand::setRemovedFlags(const QVector<QByteArray> &flags)
+void CreateItemCommand::setRemovedFlags(const QSet<QByteArray> &flags)
 {
     d_func()->removedFlags = flags;
 }
-QVector<QByteArray> CreateItemCommand::removedFlags() const
+QSet<QByteArray> CreateItemCommand::removedFlags() const
 {
     return d_func()->removedFlags;
 }
@@ -2223,11 +2223,11 @@ Attributes CreateItemCommand::attributes() const
 {
     return d_func()->attributes;
 }
-void CreateItemCommand::setParts(const QVector<QByteArray> &parts)
+void CreateItemCommand::setParts(const QSet<QByteArray> &parts)
 {
     d_func()->parts = parts;
 }
-QVector<QByteArray> CreateItemCommand::parts() const
+QSet<QByteArray> CreateItemCommand::parts() const
 {
     return d_func()->parts;
 }
@@ -4003,9 +4003,9 @@ public:
     }
 
     Scope items;
-    QVector<QByteArray> flags;
-    QVector<QByteArray> addedFlags;
-    QVector<QByteArray> removedFlags;
+    QSet<QByteArray> flags;
+    QSet<QByteArray> addedFlags;
+    QSet<QByteArray> removedFlags;
     Scope tags;
     Scope addedTags;
     Scope removedTags;
@@ -4014,7 +4014,7 @@ public:
     QString remoteRev;
     QString gid;
     QVector<QByteArray> removedParts;
-    QVector<QByteArray> parts;
+    QSet<QByteArray> parts;
     Attributes attributes;
     qint64 size;
     int oldRevision;
@@ -4070,32 +4070,32 @@ int ModifyItemsCommand::oldRevision() const
     return d_func()->oldRevision;
 }
 
-void ModifyItemsCommand::setFlags(const QVector<QByteArray> &flags)
+void ModifyItemsCommand::setFlags(const QSet<QByteArray> &flags)
 {
     d_func()->modifiedParts |= Flags;
     d_func()->flags = flags;
 }
-QVector<QByteArray> ModifyItemsCommand::flags() const
+QSet<QByteArray> ModifyItemsCommand::flags() const
 {
     return d_func()->flags;
 }
 
-void ModifyItemsCommand::setAddedFlags(const QVector<QByteArray> &addedFlags)
+void ModifyItemsCommand::setAddedFlags(const QSet<QByteArray> &addedFlags)
 {
     d_func()->modifiedParts |= AddedFlags;
     d_func()->addedFlags = addedFlags;
 }
-QVector<QByteArray> ModifyItemsCommand::addedFlags() const
+QSet<QByteArray> ModifyItemsCommand::addedFlags() const
 {
     return d_func()->addedFlags;
 }
 
-void ModifyItemsCommand::setRemovedFlags(const QVector<QByteArray> &removedFlags)
+void ModifyItemsCommand::setRemovedFlags(const QSet<QByteArray> &removedFlags)
 {
     d_func()->modifiedParts |= RemovedFlags;
     d_func()->removedFlags = removedFlags;
 }
-QVector<QByteArray> ModifyItemsCommand::removedFlags() const
+QSet<QByteArray> ModifyItemsCommand::removedFlags() const
 {
     return d_func()->removedFlags;
 }
@@ -4216,12 +4216,12 @@ QVector<QByteArray> ModifyItemsCommand::removedParts() const
     return d_func()->removedParts;
 }
 
-void ModifyItemsCommand::setParts(const QVector<QByteArray> &parts)
+void ModifyItemsCommand::setParts(const QSet<QByteArray> &parts)
 {
     d_func()->modifiedParts |= Parts;
     d_func()->parts = parts;
 }
-QVector<QByteArray> ModifyItemsCommand::parts() const
+QSet<QByteArray> ModifyItemsCommand::parts() const
 {
     return d_func()->parts;
 }
@@ -5315,7 +5315,7 @@ public:
     Scope collections;
     QString resource;
     QStringList mimeTypes;
-    QVector<QByteArray> ancestorsAttributes;
+    QSet<QByteArray> ancestorsAttributes;
     FetchCollectionsCommand::Depth depth;
     Ancestor::Depth ancestorsDepth;
     bool enabled;
@@ -5387,11 +5387,11 @@ Ancestor::Depth FetchCollectionsCommand::ancestorsDepth() const
     return d_func()->ancestorsDepth;
 }
 
-void FetchCollectionsCommand::setAncestorsAttributes(const QVector<QByteArray> &attributes)
+void FetchCollectionsCommand::setAncestorsAttributes(const QSet<QByteArray> &attributes)
 {
     d_func()->ancestorsAttributes = attributes;
 }
-QVector<QByteArray> FetchCollectionsCommand::ancestorsAttributes() const
+QSet<QByteArray> FetchCollectionsCommand::ancestorsAttributes() const
 {
     return d_func()->ancestorsAttributes;
 }
