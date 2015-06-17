@@ -85,7 +85,7 @@ bool Move::parseStream()
   if ( qb.exec() ) {
     const QVector<PimItem> items = qb.result();
     if ( items.isEmpty() ) {
-      throw HandlerException( "No items found" );
+      return successResponse( "MOVE complete" );
     }
 
     // Split the list by source collection
