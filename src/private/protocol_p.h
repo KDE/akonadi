@@ -466,8 +466,8 @@ public:
     void setRequestedParts(const QVector<QByteArray> &requestedParts);
     QVector<QByteArray> requestedParts() const;
 
-    void setRequestedPayloads(const QStringList &requestedPayloads);
-    QStringList requestedPayloads() const;
+    void setRequestedPayloads(const QVector<QByteArray> &requestedPayloads);
+    QVector<QByteArray> requestedPayloads() const;
 
     void setChangedSince(const QDateTime &changedSince);
     QDateTime changedSince() const;

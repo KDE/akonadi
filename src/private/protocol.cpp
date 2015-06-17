@@ -723,7 +723,7 @@ public:
     {}
 
     QVector<QByteArray> requestedParts;
-    QStringList requestedPayloads;
+    QVector<QByteArray> requestedPayloads;
     QDateTime changedSince;
     QVector<QByteArray> tagFetchScope;
     Ancestor::Depth ancestorDepth;
@@ -791,12 +791,12 @@ QVector<QByteArray> FetchScope::requestedParts() const
     return d->requestedParts;
 }
 
-void FetchScope::setRequestedPayloads(const QStringList &requestedPayloads)
+void FetchScope::setRequestedPayloads(const QVector<QByteArray> &requestedPayloads)
 {
     d->requestedPayloads = requestedPayloads;
 }
 
-QStringList FetchScope::requestedPayloads() const
+QVector<QByteArray> FetchScope::requestedPayloads() const
 {
     return d->requestedPayloads;
 }

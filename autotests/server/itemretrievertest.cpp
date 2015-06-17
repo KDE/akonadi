@@ -34,8 +34,8 @@ private Q_SLOTS:
         ItemRetriever r1(0);
         r1.setRetrieveFullPayload(true);
         QCOMPARE(r1.retrieveParts().size(), 1);
-        QCOMPARE(r1.retrieveParts().at(0), QString::fromLatin1("PLD:RFC822"));
-        r1.setRetrieveParts(QStringList() << QLatin1String("PLD:FOO"));
+        QCOMPARE(r1.retrieveParts().at(0), { "PLD:RFC822" });
+        r1.setRetrieveParts({ "PLD:FOO" });
         QCOMPARE(r1.retrieveParts().size(), 2);
     }
 };

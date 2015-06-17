@@ -51,8 +51,8 @@ public:
 
     Connection *connection() const;
 
-    void setRetrieveParts(const QStringList &parts);
-    QStringList retrieveParts() const;
+    void setRetrieveParts(const QVector<QByteArray> &parts);
+    QVector<QByteArray> retrieveParts() const;
     void setRetrieveFullPayload(bool fullPayload);
     void setChangedSince(const QDateTime &changedSince);
     void setItemSet(const ImapSet &set, const Collection &collection = Collection());
@@ -82,7 +82,7 @@ private:
     Collection mCollection;
     Scope mScope;
     Connection *mConnection;
-    QStringList mParts;
+    QVector<QByteArray> mParts;
     bool mFullPayload;
     bool mRecursive;
     QDateTime mChangedSince;

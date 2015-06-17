@@ -21,7 +21,7 @@
 #define ITEMRETRIEVALREQUEST_H
 
 #include <QByteArray>
-#include <QStringList>
+#include <QVector>
 
 namespace Akonadi {
 namespace Server {
@@ -40,7 +40,7 @@ public:
     QByteArray remoteId;
     QByteArray mimeType;
     QString resourceId;
-    QStringList parts;
+    QVector<QByteArray> parts;
     QString errorMsg;
     bool processed;
 
