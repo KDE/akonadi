@@ -89,6 +89,23 @@ CollectionAttribute::List List::getAttributes(const Collection &col, const QSet<
         }
         ++it;
     }
+
+    // We need the reference and enabled status, to not need to request the server mutliple times.
+    // Mostly interessting for ancestors for i.e. updates provided by the monitor.
+    const bool isReferenced = connection()->collectionReferenceManager()->isReferenced(col.id(), connection()->sessionId());
+    if (isReferenced) {
+        CollectionAttribute attr;
+        attr.setType(AKONADI_PARAM_REFERENCED);
+        attr.setValue("TRUE");
+        attributes << attr;
+    }
+    {
+        CollectionAttribute attr;
+        attr.setType(AKONADI_PARAM_ENABLED);
+        attr.setValue(col.enabled() ? "TRUE" : "FALSE");
+        attributes << attr;
+    }
+
     return attributes;
 }
 
