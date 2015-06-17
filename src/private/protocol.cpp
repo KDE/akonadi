@@ -2517,12 +2517,13 @@ class FetchRelationsCommandPrivate : public CommandPrivate
 {
 public:
     FetchRelationsCommandPrivate(qint64 left = -1, qint64 right = -1, qint64 side = -1,
-                                 const QString &type = QString(), const QString &resource = QString())
+                                 const QStringList &types = QStringList(),
+                                 const QString &resource = QString())
         : CommandPrivate(Command::FetchRelations)
         , left(left)
         , right(right)
         , side(side)
-        , type(type)
+        , types(types)
         , resource(resource)
     {}
     FetchRelationsCommandPrivate(const FetchRelationsCommandPrivate &other)
@@ -2530,7 +2531,7 @@ public:
         , left(other.left)
         , right(other.right)
         , side(other.side)
-        , type(other.type)
+        , types(other.types)
         , resource(other.resource)
     {}
 
@@ -2540,7 +2541,7 @@ public:
             && COMPARE(left)
             && COMPARE(right)
             && COMPARE(side)
-            && COMPARE(type)
+            && COMPARE(types)
             && COMPARE(resource);
     }
 
@@ -2550,7 +2551,7 @@ public:
                << left
                << right
                << side
-               << type
+               << types
                << resource;
     }
 
@@ -2560,7 +2561,7 @@ public:
                >> left
                >> right
                >> side
-               >> type
+               >> types
                >> resource;
     }
 
@@ -2570,7 +2571,7 @@ public:
         blck.write("Left", left);
         blck.write("Right", right);
         blck.write("Side", side);
-        blck.write("Type", type);
+        blck.write("Types", types);
         blck.write("Resource", resource);
     }
 
@@ -2582,7 +2583,7 @@ public:
     qint64 left;
     qint64 right;
     qint64 side;
-    QString type;
+    QStringList types;
     QString resource;
 };
 
@@ -2596,16 +2597,16 @@ FetchRelationsCommand::FetchRelationsCommand()
 {
 }
 
-FetchRelationsCommand::FetchRelationsCommand(qint64 side, const QString &type,
+FetchRelationsCommand::FetchRelationsCommand(qint64 side, const QStringList &types,
                                              const QString &resource)
-    : Command(new FetchRelationsCommandPrivate(-1, -1, side, type, resource))
+    : Command(new FetchRelationsCommandPrivate(-1, -1, side, types, resource))
 {
 }
 
 FetchRelationsCommand::FetchRelationsCommand(qint64 left, qint64 right,
-                                             const QString &type,
+                                             const QStringList &types,
                                              const QString &resource)
-    : Command(new FetchRelationsCommandPrivate(left, right, -1, type, resource))
+    : Command(new FetchRelationsCommandPrivate(left, right, -1, types, resource))
 {
 }
 
@@ -2642,13 +2643,13 @@ qint64 FetchRelationsCommand::side() const
     return d_func()->side;
 }
 
-void FetchRelationsCommand::setType(const QString &type)
+void FetchRelationsCommand::setTypes(const QStringList &types)
 {
-    d_func()->type = type;
+    d_func()->types = types;
 }
-QString FetchRelationsCommand::type() const
+QStringList FetchRelationsCommand::types() const
 {
-    return d_func()->type;
+    return d_func()->types;
 }
 
 void FetchRelationsCommand::setResource(const QString &resource)
@@ -7598,9 +7599,12 @@ namespace Protocol
 class ModifyRelationCommandPrivate : public CommandPrivate
 {
 public:
-    ModifyRelationCommandPrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString())
+    ModifyRelationCommandPrivate(qint64 left = -1, qint64 right = -1,
+                                 const QString &type = QString(),
+                                 const QString &remoteId = QString())
         : CommandPrivate(Command::ModifyRelation)
         , type(type)
+        , remoteId(remoteId)
         , left(left)
         , right(right)
     {}
@@ -7669,8 +7673,10 @@ ModifyRelationCommand::ModifyRelationCommand()
 {
 }
 
-ModifyRelationCommand::ModifyRelationCommand(qint64 left, qint64 right, const QString &type)
-    : Command(new ModifyRelationCommandPrivate(left, right, type))
+ModifyRelationCommand::ModifyRelationCommand(qint64 left, qint64 right,
+                                             const QString &type,
+                                             const QString &remoteId)
+    : Command(new ModifyRelationCommandPrivate(left, right, type, remoteId))
 {
 }
 

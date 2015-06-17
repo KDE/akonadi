@@ -46,9 +46,9 @@ bool RelationFetch::parseStream()
             relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, cmd.right());
         }
     }
-    if (!cmd.type().isEmpty()) {
+    if (!cmd.types().isEmpty()) {
         relationQuery.addJoin(QueryBuilder::InnerJoin, RelationType::tableName(), Relation::typeIdFullColumnName(), RelationType::idFullColumnName());
-        relationQuery.addValueCondition(RelationType::nameFullColumnName(), Query::Equals, cmd.type());
+        relationQuery.addValueCondition(RelationType::nameFullColumnName(), Query::In, cmd.types());
     }
     if (!cmd.resource().isEmpty()) {
         Resource res = Resource::retrieveByName(cmd.resource());
