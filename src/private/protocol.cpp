@@ -725,7 +725,7 @@ public:
     QVector<QByteArray> requestedParts;
     QVector<QByteArray> requestedPayloads;
     QDateTime changedSince;
-    QVector<QByteArray> tagFetchScope;
+    QSet<QByteArray> tagFetchScope;
     Ancestor::Depth ancestorDepth;
     FetchScope::FetchFlags fetchFlags;
 };
@@ -811,12 +811,12 @@ QDateTime FetchScope::changedSince() const
     return d->changedSince;
 }
 
-void FetchScope::setTagFetchScope(const QVector<QByteArray> &tagFetchScope)
+void FetchScope::setTagFetchScope(const QSet<QByteArray> &tagFetchScope)
 {
     d->tagFetchScope = tagFetchScope;
 }
 
-QVector<QByteArray> FetchScope::tagFetchScope() const
+QSet<QByteArray> FetchScope::tagFetchScope() const
 {
     return d->tagFetchScope;
 }
@@ -2821,34 +2821,45 @@ public:
     FetchTagsCommandPrivate(const Scope &scope = Scope())
         : CommandPrivate(Command::FetchTags)
         , scope(scope)
+        , idOnly(false)
     {}
     FetchTagsCommandPrivate(const FetchTagsCommandPrivate &other)
         : CommandPrivate(other)
         , scope(other.scope)
+        , attributes(other.attributes)
+        , idOnly(other.idOnly)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(scope);
+            && COMPARE(idOnly)
+            && COMPARE(scope)
+            && COMPARE(attributes);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-               << scope;
+               << scope
+               << attributes
+               << idOnly;
     }
 
     QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
-               >> scope;
+               >> scope
+               >> attributes
+               >> idOnly;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Command", commandType);
         blck.write("Tags", scope);
+        blck.write("Attributes", attributes);
+        blck.write("ID only", idOnly);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2857,6 +2868,8 @@ public:
     }
 
     Scope scope;
+    QSet<QByteArray> attributes;
+    bool idOnly;
 };
 
 } // namespace Protocol
@@ -2883,6 +2896,24 @@ FetchTagsCommand::FetchTagsCommand(const Command &other)
 Scope FetchTagsCommand::scope() const
 {
     return d_func()->scope;
+}
+
+void FetchTagsCommand::setAttributes(const QSet<QByteArray> &attributes)
+{
+    d_func()->attributes = attributes;
+}
+QSet<QByteArray> FetchTagsCommand::attributes() const
+{
+    return d_func()->attributes;
+}
+
+void FetchTagsCommand::setIdOnly(bool idOnly)
+{
+    d_func()->idOnly = idOnly;
+}
+bool FetchTagsCommand::idOnly() const
+{
+    return d_func()->idOnly;
 }
 
 QDataStream &operator<<(QDataStream &stream, const FetchTagsCommand &command)

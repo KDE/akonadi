@@ -472,8 +472,8 @@ public:
     void setChangedSince(const QDateTime &changedSince);
     QDateTime changedSince() const;
 
-    void setTagFetchScope(const QVector<QByteArray> &tagFetchScope);
-    QVector<QByteArray> tagFetchScope() const;
+    void setTagFetchScope(const QSet<QByteArray> &tagFetchScope);
+    QSet<QByteArray> tagFetchScope() const;
 
     void setAncestorDepth(Ancestor::Depth depth);
     Ancestor::Depth ancestorDepth() const;
@@ -958,6 +958,12 @@ public:
     FetchTagsCommand(const Command &command);
 
     Scope scope() const;
+
+    void setAttributes(const QSet<QByteArray> &attributes);
+    QSet<QByteArray> attributes() const;
+
+    void setIdOnly(bool idOnly);
+    bool idOnly() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(FetchTagsCommand)
