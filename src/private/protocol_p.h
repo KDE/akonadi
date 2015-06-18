@@ -892,9 +892,9 @@ class AKONADIPRIVATE_EXPORT FetchRelationsCommand : public Command
 {
 public:
     explicit FetchRelationsCommand();
-    FetchRelationsCommand(qint64 side, const QStringList &types = QStringList(),
+    FetchRelationsCommand(qint64 side, const QVector<QByteArray> &types = QVector<QByteArray>(),
                           const QString &resource = QString());
-    FetchRelationsCommand(qint64 left, qint64 right, const QStringList &types = QStringList(),
+    FetchRelationsCommand(qint64 left, qint64 right, const QVector<QByteArray> &types = QVector<QByteArray>(),
                           const QString &resource = QString());
     FetchRelationsCommand(const Command &command);
 
@@ -907,8 +907,8 @@ public:
     void setSide(qint64 side);
     qint64 side() const;
 
-    void setTypes(const QStringList &types);
-    QStringList types() const;
+    void setTypes(const QVector<QByteArray> &types);
+    QVector<QByteArray> types() const;
 
     void setResource(const QString &resource);
     QString resource() const;
@@ -928,16 +928,16 @@ class AKONADIPRIVATE_EXPORT FetchRelationsResponse : public Response
 {
 public:
     explicit FetchRelationsResponse();
-    explicit FetchRelationsResponse(qint64 left, qint64 right, const QString &type,
-                                    const QString &remoteId = QString());
+    explicit FetchRelationsResponse(qint64 left, qint64 right, const QByteArray &type,
+                                    const QByteArray &remoteId = QByteArray());
     FetchRelationsResponse(const Command &command);
 
     qint64 left() const;
     qint64 right() const;
-    QString type() const;
+    QByteArray type() const;
 
-    void setRemoteId(const QString &remoteId);
-    QString remoteId() const;
+    void setRemoteId(const QByteArray &remoteId);
+    QByteArray remoteId() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(FetchRelationsResponse)
@@ -2023,7 +2023,8 @@ class AKONADIPRIVATE_EXPORT ModifyRelationCommand : public Command
 {
 public:
     explicit ModifyRelationCommand();
-    ModifyRelationCommand(qint64 left, qint64 right, const QString &type, const QString &remoteId = QString());
+    ModifyRelationCommand(qint64 left, qint64 right, const QByteArray &type,
+                          const QByteArray &remoteId = QByteArray());
     ModifyRelationCommand(const Command &command);
 
     void setLeft(qint64 left);
@@ -2032,11 +2033,11 @@ public:
     void setRight(qint64 right);
     qint64 right() const;
 
-    void setType(const QString &type);
-    QString type() const;
+    void setType(const QByteArray &type);
+    QByteArray type() const;
 
-    void setRemoteId(const QString &remoteId);
-    QString remoteId() const;
+    void setRemoteId(const QByteArray &remoteId);
+    QByteArray remoteId() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
@@ -2064,7 +2065,7 @@ class AKONADIPRIVATE_EXPORT RemoveRelationsCommand : public Command
 {
 public:
     explicit RemoveRelationsCommand();
-    RemoveRelationsCommand(qint64 left, qint64 right, const QString &type = QString());
+    RemoveRelationsCommand(qint64 left, qint64 right, const QByteArray &type = QByteArray());
     RemoveRelationsCommand(const Command &command);
 
     void setLeft(qint64 left);
@@ -2073,8 +2074,8 @@ public:
     void setRight(qint64 right);
     qint64 right() const;
 
-    void setType(const QString &type);
-    QString type() const;
+    void setType(const QByteArray &type);
+    QByteArray type() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)

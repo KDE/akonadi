@@ -38,7 +38,7 @@ bool RelationRemove::parseStream()
 
     RelationType relType;
     if (!cmd.type().isEmpty()) {
-        relType = RelationType::retrieveByName(cmd.type());
+        relType = RelationType::retrieveByName(QString::fromUtf8(cmd.type()));
         if (!relType.isValid()) {
             return failureResponse("Failed to load relation type");
         }

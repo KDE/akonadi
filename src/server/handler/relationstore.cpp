@@ -43,11 +43,12 @@ bool RelationStore::parseStream()
         return failureResponse("RemoteID can only be set by Resources");
     }
 
-    RelationType relationType = RelationType::retrieveByName(cmd.type());
+    const QString typeName = QString::fromUtf8(cmd.type());
+    RelationType relationType = RelationType::retrieveByName(typeName);
     if (!relationType.isValid()) {
-        RelationType t(cmd.type());
+        RelationType t(typeName);
         if (!t.insert()) {
-            return failureResponse(QStringLiteral("Unable to create relation type '") % cmd.type() % QStringLiteral("'"));
+            return failureResponse(QStringLiteral("Unable to create relation type '") % typeName % QStringLiteral("'"));
         }
         relationType = t;
     }
@@ -63,8 +64,9 @@ bool RelationStore::parseStream()
     if (!existingRelations.isEmpty()) {
         if (existingRelations.size() == 1) {
             Relation rel = existingRelations.first();
-            if (rel.remoteId() != cmd.remoteId())
-            rel.setRemoteId(cmd.remoteId());
+            const QString remoteId = QString::fromUtf8(cmd.remoteId());
+            if (rel.remoteId() != remoteId)
+            rel.setRemoteId(remoteId);
             if (!rel.update()) {
                 return failureResponse("Failed to update relation");
             }

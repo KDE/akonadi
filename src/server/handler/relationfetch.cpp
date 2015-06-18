@@ -48,7 +48,12 @@ bool RelationFetch::parseStream()
     }
     if (!cmd.types().isEmpty()) {
         relationQuery.addJoin(QueryBuilder::InnerJoin, RelationType::tableName(), Relation::typeIdFullColumnName(), RelationType::idFullColumnName());
-        relationQuery.addValueCondition(RelationType::nameFullColumnName(), Query::In, cmd.types());
+        QStringList types;
+        types.reserve(cmd.types().size());
+        for (const QByteArray &type : cmd.types()) {
+            types << QString::fromUtf8(type);
+        }
+        relationQuery.addValueCondition(RelationType::nameFullColumnName(), Query::In, types);
     }
     if (!cmd.resource().isEmpty()) {
         Resource res = Resource::retrieveByName(cmd.resource());
@@ -72,8 +77,8 @@ bool RelationFetch::parseStream()
     }
     const Relation::List existingRelations = relationQuery.result();
     for (const Relation &relation : existingRelations) {
-        Protocol::FetchRelationsResponse response(relation.leftId(), relation.rightId(), relation.relationType().name());
-        response.setRemoteId(relation.remoteId());
+        Protocol::FetchRelationsResponse response(relation.leftId(), relation.rightId(), relation.relationType().name().toUtf8());
+        response.setRemoteId(relation.remoteId().toUtf8());
         sendResponse(response);
     }
 

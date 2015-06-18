@@ -2517,7 +2517,7 @@ class FetchRelationsCommandPrivate : public CommandPrivate
 {
 public:
     FetchRelationsCommandPrivate(qint64 left = -1, qint64 right = -1, qint64 side = -1,
-                                 const QStringList &types = QStringList(),
+                                 const QVector<QByteArray> &types = QVector<QByteArray>(),
                                  const QString &resource = QString())
         : CommandPrivate(Command::FetchRelations)
         , left(left)
@@ -2583,7 +2583,7 @@ public:
     qint64 left;
     qint64 right;
     qint64 side;
-    QStringList types;
+    QVector<QByteArray> types;
     QString resource;
 };
 
@@ -2597,14 +2597,14 @@ FetchRelationsCommand::FetchRelationsCommand()
 {
 }
 
-FetchRelationsCommand::FetchRelationsCommand(qint64 side, const QStringList &types,
+FetchRelationsCommand::FetchRelationsCommand(qint64 side, const QVector<QByteArray> &types,
                                              const QString &resource)
     : Command(new FetchRelationsCommandPrivate(-1, -1, side, types, resource))
 {
 }
 
 FetchRelationsCommand::FetchRelationsCommand(qint64 left, qint64 right,
-                                             const QStringList &types,
+                                             const QVector<QByteArray> &types,
                                              const QString &resource)
     : Command(new FetchRelationsCommandPrivate(left, right, -1, types, resource))
 {
@@ -2643,11 +2643,11 @@ qint64 FetchRelationsCommand::side() const
     return d_func()->side;
 }
 
-void FetchRelationsCommand::setTypes(const QStringList &types)
+void FetchRelationsCommand::setTypes(const QVector<QByteArray> &types)
 {
     d_func()->types = types;
 }
-QStringList FetchRelationsCommand::types() const
+QVector<QByteArray> FetchRelationsCommand::types() const
 {
     return d_func()->types;
 }
@@ -2686,8 +2686,9 @@ namespace Protocol
 class FetchRelationsResponsePrivate : public ResponsePrivate
 {
 public:
-    FetchRelationsResponsePrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString(),
-                                  const QString &remoteId = QString())
+    FetchRelationsResponsePrivate(qint64 left = -1, qint64 right = -1,
+                                  const QByteArray &type = QByteArray(),
+                                  const QByteArray &remoteId = QByteArray())
         : ResponsePrivate(Command::FetchRelations)
         , left(left)
         , right(right)
@@ -2745,8 +2746,8 @@ public:
 
     qint64 left;
     qint64 right;
-    QString type;
-    QString remoteId;
+    QByteArray type;
+    QByteArray remoteId;
 };
 
 } // namespace Protocol
@@ -2760,8 +2761,8 @@ FetchRelationsResponse::FetchRelationsResponse()
 }
 
 FetchRelationsResponse::FetchRelationsResponse(qint64 left, qint64 right,
-                                               const QString &type,
-                                               const QString &remoteId)
+                                               const QByteArray &type,
+                                               const QByteArray &remoteId)
     : Response(new FetchRelationsResponsePrivate(left, right, type, remoteId))
 {
 }
@@ -2780,15 +2781,15 @@ qint64 FetchRelationsResponse::right() const
 {
     return d_func()->right;
 }
-QString FetchRelationsResponse::type() const
+QByteArray FetchRelationsResponse::type() const
 {
     return d_func()->type;
 }
-void FetchRelationsResponse::setRemoteId(const QString &remoteId)
+void FetchRelationsResponse::setRemoteId(const QByteArray &remoteId)
 {
     d_func()->remoteId = remoteId;
 }
-QString FetchRelationsResponse::remoteId() const
+QByteArray FetchRelationsResponse::remoteId() const
 {
     return d_func()->remoteId;
 }
@@ -7631,8 +7632,8 @@ class ModifyRelationCommandPrivate : public CommandPrivate
 {
 public:
     ModifyRelationCommandPrivate(qint64 left = -1, qint64 right = -1,
-                                 const QString &type = QString(),
-                                 const QString &remoteId = QString())
+                                 const QByteArray &type = QByteArray(),
+                                 const QByteArray &remoteId = QByteArray())
         : CommandPrivate(Command::ModifyRelation)
         , type(type)
         , remoteId(remoteId)
@@ -7688,8 +7689,8 @@ public:
         return new ModifyRelationCommandPrivate(*this);
     }
 
-    QString type;
-    QString remoteId;
+    QByteArray type;
+    QByteArray remoteId;
     qint64 left;
     qint64 right;
 };
@@ -7705,8 +7706,8 @@ ModifyRelationCommand::ModifyRelationCommand()
 }
 
 ModifyRelationCommand::ModifyRelationCommand(qint64 left, qint64 right,
-                                             const QString &type,
-                                             const QString &remoteId)
+                                             const QByteArray &type,
+                                             const QByteArray &remoteId)
     : Command(new ModifyRelationCommandPrivate(left, right, type, remoteId))
 {
 }
@@ -7735,20 +7736,20 @@ qint64 ModifyRelationCommand::right() const
     return d_func()->right;
 }
 
-void ModifyRelationCommand::setType(const QString &type)
+void ModifyRelationCommand::setType(const QByteArray &type)
 {
     d_func()->type = type;
 }
-QString ModifyRelationCommand::type() const
+QByteArray ModifyRelationCommand::type() const
 {
     return d_func()->type;
 }
 
-void ModifyRelationCommand::setRemoteId(const QString &remoteId)
+void ModifyRelationCommand::setRemoteId(const QByteArray &remoteId)
 {
     d_func()->remoteId = remoteId;
 }
-QString ModifyRelationCommand::remoteId() const
+QByteArray ModifyRelationCommand::remoteId() const
 {
     return d_func()->remoteId;
 }
@@ -7795,7 +7796,8 @@ namespace Protocol
 class RemoveRelationsCommandPrivate : public CommandPrivate
 {
 public:
-    RemoveRelationsCommandPrivate(qint64 left = -1, qint64 right = -1, const QString &type = QString())
+    RemoveRelationsCommandPrivate(qint64 left = -1, qint64 right = -1,
+                                  const QByteArray &type = QByteArray())
         : CommandPrivate(Command::RemoveRelations)
         , left(left)
         , right(right)
@@ -7847,7 +7849,7 @@ public:
 
     qint64 left;
     qint64 right;
-    QString type;
+    QByteArray type;
 };
 
 } // namespace Protocol
@@ -7860,7 +7862,7 @@ RemoveRelationsCommand::RemoveRelationsCommand()
 {
 }
 
-RemoveRelationsCommand::RemoveRelationsCommand(qint64 left, qint64 right, const QString &type)
+RemoveRelationsCommand::RemoveRelationsCommand(qint64 left, qint64 right, const QByteArray &type)
     : Command(new RemoveRelationsCommandPrivate(left, right, type))
 {
 }
@@ -7889,11 +7891,11 @@ qint64 RemoveRelationsCommand::right() const
     return d_func()->right;
 }
 
-void RemoveRelationsCommand::setType(const QString &type)
+void RemoveRelationsCommand::setType(const QByteArray &type)
 {
     d_func()->type = type;
 }
-QString RemoveRelationsCommand::type() const
+QByteArray RemoveRelationsCommand::type() const
 {
     return d_func()->type;
 }

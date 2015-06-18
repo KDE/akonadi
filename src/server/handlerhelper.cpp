@@ -236,7 +236,7 @@ Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Rel
 {
     return Protocol::FetchRelationsResponse(relation.leftId(),
                                             relation.rightId(),
-                                            relation.relationType().name());
+                                            relation.relationType().name().toUtf8());
 }
 
 
