@@ -73,7 +73,7 @@ public:
                                  bool silent = false) Q_DECL_OVERRIDE;
 
     virtual bool removeItemParts(const PimItem &item,
-                                 const QVector<QByteArray> &parts)  Q_DECL_OVERRIDE;
+                                 const QSet<QByteArray> &parts)  Q_DECL_OVERRIDE;
 
     virtual bool invalidateItemCache(const PimItem &item) Q_DECL_OVERRIDE;
 

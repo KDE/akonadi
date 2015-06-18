@@ -1215,8 +1215,8 @@ public:
     void setItemSize(qint64 size);
     qint64 itemSize() const;
 
-    void setRemovedParts(const QVector<QByteArray> &removedParts);
-    QVector<QByteArray> removedParts() const;
+    void setRemovedParts(const QSet<QByteArray> &removedParts);
+    QSet<QByteArray> removedParts() const;
 
     void setParts(const QSet<QByteArray> &parts);
     QSet<QByteArray> parts() const;

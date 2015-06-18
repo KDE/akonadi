@@ -4013,7 +4013,7 @@ public:
     QString remoteId;
     QString remoteRev;
     QString gid;
-    QVector<QByteArray> removedParts;
+    QSet<QByteArray> removedParts;
     QSet<QByteArray> parts;
     Attributes attributes;
     qint64 size;
@@ -4206,12 +4206,12 @@ qint64 ModifyItemsCommand::itemSize() const
     return d_func()->size;
 }
 
-void ModifyItemsCommand::setRemovedParts(const QVector<QByteArray> &removedParts)
+void ModifyItemsCommand::setRemovedParts(const QSet<QByteArray> &removedParts)
 {
     d_func()->modifiedParts |= RemovedParts;
     d_func()->removedParts = removedParts;
 }
-QVector<QByteArray> ModifyItemsCommand::removedParts() const
+QSet<QByteArray> ModifyItemsCommand::removedParts() const
 {
     return d_func()->removedParts;
 }

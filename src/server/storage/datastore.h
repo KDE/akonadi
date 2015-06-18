@@ -137,7 +137,7 @@ public:
     virtual bool removeTags( const Tag::List &tags, bool silent = false );
 
     /* --- ItemParts ----------------------------------------------------- */
-    virtual bool removeItemParts(const PimItem &item, const QVector<QByteArray> &parts);
+    virtual bool removeItemParts(const PimItem &item, const QSet<QByteArray> &parts);
 
     // removes all payload parts for this item.
     virtual bool invalidateItemCache(const PimItem &item);
