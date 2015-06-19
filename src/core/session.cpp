@@ -231,11 +231,14 @@ void SessionPrivate::dataReceived()
                 break;
             }
 
-            // work for the current job
-        } else {
-            if (currentJob) {
-                currentJob->d_ptr->handleResponse(tag, cmd);
-            }
+            connected = true;
+            startNext();
+            continue;
+        }
+
+        // work for the current job
+        if (currentJob) {
+            currentJob->d_ptr->handleResponse(tag, cmd);
         }
     }
 }
