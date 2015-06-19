@@ -285,7 +285,7 @@ ImapInterval::List ImapSet::intervals() const
 
 bool ImapSet::isEmpty() const
 {
-    return d->intervals.isEmpty();
+    return d->intervals.isEmpty() || (d->intervals.size() == 1 && d->intervals.at(0).size() == 0);
 }
 
 QDebug operator<<(QDebug d, const Akonadi::ImapInterval &interval)
