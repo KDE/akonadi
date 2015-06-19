@@ -207,11 +207,13 @@ public:
 
     void beginBlock(const QByteArray &name = QByteArray())
     {
-        mBlocks.push(name.size());
+        mDbg << "\n";
         if (!name.isNull()) {
+            mBlocks.push(name.size() + 4);
             mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": { ";
             mIndent += mBlocks.top();
         } else {
+            mBlocks.push(2);
             mDbg << QString::fromLatin1(" ").repeated(mIndent) << "{ ";
         }
         mBlockInit.push(false);
@@ -229,11 +231,12 @@ public:
     {
         if (mBlockInit.top()) {
             mDbg.noquote() << QByteArray("\n");
+            mDbg << QString::fromLatin1(" ").repeated(mIndent);
         } else {
             mBlockInit.top() = true;
         }
 
-        mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": \"" << val << "\"";
+        mDbg << name << ": \"" << val << "\"";
     }
 
 private:
@@ -294,7 +297,7 @@ public:
 
     virtual void debugString(DebugBlock &blck) const
     {
-        blck.write("Command", commandType);
+        blck.write("Command", static_cast<Protocol::Command::Type>(commandType));
     }
 
     quint8 commandType;
@@ -457,7 +460,7 @@ public:
 
     virtual void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        blck.write("Response", static_cast<Protocol::Command::Type>(commandType & ~Command::_ResponseBit));
         blck.write("Error Code", errorCode);
         blck.write("Error Msg", errorMsg);
     }
@@ -1578,9 +1581,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
-        blck.write("Error Code", errorCode);
-        blck.write("Error Msg", errorMsg);
+        ResponsePrivate::debugString(blck);
         blck.write("Server", server);
         blck.write("Protocol Version", protocol);
         blck.write("Message", message);
@@ -1687,7 +1688,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Session ID", sessionId);
     }
 
@@ -1817,7 +1818,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Mode", [this]() -> const char* {
             switch (mode) {
             case TransactionCommand::Begin:
@@ -2018,7 +2019,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Merge mode", [this]() {
             QStringList mm;
             if (mergeMode == CreateItemCommand::None) {
@@ -2316,7 +2317,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Items", items);
         blck.write("Destination", dest);
     }
@@ -2436,7 +2437,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Items", items);
     }
 
@@ -2570,7 +2571,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Left", left);
         blck.write("Right", right);
         blck.write("Side", side);
@@ -2735,7 +2736,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.write("Left", left);
         blck.write("Right", right);
         blck.write("Type", type);
@@ -2860,7 +2861,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Tags", scope);
         blck.write("Attributes", attributes);
         blck.write("ID only", idOnly);
@@ -3002,7 +3003,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.write("ID", id);
         blck.write("Parent ID", parentId);
         blck.write("GID", gid);
@@ -3169,7 +3170,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Items", scope);
         blck.beginBlock("Scope Context");
         scopeContext.debugString(blck);
@@ -3354,7 +3355,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.write("ID", id);
         blck.write("Revision", revision);
         blck.write("Collection ID", collectionId);
@@ -3650,7 +3651,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Action", (action == LinkItemsCommand::Link ? "Link" : "Unlink"));
         blck.write("Items", items);
         blck.write("Destination", dest);
@@ -3948,7 +3949,7 @@ public:
             mps << QLatin1String("Attributes");
         }
 
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Modified PartS", mps);
         blck.write("Items", items);
         blck.write("Old Revision", oldRevision);
@@ -4416,7 +4417,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Items", items);
         blck.write("Destination", dest);
     }
@@ -4578,7 +4579,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Name", name);
         blck.write("Parent", parent);
         blck.write("Remote ID", remoteId);
@@ -4816,7 +4817,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collection", collection);
         blck.write("Destination", dest);
     }
@@ -4932,7 +4933,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collection", collection);
     }
 
@@ -5041,7 +5042,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collection", collection);
     }
 
@@ -5144,7 +5145,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.write("Count", count);
         blck.write("Unseen", unseen);
         blck.write("Size", size);
@@ -5297,7 +5298,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collections", collections);
         blck.write("Depth", depth);
         blck.write("Resource", resource);
@@ -5569,7 +5570,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.write("ID", id);
         blck.write("Name", name);
         blck.write("Parent ID", parentId);
@@ -6033,7 +6034,7 @@ public:
             mps << QLatin1String("Referenced");
         }
 
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collection", collection);
         blck.write("Modified Parts", mps);
         if (modifiedParts & ModifyCollectionCommand::Name) {
@@ -6386,7 +6387,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collection", collection);
         blck.write("Destination", dest);
     }
@@ -6502,7 +6503,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Collection", collection);
     }
 
@@ -6630,7 +6631,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Query", query);
         blck.write("Collections", collections);
         blck.write("Mimetypes", mimeTypes);
@@ -6806,7 +6807,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Search ID", searchId);
         blck.write("Collection ID", collectionId);
         blck.write("Result", result);
@@ -6952,7 +6953,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Name", name);
         blck.write("Query", query);
         blck.write("Mimetypes", mimeTypes);
@@ -7136,7 +7137,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Merge", merge);
         blck.write("GID", gid);
         blck.write("Remote ID", remoteId);
@@ -7300,7 +7301,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Tag", tag);
     }
 
@@ -7475,7 +7476,7 @@ public:
             mps << QLatin1String("Attributes");
         }
 
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Tag ID", tagId);
         blck.write("Modified Parts", mps);
         if (modifiedParts & ModifyTagCommand::ParentId) {
@@ -7680,7 +7681,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Left", left);
         blck.write("Right", right);
         blck.write("Type", type);
@@ -7839,7 +7840,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Left", left);
         blck.write("Right", right);
         blck.write("Type", type);
@@ -7974,7 +7975,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Resource ID", resourceId);
     }
 
@@ -8095,7 +8096,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Command", commandType);
+        CommandPrivate::debugString(blck);
         blck.write("Payload Name", payloadName);
         blck.write("Request", request);
         blck.write("Detination", dest);
@@ -8228,7 +8229,7 @@ public:
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
-        blck.write("Response", (commandType & ~Command::_ResponseBit));
+        ResponsePrivate::debugString(blck);
         blck.beginBlock("MetaData");
         blck.write("Size", metaData.size());
         blck.write("Version", metaData.version());
