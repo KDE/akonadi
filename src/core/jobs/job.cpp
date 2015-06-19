@@ -186,6 +186,7 @@ void JobPrivate::startNext()
 
     if (mStarted && !mCurrentSubJob && q->hasSubjobs()) {
         Job *job = qobject_cast<Akonadi::Job *>(q->subjobs().at(0));
+        qDebug() << q << "Starting subjob" << job;
         Q_ASSERT(job);
         job->d_ptr->startQueued();
     }
@@ -321,6 +322,7 @@ QString Job::errorString() const
 
 bool Job::addSubjob(KJob *job)
 {
+    qDebug() << this << "Added subjob" << job;
     bool rv = KCompositeJob::addSubjob(job);
     if (rv) {
         connect(job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)));
@@ -341,14 +343,22 @@ bool Job::removeSubjob(KJob *job)
 
 void Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
 {
-    qDebug() << "Unhandled response: " << tag << command.debugString();
+    // FIXME: We cannot set an error here due to how CollectionSync works: CS
+    // can sometimes schedule TransactionSequences and emitResult in a way that
+    // the Session dispatches next job in queue without TransactionSequence's
+    // TransactionCommitJob finishing: the we get the response for TCJ out-of-order
+    // and it's received by the currently running job instead of the TCJ.
+    qDebug() << this << "Unhandled response: " << tag << command.debugString();
+    /*
     setError(Unknown);
     setErrorText(i18n("Unexpected response"));
     emitResult();
+    */
 }
 
 void Job::slotResult(KJob *job)
 {
+    qDebug() << "Job" << job << "finished";
     if (d_ptr->mCurrentSubJob == job) {
         // current job finished, start the next one
         d_ptr->mCurrentSubJob = 0;
