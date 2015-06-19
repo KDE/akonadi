@@ -81,8 +81,10 @@ void ItemModifyJobPrivate::conflictResolveError(const QString &message)
 
 void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
-    using namespace std::placeholders;
-    Item::List::iterator it = std::find_if(mItems.begin(), mItems.end(), std::bind(&Item::id, _1) == itemId);
+    auto it = std::find_if(mItems.begin(), mItems.end(),
+                           [&itemId](const Item &item) -> bool {
+                               return item.id() == itemId;
+                           });
     if (it != mItems.end() && (*it).revision() == oldRevision) {
         (*it).setRevision(newRevision);
     }
@@ -91,7 +93,7 @@ void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int ol
 QString ItemModifyJobPrivate::jobDebuggingString() const
 {
     try {
-        return QString::fromUtf8(fullCommand());
+        return fullCommand().debugString();
     } catch (const Exception &e) {
         return QString::fromUtf8(e.what());
     }
@@ -136,7 +138,7 @@ ItemModifyJob::~ItemModifyJob()
 {
 }
 
-QByteArray ItemModifyJobPrivate::fullCommand() const
+Protocol::Command ItemModifyJobPrivate::fullCommand() const
 {
     Protocol::ModifyItemsCommand cmd;
 
@@ -192,7 +194,7 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
             cmd.setAddedTags(ProtocolHelper::entitySetToScope(item.d_func()->mAddedTags));
         }
         if (!item.d_func()->mDeletedTags.isEmpty()) {
-            cmd.setRemovedFlags(ProtocolHelper::entitySetToScope(item.d_func()->mDeletedTags));
+            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(item.d_func()->mDeletedTags));
         }
     }
 
@@ -248,15 +250,18 @@ void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
         const Protocol::StreamPayloadCommand streamCmd(response);
         Protocol::StreamPayloadResponse streamResp;
         if (streamCmd.request() == Protocol::StreamPayloadCommand::MetaData) {
-            streamResp.setMetaData(d->preparePart(streamCmd.payloadName());
+            streamResp.setMetaData(d->preparePart(streamCmd.payloadName()));
         } else {
             if (streamCmd.destination().isEmpty()) {
                 streamResp.setData(d->mPendingData);
             } else {
-                ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error);
+                QByteArray error;
+                if (!ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error)) {
+                    // TODO: Error?
+                }
             }
         }
-        d->sendCommand(streamResp);
+        d->sendCommand(tag, streamResp);
     } else if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
         // FIXME: Conflict handling
         /*
@@ -282,21 +287,21 @@ void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             item.setModificationTime(resp.modificationDateTime());
             item.d_ptr->resetChangeLog();
         } else if (resp.id() > -1) {
-            using namespace std::placeholders;
-            Item::List::Iterator it = std::find_if(d->mItems.constBegin(), d->mItems.constEnd(),
-                                                   std::bind(&Item::id, _1) == resp.id());
-            if (it == d->mItems.constEnd()) {
+            auto it = std::find_if(d->mItems.begin(), d->mItems.end(),
+                                   [&resp](const Item &item) -> bool {
+                                       return item.id() == resp.id();
+                                   });
+            if (it == d->mItems.end()) {
                 qDebug() << "Received STORE response for an item we did not modify: " << tag << response.debugString();
                 return;
             }
 
             const int newRev = resp.newRevision();
             const int oldRev = (*it).revision();
-            if (newRev < oldRev || newRev < 0) {
-                continue;
+            if (newRev >= oldRev && newRev >= 0) {
+                d->itemRevisionChanged((*it).id(), oldRev, newRev);
+                (*it).setRevision(newRev);
             }
-            d->itemRevisionChanged((*it).id(), oldRev, newRev);
-            (*it).setRevision(newRev);
         }
 
         for (const Item &item : d->mItems) {

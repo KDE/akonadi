@@ -101,7 +101,7 @@ void SearchResultJob::doStart()
         QStringList ridSet;
         ridSet.reserve(d->rid.size());
         for (const QByteArray &rid : d->rid) {
-            ridSet << QString::fromUtf8(d->rid);
+            ridSet << QString::fromUtf8(rid);
         }
         scope.setRidSet(ridSet);
     } else {

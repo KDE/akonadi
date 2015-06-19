@@ -25,6 +25,11 @@
 
 namespace Akonadi {
 
+namespace Protocol {
+class PartMetaData;
+class Command;
+}
+
 /**
  * @internal
  */
@@ -41,7 +46,7 @@ public:
     ItemModifyJobPrivate(ItemModifyJob *parent);
 
     void setClean();
-    QByteArray nextPartHeader();
+    Protocol::PartMetaData preparePart(const QByteArray &partName);
 
     void conflictResolved();
     void conflictResolveError(const QString &message);
@@ -49,8 +54,7 @@ public:
     void doUpdateItemRevision(Entity::Id, int oldRevision, int newRevision) Q_DECL_OVERRIDE;
 
     QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/;
-    QByteArray fullCommand() const;
-    QByteArray tagsToCommandParameter(const Tag::List &tags) const;
+    Protocol::Command fullCommand() const;
 
     void setSilent(bool silent);
 

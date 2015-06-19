@@ -221,7 +221,7 @@ void ItemSearchJob::doStart()
     }
     cmd.setRecursive(d->mRecursive);
     cmd.setRemote(d->mRemote);
-    cmd.setQuery(d->mQuery.toJSON());
+    cmd.setQuery(QString::fromUtf8(d->mQuery.toJSON()));
     cmd.setFetchScope(ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope));
 
     d->sendCommand(cmd);

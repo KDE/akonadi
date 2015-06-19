@@ -57,9 +57,9 @@ public:
         }
 
         try {
-            sendCommand(Protocol::LinkItemsCommand(action,
-                ProtocolHelper::entitySetToScope(objectsToLink),
-                ProtocolHelper::entityToScope(destination)));
+            JobPrivate::sendCommand(Protocol::LinkItemsCommand(action,
+                                        ProtocolHelper::entitySetToScope(objectsToLink),
+                                        ProtocolHelper::entityToScope(destination)));
         } catch (const std::exception &e) {
             q->setError(Job::Unknown);
             q->setErrorText(QString::fromUtf8(e.what()));

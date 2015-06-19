@@ -121,7 +121,6 @@ void TagFetchJob::doStart()
     Q_D(TagFetchJob);
 
     Protocol::FetchTagsCommand cmd;
-    QByteArray command = d->newTag();
     if (d->mRequestedTags.isEmpty()) {
         cmd = Protocol::FetchTagsCommand(Scope(ImapInterval(1, 0)));
     } else {
@@ -140,12 +139,12 @@ void TagFetchJob::doStart()
     d->sendCommand(cmd);
 }
 
-void TagFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+void TagFetchJob::doHandleResponse(qint64 _tag, const Protocol::Command &response)
 {
     Q_D(TagFetchJob);
 
     if (!response.isResponse() || response.type() != Protocol::Command::FetchTags) {
-        Job::doHandleResponse(tag, response);
+        Job::doHandleResponse(_tag, response);
         return;
     }
 

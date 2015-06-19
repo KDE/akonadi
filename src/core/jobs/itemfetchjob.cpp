@@ -91,7 +91,7 @@ public:
 
         } else {
             try {
-                return QString::fromLatin1(ProtocolHelper::entitySetToByteArray(mRequestedItems, AKONADI_CMD_ITEMFETCH));
+                return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
             } catch (const Exception &e) {
                 return QString::fromUtf8(e.what());
             }

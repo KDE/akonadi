@@ -99,7 +99,8 @@ public:
         if (mBase.isValid()) {
             return QStringLiteral("Collection Id %1").arg(mBase.id());
         } else if (CollectionUtils::hasValidHierarchicalRID(mBase)) {
-            return QLatin1String("(") + ProtocolHelper::hierarchicalRidToScope(mBase).ridChain().join(QLatin1String(", ")) + QLatin1String(")");
+            //return QLatin1String("(") + ProtocolHelper::hierarchicalRidToScope(mBase).hridChain().join(QLatin1String(", ")) + QLatin1String(")");
+            return QLatin1String("HRID chain");
         } else {
             return QString::fromLatin1("Collection RemoteId %1").arg(mBase.remoteId());
         }

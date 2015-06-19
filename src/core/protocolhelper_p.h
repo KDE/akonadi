@@ -137,7 +137,6 @@ public:
 
         Container<T> objects(_objects);
 
-        QByteArray rv;
         std::sort(objects.begin(), objects.end(), boost::bind(&T::id, _1) < boost::bind(&T::id, _2));
         if (objects.first().isValid()) {
             QVector<typename T::Id>  uids;
@@ -173,6 +172,8 @@ public:
 
         return Scope(Scope::Rid, rids);
     }
+
+    static Scope entitySetToScope(const Tag::List &tags);
 
     static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
                                                            const Item::List &requestedItems);

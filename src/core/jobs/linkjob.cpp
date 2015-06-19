@@ -54,6 +54,7 @@ void LinkJob::doStart()
 
 void LinkJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
+    Q_D(LinkJob);
     d->handleResponse(tag, response);
 }
 

@@ -28,6 +28,8 @@
 #include "itemserializerplugin.h"
 #include "servermanager.h"
 #include "tagfetchscope.h"
+
+#include <akonadi/private/protocol_p.h>
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtCore/QDateTime>
@@ -231,6 +233,43 @@ QByteArray ProtocolHelper::decodePartIdentifier(const QByteArray &data, PartName
     }
 }
 
+Scope ProtocolHelper::entitySetToScope(const Tag::List &_objects)
+{
+    if (_objects.isEmpty()) {
+        throw Exception("No objects specified");
+    }
+
+    Tag::List objects(_objects);
+
+    std::sort(objects.begin(), objects.end(), boost::bind(&Tag::id, _1) < boost::bind(&Tag::id, _2));
+    if (objects.first().isValid()) {
+        QVector<typename Tag::Id>  uids;
+        uids.reserve(objects.size());
+        for (const Tag &object : objects) {
+            uids << object.id();
+        }
+        ImapSet set;
+        set.add(uids);
+        return Scope(set);
+    }
+
+    // check if all items have a remote id
+    if (std::find_if(objects.constBegin(), objects.constEnd(),
+                        boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::remoteId, _1)))
+        != objects.constEnd()) {
+        throw Exception("No remote identifier specified");
+    }
+
+    QStringList rids;
+    rids.reserve(objects.size());
+    for (const Tag &object : objects) {
+        rids << QLatin1String(object.remoteId());
+    }
+
+    return Scope(Scope::Rid, rids);
+}
+
+
 Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection,
                                                                 const Akonadi::Tag &tag,
                                                                 const Item::List &requestedItems)
@@ -258,29 +297,36 @@ Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::C
 Scope ProtocolHelper::hierarchicalRidToScope(const Collection &col)
 {
     if (col == Collection::root()) {
-        return Scope(Scope::HierarchicalRid, { QString() });
+        return Scope({ Scope::HRID(0) });
     }
     if (col.remoteId().isEmpty()) {
         return Scope();
     }
 
-    QStringList chain;
+    QVector<Scope::HRID> chain;
     Collection c = col;
     while (!c.remoteId().isEmpty()) {
-        chain.append(c.remoteId());
+        chain.append(Scope::HRID(c.id(), c.remoteId()));
         c = c.parentCollection();
     }
-    return Scope(Scope::HierarchicalRid, chain);
+    return Scope(chain + QVector<Scope::HRID>{ Scope::HRID(0) });
 }
 
 Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
 {
-    return Scope(Scope::HierarchicalRid, (QStringList() << item.remoteId()) + hierarchicalRidToScope(item.parentCollection()).ridChain());
+    return Scope(QVector<Scope::HRID>({ Scope::HRID(item.id(), item.remoteId()) }) + hierarchicalRidToScope(item.parentCollection()).hridChain());
 }
 
 Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
 {
     Protocol::FetchScope fs;
+    // The default scope
+    fs.setFetch(Protocol::FetchScope::Flags |
+                Protocol::FetchScope::Size |
+                Protocol::FetchScope::RemoteID |
+                Protocol::FetchScope::RemoteRevision |
+                Protocol::FetchScope::MTime);
+
     fs.setFetch(Protocol::FetchScope::FullPayload, fetchScope.fullPayload());
     fs.setFetch(Protocol::FetchScope::AllAttributes, fetchScope.allAttributes());
     fs.setFetch(Protocol::FetchScope::CacheOnly, fetchScope.cacheOnly());
@@ -456,9 +502,9 @@ Tag ProtocolHelper::parseTagFetchResult(const Protocol::FetchTagsResponse &data)
 {
     Tag tag;
     tag.setId(data.id());
-    tag.setGid(data.gid().toLatin1());
-    tag.setRemoteId(data.remoteId().toLatin1());
-    tag.setType(data.type().toLatin1());
+    tag.setGid(data.gid());
+    tag.setRemoteId(data.remoteId());
+    tag.setType(data.type());
 
     parseAttributes(data.attributes(), &tag);
     return tag;
@@ -469,8 +515,8 @@ Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelations
     Relation relation;
     relation.setLeft(Item(data.left()));
     relation.setRight(Item(data.right()));
-    relation.setRemoteId(data.remoteId().toLatin1());
-    relation.setType(data.type().toLatin1());
+    relation.setRemoteId(data.remoteId());
+    relation.setType(data.type());
     return relation;
 }
 

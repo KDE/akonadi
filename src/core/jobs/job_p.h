@@ -67,15 +67,20 @@ public:
     /**
       Returns a new unique command tag for communication with the backend.
     */
-    QByteArray newTag();
+    qint64 newTag();
 
     /**
       Return the tag used for the request.
     */
-    QByteArray tag() const;
+    qint64 tag() const;
 
     /**
       Sends the @p command to the backend
+     */
+    void sendCommand(qint64 tag, const Protocol::Command &command);
+
+    /**
+     * Same as calling JobPrivate::sendCommand(newTag(), command)
      */
     void sendCommand(const Protocol::Command &command);
 
@@ -115,7 +120,7 @@ public:
 
     Job *mParentJob;
     Job *mCurrentSubJob;
-    QByteArray mTag;
+    qint64 mTag;
     Session *mSession;
     bool mWriteFinished;
     bool mStarted;

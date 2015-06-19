@@ -56,8 +56,8 @@ void RelationCreateJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::ModifyRelationCommand(d->mRelation.left(),
-                                                   d->mRelation.right(),
+    d->sendCommand(Protocol::ModifyRelationCommand(d->mRelation.left().id(),
+                                                   d->mRelation.right().id(),
                                                    d->mRelation.type(),
                                                    d->mRelation.remoteId()));
 }

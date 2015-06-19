@@ -67,7 +67,7 @@ public:
     Relation::List mResultRelations;
     Relation::List mPendingRelations; // relation pending for emitting itemsReceived()
     QTimer *mEmitTimer;
-    QStringList mTypes;
+    QVector<QByteArray> mTypes;
     QString mResource;
     Relation mRequestedRelation;
 };
@@ -80,7 +80,7 @@ RelationFetchJob::RelationFetchJob(const Relation &relation, QObject *parent)
     d->mRequestedRelation = relation;
 }
 
-RelationFetchJob::RelationFetchJob(const QStringList &types, QObject *parent)
+RelationFetchJob::RelationFetchJob(const QVector<QByteArray> &types, QObject *parent)
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
@@ -95,8 +95,8 @@ void RelationFetchJob::doStart()
     d->sendCommand(Protocol::FetchRelationsCommand(
         d->mRequestedRelation.left().id(),
         d->mRequestedRelation.right().id(),
-        d->mResource,
-        d->mTypes.isEmpty() ? QStringList() << d->mRequestedRelation.type() : d->mTypes));
+        d->mTypes.isEmpty() ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
+        d->mResource));
 }
 
 void RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
@@ -109,7 +109,7 @@ void RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &res
     }
 
     const Relation rel = ProtocolHelper::parseRelationFetchResult(response);
-    if (rel.isValid() {
+    if (rel.isValid()) {
         d->mResultRelations.append(rel);
         d->mPendingRelations.append(rel);
         if (!d->mEmitTimer->isActive()) {

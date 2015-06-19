@@ -441,17 +441,22 @@ void SelfTestDialog::testProtocolVersion()
                ki18n("Without a connection to the server it is not possible to check if the protocol version meets the requirements."));
         return;
     }
-    if (Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion()) {
+    if (Internal::serverProtocolVersion() < SessionPrivate::clientProtocolVersion()) {
         report(Error, ki18n("Server protocol version is too old."),
-               ki18n("The server protocol version is %1, but at least version %2 is required. "
-                     "Install a newer version of the Akonadi server.")
+               ki18n("The server protocol version is %1, but version %2 is required by the client. "
+                     "If you recently updated KDE PIM, please make sure to restart both Akonadi and KDE PIM applications.")
                .subs(Internal::serverProtocolVersion())
-               .subs(SessionPrivate::minimumProtocolVersion()));
+               .subs(SessionPrivate::clientProtocolVersion()));
+    } else if (Internal::serverProtocolVersion() > SessionPrivate::clientProtocolVersion()) {
+        report(Error, ki18n("Server protocol version is too new."),
+               ki18n("The server protocol version is %1, but version %2 is required by the client. "
+                     "If you recently updated KDE PIM, please make sure to restart both Akonadi and KDE PIM applications.")
+               .subs(Internal::serverProtocolVersion())
+               .subs(SessionPrivate::clientProtocolVersion()));
     } else {
-        report(Success, ki18n("Server protocol version is recent enough."),
-               ki18n("The server Protocol version is %1, which equal or newer than the required version %2.")
-               .subs(Internal::serverProtocolVersion())
-               .subs(SessionPrivate::minimumProtocolVersion()));
+        report(Success, ki18n("Server protocol version matches."),
+               ki18n("The current Protocol version is %1.")
+               .subs(Internal::serverProtocolVersion()));
     }
 }
 

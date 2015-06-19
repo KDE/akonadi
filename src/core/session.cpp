@@ -196,6 +196,7 @@ void SessionPrivate::dataReceived()
 
         if (logFile) {
             logFile->write("S: " + cmd.debugString().toUtf8());
+            logFile->write("\n\n");
             logFile->flush();
         }
 
@@ -355,7 +356,7 @@ void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 {
     if (logFile) {
         logFile->write("C: " + command.debugString().toUtf8());
-        logFile->write("\n");
+        logFile->write("\n\n");
         logFile->flush();
     }
 

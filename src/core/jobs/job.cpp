@@ -191,25 +191,33 @@ void JobPrivate::startNext()
     }
 }
 
-QByteArray JobPrivate::newTag()
+qint64 JobPrivate::newTag()
 {
     if (mParentJob) {
         mTag = mParentJob->d_ptr->newTag();
     } else {
-        mTag = QByteArray::number(mSession->d->nextTag());
+        mTag = mSession->d->nextTag();
     }
     return mTag;
 }
 
-QByteArray JobPrivate::tag() const
+qint64 JobPrivate::tag() const
 {
     return mTag;
 }
 
-void JobPrivate::writeData(const QByteArray &data)
+void JobPrivate::sendCommand(qint64 tag, const Protocol::Command &cmd)
 {
-    Q_ASSERT_X(!mWriteFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()");
-    mSession->d->writeData(data);
+    if (mParentJob) {
+        mParentJob->d_ptr->sendCommand(tag, cmd);
+    } else {
+        mSession->d->sendCommand(tag, cmd);
+    };
+}
+
+void JobPrivate::sendCommand(const Protocol::Command &cmd)
+{
+    sendCommand(newTag(), cmd);
 }
 
 void JobPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision)

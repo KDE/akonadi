@@ -56,8 +56,8 @@ void RelationDeleteJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::RemoveRelationsCommand(d->mRelation.left(),
-                                                    d->mRelation.right(),
+    d->sendCommand(Protocol::RemoveRelationsCommand(d->mRelation.left().id(),
+                                                    d->mRelation.right().id(),
                                                     d->mRelation.type()));
 }
 

@@ -106,21 +106,10 @@ void ItemMoveJob::doStart()
 void ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::MoveItems) {
-        setError(Job::Unknown);
-        setErrorText(i18n("Unexpected reply"));
+        Job::doHandleResponse(tag, response);
+    } else {
         emitResult();
-        return;
     }
-
-    Protocol::MoveItemsResponse resp(response);
-    if (resp.isError()) {
-        setError(Job::Unknown);
-        setErrorText(resp.errorMessage());
-        emitResult();
-        return;
-    }
-
-    emitResult();
 }
 
 Collection ItemMoveJob::destinationCollection() const

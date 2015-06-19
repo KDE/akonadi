@@ -113,7 +113,7 @@ void SearchCreateJob::doStart()
 
     Protocol::StoreSearchCommand cmd;
     cmd.setName(d->mName);
-    cmd.setQuery(d->mQuery.toJSON());
+    cmd.setQuery(QString::fromUtf8(d->mQuery.toJSON()));
     cmd.setMimeTypes(d->mMimeTypes);
     cmd.setRecursive(d->mRecursive);
     cmd.setRemote(d->mRemote);
@@ -137,6 +137,7 @@ Akonadi::Collection SearchCreateJob::createdCollection() const
 
 void SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
+    Q_D(SearchCreateJob);
     if (response.isResponse() && response.type() == Protocol::Command::CreateCollection) {
         d->mCreatedCollection = ProtocolHelper::parseCollection(response);
     } else if (response.isResponse() && response.type() == Protocol::Command::StoreSearch) {

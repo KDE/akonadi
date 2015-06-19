@@ -154,7 +154,7 @@ void ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
                 }
             }
         }
-        d->sendCommand(streamResp);
+        d->sendCommand(tag, streamResp);
     } else if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
         Protocol::FetchItemsResponse fetchResp(response);
         Item item = ProtocolHelper::parseItemFetchResult(fetchResp);
