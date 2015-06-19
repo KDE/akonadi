@@ -53,6 +53,7 @@ bool TransactionHandler::parseStream()
         if (!store->commitTransaction()) {
             return failureResponse("Unable to commit transaction.");
         }
+        break;
     }
 
     return successResponse<Protocol::TransactionResponse>();
