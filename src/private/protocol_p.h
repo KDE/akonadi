@@ -981,8 +981,8 @@ class AKONADIPRIVATE_EXPORT FetchTagsResponse : public Response
 public:
     explicit FetchTagsResponse();
     explicit FetchTagsResponse(qint64 id);
-    FetchTagsResponse(qint64 id, const QString &gid, const QString &type,
-                      const QString &remoteId = QString(),
+    FetchTagsResponse(qint64 id, const QByteArray &gid, const QByteArray &type,
+                      const QByteArray &remoteId = QByteArray(),
                       qint64 parentId = 0,
                       const Attributes &attrs = Attributes());
     FetchTagsResponse(const Command &command);
@@ -992,14 +992,14 @@ public:
     void setParentId(qint64 parentId);
     qint64 parentId() const;
 
-    void setGid(const QString &gid);
-    QString gid() const;
+    void setGid(const QByteArray &gid);
+    QByteArray gid() const;
 
-    void setType(const QString &type);
-    QString type() const;
+    void setType(const QByteArray &type);
+    QByteArray type() const;
 
-    void setRemoteId(const QString &remoteId);
-    QString remoteId() const;
+    void setRemoteId(const QByteArray &remoteId);
+    QByteArray remoteId() const;
 
     void setAttributes(const Attributes &attributes);
     Attributes attributes() const;
@@ -1888,14 +1888,14 @@ public:
     explicit CreateTagCommand();
     CreateTagCommand(const Command &command);
 
-    void setGid(const QString &gid);
-    QString gid() const;
+    void setGid(const QByteArray &gid);
+    QByteArray gid() const;
 
-    void setRemoteId(const QString &remoteId);
-    QString remoteId() const;
+    void setRemoteId(const QByteArray &remoteId);
+    QByteArray remoteId() const;
 
-    void setType(const QString &type);
-    QString type() const;
+    void setType(const QByteArray &type);
+    QByteArray type() const;
 
     void setAttributes(const Attributes &attributes);
     Attributes attributes() const;
@@ -1985,11 +1985,11 @@ public:
     void setParentId(qint64 parentId);
     qint64 parentId() const;
 
-    void setType(const QString &type);
-    QString type() const;
+    void setType(const QByteArray &type);
+    QByteArray type() const;
 
-    void setRemoteId(const QString &remoteId);
-    QString remoteId() const;
+    void setRemoteId(const QByteArray &remoteId);
+    QByteArray remoteId() const;
 
     void setRemovedAttributes(const QSet<QByteArray> &removed);
     QSet<QByteArray> removedAttributes() const;

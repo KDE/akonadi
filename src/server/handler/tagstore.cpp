@@ -56,10 +56,11 @@ bool TagStore::parseStream()
 
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::Type) {
         TagType type = TagType::retrieveById(changedTag.typeId());
-        if (cmd.type() != type.name()) {
-            TagType newType = TagType::retrieveByName(cmd.type());
+        const QString newTypeName = QString::fromUtf8(cmd.type());
+        if (newTypeName != type.name()) {
+            TagType newType = TagType::retrieveByName(newTypeName);
             if (!newType.isValid()) {
-                newType.setName(cmd.type());
+                newType.setName(newTypeName);
                 if (!newType.insert()) {
                     return failureResponse("Failed to create new tag type");
                 }
@@ -83,7 +84,7 @@ bool TagStore::parseStream()
 
         if (!cmd.remoteId().isEmpty()) {
             TagRemoteIdResourceRelation remoteIdRelation;
-            remoteIdRelation.setRemoteId(cmd.remoteId());
+            remoteIdRelation.setRemoteId(QString::fromUtf8(cmd.remoteId()));
             remoteIdRelation.setResourceId(connection()->context()->resource().id());
             remoteIdRelation.setTag(changedTag);
             if (!remoteIdRelation.insert()) {

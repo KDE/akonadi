@@ -80,13 +80,13 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-    Protocol::FetchTagsResponse createResponse(const Tag &tag, const QString &remoteId = QString(),
+    Protocol::FetchTagsResponse createResponse(const Tag &tag, const QByteArray &remoteId = QByteArray(),
                                                const Protocol::Attributes &attrs = Protocol::Attributes())
     {
         Protocol::FetchTagsResponse resp(tag.id());
-        resp.setGid(tag.gid());
+        resp.setGid(tag.gid().toUtf8());
         resp.setParentId(tag.parentId());
-        resp.setType(tag.tagType().name());
+        resp.setType(tag.tagType().name().toUtf8());
         resp.setRemoteId(remoteId);
         resp.setAttributes(attrs);
         return resp;
@@ -106,9 +106,9 @@ private Q_SLOTS:
 
         {
             Protocol::CreateTagCommand cmd;
-            cmd.setGid(QLatin1String("tag"));
+            cmd.setGid("tag");
             cmd.setParentId(0);
-            cmd.setType(QLatin1String("PLAIN"));
+            cmd.setType("PLAIN");
             cmd.setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
 
             Protocol::FetchTagsResponse resp(1);
@@ -197,7 +197,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QString(), cmd.attributes()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(), cmd.attributes()))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
             Akonadi::NotificationMessageV3 notification;
@@ -211,13 +211,13 @@ private Q_SLOTS:
 
         {
             Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setRemoteId(QLatin1String("remote1"));
+            cmd.setRemoteId("remote1");
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QLatin1String("remote1"),
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, "remote1",
                             { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
@@ -235,13 +235,13 @@ private Q_SLOTS:
 
         {
             Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setRemoteId(QString());
+            cmd.setRemoteId(QByteArray());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << FakeAkonadiServer::selectResourceScenario(res.name())
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QString(),
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(),
                             { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
@@ -259,7 +259,7 @@ private Q_SLOTS:
 
        {
             Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setRemoteId(QString());
+            cmd.setRemoteId(QByteArray());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()

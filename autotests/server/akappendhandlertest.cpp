@@ -532,8 +532,8 @@ private Q_SLOTS:
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
             rsp.setTags({
-                Protocol::FetchTagsResponse(2, QLatin1String("TAG-1"), QLatin1String("PLAIN")),
-                Protocol::FetchTagsResponse(3, QLatin1String("TAG-2"), QLatin1String("PLAIN")) });
+                Protocol::FetchTagsResponse(2, "TAG-1", "PLAIN"),
+                Protocol::FetchTagsResponse(3, "TAG-2", "PLAIN") });
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
 
         }
@@ -557,8 +557,8 @@ private Q_SLOTS:
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
             rsp.setTags({
-                Protocol::FetchTagsResponse(4, QLatin1String("TAG-3"), QLatin1String("PLAIN")),
-                Protocol::FetchTagsResponse(5, QLatin1String("TAG-4"), QLatin1String("PLAIN")) });
+                Protocol::FetchTagsResponse(4, "TAG-3", "PLAIN"),
+                Protocol::FetchTagsResponse(5, "TAG-4", "PLAIN") });
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
@@ -582,8 +582,8 @@ private Q_SLOTS:
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
             rsp.setTags({
-                Protocol::FetchTagsResponse(2, QLatin1String("TAG-1"), QLatin1String("PLAIN")),
-                Protocol::FetchTagsResponse(3, QLatin1String("TAG-2"), QLatin1String("PLAIN")) });
+                Protocol::FetchTagsResponse(2, "TAG-1", "PLAIN"),
+                Protocol::FetchTagsResponse(3, "TAG-2", "PLAIN") });
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
@@ -607,8 +607,8 @@ private Q_SLOTS:
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
             rsp.setTags({
-                Protocol::FetchTagsResponse(4, QLatin1String("TAG-3"), QLatin1String("PLAIN")),
-                Protocol::FetchTagsResponse(5, QLatin1String("TAG-4"), QLatin1String("PLAIN")) });
+                Protocol::FetchTagsResponse(4, "TAG-3", "PLAIN"),
+                Protocol::FetchTagsResponse(5, "TAG-4", "PLAIN") });
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
@@ -633,8 +633,8 @@ private Q_SLOTS:
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
             rsp.setTags({
-                Protocol::FetchTagsResponse(2, QLatin1String("TAG-1"), QLatin1String("PLAIN")),
-                Protocol::FetchTagsResponse(3, QLatin1String("TAG-2"), QLatin1String("PLAIN")) });
+                Protocol::FetchTagsResponse(2, "TAG-1", "PLAIN"),
+                Protocol::FetchTagsResponse(3, "TAG-2", "PLAIN") });
             rsp.setFlags({ "\\SEEN", "$FLAG" });
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
@@ -658,7 +658,7 @@ private Q_SLOTS:
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
             rsp.setTags({
-                Protocol::FetchTagsResponse(6, utf8String, QLatin1String("PLAIN")) });
+                Protocol::FetchTagsResponse(6, utf8String.toUtf8(), "PLAIN") });
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();

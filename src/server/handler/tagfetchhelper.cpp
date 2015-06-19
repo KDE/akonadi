@@ -107,8 +107,8 @@ QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId)
 
     QSqlQuery attributeQuery = buildAttributeQuery(tagId);
     while (attributeQuery.isValid()) {
-        attributes.insert(attributeQuery.value(1).toByteArray(),
-                          attributeQuery.value(2).toByteArray());
+        attributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
+                          Utils::variantToByteArray(attributeQuery.value(2)));
         attributeQuery.next();
     }
     return attributes;
@@ -123,11 +123,11 @@ bool TagFetchHelper::fetchTags()
     while (tagQuery.isValid()) {
         const qint64 tagId = tagQuery.value(0).toLongLong();
         Protocol::FetchTagsResponse response(tagId);
-        response.setGid(Utils::variantToString(tagQuery.value(1)));
+        response.setGid(Utils::variantToByteArray(tagQuery.value(1)));
         response.setParentId(tagQuery.value(2).toLongLong());
-        response.setType(Utils::variantToString(tagQuery.value(4)));
+        response.setType(Utils::variantToByteArray(tagQuery.value(4)));
         if (mConnection->context()->resource().isValid()) {
-            response.setRemoteId(Utils::variantToString(tagQuery.value(5)));
+            response.setRemoteId(Utils::variantToByteArray(tagQuery.value(5)));
         }
 
         QMap<QByteArray, QByteArray> tagAttributes;
@@ -140,8 +140,8 @@ bool TagFetchHelper::fetchTags()
                 break;
             }
 
-            tagAttributes.insert(attributeQuery.value(1).toByteArray(),
-                                 attributeQuery.value(2).toByteArray());
+            tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
+                                 Utils::variantToByteArray(attributeQuery.value(2)));
             attributeQuery.next();
         }
 

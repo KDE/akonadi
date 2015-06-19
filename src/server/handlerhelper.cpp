@@ -27,6 +27,7 @@
 #include "commandcontext.h"
 #include "handler.h"
 #include "connection.h"
+#include "utils.h"
 
 #include <private/imapset_p.h>
 #include <private/scope_p.h>
@@ -200,9 +201,9 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
                                                              Connection *connection)
 {
     Protocol::FetchTagsResponse response(tag.id());
-    response.setType(tag.tagType().name());
+    response.setType(tag.tagType().name().toUtf8());
     response.setParentId(tag.parentId());
-    response.setGid(tag.gid());
+    response.setGid(tag.gid().toUtf8());
 
     if (withRID && connection) {
         // Fail silently if retrieving tag RID is not allowed in current context
@@ -226,7 +227,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
         if (!query.next()) {
             return response;
         }
-        response.setRemoteId(query.value(0).toString());
+        response.setRemoteId(Utils::variantToByteArray(query.value(0)));
     }
 
     return response;

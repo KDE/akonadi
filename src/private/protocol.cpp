@@ -2941,9 +2941,9 @@ namespace Protocol
 class FetchTagsResponsePrivate : public ResponsePrivate
 {
 public:
-    FetchTagsResponsePrivate(qint64 id = -1, const QString &gid = QString(),
-                             const QString &type = QString(),
-                             const QString &remoteId = QString(),
+    FetchTagsResponsePrivate(qint64 id = -1, const QByteArray &gid = QByteArray(),
+                             const QByteArray &type = QByteArray(),
+                             const QByteArray &remoteId = QByteArray(),
                              qint64 parentId = -1,
                              const Attributes &attrs = Attributes())
         : ResponsePrivate(Command::FetchTags)
@@ -3015,9 +3015,9 @@ public:
 
     qint64 id;
     qint64 parentId;
-    QString gid;
-    QString type;
-    QString remoteId;
+    QByteArray gid;
+    QByteArray type;
+    QByteArray remoteId;
     Attributes attributes;
 };
 
@@ -3036,8 +3036,8 @@ FetchTagsResponse::FetchTagsResponse(qint64 id)
 {
 }
 
-FetchTagsResponse::FetchTagsResponse(qint64 id, const QString &gid, const QString &type,
-                                     const QString &remoteId,
+FetchTagsResponse::FetchTagsResponse(qint64 id, const QByteArray &gid, const QByteArray &type,
+                                     const QByteArray &remoteId,
                                      qint64 parentId, const Attributes &attrs)
     : Response(new FetchTagsResponsePrivate(id, gid, type, remoteId, parentId, attrs))
 {
@@ -3063,29 +3063,29 @@ qint64 FetchTagsResponse::parentId() const
     return d_func()->parentId;
 }
 
-void FetchTagsResponse::setGid(const QString &gid)
+void FetchTagsResponse::setGid(const QByteArray &gid)
 {
     d_func()->gid = gid;
 }
-QString FetchTagsResponse::gid() const
+QByteArray FetchTagsResponse::gid() const
 {
     return d_func()->gid;
 }
 
-void FetchTagsResponse::setType(const QString &type)
+void FetchTagsResponse::setType(const QByteArray &type)
 {
     d_func()->type = type;
 }
-QString FetchTagsResponse::type() const
+QByteArray FetchTagsResponse::type() const
 {
     return d_func()->type;
 }
 
-void FetchTagsResponse::setRemoteId(const QString &remoteId)
+void FetchTagsResponse::setRemoteId(const QByteArray &remoteId)
 {
     d_func()->remoteId = remoteId;
 }
-QString FetchTagsResponse::remoteId() const
+QByteArray FetchTagsResponse::remoteId() const
 {
     return d_func()->remoteId;
 }
@@ -7147,9 +7147,9 @@ public:
         return new CreateTagCommandPrivate(*this);
     }
 
-    QString gid;
-    QString remoteId;
-    QString type;
+    QByteArray gid;
+    QByteArray remoteId;
+    QByteArray type;
     Attributes attributes;
     qint64 parentId;
     bool merge;
@@ -7171,29 +7171,29 @@ CreateTagCommand::CreateTagCommand(const Command &other)
     assert(d_func()->commandType == Command::CreateTag);
 }
 
-void CreateTagCommand::setGid(const QString &gid)
+void CreateTagCommand::setGid(const QByteArray &gid)
 {
     d_func()->gid = gid;
 }
-QString CreateTagCommand::gid() const
+QByteArray CreateTagCommand::gid() const
 {
     return d_func()->gid;
 }
 
-void CreateTagCommand::setRemoteId(const QString &remoteId)
+void CreateTagCommand::setRemoteId(const QByteArray &remoteId)
 {
     d_func()->remoteId = remoteId;
 }
-QString CreateTagCommand::remoteId() const
+QByteArray CreateTagCommand::remoteId() const
 {
     return d_func()->remoteId;
 }
 
-void CreateTagCommand::setType(const QString &type)
+void CreateTagCommand::setType(const QByteArray &type)
 {
     d_func()->type = type;
 }
-QString CreateTagCommand::type() const
+QByteArray CreateTagCommand::type() const
 {
     return d_func()->type;
 }
@@ -7497,8 +7497,8 @@ public:
         return new ModifyTagCommandPrivate(*this);
     }
 
-    QString type;
-    QString remoteId;
+    QByteArray type;
+    QByteArray remoteId;
     QSet<QByteArray> removedAttributes;
     Attributes attributes;
     qint64 tagId;
@@ -7547,22 +7547,22 @@ qint64 ModifyTagCommand::parentId() const
     return d_func()->parentId;
 }
 
-void ModifyTagCommand::setType(const QString &type)
+void ModifyTagCommand::setType(const QByteArray &type)
 {
     d_func()->modifiedParts |= Type;
     d_func()->type = type;
 }
-QString ModifyTagCommand::type() const
+QByteArray ModifyTagCommand::type() const
 {
     return d_func()->type;
 }
 
-void ModifyTagCommand::setRemoteId(const QString &remoteId)
+void ModifyTagCommand::setRemoteId(const QByteArray &remoteId)
 {
     d_func()->modifiedParts |= RemoteId;
     d_func()->remoteId = remoteId;
 }
-QString ModifyTagCommand::remoteId() const
+QByteArray ModifyTagCommand::remoteId() const
 {
     return d_func()->remoteId;
 }

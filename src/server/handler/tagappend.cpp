@@ -41,21 +41,23 @@ bool TagAppend::parseStream()
 
     TagType tagType;
     if (!cmd.type().isEmpty()) {
-        tagType = TagType::retrieveByName(cmd.type());
+        const QString typeName = QString::fromUtf8(cmd.type());
+        tagType = TagType::retrieveByName(typeName);
         if (!tagType.isValid()) {
-            TagType t(cmd.type());
+            TagType t(typeName);
             if (!t.insert()) {
-                return failureResponse(QStringLiteral("Unable to create tagtype '") % cmd.type() % QStringLiteral("'"));
+                return failureResponse(QStringLiteral("Unable to create tagtype '") % typeName % QStringLiteral("'"));
             }
             tagType = t;
         }
     }
 
     qint64 tagId = -1;
+    const QString gid = QString::fromUtf8(cmd.gid());
     if (cmd.merge()) {
         QueryBuilder qb(Tag::tableName());
         qb.addColumn(Tag::idColumn());
-        qb.addValueCondition(Tag::gidColumn(), Query::Equals, cmd.gid());
+        qb.addValueCondition(Tag::gidColumn(), Query::Equals, gid);
         if (!qb.exec()) {
             return failureResponse("Unable to list tags");
         }
@@ -65,7 +67,7 @@ bool TagAppend::parseStream()
     }
     if (tagId < 0) {
         Tag insertedTag;
-        insertedTag.setGid(cmd.gid());
+        insertedTag.setGid(gid);
         if (cmd.parentId() >= 0) {
             insertedTag.setParentId(cmd.parentId());
         }
@@ -114,7 +116,7 @@ bool TagAppend::parseStream()
             TagRemoteIdResourceRelation rel;
             rel.setTagId(tagId);
             rel.setResourceId(resourceId);
-            rel.setRemoteId(cmd.remoteId());
+            rel.setRemoteId(QString::fromUtf8(cmd.remoteId()));
             ret = rel.insert();
         }
         if (!ret) {
