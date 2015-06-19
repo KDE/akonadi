@@ -76,6 +76,7 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
 {
     Protocol::PartMetaData metaPart = requestPartMetaData(partName);
     if (metaPart.name().isEmpty()) {
+        mError = QStringLiteral("Part name is empty");
         return false;
     }
     part.setVersion(metaPart.version());

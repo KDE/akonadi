@@ -8231,6 +8231,7 @@ public:
     {
         ResponsePrivate::debugString(blck);
         blck.beginBlock("MetaData");
+        blck.write("Name", metaData.name());
         blck.write("Size", metaData.size());
         blck.write("Version", metaData.version());
         blck.endBlock();
