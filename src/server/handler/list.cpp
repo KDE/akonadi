@@ -584,7 +584,7 @@ bool List::parseStream()
             if (!connection()->context()->resource().isValid()) {
                 return failureResponse("Cannot retrieve collection based on hierarchical remote identifier without a resource context");
             }
-            col = CollectionQueryHelper::resolveHierarchicalRID(scope.ridChain(), connection()->context()->resource().id());
+            col = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection()->context()->resource().id());
         } else {
             return failureResponse("Unexpected error");
         }

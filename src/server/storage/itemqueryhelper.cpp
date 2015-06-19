@@ -131,12 +131,12 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, 
         ItemQueryHelper::remoteIdToQuery(scope.ridSet(), context, qb);
         return;
     } else if (scope.scope() == Scope::HierarchicalRid) {
-        QStringList ridChain = scope.ridChain();
-        const QString itemRid = ridChain.takeFirst();
-        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(ridChain, context->resource().id());
+        QVector<Scope::HRID> hridChain = scope.hridChain();
+        const Scope::HRID itemHRID = hridChain.takeFirst();
+        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context->resource().id());
         const Collection oldSelection = context->collection();
         context->setCollection(parentCol);
-        remoteIdToQuery(QStringList() << itemRid, context, qb);
+        remoteIdToQuery(QStringList() << itemHRID.remoteId, context, qb);
         context->setCollection(oldSelection);
         return;
     }

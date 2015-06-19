@@ -57,7 +57,7 @@ void CollectionQueryHelper::scopeToQuery(const Scope &scope, Connection *connect
         if (!connection->context()->resource().isValid()) {
             throw HandlerException("Operations based on hierarchical remote identifiers require a resource or collection context");
         }
-        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.ridChain(), connection->context()->resource().id());
+        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection->context()->resource().id());
         qb.addValueCondition(Collection::idFullColumnName(), Query::Equals, c.id());
     } else {
         throw HandlerException("WTF?");
@@ -104,7 +104,7 @@ bool CollectionQueryHelper::canBeMovedTo(const Collection &collection, const Col
     return hasAllowedName(collection, collection.name(), _parent.id());
 }
 
-Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridChain, Resource::Id resId)
+Collection CollectionQueryHelper::resolveHierarchicalRID(const QVector<Scope::HRID> &ridChain, Resource::Id resId)
 {
     if (ridChain.size() < 2) {
         throw HandlerException("Empty or incomplete hierarchical RID chain");
@@ -121,7 +121,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridC
         } else {
             qb.addValueCondition(Collection::parentIdColumn(), Query::Is, QVariant());
         }
-        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, ridChain.at(i));
+        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, ridChain.at(i).remoteId);
         qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, resId);
         if (!qb.exec()) {
             throw HandlerException("Unable to execute query");

@@ -27,6 +27,7 @@
 
 using namespace Akonadi;
 
+
 namespace Akonadi
 {
 
@@ -40,13 +41,67 @@ public:
 
     ImapSet uidSet;
     QStringList ridSet;
-    QStringList ridChain;
+    QVector<Scope::HRID> hridChain;
     QStringList gidSet;
     qint64 ridContext;
     Scope::SelectionScope scope;
 };
 
 }
+
+Scope::HRID::HRID()
+    : id(-1)
+{}
+
+Scope::HRID::HRID(qint64 id, const QString &remoteId)
+    : id(id)
+    , remoteId(remoteId)
+{}
+
+Scope::HRID::HRID(const HRID &other)
+    : id(other.id)
+    , remoteId(other.remoteId)
+{}
+
+Scope::HRID::HRID(HRID &&other)
+    : id(other.id)
+{
+    remoteId.swap(other.remoteId);
+}
+
+Scope::HRID &Scope::HRID::operator=(const HRID &other)
+{
+    if (*this == other) {
+        return *this;
+    }
+
+    id = other.id;
+    remoteId = other.remoteId;
+    return *this;
+}
+
+Scope::HRID &Scope::HRID::operator=(HRID &&other)
+{
+    if (*this == other) {
+        return *this;
+    }
+
+    id = other.id;
+    remoteId.swap(other.remoteId);
+    return *this;
+}
+
+bool Scope::HRID::isEmpty() const
+{
+    return id < 0 && remoteId.isEmpty();
+}
+
+bool Scope::HRID::operator==(const HRID &other) const
+{
+    return id == other.id && remoteId == other.remoteId;
+}
+
+
 
 Scope::Scope()
     : d(new ScopePrivate)
@@ -80,19 +135,22 @@ Scope::Scope(const QVector<qint64> &interval)
 Scope::Scope(SelectionScope scope, const QStringList &ids)
     : d(new ScopePrivate)
 {
-    Q_ASSERT(scope == Rid || scope == Gid || scope == Akonadi::Scope::HierarchicalRid);
+    Q_ASSERT(scope == Rid || scope == Gid);
     if (scope == Rid) {
         d->scope = scope;
         d->ridSet = ids;
     } else if (scope == Gid) {
         d->scope = scope;
         d->gidSet = ids;
-    } else if (scope == HierarchicalRid) {
-        d->scope = scope;
-        d->ridChain = ids;
     }
 }
 
+Scope::Scope(const QVector<HRID> &hrid)
+    : d(new ScopePrivate)
+{
+    d->scope = HierarchicalRid;
+    d->hridChain = hrid;
+}
 
 Scope::Scope(const Scope &other)
     : d(other.d)
@@ -134,7 +192,7 @@ bool Scope::operator==(const Scope &other) const
     case Rid:
         return d->ridSet == other.d->ridSet && d->ridContext == other.d->ridContext;
     case HierarchicalRid:
-        return d->ridChain == other.d->ridChain && d->ridContext == other.d->ridContext;
+        return d->hridChain == other.d->hridChain && d->ridContext == other.d->ridContext;
     case Invalid:
         return true;
     }
@@ -162,7 +220,7 @@ bool Scope::isEmpty() const
     case Rid:
         return d->ridSet.isEmpty();
     case HierarchicalRid:
-        return d->ridChain.isEmpty();
+        return d->hridChain.isEmpty();
     case Gid:
         return d->gidSet.isEmpty();
     }
@@ -194,15 +252,15 @@ QStringList Scope::ridSet() const
     return d->ridSet;
 }
 
-void Scope::setRidChain(const QStringList &ridChain)
+void Scope::setHRidChain(const QVector<HRID> &hridChain)
 {
     d->scope = HierarchicalRid;
-    d->ridChain = ridChain;
+    d->hridChain = hridChain;
 }
 
-QStringList Scope::ridChain() const
+QVector<Scope::HRID> Scope::hridChain() const
 {
-    return d->ridChain;
+    return d->hridChain;
 }
 
 void Scope::setRidContext(qint64 context)
@@ -271,7 +329,7 @@ QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope)
         stream << scope.d->ridContext;
         return stream;
     case Scope::HierarchicalRid:
-        stream << scope.d->ridChain;
+        stream << scope.d->hridChain;
         return stream;
     case Scope::Gid:
         stream << scope.d->gidSet;
@@ -282,11 +340,21 @@ QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope)
     return stream;
 }
 
+QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope::HRID &hrid)
+{
+    return stream << hrid.id << hrid.remoteId;
+}
+
+QDataStream &operator>>(QDataStream &stream, Akonadi::Scope::HRID &hrid)
+{
+    return stream >> hrid.id >> hrid.remoteId;
+}
+
 QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
 {
     scope.d->uidSet = ImapSet();
     scope.d->ridSet.clear();
-    scope.d->ridChain.clear();
+    scope.d->hridChain.clear();
     scope.d->gidSet.clear();
 
     stream >> reinterpret_cast<quint8&>(scope.d->scope);
@@ -301,7 +369,7 @@ QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
         stream >> scope.d->ridContext;
         return stream;
     case Scope::HierarchicalRid:
-        stream >> scope.d->ridChain;
+        stream >> scope.d->hridChain;
         return stream;
     case Scope::Gid:
         stream >> scope.d->gidSet;
@@ -310,6 +378,11 @@ QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
 
     Q_ASSERT(false);
     return stream;
+}
+
+QDebug operator<<(QDebug dbg, const Akonadi::Scope::HRID &hrid)
+{
+    return dbg.nospace() << "(ID: " << hrid.id << ", RemoteID: " << hrid.remoteId << ")";
 }
 
 QDebug operator<<(QDebug dbg, const Akonadi::Scope &scope)
@@ -326,7 +399,7 @@ QDebug operator<<(QDebug dbg, const Akonadi::Scope &scope)
     case Scope::Gid:
         return dbg.nospace() << "GID " << scope.gidSet();
     case Scope::HierarchicalRid:
-        return dbg.nospace() << "HRID " << scope.ridChain();
+        return dbg.nospace() << "HRID " << scope.hridChain();
     default:
         return dbg.nospace() << "Invalid scope";
     }

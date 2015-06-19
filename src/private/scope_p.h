@@ -55,6 +55,23 @@ public:
         Gid = 1 << 3
     };
 
+    class HRID {
+    public:
+        explicit HRID();
+        HRID(qint64 id, const QString &remoteId = QString());
+        HRID(const HRID &other);
+        HRID(HRID &&other);
+
+        HRID &operator=(const HRID &other);
+        HRID &operator=(HRID &&other);
+
+        bool isEmpty() const;
+        bool operator==(const HRID &other) const;
+
+        qint64 id;
+        QString remoteId;
+    };
+
     explicit Scope();
     Scope(SelectionScope scope, const QStringList &ids);
 
@@ -63,6 +80,7 @@ public:
     Scope(const ImapSet &uidSet);
     Scope(const ImapInterval &interval);
     Scope(const QVector<qint64> &interval);
+    Scope(const QVector<HRID> &hridChain);
 
     Scope(const Scope &other);
     Scope(Scope &&other);
@@ -87,8 +105,8 @@ public:
     void setRidSet(const QStringList &ridSet);
     QStringList ridSet() const;
 
-    void setRidChain(const QStringList &ridChain);
-    QStringList ridChain() const;
+    void setHRidChain(const QVector<HRID> &ridChain);
+    QVector<HRID> hridChain() const;
 
     void setGidSet(const QStringList &gidChain);
     QStringList gidSet() const;
