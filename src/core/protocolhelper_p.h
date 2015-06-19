@@ -138,7 +138,7 @@ public:
         Container<T> objects(_objects);
 
         std::sort(objects.begin(), objects.end(), boost::bind(&T::id, _1) < boost::bind(&T::id, _2));
-        if (objects.first().isValid()) {
+        if (objects.at(0).isValid()) {
             QVector<typename T::Id>  uids;
             uids.reserve(objects.size());
             for (const T &object : objects) {

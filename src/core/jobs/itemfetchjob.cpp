@@ -171,8 +171,8 @@ void ItemFetchJob::doStart()
 
 
     try {
-        d->sendCommand(Protocol::FetchItemsCommand(
-            ProtocolHelper::entitySetToScope(d->mRequestedItems),
+        Scope itemScope(d->mRequestedItems.isEmpty() ? ImapSet::all() : ProtocolHelper::entitySetToScope(d->mRequestedItems));
+        d->sendCommand(Protocol::FetchItemsCommand(itemScope,
             ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mRequestedItems),
             ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
     } catch (const Akonadi::Exception &e) {
