@@ -60,14 +60,16 @@ public:
 
 Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partName)
 {
-    if (!mParts.remove(partName)) {
+    ProtocolHelper::PartNamespace ns; //dummy
+    const QByteArray partLabel = ProtocolHelper::decodePartIdentifier(partName, ns);
+    if (!mParts.remove(partLabel)) {
         // ERROR?
         return Protocol::PartMetaData();
     }
 
     mPendingData.clear();
     int version = 0;
-    ItemSerializer::serialize(mItem, partName, mPendingData, version);
+    ItemSerializer::serialize(mItem, partLabel, mPendingData, version);
 
     return Protocol::PartMetaData(partName, mPendingData.size(), version);
 }
@@ -134,7 +136,12 @@ void ItemCreateJob::doStart()
     cmd.setItemSize(d->mItem.size());
 
     cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mItem));
-    cmd.setParts(d->mParts);
+    QSet<QByteArray> parts;
+    parts.reserve(d->mParts.size());
+    for (const QByteArray &part : d->mParts) {
+        parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
+    }
+    cmd.setParts(parts);
 
     d->sendCommand(cmd);
 }
