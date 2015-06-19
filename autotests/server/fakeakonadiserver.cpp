@@ -134,7 +134,7 @@ QString FakeAkonadiServer::instanceName()
     return QString::fromLatin1("akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
-TestScenario::List FakeAkonadiServer::loginScenario()
+TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
 {
     return {
         TestScenario::create(0, TestScenario::ServerCmd,
@@ -142,7 +142,7 @@ TestScenario::List FakeAkonadiServer::loginScenario()
                                                      QStringLiteral("Not Really IMAP server"),
                                                      Connection::protocolVersion())),
         TestScenario::create(1,TestScenario::ClientCmd,
-                             Protocol::LoginCommand(instanceName().toLatin1())),
+                             Protocol::LoginCommand(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
         TestScenario::create(1, TestScenario::ServerCmd,
                              Protocol::LoginResponse())
     };

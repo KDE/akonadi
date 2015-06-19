@@ -128,6 +128,36 @@ private Q_SLOTS:
 
             QTest::newRow("create collection with local override") << scenarios <<  notification;
         }
+
+
+        {
+            Protocol::CreateCollectionCommand cmd;
+            cmd.setName(QLatin1String("TopLevel"));
+            cmd.setParent(Scope(0));
+            cmd.setMimeTypes({ QLatin1String("inode/directory") });
+
+            Protocol::FetchCollectionsResponse resp(10);
+            resp.setName(QLatin1String("TopLevel"));
+            resp.setParentId(0);
+            resp.setEnabled(true);
+            resp.setMimeTypes({ QLatin1String("inode/directory") });
+            resp.cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp.setResource(QLatin1String("akonadi_fake_resource_0"));
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario("akonadi_fake_resource_0")
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, resp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
+
+            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            notification.setSessionId("akonadi_fake_resource_0");
+            notification.setParentCollection(0);
+            notification.addEntity(10, QLatin1String(""), QLatin1String(""));
+
+            QTest::newRow("create top-level collection") << scenarios <<  notification;
+        }
+
     }
 
     void testCreate()

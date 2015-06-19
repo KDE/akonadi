@@ -100,7 +100,7 @@ public:
     static QString socketFile();
     static QString instanceName();
 
-    static TestScenario::List loginScenario();
+    static TestScenario::List loginScenario(const QByteArray &sessionId = QByteArray());
     static TestScenario::List selectCollectionScenario(const QString &name);
     static TestScenario::List selectResourceScenario(const QString &name);
 

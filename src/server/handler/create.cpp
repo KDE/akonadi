@@ -37,40 +37,51 @@ bool Create::parseStream()
         return failureResponse("Invalid collection name");
     }
 
-    Collection parent = HandlerHelper::collectionFromScope(cmd.parent(), connection());
-    if (!parent.isValid()) {
-        return failureResponse("Invalid parent collection");
-    }
-
+    Collection parent;
     qint64 resourceId = 0;
     bool forceVirtual = false;
+    MimeType::List parentContentTypes;
 
-    // check if parent can contain a sub-folder
-    const MimeType::List parentContentTypes = parent.mimeTypes();
-    bool found = false, foundVirtual = false;
-    for (const MimeType &mt : parentContentTypes) {
-        if (mt.name() == QLatin1String("inode/directory")) {
-            found = true;
-        } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
-            foundVirtual = true;
+    // Invalid or empty scope means we refer to root collection
+    if (cmd.parent().scope() != Scope::Invalid && !cmd.parent().isEmpty()) {
+        parent = HandlerHelper::collectionFromScope(cmd.parent(), connection());
+        if (!parent.isValid()) {
+            return failureResponse("Invalid parent collection");
         }
-        if (found && foundVirtual) {
-            break;
+
+        // check if parent can contain a sub-folder
+        parentContentTypes = parent.mimeTypes();
+        bool found = false, foundVirtual = false;
+        for (const MimeType &mt : parentContentTypes) {
+            if (mt.name() == QLatin1String("inode/directory")) {
+                found = true;
+            } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
+                foundVirtual = true;
+            }
+            if (found && foundVirtual) {
+                break;
+            }
         }
-    }
-    if (!found && !foundVirtual) {
-        return failureResponse("Parent collection can not contain sub-collections");
-    }
+        if (!found && !foundVirtual) {
+            return failureResponse("Parent collection can not contain sub-collections");
+        }
 
-    // If only virtual collections are supported, force every new collection to
-    // be virtual. Otherwise depend on VIRTUAL attribute in the command
-    if (foundVirtual && !found) {
-        forceVirtual = true;
+        // If only virtual collections are supported, force every new collection to
+        // be virtual. Otherwise depend on VIRTUAL attribute in the command
+        if (foundVirtual && !found) {
+            forceVirtual = true;
+        }
+
+        // inherit resource
+        resourceId = parent.resourceId();
+    } else {
+        const QString sessionId = QString::fromUtf8(connection()->sessionId());
+        Resource res = Resource::retrieveByName(sessionId);
+        if (!res.isValid()) {
+            return failureResponse("Cannot create top-level collection");
+        }
+        resourceId = res.id();
     }
-
-    // inherit resource
-    resourceId = parent.resourceId();
-
 
     Collection collection;
     if (parent.isValid()) {
