@@ -1388,11 +1388,9 @@ namespace Protocol
 class AncestorPrivate : public QSharedData
 {
 public:
-    AncestorPrivate()
-        : id(-1)
-    {}
-    AncestorPrivate(qint64 id)
+    AncestorPrivate(qint64 id = -1, const QString &remoteId = QString())
         : id(id)
+        , remoteId(remoteId)
     {}
 
     qint64 id;
@@ -1412,6 +1410,11 @@ Ancestor::Ancestor()
 
 Ancestor::Ancestor(qint64 id)
     : d(new AncestorPrivate(id))
+{
+}
+
+Ancestor::Ancestor(qint64 id, const QString &remoteId)
+    : d(new AncestorPrivate(id, remoteId))
 {
 }
 

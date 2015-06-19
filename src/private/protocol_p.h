@@ -395,6 +395,7 @@ public:
 
     explicit Ancestor();
     explicit Ancestor(qint64 id);
+    Ancestor(qint64 id, const QString &remoteId);
     Ancestor(Ancestor &&other);
     Ancestor(const Ancestor &other);
     ~Ancestor();
