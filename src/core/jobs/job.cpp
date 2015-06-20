@@ -186,7 +186,6 @@ void JobPrivate::startNext()
 
     if (mStarted && !mCurrentSubJob && q->hasSubjobs()) {
         Job *job = qobject_cast<Akonadi::Job *>(q->subjobs().at(0));
-        qDebug() << q << "Starting subjob" << job;
         Q_ASSERT(job);
         job->d_ptr->startQueued();
     }
@@ -322,7 +321,6 @@ QString Job::errorString() const
 
 bool Job::addSubjob(KJob *job)
 {
-    qDebug() << this << "Added subjob" << job;
     bool rv = KCompositeJob::addSubjob(job);
     if (rv) {
         connect(job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)));
@@ -358,7 +356,6 @@ void Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
 
 void Job::slotResult(KJob *job)
 {
-    qDebug() << "Job" << job << "finished";
     if (d_ptr->mCurrentSubJob == job) {
         // current job finished, start the next one
         d_ptr->mCurrentSubJob = 0;
