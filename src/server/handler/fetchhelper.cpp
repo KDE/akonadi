@@ -478,7 +478,7 @@ bool FetchHelper::fetchItems()
             response.setRelations(relations);
         }
 
-        if (mFetchScope.ancestorDepth() > 0) {
+        if (mFetchScope.ancestorDepth() != Protocol::Ancestor::NoAncestor) {
             response.setAncestors(ancestorsForItem(response.parentId()));
         }
 
@@ -608,7 +608,7 @@ void FetchHelper::triggerOnDemandFetch()
 
 QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentColId)
 {
-    if (mFetchScope.ancestorDepth() <= 0 || parentColId == 0) {
+    if (mFetchScope.ancestorDepth() == Protocol::Ancestor::NoAncestor || parentColId == 0) {
         return QVector<Protocol::Ancestor>();
     }
     if (mAncestorCache.contains(parentColId)) {
@@ -617,14 +617,13 @@ QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentC
 
     QVector<Protocol::Ancestor> ancestors;
     Collection col = Collection::retrieveById(parentColId);
-    for (int i = 0; i < mFetchScope.ancestorDepth(); ++i) {
+    const int depthNum = mFetchScope.ancestorDepth() == Protocol::Ancestor::ParentAncestor ? 1 : INT_MAX;
+    for (int i = 0; i < depthNum; ++i) {
         if (!col.isValid()) {
+            ancestors << Protocol::Ancestor(0);
             break;
         }
-        Protocol::Ancestor ancestor;
-        ancestor.setId(col.id());
-        ancestor.setRemoteId(col.remoteId());
-
+        ancestors << Protocol::Ancestor(col.id(), col.remoteId());
         col = col.parent();
     }
     mAncestorCache.insert(parentColId, ancestors);
