@@ -88,17 +88,19 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     }
 
     // set message flags
-    // This will hit an entry in cache inserted there in buildPimItem()
-    if (!cmd.flags().isEmpty()) {
-        const Flag::List flagList = HandlerHelper::resolveFlags(cmd.flags());
+    const QSet<QByteArray> flags = cmd.mergeModes() == Protocol::CreateItemCommand::None ? cmd.flags() : cmd.addedFlags();
+    if (!flags.isEmpty()) {
+        // This will hit an entry in cache inserted there in buildPimItem()
+        const Flag::List flagList = HandlerHelper::resolveFlags(flags);
         bool flagsChanged = false;
         if (!DataStore::self()->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true)) {
             return failureResponse("Unable to append item flags.");
         }
     }
 
-    if (!cmd.tags().isEmpty()) {
-        const Tag::List tagList = HandlerHelper::tagsFromScope(cmd.tags(), connection());
+    const Scope tags = cmd.mergeModes() == Protocol::CreateItemCommand::None ? cmd.tags() : cmd.addedTags();
+    if (!tags.isEmpty()) {
+        const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
         bool tagsChanged = false;
         if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
             return failureResponse("Unable to append item tags.");
