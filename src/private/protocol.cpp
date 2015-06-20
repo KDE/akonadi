@@ -1037,7 +1037,7 @@ void ScopeContext::setContext(Type type, qint64 id)
 
 void ScopeContext::setContext(Type type, const QString &rid)
 {
-    CTX(type) == rid;
+    CTX(type) = rid;
 }
 
 void ScopeContext::clearContext(Type type)
