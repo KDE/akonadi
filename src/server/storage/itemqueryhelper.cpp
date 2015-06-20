@@ -34,14 +34,16 @@ using namespace Akonadi::Server;
 
 void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection)
 {
-    QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+    if (!set.isEmpty()) {
+        QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+    }
     if (collection.isValid()) {
         if (collection.isVirtual() || collection.resource().isVirtual()) {
             qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
                        CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
             qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id());
         } else {
-            qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, collection.id());
+            qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, collection.id());
         }
     }
 }
@@ -113,6 +115,12 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
 
 void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
 {
+    // Handle fetch by collection/tag
+    if (scope.scope() == Scope::Invalid && !context->isEmpty()) {
+        itemSetToQuery(ImapSet(), context, qb);
+        return;
+    }
+
     if (scope.scope() == Scope::Uid) {
         itemSetToQuery(scope.uidSet(), context, qb);
         return;

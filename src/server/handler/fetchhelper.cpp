@@ -159,9 +159,7 @@ QSqlQuery FetchHelper::buildItemQuery()
 
     itemQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
-    if (mScope.scope() != Scope::Invalid) {
-        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), itemQuery);
-    }
+    ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), itemQuery);
 
     if (mFetchScope.changedSince().isValid()) {
         itemQuery.addValueCondition(PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mFetchScope.changedSince().toUTC());
@@ -190,6 +188,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
                       Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName());
     flagQuery.addColumn(PimItem::idFullColumnName());
     flagQuery.addColumn(Flag::nameFullColumnName());
+
     ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), flagQuery);
     flagQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 

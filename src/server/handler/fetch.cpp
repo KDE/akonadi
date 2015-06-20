@@ -32,13 +32,13 @@ bool Fetch::parseStream()
 {
     Protocol::FetchItemsCommand cmd(m_command);
 
+    if (!connection()->context()->setScopeContext(cmd.scopeContext())) {
+        return failureResponse("Invalid scope context");
+    }
+
     // We require context in case we do RID fetch
     if (connection()->context()->isEmpty() && cmd.scope().scope() == Scope::Rid) {
         return failureResponse("No FETCH context specified");
-    }
-
-    if (!connection()->context()->setScopeContext(cmd.scopeContext())) {
-        return failureResponse("Invalid scope context");
     }
 
     CacheCleanerInhibitor inhibitor;
