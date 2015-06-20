@@ -68,14 +68,14 @@ public:
         }
     }
 
-    inline void handleResponse(qint64 tag, const Protocol::Command &response)
+    inline bool handleResponse(qint64 tag, const Protocol::Command &response)
     {
         LinkJob *q = static_cast<LinkJob *>(q_func());
         if (!response.isResponse() || response.type() != Protocol::Command::LinkItems) {
-            q->Job::doHandleResponse(tag, response);
-        } else {
-            q->emitResult();
+            return q->Job::doHandleResponse(tag, response);
         }
+
+        return true;
     }
 
     Item::List objectsToLink;

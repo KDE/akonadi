@@ -146,7 +146,7 @@ void ItemCreateJob::doStart()
     d->sendCommand(cmd);
 }
 
-void ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemCreateJob);
 
@@ -167,21 +167,26 @@ void ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             }
         }
         d->sendCommand(tag, streamResp);
-    } else if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
+        return false;
+    }
+
+    if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
         Protocol::FetchItemsResponse fetchResp(response);
         Item item = ProtocolHelper::parseItemFetchResult(fetchResp);
         if (!item.isValid()) {
             // Error, maybe?
-            return;
+            return false;
         }
         d->mItemReceived = true;
         d->mItem = item;
-    } else if (response.isResponse() && response.type() == Protocol::Command::CreateItem) {
-        Protocol::CreateItemResponse createResp(response);
-        emitResult();
-    } else {
-        Job::doHandleResponse(tag, response);
+        return false;
     }
+
+    if (response.isResponse() && response.type() == Protocol::Command::CreateItem) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }
 
 void ItemCreateJob::setMerge(ItemCreateJob::MergeOptions options)

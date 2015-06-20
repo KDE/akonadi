@@ -116,14 +116,13 @@ void CollectionModifyJob::doStart()
     ChangeMediator::invalidateCollection(d->mCollection);
 }
 
-void CollectionModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::ModifyCollection) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }
 
 Collection CollectionModifyJob::collection() const

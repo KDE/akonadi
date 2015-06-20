@@ -52,9 +52,8 @@ void LinkJob::doStart()
     d->sendCommand(Protocol::LinkItemsCommand::Link);
 }
 
-void LinkJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool LinkJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
-    Q_D(LinkJob);
-    d->handleResponse(tag, response);
+    return d_func()->handleResponse(tag, response);
 }
 

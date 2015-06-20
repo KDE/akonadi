@@ -65,11 +65,11 @@ void CollectionDeleteJob::doStart()
     d->sendCommand(Protocol::DeleteCollectionCommand(ProtocolHelper::entityToScope(d->mCollection)));
 }
 
-void CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::DeleteCollection) {
-        Job::doHandleResponse(tag, response);
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }

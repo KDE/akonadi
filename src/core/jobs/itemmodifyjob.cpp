@@ -242,7 +242,7 @@ void ItemModifyJob::doStart()
     d->sendCommand(command);
 }
 
-void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemModifyJob);
 
@@ -262,7 +262,10 @@ void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             }
         }
         d->sendCommand(tag, streamResp);
-    } else if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
+        return false;
+    }
+
+    if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
         // FIXME: Conflict handling
         /*
             setError(Unknown);
@@ -293,7 +296,7 @@ void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
                                    });
             if (it == d->mItems.end()) {
                 qDebug() << "Received STORE response for an item we did not modify: " << tag << response.debugString();
-                return;
+                return true;
             }
 
             const int newRev = resp.newRevision();
@@ -308,10 +311,10 @@ void ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             ChangeMediator::invalidateItem(item);
         }
 
-        emitResult();
-    } else {
-        Job::doHandleResponse(tag, response);
+        return true;
     }
+
+    return Job::doHandleResponse(tag, response);
 }
 
 void ItemModifyJob::setIgnorePayload(bool ignore)

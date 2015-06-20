@@ -62,13 +62,13 @@ void RelationCreateJob::doStart()
                                                    d->mRelation.remoteId()));
 }
 
-void RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::ModifyRelation) {
-        Job::doHandleResponse(tag, response);
-    } else {
-        emitResult();
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }
 
 Relation RelationCreateJob::relation() const

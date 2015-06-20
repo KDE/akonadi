@@ -103,13 +103,13 @@ void ItemMoveJob::doStart()
     d->sendCommand(Protocol::MoveItemsCommand(itemsScope, dest));
 }
 
-void ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::MoveItems) {
-        Job::doHandleResponse(tag, response);
-    } else {
-        emitResult();
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }
 
 Collection ItemMoveJob::destinationCollection() const

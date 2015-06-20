@@ -69,14 +69,13 @@ void CollectionSelectJob::doStart()
     }
 }
 
-void CollectionSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::SelectCollection) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }
 
 #include "moc_collectionselectjob_p.cpp"

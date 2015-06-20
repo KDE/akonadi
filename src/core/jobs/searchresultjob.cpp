@@ -110,11 +110,11 @@ void SearchResultJob::doStart()
     d->sendCommand(Protocol::SearchResultCommand(d->searchId, d->collection.id(), scope));
 }
 
-void SearchResultJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool SearchResultJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::SearchResult) {
-        Job::doHandleResponse(tag, response);
-    } else {
-        emitResult();
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }

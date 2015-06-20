@@ -51,13 +51,13 @@ void ResourceSelectJob::doStart()
     d->sendCommand(Protocol::SelectResourceCommand(d->resourceId));
 }
 
-void ResourceSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ResourceSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::SelectResource) {
-        Job::doHandleResponse(tag, response);
-    } else {
-        emitResult();
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }
 
 #include "moc_resourceselectjob_p.cpp"

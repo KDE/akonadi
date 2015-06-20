@@ -139,25 +139,28 @@ void TagFetchJob::doStart()
     d->sendCommand(cmd);
 }
 
-void TagFetchJob::doHandleResponse(qint64 _tag, const Protocol::Command &response)
+bool TagFetchJob::doHandleResponse(qint64 _tag, const Protocol::Command &response)
 {
     Q_D(TagFetchJob);
 
     if (!response.isResponse() || response.type() != Protocol::Command::FetchTags) {
-        Job::doHandleResponse(_tag, response);
-        return;
+        return Job::doHandleResponse(_tag, response);
+    }
+
+    Protocol::FetchTagsResponse resp(response);
+    // Invalid tag in response marks the last response
+    if (resp.id() < 0) {
+        return true;
     }
 
     const Tag tag = ProtocolHelper::parseTagFetchResult(response);
-    if (!tag.isValid()) {
-        emitResult();
-    } else {
-        d->mResultTags.append(tag);
-        d->mPendingTags.append(tag);
-        if (!d->mEmitTimer->isActive()) {
-            d->mEmitTimer->start();
-        }
+    d->mResultTags.append(tag);
+    d->mPendingTags.append(tag);
+    if (!d->mEmitTimer->isActive()) {
+        d->mEmitTimer->start();
     }
+
+    return false;
 }
 
 Tag::List TagFetchJob::tags() const

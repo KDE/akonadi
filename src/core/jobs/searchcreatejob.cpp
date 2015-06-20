@@ -135,14 +135,17 @@ Akonadi::Collection SearchCreateJob::createdCollection() const
     return d->mCreatedCollection;
 }
 
-void SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(SearchCreateJob);
     if (response.isResponse() && response.type() == Protocol::Command::CreateCollection) {
         d->mCreatedCollection = ProtocolHelper::parseCollection(response);
-    } else if (response.isResponse() && response.type() == Protocol::Command::StoreSearch) {
-        emitResult();
-    } else {
-        Job::doHandleResponse(tag, response);
+        return false;
     }
+
+    if (response.isResponse() && response.type() == Protocol::Command::StoreSearch) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }

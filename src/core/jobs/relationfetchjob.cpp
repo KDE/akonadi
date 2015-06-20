@@ -99,25 +99,26 @@ void RelationFetchJob::doStart()
         d->mResource));
 }
 
-void RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(RelationFetchJob);
 
     if (!response.isResponse() || response.type() != Protocol::Command::FetchRelations) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
     const Relation rel = ProtocolHelper::parseRelationFetchResult(response);
-    if (rel.isValid()) {
-        d->mResultRelations.append(rel);
-        d->mPendingRelations.append(rel);
-        if (!d->mEmitTimer->isActive()) {
-            d->mEmitTimer->start();
-        }
-    } else {
-        emitResult();
+    // Invalid response means there will be no more responses
+    if (!rel.isValid()) {
+        return true;
     }
+
+    d->mResultRelations.append(rel);
+    d->mPendingRelations.append(rel);
+    if (!d->mEmitTimer->isActive()) {
+        d->mEmitTimer->start();
+    }
+    return false;
 }
 
 Relation::List RelationFetchJob::relations() const

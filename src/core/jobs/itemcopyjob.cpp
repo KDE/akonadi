@@ -75,12 +75,11 @@ void ItemCopyJob::doStart()
     }
 }
 
-void ItemCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::CopyItems) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }

@@ -227,25 +227,29 @@ void ItemSearchJob::doStart()
     d->sendCommand(cmd);
 }
 
-void ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemSearchJob);
 
     if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
         const Item item = ProtocolHelper::parseItemFetchResult(response);
         if (!item.isValid()) {
-            return;
+            return false;
         }
         d->mItems.append(item);
         d->mPendingItems.append(item);
         if (!d->mEmitTimer->isActive()) {
             d->mEmitTimer->start();
         }
-    } else if (response.isResponse() && response.type() == Protocol::Command::Search) {
-        emitResult();
-    } else {
-        Job::doHandleResponse(tag, response);
+
+        return false;
     }
+
+    if (response.isResponse() && response.type() == Protocol::Command::Search) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }
 
 Item::List ItemSearchJob::items() const

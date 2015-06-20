@@ -89,13 +89,12 @@ Collection CollectionCreateJob::collection() const
     return d->mCollection;
 }
 
-void CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(CollectionCreateJob);
 
     if (!response.isResponse()) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
     if (response.type() == Protocol::Command::FetchCollections) {
@@ -104,13 +103,14 @@ void CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &
         if (!d->mCollection.isValid()) {
             setError(Unknown);
             setErrorText(i18n("Failed to parse Collection from response"));
-            emitResult();
+            return true;
         }
-        return;
-    } else if (response.type() == Protocol::Command::CreateCollection) {
-        emitResult();
-        return;
+        return false;
     }
 
-    Job::doHandleResponse(tag, response);
+    if (response.type() == Protocol::Command::CreateCollection) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }

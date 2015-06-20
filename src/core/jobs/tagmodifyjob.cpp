@@ -58,15 +58,15 @@ void TagModifyJob::doStart()
     d->sendCommand(cmd);
 }
 
-void TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(TagModifyJob);
 
     if (response.isResponse() && (response.type() == Protocol::Command::DeleteTag
             || response.type() == Protocol::Command::ModifyTag)) {
         ChangeMediator::invalidateTag(d->mTag);
-        emitResult();
-    } else {
-        Job::doHandleResponse(tag, response);
+        return true;
     }
+
+    return Job::doHandleResponse(tag, response);
 }

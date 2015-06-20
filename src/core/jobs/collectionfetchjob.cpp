@@ -290,29 +290,27 @@ void CollectionFetchJob::doStart()
     d->sendCommand(cmd);
 }
 
-void CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(CollectionFetchJob);
 
     if (d->mBasePrefetch || d->mType == NonOverlappingRoots) {
-        return;
+        return false;
     }
 
     if (!response.isResponse() || response.type() != Protocol::Command::FetchCollections) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
     Protocol::FetchCollectionsResponse resp(response);
     // Invalid response (no ID) means this was the last response
     if (resp.id() == -1) {
-        emitResult();
-        return;
+        return true;
     }
 
     Collection collection = ProtocolHelper::parseCollection(resp, true);
     if (!collection.isValid()) {
-        return;
+        return false;
     }
 
     collection.d_ptr->resetChangeLog();
@@ -321,6 +319,8 @@ void CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &r
     if (!d->mEmitTimer->isActive()) {
         d->mEmitTimer->start();
     }
+
+    return false;
 }
 
 static Collection::List filterDescendants(const Collection::List &list)

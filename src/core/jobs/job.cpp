@@ -62,7 +62,9 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
         }
     }
 
-    q->doHandleResponse(tag, response);
+    if (q->doHandleResponse(tag, response)) {
+        QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
+    }
 }
 
 void JobPrivate::init(QObject *parent)
@@ -339,7 +341,7 @@ bool Job::removeSubjob(KJob *job)
     return rv;
 }
 
-void Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
+bool Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
 {
     // FIXME: We cannot set an error here due to how CollectionSync works: CS
     // can sometimes schedule TransactionSequences and emitResult in a way that
@@ -352,6 +354,7 @@ void Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
     setErrorText(i18n("Unexpected response"));
     emitResult();
     */
+    return true;
 }
 
 void Job::slotResult(KJob *job)

@@ -54,13 +54,13 @@ void TagDeleteJob::doStart()
     d->sendCommand(Protocol::DeleteTagCommand(ProtocolHelper::entitySetToScope(d->mTagsToRemove)));
 }
 
-void TagDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool TagDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::DeleteTag) {
-        Job::doHandleResponse(tag, response);
-    } else {
-        emitResult();
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }
 
 Tag::List TagDeleteJob::tags() const

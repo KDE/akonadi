@@ -183,25 +183,23 @@ void ItemFetchJob::doStart()
     }
 }
 
-void ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemFetchJob);
 
     if (!response.isResponse() || response.type() != Protocol::Command::FetchItems) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
     Protocol::FetchItemsResponse resp(response);
     // Invalid ID marks the last part of the response
     if (resp.id() < 0) {
-        emitResult();
-        return;
+        return true;
     }
 
     const Item item = ProtocolHelper::parseItemFetchResult(resp, d->mValuePool);
     if (!item.isValid()) {
-        return;
+        return false;
     }
 
     d->mCount++;
@@ -218,6 +216,8 @@ void ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &respons
     } else if (d->mDeliveryOptions & EmitItemsIndividually) {
         emit itemsReceived(Item::List() << item);
     }
+
+    return false;
 }
 
 Item::List ItemFetchJob::items() const

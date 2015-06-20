@@ -61,13 +61,13 @@ void RelationDeleteJob::doStart()
                                                     d->mRelation.type()));
 }
 
-void RelationDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool RelationDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::RemoveRelations) {
-        Job::doHandleResponse(tag, response);
-    } else {
-        emitResult();
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }
 
 Relation RelationDeleteJob::relation() const

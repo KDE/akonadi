@@ -36,7 +36,8 @@ public:
     {
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE { /*Q_DECL_OVERRIDE*/
+    QString jobDebuggingString() const Q_DECL_OVERRIDE
+    {
         return QStringLiteral("Collection Id %1").arg(mCollection.id());
     }
 
@@ -70,17 +71,16 @@ void CollectionStatisticsJob::doStart()
     }
 }
 
-void CollectionStatisticsJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionStatisticsJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(CollectionStatisticsJob);
 
     if (!response.isResponse() || response.type() != Protocol::Command::FetchCollectionStats) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
     d->mStatistics = ProtocolHelper::parseCollectionStatistics(response);
-    emitResult();
+    return true;
 }
 
 Collection CollectionStatisticsJob::collection() const

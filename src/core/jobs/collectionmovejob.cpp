@@ -74,12 +74,11 @@ void CollectionMoveJob::doStart()
     d->sendCommand(Protocol::MoveCollectionCommand(colScope, destScope));
 }
 
-void CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::MoveCollection) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }

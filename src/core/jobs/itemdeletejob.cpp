@@ -96,14 +96,13 @@ void ItemDeleteJob::doStart()
     d->sendCommand(Protocol::DeleteItemsCommand(ProtocolHelper::entitySetToScope(d->mItems)));
 }
 
-void ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::DeleteItems) {
-        Job::doHandleResponse(tag, response);
-        return;
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }
 
 #include "moc_itemdeletejob.cpp"

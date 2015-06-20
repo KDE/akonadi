@@ -58,11 +58,11 @@ void CollectionCopyJob::doStart()
     d->sendCommand(Protocol::CopyCollectionCommand(d->mSource.id(), d->mTarget.id()));
 }
 
-void CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     if (!response.isResponse() || response.type() != Protocol::Command::CreateCollection) {
-        Job::doHandleResponse(tag, response);
+        return Job::doHandleResponse(tag, response);
     }
 
-    emitResult();
+    return true;
 }

@@ -73,17 +73,20 @@ void TagCreateJob::doStart()
     d->sendCommand(cmd);
 }
 
-void TagCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool TagCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(TagCreateJob);
 
     if (response.isResponse() && response.type() == Protocol::Command::FetchTags) {
         d->mResultTag = ProtocolHelper::parseTagFetchResult(response);
-    } else if (response.isResponse() && response.type() == Protocol::Command::CreateTag) {
-        emitResult();
-    } else {
-        Job::doHandleResponse(tag, response);
+        return false;
     }
+
+    if (response.isResponse() && response.type() == Protocol::Command::CreateTag) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }
 
 Tag TagCreateJob::tag() const
