@@ -112,6 +112,12 @@ if (ENABLE_ASAN)
     find_package(ASan)
 endif ()
 
+if (IS_ABSOLUTE "${DBUS_INTERFACES_INSTALL_DIR}")
+    set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${DBUS_INTERFACES_INSTALL_DIR}")
+else()
+    set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${DBUS_INTERFACES_INSTALL_DIR}")
+endif()
+
 ############### Build Options ###############
 
 include(CTest)  # Calls enable_testing().

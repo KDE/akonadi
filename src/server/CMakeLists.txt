@@ -202,5 +202,5 @@ install(FILES
 
 ## DBus XML files
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
-        DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+        DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR}
 )
