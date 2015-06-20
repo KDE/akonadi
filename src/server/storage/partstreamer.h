@@ -48,6 +48,7 @@ public:
     ~PartStreamer();
 
     bool stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = 0);
+    bool streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = 0);
 
     QString error() const;
 
@@ -60,6 +61,7 @@ private:
     bool streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart);
 
     Protocol::PartMetaData requestPartMetaData(const QByteArray &partName);
+    bool preparePart(bool checkExists, const QByteArray &partName, Part &part);
 
     Connection *mConnection;
     ImapStreamParser *mStreamParser;

@@ -228,17 +228,12 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     return true;
 }
 
-bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed)
+bool PartStreamer::preparePart(bool checkExists, const QByteArray &partName, Part &part)
 {
     mError.clear();
     mDataChanged = false;
-    mCheckChanged = (changed != 0);
-    if (changed != 0) {
-        *changed = false;
-    }
-    const PartType partType = PartTypeHelper::fromFqName(partName);
 
-    Part part;
+    const PartType partType = PartTypeHelper::fromFqName(partName);
 
     if (checkExists || mCheckChanged) {
         SelectQueryBuilder<Part> qb;
@@ -249,9 +244,9 @@ bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &
             return false;
         }
 
-        Part::List result = qb.result();
+        const Part::List result = qb.result();
         if (!result.isEmpty()) {
-            part = result.first();
+            part = result.at(0);
         }
     }
 
@@ -263,6 +258,21 @@ bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &
     part.setPartType(partType);
     part.setPimItemId(mItem.id());
 
+    return true;
+}
+
+bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed)
+{
+    mCheckChanged = (changed != 0);
+    if (changed != 0) {
+        *changed = false;
+    }
+
+    Part part;
+    if (!preparePart(checkExists, partName, part)) {
+        return false;
+    }
+
     bool ok = streamPayload(part, partName);
     if (ok && mCheckChanged) {
         *changed = mDataChanged;
@@ -272,3 +282,47 @@ bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &
 
     return ok;
 }
+
+bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName, const QByteArray &value, bool *changed)
+{
+    mCheckChanged = (changed != 0);
+    if (changed != 0) {
+        *changed = false;
+    }
+
+    QByteArray partName;
+    if (!_partName.startsWith("ATR:")) {
+        partName = "ATR:" + _partName;
+    } else {
+        partName = _partName;
+    }
+
+    Part part;
+    if (!preparePart(checkExists, partName, part)) {
+        return false;
+    }
+
+    if (part.isValid()) {
+        PartHelper::update(&part, value, value.size());
+    } else {
+        const bool storeInFile = value.size() > DbConfig::configuredDatabase()->sizeThreshold();
+        part.setDatasize(value.size());
+        part.setVersion(0);
+        if (storeInFile) {
+            if (!part.insert()) {
+                mError = QStringLiteral("Failed to store part in database");
+                return false;
+            }
+            PartHelper::update(&part, value, value.size());
+        } else {
+            part.setData(value);
+            if (!part.insert()) {
+                mError = QStringLiteral("Failed to store part in database");
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+

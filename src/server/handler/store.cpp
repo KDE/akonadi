@@ -283,6 +283,23 @@ bool Store::parseStream()
         }
     }
 
+    if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Attributes) {
+        PartStreamer streamer(connection(), item, this);
+        connect(&streamer, &PartStreamer::responseAvailable,
+                this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+        const Protocol::Attributes attrs = cmd.attributes();
+        for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
+            bool changed = false;
+            if (!streamer.streamAttribute(true, iter.key(), iter.value(), &changed)) {
+                return failureResponse(streamer.error());
+            }
+
+            if (changed) {
+                changes.insert(iter.key());
+            }
+        }
+    }
+
     QDateTime datetime;
     if (!changes.isEmpty() || cmd.invalidateCache() || !cmd.dirty()) {
 

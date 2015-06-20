@@ -117,6 +117,12 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
         }
         partSizes += partSize;
     }
+    const Protocol::Attributes attrs = cmd.attributes();
+    for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
+       if (!streamer.streamAttribute(true, iter.key(), iter.value())) {
+           return failureResponse(streamer.error());
+       }
+    }
 
     // TODO: Try to avoid this addition query
     if (partSizes > item.size()) {
