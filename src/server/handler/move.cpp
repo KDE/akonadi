@@ -40,6 +40,9 @@ bool Move::parseStream()
     if (destination.isVirtual()) {
         return failureResponse("Moving items into virtual collection is not allowed");
     }
+    if (!destination.isValid()) {
+        return failureResponse("Invalid destination collection");
+    }
 
     connection()->context()->setScopeContext(cmd.itemsContext());
     if (cmd.items().scope() == Scope::Rid) {
