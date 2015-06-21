@@ -32,6 +32,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 
+#include <KLocalizedString>
+
 #include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
@@ -92,6 +94,13 @@ ItemCreateJob::~ItemCreateJob()
 void ItemCreateJob::doStart()
 {
     Q_D(ItemCreateJob);
+
+    if (!d->mCollection.isValid()) {
+        setError(Unknown);
+        setErrorText(i18n("Invalid parent collection"));
+        emitResult();
+        return;
+    }
 
     Protocol::CreateItemCommand cmd;
     cmd.setMimeType(d->mItem.mimeType());
@@ -177,7 +186,6 @@ bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             // Error, maybe?
             return false;
         }
-        d->mItemReceived = true;
         d->mItem = item;
         return false;
     }
@@ -200,16 +208,12 @@ Item ItemCreateJob::item() const
 {
     Q_D(const ItemCreateJob);
 
-    if (d->mItemReceived) {
+    // Parent collection is available only with non-silent merge/create
+    if (d->mItem.parentCollection().isValid()) {
         return d->mItem;
     }
 
-    if (d->mUid == 0) {
-        return Item();
-    }
-
     Item item(d->mItem);
-    item.setId(d->mUid);
     item.setRevision(0);
     item.setModificationTime(d->mDatetime);
     item.setParentCollection(d->mCollection);

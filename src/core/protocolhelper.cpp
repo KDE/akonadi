@@ -407,6 +407,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     item.setId(data.id());
     item.setRevision(data.revision());
     item.setRemoteId(data.remoteId());
+    item.setRemoteRevision(data.remoteRevision());
     item.setGid(data.gid());
     item.setStorageCollectionId(data.parentId());
 
