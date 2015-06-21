@@ -91,9 +91,9 @@ void ItemDeleteJob::doStart()
 {
     Q_D(ItemDeleteJob);
 
-    // FIXME: Context?
-    //command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mItems, AKONADI_CMD_ITEMDELETE);
-    d->sendCommand(Protocol::DeleteItemsCommand(ProtocolHelper::entitySetToScope(d->mItems)));
+    d->sendCommand(Protocol::DeleteItemsCommand(
+        d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
+        ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mItems)));
 }
 
 bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
