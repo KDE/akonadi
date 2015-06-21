@@ -203,6 +203,10 @@ bool Store::parseStream()
         }
     }
 
+    if (flagsChanged) {
+        changes << AKONADI_PARAM_FLAGS;
+    }
+
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::AddedTags) {
         if (!addTags(pimItems, cmd.addedTags(), tagsChanged)) {
             return failureResponse("Unable to add item tags");
@@ -219,6 +223,10 @@ bool Store::parseStream()
         if (!replaceTags(pimItems, cmd.tags(), tagsChanged)) {
             return failureResponse("Unable to reset item tags");
         }
+    }
+
+    if (tagsChanged) {
+        changes << AKONADI_PARAM_TAGS;
     }
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemoteID) {
