@@ -118,10 +118,13 @@ void CollectionModifyJob::doStart()
 
 bool CollectionModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
+    Q_D(CollectionModifyJob);
+
     if (!response.isResponse() || response.type() != Protocol::Command::ModifyCollection) {
         return Job::doHandleResponse(tag, response);
     }
 
+    d->mCollection.d_func()->resetChangeLog();
     return true;
 }
 

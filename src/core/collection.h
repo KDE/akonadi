@@ -368,8 +368,10 @@ public:
 
 private:
     AKONADI_DECLARE_PRIVATE(Collection)
+    friend class CollectionCreateJob;
     friend class CollectionFetchJob;
     friend class CollectionModifyJob;
+    friend class ProtocolHelper;
 };
 
 }

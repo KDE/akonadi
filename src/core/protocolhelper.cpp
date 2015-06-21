@@ -201,6 +201,7 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
 
     parseAttributes(data.attributes(), &collection);
 
+    collection.d_ptr->resetChangeLog();;
     return collection;
 }
 
