@@ -23,6 +23,7 @@
 #include "commandcontext.h"
 
 #include <private/scope_p.h>
+#include <private/imapset_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -34,12 +35,14 @@ bool Select::parseStream()
     // as per rfc, even if the following select fails, we need to reset
     connection()->context()->setCollection(Collection());
 
-    const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
-    if (!col.isValid()) {
-        return failureResponse("No such collection");
-    }
+    if (!cmd.collection().uidSet().isEmpty()) {
+        const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+        if (!col.isValid()) {
+            return failureResponse("No such collection");
+        }
 
-    connection()->context()->setCollection(col);
+        connection()->context()->setCollection(col);
+    }
 
     return successResponse<Protocol::SelectCollectionResponse>();
 }
