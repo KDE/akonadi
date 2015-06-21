@@ -390,7 +390,7 @@ bool FetchHelper::fetchItems()
             response.setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
         }
         if (mFetchScope.fetchMTime()) {
-            response.setMTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn).toDateTime());
+            response.setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
         }
         if (mFetchScope.fetchRemoteRevision()) {
             response.setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());
@@ -571,7 +571,7 @@ void FetchHelper::updateItemAccessTime()
 {
     Transaction transaction(mConnection->storageBackend());
     QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
-    qb.setColumnValue(PimItem::atimeColumn(), QDateTime::currentDateTime());
+    qb.setColumnValue(PimItem::atimeColumn(), QDateTime::currentDateTimeUtc());
     ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
 
     if (!qb.exec()) {

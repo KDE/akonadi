@@ -23,6 +23,7 @@
 
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
+#include <QtCore/QDateTime>
 #include <QtCore/QSet>
 
 namespace Akonadi {
@@ -58,6 +59,21 @@ static inline QByteArray variantToByteArray(const QVariant &variant)
         qWarning("Unable to convert variant of type %s to QByteArray", variant.typeName());
         Q_ASSERT(false);
         return QByteArray();
+    }
+}
+
+static inline QDateTime variantToDateTime(const QVariant &variant)
+{
+    if (variant.canConvert(QVariant::DateTime)) {
+        // the dt is stored as QString, which is serialized to Qt::LocalTime,
+        // even though it's UTC (but the information about TZ is not stored in DB)
+        QDateTime dt = variant.toDateTime();
+        dt.setTimeSpec(Qt::UTC);
+        return dt;
+    } else {
+        qWarning("Unable to convert variant of type %s to QDateTime", variant.typeName());
+        Q_ASSERT(false);
+        return QDateTime();
     }
 }
 
