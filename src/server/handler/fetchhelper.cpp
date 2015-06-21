@@ -120,7 +120,6 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
         if (!partQuery.exec()) {
             throw HandlerException("Unable to list item parts");
         }
-
         partQuery.query().next();
     }
 

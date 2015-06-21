@@ -726,7 +726,6 @@ public:
     {}
 
     QVector<QByteArray> requestedParts;
-    QVector<QByteArray> requestedPayloads;
     QDateTime changedSince;
     QSet<QByteArray> tagFetchScope;
     Ancestor::Depth ancestorDepth;
@@ -772,7 +771,6 @@ bool FetchScope::operator==(const FetchScope &other) const
 {
     return (d == other.d)
         || (d->requestedParts == other.d->requestedParts
-            && d->requestedPayloads == other.d->requestedPayloads
             && d->changedSince == other.d->changedSince
             && d->tagFetchScope == other.d->tagFetchScope
             && d->ancestorDepth == other.d->ancestorDepth
@@ -794,14 +792,13 @@ QVector<QByteArray> FetchScope::requestedParts() const
     return d->requestedParts;
 }
 
-void FetchScope::setRequestedPayloads(const QVector<QByteArray> &requestedPayloads)
-{
-    d->requestedPayloads = requestedPayloads;
-}
-
 QVector<QByteArray> FetchScope::requestedPayloads() const
 {
-    return d->requestedPayloads;
+    QVector<QByteArray> rv;
+    std::copy_if(d->requestedParts.begin(), d->requestedParts.end(),
+                 std::back_inserter(rv),
+                 [](const QByteArray &ba) { return ba.startsWith("PLD:"); });
+    return rv;
 }
 
 void FetchScope::setChangedSince(const QDateTime &changedSince)
@@ -896,6 +893,9 @@ void FetchScope::setFetch(FetchFlags attributes, bool fetch)
 {
     if (fetch) {
         d->fetchFlags |= attributes;
+        if (attributes & FullPayload) {
+            d->requestedParts << AKONADI_PARAM_PLD_RFC822;
+        }
     } else {
         d->fetchFlags &= ~attributes;
     } // namespace Protocol
@@ -909,7 +909,6 @@ bool FetchScope::fetch(FetchFlags flags) const
 void FetchScope::debugString(DebugBlock &blck) const
 {
     blck.write("Fetch Flags", d->fetchFlags);
-    blck.write("Requested Payloads", d->requestedPayloads);
     blck.write("Tag Fetch Scope", d->tagFetchScope);
     blck.write("Changed Since", d->changedSince);
     blck.write("Ancestor Depth", d->ancestorDepth);
@@ -919,7 +918,6 @@ void FetchScope::debugString(DebugBlock &blck) const
 QDataStream &operator<<(QDataStream &stream, const FetchScope &scope)
 {
     return stream << scope.d->requestedParts
-                  << scope.d->requestedPayloads
                   << scope.d->changedSince
                   << scope.d->tagFetchScope
                   << scope.d->ancestorDepth
@@ -929,7 +927,6 @@ QDataStream &operator<<(QDataStream &stream, const FetchScope &scope)
 QDataStream &operator>>(QDataStream &stream, FetchScope &scope)
 {
     return stream >> scope.d->requestedParts
-                  >> scope.d->requestedPayloads
                   >> scope.d->changedSince
                   >> scope.d->tagFetchScope
                   >> scope.d->ancestorDepth
