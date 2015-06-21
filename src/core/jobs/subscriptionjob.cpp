@@ -88,6 +88,8 @@ void SubscriptionJob::slotResult(KJob *job)
         }
         emitResult();
     } else {
+        Job::slotResult(job);
+
         if (!hasSubjobs()) {
             emitResult();
         }
