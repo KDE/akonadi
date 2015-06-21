@@ -859,9 +859,10 @@ class AKONADIPRIVATE_EXPORT DeleteItemsCommand : public Command
 {
 public:
     explicit DeleteItemsCommand();
-    explicit DeleteItemsCommand(const Scope &scope);
+    explicit DeleteItemsCommand(const Scope &scope, const ScopeContext &context = ScopeContext());
     DeleteItemsCommand(const Command &command);
 
+    ScopeContext scopeContext() const;
     Scope items() const;
 
 private:

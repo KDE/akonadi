@@ -2402,40 +2402,40 @@ namespace Protocol
 class DeleteItemsCommandPrivate : public CommandPrivate
 {
 public:
-    DeleteItemsCommandPrivate()
-        : CommandPrivate(Command::DeleteItems)
-    {}
-    DeleteItemsCommandPrivate(const Scope &items)
+    DeleteItemsCommandPrivate(const Scope &items = Scope(), const ScopeContext &context = ScopeContext())
         : CommandPrivate(Command::DeleteItems)
         , items(items)
-    {}
-    DeleteItemsCommandPrivate(const DeleteItemsCommandPrivate &other)
-        : CommandPrivate(other)
-        , items(other.items)
+        , context(context)
     {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(items);
+            && COMPARE(items)
+            && COMPARE(context);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-                << items;
+                << items
+                << context;
     }
 
     QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
-                >> items;
+                >> items
+                >> context;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         CommandPrivate::debugString(blck);
         blck.write("Items", items);
+        blck.beginBlock("Context");
+        context.debugString(blck);
+        blck.endBlock();
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -2444,6 +2444,7 @@ public:
     }
 
     Scope items;
+    ScopeContext context;
 };
 
 } // namespace Protocol
@@ -2456,8 +2457,8 @@ DeleteItemsCommand::DeleteItemsCommand()
 {
 }
 
-DeleteItemsCommand::DeleteItemsCommand(const Scope &items)
-    : Command(new DeleteItemsCommandPrivate(items))
+DeleteItemsCommand::DeleteItemsCommand(const Scope &items, const ScopeContext &context)
+    : Command(new DeleteItemsCommandPrivate(items, context))
 {
 }
 
@@ -2470,6 +2471,11 @@ DeleteItemsCommand::DeleteItemsCommand(const Command &other)
 Scope DeleteItemsCommand::items() const
 {
     return d_func()->items;
+}
+
+ScopeContext DeleteItemsCommand::scopeContext() const
+{
+    return d_func()->context;
 }
 
 QDataStream &operator<<(QDataStream &stream, const DeleteItemsCommand &command)

@@ -34,11 +34,7 @@ bool Remove::parseStream()
 {
     Protocol::DeleteItemsCommand cmd(m_command);
 
-    /* FIXME BIN
-    connection()->context()->parseContext(m_streamParser);
-    akDebug() << "Tag context:" << connection()->context()->tagId();
-    akDebug() << "Collection context: " << connection()->context()->collectionId();
-    */
+    connection()->context()->setScopeContext(cmd.scopeContext());
 
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
@@ -49,6 +45,7 @@ bool Remove::parseStream()
     if (!qb.exec()) {
         return failureResponse("Unable to execute query");
     }
+
 
     const QVector<PimItem> items = qb.result();
     if (items.isEmpty()) {
