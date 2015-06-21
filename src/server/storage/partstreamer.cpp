@@ -303,6 +303,11 @@ bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName
     }
 
     if (part.isValid()) {
+        if (mCheckChanged) {
+            if (PartHelper::translateData(part) != value) {
+                mDataChanged = true;
+            }
+        }
         PartHelper::update(&part, value, value.size());
     } else {
         const bool storeInFile = value.size() > DbConfig::configuredDatabase()->sizeThreshold();
