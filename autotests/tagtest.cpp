@@ -294,6 +294,11 @@ void TagTest::testDeleteRIDIsolation()
 
     QVERIFY(removedTag.isValid());
     QVERIFY(removedTag.remoteId().isEmpty());
+
+    {
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""), this);
+        AKVERIFYEXEC(select);
+    }
 }
 
 
