@@ -321,6 +321,15 @@ Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
 Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
 {
     Protocol::FetchScope fs;
+    QVector<QByteArray> parts;
+    for (const QByteArray &part : fetchScope.payloadParts()) {
+        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
+    }
+    for (const QByteArray &part : fetchScope.attributes()) {
+        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
+    }
+    fs.setRequestedParts(parts);
+
     // The default scope
     fs.setFetch(Protocol::FetchScope::Flags |
                 Protocol::FetchScope::Size |
@@ -365,15 +374,6 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
     fs.setFetch(Protocol::FetchScope::VirtReferences, fetchScope.fetchVirtualReferences());
     fs.setFetch(Protocol::FetchScope::MTime, fetchScope.fetchModificationTime());
     fs.setFetch(Protocol::FetchScope::Relations, fetchScope.fetchRelations());
-
-    QVector<QByteArray> parts;
-    for (const QByteArray &part : fetchScope.payloadParts()) {
-        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
-    }
-    for (const QByteArray &part : fetchScope.attributes()) {
-        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
-    }
-    fs.setRequestedParts(parts);
 
     return fs;
 }
