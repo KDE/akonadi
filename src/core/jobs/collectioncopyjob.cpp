@@ -22,6 +22,8 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
+#include <KLocalizedString>
+
 #include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
@@ -55,6 +57,18 @@ void CollectionCopyJob::doStart()
 {
     Q_D(CollectionCopyJob);
 
+    if (!d->mSource.isValid() && d->mSource.remoteId().isEmpty()) {
+        setError(Unknown);
+        setErrorText(i18n("Invalid collection to copy"));
+        emitResult();
+        return;
+    }
+    if (!d->mTarget.isValid() && d->mTarget.remoteId().isEmpty()) {
+        setError(Unknown);
+        setErrorText(i18n("Invalid destination collection"));
+        emitResult();
+        return;
+    }
     d->sendCommand(Protocol::CopyCollectionCommand(d->mSource.id(), d->mTarget.id()));
 }
 
