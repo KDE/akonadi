@@ -1047,7 +1047,7 @@ void ScopeContext::clearContext(Type type)
 
 bool ScopeContext::hasContextId(Type type) const
 {
-    return CTX(type).canConvert(QVariant::LongLong);
+    return CTX(type).type() == QVariant::LongLong;
 }
 
 qint64 ScopeContext::contextId(Type type) const
@@ -1057,7 +1057,7 @@ qint64 ScopeContext::contextId(Type type) const
 
 bool ScopeContext::hasContextRID(Type type) const
 {
-    return CTX(type).canConvert(QVariant::String);
+    return CTX(type).type() == QVariant::String;
 }
 
 QString ScopeContext::contextRID(Type type) const
