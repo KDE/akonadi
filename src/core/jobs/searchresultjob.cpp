@@ -97,7 +97,7 @@ void SearchResultJob::doStart()
     Q_D(SearchResultJob);
 
     Scope scope;
-    if (d->rid.isEmpty()) {
+    if (!d->rid.isEmpty()) {
         QStringList ridSet;
         ridSet.reserve(d->rid.size());
         for (const QByteArray &rid : d->rid) {
