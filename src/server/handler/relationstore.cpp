@@ -65,14 +65,16 @@ bool RelationStore::parseStream()
         if (existingRelations.size() == 1) {
             Relation rel = existingRelations.first();
             const QString remoteId = QString::fromUtf8(cmd.remoteId());
-            if (rel.remoteId() != remoteId)
-            rel.setRemoteId(remoteId);
+            if (rel.remoteId() != remoteId) {
+                rel.setRemoteId(remoteId);
+            }
             if (!rel.update()) {
                 return failureResponse("Failed to update relation");
             }
         } else {
             return failureResponse("Matched more than one relation");
         }
+        return successResponse<Protocol::ModifyRelationResponse>();
         //throw HandlerException("Relation is already existing");
     }
 
