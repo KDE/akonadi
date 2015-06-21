@@ -365,12 +365,14 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
     fs.setFetch(Protocol::FetchScope::MTime, fetchScope.fetchModificationTime());
     fs.setFetch(Protocol::FetchScope::Relations, fetchScope.fetchRelations());
 
+    QVector<QByteArray> parts;
     for (const QByteArray &part : fetchScope.payloadParts()) {
-        fs.setRequestedPayloads({ ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part) });
+        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
     }
     for (const QByteArray &part : fetchScope.attributes()) {
-        fs.setRequestedParts({ ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part) });
+        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
     }
+    fs.setRequestedParts(parts);
 
     return fs;
 }

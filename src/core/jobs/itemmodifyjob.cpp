@@ -50,14 +50,16 @@ void ItemModifyJobPrivate::setClean()
 
 Protocol::PartMetaData ItemModifyJobPrivate::preparePart(const QByteArray &partName)
 {
-    if (!mParts.remove(partName)) {
+    ProtocolHelper::PartNamespace ns; // dummy
+    const QByteArray partLabel = ProtocolHelper::decodePartIdentifier(partName, ns);
+    if (!mParts.remove(partLabel)) {
         // Error?
         return Protocol::PartMetaData();
     }
 
     mPendingData.clear();
     int version = 0;
-    ItemSerializer::serialize(mItems.first(), partName, mPendingData, version);
+    ItemSerializer::serialize(mItems.first(), partLabel, mPendingData, version);
 
     return Protocol::PartMetaData(partName, mPendingData.size(), version);
 }
@@ -196,6 +198,15 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         if (!item.d_func()->mDeletedTags.isEmpty()) {
             cmd.setRemovedTags(ProtocolHelper::entitySetToScope(item.d_func()->mDeletedTags));
         }
+    }
+
+    if (!mParts.isEmpty()) {
+        QSet<QByteArray> parts;
+        parts.reserve(mParts.size());
+        for (const QByteArray &part : mParts) {
+            parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
+        }
+        cmd.setParts(parts);
     }
 
     if (!item.d_func()->mDeletedAttributes.isEmpty()) {
