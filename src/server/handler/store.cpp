@@ -139,7 +139,7 @@ bool Store::parseStream()
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
     // Set the same modification time for each item.
-    const QDateTime modificationtime = QDateTime::currentDateTime().toUTC();
+    const QDateTime modificationtime = QDateTime::currentDateTimeUtc();
 
     // retrieve selected items
     SelectQueryBuilder<PimItem> qb;
@@ -173,10 +173,7 @@ bool Store::parseStream()
         }
     }
 
-    PimItem item;
-    if (pimItems.size() == 1) {
-        item = pimItems.at(0);
-    }
+    PimItem &item = pimItems.first();
 
     QSet<QByteArray> changes;
     qint64 partSizes = 0;
@@ -269,9 +266,9 @@ bool Store::parseStream()
         if (!cmd.removedParts().isEmpty()) {
             if (!store->removeItemParts(item, cmd.removedParts())) {
                 return failureResponse("Unable to remove item parts");
-                for (const QByteArray &part : cmd.removedParts()) {
-                    changes.insert(part);
-                }
+            }
+            for (const QByteArray &part : cmd.removedParts()) {
+                changes.insert(part);
             }
         }
     }

@@ -323,6 +323,10 @@ bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName
         }
     }
 
+    if (mCheckChanged) {
+        *changed = mDataChanged;
+    }
+
     return true;
 }
 
