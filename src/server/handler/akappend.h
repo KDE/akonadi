@@ -53,7 +53,7 @@ private:
                    PimItem &currentItem,
                    const Collection &parentCollection);
 
-    bool sendResponse(const PimItem &item);
+    bool sendResponse(const PimItem &item, Protocol::CreateItemCommand::MergeModes mergeModes);
 
     bool notify(const PimItem &item, const Collection &collection);
     bool notify(const PimItem &item, const Collection &collection,

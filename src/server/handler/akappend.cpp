@@ -144,7 +144,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     }
 
     notify(item, item.collection());
-    sendResponse(item);
+    sendResponse(item, Protocol::CreateItemCommand::None);
 
     return true;
 }
@@ -174,6 +174,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         currentItem.setDatetime(newItem.datetime());
     }
     currentItem.setAtime(QDateTime::currentDateTime());
+    currentItem.setSize(newItem.size());
 
     // Only mark dirty when merged from application
     currentItem.setDirty(!connection()->context()->resource().isValid());
@@ -242,7 +243,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     const Part::List existingParts = Part::retrieveFiltered(Part::pimItemIdColumn(), currentItem.id());
     QMap<QByteArray, qint64> partsSizes;
     for (const Part &part : existingParts ) {
-        partsSizes.insert(part.partType().name().toLatin1(), part.datasize());
+        partsSizes.insert(PartTypeHelper::fullName(part.partType()).toLatin1(), part.datasize());
     }
 
     PartStreamer streamer(connection(), currentItem);
@@ -262,7 +263,9 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     }
 
     const qint64 size = std::accumulate(partsSizes.begin(), partsSizes.end(), 0);
-    currentItem.setSize(size);
+    if (size > currentItem.size()) {
+        currentItem.setSize(size);
+    }
 
     // Store all changes
     if (!currentItem.update()) {
@@ -271,15 +274,20 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
 
     notify(currentItem, currentItem.collection(), changedParts);
-    if (!(cmd.mergeModes() & Protocol::CreateItemCommand::Silent)) {
-        sendResponse(currentItem);
-    }
+    sendResponse(currentItem, cmd.mergeModes());
 
     return true;
 }
 
-bool AkAppend::sendResponse(const PimItem& item)
+bool AkAppend::sendResponse(const PimItem& item, Protocol::CreateItemCommand::MergeModes mergeModes)
 {
+    if (mergeModes & Protocol::CreateItemCommand::Silent || mergeModes & Protocol::CreateItemCommand::None) {
+        Protocol::FetchItemsResponse resp(item.id());
+        resp.setMTime(item.datetime());
+        Handler::sendResponse(resp);
+        return true;
+    }
+
     Protocol::FetchScope fetchScope;
     fetchScope.setAncestorDepth(Protocol::Ancestor::ParentAncestor);
     fetchScope.setFetch(Protocol::FetchScope::AllAttributes |
