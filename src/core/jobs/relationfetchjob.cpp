@@ -95,7 +95,7 @@ void RelationFetchJob::doStart()
     d->sendCommand(Protocol::FetchRelationsCommand(
         d->mRequestedRelation.left().id(),
         d->mRequestedRelation.right().id(),
-        d->mTypes.isEmpty() ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
+        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
         d->mResource));
 }
 
