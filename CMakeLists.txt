@@ -118,6 +118,12 @@ else()
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${DBUS_INTERFACES_INSTALL_DIR}")
 endif()
 
+if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR_KF5}")
+    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR_KF5}")
+else()
+    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR_KF5}")
+end()
+
 ############### Build Options ###############
 
 include(CTest)  # Calls enable_testing().
