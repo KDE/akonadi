@@ -29,6 +29,7 @@
 #include <private/scope_p.h>
 #include <private/imapset_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection *connection, QueryBuilder &qb)

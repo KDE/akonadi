@@ -36,7 +36,19 @@ bool ColMove::parseStream()
     Protocol::MoveCollectionCommand cmd(m_command);
 
     Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
-    Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+    if (!source.isValid()) {
+        return failureResponse("Invalid collection to move");
+    }
+
+    Collection target;
+    if (cmd.destination().isEmpty()) {
+        target.setId(0);
+    } else {
+        target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+        if (!target.isValid()) {
+            return failureResponse("Invalid destination collection");
+        }
+    }
 
     if (source.parentId() == target.id()) {
         return successResponse<Protocol::MoveCollectionResponse>();
