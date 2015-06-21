@@ -5207,7 +5207,7 @@ FetchCollectionStatsResponse::FetchCollectionStatsResponse(qint64 count,
 FetchCollectionStatsResponse::FetchCollectionStatsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::FetchCollectionStats || Command::_ResponseBit));
+    assert(d_func()->commandType == (Command::FetchCollectionStats | Command::_ResponseBit));
 }
 
 qint64 FetchCollectionStatsResponse::count() const
