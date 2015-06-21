@@ -64,7 +64,7 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
     item.setSize(cmd.itemSize());
     item.setMimeTypeId(mimeType.id());
     item.setCollectionId(parentCol.id());
-    item.setDatetime(cmd.dateTime());
+    item.setDatetime(cmd.dateTime().isValid() ? cmd.dateTime() : QDateTime::currentDateTimeUtc());
     if (cmd.remoteId().isEmpty()) {
         // from application
         item.setDirty(true);
