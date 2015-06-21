@@ -210,16 +210,22 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     }
 
     if (!item.d_func()->mDeletedAttributes.isEmpty()) {
-        cmd.setRemovedParts(item.d_func()->mDeletedAttributes);
+        QSet<QByteArray> removedParts;
+        removedParts.reserve(item.d_func()->mDeletedAttributes.size());
+        for (const QByteArray &part : item.d_func()->mDeletedAttributes) {
+            removedParts.insert("ATR:" + part);
+        }
+        cmd.setRemovedParts(removedParts);
     }
 
+
     // nothing to do
-    if (cmd.modifiedParts() == Protocol::ModifyItemsCommand::None) {
+    if (cmd.modifiedParts() == Protocol::ModifyItemsCommand::None && mParts.isEmpty() && item.attributes().isEmpty()) {
         return cmd;
     }
 
     cmd.setItems(ProtocolHelper::entitySetToScope(mItems));
-    if (mRevCheck || item.revision() >= 0) {
+    if (mRevCheck && item.revision() >= 0) {
         cmd.setOldRevision(item.revision());
     }
 
@@ -228,6 +234,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     }
 
     cmd.setAttributes(ProtocolHelper::attributesToProtocol(item));
+
     return cmd;
 }
 
@@ -316,6 +323,9 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
                 d->itemRevisionChanged((*it).id(), oldRev, newRev);
                 (*it).setRevision(newRev);
             }
+            // There will be more responses, either for other modified items,
+            // or the final response with invalid ID, but with modification datetime
+            return false;
         }
 
         for (const Item &item : d->mItems) {
