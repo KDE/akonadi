@@ -34,8 +34,12 @@
 #include <akonadi/private/scope_p.h>
 #include <akonadi/private/tristate_p.h>
 
+#include <QString>
+
 #include <boost/bind.hpp>
 #include <algorithm>
+#include <type_traits>
+#include <functional>
 
 namespace Akonadi {
 
@@ -149,31 +153,23 @@ public:
             return Scope(set);
         }
 
-        // check if all items have a remote id
-        if (std::find_if(objects.constBegin(), objects.constEnd(),
-                         boost::bind(&QString::isEmpty, boost::bind(&T::remoteId, _1)))
-            != objects.constEnd()) {
+        qDebug() << entitySetHasGID(_objects);
+        if (entitySetHasGID(_objects)) {
+            return entitySetToGID(_objects);
+        }
+
+        if (!entitySetHasRemoteIdentifier(_objects, std::mem_fn(&T::remoteId))) {
             throw Exception("No remote identifier specified");
         }
 
+
         // check if we have RIDs or HRIDs
-        if (std::find_if(objects.constBegin(), objects.constEnd(),
-                         !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
-                == objects.constEnd() && objects.size() == 1) {  // ### HRID sets are not yet specified
+        if (entitySetHasHRID(_objects)) {
             return hierarchicalRidToScope(objects.first());
         }
 
-        // RIDs
-        QStringList rids;
-        rids.reserve(objects.size());
-        for (const T &object : objects) {
-            rids << object.remoteId();
-        }
-
-        return Scope(Scope::Rid, rids);
+        return entitySetToRemoteIdentifier(Scope::Rid, _objects, std::mem_fn(&T::remoteId));
     }
-
-    static Scope entitySetToScope(const Tag::List &tags);
 
     static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
                                                            const Item::List &requestedItems);
@@ -200,6 +196,12 @@ public:
     */
     static Scope hierarchicalRidToScope(const Item &item);
 
+    static Scope hierarchicalRidToScope(const Tag &/*tag*/)
+    {
+        assert(false);
+        return Scope();
+    }
+
     /**
       Converts a given ItemFetchScope object into a protocol representation.
     */
@@ -223,6 +225,93 @@ public:
     static bool streamPayloadToFile(const QString &file, const QByteArray &data, QByteArray &error);
 
     static Akonadi::Tristate listPreference(const Collection::ListPreference pref);
+
+private:
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, bool>::type
+    entitySetHasGID(const Container<T> &objects)
+    {
+        return entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::gid));
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, bool>::type
+    entitySetHasGID(const Container<T> &/*objects*/, int */*dummy*/ = 0)
+    {
+        return false;
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, Scope>::type
+    entitySetToGID(const Container<T> &objects)
+    {
+        return entitySetToRemoteIdentifier(Scope::Gid, objects, std::mem_fn(&T::gid));
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, Scope>::type
+    entitySetToGID(const Container<T> &/*objects*/, int */*dummy*/ = 0)
+    {
+        return Scope();
+    }
+
+    template<typename T, template<typename> class Container, typename RIDFunc>
+    inline static
+    bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
+    {
+
+        typedef typename RIDFunc::result_type RetType;
+        return std::find_if(objects.constBegin(), objects.constEnd(),
+                            boost::bind(&RetType::isEmpty, boost::bind(ridFunc, _1)))
+                == objects.constEnd();
+    }
+
+    template<typename T, template<typename> class Container, typename RIDFunc>
+    inline static
+    typename std::enable_if<std::is_same<QString, typename RIDFunc:: result_type>::value, Scope>::type
+    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc)
+    {
+        QStringList rids;
+        rids.reserve(objects.size());
+        std::transform(objects.cbegin(), objects.cend(),
+                       std::back_inserter(rids), boost::bind(ridFunc, _1));
+        return Scope(scope, rids);
+    }
+
+    template<typename T, template<typename> class Container, typename RIDFunc>
+    inline static
+    typename std::enable_if<std::is_same<QByteArray, typename RIDFunc:: result_type>::value, Scope>::type
+    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc, int */*dummy*/ = 0)
+    {
+        QStringList rids;
+        rids.reserve(objects.size());
+        std::transform(objects.cbegin(), objects.cend(),
+                       std::back_inserter(rids), boost::bind(&QString::fromLatin1, boost::bind(ridFunc, _1)));
+        return Scope(scope, rids);
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type
+    entitySetHasHRID(const Container<T> &objects)
+    {
+        return objects.size() == 1 &&
+                std::find_if(objects.constBegin(), objects.constEnd(),
+                             !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
+                    == objects.constEnd();  // ### HRID sets are not yet specified
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<std::is_same<T, Tag>::value, bool>::type
+    entitySetHasHRID(const Container<T> &/*objects*/, int */*dummy*/ = 0)
+    {
+        return false;
+    }
 };
 
 }

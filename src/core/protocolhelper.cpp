@@ -234,43 +234,6 @@ QByteArray ProtocolHelper::decodePartIdentifier(const QByteArray &data, PartName
     }
 }
 
-Scope ProtocolHelper::entitySetToScope(const Tag::List &_objects)
-{
-    if (_objects.isEmpty()) {
-        throw Exception("No objects specified");
-    }
-
-    Tag::List objects(_objects);
-
-    std::sort(objects.begin(), objects.end(), boost::bind(&Tag::id, _1) < boost::bind(&Tag::id, _2));
-    if (objects.first().isValid()) {
-        QVector<typename Tag::Id>  uids;
-        uids.reserve(objects.size());
-        for (const Tag &object : objects) {
-            uids << object.id();
-        }
-        ImapSet set;
-        set.add(uids);
-        return Scope(set);
-    }
-
-    // check if all items have a remote id
-    if (std::find_if(objects.constBegin(), objects.constEnd(),
-                        boost::bind(&QByteArray::isEmpty, boost::bind(&Tag::remoteId, _1)))
-        != objects.constEnd()) {
-        throw Exception("No remote identifier specified");
-    }
-
-    QStringList rids;
-    rids.reserve(objects.size());
-    for (const Tag &object : objects) {
-        rids << QLatin1String(object.remoteId());
-    }
-
-    return Scope(Scope::Rid, rids);
-}
-
-
 Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection,
                                                                 const Akonadi::Tag &tag,
                                                                 const Item::List &requestedItems)
