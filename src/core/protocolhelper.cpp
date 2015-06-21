@@ -330,7 +330,11 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
     if (fetchScope.fetchTags()) {
         fs.setFetch(Protocol::FetchScope::Tags);
         if (!fetchScope.tagFetchScope().fetchIdOnly()) {
-            fs.setTagFetchScope(fetchScope.tagFetchScope().attributes());
+            if (fetchScope.tagFetchScope().attributes().isEmpty()) {
+                fs.setTagFetchScope({ "ALL" });
+            } else {
+                fs.setTagFetchScope(fetchScope.tagFetchScope().attributes());
+            }
         }
     }
 

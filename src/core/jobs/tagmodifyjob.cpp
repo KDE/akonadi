@@ -47,13 +47,20 @@ void TagModifyJob::doStart()
     Q_D(TagModifyJob);
 
     Protocol::ModifyTagCommand cmd(d->mTag.id());
-    cmd.setRemoteId(d->mTag.remoteId());
-    cmd.setType(d->mTag.type());
+    if (!d->mTag.remoteId().isNull()) {
+        cmd.setRemoteId(d->mTag.remoteId());
+    }
+    if (!d->mTag.type().isEmpty()) {
+        cmd.setType(d->mTag.type());
+    }
     if (d->mTag.parent().isValid() && !d->mTag.isImmutable()) {
         cmd.setParentId(d->mTag.parent().id());
     }
+    if (!d->mTag.removedAttributes().isEmpty()) {
+        cmd.setRemovedAttributes(d->mTag.removedAttributes());
+    }
+
     cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
-    cmd.setRemovedAttributes(d->mTag.removedAttributes());
 
     d->sendCommand(cmd);
 }
@@ -66,6 +73,11 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respons
             || response.type() == Protocol::Command::ModifyTag)) {
         ChangeMediator::invalidateTag(d->mTag);
         return true;
+    }
+
+    // We ignore the result for now
+    if (response.isResponse() && response.type() == Protocol::Command::FetchTags) {
+        return false;
     }
 
     return Job::doHandleResponse(tag, response);
