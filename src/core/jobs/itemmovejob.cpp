@@ -94,13 +94,10 @@ void ItemMoveJob::doStart()
         return;
     }
 
-    Scope itemsScope = ProtocolHelper::entitySetToScope(d->items);
-    if (d->source.isValid()) {
-        itemsScope.setRidContext(d->source.id());
-    }
-    const Scope dest = ProtocolHelper::entitySetToScope(Collection::List() << d->destination);
-
-    d->sendCommand(Protocol::MoveItemsCommand(itemsScope, dest));
+    d->sendCommand(Protocol::MoveItemsCommand(
+        ProtocolHelper::entitySetToScope(d->items),
+        ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
+        ProtocolHelper::entityToScope(d->destination)));
 }
 
 bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
