@@ -99,9 +99,6 @@ public:
     ImapSet uidSet() const;
     void setUidSet(const ImapSet &uidSet);
 
-    void setRidContext(qint64 context);
-    qint64 ridContext() const;
-
     void setRidSet(const QStringList &ridSet);
     QStringList ridSet() const;
 

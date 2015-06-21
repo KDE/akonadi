@@ -1262,9 +1262,11 @@ class AKONADIPRIVATE_EXPORT MoveItemsCommand : public Command
 public:
     explicit MoveItemsCommand();
     explicit MoveItemsCommand(const Scope &items, const Scope &dest);
+    explicit MoveItemsCommand(const Scope &items, const ScopeContext &context, const Scope &dest);
     MoveItemsCommand(const Command &command);
 
     Scope items() const;
+    ScopeContext itemsContext() const;
     Scope destination() const;
 
 private:

@@ -4386,42 +4386,52 @@ namespace Protocol
 class MoveItemsCommandPrivate : public CommandPrivate
 {
 public:
-    MoveItemsCommandPrivate(const Scope &items = Scope(), const Scope &dest = Scope())
+    MoveItemsCommandPrivate(const Scope &items = Scope(),
+                            const ScopeContext &context = ScopeContext(),
+                            const Scope &dest = Scope())
         : CommandPrivate(Command::MoveItems)
         , items(items)
         , dest(dest)
+        , context(context)
     {}
     MoveItemsCommandPrivate(const MoveItemsCommandPrivate &other)
         : CommandPrivate(other)
         , items(other.items)
         , dest(other.dest)
+        , context(other.context)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
             && COMPARE(items)
-            && COMPARE(dest);
+            && COMPARE(dest)
+            && COMPARE(context);
     }
 
     QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << items
-               << dest;
+               << dest
+               << context;
     }
 
     QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> items
-               >> dest;
+               >> dest
+               >> context;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         CommandPrivate::debugString(blck);
         blck.write("Items", items);
+        blck.beginBlock("Context");
+        context.debugString(blck);
+        blck.endBlock();
         blck.write("Destination", dest);
     }
 
@@ -4432,6 +4442,7 @@ public:
 
     Scope items;
     Scope dest;
+    ScopeContext context;
 };
 
 } // namespace Protocol
@@ -4445,7 +4456,13 @@ MoveItemsCommand::MoveItemsCommand()
 }
 
 MoveItemsCommand::MoveItemsCommand(const Scope &items, const Scope &dest)
-    : Command(new MoveItemsCommandPrivate(items, dest))
+    : Command(new MoveItemsCommandPrivate(items, ScopeContext(), dest))
+{
+}
+
+MoveItemsCommand::MoveItemsCommand(const Scope &items, const ScopeContext &ctx,
+                                   const Scope &dest)
+    : Command(new MoveItemsCommandPrivate(items, ctx, dest))
 {
 }
 
@@ -4459,6 +4476,12 @@ Scope MoveItemsCommand::items() const
 {
     return d_func()->items;
 }
+
+ScopeContext MoveItemsCommand::itemsContext() const
+{
+    return d_func()->context;
+}
+
 Scope MoveItemsCommand::destination() const
 {
     return d_func()->dest;

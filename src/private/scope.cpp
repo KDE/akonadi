@@ -35,15 +35,13 @@ class ScopePrivate : public QSharedData
 {
 public:
     ScopePrivate()
-        : ridContext(-1)
-        , scope(Scope::Invalid)
+        : scope(Scope::Invalid)
     {}
 
     ImapSet uidSet;
     QStringList ridSet;
     QVector<Scope::HRID> hridChain;
     QStringList gidSet;
-    qint64 ridContext;
     Scope::SelectionScope scope;
 };
 
@@ -190,9 +188,9 @@ bool Scope::operator==(const Scope &other) const
     case Gid:
         return d->gidSet == other.d->gidSet;
     case Rid:
-        return d->ridSet == other.d->ridSet && d->ridContext == other.d->ridContext;
+        return d->ridSet == other.d->ridSet;
     case HierarchicalRid:
-        return d->hridChain == other.d->hridChain && d->ridContext == other.d->ridContext;
+        return d->hridChain == other.d->hridChain;
     case Invalid:
         return true;
     }
@@ -263,16 +261,6 @@ QVector<Scope::HRID> Scope::hridChain() const
     return d->hridChain;
 }
 
-void Scope::setRidContext(qint64 context)
-{
-    d->ridContext = context;
-}
-
-qint64 Scope::ridContext() const
-{
-    return d->ridContext;
-}
-
 void Scope::setGidSet(const QStringList &gidSet)
 {
     d->scope = Gid;
@@ -326,7 +314,6 @@ QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope)
         return stream;
     case Scope::Rid:
         stream << scope.d->ridSet;
-        stream << scope.d->ridContext;
         return stream;
     case Scope::HierarchicalRid:
         stream << scope.d->hridChain;
@@ -366,7 +353,6 @@ QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
         return stream;
     case Scope::Rid:
         stream >> scope.d->ridSet;
-        stream >> scope.d->ridContext;
         return stream;
     case Scope::HierarchicalRid:
         stream >> scope.d->hridChain;
@@ -391,11 +377,7 @@ QDebug operator<<(QDebug dbg, const Akonadi::Scope &scope)
     case Scope::Uid:
         return dbg.nospace() << "UID " << scope.uidSet();
     case Scope::Rid:
-        dbg.nospace() << "RID ";
-        if (scope.ridContext() > -1) {
-            dbg.nospace() << "(context = " << scope.ridContext() << ") ";
-        }
-        return dbg << scope.ridSet();
+        return dbg.nospace() << "RID " << scope.ridSet();
     case Scope::Gid:
         return dbg.nospace() << "GID " << scope.gidSet();
     case Scope::HierarchicalRid:

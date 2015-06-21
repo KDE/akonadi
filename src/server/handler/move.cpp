@@ -41,12 +41,11 @@ bool Move::parseStream()
         return failureResponse("Moving items into virtual collection is not allowed");
     }
 
+    connection()->context()->setScopeContext(cmd.itemsContext());
     if (cmd.items().scope() == Scope::Rid) {
-        if (cmd.items().ridContext() <= 0) {
+        if (!connection()->context()->collection().isValid()) {
             return failureResponse("RID move requires valid source collection");
         }
-
-        connection()->context()->setCollection(Collection::retrieveById(cmd.items().ridContext()));
     }
 
     CacheCleanerInhibitor inhibitor;
