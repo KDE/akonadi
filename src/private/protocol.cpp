@@ -36,8 +36,6 @@
 #include <tuple>
 #include <cassert>
 
-using namespace Akonadi;
-using namespace Akonadi::Protocol;
 
 #define AKONADI_DECLARE_PRIVATE(Class) \
 inline Class##Private* Class::d_func() {\
@@ -190,6 +188,7 @@ namespace Akonadi
 {
 namespace Protocol
 {
+
 class DebugBlock
 {
 public:
@@ -245,6 +244,7 @@ private:
     int mIndent;
     QDebug &mDbg;
 };
+
 }
 }
 
@@ -303,9 +303,8 @@ public:
     quint8 commandType;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
-
+}
+}
 
 template <>
 Akonadi::Protocol::CommandPrivate *QSharedDataPointer<Akonadi::Protocol::CommandPrivate>::clone()
@@ -313,6 +312,11 @@ Akonadi::Protocol::CommandPrivate *QSharedDataPointer<Akonadi::Protocol::Command
     return d->clone();
 }
 
+
+namespace Akonadi
+{
+namespace Protocol
+{
 
 
 AKONADI_DECLARE_PRIVATE(Command)
@@ -409,10 +413,6 @@ QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command &command
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 
 class ResponsePrivate : public CommandPrivate
@@ -469,8 +469,8 @@ public:
     int errorCode;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(Response)
 
@@ -529,10 +529,6 @@ QDataStream &operator>>(QDataStream &stream, Response &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FactoryPrivate
 {
@@ -636,18 +632,14 @@ Response Factory::response(Command::Type type)
     return iter.value().second();
 }
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 
 
 /******************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 void serialize(QIODevice *device, const Command &command)
 {
@@ -703,8 +695,6 @@ Command deserialize(QIODevice *device)
     return cmd;
 }
 
-}
-}
 
 
 
@@ -712,10 +702,6 @@ Command deserialize(QIODevice *device)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchScopePrivate : public QSharedData
 {
@@ -732,8 +718,8 @@ public:
     FetchScope::FetchFlags fetchFlags;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 FetchScope::FetchScope()
     : d(new FetchScopePrivate)
@@ -898,8 +884,9 @@ void FetchScope::setFetch(FetchFlags attributes, bool fetch)
         }
     } else {
         d->fetchFlags &= ~attributes;
-    } // namespace Protocol
-} // namespace Akonadi
+    }
+}
+
 
 bool FetchScope::fetch(FetchFlags flags) const
 {
@@ -936,10 +923,6 @@ QDataStream &operator>>(QDataStream &stream, FetchScope &scope)
 /******************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class ScopeContextPrivate : public QSharedData
 {
@@ -963,8 +946,6 @@ public:
     QVariant tagCtx;
 };
 
-}
-}
 
 #define CTX(type) \
     ((type == Collection) ? d->collectionCtx : d->tagCtx)
@@ -1085,10 +1066,6 @@ QDataStream &operator>>(QDataStream &stream, ScopeContext &context)
 
 /******************************************************************************/
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class PartMetaDataPrivate : public QSharedData
 {
@@ -1116,8 +1093,8 @@ public:
     bool external;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 PartMetaData::PartMetaData()
     : d(new PartMetaDataPrivate)
@@ -1231,10 +1208,6 @@ QDataStream &operator>>(QDataStream &stream, PartMetaData &part)
 /******************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class CachePolicyPrivate : public QSharedData
 {
@@ -1253,8 +1226,8 @@ public:
     bool inherit;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 CachePolicy::CachePolicy()
     : d(new CachePolicyPrivate)
@@ -1379,10 +1352,6 @@ QDataStream &operator>>(QDataStream &stream, CachePolicy &policy)
 /******************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 
 class AncestorPrivate : public QSharedData
@@ -1400,8 +1369,8 @@ public:
 };
 
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 Ancestor::Ancestor()
     : d(new AncestorPrivate)
@@ -1525,10 +1494,6 @@ QDataStream &operator>>(QDataStream &stream, Ancestor &ancestor)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 
 class HelloResponsePrivate : public ResponsePrivate
@@ -1594,8 +1559,8 @@ public:
     int protocol;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(HelloResponse)
 
@@ -1646,10 +1611,6 @@ QDataStream &operator>>(QDataStream &stream, HelloResponse &command)
 /******************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 
 class LoginCommandPrivate : public CommandPrivate
@@ -1697,8 +1658,8 @@ public:
     QByteArray sessionId;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(LoginCommand)
 
@@ -1795,10 +1756,6 @@ LogoutResponse::LogoutResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class TransactionCommandPrivate : public CommandPrivate
 {
@@ -1856,8 +1813,8 @@ public:
     TransactionCommand::Mode mode;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(TransactionCommand)
 
@@ -1916,10 +1873,6 @@ TransactionResponse::TransactionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 
 class CreateItemCommandPrivate : public CommandPrivate
@@ -2078,8 +2031,8 @@ public:
     qint64 itemSize;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(CreateItemCommand)
 
@@ -2269,10 +2222,6 @@ CreateItemResponse::CreateItemResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class CopyItemsCommandPrivate : public CommandPrivate
 {
@@ -2328,8 +2277,8 @@ public:
     Scope dest;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(CopyItemsCommand)
 
@@ -2394,10 +2343,6 @@ CopyItemsResponse::CopyItemsResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class DeleteItemsCommandPrivate : public CommandPrivate
 {
@@ -2447,8 +2392,8 @@ public:
     ScopeContext context;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(DeleteItemsCommand)
 
@@ -2514,10 +2459,6 @@ DeleteItemsResponse::DeleteItemsResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 
 class FetchRelationsCommandPrivate : public CommandPrivate
@@ -2594,8 +2535,8 @@ public:
     QString resource;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchRelationsCommand)
 
@@ -2685,10 +2626,6 @@ QDataStream &operator>>(QDataStream &stream, FetchRelationsCommand &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchRelationsResponsePrivate : public ResponsePrivate
 {
@@ -2757,8 +2694,8 @@ public:
     QByteArray remoteId;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchRelationsResponse)
 
@@ -2818,10 +2755,6 @@ QDataStream &operator>>(QDataStream &stream, FetchRelationsResponse &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchTagsCommandPrivate : public CommandPrivate
 {
@@ -2880,8 +2813,8 @@ public:
     bool idOnly;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchTagsCommand)
 
@@ -2940,10 +2873,6 @@ QDataStream &operator>>(QDataStream &stream, FetchTagsCommand &command)
 /*****************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchTagsResponsePrivate : public ResponsePrivate
 {
@@ -3028,8 +2957,8 @@ public:
     Attributes attributes;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchTagsResponse)
 
@@ -3123,10 +3052,6 @@ QDataStream &operator>>(QDataStream &stream, FetchTagsResponse &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchItemsCommandPrivate : public CommandPrivate
 {
@@ -3193,8 +3118,8 @@ public:
     FetchScope fetchScope;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchItemsCommand)
 
@@ -3258,10 +3183,6 @@ QDataStream &operator>>(QDataStream &stream, FetchItemsCommand &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchItemsResponsePrivate : public ResponsePrivate
 {
@@ -3427,8 +3348,8 @@ public:
     int revision;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchItemsResponse)
 
@@ -3605,10 +3526,6 @@ QDataStream &operator>>(QDataStream &stream, FetchItemsResponse &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class LinkItemsCommandPrivate : public CommandPrivate
 {
@@ -3670,8 +3587,8 @@ public:
     LinkItemsCommand::Action action;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(LinkItemsCommand)
 
@@ -3740,10 +3657,6 @@ LinkItemsResponse::LinkItemsResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class ModifyItemsCommandPrivate : public CommandPrivate
 {
@@ -4034,8 +3947,8 @@ public:
     ModifyItemsCommand::ModifiedParts modifiedParts;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
 
@@ -4260,10 +4173,6 @@ QDataStream &operator>>(QDataStream &stream, ModifyItemsCommand &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class ModifyItemsResponsePrivate : public ResponsePrivate
 {
@@ -4323,8 +4232,8 @@ public:
     QDateTime modificationDt;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(ModifyItemsResponse)
 
@@ -4378,10 +4287,6 @@ QDataStream &operator>>(QDataStream &stream, ModifyItemsResponse &command)
 /****************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class MoveItemsCommandPrivate : public CommandPrivate
 {
@@ -4445,8 +4350,8 @@ public:
     ScopeContext context;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(MoveItemsCommand)
 
@@ -4520,10 +4425,6 @@ MoveItemsResponse::MoveItemsResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class CreateCollectionCommandPrivate : public CommandPrivate
 {
@@ -4641,8 +4542,8 @@ public:
     bool isVirtual;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(CreateCollectionCommand)
 
@@ -4800,10 +4701,6 @@ CreateCollectionResponse::CreateCollectionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class CopyCollectionCommandPrivate : public CommandPrivate
 {
@@ -4857,8 +4754,8 @@ public:
     Scope dest;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(CopyCollectionCommand)
 
@@ -4922,10 +4819,6 @@ CopyCollectionResponse::CopyCollectionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class DeleteCollectionCommandPrivate : public CommandPrivate
 {
@@ -4971,8 +4864,8 @@ public:
     Scope collection;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(DeleteCollectionCommand)
 
@@ -5031,10 +4924,6 @@ DeleteCollectionResponse::DeleteCollectionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchCollectionStatsCommandPrivate : public CommandPrivate
 {
@@ -5080,8 +4969,8 @@ public:
     Scope collection;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionStatsCommand)
 
@@ -5122,10 +5011,6 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionStatsCommand &comman
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchCollectionStatsResponsePrivate : public ResponsePrivate
 {
@@ -5187,8 +5072,8 @@ public:
     qint64 size;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionStatsResponse)
 
@@ -5240,10 +5125,6 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionStatsResponse &comma
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchCollectionsCommandPrivate : public CommandPrivate
 {
@@ -5356,8 +5237,8 @@ public:
     bool stats;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionsCommand)
 
@@ -5487,10 +5368,6 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionsCommand &command)
 /****************************************************************************/
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class FetchCollectionsResponsePrivate : public ResponsePrivate
 {
@@ -5656,8 +5533,8 @@ public:
     bool enabled;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionsResponse)
 
@@ -5865,10 +5742,6 @@ QDataStream &operator>>(QDataStream &stream, FetchCollectionsResponse &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class ModifyCollectionCommandPrivate : public CommandPrivate
 {
@@ -6135,8 +6008,8 @@ public:
     ModifyCollectionCommand::ModifiedParts modifiedParts;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(ModifyCollectionCommand)
 
@@ -6370,10 +6243,6 @@ ModifyCollectionResponse::ModifyCollectionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class MoveCollectionCommandPrivate : public CommandPrivate
 {
@@ -6427,8 +6296,8 @@ public:
     Scope dest;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(MoveCollectionCommand)
 
@@ -6492,10 +6361,6 @@ MoveCollectionResponse::MoveCollectionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class SelectCollectionCommandPrivate : public CommandPrivate
 {
@@ -6541,8 +6406,8 @@ public:
     Scope collection;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(SelectCollectionCommand)
 
@@ -6600,10 +6465,6 @@ SelectCollectionResponse::SelectCollectionResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class SearchCommandPrivate : public CommandPrivate
 {
@@ -6681,8 +6542,8 @@ public:
     bool remote;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(SearchCommand)
 
@@ -6784,10 +6645,6 @@ SearchResponse::SearchResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class SearchResultCommandPrivate : public CommandPrivate
 {
@@ -6849,8 +6706,8 @@ public:
     qint64 collectionId;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(SearchResultCommand)
 
@@ -6922,10 +6779,6 @@ SearchResultResponse::SearchResultResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class StoreSearchCommandPrivate : public CommandPrivate
 {
@@ -7001,8 +6854,8 @@ public:
     bool recursive;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(StoreSearchCommand)
 
@@ -7105,10 +6958,6 @@ StoreSearchResponse::StoreSearchResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class CreateTagCommandPrivate : public CommandPrivate
 {
@@ -7185,8 +7034,8 @@ public:
     bool merge;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(CreateTagCommand)
 
@@ -7290,10 +7139,6 @@ CreateTagResponse::CreateTagResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class DeleteTagCommandPrivate : public CommandPrivate
 {
@@ -7339,8 +7184,8 @@ public:
     Scope tag;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(DeleteTagCommand)
 
@@ -7401,10 +7246,6 @@ DeleteTagResponse::DeleteTagResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class ModifyTagCommandPrivate : public CommandPrivate
 {
@@ -7536,8 +7377,8 @@ public:
     ModifyTagCommand::ModifiedParts modifiedParts;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(ModifyTagCommand)
 
@@ -7653,10 +7494,6 @@ ModifyTagResponse::ModifyTagResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class ModifyRelationCommandPrivate : public CommandPrivate
 {
@@ -7725,8 +7562,8 @@ public:
     qint64 right;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
 
@@ -7818,10 +7655,6 @@ ModifyRelationResponse::ModifyRelationResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class RemoveRelationsCommandPrivate : public CommandPrivate
 {
@@ -7882,8 +7715,8 @@ public:
     QByteArray type;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)
 
@@ -7964,10 +7797,6 @@ RemoveRelationsResponse::RemoveRelationsResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class SelectResourceCommandPrivate : public CommandPrivate
 {
@@ -8013,8 +7842,8 @@ public:
     QString resourceId;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(SelectResourceCommand)
 
@@ -8073,10 +7902,6 @@ SelectResourceResponse::SelectResourceResponse(const Command &other)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class StreamPayloadCommandPrivate : public CommandPrivate
 {
@@ -8138,8 +7963,8 @@ public:
     StreamPayloadCommand::Request request;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(StreamPayloadCommand)
 
@@ -8206,10 +8031,6 @@ QDataStream &operator>>(QDataStream &stream, StreamPayloadCommand &command)
 
 
 
-namespace Akonadi
-{
-namespace Protocol
-{
 
 class StreamPayloadResponsePrivate : public ResponsePrivate
 {
@@ -8274,8 +8095,8 @@ public:
     PartMetaData metaData;
 };
 
-} // namespace Protocol
-} // namespace Akonadi
+
+
 
 AKONADI_DECLARE_PRIVATE(StreamPayloadResponse)
 
@@ -8343,3 +8164,6 @@ QDataStream &operator>>(QDataStream &stream, StreamPayloadResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
+
+} // namespace Protocol
+} // namespace Akonadi
