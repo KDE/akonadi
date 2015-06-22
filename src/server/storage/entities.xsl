@@ -223,6 +223,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
           <xsl:when test="starts-with(@type, 'Tristate')">
           static_cast&lt;Tristate&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
           </xsl:when>
+          <xsl:when test="starts-with(@type, 'QDateTime')">
+          Utils::variantToDateTime(qb.query().value(valueIndex))
+          </xsl:when>
           <xsl:otherwise>
           qb.query().value( valueIndex ).value&lt;<xsl:value-of select="@type"/>&gt;()
           </xsl:otherwise>
