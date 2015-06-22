@@ -29,14 +29,10 @@
 #include <QtCore/QSharedDataPointer>
 
 namespace Akonadi {
-class ImapInterval;
-class ImapSet;
+namespace Protocol {
+class DataStream;
 }
-
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::ImapInterval &interval);
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::ImapInterval &interval);
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::ImapSet &set);
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::ImapSet &set);
+}
 
 namespace Akonadi {
 
@@ -136,8 +132,8 @@ private:
     class Private;
     QSharedDataPointer<Private> d;
 
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::ImapInterval &interval);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::ImapInterval &interval);
+    friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval);
+    friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapInterval &interval);
 };
 
 /**
@@ -230,8 +226,8 @@ private:
     class Private;
     QSharedDataPointer<Private> d;
 
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::ImapSet &set);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::ImapSet &set);
+    friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapSet &set);
+    friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapSet &set);
 };
 
 }

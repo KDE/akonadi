@@ -25,7 +25,6 @@
 
 #include <QtCore/QSharedDataPointer>
 
-class QDataStream;
 class QString;
 class QStringList;
 
@@ -33,15 +32,12 @@ namespace Akonadi
 {
 class ImapSet;
 class ImapInterval;
-class Scope;
+
+namespace Protocol
+{
+class DataStream;
 }
 
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope);
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope);
-AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug debug, const Akonadi::Scope &scope);
-
-namespace Akonadi
-{
 
 class ScopePrivate;
 class AKONADIPRIVATE_EXPORT Scope
@@ -116,10 +112,12 @@ private:
     QSharedDataPointer<ScopePrivate> d;
     friend class ScopePrivate;
 
-    friend QDataStream &::operator<<(QDataStream &stream, const Akonadi::Scope &scope);
-    friend QDataStream &::operator>>(QDataStream &stream, Akonadi::Scope &scope);
+    friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Scope &scope);
+    friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope &scope);
 };
 
 } // namespace Akonadi
+
+AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug debug, const Akonadi::Scope &scope);
 
 #endif

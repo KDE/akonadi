@@ -19,14 +19,11 @@
  */
 
 #include "scope_p.h"
+#include "datastream_p_p.h"
 
-#include <QtCore/QDataStream>
 #include <QtCore/QStringList>
 
 #include "imapset_p.h"
-
-using namespace Akonadi;
-
 
 namespace Akonadi
 {
@@ -44,8 +41,6 @@ public:
     QStringList gidSet;
     Scope::SelectionScope scope;
 };
-
-}
 
 Scope::HRID::HRID()
     : id(-1)
@@ -303,7 +298,7 @@ QString Scope::gid() const
     return d->gidSet.at(0);
 }
 
-QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope)
+Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Scope &scope)
 {
     stream << (quint8) scope.d->scope;
     switch (scope.d->scope) {
@@ -327,17 +322,17 @@ QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope &scope)
     return stream;
 }
 
-QDataStream &operator<<(QDataStream &stream, const Akonadi::Scope::HRID &hrid)
+Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Scope::HRID &hrid)
 {
     return stream << hrid.id << hrid.remoteId;
 }
 
-QDataStream &operator>>(QDataStream &stream, Akonadi::Scope::HRID &hrid)
+Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope::HRID &hrid)
 {
     return stream >> hrid.id >> hrid.remoteId;
 }
 
-QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
+Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope &scope)
 {
     scope.d->uidSet = ImapSet();
     scope.d->ridSet.clear();
@@ -365,6 +360,10 @@ QDataStream &operator>>(QDataStream &stream, Akonadi::Scope &scope)
     Q_ASSERT(false);
     return stream;
 }
+
+} // namespace Akonadi
+
+using namespace Akonadi;
 
 QDebug operator<<(QDebug dbg, const Akonadi::Scope::HRID &hrid)
 {

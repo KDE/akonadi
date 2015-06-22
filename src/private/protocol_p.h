@@ -30,7 +30,7 @@
 
 #include "tristate_p.h"
 
-class QDataStream;
+class DataStream;
 class QString;
 class QByteArray;
 template<typename T1, typename T2> class QMap;
@@ -77,6 +77,7 @@ friend class Class##Private;
 typedef QMap<QByteArray, QByteArray> Attributes;
 class Factory;
 
+class DataStream;
 class DebugBlock;
 class CommandPrivate;
 class AKONADIPRIVATE_EXPORT Command
@@ -165,8 +166,8 @@ protected:
 private:
     friend class Factory;
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::Command &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command &command);
 };
 
 
@@ -191,8 +192,8 @@ protected:
     AKONADI_DECLARE_PRIVATE(Response)
 
 private:
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Response &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Response &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::Response &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Response &command);
 };
 
 
@@ -255,8 +256,8 @@ public:
 private:
     QSharedDataPointer<AncestorPrivate> d;
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
 };
 
 
@@ -332,8 +333,8 @@ public:
 private:
     QSharedDataPointer<FetchScopePrivate> d;
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchScope &scope);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchScope &scope);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchScope &scope);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchScope &scope);
 };
 
 
@@ -378,8 +379,8 @@ public:
 private:
     QSharedDataPointer<ScopeContextPrivate> d;
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ScopeContext &context);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ScopeContext &context);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ScopeContext &context);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ScopeContext &context);
 };
 
 
@@ -418,8 +419,8 @@ public:
 private:
     QSharedDataPointer<PartMetaDataPrivate> d;
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::PartMetaData &part);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::PartMetaData &part);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::PartMetaData &part);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::PartMetaData &part);
 };
 
 
@@ -459,8 +460,8 @@ public:
 private:
     QSharedDataPointer<CachePolicyPrivate> d;
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CachePolicy &policy);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CachePolicy &policy);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CachePolicy &policy);
 };
 
 
@@ -480,8 +481,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(HelloResponse);
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::HelloResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::HelloResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::HelloResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::HelloResponse &command);
 };
 
 
@@ -500,8 +501,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(LoginCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::LoginCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::LoginCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::LoginCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::LoginCommand &command);
 };
 
 
@@ -559,8 +560,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(TransactionCommand);
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::TransactionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::TransactionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::TransactionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TransactionCommand &command);
 };
 
 
@@ -639,8 +640,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(CreateItemCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateItemCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CreateItemCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CreateItemCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateItemCommand &command);
 };
 
 
@@ -669,8 +670,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(CopyItemsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CopyItemsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CopyItemsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CopyItemsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CopyItemsCommand &command);
 };
 
 
@@ -701,8 +702,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(DeleteItemsCommand);
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteItemsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::DeleteItemsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
 };
 
 
@@ -749,8 +750,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchRelationsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchRelationsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchRelationsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchRelationsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchRelationsCommand &command);
 };
 
 
@@ -775,8 +776,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchRelationsResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchRelationsResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchRelationsResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchRelationsResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchRelationsResponse &command);
 };
 
 
@@ -801,8 +802,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchTagsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchTagsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchTagsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchTagsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchTagsCommand &command);
 };
 
 
@@ -840,8 +841,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchTagsResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchTagsResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchTagsResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchTagsResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchTagsResponse &command);
 };
 
 
@@ -865,8 +866,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchItemsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchItemsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchItemsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchItemsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchItemsCommand &command);
 };
 
 
@@ -930,8 +931,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchItemsResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchItemsResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchItemsResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchItemsResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchItemsResponse &command);
 };
 
 
@@ -958,8 +959,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(LinkItemsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::LinkItemsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::LinkItemsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::LinkItemsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::LinkItemsCommand &command);
 };
 
 
@@ -1059,8 +1060,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifyItemsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
 };
 
 
@@ -1082,8 +1083,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(ModifyItemsResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
 };
 
 
@@ -1105,8 +1106,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(MoveItemsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::MoveItemsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::MoveItemsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::MoveItemsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::MoveItemsCommand &command);
 };
 
 
@@ -1169,8 +1170,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(CreateCollectionCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateCollectionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CreateCollectionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CreateCollectionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateCollectionCommand &command);
 };
 
 
@@ -1201,8 +1202,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(CopyCollectionCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CopyCollectionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CopyCollectionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CopyCollectionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CopyCollectionCommand &command);
 };
 
 
@@ -1232,8 +1233,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(DeleteCollectionCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteCollectionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::DeleteCollectionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::DeleteCollectionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteCollectionCommand &command);
 };
 
 
@@ -1263,8 +1264,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionStatsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionStatsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionStatsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionStatsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionStatsCommand &command);
 };
 
 
@@ -1286,8 +1287,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionStatsResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionStatsResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionStatsResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionStatsResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionStatsResponse &command);
 };
 
 
@@ -1342,8 +1343,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionsCommand &command);
 };
 
 
@@ -1418,8 +1419,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(FetchCollectionsResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::FetchCollectionsResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::FetchCollectionsResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionsResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionsResponse &command);
 };
 
 
@@ -1508,8 +1509,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(ModifyCollectionCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyCollectionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyCollectionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifyCollectionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyCollectionCommand &command);
 };
 
 
@@ -1541,8 +1542,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(MoveCollectionCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::MoveCollectionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::MoveCollectionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::MoveCollectionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::MoveCollectionCommand &command);
 };
 
 
@@ -1572,8 +1573,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(SelectCollectionCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SelectCollectionCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SelectCollectionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SelectCollectionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SelectCollectionCommand &command);
 };
 
 
@@ -1618,8 +1619,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(SearchCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SearchCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SearchCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SearchCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SearchCommand &command);
 };
 
 
@@ -1652,8 +1653,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(SearchResultCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SearchResultCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SearchResultCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SearchResultCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SearchResultCommand &command);
 };
 
 
@@ -1698,8 +1699,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(StoreSearchCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StoreSearchCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StoreSearchCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::StoreSearchCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::StoreSearchCommand &command);
 };
 
 
@@ -1744,8 +1745,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(CreateTagCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::CreateTagCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::CreateTagCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CreateTagCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateTagCommand &command);
 };
 
 
@@ -1776,8 +1777,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(DeleteTagCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::DeleteTagCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::DeleteTagCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::DeleteTagCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteTagCommand &command);
 };
 
 
@@ -1835,8 +1836,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(ModifyTagCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyTagCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyTagCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifyTagCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyTagCommand &command);
 };
 
 
@@ -1877,8 +1878,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::ModifyRelationCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::ModifyRelationCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifyRelationCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyRelationCommand &command);
 };
 
 
@@ -1915,8 +1916,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::RemoveRelationsCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::RemoveRelationsCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
 };
 
 
@@ -1946,8 +1947,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(SelectResourceCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SelectResourceCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
 };
 
 
@@ -1990,8 +1991,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(StreamPayloadCommand)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::StreamPayloadCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
 };
 
 
@@ -2023,8 +2024,8 @@ public:
 private:
     AKONADI_DECLARE_PRIVATE(StreamPayloadResponse)
 
-    friend QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
-    friend QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::StreamPayloadResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
 };
 
 #undef AKONADI_DECLARE_PRIVATE
@@ -2035,8 +2036,8 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
 Q_DECLARE_METATYPE(Akonadi::Protocol::Command::Type)
 
-AKONADIPRIVATE_EXPORT QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type);
-AKONADIPRIVATE_EXPORT QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type);
+AKONADIPRIVATE_EXPORT DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command::Type &type);
+AKONADIPRIVATE_EXPORT DataStream &operator<<(DataStream &stream, Akonadi::Protocol::Command::Type type);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Protocol::Command::Type type);
 
 // Command parameters

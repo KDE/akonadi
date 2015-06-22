@@ -20,20 +20,17 @@
 #include "protocol_p.h"
 #include "scope_p.h"
 #include "imapset_p.h"
+#include "datastream_p_p.h"
 
 #include <type_traits>
 #include <typeinfo>
 
-#include <QDataStream>
 #include <QGlobalStatic>
 #include <QHash>
 #include <QMap>
 #include <QDateTime>
 #include <QStack>
-#include <QBuffer>
-#include <qfile.h>
 
-#include <tuple>
 #include <cassert>
 
 
@@ -47,54 +44,6 @@ inline const Class##Private* Class::d_func() const {\
 
 #define COMPARE(prop) \
     (prop == ((decltype(this)) other)->prop)
-
-
-// Generic code for effective streaming of enums
-template<typename T>
-typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
-&operator<<(QDataStream &stream, T val)
-{
-    return stream << static_cast<typename std::underlying_type<T>::type>(val);
-}
-
-template<typename T>
-QDataStream &operator<<(QDataStream &stream, const QFlags<T> &flags)
-{
-    return stream << static_cast<typename std::underlying_type<T>::type>(flags);
-}
-
-
-template<typename T>
-typename std::enable_if<std::is_enum<T>::value, QDataStream>::type
-&operator>>(QDataStream &stream, T &val)
-{
-    typename std::underlying_type<T>::type tmp;
-    stream >> tmp;
-    val = static_cast<T>(tmp);
-    return stream;
-}
-
-template<typename T>
-QDataStream &operator>>(QDataStream &stream, QFlags<T> &flags)
-{
-    typename std::underlying_type<T>::type t;
-    stream >> t;
-    flags = QFlags<T>(t);
-    return stream;
-}
-
-QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command::Type &type)
-{
-    qint8 t;
-    stream >> t;
-    type = static_cast<Akonadi::Protocol::Command::Type>(t);
-    return stream;
-}
-
-QDataStream &operator<<(QDataStream &stream, Akonadi::Protocol::Command::Type type)
-{
-    return stream << static_cast<qint8>(type);
-}
 
 QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
 {
@@ -280,12 +229,12 @@ public:
             && COMPARE(commandType);
     }
 
-    virtual QDataStream &serialize(QDataStream &stream) const
+    virtual DataStream &serialize(DataStream &stream) const
     {
         return stream << commandType;
     }
 
-    virtual QDataStream & deserialize(QDataStream &stream)
+    virtual DataStream &deserialize(DataStream &stream)
     {
         return stream >> commandType;
     }
@@ -397,12 +346,12 @@ QString Command::debugString(DebugBlock &blck) const
     return QString();
 }
 
-QDataStream &operator<<(QDataStream &stream, const Akonadi::Protocol::Command &command)
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::Command &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, Akonadi::Protocol::Command &command)
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -439,14 +388,14 @@ public:
             && COMPARE(errorCode);
     }
 
-    virtual QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    virtual DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                 << errorCode
                 << errorMsg;
     }
 
-    virtual QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    virtual DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                 >> errorCode
@@ -510,12 +459,12 @@ QString Response::errorMessage() const
     return d_func()->errorMsg;
 }
 
-QDataStream &operator<<(QDataStream &stream, const Response &command)
+DataStream &operator<<(DataStream &stream, const Response &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, Response &command)
+DataStream &operator>>(DataStream &stream, Response &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -643,55 +592,35 @@ Response Factory::response(Command::Type type)
 
 void serialize(QIODevice *device, const Command &command)
 {
-    QByteArray storage;
-    // TODO: It would be really nice if we could have per-command recommendation
-    // of size to preallocate.
-    storage.reserve(1024);
+    DataStream stream(device);
+    stream << command;
 
-    QDataStream storageStream(&storage, QIODevice::WriteOnly);
-    storageStream << command;
-    storageStream.unsetDevice();
-
-    QDataStream socketStream(device);
-    // writes size (quint32) followed by raw data
-    socketStream.writeBytes(storage.constData(), storage.size());
+#if 0
+    QLocalSocket *socket
+    if ((socket == qobject_cast<QLocalSocket*>(device))) {
+        socket->flush();
+    }
+#endif
 }
 
 Command deserialize(QIODevice *device)
 {
-    QDataStream socketStream(device);
-    quint32 size;
-    socketStream >> size;
+    DataStream stream(device);
 
-    QByteArray storage;
-    storage.resize(size);
-
-    const quint32 step = 1024 * 1024;
-    quint32 received = 0;
-
-    do {
-        int blockSize = qMin(step, size - received);
-        int read = socketStream.readRawData(storage.data() + received, blockSize);
-        if (read != blockSize) {
-            device->waitForReadyRead(30000);
-        }
-        received += read;
-    } while (received < size);
-
-    QDataStream storageStream(&storage, QIODevice::ReadOnly);
-    // Peek the command type and reset the stream to beginning again
-    quint8 cmdType;
-    storageStream >> cmdType;
-    storageStream.device()->seek(0);
+    stream.waitForData(sizeof(Command::Type));
+    Command::Type cmdType;
+    if (device->peek((char *) &cmdType, sizeof(Command::Type)) != sizeof(Command::Type)) {
+        throw ProtocolException("Failed to peek command type");
+    }
 
     Command cmd;
     if (cmdType & Command::_ResponseBit) {
-        cmd = Factory::response(static_cast<Command::Type>(cmdType & ~Command::_ResponseBit));
+        cmd = Factory::response(Command::Type(cmdType & ~Command::_ResponseBit));
     } else {
-        cmd = Factory::command(static_cast<Command::Type>(cmdType));
+        cmd = Factory::command(cmdType);
     }
 
-    storageStream >> cmd;
+    stream >> cmd;
     return cmd;
 }
 
@@ -902,7 +831,7 @@ void FetchScope::debugString(DebugBlock &blck) const
     blck.write("Requested Parts", d->requestedParts);
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchScope &scope)
+DataStream &operator<<(DataStream &stream, const FetchScope &scope)
 {
     return stream << scope.d->requestedParts
                   << scope.d->changedSince
@@ -911,7 +840,7 @@ QDataStream &operator<<(QDataStream &stream, const FetchScope &scope)
                   << scope.d->fetchFlags;
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchScope &scope)
+DataStream &operator>>(DataStream &stream, FetchScope &scope)
 {
     return stream >> scope.d->requestedParts
                   >> scope.d->changedSince
@@ -948,7 +877,7 @@ public:
 
 
 #define CTX(type) \
-    ((type == Collection) ? d->collectionCtx : d->tagCtx)
+    ((type == ScopeContext::Collection) ? d->collectionCtx : d->tagCtx)
 
 ScopeContext::ScopeContext()
     : d(new ScopeContextPrivate)
@@ -1049,16 +978,48 @@ void ScopeContext::debugString(DebugBlock &blck) const
     blck.write("Collection", d->collectionCtx);
 }
 
-QDataStream &operator<<(QDataStream &stream, const ScopeContext &context)
+DataStream &operator<<(DataStream &stream, const ScopeContext &context)
 {
-    return stream << context.d->collectionCtx
-                  << context.d->tagCtx;
+    // We don't have a custom generic DataStream streaming operator for QVariant
+    // because it's very hard, esp. without access to QVariant private
+    // stuff, so we have have to decompose it manually here.
+    QVariant::Type vType = context.d->collectionCtx.type();
+    stream << vType;
+    if (vType == QVariant::LongLong) {
+        stream << context.d->collectionCtx.toLongLong();
+    } else if (vType == QVariant::String) {
+        stream << context.d->collectionCtx.toString();
+    }
+
+    vType = context.d->tagCtx.type();
+    stream << vType;
+    if (vType == QVariant::LongLong) {
+        stream << context.d->tagCtx.toLongLong();
+    } else if (vType == QVariant::String) {
+        stream << context.d->tagCtx.toString();
+    }
+
+    return stream;
 }
 
-QDataStream &operator>>(QDataStream &stream, ScopeContext &context)
+DataStream &operator>>(DataStream &stream, ScopeContext &context)
 {
-    return stream >> context.d->collectionCtx
-                  >> context.d->tagCtx;
+    QVariant::Type vType;
+    qint64 id;
+    QString rid;
+
+    for (ScopeContext::Type type : { ScopeContext::Collection, ScopeContext::Tag }) {
+        stream >> vType;
+        if (vType == QVariant::LongLong) {
+            stream >> id;
+            context.setContext(type, id);
+        } else if (vType == QVariant::String) {
+            stream >> rid;
+            context.setContext(type, rid);
+        }
+    }
+
+    return stream;
 }
 
 #undef CTX
@@ -1187,7 +1148,7 @@ bool PartMetaData::isExternal() const
     return d->external;
 }
 
-QDataStream &operator<<(QDataStream &stream, const PartMetaData &part)
+DataStream &operator<<(DataStream &stream, const PartMetaData &part)
 {
     return stream << part.d->name
                   << part.d->size
@@ -1195,7 +1156,7 @@ QDataStream &operator<<(QDataStream &stream, const PartMetaData &part)
                   << part.d->external;
 }
 
-QDataStream &operator>>(QDataStream &stream, PartMetaData &part)
+DataStream &operator>>(DataStream &stream, PartMetaData &part)
 {
     return stream >> part.d->name
                   >> part.d->size
@@ -1329,7 +1290,7 @@ void CachePolicy::debugString(DebugBlock &blck) const
     blck.write("Local Parts", d->localParts);
 }
 
-QDataStream &operator<<(QDataStream &stream, const CachePolicy &policy)
+DataStream &operator<<(DataStream &stream, const CachePolicy &policy)
 {
     return stream << policy.d->inherit
                   << policy.d->interval
@@ -1338,7 +1299,7 @@ QDataStream &operator<<(QDataStream &stream, const CachePolicy &policy)
                   << policy.d->localParts;
 }
 
-QDataStream &operator>>(QDataStream &stream, CachePolicy &policy)
+DataStream &operator>>(DataStream &stream, CachePolicy &policy)
 {
     return stream >> policy.d->inherit
                   >> policy.d->interval
@@ -1471,7 +1432,7 @@ void Ancestor::debugString(DebugBlock &blck) const
     blck.write("Attributes", d->attrs);
 }
 
-QDataStream &operator<<(QDataStream &stream, const Ancestor &ancestor)
+DataStream &operator<<(DataStream &stream, const Ancestor &ancestor)
 {
     return stream << ancestor.d->id
                   << ancestor.d->remoteId
@@ -1479,7 +1440,7 @@ QDataStream &operator<<(QDataStream &stream, const Ancestor &ancestor)
                   << ancestor.d->attrs;
 }
 
-QDataStream &operator>>(QDataStream &stream, Ancestor &ancestor)
+DataStream &operator>>(DataStream &stream, Ancestor &ancestor)
 {
     return stream >> ancestor.d->id
                   >> ancestor.d->remoteId
@@ -1525,7 +1486,7 @@ public:
             && COMPARE(protocol);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << server
@@ -1533,7 +1494,7 @@ public:
                << protocol;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> server
@@ -1595,12 +1556,12 @@ int HelloResponse::protocolVersion() const
     return d_func()->protocol;
 }
 
-QDataStream &operator<<(QDataStream &stream, const HelloResponse &command)
+DataStream &operator<<(DataStream &stream, const HelloResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, HelloResponse &command)
+DataStream &operator>>(DataStream &stream, HelloResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -1632,13 +1593,13 @@ public:
             && COMPARE(sessionId);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                 << sessionId;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                 >> sessionId;
@@ -1684,12 +1645,12 @@ QByteArray LoginCommand::sessionId() const
     return d_func()->sessionId;
 }
 
-QDataStream &operator<<(QDataStream &stream, const LoginCommand &command)
+DataStream &operator<<(DataStream &stream, const LoginCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, LoginCommand &command)
+DataStream &operator>>(DataStream &stream, LoginCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -1793,13 +1754,13 @@ public:
             && COMPARE(mode);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                 << mode;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                 >> mode;
@@ -1839,12 +1800,12 @@ TransactionCommand::Mode TransactionCommand::mode() const
     return d_func()->mode;
 }
 
-QDataStream &operator<<(QDataStream &stream, const TransactionCommand &command)
+DataStream &operator<<(DataStream &stream, const TransactionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, TransactionCommand &command)
+DataStream &operator>>(DataStream &stream, TransactionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -1925,10 +1886,10 @@ public:
             && COMPARE(parts);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-               << (qint8) mergeMode
+               << mergeMode
                << collection
                << itemSize
                << mimeType
@@ -1946,7 +1907,7 @@ public:
                << parts;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> mergeMode
@@ -2186,12 +2147,12 @@ QSet<QByteArray> CreateItemCommand::parts() const
     return d_func()->parts;
 }
 
-QDataStream &operator<<(QDataStream &stream, const CreateItemCommand &command)
+DataStream &operator<<(DataStream &stream, const CreateItemCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, CreateItemCommand &command)
+DataStream &operator>>(DataStream &stream, CreateItemCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -2247,14 +2208,14 @@ public:
             && COMPARE(dest);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << items
                << dest;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> items
@@ -2308,12 +2269,12 @@ Scope CopyItemsCommand::destination() const
     return d_func()->dest;
 }
 
-QDataStream &operator<<(QDataStream &stream, const CopyItemsCommand &command)
+DataStream &operator<<(DataStream &stream, const CopyItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, CopyItemsCommand &command)
+DataStream &operator>>(DataStream &stream, CopyItemsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -2360,14 +2321,14 @@ public:
             && COMPARE(context);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                 << items
                 << context;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                 >> items
@@ -2423,12 +2384,12 @@ ScopeContext DeleteItemsCommand::scopeContext() const
     return d_func()->context;
 }
 
-QDataStream &operator<<(QDataStream &stream, const DeleteItemsCommand &command)
+DataStream &operator<<(DataStream &stream, const DeleteItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, DeleteItemsCommand &command)
+DataStream &operator>>(DataStream &stream, DeleteItemsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -2493,7 +2454,7 @@ public:
             && COMPARE(resource);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << left
@@ -2503,7 +2464,7 @@ public:
                << resource;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> left
@@ -2609,12 +2570,12 @@ QString FetchRelationsCommand::resource() const
     return d_func()->resource;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchRelationsCommand &command)
+DataStream &operator<<(DataStream &stream, const FetchRelationsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchRelationsCommand &command)
+DataStream &operator>>(DataStream &stream, FetchRelationsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -2656,7 +2617,7 @@ public:
             && COMPARE(remoteId);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << left
@@ -2665,7 +2626,7 @@ public:
                << remoteId;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> left
@@ -2738,12 +2699,12 @@ QByteArray FetchRelationsResponse::remoteId() const
     return d_func()->remoteId;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchRelationsResponse &command)
+DataStream &operator<<(DataStream &stream, const FetchRelationsResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchRelationsResponse &command)
+DataStream &operator>>(DataStream &stream, FetchRelationsResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -2779,7 +2740,7 @@ public:
             && COMPARE(attributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << scope
@@ -2787,7 +2748,7 @@ public:
                << idOnly;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> scope
@@ -2857,12 +2818,12 @@ bool FetchTagsCommand::idOnly() const
     return d_func()->idOnly;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchTagsCommand &command)
+DataStream &operator<<(DataStream &stream, const FetchTagsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchTagsCommand &command)
+DataStream &operator>>(DataStream &stream, FetchTagsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -2911,7 +2872,7 @@ public:
             && COMPARE(attributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << id
@@ -2922,7 +2883,7 @@ public:
                << attributes;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> id
@@ -3035,12 +2996,12 @@ Attributes FetchTagsResponse::attributes() const
     return d_func()->attributes;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchTagsResponse &command)
+DataStream &operator<<(DataStream &stream, const FetchTagsResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchTagsResponse &command)
+DataStream &operator>>(DataStream &stream, FetchTagsResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -3080,7 +3041,7 @@ public:
             && COMPARE(fetchScope);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << scope
@@ -3088,7 +3049,7 @@ public:
                << fetchScope;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> scope
@@ -3165,12 +3126,12 @@ FetchScope &FetchItemsCommand::fetchScope()
     return d_func()->fetchScope;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchItemsCommand &command)
+DataStream &operator<<(DataStream &stream, const FetchItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchItemsCommand &command)
+DataStream &operator>>(DataStream &stream, FetchItemsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -3235,7 +3196,7 @@ public:
             && COMPARE(cachedParts);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << id
@@ -3256,7 +3217,7 @@ public:
                << cachedParts;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> id
@@ -3509,12 +3470,12 @@ QVector<QByteArray> FetchItemsResponse::cachedParts() const
     return d_func()->cachedParts;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchItemsResponse &command)
+DataStream &operator<<(DataStream &stream, const FetchItemsResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchItemsResponse &command)
+DataStream &operator>>(DataStream &stream, FetchItemsResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -3553,7 +3514,7 @@ public:
             && COMPARE(dest);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << action
@@ -3561,7 +3522,7 @@ public:
                << dest;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> action
@@ -3621,12 +3582,12 @@ Scope LinkItemsCommand::destination() const
     return d_func()->dest;
 }
 
-QDataStream &operator<<(QDataStream &stream, const LinkItemsCommand &command)
+DataStream &operator<<(DataStream &stream, const LinkItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, LinkItemsCommand &command)
+DataStream &operator>>(DataStream &stream, LinkItemsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -3716,7 +3677,7 @@ public:
             && COMPARE(attributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
                << items
@@ -3769,7 +3730,7 @@ public:
         return stream;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         CommandPrivate::deserialize(stream)
                >> items
@@ -4157,12 +4118,12 @@ Attributes ModifyItemsCommand::attributes() const
     return d_func()->attributes;
 }
 
-QDataStream &operator<<(QDataStream &stream, const ModifyItemsCommand &command)
+DataStream &operator<<(DataStream &stream, const ModifyItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, ModifyItemsCommand &command)
+DataStream &operator>>(DataStream &stream, ModifyItemsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -4198,7 +4159,7 @@ public:
             && COMPARE(modificationDt);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << id
@@ -4206,7 +4167,7 @@ public:
                << modificationDt;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> id
@@ -4272,12 +4233,12 @@ QDateTime ModifyItemsResponse::modificationDateTime() const
     return d_func()->modificationDt;
 }
 
-QDataStream &operator<<(QDataStream &stream, const ModifyItemsResponse &command)
+DataStream &operator<<(DataStream &stream, const ModifyItemsResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, ModifyItemsResponse &command)
+DataStream &operator>>(DataStream &stream, ModifyItemsResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -4314,7 +4275,7 @@ public:
             && COMPARE(context);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << items
@@ -4322,7 +4283,7 @@ public:
                << context;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> items
@@ -4392,12 +4353,12 @@ Scope MoveItemsCommand::destination() const
     return d_func()->dest;
 }
 
-QDataStream &operator<<(QDataStream &stream, const MoveItemsCommand &command)
+DataStream &operator<<(DataStream &stream, const MoveItemsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, MoveItemsCommand &command)
+DataStream &operator>>(DataStream &stream, MoveItemsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -4453,7 +4414,7 @@ public:
         , isVirtual(other.isVirtual)
     {}
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << parent
@@ -4470,7 +4431,7 @@ public:
                << isVirtual;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> parent
@@ -4666,12 +4627,12 @@ Tristate CreateCollectionCommand::indexPref() const
     return d_func()->index;
 }
 
-QDataStream &operator<<(QDataStream &stream, const CreateCollectionCommand &command)
+DataStream &operator<<(DataStream &stream, const CreateCollectionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, CreateCollectionCommand &command)
+DataStream &operator>>(DataStream &stream, CreateCollectionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -4724,14 +4685,14 @@ public:
             && COMPARE(dest);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << collection
                << dest;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> collection
@@ -4785,12 +4746,12 @@ Scope CopyCollectionCommand::destination() const
     return d_func()->dest;
 }
 
-QDataStream &operator<<(QDataStream &stream, const CopyCollectionCommand &command)
+DataStream &operator<<(DataStream &stream, const CopyCollectionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, CopyCollectionCommand &command)
+DataStream &operator>>(DataStream &stream, CopyCollectionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -4838,13 +4799,13 @@ public:
             && COMPARE(collection);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << collection;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> collection;
@@ -4890,12 +4851,12 @@ Scope DeleteCollectionCommand::collection() const
     return d_func()->collection;
 }
 
-QDataStream &operator<<(QDataStream &stream, const DeleteCollectionCommand &command)
+DataStream &operator<<(DataStream &stream, const DeleteCollectionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, DeleteCollectionCommand &command)
+DataStream &operator>>(DataStream &stream, DeleteCollectionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -4943,13 +4904,13 @@ public:
             && COMPARE(collection);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << collection;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> collection;
@@ -4995,12 +4956,12 @@ Scope FetchCollectionStatsCommand::collection() const
     return d_func()->collection;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchCollectionStatsCommand &command)
+DataStream &operator<<(DataStream &stream, const FetchCollectionStatsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchCollectionStatsCommand &command)
+DataStream &operator>>(DataStream &stream, FetchCollectionStatsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -5038,7 +4999,7 @@ public:
             && COMPARE(size);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << count
@@ -5046,7 +5007,7 @@ public:
                << size;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> count
@@ -5108,12 +5069,12 @@ qint64 FetchCollectionStatsResponse::size() const
     return d_func()->size;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchCollectionStatsResponse &command)
+DataStream &operator<<(DataStream &stream, const FetchCollectionStatsResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchCollectionStatsResponse &command)
+DataStream &operator>>(DataStream &stream, FetchCollectionStatsResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -5171,7 +5132,7 @@ public:
             && COMPARE(ancestorsAttributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << collections
@@ -5187,7 +5148,7 @@ public:
                << stats;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> collections
@@ -5353,12 +5314,12 @@ bool FetchCollectionsCommand::fetchStats() const
     return d_func()->stats;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchCollectionsCommand &command)
+DataStream &operator<<(DataStream &stream, const FetchCollectionsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchCollectionsCommand &command)
+DataStream &operator>>(DataStream &stream, FetchCollectionsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -5423,7 +5384,7 @@ public:
             && COMPARE(attributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << id
@@ -5447,7 +5408,7 @@ public:
                << enabled;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> id
@@ -5726,12 +5687,12 @@ bool FetchCollectionsResponse::isVirtual() const
     return d_func()->isVirtual;
 }
 
-QDataStream &operator<<(QDataStream &stream, const FetchCollectionsResponse &command)
+DataStream &operator<<(DataStream &stream, const FetchCollectionsResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, FetchCollectionsResponse &command)
+DataStream &operator>>(DataStream &stream, FetchCollectionsResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -5799,7 +5760,7 @@ public:
             && COMPARE(removedAttributes) && COMPARE(attributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
                << collection
@@ -5847,7 +5808,7 @@ public:
         return stream;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         CommandPrivate::deserialize(stream)
                >> collection
@@ -6209,12 +6170,12 @@ bool ModifyCollectionCommand::referenced() const
     return d_func()->referenced;
 }
 
-QDataStream &operator<<(QDataStream &stream, const ModifyCollectionCommand &command)
+DataStream &operator<<(DataStream &stream, const ModifyCollectionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, ModifyCollectionCommand &command)
+DataStream &operator>>(DataStream &stream, ModifyCollectionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -6266,14 +6227,14 @@ public:
             && COMPARE(dest);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << collection
                << dest;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> collection
@@ -6327,12 +6288,12 @@ Scope MoveCollectionCommand::destination() const
     return d_func()->dest;
 }
 
-QDataStream &operator<<(QDataStream &stream, const MoveCollectionCommand &command)
+DataStream &operator<<(DataStream &stream, const MoveCollectionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, MoveCollectionCommand &command)
+DataStream &operator>>(DataStream &stream, MoveCollectionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -6380,13 +6341,13 @@ public:
             && COMPARE(collection);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << collection;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> collection;
@@ -6432,12 +6393,12 @@ Scope SelectCollectionCommand::collection() const
     return d_func()->collection;
 }
 
-QDataStream &operator<<(QDataStream &stream, const SelectCollectionCommand &command)
+DataStream &operator<<(DataStream &stream, const SelectCollectionCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, SelectCollectionCommand &command)
+DataStream &operator>>(DataStream &stream, SelectCollectionCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -6494,7 +6455,7 @@ public:
             && COMPARE(fetchScope);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << mimeTypes
@@ -6505,7 +6466,7 @@ public:
                << remote;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> mimeTypes
@@ -6612,12 +6573,12 @@ bool SearchCommand::remote() const
     return d_func()->remote;
 }
 
-QDataStream &operator<<(QDataStream &stream, const SearchCommand &command)
+DataStream &operator<<(DataStream &stream, const SearchCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, SearchCommand &command)
+DataStream &operator>>(DataStream &stream, SearchCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -6672,7 +6633,7 @@ public:
             && COMPARE(result);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << searchId
@@ -6680,7 +6641,7 @@ public:
                << result;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> searchId
@@ -6744,12 +6705,12 @@ Scope SearchResultCommand::result() const
     return d_func()->result;
 }
 
-QDataStream &operator<<(QDataStream &stream, const SearchResultCommand &command)
+DataStream &operator<<(DataStream &stream, const SearchResultCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, SearchResultCommand &command)
+DataStream &operator>>(DataStream &stream, SearchResultCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -6808,7 +6769,7 @@ public:
             && COMPARE(queryCols);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << name
@@ -6819,7 +6780,7 @@ public:
                << recursive;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> name
@@ -6924,12 +6885,12 @@ bool StoreSearchCommand::recursive() const
     return d_func()->recursive;
 }
 
-QDataStream &operator<<(QDataStream &stream, const StoreSearchCommand &command)
+DataStream &operator<<(DataStream &stream, const StoreSearchCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, StoreSearchCommand &command)
+DataStream &operator>>(DataStream &stream, StoreSearchCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -6988,7 +6949,7 @@ public:
             && COMPARE(attributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << gid
@@ -6999,7 +6960,7 @@ public:
                << merge;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> gid
@@ -7104,12 +7065,12 @@ Attributes CreateTagCommand::attributes() const
     return d_func()->attributes;
 }
 
-QDataStream &operator<<(QDataStream &stream, const CreateTagCommand &command)
+DataStream &operator<<(DataStream &stream, const CreateTagCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, CreateTagCommand &command)
+DataStream &operator>>(DataStream &stream, CreateTagCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -7158,13 +7119,13 @@ public:
             && COMPARE(tag);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << tag;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> tag;
@@ -7210,12 +7171,12 @@ Scope DeleteTagCommand::tag() const
     return d_func()->tag;
 }
 
-QDataStream &operator<<(QDataStream &stream, const DeleteTagCommand &command)
+DataStream &operator<<(DataStream &stream, const DeleteTagCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, DeleteTagCommand &command)
+DataStream &operator>>(DataStream &stream, DeleteTagCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -7278,7 +7239,7 @@ public:
             && COMPARE(removedAttributes);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
                << tagId
@@ -7301,7 +7262,7 @@ public:
         return stream;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         CommandPrivate::deserialize(stream)
                >> tagId
@@ -7458,12 +7419,12 @@ Attributes ModifyTagCommand::attributes() const
     return d_func()->attributes;
 }
 
-QDataStream &operator<<(QDataStream &stream, const ModifyTagCommand &command)
+DataStream &operator<<(DataStream &stream, const ModifyTagCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, ModifyTagCommand &command)
+DataStream &operator>>(DataStream &stream, ModifyTagCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -7524,7 +7485,7 @@ public:
             && COMPARE(remoteId);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << left
@@ -7533,7 +7494,7 @@ public:
                << remoteId;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> left
@@ -7621,12 +7582,12 @@ QByteArray ModifyRelationCommand::remoteId() const
     return d_func()->remoteId;
 }
 
-QDataStream &operator<<(QDataStream &stream, const ModifyRelationCommand &command)
+DataStream &operator<<(DataStream &stream, const ModifyRelationCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, ModifyRelationCommand &command)
+DataStream &operator>>(DataStream &stream, ModifyRelationCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -7681,7 +7642,7 @@ public:
             && COMPARE(type);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << left
@@ -7689,7 +7650,7 @@ public:
                << type;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> left
@@ -7763,12 +7724,12 @@ QByteArray RemoveRelationsCommand::type() const
     return d_func()->type;
 }
 
-QDataStream &operator<<(QDataStream &stream, const RemoveRelationsCommand &command)
+DataStream &operator<<(DataStream &stream, const RemoveRelationsCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, RemoveRelationsCommand &command)
+DataStream &operator>>(DataStream &stream, RemoveRelationsCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -7816,13 +7777,13 @@ public:
             && COMPARE(resourceId);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << resourceId;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> resourceId;
@@ -7868,12 +7829,12 @@ QString SelectResourceCommand::resourceId() const
     return d_func()->resourceId;
 }
 
-QDataStream &operator<<(QDataStream &stream, const SelectResourceCommand &command)
+DataStream &operator<<(DataStream &stream, const SelectResourceCommand &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, SelectResourceCommand &command)
+DataStream &operator>>(DataStream &stream, SelectResourceCommand &command)
 {
     return command.d_func()->deserialize(stream);
 }
@@ -7929,7 +7890,7 @@ public:
             && COMPARE(dest);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
                << payloadName
@@ -7937,7 +7898,7 @@ public:
                << dest;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
                >> payloadName
@@ -8012,13 +7973,13 @@ QString StreamPayloadCommand::destination() const
     return d_func()->dest;
 }
 
-QDataStream &operator<<(QDataStream &stream, const StreamPayloadCommand &command)
+DataStream &operator<<(DataStream &stream, const StreamPayloadCommand &command)
 {
     return command.d_func()->serialize(stream);
     return stream;
 }
 
-QDataStream &operator>>(QDataStream &stream, StreamPayloadCommand &command)
+DataStream &operator>>(DataStream &stream, StreamPayloadCommand &command)
 {
     return command.d_func()->deserialize(stream);
     return stream;
@@ -8058,7 +8019,7 @@ public:
             && COMPARE(data);
     }
 
-    QDataStream &serialize(QDataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::serialize(stream)
                << payloadName
@@ -8066,7 +8027,7 @@ public:
                << data;
     }
 
-    QDataStream &deserialize(QDataStream &stream) Q_DECL_OVERRIDE
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return ResponsePrivate::deserialize(stream)
                >> payloadName
@@ -8155,12 +8116,12 @@ QByteArray StreamPayloadResponse::data() const
     return d_func()->data;
 }
 
-QDataStream &operator<<(QDataStream &stream, const StreamPayloadResponse &command)
+DataStream &operator<<(DataStream &stream, const StreamPayloadResponse &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-QDataStream &operator>>(QDataStream &stream, StreamPayloadResponse &command)
+DataStream &operator>>(DataStream &stream, StreamPayloadResponse &command)
 {
     return command.d_func()->deserialize(stream);
 }

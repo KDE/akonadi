@@ -18,13 +18,15 @@
 */
 
 #include "imapset_p.h"
+#include "datastream_p_p.h"
 
 #include <QSharedData>
 #include <QDataStream>
 
 #include <limits>
 
-using namespace Akonadi;
+namespace Akonadi
+{
 
 class ImapInterval::Private : public QSharedData
 {
@@ -288,6 +290,33 @@ bool ImapSet::isEmpty() const
     return d->intervals.isEmpty() || (d->intervals.size() == 1 && d->intervals.at(0).size() == 0);
 }
 
+Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval)
+{
+    return stream << interval.d->begin
+                  << interval.d->end;
+}
+
+Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapInterval &interval)
+{
+    return stream >> interval.d->begin
+                  >> interval.d->end;
+}
+
+Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapSet &set)
+{
+    return stream << set.d->intervals;
+}
+
+Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapSet &set)
+{
+    return stream >> set.d->intervals;
+}
+
+} // namespace Akonadi
+
+using namespace Akonadi;
+
+
 QDebug operator<<(QDebug d, const Akonadi::ImapInterval &interval)
 {
     d << interval.toImapSequence();
@@ -298,26 +327,4 @@ QDebug operator<<(QDebug d, const Akonadi::ImapSet &set)
 {
     d << set.toImapSequenceSet();
     return d;
-}
-
-QDataStream &operator<<(QDataStream &stream, const Akonadi::ImapInterval &interval)
-{
-    return stream << interval.d->begin
-                  << interval.d->end;
-}
-
-QDataStream &operator>>(QDataStream &stream, Akonadi::ImapInterval &interval)
-{
-    return stream >> interval.d->begin
-                  >> interval.d->end;
-}
-
-QDataStream &operator<<(QDataStream &stream, const Akonadi::ImapSet &set)
-{
-    return stream << set.d->intervals;
-}
-
-QDataStream &operator>>(QDataStream &stream, Akonadi::ImapSet &set)
-{
-    return stream >> set.d->intervals;
 }

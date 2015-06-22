@@ -1,6 +1,7 @@
 set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
+    datastream_p.cpp
     notificationmessage.cpp
     notificationmessagev2.cpp
     notificationmessagev3.cpp
