@@ -21,6 +21,9 @@
 #include "itemfetchjob.h"
 #include "collectionfetchjob.h"
 
+#include <QPointer>
+#include <QTimer>
+
 FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent )
   : QObject(parent),
     m_model( model ),
@@ -29,7 +32,15 @@ FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, Fa
     m_nextCollectionId( 1 ),
     m_nextItemId( 0 )
 {
-  connect(session, SIGNAL(jobAdded(Akonadi::Job*)), SLOT(jobAdded(Akonadi::Job*)), Qt::QueuedConnection);
+  // can't use QueuedConnection here, because the Job might self-deleted before
+  // the slot gets called
+  connect(session, &FakeSession::jobAdded,
+          [this](Akonadi::Job *job) {
+              Entity::Id fetchColId = job->property("FetchCollectionId").toULongLong();
+              QTimer::singleShot(0, [this, fetchColId]() {
+                  jobAdded(fetchColId);
+              });
+          });
 }
 
 void FakeServerData::setCommands(QList< FakeAkonadiServerCommand* > list)
@@ -54,10 +65,8 @@ void FakeServerData::processNotifications()
   }
 }
 
-void FakeServerData::jobAdded( Job* job )
+void FakeServerData::jobAdded( qint64 fetchColId )
 {
-  Entity::Id fetchColId = job->property( "FetchCollectionId" ).toULongLong();
-
   returnEntities( fetchColId );
 }
 
