@@ -1288,9 +1288,11 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
             // which has lastError empty.
             QSqlQuery copiedQuery(m_database);
             copiedQuery.prepare(query.executedQuery());
-            const QVariantList values = query.boundValues().values();
-            for (int i = 0; i < values.size(); ++i) {
-                copiedQuery.bindValue(i, values[i]);
+            const QMap<QString, QVariant> boundValues = query.boundValues();
+            int i = 0;
+            Q_FOREACH (const QVariant &value, boundValues) {
+                copiedQuery.bindValue(i, value);
+                ++i;
             }
             query = copiedQuery;
             res = query.execBatch();
