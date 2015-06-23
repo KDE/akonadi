@@ -68,11 +68,11 @@ void SubscriptionJob::doStart()
         emitResult();
     }
 
-    for (Collection col : d->mSub) {
+    Q_FOREACH (Collection col, d->mSub) {
         col.setEnabled(true);
         new CollectionModifyJob(col, this);
     }
-    for (Collection col : d->mUnsub) {
+    Q_FOREACH (Collection col, d->mUnsub) {
         col.setEnabled(false);
         new CollectionModifyJob(col, this);
     }
@@ -83,7 +83,7 @@ void SubscriptionJob::slotResult(KJob *job)
     if (job->error()) {
         setError(job->error());
         setErrorText(job->errorText());
-        for (KJob *subjob : subjobs()) {
+        Q_FOREACH (KJob *subjob, subjobs()) {
             removeSubjob(subjob);
         }
         emitResult();

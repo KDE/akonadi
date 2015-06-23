@@ -120,7 +120,7 @@ void SearchCreateJob::doStart()
     if (!d->mCollections.isEmpty()) {
         QVector<qint64> ids;
         ids.reserve(d->mCollections.size());
-        for (const Collection &col : d->mCollections) {
+        Q_FOREACH (const Collection &col, d->mCollections) {
             ids << col.id();
         }
         cmd.setQueryCollections(ids);

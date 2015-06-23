@@ -147,7 +147,7 @@ void ItemCreateJob::doStart()
     cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mItem));
     QSet<QByteArray> parts;
     parts.reserve(d->mParts.size());
-    for (const QByteArray &part : d->mParts) {
+    Q_FOREACH (const QByteArray &part, d->mParts) {
         parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
     }
     cmd.setParts(parts);

@@ -73,7 +73,7 @@ void CollectionCreateJob::doStart()
     cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     Protocol::Attributes attrs;
-    for (Attribute *attr : d->mCollection.attributes()) {
+    Q_FOREACH (Attribute *attr, d->mCollection.attributes()) {
         attrs.insert(attr->type(), attr->serialized());
     }
     cmd.setAttributes(attrs);

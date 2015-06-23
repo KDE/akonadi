@@ -91,7 +91,7 @@ void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors
     QList<QByteArray> parentIds;
 
     Entity *current = entity;
-    for (const Protocol::Ancestor &ancestor : ancestors) {
+    Q_FOREACH (const Protocol::Ancestor &ancestor, ancestors) {
         if (ancestor.id() == rootCollectionId) {
             current->setParentCollection(Collection::root());
             break;
@@ -158,7 +158,7 @@ template<typename T>
 inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
 {
     Protocol::Attributes attributes;
-    for (const Attribute *attr : entity.attributes()) {
+    Q_FOREACH (const Attribute *attr, entity.attributes()) {
         attributes.insert(ProtocolHelper::encodePartIdentifier(ns ? ProtocolHelper::PartAttribute : ProtocolHelper::PartGlobal, attr->type()),
                           attr->serialized());
     }
@@ -285,10 +285,10 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
 {
     Protocol::FetchScope fs;
     QVector<QByteArray> parts;
-    for (const QByteArray &part : fetchScope.payloadParts()) {
+    Q_FOREACH (const QByteArray &part, fetchScope.payloadParts()) {
         parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
     }
-    for (const QByteArray &part : fetchScope.attributes()) {
+    Q_FOREACH (const QByteArray &part, fetchScope.attributes()) {
         parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
     }
     fs.setRequestedParts(parts);
@@ -394,7 +394,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     if (!data.tags().isEmpty()) {
         Tag::List tags;
         tags.reserve(data.tags().size());
-        for (const Protocol::FetchTagsResponse &tag : data.tags()) {
+        Q_FOREACH (const Protocol::FetchTagsResponse &tag, data.tags()) {
             tags.append(parseTagFetchResult(tag));
         }
         item.setTags(tags);
@@ -403,7 +403,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     if (!data.relations().isEmpty()) {
         Relation::List relations;
         relations.reserve(data.relations().size());
-        for (const Protocol::FetchRelationsResponse &rel : data.relations()) {
+        Q_FOREACH (const Protocol::FetchRelationsResponse &rel, data.relations()) {
             relations.append(parseRelationFetchResult(rel));
         }
         item.d_func()->mRelations = relations;
@@ -412,7 +412,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     if (!data.virtualReferences().isEmpty()) {
         Collection::List virtRefs;
         virtRefs.reserve(data.virtualReferences().size());
-        for (qint64 colId : data.virtualReferences()) {
+        Q_FOREACH (qint64 colId, data.virtualReferences()) {
             virtRefs.append(Collection(colId));
         }
         item.setVirtualReferences(virtRefs);
@@ -421,7 +421,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     if (!data.cachedParts().isEmpty()) {
         QSet<QByteArray> cp;
         cp.reserve(data.cachedParts().size());
-        for (const QByteArray &ba : data.cachedParts()) {
+        Q_FOREACH (const QByteArray &ba, data.cachedParts()) {
             cp.insert(ba);
         }
         item.setCachedPayloadParts(cp);
@@ -431,7 +431,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     item.setModificationTime(data.MTime());
     parseAncestorsCached(data.ancestors(), &item, data.parentId(), valuePool);
 
-    for (const Protocol::StreamPayloadResponse &part : data.parts()) {
+    Q_FOREACH (const Protocol::StreamPayloadResponse &part, data.parts()) {
         ProtocolHelper::PartNamespace ns;
         const QByteArray plainKey = decodePartIdentifier(part.payloadName(), ns);
         switch (ns) {

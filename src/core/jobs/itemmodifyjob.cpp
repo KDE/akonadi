@@ -203,7 +203,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     if (!mParts.isEmpty()) {
         QSet<QByteArray> parts;
         parts.reserve(mParts.size());
-        for (const QByteArray &part : mParts) {
+        Q_FOREACH (const QByteArray &part, mParts) {
             parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
         }
         cmd.setParts(parts);
@@ -212,7 +212,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     if (!item.d_func()->mDeletedAttributes.isEmpty()) {
         QSet<QByteArray> removedParts;
         removedParts.reserve(item.d_func()->mDeletedAttributes.size());
-        for (const QByteArray &part : item.d_func()->mDeletedAttributes) {
+        Q_FOREACH (const QByteArray &part, item.d_func()->mDeletedAttributes) {
             removedParts.insert("ATR:" + part);
         }
         cmd.setRemovedParts(removedParts);
@@ -328,7 +328,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             return false;
         }
 
-        for (const Item &item : d->mItems) {
+        Q_FOREACH (const Item &item, d->mItems) {
             ChangeMediator::invalidateItem(item);
         }
 
