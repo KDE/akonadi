@@ -96,7 +96,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
 {
     QStringList mimeTypes;
     mimeTypes.reserve(col.mimeTypes().size());
-    for (const MimeType &mt : col.mimeTypes()) {
+    Q_FOREACH (const MimeType &mt, col.mimeTypes()) {
         mimeTypes << mt.name();
     }
 
@@ -135,7 +135,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
     if (!col.queryString().isEmpty()) {
         response.setSearchQuery(col.queryString());
         QVector<qint64> searchCols;
-        for (const QString &searchColId : col.queryCollections().split(QLatin1Char(' '))) {
+        Q_FOREACH (const QString &searchColId, col.queryCollections().split(QLatin1Char(' '))) {
             searchCols << searchColId.toLongLong();
         }
     }
@@ -183,7 +183,7 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
             a.setName(c.name());
             if (!ancestorAttributes.isEmpty()) {
                 QMap<QByteArray, QByteArray> attrs;
-                for (const CollectionAttribute &attr : ancestorAttributes.pop()) {
+                Q_FOREACH (const CollectionAttribute &attr, ancestorAttributes.pop()) {
                     attrs.insert(attr.type(), attr.value());
                 }
                 a.setAttributes(attrs);

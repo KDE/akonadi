@@ -503,7 +503,7 @@ bool List::parseStream()
             return failureResponse("Unknown resource");
         }
     }
-    for (const QString &mtName : cmd.mimeTypes()) {
+    Q_FOREACH (const QString &mtName, cmd.mimeTypes()) {
         const MimeType mt = MimeType::retrieveByName(mtName);
         if (mt.isValid()) {
             mMimeTypes.append(mt.id());

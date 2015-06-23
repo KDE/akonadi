@@ -267,7 +267,7 @@ bool Store::parseStream()
             if (!store->removeItemParts(item, cmd.removedParts())) {
                 return failureResponse("Unable to remove item parts");
             }
-            for (const QByteArray &part : cmd.removedParts()) {
+            Q_FOREACH (const QByteArray &part, cmd.removedParts()) {
                 changes.insert(part);
             }
         }
@@ -277,7 +277,7 @@ bool Store::parseStream()
         PartStreamer streamer(connection(), item, this);
         connect(&streamer, &PartStreamer::responseAvailable,
                 this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
-        for (const QByteArray &partName : cmd.parts()) {
+        Q_FOREACH (const QByteArray &partName, cmd.parts()) {
             qint64 partSize = 0;
             if (!streamer.stream(true, partName, partSize)) {
                 return failureResponse(streamer.error());

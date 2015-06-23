@@ -45,7 +45,7 @@ void ItemRetrievalJob::start(QDBusAbstractInterface *interface)
         // TODO: Change the DBus call
         QStringList parts;
         parts.reserve(m_request->parts.size());
-        for (const QByteArray &part : m_request->parts) {
+        Q_FOREACH (const QByteArray &part, m_request->parts) {
             parts << QLatin1String(part);
         }
         arguments << m_request->id
@@ -101,7 +101,7 @@ void ItemRetrievalJob::callFailed(const QDBusError &error)
         QList<QVariant> arguments;
         QStringList parts;
         parts.reserve(m_request->parts.size());
-        for (const QByteArray &part : m_request->parts) {
+        Q_FOREACH (const QByteArray &part, m_request->parts) {
             parts << QLatin1String(part);
         }
         arguments << m_request->id

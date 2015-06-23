@@ -432,11 +432,11 @@ bool FetchHelper::fetchItems()
                 tagQuery.next();
             }
             if (!fullTagsRequested) {
-                for (qint64 tagId : tagIds) {
+                Q_FOREACH (qint64 tagId, tagIds) {
                     tags << Protocol::FetchTagsResponse(tagId);
                 }
             } else {
-                for (qint64 tagId : tagIds) {
+                Q_FOREACH (qint64 tagId, tagIds) {
                     tags << HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
                 }
             }
@@ -466,12 +466,12 @@ bool FetchHelper::fetchItems()
             condition.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, pimItemId);
             condition.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, pimItemId);
             qb.addCondition(condition);
-            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn());
+            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn() << Relation::remoteIdColumn());
             if (!qb.exec()) {
                 throw HandlerException("Unable to list item relations");
             }
             QVector<Protocol::FetchRelationsResponse> relations;
-            for (const Relation &rel : qb.result()) {
+            Q_FOREACH (const Relation &rel, qb.result()) {
                 relations << HandlerHelper::fetchRelationsResponse(rel);
             }
             response.setRelations(relations);

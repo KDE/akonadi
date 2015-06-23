@@ -112,7 +112,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     PartStreamer streamer(connection(), item, this);
     connect(&streamer, &PartStreamer::responseAvailable,
             this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
-    for (const QByteArray &partName : cmd.parts()) {
+    Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         qint64 partSize = 0;
         if (!streamer.stream(true, partName, partSize)) {
             return failureResponse(streamer.error());
@@ -203,7 +203,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         // through from Resource during ItemSync, like $ATTACHMENT, because the
         // resource is not aware of them (they are usually assigned by client
         // upon inspecting the payload)
-        for (const QByteArray &preserve : localFlagsToPreserve) {
+        Q_FOREACH (const QByteArray &preserve, localFlagsToPreserve) {
             flagNames.remove(preserve);
         }
         const Flag::List flags = HandlerHelper::resolveFlags(flagNames);
@@ -242,14 +242,14 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     const Part::List existingParts = Part::retrieveFiltered(Part::pimItemIdColumn(), currentItem.id());
     QMap<QByteArray, qint64> partsSizes;
-    for (const Part &part : existingParts ) {
+    Q_FOREACH (const Part &part, existingParts ) {
         partsSizes.insert(PartTypeHelper::fullName(part.partType()).toLatin1(), part.datasize());
     }
 
     PartStreamer streamer(connection(), currentItem);
     connect(&streamer, &PartStreamer::responseAvailable,
             this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
-    for (const QByteArray &partName : cmd.parts()) {
+    Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         bool changed = false;
         qint64 partSize = 0;
         if (!streamer.stream(true, partName, partSize, &changed)) {

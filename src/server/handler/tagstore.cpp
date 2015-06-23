@@ -107,7 +107,7 @@ bool TagStore::parseStream()
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::RemovedAttributes) {
-        for (const QByteArray &attrName : cmd.removedAttributes()) {
+        Q_FOREACH (const QByteArray &attrName, cmd.removedAttributes()) {
             TagAttribute attribute = attributesMap.value(attrName);
             TagAttribute::remove(attribute.id());
             changes << attrName;

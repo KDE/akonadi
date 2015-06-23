@@ -67,9 +67,9 @@ bool Modify::parseStream()
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::MimeTypes) {
         QStringList mts = cmd.mimeTypes();
-        MimeType::List currentMts = collection.mimeTypes();
+        const MimeType::List currentMts = collection.mimeTypes();
         bool equal;
-        for (const MimeType &currentMt : currentMts) {
+        Q_FOREACH (const MimeType &currentMt, currentMts) {
             if (mts.contains(currentMt.name())) {
                 mts.removeAll(currentMt.name());
                 continue;
@@ -186,7 +186,7 @@ bool Modify::parseStream()
         cols.reserve(cmd.persistentSearchCollections().size());
         QVector<qint64> inCols = cmd.persistentSearchCollections();
         qSort(inCols);
-        for (qint64 col : cmd.persistentSearchCollections()) {
+        Q_FOREACH (qint64 col, cmd.persistentSearchCollections()) {
             cols.append(QString::number(col));
         }
         const QString colStr = cols.join(QLatin1Char(' '));
@@ -236,7 +236,7 @@ bool Modify::parseStream()
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemovedAttributes) {
-        for (const QByteArray &attr : cmd.removedAttributes()) {
+        Q_FOREACH (const QByteArray &attr, cmd.removedAttributes()) {
             if (db->removeCollectionAttribute(collection, attr)) {
                 changes.append(attr);
             }

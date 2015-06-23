@@ -50,7 +50,7 @@ bool RelationFetch::parseStream()
         relationQuery.addJoin(QueryBuilder::InnerJoin, RelationType::tableName(), Relation::typeIdFullColumnName(), RelationType::idFullColumnName());
         QStringList types;
         types.reserve(cmd.types().size());
-        for (const QByteArray &type : cmd.types()) {
+        Q_FOREACH (const QByteArray &type, cmd.types()) {
             types << QString::fromUtf8(type);
         }
         relationQuery.addValueCondition(RelationType::nameFullColumnName(), Query::In, types);
@@ -76,7 +76,7 @@ bool RelationFetch::parseStream()
         return failureResponse("Failed to query for existing relation");
     }
     const Relation::List existingRelations = relationQuery.result();
-    for (const Relation &relation : existingRelations) {
+    Q_FOREACH (const Relation &relation, existingRelations) {
         sendResponse(Protocol::FetchRelationsResponse(relation.leftId(), relation.rightId(),
                                                       relation.relationType().name().toUtf8(),
                                                       relation.remoteId().toUtf8()));

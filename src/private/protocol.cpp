@@ -3252,14 +3252,14 @@ public:
         blck.write("Time", time);
         blck.write("Flags", flags);
         blck.beginBlock("Tags");
-        for (const FetchTagsResponse &tag : tags) {
+        Q_FOREACH (const FetchTagsResponse &tag, tags) {
             blck.beginBlock();
             tag.debugString(blck);
             blck.endBlock();
         }
         blck.endBlock();
         blck.beginBlock("Relations");
-        for (const FetchRelationsResponse &rel : relations) {
+        Q_FOREACH (const FetchRelationsResponse &rel, relations) {
             blck.beginBlock();
             rel.debugString(blck);
             blck.endBlock();
@@ -3267,7 +3267,7 @@ public:
         blck.endBlock();
         blck.write("Virtual References", virtRefs);
         blck.beginBlock("Ancestors");
-        for (const Ancestor &anc : ancestors) {
+        Q_FOREACH (const Ancestor &anc, ancestors) {
             blck.beginBlock();
             anc.debugString(blck);
             blck.endBlock();
@@ -3275,7 +3275,7 @@ public:
         blck.endBlock();
         blck.write("Cached Parts", cachedParts);
         blck.beginBlock("Parts");
-        for (const StreamPayloadResponse &part : parts) {
+        Q_FOREACH (const StreamPayloadResponse &part, parts) {
             blck.beginBlock(part.payloadName());
             blck.write("Size", part.metaData().size());
             blck.write("External", part.metaData().isExternal());
@@ -5453,7 +5453,7 @@ public:
         cachePolicy.debugString(blck);
         blck.endBlock();
         blck.beginBlock("Ancestors");
-        for (const Ancestor &anc: ancestors) {
+        Q_FOREACH (const Ancestor &anc, ancestors) {
             blck.beginBlock();
             anc.debugString(blck);
             blck.endBlock();

@@ -105,21 +105,21 @@ bool Move::parseStream()
         }
 
         // Emit notification for each source collection separately
-        for (const Entity::Id &sourceId : toMove.uniqueKeys()) {
+        Q_FOREACH (const Entity::Id &sourceId, toMove.uniqueKeys()) {
             const PimItem::List &itemsToMove = toMove.values(sourceId).toVector();
             const Collection &source = sources.value(sourceId);
             store->notificationCollector()->itemsMoved(itemsToMove, source, destination);
 
-            for (PimItem &moved : toMove.values(sourceId)) {
+            for (auto iter = toMove.find(sourceId), end = toMove.end(); iter != end; ++iter) {
                 // reset RID on inter-resource moves, but only after generating the change notification
                 // so that this still contains the old one for the source resource
-                const bool isInterResourceMove = moved.collection().resource().id() != source.resource().id();
+                const bool isInterResourceMove = (*iter).collection().resource().id() != source.resource().id();
                 if (isInterResourceMove) {
-                    moved.setRemoteId(QString());
+                    (*iter).setRemoteId(QString());
                 }
 
                 // FIXME Could we aggregate the changes to a single SQL query?
-                if (!moved.update()) {
+                if ((*iter).update()) {
                     return failureResponse("Unable to update item");
                 }
             }

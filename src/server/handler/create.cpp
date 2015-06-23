@@ -52,7 +52,7 @@ bool Create::parseStream()
         // check if parent can contain a sub-folder
         parentContentTypes = parent.mimeTypes();
         bool found = false, foundVirtual = false;
-        for (const MimeType &mt : parentContentTypes) {
+        Q_FOREACH (const MimeType &mt, parentContentTypes) {
             if (mt.name() == QLatin1String("inode/directory")) {
                 found = true;
             } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
@@ -113,7 +113,7 @@ bool Create::parseStream()
 
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
-        for (const MimeType &mt : parentContentTypes) {
+        Q_FOREACH (const MimeType &mt, parentContentTypes) {
             effectiveMimeTypes << mt.name();
         }
     }

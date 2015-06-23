@@ -59,7 +59,7 @@ bool SearchPersistent::parseStream()
     QStringList queryCollections;
     QVector<qint64> queryColIds = cmd.queryCollections();
     qSort(queryColIds);
-    for (qint64 col : queryColIds) {
+    Q_FOREACH (qint64 col, queryColIds) {
         queryCollections.append(QString::number(col));
     }
 
@@ -79,7 +79,7 @@ bool SearchPersistent::parseStream()
         return failureResponse("Unable to set rights attribute on persistent search");
     }
 
-    for (const QString &mimeType : cmd.mimeTypes()) {
+    Q_FOREACH (const QString &mimeType, cmd.mimeTypes()) {
         MimeType mt = MimeType::retrieveByName(mimeType);
         if (!mt.isValid()) {
             mt.setName(mimeType);
