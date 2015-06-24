@@ -176,7 +176,9 @@ void Connection::slotNewData()
         //        with SELECT job
         context()->setTag(-1);
         context()->setCollection(Collection());
-        //Tracer::self()->connectionInput(m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()));
+        if (Tracer::self()->currentTracer() != QLatin1String("null")) {
+            Tracer::self()->connectionInput(m_identifier, QByteArray::number(tag) + ' ' + cmd.debugString().toUtf8());
+        }
 
         m_currentHandler = findHandlerForCommand(cmd.type());
         assert(m_currentHandler);
@@ -336,6 +338,9 @@ void Connection::reportTime() const
 
 void Connection::sendResponse(qint64 tag, const Protocol::Command &response)
 {
+    if (Tracer::self()->currentTracer() != QLatin1String("null")) {
+        Tracer::self()->connectionOutput(m_identifier, QByteArray::number(tag) + ' ' + response.debugString().toUtf8());
+    }
     QDataStream stream(m_socket);
     stream << tag;
     Protocol::serialize(m_socket, response);
