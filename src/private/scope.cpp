@@ -86,7 +86,7 @@ Scope::HRID &Scope::HRID::operator=(HRID &&other)
 
 bool Scope::HRID::isEmpty() const
 {
-    return id < 0 && remoteId.isEmpty();
+    return id <= 0 && remoteId.isEmpty();
 }
 
 bool Scope::HRID::operator==(const HRID &other) const
