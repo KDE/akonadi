@@ -119,7 +119,7 @@ bool Move::parseStream()
                 }
 
                 // FIXME Could we aggregate the changes to a single SQL query?
-                if ((*iter).update()) {
+                if (!(*iter).update()) {
                     return failureResponse("Unable to update item");
                 }
             }
