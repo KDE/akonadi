@@ -68,7 +68,7 @@ bool Modify::parseStream()
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::MimeTypes) {
         QStringList mts = cmd.mimeTypes();
         const MimeType::List currentMts = collection.mimeTypes();
-        bool equal;
+        bool equal = true;
         Q_FOREACH (const MimeType &currentMt, currentMts) {
             if (mts.contains(currentMt.name())) {
                 mts.removeAll(currentMt.name());
@@ -248,7 +248,7 @@ bool Modify::parseStream()
         for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             SelectQueryBuilder<CollectionAttribute> qb;
             qb.addValueCondition(CollectionAttribute::collectionIdColumn(), Query::Equals, collection.id());
-            qb.addValueCondition(CollectionAttribute::typeColumn(), Query::Equals, iter.value());
+            qb.addValueCondition(CollectionAttribute::typeColumn(), Query::Equals, iter.key());
             if (!qb.exec()) {
                 return failureResponse("Unable to retrieve collection attribute");
             }
