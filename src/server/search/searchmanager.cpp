@@ -42,6 +42,7 @@
 #include <QPluginLoader>
 #include <QDBusConnection>
 #include <QTimer>
+#include <QSemaphore>
 
 #include <memory>
 
@@ -54,7 +55,7 @@ SearchManager *SearchManager::sInstance = 0;
 
 Q_DECLARE_METATYPE(Collection)
 Q_DECLARE_METATYPE(QSet<qint64>)
-Q_DECLARE_METATYPE(QWaitCondition *)
+Q_DECLARE_METATYPE(QSemaphore *)
 
 SearchManagerThread::SearchManagerThread(const QStringList &searchEngines, QObject *parent)
     : QThread(parent)
@@ -137,7 +138,7 @@ SearchManager::SearchManager(QObject *parent)
 {
     qRegisterMetaType< QSet<qint64> >();
     qRegisterMetaType<Collection>();
-    qRegisterMetaType<QWaitCondition *>();
+    qRegisterMetaType<QSemaphore *>();
 
     Q_ASSERT(sInstance == 0);
     sInstance = this;
@@ -242,13 +243,12 @@ void SearchManager::updateSearchAsync(const Collection &collection)
     QMetaObject::invokeMethod(this, "updateSearchImpl",
                               Qt::QueuedConnection,
                               Q_ARG(Collection, collection),
-                              Q_ARG(QWaitCondition *, 0));
+                              Q_ARG(QSemaphore *, 0));
 }
 
 void SearchManager::updateSearch(const Collection &collection)
 {
     QMutex mutex;
-    QWaitCondition cond;
 
     mLock.lock();
     if (mUpdatingCollections.contains(collection.id())) {
@@ -258,15 +258,19 @@ void SearchManager::updateSearch(const Collection &collection)
     mUpdatingCollections.insert(collection.id());
     mLock.unlock();
 
+    QSemaphore sem(1);
+    sem.acquire();
+
     QMetaObject::invokeMethod(this, "updateSearchImpl",
                               Qt::QueuedConnection,
                               Q_ARG(Collection, collection),
-                              Q_ARG(QWaitCondition *, &cond));
+                              Q_ARG(QSemaphore*, &sem));
 
     // Now wait for updateSearchImpl to wake us.
-    mutex.lock();
-    cond.wait(&mutex);
-    mutex.unlock();
+    if (!sem.tryAcquire()) {
+        sem.acquire();
+    }
+    sem.release();
 
     mLock.lock();
     mUpdatingCollections.remove(collection.id());
@@ -275,10 +279,10 @@ void SearchManager::updateSearch(const Collection &collection)
 
 #define wakeUpCaller(cond) \
   if (cond) { \
-    cond->wakeAll(); \
+    cond->release(); \
   }
 
-void SearchManager::updateSearchImpl(const Collection &collection, QWaitCondition *cond)
+void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *cond)
 {
     if (collection.queryString().size() >= 32768) {
         qCWarning(AKONADISERVER_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
