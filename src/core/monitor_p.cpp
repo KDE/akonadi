@@ -1010,7 +1010,7 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
     }
 
     Collection collection = col;
-    NotificationMessageV2::Entity msgEntities = msg.entities().values().first();
+    NotificationMessageV2::Entity msgEntities = msg.entities().cbegin().value();
     if (!collection.isValid() || msg.operation() == NotificationMessageV2::Remove) {
         collection = Collection(msgEntities.id);
         collection.setResource(QString::fromUtf8(msg.resource()));

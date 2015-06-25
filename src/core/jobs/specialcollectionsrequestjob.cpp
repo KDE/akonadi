@@ -174,7 +174,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         q->commit();
 
     } else {
-        const QString resourceId = mFoldersForResource.keys().first();
+        const QString resourceId = mFoldersForResource.cbegin().key();
         qDebug() << "A resource is done," << mFoldersForResource.count()
                  << "more to do. Now doing resource" << resourceId;
         ResourceScanJob *resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
