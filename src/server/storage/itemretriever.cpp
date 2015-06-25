@@ -164,10 +164,10 @@ QSqlQuery ItemRetriever::buildQuery() const
     qb.addColumn(PartType::nameFullColumnName());
     qb.addColumn(Part::datasizeFullColumnName());
 
-    if (mScope.scope() != Scope::Invalid) {
-        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
-    } else {
+    if (!mItemSet.isEmpty()) {
         ItemQueryHelper::itemSetToQuery(mItemSet, qb, mCollection);
+    } else {
+        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
     }
 
     // prevent a resource to trigger item retrieval from itself
