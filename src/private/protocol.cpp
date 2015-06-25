@@ -565,8 +565,7 @@ Command Factory::command(Command::Type type)
 {
     auto iter = sFactoryPrivate->registrar.constFind(type);
     if (iter == sFactoryPrivate->registrar.constEnd()) {
-        Q_ASSERT_X(iter != sFactoryPrivate->registrar.constEnd(),
-                    "Aknadi::Protocol::Factory::command()", "Invalid command");
+        return Command();
     }
     return iter.value().first();
 }
@@ -575,8 +574,7 @@ Response Factory::response(Command::Type type)
 {
     auto iter = sFactoryPrivate->registrar.constFind(type);
     if (iter == sFactoryPrivate->registrar.constEnd()) {
-        Q_ASSERT_X(iter != sFactoryPrivate->registrar.constEnd(),
-                    "Akonadi::Protocol::Factory::response()", "Invalid response");
+        return Response();
     }
     return iter.value().second();
 }
@@ -1522,6 +1520,13 @@ public:
 
 
 
+#define checkCopyInvariant(_cmdType) \
+    if (std::is_base_of<Response, std::remove_pointer<decltype(this)>::type>::value) { \
+        assert(d_func()->commandType == Command::Invalid || d_func()->commandType == (_cmdType | Command::_ResponseBit)); \
+    } else { \
+        assert(d_func()->commandType == Command::Invalid || d_func()->commandType == _cmdType); \
+    }
+
 
 AKONADI_DECLARE_PRIVATE(HelloResponse)
 
@@ -1538,7 +1543,7 @@ HelloResponse::HelloResponse()
 HelloResponse::HelloResponse(const Command &command)
     : Response(command)
 {
-    assert(typeid(*d_func()) == typeid(HelloResponsePrivate));
+    checkCopyInvariant(Command::Hello);
 }
 
 QString HelloResponse::serverName() const
@@ -1637,7 +1642,7 @@ LoginCommand::LoginCommand(const QByteArray &sessionId)
 LoginCommand::LoginCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::Login);
+    checkCopyInvariant(Command::Login);
 }
 
 QByteArray LoginCommand::sessionId() const
@@ -1671,7 +1676,7 @@ LoginResponse::LoginResponse()
 LoginResponse::LoginResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::Login | Command::_ResponseBit));
+    checkCopyInvariant(Command::Login);
 }
 
 
@@ -1690,7 +1695,7 @@ LogoutCommand::LogoutCommand()
 LogoutCommand::LogoutCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::Logout);
+    checkCopyInvariant(Command::Logout);
 }
 
 
@@ -1707,7 +1712,7 @@ LogoutResponse::LogoutResponse()
 LogoutResponse::LogoutResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::Logout | Command::_ResponseBit));
+    checkCopyInvariant(Command::Logout);
 }
 
 
@@ -1792,7 +1797,7 @@ TransactionCommand::TransactionCommand(TransactionCommand::Mode mode)
 TransactionCommand::TransactionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::Transaction);
+    checkCopyInvariant(Command::Transaction);
 }
 
 TransactionCommand::Mode TransactionCommand::mode() const
@@ -1825,7 +1830,7 @@ TransactionResponse::TransactionResponse()
 TransactionResponse::TransactionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::Transaction | Command::_ResponseBit));
+    checkCopyInvariant(Command::Transaction);
 }
 
 
@@ -2005,7 +2010,7 @@ CreateItemCommand::CreateItemCommand()
 CreateItemCommand::CreateItemCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::CreateItem);
+    checkCopyInvariant(Command::CreateItem);
 }
 
 void CreateItemCommand::setMergeModes(const MergeModes &mode)
@@ -2173,7 +2178,7 @@ CreateItemResponse::CreateItemResponse()
 CreateItemResponse::CreateItemResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::CreateItem | Command::_ResponseBit));
+    checkCopyInvariant(Command::CreateItem);
 }
 
 
@@ -2256,7 +2261,7 @@ CopyItemsCommand::CopyItemsCommand(const Scope &items, const Scope &dest)
 CopyItemsCommand::CopyItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::CopyItems);
+    checkCopyInvariant(Command::CopyItems);
 }
 
 Scope CopyItemsCommand::items() const
@@ -2295,7 +2300,7 @@ CopyItemsResponse::CopyItemsResponse()
 CopyItemsResponse::CopyItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::CopyItems | Command::_ResponseBit));
+    checkCopyInvariant(Command::CopyItems);
 }
 
 
@@ -2371,7 +2376,7 @@ DeleteItemsCommand::DeleteItemsCommand(const Scope &items, const ScopeContext &c
 DeleteItemsCommand::DeleteItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::DeleteItems);
+    checkCopyInvariant(Command::DeleteItems);
 }
 
 Scope DeleteItemsCommand::items() const
@@ -2410,7 +2415,7 @@ DeleteItemsResponse::DeleteItemsResponse()
 DeleteItemsResponse::DeleteItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::DeleteItems | Command::_ResponseBit));
+    checkCopyInvariant(Command::DeleteItems);
 }
 
 
@@ -2522,7 +2527,7 @@ FetchRelationsCommand::FetchRelationsCommand(qint64 left, qint64 right,
 FetchRelationsCommand::FetchRelationsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::FetchRelations);
+    checkCopyInvariant(Command::FetchRelations);
 }
 
 void FetchRelationsCommand::setLeft(qint64 left)
@@ -2675,7 +2680,7 @@ FetchRelationsResponse::FetchRelationsResponse(qint64 left, qint64 right,
 FetchRelationsResponse::FetchRelationsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::FetchRelations | Command::_ResponseBit));
+    checkCopyInvariant(Command::FetchRelations);
 }
 
 qint64 FetchRelationsResponse::left() const
@@ -2792,7 +2797,7 @@ FetchTagsCommand::FetchTagsCommand(const Scope &scope)
 FetchTagsCommand::FetchTagsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::FetchTags);
+    checkCopyInvariant(Command::FetchTags);
 }
 
 Scope FetchTagsCommand::scope() const
@@ -2943,7 +2948,7 @@ FetchTagsResponse::FetchTagsResponse(qint64 id, const QByteArray &gid, const QBy
 FetchTagsResponse::FetchTagsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::FetchTags | Command::_ResponseBit));
+    checkCopyInvariant(Command::FetchTags);
 }
 
 qint64 FetchTagsResponse::id() const
@@ -3103,7 +3108,7 @@ FetchItemsCommand::FetchItemsCommand(const Scope &scope, const ScopeContext &con
 FetchItemsCommand::FetchItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::FetchItems);
+    checkCopyInvariant(Command::FetchItems);
 }
 
 Scope FetchItemsCommand::scope() const
@@ -3327,7 +3332,7 @@ FetchItemsResponse::FetchItemsResponse(qint64 id)
 FetchItemsResponse::FetchItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::FetchItems | Command::_ResponseBit));
+    checkCopyInvariant(Command::FetchItems);
 }
 
 qint64 FetchItemsResponse::id() const
@@ -3566,7 +3571,7 @@ LinkItemsCommand::LinkItemsCommand(Action action, const Scope &items, const Scop
 LinkItemsCommand::LinkItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::LinkItems);
+    checkCopyInvariant(Command::LinkItems);
 }
 
 LinkItemsCommand::Action LinkItemsCommand::action() const
@@ -3608,7 +3613,7 @@ LinkItemsResponse::LinkItemsResponse()
 LinkItemsResponse::LinkItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::LinkItems | Command::_ResponseBit));
+    checkCopyInvariant(Command::LinkItems);
 }
 
 
@@ -3926,7 +3931,7 @@ ModifyItemsCommand::ModifyItemsCommand(const Scope &items)
 ModifyItemsCommand::ModifyItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::ModifyItems);
+    checkCopyInvariant(Command::ModifyItems);
 }
 
 ModifyItemsCommand::ModifiedParts ModifyItemsCommand::modifiedParts() const
@@ -4216,7 +4221,7 @@ ModifyItemsResponse::ModifyItemsResponse(const QDateTime &modificationDt)
 ModifyItemsResponse::ModifyItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::ModifyItems | Command::_ResponseBit));
+    checkCopyInvariant(Command::ModifyItems);
 }
 
 qint64 ModifyItemsResponse::id() const
@@ -4335,7 +4340,7 @@ MoveItemsCommand::MoveItemsCommand(const Scope &items, const ScopeContext &ctx,
 MoveItemsCommand::MoveItemsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::MoveItems);
+    checkCopyInvariant(Command::MoveItems);
 }
 
 Scope MoveItemsCommand::items() const
@@ -4377,7 +4382,7 @@ MoveItemsResponse::MoveItemsResponse()
 MoveItemsResponse::MoveItemsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::MoveItems | Command::_ResponseBit));
+    checkCopyInvariant(Command::MoveItems);
 }
 
 
@@ -4516,7 +4521,7 @@ CreateCollectionCommand::CreateCollectionCommand()
 CreateCollectionCommand::CreateCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::CreateCollection);
+    checkCopyInvariant(Command::CreateCollection);
 }
 
 void CreateCollectionCommand::setParent(const Scope &parent)
@@ -4653,7 +4658,7 @@ CreateCollectionResponse::CreateCollectionResponse()
 CreateCollectionResponse::CreateCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::CreateCollection | Command::_ResponseBit));
+    checkCopyInvariant(Command::CreateCollection);
 }
 
 
@@ -4734,7 +4739,7 @@ CopyCollectionCommand::CopyCollectionCommand(const Scope &collection,
 CopyCollectionCommand::CopyCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::CopyCollection);
+    checkCopyInvariant(Command::CopyCollection);
 }
 
 Scope CopyCollectionCommand::collection() const
@@ -4771,7 +4776,7 @@ CopyCollectionResponse::CopyCollectionResponse()
 CopyCollectionResponse::CopyCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::CopyCollection | Command::_ResponseBit));
+    checkCopyInvariant(Command::CopyCollection);
 }
 
 
@@ -4843,7 +4848,7 @@ DeleteCollectionCommand::DeleteCollectionCommand(const Scope &collection)
 DeleteCollectionCommand::DeleteCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::DeleteCollection);
+    checkCopyInvariant(Command::DeleteCollection);
 }
 
 Scope DeleteCollectionCommand::collection() const
@@ -4876,7 +4881,7 @@ DeleteCollectionResponse::DeleteCollectionResponse()
 DeleteCollectionResponse::DeleteCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::DeleteCollection | Command::_ResponseBit));
+    checkCopyInvariant(Command::DeleteCollection);
 }
 
 
@@ -4948,7 +4953,7 @@ FetchCollectionStatsCommand::FetchCollectionStatsCommand(const Scope &collection
 FetchCollectionStatsCommand::FetchCollectionStatsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::FetchCollectionStats);
+    checkCopyInvariant(Command::FetchCollectionStats);
 }
 
 Scope FetchCollectionStatsCommand::collection() const
@@ -5053,7 +5058,7 @@ FetchCollectionStatsResponse::FetchCollectionStatsResponse(qint64 count,
 FetchCollectionStatsResponse::FetchCollectionStatsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::FetchCollectionStats | Command::_ResponseBit));
+    checkCopyInvariant(Command::FetchCollectionStats);
 }
 
 qint64 FetchCollectionStatsResponse::count() const
@@ -5216,7 +5221,7 @@ FetchCollectionsCommand::FetchCollectionsCommand(const Scope &collections)
 FetchCollectionsCommand::FetchCollectionsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::FetchCollections);
+    checkCopyInvariant(Command::FetchCollections);
 }
 
 Scope FetchCollectionsCommand::collections() const
@@ -5512,7 +5517,7 @@ FetchCollectionsResponse::FetchCollectionsResponse(qint64 id)
 FetchCollectionsResponse::FetchCollectionsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::FetchCollections | Command::_ResponseBit));
+    checkCopyInvariant(Command::FetchCollections);
 }
 
 qint64 FetchCollectionsResponse::id() const
@@ -5987,7 +5992,7 @@ ModifyCollectionCommand::ModifyCollectionCommand(const Scope &collection)
 ModifyCollectionCommand::ModifyCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::ModifyCollection);
+    checkCopyInvariant(Command::ModifyCollection);
 }
 
 Scope ModifyCollectionCommand::collection() const
@@ -6195,7 +6200,7 @@ ModifyCollectionResponse::ModifyCollectionResponse()
 ModifyCollectionResponse::ModifyCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::ModifyCollection | Command::_ResponseBit));
+    checkCopyInvariant(Command::ModifyCollection);
 }
 
 
@@ -6276,7 +6281,7 @@ MoveCollectionCommand::MoveCollectionCommand(const Scope &collection,
 MoveCollectionCommand::MoveCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::MoveCollection);
+    checkCopyInvariant(Command::MoveCollection);
 }
 
 Scope MoveCollectionCommand::collection() const
@@ -6313,7 +6318,7 @@ MoveCollectionResponse::MoveCollectionResponse()
 MoveCollectionResponse::MoveCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::MoveCollection | Command::_ResponseBit));
+    checkCopyInvariant(Command::MoveCollection);
 }
 
 
@@ -6385,7 +6390,7 @@ SelectCollectionCommand::SelectCollectionCommand(const Scope &collection)
 SelectCollectionCommand::SelectCollectionCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::SelectCollection);
+    checkCopyInvariant(Command::SelectCollection);
 }
 
 Scope SelectCollectionCommand::collection() const
@@ -6417,7 +6422,7 @@ SelectCollectionResponse::SelectCollectionResponse()
 SelectCollectionResponse::SelectCollectionResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::SelectCollection | Command::_ResponseBit));
+    checkCopyInvariant(Command::SelectCollection);
 }
 
 
@@ -6516,7 +6521,7 @@ SearchCommand::SearchCommand()
 SearchCommand::SearchCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::Search);
+    checkCopyInvariant(Command::Search);
 }
 
 void SearchCommand::setMimeTypes(const QStringList &mimeTypes)
@@ -6597,7 +6602,7 @@ SearchResponse::SearchResponse()
 SearchResponse::SearchResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::Search | Command::_ResponseBit));
+    checkCopyInvariant(Command::Search);
 }
 
 
@@ -6687,7 +6692,7 @@ SearchResultCommand::SearchResultCommand(const QByteArray &searchId,
 SearchResultCommand::SearchResultCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::SearchResult);
+    checkCopyInvariant(Command::SearchResult);
 }
 
 QByteArray SearchResultCommand::searchId() const
@@ -6731,7 +6736,7 @@ SearchResultResponse::SearchResultResponse()
 SearchResultResponse::SearchResultResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::SearchResult | Command::_ResponseBit));
+    checkCopyInvariant(Command::SearchResult);
 }
 
 
@@ -6828,7 +6833,7 @@ StoreSearchCommand::StoreSearchCommand()
 StoreSearchCommand::StoreSearchCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::StoreSearch);
+    checkCopyInvariant(Command::StoreSearch);
 }
 
 void StoreSearchCommand::setName(const QString &name)
@@ -6910,7 +6915,7 @@ StoreSearchResponse::StoreSearchResponse()
 StoreSearchResponse::StoreSearchResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::StoreSearch | Command::_ResponseBit));
+    checkCopyInvariant(Command::StoreSearch);
 }
 
 
@@ -7008,7 +7013,7 @@ CreateTagCommand::CreateTagCommand()
 CreateTagCommand::CreateTagCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::CreateTag);
+    checkCopyInvariant(Command::CreateTag);
 }
 
 void CreateTagCommand::setGid(const QByteArray &gid)
@@ -7090,7 +7095,7 @@ CreateTagResponse::CreateTagResponse()
 CreateTagResponse::CreateTagResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::CreateTag | Command::_ResponseBit));
+    checkCopyInvariant(Command::CreateTag);
 }
 
 
@@ -7163,7 +7168,7 @@ DeleteTagCommand::DeleteTagCommand(const Scope &tag)
 DeleteTagCommand::DeleteTagCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::DeleteTag);
+    checkCopyInvariant(Command::DeleteTag);
 }
 
 Scope DeleteTagCommand::tag() const
@@ -7196,7 +7201,7 @@ DeleteTagResponse::DeleteTagResponse()
 DeleteTagResponse::DeleteTagResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::DeleteTag | Command::_ResponseBit));
+    checkCopyInvariant(Command::DeleteTag);
 }
 
 
@@ -7356,7 +7361,7 @@ ModifyTagCommand::ModifyTagCommand(qint64 id)
 ModifyTagCommand::ModifyTagCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::ModifyTag);
+    checkCopyInvariant(Command::ModifyTag);
 }
 
 qint64 ModifyTagCommand::tagId() const
@@ -7445,7 +7450,7 @@ ModifyTagResponse::ModifyTagResponse()
 ModifyTagResponse::ModifyTagResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::ModifyTag | Command::_ResponseBit));
+    checkCopyInvariant(Command::ModifyTag);
 }
 
 
@@ -7543,7 +7548,7 @@ ModifyRelationCommand::ModifyRelationCommand(qint64 left, qint64 right,
 ModifyRelationCommand::ModifyRelationCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::ModifyRelation);
+    checkCopyInvariant(Command::ModifyRelation);
 }
 
 void ModifyRelationCommand::setLeft(qint64 left)
@@ -7607,7 +7612,7 @@ ModifyRelationResponse::ModifyRelationResponse()
 ModifyRelationResponse::ModifyRelationResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::ModifyRelation | Command::_ResponseBit));
+    checkCopyInvariant(Command::ModifyRelation);
 }
 
 
@@ -7694,7 +7699,7 @@ RemoveRelationsCommand::RemoveRelationsCommand(qint64 left, qint64 right, const 
 RemoveRelationsCommand::RemoveRelationsCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::RemoveRelations);
+    checkCopyInvariant(Command::RemoveRelations);
 }
 
 void RemoveRelationsCommand::setLeft(qint64 left)
@@ -7749,7 +7754,7 @@ RemoveRelationsResponse::RemoveRelationsResponse()
 RemoveRelationsResponse::RemoveRelationsResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::RemoveRelations | Command::_ResponseBit));
+    checkCopyInvariant(Command::RemoveRelations);
 }
 
 
@@ -7821,7 +7826,7 @@ SelectResourceCommand::SelectResourceCommand(const QString &resourceId)
 SelectResourceCommand::SelectResourceCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::SelectResource);
+    checkCopyInvariant(Command::SelectResource);
 }
 
 QString SelectResourceCommand::resourceId() const
@@ -7854,7 +7859,7 @@ SelectResourceResponse::SelectResourceResponse()
 SelectResourceResponse::SelectResourceResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::SelectResource | Command::_ResponseBit));
+    checkCopyInvariant(Command::SelectResource);
 }
 
 
@@ -7943,7 +7948,7 @@ StreamPayloadCommand::StreamPayloadCommand(const QByteArray &name, Request reque
 StreamPayloadCommand::StreamPayloadCommand(const Command &other)
     : Command(other)
 {
-    assert(d_func()->commandType == Command::StreamPayload);
+    checkCopyInvariant(Command::StreamPayload);
 }
 
 void StreamPayloadCommand::setPayloadName(const QByteArray &name)
@@ -8088,7 +8093,7 @@ StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
 StreamPayloadResponse::StreamPayloadResponse(const Command &other)
     : Response(other)
 {
-    assert(d_func()->commandType == (Command::StreamPayload | Command::_ResponseBit));
+    checkCopyInvariant(Command::StreamPayload);
 }
 
 void StreamPayloadResponse::setPayloadName(const QByteArray &payloadName)

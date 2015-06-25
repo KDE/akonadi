@@ -144,7 +144,7 @@ void Connection::slotNewData()
     }
 
     QString currentCommand;
-    while (m_socket->bytesAvailable() > 0) {
+    while (m_socket->bytesAvailable() > (int) sizeof(qint64)) {
         QDataStream stream(m_socket);
 
         qint64 tag = -1;
@@ -167,8 +167,9 @@ void Connection::slotNewData()
         }
 
         if (cmd.type() == Protocol::Command::Invalid) {
-            // TODO: Don't so harsh, just send back an error
+            qDebug() << "Received an invalid command: resetting connection";
             slotConnectionStateChange(Server::LoggingOut);
+            m_socket->close();
             return;
         }
 
@@ -353,7 +354,9 @@ void Connection::sendResponse(const Protocol::Command &response)
 
 Protocol::Command Connection::readCommand()
 {
-    m_socket->waitForReadyRead(500);
+    while (m_socket->bytesAvailable() < (int) sizeof(qint64)) {
+        m_socket->waitForReadyRead(500);
+    }
 
     QDataStream stream(m_socket);
     qint64 tag;

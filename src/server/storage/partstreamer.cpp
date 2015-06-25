@@ -63,7 +63,7 @@ Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partN
     Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(partName, Protocol::StreamPayloadCommand::MetaData));
 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError()) {
+    if (response.isError() || !response.isValid()) {
         mError = QStringLiteral("Client failed to provide part metadata");
         return Protocol::PartMetaData();
     }
@@ -109,7 +109,7 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
     Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(metaPart.name(), Protocol::StreamPayloadCommand::Data));
 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError()) {
+    if (response.isError() || !response.isValid()) {
         mError = QStringLiteral("Client failed to provide payload data");
         akError() << mError;
         return false;
@@ -195,7 +195,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     Q_EMIT responseAvailable(cmd);
 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError()) {
+    if (response.isError() || !response.isValid()) {
         mError = QStringLiteral("Client failed to store payload into file");
         akError() << mError;
         return false;
