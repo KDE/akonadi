@@ -21,9 +21,9 @@
 #define AKONADI_TRASHRESTOREJOB_H
 
 #include "akonadicore_export.h"
+#include "collection.h"
 #include "job.h"
 #include "item.h"
-#include "collection.h"
 
 namespace Akonadi
 {
