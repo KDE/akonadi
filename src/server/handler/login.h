@@ -33,7 +33,6 @@ class Login : public Handler
 {
     Q_OBJECT
 public:
-    Login();
     bool parseStream();
 };
 

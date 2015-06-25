@@ -20,51 +20,44 @@
 #include "remove.h"
 
 #include "connection.h"
-#include "entities.h"
-#include "imapstreamparser.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
-#include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Remove::Remove(Scope::SelectionScope scope)
-    : mScope(scope)
-{
-}
-
 bool Remove::parseStream()
 {
-    mScope.parseScope(m_streamParser);
-    connection()->context()->parseContext(m_streamParser);
-    akDebug() << "Tag context:" << connection()->context()->tagId();
-    akDebug() << "Collection context: " << connection()->context()->collectionId();
+    Protocol::DeleteItemsCommand cmd(m_command);
+
+    connection()->context()->setScopeContext(cmd.scopeContext());
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(mScope, connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
 
-    if (qb.exec()) {
-        const QVector<PimItem> items = qb.result();
-        if (items.isEmpty()) {
-            throw HandlerException("No items found");
-        }
-        if (!store->cleanupPimItems(items)) {
-            throw HandlerException("Deletion failed");
-        }
-    } else {
-        throw HandlerException("Unable to execute query");
+    if (!qb.exec()) {
+        return failureResponse("Unable to execute query");
+    }
+
+
+    const QVector<PimItem> items = qb.result();
+    if (items.isEmpty()) {
+        return failureResponse("No items found");
+    }
+    if (!store->cleanupPimItems(items)) {
+        return failureResponse("Deletion failed");
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction.");
+        return failureResponse("Unable to commit transaction");
     }
 
-    return successResponse("REMOVE complete");
+    return successResponse<Protocol::DeleteItemsResponse>();
 }

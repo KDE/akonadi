@@ -22,11 +22,7 @@
 #define AKONADISTORE_H
 
 #include "handler.h"
-#include "scope.h"
 #include "entities.h"
-#include "storage/entity.h"
-
-#include <private/imapset_p.h>
 
 namespace Akonadi {
 namespace Server {
@@ -100,36 +96,15 @@ class Store : public Handler
     Q_OBJECT
 
 public:
-    Store(Scope::SelectionScope scope);
     bool parseStream();
 
 private:
-    enum Operation {
-        Replace,
-        Add,
-        Delete
-    };
-
-    void parseCommand();
-
-    bool replaceFlags(const PimItem::List &items, const QVector<QByteArray> &flags);
-    bool addFlags(const PimItem::List &items, const QVector<QByteArray> &flags, bool &flagsChanged);
-    bool deleteFlags(const PimItem::List &items, const QVector<QByteArray> &flags);
-    bool replaceTags(const PimItem::List &items, const Tag::List &tags);
-    bool addTags(const PimItem::List &items, const Tag::List &tags, bool &tagsChanged);
-    bool deleteTags(const PimItem::List &items, const Tag::List &tags);
-    bool setGid(const PimItem &item, const QString &gid);
-    void sendPimItemResponse(const PimItem &pimItem);
-
-    bool processTagsChange(Store::Operation operation, const PimItem::List &items,
-                           const Tag::List &tags, QSet<QByteArray> &changes);
-
-private:
-    Scope mScope;
-    int mPos;
-    qint64 mPreviousRevision;
-    qint64 mSize;
-    bool mCheckRevision;
+    bool replaceFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);
+    bool addFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);
+    bool deleteFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);
+    bool replaceTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged);
+    bool addTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged);
+    bool deleteTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged);
 };
 
 } // namespace Server

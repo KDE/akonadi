@@ -22,7 +22,6 @@
 #define AKONADI_RELATIONSTORE_H
 
 #include "handler.h"
-#include "scope.h"
 
 
 namespace Akonadi {
@@ -35,15 +34,10 @@ class RelationStore : public Handler
     Q_OBJECT
 
 public:
-    RelationStore(Scope::SelectionScope scope);
-    ~RelationStore();
-
     bool parseStream();
 
 private:
     Relation fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId);
-
-    Scope mScope;
 };
 
 } // namespace Server

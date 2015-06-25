@@ -19,302 +19,117 @@
 
 #include "akappend.h"
 
-#include <private/imapparser_p.h>
-#include <private/protocol_p.h>
-
-#include "imapstreamparser.h"
-
-#include "response.h"
-#include "handlerhelper.h"
-
-#include "akonadi.h"
+#include "fetchhelper.h"
 #include "connection.h"
 #include "preprocessormanager.h"
+#include "handlerhelper.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/transaction.h"
 #include "storage/parttypehelper.h"
 #include "storage/dbconfig.h"
 #include "storage/partstreamer.h"
 #include "storage/parthelper.h"
-
-#include <QtCore/QDebug>
+#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-AkAppend::AkAppend()
-    : Handler()
+static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATTACHMENT"
+                                                                        << "$INVITATION"
+                                                                        << "$ENCRYPTED"
+                                                                        << "$SIGNED"
+                                                                        << "$WATCHED";
+
+bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
+                            Collection &parentCol)
 {
-}
-
-AkAppend::~AkAppend()
-{
-}
-
-QByteArray AkAppend::parseFlag(const QByteArray &flag) const
-{
-    const int pos1 = flag.indexOf('[');
-    const int pos2 = flag.lastIndexOf(']');
-    return flag.mid(pos1 + 1, pos2 - pos1 - 1);
-}
-
-bool AkAppend::buildPimItem(PimItem &item, Collection &col,
-                            ChangedAttributes &itemFlags,
-                            ChangedAttributes &itemTagsRID,
-                            ChangedAttributes &itemTagsGID)
-{
-    // Arguments:  mailbox name
-    //        OPTIONAL flag parenthesized list
-    //        OPTIONAL date/time string
-    //        (partname literal)+
-    //
-    // Syntax:
-    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
-    const QByteArray mailbox = m_streamParser->readString();
-
-    const qint64 size = m_streamParser->readNumber();
-    // parse optional flag parenthesized list
-    // Syntax:
-    // flag-list      = "(" [flag *(SP flag)] ")"
-    // flag           = "\ANSWERED" / "\FLAGGED" / "\DELETED" / "\SEEN" /
-    //                  "\DRAFT" / flag-keyword / flag-extension
-    //                    ; Does not include "\Recent"
-    // flag-extension = "\" atom
-    // flag-keyword   = atom
-    QList<QByteArray> flags;
-    if (m_streamParser->hasList()) {
-        flags = m_streamParser->readParenthesizedList();
+    parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    if (!parentCol.isValid()) {
+        return failureResponse("Invalid parent collection");
+    }
+    if (parentCol.isVirtual()) {
+        return failureResponse("Cannot append item into virtual collection");
     }
 
-    // parse optional date/time string
-    QDateTime dateTime;
-    if (m_streamParser->hasDateTime()) {
-        dateTime = m_streamParser->readDateTime().toUTC();
-        // FIXME Should we return an error if m_dateTime is invalid?
-    } else {
-        // if date/time is not given then it will be set to the current date/time
-        // converted to UTC.
-        dateTime = QDateTime::currentDateTime().toUTC();
-    }
-
-    Response response;
-
-    col = HandlerHelper::collectionFromIdOrName(mailbox);
-    if (!col.isValid()) {
-        throw HandlerException(QByteArray("Unknown collection for '") + mailbox + QByteArray("'."));
-    }
-    if (col.isVirtual()) {
-        throw HandlerException("Cannot append item into virtual collection");
-    }
-
-    QByteArray mt;
-    QString remote_id;
-    QString remote_revision;
-    QString gid;
-    Q_FOREACH (const QByteArray &flag, flags) {
-        if (flag.startsWith(AKONADI_FLAG_MIMETYPE)) {
-            mt = parseFlag(flag);
-        } else if (flag.startsWith(AKONADI_FLAG_REMOTEID)) {
-            remote_id = QString::fromUtf8(parseFlag(flag));
-        } else if (flag.startsWith(AKONADI_FLAG_REMOTEREVISION)) {
-            remote_revision = QString::fromUtf8(parseFlag(flag));
-        } else if (flag.startsWith(AKONADI_FLAG_GID)) {
-            gid = QString::fromUtf8(parseFlag(flag));
-        } else if (flag.startsWith("+" AKONADI_FLAG_TAG)) {
-            itemTagsGID.incremental = true;
-            itemTagsGID.added.append(parseFlag(flag));
-        } else if (flag.startsWith("-" AKONADI_FLAG_TAG)) {
-            itemTagsGID.incremental = true;
-            itemTagsGID.removed.append(parseFlag(flag));
-        } else if (flag.startsWith(AKONADI_FLAG_TAG)) {
-            itemTagsGID.incremental = false;
-            itemTagsGID.added.append(parseFlag(flag));
-        } else if (flag.startsWith("+" AKONADI_FLAG_RTAG)) {
-            itemTagsRID.incremental = true;
-            itemTagsRID.added.append(parseFlag(flag));
-        } else if (flag.startsWith("-" AKONADI_FLAG_RTAG)) {
-            itemTagsRID.incremental = true;
-            itemTagsRID.removed.append(parseFlag(flag));
-        } else if (flag.startsWith(AKONADI_FLAG_RTAG)) {
-            itemTagsRID.incremental = false;
-            itemTagsRID.added.append(parseFlag(flag));
-        } else if (flag.startsWith('+')) {
-            itemFlags.incremental = true;
-            itemFlags.added.append(flag.mid(1));
-        } else if (flag.startsWith('-')) {
-            itemFlags.incremental = true;
-            itemFlags.removed.append(flag.mid(1));
-        } else {
-            itemFlags.incremental = false;
-            itemFlags.added.append(flag);
-        }
-    }
-    // standard imap does not know this attribute, so that's mail
-    if (mt.isEmpty()) {
-        mt = "message/rfc822";
-    }
-    MimeType mimeType = MimeType::retrieveByName(QString::fromLatin1(mt));
+    MimeType mimeType = MimeType::retrieveByName(cmd.mimeType());
     if (!mimeType.isValid()) {
-        MimeType m(QString::fromLatin1(mt));
+        MimeType m(cmd.mimeType());
         if (!m.insert()) {
-            return failureResponse(QByteArray("Unable to create mimetype '") + mt + QByteArray("'."));
+            return failureResponse(QStringLiteral("Unable to create mimetype '") % cmd.mimeType() % QStringLiteral("'."));
         }
         mimeType = m;
     }
 
     item.setRev(0);
-    item.setSize(size);
+    item.setSize(cmd.itemSize());
     item.setMimeTypeId(mimeType.id());
-    item.setCollectionId(col.id());
-    if (dateTime.isValid()) {
-        item.setDatetime(dateTime);
-    }
-    if (remote_id.isEmpty()) {
+    item.setCollectionId(parentCol.id());
+    item.setDatetime(cmd.dateTime().isValid() ? cmd.dateTime() : QDateTime::currentDateTimeUtc());
+    if (cmd.remoteId().isEmpty()) {
         // from application
         item.setDirty(true);
     } else {
         // from resource
-        item.setRemoteId(remote_id);
+        item.setRemoteId(cmd.remoteId());
         item.setDirty(false);
     }
-    item.setRemoteRevision(remote_revision);
-    item.setGid(gid);
+    item.setRemoteRevision(cmd.remoteRevision());
+    item.setGid(cmd.gid());
     item.setAtime(QDateTime::currentDateTime());
 
     return true;
 }
 
-// This is used for clients that don't support item streaming
-bool AkAppend::readParts(PimItem &pimItem)
-{
-
-    // parse part specification
-    QVector<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
-    QByteArray partName = "";
-    qint64 partSize = -1;
-    qint64 partSizes = 0;
-    bool ok = false;
-
-    qint64 realSize = pimItem.size();
-
-    const QList<QByteArray> list = m_streamParser->readParenthesizedList();
-    Q_FOREACH (const QByteArray &item, list) {
-        if (partName.isEmpty() && partSize == -1) {
-            partName = item;
-            continue;
-        }
-        if (item.startsWith(':')) {
-            int pos = 1;
-            ImapParser::parseNumber(item, partSize, &ok, pos);
-            if (!ok) {
-                partSize = 0;
-            }
-
-            int version = 0;
-            QByteArray plainPartName;
-            ImapParser::splitVersionedKey(partName, plainPartName, version);
-
-            partSpecs.append(qMakePair(plainPartName, qMakePair(partSize, version)));
-            partName = "";
-            partSizes += partSize;
-            partSize = -1;
-        }
-    }
-
-    realSize = qMax(partSizes, realSize);
-
-    const QByteArray allParts = m_streamParser->readString();
-
-    // chop up literal data in parts
-    int pos = 0; // traverse through part data now
-    QPair<QByteArray, QPair<qint64, int> > partSpec;
-    Q_FOREACH (partSpec, partSpecs) {
-        // wrap data into a part
-        Part part;
-        part.setPimItemId(pimItem.id());
-        part.setPartType(PartTypeHelper::fromFqName(partSpec.first));
-        part.setData(allParts.mid(pos, partSpec.second.first));
-        if (partSpec.second.second != 0) {
-            part.setVersion(partSpec.second.second);
-        }
-        part.setDatasize(partSpec.second.first);
-
-        if (!PartHelper::insert(&part)) {
-            return failureResponse("Unable to append item part");
-        }
-
-        pos += partSpec.second.first;
-    }
-
-    if (realSize != pimItem.size()) {
-        pimItem.setSize(realSize);
-        pimItem.update();
-    }
-
-    return true;
-}
-
-bool AkAppend::insertItem(PimItem &item, const Collection &parentCol,
-                          const QVector<QByteArray> &itemFlags,
-                          const QVector<QByteArray> &itemTagsRID,
-                          const QVector<QByteArray> &itemTagsGID)
+bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
+                          const Collection &parentCol)
 {
     if (!item.insert()) {
         return failureResponse("Failed to append item");
     }
 
     // set message flags
-    // This will hit an entry in cache inserted there in buildPimItem()
-    const Flag::List flagList = HandlerHelper::resolveFlags(itemFlags);
-    bool flagsChanged = false;
-    if (!DataStore::self()->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true)) {
-        return failureResponse("Unable to append item flags.");
+    const QSet<QByteArray> flags = cmd.mergeModes() == Protocol::CreateItemCommand::None ? cmd.flags() : cmd.addedFlags();
+    if (!flags.isEmpty()) {
+        // This will hit an entry in cache inserted there in buildPimItem()
+        const Flag::List flagList = HandlerHelper::resolveFlags(flags);
+        bool flagsChanged = false;
+        if (!DataStore::self()->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true)) {
+            return failureResponse("Unable to append item flags.");
+        }
     }
 
-    Tag::List tagList;
-    if (!itemTagsGID.isEmpty()) {
-        tagList << HandlerHelper::resolveTagsByGID(itemTagsGID);
-    }
-    if (!itemTagsRID.isEmpty()) {
-        tagList << HandlerHelper::resolveTagsByRID(itemTagsRID, connection()->context());
-    }
-    bool tagsChanged;
-    if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
-        return failureResponse("Unable to append item tags.");
+    const Scope tags = cmd.mergeModes() == Protocol::CreateItemCommand::None ? cmd.tags() : cmd.addedTags();
+    if (!tags.isEmpty()) {
+        const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+        bool tagsChanged = false;
+        if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
+            return failureResponse("Unable to append item tags.");
+        }
     }
 
     // Handle individual parts
     qint64 partSizes = 0;
-    if (connection()->capabilities().akAppendStreaming()) {
-        QByteArray partName /* unused */;
-        qint64 partSize;
-        m_streamParser->beginList();
-        PartStreamer streamer(connection(), m_streamParser, item, this);
-        connect(&streamer, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-                this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-        while (!m_streamParser->atListEnd()) {
-            QByteArray command = m_streamParser->readString();
-            if (command.isEmpty()) {
-                throw HandlerException("Syntax error");
-            }
-
-            if (!streamer.stream(command, false, partName, partSize)) {
-                throw HandlerException(streamer.error());
-            }
-
-            partSizes += partSize;
+    PartStreamer streamer(connection(), item, this);
+    connect(&streamer, &PartStreamer::responseAvailable,
+            this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+    Q_FOREACH (const QByteArray &partName, cmd.parts()) {
+        qint64 partSize = 0;
+        if (!streamer.stream(true, partName, partSize)) {
+            return failureResponse(streamer.error());
         }
+        partSizes += partSize;
+    }
+    const Protocol::Attributes attrs = cmd.attributes();
+    for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
+       if (!streamer.streamAttribute(true, iter.key(), iter.value())) {
+           return failureResponse(streamer.error());
+       }
+    }
 
-        // TODO: Try to avoid this addition query
-        if (partSizes > item.size()) {
-            item.setSize(partSizes);
-            item.update();
-        }
-    } else {
-        if (!readParts(item)) {
-            return false;
-        }
+    // TODO: Try to avoid this addition query
+    if (partSizes > item.size()) {
+        item.setSize(partSizes);
+        item.update();
     }
 
     // Preprocessing
@@ -328,8 +143,178 @@ bool AkAppend::insertItem(PimItem &item, const Collection &parentCol,
         PartHelper::insert(&hiddenAttribute);
     }
 
+    notify(item, item.collection());
+    sendResponse(item, Protocol::CreateItemCommand::None);
+
     return true;
 }
+
+bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
+                         PimItem &newItem, PimItem &currentItem,
+                         const Collection &parentCol)
+{
+    QSet<QByteArray> changedParts;
+
+    if (newItem.rev() > 0) {
+        currentItem.setRev(newItem.rev());
+    }
+    if (!newItem.remoteId().isEmpty() && currentItem.remoteId() != newItem.remoteId()) {
+        currentItem.setRemoteId(newItem.remoteId());
+        changedParts.insert(AKONADI_PARAM_REMOTEID);
+    }
+    if (!newItem.remoteRevision().isEmpty() && currentItem.remoteRevision() != newItem.remoteRevision()) {
+        currentItem.setRemoteRevision(newItem.remoteRevision());
+        changedParts.insert(AKONADI_PARAM_REMOTEREVISION);
+    }
+    if (!newItem.gid().isEmpty() && currentItem.gid() != newItem.gid()) {
+        currentItem.setGid(newItem.gid());
+        changedParts.insert(AKONADI_PARAM_GID);
+    }
+    if (newItem.datetime().isValid()) {
+        currentItem.setDatetime(newItem.datetime());
+    }
+    currentItem.setAtime(QDateTime::currentDateTime());
+    currentItem.setSize(newItem.size());
+
+    // Only mark dirty when merged from application
+    currentItem.setDirty(!connection()->context()->resource().isValid());
+
+    const Collection col = Collection::retrieveById(parentCol.id());
+    if (cmd.flags().isEmpty()) {
+        bool flagsAdded = false, flagsRemoved = false;
+        if (!cmd.addedFlags().isEmpty()) {
+            const Flag::List addedFlags = HandlerHelper::resolveFlags(cmd.addedFlags());
+            DataStore::self()->appendItemsFlags(PimItem::List() << currentItem, addedFlags,
+                                                &flagsAdded, true, col, true);
+        }
+        if (!cmd.removedFlags().isEmpty()) {
+            const Flag::List removedFlags = HandlerHelper::resolveFlags(cmd.removedFlags());
+            DataStore::self()->removeItemsFlags(PimItem::List() << currentItem, removedFlags,
+                                                &flagsRemoved, col, true);
+        }
+        if (flagsAdded || flagsRemoved) {
+            changedParts.insert(AKONADI_PARAM_FLAGS);
+        }
+    } else if (!cmd.flags().isEmpty()) {
+        bool flagsChanged = false;
+        QSet<QByteArray> flagNames = cmd.flags();
+
+        // Make sure we don't overwrite some local-only flags that can't come
+        // through from Resource during ItemSync, like $ATTACHMENT, because the
+        // resource is not aware of them (they are usually assigned by client
+        // upon inspecting the payload)
+        Q_FOREACH (const QByteArray &preserve, localFlagsToPreserve) {
+            flagNames.remove(preserve);
+        }
+        const Flag::List flags = HandlerHelper::resolveFlags(flagNames);
+        DataStore::self()->setItemsFlags(PimItem::List() << currentItem, flags,
+                                         &flagsChanged, col, true);
+        if (flagsChanged) {
+            changedParts.insert(AKONADI_PARAM_FLAGS);
+        }
+    }
+
+    if (cmd.tags().isEmpty()) {
+        bool tagsAdded = false, tagsRemoved = false;
+        if (!cmd.addedTags().isEmpty()) {
+            const Tag::List addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection());
+            DataStore::self()->appendItemsTags(PimItem::List() << currentItem, addedTags,
+                                               &tagsAdded, true, col, true);
+        }
+        if (!cmd.removedTags().isEmpty()) {
+            const Tag::List removedTags = HandlerHelper::tagsFromScope(cmd.removedTags(), connection());
+            DataStore::self()->removeItemsTags(PimItem::List() << currentItem, removedTags,
+                                               &tagsRemoved, true);
+        }
+
+        if (tagsAdded || tagsRemoved) {
+            changedParts.insert(AKONADI_PARAM_TAGS);
+        }
+    } else if (!cmd.tags().isEmpty()) {
+        bool tagsChanged = false;
+        const Tag::List tags = HandlerHelper::tagsFromScope(cmd.tags(), connection());
+        DataStore::self()->setItemsTags(PimItem::List() << currentItem, tags,
+                                        &tagsChanged, true);
+        if (tagsChanged) {
+            changedParts.insert(AKONADI_PARAM_TAGS);
+        }
+    }
+
+    const Part::List existingParts = Part::retrieveFiltered(Part::pimItemIdColumn(), currentItem.id());
+    QMap<QByteArray, qint64> partsSizes;
+    Q_FOREACH (const Part &part, existingParts ) {
+        partsSizes.insert(PartTypeHelper::fullName(part.partType()).toLatin1(), part.datasize());
+    }
+
+    PartStreamer streamer(connection(), currentItem);
+    connect(&streamer, &PartStreamer::responseAvailable,
+            this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+    Q_FOREACH (const QByteArray &partName, cmd.parts()) {
+        bool changed = false;
+        qint64 partSize = 0;
+        if (!streamer.stream(true, partName, partSize, &changed)) {
+            return failureResponse(streamer.error());
+        }
+
+        if (changed) {
+            changedParts.insert(partName);
+            partsSizes.insert(partName, partSize);
+        }
+    }
+
+    const qint64 size = std::accumulate(partsSizes.begin(), partsSizes.end(), 0);
+    if (size > currentItem.size()) {
+        currentItem.setSize(size);
+    }
+
+    // Store all changes
+    if (!currentItem.update()) {
+        return failureResponse("Failed to store merged item");
+    }
+
+
+    notify(currentItem, currentItem.collection(), changedParts);
+    sendResponse(currentItem, cmd.mergeModes());
+
+    return true;
+}
+
+bool AkAppend::sendResponse(const PimItem& item, Protocol::CreateItemCommand::MergeModes mergeModes)
+{
+    if (mergeModes & Protocol::CreateItemCommand::Silent || mergeModes & Protocol::CreateItemCommand::None) {
+        Protocol::FetchItemsResponse resp(item.id());
+        resp.setMTime(item.datetime());
+        Handler::sendResponse(resp);
+        return true;
+    }
+
+    Protocol::FetchScope fetchScope;
+    fetchScope.setAncestorDepth(Protocol::Ancestor::ParentAncestor);
+    fetchScope.setFetch(Protocol::FetchScope::AllAttributes |
+                        Protocol::FetchScope::FullPayload |
+                        Protocol::FetchScope::CacheOnly |
+                        Protocol::FetchScope::Flags |
+                        Protocol::FetchScope::GID |
+                        Protocol::FetchScope::MTime |
+                        Protocol::FetchScope::RemoteID |
+                        Protocol::FetchScope::RemoteRevision |
+                        Protocol::FetchScope::Size |
+                        Protocol::FetchScope::Tags);
+    fetchScope.setTagFetchScope({ "GID" });
+
+    ImapSet set;
+    set.add(QVector<qint64>() << item.id());
+    Scope scope;
+    scope.setUidSet(set);
+
+    FetchHelper fetchHelper(connection(), scope, fetchScope);
+    if (!fetchHelper.fetchItems()) {
+        return failureResponse("Failed to retrieve item");
+    }
+
+    return true;
+}
+
 
 bool AkAppend::notify(const PimItem &item, const Collection &collection)
 {
@@ -342,25 +327,20 @@ bool AkAppend::notify(const PimItem &item, const Collection &collection)
     return true;
 }
 
-bool AkAppend::sendResponse(const QByteArray &responseStr, const PimItem &item)
+bool AkAppend::notify(const PimItem &item, const Collection &collection,
+                      const QSet<QByteArray> &changedParts)
 {
-    // Date time is always stored in UTC time zone by the server.
-    const QString datetime = QLocale::c().toString(item.datetime(), QLatin1String("dd-MMM-yyyy hh:mm:ss +0000"));
-
-    Response response;
-    response.setTag(tag());
-    response.setUserDefined();
-    response.setString("[UIDNEXT " + QByteArray::number(item.id()) + " DATETIME " + ImapParser::quote(datetime.toUtf8()) + ']');
-    Q_EMIT responseAvailable(response);
-
-    response.setSuccess();
-    response.setString(responseStr);
-    Q_EMIT responseAvailable(response);
+    if (!changedParts.isEmpty()) {
+        DataStore::self()->notificationCollector()->itemChanged(item, changedParts, collection);
+    }
     return true;
 }
 
+
 bool AkAppend::parseStream()
 {
+    Protocol::CreateItemCommand cmd(m_command);
+
     // FIXME: The streaming/reading of all item parts can hold the transaction for
     // unnecessary long time -> should we wrap the PimItem into one transaction
     // and try to insert Parts independently? In case we fail to insert a part,
@@ -368,29 +348,66 @@ bool AkAppend::parseStream()
     DataStore *db = DataStore::self();
     Transaction transaction(db);
 
-    ChangedAttributes itemFlags, itemTagsRID, itemTagsGID;
-    Collection parentCol;
     PimItem item;
-    if (!buildPimItem(item, parentCol, itemFlags, itemTagsRID, itemTagsGID)) {
+    Collection parentCol;
+    if (!buildPimItem(cmd, item, parentCol)) {
         return false;
     }
 
-    if (itemFlags.incremental) {
-        throw HandlerException("Incremental flags changes are not allowed in AK-APPEND");
-    }
-    if (itemTagsRID.incremental || itemTagsRID.incremental) {
-        throw HandlerException("Incremental tags changes are not allowed in AK-APPEND");
+    if (cmd.mergeModes() == Protocol::CreateItemCommand::None) {
+        if (!insertItem(cmd, item, parentCol)) {
+            return false;
+        }
+        if (!transaction.commit()) {
+            return failureResponse("Failed to commit transaction");
+        }
+    } else {
+        // Merging is always restricted to the same collection and mimetype
+        SelectQueryBuilder<PimItem> qb;
+        qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, parentCol.id());
+        qb.addValueCondition(PimItem::mimeTypeIdColumn(), Query::Equals, item.mimeTypeId());
+        if (cmd.mergeModes() & Protocol::CreateItemCommand::GID) {
+            qb.addValueCondition(PimItem::gidColumn(), Query::Equals, item.gid());
+        }
+        if (cmd.mergeModes() & Protocol::CreateItemCommand::RemoteID) {
+            qb.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
+        }
+
+        if (!qb.exec()) {
+            return failureResponse("Failed to query database for item");
+        }
+
+        const QVector<PimItem> result = qb.result();
+        if (result.count() == 0) {
+            // No item with such GID/RID exists, so call AkAppend::insert() and behave
+            // like if this was a new item
+            if (!insertItem(cmd, item, parentCol)) {
+                return false;
+            }
+            if (!transaction.commit()) {
+                return failureResponse("Failed to commit transaction");
+            }
+        } else if (result.count() == 1) {
+            // Item with matching GID/RID combination exists, so merge this item into it
+            // and send itemChanged()
+            PimItem existingItem = result.at(0);
+
+            if (!mergeItem(cmd, item, existingItem, parentCol)) {
+                return false;
+            }
+            if (!transaction.commit()) {
+                return failureResponse("Failed to commit transaction");
+            }
+        } else {
+            akDebug() << "Multiple merge candidates:";
+            Q_FOREACH (const PimItem &item, result) {
+                akDebug() << "\t ID: " << item.id() << ", RID:" << item.remoteId() << ", GID:" << item.gid();
+            }
+            // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
+            // something we don't want
+            return failureResponse("Multiple merge candidates, aborting");
+        }
     }
 
-    if (!insertItem(item, parentCol, itemFlags.added, itemTagsRID.added, itemTagsGID.added)) {
-        return false;
-    }
-
-    // All SQL is done, let's commit!
-    if (!transaction.commit()) {
-        return failureResponse("Failed to commit transaction");
-    }
-
-    notify(item, parentCol);
-    return sendResponse("Append completed", item);
+    return successResponse<Protocol::CreateItemResponse>();
 }

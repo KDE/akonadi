@@ -21,63 +21,35 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
-#include "response.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/transaction.h"
-#include "search/searchmanager.h"
-#include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
+#include "search/searchmanager.h"
 
-#include <private/protocol_p.h>
-#include <shared/akdebug.h>
-
-#include <QDBusInterface>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Delete::Delete(Scope scope)
-    : Handler()
-    , m_scope(scope)
-{
-}
-
 bool Delete::deleteRecursive(Collection &col)
 {
     Collection::List children = col.children();
-    Q_FOREACH (Collection child, children) {
+    for (Collection &child : children) {
         if (!deleteRecursive(child)) {
             return false;
         }
     }
+
     DataStore *db = connection()->storageBackend();
     return db->cleanupCollection(col);
 }
 
 bool Delete::parseStream()
 {
-    m_scope.parseScope(m_streamParser);
-    connection()->context()->parseContext(m_streamParser);
+    Protocol::DeleteCollectionCommand cmd(m_command);
 
-    SelectQueryBuilder<Collection> qb;
-    CollectionQueryHelper::scopeToQuery(m_scope, connection(), qb);
-    if (!qb.exec()) {
-        throw HandlerException("Unable to execute collection query");
-    }
-    const Collection::List collections = qb.result();
-    if (collections.isEmpty()) {
-        throw HandlerException("No collection selected");
-    } else if (collections.size() > 1) {
-        throw HandlerException("Deleting multiple collections is not yet implemented");
-    }
-
-    // check if collection exists
-    DataStore *db = connection()->storageBackend();
-    Transaction transaction(db);
-
-    Collection collection = collections.first();
+    Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!collection.isValid()) {
         return failureResponse("No such collection.");
     }
@@ -90,17 +62,16 @@ bool Delete::parseStream()
         }
     }
 
+    Transaction transaction(DataStore::self());
+
     if (!deleteRecursive(collection)) {
         return failureResponse("Unable to delete collection");
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction.");
+        return failureResponse("Unable to commit transaction");
     }
 
-    Response response;
-    response.setTag(tag());
-    response.setString("DELETE completed");
-    Q_EMIT responseAvailable(response);
+    return successResponse<Protocol::DeleteCollectionResponse>();
     return true;
 }

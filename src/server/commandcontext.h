@@ -23,9 +23,13 @@
 #include "entities.h"
 
 namespace Akonadi {
-namespace Server {
 
-class ImapStreamParser;
+namespace Protocol
+{
+class ScopeContext;
+}
+
+namespace Server {
 
 class CommandContext
 {
@@ -36,6 +40,8 @@ public:
     void setResource(const Resource &resource);
     Resource resource() const;
 
+    bool setScopeContext(const Protocol::ScopeContext &scopeContext);
+
     void setCollection(const Collection &collection);
     qint64 collectionId() const;
     Collection collection() const;
@@ -45,8 +51,6 @@ public:
     Tag tag() const;
 
     bool isEmpty() const;
-
-    void parseContext(ImapStreamParser *parser);
 
 private:
     Resource mResource;

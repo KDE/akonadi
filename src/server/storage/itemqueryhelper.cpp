@@ -22,11 +22,11 @@
 #include "commandcontext.h"
 #include "entities.h"
 #include "storage/querybuilder.h"
-#include "handler/scope.h"
 #include "handler.h"
 #include "storage/queryhelper.h"
 #include "collectionqueryhelper.h"
 
+#include <private/scope_p.h>
 #include <private/imapset_p.h>
 
 using namespace Akonadi;
@@ -34,21 +34,23 @@ using namespace Akonadi::Server;
 
 void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection)
 {
-    QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+    if (!set.isEmpty()) {
+        QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+    }
     if (collection.isValid()) {
         if (collection.isVirtual() || collection.resource().isVirtual()) {
             qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
                        CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
             qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id());
         } else {
-            qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, collection.id());
+            qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, collection.id());
         }
     }
 }
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet &set, bool isUid, CommandContext *context, QueryBuilder &qb)
+void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context, QueryBuilder &qb)
 {
-    if (!isUid && context->collectionId() >= 0) {
+    if (context->collectionId() >= 0) {
         itemSetToQuery(set, qb, context->collection());
     } else {
         itemSetToQuery(set, qb);
@@ -113,8 +115,14 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
 
 void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
 {
-    if (scope.scope() == Scope::None || scope.scope() == Scope::Uid) {
-        itemSetToQuery(scope.uidSet(), scope.scope() == Scope::Uid, context, qb);
+    // Handle fetch by collection/tag
+    if (scope.scope() == Scope::Invalid && !context->isEmpty()) {
+        itemSetToQuery(ImapSet(), context, qb);
+        return;
+    }
+
+    if (scope.scope() == Scope::Uid) {
+        itemSetToQuery(scope.uidSet(), context, qb);
         return;
     }
 
@@ -131,12 +139,12 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, 
         ItemQueryHelper::remoteIdToQuery(scope.ridSet(), context, qb);
         return;
     } else if (scope.scope() == Scope::HierarchicalRid) {
-        QStringList ridChain = scope.ridChain();
-        const QString itemRid = ridChain.takeFirst();
-        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(ridChain, context->resource().id());
+        QVector<Scope::HRID> hridChain = scope.hridChain();
+        const Scope::HRID itemHRID = hridChain.takeFirst();
+        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context->resource().id());
         const Collection oldSelection = context->collection();
         context->setCollection(parentCol);
-        remoteIdToQuery(QStringList() << itemRid, context, qb);
+        remoteIdToQuery(QStringList() << itemHRID.remoteId, context, qb);
         context->setCollection(oldSelection);
         return;
     }

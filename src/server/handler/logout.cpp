@@ -16,35 +16,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
+
 #include "logout.h"
 
-#include <QtCore/QDebug>
-
-#include "response.h"
-
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-Logout::Logout()
-    : Handler()
-{
-}
-
-Logout::~Logout()
-{
-}
 
 bool Logout::parseStream()
 {
-    Response response;
-    response.setBye();
-    response.setString("Akonadi server logging out");
-    response.setUntagged();
-    Q_EMIT responseAvailable(response);
+    Protocol::LogoutCommand cmd(m_command);
 
-    response.setSuccess();
-    response.setTag(tag());
-    response.setString("Logout completed");
-    Q_EMIT responseAvailable(response);
+    sendResponse<Protocol::LogoutResponse>();
+
     Q_EMIT connectionStateChange(LoggingOut);
     return true;
 }

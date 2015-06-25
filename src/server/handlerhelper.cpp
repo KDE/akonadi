@@ -18,19 +18,20 @@
  ***************************************************************************/
 
 #include "handlerhelper.h"
-#include "imapstreamparser.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionstatistics.h"
 #include "storage/queryhelper.h"
+#include "storage/collectionqueryhelper.h"
 #include "commandcontext.h"
 #include "handler.h"
+#include "connection.h"
+#include "utils.h"
 
-#include <private/imapparser_p.h>
+#include <private/imapset_p.h>
+#include <private/scope_p.h>
 #include <private/protocol_p.h>
-
-#include <QtSql/QSqlError>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -80,205 +81,167 @@ QString HandlerHelper::pathForCollection(const Collection &col)
     return parts.join(QLatin1String("/"));
 }
 
-int HandlerHelper::parseCachePolicy(const QByteArray &data, Collection &col, int start, bool *changed)
+Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection& col)
 {
-    bool inheritChanged = false;
-    bool somethingElseChanged = false;
-
-    QList<QByteArray> params;
-    int end = ImapParser::parseParenthesizedList(data, params, start);
-    for (int i = 0; i < params.count() - 1; i += 2) {
-        const QByteArray key = params[i];
-        const QByteArray value = params[i + 1];
-
-        if (key == AKONADI_PARAM_INHERIT) {
-            const bool inherit = value == "true";
-            inheritChanged = col.cachePolicyInherit() != inherit;
-            col.setCachePolicyInherit(inherit);
-        } else if (key == AKONADI_PARAM_INTERVAL) {
-            const int interval = value.toInt();
-            somethingElseChanged = somethingElseChanged || interval != col.cachePolicyCheckInterval();
-            col.setCachePolicyCheckInterval(interval);
-        } else if (key == AKONADI_PARAM_CACHETIMEOUT) {
-            const int timeout = value.toInt();
-            somethingElseChanged = somethingElseChanged || timeout != col.cachePolicyCacheTimeout();
-            col.setCachePolicyCacheTimeout(timeout);
-        } else if (key == AKONADI_PARAM_SYNCONDEMAND) {
-            const bool syncOnDemand = value == "true";
-            somethingElseChanged = somethingElseChanged || syncOnDemand != col.cachePolicySyncOnDemand();
-            col.setCachePolicySyncOnDemand(syncOnDemand);
-        } else if (key == AKONADI_PARAM_LOCALPARTS) {
-            QList<QByteArray> tmp;
-            QStringList partsList;
-            ImapParser::parseParenthesizedList(value, tmp);
-            Q_FOREACH (const QByteArray &ba, tmp) {
-                partsList << QString::fromLatin1(ba);
-            }
-            const QString parts = partsList.join(QLatin1String(" "));
-            somethingElseChanged = somethingElseChanged || col.cachePolicyLocalParts() != parts;
-            col.setCachePolicyLocalParts(parts);
-        }
-    }
-
-    if (changed && (inheritChanged || (!col.cachePolicyInherit() && somethingElseChanged))) {
-        *changed = true;
-    }
-
-    return end;
+    Protocol::CachePolicy cachePolicy;
+    cachePolicy.setInherit(col.cachePolicyInherit());
+    cachePolicy.setCacheTimeout(col.cachePolicyCacheTimeout());
+    cachePolicy.setCheckInterval(col.cachePolicyCheckInterval());
+    cachePolicy.setLocalParts(col.cachePolicyLocalParts().split(QLatin1Char(' ')));
+    cachePolicy.setSyncOnDemand(col.cachePolicySyncOnDemand());
+    return cachePolicy;
 }
 
-QByteArray HandlerHelper::cachePolicyToByteArray(const Collection &col)
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col)
 {
-    QByteArray rv = AKONADI_PARAM_CACHEPOLICY " (";
-    rv += AKONADI_PARAM_INHERIT " " + (col.cachePolicyInherit() ? QByteArray("true") : QByteArray("false"));
-    rv += " " AKONADI_PARAM_INTERVAL " " + QByteArray::number(col.cachePolicyCheckInterval());
-    rv += " " AKONADI_PARAM_CACHETIMEOUT " " + QByteArray::number(col.cachePolicyCacheTimeout());
-    rv += " " AKONADI_PARAM_SYNCONDEMAND " " + (col.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false"));
-    rv += " " AKONADI_PARAM_LOCALPARTS " (" + col.cachePolicyLocalParts().toLatin1() + ')';
-    rv += ')';
-    return rv;
-}
-
-QByteArray HandlerHelper::tristateToByteArray(const Tristate &tristate)
-{
-    if (tristate == Tristate::True) {
-        return "TRUE";
-    } else if (tristate == Tristate::False) {
-        return "FALSE";
-    }
-    return "DEFAULT";
-}
-
-QByteArray HandlerHelper::collectionToByteArray(const Collection &col)
-{
-    QList<QByteArray> mimeTypes;
+    QStringList mimeTypes;
+    mimeTypes.reserve(col.mimeTypes().size());
     Q_FOREACH (const MimeType &mt, col.mimeTypes()) {
-        mimeTypes << mt.name().toUtf8();
+        mimeTypes << mt.name();
     }
-    return collectionToByteArray(col, col.attributes(), false, 0, QStack<Collection>(), QStack<CollectionAttribute::List>(), false, mimeTypes);
+
+    return fetchCollectionsResponse(col, col.attributes(), false, 0, QStack<Collection>(),
+                                    QStack<CollectionAttribute::List>(), false, mimeTypes);
 }
 
-QByteArray HandlerHelper::collectionToByteArray( const Collection &col, const CollectionAttribute::List &attrs, bool includeStatistics,
-                                                 int ancestorDepth, const QStack<Collection> &ancestors, const QStack<CollectionAttribute::List> &ancestorAttributes,
-                                                bool isReferenced, const QList<QByteArray> &mimeTypes )
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col,
+                                                                           const CollectionAttribute::List &attrs,
+                                                                           bool includeStatistics,
+                                                                           int ancestorDepth,
+                                                                           const QStack<Collection> &ancestors,
+                                                                           const QStack<CollectionAttribute::List> &ancestorAttributes,
+                                                                           bool isReferenced,
+                                                                           const QStringList &mimeTypes)
 {
-    QByteArray b = QByteArray::number(col.id()) + ' '
-                   + QByteArray::number(col.parentId()) + " (";
-
-    b += AKONADI_PARAM_NAME " " + ImapParser::quote(col.name().toUtf8()) + ' ';
-    b += AKONADI_PARAM_MIMETYPE " (" + ImapParser::join(mimeTypes, " ") + ") ";
-    b += AKONADI_PARAM_REMOTEID " " + ImapParser::quote(col.remoteId().toUtf8());
-    b += " " AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote(col.remoteRevision().toUtf8());
-    b += " " AKONADI_PARAM_RESOURCE " " + ImapParser::quote(col.resource().name().toUtf8());
-    b += " " AKONADI_PARAM_VIRTUAL " " + QByteArray::number(col.isVirtual()) + ' ';
+    Protocol::FetchCollectionsResponse response(col.id());
+    response.setParentId(col.parentId());
+    response.setName(col.name());
+    response.setMimeTypes(mimeTypes);
+    response.setRemoteId(col.remoteId());
+    response.setRemoteRevision(col.remoteRevision());
+    response.setResource(col.resource().name());
+    response.setIsVirtual(col.isVirtual());
 
     if (includeStatistics) {
         const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
         if (stats.count > -1) {
-            b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number(stats.count) + ' ';
-            b += AKONADI_ATTRIBUTE_UNSEEN " " +  QByteArray::number(stats.count - stats.read) + ' ';
-            b += AKONADI_PARAM_SIZE " " + QByteArray::number(stats.size) + ' ';
+            Protocol::FetchCollectionStatsResponse statsResponse(stats.count,
+                                                                 stats.count - stats.read,
+                                                                 stats.size);
+            response.setStatistics(statsResponse);
         }
     }
 
     if (!col.queryString().isEmpty()) {
-        b += AKONADI_PARAM_PERSISTENTSEARCH " ";
-        QList<QByteArray> args;
-        args.append(col.queryAttributes().toLatin1());
-        args.append(AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING);
-        args.append(ImapParser::quote(col.queryString().toUtf8()));
-        args.append(AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS);
-        args.append("(" + col.queryCollections().toLatin1() + ")");
-        b += ImapParser::quote("(" + ImapParser::join(args, " ") + ")");
-        b += ' ';
-    }
-
-    b += HandlerHelper::cachePolicyToByteArray(col) + ' ';
-    if (ancestorDepth > 0) {
-        b += HandlerHelper::ancestorsToByteArray(ancestorDepth, ancestors, ancestorAttributes) + ' ';
-    }
-
-    if (isReferenced) {
-        b += AKONADI_PARAM_REFERENCED " TRUE ";
-    }
-    b += AKONADI_PARAM_ENABLED " ";
-    if (col.enabled()) {
-        b += "TRUE ";
-    } else {
-        b += "FALSE ";
-    }
-    b += AKONADI_PARAM_DISPLAY " " + tristateToByteArray(col.displayPref()) + ' ';
-    b += AKONADI_PARAM_SYNC " " + tristateToByteArray(col.syncPref()) + ' ';
-    b += AKONADI_PARAM_INDEX " " + tristateToByteArray(col.indexPref()) + ' ';
-
-    for (int i = 0; i < attrs.size(); ++i) {
-        const CollectionAttribute &attr = attrs[i];
-        //Workaround to skip invalid "PARENT " attributes that were accidentaly created after 6e5bbf6
-        if (attr.type() == "PARENT") {
-            continue;
-        }
-        b += attr.type() + ' ' + ImapParser::quote(attr.value());
-        if (i != attrs.size() - 1) {
-            b += ' ';
+        response.setSearchQuery(col.queryString());
+        QVector<qint64> searchCols;
+        Q_FOREACH (const QString &searchColId, col.queryCollections().split(QLatin1Char(' '))) {
+            searchCols << searchColId.toLongLong();
         }
     }
-    b += ')';
 
-    return b;
+    Protocol::CachePolicy cachePolicy = cachePolicyResponse(col);
+    response.setCachePolicy(cachePolicy);
+
+    if (ancestorDepth) {
+        QVector<Protocol::Ancestor> ancestorList
+            = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
+        response.setAncestors(ancestorList);
+    }
+
+    response.setReferenced(isReferenced);
+    response.setEnabled(col.enabled());
+    response.setDisplayPref(col.displayPref());
+    response.setSyncPref(col.syncPref());
+    response.setIndexPref(col.indexPref());
+
+    QMap<QByteArray, QByteArray> ra;
+    for (const CollectionAttribute &attr : attrs) {
+        ra.insert(attr.type(), attr.value());
+    }
+    response.setAttributes(ra);
+
+    return response;
 }
 
-QByteArray HandlerHelper::ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &_ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes)
+QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
+                                                             const QStack<Collection> &_ancestors,
+                                                             const QStack<CollectionAttribute::List> &_ancestorsAttributes)
 {
-    QByteArray b;
-    if (ancestorDepth > 0) {
-        b += AKONADI_PARAM_ANCESTORS " (";
+    QVector<Protocol::Ancestor> rv;
+    if (ancestorDepth  > 0) {
         QStack<Collection> ancestors(_ancestors);
         QStack<CollectionAttribute::List> ancestorAttributes(_ancestorsAttributes);
         for (int i = 0; i < ancestorDepth; ++i) {
             if (ancestors.isEmpty()) {
-                b += "(0 \"\")";
+                rv << Protocol::Ancestor(0);
                 break;
             }
-            b += '(';
             const Collection c = ancestors.pop();
-            b += QByteArray::number(c.id()) + " ";
-            if (ancestorAttributes.isEmpty() || ancestorAttributes.top().isEmpty()) {
-                b += ImapParser::quote( c.remoteId().toUtf8() );
-            } else {
-                const CollectionAttribute::List attrs = ancestorAttributes.pop();
-                b += " (";
-                Q_FOREACH (const CollectionAttribute &attribute, attrs) {
-                    b += attribute.type() + ' ' + ImapParser::quote(attribute.value()) + ' ';
+            Protocol::Ancestor a(c.id());
+            a.setRemoteId(c.remoteId());
+            a.setName(c.name());
+            if (!ancestorAttributes.isEmpty()) {
+                QMap<QByteArray, QByteArray> attrs;
+                Q_FOREACH (const CollectionAttribute &attr, ancestorAttributes.pop()) {
+                    attrs.insert(attr.type(), attr.value());
                 }
-                b += ")";
+                a.setAttributes(attrs);
             }
-            b += ")";
-            if (i != ancestorDepth - 1) {
-                b += ' ';
-            }
+
+            rv << a;
         }
-        b += ')';
     }
-    return b;
+
+    return rv;
 }
 
-int HandlerHelper::parseDepth(const QByteArray &depth)
+Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
+                                                             bool withRID,
+                                                             Connection *connection)
 {
-    if (depth.isEmpty()) {
-        throw ImapParserException("No depth specified");
+    Protocol::FetchTagsResponse response(tag.id());
+    response.setType(tag.tagType().name().toUtf8());
+    response.setParentId(tag.parentId());
+    response.setGid(tag.gid().toUtf8());
+
+    if (withRID && connection) {
+        // Fail silently if retrieving tag RID is not allowed in current context
+        if (!connection->context()->resource().isValid()) {
+            return response;
+        }
+
+        QueryBuilder qb(TagRemoteIdResourceRelation::tableName());
+        qb.addColumn(TagRemoteIdResourceRelation::remoteIdColumn());
+        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(),
+                             Query::Equals,
+                             connection->context()->resource().id());
+        qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(),
+                             Query::Equals,
+                             tag.id());
+        if (!qb.exec()) {
+            throw HandlerException("Unable to query Tag Remote ID");
+        }
+        QSqlQuery query = qb.query();
+        // No RID for this tag
+        if (!query.next()) {
+            return response;
+        }
+        response.setRemoteId(Utils::variantToByteArray(query.value(0)));
     }
-    if (depth == "INF") {
-        return INT_MAX;
-    }
-    bool ok = false;
-    int result = depth.toInt(&ok);
-    if (!ok) {
-        throw ImapParserException("Invalid depth argument");
-    }
-    return result;
+
+    return response;
 }
 
-Flag::List HandlerHelper::resolveFlags(const QVector<QByteArray> &flagNames)
+Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Relation &relation)
+{
+    return Protocol::FetchRelationsResponse(relation.leftId(),
+                                            relation.rightId(),
+                                            relation.relationType().name().toUtf8());
+}
+
+
+Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
 {
     Flag::List flagList;
     Q_FOREACH (const QByteArray &flagName, flagNames) {
@@ -294,7 +257,7 @@ Flag::List HandlerHelper::resolveFlags(const QVector<QByteArray> &flagNames)
     return flagList;
 }
 
-Tag::List HandlerHelper::resolveTags(const ImapSet &tags)
+Tag::List HandlerHelper::resolveTagsByUID(const ImapSet &tags)
 {
     if (tags.isEmpty()) {
         return Tag::List();
@@ -311,18 +274,18 @@ Tag::List HandlerHelper::resolveTags(const ImapSet &tags)
     return result;
 }
 
-Tag::List HandlerHelper::resolveTagsByGID(const QVector<QByteArray> &tagsGIDs)
+Tag::List HandlerHelper::resolveTagsByGID(const QStringList &tagsGIDs)
 {
     Tag::List tagList;
     if (tagsGIDs.isEmpty()) {
         return tagList;
     }
 
-    Q_FOREACH (const QByteArray &tagGID, tagsGIDs) {
-        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), QString::fromLatin1(tagGID));
+    for (const QString &tagGID : tagsGIDs) {
+        Tag::List tags = Tag::retrieveFiltered(Tag::gidColumn(), tagGID);
         Tag tag;
         if (tags.isEmpty()) {
-            tag.setGid(QString::fromUtf8(tagGID));
+            tag.setGid(tagGID);
             tag.setParentId(0);
 
             TagType type = TagType::retrieveByName(QLatin1String("PLAIN"));
@@ -349,7 +312,7 @@ Tag::List HandlerHelper::resolveTagsByGID(const QVector<QByteArray> &tagsGIDs)
     return tagList;
 }
 
-Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs, CommandContext *context)
+Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandContext *context)
 {
     Tag::List tags;
     if (tagsRIDs.isEmpty()) {
@@ -360,13 +323,13 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs,
         throw HandlerException("Tags can be resolved by their RID only in resource context");
     }
 
-    Q_FOREACH (const QByteArray &tagRID, tagsRIDs) {
+    for (const QString &tagRID : tagsRIDs) {
         SelectQueryBuilder<Tag> qb;
         Query::Condition cond;
         cond.addColumnCondition(Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName());
         cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond);
-        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, QString::fromLatin1(tagRID));
+        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
         if (!qb.exec()) {
             throw HandlerException("Unable to resolve tags");
         }
@@ -375,13 +338,13 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs,
         Tag::List results = qb.result();
         if (results.isEmpty()) {
             // If the tag does not exist, we create a new one with GID matching RID
-            Tag::List tags = resolveTagsByGID(QVector<QByteArray>() << tagRID);
+            Tag::List tags = resolveTagsByGID(QStringList() << tagRID);
             if (tags.count() != 1) {
                 throw HandlerException("Unable to resolve tag");
             }
             tag = tags[0];
             TagRemoteIdResourceRelation rel;
-            rel.setRemoteId(QString::fromUtf8(tagRID));
+            rel.setRemoteId(tagRID);
             rel.setTagId(tag.id());
             rel.setResourceId(context->resource().id());
             if (!rel.insert()) {
@@ -397,4 +360,44 @@ Tag::List HandlerHelper::resolveTagsByRID(const QVector< QByteArray > &tagsRIDs,
     }
 
     return tags;
+}
+
+Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *connection)
+{
+    if (scope.scope() == Scope::Invalid || scope.scope() == Scope::Gid) {
+        throw HandlerException("Invalid collection scope");
+    }
+
+    SelectQueryBuilder<Collection> qb;
+    CollectionQueryHelper::scopeToQuery(scope, connection, qb);
+    if (!qb.exec()) {
+        throw HandlerException("Failed to execute SQL query");
+    }
+
+    const Collection::List c = qb.result();
+    if (c.count() == 0) {
+        return Collection();
+    } else if (c.count() == 1) {
+        return c.at(0);
+    } else  {
+        throw HandlerException("Query returned more than one reslut");
+    }
+}
+
+Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection* connection)
+{
+    if (scope.scope() == Scope::Invalid || scope.scope() == Scope::HierarchicalRid) {
+        throw HandlerException("Invalid tag scope");
+    }
+
+    if (scope.scope() == Scope::Uid) {
+        return resolveTagsByUID(scope.uidSet());
+    } else if (scope.scope() == Scope::Gid) {
+        return resolveTagsByGID(scope.gidSet());
+    } else if (scope.scope() == Scope::Rid) {
+        return resolveTagsByRID(scope.ridSet(), connection->context());
+    }
+
+    Q_ASSERT(false);
+    return Tag::List();
 }

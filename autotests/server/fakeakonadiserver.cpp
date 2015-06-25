@@ -32,7 +32,8 @@
 #include <QTest>
 
 #include <private/xdgbasedirs_p.h>
-#include <private/imapparser_p.h>
+#include <private/protocol_p.h>
+#include <private/scope_p.h>
 #include <shared/akstandarddirs.h>
 #include <shared/akapplication.h>
 
@@ -44,6 +45,48 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+
+
+TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
+                                  const Protocol::Command &response)
+{
+    TestScenario sc;
+    sc.action = action;
+
+    QBuffer buffer(&sc.data);
+    buffer.open(QIODevice::ReadWrite);
+    {
+        QDataStream stream(&buffer);
+        stream << tag;
+        Protocol::serialize(&buffer, response);
+    }
+
+    {
+        buffer.seek(0);
+        QDataStream os(&buffer);
+        qint64 cmpTag;
+        os >> cmpTag;
+        Q_ASSERT(cmpTag == tag);
+        Protocol::Command cmpResp = Protocol::deserialize(os.device());
+
+        bool ok = false;
+        [cmpTag, tag, cmpResp, response, &ok]() {
+            QCOMPARE(cmpTag, tag);
+            QCOMPARE(cmpResp.type(), response.type());
+            QCOMPARE(cmpResp.isResponse(), response.isResponse());
+            QCOMPARE(cmpResp.debugString(), response.debugString());
+            QCOMPARE(cmpResp, response);
+            ok = true;
+        }();
+        if (!ok) {
+            sc.data.clear();
+            return sc;
+        }
+    }
+    return sc;
+}
+
+
 
 FakeAkonadiServer *FakeAkonadiServer::instance()
 {
@@ -91,49 +134,40 @@ QString FakeAkonadiServer::instanceName()
     return QString::fromLatin1("akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
-QList<QByteArray> FakeAkonadiServer::loginScenario()
+TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
 {
-    QList<QByteArray> scenario;
-    // FIXME: Use real protocol version
-    scenario << "S: * OK Akonadi Almost IMAP Server [PROTOCOL " + QByteArray::number(Connection::protocolVersion()) + "]";
-    scenario << "C: 0 LOGIN " + instanceName().toLatin1();
-    scenario << "S: 0 OK User logged in";
-    return scenario;
+    return {
+        TestScenario::create(0, TestScenario::ServerCmd,
+                             Protocol::HelloResponse(QStringLiteral("Akonadi"),
+                                                     QStringLiteral("Not Really IMAP server"),
+                                                     Connection::protocolVersion())),
+        TestScenario::create(1,TestScenario::ClientCmd,
+                             Protocol::LoginCommand(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
+        TestScenario::create(1, TestScenario::ServerCmd,
+                             Protocol::LoginResponse())
+    };
 }
 
-QList<QByteArray> FakeAkonadiServer::defaultScenario()
+TestScenario::List FakeAkonadiServer::selectCollectionScenario(const QString &name)
 {
-    QList<QByteArray> caps;
-    caps << "NOTIFY 2";
-    caps << "NOPAYLOADPATH";
-    caps << "AKAPPENDSTREAMING";
-    return customCapabilitiesScenario(caps);
-}
-
-QList<QByteArray> FakeAkonadiServer::customCapabilitiesScenario(const QList<QByteArray> &capabilities)
-{
-    QList<QByteArray> scenario = loginScenario();
-    scenario << "C: 1 CAPABILITY (" + ImapParser::join(capabilities, " ") + ")";
-    scenario << "S: 1 OK CAPABILITY completed";
-    return scenario;
-}
-
-QList<QByteArray> FakeAkonadiServer::selectCollectionScenario(const QString &name)
-{
-    QList<QByteArray> scenario;
     const Collection collection = Collection::retrieveByName(name);
-    scenario << "C: 3 UID SELECT SILENT " + QByteArray::number(collection.id());
-    scenario << "S: 3 OK Completed";
-    return scenario;
+    return {
+        TestScenario::create(2, TestScenario::ClientCmd,
+                             Protocol::SelectCollectionCommand(collection.id())),
+        TestScenario::create(2, TestScenario::ServerCmd,
+                             Protocol::SelectCollectionResponse())
+    };
 }
 
-QList<QByteArray> FakeAkonadiServer::selectResourceScenario(const QString &name)
+TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name)
 {
-    QList<QByteArray> scenario;
     const Resource resource = Resource::retrieveByName(name);
-    scenario << "C: 2 RESSELECT " + resource.name().toLatin1();
-    scenario << "S: 2 OK " + resource.name().toLatin1() + " selected";
-    return scenario;
+    return {
+        TestScenario::create(3, TestScenario::ClientCmd,
+                             Protocol::SelectResourceCommand(resource.name())),
+        TestScenario::create(3, TestScenario::ServerCmd,
+                             Protocol::SelectResourceResponse())
+    };
 }
 
 bool FakeAkonadiServer::init()
@@ -241,9 +275,9 @@ bool FakeAkonadiServer::quit()
     return true;
 }
 
-void FakeAkonadiServer::setScenario(const QList<QByteArray> &scenario)
+void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 {
-    mClient->setScenario(scenario);
+    mClient->setScenarios(scenarios);
 }
 
 void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
@@ -282,7 +316,7 @@ void FakeAkonadiServer::runTest()
 
 FakeDataStore *FakeAkonadiServer::dataStore() const
 {
-    Q_ASSERT_X(mDataStore, "FakeAkonadiServer::connection()",
+    Q_ASSERT_X(mDataStore, "FakeAkonadiServer::dataStore()",
                "You have to call FakeAkonadiServer::start() first");
     return mDataStore;
 }

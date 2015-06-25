@@ -21,7 +21,8 @@
 #define AKONADI_COLLECTIONQUERYHELPER_H
 
 #include "entities.h"
-#include "handler/scope.h"
+
+#include <private/scope_p.h>
 
 namespace Akonadi {
 
@@ -31,7 +32,6 @@ namespace Server {
 
 class Connection;
 class QueryBuilder;
-class Scope;
 
 /**
   Helper methods to generate WHERE clauses for collection queries based on a Scope object.
@@ -63,7 +63,7 @@ bool canBeMovedTo(const Collection &collection, const Collection &parent);
 /**
   Retrieve the collection referred to by the given hierarchical RID chain.
 */
-Collection resolveHierarchicalRID(const QStringList &ridChain, Resource::Id resId);
+Collection resolveHierarchicalRID(const QVector<Scope::HRID> &hridChain, Resource::Id resId);
 
 /**
   Returns an existing collection specified by the given scope. If that does not

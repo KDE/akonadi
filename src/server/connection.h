@@ -23,11 +23,13 @@
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
 #include <QtNetwork/QLocalSocket>
+#include <QtCore/QDataStream>
 
 #include "entities.h"
 #include "global.h"
-#include "clientcapabilities.h"
 #include "commandcontext.h"
+
+#include <private/protocol_p.h>
 
 namespace Akonadi {
 namespace Server {
@@ -36,7 +38,6 @@ class Handler;
 class Response;
 class DataStore;
 class Collection;
-class ImapStreamParser;
 class CollectionReferenceManager;
 
 /**
@@ -63,17 +64,15 @@ public:
     bool isOwnerResource(const PimItem &item) const;
     bool isOwnerResource(const Collection &collection) const;
 
-    void addStatusMessage(const QByteArray &msg);
-    void flushStatusMessageQueue();
-
     void setSessionId(const QByteArray &id);
     QByteArray sessionId() const;
 
-    const ClientCapabilities &capabilities() const;
-    void setCapabilities(const ClientCapabilities &capabilities);
-
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
+
+    void sendResponse(const Protocol::Command &response);
+
+    Protocol::Command readCommand();
 
 Q_SIGNALS:
     void disconnected();
@@ -85,33 +84,33 @@ protected Q_SLOTS:
     void slotNewData();
     void slotConnectionStateChange(ConnectionState state);
 
-    virtual void slotResponseAvailable(const Akonadi::Server::Response &response);
+    void slotSendHello();
 
 protected:
     Connection(QObject *parent = 0); // used for testing
 
-    void writeOut(const QByteArray &data);
-    virtual Handler *findHandlerForCommand(const QByteArray &command);
+    virtual Handler *findHandlerForCommand(Protocol::Command::Type cmd);
 
 protected:
     quintptr m_socketDescriptor;
-    QIODevice *m_socket;
+    QLocalSocket *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore *m_backend;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
-    ImapStreamParser *m_streamParser;
-    ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
+
     QTime m_time;
     qint64 m_totalTime;
     QHash<QString, qint64> m_totalTimeByHandler;
     QHash<QString, qint64> m_executionsByHandler;
 
 private:
+    void sendResponse(qint64 tag, const Protocol::Command &response);
+
     /** For debugging */
     void startTime();
     void stopTime(const QString &identifier);
@@ -122,5 +121,7 @@ private:
 
 } // namespace Server
 } // namespace Akonadi
+
+
 
 #endif

@@ -40,7 +40,7 @@
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
 #include "search/searchtaskmanagerthread.h"
-#include "response.h"
+
 #include "collectionreferencemanager.h"
 
 #include <private/xdgbasedirs_p.h>
@@ -85,8 +85,6 @@ AkonadiServer::AkonadiServer(QObject *parent)
 
 bool AkonadiServer::init()
 {
-    qRegisterMetaType<Akonadi::Server::Response>();
-
     const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
     // Restrict permission to 600, as the file might contain database password in plaintext

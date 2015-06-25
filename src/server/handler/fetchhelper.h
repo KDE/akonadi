@@ -22,18 +22,17 @@
 
 #include <QtCore/QStack>
 
-#include "fetchscope.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
+#include <private/protocol_p.h>
 
 class FetchHelperTest;
 
 namespace Akonadi {
-
-class ImapSet;
 
 namespace Server {
 
@@ -45,12 +44,9 @@ class FetchHelper : public QObject
     Q_OBJECT
 
 public:
-    FetchHelper(Connection *connection, const Scope &scope, const FetchScope &fetchScope);
+    FetchHelper(Connection *connection, const Scope &scope, const Protocol::FetchScope &fetchScope);
 
-    bool fetchItems(const QByteArray &responseIdentifier);
-
-Q_SIGNALS:
-    void responseAvailable(const Akonadi::Server::Response &response);
+    bool fetchItems();
 
 private:
     enum ItemQueryColumns {
@@ -74,7 +70,7 @@ private:
     QSqlQuery buildTagQuery();
     QSqlQuery buildVRefQuery();
 
-    QStack<Collection> ancestorsForItem(Collection::Id parentColId);
+    QVector<Protocol::Ancestor> ancestorsForItem(Collection::Id parentColId);
     static bool needsAccessTimeUpdate(const QVector<QByteArray> &parts);
     QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
     bool isScopeLocal(const Scope &scope);
@@ -82,12 +78,10 @@ private:
     static QByteArray relationsToByteArray(const Relation::List &relations);
 
 private:
-    ImapStreamParser *mStreamParser;
-
     Connection *mConnection;
-    QHash<Collection::Id, QStack<Collection> > mAncestorCache;
+    QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;
-    FetchScope mFetchScope;
+    Protocol::FetchScope mFetchScope;
     int mItemQueryColumnMap[ItemQueryColumnCount];
 
     friend class ::FetchHelperTest;

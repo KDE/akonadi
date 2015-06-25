@@ -18,48 +18,43 @@
 */
 
 #include "transaction.h"
-#include "storage/datastore.h"
 #include "connection.h"
-#include "response.h"
-#include "imapstreamparser.h"
+#include "storage/datastore.h"
 
-#include <QMetaEnum>
-
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-TransactionHandler::TransactionHandler(Mode mode)
-    : mMode(mode)
-{
-}
 
 bool TransactionHandler::parseStream()
 {
+    Protocol::TransactionCommand cmd(m_command);
+
     DataStore *store = connection()->storageBackend();
 
-    if (mMode == Begin) {
+    switch (cmd.mode()) {
+    case Protocol::TransactionCommand::Invalid:
+        return failureResponse("Invalid operation");
+    case Protocol::TransactionCommand::Begin:
         if (!store->beginTransaction()) {
             return failureResponse("Unable to begin transaction.");
         }
-    }
-
-    if (mMode == Rollback) {
+        break;
+    case Protocol::TransactionCommand::Rollback:
         if (!store->inTransaction()) {
             return failureResponse("There is no transaction in progress.");
         }
         if (!store->rollbackTransaction()) {
             return failureResponse("Unable to roll back transaction.");
         }
-    }
-
-    if (mMode == Commit) {
+        break;
+    case Protocol::TransactionCommand::Commit:
         if (!store->inTransaction()) {
             return failureResponse("There is no transaction in progress.");
         }
         if (!store->commitTransaction()) {
             return failureResponse("Unable to commit transaction.");
         }
+        break;
     }
 
-    const QMetaEnum me = metaObject()->enumerator(metaObject()->indexOfEnumerator("Mode"));
-    return successResponse(me.valueToKey(mMode) + QByteArray(" completed"));
+    return successResponse<Protocol::TransactionResponse>();
 }

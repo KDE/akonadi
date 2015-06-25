@@ -19,83 +19,57 @@
 
 #include "searchpersistent.h"
 
-#include "akonadi.h"
 #include "connection.h"
-#include "response.h"
+#include "handlerhelper.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
-#include "handlerhelper.h"
 #include "search/searchmanager.h"
-#include "imapstreamparser.h"
-
-#include <private/protocol_p.h>
-#include <private/imapparser_p.h>
 
 #include <shared/akdebug.h>
-
-#include <QtCore/QStringList>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-SearchPersistent::SearchPersistent()
-    : Handler()
-{
-}
-
-SearchPersistent::~SearchPersistent()
-{
-}
-
 bool SearchPersistent::parseStream()
 {
-    QString collectionName = m_streamParser->readUtf8String();
-    if (collectionName.isEmpty()) {
+    Protocol::StoreSearchCommand cmd(m_command);
+
+    if (cmd.name().isEmpty()) {
         return failureResponse("No name specified");
+    }
+
+    if (cmd.query().isEmpty()) {
+        return failureResponse("No query specified");
     }
 
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db);
 
-    const QString queryString = m_streamParser->readUtf8String();
-    if (queryString.isEmpty()) {
-        return failureResponse("No query specified");
+    QList<QByteArray> mimeTypes;
+    QStringList queryAttributes;
+
+    if (cmd.remote()) {
+        queryAttributes << QLatin1String(AKONADI_PARAM_REMOTE);
+    }
+    if (cmd.recursive()) {
+        queryAttributes << QLatin1String(AKONADI_PARAM_RECURSIVE);
     }
 
-    // for legacy clients we have to guess the language
-    QString lang = QLatin1String("SPARQL");
-
-    QList<QByteArray> mimeTypes;
-    QString queryCollections;
-    QStringList queryAttributes;
-    if (m_streamParser->hasList()) {
-        m_streamParser->beginList();
-        while (!m_streamParser->atListEnd()) {
-            const QByteArray key = m_streamParser->readString();
-            if (key == AKONADI_PARAM_MIMETYPE) {
-                mimeTypes = m_streamParser->readParenthesizedList();
-            } else if (key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS) {
-                const QList<QByteArray> collections = m_streamParser->readParenthesizedList();
-                queryCollections = QString::fromLatin1(ImapParser::join(collections, " "));
-            } else if (key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG) {
-                queryAttributes << QLatin1String(AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG)
-                                << QString::fromUtf8(m_streamParser->readString());
-            } else if (key == AKONADI_PARAM_REMOTE) {
-                queryAttributes << QLatin1String(AKONADI_PARAM_REMOTE);
-            } else if (key == AKONADI_PARAM_RECURSIVE) {
-                queryAttributes << QLatin1String(AKONADI_PARAM_RECURSIVE);
-            }
-        }
+    QStringList queryCollections;
+    QVector<qint64> queryColIds = cmd.queryCollections();
+    qSort(queryColIds);
+    Q_FOREACH (qint64 col, queryColIds) {
+        queryCollections.append(QString::number(col));
     }
 
     Collection col;
-    col.setQueryString(queryString);
-    col.setQueryAttributes(queryAttributes.join(QLatin1String(" ")));
-    col.setQueryCollections(queryCollections);
+    col.setQueryString(cmd.query());
+    col.setQueryAttributes(queryAttributes.join(QLatin1Char(' ')));
+    col.setQueryCollections(queryCollections.join(QLatin1Char(' ')));
     col.setParentId(1);   // search root
     col.setResourceId(1);   // search resource
-    col.setName(collectionName);
+    col.setName(cmd.name());
     col.setIsVirtual(true);
     if (!db->appendCollection(col)) {
         return failureResponse("Unable to create persistent search");
@@ -105,8 +79,15 @@ bool SearchPersistent::parseStream()
         return failureResponse("Unable to set rights attribute on persistent search");
     }
 
-    Q_FOREACH (const QByteArray &mimeType, mimeTypes) {
-        col.addMimeType(MimeType::retrieveByName(QString::fromLatin1(mimeType)));
+    Q_FOREACH (const QString &mimeType, cmd.mimeTypes()) {
+        MimeType mt = MimeType::retrieveByName(mimeType);
+        if (!mt.isValid()) {
+            mt.setName(mimeType);
+            if (!mt.insert()) {
+                return failureResponse("Failed to create new mimetype");
+            }
+        }
+        col.addMimeType(mt);
     }
 
     if (!transaction.commit()) {
@@ -115,12 +96,6 @@ bool SearchPersistent::parseStream()
 
     SearchManager::instance()->updateSearch(col);
 
-    const QByteArray b = HandlerHelper::collectionToByteArray(col);
-
-    Response colResponse;
-    colResponse.setUntagged();
-    colResponse.setString(b);
-    Q_EMIT responseAvailable(colResponse);
-
-    return successResponse("SEARCH_STORE completed");
+    sendResponse(HandlerHelper::fetchCollectionsResponse(col));
+    return successResponse<Protocol::StoreSearchResponse>();
 }

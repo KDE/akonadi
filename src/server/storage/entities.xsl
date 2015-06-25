@@ -39,6 +39,8 @@
 #define AKONADI_ENTITIES_H
 #include "storage/entity.h"
 
+#include &lt;private/tristate_p.h&gt;
+
 #include &lt;shared/akdebug.h&gt;
 #include &lt;QtCore/QDebug&gt;
 #include &lt;QtCore/QSharedDataPointer&gt;
@@ -220,6 +222,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
           </xsl:when>
           <xsl:when test="starts-with(@type, 'Tristate')">
           static_cast&lt;Tristate&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
+          </xsl:when>
+          <xsl:when test="starts-with(@type, 'QDateTime')">
+          Utils::variantToDateTime(qb.query().value(valueIndex))
           </xsl:when>
           <xsl:otherwise>
           qb.query().value( valueIndex ).value&lt;<xsl:value-of select="@type"/>&gt;()

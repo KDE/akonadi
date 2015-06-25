@@ -25,6 +25,12 @@
 #include "entities.h"
 
 namespace Akonadi {
+
+namespace Protocol {
+class PartMetaData;
+class Command;
+}
+
 namespace Server {
 
 class PimItem;
@@ -38,30 +44,31 @@ class PartStreamer : public  QObject
     Q_OBJECT
 
 public:
-    explicit PartStreamer(Connection *connection, ImapStreamParser *parser,
-                          const PimItem &pimItem, QObject *parent = 0);
+    explicit PartStreamer(Connection *connection, const PimItem &pimItem, QObject *parent = 0);
     ~PartStreamer();
 
-    bool stream(const QByteArray &command, bool checkExists, QByteArray &partName,
-                qint64 &partSize, bool *changed = 0);
+    bool stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = 0);
+    bool streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = 0);
 
-    QByteArray error() const;
+    QString error() const;
 
 Q_SIGNALS:
-    void responseAvailable(const Akonadi::Server::Response &response);
+    void responseAvailable(const Protocol::Command &response);
 
 private:
-    bool streamNonliteral(Part &part, qint64 &partSize, QByteArray &value);
-    bool streamLiteral(Part &part, qint64 &partSize, QByteArray &value);
-    bool streamLiteralToFile(qint64 dataSize, Part &part, QByteArray &value);
-    bool streamLiteralToFileDirectly(qint64 dataSize, Part &part);
+    bool streamPayload(Part &part, const QByteArray &partName);
+    bool streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart);
+    bool streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart);
+
+    Protocol::PartMetaData requestPartMetaData(const QByteArray &partName);
+    bool preparePart(bool checkExists, const QByteArray &partName, Part &part);
 
     Connection *mConnection;
     ImapStreamParser *mStreamParser;
     PimItem mItem;
     bool mCheckChanged;
     bool mDataChanged;
-    QByteArray mError;
+    QString mError;
 };
 
 } // namespace Server

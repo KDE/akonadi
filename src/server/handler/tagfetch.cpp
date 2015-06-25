@@ -18,41 +18,24 @@
  ***************************************************************************/
 
 #include "tagfetch.h"
-#include "imapstreamparser.h"
 #include "connection.h"
 #include "tagfetchhelper.h"
-
-#include <private/imapset_p.h>
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagFetch::TagFetch(Scope::SelectionScope scope)
-    : Handler()
-    , mScope(scope)
-{
-}
-
-TagFetch::~TagFetch()
-{
-}
-
 bool TagFetch::parseStream()
 {
-    if (mScope.scope() != Scope::Uid) {
-        throw HandlerException("Only UID-based TAGFETCH is supported");
+    Protocol::FetchTagsCommand cmd(m_command);
+
+    if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
+        return failureResponse("Only UID-based TAGFETCH is supported");
     }
 
-    mScope.parseScope(m_streamParser);
-
-    TagFetchHelper helper(connection(),  mScope.uidSet());
-    connect(&helper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-
-    if (!helper.fetchTags(AKONADI_CMD_TAGFETCH)) {
-        return false;
+    TagFetchHelper helper(connection(),  cmd.scope());
+    if (!helper.fetchTags()) {
+        return failureResponse("Failed to fetch tags");
     }
 
-    return successResponse("UID TAGFETCH completed");
+    return successResponse<Protocol::FetchTagsResponse>();
 }

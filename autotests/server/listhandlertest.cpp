@@ -20,8 +20,9 @@
 #include <QObject>
 
 #include <handler/list.h>
-#include <imapstreamparser.h>
-#include <response.h>
+
+
+#include <private/scope_p.h>
 
 #include "fakeakonadiserver.h"
 #include "aktest.h"
@@ -43,8 +44,6 @@ public:
     ListHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->setPopulateDb(false);
             FakeAkonadiServer::instance()->init();
@@ -75,6 +74,20 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
+    Protocol::FetchCollectionsCommand createCommand(const Scope &scope,
+                                                    Protocol::FetchCollectionsCommand::Depth depth = Akonadi::Protocol::FetchCollectionsCommand::BaseCollection,
+                                                    Protocol::Ancestor::Depth ancDepth = Protocol::Ancestor::NoAncestor,
+                                                    const QStringList &mimeTypes = QStringList(),
+                                                    const QString &resource = QString())
+    {
+        Protocol::FetchCollectionsCommand cmd(scope);
+        cmd.setDepth(depth);
+        cmd.setAncestorsDepth(ancDepth);
+        cmd.setMimeTypes(mimeTypes);
+        cmd.setResource(resource);
+        return cmd;
+    }
+
     QScopedPointer<DbInitializer> initializer;
 private Q_SLOTS:
 
@@ -87,87 +100,90 @@ private Q_SLOTS:
         Collection col3 = initializer->createCollection("col3", col2);
         Collection col4 = initializer->createCollection("col4");
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 INF () ()"
-                     << initializer->listResponse(initializer->collection("Search"))
-                     << initializer->listResponse(col1)
-                     << initializer->listResponse(col2)
-                     << initializer->listResponse(col3)
-                     << initializer->listResponse(col4)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col1.id()) + " 0 () ()"
-                     << initializer->listResponse(col1)
-                     << "S: 2 OK List completed";
-            QTest::newRow("base list") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("base list") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col1.id()) + " 1 () ()"
-                     << initializer->listResponse(col2)
-                     << "S: 2 OK List completed";
-            QTest::newRow("first level list") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::ParentCollection))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("first level list") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col1.id()) + " INF () ()"
-                     << initializer->listResponse(col2)
-                     << initializer->listResponse(col3)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list that filters collection") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::AllCollections))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list that filters collection") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () (ANCESTORS INF)"
-                     << initializer->listResponse(col2, true)
-                     << "S: 2 OK List completed";
-            QTest::newRow("base ancestors") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection,
+                                                                                        Protocol::Ancestor::AllAncestors))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("base ancestors") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col1.id()) + " 1 () (ANCESTORS INF)"
-                     << initializer->listResponse(col2, true)
-                     << "S: 2 OK List completed";
-            QTest::newRow("first level ancestors") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection,
+                                                                                        Protocol::Ancestor::AllAncestors))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("first level ancestors") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col1.id()) + " INF () (ANCESTORS INF)"
-                     << initializer->listResponse(col2, true)
-                     << initializer->listResponse(col3, true)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive ancestors") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::AllCollections,
+                                                                                        Protocol::Ancestor::AllAncestors))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3, true))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive ancestors") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 1 () ()"
-                     << initializer->listResponse(initializer->collection("Search"))
-                     << initializer->listResponse(col1)
-                     << initializer->listResponse(col4)
-                     << "S: 2 OK List completed";
-            QTest::newRow("first level root list") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(), Protocol::FetchCollectionsCommand::ParentCollection))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("first level root list") << scenarios;
         }
     }
 
     void testList()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -185,24 +201,26 @@ private Q_SLOTS:
         col2.addMimeType(mtCalendar);
         col2.update();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 INF (MIMETYPE (text/calendar)) ()"
-                     << initializer->listResponse(col1, false, false)
-                     << initializer->listResponse(col2)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to display including local override") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections,
+                                                                                        Protocol::Ancestor::NoAncestor,
+                                { QLatin1String("text/calendar") }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1, false, false))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list to display including local override") << scenarios;
         }
     }
 
     void testListFiltered()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -223,13 +241,15 @@ private Q_SLOTS:
         col2.setResource(res2);
         QVERIFY(col2.insert());
 
-        QList<QByteArray> scenario;
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 LIST 0 INF (RESOURCE \"testresource\") ()"
-                 << initializer->listResponse(col1)
-                 << "S: 2 OK List completed";
+        TestScenario::List scenarios;
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(),
+                            Protocol::FetchCollectionsCommand::AllCollections,
+                            Protocol::Ancestor::NoAncestor, {}, QLatin1String("testresource")))
+                  << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         col2.remove();
@@ -243,76 +263,91 @@ private Q_SLOTS:
         Collection col1 = initializer->createCollection("col1");
         Collection col2 = initializer->createCollection("col2", col1);
         col2.setEnabled(false);
-        col2.setSyncPref(Akonadi::Server::Tristate::True);
-        col2.setDisplayPref(Akonadi::Server::Tristate::True);
-        col2.setIndexPref(Akonadi::Server::Tristate::True);
+        col2.setSyncPref(Tristate::True);
+        col2.setDisplayPref(Tristate::True);
+        col2.setIndexPref(Tristate::True);
         col2.update();
         Collection col3 = initializer->createCollection("col3", col2);
         col3.setEnabled(true);
-        col3.setSyncPref(Akonadi::Server::Tristate::False);
-        col3.setDisplayPref(Akonadi::Server::Tristate::False);
-        col3.setIndexPref(Akonadi::Server::Tristate::False);
+        col3.setSyncPref(Tristate::False);
+        col3.setDisplayPref(Tristate::False);
+        col3.setIndexPref(Tristate::False);
         col3.update();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST " + QByteArray::number(col3.id()) + " 0 (DISPLAY  ) ()"
-                    << initializer->listResponse(col3)
-                    << "S: 2 OK List completed";
+            TestScenario::List scenarios;
+
+            auto cmd = createCommand(col3.id());
+            cmd.setDisplayPref(true);
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             //Listing a disabled collection should still work for base listing
-            QTest::newRow("list base of disabled collection") << scenario;
+            QTest::newRow("list base of disabled collection") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 INF (DISPLAY  ) ()"
-                     << initializer->listResponse(initializer->collection("Search"))
-                     << initializer->listResponse(col1)
-                     << initializer->listResponse(col2)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to display including local override") << scenario;
+            TestScenario::List scenarios;
+
+            auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
+            cmd.setDisplayPref(true);
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list to display including local override") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 INF (SYNC  ) ()"
-                     << initializer->listResponse(initializer->collection("Search"))
-                     << initializer->listResponse(col1)
-                     << initializer->listResponse(col2)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to sync including local override") << scenario;
+            TestScenario::List scenarios;
+
+            auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
+            cmd.setSyncPref(true);
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list to sync including local override") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 INF (INDEX  ) ()"
-                     << initializer->listResponse(initializer->collection("Search"))
-                     << initializer->listResponse(col1)
-                     << initializer->listResponse(col2)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list to index including local override") << scenario;
+            TestScenario::List scenarios;
+
+            auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
+            cmd.setIndexPref(true);
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list to index including local override") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST 0 INF (ENABLED  ) ()"
-                     << initializer->listResponse(initializer->collection("Search"))
-                     << initializer->listResponse(col1)
-                     << initializer->listResponse(col2)
-                     << initializer->listResponse(col3)
-                     << "S: 2 OK List completed";
-            QTest::newRow("recursive list of enabled") << scenario;
+            TestScenario::List scenarios;
+
+            auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
+            cmd.setEnabled(true);
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list of enabled") << scenarios;
         }
     }
 
     void testListEnabled()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -335,32 +370,32 @@ private Q_SLOTS:
         attr2.setCollection(col2);
         attr2.insert();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col1.id()) + " 0 () ()"
-                     << initializer->listResponse(col1, false, true)
-                     << "S: 2 OK List completed";
-            QTest::newRow("list attribute") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1, false, true))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("list attribute") << scenarios;
         }
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () ()"
-                     << initializer->listResponse(col2, false, true)
-                     << "S: 2 OK List completed";
-            QTest::newRow("list attribute") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, false, true))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("list attribute") << scenarios;
         }
     }
 
     void testListAttribute()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -378,23 +413,26 @@ private Q_SLOTS:
 
         Collection col2 = initializer->createCollection("col2", col1);
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 LIST " + QByteArray::number(col2.id()) + " 0 () (ANCESTORS (DEPTH INF type NAME REMOTEID))"
-                     << initializer->listResponse(col2, true, true, QStringList() << QLatin1String("type") << QLatin1String("NAME") << QLatin1String("REMOTEID"))
-                     << "S: 2 OK List completed";
-            QTest::newRow("list ancestor attribute with fetch scope") << scenario;
+            TestScenario::List scenarios;
+
+            auto cmd = createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection, Protocol::Ancestor::AllAncestors);
+            cmd.setAncestorsAttributes({ "type" });
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true, true, { QLatin1String("type") }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("list ancestor attribute with fetch scope") << scenarios;
         }
     }
 
     void testListAncestorAttributes()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -416,37 +454,39 @@ private Q_SLOTS:
         col4.addMimeType(mtDirectory);
         col4.update();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST " + QByteArray::number(0) + " INF (MIMETYPE (mimetype1)) ()"
-                    << initializer->listResponse(col1)
-                    << initializer->listResponse(col2)
-                    << initializer->listResponse(col3)
-                    << initializer->listResponse(col4)
-                    << "S: 2 OK List completed";
-            QTest::newRow("ensure filtered grandparent is included") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections,
+                                Protocol::Ancestor::NoAncestor, { QLatin1String("mimetype1") }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("ensure filtered grandparent is included") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST " + QByteArray::number(col1.id()) + " INF (MIMETYPE (mimetype1)) ()"
-                    << initializer->listResponse(col2)
-                    << initializer->listResponse(col3)
-                    << initializer->listResponse(col4)
-                    << "S: 2 OK List completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::AllCollections,
+                                Protocol::Ancestor::NoAncestor, { QLatin1String("mimetype1") }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             //This also ensures col1 is excluded although it matches the mimetype filter
-            QTest::newRow("ensure filtered grandparent is included with specified parent") << scenario;
+            QTest::newRow("ensure filtered grandparent is included with specified parent") << scenarios;
         }
     }
 
     void testIncludeAncestors()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -498,9 +538,10 @@ private Q_SLOTS:
             col.addMimeType(mt2);
             col.update();
         }
+
         qDebug() << "Created 100000 collections in" << t.elapsed() << "msecs";
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         // {
         //     QList<QByteArray> scenario;
@@ -520,23 +561,24 @@ private Q_SLOTS:
         //     QTest::newRow("recursive list filtered by mimetype") << scenario;
         // }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                    << "C: 2 LIST " + QByteArray::number(toplevel.id()) + " INF (ANCESTORS INF MIMETYPE (mimetype1) RESOURCE \"testresource\") ()"
-                    << "S: IGNORE 101005"
-                    << "S: 2 OK List completed";
-            QTest::newRow("recursive list filtered by mimetype with ancestors") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(toplevel.id(), Protocol::FetchCollectionsCommand::AllCollections,
+                                Protocol::Ancestor::AllAncestors, { QLatin1String("mimetype1") }, QLatin1String("testresource")))
+                      << TestScenario::ignore(101005)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+            QTest::newRow("recursive list filtered by mimetype with ancestors") << scenarios;
         }
     }
 
     void testListEnabledBenchmark()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         // StorageDebugger::instance()->enableSQLDebugging(true);
         // StorageDebugger::instance()->writeToFile(QLatin1String("sqllog.txt"));
 
         QBENCHMARK {
-            FakeAkonadiServer::instance()->setScenario(scenario);
+            FakeAkonadiServer::instance()->setScenarios(scenarios);
             FakeAkonadiServer::instance()->runTest();
         }
     }

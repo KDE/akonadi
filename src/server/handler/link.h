@@ -21,7 +21,6 @@
 #define AKONADI_LINK_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
@@ -33,30 +32,12 @@ namespace Server {
  *
  * These commands are used to add and remove references of a set of items to a
  * virtual collection.
- *
- * <h4>Syntax</h4>
- *
- * Request:
- * @verbatim
- * request = tag [" " selection-scope] " " [" LINK "|" UNLINK "] collection-id " " [selection-scope " "] item-set
- * @endverbatim
- *
- * There is only the usual status response indicating success or failure of the
- * LINK and UNLINK commands.
  */
 class Link : public Handler
 {
     Q_OBJECT
 public:
-    /**
-     * @param create @c true adds references, @c false removes them
-     */
-    Link(Scope::SelectionScope scope, bool create);
     bool parseStream();
-
-private:
-    Scope mDestinationScope;
-    bool mCreateLinks;
 };
 
 } // namespace Server

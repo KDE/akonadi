@@ -18,49 +18,40 @@
 */
 
 #include "colmove.h"
+
 #include "handlerhelper.h"
-#include "storage/datastore.h"
 #include "connection.h"
+#include "cachecleaner.h"
+#include "storage/datastore.h"
 #include "storage/itemretriever.h"
-#include "imapstreamparser.h"
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
 #include "storage/selectquerybuilder.h"
-#include "cachecleaner.h"
-
-#include <shared/akdebug.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ColMove::ColMove(Scope::SelectionScope scope)
-    : m_scope(scope)
-{
-}
-
 bool ColMove::parseStream()
 {
-    m_scope.parseScope(m_streamParser);
-    SelectQueryBuilder<Collection> qb;
-    CollectionQueryHelper::scopeToQuery(m_scope, connection(), qb);
-    if (!qb.exec()) {
-        throw HandlerException("Unable to execute collection query");
-    }
-    const Collection::List sources = qb.result();
-    if (sources.isEmpty()) {
-        throw HandlerException("No source collection specified");
-    } else if (sources.size() > 1) {   // TODO
-        throw HandlerException("Moving multiple collections is not yet implemented");
-    }
-    Collection source = sources.first();
+    Protocol::MoveCollectionCommand cmd(m_command);
 
-    Scope destScope(m_scope.scope());
-    destScope.parseScope(m_streamParser);
-    akDebug() << destScope.uidSet().toImapSequenceSet();
-    const Collection target = CollectionQueryHelper::singleCollectionFromScope(destScope, connection());
+    Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    if (!source.isValid()) {
+        return failureResponse("Invalid collection to move");
+    }
+
+    Collection target;
+    if (cmd.destination().isEmpty()) {
+        target.setId(0);
+    } else {
+        target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+        if (!target.isValid()) {
+            return failureResponse("Invalid destination collection");
+        }
+    }
 
     if (source.parentId() == target.id()) {
-        return successResponse("COLMOVE complete - nothing to do");
+        return successResponse<Protocol::MoveCollectionResponse>();
     }
 
     CacheCleanerInhibitor inhibitor;
@@ -84,5 +75,5 @@ bool ColMove::parseStream()
         return failureResponse("Cannot commit transaction.");
     }
 
-    return successResponse("COLMOVE complete");
+    return successResponse<Protocol::MoveCollectionResponse>();
 }

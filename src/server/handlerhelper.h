@@ -21,7 +21,6 @@
 #define AKONADIHANDLERHELPER_H
 
 #include "entities.h"
-#include "imapset_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -29,11 +28,22 @@
 #include <QtCore/QStack>
 
 namespace Akonadi {
+
+class Scope;
+class ImapSet;
+
+namespace Protocol {
+class Ancestor;
+class CachePolicy;
+class FetchCollectionsResponse;
+class FetchTagsResponse;
+class FetchRelationsResponse;
+}
+
 namespace Server {
 
 class CommandContext;
-
-class ImapStreamParser;
+class Connection;
 
 /**
   Helper functions for command handlers.
@@ -52,61 +62,64 @@ public:
     static QString pathForCollection(const Collection &col);
 
     /**
-      Parse cache policy and update the given Collection object accoordingly.
-      @param changed Indicates whether or not the cache policy already available in @p col
-      has actually changed
-      @todo Error handling.
-    */
-    static int parseCachePolicy(const QByteArray &data, Collection &col, int start = 0, bool *changed = 0);
-
-    /**
       Returns the protocol representation of the cache policy of the given
       Collection object.
     */
-    static QByteArray cachePolicyToByteArray(const Collection &col);
-
-    static QByteArray tristateToByteArray(const Tristate &tristate);
+    static Protocol::CachePolicy cachePolicyResponse(const Collection &col);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray(const Collection &col);
+    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray(const Collection &col, const CollectionAttribute::List &attributeList, bool includeStatistics = false,
-                                            int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>(), const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(), bool isReferenced = false, const QList<QByteArray> &mimeTypes = QList<QByteArray>());
+    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col,
+                                                                       const CollectionAttribute::List &attributeList,
+                                                                       bool includeStatistics = false,
+                                                                       int ancestorDepth = 0,
+                                                                       const QStack<Collection> &ancestors = QStack<Collection>(),
+                                                                       const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(),
+                                                                       bool isReferenced = false,
+                                                                       const QStringList &mimeTypes = QStringList());
 
     /**
       Returns the protocol representation of a collection ancestor chain.
     */
-    static QByteArray ancestorsToByteArray(int ancestorDepth, const QStack<Collection> &ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
+    static QVector<Protocol::Ancestor> ancestorsResponse(int ancestorDepth,
+                                                         const QStack<Collection> &ancestors,
+                                                         const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
 
-    /**
-      Parses the listing/ancestor depth parameter.
-    */
-    static int parseDepth(const QByteArray &depth);
+    static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag,
+                                                         bool withRID = false,
+                                                         Connection *connection = Q_NULLPTR);
+
+    static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
 
     /**
       Converts a bytearray list of flag names into flag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Flag::List resolveFlags(const QVector<QByteArray> &flagNames);
+    static Flag::List resolveFlags(const QSet<QByteArray> &flagNames);
 
     /**
       Converts a imap set of tags into tag records.
       @throws HandlerException on errors during datbase operations
     */
-    static Tag::List resolveTags(const ImapSet &tags);
+    static Tag::List resolveTagsByUID(const ImapSet &tags);
 
-    static Tag::List resolveTagsByGID(const QVector<QByteArray> &tagsGIDs);
+    static Tag::List resolveTagsByGID(const QStringList &tagsGIDs);
 
-    static Tag::List resolveTagsByRID(const QVector<QByteArray> &tagsRIDs, CommandContext *context);
+    static Tag::List resolveTagsByRID(const QStringList &tagsRIDs, CommandContext *context);
+
+    static Collection collectionFromScope(const Scope &scope, Connection *connection);
+
+    static Tag::List tagsFromScope(const Scope &scope, Connection *connection);
 };
 
 } // namespace Server

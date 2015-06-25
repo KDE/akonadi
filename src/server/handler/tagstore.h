@@ -30,11 +30,7 @@ class TagStore : public Handler
     Q_OBJECT
 
 public:
-    TagStore();
-    ~TagStore();
-
     bool parseStream();
-
 };
 
 } // namespace Server

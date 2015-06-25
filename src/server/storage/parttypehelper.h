@@ -71,7 +71,16 @@ Query::Condition conditionFromFqNames(const QStringList &fqNames);
 /**
  * Convenience overload for the above.
  */
-Query::Condition conditionFromFqNames(const QList<QByteArray> &fqNames);
+template<template<typename> class T>
+Query::Condition conditionFromFqNames(const T<QByteArray> &fqNames)
+{
+    Query::Condition c;
+    c.setSubQueryMode(Query::Or);
+    Q_FOREACH (const QByteArray &fqName, fqNames) {
+        c.addCondition(conditionFromFqName(QLatin1String(fqName)));
+    }
+    return c;
+}
 
 /**
  * Parses a fully qualified part type name into namespace/name.

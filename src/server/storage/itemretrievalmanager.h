@@ -47,7 +47,7 @@ public:
     ~ItemRetrievalManager();
 
     void requestItemDelivery(qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
-                             const QString &resource, const QStringList &parts);
+                             const QString &resource, const QVector<QByteArray> &parts);
 
     /**
      * Added for convenience. ItemRetrievalManager takes ownership over the

@@ -84,84 +84,81 @@ QByteArray DbInitializer::toByteArray(bool enabled)
     return "FALSE";
 }
 
-QByteArray DbInitializer::toByteArray(Akonadi::Server::Tristate tristate)
+QByteArray DbInitializer::toByteArray(Akonadi::Tristate tristate)
 {
 
     switch (tristate) {
-    case Akonadi::Server::Tristate::True:
+    case Akonadi::Tristate::True:
         return "TRUE";
-    case Akonadi::Server::Tristate::False:
+    case Akonadi::Tristate::False:
         return "FALSE";
-    case Akonadi::Server::Tristate::Undefined:
+    case Akonadi::Tristate::Undefined:
     default:
         break;
     }
     return "DEFAULT";
 }
 
-QByteArray DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes, const QStringList &ancestorFetchScope)
+Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Collection &col,
+                                                                        bool ancestors,
+                                                                        bool mimetypes,
+                                                                        const QStringList &ancestorFetchScope)
 {
-    QByteArray s;
-    s = "S: * " + QByteArray::number(col.id()) + " " + QByteArray::number(col.parentId()) + " (NAME \"" + col.name().toLatin1() +
-        "\" MIMETYPE (";
+    Akonadi::Protocol::FetchCollectionsResponse resp(col.id());
+    resp.setParentId(col.parentId());
+    resp.setName(col.name());
     if (mimetypes) {
-        for (int i = 0; i < col.mimeTypes().size(); i++) {
-            const MimeType mt = col.mimeTypes().at(i);
-            s += mt.name().toUtf8();
-            if (i != (col.mimeTypes().size() - 1)) {
-                s += " ";
-            }
+        QStringList mts;
+        for (const Akonadi::Server::MimeType &mt : col.mimeTypes()) {
+            mts << mt.name();
         }
+        resp.setMimeTypes(mts);
     }
-    s += ") REMOTEID \"" + col.remoteId().toLatin1() +
-         "\" REMOTEREVISION \"\" RESOURCE \"" + col.resource().name().toLatin1() +
-         "\" VIRTUAL ";
-    if (col.isVirtual()) {
-        s += "1";
-    } else {
-        s += "0";
-    }
-    s += " CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS (ALL))";
+    resp.setRemoteId(col.remoteId());
+    resp.setRemoteRevision(col.remoteRevision());
+    resp.setResource(col.resource().name());
+    resp.setIsVirtual(col.isVirtual());
+    Akonadi::Protocol::CachePolicy cp;
+    cp.setInherit(true);
+    cp.setLocalParts({ QLatin1String("ALL") });
+    resp.setCachePolicy(cp);
     if (ancestors) {
-        s += " ANCESTORS (";
+        QVector<Akonadi::Protocol::Ancestor> ancs;
         Collection parent = col.parent();
         while (parent.isValid()) {
-            s += "(" + QByteArray::number(parent.id());
-            if (ancestorFetchScope.isEmpty()) {
-                s += " \"" + parent.remoteId().toUtf8() + "\"";
-            } else {
-                s += "  (";
-                if (ancestorFetchScope.contains(QLatin1String("REMOTEID"))) {
-                    s += "REMOTEID \"" + parent.remoteId().toUtf8() + "\" ";
-                }
-                if (ancestorFetchScope.contains(QLatin1String("NAME"))) {
-                    s += "NAME \"" + parent.name().toUtf8() + "\" ";
-                }
+            Akonadi::Protocol::Ancestor anc;
+            anc.setId(parent.id());
+            anc.setRemoteId(parent.remoteId());
+            anc.setName(parent.name());
+            if (!ancestorFetchScope.isEmpty()) {
+                anc.setRemoteId(parent.remoteId());
+                Akonadi::Protocol::Attributes attrs;
                 Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
                     if (ancestorFetchScope.contains(QString::fromLatin1(attr.type()))) {
-                        s += attr.type() + " \"" + attr.value() + "\" ";
+                        attrs.insert(attr.type(), attr.value());
                     }
                 }
-                s += ")";
+                anc.setAttributes(attrs);
             }
-            s += ") ";
             parent = parent.parent();
+            ancs.push_back(anc);
         }
-        s += "(0 \"\")";
-        s += ")";
+        // Root
+        ancs.push_back(Akonadi::Protocol::Ancestor(0));
+        resp.setAncestors(ancs);
     }
-    if (col.referenced()) {
-        s += " REFERENCED TRUE";
-    }
-    s += " ENABLED " + toByteArray(col.enabled()) + " DISPLAY " + toByteArray(col.displayPref()) + " SYNC " + toByteArray(col.syncPref()) + " INDEX " + toByteArray(col.indexPref()) + " ";
+    resp.setReferenced(col.referenced());
+    resp.setEnabled(col.enabled());
+    resp.setDisplayPref(col.displayPref());
+    resp.setSyncPref(col.syncPref());
+    resp.setIndexPref(col.indexPref());
+
+    Akonadi::Protocol::Attributes attrs;
     Q_FOREACH(const CollectionAttribute &attr, col.attributes()) {
-        s += attr.type() + " \"" + attr.value() + "\" ";
+        attrs.insert(attr.type(), attr.value());
     }
-    if (!col.attributes().isEmpty()) {
-        s.chop(1);
-    }
-    s += ")";
-    return s;
+    resp.setAttributes(attrs);
+    return resp;
 }
 
 Collection DbInitializer::collection(const char *name)

@@ -28,7 +28,7 @@
 
 #include <private/notificationmessagev3_p.h>
 
-class QWaitCondition;
+class QSemaphore;
 class QTimer;
 class QPluginLoader;
 
@@ -121,7 +121,7 @@ private Q_SLOTS:
      * synchrounously, we can pass in a QWaitCondition that the code will wake up
      * once the search update is completed.
      */
-    void updateSearchImpl(const Collection &collection, QWaitCondition *cond);
+    void updateSearchImpl(const Collection &collection, QSemaphore *cond);
 
 protected:
     void init(const QStringList &searchEngines, const QList<QPluginLoader*> &loaders);

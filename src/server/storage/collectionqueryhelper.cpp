@@ -23,12 +23,13 @@
 #include "entities.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
-#include "handler/scope.h"
 #include "handler.h"
 #include "queryhelper.h"
 
+#include <private/scope_p.h>
 #include <private/imapset_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection *connection, QueryBuilder &qb)
@@ -46,7 +47,7 @@ void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection 
 
 void CollectionQueryHelper::scopeToQuery(const Scope &scope, Connection *connection, QueryBuilder &qb)
 {
-    if (scope.scope() == Scope::None || scope.scope() == Scope::Uid) {
+    if (scope.scope() == Scope::Uid) {
         QueryHelper::setToQuery(scope.uidSet(), Collection::idFullColumnName(), qb);
     } else if (scope.scope() == Scope::Rid) {
         if (connection->context()->collectionId() <= 0 && !connection->context()->resource().isValid()) {
@@ -57,7 +58,7 @@ void CollectionQueryHelper::scopeToQuery(const Scope &scope, Connection *connect
         if (!connection->context()->resource().isValid()) {
             throw HandlerException("Operations based on hierarchical remote identifiers require a resource or collection context");
         }
-        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.ridChain(), connection->context()->resource().id());
+        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection->context()->resource().id());
         qb.addValueCondition(Collection::idFullColumnName(), Query::Equals, c.id());
     } else {
         throw HandlerException("WTF?");
@@ -104,7 +105,7 @@ bool CollectionQueryHelper::canBeMovedTo(const Collection &collection, const Col
     return hasAllowedName(collection, collection.name(), _parent.id());
 }
 
-Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridChain, Resource::Id resId)
+Collection CollectionQueryHelper::resolveHierarchicalRID(const QVector<Scope::HRID> &ridChain, Resource::Id resId)
 {
     if (ridChain.size() < 2) {
         throw HandlerException("Empty or incomplete hierarchical RID chain");
@@ -121,7 +122,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridC
         } else {
             qb.addValueCondition(Collection::parentIdColumn(), Query::Is, QVariant());
         }
-        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, ridChain.at(i));
+        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, ridChain.at(i).remoteId);
         qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, resId);
         if (!qb.exec()) {
             throw HandlerException("Unable to execute query");
@@ -139,7 +140,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QStringList &ridC
 Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, Connection *connection)
 {
     // root
-    if ((scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1) {
+    if (scope.scope() == Scope::Uid && scope.uidSet().intervals().count() == 1) {
         const ImapInterval i = scope.uidSet().intervals().at(0);
         if (!i.size()) {   // ### why do we need this hack for 0, shouldn't that be size() == 1?
             Collection root;

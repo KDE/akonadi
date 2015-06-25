@@ -24,19 +24,57 @@
 #include "exception.h"
 
 #include <QSignalSpy>
+#include <QBuffer>
+#include <QDataStream>
+#include <QtTest/QTest>
+
+#include <type_traits>
+
+#include <private/protocol_p.h>
 
 class QLocalServer;
 class QEventLoop;
 
-Q_DECLARE_METATYPE(QList<QByteArray>)
-
 namespace Akonadi {
 namespace Server {
 
-class FakeClient;
 class FakeSearchManager;
 class FakeDataStore;
 class FakeConnection;
+class FakeClient;
+
+class TestScenario {
+public:
+    typedef QList<TestScenario> List;
+
+    enum Action {
+        ServerCmd,
+        ClientCmd,
+        Wait,
+        Quit,
+        Ignore
+    };
+
+    Action action;
+    QByteArray data;
+
+    static TestScenario create(qint64 tag, Action action, const Protocol::Command &response);
+
+    static TestScenario wait(int timeout)
+    {
+        return TestScenario { Wait, QByteArray::number(timeout) };
+    }
+
+    static TestScenario quit()
+    {
+        return TestScenario { Quit, QByteArray() };
+    }
+
+    static TestScenario ignore(int count)
+    {
+        return TestScenario { Ignore, QByteArray::number(count) };
+    }
+};
 
 /**
  * A fake server used for testing. Losely based on KIMAP::FakeServer
@@ -61,13 +99,12 @@ public:
     static QString basePath();
     static QString socketFile();
     static QString instanceName();
-    static QList<QByteArray> loginScenario();
-    static QList<QByteArray> defaultScenario();
-    static QList<QByteArray> customCapabilitiesScenario(const QList<QByteArray> &capabilities);
-    static QList<QByteArray> selectCollectionScenario(const QString &name);
-    static QList<QByteArray> selectResourceScenario(const QString &name);
 
-    void setScenario(const QList<QByteArray> &scenario);
+    static TestScenario::List loginScenario(const QByteArray &sessionId = QByteArray());
+    static TestScenario::List selectCollectionScenario(const QString &name);
+    static TestScenario::List selectResourceScenario(const QString &name);
+
+    void setScenarios(const TestScenario::List &scenarios);
 
     void runTest();
 
@@ -102,5 +139,8 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);
 
 }
 }
+
+Q_DECLARE_METATYPE(Akonadi::Server::TestScenario)
+Q_DECLARE_METATYPE(Akonadi::Server::TestScenario::List)
 
 #endif // FAKEAKONADISERVER_H

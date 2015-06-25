@@ -79,16 +79,6 @@ Query::Condition PartTypeHelper::conditionFromFqNames(const QStringList &fqNames
     return c;
 }
 
-Query::Condition PartTypeHelper::conditionFromFqNames(const QList< QByteArray > &fqNames)
-{
-    Query::Condition c;
-    c.setSubQueryMode(Query::Or);
-    Q_FOREACH (const QByteArray &fqName, fqNames) {
-        c.addCondition(conditionFromFqName(QLatin1String(fqName)));
-    }
-    return c;
-}
-
 QString PartTypeHelper::fullName(const PartType &type)
 {
     return type.ns() + QLatin1String(":") + type.name();

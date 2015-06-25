@@ -38,6 +38,8 @@
 
 #include <algorithm>
 
+#include <private/tristate_p.h>
+
 using namespace Akonadi::Server;
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase &database, Schema *schema)
@@ -331,12 +333,12 @@ QString DbInitializer::sqlValue(const QString &type, const QString &value) const
     }
     if (type == QLatin1String("Tristate")) {
         if (value == QLatin1String("False")) {
-            return QString::number(Akonadi::Server::Tristate::False);
+            return QString::number((int)Akonadi::Tristate::False);
         }
         if (value == QLatin1String("True")) {
-            return QString::number(Akonadi::Server::Tristate::True);
+            return QString::number((int)Akonadi::Tristate::True);
         }
-        return QString::number(Akonadi::Server::Tristate::Undefined);
+        return QString::number((int)Akonadi::Tristate::Undefined);
     }
 
     return value;

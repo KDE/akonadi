@@ -18,11 +18,9 @@
 */
 
 #include "fakeconnection.h"
-#include "imapstreamparser.h"
-#include "response.h"
+
 #include "fakedatastore.h"
 #include "fakeakonadiserver.h"
-#include "handler/scope.h"
 
 #include <QBuffer>
 
@@ -31,7 +29,6 @@ using namespace Akonadi::Server;
 FakeConnection::FakeConnection(quintptr socketDescriptor, QObject *parent)
     : Connection(socketDescriptor, parent)
 {
-    m_streamParser->setWaitTimeout(500);
 }
 
 FakeConnection::FakeConnection(QObject *parent)

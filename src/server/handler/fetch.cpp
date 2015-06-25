@@ -19,55 +19,34 @@
 
 #include "fetch.h"
 
-#include "akonadi.h"
 #include "connection.h"
 #include "fetchhelper.h"
-#include "response.h"
-#include "storage/selectquerybuilder.h"
-#include "imapstreamparser.h"
 #include "cachecleaner.h"
-
-#include <private/protocol_p.h>
+#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Fetch::Fetch(Scope::SelectionScope scope)
-    : mScope(scope)
-{
-}
 
 bool Fetch::parseStream()
 {
-    // sequence set
-    mScope.parseScope(m_streamParser);
+    Protocol::FetchItemsCommand cmd(m_command);
 
-    // context
-    connection()->context()->parseContext(m_streamParser);
+    if (!connection()->context()->setScopeContext(cmd.scopeContext())) {
+        return failureResponse("Invalid scope context");
+    }
+
     // We require context in case we do RID fetch
-    if (connection()->context()->isEmpty() && mScope.scope() == Scope::Rid) {
-        throw HandlerException("No FETCH context specified");
+    if (connection()->context()->isEmpty() && cmd.scope().scope() == Scope::Rid) {
+        return failureResponse("No FETCH context specified");
     }
 
     CacheCleanerInhibitor inhibitor;
 
-    FetchHelper fetchHelper(connection(), mScope, FetchScope(m_streamParser));
-    connect(&fetchHelper, SIGNAL(responseAvailable(Akonadi::Server::Response)),
-            this, SIGNAL(responseAvailable(Akonadi::Server::Response)));
-
-    if (!fetchHelper.fetchItems(AKONADI_CMD_ITEMFETCH)) {
-        return false;
+    FetchHelper fetchHelper(connection(), cmd.scope(), cmd.fetchScope());
+    if (!fetchHelper.fetchItems()) {
+        return failureResponse("Failed to fetch items");
     }
 
-    if (mScope.scope() == Scope::Uid) {
-        successResponse("UID FETCH completed");
-    } else if (mScope.scope() == Scope::Rid) {
-        successResponse("RID FETCH completed");
-    } else if (mScope.scope() == Scope::Gid) {
-        successResponse("GID FETCH completed");
-    } else {
-        successResponse("FETCH completed");
-    }
-
-    return true;
+    return successResponse<Protocol::FetchItemsResponse>();
 }

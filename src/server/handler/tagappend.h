@@ -30,9 +30,6 @@ class TagAppend : public Handler
     Q_OBJECT
 
 public:
-    TagAppend();
-    ~TagAppend();
-
     bool parseStream();
 };
 

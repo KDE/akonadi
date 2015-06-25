@@ -1,9 +1,13 @@
 set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
+    datastream_p.cpp
     notificationmessage.cpp
     notificationmessagev2.cpp
     notificationmessagev3.cpp
+    protocol.cpp
+    scope.cpp
+    tristate.cpp
     xdgbasedirs.cpp
 )
 
@@ -41,5 +45,7 @@ install(FILES
     protocol_p.h
     xdgbasedirs_p.h
     capabilities_p.h
+    scope_p.h
+    tristate_p.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/private
 )

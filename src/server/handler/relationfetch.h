@@ -21,7 +21,6 @@
 #define AKONADIFETCHRELATION_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
@@ -35,15 +34,7 @@ class RelationFetch : public Handler
 {
     Q_OBJECT
 public:
-    RelationFetch(Scope::SelectionScope scope);
-    ~RelationFetch();
-
     bool parseStream();
-
-    static QByteArray relationToByteArray(qint64 leftId, qint64 rightId, const QByteArray &type, const QByteArray &rid);
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

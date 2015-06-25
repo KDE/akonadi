@@ -33,12 +33,7 @@ class Status : public Handler
 {
     Q_OBJECT
 public:
-    Status();
-
-    ~Status();
-
     bool parseStream();
-
 };
 
 } // namespace Server

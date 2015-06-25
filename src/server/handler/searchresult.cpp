@@ -20,84 +20,56 @@
  */
 
 #include "searchresult.h"
+
 #include "connection.h"
-#include "imapstreamparser.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/itemqueryhelper.h"
 #include "search/searchtaskmanager.h"
 
-#include <private/protocol_p.h>
-#include <shared/akdebug.h>
+#include <private/imapset_p.h>
+#include <private/scope_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-SearchResult::SearchResult(Scope::SelectionScope scope)
-    : Handler()
-    , mScope(scope)
-{
-}
-
-SearchResult::~SearchResult()
-{
-}
 
 bool SearchResult::parseStream()
 {
-    const QByteArray searchId = m_streamParser->readString();
-    const qint64 collectionId = m_streamParser->readNumber();
-    if (mScope.scope() != Scope::Uid && mScope.scope() != Scope::Rid) {
-        fail(searchId, "Only UID or RID scopes are allowed in SEARECH_RESULT");
-        return false;
-    }
+    Protocol::SearchResultCommand cmd(m_command);
 
-    if (mScope.scope() == Scope::Uid) {
-        // Handle empty UID set
-        m_streamParser->beginList();
-        if (!m_streamParser->atListEnd()) {
-            mScope.parseScope(m_streamParser);
-            // FIXME: A hack to move stream parser beyond ')'
-            m_streamParser->readChar();
-        }
-    } else {
-        mScope.parseScope(m_streamParser);
+    if (!checkScopeConstraints(cmd.result(), Scope::Uid | Scope::Rid)) {
+        return fail(cmd.searchId(), QStringLiteral("Only UID or RID scopes are allowed in SEARECH_RESULT"));
     }
 
     QSet<qint64> ids;
-    if (mScope.scope() == Scope::Rid && !mScope.ridSet().isEmpty()) {
+    if (cmd.result().scope() == Scope::Rid && !cmd.result().isEmpty()) {
         QueryBuilder qb(PimItem::tableName());
         qb.addColumn(PimItem::idFullColumnName());
-        ItemQueryHelper::remoteIdToQuery(mScope.ridSet(), connection()->context(), qb);
-        qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, collectionId);
+        ItemQueryHelper::remoteIdToQuery(cmd.result().ridSet(), connection()->context(), qb);
+        qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, cmd.collectionId());
 
         if (!qb.exec()) {
-            fail(searchId, "Failed to convert RID to UID");
-            return false;
+            return fail(cmd.searchId(), QStringLiteral("Failed to convert RID to UID"));
         }
 
         QSqlQuery query = qb.query();
         while (query.next()) {
             ids << query.value(0).toLongLong();
         }
-    } else if (mScope.scope() == Scope::Uid && !mScope.uidSet().isEmpty()) {
-        Q_FOREACH (const ImapInterval &interval, mScope.uidSet().intervals()) {
-            if (!interval.hasDefinedBegin() && !interval.hasDefinedEnd()) {
-                fail(searchId, "Open UID intervals not allowed in SEARCH_RESULT");
-                return false;
-            }
-
-            for (int i = interval.begin(); i <= interval.end(); ++i) {
-                ids << i;
+    } else if (cmd.result().scope() == Scope::Uid && !cmd.result().isEmpty()) {
+        const ImapSet result = cmd.result().uidSet();
+        Q_FOREACH (const ImapInterval &interval, result.intervals()) {
+            for (qint64 i = interval.begin(); i <= interval.end(); ++i) {
+                ids.insert(i);
             }
         }
     }
-    SearchTaskManager::instance()->pushResults(searchId, ids, connection());
+    SearchTaskManager::instance()->pushResults(cmd.searchId(), ids, connection());
 
-    successResponse("Done");
-    return true;
+    return successResponse<Protocol::SearchResultResponse>();
 }
 
-void SearchResult::fail(const QByteArray &searchId, const char *error)
+bool SearchResult::fail(const QByteArray &searchId, const QString &error)
 {
     SearchTaskManager::instance()->pushResults(searchId, QSet<qint64>(), connection());
-    failureResponse(error);
+    return failureResponse(error);
 }

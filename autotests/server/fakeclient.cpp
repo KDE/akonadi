@@ -19,8 +19,9 @@
 
 #include "fakeclient.h"
 #include "fakeakonadiserver.h"
-#include "imapstreamparser.h"
+
 #include <shared/akdebug.h>
+#include <private/protocol_p.h>
 
 #include <QTest>
 #include <QMutexLocker>
@@ -42,6 +43,7 @@ do {\
     }\
 } while (0)
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 FakeClient::FakeClient(QObject *parent)
@@ -54,22 +56,22 @@ FakeClient::~FakeClient()
 {
 }
 
-void FakeClient::setScenario(const QList<QByteArray> &scenario)
+void FakeClient::setScenarios(const TestScenario::List &scenarios)
 {
-    mScenario = scenario;
+    mScenarios = scenarios;
 }
 
 bool FakeClient::isScenarioDone() const
 {
     QMutexLocker locker(&mMutex);
-    return mScenario.isEmpty();
+    return mScenarios.isEmpty();
 }
 
 void FakeClient::dataAvailable()
 {
     QMutexLocker locker(&mMutex);
 
-    CLIENT_VERIFY(!mScenario.isEmpty());
+    CLIENT_VERIFY(!mScenarios.isEmpty());
 
     readServerPart();
     writeClientPart();
@@ -77,24 +79,49 @@ void FakeClient::dataAvailable()
 
 void FakeClient::readServerPart()
 {
-    while (!mScenario.isEmpty() && mScenario.first().startsWith("S: ")) {
-        if (mScenario.first().startsWith("S: IGNORE")) {
-            QByteArray command = mScenario.takeFirst();
-            command = command.mid(9).trimmed();
-            const int count = command.toInt();
-            for (int i = 0; i < count; i++) {
-                mStreamParser->readUntilCommandEnd();
+    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ServerCmd
+            || mScenarios.at(0).action == TestScenario::Ignore)) {
+        TestScenario scenario = mScenarios.takeFirst();
+        if (scenario.action == TestScenario::Ignore) {
+            const int count = scenario.data.toInt();
+
+            // Read and throw away all "count" responses. Useful for scenarios
+            // with thousands of responses
+            qint64 tag;
+            for (int i = 0; i < count; ++i) {
+                mStream >> tag;
+                Protocol::deserialize(mStream.device());
             }
-            continue;
+        } else {
+            QDataStream expectedStream(scenario.data);
+            qint64 expectedTag, actualTag;
+            Protocol::Command expectedCommand, actualCommand;
+
+            expectedStream >> expectedTag;
+            mStream >> actualTag;
+            CLIENT_COMPARE(actualTag, expectedTag);
+
+            expectedCommand = Protocol::deserialize(expectedStream.device());
+            actualCommand = Protocol::deserialize(mStream.device());
+
+            if (actualCommand.type() != expectedCommand.type()) {
+                qDebug() << "Actual command:  " << actualCommand.debugString();
+                qDebug() << "Expected Command:" << expectedCommand.debugString();
+            }
+            CLIENT_COMPARE(actualCommand.type(), expectedCommand.type());
+            CLIENT_COMPARE(actualCommand.isResponse(), expectedCommand.isResponse());
+            if (actualCommand != expectedCommand) {
+                qDebug() << "Actual command:  " << actualCommand.debugString();
+                qDebug() << "Expected Command:" << expectedCommand.debugString();
+            }
+            CLIENT_COMPARE(actualCommand, expectedCommand);
         }
-        const QByteArray received = "S: " + mStreamParser->readUntilCommandEnd();
-        const QByteArray expected = mScenario.takeFirst() + "\r\n";
-        CLIENT_COMPARE(QString::fromUtf8(received), QString::fromUtf8(expected));
-        CLIENT_COMPARE(received, expected);
     }
 
-    if (!mScenario.isEmpty()) {
-        CLIENT_VERIFY(mScenario.first().startsWith("C: "));
+    if (!mScenarios.isEmpty()) {
+        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ClientCmd
+                        || mScenarios.at(0).action == TestScenario::Wait
+                        || mScenarios.at(0).action ==TestScenario::Quit);
     } else {
         // Server replied and there's nothing else to send, then quit
         quit();
@@ -103,24 +130,25 @@ void FakeClient::readServerPart()
 
 void FakeClient::writeClientPart()
 {
-    while (!mScenario.isEmpty() && (mScenario.first().startsWith("C: ") || mScenario.first().startsWith("W: "))) {
-        const QByteArray rule = mScenario.takeFirst();
+    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ClientCmd
+            || mScenarios.at(0).action == TestScenario::Wait)) {
+        const TestScenario rule = mScenarios.takeFirst();
 
-        if (rule.startsWith("C: ")) {
-            const QByteArray payload = rule.mid(3);
-            mSocket->write(payload + "\n");
+       if (rule.action == TestScenario::ClientCmd) {
+            mSocket->write(rule.data);
         } else {
-            const int timeout = rule.mid(3).toInt();
+            const int timeout = rule.data.toInt();
             QTest::qWait(timeout);
         }
     }
 
-    if (!mScenario.isEmpty() && mScenario.first().startsWith("X:")) {
+    if (!mScenarios.isEmpty() && mScenarios.at(0).action == TestScenario::Quit) {
         mSocket->close();
     }
 
-    if (!mScenario.isEmpty()) {
-        CLIENT_VERIFY(mScenario.first().startsWith("S: "));
+    if (!mScenarios.isEmpty()) {
+        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ServerCmd
+                        || mScenarios.at(0).action == TestScenario::Ignore);
     }
 }
 
@@ -133,12 +161,11 @@ void FakeClient::run()
     if (!mSocket->waitForConnected()) {
         akFatal() << "Failed to connect to FakeAkonadiServer";
     }
-    mStreamParser = new ImapStreamParser(mSocket);
+    mStream.setDevice(mSocket);
 
     exec();
 
-    delete mStreamParser;
-    mStreamParser = 0;
+    mStream.setDevice(Q_NULLPTR);
     mSocket->close();
     delete mSocket;
     mSocket = 0;

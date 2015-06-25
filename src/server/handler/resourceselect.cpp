@@ -20,30 +20,26 @@
 #include "resourceselect.h"
 
 #include "connection.h"
-#include "entities.h"
-#include "imapstreamparser.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ResourceSelect::ResourceSelect()
-    : Handler()
-{
-}
 
 bool ResourceSelect::parseStream()
 {
-    const QString resourceName = m_streamParser->readUtf8String();
-    if (resourceName.isEmpty()) {
+    Protocol::SelectResourceCommand cmd(m_command);
+
+    if (cmd.resourceId().isEmpty()) {
         connection()->context()->setResource(Resource());
-        return successResponse("Resource deselected");
+        return successResponse<Protocol::SelectResourceResponse>();
     }
 
-    const Resource res = Resource::retrieveByName(resourceName);
+    const Resource res = Resource::retrieveByName(cmd.resourceId());
     if (!res.isValid()) {
-        throw HandlerException(resourceName.toUtf8() + " is not a valid resource identifier");
+        return failureResponse(cmd.resourceId() % QStringLiteral(" is not a valid resource identifier"));
     }
 
     connection()->context()->setResource(res);
 
-    return successResponse(resourceName.toUtf8() + " selected");
+    return successResponse<Protocol::SelectResourceResponse>();
 }

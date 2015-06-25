@@ -29,6 +29,12 @@
 #include <QtCore/QSharedDataPointer>
 
 namespace Akonadi {
+namespace Protocol {
+class DataStream;
+}
+}
+
+namespace Akonadi {
 
 /**
   Represents a single interval in an ImapSet.
@@ -125,6 +131,9 @@ public:
 private:
     class Private;
     QSharedDataPointer<Private> d;
+
+    friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval);
+    friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapInterval &interval);
 };
 
 /**
@@ -145,6 +154,12 @@ public:
     */
     ImapSet();
 
+    ImapSet(qint64 Id);
+
+    ImapSet(const QVector<qint64> &ids);
+
+    ImapSet(const ImapInterval &interval);
+
     /**
       Copy constructor.
     */
@@ -156,9 +171,16 @@ public:
     ~ImapSet();
 
     /**
+     * Returns ImapSet representing 1:*
+     * */
+    static ImapSet all();
+
+    /**
       Assignment operator.
     */
     ImapSet &operator=(const ImapSet &other);
+
+    bool operator==(const ImapSet &other) const;
 
     /**
       Adds the given list of positive integer numbers to the set.
@@ -203,11 +225,14 @@ public:
 private:
     class Private;
     QSharedDataPointer<Private> d;
+
+    friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapSet &set);
+    friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapSet &set);
 };
 
 }
 
-AKONADIPRIVATE_EXPORT QDebug &operator<<(QDebug &d, const Akonadi::ImapInterval &interval);
+AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug d, const Akonadi::ImapInterval &interval);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug d, const Akonadi::ImapSet &set);
 
 Q_DECLARE_TYPEINFO(Akonadi::ImapInterval, Q_MOVABLE_TYPE);

@@ -69,15 +69,6 @@ bool remove(const QString &column, const QVariant &value);
  */
 void removeFile(const QString &fileName);
 
-/**
- * Reads data from @p streamParser as they arrive from client and writes them
- * to @p partFile. It will close the file when all data are read.
- *
- * @param partFile File to write into. The file must be closed, or opened in write mode
- * @throws PartHelperException when an error occurs (write fails, data truncated, etc)
- */
-bool streamToFile(ImapStreamParser *streamParser, QFile &partFile, QIODevice::OpenMode = QIODevice::WriteOnly);
-
 /** Returns the payload data. */
 QByteArray translateData(const QByteArray &data, bool isExternal);
 /** Convenience overload of the above. */

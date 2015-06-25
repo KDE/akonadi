@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2015  Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,38 +17,39 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SUBSCRIBE_H
-#define AKONADI_SUBSCRIBE_H
+#ifndef AKONADI_TAGQUERYHELPER_H
+#define AKONADI_TAGQUERYHELPER_H
 
-#include "handler.h"
+#include "entities.h"
 
 namespace Akonadi {
+
+class Scope;
+
 namespace Server {
 
+class CommandContext;
+class QueryBuilder;
+
 /**
-  @ingroup akonadi_server_handler
+  Helper methods to generate WHERE clauses for item queries based on the item set
+  used in the protocol.
+*/
+namespace TagQueryHelper {
 
-  Handler for the subscribe/unsubscribe commands.
-  Compatible with RFC 3501 section 6.3.7 and 6.3.8.
+/**
+  Add conditions to @p qb for the given remote identifier @p rid.
+  The rid context is taken from @p context.
+*/
+void remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb);
+void gidToQuery(const QStringList &gids, CommandContext *context, QueryBuilder &qb);
 
-  Locally subscribe/unsubscribe a set of collections.
-
-  <h4>Syntax</h4>
-  @verbatim
-  tag "SUBSCRIBE " collection *( " " collection )
-  tag "UNSUBSCRIBE " collection *( " " collection )
-  @endverbatim
- */
-class Subscribe : public Handler
-{
-    Q_OBJECT
-public:
-    Subscribe(bool subscribe);
-    bool parseStream();
-
-private:
-    bool mSubscribe;
-};
+/**
+  Add conditions to @p qb for the given item operation scope @p scope.
+  The rid context is taken from @p context, if none is specified an exception is thrown.
+*/
+void scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb);
+}
 
 } // namespace Server
 } // namespace Akonadi

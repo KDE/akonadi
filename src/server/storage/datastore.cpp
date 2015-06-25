@@ -36,6 +36,7 @@
 #include "parttypehelper.h"
 #include "querycache.h"
 #include "queryhelper.h"
+#include <utils.h>
 
 #include <shared/akdebug.h>
 #include <private/xdgbasedirs_p.h>
@@ -655,7 +656,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 
 /* --- ItemParts ----------------------------------------------------- */
 
-bool DataStore::removeItemParts(const PimItem &item, const QList<QByteArray> &parts)
+bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &parts)
 {
     SelectQueryBuilder<Part> qb;
     qb.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
@@ -670,7 +671,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QList<QByteArray> &pa
         }
     }
 
-    mNotificationCollector->itemChanged(item, parts.toSet());
+    mNotificationCollector->itemChanged(item, parts);
     return true;
 }
 
@@ -1077,10 +1078,7 @@ bool DataStore::unhidePimItem(PimItem &pimItem)
     akDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
 
     // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
-    QList< QByteArray > parts;
-    parts << AKONADI_ATTRIBUTE_HIDDEN;
-
-    return removeItemParts(pimItem, parts);
+    return removeItemParts(pimItem, { AKONADI_ATTRIBUTE_HIDDEN });
 }
 
 bool DataStore::unhideAllPimItems()

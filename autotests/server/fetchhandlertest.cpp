@@ -19,8 +19,8 @@
 
 #include <QObject>
 
-#include <imapstreamparser.h>
-#include <response.h>
+#include <private/scope_p.h>
+#include <private/imapset_p.h>
 
 #include "fakeakonadiserver.h"
 #include "aktest.h"
@@ -45,7 +45,6 @@ public:
     FetchHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
         try {
@@ -62,6 +61,22 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
+    Protocol::FetchItemsCommand createCommand(const Scope &scope, const Protocol::ScopeContext &ctx = Protocol::ScopeContext())
+    {
+        Protocol::FetchItemsCommand cmd(scope, ctx);
+        cmd.fetchScope().setFetch(Protocol::FetchScope::IgnoreErrors);
+        return cmd;;
+    }
+
+    Protocol::FetchItemsResponse createResponse(const PimItem &item)
+    {
+        Protocol::FetchItemsResponse resp(item.id());
+        resp.setMimeType(item.mimeType().name());
+        resp.setParentId(item.collectionId());
+
+        return resp;
+    }
+
     QScopedPointer<DbInitializer> initializer;
 
 private Q_SLOTS:
@@ -73,32 +88,33 @@ private Q_SLOTS:
         PimItem item1 = initializer->createItem("item1", col);
         PimItem item2 = initializer->createItem("item2", col);
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List >("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID FETCH " + QByteArray::number(item1.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: 2 OK UID FETCH completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item1.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
 
-            QTest::newRow("basic fetch") << scenario;
+            QTest::newRow("basic fetch") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item2.id()) + " FETCH (UID " + QByteArray::number(item2.id()) + " REV 0 MIMETYPE \"" + item2.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")";
-            QTest::newRow("collection context") << scenario;
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+            QTest::newRow("collection context") << scenarios;
         }
     }
 
     void testFetch()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -121,55 +137,45 @@ private Q_SLOTS:
         item1.addTag(tag);
         item1.update();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: 2 OK UID FETCH completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
 
-            QTest::newRow("fetch by tag") << scenario;
+            QTest::newRow("fetch by tag") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
-            << "C: 2 UID FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: 2 OK UID FETCH completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
 
-            QTest::newRow("uid fetch by tag from resource") << scenario;
+            QTest::newRow("uid fetch by tag from resource") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
-            << "C: 2 FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: 2 OK FETCH completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
 
-            QTest::newRow("fetch by tag from resource") << scenario;
-        }
-        {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
-            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item2.id()) + " FETCH (UID " + QByteArray::number(item2.id()) + " REV 0 MIMETYPE \"" + item2.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col.id()) + ")"
-            << "S: 2 OK FETCH completed";
-
-            QTest::newRow("fetch collection") << scenario;
+            QTest::newRow("fetch collection") << scenarios;
         }
     }
 
     void testFetchByTag()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -192,28 +198,28 @@ private Q_SLOTS:
         item1.addTag(tag);
         item1.update();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
-            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col2.id()) + " (UID COLLECTIONID)"
-            << "S: 2 OK FETCH completed"
-            << "C: 3 FETCH 1:* TAGID " + QByteArray::number(tag.id()) + " (UID COLLECTIONID)"
-            << "S: * " + QByteArray::number(item1.id()) + " FETCH (UID " + QByteArray::number(item1.id()) + " REV 0 MIMETYPE \"" + item1.mimeType().name().toLatin1() + "\" COLLECTIONID " + QByteArray::number(col1.id()) + ")"
-            << "S: 3 OK FETCH completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse())
+                      << TestScenario::create(6, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
+                      << TestScenario::create(6, TestScenario::ServerCmd, createResponse(item1))
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
 
             //Special case that used to be broken due to persistent command context
-            QTest::newRow("fetch by tag after collection") << scenario;
+            QTest::newRow("fetch by tag after collection") << scenarios;
         }
     }
 
     void testFetchCommandContext()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 
@@ -229,30 +235,30 @@ private Q_SLOTS:
         for (int i = 0; i< 1000; i++) {
             items.append(initializer->createItem(QString::number(i).toLatin1().constData(),col1));
         }
-        akDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
+        qDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
         timer.start();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 FETCH 1:* COLLECTIONID " + QByteArray::number(col1.id()) + "CACHEONLY FULLPAYLOAD ALLATTR IGNOREERRORS ANCESTORS INF EXTERNALPAYLOAD (UID COLLECTIONID FLAGS SIZE REMOTEID REMOTEREVISION ATR:ENTITYDISPLAY)";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col1.id())));
             while (!items.isEmpty()) {
                 const PimItem &item = items.takeLast();
-                scenario << "S: * " + QByteArray::number(item.id()) + " FETCH (UID " + QByteArray::number(item.id()) + " REV 0 REMOTEID \""+item.remoteId().toLatin1()+"\" MIMETYPE \"test\" COLLECTIONID "+QByteArray::number(col1.id())+" SIZE 0 FLAGS () ANCESTORS (("+QByteArray::number(col1.id())+" \""+col1.name().toLatin1()+"\") (0 \"\")))";
+                scenarios << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item));
             }
-            scenario << "S: 2 OK FETCH completed";
-            QTest::newRow("complete list") << scenario;
+            scenarios << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+            QTest::newRow("complete list") << scenarios;
         }
-        akDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
+        qDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
     }
 
     void testList()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         //StorageDebugger::instance()->enableSQLDebugging(true);
         //StorageDebugger::instance()->writeToFile(QLatin1String("sqllog.txt"));
         FakeAkonadiServer::instance()->runTest();

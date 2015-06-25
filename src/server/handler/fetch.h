@@ -21,7 +21,6 @@
 #define AKONADIFETCH_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
@@ -30,32 +29,12 @@ namespace Server {
   @ingroup akonadi_server_handler
 
   Handler for the fetch command.
-
-  Request syntax:
-  @verbatim
-  fetch-request = tag " " [scope-selector " "] "FETCH " scope " " fetch-parameters " " part-list
-  scope-selector = ["UID" / "RID"]
-  fetch-parameters = ["FULLPAYLOAD" / "CACHEONLY" / "CACHEONLY" / "EXTERNALPAYLOAD" / "ANCESTORS " depth]
-  part-list = "(" *(part-id) ")"
-  depth = "0" / "1" / "INF"
-  @endverbatim
-
-  Semantics:
-  - @c FULLPAYLOAD: Retrieve the full payload
-  - @c CACHEONLY: Restrict retrieval to parts already in the cache, even if more parts have been requested.
-  - @c EXTERNALPAYLOAD: Indicate the capability to retrieve parts via the filesystem instead over the socket
-  - @c ANCESTORS: Indicate the desired ancestor collection depth (0 is the default)
- */
+*/
 class Fetch : public Handler
 {
     Q_OBJECT
 public:
-    Fetch(Scope::SelectionScope scope);
-
     bool parseStream();
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

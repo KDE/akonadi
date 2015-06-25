@@ -21,7 +21,6 @@
 #define AKONADI_RELATIONREMOVE_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
@@ -30,13 +29,7 @@ class RelationRemove : public Handler
 {
     Q_OBJECT
 public:
-    RelationRemove(Scope::SelectionScope scope);
-    ~RelationRemove();
-
-    virtual bool parseStream();
-
-private:
-    Scope mScope;
+    bool parseStream();
 };
 
 } // namespace Server

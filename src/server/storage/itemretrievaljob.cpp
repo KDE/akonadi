@@ -42,10 +42,16 @@ void ItemRetrievalJob::start(QDBusAbstractInterface *interface)
         m_active = true;
         m_oldMethodCalled = false;
         QList<QVariant> arguments;
+        // TODO: Change the DBus call
+        QStringList parts;
+        parts.reserve(m_request->parts.size());
+        Q_FOREACH (const QByteArray &part, m_request->parts) {
+            parts << QLatin1String(part);
+        }
         arguments << m_request->id
                   << QString::fromUtf8(m_request->remoteId)
                   << QString::fromUtf8(m_request->mimeType)
-                  << m_request->parts;
+                  << parts;
         interface->callWithCallback(QLatin1String("requestItemDeliveryV2"), arguments, this, SLOT(callFinished(QString)), SLOT(callFailed(QDBusError)));
     } else {
         Q_EMIT requestCompleted(m_request, QString::fromLatin1("Unable to contact resource"));
@@ -90,12 +96,18 @@ void ItemRetrievalJob::callFailed(const QDBusError &error)
     if (error.type() == QDBusError::UnknownMethod && !m_oldMethodCalled) {
         akDebug() << "processing retrieval request (old method) for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
         Q_ASSERT(m_interface);
+        // TODO: Remove?
         //try the old version
         QList<QVariant> arguments;
+        QStringList parts;
+        parts.reserve(m_request->parts.size());
+        Q_FOREACH (const QByteArray &part, m_request->parts) {
+            parts << QLatin1String(part);
+        }
         arguments << m_request->id
                   << QString::fromUtf8(m_request->remoteId)
                   << QString::fromUtf8(m_request->mimeType)
-                  << m_request->parts;
+                  << parts;
         m_oldMethodCalled = true;
         m_interface->callWithCallback(QLatin1String("requestItemDelivery"), arguments, this, SLOT(callFinished(bool)), SLOT(callFailed(QDBusError)));
         return;

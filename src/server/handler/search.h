@@ -21,7 +21,6 @@
 #define AKONADISEARCH_H
 
 #include "handler.h"
-#include "fetchscope.h"
 
 #include <QtCore/QVector>
 #include <QtCore/QSet>
@@ -33,28 +32,19 @@ namespace Server {
   @ingroup akonadi_server_handler
 
   Handler for the search commands.
-
-  A search has the following forms:
-  @verbatim
-  <tag> SEARCH [MIMETYPE (mimetype-list)] [COLLECTIONS (collections-list) [RECURSIVE]] QUERY <SPARQL-query> <fetch scope>
-  @endverbatim
 */
 class Search : public Handler
 {
     Q_OBJECT
 
 public:
-    Search();
-
-    ~Search();
-
     bool parseStream();
 
 private Q_SLOTS:
     void slotResultsAvailable(const QSet<qint64> &results);
 
 private:
-    FetchScope mFetchScope;
+    Protocol::FetchScope mFetchScope;
     QSet<qint64> mAllResults;
 };
 

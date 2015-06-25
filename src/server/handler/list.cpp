@@ -19,21 +19,17 @@
 
 #include "list.h"
 #include "akonadiserver_debug.h"
-#include <QtCore/QDebug>
 
+#include "connection.h"
+#include "handlerhelper.h"
+#include "collectionreferencemanager.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
 
-#include "connection.h"
-#include "response.h"
-#include "handlerhelper.h"
-#include "imapstreamparser.h"
-#include "collectionreferencemanager.h"
+#include <private/scope_p.h>
 
-#include <private/protocol_p.h>
-
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 template <typename T>
@@ -47,11 +43,9 @@ static bool intersect(const QVector<typename T::Id> &l1, const QVector<T> &l2)
     return false;
 }
 
-List::List(Scope::SelectionScope scope, bool onlySubscribed)
+List::List()
     : Handler()
-    , mScope(scope)
     , mAncestorDepth(0)
-    , mOnlySubscribed(onlySubscribed)
     , mIncludeStatistics(false)
     , mEnabledCollections(false)
     , mCollectionsToDisplay(false)
@@ -85,34 +79,22 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
     return ancestors;
 }
 
-CollectionAttribute::List List::getAttributes(const Collection &col, const QVector<QByteArray> &filter)
+CollectionAttribute::List List::getAttributes(const Collection &col, const QSet<QByteArray> &filter)
 {
     CollectionAttribute::List attributes;
-    if (filter.contains("REMOTEID")) {
-        CollectionAttribute attr;
-        attr.setType("REMOTEID");
-        attr.setValue(col.remoteId().toUtf8());
-        attributes << attr;
-    }
-    if (filter.contains("NAME")) {
-        CollectionAttribute attr;
-        attr.setType("NAME");
-        attr.setValue(col.name().toUtf8());
-        attributes << attr;
-    }
-    {
-        auto it = mCollectionAttributes.find(col.id());
-        while (it != mCollectionAttributes.end() && it.key() == col.id()) {
-            if (filter.isEmpty() || filter.contains(it.value().type())) {
-                attributes << it.value();
-            }
-            ++it;
+    auto it = mCollectionAttributes.find(col.id());
+    while (it != mCollectionAttributes.end() && it.key() == col.id()) {
+        if (filter.isEmpty() || filter.contains(it.value().type())) {
+            attributes << it.value();
         }
+        ++it;
     }
     return attributes;
 }
 
-void List::listCollection(const Collection &root, const QStack<Collection> &ancestors, const QList<QByteArray> &mimeTypes, const CollectionAttribute::List &attributes)
+void List::listCollection(const Collection &root, const QStack<Collection> &ancestors,
+                          const QStringList &mimeTypes,
+                          const CollectionAttribute::List &attributes)
 {
     const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(root.id(), connection()->sessionId());
     //We always expose referenced collections to the resource as referenced (although it's a different session)
@@ -131,20 +113,20 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     Collection dummy = root;
     DataStore *db = connection()->storageBackend();
     db->activeCachePolicy(dummy);
-    const QByteArray b = HandlerHelper::collectionToByteArray(dummy, attributes, mIncludeStatistics, mAncestorDepth, ancestors, ancestorAttributes, isReferencedFromSession || resourceIsSynchronizing, mimeTypes);
 
-    Response response;
-    response.setUntagged();
-    response.setString(b);
-    Q_EMIT responseAvailable(response);
+    sendResponse(HandlerHelper::fetchCollectionsResponse(dummy, attributes, mIncludeStatistics,
+                                                         mAncestorDepth, ancestors,
+                                                         ancestorAttributes,
+                                                         isReferencedFromSession || resourceIsSynchronizing,
+                                                         mimeTypes));
 }
 
 static Query::Condition filterCondition(const QString &column)
 {
     Query::Condition orCondition(Query::Or);
-    orCondition.addValueCondition(column, Query::Equals, Akonadi::Server::Tristate::True);
+    orCondition.addValueCondition(column, Query::Equals, (int)Tristate::True);
     Query::Condition andCondition(Query::And);
-    andCondition.addValueCondition(column, Query::Equals, Akonadi::Server::Tristate::Undefined);
+    andCondition.addValueCondition(column, Query::Equals, (int)Tristate::Undefined);
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
     orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
@@ -177,7 +159,7 @@ bool List::checkFilterCondition(const Collection &col) const
     return true;
 }
 
-static QSqlQuery getAttributeQuery(const QVariantList &ids, const QVector<QByteArray> &requestedAttributes)
+static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArray> &requestedAttributes)
 {
     QueryBuilder qb(CollectionAttribute::tableName());
 
@@ -186,7 +168,7 @@ static QSqlQuery getAttributeQuery(const QVariantList &ids, const QVector<QByteA
     qb.addColumn(CollectionAttribute::collectionIdFullColumnName());
     qb.addColumn(CollectionAttribute::typeFullColumnName());
     qb.addColumn(CollectionAttribute::valueFullColumnName());
-    
+
     if (!requestedAttributes.isEmpty()) {
         QVariantList attributes;
         Q_FOREACH (const QByteArray &type, requestedAttributes) {
@@ -341,7 +323,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 }
             }
 
-    //If we matched referenced collecions we need to ensure the collection was referenced from this session
+            //If we matched referenced collecions we need to ensure the collection was referenced from this session
             const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
             //The collection is referenced, but not from this session. We need to reevaluate the filter condition
             if (it->referenced() && !isReferencedFromSession) {
@@ -399,8 +381,14 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     }
     }
 
-    // qCDebug(AKONADISERVER_LOG) << "HAS:" << knownIds;
-    // qCDebug(AKONADISERVER_LOG) << "MISSING:" << missingCollections;
+    /*
+    QSet<qint64> knownIds;
+    for (const Collection &col : mCollections) {
+        knownIds.insert(col.id());
+    }
+    qCDebug(AKONADISERVER_LOG) << "HAS:" << knownIds;
+    qCDebug(AKONADISERVER_LOG) << "MISSING:" << missingCollections;
+    */
 
     //Fetch missing collections that are part of the tree
     while (!missingCollections.isEmpty()) {
@@ -444,7 +432,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         const Collection col = it.value();
         // qCDebug(AKONADISERVER_LOG) << "col " << col.id();
 
-        QList<QByteArray> mimeTypes;
+        QStringList mimeTypes;
         {
             //Get new query if necessary
             if (!mimeTypeQuery.isValid() && mimetypeQueryStart < mimeTypeIds.size()) {
@@ -463,11 +451,11 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             }
             //Advance query while a mimetype for this collection is returned
             while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() == col.id()) {
-                mimeTypes << mimeTypeQuery.value(2).toString().toUtf8();
+                mimeTypes << mimeTypeQuery.value(2).toString();
                 if (!mimeTypeQuery.next()) {
                     break;
-        }
-    }
+                }
+            }
         }
 
         CollectionAttribute::List attributes;
@@ -476,7 +464,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             if (!attributeQuery.isValid() && attributeQueryStart < attributeIds.size()) {
                 const QVariantList ids = attributeIds.mid(attributeQueryStart, querySizeLimit);
                 attributeQueryStart += querySizeLimit;
-                attributeQuery = getAttributeQuery(ids, QVector<QByteArray>());
+                attributeQuery = getAttributeQuery(ids, QSet<QByteArray>());
                 attributeQuery.next(); //place at first record
             }
 
@@ -507,99 +495,67 @@ void List::retrieveCollections(const Collection &topParent, int depth)
 
 bool List::parseStream()
 {
-    qint64 baseCollection = -1;
-    QString rid;
-    if (mScope.scope() == Scope::None || mScope.scope() == Scope::Uid) {
-        bool ok = false;
-        baseCollection = m_streamParser->readNumber(&ok);
-        if (!ok) {
-            return failureResponse("Invalid base collection");
+    Protocol::FetchCollectionsCommand cmd(m_command);
+
+    if (!cmd.resource().isEmpty()) {
+        mResource = Resource::retrieveByName(cmd.resource());
+        if (!mResource.isValid()) {
+            return failureResponse("Unknown resource");
         }
-    } else if (mScope.scope() == Scope::Rid) {
-        rid = m_streamParser->readUtf8String();
-        if (rid.isEmpty()) {
-            throw HandlerException("No remote identifier specified");
-        }
-    } else if (mScope.scope() == Scope::HierarchicalRid) {
-        mScope.parseScope(m_streamParser);
-    } else {
-        throw HandlerException("WTF");
     }
-
-    const int depth = HandlerHelper::parseDepth(m_streamParser->readString());
-
-    m_streamParser->beginList();
-    while (!m_streamParser->atListEnd()) {
-        const QByteArray filter = m_streamParser->readString();
-        if (filter == AKONADI_PARAM_RESOURCE) {
-            mResource = Resource::retrieveByName(m_streamParser->readUtf8String());
-            if (!mResource.isValid()) {
-                return failureResponse("Unknown resource");
+    Q_FOREACH (const QString &mtName, cmd.mimeTypes()) {
+        const MimeType mt = MimeType::retrieveByName(mtName);
+        if (mt.isValid()) {
+            mMimeTypes.append(mt.id());
+        } else {
+            MimeType mt(mtName);
+            if (!mt.insert()) {
+                return failureResponse("Failed to create mimetype record");
             }
-        } else if (filter == AKONADI_PARAM_MIMETYPE) {
-            m_streamParser->beginList();
-            while (!m_streamParser->atListEnd()) {
-                const QString mtName = m_streamParser->readUtf8String();
-                const MimeType mt = MimeType::retrieveByName(mtName);
-                if (mt.isValid()) {
-                    mMimeTypes.append(mt.id());
-                } else {
-                    MimeType mt(mtName);
-                    if (!mt.insert()) {
-                        throw HandlerException("Failed to create mimetype record");
-                    }
-                    mMimeTypes.append(mt.id());
-                }
-            }
-        } else if (filter == AKONADI_PARAM_ENABLED) {
-            mEnabledCollections = true;
-        } else if (filter == AKONADI_PARAM_SYNC) {
-            mCollectionsToSynchronize = true;
-        } else if (filter == AKONADI_PARAM_DISPLAY) {
-            mCollectionsToDisplay = true;
-        } else if (filter == AKONADI_PARAM_INDEX) {
-            mCollectionsToIndex = true;
+            mMimeTypes.append(mt.id());
         }
     }
 
-    //For backwards compatibilty with the subscription mechanism
-    mEnabledCollections = mEnabledCollections || mOnlySubscribed;
+    mEnabledCollections = cmd.enabled();
+    mCollectionsToSynchronize = cmd.syncPref();
+    mCollectionsToDisplay = cmd.displayPref();
+    mCollectionsToIndex = cmd.indexPref();
+    mIncludeStatistics = cmd.fetchStats();
 
-    if (m_streamParser->hasList()) {   // We got extra options
-        m_streamParser->beginList();
-        while (!m_streamParser->atListEnd()) {
-            const QByteArray option = m_streamParser->readString();
-            if (option == AKONADI_PARAM_STATISTICS) {
-                if (m_streamParser->readString() == "true") {
-                    mIncludeStatistics = true;
-                }
-            }
-            if (option == AKONADI_PARAM_ANCESTORS) {
-                const QByteArray argument = m_streamParser->readString();
-                if (m_streamParser->hasList()) {
-                    m_streamParser->beginList();
-                    while (!m_streamParser->atListEnd()) {
-                        const QByteArray &value = m_streamParser->readString();
-                        if (value == "DEPTH") {
-                            mAncestorDepth = HandlerHelper::parseDepth(m_streamParser->readString());
-                        } else {
-                            mAncestorAttributes << value;
-                        }
-                    }
-                } else { //Backwards compatibility
-                mAncestorDepth = HandlerHelper::parseDepth(argument);
-            }
-        }
-    }
+    int depth;
+    switch (cmd.depth()) {
+    case Protocol::FetchCollectionsCommand::BaseCollection:
+        depth = 0;
+        break;
+    case Protocol::FetchCollectionsCommand::ParentCollection:
+        depth = 1;
+        break;
+    case Protocol::FetchCollectionsCommand::AllCollections:
+        depth = INT_MAX;
+        break;
     }
 
-    if (baseCollection != 0) { // not root
+    switch (cmd.ancestorsDepth()) {
+    case Protocol::Ancestor::NoAncestor:
+        mAncestorDepth = 0;
+        break;
+    case Protocol::Ancestor::ParentAncestor:
+        mAncestorDepth = 1;
+        break;
+    case Protocol::Ancestor::AllAncestors:
+        mAncestorDepth = INT_MAX;
+        break;
+    }
+    mAncestorAttributes = cmd.ancestorsAttributes();
+
+    Scope scope = cmd.collections();
+    if (!scope.isEmpty()) { // not root
         Collection col;
-        if (mScope.scope() == Scope::None || mScope.scope() == Scope::Uid) {
-            col = Collection::retrieveById(baseCollection);
-        } else if (mScope.scope() == Scope::Rid) {
+        if (scope.scope() == Scope::Uid) {
+            col = Collection::retrieveById(scope.uid());
+        } else if (scope.scope() == Scope::Rid) {
             SelectQueryBuilder<Collection> qb;
-            qb.addValueCondition(Collection::remoteIdFullColumnName(), Query::Equals, rid);
+            qb.addValueCondition(Collection::remoteIdFullColumnName(), Query::Equals, scope.rid());
             qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(),
                        Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
             if (mCollectionsToSynchronize) {
@@ -614,27 +570,27 @@ bool List::parseStream()
             } else if (connection()->context()->resource().isValid()) {
                 qb.addValueCondition(Resource::idFullColumnName(), Query::Equals, connection()->context()->resource().id());
             } else {
-                throw HandlerException("Cannot retrieve collection based on remote identifier without a resource context");
+                return failureResponse("Cannot retrieve collection based on remote identifier without a resource context");
             }
             if (!qb.exec()) {
-                throw HandlerException("Unable to retrieve collection for listing");
+                return failureResponse("Unable to retrieve collection for listing");
             }
             Collection::List results = qb.result();
             if (results.count() != 1) {
-                throw HandlerException(QByteArray::number(results.count()) + " collections found");
+                return failureResponse(QString::number(results.count()) + QStringLiteral(" collections found"));
             }
             col = results.first();
-        } else if (mScope.scope() == Scope::HierarchicalRid) {
+        } else if (scope.scope() == Scope::HierarchicalRid) {
             if (!connection()->context()->resource().isValid()) {
-                throw HandlerException("Cannot retrieve collection based on hierarchical remote identifier without a resource context");
+                return failureResponse("Cannot retrieve collection based on hierarchical remote identifier without a resource context");
             }
-            col = CollectionQueryHelper::resolveHierarchicalRID(mScope.ridChain(), connection()->context()->resource().id());
+            col = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection()->context()->resource().id());
         } else {
-            throw HandlerException("WTF");
+            return failureResponse("Unexpected error");
         }
 
         if (!col.isValid()) {
-            return failureResponse("Collection " + QByteArray::number(baseCollection) + " does not exist");
+            return failureResponse("Collection does not exist");
         }
 
         retrieveCollections(col, depth);
@@ -644,10 +600,5 @@ bool List::parseStream()
     }
     }
 
-    Response response;
-    response.setSuccess();
-    response.setTag(tag());
-    response.setString("List completed");
-    Q_EMIT responseAvailable(response);
-    return true;
+    return successResponse<Protocol::FetchCollectionsResponse>();
 }

@@ -26,7 +26,6 @@
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
 #include "storage/collectionqueryhelper.h"
-#include "imapstreamparser.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -87,14 +86,14 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
 
 bool ColCopy::parseStream()
 {
-    QByteArray tmp = m_streamParser->readString();
-    const Collection source = HandlerHelper::collectionFromIdOrName(tmp);
+    Protocol::CopyCollectionCommand cmd(m_command);
+
+    const Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!source.isValid()) {
         return failureResponse("No valid source specified");
     }
 
-    tmp = m_streamParser->readString();
-    const Collection target = HandlerHelper::collectionFromIdOrName(tmp);
+    const Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!target.isValid()) {
         return failureResponse("No valid target specified");
     }
@@ -120,5 +119,5 @@ bool ColCopy::parseStream()
         return failureResponse("Cannot commit transaction.");
     }
 
-    return successResponse("COLCOPY complete");
+    return successResponse<Protocol::CopyCollectionResponse>();
 }

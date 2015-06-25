@@ -22,7 +22,6 @@
 
 #include "entities.h"
 #include "handler.h"
-#include "scope.h"
 
 template <typename T> class QStack;
 
@@ -87,32 +86,34 @@ class List : public Handler
     Q_OBJECT
 
 public:
-    List(Scope::SelectionScope scope, bool onlySubscribed);
+    List();
 
     bool parseStream();
 
 private:
-    void listCollection(const Collection &root, const QStack<Collection> &ancestors, const QList<QByteArray> &mimeTypes, const CollectionAttribute::List &attributes);
+    void listCollection(const Collection &root,
+                        const QStack<Collection> &ancestors,
+                        const QStringList &mimeTypes,
+                        const CollectionAttribute::List &attributes);
     QStack<Collection> ancestorsForCollection(const Collection &col);
     void retrieveCollections(const Collection &topParent, int depth);
     bool checkFilterCondition(const Collection &col) const;
     bool checkChildrenForMimeTypes(const QHash<qint64, Collection> &collectionsMap,
                                    const QHash<qint64, qint64> &parentMap,
                                    const Collection &col);
-    CollectionAttribute::List getAttributes(const Collection &colId, const QVector<QByteArray> &filter = QVector<QByteArray>());
+    CollectionAttribute::List getAttributes(const Collection &colId,
+                                            const QSet<QByteArray> &filter = QSet<QByteArray>());
     void retrieveAttributes(const QVariantList &collectionIds);
 
     Resource mResource;
     QVector<MimeType::Id> mMimeTypes;
-    Scope mScope;
     int mAncestorDepth;
-    bool mOnlySubscribed;
     bool mIncludeStatistics;
     bool mEnabledCollections;
     bool mCollectionsToDisplay;
     bool mCollectionsToSynchronize;
     bool mCollectionsToIndex;
-    QVector<QByteArray> mAncestorAttributes;
+    QSet<QByteArray> mAncestorAttributes;
     QMap<qint64 /*id*/, Collection> mCollections;
     QHash<qint64 /*id*/, Collection> mAncestors;
     QMultiHash<qint64 /*collectionId*/, CollectionAttribute /*mimetypeId*/> mCollectionAttributes;

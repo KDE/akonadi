@@ -20,8 +20,6 @@
 #include "move.h"
 
 #include "connection.h"
-#include "entities.h"
-#include "imapstreamparser.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
 #include "storage/datastore.h"
@@ -31,43 +29,33 @@
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-Move::Move(Scope::SelectionScope scope)
-    : mScope(scope)
-{
-}
 
 bool Move::parseStream()
 {
-    mScope.parseScope(m_streamParser);
+    Protocol::MoveItemsCommand cmd(m_command);
 
-    Scope destScope(mScope.scope());
-    destScope.parseScope(m_streamParser);
-    const Collection destination = CollectionQueryHelper::singleCollectionFromScope(destScope, connection());
-    const Resource destResource = destination.resource();
-
+    const Collection destination = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (destination.isVirtual()) {
         return failureResponse("Moving items into virtual collection is not allowed");
     }
-
-    Collection source;
-    if (!m_streamParser->atCommandEnd()) {
-        Scope sourceScope(mScope.scope());
-        sourceScope.parseScope(m_streamParser);
-        source = CollectionQueryHelper::singleCollectionFromScope(sourceScope, connection());
+    if (!destination.isValid()) {
+        return failureResponse("Invalid destination collection");
     }
 
-    if (mScope.scope() == Scope::Rid && !source.isValid()) {
-        throw HandlerException("RID move requires valid source collection");
+    connection()->context()->setScopeContext(cmd.itemsContext());
+    if (cmd.items().scope() == Scope::Rid) {
+        if (!connection()->context()->collection().isValid()) {
+            return failureResponse("RID move requires valid source collection");
+        }
     }
-    connection()->context()->setCollection(source);
 
     CacheCleanerInhibitor inhibitor;
 
     // make sure all the items we want to move are in the cache
     ItemRetriever retriever(connection());
-    retriever.setScope(mScope);
+    retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
@@ -77,7 +65,7 @@ bool Move::parseStream()
     Transaction transaction(store);
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(mScope, connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, destination.id());
 
     const QDateTime mtime = QDateTime::currentDateTime();
@@ -85,7 +73,7 @@ bool Move::parseStream()
     if (qb.exec()) {
         const QVector<PimItem> items = qb.result();
         if (items.isEmpty()) {
-            return successResponse("MOVE complete");
+            return successResponse<Protocol::MoveItemsResponse>();
         }
 
         // Split the list by source collection
@@ -94,14 +82,14 @@ bool Move::parseStream()
         Q_FOREACH (/*sic!*/ PimItem item, items) {
             const Collection source = items.at(0).collection();
             if (!source.isValid()) {
-                throw HandlerException("Item without collection found!?");
+                return failureResponse("Item without collection found!?");
             }
             if (!sources.contains(source.id())) {
                 sources.insert(source.id(), source);
             }
 
             if (!item.isValid()) {
-                throw HandlerException("Invalid item in result set!?");
+                return failureResponse("Invalid item in result set!?");
             }
             Q_ASSERT(item.collectionId() != destination.id());
 
@@ -109,7 +97,7 @@ bool Move::parseStream()
             item.setAtime(mtime);
             item.setDatetime(mtime);
             // if the resource moved itself, we assume it did so because the change happend in the backend
-            if (connection()->context()->resource().id() != destResource.id()) {
+            if (connection()->context()->resource().id() != destination.resourceId()) {
                 item.setDirty(true);
             }
 
@@ -122,27 +110,27 @@ bool Move::parseStream()
             const Collection &source = sources.value(sourceId);
             store->notificationCollector()->itemsMoved(itemsToMove, source, destination);
 
-            Q_FOREACH (PimItem moved, toMove.values(sourceId)) {
+            for (auto iter = toMove.find(sourceId), end = toMove.end(); iter != end; ++iter) {
                 // reset RID on inter-resource moves, but only after generating the change notification
                 // so that this still contains the old one for the source resource
-                const bool isInterResourceMove = moved.collection().resource().id() != source.resource().id();
+                const bool isInterResourceMove = (*iter).collection().resource().id() != source.resource().id();
                 if (isInterResourceMove) {
-                    moved.setRemoteId(QString());
+                    (*iter).setRemoteId(QString());
                 }
 
                 // FIXME Could we aggregate the changes to a single SQL query?
-                if (!moved.update()) {
-                    throw HandlerException("Unable to update item");
+                if (!(*iter).update()) {
+                    return failureResponse("Unable to update item");
                 }
             }
         }
     } else {
-        throw HandlerException("Unable to execute query");
+        return failureResponse("Unable to execute query");
     }
 
     if (!transaction.commit()) {
         return failureResponse("Unable to commit transaction.");
     }
 
-    return successResponse("MOVE complete");
+    return successResponse<Protocol::MoveItemsResponse>();
 }

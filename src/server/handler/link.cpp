@@ -26,27 +26,22 @@
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
-#include "entities.h"
-#include "imapstreamparser.h"
 
+#include <private/scope_p.h>
+
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-Link::Link(Scope::SelectionScope scope, bool create)
-    : Handler()
-    , mDestinationScope(scope)
-    , mCreateLinks(create)
-{
-}
 
 bool Link::parseStream()
 {
-    mDestinationScope.parseScope(m_streamParser);
-    const Collection collection = CollectionQueryHelper::singleCollectionFromScope(mDestinationScope, connection());
+    Protocol::LinkItemsCommand cmd(m_command);
 
+    const Collection collection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!collection.isVirtual()) {
         return failureResponse("Can't link items to non-virtual collections");
     }
 
+    /* FIXME BIN
     Resource originalContext;
     Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray(m_streamParser->peekString());
     if (itemSelectionScope != Scope::None) {
@@ -61,13 +56,16 @@ bool Link::parseStream()
     }
     Scope itemScope(itemSelectionScope);
     itemScope.parseScope(m_streamParser);
+    */
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(itemScope, connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
 
+    /*
     if (originalContext.isValid()) {
         connection()->context()->setResource(originalContext);
     }
+    */
 
     if (!qb.exec()) {
         return failureResponse("Unable to execute item query");
@@ -79,13 +77,14 @@ bool Link::parseStream()
     Transaction transaction(store);
 
     PimItem::List toLink, toUnlink;
+    const bool createLinks = (cmd.action() == Protocol::LinkItemsCommand::Link);
     Q_FOREACH (const PimItem &item, items) {
         const bool alreadyLinked = collection.relatesToPimItem(item);
         bool result = true;
-        if (mCreateLinks && !alreadyLinked) {
+        if (createLinks && !alreadyLinked) {
             result = collection.addPimItem(item);
             toLink << item;
-        } else if (!mCreateLinks && alreadyLinked) {
+        } else if (!createLinks && alreadyLinked) {
             result = collection.removePimItem(item);
             toUnlink << item;
         }
@@ -104,5 +103,5 @@ bool Link::parseStream()
         return failureResponse("Cannot commit transaction.");
     }
 
-    return successResponse("LINK complete");
+    return successResponse<Protocol::LinkItemsResponse>();
 }

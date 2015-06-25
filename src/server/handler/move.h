@@ -21,7 +21,6 @@
 #define AKONADI_MOVE_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
@@ -30,14 +29,6 @@ namespace Server {
   @ingroup akonadi_server_handler
 
   Handler for the item move command.
-
-  <h4>Syntax</h4>
-  One of the following three:
-  @verbatim
-  <tag> MOVE <uid-set> <destination>
-  <tag> UID MOVE <uid-set> <destination>
-  <tag> RID MOVE <remote-identifiers> <destination>
-  @endverbatim
 
   <h4>Semantics</h4>
   Moves the selected items. Item selection can happen within the usual three scopes:
@@ -51,11 +42,7 @@ class  Move : public Handler
 {
     Q_OBJECT
 public:
-    Move(Scope::SelectionScope scope);
     bool parseStream();
-
-private:
-    Scope mScope;
 };
 
 } // namespace Server

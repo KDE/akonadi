@@ -24,67 +24,35 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/queryhelper.h"
 #include "storage/datastore.h"
-#include "imapstreamparser.h"
-#include <private/protocol_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-RelationRemove::RelationRemove(Scope::SelectionScope scope)
-    :Handler()
-    ,mScope(scope)
-{
-}
-
-RelationRemove::~RelationRemove()
-{
-}
-
 bool RelationRemove::parseStream()
 {
-    QString type;
-    qint64 left = -1;
-    qint64 right = -1;
+    Protocol::RemoveRelationsCommand cmd(m_command);
 
-    if (mScope.scope() != Scope::Uid) {
-        return failureResponse(QByteArray("Only the UID scope is implemented'"));
-    }
-
-    while (!m_streamParser->atCommandEnd()) {
-        const QByteArray param = m_streamParser->readString();
-
-        if (param == AKONADI_PARAM_LEFT) {
-            left = m_streamParser->readNumber();
-        } else if (param == AKONADI_PARAM_RIGHT) {
-            right = m_streamParser->readNumber();
-        } else if (param == AKONADI_PARAM_TYPE) {
-            type = m_streamParser->readUtf8String();
-        } else {
-            return failureResponse(QByteArray("Unknown parameter while removing relation '") + type.toLatin1() + QByteArray("'."));
-        }
-    }
-
-    if (left < 0 || right < 0) {
-        throw HandlerException("Invalid relation id's provided");
+    if (cmd.left() < 0 || cmd.right() < 0) {
+        return failureResponse("Invalid relation id's provided");
     }
 
     RelationType relType;
-    if (!type.isEmpty()) {
-        relType = RelationType::retrieveByName(type);
+    if (!cmd.type().isEmpty()) {
+        relType = RelationType::retrieveByName(QString::fromUtf8(cmd.type()));
         if (!relType.isValid()) {
-            throw HandlerException("Failed to load relation type");
+            return failureResponse("Failed to load relation type");
         }
     }
 
     SelectQueryBuilder<Relation> relationQuery;
-    relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, left);
-    relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, right);
+    relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, cmd.left());
+    relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, cmd.right());
     if (relType.isValid()) {
         relationQuery.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, relType.id());
     }
 
     if (!relationQuery.exec()) {
-        throw HandlerException("Failed to obtain relations");
+        return failureResponse("Failed to obtain relations");
     }
     const Relation::List relations = relationQuery.result();
     Q_FOREACH (const Relation &relation, relations) {
@@ -94,28 +62,27 @@ bool RelationRemove::parseStream()
     // Get all PIM items that that are part of the relation
     SelectQueryBuilder<PimItem> itemsQuery;
     itemsQuery.setSubQueryMode(Query::Or);
-    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, left);
-    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, right);
+    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.left());
+    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.right());
 
     if (!itemsQuery.exec()) {
-        throw HandlerException("Removing relation failed");
+        throw failureResponse("Removing relation failed");
     }
     const PimItem::List items = itemsQuery.result();
-
     if (!items.isEmpty()) {
         DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List(), relations);
     }
 
     QueryBuilder qb(Relation::tableName(), QueryBuilder::Delete);
-    qb.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, left);
-    qb.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, right);
+    qb.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, cmd.left());
+    qb.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, cmd.right());
     if (relType.isValid()) {
         qb.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, relType.id());
     }
     if (!qb.exec()) {
-        throw HandlerException("Deletion failed");
+        return failureResponse("Failed to remove relations");
     }
 
-    return successResponse("RELATIONREMOVE complete");
+    return successResponse<Protocol::RemoveRelationsResponse>();
 }
 

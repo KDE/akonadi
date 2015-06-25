@@ -22,8 +22,6 @@
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
-#include "imapstreamparser.h"
-
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretriever.h"
@@ -71,22 +69,26 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
 
 bool Copy::parseStream()
 {
-    ImapSet set = m_streamParser->readSequenceSet();
-    if (set.isEmpty()) {
+    Protocol::CopyItemsCommand cmd(m_command);
+
+    if (!checkScopeConstraints(cmd.items(), Scope::Uid)) {
+        return failureResponse("Only UID copy is allowed");
+    }
+
+    if (cmd.items().isEmpty()) {
         return failureResponse("No items specified");
     }
 
     CacheCleanerInhibitor inhibitor;
 
     ItemRetriever retriever(connection());
-    retriever.setItemSet(set);
+    retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
     }
 
-    const QByteArray tmp = m_streamParser->readString();
-    const Collection targetCollection = HandlerHelper::collectionFromIdOrName(tmp);
+    const Collection targetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!targetCollection.isValid()) {
         return failureResponse("No valid target specified");
     }
@@ -95,7 +97,7 @@ bool Copy::parseStream()
     }
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::itemSetToQuery(set, qb);
+    ItemQueryHelper::itemSetToQuery(cmd.items().uidSet(), qb);
     if (!qb.exec()) {
         return failureResponse("Unable to retrieve items");
     }
@@ -115,5 +117,6 @@ bool Copy::parseStream()
         return failureResponse("Cannot commit transaction.");
     }
 
-    return successResponse("COPY complete");
+    return successResponse<Protocol::CopyItemsResponse>();
+    return true;
 }

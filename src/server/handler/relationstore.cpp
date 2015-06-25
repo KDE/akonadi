@@ -18,26 +18,14 @@
 */
 
 #include "relationstore.h"
+
 #include "connection.h"
-#include "imapstreamparser.h"
-#include "response.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
-#include "entities.h"
-#include <private/protocol_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-RelationStore::RelationStore(Scope::SelectionScope scope)
-    :Handler()
-    ,mScope(scope)
-{
-}
-
-RelationStore::~RelationStore()
-{
-}
 
 Relation RelationStore::fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId)
 {
@@ -60,85 +48,65 @@ Relation RelationStore::fetchRelation(qint64 leftId, qint64 rightId, qint64 type
     return Relation();
 }
 
-
 bool RelationStore::parseStream()
 {
-    QString type;
-    QString remoteId;
-    qint64 left = -1;
-    qint64 right = -1;
+    Protocol::ModifyRelationCommand cmd(m_command);
 
-    if (mScope.scope() != Scope::Uid) {
-        return failureResponse(QByteArray("Only uid based parents are supported.'"));
+    if (cmd.type().isEmpty()) {
+        return failureResponse("Relation type not specified");
     }
 
-    while (!m_streamParser->atCommandEnd()) {
-        const QByteArray param = m_streamParser->readString();
-
-        if (param == AKONADI_PARAM_LEFT) {
-            if (mScope.scope() == Scope::Uid) {
-                left = m_streamParser->readNumber();
-            }
-        } else if (param == AKONADI_PARAM_RIGHT) {
-            if (mScope.scope() == Scope::Uid) {
-                right = m_streamParser->readNumber();
-            }
-        } else if (param == AKONADI_PARAM_TYPE) {
-            type = m_streamParser->readUtf8String();
-        } else if (param == AKONADI_PARAM_REMOTEID) {
-            if (!connection()->context()->resource().isValid()) {
-                throw HandlerException("remote id can only be set in resource context");
-            }
-            remoteId = m_streamParser->readUtf8String();
-        } else {
-            return failureResponse(QByteArray("Unknown parameter while creating relation '") + type.toLatin1() + QByteArray("'."));
-        }
+    if (cmd.left() < 0 || cmd.right() < 0) {
+        return failureResponse("Invalid relation specified");
     }
 
-    RelationType relationType = RelationType::retrieveByName(type);
+    if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
+        return failureResponse("RemoteID can only be set by Resources");
+    }
+
+    const QString typeName = QString::fromUtf8(cmd.type());
+    RelationType relationType = RelationType::retrieveByName(typeName);
     if (!relationType.isValid()) {
-        RelationType t(type);
+        RelationType t(typeName);
         if (!t.insert()) {
-            return failureResponse(QByteArray("Unable to create relationtype '") + type.toLatin1() + QByteArray("'."));
+            return failureResponse(QStringLiteral("Unable to create relation type '") % typeName % QStringLiteral("'"));
         }
         relationType = t;
     }
 
-    Relation existingRelation = fetchRelation(left, right, relationType.id());
+    Relation existingRelation = fetchRelation(cmd.left(), cmd.right(), relationType.id());
     if (existingRelation.isValid()) {
-        existingRelation.setRemoteId(remoteId);
+        existingRelation.setRemoteId(QLatin1String(cmd.remoteId()));
         if (!existingRelation.update()) {
-            throw HandlerException("Failed to update relation");
+            return failureResponse("Failed to update relation");
         }
-        // FIXME: Are we actually throwing exception for a valid case?
-        throw HandlerException("Relation already exists");
     }
 
     // Can't use insert(), does not work here (no "id" column)
     QueryBuilder inQb(Relation::tableName(), QueryBuilder::Insert);
     inQb.setIdentificationColumn(QString()); // omit "RETURING xyz" with PSQL
-    inQb.setColumnValue(Relation::leftIdColumn(), left);
-    inQb.setColumnValue(Relation::rightIdColumn(), right);
+    inQb.setColumnValue(Relation::leftIdColumn(), cmd.left());
+    inQb.setColumnValue(Relation::rightIdColumn(), cmd.right());
     inQb.setColumnValue(Relation::typeIdColumn(), relationType.id());
     if (!inQb.exec()) {
         throw HandlerException("Failed to store relation");
     }
 
-    Relation insertedRelation = fetchRelation(left, right, relationType.id());
+    Relation insertedRelation = fetchRelation(cmd.left(), cmd.right(), relationType.id());
 
     // Get all PIM items that are part of the relation
     SelectQueryBuilder<PimItem> itemsQuery;
     itemsQuery.setSubQueryMode(Query::Or);
-    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, left);
-    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, right);
+    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.left());
+    itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.right());
 
     if (!itemsQuery.exec()) {
-        throw HandlerException("Adding relation failed");
+        return failureResponse("Adding relation failed");
     }
     const PimItem::List items = itemsQuery.result();
 
     if (items.size() != 2) {
-        throw HandlerException("Couldn't find items for relation");
+        return failureResponse("Couldn't find items for relation");
     }
 
     /* if (items[0].collection().resourceId() != items[1].collection().resourceId()) {
@@ -148,11 +116,6 @@ bool RelationStore::parseStream()
     DataStore::self()->notificationCollector()->relationAdded(insertedRelation);
     DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List() << insertedRelation, Relation::List());
 
-    Response response;
-    response.setTag(tag());
-    response.setSuccess();
-    response.setString("Store completed");
-    Q_EMIT responseAvailable(response);
-    return true;
+    return successResponse<Protocol::ModifyRelationResponse>();
 }
 

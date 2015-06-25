@@ -23,20 +23,18 @@
 #include "selectquerybuilder.h"
 #include "dbconfig.h"
 #include "parttypehelper.h"
-#include "imapstreamparser.h"
 
 #include <shared/akdebug.h>
 #include <shared/akstandarddirs.h>
 #include <private/xdgbasedirs_p.h>
-#include <private/imapparser_p.h>
 #include <private/protocol_p.h>
 
 #include <QDir>
 #include <QFile>
-#include "akonadiserver_debug.h"
 #include <QFileInfo>
-
 #include <QSqlError>
+
+#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -196,30 +194,6 @@ void PartHelper::removeFile(const QString &fileName)
         throw PartHelperException("Attempting to delete a file not in our prefix.");
     }
     QFile::remove(fileName);
-}
-
-bool PartHelper::streamToFile(ImapStreamParser *streamParser, QFile &file, QIODevice::OpenMode openMode)
-{
-    Q_ASSERT(openMode & QIODevice::WriteOnly);
-
-    if (!file.isOpen()) {
-        if (!file.open(openMode)) {
-            throw PartHelperException("Unable to update item part");
-        }
-    } else {
-        Q_ASSERT(file.openMode() & QIODevice::WriteOnly);
-    }
-
-    QByteArray value;
-    while (!streamParser->atLiteralEnd()) {
-        value = streamParser->readLiteralPart();
-        if (file.write(value) != value.size()) {
-            throw PartHelperException("Unable to write payload to file");
-        }
-    }
-    file.close();
-
-    return true;
 }
 
 QByteArray PartHelper::translateData(const QByteArray &data, bool isExternal)

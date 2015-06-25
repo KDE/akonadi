@@ -18,12 +18,11 @@
  */
 
 #include "commandcontext.h"
-#include "imapstreamparser.h"
-#include "handler.h"
 #include "storage/selectquerybuilder.h"
 
 #include <private/protocol_p.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 CommandContext::CommandContext()
@@ -43,6 +42,34 @@ void CommandContext::setResource(const Resource &resource)
 Resource CommandContext::resource() const
 {
     return mResource;
+}
+
+bool CommandContext::setScopeContext(const Protocol::ScopeContext &scopeContext)
+{
+    if (scopeContext.hasContextId(Protocol::ScopeContext::Collection)) {
+        mCollection = Collection::retrieveById(scopeContext.contextId(Protocol::ScopeContext::Collection));
+    } else if (scopeContext.hasContextRID(Protocol::ScopeContext::Collection)) {
+        if (mResource.isValid()) {
+            SelectQueryBuilder<Collection> qb;
+            qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, scopeContext.contextRID(Protocol::ScopeContext::Collection));
+            qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, mResource.id());
+            qb.exec();
+            Collection::List cols = qb.result();
+            if (cols.isEmpty()) {
+                // error
+                return false;
+            }
+            mCollection = cols.at(0);
+        } else {
+            return false;
+        }
+    }
+
+    if (scopeContext.hasContextId(Protocol::ScopeContext::Tag)) {
+        mTagId = scopeContext.contextId(Protocol::ScopeContext::Tag);
+    }
+
+    return true;
 }
 
 void CommandContext::setCollection(const Collection &collection)
@@ -82,58 +109,4 @@ Tag CommandContext::tag() const
 bool CommandContext::isEmpty() const
 {
     return !mCollection.isValid() && mTagId < 0;
-}
-
-void CommandContext::parseContext(ImapStreamParser *parser)
-{
-    // Context
-    if (!parser->hasString()) {
-        return;
-    }
-
-    const QByteArray param = parser->peekString();
-
-    if (param == AKONADI_PARAM_COLLECTIONID) {
-        parser->readString(); // Read the param
-        bool ok = false;
-        const qint64 colId = parser->readNumber(&ok);
-        if (!ok) {
-            throw HandlerException("Invalid FETCH collection ID");
-        }
-        const Collection col = Collection::retrieveById(colId);
-        if (!col.isValid()) {
-            throw HandlerException("No such collection");
-        }
-        setCollection(col);
-    } else if (param == AKONADI_PARAM_COLLECTION) {
-        if (!resource().isValid()) {
-            throw HandlerException("Only resources can use REMOTEID");
-        }
-        parser->readString(); // Read the param
-        const QByteArray rid = parser->readString();
-        SelectQueryBuilder<Collection> qb;
-        qb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8(rid));
-        qb.addValueCondition(Collection::resourceIdColumn(), Query::Equals, resource().id());
-        if (!qb.exec()) {
-            throw HandlerException("Failed to select collection");
-        }
-        Collection::List results = qb.result();
-        if (results.count() != 1) {
-            throw HandlerException(QByteArray::number(results.count()) + " collections found");
-        }
-        setCollection(results.first());
-    }
-
-    if (param == AKONADI_PARAM_TAGID) {
-        parser->readString(); // Read the param
-        bool ok = false;
-        const qint64 tagId = parser->readNumber(&ok);
-        if (!ok) {
-            throw HandlerException("Invalid FETCH tag");
-        }
-        if (!Tag::exists(tagId)) {
-            throw HandlerException("No such tag");
-        }
-        setTag(tagId);
-    }
 }

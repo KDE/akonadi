@@ -20,7 +20,6 @@
 #define AKONADISELECT_H
 
 #include "handler.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
@@ -34,11 +33,7 @@ class Select : public Handler
 {
     Q_OBJECT
 public:
-    explicit Select(Scope::SelectionScope scope);
     bool parseStream();
-
-private:
-    Scope::SelectionScope mScope;
 
 };
 

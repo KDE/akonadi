@@ -22,7 +22,6 @@
 #include "entities.h"
 #include "notificationmanager.h"
 #include "notificationsource.h"
-#include "clientcapabilityaggregator.h"
 
 #include <QtCore/QObject>
 #include <QtTest/QTest>
@@ -267,10 +266,6 @@ private Q_SLOTS:
         QFETCH(QVector<QByteArray>, ignoredSessions);
         QFETCH(NotificationMessageV3, notification);
         QFETCH(bool, accepted);
-
-        ClientCapabilities caps;
-        caps.setNotificationMessageVersion(3);
-        ClientCapabilityAggregator::addSession(caps);
 
         NotificationManager mgr;
         NotificationSource source(QLatin1String("testSource"), QString(), &mgr);

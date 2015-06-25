@@ -18,14 +18,16 @@
 */
 #include <QObject>
 #include <handler/modify.h>
-#include <imapstreamparser.h>
-#include <response.h>
+
 #include <storage/entity.h>
 
 #include "fakeakonadiserver.h"
 #include "aktest.h"
 #include "akdebug.h"
 #include "entities.h"
+
+#include <private/scope_p.h>
+#include <private/imapset_p.h>
 
 #include <QtTest/QTest>
 
@@ -41,8 +43,6 @@ class ModifyHandlerTest : public QObject
 public:
     ModifyHandlerTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {
@@ -59,7 +59,7 @@ public:
 private Q_SLOTS:
     void testModify_data()
     {
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<QList<Akonadi::NotificationMessageV3> >("expectedNotifications");
         QTest::addColumn<QVariant>("newValue");
 
@@ -72,64 +72,79 @@ private Q_SLOTS:
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 MODIFY 5 NAME \"New Name\""
-                     << "S: 2 OK MODIFY done";
+            Protocol::ModifyCollectionCommand cmd(5);
+            cmd.setName(QLatin1String("New Name"));
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "NAME");
 
-            QTest::newRow("modify collection") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification) << QVariant::fromValue(QString::fromLatin1("New Name"));
+            QTest::newRow("modify collection") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification) << QVariant::fromValue(QString::fromLatin1("New Name"));
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 MODIFY 5 ENABLED FALSE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
-                     << "S: 2 OK MODIFY done";
+            Protocol::ModifyCollectionCommand cmd(5);
+            cmd.setEnabled(false);
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED");
             Akonadi::NotificationMessageV3 unsubscribeNotification = notificationTemplate;
             unsubscribeNotification.setOperation(NotificationMessageV2::Unsubscribe);
 
-            QTest::newRow("disable collection") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(false);
+            QTest::newRow("disable collection") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(false);
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 MODIFY 5 ENABLED TRUE SYNC DEFAULT DISPLAY DEFAULT INDEX DEFAULT"
-                     << "S: 2 OK MODIFY done";
+            Protocol::ModifyCollectionCommand cmd(5);
+            cmd.setEnabled(true);
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED");
             Akonadi::NotificationMessageV3 subscribeNotification = notificationTemplate;
             subscribeNotification.setOperation(NotificationMessageV2::Subscribe);
 
-            QTest::newRow("enable collection") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << subscribeNotification) << QVariant::fromValue(true);
+            QTest::newRow("enable collection") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification << subscribeNotification) << QVariant::fromValue(true);
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-                     << "C: 2 MODIFY 5 ENABLED FALSE SYNC TRUE DISPLAY TRUE INDEX TRUE"
-                     << "S: 2 OK MODIFY done";
+            Protocol::ModifyCollectionCommand cmd(5);
+            cmd.setEnabled(false);
+            cmd.setSyncPref(Tristate::True);
+            cmd.setDisplayPref(Tristate::True);
+            cmd.setIndexPref(Tristate::True);
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
             Akonadi::NotificationMessageV3 notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
             Akonadi::NotificationMessageV3 unsubscribeNotification = notificationTemplate;
             unsubscribeNotification.setOperation(NotificationMessageV2::Unsubscribe);
 
-            QTest::newRow("local override enable") << scenario << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(true);
+            QTest::newRow("local override enable") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification << unsubscribeNotification) << QVariant::fromValue(true);
         }
     }
 
     void testModify()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(QList<NotificationMessageV3>, expectedNotifications);
         QFETCH(QVariant, newValue);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();

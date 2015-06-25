@@ -19,8 +19,7 @@
 
 #include <QObject>
 
-#include <imapstreamparser.h>
-#include <response.h>
+
 #include <storage/selectquerybuilder.h>
 
 #include "fakeakonadiserver.h"
@@ -63,7 +62,6 @@ public:
     RelationHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
         qRegisterMetaType<Akonadi::Server::Relation::List>();
 
         try {
@@ -111,7 +109,7 @@ private Q_SLOTS:
         PimItem item1 = initializer->createItem("item1", col1);
         PimItem item2 = initializer->createItem("item2", col1);
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
         QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
 
@@ -121,10 +119,10 @@ private Q_SLOTS:
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONSTORE LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE \"type\""
-            << "S: 2 OK Store completed";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::ModifyRelationCommand(item1.id(), item2.id(), "type"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyRelationResponse());
 
             Relation rel;
             rel.setLeftId(item1.id());
@@ -145,17 +143,17 @@ private Q_SLOTS:
 
             Akonadi::NotificationMessageV3 notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1());
 
-            QTest::newRow("uid create relation") << scenario << (Relation::List() << rel) << (NotificationMessageV3::List() << notification << itemNotification);
+            QTest::newRow("uid create relation") << scenarios << (Relation::List() << rel) << (NotificationMessageV3::List() << notification << itemNotification);
         }
     }
 
     void testStoreRelation()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(Relation::List, expectedRelations);
         QFETCH(NotificationMessageV3::List, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
@@ -205,14 +203,14 @@ private Q_SLOTS:
         notificationTemplate.setOperation(NotificationMessageV2::Remove);
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
         QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONREMOVE LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE \"type\""
-            << "S: 2 OK RELATIONREMOVE complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommand(item1.id(), item2.id(), "type"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponse());
 
             Akonadi::NotificationMessageV3 itemNotification;
             itemNotification.setType(NotificationMessageV2::Items);
@@ -226,14 +224,14 @@ private Q_SLOTS:
 
             Akonadi::NotificationMessageV3 notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1());
 
-            QTest::newRow("uid remove relation") << scenario << (Relation::List() << rel2) << (NotificationMessageV3::List() << notification << itemNotification);
+            QTest::newRow("uid remove relation") << scenarios << (Relation::List() << rel2) << (NotificationMessageV3::List() << notification << itemNotification);
         }
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONREMOVE LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id())
-            << "S: 2 OK RELATIONREMOVE complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommand(item1.id(), item2.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponse());
 
             Akonadi::NotificationMessageV3 itemNotification;
             itemNotification.setType(NotificationMessageV2::Items);
@@ -247,18 +245,18 @@ private Q_SLOTS:
 
             Akonadi::NotificationMessageV3 notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1(), "type2");
 
-            QTest::newRow("uid remove relation without type") << scenario << Relation::List() << (NotificationMessageV3::List() << notification << itemNotification);
+            QTest::newRow("uid remove relation without type") << scenarios << Relation::List() << (NotificationMessageV3::List() << notification << itemNotification);
         }
 
     }
 
     void testRemoveRelation()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(Relation::List, expectedRelations);
         QFETCH(NotificationMessageV3::List, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
@@ -322,41 +320,41 @@ private Q_SLOTS:
         rel4.setRemoteId(QLatin1String("foobar4"));
         QVERIFY(rel4.insert());
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH (TYPE (\"type\"))"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type REMOTEID foobar1)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item3.id()) + " RIGHT " + QByteArray::number(item4.id()) + " TYPE type REMOTEID foobar3)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item4.id()) + " RIGHT " + QByteArray::number(item3.id()) + " TYPE type REMOTEID foobar4)"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, { "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type" }, "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), { "type" }, "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), { "type" }, "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("filter by type") << scenario;
+            QTest::newRow("filter by type") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH ()"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type REMOTEID foobar1)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type2 REMOTEID foobar2)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item3.id()) + " RIGHT " + QByteArray::number(item4.id()) + " TYPE type REMOTEID foobar3)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item4.id()) + " RIGHT " + QByteArray::number(item3.id()) + " TYPE type REMOTEID foobar4)"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type" }, "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type2" }, "foobar2"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), { "type" }, "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), { "type" }, "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("no filter") << scenario;
+            QTest::newRow("no filter") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH (RESOURCE \"testresource\")"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type REMOTEID foobar1)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type2 REMOTEID foobar2)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item3.id()) + " RIGHT " + QByteArray::number(item4.id()) + " TYPE type REMOTEID foobar3)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item4.id()) + " RIGHT " + QByteArray::number(item3.id()) + " TYPE type REMOTEID foobar4)"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, {}, QLatin1String("testresource")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type" }, "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type2" }, "foobar2"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), { "type" }, "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), { "type" }, "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("filter by resource with matching resource") << scenario;
+            QTest::newRow("filter by resource with matching resource") << scenarios;
         }
         {
 
@@ -364,48 +362,48 @@ private Q_SLOTS:
             res.setName(QLatin1String("testresource2"));
             res.insert();
 
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH (RESOURCE \"testresource2\")"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, {}, QLatin1String("testresource2")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("filter by resource with nonmatching resource") << scenario;
+            QTest::newRow("filter by resource with nonmatching resource") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + "TYPE (\"type\"))"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type REMOTEID foobar1)"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(item1.id(), -1, { "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("filter by left and type") << scenario;
+            QTest::newRow("filter by left and type") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH (RIGHT " + QByteArray::number(item2.id()) + "TYPE (\"type\"))"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item1.id()) + " RIGHT " + QByteArray::number(item2.id()) + " TYPE type REMOTEID foobar1)"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, item2.id(), { "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("filter by right and type") << scenario;
+            QTest::newRow("filter by right and type") << scenarios;
         }
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID RELATIONFETCH (SIDE " + QByteArray::number(item3.id()) + "TYPE (\"type\"))"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item3.id()) + " RIGHT " + QByteArray::number(item4.id()) + " TYPE type REMOTEID foobar3)"
-            << "S: * RELATIONFETCH (LEFT " + QByteArray::number(item4.id()) + " RIGHT " + QByteArray::number(item3.id()) + " TYPE type REMOTEID foobar4)"
-            << "S: 2 OK RELATIONFETCH complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(item3.id(), { "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), "type", "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), "type", "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
-            QTest::newRow("fetch by side with typefilter") << scenario;
+            QTest::newRow("fetch by side with typefilter") << scenarios;
         }
     }
 
     void testListRelation()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
     }
 

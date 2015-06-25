@@ -21,11 +21,11 @@
 #define AKONADI_DELETE_H
 
 #include "handler.h"
-#include "entities.h"
-#include "scope.h"
 
 namespace Akonadi {
 namespace Server {
+
+class Collection;
 
 /**
   @ingroup akonadi_server_handler
@@ -34,30 +34,15 @@ namespace Server {
 
   This commands deletes the selected collections including all their content
   and that of any child collection.
-
-  <h4>Syntax</h4>
-
-  Request:
-  @verbatim
-  request = tag [" RID"] " DELETE " collection-ids
-  @endverbatim
-
-  @c collection-ids is the set of collections that should be deleted, either as UID-set
-  or as a list of RIDs (in case the @c RID prefix is given).
-
-  There is only the usual status response indicating success or failure of the
-  DELETE command
 */
 class Delete : public Handler
 {
     Q_OBJECT
 public:
-    Delete(Scope scope);
     bool parseStream();
 
 private:
     bool deleteRecursive(Collection &col);
-    Scope m_scope;
 
 };
 

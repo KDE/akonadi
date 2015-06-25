@@ -19,8 +19,7 @@
 
 #include <QObject>
 
-#include <imapstreamparser.h>
-#include <response.h>
+
 #include <storage/selectquerybuilder.h>
 
 #include "fakeakonadiserver.h"
@@ -28,6 +27,8 @@
 #include "akdebug.h"
 #include "entities.h"
 #include "dbinitializer.h"
+
+#include <private/scope_p.h>
 
 #include <QtTest/QTest>
 
@@ -63,7 +64,6 @@ public:
     TagHandlerTest()
         : QObject()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
         try {
@@ -80,6 +80,18 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
+    Protocol::FetchTagsResponse createResponse(const Tag &tag, const QByteArray &remoteId = QByteArray(),
+                                               const Protocol::Attributes &attrs = Protocol::Attributes())
+    {
+        Protocol::FetchTagsResponse resp(tag.id());
+        resp.setGid(tag.gid().toUtf8());
+        resp.setParentId(tag.parentId());
+        resp.setType(tag.tagType().name().toUtf8());
+        resp.setRemoteId(remoteId);
+        resp.setAttributes(attrs);
+        return resp;
+    }
+
     QScopedPointer<DbInitializer> initializer;
 
 private Q_SLOTS:
@@ -88,16 +100,28 @@ private Q_SLOTS:
         initializer.reset(new DbInitializer);
         Resource res = initializer->createResource("testresource");
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
         QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 TAGAPPEND (GID \"tag\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag4\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * 1 TAGFETCH (UID 1 GID \"tag\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag4\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: 2 OK Append completed";
+            Protocol::CreateTagCommand cmd;
+            cmd.setGid("tag");
+            cmd.setParentId(0);
+            cmd.setType("PLAIN");
+            cmd.setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
+
+            Protocol::FetchTagsResponse resp(1);
+            resp.setGid(cmd.gid());
+            resp.setParentId(cmd.parentId());
+            resp.setType(cmd.type());
+            resp.setAttributes(cmd.attributes());
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, resp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateTagResponse());
 
             Tag tag;
             tag.setId(1);
@@ -111,17 +135,17 @@ private Q_SLOTS:
             notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             notification.addEntity(1);
 
-            QTest::newRow("uid create relation") << scenario << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
+            QTest::newRow("uid create relation") << scenarios << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
         }
     }
 
     void testStoreTag()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
         QFETCH(NotificationMessageV3::List, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
@@ -163,34 +187,18 @@ private Q_SLOTS:
         rel.setTag(tag);
         rel.insert();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
         QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * " + QByteArray::number(tag.id()) + " TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: 2 OK TAGSTORE completed";
+            Protocol::ModifyTagCommand cmd(tag.id());
+            cmd.setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
 
-
-            Akonadi::NotificationMessageV3 notification;
-            notification.setType(NotificationMessageV2::Tags);
-            notification.setOperation(NotificationMessageV2::Modify);
-            notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification.addEntity(tag.id());
-
-            QTest::newRow("uid store name") << scenario << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
-        }
-
-        {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
-            << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (REMOTEID \"remote1\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * " + QByteArray::number(tag.id()) + " TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" REMOTEID remote1 TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: 2 OK TAGSTORE completed";
-
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(), cmd.attributes()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
             Akonadi::NotificationMessageV3 notification;
             notification.setType(NotificationMessageV2::Tags);
@@ -198,33 +206,67 @@ private Q_SLOTS:
             notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             notification.addEntity(tag.id());
 
-            QTest::newRow("uid store rid") << scenario << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
+            QTest::newRow("uid store name") << scenarios << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
         }
 
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(res.name())
-            << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (REMOTEID \"\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * " + QByteArray::number(tag.id()) + " TAGFETCH (UID " + QByteArray::number(tag.id()) + " GID \"gid\" PARENT 0 MIMETYPE \"PLAIN\" TAG \"(\\\"tag1\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: 2 OK TAGSTORE completed";
+            Protocol::ModifyTagCommand cmd(tag.id());
+            cmd.setRemoteId("remote1");
 
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, "remote1",
+                            { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
+
+            // RID-only changes don't emit notifications
+            /*
+            Akonadi::NotificationMessageV3 notification;
+            notification.setType(NotificationMessageV2::Tags);
+            notification.setOperation(NotificationMessageV2::Modify);
+            notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            notification.addEntity(tag.id());
+            */
+
+            QTest::newRow("uid store rid") << scenarios << (Tag::List() << tag) << NotificationMessageV3::List();
+        }
+
+        {
+            Protocol::ModifyTagCommand cmd(tag.id());
+            cmd.setRemoteId(QByteArray());
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << FakeAkonadiServer::selectResourceScenario(res.name())
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(),
+                            { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
+
+            // RID-only changes don't emit notifications
+            /*
             Akonadi::NotificationMessageV3 tagChangeNtf;
             tagChangeNtf.setType(NotificationMessageV2::Tags);
             tagChangeNtf.setOperation(NotificationMessageV2::Modify);
             tagChangeNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             tagChangeNtf.addEntity(tag.id());
+            */
 
-            QTest::newRow("uid store unset one rid") << scenario << (Tag::List() << tag) << (NotificationMessageV3::List() << tagChangeNtf);
+            QTest::newRow("uid store unset one rid") << scenarios << (Tag::List() << tag) << NotificationMessageV3::List();
         }
 
        {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << FakeAkonadiServer::selectResourceScenario(res2.name())
-            << "C: 2 UID TAGSTORE " + QByteArray::number(tag.id()) + " (REMOTEID \"\" MIMETYPE \"PLAIN\" TAG \"(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")\")"
-            << "S: * " + QByteArray::number(tag.id()) + " TAGREMOVE"
-            << "S: 2 OK TAGSTORE completed";
+            Protocol::ModifyTagCommand cmd(tag.id());
+            cmd.setRemoteId(QByteArray());
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << FakeAkonadiServer::selectResourceScenario(res2.name())
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponse())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
             Akonadi::NotificationMessageV3 itemUntaggedNtf;
             itemUntaggedNtf.setType(NotificationMessageV2::Items);
@@ -241,17 +283,17 @@ private Q_SLOTS:
             tagRemoveNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             tagRemoveNtf.addEntity(tag.id());
 
-            QTest::newRow("uid store unset last rid") << scenario << Tag::List() << (NotificationMessageV3::List() << itemUntaggedNtf << tagRemoveNtf);
+            QTest::newRow("uid store unset last rid") << scenarios << Tag::List() << (NotificationMessageV3::List() << itemUntaggedNtf << tagRemoveNtf);
         }
     }
 
     void testModifyTag()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
         QFETCH(NotificationMessageV3::List, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
@@ -295,14 +337,14 @@ private Q_SLOTS:
         rel2.setTag(tag);
         rel2.insert();
 
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
         QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
         {
-            QList<QByteArray> scenario;
-            scenario << FakeAkonadiServer::defaultScenario()
-            << "C: 2 UID TAGREMOVE " + QByteArray::number(tag.id())
-            << "S: 2 OK TAGREMOVE complete";
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::DeleteTagCommand(tag.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponse());
 
             Akonadi::NotificationMessageV3 ntf;
             ntf.setType(NotificationMessageV2::Tags);
@@ -320,17 +362,17 @@ private Q_SLOTS:
             Akonadi::NotificationMessageV3 clientNtf = ntf;
             clientNtf.addEntity(tag.id());
 
-            QTest::newRow("uid remove") << scenario << Tag::List() << (NotificationMessageV3::List() << res1Ntf << res2Ntf << clientNtf);
+            QTest::newRow("uid remove") << scenarios << Tag::List() << (NotificationMessageV3::List() << res1Ntf << res2Ntf << clientNtf);
         }
     }
 
     void testRemoveTag()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
         QFETCH(Akonadi::NotificationMessageV3::List, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());

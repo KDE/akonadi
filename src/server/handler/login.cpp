@@ -14,33 +14,25 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+
 #include "login.h"
 
-#include "response.h"
 #include "connection.h"
-#include "imapstreamparser.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
-
-Login::Login()
-    : Handler()
-{
-}
 
 bool Login::parseStream()
 {
-    const QByteArray sessionId = m_streamParser->readString();
-    if (sessionId.isEmpty()) {
-        return failureResponse("Missing session identifier.");
+    Protocol::LoginCommand cmd(m_command);
+
+    if (cmd.sessionId().isEmpty()) {
+        return failureResponse("Missing session identifier");
     }
-    connection()->setSessionId(sessionId);
+    connection()->setSessionId(cmd.sessionId());
+    Q_EMIT connectionStateChange(Server::Authenticated);
 
-    // ignore anything that follows, for Roundcube compatibility
-    m_streamParser->readUntilCommandEnd();
-
-    successResponse("User logged in");
-    Q_EMIT connectionStateChange(Authenticated);
-    return true;
+    return successResponse<Protocol::LoginResponse>();
 }

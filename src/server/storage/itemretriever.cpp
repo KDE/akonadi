@@ -40,7 +40,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 ItemRetriever::ItemRetriever(Connection *connection)
-    : mScope(Scope::Invalid)
+    : mScope()
     , mConnection(connection)
     , mFullPayload(false)
     , mRecursive(false)
@@ -56,12 +56,12 @@ Connection *ItemRetriever::connection() const
     return mConnection;
 }
 
-void ItemRetriever::setRetrieveParts(const QStringList &parts)
+void ItemRetriever::setRetrieveParts(const QVector<QByteArray> &parts)
 {
     mParts = parts;
     // HACK, we need a full payload available flag in PimItem
-    if (mFullPayload && !mParts.contains(QLatin1String(AKONADI_PARAM_PLD_RFC822))) {
-        mParts.append(QLatin1String(AKONADI_PARAM_PLD_RFC822));
+    if (mFullPayload && !mParts.contains(AKONADI_PARAM_PLD_RFC822)) {
+        mParts.append(AKONADI_PARAM_PLD_RFC822);
     }
 }
 
@@ -93,8 +93,8 @@ void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
 {
     mFullPayload = fullPayload;
     // HACK, we need a full payload available flag in PimItem
-    if (fullPayload && !mParts.contains(QLatin1String(AKONADI_PARAM_PLD_RFC822))) {
-        mParts.append(QLatin1String(AKONADI_PARAM_PLD_RFC822));
+    if (fullPayload && !mParts.contains(AKONADI_PARAM_PLD_RFC822)) {
+        mParts.append(AKONADI_PARAM_PLD_RFC822);
     }
 }
 
@@ -120,7 +120,7 @@ void ItemRetriever::setChangedSince(const QDateTime &changedSince)
     mChangedSince = changedSince;
 }
 
-QStringList ItemRetriever::retrieveParts() const
+QVector<QByteArray> ItemRetriever::retrieveParts() const
 {
     return mParts;
 }
@@ -164,10 +164,10 @@ QSqlQuery ItemRetriever::buildQuery() const
     qb.addColumn(PartType::nameFullColumnName());
     qb.addColumn(Part::datasizeFullColumnName());
 
-    if (mScope.scope() != Scope::Invalid) {
-        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
-    } else {
+    if (!mItemSet.isEmpty()) {
         ItemQueryHelper::itemSetToQuery(mItemSet, qb, mCollection);
+    } else {
+        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
     }
 
     // prevent a resource to trigger item retrieval from itself
@@ -205,9 +205,9 @@ bool ItemRetriever::exec()
     ItemRetrievalRequest *lastRequest = 0;
     QList<ItemRetrievalRequest *> requests;
 
-    QStringList parts;
-    Q_FOREACH (const QString &part, mParts) {
-        if (part.startsWith(QLatin1String(AKONADI_PARAM_PLD))) {
+    QVector<QByteArray> parts;
+    Q_FOREACH (const QByteArray &part, mParts) {
+        if (part.startsWith(AKONADI_PARAM_PLD)) {
             parts << part.mid(4);
         }
     }
@@ -231,8 +231,8 @@ bool ItemRetriever::exec()
         }
 
         qint64 datasize = query.value(PartDatasizeColumn).toLongLong();
-        const QString partName = Utils::variantToString(query.value(PartTypeNameColumn));
-        Q_ASSERT(!partName.startsWith(QLatin1String(AKONADI_PARAM_PLD)));
+        const QByteArray partName = Utils::variantToByteArray(query.value(PartTypeNameColumn));
+        Q_ASSERT(!partName.startsWith(AKONADI_PARAM_PLD));
 
         if (datasize <= 0) {
             // request update for this part

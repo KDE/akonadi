@@ -66,7 +66,6 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
 }
 
 #include <private/notificationmessagev3_p.h>
-#include "src/server/response.h"
 
 namespace QTest {
 template<>
@@ -80,25 +79,6 @@ char *toString(const Akonadi::NotificationMessageV3 &msg)
     dbg.nospace() << msg;
     buf.close();
     return qstrdup(ba.constData());
-}
-
-template<>
-char *toString(const Akonadi::Server::Response::ResultCode &response)
-{
-    switch (response) {
-    case Akonadi::Server::Response::OK:
-        return qstrdup("Response::OK");
-    case Akonadi::Server::Response::BAD:
-        return qstrdup("Response::BAD");
-    case Akonadi::Server::Response::BYE:
-        return qstrdup("Response::BYE");
-    case Akonadi::Server::Response::NO:
-        return qstrdup("Response::NO");
-    case Akonadi::Server::Response::USER:
-        return qstrdup("Response::USER");
-    }
-    Q_ASSERT(false);
-    return nullptr;
 }
 }
 

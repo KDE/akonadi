@@ -21,12 +21,14 @@
 #include <QtTest/QTest>
 
 #include <aktest.h>
+#include <private/protocol_p.h>
 
 #include "handler.h"
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
-#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << #command << "Akonadi::Server::" #class;
+#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << command << "Akonadi::Server::" #class;
 
 class HandlerTest : public QObject
 {
@@ -34,53 +36,46 @@ class HandlerTest : public QObject
 private:
     void setupTestData()
     {
-        QTest::addColumn<QString>("command");
+        QTest::addColumn<Protocol::Command::Type>("command");
         QTest::addColumn<QString>("className");
     }
 
     void addAuthCommands()
     {
-        MAKE_CMD_ROW(CREATE, Create)
-        MAKE_CMD_ROW(LIST, List)
-        MAKE_CMD_ROW(LSUB, List)
-        MAKE_CMD_ROW(SELECT, Select)
-        MAKE_CMD_ROW(SEARCH_STORE, SearchPersistent)
-        MAKE_CMD_ROW(SEARCH, Search)
-        MAKE_CMD_ROW(FETCH, Fetch)
-        MAKE_CMD_ROW(STORE, Store)
-        MAKE_CMD_ROW(STATUS, Status)
-        MAKE_CMD_ROW(DELETE, Delete)
-        MAKE_CMD_ROW(MODIFY, Modify)
-        MAKE_CMD_ROW(BEGIN, TransactionHandler)
-        MAKE_CMD_ROW(ROLLBACK, TransactionHandler)
-        MAKE_CMD_ROW(COMMIT, TransactionHandler)
-        MAKE_CMD_ROW(X-AKAPPEND, AkAppend)
-        MAKE_CMD_ROW(SUBSCRIBE, Subscribe)
-        MAKE_CMD_ROW(UNSUBSCRIBE, Subscribe)
-        MAKE_CMD_ROW(COPY, Copy)
-        MAKE_CMD_ROW(COLCOPY, ColCopy)
-        MAKE_CMD_ROW(LINK, Link)
-        MAKE_CMD_ROW(UNLINK, Link)
-        MAKE_CMD_ROW(RESSELECT, ResourceSelect)
-        MAKE_CMD_ROW(REMOVE, Remove)
-        MAKE_CMD_ROW(MOVE, Move)
-        MAKE_CMD_ROW(COLMOVE, ColMove)
+        MAKE_CMD_ROW(Protocol::Command::CreateCollection, Create)
+        MAKE_CMD_ROW(Protocol::Command::FetchCollections, List)
+        MAKE_CMD_ROW(Protocol::Command::SelectCollection, Select)
+        MAKE_CMD_ROW(Protocol::Command::StoreSearch, SearchPersistent)
+        MAKE_CMD_ROW(Protocol::Command::Search, Search)
+        MAKE_CMD_ROW(Protocol::Command::FetchItems, Fetch)
+        MAKE_CMD_ROW(Protocol::Command::ModifyItems, Store)
+        MAKE_CMD_ROW(Protocol::Command::FetchCollectionStats, Status)
+        MAKE_CMD_ROW(Protocol::Command::DeleteCollection, Delete)
+        MAKE_CMD_ROW(Protocol::Command::ModifyCollection, Modify)
+        MAKE_CMD_ROW(Protocol::Command::Transaction, TransactionHandler)
+        MAKE_CMD_ROW(Protocol::Command::CreateItem, AkAppend)
+        MAKE_CMD_ROW(Protocol::Command::CopyItems, Copy)
+        MAKE_CMD_ROW(Protocol::Command::CopyCollection, ColCopy)
+        MAKE_CMD_ROW(Protocol::Command::LinkItems, Link)
+        MAKE_CMD_ROW(Protocol::Command::SelectResource, ResourceSelect)
+        MAKE_CMD_ROW(Protocol::Command::DeleteItems, Remove)
+        MAKE_CMD_ROW(Protocol::Command::MoveItems, Move)
+        MAKE_CMD_ROW(Protocol::Command::MoveCollection, ColMove)
     }
 
     void addNonAuthCommands()
     {
-        MAKE_CMD_ROW(LOGIN, Login)
+        MAKE_CMD_ROW(Protocol::Command::Login, Login)
     }
 
     void addAlwaysCommands()
     {
-        MAKE_CMD_ROW(LOGOUT, Logout)
-        MAKE_CMD_ROW(CAPABILITY, Capability)
+        MAKE_CMD_ROW(Protocol::Command::Logout, Logout)
     }
 
     void addInvalidCommands()
     {
-        MAKE_CMD_ROW(UNKNOWN, UnknownCommandHandler)
+        //MAKE_CMD_ROW(Protocol::Command::Invalid, UnknownCommandHandler)
     }
 private Q_SLOTS:
     void testFindAuthenticatedCommand_data()
@@ -91,9 +86,9 @@ private Q_SLOTS:
 
     void testFindAuthenticatedCommand()
     {
-        QFETCH(QString, command);
+        QFETCH(Protocol::Command::Type, command);
         QFETCH(QString, className);
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command.toLatin1(), 0));
+        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
         QVERIFY(!handler.isNull());
         QCOMPARE(handler->metaObject()->className(), className.toLatin1().constData());
     }
@@ -108,10 +103,10 @@ private Q_SLOTS:
 
     void testFindAuthenticatedCommandNegative()
     {
-        QFETCH(QString, command);
+        QFETCH(Protocol::Command::Type, command);
         QFETCH(QString, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command.toLatin1(), 0));
+        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
         QVERIFY(handler.isNull());
     }
 
@@ -123,10 +118,10 @@ private Q_SLOTS:
 
     void testFindNonAutenticatedCommand()
     {
-        QFETCH(QString, command);
+        QFETCH(Protocol::Command::Type, command);
         QFETCH(QString, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command.toLatin1()));
+        QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
         QVERIFY(!handler.isNull());
         QCOMPARE(handler->metaObject()->className(), className.toLatin1().constData());
     }
@@ -141,10 +136,10 @@ private Q_SLOTS:
 
     void testFindNonAutenticatedCommandNegative()
     {
-        QFETCH(QString, command);
+        QFETCH(Protocol::Command::Type, command);
         QFETCH(QString, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command.toLatin1()));
+        QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
         QVERIFY(handler.isNull());
     }
 
@@ -156,10 +151,10 @@ private Q_SLOTS:
 
     void testFindAlwaysCommand()
     {
-        QFETCH(QString, command);
+        QFETCH(Protocol::Command::Type, command);
         QFETCH(QString, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command.toLatin1()));
+        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
         QVERIFY(!handler.isNull());
         QCOMPARE(handler->metaObject()->className(), className.toLatin1().constData());
     }
@@ -174,10 +169,10 @@ private Q_SLOTS:
 
     void testFindAlwaysCommandNegative()
     {
-        QFETCH(QString, command);
+        QFETCH(Protocol::Command::Type, command);
         QFETCH(QString, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command.toLatin1()));
+        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
         QVERIFY(handler.isNull());
     }
 };

@@ -43,29 +43,23 @@ set(libakonadiserver_SRCS
     connection.cpp
     connectionthread.cpp
     collectionscheduler.cpp
-    clientcapabilities.cpp
-    clientcapabilityaggregator.cpp
     dbusconnectionpool.cpp
     handler.cpp
     handlerhelper.cpp
     intervalcheck.cpp
-    response.cpp
     collectionreferencemanager.cpp
     handler/akappend.cpp
     handler/copy.cpp
     handler/colcopy.cpp
     handler/colmove.cpp
     handler/create.cpp
-    handler/capability.cpp
     handler/delete.cpp
     handler/fetch.cpp
     handler/fetchhelper.cpp
-    handler/fetchscope.cpp
     handler/link.cpp
     handler/list.cpp
     handler/login.cpp
     handler/logout.cpp
-    handler/merge.cpp
     handler/modify.cpp
     handler/move.cpp
     handler/remove.cpp
@@ -73,13 +67,11 @@ set(libakonadiserver_SRCS
     handler/relationstore.cpp
     handler/relationremove.cpp
     handler/relationfetch.cpp
-    handler/scope.cpp
     handler/search.cpp
     handler/searchhelper.cpp
     handler/searchpersistent.cpp
     handler/searchresult.cpp
     handler/select.cpp
-    handler/subscribe.cpp
     handler/status.cpp
     handler/store.cpp
     handler/tagappend.cpp
@@ -125,6 +117,7 @@ set(libakonadiserver_SRCS
     storage/querycache.cpp
     storage/queryhelper.cpp
     storage/schematypes.cpp
+    storage/tagqueryhelper.cpp
     storage/transaction.cpp
     storage/parthelper.cpp
     storage/partstreamer.cpp
@@ -138,7 +131,6 @@ set(libakonadiserver_SRCS
     resourcemanager.cpp
     cachecleaner.cpp
     debuginterface.cpp
-    imapstreamparser.cpp
     preprocessorinstance.cpp
     preprocessormanager.cpp
     storagejanitor.cpp

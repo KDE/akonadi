@@ -114,7 +114,7 @@ OrgFreedesktopAkonadiResourceInterface *ItemRetrievalManager::resourceInterface(
 
 // called from any thread
 void ItemRetrievalManager::requestItemDelivery(qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
-                                               const QString &resource, const QStringList &parts)
+                                               const QString &resource, const QVector<QByteArray> &parts)
 {
     ItemRetrievalRequest *req = new ItemRetrievalRequest();
     req->id = uid;

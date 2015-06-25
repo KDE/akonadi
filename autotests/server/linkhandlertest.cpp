@@ -20,8 +20,7 @@
 #include <QObject>
 
 #include <handler/link.h>
-#include <imapstreamparser.h>
-#include <response.h>
+
 
 #include <private/notificationmessagev3_p.h>
 #include <private/notificationmessagev2_p.h>
@@ -30,6 +29,9 @@
 #include <shared/aktest.h>
 #include <shared/akdebug.h>
 #include "entities.h"
+
+#include <private/scope_p.h>
+#include <private/imapset_p.h>
 
 #include <QtTest/QTest>
 #include <QSignalSpy>
@@ -44,8 +46,6 @@ class LinkHandlerTest : public QObject
 public:
     LinkHandlerTest()
     {
-        qRegisterMetaType<Akonadi::Server::Response>();
-
         try {
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {
@@ -59,20 +59,27 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
+    Protocol::LinkItemsResponse createError(const QString &error)
+    {
+        Protocol::LinkItemsResponse resp;
+        resp.setError(1, error);
+        return resp;
+    }
+
 private Q_SLOTS:
     void testLink_data()
     {
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
         QTest::addColumn<bool>("expectFail");
 
-        QList<QByteArray> scenario;
+        TestScenario::List scenarios;
         NotificationMessageV3 notification;
 
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID LINK 3 1:3"
-                 << "S: 2 NO Can't link items to non-virtual collections";
-        QTest::newRow("non-virtual collection") << scenario << NotificationMessageV3() << true;
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Link, ImapInterval(1, 3), 3))
+                  << TestScenario::create(5, TestScenario::ServerCmd, createError(QLatin1String("Can't link items to non-virtual collections")));
+        QTest::newRow("non-virtual collection") << scenarios << NotificationMessageV3() << true;
 
         notification.setType(NotificationMessageV2::Items);
         notification.setOperation(NotificationMessageV2::Link);
@@ -83,25 +90,25 @@ private Q_SLOTS:
         notification.setResource("akonadi_fake_resource_with_virtual_collections_0");
         notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID LINK 6 1:3"
-                 << "S: 2 OK LINK complete";
-        QTest::newRow("normal") << scenario << notification << false;
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Link, ImapInterval(1, 3), 6))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
+        QTest::newRow("normal") << scenarios << notification << false;
 
         notification.clearEntities();
         notification.addEntity(4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream"));
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID LINK 6 4 123456"
-                 << "S: 2 OK LINK complete";
-        QTest::newRow("existent and non-existent item") << scenario << notification << false;
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Link, QVector<qint64>{ 4, 123456 }, 6))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
+        QTest::newRow("existent and non-existent item") << scenarios << notification << false;
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID LINK 6 123456"
-                 << "S: 2 OK LINK complete";
-        QTest::newRow("non-existent item only") << scenario << NotificationMessageV3() << false;
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Link, 4, 6))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
+        QTest::newRow("non-existent item only") << scenarios << NotificationMessageV3() << false;
 
         //FIXME: All RID related operations are currently broken because we reset the collection context before every command,
         //and LINK still relies on SELECT to set the collection context.
@@ -140,11 +147,11 @@ private Q_SLOTS:
 
     void testLink()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(NotificationMessageV3, notification);
         QFETCH(bool, expectFail);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
@@ -168,17 +175,17 @@ private Q_SLOTS:
 
     void testUnlink_data()
     {
-        QTest::addColumn<QList<QByteArray> >("scenario");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
         QTest::addColumn<bool>("expectFail");
 
-        QList<QByteArray> scenario;
+        TestScenario::List scenarios;
         NotificationMessageV3 notification;
 
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 1 UID UNLINK 3 1:3"
-                 << "S: 1 NO Can't link items to non-virtual collections";
-        QTest::newRow("non-virtual collection") << scenario << NotificationMessageV3() << true;
+        scenarios << FakeAkonadiServer::loginScenario()
+                 << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Unlink, ImapInterval(1, 3), 3))
+                 << TestScenario::create(5, TestScenario::ServerCmd, createError(QLatin1String("Can't link items to non-virtual collections")));
+        QTest::newRow("non-virtual collection") << scenarios << NotificationMessageV3() << true;
 
         notification.setType(NotificationMessageV2::Items);
         notification.setOperation(NotificationMessageV2::Unlink);
@@ -188,25 +195,25 @@ private Q_SLOTS:
         notification.setParentCollection(6);
         notification.setResource("akonadi_fake_resource_with_virtual_collections_0");
         notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID UNLINK 6 1:3"
-                 << "S: 2 OK LINK complete";
-        QTest::newRow("normal") << scenario << notification << false;
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Unlink, ImapInterval(1, 3), 6))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
+        QTest::newRow("normal") << scenarios << notification << false;
 
         notification.clearEntities();
         notification.addEntity(4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream"));
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID UNLINK 6 4 2048"
-                 << "S: 2 OK LINK complete";
-        QTest::newRow("existent and non-existent item") << scenario << notification << false;
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Unlink, QVector<qint64>{ 4, 2048 }, 6))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
+        QTest::newRow("existent and non-existent item") << scenarios << notification << false;
 
-        scenario.clear();
-        scenario << FakeAkonadiServer::defaultScenario()
-                 << "C: 2 UID UNLINK 6 4096"
-                 << "S: 2 OK LINK complete";
-        QTest::newRow("non-existent item only") << scenario << NotificationMessageV3() << false;
+        scenarios.clear();
+        scenarios << FakeAkonadiServer::loginScenario()
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Unlink, 4096, 6))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
+        QTest::newRow("non-existent item only") << scenarios << NotificationMessageV3() << false;
 
         //FIXME: All RID related operations are currently broken because we reset the collection context before every command,
         //and LINK still relies on SELECT to set the collection context.
@@ -245,11 +252,11 @@ private Q_SLOTS:
 
     void testUnlink()
     {
-        QFETCH(QList<QByteArray>, scenario);
+        QFETCH(TestScenario::List, scenarios);
         QFETCH(NotificationMessageV3, notification);
         QFETCH(bool, expectFail);
 
-        FakeAkonadiServer::instance()->setScenario(scenario);
+        FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
