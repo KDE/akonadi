@@ -181,6 +181,8 @@ void SessionPrivate::socketDisconnected()
 
 void SessionPrivate::dataReceived()
 {
+    int iterations = 0;
+
     while (socket->bytesAvailable() > 0) {
         QDataStream stream(socket);
         qint64 tag;
@@ -241,6 +243,22 @@ void SessionPrivate::dataReceived()
         // work for the current job
         if (currentJob) {
             currentJob->d_ptr->handleResponse(tag, cmd);
+        }
+
+        // FIXME: It happens often that data are arriving from the server faster
+        // than we Jobs can process them which means, that we often process all
+        // responses in single dataReceived() call and thus not returning to back
+        // to QEventLoop, which breaks batch-delivery of ItemFetchJob (among other
+        // things). To workaround that we force processing of events every
+        // now and then.
+        //
+        // Longterm we want something better, like processing and parsing in
+        // separate thread which would only post the parsed Protocol::Commands
+        // to the jobs through event loop. That will be overall slower but should
+        // result in much more responsive applications.
+        if (++iterations == 100) {
+            qApp->processEvents(QEventLoop::ExcludeSocketNotifiers);
+            iterations = 0;
         }
     }
 }
