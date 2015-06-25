@@ -367,10 +367,9 @@ bool AkAppend::parseStream()
         }
         storageTrx.commit();
     } else {
-        // Merging is always restricted to the same collection and mimetype
+        // Merging is always restricted to the same collection
         SelectQueryBuilder<PimItem> qb;
         qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, parentCol.id());
-        qb.addValueCondition(PimItem::mimeTypeIdColumn(), Query::Equals, item.mimeTypeId());
         if (cmd.mergeModes() & Protocol::CreateItemCommand::GID) {
             qb.addValueCondition(PimItem::gidColumn(), Query::Equals, item.gid());
         }
