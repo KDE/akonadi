@@ -256,7 +256,7 @@ void SessionPrivate::dataReceived()
         // separate thread which would only post the parsed Protocol::Commands
         // to the jobs through event loop. That will be overall slower but should
         // result in much more responsive applications.
-        if (++iterations == 100) {
+        if (++iterations == 1000) {
             qApp->processEvents(QEventLoop::ExcludeSocketNotifiers);
             iterations = 0;
         }
