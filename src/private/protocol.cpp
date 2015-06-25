@@ -537,7 +537,9 @@ public:
         registerType<Command::StreamPayload, StreamPayloadCommand, StreamPayloadResponse>();
     }
 
-    QHash<Command::Type, QPair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
+    // clang has problem resolving the right qHash() overload for Command::Type,
+    // so use its underlying integer type instead
+    QHash<std::underlying_type<Command::Type>::type, QPair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
 
 private:
     template<typename T>
