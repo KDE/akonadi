@@ -190,7 +190,9 @@ void SessionPrivate::dataReceived()
         Protocol::Command cmd = Protocol::deserialize(socket);
         if (cmd.type() == Protocol::Command::Invalid) {
             qWarning() << "Invalid command, the world is going to end!";
-            continue;
+            socket->close();
+            reconnect();
+            return;
         }
 
 
