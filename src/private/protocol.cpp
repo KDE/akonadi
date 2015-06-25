@@ -5369,6 +5369,7 @@ public:
         , index(other.index)
         , isVirtual(other.isVirtual)
         , referenced(other.referenced)
+        , enabled(other.enabled)
     {}
 
     bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
