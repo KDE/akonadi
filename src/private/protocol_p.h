@@ -774,12 +774,14 @@ class AKONADIPRIVATE_EXPORT FetchRelationsResponse : public Response
 {
 public:
     explicit FetchRelationsResponse();
-    explicit FetchRelationsResponse(qint64 left, qint64 right, const QByteArray &type,
+    explicit FetchRelationsResponse(qint64 left, const QByteArray &leftMimeType, qint64 right, const QByteArray &rightMimeType, const QByteArray &type,
                                     const QByteArray &remoteId = QByteArray());
     FetchRelationsResponse(const Command &command);
 
     qint64 left() const;
+    QByteArray leftMimeType() const;
     qint64 right() const;
+    QByteArray rightMimeType() const;
     QByteArray type() const;
 
     void setRemoteId(const QByteArray &remoteId);

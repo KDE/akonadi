@@ -239,7 +239,9 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
 Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Relation &relation)
 {
     return Protocol::FetchRelationsResponse(relation.leftId(),
+                                            relation.left().mimeType().name().toUtf8(),
                                             relation.rightId(),
+                                            relation.right().mimeType().name().toUtf8(),
                                             relation.relationType().name().toUtf8());
 }
 

@@ -325,9 +325,9 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type" }, "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), { "type" }, "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), { "type" }, "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type" }, "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), { "type" }, "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), { "type" }, "foobar4"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
             QTest::newRow("filter by type") << scenarios;
@@ -336,10 +336,10 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand())
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type" }, "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type2" }, "foobar2"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), { "type" }, "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), { "type" }, "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type" }, "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type2" }, "foobar2"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), { "type" }, "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), { "type" }, "foobar4"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
             QTest::newRow("no filter") << scenarios;
@@ -348,10 +348,10 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, {}, QLatin1String("testresource")))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type" }, "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), { "type2" }, "foobar2"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), { "type" }, "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), { "type" }, "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type" }, "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type2" }, "foobar2"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), { "type" }, "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), { "type" }, "foobar4"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
             QTest::newRow("filter by resource with matching resource") << scenarios;
@@ -373,7 +373,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(item1.id(), -1, { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
             QTest::newRow("filter by left and type") << scenarios;
@@ -382,7 +382,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, item2.id(), { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item2.id(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
             QTest::newRow("filter by right and type") << scenarios;
@@ -391,8 +391,8 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(item3.id(), { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item4.id(), "type", "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item3.id(), "type", "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), "type", "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), "type", "foobar4"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
 
             QTest::newRow("fetch by side with typefilter") << scenarios;

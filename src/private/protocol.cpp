@@ -49,7 +49,7 @@ namespace Akonadi {
 namespace Protocol {
 
 int version() {
-    return 52;
+    return 53;
 }
 
 }
@@ -2703,19 +2703,24 @@ DataStream &operator>>(DataStream &stream, FetchRelationsCommand &command)
 class FetchRelationsResponsePrivate : public ResponsePrivate
 {
 public:
-    FetchRelationsResponsePrivate(qint64 left = -1, qint64 right = -1,
+    FetchRelationsResponsePrivate(qint64 left = -1, const QByteArray &leftMimeType = QByteArray(),
+                                  qint64 right = -1, const QByteArray &rightMimeType = QByteArray(),
                                   const QByteArray &type = QByteArray(),
                                   const QByteArray &remoteId = QByteArray())
         : ResponsePrivate(Command::FetchRelations)
         , left(left)
+        , leftMimeType(leftMimeType)
         , right(right)
+        , rightMimeType(rightMimeType)
         , type(type)
         , remoteId(remoteId)
     {}
     FetchRelationsResponsePrivate(const FetchRelationsResponsePrivate &other)
         : ResponsePrivate(other)
         , left(other.left)
+        , leftMimeType(other.leftMimeType)
         , right(other.right)
+        , rightMimeType(other.rightMimeType)
         , type(other.type)
         , remoteId(other.remoteId)
     {}
@@ -2724,7 +2729,9 @@ public:
     {
         return ResponsePrivate::compare(other)
             && COMPARE(left)
+            && COMPARE(leftMimeType)
             && COMPARE(right)
+            && COMPARE(rightMimeType)
             && COMPARE(type)
             && COMPARE(remoteId);
     }
@@ -2733,7 +2740,9 @@ public:
     {
         return ResponsePrivate::serialize(stream)
                << left
+               << leftMimeType
                << right
+               << rightMimeType
                << type
                << remoteId;
     }
@@ -2742,7 +2751,9 @@ public:
     {
         return ResponsePrivate::deserialize(stream)
                >> left
+               >> leftMimeType
                >> right
+               >> rightMimeType
                >> type
                >> remoteId;
     }
@@ -2751,7 +2762,9 @@ public:
     {
         ResponsePrivate::debugString(blck);
         blck.write("Left", left);
+        blck.write("LeftMimeType", leftMimeType);
         blck.write("Right", right);
+        blck.write("RightMimeType", rightMimeType);
         blck.write("Type", type);
         blck.write("Remote ID", remoteId);
     }
@@ -2762,7 +2775,9 @@ public:
     }
 
     qint64 left;
+    QByteArray leftMimeType;
     qint64 right;
+    QByteArray rightMimeType;
     QByteArray type;
     QByteArray remoteId;
 };
@@ -2777,10 +2792,11 @@ FetchRelationsResponse::FetchRelationsResponse()
 {
 }
 
-FetchRelationsResponse::FetchRelationsResponse(qint64 left, qint64 right,
+FetchRelationsResponse::FetchRelationsResponse(qint64 left, const QByteArray &leftMimeType,
+                                               qint64 right, const QByteArray &rightMimeType,
                                                const QByteArray &type,
                                                const QByteArray &remoteId)
-    : Response(new FetchRelationsResponsePrivate(left, right, type, remoteId))
+    : Response(new FetchRelationsResponsePrivate(left, leftMimeType, right, rightMimeType, type, remoteId))
 {
 }
 
@@ -2794,9 +2810,17 @@ qint64 FetchRelationsResponse::left() const
 {
     return d_func()->left;
 }
+QByteArray FetchRelationsResponse::leftMimeType() const
+{
+    return d_func()->leftMimeType;
+}
 qint64 FetchRelationsResponse::right() const
 {
     return d_func()->right;
+}
+QByteArray FetchRelationsResponse::rightMimeType() const
+{
+    return d_func()->rightMimeType;
 }
 QByteArray FetchRelationsResponse::type() const
 {
