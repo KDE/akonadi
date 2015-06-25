@@ -18,9 +18,13 @@
 */
 
 #include "collectioncopyjob.h"
-
 #include "collection.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
+
+#include <KLocalizedString>
+
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -53,11 +57,26 @@ void CollectionCopyJob::doStart()
 {
     Q_D(CollectionCopyJob);
 
-    QByteArray command = d->newTag();
-    command += " COLCOPY ";
-    command += QByteArray::number(d->mSource.id());
-    command += ' ';
-    command += QByteArray::number(d->mTarget.id());
-    command += '\n';
-    d->writeData(command);
+    if (!d->mSource.isValid() && d->mSource.remoteId().isEmpty()) {
+        setError(Unknown);
+        setErrorText(i18n("Invalid collection to copy"));
+        emitResult();
+        return;
+    }
+    if (!d->mTarget.isValid() && d->mTarget.remoteId().isEmpty()) {
+        setError(Unknown);
+        setErrorText(i18n("Invalid destination collection"));
+        emitResult();
+        return;
+    }
+    d->sendCommand(Protocol::CopyCollectionCommand(d->mSource.id(), d->mTarget.id()));
+}
+
+bool CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::CreateCollection) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
 }

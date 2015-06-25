@@ -253,7 +253,7 @@ private:
         Collection::List leafCols = resultCols;
         for (auto iter = leafCols.begin(); iter != leafCols.end();) {
             bool found = false;
-            for (const Collection &c : resultCols) {
+            Q_FOREACH (const Collection &c, resultCols) {
                 if (c.parentCollection().id() == iter->id()) {
                     iter = leafCols.erase(iter);
                     found = true;

@@ -239,7 +239,7 @@ ServerManager::State ServerManager::state()
         // check if the server protocol is recent enough
         if (sInstance.exists()) {
             if (Internal::serverProtocolVersion() >= 0 &&
-                Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion()) {
+                Internal::serverProtocolVersion() < SessionPrivate::clientProtocolVersion()) {
                 return Broken;
             }
         }

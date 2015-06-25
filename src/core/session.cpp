@@ -26,6 +26,7 @@
 #include "servermanager_p.h"
 #include "protocolhelper_p.h"
 #include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/private/protocol_p.h>
 
 #include <QDebug>
 #include <klocalizedstring.h>
@@ -53,12 +54,6 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-static const QList<QByteArray> sCapabilities = QList<QByteArray>()
-                                               << "NOTIFY 3"
-                                               << "NOPAYLOADPATH"
-                                               << "AKAPPENDSTREAMING"
-                                               << "SERVERSEARCH"
-                                               << "DIRECTSTREAMING";
 
 void SessionPrivate::startNext()
 {
@@ -186,65 +181,84 @@ void SessionPrivate::socketDisconnected()
 
 void SessionPrivate::dataReceived()
 {
+    int iterations = 0;
+
     while (socket->bytesAvailable() > 0) {
-        if (parser->continuationSize() > 1) {
-            const QByteArray data = socket->read(qMin(socket->bytesAvailable(), parser->continuationSize() - 1));
-            parser->parseBlock(data);
-        } else if (socket->canReadLine()) {
-            if (!parser->parseNextLine(socket->readLine())) {
-                continue; // response not yet completed
+        QDataStream stream(socket);
+        qint64 tag;
+        // TODO: Verify the tag matches the last tag we sent
+        stream >> tag;
+
+        Protocol::Command cmd = Protocol::deserialize(socket);
+        if (cmd.type() == Protocol::Command::Invalid) {
+            qWarning() << "Invalid command, the world is going to end!";
+            socket->close();
+            reconnect();
+            return;
+        }
+
+
+        if (logFile) {
+            logFile->write("S: " + cmd.debugString().toUtf8());
+            logFile->write("\n\n");
+            logFile->flush();
+        }
+
+        // Handle Hello response -> send Login
+        if (cmd.type() == Protocol::Command::Hello) {
+            Protocol::HelloResponse hello(cmd);
+            if (hello.isError()) {
+                qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
+                socket->close();
+                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+                break;
             }
 
-            if (logFile) {
-                logFile->write("S: " + parser->data());
-                logFile->flush();
+            qDebug() << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
+            qDebug() << "Server says:" << hello.message();
+            // Version mismatch is handled in SessionPrivate::startJob() so that
+            // we can report the error out via KJob API
+            protocolVersion = hello.protocolVersion();
+
+            Protocol::LoginCommand login(sessionId);
+            sendCommand(nextTag(), login);
+            continue;
+        }
+
+        // Login response
+        if (cmd.type() == Protocol::Command::Login) {
+            Protocol::LoginResponse login(cmd);
+            if (login.isError()) {
+                qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
+                socket->close();
+                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+                break;
             }
 
-            // handle login response
-            if (parser->tag() == QByteArray("0")) {
-                if (parser->data().startsWith("OK")) {     //krazy:exclude=strings
-                    writeData("1 CAPABILITY (" + ImapParser::join(sCapabilities, " ") + ")");
-                } else {
-                    qWarning() << "Unable to login to Akonadi server:" << parser->data();
-                    socket->close();
-                    QTimer::singleShot(1000, mParent, SLOT(reconnect()));
-                }
-            }
+            connected = true;
+            startNext();
+            continue;
+        }
 
-            // handle capability response
-            if (parser->tag() == QByteArray("1")) {
-                if (parser->data().startsWith("OK")) {
-                    connected = true;
-                    startNext();
-                } else {
-                    qDebug() << "Unhandled server capability response:" << parser->data();
-                }
-            }
+        // work for the current job
+        if (currentJob) {
+            currentJob->d_ptr->handleResponse(tag, cmd);
+        }
 
-            // send login command
-            if (parser->tag() == "*" && parser->data().startsWith("OK Akonadi")) {
-                const int pos = parser->data().indexOf("[PROTOCOL");
-                if (pos > 0) {
-                    qint64 tmp = 0;
-                    ImapParser::parseNumber(parser->data(), tmp, 0, pos + 9);
-                    protocolVersion = tmp;
-                    Internal::setServerProtocolVersion(tmp);
-                }
-                qDebug() << "Server protocol version is:" << protocolVersion;
-
-                writeData("0 LOGIN " + ImapParser::quote(sessionId) + '\n');
-
-                // work for the current job
-            } else {
-                if (currentJob) {
-                    currentJob->d_ptr->handleResponse(parser->tag(), parser->data());
-                }
-            }
-
-            // reset parser stuff
-            parser->reset();
-        } else {
-            break; // nothing we can do for now
+        // FIXME: It happens often that data are arriving from the server faster
+        // than we Jobs can process them which means, that we often process all
+        // responses in single dataReceived() call and thus not returning to back
+        // to QEventLoop, which breaks batch-delivery of ItemFetchJob (among other
+        // things). To workaround that we force processing of events every
+        // now and then.
+        //
+        // Longterm we want something better, like processing and parsing in
+        // separate thread which would only post the parsed Protocol::Commands
+        // to the jobs through event loop. That will be overall slower but should
+        // result in much more responsive applications.
+        if (++iterations == 1000) {
+            qApp->processEvents(QEventLoop::ExcludeSocketNotifiers);
+            iterations = 0;
         }
     }
 }
@@ -287,9 +301,21 @@ void SessionPrivate::doStartNext()
 
 void SessionPrivate::startJob(Job *job)
 {
-    if (protocolVersion < minimumProtocolVersion()) {
+    if (protocolVersion != clientProtocolVersion()) {
         job->setError(Job::ProtocolVersionMismatch);
-        job->setErrorText(i18n("Protocol version %1 found, expected at least %2", protocolVersion, minimumProtocolVersion()));
+        if (protocolVersion < SessionPrivate::clientProtocolVersion()) {
+            job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
+                                    "If you updated your system recently please restart the Akonadi server.",
+                                    protocolVersion, clientProtocolVersion()));
+            qWarning() << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << clientProtocolVersion() << "). "
+                            "If you updated your system recently please restart the Akonadi server.";
+        } else {
+            job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
+                                    "If you updated your system recently please restart all KDE PIM applications.",
+                                    protocolVersion, clientProtocolVersion()));
+            qWarning() << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << clientProtocolVersion() << "). "
+                            "If you updated your system recently please restart all KDE PIM applications.";
+        }
         job->emitResult();
     } else {
         job->d_ptr->startQueued();
@@ -344,25 +370,25 @@ void SessionPrivate::addJob(Job *job)
     startNext();
 }
 
-int SessionPrivate::nextTag()
+qint64 SessionPrivate::nextTag()
 {
     return theNextTag++;
 }
 
-void SessionPrivate::writeData(const QByteArray &data)
+void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 {
     if (logFile) {
-        logFile->write("C: " + data);
-        if (!data.endsWith('\n')) {
-            logFile->write("\n");
-        }
+        logFile->write("C: " + command.debugString().toUtf8());
+        logFile->write("\n\n");
         logFile->flush();
     }
 
-    if (socket) {
-        socket->write(data);
+    if (socket && socket->isOpen()) {
+        QDataStream stream(socket);
+        stream << tag;
+        Protocol::serialize(socket, command);
     } else {
-        //PORT QT5 qWarning() << "Trying to write while session is disconnected!" << kBacktrace();
+        // TODO: Queue the commands and resend on reconnect?
     }
 }
 
@@ -396,15 +422,17 @@ SessionPrivate::SessionPrivate(Session *parent)
     , socket(0)
     , protocolVersion(0)
     , currentJob(0)
-    , parser(0)
     , logFile(0)
+{
+}
+
+SessionPrivate::~SessionPrivate()
 {
 }
 
 void SessionPrivate::init(const QByteArray &id)
 {
     qDebug() << id;
-    parser = new ImapParser();
 
     if (!id.isEmpty()) {
         sessionId = id;

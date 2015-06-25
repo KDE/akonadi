@@ -96,23 +96,25 @@ void SearchResultJob::doStart()
 {
     Q_D(SearchResultJob);
 
-    QByteArray command = d->newTag() + ' ';
-
+    Scope scope;
     if (!d->rid.isEmpty()) {
-        command += AKONADI_CMD_RID;
+        QStringList ridSet;
+        ridSet.reserve(d->rid.size());
+        for (const QByteArray &rid : d->rid) {
+            ridSet << QString::fromUtf8(rid);
+        }
+        scope.setRidSet(ridSet);
     } else {
-        command += AKONADI_CMD_UID;
+        scope.setUidSet(d->uid);
+    }
+    d->sendCommand(Protocol::SearchResultCommand(d->searchId, d->collection.id(), scope));
+}
+
+bool SearchResultJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::SearchResult) {
+        return Job::doHandleResponse(tag, response);
     }
 
-    command += " SEARCH_RESULT " + d->searchId + " " + QByteArray::number(d->collection.id()) + " (";
-
-    if (!d->rid.isEmpty()) {
-        command += ImapParser::join(d->rid.toList(), " ");
-    } else if (!d->uid.isEmpty()) {
-        command += d->uid.toImapSequenceSet();
-    }
-
-    command += ")";
-
-    d->writeData(command);
+    return true;
 }

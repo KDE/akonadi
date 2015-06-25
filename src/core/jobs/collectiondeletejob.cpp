@@ -18,11 +18,12 @@
 */
 
 #include "collectiondeletejob.h"
-
 #include "collection.h"
 #include "job_p.h"
+#include <protocolhelper_p.h>
 
-#include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/protocol_p.h>
+
 #include <KLocalizedString>
 
 using namespace Akonadi;
@@ -61,9 +62,14 @@ void CollectionDeleteJob::doStart()
         return;
     }
 
-    if (d->mCollection.isValid()) {
-        d->writeData(d->newTag() + " DELETE " + QByteArray::number(d->mCollection.id()) + '\n');
-    } else {
-        d->writeData(d->newTag() + " RID DELETE " + ImapParser::quote(d->mCollection.remoteId().toUtf8()) + '\n');
+    d->sendCommand(Protocol::DeleteCollectionCommand(ProtocolHelper::entityToScope(d->mCollection)));
+}
+
+bool CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::DeleteCollection) {
+        return Job::doHandleResponse(tag, response);
     }
+
+    return true;
 }

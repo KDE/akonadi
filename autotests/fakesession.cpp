@@ -29,7 +29,7 @@ class FakeSessionPrivate : public SessionPrivate
     FakeSessionPrivate(FakeSession* parent, FakeSession::Mode mode)
       : SessionPrivate( parent ), q_ptr( parent ), m_mode(mode)
     {
-      protocolVersion = minimumProtocolVersion();
+      protocolVersion = clientProtocolVersion();
     }
 
     /* reimp */

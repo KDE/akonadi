@@ -55,9 +55,7 @@ void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
 
 void RelationSync::doStart()
 {
-    QStringList types;
-    types << QString::fromAscii(Akonadi::Relation::GENERIC);
-    Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob(types, this);
+    Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob({ Akonadi::Relation::GENERIC }, this);
     connect(fetch, SIGNAL(result(KJob*)), this, SLOT(onLocalFetchDone(KJob*)));
 }
 

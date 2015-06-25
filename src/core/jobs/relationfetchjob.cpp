@@ -23,6 +23,8 @@
 #include "protocolhelper_p.h"
 #include <QTimer>
 
+#include <akonadi/private/protocol_p.h>
+
 using namespace Akonadi;
 
 class Akonadi::RelationFetchJobPrivate : public JobPrivate
@@ -65,7 +67,7 @@ public:
     Relation::List mResultRelations;
     Relation::List mPendingRelations; // relation pending for emitting itemsReceived()
     QTimer *mEmitTimer;
-    QStringList mTypes;
+    QVector<QByteArray> mTypes;
     QString mResource;
     Relation mRequestedRelation;
 };
@@ -78,7 +80,7 @@ RelationFetchJob::RelationFetchJob(const Relation &relation, QObject *parent)
     d->mRequestedRelation = relation;
 }
 
-RelationFetchJob::RelationFetchJob(const QStringList &types, QObject *parent)
+RelationFetchJob::RelationFetchJob(const QVector<QByteArray> &types, QObject *parent)
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
@@ -90,64 +92,33 @@ void RelationFetchJob::doStart()
 {
     Q_D(RelationFetchJob);
 
-    QByteArray command = d->newTag();
-    command += " UID RELATIONFETCH ";
-
-    QList<QByteArray> filter;
-    if (!d->mResource.isEmpty()) {
-        filter.append("RESOURCE");
-        filter.append(d->mResource.toUtf8());
-    }
-    if (!d->mTypes.isEmpty()) {
-        filter.append("TYPE");
-        QList<QByteArray> types;
-        types.reserve(d->mTypes.count());
-        foreach (const QString &t, d->mTypes) {
-            types.append(t.toUtf8());
-        }
-        filter.append('(' + ImapParser::join(types, " ") + ')');
-    } else if (!d->mRequestedRelation.type().isEmpty()) {
-        filter.append("TYPE");
-        filter.append('(' + d->mRequestedRelation.type() + ')');
-    }
-    if (d->mRequestedRelation.left().id() >= 0) {
-        filter << "LEFT" << QByteArray::number(d->mRequestedRelation.left().id());
-    }
-    if (d->mRequestedRelation.right().id() >= 0) {
-        filter << "RIGHT" << QByteArray::number(d->mRequestedRelation.right().id());
-    }
-
-    command += "(" + ImapParser::join(filter, " ") + ")\n";
-
-    qDebug() << command;
-    d->writeData(command);
+    d->sendCommand(Protocol::FetchRelationsCommand(
+        d->mRequestedRelation.left().id(),
+        d->mRequestedRelation.right().id(),
+        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
+        d->mResource));
 }
 
-void RelationFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(RelationFetchJob);
 
-    if (tag == "*") {
-        int begin = data.indexOf("RELATIONFETCH");
-        if (begin >= 0) {
-            // split fetch response into key/value pairs
-            QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
-
-            Relation rel;
-            ProtocolHelper::parseRelationFetchResult(fetchResponse, rel);
-
-            if (rel.isValid()) {
-                d->mResultRelations.append(rel);
-                d->mPendingRelations.append(rel);
-                if (!d->mEmitTimer->isActive()) {
-                    d->mEmitTimer->start();
-                }
-            }
-            return;
-        }
+    if (!response.isResponse() || response.type() != Protocol::Command::FetchRelations) {
+        return Job::doHandleResponse(tag, response);
     }
-    qDebug() << "Unhandled response: " << tag << data;
+
+    const Relation rel = ProtocolHelper::parseRelationFetchResult(response);
+    // Invalid response means there will be no more responses
+    if (!rel.isValid()) {
+        return true;
+    }
+
+    d->mResultRelations.append(rel);
+    d->mPendingRelations.append(rel);
+    if (!d->mEmitTimer->isActive()) {
+        d->mEmitTimer->start();
+    }
+    return false;
 }
 
 Relation::List RelationFetchJob::relations() const

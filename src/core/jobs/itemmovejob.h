@@ -70,7 +70,7 @@ public:
     ItemMoveJob(const QList<Item> &items, const Collection &destination, QObject *parent = Q_NULLPTR);
 
     /**
-     * Move the given items from @p sourec to @p destination.
+     * Move the given items from @p source to @p destination.
      *
      * @internal If the items are identified only by RID, then you MUST use this
      * constructor to specify the source collection, otherwise the job will fail.
@@ -101,10 +101,10 @@ public:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
+    bool doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(ItemMoveJob)
-    template <typename T, typename MoveJob> friend class MoveJobImpl;
 };
 
 }

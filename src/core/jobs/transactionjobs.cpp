@@ -21,76 +21,80 @@
 
 #include "job_p.h"
 
+#include <akonadi/private/protocol_p.h>
+
 using namespace Akonadi;
 
-class Akonadi::TransactionBeginJobPrivate : public JobPrivate
+class Akonadi::TransactionJobPrivate : public JobPrivate
 {
 public:
-    TransactionBeginJobPrivate(TransactionBeginJob *parent)
+    TransactionJobPrivate(Job *parent)
         : JobPrivate(parent)
-    {
-    }
+    {}
 };
 
-class Akonadi::TransactionRollbackJobPrivate : public JobPrivate
-{
-public:
-    TransactionRollbackJobPrivate(TransactionRollbackJob *parent)
-        : JobPrivate(parent)
-    {
-    }
-};
-
-class Akonadi::TransactionCommitJobPrivate : public JobPrivate
-{
-public:
-    TransactionCommitJobPrivate(TransactionCommitJob *parent)
-        : JobPrivate(parent)
-    {
-    }
-};
-
-TransactionBeginJob::TransactionBeginJob(QObject *parent)
-    : Job(new TransactionBeginJobPrivate(this), parent)
+TransactionJob::TransactionJob(QObject *parent)
+    : Job(new TransactionJobPrivate(this), parent)
 {
     Q_ASSERT(parent);
+}
+
+TransactionJob::~TransactionJob()
+{
+}
+
+void TransactionJob::doStart()
+{
+    Q_D(TransactionJob);
+
+    Protocol::TransactionCommand::Mode mode;
+    if (qobject_cast<TransactionBeginJob*>(this)) {
+        mode = Protocol::TransactionCommand::Begin;
+    } else if (qobject_cast<TransactionRollbackJob*>(this)) {
+        mode = Protocol::TransactionCommand::Rollback;
+    } else if (qobject_cast<TransactionCommitJob*>(this)) {
+        mode = Protocol::TransactionCommand::Commit;
+    } else {
+        Q_ASSERT(false);
+        mode = Protocol::TransactionCommand::Invalid;
+    }
+
+    d->sendCommand(Protocol::TransactionCommand(mode));
+}
+
+bool TransactionJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::Transaction) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
+}
+
+
+TransactionBeginJob::TransactionBeginJob(QObject *parent)
+    : TransactionJob(parent)
+{
 }
 
 TransactionBeginJob::~TransactionBeginJob()
 {
 }
 
-void TransactionBeginJob::doStart()
-{
-    d_ptr->writeData(d_ptr->newTag() + " BEGIN\n");
-}
-
 TransactionRollbackJob::TransactionRollbackJob(QObject *parent)
-    : Job(new TransactionRollbackJobPrivate(this), parent)
+    : TransactionJob(parent)
 {
-    Q_ASSERT(parent);
 }
 
 TransactionRollbackJob::~TransactionRollbackJob()
 {
 }
 
-void TransactionRollbackJob::doStart()
-{
-    d_ptr->writeData(d_ptr->newTag() + " ROLLBACK\n");
-}
-
 TransactionCommitJob::TransactionCommitJob(QObject *parent)
-    : Job(new TransactionCommitJobPrivate(this), parent)
+    : TransactionJob(parent)
 {
-    Q_ASSERT(parent);
 }
 
 TransactionCommitJob::~TransactionCommitJob()
 {
-}
-
-void TransactionCommitJob::doStart()
-{
-    d_ptr->writeData(d_ptr->newTag() + " COMMIT\n");
 }

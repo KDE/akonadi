@@ -23,6 +23,8 @@
 #include "protocolhelper_p.h"
 #include <KLocalizedString>
 
+#include <akonadi/private/protocol_p.h>
+
 using namespace Akonadi;
 
 struct Akonadi::RelationCreateJobPrivate : public JobPrivate
@@ -54,29 +56,19 @@ void RelationCreateJob::doStart()
         return;
     }
 
-    QByteArray command = d->newTag() + " UID RELATIONSTORE ";
-
-    QList<QByteArray> list;
-    list << "LEFT";
-    list << QByteArray::number(d->mRelation.left().id());
-    list << "RIGHT";
-    list << QByteArray::number(d->mRelation.right().id());
-    list << "TYPE";
-    list << ImapParser::quote(d->mRelation.type());
-    if (!d->mRelation.remoteId().isEmpty()) {
-        list << "REMOTEID";
-        list << d->mRelation.remoteId();
-    }
-
-    command += ImapParser::join(list, " ") + "\n";
-
-    d->writeData(command);
+    d->sendCommand(Protocol::ModifyRelationCommand(d->mRelation.left().id(),
+                                                   d->mRelation.right().id(),
+                                                   d->mRelation.type(),
+                                                   d->mRelation.remoteId()));
 }
 
-void RelationCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
-    Q_D(RelationCreateJob);
-    qWarning() << "Unhandled response: " << tag << data;
+    if (!response.isResponse() || response.type() != Protocol::Command::ModifyRelation) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
 }
 
 Relation RelationCreateJob::relation() const

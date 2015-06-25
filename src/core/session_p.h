@@ -24,7 +24,6 @@
 #include "session.h"
 #include "item.h"
 #include "servermanager.h"
-#include <akonadi/private/imapparser_p.h>
 
 #include <QtNetwork/QLocalSocket>
 
@@ -36,6 +35,10 @@ class QIODevice;
 
 namespace Akonadi {
 
+namespace Protocol {
+class Command;
+}
+
 /**
  * @internal
  */
@@ -44,10 +47,7 @@ class AKONADICORE_EXPORT SessionPrivate
 public:
     explicit SessionPrivate(Session *parent);
 
-    virtual ~SessionPrivate()
-    {
-        delete parser;
-    }
+    virtual ~SessionPrivate();
 
     virtual void init(const QByteArray &sessionId);
 
@@ -102,21 +102,21 @@ public:
     /**
       Returns the next IMAP tag.
     */
-    int nextTag();
+    qint64 nextTag();
 
     /**
-      Sends the given raw data.
+      Sends the given command to server
     */
-    void writeData(const QByteArray &data);
+    void sendCommand(qint64 tag, const Protocol::Command &command);
 
     /**
      * Propagate item revision changes to following jobs.
      */
     void itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision);
 
-    static int minimumProtocolVersion()
+    static int clientProtocolVersion()
     {
-        return 44;
+        return 50;
     }
 
     /**
@@ -128,7 +128,7 @@ public:
     QByteArray sessionId;
     QIODevice *socket;
     bool connected;
-    int theNextTag;
+    qint64 theNextTag;
     int protocolVersion;
 
     // job management
@@ -136,9 +136,6 @@ public:
     QQueue<Job *> pipeline;
     Job *currentJob;
     bool jobRunning;
-
-    // parser stuff
-    ImapParser *parser;
 
     QFile *logFile;
 };

@@ -25,6 +25,10 @@
 
 namespace Akonadi {
 
+namespace Protocol {
+class Command;
+}
+
 /**
  * @internal
  */
@@ -46,7 +50,7 @@ public:
 
     void init(QObject *parent);
 
-    void handleResponse(const QByteArray &tag, const QByteArray &data);
+    void handleResponse(qint64 tag, const Protocol::Command &response);
     void startQueued();
     void lostConnection();
     void slotSubJobAboutToStart(Akonadi::Job *job);
@@ -63,17 +67,22 @@ public:
     /**
       Returns a new unique command tag for communication with the backend.
     */
-    QByteArray newTag();
+    qint64 newTag();
 
     /**
       Return the tag used for the request.
     */
-    QByteArray tag() const;
+    qint64 tag() const;
 
     /**
-      Sends raw data to the backend.
-    */
-    void writeData(const QByteArray &data);
+      Sends the @p command to the backend
+     */
+    void sendCommand(qint64 tag, const Protocol::Command &command);
+
+    /**
+     * Same as calling JobPrivate::sendCommand(newTag(), command)
+     */
+    void sendCommand(const Protocol::Command &command);
 
     /**
      * Notify following jobs about item revision changes.
@@ -111,7 +120,7 @@ public:
 
     Job *mParentJob;
     Job *mCurrentSubJob;
-    QByteArray mTag;
+    qint64 mTag;
     Session *mSession;
     bool mWriteFinished;
     bool mStarted;

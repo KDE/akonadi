@@ -23,7 +23,7 @@
 #include "job_p.h"
 #include "KDBusConnectionPool"
 #include <QTime>
-#include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/protocol_p.h>
 #include "session.h"
 #include "session_p.h"
 
@@ -41,42 +41,30 @@ using namespace Akonadi;
 static QDBusAbstractInterface *s_jobtracker = 0;
 
 //@cond PRIVATE
-void JobPrivate::handleResponse(const QByteArray &tag, const QByteArray &data)
+void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_Q(Job);
 
     if (mCurrentSubJob) {
-        mCurrentSubJob->d_ptr->handleResponse(tag, data);
+        mCurrentSubJob->d_ptr->handleResponse(tag, response);
         return;
     }
 
     if (tag == mTag) {
-        if (data.startsWith("NO ") || data.startsWith("BAD ")) {       //krazy:exclude=strings
-            QString msg = QString::fromUtf8(data);
-
-            msg.remove(0, msg.startsWith(QStringLiteral("NO ")) ? 3 : 4);
-
-            if (msg.endsWith(QStringLiteral("\r\n"))) {
-                msg.chop(2);
+        if (response.isResponse()) {
+            Protocol::Response resp(response);
+            if (resp.isError()) {
+                q->setError(Job::Unknown);
+                q->setErrorText(resp.errorMessage());
+                q->emitResult();
+                return;
             }
-
-            q->setError(Job::Unknown);
-            q->setErrorText(msg);
-            q->emitResult();
-            return;
-        } else if (data.startsWith("OK")) {     //krazy:exclude=strings
-
-            // We can't use emitResult() here: The slot connected to the result signal might exec()
-            // another job, and therefore this method would never return. That causes the session
-            // to deadlock, since it calls this method and does not continue starting new jobs until
-            // this method finishes. Which would also mean the exec()'d job is never started,, and there-
-            // fore everything deadlocks.
-            QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
-            return;
         }
     }
 
-    q->doHandleResponse(tag, data);
+    if (q->doHandleResponse(tag, response)) {
+        QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
+    }
 }
 
 void JobPrivate::init(QObject *parent)
@@ -205,25 +193,33 @@ void JobPrivate::startNext()
     }
 }
 
-QByteArray JobPrivate::newTag()
+qint64 JobPrivate::newTag()
 {
     if (mParentJob) {
         mTag = mParentJob->d_ptr->newTag();
     } else {
-        mTag = QByteArray::number(mSession->d->nextTag());
+        mTag = mSession->d->nextTag();
     }
     return mTag;
 }
 
-QByteArray JobPrivate::tag() const
+qint64 JobPrivate::tag() const
 {
     return mTag;
 }
 
-void JobPrivate::writeData(const QByteArray &data)
+void JobPrivate::sendCommand(qint64 tag, const Protocol::Command &cmd)
 {
-    Q_ASSERT_X(!mWriteFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()");
-    mSession->d->writeData(data);
+    if (mParentJob) {
+        mParentJob->d_ptr->sendCommand(tag, cmd);
+    } else {
+        mSession->d->sendCommand(tag, cmd);
+    };
+}
+
+void JobPrivate::sendCommand(const Protocol::Command &cmd)
+{
+    sendCommand(newTag(), cmd);
 }
 
 void JobPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
@@ -345,9 +341,20 @@ bool Job::removeSubjob(KJob *job)
     return rv;
 }
 
-void Job::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
 {
-    qDebug() << "Unhandled response: " << tag << data;
+    // FIXME: We cannot set an error here due to how CollectionSync works: CS
+    // can sometimes schedule TransactionSequences and emitResult in a way that
+    // the Session dispatches next job in queue without TransactionSequence's
+    // TransactionCommitJob finishing: the we get the response for TCJ out-of-order
+    // and it's received by the currently running job instead of the TCJ.
+    qDebug() << this << "Unhandled response: " << tag << command.debugString();
+    /*
+    setError(Unknown);
+    setErrorText(i18n("Unexpected response"));
+    emitResult();
+    */
+    return true;
 }
 
 void Job::slotResult(KJob *job)

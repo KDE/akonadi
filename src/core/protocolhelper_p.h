@@ -31,9 +31,15 @@
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
+#include <akonadi/private/scope_p.h>
+#include <akonadi/private/tristate_p.h>
+
+#include <QString>
 
 #include <boost/bind.hpp>
 #include <algorithm>
+#include <type_traits>
+#include <functional>
 
 namespace Akonadi {
 
@@ -67,22 +73,20 @@ public:
 
     /**
       Parse a cache policy definition.
-      @param data The input data.
       @param policy The parsed cache policy.
-      @param start Start of the data, ie. postion after the label.
-      @returns Position in data after the cache policy description.
+      @returns Akonadi::CachePolicy
     */
-    static int parseCachePolicy(const QByteArray &data, CachePolicy &policy, int start = 0);
+    static CachePolicy parseCachePolicy(const Protocol::CachePolicy &policy);
 
     /**
       Convert a cache policy object into its protocol representation.
     */
-    static QByteArray cachePolicyToByteArray(const CachePolicy &policy);
+    static Protocol::CachePolicy cachePolicyToProtocol(const CachePolicy &policy);
 
     /**
       Convert a ancestor chain from its protocol representation into an Entity object.
     */
-    static void parseAncestors(const QByteArray &data, Entity *entity, int start = 0);
+    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Entity *entity);
 
     /**
       Convert a ancestor chain from its protocol representation into an Entity object.
@@ -90,28 +94,34 @@ public:
       This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
       same @p parentCollection don't have to be parsed twice.
     */
-    static void parseAncestorsCached(const QByteArray &data, Entity *entity, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = 0, int start = 0);
+    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+                                     Entity *entity,
+                                     Collection::Id parentCollection,
+                                     ProtocolHelperValuePool *valuePool = 0);
 
     /**
       Parse a collection description.
       @param data The input data.
-      @param collection The parsed collection.
-      @param start Start of the data.
       @param requireParent Whether or not we require a parent as part of the data.
-      @returns Position in data after the collection description.
+      @returns The parsed collection
     */
-    static int parseCollection(const QByteArray &data, Collection &collection, int start = 0, bool requireParent = true);
+    static Collection parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent = true);
+
+    static void parseAttributes(const Protocol::Attributes &attributes, Entity *entity);
+    static void parseAttributes(const Protocol::Attributes &attributes, AttributeEntity *entity);
+
+    static CollectionStatistics parseCollectionStatistics(const Protocol::FetchCollectionStatsResponse &stats);
 
     /**
       Convert attributes to their protocol representation.
     */
-    static QByteArray attributesToByteArray(const Entity &entity, bool ns = false);
-    static QByteArray attributesToByteArray(const AttributeEntity &entity, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const Entity &entity, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const AttributeEntity &entity, bool ns = false);
 
     /**
       Encodes part label and namespace.
     */
-    static QByteArray encodePartIdentifier(PartNamespace ns, const QByteArray &label, int version = 0);
+    static QByteArray encodePartIdentifier(PartNamespace ns, const QByteArray &label);
 
     /**
       Decode part label and namespace.
@@ -122,127 +132,186 @@ public:
       Converts the given set of items into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    template <typename T>
-    static QByteArray entitySetToByteArray(const QList<T> &_objects, const QByteArray &command)
+    template<typename T, template<typename> class Container>
+    static Scope entitySetToScope(const Container<T> &_objects)
     {
         if (_objects.isEmpty()) {
             throw Exception("No objects specified");
         }
 
-        typename T::List objects(_objects);
+        Container<T> objects(_objects);
 
-        QByteArray rv;
         std::sort(objects.begin(), objects.end(), boost::bind(&T::id, _1) < boost::bind(&T::id, _2));
-        if (objects.first().isValid()) {
-            // all items have a uid set
-            rv += " " AKONADI_CMD_UID " ";
-            if (!command.isEmpty()) {
-                rv += command;
-                rv += ' ';
-            }
+        if (objects.at(0).isValid()) {
             QVector<typename T::Id>  uids;
-            foreach (const T &object, objects) {
+            uids.reserve(objects.size());
+            for (const T &object : objects) {
                 uids << object.id();
             }
             ImapSet set;
             set.add(uids);
-            rv += set.toImapSequenceSet();
-            return rv;
+            return Scope(set);
         }
 
-        // check if all items have a remote id
-        if (std::find_if(objects.constBegin(), objects.constEnd(),
-                         boost::bind(&QString::isEmpty, boost::bind(&T::remoteId, _1)))
-            != objects.constEnd()) {
+        qDebug() << entitySetHasGID(_objects);
+        if (entitySetHasGID(_objects)) {
+            return entitySetToGID(_objects);
+        }
+
+        if (!entitySetHasRemoteIdentifier(_objects, std::mem_fn(&T::remoteId))) {
             throw Exception("No remote identifier specified");
         }
 
+
         // check if we have RIDs or HRIDs
-        if (std::find_if(objects.constBegin(), objects.constEnd(),
-                         !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
-            == objects.constEnd() && objects.size() == 1) {  // ### HRID sets are not yet specified
-            // HRIDs
-            rv += " " AKONADI_CMD_HRID " ";
-            if (!command.isEmpty()) {
-                rv += command;
-                rv += ' ';
-            }
-            rv += '(' + hierarchicalRidToByteArray(objects.first()) + ')';
-            return rv;
+        if (entitySetHasHRID(_objects)) {
+            return hierarchicalRidToScope(objects.first());
         }
 
-        // RIDs
-        QList<QByteArray> rids;
-        foreach (const T &object, objects) {
-            rids << ImapParser::quote(object.remoteId().toUtf8());
-        }
-
-        rv += " " AKONADI_CMD_RID " ";
-        if (!command.isEmpty()) {
-            rv += command;
-            rv += ' ';
-        }
-        rv += '(';
-        rv += ImapParser::join(rids, " ");
-        rv += ')';
-        return rv;
+        return entitySetToRemoteIdentifier(Scope::Rid, _objects, std::mem_fn(&T::remoteId));
     }
 
-    static QByteArray entitySetToByteArray(const QList<Akonadi::Item> &_objects, const QByteArray &command);
-
-    static QByteArray tagSetToImapSequenceSet(const Akonadi::Tag::List &_objects);
-    static QByteArray tagSetToByteArray(const Akonadi::Tag::List &_objects, const QByteArray &command);
-
-    static QByteArray commandContextToByteArray(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
-                                                const Item::List &requestedItems, const QByteArray &command);
+    static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
+                                                           const Item::List &requestedItems);
 
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     template <typename T>
-    static QByteArray entityIdToByteArray(const T &object, const QByteArray &command)
+    static Scope entityToScope(const T &object)
     {
-        return entitySetToByteArray(typename T::List() << object, command);
+        return entitySetToScope(QVector<T>() << object);
     }
 
     /**
       Converts the given collection's hierarchical RID into a protocol representation.
       Assumes @p col has a valid hierarchical RID, so check that before!
     */
-    static QByteArray hierarchicalRidToByteArray(const Collection &col);
+    static Scope hierarchicalRidToScope(const Collection &col);
 
     /**
       Converts the HRID of the given item into an ASAP protocol representation.
       Assumes @p item has a valid HRID.
     */
-    static QByteArray hierarchicalRidToByteArray(const Item &item);
+    static Scope hierarchicalRidToScope(const Item &item);
+
+    static Scope hierarchicalRidToScope(const Tag &/*tag*/)
+    {
+        assert(false);
+        return Scope();
+    }
 
     /**
       Converts a given ItemFetchScope object into a protocol representation.
     */
-    static QByteArray itemFetchScopeToByteArray(const ItemFetchScope &fetchScope);
+    static Protocol::FetchScope itemFetchScopeToProtocol(const ItemFetchScope &fetchScope);
 
     /**
       Converts a given TagFetchScope object into a protocol representation.
     */
-    static QByteArray tagFetchScopeToByteArray(const TagFetchScope &fetchScope);
+    static QVector<QByteArray> tagFetchScopeToProtocol(const TagFetchScope &fetchScope);
 
     /**
       Parses a single line from an item fetch job result into an Item object.
      */
-    static void parseItemFetchResult(const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0);
-    static void parseTagFetchResult(const QList<QByteArray> &lineTokens, Tag &tag);
-    static void parseRelationFetchResult(const QList<QByteArray> &lineTokens, Relation &tag);
+    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, ProtocolHelperValuePool *valuePool = 0);
+    static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
+    static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 
     static QString akonadiStoragePath();
     static QString absolutePayloadFilePath(const QString &fileName);
 
-    static bool streamPayloadToFile(const QByteArray &command, const QByteArray &data, QByteArray &error);
+    static bool streamPayloadToFile(const QString &file, const QByteArray &data, QByteArray &error);
 
-    static QByteArray listPreference(Collection::ListPurpose purpose, Collection::ListPreference preference);
-    static QByteArray enabled(bool);
-    static QByteArray referenced(bool);
+    static Akonadi::Tristate listPreference(const Collection::ListPreference pref);
+
+private:
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, bool>::type
+    entitySetHasGID(const Container<T> &objects)
+    {
+        return entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::gid));
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, bool>::type
+    entitySetHasGID(const Container<T> &/*objects*/, int */*dummy*/ = 0)
+    {
+        return false;
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, Scope>::type
+    entitySetToGID(const Container<T> &objects)
+    {
+        return entitySetToRemoteIdentifier(Scope::Gid, objects, std::mem_fn(&T::gid));
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, Scope>::type
+    entitySetToGID(const Container<T> &/*objects*/, int */*dummy*/ = 0)
+    {
+        return Scope();
+    }
+
+    template<typename T, template<typename> class Container, typename RIDFunc>
+    inline static
+    bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
+    {
+
+        typedef typename RIDFunc::result_type RetType;
+        return std::find_if(objects.constBegin(), objects.constEnd(),
+                            boost::bind(&RetType::isEmpty, boost::bind(ridFunc, _1)))
+                == objects.constEnd();
+    }
+
+    template<typename T, template<typename> class Container, typename RIDFunc>
+    inline static
+    typename std::enable_if<std::is_same<QString, typename RIDFunc:: result_type>::value, Scope>::type
+    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc)
+    {
+        QStringList rids;
+        rids.reserve(objects.size());
+        std::transform(objects.cbegin(), objects.cend(),
+                       std::back_inserter(rids), boost::bind(ridFunc, _1));
+        return Scope(scope, rids);
+    }
+
+    template<typename T, template<typename> class Container, typename RIDFunc>
+    inline static
+    typename std::enable_if<std::is_same<QByteArray, typename RIDFunc:: result_type>::value, Scope>::type
+    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc, int */*dummy*/ = 0)
+    {
+        QStringList rids;
+        rids.reserve(objects.size());
+        std::transform(objects.cbegin(), objects.cend(),
+                       std::back_inserter(rids), boost::bind(&QString::fromLatin1, boost::bind(ridFunc, _1)));
+        return Scope(scope, rids);
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type
+    entitySetHasHRID(const Container<T> &objects)
+    {
+        return objects.size() == 1 &&
+                std::find_if(objects.constBegin(), objects.constEnd(),
+                             !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
+                    == objects.constEnd();  // ### HRID sets are not yet specified
+    }
+
+    template<typename T, template<typename> class Container>
+    inline static
+    typename std::enable_if<std::is_same<T, Tag>::value, bool>::type
+    entitySetHasHRID(const Container<T> &/*objects*/, int */*dummy*/ = 0)
+    {
+        return false;
+    }
 };
 
 }

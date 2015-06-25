@@ -57,7 +57,7 @@ public:
     void processNotifications();
 
 private Q_SLOTS:
-    void jobAdded(Akonadi::Job *job);
+    void jobAdded(qint64 fetchCollectionId);
 
 private:
     bool returnCollections(Entity::Id fetchColId);

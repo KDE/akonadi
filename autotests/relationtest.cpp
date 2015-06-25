@@ -82,7 +82,7 @@ void RelationTest::testCreateFetch()
 
     //Test fetch & create
     {
-        RelationFetchJob *fetchJob = new RelationFetchJob(QStringList(), this);
+        RelationFetchJob *fetchJob = new RelationFetchJob(QVector<QByteArray>(), this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->relations().size(), 1);
         QCOMPARE(fetchJob->relations().first().type(), QByteArray(Relation::GENERIC));
@@ -108,7 +108,7 @@ void RelationTest::testCreateFetch()
         RelationDeleteJob *deleteJob = new RelationDeleteJob(rel, this);
         AKVERIFYEXEC(deleteJob);
 
-        RelationFetchJob *fetchJob = new RelationFetchJob(QStringList(), this);
+        RelationFetchJob *fetchJob = new RelationFetchJob(QVector<QByteArray>(), this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->relations().size(), 0);
     }

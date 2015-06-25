@@ -120,12 +120,12 @@ void TagFetchJob::doStart()
 {
     Q_D(TagFetchJob);
 
-    QByteArray command = d->newTag();
+    Protocol::FetchTagsCommand cmd;
     if (d->mRequestedTags.isEmpty()) {
-        command += " UID TAGFETCH 1:*";
+        cmd = Protocol::FetchTagsCommand(Scope(ImapInterval(1, 0)));
     } else {
         try {
-            command += ProtocolHelper::tagSetToByteArray(d->mRequestedTags, "TAGFETCH");
+            cmd = Protocol::FetchTagsCommand(ProtocolHelper::entitySetToScope(d->mRequestedTags));
         } catch (const Exception &e) {
             setError(Job::Unknown);
             setErrorText(QString::fromUtf8(e.what()));
@@ -133,36 +133,34 @@ void TagFetchJob::doStart()
             return;
         }
     }
-    command += " " + ProtocolHelper::tagFetchScopeToByteArray(d->mFetchScope) + "\n";
+    cmd.setAttributes(d->mFetchScope.attributes());
+    cmd.setIdOnly(d->mFetchScope.fetchIdOnly());
 
-    d->writeData(command);
+    d->sendCommand(cmd);
 }
 
-void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool TagFetchJob::doHandleResponse(qint64 _tag, const Protocol::Command &response)
 {
     Q_D(TagFetchJob);
 
-    if (tag == "*") {
-        int begin = data.indexOf("TAGFETCH");
-        if (begin >= 0) {
-            // split fetch response into key/value pairs
-            QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
-
-            Tag tag;
-            ProtocolHelper::parseTagFetchResult(fetchResponse, tag);
-
-            if (tag.isValid()) {
-                d->mResultTags.append(tag);
-                d->mPendingTags.append(tag);
-                if (!d->mEmitTimer->isActive()) {
-                    d->mEmitTimer->start();
-                }
-            }
-            return;
-        }
+    if (!response.isResponse() || response.type() != Protocol::Command::FetchTags) {
+        return Job::doHandleResponse(_tag, response);
     }
-    qDebug() << "Unhandled response: " << tag << data;
+
+    Protocol::FetchTagsResponse resp(response);
+    // Invalid tag in response marks the last response
+    if (resp.id() < 0) {
+        return true;
+    }
+
+    const Tag tag = ProtocolHelper::parseTagFetchResult(response);
+    d->mResultTags.append(tag);
+    d->mPendingTags.append(tag);
+    if (!d->mEmitTimer->isActive()) {
+        d->mEmitTimer->start();
+    }
+
+    return false;
 }
 
 Tag::List TagFetchJob::tags() const

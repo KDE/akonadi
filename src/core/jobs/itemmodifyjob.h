@@ -198,7 +198,7 @@ public:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
-    void doHandleResponse(const QByteArray &tag, const QByteArray &data) Q_DECL_OVERRIDE;
+    bool doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

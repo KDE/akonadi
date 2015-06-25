@@ -23,6 +23,8 @@
 #include "protocolhelper_p.h"
 #include <KLocalizedString>
 
+#include <akonadi/private/protocol_p.h>
+
 using namespace Akonadi;
 
 struct Akonadi::RelationDeleteJobPrivate : public JobPrivate
@@ -54,27 +56,18 @@ void RelationDeleteJob::doStart()
         return;
     }
 
-    QByteArray command = d->newTag() + " UID RELATIONREMOVE ";
-
-    QList<QByteArray> list;
-    list << "LEFT";
-    list << QByteArray::number(d->mRelation.left().id());
-    list << "RIGHT";
-    list << QByteArray::number(d->mRelation.right().id());
-    if (!d->mRelation.type().isEmpty()) {
-        list << "TYPE";
-        list << ImapParser::quote(d->mRelation.type());
-    }
-
-    command += ImapParser::join(list, " ") + "\n";
-
-    d->writeData(command);
+    d->sendCommand(Protocol::RemoveRelationsCommand(d->mRelation.left().id(),
+                                                    d->mRelation.right().id(),
+                                                    d->mRelation.type()));
 }
 
-void RelationDeleteJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool RelationDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
-    Q_D(RelationDeleteJob);
-    qWarning() << "Unhandled response: " << tag << data;
+    if (!response.isResponse() || response.type() != Protocol::Command::RemoveRelations) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
 }
 
 Relation RelationDeleteJob::relation() const

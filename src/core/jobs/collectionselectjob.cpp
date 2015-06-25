@@ -20,11 +20,9 @@
 #include "collectionselectjob_p.h"
 
 #include "job_p.h"
+#include "protocolhelper_p.h"
 #include <akonadi/private/protocol_p.h>
-#include <akonadi/private/imapparser_p.h>
 
-#include <QtCore/QDebug>
-#include <KLocalizedString>
 using namespace Akonadi;
 
 class Akonadi::CollectionSelectJobPrivate : public JobPrivate
@@ -62,17 +60,22 @@ void CollectionSelectJob::doStart()
 {
     Q_D(CollectionSelectJob);
 
-    if (d->mCollection.isValid()) {
-        QByteArray command(d->newTag() + " SELECT SILENT ");
-        d->writeData(command + QByteArray::number(d->mCollection.id()) + '\n');
-    } else if (!d->mCollection.remoteId().isEmpty()) {
-        QByteArray command(d->newTag() + " " AKONADI_CMD_RID " SELECT SILENT ");
-        d->writeData(command + ImapParser::quote(d->mCollection.remoteId().toUtf8()) + '\n');
-    } else {
+    try {
+        d->sendCommand(Protocol::SelectCollectionCommand(ProtocolHelper::entityToScope(d->mCollection)));
+    } catch (const std::exception &e) {
         setError(Unknown);
-        setErrorText(i18n("Invalid collection specified"));
+        setErrorText(QString::fromUtf8(e.what()));
         emitResult();
     }
+}
+
+bool CollectionSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::SelectCollection) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
 }
 
 #include "moc_collectionselectjob_p.cpp"

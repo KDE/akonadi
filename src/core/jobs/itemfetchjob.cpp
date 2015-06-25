@@ -22,12 +22,12 @@
 #include "attributefactory.h"
 #include "collection.h"
 #include "collectionselectjob_p.h"
-#include <akonadi/private/imapparser_p.h>
 #include "itemfetchscope.h"
 #include "job_p.h"
-#include <akonadi/private/protocol_p.h>
 #include "protocolhelper_p.h"
 #include "session_p.h"
+
+#include <akonadi/private/protocol_p.h>
 
 #include <qdebug.h>
 
@@ -91,7 +91,7 @@ public:
 
         } else {
             try {
-                return QString::fromLatin1(ProtocolHelper::entitySetToByteArray(mRequestedItems, AKONADI_CMD_ITEMFETCH));
+                return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
             } catch (const Exception &e) {
                 return QString::fromUtf8(e.what());
             }
@@ -169,64 +169,55 @@ void ItemFetchJob::doStart()
 {
     Q_D(ItemFetchJob);
 
-    QByteArray command = d->newTag();
+
     try {
-      command += ProtocolHelper::commandContextToByteArray(d->mCollection, d->mTag, d->mRequestedItems, AKONADI_CMD_ITEMFETCH);
+        d->sendCommand(Protocol::FetchItemsCommand(
+            d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
+            ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mRequestedItems),
+            ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
     } catch (const Akonadi::Exception &e) {
       setError(Job::Unknown);
       setErrorText(QString::fromUtf8(e.what()));
       emitResult();
       return;
     }
-
-    // This is only required for 4.10
-    if (d->protocolVersion() < 30) {
-        if (d->mFetchScope.ignoreRetrievalErrors()) {
-            qDebug() << "IGNOREERRORS is not available with this version of Akonadi server";
-        }
-        d->mFetchScope.setIgnoreRetrievalErrors(false);
-    }
-
-    command += ProtocolHelper::itemFetchScopeToByteArray(d->mFetchScope);
-    d->writeData(command);
 }
 
-void ItemFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemFetchJob);
 
-    if (tag == "*") {
-        int begin = data.indexOf("FETCH");
-        if (begin >= 0) {
-
-            // split fetch response into key/value pairs
-            QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 6);
-
-            Item item;
-            ProtocolHelper::parseItemFetchResult(fetchResponse, item, d->mValuePool);
-            if (!item.isValid()) {
-                return;
-            }
-
-            d->mCount++;
-
-            if (d->mDeliveryOptions & ItemGetter) {
-                d->mResultItems.append(item);
-            }
-
-            if (d->mDeliveryOptions & EmitItemsInBatches) {
-                d->mPendingItems.append(item);
-                if (!d->mEmitTimer->isActive()) {
-                    d->mEmitTimer->start();
-                }
-            } else if (d->mDeliveryOptions & EmitItemsIndividually) {
-                emit itemsReceived(Item::List() << item);
-            }
-            return;
-        }
+    if (!response.isResponse() || response.type() != Protocol::Command::FetchItems) {
+        return Job::doHandleResponse(tag, response);
     }
-    qDebug() << "Unhandled response: " << tag << data;
+
+    Protocol::FetchItemsResponse resp(response);
+    // Invalid ID marks the last part of the response
+    if (resp.id() < 0) {
+        return true;
+    }
+
+    const Item item = ProtocolHelper::parseItemFetchResult(resp, d->mValuePool);
+    if (!item.isValid()) {
+        return false;
+    }
+
+    d->mCount++;
+
+    if (d->mDeliveryOptions & ItemGetter) {
+        d->mResultItems.append(item);
+    }
+
+    if (d->mDeliveryOptions & EmitItemsInBatches) {
+        d->mPendingItems.append(item);
+        if (!d->mEmitTimer->isActive()) {
+            d->mEmitTimer->start();
+        }
+    } else if (d->mDeliveryOptions & EmitItemsIndividually) {
+        emit itemsReceived(Item::List() << item);
+    }
+
+    return false;
 }
 
 Item::List ItemFetchJob::items() const

@@ -18,13 +18,13 @@
 */
 
 #include "collectioncreatejob.h"
-#include <akonadi/private/imapparser_p.h>
 #include "protocolhelper_p.h"
-
 #include "job_p.h"
 
-#include <qdebug.h>
+#include <akonadi/private/protocol_p.h>
+
 #include <KLocalizedString>
+
 using namespace Akonadi;
 
 class Akonadi::CollectionCreateJobPrivate : public JobPrivate
@@ -60,39 +60,25 @@ void CollectionCreateJob::doStart()
         return;
     }
 
-    QByteArray command = d->newTag();
-    if (d->mCollection.parentCollection().id() < 0) {
-        command += " RID";
+    Protocol::CreateCollectionCommand cmd;
+    cmd.setName(d->mCollection.name());
+    cmd.setParent(ProtocolHelper::entityToScope(d->mCollection.parentCollection()));
+    cmd.setMimeTypes(d->mCollection.contentMimeTypes());
+    cmd.setRemoteId(d->mCollection.remoteId());
+    cmd.setRemoteRevision(d->mCollection.remoteRevision());
+    cmd.setIsVirtual(d->mCollection.isVirtual());
+    cmd.setEnabled(d->mCollection.enabled());
+    cmd.setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+    cmd.setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+    cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
+    cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
+    Protocol::Attributes attrs;
+    Q_FOREACH (Attribute *attr, d->mCollection.attributes()) {
+        attrs.insert(attr->type(), attr->serialized());
     }
-    command += " CREATE " + ImapParser::quote(d->mCollection.name().toUtf8()) + ' ';
-    if (d->mCollection.parentCollection().id() >= 0) {
-        command += QByteArray::number(d->mCollection.parentCollection().id());
-    } else {
-        command += ImapParser::quote(d->mCollection.parentCollection().remoteId().toUtf8());
-    }
-    command += " (";
-    if (!d->mCollection.contentMimeTypes().isEmpty()) {
-        QList<QByteArray> cList;
-        const QStringList mimeTypes = d->mCollection.contentMimeTypes();
-        cList.reserve(mimeTypes.count());
-        foreach (const QString &s, mimeTypes) {
-            cList << s.toLatin1();
-        }
-        command += "MIMETYPE (" + ImapParser::join(cList, QByteArray(" ")) + ')';
-    }
-    command += " REMOTEID " + ImapParser::quote(d->mCollection.remoteId().toUtf8());
-    command += " REMOTEREVISION " + ImapParser::quote(d->mCollection.remoteRevision().toUtf8());
-    command += " VIRTUAL " + QByteArray::number(d->mCollection.isVirtual());
-    command += ' ' + ProtocolHelper::enabled(d->mCollection.enabled());
-    command += ' ' + ProtocolHelper::listPreference(Collection::ListDisplay, d->mCollection.localListPreference(Collection::ListDisplay));
-    command += ' ' + ProtocolHelper::listPreference(Collection::ListSync, d->mCollection.localListPreference(Collection::ListSync));
-    command += ' ' + ProtocolHelper::listPreference(Collection::ListIndex, d->mCollection.localListPreference(Collection::ListIndex));
-    foreach (Attribute *attr, d->mCollection.attributes()) {
-        command += ' ' + attr->type() + ' ' + ImapParser::quote(attr->serialized());
-    }
-    command += ' ' + ProtocolHelper::cachePolicyToByteArray(d->mCollection.cachePolicy());
-    command += ")\n";
-    d->writeData(command);
+    cmd.setAttributes(attrs);
+
+    d->sendCommand(cmd);
     emitWriteFinished();
 }
 
@@ -103,24 +89,28 @@ Collection CollectionCreateJob::collection() const
     return d->mCollection;
 }
 
-void CollectionCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(CollectionCreateJob);
 
-    if (tag == "*") {
-        Collection col;
-        ProtocolHelper::parseCollection(data, col);
-        if (!col.isValid()) {
-            return;
-        }
-
-        col.setParentCollection(d->mCollection.parentCollection());
-        col.setName(d->mCollection.name());
-        col.setRemoteId(d->mCollection.remoteId());
-        col.setRemoteRevision(d->mCollection.remoteRevision());
-        col.setVirtual(d->mCollection.isVirtual());
-        d->mCollection = col;
-    } else {
-        Job::doHandleResponse(tag, data);
+    if (!response.isResponse()) {
+        return Job::doHandleResponse(tag, response);
     }
+
+    if (response.type() == Protocol::Command::FetchCollections) {
+        Protocol::FetchCollectionsResponse resp(response);
+        d->mCollection = ProtocolHelper::parseCollection(resp);
+        if (!d->mCollection.isValid()) {
+            setError(Unknown);
+            setErrorText(i18n("Failed to parse Collection from response"));
+            return true;
+        }
+        return false;
+    }
+
+    if (response.type() == Protocol::Command::CreateCollection) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }

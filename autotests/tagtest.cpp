@@ -161,7 +161,7 @@ void TagTest::testRIDIsolation()
     {
         TagFetchJob *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
-        for (Tag tag : fetchJob->tags()) {
+        Q_FOREACH (const Tag &tag, fetchJob->tags()) {
             qDebug() << tag.gid();
         }
         QCOMPARE(fetchJob->tags().count(), 1);
@@ -294,6 +294,11 @@ void TagTest::testDeleteRIDIsolation()
 
     QVERIFY(removedTag.isValid());
     QVERIFY(removedTag.remoteId().isEmpty());
+
+    {
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""), this);
+        AKVERIFYEXEC(select);
+    }
 }
 
 

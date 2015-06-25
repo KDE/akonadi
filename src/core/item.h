@@ -372,7 +372,27 @@ public:
     template <typename T> void setPayload(const T &p);
     //@cond PRIVATE
     template <typename T> void setPayload(T *p);
+
+// We know that auto_ptr is deprecated, but we still want to handle the case
+// without compilers yelling at us all the time just because item.h gets included
+// virtually everywhere
+#ifdef __GNUC__
+  #ifdef __clang__
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  #else
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+#endif
     template <typename T> void setPayload(std::auto_ptr<T> p);
+#ifdef __GNUC__
+  #ifdef __clang__
+    #pragma clang diagnostic pop
+  #else
+    #pragma GCC diagnostic pop
+  #endif
+#endif
     template <typename T> void setPayload(std::unique_ptr<T> p);
     //@endcond
 
@@ -759,11 +779,27 @@ void Item::setPayload(T *p)
     p->You_MUST_NOT_use_a_pointer_as_payload;
 }
 
+#ifdef __GNUC__
+  #ifdef __clang__
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  #else
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+#endif
 template <typename T>
 void Item::setPayload(std::auto_ptr<T> p)
 {
     p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
 }
+#ifdef __GNUC__
+  #ifdef __clang__
+    #pragma clang diagnostic pop
+  #else
+    #pragma GCC diagnostic pop
+  #endif
+#endif
 
 template <typename T>
 void Item::setPayload(std::unique_ptr<T> p)

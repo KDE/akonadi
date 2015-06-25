@@ -19,11 +19,12 @@
 
 #include "itemsearchjob.h"
 
-#include <akonadi/private/imapparser_p.h>
 #include "itemfetchscope.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "searchquery.h"
+
+#include <akonadi/private/protocol_p.h>
 
 #include <QtCore/QTimer>
 #include <QThreadStorage>
@@ -64,7 +65,7 @@ public:
             mPendingItems.clear();
         }
     }
-    QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/ {
+    QString jobDebuggingString() const Q_DECL_OVERRIDE {
         QStringList flags;
         if ( mRecursive ) {
             flags.append( QStringLiteral( "recursive" ) );
@@ -208,57 +209,47 @@ void ItemSearchJob::doStart()
 {
     Q_D(ItemSearchJob);
 
-    QByteArray command = d->newTag() + " SEARCH ";
-    if (!d->mMimeTypes.isEmpty()) {
-        command += "MIMETYPE (" + d->mMimeTypes.join(QStringLiteral(" ")).toLatin1() + ") ";
-    }
+    Protocol::SearchCommand cmd;
+    cmd.setMimeTypes(d->mMimeTypes);
     if (!d->mCollections.isEmpty()) {
-        command += "COLLECTIONS (";
-        Q_FOREACH (const Collection &collection, d->mCollections) {
-            command += QByteArray::number(collection.id()) + ' ';
+        QVector<qint64> ids;
+        ids.reserve(d->mCollections.size());
+        Q_FOREACH (const Collection &col, d->mCollections) {
+            ids << col.id();
         }
-        command += ") ";
+        cmd.setCollections(ids);
     }
-    if (d->mRecursive) {
-        command += "RECURSIVE ";
-    }
-    if (d->mRemote) {
-        command += "REMOTE ";
-    }
+    cmd.setRecursive(d->mRecursive);
+    cmd.setRemote(d->mRemote);
+    cmd.setQuery(QString::fromUtf8(d->mQuery.toJSON()));
+    cmd.setFetchScope(ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope));
 
-    command += "QUERY " + ImapParser::quote(d->mQuery.toJSON());
-    command += ' ' + ProtocolHelper::itemFetchScopeToByteArray(d->mFetchScope);
-    command += '\n';
-    d->writeData(command);
+    d->sendCommand(cmd);
 }
 
-void ItemSearchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(ItemSearchJob);
 
-    if (tag == "*") {
-        int begin = data.indexOf("SEARCH");
-        if (begin >= 0) {
-
-            // split fetch response into key/value pairs
-            QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 7);
-
-            Item item;
-            ProtocolHelper::parseItemFetchResult(fetchResponse, item);
-            if (!item.isValid()) {
-                return;
-            }
-
-            d->mItems.append(item);
-            d->mPendingItems.append(item);
-            if (!d->mEmitTimer->isActive()) {
-                d->mEmitTimer->start();
-            }
-            return;
+    if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
+        const Item item = ProtocolHelper::parseItemFetchResult(response);
+        if (!item.isValid()) {
+            return false;
         }
+        d->mItems.append(item);
+        d->mPendingItems.append(item);
+        if (!d->mEmitTimer->isActive()) {
+            d->mEmitTimer->start();
+        }
+
+        return false;
     }
-    qDebug() << "Unhandled response: " << tag << data;
+
+    if (response.isResponse() && response.type() == Protocol::Command::Search) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }
 
 Item::List ItemSearchJob::items() const

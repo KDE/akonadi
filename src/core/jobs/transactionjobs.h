@@ -25,9 +25,25 @@
 
 namespace Akonadi {
 
-class TransactionBeginJobPrivate;
-class TransactionRollbackJobPrivate;
-class TransactionCommitJobPrivate;
+class TransactionJobPrivate;
+class TransactionJob : public Job
+{
+    Q_OBJECT
+
+public:
+    ~TransactionJob();
+
+protected:
+    explicit TransactionJob(QObject *parent);
+
+    void doStart() Q_DECL_OVERRIDE;
+    bool doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
+
+private:
+    Q_DECLARE_PRIVATE(TransactionJob)
+};
+
+class TransactionJobPrivate;
 
 /**
  * @short Job that begins a session-global transaction.
@@ -42,7 +58,7 @@ class TransactionCommitJobPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADICORE_EXPORT TransactionBeginJob : public Job
+class AKONADICORE_EXPORT TransactionBeginJob : public TransactionJob
 {
     Q_OBJECT
 
@@ -58,12 +74,6 @@ public:
      * Destroys the transaction begin job.
      */
     ~TransactionBeginJob();
-
-protected:
-    void doStart() Q_DECL_OVERRIDE;
-
-private:
-    Q_DECLARE_PRIVATE(TransactionBeginJob)
 };
 
 /**
@@ -77,7 +87,7 @@ private:
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADICORE_EXPORT TransactionRollbackJob : public Job
+class AKONADICORE_EXPORT TransactionRollbackJob : public TransactionJob
 {
     Q_OBJECT
 
@@ -94,12 +104,6 @@ public:
      * Destroys the transaction rollback job.
      */
     ~TransactionRollbackJob();
-
-protected:
-    void doStart() Q_DECL_OVERRIDE;
-
-private:
-    Q_DECLARE_PRIVATE(TransactionRollbackJob)
 };
 
 /**
@@ -109,7 +113,7 @@ private:
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADICORE_EXPORT TransactionCommitJob : public Job
+class AKONADICORE_EXPORT TransactionCommitJob : public TransactionJob
 {
     Q_OBJECT
 
@@ -126,12 +130,6 @@ public:
      * Destroys the transaction commit job.
      */
     ~TransactionCommitJob();
-
-protected:
-    void doStart() Q_DECL_OVERRIDE;
-
-private:
-    Q_DECLARE_PRIVATE(TransactionCommitJob)
 };
 
 }

@@ -26,7 +26,6 @@
 #include "notificationsourceinterface.h"
 #include "job_p.h"
 #include "itemmovejob.h"
-#include "movejobimpl_p.h"
 #include "collection.h"
 #include "item.h"
 
@@ -156,6 +155,7 @@ void ChangeMediator::do_unregisterSession(const QByteArray &id)
 
 void ChangeMediator::do_beginMoveItems(JobPrivate *movePrivate, const QByteArray &id)
 {
+#if 0
     if (!m_sessions.contains(id)) {
         return;
     }
@@ -179,7 +179,7 @@ void ChangeMediator::do_beginMoveItems(JobPrivate *movePrivate, const QByteArray
     }
 
 //   if (itemsDataAvailable.isEmpty())
-
+#endif
 }
 
 void ChangeMediator::do_itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id)

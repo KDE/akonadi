@@ -63,56 +63,30 @@ void TagCreateJob::doStart()
         return;
     }
 
-    QByteArray command = d->newTag() + " TAGAPPEND (";
-
-    QList<QByteArray> list;
-    list << "GID";
-    list << ImapParser::quote(d->mTag.gid());
-
-    if (d->mMerge) {
-        list << "MERGE";
-    }
-
-    if (!d->mTag.type().isEmpty()) {
-        list << "MIMETYPE";
-        list << ImapParser::quote(d->mTag.type());
-    }
-    if (!d->mTag.remoteId().isEmpty()) {
-        list << "REMOTEID";
-        list << ImapParser::quote(d->mTag.remoteId());
-    }
-    if (d->mTag.parent().isValid()) {
-        list << "PARENT";
-        list << QString::number(d->mTag.parent().id()).toLatin1();
-    }
-    command += ImapParser::join(list, " ");
-    command += " "; // list of parts
-    const QByteArray attrs = ProtocolHelper::attributesToByteArray(d->mTag, false);
-    if (!attrs.isEmpty()) {
-        command += attrs;
-    }
-    command += ")";
-
-    d->writeData(command);
+    Protocol::CreateTagCommand cmd;
+    cmd.setGid(d->mTag.gid());
+    cmd.setMerge(d->mMerge);
+    cmd.setType(d->mTag.type());
+    cmd.setRemoteId(d->mTag.remoteId());
+    cmd.setParentId(d->mTag.parent().id());
+    cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
+    d->sendCommand(cmd);
 }
 
-void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool TagCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(TagCreateJob);
 
-    if (tag == "*") {
-        int begin = data.indexOf("TAGFETCH");
-        if (begin >= 0) {
-            // split fetch response into key/value pairs
-            QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
-            if (!d->mMerge) {
-                //If merge is enabled there is the possibility that existing attributes etc are not valid anymore
-                d->mResultTag = d->mTag;
-            }
-            ProtocolHelper::parseTagFetchResult(fetchResponse, d->mResultTag);
-        }
+    if (response.isResponse() && response.type() == Protocol::Command::FetchTags) {
+        d->mResultTag = ProtocolHelper::parseTagFetchResult(response);
+        return false;
     }
+
+    if (response.isResponse() && response.type() == Protocol::Command::CreateTag) {
+        return true;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }
 
 Tag TagCreateJob::tag() const

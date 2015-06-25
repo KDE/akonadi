@@ -46,59 +46,39 @@ void TagModifyJob::doStart()
 {
     Q_D(TagModifyJob);
 
-    QList<QByteArray> list;
+    Protocol::ModifyTagCommand cmd(d->mTag.id());
     if (!d->mTag.remoteId().isNull()) {
-        list << "REMOTEID";
-        list << ImapParser::quote(d->mTag.remoteId());
+        cmd.setRemoteId(d->mTag.remoteId());
     }
     if (!d->mTag.type().isEmpty()) {
-        list << "MIMETYPE";
-        list << ImapParser::quote(d->mTag.type());
+        cmd.setType(d->mTag.type());
     }
     if (d->mTag.parent().isValid() && !d->mTag.isImmutable()) {
-        list << "PARENT";
-        list << QString::number(d->mTag.parent().id()).toLatin1();
+        cmd.setParentId(d->mTag.parent().id());
+    }
+    if (!d->mTag.removedAttributes().isEmpty()) {
+        cmd.setRemovedAttributes(d->mTag.removedAttributes());
     }
 
-    QByteArray command = d->newTag();
-    try {
-        command += ProtocolHelper::tagSetToByteArray(Tag::List() << d->mTag, "TAGSTORE");
-    } catch (const std::exception &e) {
-        setError(Unknown);
-        setErrorText(QString::fromUtf8(e.what()));
-        emitResult();
-        return;
-    }
-    command += " (";
-    command += ImapParser::join(list, " ");
-    command += " ";
+    cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
 
-    if (!d->mTag.attributes().isEmpty()) {
-        command += ProtocolHelper::attributesToByteArray(d->mTag, false);
-    }
-
-    const QSet<QByteArray> removedAttributes = d->mTag.removedAttributes();
-    if (!removedAttributes.isEmpty()) {
-        QList<QByteArray> l;
-        l.reserve(removedAttributes.count());
-        Q_FOREACH (const QByteArray &attr, removedAttributes) {
-            l << '-' + attr;
-        }
-        command += ImapParser::join(l, " ");
-    }
-
-    command += ")";
-
-    d->writeData(command);
+    d->sendCommand(cmd);
 }
 
-void TagModifyJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
+bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(TagModifyJob);
-    Q_UNUSED(tag);
 
-    if (data.startsWith("OK")) {     //krazy:exclude=strings
+    if (response.isResponse() && (response.type() == Protocol::Command::DeleteTag
+            || response.type() == Protocol::Command::ModifyTag)) {
         ChangeMediator::invalidateTag(d->mTag);
-        emitResult();
+        return true;
     }
+
+    // We ignore the result for now
+    if (response.isResponse() && response.type() == Protocol::Command::FetchTags) {
+        return false;
+    }
+
+    return Job::doHandleResponse(tag, response);
 }

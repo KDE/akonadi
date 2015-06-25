@@ -22,7 +22,6 @@
 #include "changemediator_p.h"
 #include "collection_p.h"
 #include "collectionstatistics.h"
-#include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
@@ -60,9 +59,10 @@ CollectionModifyJob::~CollectionModifyJob()
 void CollectionModifyJob::doStart()
 {
     Q_D(CollectionModifyJob);
-    QByteArray command = d->newTag();
+
+    Protocol::ModifyCollectionCommand cmd;
     try {
-        command += ProtocolHelper::entityIdToByteArray(d->mCollection, AKONADI_CMD_COLLECTIONMODIFY);
+        cmd = Protocol::ModifyCollectionCommand(ProtocolHelper::entityToScope(d->mCollection));
     } catch (const std::exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));
@@ -70,56 +70,62 @@ void CollectionModifyJob::doStart()
         return;
     }
 
-    QByteArray changes;
     if (d->mCollection.d_func()->contentTypesChanged) {
-        QList<QByteArray> bList;
-        const QStringList mimeTypes = d->mCollection.contentMimeTypes();
-        bList.reserve(mimeTypes.count());
-        foreach (const QString &s, mimeTypes) {
-            bList << s.toLatin1();
-        }
-        changes += " MIMETYPE (" + ImapParser::join(bList, " ") + ')';
+        cmd.setMimeTypes(d->mCollection.contentMimeTypes());
     }
     if (d->mCollection.parentCollection().id() >= 0) {
-        changes += " PARENT " + QByteArray::number(d->mCollection.parentCollection().id());
+        cmd.setParentId(d->mCollection.parentCollection().id());
     }
     if (!d->mCollection.name().isEmpty()) {
-        changes += " NAME " + ImapParser::quote(d->mCollection.name().toUtf8());
+        cmd.setName(d->mCollection.name());
     }
     if (!d->mCollection.remoteId().isNull()) {
-        changes += " REMOTEID " + ImapParser::quote(d->mCollection.remoteId().toUtf8());
+        cmd.setRemoteId(d->mCollection.remoteId());
     }
     if (!d->mCollection.remoteRevision().isNull()) {
-        changes += " REMOTEREVISION " + ImapParser::quote(d->mCollection.remoteRevision().toUtf8());
+        cmd.setRemoteRevision(d->mCollection.remoteRevision());
     }
     if (d->mCollection.d_func()->cachePolicyChanged) {
-        changes += ' ' + ProtocolHelper::cachePolicyToByteArray(d->mCollection.cachePolicy());
+        cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     }
     if (d->mCollection.d_func()->enabledChanged) {
-        changes += ' ' + ProtocolHelper::enabled(d->mCollection.enabled());
+        cmd.setEnabled(d->mCollection.enabled());
     }
     if (d->mCollection.d_func()->listPreferenceChanged) {
-        changes += ' ' + ProtocolHelper::listPreference(Collection::ListDisplay, d->mCollection.localListPreference(Collection::ListDisplay));
-        changes += ' ' + ProtocolHelper::listPreference(Collection::ListSync, d->mCollection.localListPreference(Collection::ListSync));
-        changes += ' ' + ProtocolHelper::listPreference(Collection::ListIndex, d->mCollection.localListPreference(Collection::ListIndex));
+        cmd.setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+        cmd.setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListSync)));
+        cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     }
     if (d->mCollection.d_func()->referencedChanged) {
-        changes += ' ' + ProtocolHelper::referenced(d->mCollection.referenced());
+        cmd.setReferenced(d->mCollection.referenced());
     }
     if (d->mCollection.attributes().count() > 0) {
-        changes += ' ' + ProtocolHelper::attributesToByteArray(d->mCollection);
+        cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
     }
-    foreach (const QByteArray &b, d->mCollection.d_func()->mDeletedAttributes) {
-        changes += " -" + b;
+    if (!d->mCollection.d_func()->mDeletedAttributes.isEmpty()) {
+        cmd.setRemovedAttributes(d->mCollection.d_func()->mDeletedAttributes);
     }
-    if (changes.isEmpty()) {
+
+    if (cmd.modifiedParts() == Protocol::ModifyCollectionCommand::None) {
         emitResult();
         return;
     }
-    command += changes + '\n';
-    d->writeData(command);
+
+    d->sendCommand(cmd);
 
     ChangeMediator::invalidateCollection(d->mCollection);
+}
+
+bool CollectionModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    Q_D(CollectionModifyJob);
+
+    if (!response.isResponse() || response.type() != Protocol::Command::ModifyCollection) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    d->mCollection.d_func()->resetChangeLog();
+    return true;
 }
 
 Collection CollectionModifyJob::collection() const

@@ -30,6 +30,10 @@ class QString;
 
 namespace Akonadi {
 
+namespace Protocol {
+class Command;
+}
+
 class JobPrivate;
 class Session;
 class SessionPrivate;
@@ -169,9 +173,12 @@ protected:
      * The default implementation does nothing.
      *
      * @param tag The tag of the corresponding command, empty if this is an untagged response.
-     * @param data The received data.
+     * @param response The received response
+     *
+     * @return Implementations should return true if the last response was processed and
+     * the job can emit result. Return false if more responses from server are expected.
      */
-    virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);
+    virtual bool doHandleResponse(qint64 tag, const Protocol::Command &response);
 
     /**
      * Adds the given job as a subjob to this job. This method is automatically called

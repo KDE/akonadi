@@ -47,8 +47,17 @@ ResourceSelectJob::ResourceSelectJob(const QString &identifier, QObject *parent)
 void ResourceSelectJob::doStart()
 {
     Q_D(ResourceSelectJob);
-    d->writeData(d->newTag() + " " AKONADI_CMD_RESOURCESELECT " " + ImapParser::quote(d->resourceId.toUtf8()) + '\n');
-    emitWriteFinished();
+
+    d->sendCommand(Protocol::SelectResourceCommand(d->resourceId));
+}
+
+bool ResourceSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::SelectResource) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
 }
 
 #include "moc_resourceselectjob_p.cpp"

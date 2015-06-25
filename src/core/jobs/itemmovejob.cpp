@@ -23,18 +23,26 @@
 #include "item.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
-#include <akonadi/private/imapparser_p.h>
-#include "movejobimpl_p.h"
+
+#include <akonadi/private/protocol_p.h>
+
+#include <KLocalizedString>
 
 using namespace Akonadi;
 
-class Akonadi::ItemMoveJobPrivate : public MoveJobImpl<Item, ItemMoveJob>
+class Akonadi::ItemMoveJobPrivate : public Akonadi::JobPrivate
 {
 public:
     ItemMoveJobPrivate(ItemMoveJob *parent)
-        : MoveJobImpl<Item, ItemMoveJob>(parent)
+        : JobPrivate(parent)
     {
     }
+
+
+    Item::List items;
+    Collection destination;
+    Collection source;
+
     Q_DECLARE_PUBLIC(ItemMoveJob)
 };
 
@@ -43,7 +51,7 @@ ItemMoveJob::ItemMoveJob(const Item &item, const Collection &destination, QObjec
 {
     Q_D(ItemMoveJob);
     d->destination = destination;
-    d->objectsToMove.append(item);
+    d->items.append(item);
 }
 
 ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &destination, QObject *parent)
@@ -51,7 +59,7 @@ ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &destination,
 {
     Q_D(ItemMoveJob);
     d->destination = destination;
-    d->objectsToMove = items;
+    d->items = items;
 }
 
 ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &source, const Collection &destination, QObject *parent)
@@ -60,7 +68,7 @@ ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &source, cons
     Q_D(ItemMoveJob);
     d->source = source;
     d->destination = destination;
-    d->objectsToMove = items;
+    d->items = items;
 }
 
 
@@ -71,7 +79,34 @@ ItemMoveJob::~ItemMoveJob()
 void ItemMoveJob::doStart()
 {
     Q_D(ItemMoveJob);
-    d->sendCommand("MOVE");
+
+    if (d->items.isEmpty()) {
+        setError(Job::Unknown);
+        setErrorText(i18n("No objects specified for moving"));
+        emitResult();
+        return;
+    }
+
+    if (!d->destination.isValid() && d->destination.remoteId().isEmpty()) {
+        setError(Job::Unknown);
+        setErrorText(i18n("No valid destination specified"));
+        emitResult();
+        return;
+    }
+
+    d->sendCommand(Protocol::MoveItemsCommand(
+        ProtocolHelper::entitySetToScope(d->items),
+        ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
+        ProtocolHelper::entityToScope(d->destination)));
+}
+
+bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+{
+    if (!response.isResponse() || response.type() != Protocol::Command::MoveItems) {
+        return Job::doHandleResponse(tag, response);
+    }
+
+    return true;
 }
 
 Collection ItemMoveJob::destinationCollection() const
@@ -83,6 +118,6 @@ Collection ItemMoveJob::destinationCollection() const
 QList<Item> ItemMoveJob::items() const
 {
     Q_D(const ItemMoveJob);
-    return d->objectsToMove;
+    return d->items;
 }
 
