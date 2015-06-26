@@ -118,6 +118,7 @@ static Collection::ListPreference parsePreference(Tristate value)
     }
 
     Q_ASSERT(false);
+    return Tristate::Undefined;
 }
 
 CollectionStatistics ProtocolHelper::parseCollectionStatistics(const Protocol::FetchCollectionStatsResponse &stats)
