@@ -240,8 +240,9 @@ bool ItemRetriever::exec()
                 lastRequest->parts << partName;
             }
         } else {
+            Q_ASSERT(lastRequest->parts.count(partName) <= 1);
             // data available, don't request update
-            lastRequest->parts.removeAll(partName);
+            lastRequest->parts.removeOne(partName);
         }
         query.next();
     }
