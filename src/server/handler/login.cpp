@@ -31,7 +31,12 @@ bool Login::parseStream()
     if (cmd.sessionId().isEmpty()) {
         return failureResponse("Missing session identifier");
     }
+
     connection()->setSessionId(cmd.sessionId());
+    if (cmd.sessionMode() == Protocol::LoginCommand::NotificationBus) {
+        connection()->setIsNotificationBus(true);
+    }
+
     Q_EMIT connectionStateChange(Server::Authenticated);
 
     return successResponse<Protocol::LoginResponse>();

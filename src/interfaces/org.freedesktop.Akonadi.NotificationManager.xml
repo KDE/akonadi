@@ -1,33 +1,20 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="org.freedesktop.Akonadi.NotificationManager">
-    <signal name="notify">
-      <arg name="message" type="a(ayiixsayxxsas)" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="const Akonadi::NotificationMessage::List &amp;"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const Akonadi::NotificationMessage::List &amp;"/>
-    </signal>
     <method name="subscribe">
       <arg type="s" name="identifier" direction="in"/>
+      <arg type="b" name="exclusive" direction="in"/>
       <arg type="o" direction="out"/>
     </method>
     <signal name="subscribed">
-      <arg type="s" name="identifier" direction="out"/>
+      <arg type="o" name="identifier" direction="out"/>
     </signal>
-
-    <method name="subscribeV2">
-      <arg type="s" name="identifier" direction="in"/>
-      <arg type="b" name="serverSideMonitor" direction="in"/>
-      <arg type="o" direction="out"/>
-    </method>
-    <method name="unsubscribe">
-      <arg type="s" name="identifier" direction="in"/>
-    </method>
     <signal name="unsubscribed">
-      <arg type="s" name="identifier" direction="out"/>
+      <arg type="o" name="identifier" direction="out"/>
     </signal>
 
     <method name="subscribers">
-      <arg type="as" direction="out" />
+      <arg type="ao" direction="out" />
     </method>
   </interface>
 </node>

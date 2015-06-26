@@ -22,7 +22,7 @@
 
 #include "entities.h"
 
-#include <private/notificationmessagev3_p.h>
+#include <private/protocol_p.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -217,10 +217,10 @@ public:
     void dispatchNotifications();
 
 Q_SIGNALS:
-    void notify(const Akonadi::NotificationMessageV3::List &msgs);
+    void notify(const Akonadi::Protocol::ChangeNotification::List &msgs);
 
 private:
-    void itemNotification(NotificationMessageV2::Operation op, const PimItem::List &items,
+    void itemNotification(Protocol::ChangeNotification::Operation op, const PimItem::List &items,
                           const Collection &collection,
                           const Collection &collectionDest,
                           const QByteArray &resource,
@@ -231,24 +231,24 @@ private:
                           const QSet<qint64> &removedTags = QSet<qint64>(),
                           const Relation::List &addedRelations = Relation::List(),
                           const Relation::List &removedRelations = Relation::List() );
-    void itemNotification(NotificationMessageV2::Operation op, const PimItem &item,
+    void itemNotification(Protocol::ChangeNotification::Operation op, const PimItem &item,
                           const Collection &collection,
                           const Collection &collectionDest,
                           const QByteArray &resource,
                           const QSet<QByteArray> &parts = QSet<QByteArray>());
-    void collectionNotification(NotificationMessageV2::Operation op,
+    void collectionNotification(Protocol::ChangeNotification::Operation op,
                                 const Collection &collection,
                                 Collection::Id source, Collection::Id destination,
                                 const QByteArray &resource,
                                 const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                 const QByteArray &destResource = QByteArray());
-    void tagNotification(NotificationMessageV2::Operation op,
+    void tagNotification(Protocol::ChangeNotification::Operation op,
                           const Tag &tag,
                           const QByteArray &resource = QByteArray(),
                           const QString &remoteId = QString());
-    void relationNotification(NotificationMessageV2::Operation op,
+    void relationNotification(Protocol::ChangeNotification::Operation op,
                                              const Relation &relation);
-    void dispatchNotification(const NotificationMessageV3 &msg);
+    void dispatchNotification(const Protocol::ChangeNotification &msg);
     void clear();
 
 private Q_SLOTS:
@@ -259,7 +259,7 @@ private:
     DataStore *mDb;
     QByteArray mSessionId;
 
-    NotificationMessageV3::List mNotifications;
+    Protocol::ChangeNotification::List mNotifications;
 };
 
 } // namespace Server

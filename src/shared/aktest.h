@@ -65,20 +65,13 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
     AkApplication::setInstanceIdentifier(instanceId);
 }
 
-#include <private/notificationmessagev3_p.h>
+#include <private/protocol_p.h>
 
 namespace QTest {
 template<>
-char *toString(const Akonadi::NotificationMessageV3 &msg)
+char *toString(const Akonadi::Protocol::ChangeNotification &msg)
 {
-    QByteArray ba;
-    QBuffer buf;
-    buf.setBuffer(&ba);
-    buf.open(QIODevice::WriteOnly);
-    QDebug dbg(&buf);
-    dbg.nospace() << msg;
-    buf.close();
-    return qstrdup(ba.constData());
+    return qstrdup(qPrintable(msg.debugString()));
 }
 }
 
@@ -105,8 +98,8 @@ enum NtfField {
 };
 typedef QFlags<NtfField> NtfFields;
 
-bool compareNotifications(const Akonadi::NotificationMessageV3 &actual,
-                          const Akonadi::NotificationMessageV3 &expected,
+bool compareNotifications(const Akonadi::Protocol::ChangeNotification &actual,
+                          const Akonadi::Protocol::ChangeNotification &expected,
                           const NtfFields fields = NtfAll)
 {
     if (fields & NtfType) {

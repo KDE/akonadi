@@ -205,6 +205,10 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
                     "Handler::findHandlerForCommandAuthenticated()",
                     "StreamPayload command is not allowed in this context");
         return Q_NULLPTR;
+    case Protocol::Command::ChangeNotification:
+        Q_ASSERT_X(cmd != Protocol::Command::ChangeNotification,
+                   "Handler::findHandlerForCommandNonAuthenticated()",
+                   "ChangeNotification command is not allowed in this context");
     }
 
     return Q_NULLPTR;

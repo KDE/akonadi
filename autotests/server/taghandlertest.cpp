@@ -38,16 +38,16 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(Akonadi::Server::Tag::List);
 Q_DECLARE_METATYPE(Akonadi::Server::Tag);
 
-static NotificationMessageV3::List extractNotifications(QSignalSpy *notificationSpy)
+static Protocol::ChangeNotification::List extractNotifications(QSignalSpy *notificationSpy)
 {
-    NotificationMessageV3::List receivedNotifications;
+    Protocol::ChangeNotification::List receivedNotifications;
     for (int q = 0; q < notificationSpy->size(); q++) {
         //Only one notify call
         if (notificationSpy->at(q).count() != 1) {
             qWarning() << "Error: We're assuming only one notify call.";
-            return NotificationMessageV3::List();
+            return Protocol::ChangeNotification::List();
         }
-        const NotificationMessageV3::List n = notificationSpy->at(q).first().value<NotificationMessageV3::List>();
+        const Protocol::ChangeNotification::List n = notificationSpy->at(q).first().value<Protocol::ChangeNotification::List>();
         for (int i = 0; i < n.size(); i++) {
             // qDebug() << n.at(i);
             receivedNotifications.append(n.at(i));
@@ -102,7 +102,7 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
-        QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
 
         {
             Protocol::CreateTagCommand cmd;
@@ -129,13 +129,13 @@ private Q_SLOTS:
             type.setName(QLatin1String("PLAIN"));
             tag.setTagType(type);
 
-            Akonadi::NotificationMessageV3 notification;
-            notification.setType(NotificationMessageV2::Tags);
-            notification.setOperation(NotificationMessageV2::Add);
+            Akonadi::Protocol::ChangeNotification notification;
+            notification.setType(Protocol::ChangeNotification::Tags);
+            notification.setOperation(Protocol::ChangeNotification::Add);
             notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             notification.addEntity(1);
 
-            QTest::newRow("uid create relation") << scenarios << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
+            QTest::newRow("uid create relation") << scenarios << (Tag::List() << tag) << (Protocol::ChangeNotification::List() << notification);
         }
     }
 
@@ -143,12 +143,12 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
-        QFETCH(NotificationMessageV3::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
@@ -189,7 +189,7 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
-        QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
         {
             Protocol::ModifyTagCommand cmd(tag.id());
             cmd.setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
@@ -200,13 +200,13 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(), cmd.attributes()))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
-            Akonadi::NotificationMessageV3 notification;
-            notification.setType(NotificationMessageV2::Tags);
-            notification.setOperation(NotificationMessageV2::Modify);
+            Akonadi::Protocol::ChangeNotification notification;
+            notification.setType(Protocol::ChangeNotification::Tags);
+            notification.setOperation(Protocol::ChangeNotification::Modify);
             notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             notification.addEntity(tag.id());
 
-            QTest::newRow("uid store name") << scenarios << (Tag::List() << tag) << (NotificationMessageV3::List() << notification);
+            QTest::newRow("uid store name") << scenarios << (Tag::List() << tag) << (Protocol::ChangeNotification::List() << notification);
         }
 
         {
@@ -223,14 +223,14 @@ private Q_SLOTS:
 
             // RID-only changes don't emit notifications
             /*
-            Akonadi::NotificationMessageV3 notification;
-            notification.setType(NotificationMessageV2::Tags);
-            notification.setOperation(NotificationMessageV2::Modify);
+            Akonadi::Protocol::ChangeNotification notification;
+            notification.setType(Protocol::ChangeNotification::Tags);
+            notification.setOperation(Protocol::ChangeNotification::Modify);
             notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             notification.addEntity(tag.id());
             */
 
-            QTest::newRow("uid store rid") << scenarios << (Tag::List() << tag) << NotificationMessageV3::List();
+            QTest::newRow("uid store rid") << scenarios << (Tag::List() << tag) << Protocol::ChangeNotification::List();
         }
 
         {
@@ -247,14 +247,14 @@ private Q_SLOTS:
 
             // RID-only changes don't emit notifications
             /*
-            Akonadi::NotificationMessageV3 tagChangeNtf;
-            tagChangeNtf.setType(NotificationMessageV2::Tags);
-            tagChangeNtf.setOperation(NotificationMessageV2::Modify);
+            Akonadi::Protocol::ChangeNotification tagChangeNtf;
+            tagChangeNtf.setType(Protocol::ChangeNotification::Tags);
+            tagChangeNtf.setOperation(Protocol::ChangeNotification::Modify);
             tagChangeNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             tagChangeNtf.addEntity(tag.id());
             */
 
-            QTest::newRow("uid store unset one rid") << scenarios << (Tag::List() << tag) << NotificationMessageV3::List();
+            QTest::newRow("uid store unset one rid") << scenarios << (Tag::List() << tag) << Protocol::ChangeNotification::List();
         }
 
        {
@@ -268,22 +268,22 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponse())
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
 
-            Akonadi::NotificationMessageV3 itemUntaggedNtf;
-            itemUntaggedNtf.setType(NotificationMessageV2::Items);
-            itemUntaggedNtf.setOperation(NotificationMessageV2::ModifyTags);
+            Akonadi::Protocol::ChangeNotification itemUntaggedNtf;
+            itemUntaggedNtf.setType(Protocol::ChangeNotification::Items);
+            itemUntaggedNtf.setOperation(Protocol::ChangeNotification::ModifyTags);
             itemUntaggedNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemUntaggedNtf.addEntity(pimItem.id(), pimItem.remoteId(), QString(), pimItem.mimeType().name());
             itemUntaggedNtf.setResource(res2.name().toLatin1());
             itemUntaggedNtf.setParentCollection(col.id());
             itemUntaggedNtf.setRemovedTags(QSet<qint64>() << tag.id());
 
-            Akonadi::NotificationMessageV3 tagRemoveNtf;
-            tagRemoveNtf.setType(NotificationMessageV2::Tags);
-            tagRemoveNtf.setOperation(NotificationMessageV2::Remove);
+            Akonadi::Protocol::ChangeNotification tagRemoveNtf;
+            tagRemoveNtf.setType(Protocol::ChangeNotification::Tags);
+            tagRemoveNtf.setOperation(Protocol::ChangeNotification::Remove);
             tagRemoveNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             tagRemoveNtf.addEntity(tag.id());
 
-            QTest::newRow("uid store unset last rid") << scenarios << Tag::List() << (NotificationMessageV3::List() << itemUntaggedNtf << tagRemoveNtf);
+            QTest::newRow("uid store unset last rid") << scenarios << Tag::List() << (Protocol::ChangeNotification::List() << itemUntaggedNtf << tagRemoveNtf);
         }
     }
 
@@ -291,12 +291,12 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
-        QFETCH(NotificationMessageV3::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {
@@ -339,30 +339,30 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
-        QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::DeleteTagCommand(tag.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponse());
 
-            Akonadi::NotificationMessageV3 ntf;
-            ntf.setType(NotificationMessageV2::Tags);
-            ntf.setOperation(NotificationMessageV2::Remove);
+            Akonadi::Protocol::ChangeNotification ntf;
+            ntf.setType(Protocol::ChangeNotification::Tags);
+            ntf.setOperation(Protocol::ChangeNotification::Remove);
             ntf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
-            Akonadi::NotificationMessageV3 res1Ntf = ntf;
+            Akonadi::Protocol::ChangeNotification res1Ntf = ntf;
             res1Ntf.addEntity(tag.id(), rel1.remoteId());
             res1Ntf.setResource(res1.name().toLatin1());
 
-            Akonadi::NotificationMessageV3 res2Ntf = ntf;
+            Akonadi::Protocol::ChangeNotification res2Ntf = ntf;
             res2Ntf.addEntity(tag.id(), rel2.remoteId());
             res2Ntf.setResource(res2.name().toLatin1());
 
-            Akonadi::NotificationMessageV3 clientNtf = ntf;
+            Akonadi::Protocol::ChangeNotification clientNtf = ntf;
             clientNtf.addEntity(tag.id());
 
-            QTest::newRow("uid remove") << scenarios << Tag::List() << (NotificationMessageV3::List() << res1Ntf << res2Ntf << clientNtf);
+            QTest::newRow("uid remove") << scenarios << Tag::List() << (Protocol::ChangeNotification::List() << res1Ntf << res2Ntf << clientNtf);
         }
     }
 
@@ -370,12 +370,12 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
-        QFETCH(Akonadi::NotificationMessageV3::List, expectedNotifications);
+        QFETCH(Akonadi::Protocol::ChangeNotification::List, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {

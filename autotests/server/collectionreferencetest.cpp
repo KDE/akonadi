@@ -36,7 +36,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(QList<Akonadi::NotificationMessageV3>)
+Q_DECLARE_METATYPE(QList<Akonadi::Protocol::ChangeNotification>)
 Q_DECLARE_METATYPE(Collection::List)
 
 class CollectionReferenceTest : public QObject
@@ -72,11 +72,11 @@ private Q_SLOTS:
     void testModify_data()
     {
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<QList<Akonadi::NotificationMessageV3> >("expectedNotifications");
+        QTest::addColumn<QList<Akonadi::Protocol::ChangeNotification> >("expectedNotifications");
 
-        Akonadi::NotificationMessageV3 notificationTemplate;
-        notificationTemplate.setType(NotificationMessageV2::Collections);
-        notificationTemplate.setOperation(NotificationMessageV2::Modify);
+        Akonadi::Protocol::ChangeNotification notificationTemplate;
+        notificationTemplate.setType(Protocol::ChangeNotification::Collections);
+        notificationTemplate.setOperation(Protocol::ChangeNotification::Modify);
         notificationTemplate.addEntity(initializer.collection("col2").id(), QLatin1String("col2"), QLatin1String(""));
         notificationTemplate.setParentCollection(0);
         notificationTemplate.setResource("testresource");
@@ -92,7 +92,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer.listResponse(initializer.collection("col1")))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
-            QTest::newRow("list before referenced first level") << scenarios << QList<Akonadi::NotificationMessageV3>();
+            QTest::newRow("list before referenced first level") << scenarios << QList<Akonadi::Protocol::ChangeNotification>();
         }
 
         {
@@ -104,10 +104,10 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("reference") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification);
+            QTest::newRow("reference") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification);
         }
 
         {
@@ -128,10 +128,10 @@ private Q_SLOTS:
                       << TestScenario::create(6, TestScenario::ServerCmd, initializer.listResponse(col2))
                       << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("list referenced base") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification);
+            QTest::newRow("list referenced base") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification);
         }
         {
             Protocol::ModifyCollectionCommand cmd(initializer.collection("col2").id());
@@ -153,10 +153,10 @@ private Q_SLOTS:
                       << TestScenario::create(6, TestScenario::ServerCmd, initializer.listResponse(col2))
                       << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("list referenced first level") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification);
+            QTest::newRow("list referenced first level") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification);
         }
         {
             Protocol::ModifyCollectionCommand cmd1(initializer.collection("col2").id());
@@ -172,30 +172,30 @@ private Q_SLOTS:
                       << TestScenario::create(6, TestScenario::ClientCmd, cmd2)
                       << TestScenario::create(6, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.setItemParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("dereference") << scenarios << (QList<Akonadi::NotificationMessageV3>() << notification << notification);
+            QTest::newRow("dereference") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification << notification);
         }
     }
 
     void testModify()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(QList<NotificationMessageV3>, expectedNotifications);
+        QFETCH(QList<Protocol::ChangeNotification>, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (expectedNotifications.isEmpty()) {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
         } else {
-            NotificationMessageV3::List receivedNotifications;
+            Protocol::ChangeNotification::List receivedNotifications;
             for (int q = 0; q < notificationSpy->size(); q++) {
                 //Only one notify call
                 QCOMPARE(notificationSpy->first().count(), 1);
-                const NotificationMessageV3::List n = notificationSpy->first().first().value<NotificationMessageV3::List>();
+                const Protocol::ChangeNotification::List n = notificationSpy->first().first().value<Protocol::ChangeNotification::List>();
                 for (int i = 0; i < n.size(); i++) {
                     receivedNotifications.append(n.at(i));
                 }

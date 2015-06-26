@@ -42,7 +42,7 @@ class NotificationManagerTest : public QObject
 private Q_SLOTS:
     void testSourceFilter_data()
     {
-        qRegisterMetaType<NotificationMessageV3::List>();
+        qRegisterMetaType<Protocol::ChangeNotification::List>();
 
         QTest::addColumn<bool>("allMonitored");
         QTest::addColumn<QVector<Entity::Id> >("monitoredCollections");
@@ -50,17 +50,17 @@ private Q_SLOTS:
         QTest::addColumn<QVector<QByteArray> >("monitoredResources");
         QTest::addColumn<QVector<QString> >("monitoredMimeTypes");
         QTest::addColumn<QVector<QByteArray> >("ignoredSessions");
-        QTest::addColumn<NotificationMessageV3>("notification");
+        QTest::addColumn<Protocol::ChangeNotification>("notification");
         QTest::addColumn<bool>("accepted");
 
-        NotificationMessageV3 msg;
+        Protocol::ChangeNotification msg;
 
 #define EmptyList(T) (QVector<T>())
 #define List(T,x) (QVector<T>() << x)
 
-        msg = NotificationMessageV3();
-        msg.setType(NotificationMessageV2::Items);
-        msg.setOperation(NotificationMessageV2::Add);
+        msg = Protocol::ChangeNotification();
+        msg.setType(Protocol::ChangeNotification::Items);
+        msg.setOperation(Protocol::ChangeNotification::Add);
         msg.setParentCollection(1);
         QTest::newRow("monitorAll vs notification without items")
                 << true
@@ -115,9 +115,9 @@ private Q_SLOTS:
                 << false;
 
         // Simulate adding a new resource
-        msg = NotificationMessageV3();
-        msg.setType(NotificationMessageV2::Collections);
-        msg.setOperation(NotificationMessageV2::Add);
+        msg = Protocol::ChangeNotification();
+        msg.setType(Protocol::ChangeNotification::Collections);
+        msg.setOperation(Protocol::ChangeNotification::Add);
         msg.addEntity(1, QLatin1String("imap://user@some.domain/"));
         msg.setParentCollection(0);
         msg.setSessionId("akonadi_imap_resource_0");
@@ -132,9 +132,9 @@ private Q_SLOTS:
                 << msg
                 << true;
 
-        msg = NotificationMessageV3();
-        msg.setType(NotificationMessageV2::Items);
-        msg.setOperation(NotificationMessageV2::Move);
+        msg = Protocol::ChangeNotification();
+        msg.setType(Protocol::ChangeNotification::Items);
+        msg.setOperation(Protocol::ChangeNotification::Move);
         msg.setResource("akonadi_resource_1");
         msg.setDestinationResource("akonadi_resource_2");
         msg.setParentCollection(1);
@@ -171,9 +171,9 @@ private Q_SLOTS:
                 << msg
                 << false;
 
-        msg = NotificationMessageV3();
-        msg.setType(NotificationMessageV2::Collections);
-        msg.setOperation(NotificationMessageV2::Add);
+        msg = Protocol::ChangeNotification();
+        msg.setType(Protocol::ChangeNotification::Collections);
+        msg.setOperation(Protocol::ChangeNotification::Add);
         msg.setSessionId("kmail");
         msg.setResource("akonadi_resource_1");
         msg.setParentCollection(1);
@@ -187,9 +187,9 @@ private Q_SLOTS:
                 << msg
                 << false;
 
-        msg = NotificationMessageV3();
-        msg.setType(NotificationMessageV2::Items);
-        msg.setOperation(NotificationMessageV2::Add);
+        msg = Protocol::ChangeNotification();
+        msg.setType(Protocol::ChangeNotification::Items);
+        msg.setOperation(Protocol::ChangeNotification::Add);
         msg.setSessionId("randomSession");
         msg.setResource("randomResource");
         msg.setParentCollection(1);
@@ -204,9 +204,9 @@ private Q_SLOTS:
                 << msg
                 << true;
 
-      msg = NotificationMessageV3();
-      msg.setType( NotificationMessageV2::Tags );
-      msg.setOperation( NotificationMessageV2::Remove );
+      msg = Protocol::ChangeNotification();
+      msg.setType( Protocol::ChangeNotification::Tags );
+      msg.setOperation( Protocol::ChangeNotification::Remove );
       msg.setSessionId( "randomSession" );
       msg.setResource( "akonadi_random_resource_0" );
       msg.addEntity( 1, QLatin1String("TAG") );
@@ -230,9 +230,9 @@ private Q_SLOTS:
         << msg
         << false;
 
-      msg = NotificationMessageV3();
-      msg.setType( NotificationMessageV2::Tags );
-      msg.setOperation( NotificationMessageV2::Remove );
+      msg = Protocol::ChangeNotification();
+      msg.setType( Protocol::ChangeNotification::Tags );
+      msg.setOperation( Protocol::ChangeNotification::Remove );
       msg.setSessionId( "randomSession" );
       msg.addEntity( 1, QLatin1String("TAG") );
       QTest::newRow( "Tag removal - client notification - client source" )
@@ -264,12 +264,11 @@ private Q_SLOTS:
         QFETCH(QVector<QByteArray>, monitoredResources);
         QFETCH(QVector<QString>, monitoredMimeTypes);
         QFETCH(QVector<QByteArray>, ignoredSessions);
-        QFETCH(NotificationMessageV3, notification);
+        QFETCH(Protocol::ChangeNotification, notification);
         QFETCH(bool, accepted);
 
         NotificationManager mgr;
         NotificationSource source(QLatin1String("testSource"), QString(), &mgr);
-        source.setServerSideMonitorEnabled(true);
         mgr.registerSource(&source);
 
         source.setAllMonitored(allMonitored);
@@ -289,8 +288,8 @@ private Q_SLOTS:
             source.setIgnoredSession(session, true);
         }
 
-        QSignalSpy spy(&source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)));
-        NotificationMessageV3::List list;
+        QSignalSpy spy(&source, SIGNAL(notify(Akonadi::Protocol::Command)));
+        Protocol::ChangeNotification::List list;
         list << notification;
         mgr.slotNotify(list);
         mgr.emitPendingNotifications();
@@ -298,8 +297,8 @@ private Q_SLOTS:
         QCOMPARE(spy.count(), accepted ? 1 : 0);
 
         if (accepted) {
-            list = spy.at(0).at(0).value<NotificationMessageV3::List>();
-            QCOMPARE(list.count(), accepted ? 1 : 0);
+            Protocol::ChangeNotification ntf = spy.at(0).at(0).value<Protocol::Command>();
+            QVERIFY(ntf.isValid());
         }
     }
 };

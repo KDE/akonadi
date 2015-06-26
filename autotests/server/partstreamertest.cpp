@@ -38,8 +38,6 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(Akonadi::Server::PimItem)
-Q_DECLARE_METATYPE(Akonadi::Protocol::Command)
-
 
 class PartStreamerTest : public QObject
 {

@@ -23,6 +23,7 @@
 #include "notificationsource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
+#include "connection.h"
 
 #include <shared/akdebug.h>
 #include <shared/akstandarddirs.h>
@@ -40,10 +41,6 @@ NotificationManager *NotificationManager::mSelf = 0;
 NotificationManager::NotificationManager()
     : QObject(0)
 {
-    NotificationMessage::registerDBusTypes();
-    NotificationMessageV2::registerDBusTypes();
-    NotificationMessageV3::registerDBusTypes();
-
     new NotificationManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications"),
                                                  this, QDBusConnection::ExportAdaptors);
@@ -73,15 +70,46 @@ NotificationManager *NotificationManager::self()
 
 void NotificationManager::connectNotificationCollector(NotificationCollector *collector)
 {
-    connect(collector, SIGNAL(notify(Akonadi::NotificationMessageV3::List)),
-            SLOT(slotNotify(Akonadi::NotificationMessageV3::List)));
+    connect(collector, SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)),
+            SLOT(slotNotify(Akonadi::Protocol::ChangeNotification::List)));
 }
 
-void NotificationManager::slotNotify(const Akonadi::NotificationMessageV3::List &msgs)
+void NotificationManager::registerConnection(Connection *connection)
+{
+    QMutexLocker locker(&mSourcesLock);
+    auto source = std::find_if(mNotificationSources.cbegin(), mNotificationSources.cend(),
+                               [connection](NotificationSource *source) {
+                                    return connection->sessionId() == source->dbusPath().path().toLatin1();
+                               });
+    if (source == mNotificationSources.cend()) {
+        qWarning() << "Received request to register Notification bus connection, but there's no such subscriber";
+        return;
+    }
+
+    connect(const_cast<NotificationSource*>(*source), &NotificationSource::notify,
+            connection, static_cast<void(Connection::*)(const Protocol::Command &)>(&Connection::sendResponse),
+            Qt::QueuedConnection);
+}
+
+void NotificationManager::unregisterConnection(Connection *connection)
+{
+    QMutexLocker locker(&mSourcesLock);
+    auto source = std::find_if(mNotificationSources.cbegin(), mNotificationSources.cend(),
+                               [connection](NotificationSource *source) {
+                                    return connection->sessionId() == source->dbusPath().path().toLatin1();
+                               });
+    if (source != mNotificationSources.cend()) {
+        (*source)->disconnect(connection);
+    }
+}
+
+
+
+void NotificationManager::slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs)
 {
     //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
-    Q_FOREACH (const NotificationMessageV3 &msg, msgs) {
-        NotificationMessageV3::appendAndCompress(mNotifications, msg);
+    Q_FOREACH (const Protocol::ChangeNotification &msg, msgs) {
+        Protocol::ChangeNotification::appendAndCompress(mNotifications, msg);
     }
     //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
 
@@ -96,25 +124,13 @@ void NotificationManager::emitPendingNotifications()
         return;
     }
 
-    NotificationMessage::List legacyNotifications;
-    Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
-        Tracer::self()->signal("NotificationManager::notify", notification.toString());
-    }
-
-    if (!legacyNotifications.isEmpty()) {
-        Q_FOREACH (NotificationSource *src, mNotificationSources) {
-            src->emitNotification(legacyNotifications);
-        }
+    Q_FOREACH (const Protocol::ChangeNotification &notification, mNotifications) {
+        Tracer::self()->signal("NotificationManager::notify", notification.debugString());
     }
 
     Q_FOREACH (NotificationSource *source, mNotificationSources) {
-        if (!source->isServerSideMonitorEnabled()) {
-            source->emitNotification(mNotifications);
-            continue;
-        }
-
-        NotificationMessageV3::List acceptedNotifications;
-        Q_FOREACH (const NotificationMessageV3 &notification, mNotifications) {
+        Protocol::ChangeNotification::List acceptedNotifications;
+        Q_FOREACH (const Protocol::ChangeNotification &notification, mNotifications) {
             if (source->acceptsNotification(notification)) {
                 acceptedNotifications << notification;
             }
@@ -125,26 +141,12 @@ void NotificationManager::emitPendingNotifications()
         }
     }
 
-
-    // backward compatibility with the old non-subcription interface
-    // FIXME: Can we drop this already?
-    if (!legacyNotifications.isEmpty()) {
-        Q_EMIT notify(legacyNotifications);
-    }
-
     mNotifications.clear();
 }
 
-QDBusObjectPath NotificationManager::subscribeV2(const QString &identifier, bool serverSideMonitor)
+QDBusObjectPath NotificationManager::subscribe(const QString &identifier, bool exclusive)
 {
-    akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
-    return subscribeV3(identifier, serverSideMonitor, false);
-}
-
-QDBusObjectPath NotificationManager::subscribeV3(const QString &identifier, bool serverSideMonitor, bool exclusive)
-{
-    akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor << exclusive;
-
+    akDebug() << Q_FUNC_INFO << this << identifier <<  exclusive;
     NotificationSource *source = mNotificationSources.value(identifier);
     if (source) {
         akDebug() << "Known subscriber" << identifier << "subscribes again";
@@ -154,29 +156,19 @@ QDBusObjectPath NotificationManager::subscribeV3(const QString &identifier, bool
     }
 
     registerSource(source);
-    source->setServerSideMonitorEnabled(serverSideMonitor);
     source->setExclusive(exclusive);
 
-    // The path is /subscriber/escaped_identifier. We want to extract
-    // the escaped_identifier and emit it in subscribed() instead of the original
-    // identifier
-    const QStringList paths = source->dbusPath().path().split(QLatin1Char('/'), QString::SkipEmptyParts);
-
     // FIXME KF5: Emit the QDBusObjectPath instead of the identifier
-    Q_EMIT subscribed(paths.at(1));
+    Q_EMIT subscribed(source->dbusPath());
 
     return source->dbusPath();
 }
 
 void NotificationManager::registerSource(NotificationSource *source)
 {
+    // Protect write operations because of registerConnection()
+    QMutexLocker locker(&mSourcesLock);
     mNotificationSources.insert(source->identifier(), source);
-}
-
-QDBusObjectPath NotificationManager::subscribe(const QString &identifier)
-{
-    akDebug() << Q_FUNC_INFO << this << identifier;
-    return subscribeV2(identifier, false);
 }
 
 void NotificationManager::unsubscribe(const QString &identifier)
@@ -184,9 +176,8 @@ void NotificationManager::unsubscribe(const QString &identifier)
     NotificationSource *source = mNotificationSources.value(identifier);
     if (source) {
         unregisterSource(source);
-        const QStringList paths = source->dbusPath().path().split(QLatin1Char('/'), QString::SkipEmptyParts);
         source->deleteLater();
-        Q_EMIT unsubscribed(paths.at(1));
+        Q_EMIT unsubscribed(source->dbusPath());
     } else {
         akDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
     }
@@ -194,14 +185,17 @@ void NotificationManager::unsubscribe(const QString &identifier)
 
 void NotificationManager::unregisterSource(NotificationSource *source)
 {
+    // Protect write operations because of registerConnection()
+    QMutexLocker locker(&mSourcesLock);
     mNotificationSources.remove(source->identifier());
 }
 
-QStringList NotificationManager::subscribers() const
+QList<QDBusObjectPath> NotificationManager::subscribers() const
 {
-    QStringList identifiers;
+    QList<QDBusObjectPath> identifiers;
+    identifiers.reserve(mNotificationSources.size());
     Q_FOREACH (NotificationSource *source, mNotificationSources) {
-        identifiers << source->identifier();
+        identifiers << source->dbusPath();
     }
 
     return identifiers;

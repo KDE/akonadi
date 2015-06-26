@@ -19,19 +19,18 @@
 #ifndef AKONADI_NOTIFICATIONSOURCE_H
 #define AKONADI_NOTIFICATIONSOURCE_H
 
-#include <private/notificationmessage_p.h>
-#include <private/notificationmessagev2_p.h>
-#include <private/notificationmessagev3_p.h>
-
 #include <QtCore/QObject>
 #include <QtCore/QVector>
 #include <QtDBus/QtDBus>
 
 #include "entities.h"
 
+#include <private/protocol_p.h>
+
 namespace Akonadi {
 namespace Server {
 
+class Connection;
 class NotificationManager;
 
 class NotificationSource : public QObject
@@ -60,21 +59,7 @@ public:
      *
      * @param notifications List of notifications to emit.
      */
-    void emitNotification(const NotificationMessageV3::List &notifications);
-
-    /**
-     * Emit the given notifications
-     *
-     * @param notifications List of notifications to emit.
-     */
-    void emitNotification(const NotificationMessageV2::List &notifications);
-
-    /**
-     * Emit the given notifications
-     *
-     * @param notifications List of notifications to emit.
-     */
-    void emitNotification(const NotificationMessage::List &notifications);
+    void emitNotification(const Protocol::ChangeNotification::List &notifications);
 
     /**
      * Return the dbus path this message source uses.
@@ -92,10 +77,7 @@ public:
      */
     void addClientServiceName(const QString &clientServiceName);
 
-    void setServerSideMonitorEnabled(bool enabled);
-    bool isServerSideMonitorEnabled() const;
-
-    bool acceptsNotification(const NotificationMessageV3 &notification);
+    bool acceptsNotification(const Protocol::ChangeNotification &notification);
 
 public Q_SLOTS:
     /**
@@ -120,16 +102,14 @@ public Q_SLOTS:
     Q_SCRIPTABLE void setSession( const QByteArray &sessionId );
     Q_SCRIPTABLE void setIgnoredSession(const QByteArray &sessionId, bool ignored);
     Q_SCRIPTABLE QVector<QByteArray> ignoredSessions() const;
-    Q_SCRIPTABLE void setMonitoredType(NotificationMessageV2::Type type, bool monitored);
-    Q_SCRIPTABLE QVector<NotificationMessageV2::Type> monitoredTypes() const;
+    Q_SCRIPTABLE void setMonitoredType(Protocol::ChangeNotification::Type type, bool monitored);
+    Q_SCRIPTABLE QVector<Protocol::ChangeNotification::Type> monitoredTypes() const;
     Q_SCRIPTABLE void setExclusive( bool exclusive );
     Q_SCRIPTABLE bool isExclusive() const;
 
 Q_SIGNALS:
-
-    Q_SCRIPTABLE void notify(const Akonadi::NotificationMessage::List &msgs);
-    Q_SCRIPTABLE void notifyV2(const Akonadi::NotificationMessageV2::List &msgs);
-    Q_SCRIPTABLE void notifyV3(const Akonadi::NotificationMessageV3::List &msgs);
+    // Internal, not exported to DBus
+    void notify(const Akonadi::Protocol::Command &response);
 
     Q_SCRIPTABLE void monitoredCollectionsChanged();
     Q_SCRIPTABLE void monitoredItemsChanged();
@@ -146,7 +126,7 @@ private Q_SLOTS:
 private:
     bool isCollectionMonitored(Entity::Id id) const;
     bool isMimeTypeMonitored(const QString &mimeType) const;
-    bool isMoveDestinationResourceMonitored(const NotificationMessageV3 &msg) const;
+    bool isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const;
 
 private:
     NotificationManager *mManager;
@@ -154,14 +134,15 @@ private:
     QString mDBusIdentifier;
     QDBusServiceWatcher *mClientWatcher;
 
-    bool mServerSideMonitorEnabled;
+    QPointer<Connection> mConnection;
+
     bool mAllMonitored;
     bool mExclusive;
     QSet<Entity::Id> mMonitoredCollections;
     QSet<Entity::Id> mMonitoredItems;
     QSet<Entity::Id> mMonitoredTags;
     // TODO: Make this a bitflag
-    QSet<Akonadi::NotificationMessageV2::Type> mMonitoredTypes;
+    QSet<Protocol::ChangeNotification::Type> mMonitoredTypes;
     QSet<QString> mMonitoredMimeTypes;
     QSet<QByteArray> mMonitoredResources;
     QSet<QByteArray> mIgnoredSessions;

@@ -23,10 +23,9 @@
 
 #include <QThread>
 #include <QVector>
+#include <QSet>
 #include <QMutex>
 #include <QDBusConnection>
-
-#include <private/notificationmessagev3_p.h>
 
 class QSemaphore;
 class QTimer;

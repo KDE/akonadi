@@ -36,16 +36,16 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(Akonadi::Server::Relation::List);
 Q_DECLARE_METATYPE(Akonadi::Server::Relation);
 
-static NotificationMessageV3::List extractNotifications(QSignalSpy *notificationSpy)
+static Protocol::ChangeNotification::List extractNotifications(QSignalSpy *notificationSpy)
 {
-    NotificationMessageV3::List receivedNotifications;
+    Protocol::ChangeNotification::List receivedNotifications;
     for (int q = 0; q < notificationSpy->size(); q++) {
         //Only one notify call
         if (notificationSpy->at(q).count() != 1) {
             qWarning() << "Error: We're assuming only one notify call.";
-            return NotificationMessageV3::List();
+            return Protocol::ChangeNotification::List();
         }
-        const NotificationMessageV3::List n = notificationSpy->at(q).first().value<NotificationMessageV3::List>();
+        const Protocol::ChangeNotification::List n = notificationSpy->at(q).first().value<Protocol::ChangeNotification::List>();
         for (int i = 0; i < n.size(); i++) {
             // qDebug() << n.at(i);
             receivedNotifications.append(n.at(i));
@@ -88,9 +88,9 @@ public:
 
     QScopedPointer<DbInitializer> initializer;
 
-    Akonadi::NotificationMessageV3 relationNotification(const Akonadi::NotificationMessageV3 &notificationTemplate, const PimItem &item1, const PimItem &item2, const QByteArray &rid, const QByteArray &type = QByteArray("type"))
+    Akonadi::Protocol::ChangeNotification relationNotification(const Akonadi::Protocol::ChangeNotification &notificationTemplate, const PimItem &item1, const PimItem &item2, const QByteArray &rid, const QByteArray &type = QByteArray("type"))
     {
-        Akonadi::NotificationMessageV3 notification = notificationTemplate;
+        Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
         QSet<QByteArray> itemParts;
         itemParts << "LEFT " + QByteArray::number(item1.id());
         itemParts << "RIGHT " + QByteArray::number(item2.id());
@@ -111,11 +111,11 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
-        QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
 
-        Akonadi::NotificationMessageV3 notificationTemplate;
-        notificationTemplate.setType(NotificationMessageV2::Relations);
-        notificationTemplate.setOperation(NotificationMessageV2::Add);
+        Akonadi::Protocol::ChangeNotification notificationTemplate;
+        notificationTemplate.setType(Protocol::ChangeNotification::Relations);
+        notificationTemplate.setOperation(Protocol::ChangeNotification::Add);
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
@@ -131,9 +131,9 @@ private Q_SLOTS:
             type.setName(QLatin1String("type"));
             rel.setRelationType(type);
 
-            Akonadi::NotificationMessageV3 itemNotification;
-            itemNotification.setType(NotificationMessageV2::Items);
-            itemNotification.setOperation(NotificationMessageV2::ModifyRelations);
+            Akonadi::Protocol::ChangeNotification itemNotification;
+            itemNotification.setType(Protocol::ChangeNotification::Items);
+            itemNotification.setOperation(Protocol::ChangeNotification::ModifyRelations);
             itemNotification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification.setResource("testresource");
             itemNotification.setParentCollection(col1.id());
@@ -141,9 +141,9 @@ private Q_SLOTS:
             itemNotification.addEntity(item2.id(), item2.remoteId(), QString(), item2.mimeType().name());
             itemNotification.setAddedFlags(QSet<QByteArray>() << "RELATION type " + QByteArray::number(item1.id()) + " " + QByteArray::number(item2.id()));
 
-            Akonadi::NotificationMessageV3 notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1());
+            Akonadi::Protocol::ChangeNotification notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1());
 
-            QTest::newRow("uid create relation") << scenarios << (Relation::List() << rel) << (NotificationMessageV3::List() << notification << itemNotification);
+            QTest::newRow("uid create relation") << scenarios << (Relation::List() << rel) << (Protocol::ChangeNotification::List() << notification << itemNotification);
         }
     }
 
@@ -151,12 +151,12 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Relation::List, expectedRelations);
-        QFETCH(NotificationMessageV3::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
@@ -198,23 +198,23 @@ private Q_SLOTS:
         rel2.setRelationType(RelationType::retrieveByName(QLatin1String("type2")));
         QVERIFY(rel2.insert());
 
-        Akonadi::NotificationMessageV3 notificationTemplate;
-        notificationTemplate.setType(NotificationMessageV2::Relations);
-        notificationTemplate.setOperation(NotificationMessageV2::Remove);
+        Akonadi::Protocol::ChangeNotification notificationTemplate;
+        notificationTemplate.setType(Protocol::ChangeNotification::Relations);
+        notificationTemplate.setOperation(Protocol::ChangeNotification::Remove);
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
-        QTest::addColumn<Akonadi::NotificationMessageV3::List>("expectedNotifications");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommand(item1.id(), item2.id(), "type"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponse());
 
-            Akonadi::NotificationMessageV3 itemNotification;
-            itemNotification.setType(NotificationMessageV2::Items);
-            itemNotification.setOperation(NotificationMessageV2::ModifyRelations);
+            Akonadi::Protocol::ChangeNotification itemNotification;
+            itemNotification.setType(Protocol::ChangeNotification::Items);
+            itemNotification.setOperation(Protocol::ChangeNotification::ModifyRelations);
             itemNotification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification.setResource("testresource");
             itemNotification.setParentCollection(col1.id());
@@ -222,9 +222,9 @@ private Q_SLOTS:
             itemNotification.addEntity(item2.id(), item2.remoteId(), QString(), item2.mimeType().name());
             itemNotification.setRemovedFlags(QSet<QByteArray>() << "RELATION type " + QByteArray::number(item1.id()) + " " + QByteArray::number(item2.id()));
 
-            Akonadi::NotificationMessageV3 notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1());
+            Akonadi::Protocol::ChangeNotification notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1());
 
-            QTest::newRow("uid remove relation") << scenarios << (Relation::List() << rel2) << (NotificationMessageV3::List() << notification << itemNotification);
+            QTest::newRow("uid remove relation") << scenarios << (Relation::List() << rel2) << (Protocol::ChangeNotification::List() << notification << itemNotification);
         }
 
         {
@@ -233,9 +233,9 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommand(item1.id(), item2.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponse());
 
-            Akonadi::NotificationMessageV3 itemNotification;
-            itemNotification.setType(NotificationMessageV2::Items);
-            itemNotification.setOperation(NotificationMessageV2::ModifyRelations);
+            Akonadi::Protocol::ChangeNotification itemNotification;
+            itemNotification.setType(Protocol::ChangeNotification::Items);
+            itemNotification.setOperation(Protocol::ChangeNotification::ModifyRelations);
             itemNotification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification.setResource("testresource");
             itemNotification.setParentCollection(col1.id());
@@ -243,9 +243,9 @@ private Q_SLOTS:
             itemNotification.addEntity(item2.id(), item2.remoteId(), QString(), item2.mimeType().name());
             itemNotification.setRemovedFlags(QSet<QByteArray>() << "RELATION type2 " + QByteArray::number(item1.id()) + " " + QByteArray::number(item2.id()));
 
-            Akonadi::NotificationMessageV3 notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1(), "type2");
+            Akonadi::Protocol::ChangeNotification notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId().toLatin1(), "type2");
 
-            QTest::newRow("uid remove relation without type") << scenarios << Relation::List() << (NotificationMessageV3::List() << notification << itemNotification);
+            QTest::newRow("uid remove relation without type") << scenarios << Relation::List() << (Protocol::ChangeNotification::List() << notification << itemNotification);
         }
 
     }
@@ -254,12 +254,12 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Relation::List, expectedRelations);
-        QFETCH(NotificationMessageV3::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const NotificationMessageV3::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));

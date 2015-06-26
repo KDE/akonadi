@@ -2,9 +2,6 @@ set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
     datastream_p.cpp
-    notificationmessage.cpp
-    notificationmessagev2.cpp
-    notificationmessagev3.cpp
     protocol.cpp
     scope.cpp
     tristate.cpp
@@ -39,9 +36,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h
     imapparser_p.h
     imapset_p.h
-    notificationmessage_p.h
-    notificationmessagev2_p.h
-    notificationmessagev3_p.h
     protocol_p.h
     xdgbasedirs_p.h
     capabilities_p.h
