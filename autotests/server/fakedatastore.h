@@ -33,7 +33,7 @@ public:
     virtual ~FakeDataStore();
     static DataStore *self();
 
-    virtual bool init();
+    bool init() Q_DECL_OVERRIDE;
 
     QMap<QString, QVariantList> changes() const
     {
