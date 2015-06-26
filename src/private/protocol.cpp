@@ -131,6 +131,7 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
     }
 
     Q_ASSERT(false);
+    return dbg;
 }
 
 namespace Akonadi
