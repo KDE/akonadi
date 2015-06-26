@@ -424,7 +424,9 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
 
 void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 {
-    Q_UNUSED(job)
+    if (job->error()) {
+        qWarning() << "Deleting items from the akonadi database failed:" << job->errorString();
+    }
     mPendingJobs--;
     mProgress++;
 
@@ -433,7 +435,9 @@ void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 
 void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
-    Q_UNUSED(job);
+    if (job->error()) {
+        qWarning() << "Creating/updating items from the akonadi database failed:" << job->errorString();
+    }
     mPendingJobs--;
     mProgress++;
 
