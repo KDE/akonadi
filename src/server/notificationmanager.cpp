@@ -200,6 +200,7 @@ void NotificationManager::unregisterSource(NotificationSource *source)
 QStringList NotificationManager::subscribers() const
 {
     QStringList identifiers;
+    identifiers.reserve(mNotificationSources.count());
     Q_FOREACH (NotificationSource *source, mNotificationSources) {
         identifiers << source->identifier();
     }

@@ -315,6 +315,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
     QSet<QByteArray> added;
 
     QVariantList itemsIds;
+    itemsIds.reserve(items.count());
     Q_FOREACH (const PimItem &item, items) {
         itemsIds.append(item.id());
     }
@@ -371,6 +372,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
     QVariantList flagsIds;
 
     setBoolPtr(flagsChanged, false);
+    itemsIds.reserve(items.count());
 
     Q_FOREACH (const PimItem &item, items) {
         itemsIds << item.id();
@@ -511,6 +513,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
     QSet<QByteArray> added;
 
     QVariantList itemsIds;
+    itemsIds.reserve(items.count());
     Q_FOREACH (const PimItem &item, items) {
         itemsIds.append(item.id());
     }
@@ -560,6 +563,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
     QVariantList tagsIds;
 
     setBoolPtr(tagsChanged, false);
+    itemsIds.reserve(items.count());
 
     Q_FOREACH (const PimItem &item, items) {
         itemsIds << item.id();
@@ -596,6 +600,8 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 {
     QVariantList removedTagsIds;
     QSet<qint64> removedTags;
+    removedTagsIds.reserve(tags.count());
+    removedTags.reserve(tags.count());
     Q_FOREACH (const Tag &tag, tags) {
         removedTagsIds << tag.id();
         removedTags << tag.id();

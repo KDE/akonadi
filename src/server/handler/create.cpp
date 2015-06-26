@@ -113,6 +113,7 @@ bool Create::parseStream()
 
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
+        effectiveMimeTypes.reserve(parentContentTypes.count());
         Q_FOREACH (const MimeType &mt, parentContentTypes) {
             effectiveMimeTypes << mt.name();
         }

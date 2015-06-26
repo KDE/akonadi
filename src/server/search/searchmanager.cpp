@@ -299,7 +299,10 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     bool recursive = queryAttributes.contains(QLatin1String(AKONADI_PARAM_RECURSIVE));
 
     QStringList queryMimeTypes;
-    Q_FOREACH (const MimeType &mt, collection.mimeTypes()) {
+    const QVector<MimeType> mimeTypes = collection.mimeTypes();
+    queryMimeTypes.reserve(mimeTypes.count());
+
+    Q_FOREACH (const MimeType &mt, mimeTypes) {
         queryMimeTypes << mt.name();
     }
 
@@ -420,6 +423,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     }
 
     QVariantList newMatchesVariant;
+    newMatchesVariant.reserve(newMatches.count());
     Q_FOREACH (qint64 id, newMatches) {
         newMatchesVariant << id;
         Collection::addPimItem(collection.id(), id);
