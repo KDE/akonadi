@@ -428,8 +428,11 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
     }
 }
 
-void ItemSyncPrivate::slotLocalDeleteDone(KJob *)
+void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 {
+    if (job->error()) {
+        kWarning() << "Deleting items from the akonadi database failed:" << job->errorString();
+    }
     mPendingJobs--;
     mProgress++;
 
@@ -438,7 +441,9 @@ void ItemSyncPrivate::slotLocalDeleteDone(KJob *)
 
 void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
-    Q_UNUSED(job);
+    if (job->error()) {
+        kWarning() << "Creating/updating items from the akonadi database failed:" << job->errorString();
+    }
     mPendingJobs--;
     mProgress++;
 
