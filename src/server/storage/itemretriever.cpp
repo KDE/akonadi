@@ -164,7 +164,7 @@ QSqlQuery ItemRetriever::buildQuery() const
     qb.addColumn(PartType::nameFullColumnName());
     qb.addColumn(Part::datasizeFullColumnName());
 
-    if (!mItemSet.isEmpty()) {
+    if (!mItemSet.isEmpty() || mCollection.isValid()) {
         ItemQueryHelper::itemSetToQuery(mItemSet, qb, mCollection);
     } else {
         ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
