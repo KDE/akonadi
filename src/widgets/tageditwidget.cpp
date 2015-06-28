@@ -215,6 +215,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
             d.data(), SLOT(slotItemEntered(QModelIndex)));
 
     d->m_newTagEdit = new KLineEdit(this);
+    d->m_newTagEdit->setTrapReturnKey(true);
     d->m_newTagEdit->setClearButtonEnabled(true);
     connect(d->m_newTagEdit, SIGNAL(textEdited(QString)),
             d.data(), SLOT(slotTextEdited(QString)));
