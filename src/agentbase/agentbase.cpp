@@ -44,8 +44,6 @@
 #include <k4aboutdata.h>
 #include <Kdelibs4ConfigMigrator>
 
-#include <Solid/PowerManagement>
-
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
@@ -344,6 +342,7 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mChangeRecorder(0)
     , mTracer(0)
     , mObserver(0)
+    , mPowerInterface(0)
     , mTemporaryOfflineTimer(0)
 {
     Internal::setClientType(Internal::Agent);
@@ -429,7 +428,17 @@ void AgentBasePrivate::init()
     connect(q, SIGNAL(warning(QString)), q, SLOT(slotWarning(QString)));
     connect(q, SIGNAL(error(QString)), q, SLOT(slotError(QString)));
 
-    connect(Solid::PowerManagement::notifier(), SIGNAL(resumingFromSuspend()), q, SLOT(slotResumedFromSuspend()));
+    mPowerInterface = new QDBusInterface(QStringLiteral("org.kde.Solid.PowerManagement"),
+                                         QStringLiteral("/org/kde/Solid/PowerManagement/Actions/SuspendSession"),
+                                         QStringLiteral("org.kde.Solid.PowerManagement.Actions.SuspendSession"),
+                                         QDBusConnection::sessionBus(), this);
+    if (mPowerInterface->isValid()) {
+        connect(mPowerInterface, SIGNAL(resumingFromSuspend()),
+                q, SLOT(slotResumedFromSuspend()));
+    } else {
+        delete mPowerInterface;
+        mPowerInterface = 0;
+    }
 
     // Use reference counting to allow agents to finish internal jobs when the
     // agent is stopped.

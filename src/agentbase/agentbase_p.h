@@ -109,6 +109,7 @@ public:
     org::freedesktop::Akonadi::Tracer *mTracer;
 
     AgentBase::Observer *mObserver;
+    QDBusInterface *mPowerInterface;
 
     QTimer *mTemporaryOfflineTimer;
 
