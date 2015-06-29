@@ -27,6 +27,7 @@
 #include <QtCore/QFlags>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QDebug>
+#include <QtDBus/QDBusArgument>
 
 #include "tristate_p.h"
 
@@ -2253,6 +2254,22 @@ Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotification::List)
 AKONADIPRIVATE_EXPORT DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command::Type &type);
 AKONADIPRIVATE_EXPORT DataStream &operator<<(DataStream &stream, Akonadi::Protocol::Command::Type type);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Protocol::Command::Type type);
+
+AKONADIPRIVATE_EXPORT inline const QDBusArgument &operator>>(const QDBusArgument &arg, Akonadi::Protocol::ChangeNotification::Type &type)
+{
+    arg.beginStructure();
+    arg >> reinterpret_cast<int&>(type);
+    arg.endStructure();
+    return arg;
+}
+
+AKONADIPRIVATE_EXPORT inline QDBusArgument &operator<<(QDBusArgument &arg, Akonadi::Protocol::ChangeNotification::Type type)
+{
+    arg.beginStructure();
+    arg << (int) type;
+    arg.endStructure();
+    return arg;
+}
 
 // Command parameters
 #define AKONADI_PARAM_ATR                          "ATR:"

@@ -67,7 +67,7 @@ public Q_SLOTS:
      * @param exclusive Exclusive subscribers also receive notifications on referenced collections
      * @return The path we got assigned. Contains identifier.
      */
-    Q_SCRIPTABLE QDBusObjectPath subscribe(const QString &identifier, bool exclusive);
+    QDBusObjectPath subscribe(const QString &identifier, bool exclusive);
 
     /**
      * Unsubscribe from this manager.
@@ -77,18 +77,21 @@ public Q_SLOTS:
      *
      * @param identifier The identifier used for subscription.
      */
-    Q_SCRIPTABLE void unsubscribe(const QString &identifier);
+    void unsubscribe(const QString &identifier);
 
     /**
      * Returns identifiers of currently subscribed sources
      */
     Q_SCRIPTABLE QList<QDBusObjectPath> subscribers() const;
 
-Q_SIGNALS:
-    Q_SCRIPTABLE void notify(const Akonadi::Protocol::ChangeNotification::List &msgs);
+    Q_SCRIPTABLE void enableDebug(bool enable);
+    Q_SCRIPTABLE bool debugEnabled() const;
 
-    Q_SCRIPTABLE void subscribed(const QDBusObjectPath &path);
-    Q_SCRIPTABLE void unsubscribed(const QDBusObjectPath &path);
+Q_SIGNALS:
+    Q_SCRIPTABLE void debugNotify(const QVector<QByteArray> &msg);
+
+    void subscribed(const QDBusObjectPath &path);
+    void unsubscribed(const QDBusObjectPath &path);
 
 private Q_SLOTS:
     void slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs);
@@ -107,6 +110,8 @@ private:
     //! One message source for each subscribed process
     QMutex mSourcesLock;
     QHash<QString, NotificationSource *> mNotificationSources;
+
+    bool mDebug;
 
     friend class NotificationSource;
     friend class ::NotificationManagerTest;

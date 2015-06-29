@@ -40,12 +40,19 @@ NotificationManager *NotificationManager::mSelf = 0;
 
 NotificationManager::NotificationManager()
     : QObject(0)
+    , mDebug(false)
 {
+    qRegisterMetaType<QVector<QByteArray>>();
+    qDBusRegisterMetaType<QVector<QByteArray>>();
+    qRegisterMetaType<Protocol::ChangeNotification::Type>();
+    qDBusRegisterMetaType<Protocol::ChangeNotification::Type>();
+
     new NotificationManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications"),
                                                  this, QDBusConnection::ExportAdaptors);
     QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications/debug"),
-                                                 this, QDBusConnection::ExportScriptableSlots);
+                                                 this, QDBusConnection::ExportScriptableSlots |
+                                                       QDBusConnection::ExportScriptableSignals);
 
     const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
@@ -124,8 +131,23 @@ void NotificationManager::emitPendingNotifications()
         return;
     }
 
-    Q_FOREACH (const Protocol::ChangeNotification &notification, mNotifications) {
-        Tracer::self()->signal("NotificationManager::notify", notification.debugString());
+    if (mDebug) {
+        QVector<QByteArray> bas;
+        bas.reserve(mNotifications.size());
+        QBuffer buffer;
+        buffer.open(QIODevice::WriteOnly);
+        Q_FOREACH (const Protocol::ChangeNotification &notification, mNotifications) {
+            Tracer::self()->signal("NotificationManager::notify", notification.debugString());
+            Protocol::serialize(&buffer, notification);
+            bas << buffer.data();
+            buffer.buffer().clear();
+            buffer.seek(0);
+        }
+        Q_EMIT debugNotify(bas);
+    } else {
+        Q_FOREACH (const Protocol::ChangeNotification &notification, mNotifications) {
+            Tracer::self()->signal("NotificationManager::notify", notification.debugString());
+        }
     }
 
     Q_FOREACH (NotificationSource *source, mNotificationSources) {
@@ -200,3 +222,14 @@ QList<QDBusObjectPath> NotificationManager::subscribers() const
 
     return identifiers;
 }
+
+void NotificationManager::enableDebug(bool enable)
+{
+    mDebug = enable;
+}
+
+bool NotificationManager::debugEnabled() const
+{
+    return mDebug;
+}
+

@@ -15,7 +15,7 @@ generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
 
 target_link_libraries(KF5AkonadiPrivate
-PRIVATE
+PUBLIC
     Qt5::Core
     Qt5::DBus
 )
