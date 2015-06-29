@@ -296,7 +296,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
                 connect(handler, SIGNAL(error(QString)), SLOT(conflictResolveError(QString)));
 
                 QMetaObject::invokeMethod(handler, "start", Qt::QueuedConnection);
-                return;
+                return true;
             }
         }
 
