@@ -214,7 +214,7 @@ void NotificationManager::unregisterSource(NotificationSource *source)
 
 QList<QDBusObjectPath> NotificationManager::subscribers() const
 {
-    QStringList identifiers;
+    QList<QDBusObjectPath> identifiers;
     identifiers.reserve(mNotificationSources.count());
     Q_FOREACH (NotificationSource *source, mNotificationSources) {
         identifiers << source->dbusPath();
