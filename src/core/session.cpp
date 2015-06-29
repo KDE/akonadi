@@ -449,7 +449,6 @@ void SessionPrivate::init(const QByteArray &id)
         sessionId = QCoreApplication::instance()->applicationName().toUtf8()
                     + '-' + QByteArray::number(qrand());
     }
-
     connected = false;
     theNextTag = 2;
     jobRunning = false;
@@ -464,7 +463,7 @@ void SessionPrivate::init(const QByteArray &id)
     if (!sessionLogFile.isEmpty()) {
         logFile = new QFile(QString::fromLatin1("%1.%2.%3").arg(QString::fromLatin1(sessionLogFile))
                             .arg(QString::number(QApplication::applicationPid()))
-                            .arg(QString::fromLatin1(sessionId)),
+                            .arg(QString::fromLatin1(sessionId.replace('/', '_'))),
                             mParent);
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             qWarning() << "Failed to open Akonadi Session log file" << logFile->fileName();
