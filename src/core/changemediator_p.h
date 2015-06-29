@@ -50,11 +50,6 @@ public:
     static void invalidateItem(const Akonadi::Item &item);
     static void invalidateTag(const Akonadi::Tag &tag);
 
-    static void registerSession(const QByteArray &id);
-    static void unregisterSession(const QByteArray &id);
-    static void beginMoveItems(JobPrivate *movePrivate, const QByteArray &id);
-    static void itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id);
-
 private Q_SLOTS:
     void do_registerMonitor(QObject *monitor);
     void do_unregisterMonitor(QObject *monitor);
@@ -63,17 +58,8 @@ private Q_SLOTS:
     void do_invalidateItem(const Akonadi::Item &item);
     void do_invalidateTag(const Akonadi::Tag &tag);
 
-    void do_registerSession(const QByteArray &id);
-    void do_unregisterSession(const QByteArray &id);
-    void do_beginMoveItems(JobPrivate *movePrivate, const QByteArray &id);
-    void do_itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id);
-
 private:
     QList<QObject *> m_monitors;
-
-    QVector<Akonadi::Job *> unfilteredJobs;
-
-    QSet<QByteArray> m_sessions;
 };
 
 }
