@@ -57,6 +57,9 @@ macro(add_server_test _source)
                              ENVIRONMENT ASAN_OPTIONS=symbolize=1
         )
     endif()
+    set_tests_properties(AkonadiServer-${_name} PROPERTIES
+                         ENVIRONMENT QT_HASH_SEED=0
+    )
     target_link_libraries(${_name}
         akonadi_shared
         akonadi_unittest_common
