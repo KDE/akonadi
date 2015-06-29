@@ -27,6 +27,7 @@
 
 #include "storage/datastore.h"
 #include "handler.h"
+#include "notificationmanager.h"
 
 #include "tracer.h"
 #include "collectionreferencemanager.h"
@@ -39,7 +40,7 @@
 
 #include <private/protocol_p.h>
 
-#define AKONADI_PROTOCOL_VERSION 50
+#define AKONADI_PROTOCOL_VERSION 51
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -50,6 +51,7 @@ Connection::Connection(QObject *parent)
     , m_socket(0)
     , m_currentHandler(0)
     , m_connectionState(NonAuthenticated)
+    , m_isNotificationBus(false)
     , m_backend(0)
     , m_verifyCacheOnRetrieval(false)
     , m_totalTime( 0 )
@@ -130,6 +132,7 @@ Connection::~Connection()
 
     Tracer::self()->endConnection(m_identifier, QString());
     collectionReferenceManager()->removeSession(m_sessionId);
+    NotificationManager::self()->unregisterConnection(this);
 
     if (m_reportTime) {
         reportTime();
@@ -138,8 +141,8 @@ Connection::~Connection()
 
 void Connection::slotNewData()
 {
-    // On Windows, calling readLiteralPart() triggers the readyRead() signal recursively and leads to parse errors
-    if (m_currentHandler) {
+    if (m_isNotificationBus) {
+        qWarning() << "Connection" << sessionId() << ": received data when in NotificationBus mode!";
         return;
     }
 
@@ -286,6 +289,28 @@ QByteArray Connection::sessionId() const
     return m_sessionId;
 }
 
+void Connection::setIsNotificationBus(bool on)
+{
+    if (m_isNotificationBus == on) {
+        return;
+    }
+
+    m_isNotificationBus = on;
+    if (m_isNotificationBus) {
+        qDebug() << "New notification bus:" << m_sessionId;
+        NotificationManager::self()->registerConnection(this);
+    } else {
+        NotificationManager::self()->unregisterConnection(this);
+    }
+}
+
+bool Connection::isNotificationBus() const
+{
+    return m_isNotificationBus;
+}
+
+
+
 bool Connection::isOwnerResource(const PimItem &item) const
 {
     if (context()->resource().isValid() && item.collection().resourceId() == context()->resource().id()) {
@@ -339,8 +364,11 @@ void Connection::reportTime() const
 
 void Connection::sendResponse(qint64 tag, const Protocol::Command &response)
 {
-    if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-        Tracer::self()->connectionOutput(m_identifier, QByteArray::number(tag) + ' ' + response.debugString().toUtf8());
+    // Notifications have their own debugging system
+    if (!m_isNotificationBus) {
+        if (Tracer::self()->currentTracer() != QLatin1String("null")) {
+            Tracer::self()->connectionOutput(m_identifier, QByteArray::number(tag) + ' ' + response.debugString().toUtf8());
+        }
     }
     QDataStream stream(m_socket);
     stream << tag;
@@ -349,7 +377,13 @@ void Connection::sendResponse(qint64 tag, const Protocol::Command &response)
 
 void Connection::sendResponse(const Protocol::Command &response)
 {
-    sendResponse(m_currentHandler->tag(), response);
+    if (m_isNotificationBus) {
+        // FIXME: Don't hardcode the tag for notifications
+        sendResponse(4, response);
+    } else {
+        Q_ASSERT(m_currentHandler);
+        sendResponse(m_currentHandler->tag(), response);
+    }
 }
 
 Protocol::Command Connection::readCommand()

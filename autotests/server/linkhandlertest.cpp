@@ -21,10 +21,6 @@
 
 #include <handler/link.h>
 
-
-#include <private/notificationmessagev3_p.h>
-#include <private/notificationmessagev2_p.h>
-
 #include "fakeakonadiserver.h"
 #include <shared/aktest.h>
 #include <shared/akdebug.h>
@@ -70,19 +66,19 @@ private Q_SLOTS:
     void testLink_data()
     {
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification>("notification");
         QTest::addColumn<bool>("expectFail");
 
         TestScenario::List scenarios;
-        NotificationMessageV3 notification;
+        Protocol::ChangeNotification notification;
 
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Link, ImapInterval(1, 3), 3))
                   << TestScenario::create(5, TestScenario::ServerCmd, createError(QLatin1String("Can't link items to non-virtual collections")));
-        QTest::newRow("non-virtual collection") << scenarios << NotificationMessageV3() << true;
+        QTest::newRow("non-virtual collection") << scenarios << Protocol::ChangeNotification() << true;
 
-        notification.setType(NotificationMessageV2::Items);
-        notification.setOperation(NotificationMessageV2::Link);
+        notification.setType(Protocol::ChangeNotification::Items);
+        notification.setOperation(Protocol::ChangeNotification::Link);
         notification.addEntity(1, QLatin1String("A"), QString(), QLatin1String("application/octet-stream"));
         notification.addEntity(2, QLatin1String("B"), QString(), QLatin1String("application/octet-stream"));
         notification.addEntity(3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream"));
@@ -108,7 +104,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Link, 4, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
-        QTest::newRow("non-existent item only") << scenarios << NotificationMessageV3() << false;
+        QTest::newRow("non-existent item only") << scenarios << Protocol::ChangeNotification() << false;
 
         //FIXME: All RID related operations are currently broken because we reset the collection context before every command,
         //and LINK still relies on SELECT to set the collection context.
@@ -148,7 +144,7 @@ private Q_SLOTS:
     void testLink()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(NotificationMessageV3, notification);
+        QFETCH(Protocol::ChangeNotification, notification);
         QFETCH(bool, expectFail);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
@@ -157,14 +153,14 @@ private Q_SLOTS:
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
-            const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
+            const Protocol::ChangeNotification::List notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>();
             QCOMPARE(notifications.count(), 1);
             QCOMPARE(notifications.first(), notification);
         } else {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
         }
 
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
             if (expectFail) {
                 QVERIFY(!Collection::relatesToPimItem(notification.parentCollection(), entity.id));
             } else {
@@ -176,19 +172,19 @@ private Q_SLOTS:
     void testUnlink_data()
     {
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification>("notification");
         QTest::addColumn<bool>("expectFail");
 
         TestScenario::List scenarios;
-        NotificationMessageV3 notification;
+        Protocol::ChangeNotification notification;
 
         scenarios << FakeAkonadiServer::loginScenario()
                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Unlink, ImapInterval(1, 3), 3))
                  << TestScenario::create(5, TestScenario::ServerCmd, createError(QLatin1String("Can't link items to non-virtual collections")));
-        QTest::newRow("non-virtual collection") << scenarios << NotificationMessageV3() << true;
+        QTest::newRow("non-virtual collection") << scenarios << Protocol::ChangeNotification() << true;
 
-        notification.setType(NotificationMessageV2::Items);
-        notification.setOperation(NotificationMessageV2::Unlink);
+        notification.setType(Protocol::ChangeNotification::Items);
+        notification.setOperation(Protocol::ChangeNotification::Unlink);
         notification.addEntity(1, QLatin1String("A"), QString(), QLatin1String("application/octet-stream"));
         notification.addEntity(2, QLatin1String("B"), QString(), QLatin1String("application/octet-stream"));
         notification.addEntity(3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream"));
@@ -213,7 +209,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommand(Protocol::LinkItemsCommand::Unlink, 4096, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponse());
-        QTest::newRow("non-existent item only") << scenarios << NotificationMessageV3() << false;
+        QTest::newRow("non-existent item only") << scenarios << Protocol::ChangeNotification() << false;
 
         //FIXME: All RID related operations are currently broken because we reset the collection context before every command,
         //and LINK still relies on SELECT to set the collection context.
@@ -253,7 +249,7 @@ private Q_SLOTS:
     void testUnlink()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(NotificationMessageV3, notification);
+        QFETCH(Protocol::ChangeNotification, notification);
         QFETCH(bool, expectFail);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
@@ -262,14 +258,14 @@ private Q_SLOTS:
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
-            const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
+            const Protocol::ChangeNotification::List notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>();
             QCOMPARE(notifications.count(), 1);
             QCOMPARE(notifications.first(), notification);
         } else {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
         }
 
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
             if (expectFail) {
                 QVERIFY(Collection::relatesToPimItem(notification.parentCollection(), entity.id));
             } else {

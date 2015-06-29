@@ -18,7 +18,7 @@
 */
 
 #include "notificationmessagetest.h"
-#include <private/notificationmessage_p.h>
+#include <private/protocol_p.h>
 
 #include <QSet>
 #include <QtTest/QTest>
@@ -26,130 +26,80 @@
 QTEST_APPLESS_MAIN(NotificationMessageTest)
 
 using namespace Akonadi;
-
-Q_DECLARE_METATYPE(NotificationMessage::Type)
+using namespace Akonadi::Protocol;
 
 void NotificationMessageTest::testCompress()
 {
-    NotificationMessage::List list;
-    NotificationMessage msg;
-    msg.setType(NotificationMessage::Item);
-    msg.setOperation(NotificationMessage::Add);
+    ChangeNotification::List list;
+    ChangeNotification msg;
+    msg.setType(ChangeNotification::Collections);
+    msg.setOperation(ChangeNotification::Add);
 
-    NotificationMessage::appendAndCompress(list, msg);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
 
-    msg.setOperation(NotificationMessage::Modify);
-    NotificationMessage::appendAndCompress(list, msg);
+    msg.setOperation(ChangeNotification::Modify);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
-    QCOMPARE(list.first().operation(), NotificationMessage::Add);
+    QCOMPARE(list.first().operation(), ChangeNotification::Add);
 
-    msg.setOperation(NotificationMessage::Remove);
-    NotificationMessage::appendAndCompress(list, msg);
-    QCOMPARE(list.count(), 2);   // should be 2 for collections, 0 for items?
+    msg.setOperation(ChangeNotification::Remove);
+    ChangeNotification::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 2);
 }
 
 void NotificationMessageTest::testCompress2()
 {
-    NotificationMessage::List list;
-    NotificationMessage msg;
-    msg.setType(NotificationMessage::Item);
-    msg.setOperation(NotificationMessage::Modify);
+    ChangeNotification::List list;
+    ChangeNotification msg;
+    msg.setType(ChangeNotification::Collections);
+    msg.setOperation(ChangeNotification::Modify);
 
-    NotificationMessage::appendAndCompress(list, msg);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
 
-    msg.setOperation(NotificationMessage::Remove);
-    NotificationMessage::appendAndCompress(list, msg);
-    QCOMPARE(list.count(), 1);
-    QCOMPARE(list.first().operation(), NotificationMessage::Remove);
+    msg.setOperation(ChangeNotification::Remove);
+    ChangeNotification::appendAndCompress(list, msg);
+    QCOMPARE(list.count(), 2);
+    QCOMPARE(list.first().operation(), ChangeNotification::Modify);
+    QCOMPARE(list.last().operation(), ChangeNotification::Remove);
 }
 
 void NotificationMessageTest::testCompress3()
 {
-    NotificationMessage::List list;
-    NotificationMessage msg;
-    msg.setType(NotificationMessage::Item);
-    msg.setOperation(NotificationMessage::Modify);
+    ChangeNotification::List list;
+    ChangeNotification msg;
+    msg.setType(ChangeNotification::Collections);
+    msg.setOperation(ChangeNotification::Modify);
 
-    NotificationMessage::appendAndCompress(list, msg);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
 
-    NotificationMessage::appendAndCompress(list, msg);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
-}
-
-void NotificationMessageTest::testCompressWithItemParts()
-{
-    NotificationMessage::List list;
-    NotificationMessage msg;
-    msg.setType(NotificationMessage::Item);
-    msg.setOperation(NotificationMessage::Add);
-
-    NotificationMessage::appendAndCompress(list, msg);
-    QCOMPARE(list.count(), 1);
-
-    msg.setOperation(NotificationMessage::Modify);
-    QSet<QByteArray> changes;
-    changes.insert("FLAGS");
-    msg.setItemParts(changes);
-    NotificationMessage::appendAndCompress(list, msg);
-    NotificationMessage::appendAndCompress(list, msg);
-
-    QCOMPARE(list.count(), 1);
-    QCOMPARE(list.first().operation(), NotificationMessage::Add);
-    QCOMPARE(list.first().itemParts(), QSet<QByteArray>());
-
-    list.clear();
-    NotificationMessage::appendAndCompress(list, msg);
-    QCOMPARE(list.count(), 1);
-
-    msg.setOperation(NotificationMessage::Remove);
-    msg.setItemParts(QSet<QByteArray>());
-    NotificationMessage::appendAndCompress(list, msg);
-
-    QCOMPARE(list.count(), 1);
-    QCOMPARE(list.first().operation(), NotificationMessage::Remove);
-    QCOMPARE(list.first().itemParts(), QSet<QByteArray>());
-}
-
-void NotificationMessageTest::testNoCompress()
-{
-    NotificationMessage::List list;
-    NotificationMessage msg;
-    msg.setType(NotificationMessage::Item);
-    msg.setOperation(NotificationMessage::Modify);
-
-    NotificationMessage::appendAndCompress(list, msg);
-    QCOMPARE(list.count(), 1);
-
-    msg.setType(NotificationMessage::Collection);
-    NotificationMessage::appendAndCompress(list, msg);
-    QCOMPARE(list.count(), 2);
 }
 
 void NotificationMessageTest::testPartModificationMerge_data()
 {
-    QTest::addColumn<NotificationMessage::Type>("type");
-    QTest::newRow("item") << NotificationMessage::Item;
-    QTest::newRow("collection") << NotificationMessage::Collection;
+    QTest::addColumn<ChangeNotification::Type>("type");
+    QTest::newRow("collection") << ChangeNotification::Collections;
 }
 
 void NotificationMessageTest::testPartModificationMerge()
 {
-    QFETCH(NotificationMessage::Type, type);
+    QFETCH(ChangeNotification::Type, type);
 
-    NotificationMessage::List list;
-    NotificationMessage msg;
+    ChangeNotification::List list;
+    ChangeNotification msg;
     msg.setType(type);
-    msg.setOperation(NotificationMessage::Modify);
+    msg.setOperation(ChangeNotification::Modify);
     msg.setItemParts(QSet<QByteArray>() << "PART1");
 
-    NotificationMessage::appendAndCompress(list, msg);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
 
     msg.setItemParts(QSet<QByteArray>() << "PART2");
-    NotificationMessage::appendAndCompress(list, msg);
+    ChangeNotification::appendAndCompress(list, msg);
     QCOMPARE(list.count(), 1);
     QCOMPARE(list.first().itemParts(), (QSet<QByteArray>() << "PART1" << "PART2"));
 }

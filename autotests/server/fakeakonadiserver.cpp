@@ -291,7 +291,8 @@ void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
     connect(thread, SIGNAL(finished()), connection, SLOT(deleteLater()));
 
     mNotificationSpy = new QSignalSpy(connection->notificationCollector(),
-                                      SIGNAL(notify(Akonadi::NotificationMessageV3::List)));
+                                      SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)));
+    Q_ASSERT(mNotificationSpy->isValid());
 }
 
 void FakeAkonadiServer::runTest()

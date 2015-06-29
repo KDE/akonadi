@@ -81,6 +81,13 @@ AkonadiServer::AkonadiServer(QObject *parent)
     , mSearchManager(0)
     , mAlreadyShutdown(false)
 {
+    // Register bunch of useful types
+    qRegisterMetaType<Protocol::Command>();
+    qRegisterMetaType<Protocol::ChangeNotification>();
+    qRegisterMetaType<Protocol::ChangeNotification::List>();
+
+    qRegisterMetaType<Protocol::ChangeNotification::Type>();
+    qDBusRegisterMetaType<Protocol::ChangeNotification::Type>();
 }
 
 bool AkonadiServer::init()

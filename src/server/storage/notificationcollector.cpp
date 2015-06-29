@@ -27,7 +27,6 @@
 #include "search/searchmanager.h"
 #include "akonadi.h"
 #include "handler/search.h"
-#include <private/notificationmessagev2_p_p.h>
 
 #include <QtCore/QDebug>
 
@@ -57,7 +56,7 @@ void NotificationCollector::itemAdded(const PimItem &item,
                                       const QByteArray &resource)
 {
     SearchManager::instance()->scheduleSearchUpdate();
-    itemNotification(NotificationMessageV2::Add, item, collection, Collection(), resource);
+    itemNotification(Protocol::ChangeNotification::Add, item, collection, Collection(), resource);
 }
 
 void NotificationCollector::itemChanged(const PimItem &item,
@@ -66,7 +65,7 @@ void NotificationCollector::itemChanged(const PimItem &item,
                                         const QByteArray &resource)
 {
     SearchManager::instance()->scheduleSearchUpdate();
-    itemNotification(NotificationMessageV2::Modify, item, collection, Collection(), resource, changedParts);
+    itemNotification(Protocol::ChangeNotification::Modify, item, collection, Collection(), resource, changedParts);
 }
 
 void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
@@ -75,7 +74,7 @@ void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
                                               const Collection &collection,
                                               const QByteArray &resource)
 {
-    itemNotification(NotificationMessageV2::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags);
+    itemNotification(Protocol::ChangeNotification::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags);
 }
 
 void NotificationCollector::itemsTagsChanged(const PimItem::List &items,
@@ -84,7 +83,7 @@ void NotificationCollector::itemsTagsChanged(const PimItem::List &items,
                                              const Collection &collection,
                                              const QByteArray &resource)
 {
-    itemNotification(NotificationMessageV2::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), addedTags, removedTags);
+    itemNotification(Protocol::ChangeNotification::ModifyTags, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), addedTags, removedTags);
 }
 
 void NotificationCollector::itemsRelationsChanged(const PimItem::List &items,
@@ -93,7 +92,7 @@ void NotificationCollector::itemsRelationsChanged(const PimItem::List &items,
                                                   const Collection &collection,
                                                   const QByteArray &resource)
 {
-    itemNotification(NotificationMessageV2::ModifyRelations, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), QSet<qint64>(), QSet<qint64>(), addedRelations, removedRelations);
+    itemNotification(Protocol::ChangeNotification::ModifyRelations, items, collection, Collection(), resource, QSet<QByteArray>(), QSet<QByteArray>(), QSet<QByteArray>(), QSet<qint64>(), QSet<qint64>(), addedRelations, removedRelations);
 }
 
 void NotificationCollector::itemsMoved(const PimItem::List &items,
@@ -102,24 +101,24 @@ void NotificationCollector::itemsMoved(const PimItem::List &items,
                                        const QByteArray &sourceResource)
 {
     SearchManager::instance()->scheduleSearchUpdate();
-    itemNotification(NotificationMessageV2::Move, items, collectionSrc, collectionDest, sourceResource);
+    itemNotification(Protocol::ChangeNotification::Move, items, collectionSrc, collectionDest, sourceResource);
 }
 
 void NotificationCollector::itemsRemoved(const PimItem::List &items,
                                          const Collection &collection,
                                          const QByteArray &resource)
 {
-    itemNotification(NotificationMessageV2::Remove, items, collection, Collection(), resource);
+    itemNotification(Protocol::ChangeNotification::Remove, items, collection, Collection(), resource);
 }
 
 void NotificationCollector::itemsLinked(const PimItem::List &items, const Collection &collection)
 {
-    itemNotification(NotificationMessageV2::Link, items, collection, Collection(), QByteArray());
+    itemNotification(Protocol::ChangeNotification::Link, items, collection, Collection(), QByteArray());
 }
 
 void NotificationCollector::itemsUnlinked(const PimItem::List &items, const Collection &collection)
 {
-    itemNotification(NotificationMessageV2::Unlink, items, collection, Collection(), QByteArray());
+    itemNotification(Protocol::ChangeNotification::Unlink, items, collection, Collection(), QByteArray());
 }
 
 void NotificationCollector::collectionAdded(const Collection &collection,
@@ -131,7 +130,7 @@ void NotificationCollector::collectionAdded(const Collection &collection,
     if (AkonadiServer::instance()->intervalChecker()) {
         AkonadiServer::instance()->intervalChecker()->collectionAdded(collection.id());
     }
-    collectionNotification(NotificationMessageV2::Add, collection, collection.parentId(), -1, resource);
+    collectionNotification(Protocol::ChangeNotification::Add, collection, collection.parentId(), -1, resource);
 }
 
 void NotificationCollector::collectionChanged(const Collection &collection,
@@ -145,7 +144,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
         AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
     }
     CollectionStatistics::self()->invalidateCollection(collection);
-    collectionNotification(NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet());
+    collectionNotification(Protocol::ChangeNotification::Modify, collection, collection.parentId(), -1, resource, changes.toSet());
 }
 
 void NotificationCollector::collectionMoved(const Collection &collection,
@@ -159,7 +158,7 @@ void NotificationCollector::collectionMoved(const Collection &collection,
     if (AkonadiServer::instance()->intervalChecker()) {
         AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
     }
-    collectionNotification(NotificationMessageV2::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource);
+    collectionNotification(Protocol::ChangeNotification::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource);
 }
 
 void NotificationCollector::collectionRemoved(const Collection &collection,
@@ -172,7 +171,7 @@ void NotificationCollector::collectionRemoved(const Collection &collection,
         AkonadiServer::instance()->intervalChecker()->collectionRemoved(collection.id());
     }
     CollectionStatistics::self()->invalidateCollection(collection);
-    collectionNotification(NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource);
+    collectionNotification(Protocol::ChangeNotification::Remove, collection, collection.parentId(), -1, resource);
 }
 
 void NotificationCollector::collectionSubscribed(const Collection &collection,
@@ -184,7 +183,7 @@ void NotificationCollector::collectionSubscribed(const Collection &collection,
     if (AkonadiServer::instance()->intervalChecker()) {
         AkonadiServer::instance()->intervalChecker()->collectionAdded(collection.id());
     }
-    collectionNotification(NotificationMessageV2::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
+    collectionNotification(Protocol::ChangeNotification::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }
 
 void NotificationCollector::collectionUnsubscribed(const Collection &collection,
@@ -197,32 +196,32 @@ void NotificationCollector::collectionUnsubscribed(const Collection &collection,
         AkonadiServer::instance()->intervalChecker()->collectionRemoved(collection.id());
     }
     CollectionStatistics::self()->invalidateCollection(collection);
-    collectionNotification(NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
+    collectionNotification(Protocol::ChangeNotification::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }
 
 void NotificationCollector::tagAdded(const Tag &tag)
 {
-    tagNotification(NotificationMessageV2::Add, tag);
+    tagNotification(Protocol::ChangeNotification::Add, tag);
 }
 
 void NotificationCollector::tagChanged(const Tag &tag)
 {
-    tagNotification(NotificationMessageV2::Modify, tag);
+    tagNotification(Protocol::ChangeNotification::Modify, tag);
 }
 
 void NotificationCollector::tagRemoved(const Tag &tag, const QByteArray &resource, const QString &remoteId)
 {
-    tagNotification(NotificationMessageV2::Remove, tag, resource, remoteId);
+    tagNotification(Protocol::ChangeNotification::Remove, tag, resource, remoteId);
 }
 
 void NotificationCollector::relationAdded(const Relation &relation)
 {
-    relationNotification(NotificationMessageV2::Add, relation);
+    relationNotification(Protocol::ChangeNotification::Add, relation);
 }
 
 void NotificationCollector::relationRemoved(const Relation &relation)
 {
-    relationNotification(NotificationMessageV2::Remove, relation);
+    relationNotification(Protocol::ChangeNotification::Remove, relation);
 }
 
 void NotificationCollector::transactionCommitted()
@@ -245,7 +244,7 @@ void NotificationCollector::setSessionId(const QByteArray &sessionId)
     mSessionId = sessionId;
 }
 
-void NotificationCollector::itemNotification(NotificationMessageV2::Operation op,
+void NotificationCollector::itemNotification(Protocol::ChangeNotification::Operation op,
                                              const PimItem &item,
                                              const Collection &collection,
                                              const Collection &collectionDest,
@@ -257,7 +256,7 @@ void NotificationCollector::itemNotification(NotificationMessageV2::Operation op
     itemNotification(op, items, collection, collectionDest, resource, parts);
 }
 
-void NotificationCollector::itemNotification(NotificationMessageV2::Operation op,
+void NotificationCollector::itemNotification(Protocol::ChangeNotification::Operation op,
                                              const PimItem::List &items,
                                              const Collection &collection,
                                              const Collection &collectionDest,
@@ -273,16 +272,16 @@ void NotificationCollector::itemNotification(NotificationMessageV2::Operation op
     Collection notificationDestCollection;
     QMap<Entity::Id, QList<PimItem> > vCollections;
 
-    if ((op == NotificationMessageV2::Modify) ||
-        (op == NotificationMessageV2::ModifyFlags) ||
-        (op == NotificationMessageV2::ModifyTags) ||
-        (op == NotificationMessageV2::ModifyRelations)) {
+    if ((op == Protocol::ChangeNotification::Modify) ||
+        (op == Protocol::ChangeNotification::ModifyFlags) ||
+        (op == Protocol::ChangeNotification::ModifyTags) ||
+        (op == Protocol::ChangeNotification::ModifyRelations)) {
         vCollections = DataStore::self()->virtualCollections(items);
     }
 
-    NotificationMessageV3 msg;
+    Protocol::ChangeNotification msg;
     msg.setSessionId(mSessionId);
-    msg.setType(NotificationMessageV2::Items);
+    msg.setType(Protocol::ChangeNotification::Items);
     msg.setOperation(op);
 
     msg.setItemParts(parts);
@@ -310,7 +309,7 @@ void NotificationCollector::itemNotification(NotificationMessageV2::Operation op
     /* Notify all virtual collections the items are linked to. */
     auto iter = vCollections.constBegin(), endIter = vCollections.constEnd();
     for (; iter != endIter; ++iter) {
-        NotificationMessageV3 copy = msg;
+        Protocol::ChangeNotification copy = msg;
 
         Q_FOREACH (const PimItem &item, iter.value()) {
             copy.addEntity(item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name());
@@ -345,7 +344,7 @@ void NotificationCollector::itemNotification(NotificationMessageV2::Operation op
     dispatchNotification(msg);
 }
 
-void NotificationCollector::collectionNotification(NotificationMessageV2::Operation op,
+void NotificationCollector::collectionNotification(Protocol::ChangeNotification::Operation op,
                                                    const Collection &collection,
                                                    Collection::Id source,
                                                    Collection::Id destination,
@@ -353,8 +352,8 @@ void NotificationCollector::collectionNotification(NotificationMessageV2::Operat
                                                    const QSet<QByteArray> &changes,
                                                    const QByteArray &destResource)
 {
-    NotificationMessageV3 msg;
-    msg.setType(NotificationMessageV2::Collections);
+    Protocol::ChangeNotification msg;
+    msg.setType(Protocol::ChangeNotification::Collections);
     msg.setOperation(op);
     msg.setSessionId(mSessionId);
     msg.addEntity(collection.id(), collection.remoteId(), collection.remoteRevision());
@@ -364,7 +363,7 @@ void NotificationCollector::collectionNotification(NotificationMessageV2::Operat
     msg.setItemParts(changes);
 
   if (!collection.enabled()) {
-      msg.d->metadata << "DISABLED";
+      msg.addMetadata("DISABLED");
   }
 
     QByteArray res = resource;
@@ -376,14 +375,14 @@ void NotificationCollector::collectionNotification(NotificationMessageV2::Operat
     dispatchNotification(msg);
 }
 
-void NotificationCollector::tagNotification(NotificationMessageV2::Operation op,
+void NotificationCollector::tagNotification(Protocol::ChangeNotification::Operation op,
                                              const Tag &tag,
                                              const QByteArray &resource,
                                              const QString &remoteId
                                            )
 {
-    NotificationMessageV3 msg;
-    msg.setType(NotificationMessageV2::Tags);
+    Protocol::ChangeNotification msg;
+    msg.setType(Protocol::ChangeNotification::Tags);
     msg.setOperation(op);
     msg.setSessionId(mSessionId);
     msg.setResource( resource );
@@ -392,11 +391,11 @@ void NotificationCollector::tagNotification(NotificationMessageV2::Operation op,
     dispatchNotification(msg);
 }
 
-void NotificationCollector::relationNotification(NotificationMessageV2::Operation op,
+void NotificationCollector::relationNotification(Protocol::ChangeNotification::Operation op,
                                                  const Relation &relation)
 {
-    NotificationMessageV3 msg;
-    msg.setType(NotificationMessageV2::Relations);
+    Protocol::ChangeNotification msg;
+    msg.setType(Protocol::ChangeNotification::Relations);
     msg.setOperation(op);
     msg.setSessionId(mSessionId);
     QSet<QByteArray> itemParts;
@@ -410,14 +409,12 @@ void NotificationCollector::relationNotification(NotificationMessageV2::Operatio
     dispatchNotification(msg);
 }
 
-void NotificationCollector::dispatchNotification(const NotificationMessageV3 &msg)
+void NotificationCollector::dispatchNotification(const Protocol::ChangeNotification &msg)
 {
     if (!mDb || mDb->inTransaction()) {
-        NotificationMessageV3::appendAndCompress(mNotifications, msg);
+        Protocol::ChangeNotification::appendAndCompress(mNotifications, msg);
     } else {
-        NotificationMessageV3::List l;
-        l << msg;
-        Q_EMIT notify(l);
+        Q_EMIT notify(Protocol::ChangeNotification::List() << msg);
     }
 }
 

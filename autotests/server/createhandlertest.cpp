@@ -60,11 +60,11 @@ private Q_SLOTS:
         DbInitializer dbInitializer;
 
         QTest::addColumn<TestScenario::List >("scenarios");
-        QTest::addColumn<Akonadi::NotificationMessageV3>("notification");
+        QTest::addColumn<Akonadi::Protocol::ChangeNotification>("notification");
 
-        Akonadi::NotificationMessageV3 notificationTemplate;
-        notificationTemplate.setType(NotificationMessageV2::Collections);
-        notificationTemplate.setOperation(NotificationMessageV2::Add);
+        Akonadi::Protocol::ChangeNotification notificationTemplate;
+        notificationTemplate.setType(Protocol::ChangeNotification::Collections);
+        notificationTemplate.setOperation(Protocol::ChangeNotification::Add);
         notificationTemplate.setParentCollection(3);
         notificationTemplate.setResource("akonadi_fake_resource_0");
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
@@ -90,7 +90,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.addEntity(8, QLatin1String(""), QLatin1String(""));
 
             QTest::newRow("create collection") << scenarios <<  notification;
@@ -123,7 +123,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.addEntity(9, QLatin1String(""), QLatin1String(""));
 
             QTest::newRow("create collection with local override") << scenarios <<  notification;
@@ -150,7 +150,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
 
-            Akonadi::NotificationMessageV3 notification = notificationTemplate;
+            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
             notification.setSessionId("akonadi_fake_resource_0");
             notification.setParentCollection(0);
             notification.addEntity(10, QLatin1String(""), QLatin1String(""));
@@ -163,7 +163,7 @@ private Q_SLOTS:
     void testCreate()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(NotificationMessageV3, notification);
+        QFETCH(Protocol::ChangeNotification, notification);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
@@ -171,11 +171,11 @@ private Q_SLOTS:
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
-            const NotificationMessageV3::List notifications = notificationSpy->takeFirst().first().value<NotificationMessageV3::List>();
+            const Protocol::ChangeNotification::List notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>();
             QCOMPARE(notifications.count(), 1);
             QCOMPARE(notifications.first(), notification);
         } else {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<NotificationMessageV3::List>().isEmpty());
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
         }
     }
 

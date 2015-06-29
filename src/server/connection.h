@@ -67,12 +67,17 @@ public:
     void setSessionId(const QByteArray &id);
     QByteArray sessionId() const;
 
+    void setIsNotificationBus(bool on);
+    bool isNotificationBus() const;
+
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
-    void sendResponse(const Protocol::Command &response);
 
     Protocol::Command readCommand();
+
+public Q_SLOTS:
+    virtual void sendResponse(const Protocol::Command &response);
 
 Q_SIGNALS:
     void disconnected();
@@ -96,6 +101,7 @@ protected:
     QLocalSocket *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
+    bool m_isNotificationBus;
     mutable DataStore *m_backend;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;

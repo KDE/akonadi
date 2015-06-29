@@ -20,14 +20,15 @@
 #ifndef AKONADI_NOTIFICATIONMANAGER_H
 #define AKONADI_NOTIFICATIONMANAGER_H
 
-#include <private/notificationmessage_p.h>
-#include <private/notificationmessagev3_p.h>
+#include <private/protocol_p.h>
 #include "storage/entity.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtDBus/qdbuscontext.h>
+#include <QtCore/QMutex>
+#include <QtDBus/QDBusContext>
+#include <QtDBus/QDBusObjectPath>
 
 class NotificationManagerTest;
 
@@ -36,6 +37,7 @@ namespace Server {
 
 class NotificationCollector;
 class NotificationSource;
+class Connection;
 
 /**
   Notification manager D-Bus interface.
@@ -52,35 +54,20 @@ public:
 
     void connectNotificationCollector(NotificationCollector *collector);
 
+    void registerConnection(Connection *connection);
+    void unregisterConnection(Connection *connection);
+
 public Q_SLOTS:
     Q_SCRIPTABLE void emitPendingNotifications();
 
     /**
      * Subscribe to notifications emitted by this manager.
      *
-     * @param identifier Identifier to use of our subscription.
-     * @return The path we got assigned. Contains identifier.
-     */
-    Q_SCRIPTABLE QDBusObjectPath subscribe(const QString &identifier);
-
-    /**
-     * Subscribe to notifications emitted by this manager.
-     *
      * @param identifier Identifier to use for our subscription.
-     * @param serverSideMonitor Whether client supports server-side monitoring
-     * @return The path we got assigned. Contains identifier.
-     */
-    Q_SCRIPTABLE QDBusObjectPath subscribeV2(const QString &identifier, bool serverSideMonitor);
-
-    /**
-     * Subscribe to notifications emitted by this manager.
-     *
-     * @param identifier Identifier to use for our subscription.
-     * @param serverSideMonitor Whether client supports server-side monitoring
      * @param exclusive Exclusive subscribers also receive notifications on referenced collections
      * @return The path we got assigned. Contains identifier.
      */
-    Q_SCRIPTABLE QDBusObjectPath subscribeV3(const QString &identifier, bool serverSideMonitor, bool exclusive);
+    QDBusObjectPath subscribe(const QString &identifier, bool exclusive);
 
     /**
      * Unsubscribe from this manager.
@@ -90,21 +77,24 @@ public Q_SLOTS:
      *
      * @param identifier The identifier used for subscription.
      */
-    Q_SCRIPTABLE void unsubscribe(const QString &identifier);
+    void unsubscribe(const QString &identifier);
 
     /**
      * Returns identifiers of currently subscribed sources
      */
-    Q_SCRIPTABLE QStringList subscribers() const;
+    Q_SCRIPTABLE QList<QDBusObjectPath> subscribers() const;
+
+    Q_SCRIPTABLE void enableDebug(bool enable);
+    Q_SCRIPTABLE bool debugEnabled() const;
 
 Q_SIGNALS:
-    Q_SCRIPTABLE void notify(const Akonadi::NotificationMessage::List &msgs);
+    Q_SCRIPTABLE void debugNotify(const QVector<QByteArray> &msg);
 
-    Q_SCRIPTABLE void subscribed(const QString &identifier);
-    Q_SCRIPTABLE void unsubscribed(const QString &identifier);
+    void subscribed(const QDBusObjectPath &path);
+    void unsubscribed(const QDBusObjectPath &path);
 
 private Q_SLOTS:
-    void slotNotify(const Akonadi::NotificationMessageV3::List &msgs);
+    void slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs);
 
 private:
     NotificationManager();
@@ -114,11 +104,14 @@ private:
     void unregisterSource(NotificationSource *source);
 
     static NotificationManager *mSelf;
-    NotificationMessageV3::List mNotifications;
+    Protocol::ChangeNotification::List mNotifications;
     QTimer mTimer;
 
     //! One message source for each subscribed process
+    QMutex mSourcesLock;
     QHash<QString, NotificationSource *> mNotificationSources;
+
+    bool mDebug;
 
     friend class NotificationSource;
     friend class ::NotificationManagerTest;

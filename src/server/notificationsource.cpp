@@ -18,12 +18,13 @@
 */
 
 #include "notificationsource.h"
+
 #include <shared/akdebug.h>
 
 #include "notificationsourceadaptor.h"
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
-#include <private/notificationmessagev2_p_p.h>
+#include "connection.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -42,7 +43,6 @@ NotificationSource::NotificationSource(const QString &identifier, const QString 
     , mIdentifier(identifier)
     , mDBusIdentifier(identifier)
     , mClientWatcher(0)
-    , mServerSideMonitorEnabled(false)
     , mAllMonitored(false)
     , mExclusive(false)
 {
@@ -74,19 +74,11 @@ QDBusObjectPath NotificationSource::dbusPath() const
     return QDBusObjectPath(QLatin1String("/subscriber/") + mDBusIdentifier);
 }
 
-void NotificationSource::emitNotification(const NotificationMessage::List &notifications)
+void NotificationSource::emitNotification(const Protocol::ChangeNotification::List &notifications)
 {
-    Q_EMIT notify(notifications);
-}
-
-void NotificationSource::emitNotification(const NotificationMessageV2::List &notifications)
-{
-    Q_EMIT notifyV2(notifications);
-}
-
-void NotificationSource::emitNotification(const NotificationMessageV3::List &notifications)
-{
-    Q_EMIT notifyV3(notifications);
+    Q_FOREACH (const auto &notification, notifications) {
+        Q_EMIT notify(notification);
+    }
 }
 
 QString NotificationSource::identifier() const
@@ -97,16 +89,6 @@ QString NotificationSource::identifier() const
 void NotificationSource::unsubscribe()
 {
     mManager->unsubscribe(mIdentifier);
-}
-
-bool NotificationSource::isServerSideMonitorEnabled() const
-{
-    return mServerSideMonitorEnabled;
-}
-
-void NotificationSource::setServerSideMonitorEnabled(bool enabled)
-{
-    mServerSideMonitorEnabled = enabled;
 }
 
 bool NotificationSource::isExclusive() const
@@ -141,7 +123,7 @@ void NotificationSource::serviceUnregistered(const QString &serviceName)
 
 void NotificationSource::setMonitoredCollection(Entity::Id id, bool monitored)
 {
-    if (id < 0 || !isServerSideMonitorEnabled()) {
+    if (id < 0) {
         return;
     }
 
@@ -161,7 +143,7 @@ QVector<Entity::Id> NotificationSource::monitoredCollections() const
 
 void NotificationSource::setMonitoredItem(Entity::Id id, bool monitored)
 {
-    if (id < 0 || !isServerSideMonitorEnabled()) {
+    if (id < 0) {
         return;
     }
 
@@ -181,7 +163,7 @@ QVector<Entity::Id> NotificationSource::monitoredItems() const
 
 void NotificationSource::setMonitoredTag(Entity::Id id, bool monitored)
 {
-    if (id < 0 || !isServerSideMonitorEnabled()) {
+    if (id < 0) {
         return;
     }
 
@@ -201,10 +183,6 @@ QVector<Entity::Id> NotificationSource::monitoredTags() const
 
 void NotificationSource::setMonitoredResource(const QByteArray &resource, bool monitored)
 {
-    if (!isServerSideMonitorEnabled()) {
-        return;
-    }
-
     if (monitored && !mMonitoredResources.contains(resource)) {
         mMonitoredResources.insert(resource);
         Q_EMIT monitoredResourcesChanged();
@@ -221,7 +199,7 @@ QVector<QByteArray> NotificationSource::monitoredResources() const
 
 void NotificationSource::setMonitoredMimeType(const QString &mimeType, bool monitored)
 {
-    if (mimeType.isEmpty() || !isServerSideMonitorEnabled()) {
+    if (mimeType.isEmpty()) {
         return;
     }
 
@@ -241,10 +219,6 @@ QStringList NotificationSource::monitoredMimeTypes() const
 
 void NotificationSource::setAllMonitored(bool allMonitored)
 {
-    if (!isServerSideMonitorEnabled()) {
-        return;
-    }
-
     if (allMonitored && !mAllMonitored) {
         mAllMonitored = true;
         Q_EMIT isAllMonitoredChanged();
@@ -261,21 +235,11 @@ bool NotificationSource::isAllMonitored() const
 
 void NotificationSource::setSession(const QByteArray &sessionId)
 {
-    if (!isServerSideMonitorEnabled()) {
-        return;
-    }
-
-    if (mSession != sessionId) {
-        mSession = sessionId;
-    }
+    mSession = sessionId;
 }
 
 void NotificationSource::setIgnoredSession(const QByteArray &sessionId, bool ignored)
 {
-    if (!isServerSideMonitorEnabled()) {
-        return;
-    }
-
     if (ignored && !mIgnoredSessions.contains(sessionId)) {
         mIgnoredSessions.insert(sessionId);
         Q_EMIT ignoredSessionsChanged();
@@ -309,20 +273,16 @@ bool NotificationSource::isMimeTypeMonitored(const QString &mimeType) const
     // FIXME: Handle mimetype aliases
 }
 
-bool NotificationSource::isMoveDestinationResourceMonitored(const NotificationMessageV3 &msg) const
+bool NotificationSource::isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const
 {
-    if (msg.operation() != NotificationMessageV2::Move) {
+    if (msg.operation() != Protocol::ChangeNotification::Move) {
         return false;
     }
     return mMonitoredResources.contains(msg.destinationResource());
 }
 
-void NotificationSource::setMonitoredType(NotificationMessageV2::Type type, bool monitored)
+void NotificationSource::setMonitoredType(Protocol::ChangeNotification::Type type, bool monitored)
 {
-    if (!isServerSideMonitorEnabled()) {
-        return;
-    }
-
     if (monitored && !mMonitoredTypes.contains(type)) {
         mMonitoredTypes.insert(type);
         Q_EMIT monitoredTypesChanged();
@@ -332,36 +292,36 @@ void NotificationSource::setMonitoredType(NotificationMessageV2::Type type, bool
     }
 }
 
-QVector<NotificationMessageV2::Type> NotificationSource::monitoredTypes() const
+QVector<Protocol::ChangeNotification::Type> NotificationSource::monitoredTypes() const
 {
-    return setToVector<NotificationMessageV2::Type>(mMonitoredTypes);
+    return setToVector<Protocol::ChangeNotification::Type>(mMonitoredTypes);
 }
 
-bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notification)
+bool NotificationSource::acceptsNotification(const Protocol::ChangeNotification &notification)
 {
     // session is ignored
     if (mIgnoredSessions.contains(notification.sessionId())) {
         return false;
     }
 
-    if (notification.entities().count() == 0 && notification.type() != NotificationMessageV2::Relations) {
+    if (notification.entities().count() == 0 && notification.type() != Protocol::ChangeNotification::Relations) {
         return false;
     }
 
     //Only emit notifications for referenced collections if the subscriber is exclusive or monitors the collection
-    if (notification.type() == NotificationMessageV2::Collections) {
+    if (notification.type() == Protocol::ChangeNotification::Collections) {
         // HACK: We need to dispatch notifications about disabled collections to SOME
         // agents (that's what we have the exclusive subscription for) - but because
         // querying each Collection from database would be expensive, we use the
         // metadata hack to transfer this information from NotificationCollector
-        if (notification.d->metadata.contains("DISABLED") && (notification.operation() != NotificationMessageV2::Unsubscribe) && !notification.itemParts().contains("ENABLED")) {
+        if (notification.metadata().contains("DISABLED") && (notification.operation() != Protocol::ChangeNotification::Unsubscribe) && !notification.itemParts().contains("ENABLED")) {
             // Exclusive subscriber always gets it
             if (mExclusive) {
                 return true;
             }
 
 
-            Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
                 //Deliver the notification if referenced from this session
                 if (CollectionReferenceManager::instance()->isReferenced(entity.id, mSession)) {
                     return true;
@@ -383,17 +343,17 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
             // this one, so drop it
             return false;
         }
-    } else if (notification.type() == NotificationMessageV2::Items) {
+    } else if (notification.type() == Protocol::ChangeNotification::Items) {
         if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
             return (mExclusive || isCollectionMonitored(notification.parentCollection()) || isMoveDestinationResourceMonitored(notification));
         }
-    } else if (notification.type() == NotificationMessageV2::Tags) {
+    } else if (notification.type() == Protocol::ChangeNotification::Tags) {
         // Special handling for Tag removal notifications: When a Tag is removed,
         // a notification is emitted for each Resource that owns the tag (i.e.
         // each resource that owns a Tag RID - Tag RIDs are resource-specific).
         // Additionally then we send one more notification without any RID that is
         // destined for regular applications (which don't know anything about Tag RIDs)
-        if (notification.operation() == NotificationMessageV2::Remove) {
+        if (notification.operation() == Protocol::ChangeNotification::Remove) {
             // HACK: Since have no way to determine which resource this NotificationSource
             // belongs to, we are abusing the fact that each resource ignores it's own
             // main session, which is called the same name as the resource.
@@ -421,17 +381,17 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
     }
 
     // user requested everything
-    if (mAllMonitored && notification.type() != NotificationMessageV2::InvalidType) {
+    if (mAllMonitored && notification.type() != Protocol::ChangeNotification::InvalidType) {
         return true;
     }
 
     switch (notification.type()) {
-    case NotificationMessageV2::InvalidType:
+    case Protocol::ChangeNotification::InvalidType:
         akDebug() << "Received invalid change notification!";
         return false;
 
-    case NotificationMessageV2::Items:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(NotificationMessageV2::Items)) {
+    case Protocol::ChangeNotification::Items:
+        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Items)) {
             return false;
         }
         // we have a resource or mimetype filter
@@ -444,7 +404,7 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
                 return true;
             }
 
-            Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
                 if (isMimeTypeMonitored(entity.mimeType)) {
                     return true;
                 }
@@ -454,7 +414,7 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
         }
 
         // we explicitly monitor that item or the collections it's in
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
             if (mMonitoredItems.contains(entity.id)) {
                 return true;
             }
@@ -463,8 +423,8 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
         return isCollectionMonitored(notification.parentCollection())
                || isCollectionMonitored(notification.parentDestCollection());
 
-    case NotificationMessageV2::Collections:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(NotificationMessageV2::Collections)) {
+    case Protocol::ChangeNotification::Collections:
+        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Collections)) {
             return false;
         }
 
@@ -482,7 +442,7 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
         }
 
         // we explicitly monitor that colleciton, or all of them
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
             if (isCollectionMonitored(entity.id)) {
                 return true;
             }
@@ -491,8 +451,8 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
         return isCollectionMonitored(notification.parentCollection())
                || isCollectionMonitored(notification.parentDestCollection());
 
-    case NotificationMessageV2::Tags:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(NotificationMessageV2::Tags)) {
+    case Protocol::ChangeNotification::Tags:
+        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Tags)) {
             return false;
         }
 
@@ -500,7 +460,7 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
             return true;
         }
 
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
             if (mMonitoredTags.contains(entity.id)) {
                 return true;
             }
@@ -508,8 +468,8 @@ bool NotificationSource::acceptsNotification(const NotificationMessageV3 &notifi
 
         return false;
 
-    case NotificationMessageV2::Relations:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(NotificationMessageV2::Relations)) {
+    case Protocol::ChangeNotification::Relations:
+        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Relations)) {
             return false;
         }
         return true;

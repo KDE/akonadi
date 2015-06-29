@@ -2,9 +2,6 @@ set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
     datastream_p.cpp
-    notificationmessage.cpp
-    notificationmessagev2.cpp
-    notificationmessagev3.cpp
     protocol.cpp
     scope.cpp
     tristate.cpp
@@ -18,7 +15,7 @@ generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
 
 target_link_libraries(KF5AkonadiPrivate
-PRIVATE
+PUBLIC
     Qt5::Core
     Qt5::DBus
 )
@@ -39,9 +36,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h
     imapparser_p.h
     imapset_p.h
-    notificationmessage_p.h
-    notificationmessagev2_p.h
-    notificationmessagev3_p.h
     protocol_p.h
     xdgbasedirs_p.h
     capabilities_p.h
