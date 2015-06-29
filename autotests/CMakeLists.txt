@@ -59,7 +59,7 @@ include(../KF5AkonadiMacros.cmake)
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "protocol_p.h")
 qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 add_library(akonaditestfake SHARED

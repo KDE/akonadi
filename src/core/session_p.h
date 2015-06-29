@@ -61,6 +61,7 @@ public:
     void socketError(QLocalSocket::LocalSocketError error);
     void socketError(QAbstractSocket::SocketError error);
     void dataReceived();
+    virtual bool handleCommand(qint64 tag, const Protocol::Command &cmd);
     void doStartNext();
     void startJob(Job *job);
 
@@ -116,7 +117,7 @@ public:
 
     static int clientProtocolVersion()
     {
-        return 50;
+        return 51;
     }
 
     /**

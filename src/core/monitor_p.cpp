@@ -28,7 +28,6 @@
 #include "notificationmanagerinterface.h"
 #include "session.h"
 #include "changemediator_p.h"
-#include <akonadi/private/notificationmessagev2_p.h>
 
 #include <qdebug.h>
 
@@ -40,6 +39,7 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     : q_ptr(parent)
     , dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory)
     , notificationSource(0)
+    , notificationBus(0)
     , monitorAll(false)
     , exclusive(false)
     , mFetchChangedOnly(false)
@@ -52,6 +52,8 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , collectionMoveTranslationEnabled(true)
     , useRefCounting(false)
 {
+    qRegisterMetaType<Akonadi::Protocol::ChangeNotification::Type>();
+    qDBusRegisterMetaType<Akonadi::Protocol::ChangeNotification::Type>();
 }
 
 void MonitorPrivate::init()
@@ -70,9 +72,6 @@ void MonitorPrivate::init()
     QObject::connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
                      q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)));
 
-    NotificationMessageV2::registerDBusTypes();
-    NotificationMessageV3::registerDBusTypes();
-
     statisticsCompressionTimer.setSingleShot(true);
     statisticsCompressionTimer.setInterval(500);
     QObject::connect(&statisticsCompressionTimer, SIGNAL(timeout()), q_ptr, SLOT(slotFlushRecentlyChangedCollections()));
@@ -81,18 +80,23 @@ void MonitorPrivate::init()
 bool MonitorPrivate::connectToNotificationManager()
 {
     delete notificationSource;
-    notificationSource = 0;
 
     notificationSource = dependenciesFactory->createNotificationSource(q_ptr);
-
     if (!notificationSource) {
         return false;
     }
 
-    QObject::connect(notificationSource, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
-                     q_ptr, SLOT(slotNotify(Akonadi::NotificationMessageV3::List)));
-
     notificationSource->setSession(session->sessionId());
+
+    delete notificationBus;
+    notificationBus = dependenciesFactory->createNotificationBus(q_ptr, notificationSource);
+    if (!notificationBus) {
+        delete notificationSource;
+        notificationSource = 0;
+        return false;
+    }
+    QObject::connect(notificationBus, SIGNAL(notify(Akonadi::Protocol::ChangeNotification)),
+                     q_ptr, SLOT(slotNotify(Akonadi::Protocol::ChangeNotification)));
 
     return true;
 }
@@ -123,7 +127,7 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
             }
             Q_FOREACH (Monitor::Type type, types) {
                 notificationSource->setMonitoredType(
-                    static_cast<NotificationMessageV2::Type>(type), true);
+                    static_cast<Protocol::ChangeNotification::Type>(type), true);
             }
         }
     }
@@ -149,34 +153,34 @@ int MonitorPrivate::pipelineSize() const
     return PipelineSize;
 }
 
-bool MonitorPrivate::isLazilyIgnored(const NotificationMessageV3 &msg, bool allowModifyFlagsConversion) const
+bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotification &msg, bool allowModifyFlagsConversion) const
 {
-    NotificationMessageV2::Operation op = msg.operation();
+    Protocol::ChangeNotification::Operation op = msg.operation();
 
-    if (msg.type() == NotificationMessageV2::Tags
-        && ((op == NotificationMessageV2::Add && q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0)
-            || (op == NotificationMessageV2::Modify && q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0)
-            || (op == NotificationMessageV2::Remove && q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0))) {
+    if (msg.type() == Protocol::ChangeNotification::Tags
+        && ((op == Protocol::ChangeNotification::Add && q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0)
+            || (op == Protocol::ChangeNotification::Modify && q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0)
+            || (op == Protocol::ChangeNotification::Remove && q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0))) {
         return true;
     }
 
     if (!fetchCollectionStatistics
-        && (msg.type() == NotificationMessageV2::Items)
-        && ((op == NotificationMessageV2::Add && q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) == 0)
-            || (op == NotificationMessageV2::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
+        && (msg.type() == Protocol::ChangeNotification::Items)
+        && ((op == Protocol::ChangeNotification::Add && q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) == 0)
+            || (op == Protocol::ChangeNotification::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
                 && q_ptr->receivers(SIGNAL(itemsRemoved(Akonadi::Item::List))) == 0)
-            || (op == NotificationMessageV2::Modify && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)
-            || (op == NotificationMessageV2::ModifyFlags
+            || (op == Protocol::ChangeNotification::Modify && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)
+            || (op == Protocol::ChangeNotification::ModifyFlags
                 && (q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) == 0
                     // Newly delivered ModifyFlags notifications will be converted to
                     // itemChanged(item, "FLAGS") for legacy clients.
                     && (!allowModifyFlagsConversion || q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)))
-            || (op == NotificationMessageV2::ModifyTags && q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) == 0)
-            || (op == NotificationMessageV2::Move && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) == 0
+            || (op == Protocol::ChangeNotification::ModifyTags && q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) == 0)
+            || (op == Protocol::ChangeNotification::Move && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) == 0
                 && q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) == 0)
-            || (op == NotificationMessageV2::Link && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) == 0
+            || (op == Protocol::ChangeNotification::Link && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) == 0
                 && q_ptr->receivers(SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection))) == 0)
-            || (op == NotificationMessageV2::Unlink && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) == 0
+            || (op == Protocol::ChangeNotification::Unlink && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) == 0
                 && q_ptr->receivers(SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection))) == 0))) {
         return true;
     }
@@ -185,26 +189,26 @@ bool MonitorPrivate::isLazilyIgnored(const NotificationMessageV3 &msg, bool allo
         return false;
     }
 
-    if (msg.type() == NotificationMessageV2::Collections) {
+    if (msg.type() == Protocol::ChangeNotification::Collections) {
         // Lazy fetching can only affects items.
         return false;
     }
 
     Collection::Id parentCollectionId = msg.parentCollection();
 
-    if ((op == NotificationMessageV2::Add)
-        || (op == NotificationMessageV2::Remove)
-        || (op == NotificationMessageV2::Modify)
-        || (op == NotificationMessageV2::ModifyFlags)
-        || (op == NotificationMessageV2::ModifyTags)
-        || (op == NotificationMessageV2::Link)
-        || (op == NotificationMessageV2::Unlink)) {
+    if ((op == Protocol::ChangeNotification::Add)
+        || (op == Protocol::ChangeNotification::Remove)
+        || (op == Protocol::ChangeNotification::Modify)
+        || (op == Protocol::ChangeNotification::ModifyFlags)
+        || (op == Protocol::ChangeNotification::ModifyTags)
+        || (op == Protocol::ChangeNotification::Link)
+        || (op == Protocol::ChangeNotification::Unlink)) {
         if (isMonitored(parentCollectionId)) {
             return false;
         }
     }
 
-    if (op == NotificationMessageV2::Move) {
+    if (op == Protocol::ChangeNotification::Move) {
         if (!isMonitored(parentCollectionId) && !isMonitored(msg.parentDestCollection())) {
             return true;
         }
@@ -214,47 +218,47 @@ bool MonitorPrivate::isLazilyIgnored(const NotificationMessageV3 &msg, bool allo
     return true;
 }
 
-void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &needsSplit, bool &batchSupported) const
+void MonitorPrivate::checkBatchSupport(const Protocol::ChangeNotification &msg, bool &needsSplit, bool &batchSupported) const
 {
     const bool isBatch = (msg.entities().count() > 1);
 
-    if (msg.type() == NotificationMessageV2::Items) {
+    if (msg.type() == Protocol::ChangeNotification::Items) {
         switch (msg.operation()) {
-        case NotificationMessageV2::Add:
+        case Protocol::ChangeNotification::Add:
             needsSplit = isBatch;
             batchSupported = false;
             return;
-        case NotificationMessageV2::Modify:
+        case Protocol::ChangeNotification::Modify:
             needsSplit = isBatch;
             batchSupported = false;
             return;
-        case NotificationMessageV2::ModifyFlags:
+        case Protocol::ChangeNotification::ModifyFlags:
             batchSupported = q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) > 0;
             needsSplit = isBatch && !batchSupported && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) > 0;
             return;
-        case NotificationMessageV2::ModifyTags:
+        case Protocol::ChangeNotification::ModifyTags:
             // Tags were added after batch notifications, so they are always supported
             batchSupported = true;
             needsSplit = false;
             return;
-        case NotificationMessageV2::ModifyRelations:
+        case Protocol::ChangeNotification::ModifyRelations:
             // Relations were added after batch notifications, so they are always supported
             batchSupported = true;
             needsSplit = false;
             return;
-        case NotificationMessageV2::Move:
+        case Protocol::ChangeNotification::Move:
             needsSplit = isBatch && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) > 0;
             batchSupported = q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) > 0;
             return;
-        case NotificationMessageV2::Remove:
+        case Protocol::ChangeNotification::Remove:
             needsSplit = isBatch && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) > 0;
             batchSupported = q_ptr->receivers(SIGNAL(itemsRemoved(Akonadi::Item::List))) > 0;
             return;
-        case NotificationMessageV2::Link:
+        case Protocol::ChangeNotification::Link:
             needsSplit = isBatch && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) > 0;
             batchSupported = q_ptr->receivers(SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection))) > 0;
             return;
-        case NotificationMessageV2::Unlink:
+        case Protocol::ChangeNotification::Unlink:
             needsSplit = isBatch && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) > 0;
             batchSupported = q_ptr->receivers(SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection))) > 0;
             return;
@@ -264,27 +268,27 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool &n
             qDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
             return;
         }
-    } else if (msg.type() == NotificationMessageV2::Collections) {
+    } else if (msg.type() == Protocol::ChangeNotification::Collections) {
         needsSplit = isBatch;
         batchSupported = false;
-    } else if (msg.type() == NotificationMessageV2::Tags) {
+    } else if (msg.type() == Protocol::ChangeNotification::Tags) {
         needsSplit = isBatch;
         batchSupported = false;
-    } else if (msg.type() == NotificationMessageV2::Relations) {
+    } else if (msg.type() == Protocol::ChangeNotification::Relations) {
         needsSplit = isBatch;
         batchSupported = false;
     }
 }
 
-NotificationMessageV3::List MonitorPrivate::splitMessage(const NotificationMessageV3 &msg, bool legacy) const
+Protocol::ChangeNotification::List MonitorPrivate::splitMessage(const Protocol::ChangeNotification &msg, bool legacy) const
 {
-    NotificationMessageV3::List list;
+    Protocol::ChangeNotification::List list;
 
-    NotificationMessageV3 baseMsg;
+    Protocol::ChangeNotification baseMsg;
     baseMsg.setSessionId(msg.sessionId());
     baseMsg.setType(msg.type());
-    if (legacy && msg.operation() == NotificationMessageV2::ModifyFlags) {
-        baseMsg.setOperation(NotificationMessageV2::Modify);
+    if (legacy && msg.operation() == Protocol::ChangeNotification::ModifyFlags) {
+        baseMsg.setOperation(Protocol::ChangeNotification::Modify);
         baseMsg.setItemParts(QSet<QByteArray>() << "FLAGS");
     } else {
         baseMsg.setOperation(msg.operation());
@@ -300,8 +304,8 @@ NotificationMessageV3::List MonitorPrivate::splitMessage(const NotificationMessa
     baseMsg.setRemovedTags(msg.removedTags());
 
     list.reserve(msg.entities().count());
-    Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
-        NotificationMessageV3 copy = baseMsg;
+    Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
+        Protocol::ChangeNotification copy = baseMsg;
         copy.addEntity(entity.id, entity.remoteId, entity.remoteRevision, entity.mimeType);
 
         list << copy;
@@ -310,19 +314,19 @@ NotificationMessageV3::List MonitorPrivate::splitMessage(const NotificationMessa
     return list;
 }
 
-bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &msg) const
+bool MonitorPrivate::acceptNotification(const Akonadi::Protocol::ChangeNotification &msg) const
 {
     // session is ignored
     if (sessions.contains(msg.sessionId())) {
         return false;
     }
 
-    if (msg.entities().count() == 0 && msg.type() != NotificationMessageV2::Relations) {
+    if (msg.entities().count() == 0 && msg.type() != Protocol::ChangeNotification::Relations) {
         return false;
     }
 
     // user requested everything
-    if (monitorAll && msg.type() != NotificationMessageV2::InvalidType) {
+    if (monitorAll && msg.type() != Protocol::ChangeNotification::InvalidType) {
         return true;
     }
 
@@ -332,18 +336,18 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
     }
 
     switch (msg.type()) {
-    case NotificationMessageV2::InvalidType:
+    case Protocol::ChangeNotification::InvalidType:
         qWarning() << "Received invalid change notification!";
         return false;
 
-    case NotificationMessageV2::Items:
+    case Protocol::ChangeNotification::Items:
         // we have a resource or mimetype filter
         if (!resources.isEmpty() || !mimetypes.isEmpty()) {
             if (resources.contains(msg.resource()) || isMoveDestinationResourceMonitored(msg)) {
                 return true;
             }
 
-            Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
                 if (isMimeTypeMonitored(entity.mimeType)) {
                     return true;
                 }
@@ -352,7 +356,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
         }
 
         // we explicitly monitor that item or the collections it's in
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
             if (items.contains(entity.id)) {
                 return true;
             }
@@ -361,7 +365,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
         return isCollectionMonitored(msg.parentCollection())
                || isCollectionMonitored(msg.parentDestCollection());
 
-    case NotificationMessageV2::Collections:
+    case Protocol::ChangeNotification::Collections:
         // we have a resource filter
         if (!resources.isEmpty()) {
             const bool resourceMatches = resources.contains(msg.resource()) || isMoveDestinationResourceMonitored(msg);
@@ -374,7 +378,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
         }
 
         // we explicitly monitor that colleciton, or all of them
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
             if (isCollectionMonitored(entity.id)) {
                 return true;
             }
@@ -382,9 +386,9 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
         return isCollectionMonitored(msg.parentCollection())
                || isCollectionMonitored(msg.parentDestCollection());
 
-    case NotificationMessageV2::Tags:
+    case Protocol::ChangeNotification::Tags:
         if (!tags.isEmpty()) {
-            Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
                 if (tags.contains(entity.id)) {
                     return true;
                 }
@@ -392,7 +396,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
             return false;
         }
         return true;
-    case NotificationMessageV2::Relations:
+    case Protocol::ChangeNotification::Relations:
         return true;
     }
     Q_ASSERT(false);
@@ -402,7 +406,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::NotificationMessageV3 &ms
 void MonitorPrivate::cleanOldNotifications()
 {
     bool erased = false;
-    for (QQueue<NotificationMessageV3>::iterator it = pipeline.begin(); it != pipeline.end();) {
+    for (QQueue<Protocol::ChangeNotification>::iterator it = pipeline.begin(); it != pipeline.end();) {
         if (!acceptNotification(*it) || isLazilyIgnored(*it)) {
             it = pipeline.erase(it);
             erased = true;
@@ -411,7 +415,7 @@ void MonitorPrivate::cleanOldNotifications()
         }
     }
 
-    for (QQueue<NotificationMessageV3>::iterator it = pendingNotifications.begin(); it != pendingNotifications.end();) {
+    for (QQueue<Protocol::ChangeNotification>::iterator it = pendingNotifications.begin(); it != pendingNotifications.end();) {
         if (!acceptNotification(*it) || isLazilyIgnored(*it)) {
             it = pendingNotifications.erase(it);
             erased = true;
@@ -434,21 +438,21 @@ bool MonitorPrivate::fetchItems() const
     return !mItemFetchScope.isEmpty();
 }
 
-bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
+bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg)
 {
-    if (msg.type() == NotificationMessageV2::Tags) {
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+    if (msg.type() == Protocol::ChangeNotification::Tags) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
             if (!tagCache->ensureCached(QList<Tag::Id>() << entity.id, mTagFetchScope)) {
                 return false;
             }
         }
         return true;
     }
-    if (msg.type() == NotificationMessageV2::Relations) {
+    if (msg.type() == Protocol::ChangeNotification::Relations) {
         return true;
     }
 
-    if (msg.operation() == NotificationMessageV2::Remove && msg.type() == NotificationMessageV2::Collections) {
+    if (msg.operation() == Protocol::ChangeNotification::Remove && msg.type() == Protocol::ChangeNotification::Collections) {
         //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
         return true;
     }
@@ -458,17 +462,17 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         if (!collectionCache->ensureCached(msg.parentCollection(), mCollectionFetchScope)) {
             allCached = false;
         }
-        if (msg.operation() == NotificationMessageV2::Move && !collectionCache->ensureCached(msg.parentDestCollection(), mCollectionFetchScope)) {
+        if (msg.operation() == Protocol::ChangeNotification::Move && !collectionCache->ensureCached(msg.parentDestCollection(), mCollectionFetchScope)) {
             allCached = false;
         }
     }
-    if (msg.operation() == NotificationMessageV2::Remove) {
+    if (msg.operation() == Protocol::ChangeNotification::Remove) {
         return allCached; // the actual object is gone already, nothing to fetch there
     }
 
-    if (msg.type() == NotificationMessageV2::Items && fetchItems()) {
+    if (msg.type() == Protocol::ChangeNotification::Items && fetchItems()) {
         ItemFetchScope scope(mItemFetchScope);
-        if (mFetchChangedOnly && (msg.operation() == NotificationMessageV2::Modify || msg.operation() == NotificationMessageV2::ModifyFlags)) {
+        if (mFetchChangedOnly && (msg.operation() == Protocol::ChangeNotification::Modify || msg.operation() == Protocol::ChangeNotification::ModifyFlags)) {
             bool fullPayloadWasRequested = scope.fullPayload();
             scope.fetchFullPayload(false);
             QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
@@ -500,14 +504,14 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
         }
 
         // Make sure all tags for ModifyTags operation are in cache too
-        if (msg.operation() == NotificationMessageV2::ModifyTags) {
+        if (msg.operation() == Protocol::ChangeNotification::ModifyTags) {
             if (!tagCache->ensureCached((msg.addedTags() + msg.removedTags()).toList(), mTagFetchScope)) {
                 allCached = false;
             }
         }
 
-    } else if (msg.type() == NotificationMessageV2::Collections && fetchCollections()) {
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+    } else if (msg.type() == Protocol::ChangeNotification::Collections && fetchCollections()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
             if (!collectionCache->ensureCached(entity.id, mCollectionFetchScope)) {
                 allCached = false;
                 break;
@@ -517,16 +521,16 @@ bool MonitorPrivate::ensureDataAvailable(const NotificationMessageV3 &msg)
     return allCached;
 }
 
-bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
+bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
 {
     bool someoneWasListening = false;
     bool shouldCleanOldNotifications = false;
-    if (msg.type() == NotificationMessageV2::Tags) {
+    if (msg.type() == Protocol::ChangeNotification::Tags) {
         //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
         const Tag::List tags = tagCache->retrieve(msg.uids());
         someoneWasListening = emitTagsNotification(msg, tags);
         shouldCleanOldNotifications = !someoneWasListening;
-    } else if (msg.type() == NotificationMessageV2::Relations) {
+    } else if (msg.type() == Protocol::ChangeNotification::Relations) {
         Relation rel;
         Q_FOREACH (const QByteArray & part, msg.itemParts()) {
             QList<QByteArray> splitPart = part.split(' ');
@@ -546,28 +550,28 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
     } else {
         const Collection parent = collectionCache->retrieve(msg.parentCollection());
         Collection destParent;
-        if (msg.operation() == NotificationMessageV2::Move) {
+        if (msg.operation() == Protocol::ChangeNotification::Move) {
             destParent = collectionCache->retrieve(msg.parentDestCollection());
         }
 
-        if (msg.type() == NotificationMessageV2::Collections) {
+        if (msg.type() == Protocol::ChangeNotification::Collections) {
             Collection col;
-            Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
                 //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
                 col = collectionCache->retrieve(entity.id);
                 //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
                 //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
-                if (col.isValid() || msg.operation() == NotificationMessageV2::Remove || !fetchCollections()) {
+                if (col.isValid() || msg.operation() == Protocol::ChangeNotification::Remove || !fetchCollections()) {
                     someoneWasListening = emitCollectionNotification(msg, col, parent, destParent);
                     shouldCleanOldNotifications = !someoneWasListening;
                 }
             }
-        } else if (msg.type() == NotificationMessageV2::Items) {
+        } else if (msg.type() == Protocol::ChangeNotification::Items) {
             //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
             const Item::List items = itemCache->retrieve(msg.uids());
             //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
             //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
-            if (!items.isEmpty() || msg.operation() == NotificationMessageV2::Remove || !fetchItems()) {
+            if (!items.isEmpty() || msg.operation() == Protocol::ChangeNotification::Remove || !fetchItems()) {
                 someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
                 shouldCleanOldNotifications = !someoneWasListening;
             }
@@ -581,15 +585,15 @@ bool MonitorPrivate::emitNotification(const NotificationMessageV3 &msg)
     return someoneWasListening;
 }
 
-void MonitorPrivate::updatePendingStatistics(const NotificationMessageV3 &msg)
+void MonitorPrivate::updatePendingStatistics(const Protocol::ChangeNotification &msg)
 {
-    if (msg.type() == NotificationMessageV2::Items) {
+    if (msg.type() == Protocol::ChangeNotification::Items) {
         notifyCollectionStatisticsWatchers(msg.parentCollection(), msg.resource());
         // FIXME use the proper resource of the target collection, for cross resource moves
         notifyCollectionStatisticsWatchers(msg.parentDestCollection(), msg.destinationResource());
-    } else if (msg.type() == NotificationMessageV2::Collections && msg.operation() == NotificationMessageV2::Remove) {
+    } else if (msg.type() == Protocol::ChangeNotification::Collections && msg.operation() == Protocol::ChangeNotification::Remove) {
         // no need for statistics updates anymore
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
             recentlyChangedCollections.remove(entity.id);
         }
     }
@@ -632,17 +636,17 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
     recentlyChangedCollections.clear();
 }
 
-int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notificationQueue, const NotificationMessageV3 &msg)
+int MonitorPrivate::translateAndCompress(QQueue< Protocol::ChangeNotification > &notificationQueue, const Protocol::ChangeNotification &msg)
 {
     // We have to split moves into insert or remove if the source or destination
     // is not monitored.
-    if (msg.operation() != NotificationMessageV2::Move) {
+    if (msg.operation() != Protocol::ChangeNotification::Move) {
         notificationQueue.enqueue(msg);
         return 1;
     }
 
     // Always handle tags
-    if (msg.type() == NotificationMessageV2::Tags) {
+    if (msg.type() == Protocol::ChangeNotification::Tags) {
         notificationQueue.enqueue(msg);
         return 1;
     }
@@ -650,7 +654,7 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
     bool sourceWatched = false;
     bool destWatched = false;
 
-    if (useRefCounting && msg.type() == NotificationMessageV2::Items) {
+    if (useRefCounting && msg.type() == Protocol::ChangeNotification::Items) {
         sourceWatched = isMonitored(msg.parentCollection());
         destWatched = isMonitored(msg.parentDestCollection());
     } else {
@@ -670,28 +674,28 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
         return 0;
     }
 
-    if ((sourceWatched && destWatched) || (!collectionMoveTranslationEnabled && msg.type() == NotificationMessageV2::Collections)) {
+    if ((sourceWatched && destWatched) || (!collectionMoveTranslationEnabled && msg.type() == Protocol::ChangeNotification::Collections)) {
         notificationQueue.enqueue(msg);
         return 1;
     }
 
     if (sourceWatched) {
         // Transform into a removal
-        NotificationMessageV3 removalMessage = msg;
-        removalMessage.setOperation(NotificationMessageV2::Remove);
+        Protocol::ChangeNotification removalMessage = msg;
+        removalMessage.setOperation(Protocol::ChangeNotification::Remove);
         removalMessage.setParentDestCollection(-1);
         notificationQueue.enqueue(removalMessage);
         return 1;
     }
 
     // Transform into an insertion
-    NotificationMessageV3 insertionMessage = msg;
-    insertionMessage.setOperation(NotificationMessageV2::Add);
+    Protocol::ChangeNotification insertionMessage = msg;
+    insertionMessage.setOperation(Protocol::ChangeNotification::Add);
     insertionMessage.setParentCollection(msg.parentDestCollection());
     insertionMessage.setParentDestCollection(-1);
     // We don't support batch insertion, so we have to do it one by one
-    const NotificationMessageV3::List split = splitMessage(insertionMessage, false);
-    Q_FOREACH (const NotificationMessageV3 &insertion, split) {
+    const Protocol::ChangeNotification::List split = splitMessage(insertionMessage, false);
+    Q_FOREACH (const Protocol::ChangeNotification &insertion, split) {
         notificationQueue.enqueue(insertion);
     }
     return split.count();
@@ -706,56 +710,55 @@ int MonitorPrivate::translateAndCompress(QQueue< NotificationMessageV3 > &notifi
   fetchJobDone --> pipeline ?dataAvailable --> emit
  */
 
-void MonitorPrivate::slotNotify(const NotificationMessageV3::List &msgs)
+void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
 {
     int appendedMessages = 0;
     int modifiedMessages = 0;
     int erasedMessages = 0;
-    Q_FOREACH (const NotificationMessageV3 &msg, msgs) {
-        invalidateCaches(msg);
-        updatePendingStatistics(msg);
-        bool needsSplit = true;
-        bool supportsBatch = false;
 
-        if (isLazilyIgnored(msg, true)) {
-            continue;
+    invalidateCaches(msg);
+    updatePendingStatistics(msg);
+    bool needsSplit = true;
+    bool supportsBatch = false;
+
+    if (isLazilyIgnored(msg, true)) {
+        return;
+    }
+
+    checkBatchSupport(msg, needsSplit, supportsBatch);
+
+    if (supportsBatch
+        || (!needsSplit && !supportsBatch && msg.operation() != Protocol::ChangeNotification::ModifyFlags)
+        || msg.type() == Protocol::ChangeNotification::Collections) {
+        // Make sure the batch msg is always queued before the split notifications
+        const int oldSize = pendingNotifications.size();
+        const int appended = translateAndCompress(pendingNotifications, msg);
+        if (appended > 0) {
+            appendedMessages += appended;
+        } else {
+            ++modifiedMessages;
         }
-
-        checkBatchSupport(msg, needsSplit, supportsBatch);
-
-        if (supportsBatch
-            || (!needsSplit && !supportsBatch && msg.operation() != NotificationMessageV2::ModifyFlags)
-            || msg.type() == NotificationMessageV2::Collections) {
-            // Make sure the batch msg is always queued before the split notifications
-            const int oldSize = pendingNotifications.size();
-            const int appended = translateAndCompress(pendingNotifications, msg);
-            if (appended > 0) {
-                appendedMessages += appended;
-            } else {
-                ++modifiedMessages;
-            }
-            // translateAndCompress can remove an existing "modify" when msg is a "delete".
-            // Or it can merge two ModifyFlags and return false.
-            // We need to detect such removals, for ChangeRecorder.
-            if (pendingNotifications.count() != oldSize + appended) {
-                ++erasedMessages; // this count isn't exact, but it doesn't matter
-            }
-        } else if (needsSplit) {
-            // If it's not queued at least make sure we fetch all the items from split
-            // notifications in one go.
-            itemCache->ensureCached(msg.uids(), mItemFetchScope);
+        // translateAndCompress can remove an existing "modify" when msg is a "delete".
+        // Or it can merge two ModifyFlags and return false.
+        // We need to detect such removals, for ChangeRecorder.
+        if (pendingNotifications.count() != oldSize + appended) {
+            ++erasedMessages; // this count isn't exact, but it doesn't matter
         }
+    } else if (needsSplit) {
+        // If it's not queued at least make sure we fetch all the items from split
+        // notifications in one go.
+        itemCache->ensureCached(msg.uids(), mItemFetchScope);
+    }
 
-        // if the message contains more items, but we need to emit single-item notification,
-        // split the message into one message per item and queue them
-        // if the message contains only one item, but batches are not supported
-        // (and thus neither is flagsModified), splitMessage() will convert the
-        // notification to regular Modify with "FLAGS" part changed
-        if (needsSplit || (!needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags)) {
-            const NotificationMessageV3::List split = splitMessage(msg, !supportsBatch);
-            pendingNotifications << split.toList();
-            appendedMessages += split.count();
-        }
+    // if the message contains more items, but we need to emit single-item notification,
+    // split the message into one message per item and queue them
+    // if the message contains only one item, but batches are not supported
+    // (and thus neither is flagsModified), splitMessage() will convert the
+    // notification to regular Modify with "FLAGS" part changed
+    if (needsSplit || (!needsSplit && !supportsBatch && msg.operation() == Akonadi::Protocol::ChangeNotification::ModifyFlags)) {
+        const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
+        pendingNotifications << split.toList();
+        appendedMessages += split.count();
     }
 
     // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
@@ -773,7 +776,7 @@ void MonitorPrivate::slotNotify(const NotificationMessageV3::List &msgs)
 void MonitorPrivate::flushPipeline()
 {
     while (!pipeline.isEmpty()) {
-        const NotificationMessageV3 msg = pipeline.head();
+        const Protocol::ChangeNotification msg = pipeline.head();
         if (ensureDataAvailable(msg)) {
             // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
             // being called again) and we end up dequeuing an empty pipeline
@@ -795,7 +798,7 @@ void MonitorPrivate::dispatchNotifications()
 {
     // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
     while (pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty()) {
-        const NotificationMessageV3 msg = pendingNotifications.dequeue();
+        const Protocol::ChangeNotification msg = pendingNotifications.dequeue();
         if (ensureDataAvailable(msg) && pipeline.isEmpty()) {
             emitNotification(msg);
         } else {
@@ -818,10 +821,10 @@ static Relation::List extractRelations(QSet<QByteArray> &flags)
     return relations;
 }
 
-bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+bool MonitorPrivate::emitItemsNotification(const Protocol::ChangeNotification &msg_, const Item::List &items, const Collection &collection, const Collection &collectionDest)
 {
-    NotificationMessageV3 msg = msg_;
-    Q_ASSERT(msg.type() == NotificationMessageV2::Items);
+    Protocol::ChangeNotification msg = msg_;
+    Q_ASSERT(msg.type() == Protocol::ChangeNotification::Items);
     Collection col = collection;
     Collection colDest = collectionDest;
     if (!col.isValid()) {
@@ -837,7 +840,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
     }
 
     Relation::List addedRelations, removedRelations;
-    if (msg.operation() == NotificationMessageV2::ModifyRelations) {
+    if (msg.operation() == Protocol::ChangeNotification::ModifyRelations) {
         QSet<QByteArray> addedFlags = msg.addedFlags();
         addedRelations = extractRelations(addedFlags);
         msg.setAddedFlags(addedFlags);
@@ -848,26 +851,26 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
     }
 
     Tag::List addedTags, removedTags;
-    if (msg.operation() == NotificationMessageV2::ModifyTags) {
+    if (msg.operation() == Protocol::ChangeNotification::ModifyTags) {
         addedTags = tagCache->retrieve(msg.addedTags().toList());
         removedTags = tagCache->retrieve(msg.removedTags().toList());
     }
 
-    QMap<NotificationMessageV2::Id, NotificationMessageV2::Entity> msgEntities = msg.entities();
+    QMap<Protocol::ChangeNotification::Id, Protocol::ChangeNotification::Entity> msgEntities = msg.entities();
     Item::List its = items;
     QMutableListIterator<Item> iter(its);
     while (iter.hasNext()) {
         Item it = iter.next();
         if (it.isValid()) {
-            const NotificationMessageV2::Entity msgEntity = msgEntities[it.id()];
-            if (msg.operation() == NotificationMessageV2::Remove) {
+            const Protocol::ChangeNotification::Entity msgEntity = msgEntities[it.id()];
+            if (msg.operation() == Protocol::ChangeNotification::Remove) {
                 it.setRemoteId(msgEntity.remoteId);
                 it.setRemoteRevision(msgEntity.remoteRevision);
                 it.setMimeType(msgEntity.mimeType);
             }
 
             if (!it.parentCollection().isValid()) {
-                if (msg.operation() == NotificationMessageV2::Move) {
+                if (msg.operation() == Protocol::ChangeNotification::Move) {
                     it.setParentCollection(colDest);
                 } else {
                     it.setParentCollection(col);
@@ -885,7 +888,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
                     // If one client does a modify followed by a move we have to make sure that the
                     // AgentBase::itemChanged() in another client always sees the parent collection
                     // of the item before it has been moved.
-                    if (msg.operation() != NotificationMessageV2::Move) {
+                    if (msg.operation() != Protocol::ChangeNotification::Move) {
                         it.setParentCollection(col);
                     }
                 }
@@ -899,12 +902,12 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
     }
 
     // Now reconstruct any items there were left in msgItems
-    Q_FOREACH (const NotificationMessageV2::Entity &msgItem, msgEntities) {
+    Q_FOREACH (const Protocol::ChangeNotification::Entity &msgItem, msgEntities) {
         Item it(msgItem.id);
         it.setRemoteId(msgItem.remoteId);
         it.setRemoteRevision(msgItem.remoteRevision);
         it.setMimeType(msgItem.mimeType);
-        if (msg.operation() == NotificationMessageV2::Move) {
+        if (msg.operation() == Protocol::ChangeNotification::Move) {
             it.setParentCollection(colDest);
         } else {
             it.setParentCollection(col);
@@ -914,27 +917,27 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
 
     bool handled = false;
     switch (msg.operation()) {
-    case NotificationMessageV2::Add:
+    case Protocol::ChangeNotification::Add:
         if (q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) > 0) {
             Q_ASSERT(its.count() == 1);
             emit q_ptr->itemAdded(its.first(), col);
             return true;
         }
         return false;
-    case NotificationMessageV2::Modify:
+    case Protocol::ChangeNotification::Modify:
         if (q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) > 0) {
             Q_ASSERT(its.count() == 1);
             emit q_ptr->itemChanged(its.first(), msg.itemParts());
             return true;
         }
         return false;
-    case NotificationMessageV2::ModifyFlags:
+    case Protocol::ChangeNotification::ModifyFlags:
         if (q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) > 0) {
             emit q_ptr->itemsFlagsChanged(its, msg.addedFlags(), msg.removedFlags());
             handled = true;
         }
         return handled;
-    case NotificationMessageV2::Move:
+    case Protocol::ChangeNotification::Move:
         if (q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) > 0) {
             Q_ASSERT(its.count() == 1);
             emit q_ptr->itemMoved(its.first(), col, colDest);
@@ -945,7 +948,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
             handled = true;
         }
         return handled;
-    case NotificationMessageV2::Remove:
+    case Protocol::ChangeNotification::Remove:
         if (q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) > 0) {
             Q_ASSERT(its.count() == 1);
             emit q_ptr->itemRemoved(its.first());
@@ -956,7 +959,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
             handled = true;
         }
         return handled;
-    case NotificationMessageV2::Link:
+    case Protocol::ChangeNotification::Link:
         if (q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) > 0) {
             Q_ASSERT(its.count() == 1);
             emit q_ptr->itemLinked(its.first(), col);
@@ -967,7 +970,7 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
             handled = true;
         }
         return handled;
-    case NotificationMessageV2::Unlink:
+    case Protocol::ChangeNotification::Unlink:
         if (q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) > 0) {
             Q_ASSERT(its.count() == 1);
             emit q_ptr->itemUnlinked(its.first(), col);
@@ -978,13 +981,13 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
             handled = true;
         }
         return handled;
-    case NotificationMessageV2::ModifyTags:
+    case Protocol::ChangeNotification::ModifyTags:
         if (q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) > 0) {
             emit q_ptr->itemsTagsChanged(its, addedTags.toSet(), removedTags.toSet());
             return true;
         }
         return false;
-    case NotificationMessageV2::ModifyRelations:
+    case Protocol::ChangeNotification::ModifyRelations:
         if (q_ptr->receivers(SIGNAL(itemsRelationsChanged(Akonadi::Item::List,Akonadi::Relation::List,Akonadi::Relation::List))) > 0) {
             emit q_ptr->itemsRelationsChanged(its, addedRelations, removedRelations);
             return true;
@@ -997,9 +1000,9 @@ bool MonitorPrivate::emitItemsNotification(const NotificationMessageV3 &msg_, co
     return false;
 }
 
-bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg, const Collection &col, const Collection &par, const Collection &dest)
+bool MonitorPrivate::emitCollectionNotification(const Protocol::ChangeNotification &msg, const Collection &col, const Collection &par, const Collection &dest)
 {
-    Q_ASSERT(msg.type() == NotificationMessageV2::Collections);
+    Q_ASSERT(msg.type() == Protocol::ChangeNotification::Collections);
     Collection parent = par;
     if (!parent.isValid()) {
         parent = Collection(msg.parentCollection());
@@ -1010,15 +1013,15 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
     }
 
     Collection collection = col;
-    NotificationMessageV2::Entity msgEntities = msg.entities().cbegin().value();
-    if (!collection.isValid() || msg.operation() == NotificationMessageV2::Remove) {
+    Protocol::ChangeNotification::Entity msgEntities = msg.entities().cbegin().value();
+    if (!collection.isValid() || msg.operation() == Protocol::ChangeNotification::Remove) {
         collection = Collection(msgEntities.id);
         collection.setResource(QString::fromUtf8(msg.resource()));
         collection.setRemoteId(msgEntities.remoteId);
     }
 
     if (!collection.parentCollection().isValid()) {
-        if (msg.operation() == NotificationMessageV2::Move) {
+        if (msg.operation() == Protocol::ChangeNotification::Move) {
             collection.setParentCollection(destination);
         } else {
             collection.setParentCollection(parent);
@@ -1026,13 +1029,13 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
     }
 
     switch (msg.operation()) {
-    case NotificationMessageV2::Add:
+    case Protocol::ChangeNotification::Add:
         if (q_ptr->receivers(SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection))) == 0) {
             return false;
         }
         emit q_ptr->collectionAdded(collection, parent);
         return true;
-    case NotificationMessageV2::Modify:
+    case Protocol::ChangeNotification::Modify:
         if (q_ptr->receivers(SIGNAL(collectionChanged(Akonadi::Collection))) == 0
             && q_ptr->receivers(SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>))) == 0) {
             return false;
@@ -1040,19 +1043,19 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
         emit q_ptr->collectionChanged(collection);
         emit q_ptr->collectionChanged(collection, msg.itemParts());
         return true;
-    case NotificationMessageV2::Move:
+    case Protocol::ChangeNotification::Move:
         if (q_ptr->receivers(SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection))) == 0) {
             return false;
         }
         emit q_ptr->collectionMoved(collection, parent, destination);
         return true;
-    case NotificationMessageV2::Remove:
+    case Protocol::ChangeNotification::Remove:
         if (q_ptr->receivers(SIGNAL(collectionRemoved(Akonadi::Collection))) == 0) {
             return false;
         }
         emit q_ptr->collectionRemoved(collection);
         return true;
-    case NotificationMessageV2::Subscribe:
+    case Protocol::ChangeNotification::Subscribe:
         if (q_ptr->receivers(SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection))) == 0) {
             return false;
         }
@@ -1060,7 +1063,7 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
             emit q_ptr->collectionSubscribed(collection, parent);
         }
         return true;
-    case NotificationMessageV2::Unsubscribe:
+    case Protocol::ChangeNotification::Unsubscribe:
         if (q_ptr->receivers(SIGNAL(collectionUnsubscribed(Akonadi::Collection))) == 0) {
             return false;
         }
@@ -1075,15 +1078,15 @@ bool MonitorPrivate::emitCollectionNotification(const NotificationMessageV3 &msg
     return false;
 }
 
-bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, const Tag::List &tags)
+bool MonitorPrivate::emitTagsNotification(const Protocol::ChangeNotification &msg, const Tag::List &tags)
 {
-    Q_ASSERT(msg.type() == NotificationMessageV2::Tags);
+    Q_ASSERT(msg.type() == Protocol::ChangeNotification::Tags);
 
     Tag::List validTags;
-    if (msg.operation() == NotificationMessageV2::Remove) {
+    if (msg.operation() == Protocol::ChangeNotification::Remove) {
         //In case of a removed signal the cache entry was already invalidated, and we therefore received an empty list of tags
         validTags.reserve(msg.entities().count());
-        Q_FOREACH (const Akonadi::NotificationMessageV2::Entity &entity, msg.entities()) {
+        Q_FOREACH (const Akonadi::Protocol::ChangeNotification::Entity &entity, msg.entities()) {
             Tag tag(entity.id);
             tag.setRemoteId(entity.remoteId.toLatin1());
             validTags << tag;
@@ -1097,7 +1100,7 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
     }
 
     switch (msg.operation()) {
-    case NotificationMessageV2::Add:
+    case Protocol::ChangeNotification::Add:
         if (q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0) {
             return false;
         }
@@ -1105,7 +1108,7 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
             Q_EMIT q_ptr->tagAdded(tag);
         }
         return true;
-    case NotificationMessageV2::Modify:
+    case Protocol::ChangeNotification::Modify:
         if (q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0) {
             return false;
         }
@@ -1113,7 +1116,7 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
             Q_EMIT q_ptr->tagChanged(tag);
         }
         return true;
-    case NotificationMessageV2::Remove:
+    case Protocol::ChangeNotification::Remove:
         if (q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0) {
             return false;
         }
@@ -1128,16 +1131,16 @@ bool MonitorPrivate::emitTagsNotification(const NotificationMessageV3 &msg, cons
     return false;
 }
 
-bool MonitorPrivate::emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations)
+bool MonitorPrivate::emitRelationsNotification(const Protocol::ChangeNotification &msg, const Relation::List &relations)
 {
-    Q_ASSERT(msg.type() == NotificationMessageV2::Relations);
+    Q_ASSERT(msg.type() == Protocol::ChangeNotification::Relations);
 
     if (relations.isEmpty()) {
         return false;
     }
 
     switch (msg.operation()) {
-    case NotificationMessageV2::Add:
+    case Protocol::ChangeNotification::Add:
         if (q_ptr->receivers(SIGNAL(relationAdded(Akonadi::Relation))) == 0) {
             return false;
         }
@@ -1145,7 +1148,7 @@ bool MonitorPrivate::emitRelationsNotification(const NotificationMessageV3 &msg,
             Q_EMIT q_ptr->relationAdded(relation);
         }
         return true;
-    case NotificationMessageV2::Remove:
+    case Protocol::ChangeNotification::Remove:
         if (q_ptr->receivers(SIGNAL(relationRemoved(Akonadi::Relation))) == 0) {
             return false;
         }
@@ -1160,35 +1163,35 @@ bool MonitorPrivate::emitRelationsNotification(const NotificationMessageV3 &msg,
     return false;
 }
 
-void MonitorPrivate::invalidateCaches(const NotificationMessageV3 &msg)
+void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
 {
     // remove invalidates
-    if (msg.operation() == NotificationMessageV2::Remove) {
-        if (msg.type() == NotificationMessageV2::Collections) {
+    if (msg.operation() == Protocol::ChangeNotification::Remove) {
+        if (msg.type() == Protocol::ChangeNotification::Collections) {
             Q_FOREACH (qint64 uid, msg.uids()) {
                 collectionCache->invalidate(uid);
             }
-        } else if (msg.type() == NotificationMessageV2::Items) {
+        } else if (msg.type() == Protocol::ChangeNotification::Items) {
             itemCache->invalidate(msg.uids());
-        } else if (msg.type() == NotificationMessageV2::Tags) {
+        } else if (msg.type() == Protocol::ChangeNotification::Tags) {
             tagCache->invalidate(msg.uids());
         }
     }
 
     // modify removes the cache entry, as we need to re-fetch
     // And subscription modify the visibility of the collection by the collectionFetchScope.
-    if (msg.operation() == NotificationMessageV2::Modify
-        || msg.operation() == NotificationMessageV2::ModifyFlags
-        || msg.operation() == NotificationMessageV3::ModifyTags
-        || msg.operation() == NotificationMessageV2::Move
-        || msg.operation() == NotificationMessageV2::Subscribe) {
-        if (msg.type() == NotificationMessageV2::Collections) {
+    if (msg.operation() == Protocol::ChangeNotification::Modify
+        || msg.operation() == Protocol::ChangeNotification::ModifyFlags
+        || msg.operation() == Protocol::ChangeNotification::ModifyTags
+        || msg.operation() == Protocol::ChangeNotification::Move
+        || msg.operation() == Protocol::ChangeNotification::Subscribe) {
+        if (msg.type() == Protocol::ChangeNotification::Collections) {
             Q_FOREACH (quint64 uid, msg.uids()) {
                 collectionCache->update(uid, mCollectionFetchScope);
             }
-        } else if (msg.type() == NotificationMessageV2::Items) {
+        } else if (msg.type() == Protocol::ChangeNotification::Items) {
             itemCache->update(msg.uids(), mItemFetchScope);
-        } else if (msg.type() == NotificationMessageV2::Tags) {
+        } else if (msg.type() == Protocol::ChangeNotification::Tags) {
             tagCache->update(msg.uids(), mTagFetchScope);
         }
     }

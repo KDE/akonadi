@@ -20,6 +20,7 @@
 #include "changenotificationdependenciesfactory_p.h"
 #include "KDBusConnectionPool"
 #include "notificationsource_p.h"
+#include "notificationbus_p.h"
 #include "notificationsourceinterface.h"
 #include "notificationmanagerinterface.h"
 #include "changemediator_p.h"
@@ -54,7 +55,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
             KGlobal::mainComponent().componentName(),
             QString::number(QCoreApplication::applicationPid()),
             KRandom::randomString(6));
-    QDBusObjectPath p = manager->subscribeV2(name, true);
+    QDBusObjectPath p = manager->subscribe(name, false);
     const bool validError = manager->lastError().isValid();
     if (validError) {
         qWarning() << manager->lastError().name() << manager->lastError().message();
@@ -74,6 +75,13 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
         return 0;
     }
     return new NotificationSource(notificationSource);
+}
+
+QObject *ChangeNotificationDependenciesFactory::createNotificationBus(QObject *parent, NotificationSource *source)
+{
+    NotificationBusPrivate *priv = new NotificationBusPrivate;
+    new Session(priv, source->identifier().toLatin1(), parent);
+    return priv;
 }
 
 QObject *ChangeNotificationDependenciesFactory::createChangeMediator(QObject *parent)

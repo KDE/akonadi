@@ -18,6 +18,7 @@
 */
 
 #include "notificationsource_p.h"
+#include "notificationsourceinterface.h"
 
 using namespace Akonadi;
 
@@ -25,13 +26,17 @@ NotificationSource::NotificationSource(QObject *source)
     : QObject(source)
 {
     Q_ASSERT(source);
-
-    connect(source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
-            this, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)));
 }
 
 NotificationSource::~NotificationSource()
 {
+}
+
+QString NotificationSource::identifier() const
+{
+    org::freedesktop::Akonadi::NotificationSource *source =
+        qobject_cast<org::freedesktop::Akonadi::NotificationSource*>(parent());
+    return source->path();
 }
 
 void NotificationSource::setAllMonitored(bool allMonitored)
@@ -104,10 +109,10 @@ void NotificationSource::setMonitoredTag(Tag::Id id, bool monitored)
     Q_UNUSED(ok);
 }
 
-void NotificationSource::setMonitoredType(NotificationMessageV2::Type type, bool monitored)
+void NotificationSource::setMonitoredType(Protocol::ChangeNotification::Type type, bool monitored)
 {
     const bool ok = QMetaObject::invokeMethod(parent(), "setMonitoredType",
-                                              Q_ARG(Akonadi::NotificationMessageV2::Type, type),
+                                              Q_ARG(Akonadi::Protocol::ChangeNotification::Type, type),
                                               Q_ARG(bool, monitored));
     Q_ASSERT(ok);
     Q_UNUSED(ok);

@@ -38,6 +38,10 @@ class MonitorPrivate;
 class Session;
 class TagFetchScope;
 
+namespace Protocol {
+class ChangeNotification;
+}
+
 /**
  * @short Monitors an item or collection for changes.
  *
@@ -742,7 +746,7 @@ private:
     Q_PRIVATE_SLOT(d_ptr, void slotSessionDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_ptr, void slotStatisticsChangedFinished(KJob *))
     Q_PRIVATE_SLOT(d_ptr, void slotFlushRecentlyChangedCollections())
-    Q_PRIVATE_SLOT(d_ptr, void slotNotify(const Akonadi::NotificationMessageV3::List &))
+    Q_PRIVATE_SLOT(d_ptr, void slotNotify(const Akonadi::Protocol::ChangeNotification &))
     Q_PRIVATE_SLOT(d_ptr, void dataAvailable())
     Q_PRIVATE_SLOT(d_ptr, void serverStateChanged(Akonadi::ServerManager::State))
     Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))

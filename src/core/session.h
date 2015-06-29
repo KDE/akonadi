@@ -30,6 +30,7 @@ namespace Akonadi {
 
 class Job;
 class SessionPrivate;
+class ChangeNotificationDependenciesFactory;
 
 /**
  * @short A communication session with the Akonadi storage.
@@ -122,6 +123,7 @@ private:
     //@cond PRIVATE
     SessionPrivate *const d;
     friend class ::FakeSession;
+    friend class ChangeNotificationDependenciesFactory;
 
     Q_PRIVATE_SLOT(d, void reconnect())
     Q_PRIVATE_SLOT(d, void socketError(QLocalSocket::LocalSocketError))

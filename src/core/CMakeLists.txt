@@ -45,7 +45,8 @@ set(akonadicore_base_SRCS
     monitor.cpp
     monitor_p.cpp
     newmailnotifierattribute.cpp
-    notificationsource.cpp
+    notificationbus_p.cpp
+    notificationsource_p.cpp
     partfetcher.cpp
     pastehelper.cpp
     persistentsearchattribute.cpp
@@ -268,11 +269,10 @@ if (NOT "${std_exception_file}" STREQUAL "")
 endif()
 
 set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/notificationmessagev3_p.h" )
 qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface)
 
 set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/notificationmessagev3_p.h" )
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/protocol_p.h" )
 qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface)
 
 qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml)
