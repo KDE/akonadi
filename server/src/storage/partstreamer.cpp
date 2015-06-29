@@ -290,6 +290,12 @@ bool PartStreamer::stream(const QByteArray &command, bool checkExists,
         mDataChanged = true;
     }
 
+    // If the part is external, remember it's current file name
+    QString originalFile;
+    if (part.isValid() && part.external()) {
+        originalFile = PartHelper::resolveAbsolutePath(part.data());
+    }
+
     part.setPartType(partType);
     part.setVersion(partVersion);
     part.setPimItemId(mItem.id());
@@ -304,6 +310,14 @@ bool PartStreamer::stream(const QByteArray &command, bool checkExists,
 
     if (ok && mCheckChanged) {
         *changed = mDataChanged;
+    }
+
+    if (!originalFile.isEmpty()) {
+        // If the part was external but is not anymore, or if it's still external
+        // but the filename has changed (revision update), remove the original file
+        if (!part.external() || (part.external() && originalFile != PartHelper::resolveAbsolutePath(part.data()))) {
+            PartHelper::removeFile(originalFile);
+        }
     }
 
     return ok;
