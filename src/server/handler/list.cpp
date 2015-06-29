@@ -340,14 +340,12 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     }
 
     QVariantList mimeTypeIds;
-    mimeTypeIds.reserve(mCollections.size());
-    Q_FOREACH (const Collection::Id id, mCollections.keys()) {
-        mimeTypeIds << id;
-    }
-
     QVariantList attributeIds;
-    Q_FOREACH (const Collection::Id id, mCollections.keys()) {
-        attributeIds << id;
+    mimeTypeIds.reserve(mCollections.size());
+    attributeIds.reserve(mCollections.size());
+    for (auto it = mCollections.cbegin(), end = mCollections.cend(); it != end; ++it) {
+        mimeTypeIds << it.key();
+        attributeIds << it.key();
     }
 
     QVariantList ancestorIds;
