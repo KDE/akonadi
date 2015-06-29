@@ -284,25 +284,22 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
     }
 
     if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
-        // FIXME: Conflict handling
-        /*
-            setError(Unknown);
-            setErrorText(QString::fromUtf8(data));
-
-            if (data.contains("[LLCONFLICT]")) {
-                if (d->mAutomaticConflictHandlingEnabled) {
-                    ConflictHandler *handler = new ConflictHandler(ConflictHandler::LocalLocalConflict, this);
-                    handler->setConflictingItems(d->mItems.first(), d->mItems.first());
-                    connect(handler, SIGNAL(conflictResolved()), SLOT(conflictResolved()));
-                    connect(handler, SIGNAL(error(QString)), SLOT(conflictResolveError(QString)));
-
-                    QMetaObject::invokeMethod(handler, "start", Qt::QueuedConnection);
-                    return;
-                }
-            }
-        */
-
         Protocol::ModifyItemsResponse resp(response);
+        setError(Unknown);
+        setErrorText(resp.errorMessage());
+
+        if (resp.errorMessage().contains(QStringLiteral("[LLCONFLICT]"))) {
+            if (d->mAutomaticConflictHandlingEnabled) {
+                ConflictHandler *handler = new ConflictHandler(ConflictHandler::LocalLocalConflict, this);
+                handler->setConflictingItems(d->mItems.first(), d->mItems.first());
+                connect(handler, SIGNAL(conflictResolved()), SLOT(conflictResolved()));
+                connect(handler, SIGNAL(error(QString)), SLOT(conflictResolveError(QString)));
+
+                QMetaObject::invokeMethod(handler, "start", Qt::QueuedConnection);
+                return;
+            }
+        }
+
         if (resp.modificationDateTime().isValid()) {
             Item &item = d->mItems.first();
             item.setModificationTime(resp.modificationDateTime());
