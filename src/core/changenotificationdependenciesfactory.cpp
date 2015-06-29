@@ -80,7 +80,8 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
 QObject *ChangeNotificationDependenciesFactory::createNotificationBus(QObject *parent, NotificationSource *source)
 {
     NotificationBusPrivate *priv = new NotificationBusPrivate;
-    new Session(priv, source->identifier().toLatin1(), parent);
+    Session *session = new Session(priv, source->identifier().toLatin1(), parent);
+    priv->setParent(session);
     return priv;
 }
 

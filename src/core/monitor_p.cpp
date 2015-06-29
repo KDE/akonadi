@@ -88,7 +88,12 @@ bool MonitorPrivate::connectToNotificationManager()
 
     notificationSource->setSession(session->sessionId());
 
-    delete notificationBus;
+    if (notificationBus) {
+        // HACK: Implementation detail: notificationBus is SessionPrivate subclass,
+        // so we cannot delete it directly, but we need to delete the owning
+        // Session instead, otherwise it will dereference a deleted d_ptr.
+        delete notificationBus->parent();
+    }
     notificationBus = dependenciesFactory->createNotificationBus(q_ptr, notificationSource);
     if (!notificationBus) {
         delete notificationSource;
