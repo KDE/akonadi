@@ -350,8 +350,9 @@ void List::retrieveCollections(const Collection &topParent, int depth)
 
     QVariantList ancestorIds;
     //We'd only require the non-leaf collections, but we don't know which those are, so we take all.
-    Q_FOREACH (const Collection::Id id, mCollections.keys()) {
-        ancestorIds << id;
+    ancestorIds.reserve(mCollections.size());
+    for (auto it = mCollections.cbegin(), end = mCollections.cend(); it != end; ++it) {
+        ancestorIds << it.key();
     }
     if (mAncestorDepth > 0 && topParent.isValid()) {
         //unless depth is 0 the base collection is not part of the listing
