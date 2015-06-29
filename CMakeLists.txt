@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.11.0")
-set(KDEPIMLIBS_VERSION "4.83.0")
+set(KDEPIMLIBS_VERSION "4.84.0")
 set(QT_REQUIRED_VERSION "5.2.0")
 
 # Remove it when we split it
@@ -54,7 +54,7 @@ set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
 
 
-set(KF5AkonadiServer_MIN_VERSION "5.0.50")
+set(KF5AkonadiServer_MIN_VERSION "5.0.51")
 find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)

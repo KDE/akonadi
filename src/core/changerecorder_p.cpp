@@ -46,12 +46,12 @@ int ChangeRecorderPrivate::pipelineSize() const
     return MonitorPrivate::pipelineSize();
 }
 
-void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV3::List &msgs)
+void ChangeRecorderPrivate::slotNotify(const Akonadi::Protocol::ChangeNotification &msg)
 {
     Q_Q(ChangeRecorder);
     const int oldChanges = pendingNotifications.size();
     // with change recording disabled this will automatically take care of dispatching notification messages and saving
-    MonitorPrivate::slotNotify(msgs);
+    MonitorPrivate::slotNotify(msg);
     if (enableChangeRecording && pendingNotifications.size() != oldChanges) {
         emit q->changesAdded();
     }
@@ -85,10 +85,10 @@ void ChangeRecorderPrivate::loadNotifications()
 
         for (int i = 0; i < size; ++i) {
             settings->setArrayIndex(i);
-            NotificationMessageV3 msg;
+            Protocol::ChangeNotification msg;
             msg.setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
-            msg.setType((NotificationMessageV2::Type)settings->value(QStringLiteral("type")).toInt());
-            msg.setOperation((NotificationMessageV2::Operation)settings->value(QStringLiteral("op")).toInt());
+            msg.setType((Protocol::ChangeNotification::Type)settings->value(QStringLiteral("type")).toInt());
+            msg.setOperation((Protocol::ChangeNotification::Operation)settings->value(QStringLiteral("op")).toInt());
             msg.addEntity(settings->value(QStringLiteral("uid")).toLongLong(),
                           settings->value(QStringLiteral("rid")).toString(),
                           QString(),
@@ -127,11 +127,11 @@ void ChangeRecorderPrivate::loadNotifications()
     notificationsLoaded();
 }
 
-static const quint64 s_currentVersion = Q_UINT64_C(0x000300000000);
+static const quint64 s_currentVersion = Q_UINT64_C(0x000400000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device, bool &needsFullSave) const
+QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QIODevice *device, bool &needsFullSave) const
 {
     QDataStream stream(device);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -143,7 +143,7 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device,
     QSet<QByteArray> itemParts, addedFlags, removedFlags;
     QSet<qint64> addedTags, removedTags;
 
-    QQueue<NotificationMessageV3> list;
+    QQueue<Protocol::ChangeNotification> list;
 
     quint64 sizeAndVersion;
     stream >> sizeAndVersion;
@@ -161,7 +161,7 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device,
     needsFullSave = startOffset > 0 || version == 0;
 
     for (quint64 i = 0; i < size && !stream.atEnd(); ++i) {
-        NotificationMessageV2 msg;
+        Protocol::ChangeNotification msg;
 
         if (version == 1) {
             stream >> sessionId;
@@ -180,8 +180,8 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device,
             }
 
             msg.setSessionId(sessionId);
-            msg.setType(static_cast<NotificationMessageV2::Type>(type));
-            msg.setOperation(static_cast<NotificationMessageV2::Operation>(operation));
+            msg.setType(static_cast<Protocol::ChangeNotification::Type>(type));
+            msg.setOperation(static_cast<Protocol::ChangeNotification::Operation>(operation));
             msg.addEntity(uid, remoteId, QString(), mimeType);
             msg.setResource(resource);
             msg.setParentCollection(parentCollection);
@@ -190,7 +190,7 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device,
 
         } else if (version == 2 || version == 3) {
 
-            NotificationMessageV3 msg;
+            Protocol::ChangeNotification msg;
 
             stream >> sessionId;
             stream >> type;
@@ -220,8 +220,8 @@ QQueue<NotificationMessageV3> ChangeRecorderPrivate::loadFrom(QIODevice *device,
             }
 
             msg.setSessionId(sessionId);
-            msg.setType(static_cast<NotificationMessageV2::Type>(type));
-            msg.setOperation(static_cast<NotificationMessageV2::Operation>(operation));
+            msg.setType(static_cast<Protocol::ChangeNotification::Type>(type));
+            msg.setOperation(static_cast<Protocol::ChangeNotification::Operation>(operation));
             msg.setResource(resource);
             msg.setDestinationResource(destinationResource);
             msg.setParentCollection(parentCollection);
@@ -271,19 +271,17 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
 
     QString result;
     bool dummy;
-    const QQueue<NotificationMessageV3> notifications = loadFrom(&file, dummy);
-    Q_FOREACH(const NotificationMessageV3 &n, notifications) {
-        n.toString();
-
+    const QQueue<Protocol::ChangeNotification> notifications = loadFrom(&file, dummy);
+    Q_FOREACH(const Protocol::ChangeNotification &n, notifications) {
         QString typeString;
         switch (n.type()) {
-        case NotificationMessageV2::Collections:
+            case Protocol::ChangeNotification::Collections:
             typeString = QStringLiteral("Collections");
             break;
-        case NotificationMessageV2::Items:
+        case Protocol::ChangeNotification::Items:
             typeString = QStringLiteral("Items");
             break;
-        case NotificationMessageV2::Tags:
+        case Protocol::ChangeNotification::Tags:
             typeString = QStringLiteral("Tags");
             break;
         default:
@@ -293,34 +291,34 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
 
         QString operationString;
         switch (n.operation()) {
-        case NotificationMessageV2::Add:
+        case Protocol::ChangeNotification::Add:
             operationString = QStringLiteral("Add");
             break;
-        case NotificationMessageV2::Modify:
+        case Protocol::ChangeNotification::Modify:
             operationString = QStringLiteral("Modify");
             break;
-        case NotificationMessageV2::ModifyFlags:
+        case Protocol::ChangeNotification::ModifyFlags:
             operationString = QStringLiteral("ModifyFlags");
             break;
-        case NotificationMessageV2::ModifyTags:
+        case Protocol::ChangeNotification::ModifyTags:
             operationString = QStringLiteral("ModifyTags");
             break;
-        case NotificationMessageV2::Move:
+        case Protocol::ChangeNotification::Move:
             operationString = QStringLiteral("Move");
             break;
-        case NotificationMessageV2::Remove:
+        case Protocol::ChangeNotification::Remove:
             operationString = QStringLiteral("Remove");
             break;
-        case NotificationMessageV2::Link:
+        case Protocol::ChangeNotification::Link:
             operationString = QStringLiteral("Link");
             break;
-        case NotificationMessageV2::Unlink:
+        case Protocol::ChangeNotification::Unlink:
             operationString = QStringLiteral("Unlink");
             break;
-        case NotificationMessageV2::Subscribe:
+        case Protocol::ChangeNotification::Subscribe:
             operationString = QStringLiteral("Subscribe");
             break;
-        case NotificationMessageV2::Unsubscribe:
+        case Protocol::ChangeNotification::Unsubscribe:
             operationString = QStringLiteral("Unsubscribe");
             break;
         default:
@@ -351,13 +349,16 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     return result;
 }
 
-void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessageV3 &msg)
+void ChangeRecorderPrivate::addToStream(QDataStream &stream, const Protocol::ChangeNotification &msg)
 {
+    // We deliberately don't use Factory::serialize(), because the internal
+    // serialization format could change at any point
+
     stream << msg.sessionId();
     stream << int(msg.type());
     stream << int(msg.operation());
     stream << msg.entities().count();
-    Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+    Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
         stream << quint64(entity.id);
         stream << entity.remoteId;
         stream << entity.remoteRevision;
@@ -435,7 +436,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
     //qDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
     for (int i = 0; i < pendingNotifications.count(); ++i) {
-        const NotificationMessageV3 msg = pendingNotifications.at(i);
+        const Protocol::ChangeNotification msg = pendingNotifications.at(i);
         addToStream(stream, msg);
     }
 }
@@ -492,7 +493,7 @@ void ChangeRecorderPrivate::notificationsLoaded()
     m_startOffset = 0;
 }
 
-bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessageV3 &msg)
+bool ChangeRecorderPrivate::emitNotification(const Protocol::ChangeNotification &msg)
 {
     const bool someoneWasListening = MonitorPrivate::emitNotification(msg);
     if (!someoneWasListening && enableChangeRecording) {

@@ -26,7 +26,8 @@
 
 #include "entity.h"
 #include "tag.h"
-#include <akonadi/private/notificationmessagev3_p.h>
+
+#include <akonadi/private/protocol_p.h>
 
 namespace Akonadi {
 
@@ -38,6 +39,8 @@ public:
     NotificationSource(QObject *source);
     ~NotificationSource();
 
+    QString identifier() const;
+
     void setAllMonitored(bool allMonitored);
     void setExclusive(bool exclusive);
     void setMonitoredCollection(Entity::Id id, bool monitored);
@@ -45,14 +48,11 @@ public:
     void setMonitoredResource(const QByteArray &resource, bool monitored);
     void setMonitoredMimeType(const QString &mimeType, bool monitored);
     void setMonitoredTag(Tag::Id id, bool monitored);
-    void setMonitoredType(NotificationMessageV2::Type type, bool monitored);
+    void setMonitoredType(Protocol::ChangeNotification::Type type, bool monitored);
     void setIgnoredSession(const QByteArray &session, bool monitored);
     void setSession(const QByteArray &session);
 
     QObject *source() const;
-
-Q_SIGNALS:
-    void notifyV3(const Akonadi::NotificationMessageV3::List &msgs);
 };
 
 }

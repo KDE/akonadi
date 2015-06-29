@@ -34,7 +34,7 @@
 #include "changenotificationdependenciesfactory_p.h"
 #include "notificationsource_p.h"
 
-#include <akonadi/private/notificationmessagev3_p.h>
+#include <akonadi/private/protocol_p.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
@@ -64,6 +64,7 @@ public:
     Q_DECLARE_PUBLIC(Monitor)
     ChangeNotificationDependenciesFactory *dependenciesFactory;
     NotificationSource *notificationSource;
+    QObject *notificationBus;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
@@ -84,9 +85,9 @@ public:
     QMimeDatabase mimeDatabase;
 
     // The waiting list
-    QQueue<NotificationMessageV3> pendingNotifications;
+    QQueue<Protocol::ChangeNotification> pendingNotifications;
     // The messages for which data is currently being fetched
-    QQueue<NotificationMessageV3> pipeline;
+    QQueue<Protocol::ChangeNotification> pipeline;
     // In a pure Monitor, the pipeline contains items that were dequeued from pendingNotifications.
     // The ordering [pipeline] [pendingNotifications] is kept at all times.
     // [] [A B C]  -> [A B] [C]  -> [B] [C] -> [B C] [] -> [C] [] -> []
@@ -107,7 +108,7 @@ public:
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification(const NotificationMessageV3 &msg) const;
+    bool acceptNotification(const Protocol::ChangeNotification &msg) const;
     void dispatchNotifications();
     void flushPipeline();
 
@@ -115,15 +116,15 @@ public:
     // are still accepted, if not they are removed
     void cleanOldNotifications();
 
-    bool ensureDataAvailable(const NotificationMessageV3 &msg);
+    bool ensureDataAvailable(const Protocol::ChangeNotification &msg);
     /**
      * Sends out the change notification @p msg.
      * @param msg the change notification to send
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    virtual bool emitNotification(const NotificationMessageV3 &msg);
-    void updatePendingStatistics(const NotificationMessageV3 &msg);
-    void invalidateCaches(const NotificationMessageV3 &msg);
+    virtual bool emitNotification(const Protocol::ChangeNotification &msg);
+    void updatePendingStatistics(const Protocol::ChangeNotification &msg);
+    void invalidateCaches(const Protocol::ChangeNotification &msg);
 
     /** Used by ResourceBase to inform us about collection changes before the notifications are emitted,
         needed to avoid the missing RID race on change replay.
@@ -142,26 +143,26 @@ public:
     /**
       Returns whether a message was appended to @p notificationQueue
     */
-    int translateAndCompress(QQueue<NotificationMessageV3> &notificationQueue, const NotificationMessageV3 &msg);
+    int translateAndCompress(QQueue<Protocol::ChangeNotification> &notificationQueue, const Protocol::ChangeNotification &msg);
 
-    virtual void slotNotify(const NotificationMessageV3::List &msgs);
+    virtual void slotNotify(const Protocol::ChangeNotification &msg);
 
     /**
      * Sends out a change notification for an item.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitItemsNotification(const NotificationMessageV3 &msg, const Item::List &items = Item::List(),
+    bool emitItemsNotification(const Protocol::ChangeNotification &msg, const Item::List &items = Item::List(),
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection());
     /**
      * Sends out a change notification for a collection.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitCollectionNotification(const NotificationMessageV3 &msg, const Collection &col = Collection(),
+    bool emitCollectionNotification(const Protocol::ChangeNotification &msg, const Collection &col = Collection(),
                                     const Collection &par = Collection(), const Collection &dest = Collection());
 
-    bool emitTagsNotification(const NotificationMessageV3 &msg, const Tag::List &tags);
+    bool emitTagsNotification(const Protocol::ChangeNotification &msg, const Tag::List &tags);
 
-    bool emitRelationsNotification(const NotificationMessageV3 &msg, const Relation::List &relations);
+    bool emitRelationsNotification(const Protocol::ChangeNotification &msg, const Relation::List &relations);
 
     void serverStateChanged(Akonadi::ServerManager::State state);
 
@@ -248,16 +249,16 @@ private:
     /**
       @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
     */
-    bool isLazilyIgnored(const NotificationMessageV3 &msg, bool allowModifyFlagsConversion = false) const;
+    bool isLazilyIgnored(const Protocol::ChangeNotification &msg, bool allowModifyFlagsConversion = false) const;
 
     /**
       Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
       listener that does not support batch operations. Sets @p batchSupported to True when
       there's at least one listener that supports batch operations.
     */
-    void checkBatchSupport(const NotificationMessageV3 &msg, bool &needsSplit, bool &batchSupported) const;
+    void checkBatchSupport(const Protocol::ChangeNotification &msg, bool &needsSplit, bool &batchSupported) const;
 
-    NotificationMessageV3::List splitMessage(const NotificationMessageV3 &msg, bool legacy) const;
+    Protocol::ChangeNotification::List splitMessage(const Protocol::ChangeNotification &msg, bool legacy) const;
 
     bool isCollectionMonitored(Collection::Id collection) const
     {
@@ -293,9 +294,9 @@ private:
         return false;
     }
 
-    bool isMoveDestinationResourceMonitored(const NotificationMessageV3 &msg) const
+    bool isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const
     {
-        if (msg.operation() != NotificationMessageV2::Move) {
+        if (msg.operation() != Protocol::ChangeNotification::Move) {
             return false;
         }
         return resources.contains(msg.destinationResource());

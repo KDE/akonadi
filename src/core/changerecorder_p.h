@@ -42,15 +42,15 @@ public:
     void notificationsEnqueued(int count) Q_DECL_OVERRIDE;
     void notificationsErased() Q_DECL_OVERRIDE;
 
-    void slotNotify(const NotificationMessageV3::List &msgs) Q_DECL_OVERRIDE;
-    bool emitNotification(const Akonadi::NotificationMessageV3& msg) Q_DECL_OVERRIDE;
+    void slotNotify(const Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE;
+    bool emitNotification(const Akonadi::Protocol::ChangeNotification& msg) Q_DECL_OVERRIDE;
 
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<NotificationMessageV3> loadFrom(QIODevice *device, bool &needsFullSave) const;
+    QQueue<Protocol::ChangeNotification> loadFrom(QIODevice *device, bool &needsFullSave) const;
     QString dumpNotificationListToString() const;
-    void addToStream(QDataStream &stream, const NotificationMessageV3 &msg);
+    void addToStream(QDataStream &stream, const Protocol::ChangeNotification &msg);
     void saveNotifications();
     void saveTo(QIODevice *device);
 private:

@@ -26,7 +26,6 @@
 #include <QtCore/QSet>
 
 #include "item.h"
-#include <akonadi/private/notificationmessagev2_p.h>
 
 namespace Akonadi {
 
@@ -72,7 +71,6 @@ private Q_SLOTS:
 private:
     QList<QObject *> m_monitors;
 
-    QVector<Akonadi::NotificationMessageV2> messageQueue;
     QVector<Akonadi::Job *> unfilteredJobs;
 
     QSet<QByteArray> m_sessions;

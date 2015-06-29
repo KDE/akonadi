@@ -38,6 +38,7 @@ public:
     {
     }
     virtual NotificationSource *createNotificationSource(QObject *parent);
+    virtual QObject *createNotificationBus(QObject *parent, NotificationSource *source);
     virtual QObject *createChangeMediator(QObject *parent);
 
     virtual Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Session *session);

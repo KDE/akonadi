@@ -179,6 +179,52 @@ void SessionPrivate::socketDisconnected()
     connected = false;
 }
 
+bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
+{
+    // Handle Hello response -> send Login
+    if (cmd.type() == Protocol::Command::Hello) {
+        Protocol::HelloResponse hello(cmd);
+        if (hello.isError()) {
+            qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
+            socket->close();
+            QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+            return false;
+        }
+
+        qDebug() << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
+        qDebug() << "Server says:" << hello.message();
+        // Version mismatch is handled in SessionPrivate::startJob() so that
+        // we can report the error out via KJob API
+        protocolVersion = hello.protocolVersion();
+
+        Protocol::LoginCommand login(sessionId);
+        sendCommand(nextTag(), login);
+        return true;
+    }
+
+    // Login response
+    if (cmd.type() == Protocol::Command::Login) {
+        Protocol::LoginResponse login(cmd);
+        if (login.isError()) {
+            qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
+            socket->close();
+            QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+            return false;
+        }
+
+        connected = true;
+        startNext();
+        return true;
+    }
+
+    // work for the current job
+    if (currentJob) {
+        currentJob->d_ptr->handleResponse(tag, cmd);
+    }
+
+    return true;
+}
+
 void SessionPrivate::dataReceived()
 {
     int iterations = 0;
@@ -204,45 +250,8 @@ void SessionPrivate::dataReceived()
             logFile->flush();
         }
 
-        // Handle Hello response -> send Login
-        if (cmd.type() == Protocol::Command::Hello) {
-            Protocol::HelloResponse hello(cmd);
-            if (hello.isError()) {
-                qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
-                socket->close();
-                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
-                break;
-            }
-
-            qDebug() << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
-            qDebug() << "Server says:" << hello.message();
-            // Version mismatch is handled in SessionPrivate::startJob() so that
-            // we can report the error out via KJob API
-            protocolVersion = hello.protocolVersion();
-
-            Protocol::LoginCommand login(sessionId);
-            sendCommand(nextTag(), login);
-            continue;
-        }
-
-        // Login response
-        if (cmd.type() == Protocol::Command::Login) {
-            Protocol::LoginResponse login(cmd);
-            if (login.isError()) {
-                qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
-                socket->close();
-                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
-                break;
-            }
-
-            connected = true;
-            startNext();
-            continue;
-        }
-
-        // work for the current job
-        if (currentJob) {
-            currentJob->d_ptr->handleResponse(tag, cmd);
+        if (!handleCommand(tag, cmd)) {
+            break;
         }
 
         // FIXME: It happens often that data are arriving from the server faster
@@ -490,6 +499,7 @@ Session::Session(SessionPrivate *dd, const QByteArray &sessionId, QObject *paren
     : QObject(parent)
     , d(dd)
 {
+    d->mParent = this;
     d->init(sessionId);
 }
 
