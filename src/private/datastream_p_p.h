@@ -23,29 +23,12 @@
 #define AKONADI_PROTOCOL_DATASTREAM_H
 
 #include <type_traits>
-#include <exception>
+
+#include "protocol_exception_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QIODevice>
 #include <QtCore/QTimeZone>
-
-namespace Akonadi {
-class ProtocolException : public std::exception {
-public:
-    ProtocolException(const char *what)
-        : std::exception()
-        , mWhat(what)
-    {}
-
-    const char *what() const throw()
-    {
-        return mWhat.constData();
-    }
-
-private:
-    QByteArray mWhat;
-};
-} // namespace Akonadi
 
 namespace Akonadi {
 namespace Protocol {

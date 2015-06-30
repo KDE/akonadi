@@ -37,6 +37,7 @@ install(FILES
     imapparser_p.h
     imapset_p.h
     protocol_p.h
+    protocol_exception_p.h
     xdgbasedirs_p.h
     capabilities_p.h
     scope_p.h
