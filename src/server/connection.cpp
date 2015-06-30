@@ -39,6 +39,7 @@
 #include <assert.h>
 
 #include <private/protocol_p.h>
+#include <private/datastream_p_p.h>
 
 #define AKONADI_PROTOCOL_VERSION 51
 
@@ -154,25 +155,22 @@ void Connection::slotNewData()
         stream >> tag;
         // TODO: Check tag is incremental sequence
 
-        Protocol::Command cmd = Protocol::deserialize(m_socket);
-
-        // TODO: The resend-on-read-past-end is not really a solution, because
-        // the same will probably happen again. We should send overall size of the
-        // message as first argument and ensure we have buffered enough data.
-        // That however requires some larger changes to the protocol and the way
-        // we (de)serialize data.
-        if (stream.status() == QDataStream::ReadCorruptData || stream.status() == QDataStream::ReadPastEnd) {
-            // TODO: Create a proper Protocol::ResendDataResponse class
-            Protocol::Response resp;
-            resp.setError(1, QLatin1String("Corrupted data or incomplete data, please resend"));
-            sendResponse(resp);
+        Protocol::Command cmd;
+        try {
+            cmd = Protocol::deserialize(m_socket);
+        } catch (const Akonadi::ProtocolException &e) {
+            qDebug() << "ProtocolException:" << e.what();
+            slotConnectionStateChange(Server::LoggingOut);
+            return;
+        } catch (const std::exception &e) {
+            qDebug() << "Unknown exception:" << e.what();
+            slotConnectionStateChange(Server::LoggingOut);
             return;
         }
 
         if (cmd.type() == Protocol::Command::Invalid) {
             qDebug() << "Received an invalid command: resetting connection";
             slotConnectionStateChange(Server::LoggingOut);
-            m_socket->close();
             return;
         }
 
@@ -185,7 +183,11 @@ void Connection::slotNewData()
         }
 
         m_currentHandler = findHandlerForCommand(cmd.type());
-        assert(m_currentHandler);
+        if (!m_currentHandler) {
+            qDebug() << "Invalid command: no such handler for" << cmd.type();
+            slotConnectionStateChange(Server::LoggingOut);
+            return;
+        }
         if (m_reportTime) {
             startTime();
         }
