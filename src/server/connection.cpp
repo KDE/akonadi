@@ -355,7 +355,8 @@ void Connection::reportTime() const
 {
     qCDebug(AKONADISERVER_LOG) << "===== Time report for " << m_identifier << " =====";
     qCDebug(AKONADISERVER_LOG) << " total: " << m_totalTime;
-    Q_FOREACH (const QString &handler, m_totalTimeByHandler.keys()) {
+    for (auto it = m_totalTimeByHandler.cbegin(), end = m_totalTimeByHandler.cend(); it != end; ++it) {
+        const QString &handler = it.key();
         qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
     }
 }
