@@ -285,8 +285,11 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
 
     if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
         Protocol::ModifyItemsResponse resp(response);
-        setError(Unknown);
-        setErrorText(resp.errorMessage());
+        if (resp.errorCode()) {
+            setError(Unknown);
+            setErrorText(resp.errorMessage());
+            return true;
+        }
 
         if (resp.errorMessage().contains(QStringLiteral("[LLCONFLICT]"))) {
             if (d->mAutomaticConflictHandlingEnabled) {
