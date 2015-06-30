@@ -265,9 +265,7 @@ void Connection::slotConnectionStateChange(ConnectionState state)
     case Selected:
         break;
     case LoggingOut:
-        if (dynamic_cast<QLocalSocket *>(m_socket)) {
-            dynamic_cast<QLocalSocket *>(m_socket)->disconnectFromServer();
-        }
+        m_socket->disconnectFromServer();
         break;
     }
 }
