@@ -128,7 +128,9 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QVector<Scope::HR
             throw HandlerException("Unable to execute query");
         }
         Collection::List results = qb.result();
-        if (results.size() != 1) {
+        if (results.size() == 0) {
+            throw HandlerException("Hierarchical RID does not specify an existing collection");
+        } else if (results.size() > 1) {
             throw HandlerException("Hierarchical RID does not specify a unique collection");
         }
         result = results.first();
