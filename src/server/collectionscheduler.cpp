@@ -237,9 +237,9 @@ void CollectionScheduler::startScheduler()
 void CollectionScheduler::scheduleCollection(Collection collection, bool shouldStartScheduler)
 {
     QMutexLocker locker(&mScheduleLock);
-    if (mSchedule.values().contains(collection)) {
-        const uint key = mSchedule.key(collection);
-        mSchedule.remove(key, collection);
+    auto i = std::find(mSchedule.cbegin(), mSchedule.cend(), collection);
+    if (i != mSchedule.cend()) {
+        mSchedule.remove(i.key(), i.value());
     }
 
     DataStore::self()->activeCachePolicy(collection);
