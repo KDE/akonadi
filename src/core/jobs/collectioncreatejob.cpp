@@ -99,12 +99,18 @@ bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &
 
     if (response.type() == Protocol::Command::FetchCollections) {
         Protocol::FetchCollectionsResponse resp(response);
-        d->mCollection = ProtocolHelper::parseCollection(resp);
-        if (!d->mCollection.isValid()) {
+        Collection col = ProtocolHelper::parseCollection(resp);
+        if (!col.isValid()) {
             setError(Unknown);
             setErrorText(i18n("Failed to parse Collection from response"));
             return true;
         }
+        col.setParentCollection(d->mCollection.parentCollection());
+        col.setName(d->mCollection.name());
+        col.setRemoteId(d->mCollection.remoteId());
+        col.setRemoteRevision(d->mCollection.remoteRevision());
+        col.setVirtual(d->mCollection.isVirtual());
+        d->mCollection = col;
         return false;
     }
 
