@@ -125,7 +125,7 @@ public:
     void readConfig()
     {
         KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
-        const QSize sizeDialog = group.readEntry("Size", QSize(300, 200));
+        const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
         if (sizeDialog.isValid()) {
             q->resize(sizeDialog);
         }
