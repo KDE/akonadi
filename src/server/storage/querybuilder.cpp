@@ -528,7 +528,7 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
 void QueryBuilder::buildCaseStatement(QString *query, const Query::Case &caseStmt)
 {
     *query += QLatin1String("CASE ");
-    Q_FOREACH (const auto whenThen, caseStmt.mWhenThen) {
+    Q_FOREACH (const auto &whenThen, caseStmt.mWhenThen) {
         *query += QLatin1String("WHEN ");
         buildWhereCondition(query, whenThen.first);    // When
         *query += QLatin1String(" THEN ") + whenThen.second; // then

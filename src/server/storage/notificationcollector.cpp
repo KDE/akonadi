@@ -286,12 +286,12 @@ void NotificationCollector::itemNotification(Protocol::ChangeNotification::Opera
 
     msg.setItemParts(parts);
     QSet<QByteArray> addedFlagsAndRelations(addedFlags);
-    Q_FOREACH (const Relation rel, addedRelations) {
+    Q_FOREACH (const Relation &rel, addedRelations) {
         addedFlagsAndRelations << "RELATION " + rel.relationType().name().toLatin1() + " " + QByteArray::number(rel.leftId()) + " " + QByteArray::number(rel.rightId());
     }
     msg.setAddedFlags(addedFlagsAndRelations);
     QSet<QByteArray> removedFlagsAndRelations(removedFlags);
-    Q_FOREACH (const Relation rel, removedRelations) {
+    Q_FOREACH (const Relation &rel, removedRelations) {
         removedFlagsAndRelations << "RELATION " + rel.relationType().name().toLatin1() + " " + QByteArray::number(rel.leftId()) + " " + QByteArray::number(rel.rightId());
     }
     msg.setRemovedFlags(removedFlagsAndRelations);
