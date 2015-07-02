@@ -126,8 +126,9 @@ bool Akonadi::Entity::operator<(const Entity &other) const
 
 void Entity::addAttribute(Attribute *attr)
 {
-    if (d_ptr->mAttributes.contains(attr->type())) {
-        Attribute *existing = d_ptr->mAttributes.value(attr->type());
+    Q_ASSERT(attr);
+    Attribute *existing = d_ptr->mAttributes.value(attr->type());
+    if (existing) {
         if (attr == existing) {
             return;
         }
@@ -165,10 +166,7 @@ void Akonadi::Entity::clearAttributes()
 
 Attribute *Entity::attribute(const QByteArray &type) const
 {
-    if (d_ptr->mAttributes.contains(type)) {
-        return d_ptr->mAttributes.value(type);
-    }
-    return 0;
+    return d_ptr->mAttributes.value(type);
 }
 
 uint qHash(const Akonadi::Entity &entity)
