@@ -122,6 +122,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
     inform("Looking for dirty objects...");
     findDirtyObjects();
 
+    inform("Looking for rid-duplicates not matching the content mime-type of the parent collection");
+    findRIDDuplicates();
+
     inform("Migrating parts to new cache hierarchy...");
     migrateToLevelledCacheHierarchy();
 
@@ -491,6 +494,47 @@ void StorageJanitor::findDirtyObjects()
         inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" has RID and is dirty."));
     }
     inform(QLatin1Literal("Found ") + QString::number(dirtyItems.size()) + QLatin1Literal(" dirty items."));
+}
+
+void StorageJanitor::findRIDDuplicates()
+{
+    QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
+    qb.addColumn(Collection::idColumn());
+    qb.addColumn(Collection::nameColumn());
+    qb.exec();
+  
+    while (qb.query().next()) {
+        const Collection::Id id = qb.query().value(0).value<Collection::Id>();
+        const QString name = qb.query().value(1).toString();
+        inform(QStringLiteral("Checking ") + name);
+    
+        QueryBuilder duplicates(PimItem::tableName(), QueryBuilder::Select);
+        duplicates.addColumn(PimItem::remoteIdColumn());
+        duplicates.addColumn(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(") as cnt"));
+        duplicates.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
+        duplicates.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, id);
+        duplicates.addGroupColumn(PimItem::remoteIdColumn());
+        duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
+        duplicates.exec();
+    
+        Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(id);
+        const QVector<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
+        QVariantList contentMimeTypesVariantList;
+        Q_FOREACH (const Akonadi::Server::MimeType &mimeType, contentMimeTypes) {
+            contentMimeTypesVariantList << mimeType.id();
+        }
+        while (duplicates.query().next()) {
+            const QString rid = duplicates.query().value(0).toString();
+            inform(QStringLiteral("Found duplicates ") + rid);
+    
+            QueryBuilder items(PimItem::tableName(), QueryBuilder::Delete);
+            items.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, rid);
+            items.addValueCondition(PimItem::mimeTypeIdColumn(), Query::NotIn, contentMimeTypesVariantList);
+            if (!items.exec()) {
+                inform(QStringLiteral("Error while deleting duplicates ") + items.query().lastError().text());
+            }
+        }
+    }
 }
 
 void StorageJanitor::vacuum()

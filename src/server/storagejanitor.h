@@ -109,6 +109,13 @@ private:
     void findDirtyObjects();
 
     /**
+     * Look for duplicates by RID.
+     *
+     * ..and remove the one that doesn't match the parent collections content mimetype.
+     */
+    void findRIDDuplicates();
+
+    /**
      * Check whether part sizes match what's in database.
      *
      * If SizeTreshold has change, it will move parts from or to database
