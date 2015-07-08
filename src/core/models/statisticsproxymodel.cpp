@@ -30,7 +30,7 @@
 
 #include <qdebug.h>
 #include <kiconloader.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <kio/global.h>
 
 #include <QApplication>

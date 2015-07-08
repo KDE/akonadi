@@ -26,8 +26,8 @@
 #include <QAction>
 #include <QMimeData>
 #include "akonadiwidgets_debug.h"
-#include <klocalizedstring.h>
-#include <kmessagebox.h>
+#include <KLocalizedString>
+#include <KMessageBox>
 #include <QUrl>
 #include <kxmlguifactory.h>
 #include <kxmlguiwindow.h>

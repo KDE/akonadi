@@ -26,7 +26,7 @@
 #include "pastehelper_p.h"
 #include "session.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QUrl>
 
 #include <QCoreApplication>

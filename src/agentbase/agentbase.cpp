@@ -39,7 +39,7 @@
 #include <kcmdlineargs.h>
 #include "akonadiagentbase_debug.h"
 #include <kglobal.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <k4aboutdata.h>
 #include <Kdelibs4ConfigMigrator>

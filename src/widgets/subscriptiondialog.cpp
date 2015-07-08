@@ -27,14 +27,14 @@
 #include "akonadiwidgets_debug.h"
 #include <ksharedconfig.h>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <KConfigGroup>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
 #ifndef KDEPIM_MOBILE_UI
-#include <klineedit.h>
+#include <KLineEdit>
 #include <QPushButton>
 #include <krecursivefilterproxymodel.h>
 #include <QHeaderView>

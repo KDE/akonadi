@@ -52,7 +52,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include "akonadiagentbase_debug.h"
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>

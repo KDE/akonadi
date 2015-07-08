@@ -21,7 +21,7 @@
 
 #include <QtCore/QDebug>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <qapplication.h>
 #include <QCommandLineParser>
 #include <kaboutdata.h>

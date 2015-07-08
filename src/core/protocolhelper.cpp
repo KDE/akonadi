@@ -39,7 +39,7 @@
 #include <QtCore/QDir>
 
 #include <qdebug.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

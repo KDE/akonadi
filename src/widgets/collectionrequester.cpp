@@ -23,8 +23,8 @@
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 
-#include <klineedit.h>
-#include <klocalizedstring.h>
+#include <KLineEdit>
+#include <KLocalizedString>
 #include <kstandardshortcut.h>
 
 #include <QtCore/QEvent>

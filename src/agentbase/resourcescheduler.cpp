@@ -23,7 +23,7 @@
 #include "recursivemover_p.h"
 
 #include "akonadiagentbase_debug.h"
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusInterface>

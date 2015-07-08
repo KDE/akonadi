@@ -22,7 +22,7 @@
 #include "agenttype.h"
 #include "agentfilterproxymodel.h"
 
-#include <kcombobox.h>
+#include <KComboBox>
 #include <KAboutData>
 
 #include <QCommandLineParser>

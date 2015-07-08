@@ -25,7 +25,7 @@
 
 #include <qdebug.h>
 #include <kglobal.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>

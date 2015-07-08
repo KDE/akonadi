@@ -23,7 +23,7 @@
 #include <QtCore/QMimeData>
 
 #include <kconfiggroup.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <KJob>
 #include <QUrl>
 #include <KConfig>

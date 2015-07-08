@@ -29,7 +29,7 @@
 #include <akonadi/private/protocol_p.h>
 
 #include <QDebug>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <QCoreApplication>
 #include <QtCore/QDir>

@@ -24,7 +24,7 @@
 #include "collectionstatistics.h"
 #include "collectionutils.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <KFormat>
 

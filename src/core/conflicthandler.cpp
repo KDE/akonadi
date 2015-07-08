@@ -28,7 +28,7 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "session.h"
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

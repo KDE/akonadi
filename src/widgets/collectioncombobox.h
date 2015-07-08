@@ -23,7 +23,7 @@
 #include "akonadiwidgets_export.h"
 #include "collection.h"
 
-#include <kcombobox.h>
+#include <KComboBox>
 
 class QAbstractItemModel;
 

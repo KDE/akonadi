@@ -25,7 +25,7 @@
 #include <QtCore/QStringList>
 #include <QIcon>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

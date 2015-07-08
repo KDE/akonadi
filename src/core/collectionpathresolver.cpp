@@ -22,7 +22,7 @@
 #include "collectionfetchjob.h"
 #include "job_p.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <QtCore/QStringList>
 

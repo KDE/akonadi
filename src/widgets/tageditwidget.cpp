@@ -20,9 +20,9 @@
 */
 #include "tageditwidget.h"
 
-#include <klineedit.h>
-#include <klocalizedstring.h>
-#include <kmessagebox.h>
+#include <KLineEdit>
+#include <KLocalizedString>
+#include <KMessageBox>
 #include <kcheckableproxymodel.h>
 
 #include "changerecorder.h"

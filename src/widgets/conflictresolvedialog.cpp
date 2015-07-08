@@ -30,7 +30,7 @@
 #include <QDateTime>
 
 #include <kcolorscheme.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <kglobal.h>
 #include <qtextbrowser.h>
 #include <KLocale>

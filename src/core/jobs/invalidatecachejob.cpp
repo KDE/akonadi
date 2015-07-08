@@ -23,7 +23,7 @@
 #include "itemfetchjob.h"
 #include "itemmodifyjob.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

@@ -21,7 +21,7 @@
 
 #include <kconfiggroup.h>
 #include <QDebug>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <KPluginLoader>
 #include <KConfig>
 #include <QDir>

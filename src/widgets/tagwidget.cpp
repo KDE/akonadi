@@ -27,7 +27,7 @@
 #include "tagselectiondialog.h"
 
 #include <kicon.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QLabel>
