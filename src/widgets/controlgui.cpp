@@ -24,7 +24,6 @@
 #include "erroroverlay_p.h"
 
 #include <qdebug.h>
-#include <kglobal.h>
 #include <KLocalizedString>
 
 #include <QtCore/QEventLoop>
@@ -72,7 +71,7 @@ public:
 
 }
 
-K_GLOBAL_STATIC(Internal::StaticControlGui, s_instance)
+Q_GLOBAL_STATIC(Internal::StaticControlGui, s_instance)
 
 /**
  * @internal
@@ -116,7 +115,7 @@ public:
 
     void cleanup()
     {
-        s_instance.destroy();
+        delete s_instance;
     }
 
     bool exec();
