@@ -115,7 +115,7 @@ public:
 
     void cleanup()
     {
-        delete s_instance;
+        //delete s_instance;
     }
 
     bool exec();
