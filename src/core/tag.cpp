@@ -218,7 +218,7 @@ QDebug &operator<<(QDebug &debug, const Tag &tag)
     return debug;
 }
 
-Tag Tag::genericTag(QString name)
+Tag Tag::genericTag(const QString &name)
 {
   Tag tag;
   tag.d->type = GENERIC;

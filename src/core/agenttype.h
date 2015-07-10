@@ -63,7 +63,7 @@ public:
     /**
      * Describes a list of agent types.
      */
-    typedef QList<AgentType> List;
+    typedef QVector<AgentType> List;
 
     /**
      * Creates a new agent type.

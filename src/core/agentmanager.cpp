@@ -387,7 +387,7 @@ AgentManager *AgentManager::self()
 
 AgentType::List AgentManager::types() const
 {
-    return d->mTypes.values();
+    return d->mTypes.values().toVector();
 }
 
 AgentType AgentManager::type(const QString &identifier) const
@@ -397,7 +397,7 @@ AgentType AgentManager::type(const QString &identifier) const
 
 AgentInstance::List AgentManager::instances() const
 {
-    return d->mInstances.values();
+    return d->mInstances.values().toVector();
 }
 
 AgentInstance AgentManager::instance(const QString &identifier) const

@@ -106,7 +106,7 @@ public:
      * @param collections List of collections to be queries
      * @since 4.13
      */
-    void setQueryCollections(const QList<Collection> &collections);
+    void setQueryCollections(const QVector<Collection> &collections);
 
     /**
      * Sets IDs of collections to be queries

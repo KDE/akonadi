@@ -67,7 +67,7 @@ QList<qint64> PersistentSearchAttribute::queryCollections() const
     return d->queryCollections;
 }
 
-void PersistentSearchAttribute::setQueryCollections(const QList<Collection> &collections)
+void PersistentSearchAttribute::setQueryCollections(const QVector<Collection> &collections)
 {
     d->queryCollections.clear();
     Q_FOREACH (const Collection &collection, collections) {

@@ -188,9 +188,9 @@ AgentInstance AgentInstanceWidget::currentAgentInstance() const
     return index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
 }
 
-QList<AgentInstance> AgentInstanceWidget::selectedAgentInstances() const
+AgentInstance::List AgentInstanceWidget::selectedAgentInstances() const
 {
-    QList<AgentInstance> list;
+    AgentInstance::List list;
     QItemSelectionModel *selectionModel = d->mView->selectionModel();
     if (!selectionModel) {
         return list;

@@ -99,14 +99,14 @@ public:
      * @param collections Collections to search in, or an empty list to search all
      * @since 4.13
      */
-    void setSearchCollections(const Collection::List &collections);
+    void setSearchCollections(const QVector<Collection> &collections);
 
     /**
      * Returns list of collections to search in
      *
      * @since 4.13
      */
-    Collection::List searchCollections() const;
+    QVector<Collection> searchCollections() const;
 
     /**
      * Sets whether resources should be queried too.

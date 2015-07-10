@@ -90,7 +90,7 @@ public:
      * Returns the selected agent instances.
      * @since 4.5
      */
-    QList<AgentInstance> selectedAgentInstances() const;
+    QVector<AgentInstance> selectedAgentInstances() const;
 
     /**
      * Returns the agent filter proxy model, use this to filter by

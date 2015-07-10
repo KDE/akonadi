@@ -124,7 +124,7 @@ public:
     /**
      * Returns a GENERIC tag with the given name and a valid gid
      */
-    static Tag genericTag(QString name);
+    static Tag genericTag(const QString &name);
 private:
     class Private;
     QSharedPointer<Private> d;
@@ -137,5 +137,5 @@ AKONADICORE_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Tag &tag);
 Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Tag>)
-
+Q_DECLARE_TYPEINFO(Akonadi::Tag, Q_MOVABLE_TYPE);
 #endif

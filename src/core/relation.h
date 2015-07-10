@@ -129,5 +129,5 @@ AKONADICORE_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Relation &ta
 Q_DECLARE_METATYPE(Akonadi::Relation)
 Q_DECLARE_METATYPE(Akonadi::Relation::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Relation>)
-
+Q_DECLARE_TYPEINFO(Akonadi::Relation, Q_MOVABLE_TYPE);
 #endif
