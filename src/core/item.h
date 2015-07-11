@@ -118,7 +118,7 @@ public:
     /**
      * Describes a list of items.
      */
-    typedef QList<Item> List;
+    typedef QVector<Item> List;
 
     /**
      * Describes a flag name.

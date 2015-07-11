@@ -113,7 +113,7 @@ Collection ItemMoveJob::destinationCollection() const
     return d->destination;
 }
 
-QList<Item> ItemMoveJob::items() const
+Item::List ItemMoveJob::items() const
 {
     Q_D(const ItemMoveJob);
     return d->items;

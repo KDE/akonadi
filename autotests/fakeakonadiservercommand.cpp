@@ -68,7 +68,7 @@ void FakeJobResponse::doCommand()
         emit_collectionsFetched(m_collections.values());
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
-        emit_itemsFetched(m_items.values());
+        emit_itemsFetched(m_items.values().toVector());
     }
 }
 

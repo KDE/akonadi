@@ -22,12 +22,11 @@
 
 #include "akonadicore_export.h"
 #include "job.h"
-
+#include "item.h"
 namespace Akonadi
 {
 
 class Collection;
-class Item;
 class ItemMoveJobPrivate;
 
 /**
@@ -68,7 +67,7 @@ public:
      * @param destination The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob(const QList<Item> &items, const Collection &destination, QObject *parent = Q_NULLPTR);
+    ItemMoveJob(const Item::List &items, const Collection &destination, QObject *parent = Q_NULLPTR);
 
     /**
      * Move the given items from @p source to @p destination.
@@ -79,7 +78,7 @@ public:
      *
      * @since 4.14
      */
-    ItemMoveJob(const QList<Item> &items, const Collection &source, const Collection &destination, QObject *parent = Q_NULLPTR);
+    ItemMoveJob(const Item::List &items, const Collection &source, const Collection &destination, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the item move job.
@@ -98,7 +97,7 @@ public:
      *
      * @since 4.7
      */
-    QList<Item> items() const;
+    Akonadi::Item::List items() const;
 
 protected:
     void doStart() Q_DECL_OVERRIDE;

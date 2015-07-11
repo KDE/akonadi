@@ -863,7 +863,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ChangeNotification &m
 
     QMap<Protocol::ChangeNotification::Id, Protocol::ChangeNotification::Entity> msgEntities = msg.entities();
     Item::List its = items;
-    QMutableListIterator<Item> iter(its);
+    QMutableVectorIterator<Item> iter(its);
     while (iter.hasNext()) {
         Item it = iter.next();
         if (it.isValid()) {

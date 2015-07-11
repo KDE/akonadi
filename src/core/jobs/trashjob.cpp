@@ -128,7 +128,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
 {
     Q_Q(TrashJob);
     Item::List items = list;
-    QMutableListIterator<Item> i(items);
+    QMutableVectorIterator<Item> i(items);
     while (i.hasNext()) {
         const Item &item = i.next();
         EntityDeletedAttribute *eda = new EntityDeletedAttribute();
@@ -223,7 +223,7 @@ void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
 
     Item::List toDelete;
 
-    QListIterator<Item> i(items);
+    QVectorIterator<Item> i(items);
     while (i.hasNext()) {
         const Item &item = i.next();
         if (item.hasAttribute<EntityDeletedAttribute>()) {
