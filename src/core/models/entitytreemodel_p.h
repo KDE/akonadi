@@ -118,7 +118,6 @@ public:
     void retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection = true);
     void ancestorsFetched(const Akonadi::Collection::List &collectionList);
     void insertCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
-    void insertPendingCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parent, QMutableListIterator<Collection> &it);
 
     void beginResetModel();
     void endResetModel();
