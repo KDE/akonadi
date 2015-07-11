@@ -79,7 +79,7 @@ void RecursiveMover::collectionListResult(KJob *job)
         if (children.isEmpty()) {
             continue;
         }
-        m_pendingCollections.append(children);
+        m_pendingCollections += children;
         foreach (const Collection &child, children) {
             toBeProcessed.enqueue(child);
         }
