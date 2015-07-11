@@ -26,7 +26,8 @@
 #include "itemfetchscope.h"
 #include "tagfetchscope.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal

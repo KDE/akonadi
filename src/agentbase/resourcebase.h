@@ -33,7 +33,8 @@ class KJob;
 class Akonadi__ResourceAdaptor;
 class ResourceState;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ResourceBasePrivate;
 
@@ -833,10 +834,10 @@ private:
  * Convenience Macro for the most common main() function for Akonadi resources.
  */
 #define AKONADI_RESOURCE_MAIN( resourceClass )                       \
-  int main( int argc, char **argv )                                  \
-  {                                                                  \
-    return Akonadi::ResourceBase::init<resourceClass>( argc, argv ); \
-  }
+    int main( int argc, char **argv )                                  \
+    {                                                                  \
+        return Akonadi::ResourceBase::init<resourceClass>( argc, argv ); \
+    }
 #endif
 
 #endif

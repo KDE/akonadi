@@ -25,7 +25,8 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short An Attribute that marks that an entity should be hidden in the UI.

@@ -114,10 +114,10 @@ void EntityTreeModel::setCollectionsMonitored(const Collection::List &collection
 {
     Q_D(EntityTreeModel);
     d->beginResetModel();
-    foreach(const Akonadi::Collection &col, d->m_monitor->collectionsMonitored()) {
+    foreach (const Akonadi::Collection &col, d->m_monitor->collectionsMonitored()) {
         d->m_monitor->setCollectionMonitored(col, false);
     }
-    foreach(const Akonadi::Collection &col, collections) {
+    foreach (const Akonadi::Collection &col, collections) {
         d->m_monitor->setCollectionMonitored(col, true);
     }
     d->endResetModel();
@@ -161,7 +161,7 @@ int EntityTreeModel::columnCount(const QModelIndex &parent) const
 {
 // TODO: Statistics?
     if (parent.isValid() &&
-        parent.column() != 0) {
+            parent.column() != 0) {
         return 0;
     }
 
@@ -177,7 +177,7 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
         case Qt::DisplayRole:
         case Qt::EditRole:
             if (item.hasAttribute<EntityDisplayAttribute>() &&
-                !item.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
+                    !item.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
                 return item.attribute<EntityDisplayAttribute>()->displayName();
             } else {
                 if (!item.remoteId().isEmpty()) {
@@ -188,7 +188,7 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
             break;
         case Qt::DecorationRole:
             if (item.hasAttribute<EntityDisplayAttribute>() &&
-                !item.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
+                    !item.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
                 return d->iconForName(item.attribute<EntityDisplayAttribute>()->iconName());
             }
             break;
@@ -233,7 +233,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
         break;
     case Qt::DecorationRole:
         if (collection.hasAttribute<EntityDisplayAttribute>() &&
-            !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
+                !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
             return d->iconForName(collection.attribute<EntityDisplayAttribute>()->iconName());
         }
         return d->iconForName(CollectionUtils::defaultIconName(collection));
@@ -270,7 +270,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
     const Node *node = reinterpret_cast<Node *>(index.internalPointer());
 
     if (ParentCollectionRole == role &&
-        d->m_collectionFetchStrategy != FetchNoCollections) {
+            d->m_collectionFetchStrategy != FetchNoCollections) {
         const Collection parentCollection = d->m_collections.value(node->parent);
         Q_ASSERT(parentCollection.isValid());
 
@@ -453,7 +453,7 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
             const int rights = parentCollection.rights();
 
             // Can't drop onto items.
-            if (rights &Collection::CanChangeItem && index.column() == 0) {
+            if (rights & Collection::CanChangeItem && index.column() == 0) {
                 flags = flags | Qt::ItemIsEditable;
             }
             // dragging is always possible, even for read-only objects, but they can only be copied, not moved.
@@ -542,7 +542,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 const Collection collection = d->m_collections.value(Collection::fromUrl(url).id());
                 if (collection.isValid()) {
                     if (collection.parentCollection().id() == destCollection.id() &&
-                        action != Qt::CopyAction) {
+                            action != Qt::CopyAction) {
                         qWarning() << "Error: source and destination of move are the same.";
                         return false;
                     }
@@ -608,7 +608,7 @@ QModelIndex EntityTreeModel::index(int row, int column, const QModelIndex &paren
 
     //TODO: don't use column count here? Use some d-> func.
     if (column >= columnCount() ||
-        column < 0) {
+            column < 0) {
         return QModelIndex();
     }
 
@@ -647,7 +647,7 @@ QModelIndex EntityTreeModel::parent(const QModelIndex &index) const
     }
 
     if (d->m_collectionFetchStrategy == InvisibleCollectionFetch ||
-        d->m_collectionFetchStrategy == FetchNoCollections) {
+            d->m_collectionFetchStrategy == FetchNoCollections) {
         return QModelIndex();
     }
 
@@ -685,7 +685,7 @@ int EntityTreeModel::rowCount(const QModelIndex &parent) const
     Q_D(const EntityTreeModel);
 
     if (d->m_collectionFetchStrategy == InvisibleCollectionFetch ||
-        d->m_collectionFetchStrategy == FetchNoCollections) {
+            d->m_collectionFetchStrategy == FetchNoCollections) {
         if (parent.isValid()) {
             return 0;
         } else {
@@ -734,8 +734,8 @@ QVariant EntityTreeModel::entityHeaderData(int section, Qt::Orientation orientat
     Q_UNUSED(headerGroup);
 
     if (section == 0 &&
-        orientation == Qt::Horizontal &&
-        role == Qt::DisplayRole) {
+            orientation == Qt::Horizontal &&
+            role == Qt::DisplayRole) {
         if (d->m_rootCollection == Collection::root()) {
             return i18nc("@title:column Name of a thing", "Name");
         }
@@ -811,9 +811,9 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
     }
 
     if (index.isValid() &&
-        node->type == Node::Collection &&
-        (role == CollectionRefRole ||
-         role == CollectionDerefRole)) {
+            node->type == Node::Collection &&
+            (role == CollectionRefRole ||
+             role == CollectionDerefRole)) {
         const Collection collection = index.data(CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
@@ -826,7 +826,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
     }
 
     if (index.column() == 0 &&
-        (role &(Qt::EditRole | ItemRole | CollectionRole))) {
+            (role & (Qt::EditRole | ItemRole | CollectionRole))) {
         if (Node::Collection == node->type) {
 
             Collection collection = d->m_collections.value(node->id);
@@ -943,7 +943,7 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent) const
     Q_D(const EntityTreeModel);
 
     if (d->m_collectionFetchStrategy == InvisibleCollectionFetch ||
-        d->m_collectionFetchStrategy == FetchNoCollections) {
+            d->m_collectionFetchStrategy == FetchNoCollections) {
         return parent.isValid() ? false : !d->m_items.isEmpty();
     }
 
@@ -1061,8 +1061,8 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
     QModelIndexList list;
 
     if (role < 0 ||
-        !start.isValid() ||
-        !value.isValid()) {
+            !start.isValid() ||
+            !value.isValid()) {
         return list;
     }
 
@@ -1072,7 +1072,7 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
     const int parentRowCount = rowCount(parentIndex);
 
     while (row < parentRowCount &&
-           (hits == -1 || list.size() < hits)) {
+            (hits == -1 || list.size() < hits)) {
         const QModelIndex idx = index(row, column, parentIndex);
         const Item item = idx.data(ItemRole).value<Item>();
 
@@ -1186,7 +1186,7 @@ void EntityTreeModel::setCollectionFetchStrategy(CollectionFetchStrategy strateg
     d->m_collectionFetchStrategy = strategy;
 
     if (strategy == FetchNoCollections ||
-        strategy == InvisibleCollectionFetch) {
+            strategy == InvisibleCollectionFetch) {
         disconnect(d->m_monitor, SIGNAL(collectionChanged(Akonadi::Collection)),
                    this, SLOT(monitoredCollectionChanged(Akonadi::Collection)));
         disconnect(d->m_monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),

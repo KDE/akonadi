@@ -29,7 +29,8 @@
 class QAbstractItemModel;
 class QModelIndex;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal

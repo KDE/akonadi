@@ -25,7 +25,8 @@
 class QAbstractItemModel;
 class QEvent;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionComboBox;
 class CollectionFilterProxyModel;

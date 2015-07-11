@@ -22,7 +22,8 @@
 
 #include <kjob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class CollectionAttributesSynchronizationJobPrivate;

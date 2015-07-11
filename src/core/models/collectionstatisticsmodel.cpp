@@ -29,7 +29,8 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionStatisticsModelPrivate : public CollectionModelPrivate
 {
@@ -50,7 +51,7 @@ public:
 }
 
 qint64 CollectionStatisticsModelPrivate::countRecursive(Collection::Id collection,
-                                                        CountType type) const
+        CountType type) const
 {
     qint64 result = -1;
     switch (type) {
@@ -106,11 +107,11 @@ QVariant CollectionStatisticsModel::data(const QModelIndex &index, int role) con
     qint64 unread = statistics.unreadCount();
     qint64 size = statistics.size();
     qint64 totalRecursive = d->countRecursive(col.id(),
-                                              CollectionStatisticsModelPrivate::Total);
+                            CollectionStatisticsModelPrivate::Total);
     qint64 unreadRecursive = d->countRecursive(col.id(),
-                                               CollectionStatisticsModelPrivate::Unread);
+                             CollectionStatisticsModelPrivate::Unread);
     qint64 sizeRecursive = d->countRecursive(col.id(),
-                                             CollectionStatisticsModelPrivate::Size);
+                           CollectionStatisticsModelPrivate::Size);
 
     if (role == TotalRole) {
         return total;
@@ -135,7 +136,7 @@ QVariant CollectionStatisticsModel::data(const QModelIndex &index, int role) con
     }
 
     if (role == Qt::DisplayRole &&
-        (index.column() == 1 || index.column() == 2 || index.column() == 3)) {
+            (index.column() == 1 || index.column() == 2 || index.column() == 3)) {
 
         qint64 value = -1;
         switch (index.column()) {

@@ -26,7 +26,8 @@
 
 class Akonadi__TransportAdaptor;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class TransportResourceBase;
 

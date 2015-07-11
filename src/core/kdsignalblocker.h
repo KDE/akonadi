@@ -29,9 +29,11 @@ QT_BEGIN_NAMESPACE
 class QObject;
 QT_END_NAMESPACE
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-class KDSignalBlocker {
+class KDSignalBlocker
+{
     Q_DISABLE_COPY(KDSignalBlocker)
 public:
     explicit KDSignalBlocker(QObject *o);

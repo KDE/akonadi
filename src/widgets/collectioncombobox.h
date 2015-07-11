@@ -27,7 +27,8 @@
 
 class QAbstractItemModel;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A combobox for selecting an Akonadi collection.

@@ -26,7 +26,8 @@
 class KJob;
 class FakeSession;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Job;
 class SessionPrivate;

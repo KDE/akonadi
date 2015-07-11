@@ -24,7 +24,8 @@
 
 #include <QWidget>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentFilterProxyModel;
 class AgentType;

@@ -24,7 +24,8 @@
 #include <QStringList>
 #include <QScopedPointer>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionFetchScopePrivate : public QSharedData
 {
@@ -219,6 +220,5 @@ CollectionFetchScope &CollectionFetchScope::ancestorFetchScope()
     }
     return *d->ancestorFetchScope;
 }
-
 
 }

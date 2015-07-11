@@ -27,7 +27,8 @@
 
 #include <QtCore/QVariant>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SpecialCollectionsRequestJobPrivate;
 

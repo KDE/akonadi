@@ -163,30 +163,30 @@ bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotification &msg, bo
     Protocol::ChangeNotification::Operation op = msg.operation();
 
     if (msg.type() == Protocol::ChangeNotification::Tags
-        && ((op == Protocol::ChangeNotification::Add && q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0)
-            || (op == Protocol::ChangeNotification::Modify && q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0)
-            || (op == Protocol::ChangeNotification::Remove && q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0))) {
+            && ((op == Protocol::ChangeNotification::Add && q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0)
+                || (op == Protocol::ChangeNotification::Modify && q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0)
+                || (op == Protocol::ChangeNotification::Remove && q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0))) {
         return true;
     }
 
     if (!fetchCollectionStatistics
-        && (msg.type() == Protocol::ChangeNotification::Items)
-        && ((op == Protocol::ChangeNotification::Add && q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) == 0)
-            || (op == Protocol::ChangeNotification::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
-                && q_ptr->receivers(SIGNAL(itemsRemoved(Akonadi::Item::List))) == 0)
-            || (op == Protocol::ChangeNotification::Modify && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)
-            || (op == Protocol::ChangeNotification::ModifyFlags
-                && (q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) == 0
-                    // Newly delivered ModifyFlags notifications will be converted to
-                    // itemChanged(item, "FLAGS") for legacy clients.
-                    && (!allowModifyFlagsConversion || q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)))
-            || (op == Protocol::ChangeNotification::ModifyTags && q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) == 0)
-            || (op == Protocol::ChangeNotification::Move && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) == 0
-                && q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) == 0)
-            || (op == Protocol::ChangeNotification::Link && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) == 0
-                && q_ptr->receivers(SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection))) == 0)
-            || (op == Protocol::ChangeNotification::Unlink && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) == 0
-                && q_ptr->receivers(SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection))) == 0))) {
+            && (msg.type() == Protocol::ChangeNotification::Items)
+            && ((op == Protocol::ChangeNotification::Add && q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) == 0)
+                || (op == Protocol::ChangeNotification::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
+                    && q_ptr->receivers(SIGNAL(itemsRemoved(Akonadi::Item::List))) == 0)
+                || (op == Protocol::ChangeNotification::Modify && q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)
+                || (op == Protocol::ChangeNotification::ModifyFlags
+                    && (q_ptr->receivers(SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>))) == 0
+                        // Newly delivered ModifyFlags notifications will be converted to
+                        // itemChanged(item, "FLAGS") for legacy clients.
+                        && (!allowModifyFlagsConversion || q_ptr->receivers(SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>))) == 0)))
+                || (op == Protocol::ChangeNotification::ModifyTags && q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) == 0)
+                || (op == Protocol::ChangeNotification::Move && q_ptr->receivers(SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection))) == 0
+                    && q_ptr->receivers(SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection))) == 0)
+                || (op == Protocol::ChangeNotification::Link && q_ptr->receivers(SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection))) == 0
+                    && q_ptr->receivers(SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection))) == 0)
+                || (op == Protocol::ChangeNotification::Unlink && q_ptr->receivers(SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection))) == 0
+                    && q_ptr->receivers(SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection))) == 0))) {
         return true;
     }
 
@@ -202,12 +202,12 @@ bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotification &msg, bo
     Collection::Id parentCollectionId = msg.parentCollection();
 
     if ((op == Protocol::ChangeNotification::Add)
-        || (op == Protocol::ChangeNotification::Remove)
-        || (op == Protocol::ChangeNotification::Modify)
-        || (op == Protocol::ChangeNotification::ModifyFlags)
-        || (op == Protocol::ChangeNotification::ModifyTags)
-        || (op == Protocol::ChangeNotification::Link)
-        || (op == Protocol::ChangeNotification::Unlink)) {
+            || (op == Protocol::ChangeNotification::Remove)
+            || (op == Protocol::ChangeNotification::Modify)
+            || (op == Protocol::ChangeNotification::ModifyFlags)
+            || (op == Protocol::ChangeNotification::ModifyTags)
+            || (op == Protocol::ChangeNotification::Link)
+            || (op == Protocol::ChangeNotification::Unlink)) {
         if (isMonitored(parentCollectionId)) {
             return false;
         }
@@ -494,11 +494,11 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
             QSet<QByteArray> changedParts = msg.itemParts();
             Q_FOREACH (const QByteArray &part, changedParts)  {
                 if (part.startsWith("PLD:") &&    //krazy:exclude=strings since QByteArray
-                    (fullPayloadWasRequested || requestedPayloadParts.contains(part))) {
+                        (fullPayloadWasRequested || requestedPayloadParts.contains(part))) {
                     scope.fetchPayloadPart(part.mid(4), true);;
                 }
                 if (part.startsWith("ATR:") &&    //krazy:exclude=strings since QByteArray
-                    (allAttributesWereRequested || requestedAttrParts.contains(part))) {
+                        (allAttributesWereRequested || requestedAttrParts.contains(part))) {
                     scope.fetchAttribute(part.mid(4), true);
                 }
             }
@@ -537,7 +537,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
         shouldCleanOldNotifications = !someoneWasListening;
     } else if (msg.type() == Protocol::ChangeNotification::Relations) {
         Relation rel;
-        Q_FOREACH (const QByteArray & part, msg.itemParts()) {
+        Q_FOREACH (const QByteArray &part, msg.itemParts()) {
             QList<QByteArray> splitPart = part.split(' ');
             Q_ASSERT(splitPart.size() == 2);
             if (splitPart.first() == "LEFT") {
@@ -733,8 +733,8 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
     checkBatchSupport(msg, needsSplit, supportsBatch);
 
     if (supportsBatch
-        || (!needsSplit && !supportsBatch && msg.operation() != Protocol::ChangeNotification::ModifyFlags)
-        || msg.type() == Protocol::ChangeNotification::Collections) {
+            || (!needsSplit && !supportsBatch && msg.operation() != Protocol::ChangeNotification::ModifyFlags)
+            || msg.type() == Protocol::ChangeNotification::Collections) {
         // Make sure the batch msg is always queued before the split notifications
         const int oldSize = pendingNotifications.size();
         const int appended = translateAndCompress(pendingNotifications, msg);
@@ -1042,7 +1042,7 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::ChangeNotificati
         return true;
     case Protocol::ChangeNotification::Modify:
         if (q_ptr->receivers(SIGNAL(collectionChanged(Akonadi::Collection))) == 0
-            && q_ptr->receivers(SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>))) == 0) {
+                && q_ptr->receivers(SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>))) == 0) {
             return false;
         }
         emit q_ptr->collectionChanged(collection);
@@ -1186,10 +1186,10 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
     // modify removes the cache entry, as we need to re-fetch
     // And subscription modify the visibility of the collection by the collectionFetchScope.
     if (msg.operation() == Protocol::ChangeNotification::Modify
-        || msg.operation() == Protocol::ChangeNotification::ModifyFlags
-        || msg.operation() == Protocol::ChangeNotification::ModifyTags
-        || msg.operation() == Protocol::ChangeNotification::Move
-        || msg.operation() == Protocol::ChangeNotification::Subscribe) {
+            || msg.operation() == Protocol::ChangeNotification::ModifyFlags
+            || msg.operation() == Protocol::ChangeNotification::ModifyTags
+            || msg.operation() == Protocol::ChangeNotification::Move
+            || msg.operation() == Protocol::ChangeNotification::Subscribe) {
         if (msg.type() == Protocol::ChangeNotification::Collections) {
             Q_FOREACH (quint64 uid, msg.uids()) {
                 collectionCache->update(uid, mCollectionFetchScope);

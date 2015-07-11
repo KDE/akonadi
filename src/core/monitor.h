@@ -28,7 +28,8 @@
 
 #include <QtCore/QObject>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionFetchScope;
 class CollectionStatistics;
@@ -38,7 +39,8 @@ class MonitorPrivate;
 class Session;
 class TagFetchScope;
 
-namespace Protocol {
+namespace Protocol
+{
 class ChangeNotification;
 }
 
@@ -457,7 +459,7 @@ Q_SIGNALS:
      * @since 4.15
      */
     void itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations,
-                          const Akonadi::Relation::List &removedRelations);
+                               const Akonadi::Relation::List &removedRelations);
 
     /**
      * This signal is emitted if a monitored item has been moved between two collections

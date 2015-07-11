@@ -24,7 +24,8 @@
 
 #include <QDialog>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * Local subscription dialog.

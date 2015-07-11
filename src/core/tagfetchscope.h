@@ -24,7 +24,8 @@
 
 #include <QSharedPointer>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Specifies which parts of a tag should be fetched from the Akonadi storage.

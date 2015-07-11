@@ -34,7 +34,8 @@ class QAction;
  * @since 4.8
  */
 
-namespace Akonadi {
+namespace Akonadi
+{
 class RecentCollectionAction : public QObject
 {
     Q_OBJECT

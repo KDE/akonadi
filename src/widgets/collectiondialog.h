@@ -28,7 +28,8 @@
 
 #include <QAbstractItemView>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A collection selection dialog.

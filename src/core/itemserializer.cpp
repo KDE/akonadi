@@ -34,7 +34,8 @@
 
 Q_DECLARE_METATYPE(std::string)
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 DefaultItemSerializerPlugin::DefaultItemSerializerPlugin()
 {

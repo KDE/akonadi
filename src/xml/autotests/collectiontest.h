@@ -22,14 +22,14 @@
 #include <QtCore/QObject>
 #include "collection.h"
 
-
-class CollectionTest : public QObject {
-  Q_OBJECT
-  private:
-    void verifyCollection( const Akonadi::Collection::List &colist, int listPosition,
-                           const QString &remoteId, const QString &name,
-                           const QStringList &mimeType );
-  private Q_SLOTS:
+class CollectionTest : public QObject
+{
+    Q_OBJECT
+private:
+    void verifyCollection(const Akonadi::Collection::List &colist, int listPosition,
+                          const QString &remoteId, const QString &name,
+                          const QStringList &mimeType);
+private Q_SLOTS:
     void serializeCollection();
     void testBuildCollection();
 };

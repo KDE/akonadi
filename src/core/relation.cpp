@@ -68,8 +68,8 @@ bool Relation::operator==(const Relation &other) const
 {
     if (isValid() && other.isValid()) {
         return d->left == other.d->left
-            && d->right == other.d->right
-            && d->type == other.d->type;
+               && d->right == other.d->right
+               && d->type == other.d->type;
     }
     return false;
 }
@@ -126,7 +126,7 @@ bool Relation::isValid() const
 
 uint qHash(const Relation &relation)
 {
-    return (3*qHash(relation.left())+qHash(relation.right())+qHash(relation.type()));
+    return (3 * qHash(relation.left()) + qHash(relation.right()) + qHash(relation.type()));
 }
 
 QDebug &operator<<(QDebug &debug, const Relation &relation)

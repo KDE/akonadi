@@ -73,7 +73,7 @@ qint64 CollectionQuotaAttribute::maximumValue() const
 
 QByteArray CollectionQuotaAttribute::type() const
 {
-    static const QByteArray sType( "collectionquota" );
+    static const QByteArray sType("collectionquota");
     return sType;
 }
 

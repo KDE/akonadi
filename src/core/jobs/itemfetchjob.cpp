@@ -63,8 +63,7 @@ public:
         q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
     }
 
-    void aboutToFinish() Q_DECL_OVERRIDE
-    {
+    void aboutToFinish() Q_DECL_OVERRIDE {
         timeout();
     }
 
@@ -84,10 +83,11 @@ public:
     QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/
     {
         if (mRequestedItems.isEmpty()) {
-           QString str = QString::fromLatin1( "All items from collection %1" ).arg( mCollection.id() );
-           if ( mFetchScope.fetchChangedSince().isValid() )
-             str += QString::fromLatin1( " changed since %1" ).arg( mFetchScope.fetchChangedSince().toString() );
-           return str;
+            QString str = QString::fromLatin1("All items from collection %1").arg(mCollection.id());
+            if (mFetchScope.fetchChangedSince().isValid()) {
+                str += QString::fromLatin1(" changed since %1").arg(mFetchScope.fetchChangedSince().toString());
+            }
+            return str;
 
         } else {
             try {
@@ -169,17 +169,16 @@ void ItemFetchJob::doStart()
 {
     Q_D(ItemFetchJob);
 
-
     try {
         d->sendCommand(Protocol::FetchItemsCommand(
-            d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
-            ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mRequestedItems),
-            ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
+                           d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
+                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mRequestedItems),
+                           ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
     } catch (const Akonadi::Exception &e) {
-      setError(Job::Unknown);
-      setErrorText(QString::fromUtf8(e.what()));
-      emitResult();
-      return;
+        setError(Job::Unknown);
+        setErrorText(QString::fromUtf8(e.what()));
+        emitResult();
+        return;
     }
 }
 

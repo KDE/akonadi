@@ -29,7 +29,8 @@
 
 class QIODevice;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short The base class for item type serializer plugins.

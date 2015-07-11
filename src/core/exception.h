@@ -32,7 +32,8 @@
 class QByteArray;
 class QString;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
   Base class for exceptions used by the Akonadi library.
@@ -81,21 +82,21 @@ private:
 };
 
 #define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \
-class AKONADICORE_EXPORT classname : public Akonadi::Exception \
-{ \
-  public: \
-    classname ( const char *what ) throw() : Akonadi::Exception( what ) \
+    class AKONADICORE_EXPORT classname : public Akonadi::Exception \
     { \
-    } \
-    classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) \
-    { \
-    } \
-    classname ( const QString &what ) throw() : Akonadi::Exception( what ) \
-    { \
-    } \
-    ~classname() throw(); \
-    QByteArray type() const throw(); \
-}
+    public: \
+        classname ( const char *what ) throw() : Akonadi::Exception( what ) \
+        { \
+        } \
+        classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) \
+        { \
+        } \
+        classname ( const QString &what ) throw() : Akonadi::Exception( what ) \
+        { \
+        } \
+        ~classname() throw(); \
+        QByteArray type() const throw(); \
+    }
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);
 

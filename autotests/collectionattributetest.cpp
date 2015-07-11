@@ -59,8 +59,7 @@ public:
     {
         return mData;
     }
-    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE
-    {
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE {
         mData = data;
     }
 private:

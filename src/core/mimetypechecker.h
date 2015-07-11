@@ -27,7 +27,8 @@
 class QString;
 class QStringList;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Collection;
 class Item;
 class MimeTypeCheckerPrivate;
@@ -254,4 +255,3 @@ private:
 }
 
 #endif
-// kate: space-indent on; indent-width 2; replace-tabs on;

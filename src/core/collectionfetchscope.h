@@ -28,7 +28,8 @@
 
 class QStringList;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionFetchScopePrivate;
 
@@ -288,7 +289,6 @@ public:
      * @since KF5
      */
     bool ignoreRetrievalErrors() const;
-
 
     /**
      * Returns @c true if there is nothing to fetch.

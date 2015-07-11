@@ -22,7 +22,8 @@
 
 #include "akonadicore_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Relation;
 }
 
@@ -33,7 +34,8 @@ AKONADICORE_EXPORT unsigned int qHash(const Akonadi::Relation &);
 #include <QList>
 #include <QDebug>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 
 /**
@@ -43,9 +45,9 @@ class Item;
  *
  * An example usecase could be a association of a note with an email. The note (that for instance contains personal notes for the email),
  * can be stored independently but is easily retrieved by asking for relations the email.
- * 
+ *
  * The relation type allows to distinguish various types of relations that could for instance be bidirectional or not.
- * 
+ *
  * @since 4.15
  */
 class AKONADICORE_EXPORT Relation

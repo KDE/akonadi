@@ -45,7 +45,8 @@ static const int safetyTimeout = 60000; // ms
 static const int safetyTimeout = 10000; // ms
 #endif
 
-namespace Akonadi {
+namespace Akonadi
+{
 /**
  * @internal
  */
@@ -81,7 +82,7 @@ public:
     {
         org::freedesktop::Akonadi::Agent::Control *agentControlIface =
             new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, agentInstance.identifier()),
-                                                          QStringLiteral("/"), KDBusConnectionPool::threadConnection(), q);
+                    QStringLiteral("/"), KDBusConnectionPool::threadConnection(), q);
         if (!agentControlIface || !agentControlIface->isValid()) {
             delete agentControlIface;
 

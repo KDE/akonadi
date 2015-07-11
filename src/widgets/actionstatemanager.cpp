@@ -38,7 +38,7 @@ static bool canCreateSubCollection(const Collection &collection)
     }
 
     if (!collection.contentMimeTypes().contains(Collection::mimeType()) &&
-        !collection.contentMimeTypes().contains(Collection::virtualMimeType())) {
+            !collection.contentMimeTypes().contains(Collection::virtualMimeType())) {
         return false;
     }
 
@@ -52,8 +52,8 @@ static inline bool canContainItems(const Collection &collection)
     }
 
     if ((collection.contentMimeTypes().count() == 1) &&
-        ((collection.contentMimeTypes().first() == Collection::mimeType()) ||
-         (collection.contentMimeTypes().first() == Collection::virtualMimeType()))) {
+            ((collection.contentMimeTypes().first() == Collection::mimeType()) ||
+             (collection.contentMimeTypes().first() == Collection::virtualMimeType()))) {
         return false;
     }
 

@@ -66,7 +66,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
 
     // check existing overlays to detect cascading
     for (QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
-         it != sInstanceOverlay->baseWidgets.end();) {
+            it != sInstanceOverlay->baseWidgets.end();) {
         if ((*it).first == 0 || (*it).second == 0) {
             // garbage collection
             it = sInstanceOverlay->baseWidgets.erase(it);
@@ -168,9 +168,9 @@ void ErrorOverlay::reposition()
 bool ErrorOverlay::eventFilter(QObject *object, QEvent *event)
 {
     if (object == mBaseWidget && mOverlayActive &&
-        (event->type() == QEvent::Move || event->type() == QEvent::Resize ||
-         event->type() == QEvent::Show || event->type() == QEvent::Hide ||
-         event->type() == QEvent::ParentChange)) {
+            (event->type() == QEvent::Move || event->type() == QEvent::Resize ||
+             event->type() == QEvent::Show || event->type() == QEvent::Hide ||
+             event->type() == QEvent::ParentChange)) {
         reposition();
     }
     return QWidget::eventFilter(object, event);

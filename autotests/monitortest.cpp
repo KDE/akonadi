@@ -46,7 +46,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( MonitorTest )
+QTEST_AKONADIMAIN(MonitorTest)
 
 static Collection res3;
 
@@ -55,369 +55,372 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 void MonitorTest::initTestCase()
 {
-  AkonadiTest::checkTestIsIsolated();
-  Control::start();
+    AkonadiTest::checkTestIsIsolated();
+    Control::start();
 
-  res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
 
-  AkonadiTest::setAllResourcesOffline();
+    AkonadiTest::setAllResourcesOffline();
 }
 
 void MonitorTest::testMonitor_data()
 {
-  QTest::addColumn<bool>( "fetchCol" );
-  QTest::newRow( "with collection fetching" ) << true;
-  QTest::newRow( "without collection fetching" ) << false;
+    QTest::addColumn<bool>("fetchCol");
+    QTest::newRow("with collection fetching") << true;
+    QTest::newRow("without collection fetching") << false;
 }
 
 void MonitorTest::testMonitor()
 {
-  QFETCH( bool, fetchCol );
+    QFETCH(bool, fetchCol);
 
-  Monitor *monitor = new Monitor( this );
-  monitor->setCollectionMonitored( Collection::root() );
-  monitor->fetchCollection( fetchCol );
-  monitor->itemFetchScope().fetchFullPayload();
-  monitor->itemFetchScope().setCacheOnly(true);
+    Monitor *monitor = new Monitor(this);
+    monitor->setCollectionMonitored(Collection::root());
+    monitor->fetchCollection(fetchCol);
+    monitor->itemFetchScope().fetchFullPayload();
+    monitor->itemFetchScope().setCacheOnly(true);
 
-  // monitor signals
-  qRegisterMetaType<Akonadi::Collection>();
-  /*
-     qRegisterMetaType<Akonadi::Collection::Id>() registers the type with a
-     name of "qlonglong".  Doing
-     qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" )
-     doesn't help. (works now , see QTBUG-937 and QTBUG-6833, -- dvratil)
+    // monitor signals
+    qRegisterMetaType<Akonadi::Collection>();
+    /*
+       qRegisterMetaType<Akonadi::Collection::Id>() registers the type with a
+       name of "qlonglong".  Doing
+       qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" )
+       doesn't help. (works now , see QTBUG-937 and QTBUG-6833, -- dvratil)
 
-     The problem here is that Akonadi::Collection::Id is a typedef to qlonglong,
-     and qlonglong is already a registered meta type.  So the signal spy will
-     give us a QVariant of type Akonadi::Collection::Id, but calling
-     .value<Akonadi::Collection::Id>() on that variant will in fact end up
-     calling qvariant_cast<qlonglong>.  From the point of view of QMetaType,
-     Akonadi::Collection::Id and qlonglong are different types, so QVariant
-     can't convert, and returns a default-constructed qlonglong, zero.
+       The problem here is that Akonadi::Collection::Id is a typedef to qlonglong,
+       and qlonglong is already a registered meta type.  So the signal spy will
+       give us a QVariant of type Akonadi::Collection::Id, but calling
+       .value<Akonadi::Collection::Id>() on that variant will in fact end up
+       calling qvariant_cast<qlonglong>.  From the point of view of QMetaType,
+       Akonadi::Collection::Id and qlonglong are different types, so QVariant
+       can't convert, and returns a default-constructed qlonglong, zero.
 
-     When connecting to a real slot (without QSignalSpy), this problem is
-     avoided, because the casting is done differently (via a lot of void
-     pointers).
+       When connecting to a real slot (without QSignalSpy), this problem is
+       avoided, because the casting is done differently (via a lot of void
+       pointers).
 
-     The docs say nothing about qRegisterMetaType -ing a typedef, so I'm not
-     sure if this is a bug or not. (cberzan)
-   */
-  qRegisterMetaType<Akonadi::Collection::Id>("Akonadi::Collection::Id");
-  qRegisterMetaType<Akonadi::Item>();
-  qRegisterMetaType<Akonadi::CollectionStatistics>();
-  qRegisterMetaType<QSet<QByteArray> >();
-  QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
-  QSignalSpy cmvspy( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)) );
-  QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
-  QSignalSpy cSubscribedSpy( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy cUnsubscribedSpy( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)) );
-  QSignalSpy iaddspy( monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) );
-  QSignalSpy imodspy( monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-  QSignalSpy imvspy( monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy irmspy( monitor, SIGNAL(itemRemoved(Akonadi::Item)) );
+       The docs say nothing about qRegisterMetaType -ing a typedef, so I'm not
+       sure if this is a bug or not. (cberzan)
+     */
+    qRegisterMetaType<Akonadi::Collection::Id>("Akonadi::Collection::Id");
+    qRegisterMetaType<Akonadi::Item>();
+    qRegisterMetaType<Akonadi::CollectionStatistics>();
+    qRegisterMetaType<QSet<QByteArray> >();
+    QSignalSpy caddspy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy cmodspy(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)));
+    QSignalSpy cmvspy(monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy crmspy(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)));
+    QSignalSpy cstatspy(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)));
+    QSignalSpy cSubscribedSpy(monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy cUnsubscribedSpy(monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)));
+    QSignalSpy iaddspy(monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+    QSignalSpy imodspy(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+    QSignalSpy imvspy(monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy irmspy(monitor, SIGNAL(itemRemoved(Akonadi::Item)));
 
-  QVERIFY( caddspy.isValid() );
-  QVERIFY( cmodspy.isValid() );
-  QVERIFY( cmvspy.isValid() );
-  QVERIFY( crmspy.isValid() );
-  QVERIFY( cstatspy.isValid() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isValid() );
-  QVERIFY( imodspy.isValid() );
-  QVERIFY( imvspy.isValid() );
-  QVERIFY( irmspy.isValid() );
+    QVERIFY(caddspy.isValid());
+    QVERIFY(cmodspy.isValid());
+    QVERIFY(cmvspy.isValid());
+    QVERIFY(crmspy.isValid());
+    QVERIFY(cstatspy.isValid());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isValid());
+    QVERIFY(imodspy.isValid());
+    QVERIFY(imvspy.isValid());
+    QVERIFY(irmspy.isValid());
 
-  // create a collection
-  Collection monitorCol;
-  monitorCol.setParentCollection( res3 );
-  monitorCol.setName( QStringLiteral("monitor") );
-  CollectionCreateJob *create = new CollectionCreateJob( monitorCol, this );
-  AKVERIFYEXEC( create );
-  monitorCol = create->collection();
-  QVERIFY( monitorCol.isValid() );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+    // create a collection
+    Collection monitorCol;
+    monitorCol.setParentCollection(res3);
+    monitorCol.setName(QStringLiteral("monitor"));
+    CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+    AKVERIFYEXEC(create);
+    monitorCol = create->collection();
+    QVERIFY(monitorCol.isValid());
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000));
 
-  QCOMPARE( caddspy.count(), 1 );
-  QList<QVariant> arg = caddspy.takeFirst();
-  Collection col = arg.at(0).value<Collection>();
-  QCOMPARE( col, monitorCol );
-  if ( fetchCol )
-    QCOMPARE( col.name(), QStringLiteral("monitor") );
-  Collection parent = arg.at(1).value<Collection>();
-  QCOMPARE( parent, res3 );
+    QCOMPARE(caddspy.count(), 1);
+    QList<QVariant> arg = caddspy.takeFirst();
+    Collection col = arg.at(0).value<Collection>();
+    QCOMPARE(col, monitorCol);
+    if (fetchCol) {
+        QCOMPARE(col.name(), QStringLiteral("monitor"));
+    }
+    Collection parent = arg.at(1).value<Collection>();
+    QCOMPARE(parent, res3);
 
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cstatspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cstatspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // add an item
-  Item newItem;
-  newItem.setMimeType( QStringLiteral("application/octet-stream") );
-  ItemCreateJob *append = new ItemCreateJob( newItem, monitorCol, this );
-  AKVERIFYEXEC( append );
-  Item monitorRef = append->item();
-  QVERIFY( monitorRef.isValid() );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+    // add an item
+    Item newItem;
+    newItem.setMimeType(QStringLiteral("application/octet-stream"));
+    ItemCreateJob *append = new ItemCreateJob(newItem, monitorCol, this);
+    AKVERIFYEXEC(append);
+    Item monitorRef = append->item();
+    QVERIFY(monitorRef.isValid());
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
 
-  QCOMPARE( cstatspy.count(), 1 );
-  arg = cstatspy.takeFirst();
-  QCOMPARE( arg.at(0).value<Akonadi::Collection::Id>(), monitorCol.id() );
+    QCOMPARE(cstatspy.count(), 1);
+    arg = cstatspy.takeFirst();
+    QCOMPARE(arg.at(0).value<Akonadi::Collection::Id>(), monitorCol.id());
 
-  QCOMPARE( iaddspy.count(), 1 );
-  arg = iaddspy.takeFirst();
-  Item item = arg.at( 0 ).value<Item>();
-  QCOMPARE( item, monitorRef );
-  QCOMPARE( item.mimeType(), QString::fromLatin1(  "application/octet-stream" ) );
-  Collection collection = arg.at( 1 ).value<Collection>();
-  QCOMPARE( collection.id(), monitorCol.id() );
+    QCOMPARE(iaddspy.count(), 1);
+    arg = iaddspy.takeFirst();
+    Item item = arg.at(0).value<Item>();
+    QCOMPARE(item, monitorRef);
+    QCOMPARE(item.mimeType(), QString::fromLatin1("application/octet-stream"));
+    Collection collection = arg.at(1).value<Collection>();
+    QCOMPARE(collection.id(), monitorCol.id());
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // modify an item
-  item.setPayload<QByteArray>( "some new content" );
-  ItemModifyJob *store = new ItemModifyJob( item, this );
-  AKVERIFYEXEC( store );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+    // modify an item
+    item.setPayload<QByteArray>("some new content");
+    ItemModifyJob *store = new ItemModifyJob(item, this);
+    AKVERIFYEXEC(store);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
 
-  QCOMPARE( cstatspy.count(), 1 );
-  arg = cstatspy.takeFirst();
-  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
+    QCOMPARE(cstatspy.count(), 1);
+    arg = cstatspy.takeFirst();
+    QCOMPARE(arg.at(0).value<Collection::Id>(), monitorCol.id());
 
-  QCOMPARE( imodspy.count(), 1 );
-  arg = imodspy.takeFirst();
-  item = arg.at( 0 ).value<Item>();
-  QCOMPARE( monitorRef, item );
-  QVERIFY( item.hasPayload<QByteArray>() );
-  QCOMPARE( item.payload<QByteArray>(), QByteArray( "some new content" ) );
-  QSet<QByteArray> parts = arg.at( 1 ).value<QSet<QByteArray> >();
-  QCOMPARE( parts, QSet<QByteArray>() << "PLD:RFC822" );
+    QCOMPARE(imodspy.count(), 1);
+    arg = imodspy.takeFirst();
+    item = arg.at(0).value<Item>();
+    QCOMPARE(monitorRef, item);
+    QVERIFY(item.hasPayload<QByteArray>());
+    QCOMPARE(item.payload<QByteArray>(), QByteArray("some new content"));
+    QSet<QByteArray> parts = arg.at(1).value<QSet<QByteArray> >();
+    QCOMPARE(parts, QSet<QByteArray>() << "PLD:RFC822");
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // move an item
-  ItemMoveJob *move = new ItemMoveJob( item, res3 );
-  AKVERIFYEXEC( move );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
-  QCOMPARE( cstatspy.count(), 2 );
-  // NOTE: We don't make any assumptions about the order of the collectionStatisticsChanged
-  // signals, they seem to arrive in random order
-  QList<Collection::Id> notifiedCols;
-  notifiedCols << cstatspy.takeFirst().at(0).value<Collection::Id>()
-               << cstatspy.takeFirst().at(0).value<Collection::Id>();
-  QVERIFY(notifiedCols.contains(res3.id()));  // destination
-  QVERIFY(notifiedCols.contains(monitorCol.id())); // source
+    // move an item
+    ItemMoveJob *move = new ItemMoveJob(item, res3);
+    AKVERIFYEXEC(move);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    QCOMPARE(cstatspy.count(), 2);
+    // NOTE: We don't make any assumptions about the order of the collectionStatisticsChanged
+    // signals, they seem to arrive in random order
+    QList<Collection::Id> notifiedCols;
+    notifiedCols << cstatspy.takeFirst().at(0).value<Collection::Id>()
+                 << cstatspy.takeFirst().at(0).value<Collection::Id>();
+    QVERIFY(notifiedCols.contains(res3.id()));  // destination
+    QVERIFY(notifiedCols.contains(monitorCol.id())); // source
 
-  QCOMPARE( imvspy.count(), 1 );
-  arg = imvspy.takeFirst();
-  item = arg.at( 0 ).value<Item>(); // the item
-  QCOMPARE( monitorRef, item );
-  col = arg.at( 1 ).value<Collection>(); // the source collection
-  QCOMPARE( col.id(), monitorCol.id() );
-  col = arg.at( 2 ).value<Collection>(); // the destination collection
-  QCOMPARE( col.id(), res3.id() );
+    QCOMPARE(imvspy.count(), 1);
+    arg = imvspy.takeFirst();
+    item = arg.at(0).value<Item>();   // the item
+    QCOMPARE(monitorRef, item);
+    col = arg.at(1).value<Collection>();   // the source collection
+    QCOMPARE(col.id(), monitorCol.id());
+    col = arg.at(2).value<Collection>();   // the destination collection
+    QCOMPARE(col.id(), res3.id());
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // delete an item
-  ItemDeleteJob *del = new ItemDeleteJob( monitorRef, this );
-  AKVERIFYEXEC( del );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
+    // delete an item
+    ItemDeleteJob *del = new ItemDeleteJob(monitorRef, this);
+    AKVERIFYEXEC(del);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
 
-  QCOMPARE( cstatspy.count(), 1 );
-  arg = cstatspy.takeFirst();
-  QCOMPARE( arg.at(0).value<Collection::Id>(), res3.id() );
-  cmodspy.clear();
+    QCOMPARE(cstatspy.count(), 1);
+    arg = cstatspy.takeFirst();
+    QCOMPARE(arg.at(0).value<Collection::Id>(), res3.id());
+    cmodspy.clear();
 
-  QCOMPARE( irmspy.count(), 1 );
-  arg = irmspy.takeFirst();
-  Item ref = qvariant_cast<Item>( arg.at(0) );
-  QCOMPARE( monitorRef, ref );
-  QCOMPARE( ref.parentCollection(), res3 );
+    QCOMPARE(irmspy.count(), 1);
+    arg = irmspy.takeFirst();
+    Item ref = qvariant_cast<Item>(arg.at(0));
+    QCOMPARE(monitorRef, ref);
+    QCOMPARE(ref.parentCollection(), res3);
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  imvspy.clear();
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    imvspy.clear();
 
-  // Unsubscribe and re-subscribed a collection that existed before the monitor was created.
-  Collection subCollection = Collection( collectionIdFromPath( QStringLiteral("res2/foo2") ) );
-  subCollection.setName( QStringLiteral("foo2") );
-  QVERIFY( subCollection.isValid() );
+    // Unsubscribe and re-subscribed a collection that existed before the monitor was created.
+    Collection subCollection = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
+    subCollection.setName(QStringLiteral("foo2"));
+    QVERIFY(subCollection.isValid());
 
-  SubscriptionJob *subscribeJob = new SubscriptionJob( this );
-  subscribeJob->unsubscribe( Collection::List() << subCollection );
-  AKVERIFYEXEC( subscribeJob );
-  // Wait for unsubscribed signal, it goes after changed, so we can check for both
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000 ) );
-  QCOMPARE( cmodspy.size(), 1 );
-  arg = cmodspy.takeFirst();
-  col = arg.at( 0 ).value<Collection>();
-  QCOMPARE( col.id(), subCollection.id() );
+    SubscriptionJob *subscribeJob = new SubscriptionJob(this);
+    subscribeJob->unsubscribe(Collection::List() << subCollection);
+    AKVERIFYEXEC(subscribeJob);
+    // Wait for unsubscribed signal, it goes after changed, so we can check for both
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000));
+    QCOMPARE(cmodspy.size(), 1);
+    arg = cmodspy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col.id(), subCollection.id());
 
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QCOMPARE( cUnsubscribedSpy.size(), 1 );
-  arg = cUnsubscribedSpy.takeFirst();
-  col = arg.at( 0 ).value<Collection>();
-  QCOMPARE( col.id(), subCollection.id() );
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QCOMPARE(cUnsubscribedSpy.size(), 1);
+    arg = cUnsubscribedSpy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col.id(), subCollection.id());
 
-  subscribeJob = new SubscriptionJob( this );
-  subscribeJob->subscribe( Collection::List() << subCollection );
-  AKVERIFYEXEC( subscribeJob );
-  // Wait for subscribed signal, it goes after changed, so we can check for both
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
-  QCOMPARE( cmodspy.size(), 1 );
-  arg = cmodspy.takeFirst();
-  col = arg.at( 0 ).value<Collection>();
-  QCOMPARE( col.id(), subCollection.id() );
+    subscribeJob = new SubscriptionJob(this);
+    subscribeJob->subscribe(Collection::List() << subCollection);
+    AKVERIFYEXEC(subscribeJob);
+    // Wait for subscribed signal, it goes after changed, so we can check for both
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000));
+    QCOMPARE(cmodspy.size(), 1);
+    arg = cmodspy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col.id(), subCollection.id());
 
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QCOMPARE( cSubscribedSpy.size(), 1 );
-  arg = cSubscribedSpy.takeFirst();
-  col = arg.at( 0 ).value<Collection>();
-  QCOMPARE( col.id(), subCollection.id() );
-  if ( fetchCol ) {
-    QVERIFY( !col.name().isEmpty() );
-    QCOMPARE( col.name(), subCollection.name() );
-  }
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QCOMPARE(cSubscribedSpy.size(), 1);
+    arg = cSubscribedSpy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col.id(), subCollection.id());
+    if (fetchCol) {
+        QVERIFY(!col.name().isEmpty());
+        QCOMPARE(col.name(), subCollection.name());
+    }
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cstatspy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cstatspy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // modify a collection
-  monitorCol.setName( QStringLiteral("changed name") );
-  CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
-  AKVERIFYEXEC( mod );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000 ) );
+    // modify a collection
+    monitorCol.setName(QStringLiteral("changed name"));
+    CollectionModifyJob *mod = new CollectionModifyJob(monitorCol, this);
+    AKVERIFYEXEC(mod);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000));
 
-  QCOMPARE( cmodspy.count(), 1 );
-  arg = cmodspy.takeFirst();
-  col = arg.at(0).value<Collection>();
-  QCOMPARE( col, monitorCol );
-  if ( fetchCol )
-    QCOMPARE( col.name(), QStringLiteral("changed name") );
+    QCOMPARE(cmodspy.count(), 1);
+    arg = cmodspy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col, monitorCol);
+    if (fetchCol) {
+        QCOMPARE(col.name(), QStringLiteral("changed name"));
+    }
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cstatspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cstatspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // move a collection
-  Collection dest = Collection( collectionIdFromPath( QStringLiteral("res1/foo") ) );
-  CollectionMoveJob *cmove = new CollectionMoveJob( monitorCol, dest, this );
-  AKVERIFYEXEC( cmove );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+    // move a collection
+    Collection dest = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+    CollectionMoveJob *cmove = new CollectionMoveJob(monitorCol, dest, this);
+    AKVERIFYEXEC(cmove);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000));
 
-  QCOMPARE( cmvspy.count(), 1 );
-  arg = cmvspy.takeFirst();
-  col = arg.at( 0 ).value<Collection>();
-  QCOMPARE( col, monitorCol );
-  QCOMPARE( col.parentCollection(), dest );
-  if ( fetchCol )
-    QCOMPARE( col.name(), monitorCol.name() );
-  col = arg.at( 1 ).value<Collection>();
-  QCOMPARE( col, res3 );
-  col = arg.at( 2 ).value<Collection>();
-  QCOMPARE( col, dest );
+    QCOMPARE(cmvspy.count(), 1);
+    arg = cmvspy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col, monitorCol);
+    QCOMPARE(col.parentCollection(), dest);
+    if (fetchCol) {
+        QCOMPARE(col.name(), monitorCol.name());
+    }
+    col = arg.at(1).value<Collection>();
+    QCOMPARE(col, res3);
+    col = arg.at(2).value<Collection>();
+    QCOMPARE(col, dest);
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( crmspy.isEmpty() );
-  QVERIFY( cstatspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(crmspy.isEmpty());
+    QVERIFY(cstatspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 
-  // delete a collection
-  CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
-  AKVERIFYEXEC( cdel );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000 ) );
+    // delete a collection
+    CollectionDeleteJob *cdel = new CollectionDeleteJob(monitorCol, this);
+    AKVERIFYEXEC(cdel);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000));
 
-  QCOMPARE( crmspy.count(), 1 );
-  arg = crmspy.takeFirst();
-  col = arg.at(0).value<Collection>();
-  QCOMPARE( col.id(), monitorCol.id() );
-  QCOMPARE( col.parentCollection(), dest );
+    QCOMPARE(crmspy.count(), 1);
+    arg = crmspy.takeFirst();
+    col = arg.at(0).value<Collection>();
+    QCOMPARE(col.id(), monitorCol.id());
+    QCOMPARE(col.parentCollection(), dest);
 
-  QVERIFY( caddspy.isEmpty() );
-  QVERIFY( cmodspy.isEmpty() );
-  QVERIFY( cmvspy.isEmpty() );
-  QVERIFY( cstatspy.isEmpty() );
-  QVERIFY( cSubscribedSpy.isEmpty() );
-  QVERIFY( cUnsubscribedSpy.isEmpty() );
-  QVERIFY( iaddspy.isEmpty() );
-  QVERIFY( imodspy.isEmpty() );
-  QVERIFY( imvspy.isEmpty() );
-  QVERIFY( irmspy.isEmpty() );
+    QVERIFY(caddspy.isEmpty());
+    QVERIFY(cmodspy.isEmpty());
+    QVERIFY(cmvspy.isEmpty());
+    QVERIFY(cstatspy.isEmpty());
+    QVERIFY(cSubscribedSpy.isEmpty());
+    QVERIFY(cUnsubscribedSpy.isEmpty());
+    QVERIFY(iaddspy.isEmpty());
+    QVERIFY(imodspy.isEmpty());
+    QVERIFY(imvspy.isEmpty());
+    QVERIFY(irmspy.isEmpty());
 }
 
 void MonitorTest::testVirtualCollectionsMonitoring()
 {
-  Monitor *monitor = new Monitor( this );
-  monitor->setCollectionMonitored( Collection( 1 ) );   // top-level 'Search' collection
+    Monitor *monitor = new Monitor(this);
+    monitor->setCollectionMonitored(Collection(1));       // top-level 'Search' collection
 
-  QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QVERIFY( caddspy.isValid() );
+    QSignalSpy caddspy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    QVERIFY(caddspy.isValid());
 
-  SearchCreateJob *job = new SearchCreateJob( QStringLiteral("Test search collection"), Akonadi::SearchQuery(), this );
-  AKVERIFYEXEC( job );
-  QVERIFY( AkonadiTest::akWaitForSignal( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
-  QCOMPARE( caddspy.count(), 1 );
+    SearchCreateJob *job = new SearchCreateJob(QStringLiteral("Test search collection"), Akonadi::SearchQuery(), this);
+    AKVERIFYEXEC(job);
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000));
+    QCOMPARE(caddspy.count(), 1);
 }
 

@@ -306,8 +306,8 @@ void AgentManagerPrivate::createDBusInterface()
     delete mManager;
 
     mManager = new org::freedesktop::Akonadi::AgentManager(ServerManager::serviceName(ServerManager::Control),
-                                                           QStringLiteral("/AgentManager"),
-                                                           KDBusConnectionPool::threadConnection(), mParent);
+            QStringLiteral("/AgentManager"),
+            KDBusConnectionPool::threadConnection(), mParent);
 
     QObject::connect(mManager, SIGNAL(agentTypeAdded(QString)),
                      mParent, SLOT(agentTypeAdded(QString)));
@@ -363,8 +363,8 @@ AgentManager::AgentManager()
     d->createDBusInterface();
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Control),
-                                                           KDBusConnectionPool::threadConnection(),
-                                                           QDBusServiceWatcher::WatchForOwnerChange, this);
+            KDBusConnectionPool::threadConnection(),
+            QDBusServiceWatcher::WatchForOwnerChange, this);
     connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 }
@@ -387,6 +387,7 @@ AgentManager *AgentManager::self()
 
 AgentType::List AgentManager::types() const
 {
+    qDebug() << " AgentManager::types()***********************************************************************************************************************************:" << d->mTypes.values().count();
     return d->mTypes.values().toVector();
 }
 

@@ -27,7 +27,8 @@
 
 class QTextBrowser;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A dialog to ask the user for a resolve strategy for conflicts.

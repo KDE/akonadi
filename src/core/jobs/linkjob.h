@@ -24,7 +24,8 @@
 #include "job.h"
 #include "item.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class LinkJobPrivate;

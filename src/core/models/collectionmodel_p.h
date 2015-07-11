@@ -32,7 +32,8 @@
 
 class KJob;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionModel;
 class CollectionStatistics;

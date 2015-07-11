@@ -26,7 +26,8 @@
 
 class QModelIndex;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Item;
 class PartFetcherPrivate;

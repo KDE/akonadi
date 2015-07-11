@@ -23,7 +23,8 @@
 #include "akonadiagentbase_export.h"
 #include <QString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class AgentSearchInterfacePrivate;

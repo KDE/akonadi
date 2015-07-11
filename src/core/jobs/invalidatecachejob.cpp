@@ -27,7 +27,8 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class InvalidateCacheJobPrivate : JobPrivate
 {

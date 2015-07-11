@@ -206,8 +206,8 @@ void SelfTestDialog::testSQLDriver()
     const KLocalizedString detailsOk = ki18n("The QtSQL driver '%1' is required by your current Akonadi server configuration and was found on your system.")
                                        .subs(driver);
     const KLocalizedString detailsFail = ki18n("The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
-                                               "The following drivers are installed: %2.\n"
-                                               "Make sure the required driver is installed.")
+                                         "The following drivers are installed: %2.\n"
+                                         "Make sure the required driver is installed.")
                                          .subs(driver)
                                          .subs(availableDrivers.join(QStringLiteral(", ")));
     QStandardItem *item = 0;

@@ -31,7 +31,8 @@ class KLocalizedString;
 class QItemSelectionModel;
 class QWidget;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Manages generic actions for agent and agent instance views.

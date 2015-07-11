@@ -85,7 +85,7 @@ public:
      * @reimp
      */
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
 
 protected:
     EntityOrderProxyModelPrivate *const d_ptr;

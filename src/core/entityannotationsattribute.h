@@ -26,7 +26,8 @@
 
 #include <QMap>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * An attribute for annotations.

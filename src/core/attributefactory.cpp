@@ -33,8 +33,10 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
-namespace Internal {
+namespace Akonadi
+{
+namespace Internal
+{
 
 /**
  * @internal
@@ -61,8 +63,7 @@ public:
     {
         return mValue;
     }
-    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE
-    {
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE {
         mValue = data;
     }
 

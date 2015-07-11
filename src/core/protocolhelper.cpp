@@ -66,8 +66,8 @@ Protocol::CachePolicy ProtocolHelper::cachePolicyToProtocol(const CachePolicy &p
 }
 
 void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors, Entity *entity,
-                                          Collection::Id parentCollection,
-                                          ProtocolHelperValuePool *pool)
+        Collection::Id parentCollection,
+        ProtocolHelperValuePool *pool)
 {
     if (!pool || parentCollection == -1) {
         // if no pool or parent collection id is provided we can't cache anything, so continue as usual
@@ -154,7 +154,6 @@ void ProtocolHelper::parseAttributes(const Protocol::Attributes &attributes, Att
     parseAttributesImpl(attributes, entity);
 }
 
-
 template<typename T>
 inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
 {
@@ -175,7 +174,6 @@ Protocol::Attributes ProtocolHelper::attributesToProtocol(const AttributeEntity 
 {
     return attributesToProtocolImpl(entity, ns);
 }
-
 
 Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent)
 {
@@ -236,8 +234,8 @@ QByteArray ProtocolHelper::decodePartIdentifier(const QByteArray &data, PartName
 }
 
 Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection,
-                                                                const Akonadi::Tag &tag,
-                                                                const Item::List &requestedItems)
+        const Akonadi::Tag &tag,
+        const Item::List &requestedItems)
 {
     Protocol::ScopeContext ctx;
     if (tag.isValid()) {
@@ -274,7 +272,7 @@ Scope ProtocolHelper::hierarchicalRidToScope(const Collection &col)
         chain.append(Scope::HRID(c.id(), c.remoteId()));
         c = c.parentCollection();
     }
-    return Scope(chain + QVector<Scope::HRID>{ Scope::HRID(0) });
+    return Scope(chain + QVector<Scope::HRID> { Scope::HRID(0) });
 }
 
 Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
@@ -539,8 +537,7 @@ bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArr
 
 Akonadi::Tristate ProtocolHelper::listPreference(Collection::ListPreference pref)
 {
-    switch (pref)
-    {
+    switch (pref) {
     case Collection::ListEnabled:
         return Tristate::True;
     case Collection::ListDisabled:

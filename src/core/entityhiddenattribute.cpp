@@ -36,7 +36,7 @@ EntityHiddenAttribute::~EntityHiddenAttribute()
 
 QByteArray Akonadi::EntityHiddenAttribute::type() const
 {
-    static const QByteArray sType( "HIDDEN" );
+    static const QByteArray sType("HIDDEN");
     return sType;
 }
 

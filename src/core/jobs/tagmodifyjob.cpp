@@ -25,8 +25,7 @@
 
 using namespace Akonadi;
 
-struct Akonadi::TagModifyJobPrivate : public JobPrivate
-{
+struct Akonadi::TagModifyJobPrivate : public JobPrivate {
     TagModifyJobPrivate(TagModifyJob *parent)
         : JobPrivate(parent)
     {
@@ -70,7 +69,7 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respons
     Q_D(TagModifyJob);
 
     if (response.isResponse() && (response.type() == Protocol::Command::DeleteTag
-            || response.type() == Protocol::Command::ModifyTag)) {
+                                  || response.type() == Protocol::Command::ModifyTag)) {
         ChangeMediator::invalidateTag(d->mTag);
         return true;
     }

@@ -47,7 +47,8 @@ static const char LEGACY_NAME[] = "legacy";
 static const char DEFAULT_NAME[] = "default";
 static const char _APPLICATION_OCTETSTREAM[] = "application/octet-stream";
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 Q_GLOBAL_STATIC(DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin)
 
@@ -451,7 +452,6 @@ QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, co
 {
     return s_pluginRegistry->findBestMatch(mimetype, metaTypeIds, opt);
 }
-
 
 QObject *TypePluginLoader::defaultObjectForMimeType(const QString &mimetype)
 {

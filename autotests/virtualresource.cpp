@@ -29,17 +29,17 @@
 #include <QStringList>
 
 #define EXEC(job) \
-do { \
-  if (!job->exec()) { \
-      kFatal() << "Job failed: " << job->errorString(); \
-  } \
-} while ( 0 )
+    do { \
+        if (!job->exec()) { \
+            kFatal() << "Job failed: " << job->errorString(); \
+        } \
+    } while ( 0 )
 
 using namespace Akonadi;
 
 VirtualResource::VirtualResource(const QString &name, QObject *parent)
     : QObject(parent),
-    mResourceName(name)
+      mResourceName(name)
 {
     // QDBusInterface *interface = new QDBusInterface(ServerManager::serviceName(ServerManager::Control),
     //                                QString::fromLatin1("/"),
@@ -75,7 +75,7 @@ Akonadi::Collection VirtualResource::createCollection(const Akonadi::Collection 
 {
     // kDebug() << collection.name() << collection.parentCollection().remoteId();
     // kDebug() << "contentMimeTypes: " << collection.contentMimeTypes();
-    
+
     Q_ASSERT(!collection.name().isEmpty());
     Collection col = collection;
     if (!col.parentCollection().isValid()) {

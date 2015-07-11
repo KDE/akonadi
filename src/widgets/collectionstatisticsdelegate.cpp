@@ -39,7 +39,8 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 enum CountType {
     UnreadCount,
@@ -148,7 +149,7 @@ bool CollectionStatisticsDelegate::progressAnimationEnabled() const
 }
 
 void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
-                                                   const QModelIndex &index) const
+        const QModelIndex &index) const
 {
     Q_D(const CollectionStatisticsDelegate);
 
@@ -194,8 +195,8 @@ private:
 };
 
 void CollectionStatisticsDelegate::paint(QPainter *painter,
-                                         const QStyleOptionViewItem &option,
-                                         const QModelIndex &index) const
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
     Q_D(const CollectionStatisticsDelegate);
     PainterStateSaver stateSaver(painter);
@@ -284,7 +285,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         const QRect iconRect = s->subElementRect(QStyle::SE_ItemViewItemDecoration, &option4, widget);
 
         if (option.decorationPosition == QStyleOptionViewItem::Left ||
-            option.decorationPosition == QStyleOptionViewItem::Right) {
+                option.decorationPosition == QStyleOptionViewItem::Right) {
             // Squeeze the folder text if it is to big and calculate the rectangles
             // where the folder text and the unread count will be drawn to
             QString folderName = text;

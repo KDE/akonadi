@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class Item;
@@ -97,10 +98,10 @@ public:
     Item item() const;
 
     enum MergeOption {
-      NoMerge = 0, ///< Don't merge
-      RID     = 1, ///< Merge by remote id
-      GID     = 2, ///< Merge by GID
-      Silent  = 4  ///< Only return the id of the merged/created item.
+        NoMerge = 0, ///< Don't merge
+        RID     = 1, ///< Merge by remote id
+        GID     = 2, ///< Merge by GID
+        Silent  = 4  ///< Only return the id of the merged/created item.
     };
     Q_DECLARE_FLAGS(MergeOptions, MergeOption)
 

@@ -26,8 +26,7 @@ using namespace Akonadi;
 const char Akonadi::Tag::PLAIN[] = "PLAIN";
 const char Akonadi::Tag::GENERIC[] = "GENERIC";
 
-struct Akonadi::Tag::Private
-{
+struct Akonadi::Tag::Private {
     Private()
         : id(-1)
     {
@@ -220,10 +219,10 @@ QDebug &operator<<(QDebug &debug, const Tag &tag)
 
 Tag Tag::genericTag(const QString &name)
 {
-  Tag tag;
-  tag.d->type = GENERIC;
-  tag.d->gid = QUuid::createUuid().toByteArray().mid(1, 36);
-  tag.setName(name);
-  return tag;
+    Tag tag;
+    tag.d->type = GENERIC;
+    tag.d->gid = QUuid::createUuid().toByteArray().mid(1, 36);
+    tag.setName(name);
+    return tag;
 }
 

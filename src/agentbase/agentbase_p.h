@@ -31,7 +31,8 @@
 class QSettings;
 class QTimer;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal

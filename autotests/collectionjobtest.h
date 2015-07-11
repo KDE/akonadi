@@ -24,8 +24,8 @@
 
 class CollectionJobTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase();
     void testTopLevelList();
     void testFolderList();

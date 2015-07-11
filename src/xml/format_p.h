@@ -22,32 +22,81 @@
 
 #include <QString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Format {
+namespace Format
+{
 
-namespace Tag {
+namespace Tag
+{
 
-  inline QString root() { return QString::fromLatin1( "knut" ); }
-  inline QString collection() { return QString::fromLatin1( "collection" ); }
-  inline QString item() { return QString::fromLatin1( "item" ); }
-  inline QString attribute() { return QString::fromLatin1( "attribute" ); }
-  inline QString flag() { return QString::fromLatin1( "flag" ); }
-  inline QString tag() { return QString::fromLatin1( "tag" ); }
-  inline QString payload() { return QString::fromLatin1( "payload" ); }
+inline QString root()
+{
+    return QString::fromLatin1("knut");
+}
+inline QString collection()
+{
+    return QString::fromLatin1("collection");
+}
+inline QString item()
+{
+    return QString::fromLatin1("item");
+}
+inline QString attribute()
+{
+    return QString::fromLatin1("attribute");
+}
+inline QString flag()
+{
+    return QString::fromLatin1("flag");
+}
+inline QString tag()
+{
+    return QString::fromLatin1("tag");
+}
+inline QString payload()
+{
+    return QString::fromLatin1("payload");
+}
 
 }
 
-namespace Attr {
+namespace Attr
+{
 
-  inline QString remoteId() { return QString::fromLatin1( "rid" ); }
-  inline QString attributeType() { return QString::fromLatin1( "type" ); }
-  inline QString collectionName() { return QString::fromLatin1( "name" ); }
-  inline QString collectionContentTypes() { return QString::fromLatin1( "content" ); }
-  inline QString itemMimeType() { return QString::fromLatin1( "mimetype" ); }
-  inline QString name() { return QString::fromLatin1( "name" ); }
-  inline QString gid() { return QString::fromLatin1( "gid" ); }
-  inline QString type() { return QString::fromLatin1( "type" ); }
+inline QString remoteId()
+{
+    return QString::fromLatin1("rid");
+}
+inline QString attributeType()
+{
+    return QString::fromLatin1("type");
+}
+inline QString collectionName()
+{
+    return QString::fromLatin1("name");
+}
+inline QString collectionContentTypes()
+{
+    return QString::fromLatin1("content");
+}
+inline QString itemMimeType()
+{
+    return QString::fromLatin1("mimetype");
+}
+inline QString name()
+{
+    return QString::fromLatin1("name");
+}
+inline QString gid()
+{
+    return QString::fromLatin1("gid");
+}
+inline QString type()
+{
+    return QString::fromLatin1("type");
+}
 
 }
 

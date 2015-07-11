@@ -24,7 +24,8 @@
 
 #include <QtCore/QObject>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Provides methods to control the Akonadi server process.

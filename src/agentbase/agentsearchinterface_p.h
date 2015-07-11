@@ -27,7 +27,8 @@
 
 class KJob;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentSearchInterfacePrivate : public QObject
 {

@@ -30,70 +30,70 @@ using namespace Akonadi;
 
 class ResourceTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
+        AkonadiTest::checkTestIsIsolated();
     }
     void testResourceManagement()
     {
-      qRegisterMetaType<Akonadi::AgentInstance>();
-      QSignalSpy spyAddInstance( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)) );
-      QVERIFY( spyAddInstance.isValid() );
-      QSignalSpy spyRemoveInstance( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)) );
-      QVERIFY( spyRemoveInstance.isValid() );
+        qRegisterMetaType<Akonadi::AgentInstance>();
+        QSignalSpy spyAddInstance(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)));
+        QVERIFY(spyAddInstance.isValid());
+        QSignalSpy spyRemoveInstance(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)));
+        QVERIFY(spyRemoveInstance.isValid());
 
-      AgentType type = AgentManager::self()->type( QLatin1String("akonadi_knut_resource") );
-      QVERIFY( type.isValid() );
+        AgentType type = AgentManager::self()->type(QLatin1String("akonadi_knut_resource"));
+        QVERIFY(type.isValid());
 
-      QStringList lst;
-      lst << QLatin1String( "Resource" );
-      QCOMPARE( type.capabilities(), lst );
+        QStringList lst;
+        lst << QLatin1String("Resource");
+        QCOMPARE(type.capabilities(), lst);
 
-      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
-      AKVERIFYEXEC( job );
+        AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type);
+        AKVERIFYEXEC(job);
 
-      AgentInstance instance = job->instance();
-      QVERIFY( instance.isValid() );
+        AgentInstance instance = job->instance();
+        QVERIFY(instance.isValid());
 
-      QCOMPARE( spyAddInstance.count(), 1 );
-      QCOMPARE( spyAddInstance.first().at( 0 ).value<AgentInstance>(), instance );
-      QVERIFY( AgentManager::self()->instance( instance.identifier() ).isValid() );
+        QCOMPARE(spyAddInstance.count(), 1);
+        QCOMPARE(spyAddInstance.first().at(0).value<AgentInstance>(), instance);
+        QVERIFY(AgentManager::self()->instance(instance.identifier()).isValid());
 
-      job = new AgentInstanceCreateJob( type );
-      AKVERIFYEXEC( job );
-      AgentInstance instance2 = job->instance();
-      QVERIFY( !( instance == instance2 ) );
-      QCOMPARE( spyAddInstance.count(), 2 );
+        job = new AgentInstanceCreateJob(type);
+        AKVERIFYEXEC(job);
+        AgentInstance instance2 = job->instance();
+        QVERIFY(!(instance == instance2));
+        QCOMPARE(spyAddInstance.count(), 2);
 
-      AgentManager::self()->removeInstance( instance );
-      AgentManager::self()->removeInstance( instance2 );
-      QTRY_COMPARE( spyRemoveInstance.count(), 2 );
-      QVERIFY( !AgentManager::self()->instances().contains( instance ) );
-      QVERIFY( !AgentManager::self()->instances().contains( instance2 ) );
+        AgentManager::self()->removeInstance(instance);
+        AgentManager::self()->removeInstance(instance2);
+        QTRY_COMPARE(spyRemoveInstance.count(), 2);
+        QVERIFY(!AgentManager::self()->instances().contains(instance));
+        QVERIFY(!AgentManager::self()->instances().contains(instance2));
     }
 
     void testIllegalResourceManagement()
     {
-      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( AgentManager::self()->type( QLatin1String("non_existing_resource") ) );
-      QVERIFY( !job->exec() );
+        AgentInstanceCreateJob *job = new AgentInstanceCreateJob(AgentManager::self()->type(QLatin1String("non_existing_resource")));
+        QVERIFY(!job->exec());
 
-      // unique agent
-      // According to vkrause the mailthreader agent is no longer started by
-      // default so this won't work.
-      /*
-      const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
-      QVERIFY( type.isValid() );
-      job = new AgentInstanceCreateJob( type );
-      AKVERIFYEXEC( job );
+        // unique agent
+        // According to vkrause the mailthreader agent is no longer started by
+        // default so this won't work.
+        /*
+        const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
+        QVERIFY( type.isValid() );
+        job = new AgentInstanceCreateJob( type );
+        AKVERIFYEXEC( job );
 
-      job = new AgentInstanceCreateJob( type );
-      QVERIFY( !job->exec() );
-      */
+        job = new AgentInstanceCreateJob( type );
+        QVERIFY( !job->exec() );
+        */
     }
 };
 
-QTEST_AKONADIMAIN( ResourceTest )
+QTEST_AKONADIMAIN(ResourceTest)
 
 #include "resourcetest.moc"

@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include <QString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Entity;
 }
 
@@ -41,7 +42,8 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Entity &);
     const Class##Private *d_func() const; \
     friend class Class##Private;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class EntityPrivate;

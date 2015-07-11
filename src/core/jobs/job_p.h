@@ -23,9 +23,11 @@
 #include "session.h"
 #include "item.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Protocol {
+namespace Protocol
+{
 class Command;
 }
 
@@ -61,7 +63,8 @@ public:
     /*
       Returns a string to display in akonadi console's job tracker. E.g. item ID.
      */
-    virtual QString jobDebuggingString() const {
+    virtual QString jobDebuggingString() const
+    {
         return QString();
     }
     /**

@@ -22,7 +22,8 @@
 
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Relation;
 class RelationCreateJobPrivate;

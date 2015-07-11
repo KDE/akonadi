@@ -25,7 +25,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ServerManagerPrivate;
 

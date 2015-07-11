@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Provides the functionality of registering and creating arbitrary

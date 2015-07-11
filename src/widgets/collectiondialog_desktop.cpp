@@ -64,7 +64,7 @@ public:
         QLineEdit *filterCollectionLineEdit = new QLineEdit(widget);
         filterCollectionLineEdit->setClearButtonEnabled(true);
         filterCollectionLineEdit->setPlaceholderText(i18nc("@info Displayed grayed-out inside the "
-                                                           "textbox, verb to search", "Search"));
+                "textbox, verb to search", "Search"));
         layout->addWidget(filterCollectionLineEdit);
 
         mView = new EntityTreeView;
@@ -186,7 +186,7 @@ public:
 void CollectionDialog::Private::slotDoubleClicked()
 {
     if (canSelectCollection()) {
-       mParent->accept();
+        mParent->accept();
     }
 }
 
@@ -224,7 +224,7 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
     if (mAllowToCreateNewChildCollection) {
         mParent->setButtons(Ok | Cancel | User1);
         mParent->setButtonGuiItem(User1, KGuiItem(i18n("&New Subfolder..."), QStringLiteral("folder-new"),
-                                                  i18n("Create a new subfolder under the currently selected folder")));
+                                  i18n("Create a new subfolder under the currently selected folder")));
         mParent->enableButton(KDialog::User1, false);
         connect(mParent, SIGNAL(user1Clicked()), mParent, SLOT(slotAddChildCollection()));
     }
@@ -260,7 +260,7 @@ void CollectionDialog::Private::slotAddChildCollection()
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     if (canCreateCollection(parentCollection)) {
         const QString name = QInputDialog::getText(mParent, i18nc("@title:window", "New Folder"),
-                                                   i18nc("@label:textbox, name of a thing", "Name"));
+                             i18nc("@label:textbox, name of a thing", "Name"));
         if (name.isEmpty()) {
             return;
         }
@@ -411,6 +411,5 @@ void CollectionDialog::setContentMimeTypes(const QStringList &mimetypes)
 {
     d->mContentMimeTypes = mimetypes;
 }
-
 
 #include "moc_collectiondialog.cpp"

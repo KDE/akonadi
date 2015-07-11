@@ -29,7 +29,8 @@ class QString;
 template <typename T>
 class QVector;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ItemSerializerPlugin;
 
 /**
@@ -44,7 +45,8 @@ class ItemSerializerPlugin;
  * the old code from ItemSerializer has been extracted into the pluginForMimeType() method
  * inside the TypePluginLoader namespace.
  */
-namespace TypePluginLoader {
+namespace TypePluginLoader
+{
 
 enum Option {
     NoOptions,

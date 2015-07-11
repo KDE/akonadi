@@ -23,7 +23,8 @@
 #include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A page in a collection properties dialog to configure the cache policy.

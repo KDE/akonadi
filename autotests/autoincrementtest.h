@@ -23,7 +23,8 @@
 
 #include <QtCore/QObject>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class CollectionCreateJob;
 class ItemCreateJob;
 }

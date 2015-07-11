@@ -27,7 +27,8 @@
 
 #include <kpixmapsequence.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class DelegateAnimator : public QObject
 {
@@ -53,7 +54,8 @@ public:
             return index == other.index;
         }
 
-        inline void nextFrame() const {
+        inline void nextFrame() const
+        {
             frame = (frame + 1) % sCount;
         }
         mutable int frame;

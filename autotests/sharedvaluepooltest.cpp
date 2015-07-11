@@ -29,32 +29,34 @@ using namespace Akonadi;
 
 class SharedValuePoolTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testQVector_data()
     {
-      QTest::addColumn<int>( "size" );
-      QTest::newRow( "10" ) << 10;
-      QTest::newRow( "100" ) << 100;
+        QTest::addColumn<int>("size");
+        QTest::newRow("10") << 10;
+        QTest::newRow("100") << 100;
     }
 
     void testQVector()
     {
-      QFETCH( int, size );
-      QVector<QByteArray> data;
-      Internal::SharedValuePool<QByteArray, QVector> pool;
+        QFETCH(int, size);
+        QVector<QByteArray> data;
+        Internal::SharedValuePool<QByteArray, QVector> pool;
 
-      for ( int i = 0; i < size; ++i ) {
-        QByteArray b( 10, (char)i );
-        data.push_back( b );
-        QCOMPARE( pool.sharedValue( b ), b );
-        QCOMPARE( pool.sharedValue( b ), b );
-      }
+        for (int i = 0; i < size; ++i) {
+            QByteArray b(10, (char)i);
+            data.push_back(b);
+            QCOMPARE(pool.sharedValue(b), b);
+            QCOMPARE(pool.sharedValue(b), b);
+        }
 
-      QBENCHMARK {
-        foreach ( const QByteArray &b, data )
-          pool.sharedValue( b );
-      }
+        QBENCHMARK {
+            foreach (const QByteArray &b, data)
+            {
+                pool.sharedValue(b);
+            }
+        }
     }
 
     /*void testQSet_data()
@@ -84,6 +86,6 @@ class SharedValuePoolTest : public QObject
     }*/
 };
 
-QTEST_MAIN( SharedValuePoolTest )
+QTEST_MAIN(SharedValuePoolTest)
 
 #include "sharedvaluepooltest.moc"

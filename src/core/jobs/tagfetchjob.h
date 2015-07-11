@@ -24,7 +24,8 @@
 #include "job.h"
 #include "tag.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class TagFetchScope;
 class TagFetchJobPrivate;

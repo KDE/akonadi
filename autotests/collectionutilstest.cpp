@@ -25,55 +25,55 @@ using namespace Akonadi;
 
 class CollectionUtilsTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testHasValidHierarchicalRID_data()
     {
-      QTest::addColumn<Collection>( "collection" );
-      QTest::addColumn<bool>( "isHRID" );
+        QTest::addColumn<Collection>("collection");
+        QTest::addColumn<bool>("isHRID");
 
-      QTest::newRow( "empty" ) << Collection() << false;
-      QTest::newRow( "root" ) << Collection::root() << true;
-      Collection c;
-      c.setParentCollection( Collection::root() );
-      QTest::newRow( "one level not ok" ) << c << false;
-      c.setRemoteId( QLatin1String("r1") );
-      QTest::newRow( "one level ok" ) << c << true;
-      Collection c2;
-      c2.setParentCollection( c );
-      QTest::newRow( "two level not ok" ) << c2 << false;
-      c2.setRemoteId( QLatin1String("r2") );
-      QTest::newRow( "two level ok" ) << c2 << true;
-      c2.parentCollection().setRemoteId( QString() );
-      QTest::newRow( "mid RID missing" ) << c2 << false;
+        QTest::newRow("empty") << Collection() << false;
+        QTest::newRow("root") << Collection::root() << true;
+        Collection c;
+        c.setParentCollection(Collection::root());
+        QTest::newRow("one level not ok") << c << false;
+        c.setRemoteId(QLatin1String("r1"));
+        QTest::newRow("one level ok") << c << true;
+        Collection c2;
+        c2.setParentCollection(c);
+        QTest::newRow("two level not ok") << c2 << false;
+        c2.setRemoteId(QLatin1String("r2"));
+        QTest::newRow("two level ok") << c2 << true;
+        c2.parentCollection().setRemoteId(QString());
+        QTest::newRow("mid RID missing") << c2 << false;
     }
 
     void testHasValidHierarchicalRID()
     {
-      QFETCH( Collection, collection );
-      QFETCH( bool, isHRID );
-      QCOMPARE( CollectionUtils::hasValidHierarchicalRID( collection ), isHRID );
+        QFETCH(Collection, collection);
+        QFETCH(bool, isHRID);
+        QCOMPARE(CollectionUtils::hasValidHierarchicalRID(collection), isHRID);
     }
 
     void testPersistentParentCollection()
     {
-      Collection col1(1);
-      Collection col2(2);
-      Collection col3(3);
+        Collection col1(1);
+        Collection col2(2);
+        Collection col3(3);
 
-      col2.setParentCollection(col3);
-      col1.setParentCollection(col2);
+        col2.setParentCollection(col3);
+        col1.setParentCollection(col2);
 
-      Collection assigned = col1;
-      QCOMPARE(assigned.parentCollection(), col2);
-      QCOMPARE(assigned.parentCollection().parentCollection(), col3);
+        Collection assigned = col1;
+        QCOMPARE(assigned.parentCollection(), col2);
+        QCOMPARE(assigned.parentCollection().parentCollection(), col3);
 
-      Collection copied(col1);
-      QCOMPARE(copied.parentCollection(), col2);
-      QCOMPARE(copied.parentCollection().parentCollection(), col3);
+        Collection copied(col1);
+        QCOMPARE(copied.parentCollection(), col2);
+        QCOMPARE(copied.parentCollection().parentCollection(), col3);
     }
 };
 
-QTEST_AKONADIMAIN( CollectionUtilsTest )
+QTEST_AKONADIMAIN(CollectionUtilsTest)
 
 #include "collectionutilstest.moc"

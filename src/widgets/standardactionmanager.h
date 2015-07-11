@@ -34,7 +34,8 @@ class QItemSelectionModel;
 class QWidget;
 class QMenu;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class FavoriteCollectionsModel;
 

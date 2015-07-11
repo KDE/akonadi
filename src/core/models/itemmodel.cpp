@@ -43,8 +43,7 @@ using namespace Akonadi;
  *
  * Semantically, we could have used an item instead.
  */
-struct ItemContainer
-{
+struct ItemContainer {
     ItemContainer(const Item &i, int r)
         : item(i)
         , row(r)
@@ -166,7 +165,7 @@ int ItemModel::Private::rowForItem(const Akonadi::Item &item)
        the ItemContainer rows have not been updated (costs too much).
     */
     if (container->row < items.count()
-        && items.at(container->row) == container) {
+            && items.at(container->row) == container) {
         return container->row;
     } else {
         // Slow solution if the fist one has not succeeded

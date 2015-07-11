@@ -29,7 +29,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentFactoryBasePrivate;
 

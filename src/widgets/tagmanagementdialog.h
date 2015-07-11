@@ -27,7 +27,8 @@
 #include <QDialog>
 #include "tag.h"
 class QDialogButtonBox;
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * A dialog to manage tags.

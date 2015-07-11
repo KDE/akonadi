@@ -25,7 +25,8 @@
 #include "specialcollections.h"
 #include <kcompositejob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SpecialCollectionsDiscoveryJobPrivate;
 

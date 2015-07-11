@@ -34,8 +34,8 @@
 class QFileSystemWatcher;
 
 class KnutResource : public Akonadi::ResourceBase,
-                     public Akonadi::AgentBase::ObserverV2,
-                     public Akonadi::AgentSearchInterface
+    public Akonadi::AgentBase::ObserverV2,
+    public Akonadi::AgentSearchInterface
 {
     Q_OBJECT
 
@@ -55,10 +55,10 @@ protected:
     void collectionChanged(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
     void collectionRemoved(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
 
-    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection ) Q_DECL_OVERRIDE;
-    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts ) Q_DECL_OVERRIDE;
-    void itemRemoved( const Akonadi::Item &ref ) Q_DECL_OVERRIDE;
-    void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination ) Q_DECL_OVERRIDE;
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
+    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
+    void itemRemoved(const Akonadi::Item &ref) Q_DECL_OVERRIDE;
+    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination) Q_DECL_OVERRIDE;
 
     void search(const QString &query, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
     void addSearch(const QString &query, const QString &queryLanguage, const Akonadi::Collection &resultCollection) Q_DECL_OVERRIDE;

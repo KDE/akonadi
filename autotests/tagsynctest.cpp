@@ -62,7 +62,7 @@ private Q_SLOTS:
     Tag::List getTagsWithRid()
     {
         Tag::List tags;
-        Q_FOREACH(const Tag &t, getTags()) {
+        Q_FOREACH (const Tag &t, getTags()) {
             if (!t.remoteId().isEmpty()) {
                 tags << t;
                 qDebug() << t.remoteId();
@@ -73,7 +73,7 @@ private Q_SLOTS:
 
     void cleanTags()
     {
-        Q_FOREACH(const Tag &t, getTags()) {
+        Q_FOREACH (const Tag &t, getTags()) {
             TagDeleteJob *job = new TagDeleteJob(t);
             bool ret = job->exec();
             Q_ASSERT(ret);
@@ -91,7 +91,7 @@ private Q_SLOTS:
         tag1.setRemoteId("rid1");
         remoteTags << tag1;
 
-        TagSync* syncer = new TagSync(this);
+        TagSync *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
@@ -104,7 +104,7 @@ private Q_SLOTS:
 
     void newTagWithItems()
     {
-        const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+        const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
         ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
 
@@ -126,7 +126,7 @@ private Q_SLOTS:
         QHash<QString, Item::List> tagMembers;
         tagMembers.insert(QString::fromLatin1(tag1.remoteId()), Item::List() << item1);
 
-        TagSync* syncer = new TagSync(this);
+        TagSync *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(tagMembers);
         AKVERIFYEXEC(syncer);
@@ -142,7 +142,6 @@ private Q_SLOTS:
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().count(), tagMembers.value(QString::fromLatin1(tag1.remoteId())).count());
         QCOMPARE(fetchJob->items(), tagMembers.value(QString::fromLatin1(tag1.remoteId())));
-
 
         cleanTags();
     }
@@ -161,7 +160,7 @@ private Q_SLOTS:
         Tag::List remoteTags;
         remoteTags << tag1;
 
-        TagSync* syncer = new TagSync(this);
+        TagSync *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
@@ -174,7 +173,7 @@ private Q_SLOTS:
 
     void existingTagWithItems()
     {
-        const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+        const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
 
         ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
@@ -210,7 +209,7 @@ private Q_SLOTS:
         QHash<QString, Item::List> tagMembers;
         tagMembers.insert(QString::fromLatin1(tag1.remoteId()), Item::List() << item1);
 
-        TagSync* syncer = new TagSync(this);
+        TagSync *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(tagMembers);
         AKVERIFYEXEC(syncer);
@@ -247,7 +246,7 @@ private Q_SLOTS:
 
         Tag::List remoteTags;
 
-        TagSync* syncer = new TagSync(this);
+        TagSync *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);

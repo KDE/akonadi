@@ -23,7 +23,8 @@
 #include "akonadi-xml_export.h"
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class XmlWriteJobPrivate;
@@ -33,22 +34,22 @@ class XmlWriteJobPrivate;
 */
 class AKONADI_XML_EXPORT XmlWriteJob : public Job
 {
-  Q_OBJECT
-  public:
-    XmlWriteJob( const Collection &root, const QString &fileName, QObject *parent = Q_NULLPTR );
-    XmlWriteJob( const QList<Collection> &roots, const QString &fileName, QObject *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    XmlWriteJob(const Collection &root, const QString &fileName, QObject *parent = Q_NULLPTR);
+    XmlWriteJob(const QList<Collection> &roots, const QString &fileName, QObject *parent = Q_NULLPTR);
     ~XmlWriteJob();
 
-  protected:
+protected:
     /* reimpl. */ void doStart() Q_DECL_OVERRIDE;
 
-  private:
+private:
     friend class XmlWriteJobPrivate;
-    XmlWriteJobPrivate* const d;
+    XmlWriteJobPrivate *const d;
     void done();
 
-    Q_PRIVATE_SLOT( d, void collectionFetchResult(KJob*) )
-    Q_PRIVATE_SLOT( d, void itemFetchResult(KJob*) )
+    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
+    Q_PRIVATE_SLOT(d, void itemFetchResult(KJob *))
 };
 
 }

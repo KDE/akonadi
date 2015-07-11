@@ -22,7 +22,8 @@
 #include "tag.h"
 #include "akonadiwidgets_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 /**
  * A widget that offers facilities to add/remove tags and provides a way to select tags.
  *

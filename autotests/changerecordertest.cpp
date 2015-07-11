@@ -65,8 +65,8 @@ private Q_SLOTS:
         QTest::newRow("multipleItems") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("r1") << QStringLiteral("c4") << QStringLiteral("r2") << QStringLiteral("r3") << QStringLiteral("r4") << QStringLiteral("rn"));
         QTest::newRow("reload") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c1") << QStringLiteral("c3") << QStringLiteral("reload") << QStringLiteral("r1") << QStringLiteral("r1") << QStringLiteral("r3") << QStringLiteral("rn"));
         QTest::newRow("more") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("reload") << QStringLiteral("r1") << QStringLiteral("reload") << QStringLiteral("c4") << QStringLiteral("reload") << QStringLiteral("r2") << QStringLiteral("reload") << QStringLiteral("r3") << QStringLiteral("r4") << QStringLiteral("rn"));
-      //FIXME: Due to the event compression in the server we simply expect a removal signal
-      // QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
+        //FIXME: Due to the event compression in the server we simply expect a removal signal
+        // QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
     }
 
     void testChangeRecorder()

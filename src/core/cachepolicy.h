@@ -25,7 +25,8 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Represents the caching policy for a collection.

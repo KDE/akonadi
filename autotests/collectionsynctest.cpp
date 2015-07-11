@@ -110,10 +110,10 @@ private:
         collections << shared;
         for (int i = 0; i < 10000; ++i) {
             const Collection col = createCollection(QString::fromLatin1("Shared Col %1").arg(i), QString::fromLatin1("/shared%1").arg(i), shared);
-              collections << col;
-              for (int j = 0; j < 6; ++j) {
-                  collections << createCollection(QString::fromLatin1("Shared Subcol %1-%2").arg(i).arg(j), QString::fromLatin1("/shared%1-%2").arg(i).arg(j), col);
-              }
+            collections << col;
+            for (int j = 0; j < 6; ++j) {
+                collections << createCollection(QString::fromLatin1("Shared Subcol %1-%2").arg(i).arg(j), QString::fromLatin1("/shared%1-%2").arg(i).arg(j), col);
+            }
         }
         return collections;
     }
@@ -130,7 +130,7 @@ private:
     void cleanupBenchmark(const Collection::List &collections)
     {
         Collection::List baseCols;
-        Q_FOREACH(const Collection &col, collections) {
+        Q_FOREACH (const Collection &col, collections) {
             if (col.remoteId().startsWith(QLatin1String("/baseCol")) || col.remoteId() == QLatin1String("/shared")) {
                 baseCols << col;
             }
@@ -141,15 +141,14 @@ private:
         }
     }
 
-
-  public Q_SLOTS:
+public Q_SLOTS:
     void syncBenchmarkProgress(KJob *job, ulong percent)
     {
         Q_UNUSED(job);
         qDebug() << "CollectionSync progress:" <<  percent << "%";
     }
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase()
     {
         AkonadiTest::checkTestIsIsolated();
@@ -288,7 +287,6 @@ private:
         syncer->setRemoteCollections(resultCols, delCols);
         AKVERIFYEXEC(syncer);
 
-
         Collection::List resultCols2 = fetchCollections(resource);
         QCOMPARE(resultCols2.count(), resultCols.count());
     }
@@ -368,41 +366,41 @@ private:
 
     void testAttributeChanges()
     {
-      QFETCH(bool, keepLocalChanges);
-      const QString resource(QStringLiteral("akonadi_knut_resource_0"));
-      Collection col = fetchCollections( resource ).first();
-      col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
-      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("foo"));
-      {
-        CollectionModifyJob *job = new CollectionModifyJob(col);
-        AKVERIFYEXEC(job);
-      }
-
-      col.attribute<EntityDisplayAttribute>()->setDisplayName(QStringLiteral("default"));
-      col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("default"));
-
-      CollectionSync* syncer = new CollectionSync( resource, this );
-      if (keepLocalChanges) {
-          syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY" << "CONTENTMIMETYPES");
-      } else {
-          syncer->setKeepLocalChanges(QSet<QByteArray>());
-      }
-
-      syncer->setRemoteCollections( Collection::List() << col, Collection::List() );
-      AKVERIFYEXEC( syncer );
-
-      {
-        CollectionFetchJob *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
-        AKVERIFYEXEC(job);
-        Collection resultCol = job->collections().first();
-        if (keepLocalChanges) {
-          QCOMPARE( resultCol.displayName(), QString::fromLatin1("foo") );
-          QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("foo")));
-        } else {
-          QCOMPARE( resultCol.displayName(), QString::fromLatin1("default") );
-          QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("default")));
+        QFETCH(bool, keepLocalChanges);
+        const QString resource(QStringLiteral("akonadi_knut_resource_0"));
+        Collection col = fetchCollections(resource).first();
+        col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
+        col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("foo"));
+        {
+            CollectionModifyJob *job = new CollectionModifyJob(col);
+            AKVERIFYEXEC(job);
         }
-      }
+
+        col.attribute<EntityDisplayAttribute>()->setDisplayName(QStringLiteral("default"));
+        col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("default"));
+
+        CollectionSync *syncer = new CollectionSync(resource, this);
+        if (keepLocalChanges) {
+            syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY" << "CONTENTMIMETYPES");
+        } else {
+            syncer->setKeepLocalChanges(QSet<QByteArray>());
+        }
+
+        syncer->setRemoteCollections(Collection::List() << col, Collection::List());
+        AKVERIFYEXEC(syncer);
+
+        {
+            CollectionFetchJob *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
+            AKVERIFYEXEC(job);
+            Collection resultCol = job->collections().first();
+            if (keepLocalChanges) {
+                QCOMPARE(resultCol.displayName(), QString::fromLatin1("foo"));
+                QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("foo")));
+            } else {
+                QCOMPARE(resultCol.displayName(), QString::fromLatin1("default"));
+                QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("default")));
+            }
+        }
     }
 
 // Disabled by default, because they take ~15 minutes to complete

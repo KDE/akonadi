@@ -27,73 +27,73 @@
 
 #include <memory>
 
-QTEST_MAIN( ItemTest )
+QTEST_MAIN(ItemTest)
 
 using namespace Akonadi;
 
 void ItemTest::testMultipart()
 {
-  Item item;
-  item.setMimeType( QStringLiteral("application/octet-stream") );
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
 
-  QSet<QByteArray> parts;
-  QCOMPARE( item.loadedPayloadParts(), parts );
+    QSet<QByteArray> parts;
+    QCOMPARE(item.loadedPayloadParts(), parts);
 
-  QByteArray bodyData = "bodydata";
-  item.setPayload<QByteArray>( bodyData );
-  parts << Item::FullPayload;
-  QCOMPARE( item.loadedPayloadParts(), parts );
-  QCOMPARE( item.payload<QByteArray>(), bodyData );
+    QByteArray bodyData = "bodydata";
+    item.setPayload<QByteArray>(bodyData);
+    parts << Item::FullPayload;
+    QCOMPARE(item.loadedPayloadParts(), parts);
+    QCOMPARE(item.payload<QByteArray>(), bodyData);
 
-  QByteArray myData = "mypartdata";
-  item.attribute<TestAttribute>( Item::AddIfMissing )->data = myData;
+    QByteArray myData = "mypartdata";
+    item.attribute<TestAttribute>(Item::AddIfMissing)->data = myData;
 
-  QCOMPARE( item.loadedPayloadParts(), parts );
-  QCOMPARE( item.attributes().count(), 1 );
-  QVERIFY( item.hasAttribute<TestAttribute>() );
-  QCOMPARE( item.attribute<TestAttribute>()->data, myData );
+    QCOMPARE(item.loadedPayloadParts(), parts);
+    QCOMPARE(item.attributes().count(), 1);
+    QVERIFY(item.hasAttribute<TestAttribute>());
+    QCOMPARE(item.attribute<TestAttribute>()->data, myData);
 }
 
 void ItemTest::testInheritance()
 {
-  Item a;
+    Item a;
 
-  a.setRemoteId( QStringLiteral("Hello World") );
-  a.setSize( 10 );
+    a.setRemoteId(QStringLiteral("Hello World"));
+    a.setSize(10);
 
-  Item b( a );
-  b.setFlag( "\\send" );
-  QCOMPARE( b.remoteId(), QStringLiteral( "Hello World" ) );
-  QCOMPARE( b.size(), (qint64)10 );
+    Item b(a);
+    b.setFlag("\\send");
+    QCOMPARE(b.remoteId(), QStringLiteral("Hello World"));
+    QCOMPARE(b.size(), (qint64)10);
 }
 
-void ItemTest::testParentCollection ()
+void ItemTest::testParentCollection()
 {
-  Item a;
-  QVERIFY( !a.parentCollection().isValid() );
+    Item a;
+    QVERIFY(!a.parentCollection().isValid());
 
-  a.setParentCollection( Collection::root() );
-  QCOMPARE( a.parentCollection(), Collection::root() );
-  Item b = a;
-  QCOMPARE( b.parentCollection(), Collection::root() );
+    a.setParentCollection(Collection::root());
+    QCOMPARE(a.parentCollection(), Collection::root());
+    Item b = a;
+    QCOMPARE(b.parentCollection(), Collection::root());
 
-  Item c;
-  c.parentCollection().setRemoteId( QStringLiteral("foo") );
-  QCOMPARE( c.parentCollection().remoteId(), QStringLiteral( "foo" ) );
-  const Item d = c;
-  QCOMPARE( d.parentCollection().remoteId(), QStringLiteral( "foo" ) );
+    Item c;
+    c.parentCollection().setRemoteId(QStringLiteral("foo"));
+    QCOMPARE(c.parentCollection().remoteId(), QStringLiteral("foo"));
+    const Item d = c;
+    QCOMPARE(d.parentCollection().remoteId(), QStringLiteral("foo"));
 
-  const Item e;
-  QVERIFY( !e.parentCollection().isValid() );
+    const Item e;
+    QVERIFY(!e.parentCollection().isValid());
 
-  Collection col( 5 );
-  Item f;
-  f.setParentCollection( col );
-  QCOMPARE( f.parentCollection(), col );
-  Item g = f;
-  QCOMPARE( g.parentCollection(), col );
-  b = g;
-  QCOMPARE( b.parentCollection(), col );
+    Collection col(5);
+    Item f;
+    f.setParentCollection(col);
+    QCOMPARE(f.parentCollection(), col);
+    Item g = f;
+    QCOMPARE(g.parentCollection(), col);
+    b = g;
+    QCOMPARE(b.parentCollection(), col);
 }
 
 void ItemTest::testComparision_data()

@@ -25,7 +25,8 @@
 
 class QObject;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A helper class to manage action states.

@@ -20,4 +20,3 @@
 #include "akonadiagentbase_debug.h"
 Q_LOGGING_CATEGORY(AKONADIAGENTBASE_LOG, "akonadiagentbase_log")
 
-

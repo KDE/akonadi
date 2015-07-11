@@ -26,7 +26,8 @@
 
 #include <QtCore/QAbstractTableModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class ItemFetchScope;

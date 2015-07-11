@@ -88,7 +88,7 @@ QByteArray Exception::type() const throw()
 {
     static const char mytype[] = "Akonadi::Exception";
     try {
-        return QByteArray::fromRawData("Akonadi::Exception", sizeof (mytype) - 1);
+        return QByteArray::fromRawData("Akonadi::Exception", sizeof(mytype) - 1);
     } catch (...) {
         return QByteArray();
     }

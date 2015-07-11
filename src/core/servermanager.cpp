@@ -138,8 +138,8 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Server),
-                                                           KDBusConnectionPool::threadConnection(),
-                                                           QDBusServiceWatcher::WatchForOwnerChange, this);
+            KDBusConnectionPool::threadConnection(),
+            QDBusServiceWatcher::WatchForOwnerChange, this);
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::Control));
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::ControlLock));
     watcher->addWatchedService(ServerManager::serviceName(ServerManager::UpgradeIndicator));
@@ -239,7 +239,7 @@ ServerManager::State ServerManager::state()
         // check if the server protocol is recent enough
         if (sInstance.exists()) {
             if (Internal::serverProtocolVersion() >= 0 &&
-                Internal::serverProtocolVersion() < SessionPrivate::clientProtocolVersion()) {
+                    Internal::serverProtocolVersion() < SessionPrivate::clientProtocolVersion()) {
                 return Broken;
             }
         }

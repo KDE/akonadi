@@ -26,7 +26,8 @@ class KJob;
 class QDeclarativeView;
 class QSortFilterProxyModel;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AsyncSelectionHandler;
 class EntityRightsFilterModel;

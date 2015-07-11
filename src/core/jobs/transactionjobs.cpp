@@ -48,11 +48,11 @@ void TransactionJob::doStart()
     Q_D(TransactionJob);
 
     Protocol::TransactionCommand::Mode mode;
-    if (qobject_cast<TransactionBeginJob*>(this)) {
+    if (qobject_cast<TransactionBeginJob *>(this)) {
         mode = Protocol::TransactionCommand::Begin;
-    } else if (qobject_cast<TransactionRollbackJob*>(this)) {
+    } else if (qobject_cast<TransactionRollbackJob *>(this)) {
         mode = Protocol::TransactionCommand::Rollback;
-    } else if (qobject_cast<TransactionCommitJob*>(this)) {
+    } else if (qobject_cast<TransactionCommitJob *>(this)) {
         mode = Protocol::TransactionCommand::Commit;
     } else {
         Q_ASSERT(false);
@@ -70,7 +70,6 @@ bool TransactionJob::doHandleResponse(qint64 tag, const Protocol::Command &respo
 
     return true;
 }
-
 
 TransactionBeginJob::TransactionBeginJob(QObject *parent)
     : TransactionJob(parent)

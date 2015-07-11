@@ -23,23 +23,23 @@
 #include <QCommandLineParser>
 #include <QApplication>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
+    QApplication app(argc, argv);
 
-  KAboutData aboutData( QStringLiteral("akonadi-firstrun"),
-                        QStringLiteral( "Test akonadi-firstrun" ),
-                        QStringLiteral("0.10"));
-  KAboutData::setApplicationData(aboutData);
+    KAboutData aboutData(QStringLiteral("akonadi-firstrun"),
+                         QStringLiteral("Test akonadi-firstrun"),
+                         QStringLiteral("0.10"));
+    KAboutData::setApplicationData(aboutData);
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  Akonadi::Firstrun *f = new Akonadi::Firstrun();
-  QObject::connect(f, &Akonadi::Firstrun::destroyed, &app, &QApplication::quit);
-  app.exec();
+    Akonadi::Firstrun *f = new Akonadi::Firstrun();
+    QObject::connect(f, &Akonadi::Firstrun::destroyed, &app, &QApplication::quit);
+    app.exec();
 }

@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include <QString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Tag;
 }
 
@@ -34,7 +35,8 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 #include <QUrl>
 #include <QDebug>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * An Akonadi Tag.

@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short An attribute to specify how a collection should be indexed for searching.

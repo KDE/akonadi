@@ -26,7 +26,8 @@
 
 class QStandardItem;
 class QStandardItemModel;
-namespace Akonadi {
+namespace Akonadi
+{
 /**
  * @internal
  *

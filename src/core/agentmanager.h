@@ -27,7 +27,8 @@
 
 #include <QtCore/QObject>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentManagerPrivate;
 class Collection;

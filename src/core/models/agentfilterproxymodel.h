@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include <QSortFilterProxyModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A proxy model for filtering AgentType or AgentInstance

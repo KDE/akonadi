@@ -31,7 +31,8 @@
 #include <qdebug.h>
 #include <KLocalizedString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /** Shared implementation details between item and collection move jobs. */
 template <typename LinkJob> class LinkJobImpl : public JobPrivate
@@ -58,8 +59,8 @@ public:
 
         try {
             JobPrivate::sendCommand(Protocol::LinkItemsCommand(action,
-                                        ProtocolHelper::entitySetToScope(objectsToLink),
-                                        ProtocolHelper::entityToScope(destination)));
+                                    ProtocolHelper::entitySetToScope(objectsToLink),
+                                    ProtocolHelper::entityToScope(destination)));
         } catch (const std::exception &e) {
             q->setError(Job::Unknown);
             q->setErrorText(QString::fromUtf8(e.what()));

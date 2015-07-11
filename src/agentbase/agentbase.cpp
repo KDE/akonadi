@@ -313,8 +313,8 @@ void AgentBase::ObserverV4::relationRemoved(const Akonadi::Relation &relation)
 }
 
 void AgentBase::ObserverV4::itemsRelationsChanged(const Akonadi::Item::List &items,
-                                                  const Akonadi::Relation::List &addedRelations,
-                                                  const Akonadi::Relation::List &removedRelations)
+        const Akonadi::Relation::List &addedRelations,
+        const Akonadi::Relation::List &removedRelations)
 {
     Q_UNUSED(items)
     Q_UNUSED(addedRelations)
@@ -373,8 +373,8 @@ void AgentBasePrivate::init()
     }
 
     mTracer = new org::freedesktop::Akonadi::Tracer(ServerManager::serviceName(ServerManager::Server),
-                                                    QStringLiteral("/tracing"),
-                                                    KDBusConnectionPool::threadConnection(), q);
+            QStringLiteral("/tracing"),
+            KDBusConnectionPool::threadConnection(), q);
 
     new Akonadi__ControlAdaptor(q);
     new Akonadi__StatusAdaptor(q);
@@ -701,8 +701,8 @@ void AgentBasePrivate::relationRemoved(const Akonadi::Relation &relation)
 }
 
 void AgentBasePrivate::itemsRelationsChanged(const Akonadi::Item::List &items,
-                                             const Akonadi::Relation::List &addedRelations,
-                                             const Akonadi::Relation::List &removedRelations)
+        const Akonadi::Relation::List &addedRelations,
+        const Akonadi::Relation::List &removedRelations)
 {
     if (!mObserver) {
         return;

@@ -21,7 +21,8 @@
 #ifndef ABSTRACTDIFFERENCESREPORTER_P_H
 #define ABSTRACTDIFFERENCESREPORTER_P_H
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short An interface to report differences between two arbitrary objects.

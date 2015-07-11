@@ -31,7 +31,6 @@
 #include <QIcon>
 #include <QUrl>
 
-
 #include <QtCore/QMimeData>
 
 using namespace Akonadi;

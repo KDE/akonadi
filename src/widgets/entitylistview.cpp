@@ -174,7 +174,7 @@ void EntityListView::setModel(QAbstractItemModel *model)
 void EntityListView::dragMoveEvent(QDragMoveEvent *event)
 {
     if (d->mDragDropManager->dropAllowed(event) ||
-        qobject_cast<Akonadi::FavoriteCollectionsModel *>(model())) {
+            qobject_cast<Akonadi::FavoriteCollectionsModel *>(model())) {
         // All urls are supported. process the event.
         QListView::dragMoveEvent(event);
         return;
@@ -187,7 +187,7 @@ void EntityListView::dropEvent(QDropEvent *event)
 {
     bool menuCanceled = false;
     if (d->mDragDropManager->processDropEvent(event, menuCanceled) &&
-        !menuCanceled) {
+            !menuCanceled) {
         if (menuCanceled) {
             return;
         }

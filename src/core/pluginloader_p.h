@@ -28,7 +28,8 @@
 
 class QPluginLoader;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADI_TESTS_EXPORT PluginMetaData
 {

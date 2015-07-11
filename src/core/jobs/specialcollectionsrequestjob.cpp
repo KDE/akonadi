@@ -73,7 +73,7 @@ public:
 };
 
 SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(SpecialCollections *collections,
-                                                                         SpecialCollectionsRequestJob *qq)
+        SpecialCollectionsRequestJob *qq)
     : q(qq)
     , mSpecialCollections(collections)
     , mPendingCreateJobs(0)
@@ -199,7 +199,7 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
         // This is the default resource.
         if (resourceId != mSpecialCollections->d->defaultResourceId()) {
             qCritical() << "Resource id's don't match: " << resourceId
-                     << mSpecialCollections->d->defaultResourceId();
+                        << mSpecialCollections->d->defaultResourceId();
             Q_ASSERT(false);
         }
         //mToForget.append( mSpecialCollections->defaultResourceId() );
@@ -213,7 +213,7 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
 }
 
 void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob *scanJob,
-                                                                 QHash<QByteArray, bool> &requestedFolders)
+        QHash<QByteArray, bool> &requestedFolders)
 {
     // Remove from the request list the folders which already exist.
     foreach (const Collection &collection, scanJob->specialCollections()) {

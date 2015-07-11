@@ -24,7 +24,8 @@
 #include <akonadi/item.h>
 #include <akonadi/session.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * For testing only.

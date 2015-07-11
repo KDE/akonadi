@@ -38,8 +38,7 @@ public:
     {
     }
 
-    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE
-    {
+    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE {
         // TODO: Check/Log
         return Akonadi::MonitorPrivate::emitNotification(msg);
     }

@@ -33,9 +33,11 @@
 
 class QIODevice;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Protocol {
+namespace Protocol
+{
 class Command;
 }
 

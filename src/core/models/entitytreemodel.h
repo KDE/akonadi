@@ -28,7 +28,8 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ChangeRecorder;
 class CollectionStatistics;
@@ -714,7 +715,7 @@ private:
     bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
 
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id,
-                                                                       const Akonadi::CollectionStatistics &))
+                   const Akonadi::CollectionStatistics &))
 
     Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
     Q_PRIVATE_SLOT(d_func(), void serverStarted())
@@ -740,13 +741,13 @@ private:
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionRemoved(const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionChanged(const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionMoved(const Akonadi::Collection &, const Akonadi::Collection &,
-                                                           const Akonadi::Collection &))
+                   const Akonadi::Collection &))
 
     Q_PRIVATE_SLOT(d_func(), void monitoredItemAdded(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemRemoved(const Akonadi::Item &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemChanged(const Akonadi::Item &, const QSet<QByteArray> &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemMoved(const Akonadi::Item &, const Akonadi::Collection &,
-                                                     const Akonadi::Collection &))
+                   const Akonadi::Collection &))
 
     Q_PRIVATE_SLOT(d_func(), void monitoredItemLinked(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemUnlinked(const Akonadi::Item &, const Akonadi::Collection &))

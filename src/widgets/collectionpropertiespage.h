@@ -24,7 +24,8 @@
 
 #include <QWidget>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 
@@ -205,14 +206,14 @@ public:
  * @ingroup AkonadiMacros
  */
 #define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
-class factoryName : public Akonadi::CollectionPropertiesPageFactory \
-{ \
-  public: \
-    inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = Q_NULLPTR ) const \
+    class factoryName : public Akonadi::CollectionPropertiesPageFactory \
     { \
-      return new className( parent ); \
-    } \
-};
+    public: \
+        inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = Q_NULLPTR ) const \
+        { \
+            return new className( parent ); \
+        } \
+    };
 
 }
 

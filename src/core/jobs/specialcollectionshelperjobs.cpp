@@ -76,7 +76,7 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
 {
     QMetaMethod m;
     for (int i = 0; i < mo->methodCount(); ++i) {
-    const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
+        const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
         if (signature.startsWith(method)) {
             m = mo->method(i);
         }
@@ -199,7 +199,7 @@ Akonadi::Collection::List ResourceScanJob::specialCollections() const
 void ResourceScanJob::doStart()
 {
     if (d->mResourceId.isEmpty()) {
-        if(!qobject_cast<DefaultResourceJob *>(this)) {
+        if (!qobject_cast<DefaultResourceJob *>(this)) {
             qCritical() << "No resource ID given.";
             setError(Job::Unknown);
             setErrorText(i18n("No resource ID given."));
@@ -209,7 +209,7 @@ void ResourceScanJob::doStart()
     }
 
     CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(),
-                                                          CollectionFetchJob::Recursive, this);
+            CollectionFetchJob::Recursive, this);
     fetchJob->fetchScope().setResource(d->mResourceId);
     fetchJob->fetchScope().setIncludeStatistics(true);
     fetchJob->fetchScope().setListFilter(CollectionFetchScope::Display);
@@ -587,7 +587,7 @@ void GetLockJob::Private::doStart()
         q->emitResult();
     } else {
         QDBusServiceWatcher *watcher = new QDBusServiceWatcher(dbusServiceName(), KDBusConnectionPool::threadConnection(),
-                                                               QDBusServiceWatcher::WatchForOwnerChange, q);
+                QDBusServiceWatcher::WatchForOwnerChange, q);
         //qDebug() << "Waiting for lock.";
         connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), q, SLOT(serviceOwnerChanged(QString,QString,QString)));
 

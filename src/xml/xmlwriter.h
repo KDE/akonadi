@@ -25,7 +25,8 @@
 
 #include <QtXml/QDomElement>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Attribute;
 class Collection;
@@ -38,35 +39,35 @@ class Item;
 */
 namespace XmlWriter
 {
-  /**
-    Creates an attribute element for the given document.
-  */
-  AKONADI_XML_EXPORT QDomElement attributeToElement( Attribute* attr, QDomDocument &document );
+/**
+  Creates an attribute element for the given document.
+*/
+AKONADI_XML_EXPORT QDomElement attributeToElement(Attribute *attr, QDomDocument &document);
 
-  /**
-    Serializes all attributes of the given Akonadi object into the given parent element.
-  */
-  AKONADI_XML_EXPORT void writeAttributes( const Entity &entity, QDomElement &parentElem );
+/**
+  Serializes all attributes of the given Akonadi object into the given parent element.
+*/
+AKONADI_XML_EXPORT void writeAttributes(const Entity &entity, QDomElement &parentElem);
 
-  /**
-    Creates a collection element for the given document, not yet attached to the DOM tree.
-  */
-  AKONADI_XML_EXPORT QDomElement collectionToElement( const Collection &collection, QDomDocument &document );
+/**
+  Creates a collection element for the given document, not yet attached to the DOM tree.
+*/
+AKONADI_XML_EXPORT QDomElement collectionToElement(const Collection &collection, QDomDocument &document);
 
-  /**
-    Serializes the given collection into a DOM element with the given parent.
-  */
-  AKONADI_XML_EXPORT QDomElement writeCollection( const Collection &collection, QDomElement &parentElem );
+/**
+  Serializes the given collection into a DOM element with the given parent.
+*/
+AKONADI_XML_EXPORT QDomElement writeCollection(const Collection &collection, QDomElement &parentElem);
 
-  /**
-    Creates an item element for the given document, not yet attached to the DOM tree
-  */
-  AKONADI_XML_EXPORT QDomElement itemToElement( const Item &item, QDomDocument &document );
+/**
+  Creates an item element for the given document, not yet attached to the DOM tree
+*/
+AKONADI_XML_EXPORT QDomElement itemToElement(const Item &item, QDomDocument &document);
 
-  /**
-    Serializes the given item into a DOM element and attaches it to the given item.
-  */
-  AKONADI_XML_EXPORT QDomElement writeItem( const Akonadi::Item& item, QDomElement& parentElem );
+/**
+  Serializes the given item into a DOM element and attaches it to the given item.
+*/
+AKONADI_XML_EXPORT QDomElement writeItem(const Akonadi::Item &item, QDomElement &parentElem);
 }
 
 }

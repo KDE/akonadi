@@ -74,7 +74,7 @@ void TagAttribute::setIconName(const QString &icon)
 
 QByteArray Akonadi::TagAttribute::type() const
 {
-    static const QByteArray sType( "TAG" );
+    static const QByteArray sType("TAG");
     return sType;
 }
 

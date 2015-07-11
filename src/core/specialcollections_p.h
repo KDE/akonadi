@@ -32,7 +32,8 @@
 class KCoreConfigSkeleton;
 class KJob;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentInstance;
 class SpecialCollections;

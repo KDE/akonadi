@@ -38,8 +38,7 @@ public:
     {
     }
 
-    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE
-    {
+    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE {
         // TODO: Check/Log
         return Akonadi::ChangeRecorderPrivate::emitNotification(msg);
     }
@@ -51,11 +50,13 @@ class AKONADITESTFAKE_EXPORT InspectableChangeRecorder : public Akonadi::ChangeR
 public:
     InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = Q_NULLPTR);
 
-    FakeNotificationSource *notifier() const {
+    FakeNotificationSource *notifier() const
+    {
         return qobject_cast<FakeNotificationSource *>(d_ptr->notificationSource->source());
     }
 
-    FakeNotificationBus *notificationBus() const {
+    FakeNotificationBus *notificationBus() const
+    {
         return qobject_cast<FakeNotificationBus *>(d_ptr->notificationBus);
     }
 

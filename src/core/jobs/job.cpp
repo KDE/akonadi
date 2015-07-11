@@ -143,7 +143,7 @@ void JobPrivate::signalStartedToJobTracker()
 
 void JobPrivate::aboutToFinish()
 {
-  // Dummy
+    // Dummy
 }
 
 void JobPrivate::delayedEmitResult()

@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include <qglobal.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Item;
 class ItemFetchScope;

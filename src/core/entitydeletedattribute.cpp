@@ -74,7 +74,7 @@ QString EntityDeletedAttribute::restoreResource() const
 
 QByteArray Akonadi::EntityDeletedAttribute::type() const
 {
-    static const QByteArray sType( "DELETED" );
+    static const QByteArray sType("DELETED");
     return sType;
 }
 

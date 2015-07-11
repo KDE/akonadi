@@ -24,91 +24,92 @@
 #include <QPointer>
 #include <QTimer>
 
-FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent )
-  : QObject(parent),
-    m_model( model ),
-    m_session( session ),
-    m_monitor( monitor ),
-    m_nextCollectionId( 1 ),
-    m_nextItemId( 0 )
+FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
+    : QObject(parent),
+      m_model(model),
+      m_session(session),
+      m_monitor(monitor),
+      m_nextCollectionId(1),
+      m_nextItemId(0)
 {
-  // can't use QueuedConnection here, because the Job might self-deleted before
-  // the slot gets called
-  connect(session, &FakeSession::jobAdded,
-          [this](Akonadi::Job *job) {
-              Entity::Id fetchColId = job->property("FetchCollectionId").toULongLong();
-              QTimer::singleShot(0, [this, fetchColId]() {
-                  jobAdded(fetchColId);
-              });
-          });
+    // can't use QueuedConnection here, because the Job might self-deleted before
+    // the slot gets called
+    connect(session, &FakeSession::jobAdded,
+    [this](Akonadi::Job * job) {
+        Entity::Id fetchColId = job->property("FetchCollectionId").toULongLong();
+        QTimer::singleShot(0, [this, fetchColId]() {
+            jobAdded(fetchColId);
+        });
+    });
 }
 
-void FakeServerData::setCommands(QList< FakeAkonadiServerCommand* > list)
+void FakeServerData::setCommands(QList< FakeAkonadiServerCommand * > list)
 {
-  m_communicationQueue.clear();
-  foreach( FakeAkonadiServerCommand *command, list )
-    m_communicationQueue << command;
+    m_communicationQueue.clear();
+    foreach (FakeAkonadiServerCommand *command, list) {
+        m_communicationQueue << command;
+    }
 }
 
 void FakeServerData::processNotifications()
 {
-  while ( !m_communicationQueue.isEmpty() )
-  {
-    FakeAkonadiServerCommand::Type respondTo = m_communicationQueue.head()->respondTo();
-    if ( respondTo == FakeAkonadiServerCommand::Notification )
-    {
-      FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
-      command->doCommand();
-    } else {
-      return;
+    while (!m_communicationQueue.isEmpty()) {
+        FakeAkonadiServerCommand::Type respondTo = m_communicationQueue.head()->respondTo();
+        if (respondTo == FakeAkonadiServerCommand::Notification) {
+            FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
+            command->doCommand();
+        } else {
+            return;
+        }
     }
-  }
 }
 
-void FakeServerData::jobAdded( qint64 fetchColId )
+void FakeServerData::jobAdded(qint64 fetchColId)
 {
-  returnEntities( fetchColId );
+    returnEntities(fetchColId);
 }
 
-void FakeServerData::returnEntities( Entity::Id fetchColId )
+void FakeServerData::returnEntities(Entity::Id fetchColId)
 {
-  if ( !returnCollections( fetchColId ) )
-    while ( !m_communicationQueue.isEmpty() && m_communicationQueue.head()->respondTo() == FakeAkonadiServerCommand::RespondToItemFetch )
-      returnItems( fetchColId );
+    if (!returnCollections(fetchColId))
+        while (!m_communicationQueue.isEmpty() && m_communicationQueue.head()->respondTo() == FakeAkonadiServerCommand::RespondToItemFetch) {
+            returnItems(fetchColId);
+        }
 
-  processNotifications();
+    processNotifications();
 }
 
-bool FakeServerData::returnCollections( Entity::Id fetchColId )
+bool FakeServerData::returnCollections(Entity::Id fetchColId)
 {
-  if ( m_communicationQueue.isEmpty() )
-    return true;
-  FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
+    if (m_communicationQueue.isEmpty()) {
+        return true;
+    }
+    FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
 
-  Collection fetchCollection = m_communicationQueue.head()->fetchCollection();
+    Collection fetchCollection = m_communicationQueue.head()->fetchCollection();
 
-  if ( commType == FakeAkonadiServerCommand::RespondToCollectionFetch
-       && fetchColId == fetchCollection.id() )
-  {
-    FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
-    command->doCommand();
-    if ( !m_communicationQueue.isEmpty() )
-      returnEntities( fetchColId );
-    return true;
-  }
-  return false;
+    if (commType == FakeAkonadiServerCommand::RespondToCollectionFetch
+            && fetchColId == fetchCollection.id()) {
+        FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
+        command->doCommand();
+        if (!m_communicationQueue.isEmpty()) {
+            returnEntities(fetchColId);
+        }
+        return true;
+    }
+    return false;
 }
 
-void FakeServerData::returnItems( Entity::Id fetchColId )
+void FakeServerData::returnItems(Entity::Id fetchColId)
 {
-  FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
+    FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
 
-  if ( commType == FakeAkonadiServerCommand::RespondToItemFetch )
-  {
-    FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
-    command->doCommand();
-    if ( !m_communicationQueue.isEmpty() )
-      returnEntities( fetchColId );
-  }
+    if (commType == FakeAkonadiServerCommand::RespondToItemFetch) {
+        FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
+        command->doCommand();
+        if (!m_communicationQueue.isEmpty()) {
+            returnEntities(fetchColId);
+        }
+    }
 }
 

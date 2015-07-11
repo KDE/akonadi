@@ -23,7 +23,8 @@
 #include "akonadiagentbase_export.h"
 #include "resourcebasesettings.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADIAGENTBASE_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //krazy:exclude=dpointer
 {

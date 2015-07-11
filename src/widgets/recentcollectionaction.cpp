@@ -111,7 +111,7 @@ void RecentCollectionAction::addRecentCollection(Akonadi::StandardActionManager:
 {
     const QString newCollectionID = QString::number(id);
     if (mListRecentCollection.isEmpty() ||
-        !mListRecentCollection.contains(newCollectionID)) {
+            !mListRecentCollection.contains(newCollectionID)) {
         if (mListRecentCollection.count() == s_maximumRecentCollection) {
             mListRecentCollection.removeFirst();
         }

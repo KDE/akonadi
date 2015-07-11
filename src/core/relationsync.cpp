@@ -16,8 +16,9 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-namespace Akonadi {
-    class Item;
+namespace Akonadi
+{
+class Item;
 }
 
 #include "relationsync.h"

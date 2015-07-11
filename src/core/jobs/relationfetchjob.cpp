@@ -45,9 +45,8 @@ public:
         q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
     }
 
-    void aboutToFinish() Q_DECL_OVERRIDE
-    {
-      timeout();
+    void aboutToFinish() Q_DECL_OVERRIDE {
+        timeout();
     }
 
     void timeout()
@@ -93,10 +92,10 @@ void RelationFetchJob::doStart()
     Q_D(RelationFetchJob);
 
     d->sendCommand(Protocol::FetchRelationsCommand(
-        d->mRequestedRelation.left().id(),
-        d->mRequestedRelation.right().id(),
-        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
-        d->mResource));
+                       d->mRequestedRelation.left().id(),
+                       d->mRequestedRelation.right().id(),
+                       (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
+                       d->mResource));
 }
 
 bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

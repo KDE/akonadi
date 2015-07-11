@@ -357,10 +357,9 @@ public:
     void createActionFolderMenu(QMenu *menu, StandardActionManager::Type type)
     {
         if (type == CopyCollectionToMenu ||
-            type == CopyItemToMenu ||
-            type == MoveItemToMenu ||
-            type == MoveCollectionToMenu)
-        {
+                type == CopyItemToMenu ||
+                type == MoveItemToMenu ||
+                type == MoveCollectionToMenu) {
 
             new RecentCollectionAction(type, Akonadi::Collection::List(), collectionSelectionModel->model(), menu);
             Collection::List selectedCollectionsList = selectedCollections();
@@ -538,7 +537,8 @@ public:
     }
 
     // RAII class for setting insideSelectionSlot to true on entering, and false on exiting, the two slots below.
-    class InsideSelectionSlotBlocker {
+    class InsideSelectionSlotBlocker
+    {
     public:
         InsideSelectionSlotBlocker(Private *p)
             : _p(p)
@@ -625,7 +625,7 @@ public:
             return;
         }
         if (name.startsWith(QLatin1Char('.')) ||
-            name.endsWith(QLatin1Char('.'))) {
+                name.endsWith(QLatin1Char('.'))) {
             KMessageBox::error(parentWidget,
                                i18n("We can not add \".\" at begin or end of folder name."),
                                i18n("Create new folder error"));
@@ -1556,8 +1556,7 @@ public:
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;
 
-    struct ContextTextEntry
-    {
+    struct ContextTextEntry {
         QString text;
         KLocalizedString localizedText;
         bool isLocalized;

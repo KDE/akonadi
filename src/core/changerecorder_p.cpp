@@ -28,7 +28,7 @@
 using namespace Akonadi;
 
 ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
-                                             ChangeRecorder *parent)
+        ChangeRecorder *parent)
     : MonitorPrivate(dependenciesFactory_, parent)
     , settings(0)
     , enableChangeRecording(true)
@@ -272,10 +272,10 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     QString result;
     bool dummy;
     const QQueue<Protocol::ChangeNotification> notifications = loadFrom(&file, dummy);
-    Q_FOREACH(const Protocol::ChangeNotification &n, notifications) {
+    Q_FOREACH (const Protocol::ChangeNotification &n, notifications) {
         QString typeString;
         switch (n.type()) {
-            case Protocol::ChangeNotification::Collections:
+        case Protocol::ChangeNotification::Collections:
             typeString = QStringLiteral("Collections");
             break;
         case Protocol::ChangeNotification::Items:
@@ -331,19 +331,19 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
         const QString removedTags = join(n.removedTags().toList());
 
         const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11 addedTags=%12 removedTags=%13")
-                            .arg(QString::fromLatin1(n.sessionId()))
-                            .arg(typeString)
-                            .arg(operationString)
-                            .arg(entities)
-                            .arg(QString::fromLatin1(n.resource()))
-                            .arg(QString::fromLatin1(n.destinationResource()))
-                            .arg(n.parentCollection())
-                            .arg(n.parentDestCollection())
-                            .arg(join(n.itemParts()))
-                            .arg(join(n.addedFlags()))
-                            .arg(join(n.removedFlags()))
-                            .arg(addedTags)
-                            .arg(removedTags);
+                              .arg(QString::fromLatin1(n.sessionId()))
+                              .arg(typeString)
+                              .arg(operationString)
+                              .arg(entities)
+                              .arg(QString::fromLatin1(n.resource()))
+                              .arg(QString::fromLatin1(n.destinationResource()))
+                              .arg(n.parentCollection())
+                              .arg(n.parentDestCollection())
+                              .arg(join(n.itemParts()))
+                              .arg(join(n.addedFlags()))
+                              .arg(join(n.removedFlags()))
+                              .arg(addedTags)
+                              .arg(removedTags);
         result += entry + QLatin1Char('\n');
     }
     return result;

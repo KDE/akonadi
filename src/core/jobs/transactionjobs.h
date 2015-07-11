@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class TransactionJobPrivate;
 class TransactionJob : public Job

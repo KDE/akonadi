@@ -27,7 +27,8 @@
 
 #include <QtXml/QDomDocument>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class XmlDocumentPrivate;
 
@@ -36,7 +37,7 @@ class XmlDocumentPrivate;
 */
 class AKONADI_XML_EXPORT XmlDocument
 {
-  public:
+public:
     /**
       Creates an empty document.
     */
@@ -47,7 +48,7 @@ class AKONADI_XML_EXPORT XmlDocument
 
       @see loadFile()
     */
-    XmlDocument( const QString &fileName );
+    XmlDocument(const QString &fileName);
     ~XmlDocument();
 
     /**
@@ -57,12 +58,12 @@ class AKONADI_XML_EXPORT XmlDocument
 
        @see isValid(), lastError()
     */
-    bool loadFile( const QString &fileName );
+    bool loadFile(const QString &fileName);
 
     /**
       Writes the current document into the given file.
     */
-    bool writeToFile( const QString &fileName ) const;
+    bool writeToFile(const QString &fileName) const;
 
     /**
       Returns true if the document could be parsed successfully.
@@ -80,27 +81,27 @@ class AKONADI_XML_EXPORT XmlDocument
     /**
       Returns the DOM document for this XML document.
     */
-    QDomDocument& document() const;
+    QDomDocument &document() const;
 
     /**
       Returns the DOM element representing @p collection.
     */
-    QDomElement collectionElement( const Collection &collection ) const;
+    QDomElement collectionElement(const Collection &collection) const;
 
     /**
       Returns the DOM element representing the item with the given remote id
     */
-    QDomElement itemElementByRemoteId( const QString &rid ) const;
+    QDomElement itemElementByRemoteId(const QString &rid) const;
 
     /**
       Returns the collection with the given remote id.
     */
-    Collection collectionByRemoteId( const QString &rid ) const;
+    Collection collectionByRemoteId(const QString &rid) const;
 
     /**
       Returns the item with the given remote id.
     */
-    Item itemByRemoteId( const QString& rid, bool includePayload = true ) const;
+    Item itemByRemoteId(const QString &rid, bool includePayload = true) const;
 
     /**
       Returns the collections defined in this document.
@@ -115,15 +116,15 @@ class AKONADI_XML_EXPORT XmlDocument
     /**
       Returns the immediate child collections of @p parentCollection.
     */
-    Collection::List childCollections( const Collection &parentCollection ) const;
+    Collection::List childCollections(const Collection &parentCollection) const;
 
     /**
       Returns the items in the given collection.
     */
-    Item::List items( const Collection& collection, bool includePayload = true ) const;
+    Item::List items(const Collection &collection, bool includePayload = true) const;
 
-  private:
-    XmlDocumentPrivate * const d;
+private:
+    XmlDocumentPrivate *const d;
 };
 
 }

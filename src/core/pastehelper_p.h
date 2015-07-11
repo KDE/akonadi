@@ -28,7 +28,8 @@
 class KJob;
 class QMimeData;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Session;
 
@@ -39,7 +40,8 @@ class Session;
 
   @todo Use in item/collection models as well for dnd
 */
-namespace PasteHelper {
+namespace PasteHelper
+{
 /**
   Check whether the given mime data can be pasted into the given collection.
   @param mimeData The pasted/dropped data.

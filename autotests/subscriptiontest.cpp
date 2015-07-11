@@ -33,62 +33,62 @@ using namespace Akonadi;
 
 class SubscriptionTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
-      Control::start();
+        AkonadiTest::checkTestIsIsolated();
+        Control::start();
     }
 
     void testSubscribe()
     {
-      Collection::List l;
-      l << Collection( collectionIdFromPath( QLatin1String("res2/foo2") ) );
-      QVERIFY( l.first().isValid() );
-      SubscriptionJob *sjob = new SubscriptionJob( this );
-      sjob->unsubscribe( l );
-      AKVERIFYEXEC( sjob );
+        Collection::List l;
+        l << Collection(collectionIdFromPath(QLatin1String("res2/foo2")));
+        QVERIFY(l.first().isValid());
+        SubscriptionJob *sjob = new SubscriptionJob(this);
+        sjob->unsubscribe(l);
+        AKVERIFYEXEC(sjob);
 
-      const Collection res2Col = Collection( collectionIdFromPath( QLatin1String("res2") ) );
-      QVERIFY( res2Col.isValid() );
-      CollectionFetchJob *ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
-      AKVERIFYEXEC( ljob );
-      QCOMPARE( ljob->collections().count(), 1 );
+        const Collection res2Col = Collection(collectionIdFromPath(QLatin1String("res2")));
+        QVERIFY(res2Col.isValid());
+        CollectionFetchJob *ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
+        AKVERIFYEXEC(ljob);
+        QCOMPARE(ljob->collections().count(), 1);
 
-      ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
-      ljob->fetchScope().setIncludeUnsubscribed( true );
-      AKVERIFYEXEC( ljob );
-      QCOMPARE( ljob->collections().count(), 2 );
+        ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
+        ljob->fetchScope().setIncludeUnsubscribed(true);
+        AKVERIFYEXEC(ljob);
+        QCOMPARE(ljob->collections().count(), 2);
 
-      sjob = new SubscriptionJob( this );
-      sjob->subscribe( l );
-      AKVERIFYEXEC( sjob );
+        sjob = new SubscriptionJob(this);
+        sjob->subscribe(l);
+        AKVERIFYEXEC(sjob);
 
-      ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
-      AKVERIFYEXEC( ljob );
-      QCOMPARE( ljob->collections().count(), 2 );
+        ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
+        AKVERIFYEXEC(ljob);
+        QCOMPARE(ljob->collections().count(), 2);
     }
 
     void testEmptySubscribe()
     {
-      Collection::List l;
-      SubscriptionJob *sjob = new SubscriptionJob( this );
-      AKVERIFYEXEC( sjob );
+        Collection::List l;
+        SubscriptionJob *sjob = new SubscriptionJob(this);
+        AKVERIFYEXEC(sjob);
     }
 
     void testInvalidSubscribe()
     {
-      Collection::List l;
-      l << Collection( 1 );
-      SubscriptionJob *sjob = new SubscriptionJob( this );
-      sjob->subscribe( l );
-      l << Collection( INT_MAX );
-      sjob->unsubscribe( l );
-      QVERIFY( !sjob->exec() );
+        Collection::List l;
+        l << Collection(1);
+        SubscriptionJob *sjob = new SubscriptionJob(this);
+        sjob->subscribe(l);
+        l << Collection(INT_MAX);
+        sjob->unsubscribe(l);
+        QVERIFY(!sjob->exec());
     }
 };
 
-QTEST_AKONADIMAIN( SubscriptionTest )
+QTEST_AKONADIMAIN(SubscriptionTest)
 
 #include "subscriptiontest.moc"

@@ -23,7 +23,8 @@
 #include "akonadicore_export.h"
 #include <QSortFilterProxyModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionModel;
 

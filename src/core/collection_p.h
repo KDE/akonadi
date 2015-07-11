@@ -82,8 +82,7 @@ public:
         return new CollectionPrivate(*this);
     }
 
-    void resetChangeLog() Q_DECL_OVERRIDE
-    {
+    void resetChangeLog() Q_DECL_OVERRIDE {
         contentTypesChanged = false;
         cachePolicyChanged = false;
         enabledChanged = false;

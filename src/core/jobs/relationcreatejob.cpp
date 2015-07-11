@@ -27,8 +27,7 @@
 
 using namespace Akonadi;
 
-struct Akonadi::RelationCreateJobPrivate : public JobPrivate
-{
+struct Akonadi::RelationCreateJobPrivate : public JobPrivate {
     RelationCreateJobPrivate(RelationCreateJob *parent)
         : JobPrivate(parent)
     {
@@ -57,9 +56,9 @@ void RelationCreateJob::doStart()
     }
 
     d->sendCommand(Protocol::ModifyRelationCommand(d->mRelation.left().id(),
-                                                   d->mRelation.right().id(),
-                                                   d->mRelation.type(),
-                                                   d->mRelation.remoteId()));
+                   d->mRelation.right().id(),
+                   d->mRelation.type(),
+                   d->mRelation.remoteId()));
 }
 
 bool RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

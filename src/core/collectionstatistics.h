@@ -25,7 +25,8 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Provides statistics information of a Collection.

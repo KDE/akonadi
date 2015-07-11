@@ -35,67 +35,68 @@ using namespace Akonadi;
 
 class ItemCopyTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
-      Control::start();
-      // switch target resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
-        if ( agent.identifier() == QStringLiteral("akonadi_knut_resource_2") )
-          agent.setIsOnline( false );
-      }
+        AkonadiTest::checkTestIsIsolated();
+        Control::start();
+        // switch target resources offline to reduce interference from them
+        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {   //krazy:exclude=foreach
+            if (agent.identifier() == QStringLiteral("akonadi_knut_resource_2")) {
+                agent.setIsOnline(false);
+            }
+        }
     }
 
     void testCopy()
     {
-      const Collection target( collectionIdFromPath( QStringLiteral("res3") ) );
-      QVERIFY( target.isValid() );
+        const Collection target(collectionIdFromPath(QStringLiteral("res3")));
+        QVERIFY(target.isValid());
 
-      ItemCopyJob *copy = new ItemCopyJob( Item( 1 ), target );
-      AKVERIFYEXEC( copy );
+        ItemCopyJob *copy = new ItemCopyJob(Item(1), target);
+        AKVERIFYEXEC(copy);
 
-      Item source( 1 );
-      ItemFetchJob *sourceFetch = new ItemFetchJob( source );
-      AKVERIFYEXEC( sourceFetch );
-      source = sourceFetch->items().first();
+        Item source(1);
+        ItemFetchJob *sourceFetch = new ItemFetchJob(source);
+        AKVERIFYEXEC(sourceFetch);
+        source = sourceFetch->items().first();
 
-      ItemFetchJob *fetch = new ItemFetchJob( target );
-      fetch->fetchScope().fetchFullPayload();
-      fetch->fetchScope().fetchAllAttributes();
-      fetch->fetchScope().setCacheOnly( true );
-      AKVERIFYEXEC( fetch );
-      QCOMPARE( fetch->items().count(), 1 );
+        ItemFetchJob *fetch = new ItemFetchJob(target);
+        fetch->fetchScope().fetchFullPayload();
+        fetch->fetchScope().fetchAllAttributes();
+        fetch->fetchScope().setCacheOnly(true);
+        AKVERIFYEXEC(fetch);
+        QCOMPARE(fetch->items().count(), 1);
 
-      Item item = fetch->items().first();
-      QVERIFY( item.hasPayload() );
-      QVERIFY( source.size() > 0 );
-      QVERIFY( item.size() > 0 );
-      QCOMPARE( item.size(), source.size() );
-      QCOMPARE( item.attributes().count(), 1 );
-      QVERIFY( item.remoteId().isEmpty() );
-      QEXPECT_FAIL("", "statistics are not properly updated after copy", Abort);
-      QCOMPARE( target.statistics().count(), 1ll );
+        Item item = fetch->items().first();
+        QVERIFY(item.hasPayload());
+        QVERIFY(source.size() > 0);
+        QVERIFY(item.size() > 0);
+        QCOMPARE(item.size(), source.size());
+        QCOMPARE(item.attributes().count(), 1);
+        QVERIFY(item.remoteId().isEmpty());
+        QEXPECT_FAIL("", "statistics are not properly updated after copy", Abort);
+        QCOMPARE(target.statistics().count(), 1ll);
     }
 
     void testIlleagalCopy()
     {
-      // empty item list
-      ItemCopyJob *copy = new ItemCopyJob( Item::List(), Collection::root() );
-      QVERIFY( !copy->exec() );
+        // empty item list
+        ItemCopyJob *copy = new ItemCopyJob(Item::List(), Collection::root());
+        QVERIFY(!copy->exec());
 
-      // non-existing target
-      copy = new ItemCopyJob( Item( 1 ), Collection( INT_MAX ) );
-      QVERIFY( !copy->exec() );
+        // non-existing target
+        copy = new ItemCopyJob(Item(1), Collection(INT_MAX));
+        QVERIFY(!copy->exec());
 
-      // non-existing source
-      copy = new ItemCopyJob( Item( INT_MAX ), Collection::root() );
-      QVERIFY( !copy->exec() );
+        // non-existing source
+        copy = new ItemCopyJob(Item(INT_MAX), Collection::root());
+        QVERIFY(!copy->exec());
     }
 
 };
 
-QTEST_AKONADIMAIN( ItemCopyTest )
+QTEST_AKONADIMAIN(ItemCopyTest)
 
 #include "itemcopytest.moc"

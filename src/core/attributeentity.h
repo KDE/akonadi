@@ -28,7 +28,8 @@
 #include <QSharedPointer>
 #include <QDebug>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * Parent class for entities that can have attributes.
@@ -39,7 +40,8 @@ namespace Akonadi {
  * calls etc.
  * An even better solution is probably ot make AttributeEntity a private member of Entity, with all Attribute related member functions forwarding to this class.
  */
-class AKONADICORE_EXPORT AttributeEntity {
+class AKONADICORE_EXPORT AttributeEntity
+{
 public:
     AttributeEntity();
 

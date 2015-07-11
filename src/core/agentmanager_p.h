@@ -27,7 +27,8 @@
 
 #include <QtCore/QHash>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentManager;
 

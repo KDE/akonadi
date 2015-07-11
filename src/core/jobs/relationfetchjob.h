@@ -23,7 +23,8 @@
 #include "job.h"
 #include "relation.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Relation;
 class RelationFetchJobPrivate;

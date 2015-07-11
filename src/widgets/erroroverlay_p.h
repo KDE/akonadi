@@ -27,11 +27,13 @@
 
 #include <boost/scoped_ptr.hpp>
 
-namespace Ui {
+namespace Ui
+{
 class ErrorOverlay;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal

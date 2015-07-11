@@ -66,9 +66,9 @@ bool restartAkonadiServer()
     } else {
         bool ok = false;
         [&]() {
-                QSignalSpy spy(Akonadi::ServerManager::self(), SIGNAL(started()));
-                QTRY_VERIFY_WITH_TIMEOUT(spy.count() > 0, 10000);
-                ok = true;
+            QSignalSpy spy(Akonadi::ServerManager::self(), SIGNAL(started()));
+            QTRY_VERIFY_WITH_TIMEOUT(spy.count() > 0, 10000);
+            ok = true;
         }();
         return ok;
     }

@@ -44,7 +44,8 @@ class KJob;
 typedef QList<Akonadi::Entity::Id> EntityIdList;
 Q_DECLARE_METATYPE(QList<Akonadi::Entity::Id>)
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
   @internal
@@ -69,8 +70,7 @@ private Q_SLOTS:
 };
 
 template <typename T>
-struct EntityCacheNode
-{
+struct EntityCacheNode {
     EntityCacheNode()
         : pending(false)
         , invalid(false)
@@ -175,7 +175,7 @@ public:
         EntityCacheNode<T> *node = new EntityCacheNode<T>(id);
         FetchJob *job = createFetchJob(id, scope);
         job->setProperty("EntityCacheNode", QVariant::fromValue<typename T::Id>(id));
-        connect(job, SIGNAL(result(KJob*)), SLOT(processResult(KJob*)));
+        connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
         mCache.enqueue(node);
     }
 
@@ -183,7 +183,7 @@ private:
     EntityCacheNode<T> *cacheNodeForId(typename T::Id id) const
     {
         for (typename QQueue<EntityCacheNode<T> *>::const_iterator it = mCache.constBegin(), endIt = mCache.constEnd();
-             it != endIt; ++it) {
+                it != endIt; ++it) {
             if ((*it)->entity.id() == id) {
                 return *it;
             }
@@ -191,14 +191,15 @@ private:
         return 0;
     }
 
-    void processResult(KJob *job) Q_DECL_OVERRIDE
-    {
-        if (job->error()) {
+    void processResult(KJob *job) Q_DECL_OVERRIDE {
+        if (job->error())
+        {
             //This can happen if we have stale notifications for items that have already been removed
         }
-        typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
+        typename T::Id id = job->property("EntityCacheNode").template value<typename T::Id>();
         EntityCacheNode<T> *node = cacheNodeForId(id);
-        if (!node) {
+        if (!node)
+        {
             return; // got replaced in the meantime
         }
 
@@ -206,7 +207,8 @@ private:
         extractResult(node, job);
         // make sure we find this node again if something went wrong here,
         // most likely the object got deleted from the server in the meantime
-        if (node->entity.id() != id) {
+        if (node->entity.id() != id)
+        {
             // TODO: Recursion guard? If this is called with non-existing ids, the if will never be true!
             node->entity.setId(id);
             node->invalid = true;
@@ -281,8 +283,7 @@ typedef EntityCache<Item, ItemFetchJob, ItemFetchScope> ItemCache;
 typedef EntityCache<Tag, TagFetchJob, TagFetchScope> TagCache;
 
 template <typename T>
-struct EntityListCacheNode
-{
+struct EntityListCacheNode {
     EntityListCacheNode()
         : pending(false)
         , invalid(false)
@@ -407,7 +408,7 @@ public:
         }
         FetchJob *job = createFetchJob(ids, scope);
         job->setProperty("EntityListCacheIds", QVariant::fromValue< QList<Entity::Id> >(ids));
-        connect(job, SIGNAL(result(KJob*)), SLOT(processResult(KJob*)));
+        connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
     }
 
     bool isNotRequested(const QList<Entity::Id> &ids) const
@@ -457,9 +458,9 @@ private:
         return job;
     }
 
-    void processResult(KJob *job) Q_DECL_OVERRIDE
-    {
-        if (job->error()) {
+    void processResult(KJob *job) Q_DECL_OVERRIDE {
+        if (job->error())
+        {
             qWarning() << job->errorString();
         }
         const QList<Entity::Id> ids = job->property("EntityListCacheIds").value< QList<Entity::Id> >();
@@ -467,7 +468,8 @@ private:
         typename T::List entities;
         extractResults(job, entities);
 
-        foreach (Entity::Id id, ids) {
+        foreach (Entity::Id id, ids)
+        {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (!node) {
                 continue; // got replaced in the meantime

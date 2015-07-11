@@ -24,7 +24,8 @@
 
 #include <QtCore/QList>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Provides interface for custom attributes for Entity.

@@ -69,7 +69,7 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
             const Collection collection = Collection::fromUrl(url);
             if (collection.isValid()) {
                 if (!supportedContentTypes.contains(Collection::mimeType()) &&
-                    !supportedContentTypes.contains(Collection::virtualMimeType())) {
+                        !supportedContentTypes.contains(Collection::virtualMimeType())) {
                     break;
                 }
 
@@ -141,16 +141,16 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     moveAllowed = copyAllowed = linkAllowed = false;
 
     if ((targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem)) &&
-        (event->possibleActions() & Qt::MoveAction)) {
+            (event->possibleActions() & Qt::MoveAction)) {
         moveAllowed = true;
     }
     if ((targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem)) &&
-        (event->possibleActions() & Qt::CopyAction)) {
+            (event->possibleActions() & Qt::CopyAction)) {
         copyAllowed = true;
     }
 
     if ((targetCollection.rights() & Collection::CanLinkItem) &&
-        (event->possibleActions() & Qt::LinkAction)) {
+            (event->possibleActions() & Qt::LinkAction)) {
         linkAllowed = true;
     }
 
@@ -167,7 +167,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
 
     // first check whether the user pressed a modifier key to select a specific action
     if ((QApplication::keyboardModifiers() & Qt::ControlModifier) &&
-        (QApplication::keyboardModifiers() & Qt::ShiftModifier)) {
+            (QApplication::keyboardModifiers() & Qt::ShiftModifier)) {
         if (linkAllowed) {
             defaultAction = Qt::LinkAction;
             actionCount = 1;
@@ -305,7 +305,7 @@ void DragDropManager::startDrag(Qt::DropActions supportedActions)
 
     Qt::DropAction defaultAction = Qt::IgnoreAction;
     if ((QApplication::keyboardModifiers() & Qt::ControlModifier) &&
-        (QApplication::keyboardModifiers() & Qt::ShiftModifier)) {
+            (QApplication::keyboardModifiers() & Qt::ShiftModifier)) {
         defaultAction = Qt::LinkAction;
     } else if ((QApplication::keyboardModifiers() & Qt::ControlModifier)) {
         defaultAction = Qt::CopyAction;

@@ -26,7 +26,8 @@
 
 #include <QColor>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Attribute that stores the properties that are used to display a tag.

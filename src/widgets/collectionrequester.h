@@ -25,7 +25,8 @@
 #include "collectiondialog.h"
 #include <QWidget>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A widget to request an Akonadi collection from the user.

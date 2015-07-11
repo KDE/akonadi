@@ -123,13 +123,12 @@ public Q_SLOTS:
     }
 };
 
-
 class AKONADITESTFAKE_EXPORT FakeNotificationBus : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit FakeNotificationBus(QObject* parent = Q_NULLPTR)
+    explicit FakeNotificationBus(QObject *parent = Q_NULLPTR)
         : QObject(parent)
     {}
 
@@ -156,26 +155,22 @@ public:
     {
     }
 
-    Akonadi::NotificationSource *createNotificationSource(QObject *parent) Q_DECL_OVERRIDE
-    {
+    Akonadi::NotificationSource *createNotificationSource(QObject *parent) Q_DECL_OVERRIDE {
         return new Akonadi::NotificationSource(new FakeNotificationSource(parent));
     }
 
-    QObject *createNotificationBus(QObject *parent, Akonadi::NotificationSource *source) Q_DECL_OVERRIDE
-    {
+    QObject *createNotificationBus(QObject *parent, Akonadi::NotificationSource *source) Q_DECL_OVERRIDE {
         Q_UNUSED(source);
         return new FakeNotificationBus(parent);
     }
 
-    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE
-    {
+    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return collectionCache;
     }
 
-    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE
-    {
+    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return itemCache;

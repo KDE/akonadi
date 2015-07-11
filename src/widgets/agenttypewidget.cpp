@@ -28,8 +28,10 @@
 #include "agenttype.h"
 #include "agenttypemodel.h"
 
-namespace Akonadi {
-namespace Internal {
+namespace Akonadi
+{
+namespace Internal
+{
 
 /**
  * @internal
@@ -264,7 +266,7 @@ void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionVie
         QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
                                   ? QPalette::Normal : QPalette::Disabled;
         o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected)
-                                                 ? QPalette::Highlight : QPalette::Background);
+                            ? QPalette::Highlight : QPalette::Background);
         QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
     }
 }

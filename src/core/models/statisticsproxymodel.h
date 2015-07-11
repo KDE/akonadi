@@ -24,7 +24,8 @@
 
 #include <QIdentityProxyModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A proxy model that exposes collection statistics through extra columns.
@@ -57,7 +58,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit StatisticsProxyModel( QObject *parent = Q_NULLPTR );
+    explicit StatisticsProxyModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the statistics proxy model.
@@ -67,7 +68,7 @@ public:
     /**
      * @param enable Display tooltips
      */
-    void setToolTipEnabled( bool enable);
+    void setToolTipEnabled(bool enable);
 
     /**
      * Return true if we display tooltips, otherwise false
@@ -77,41 +78,40 @@ public:
     /**
      * @param enable Display extra statistics columns
      */
-    void setExtraColumnsEnabled( bool enable);
+    void setExtraColumnsEnabled(bool enable);
 
     /**
      * Return true if we display extra statistics columns, otherwise false
      */
     bool isExtraColumnsEnabled() const;
 
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
-    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
-    QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags ( const QModelIndex & index ) const Q_DECL_OVERRIDE;
-    int columnCount( const QModelIndex & parent = QModelIndex() ) const Q_DECL_OVERRIDE;
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
 
-    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
+    void connectNotify(const QMetaMethod &signal) Q_DECL_OVERRIDE;
 
-    void setSourceModel(QAbstractItemModel* sourceModel) Q_DECL_OVERRIDE;
-    void connectNotify(const QMetaMethod & signal) Q_DECL_OVERRIDE;
-
-    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const Q_DECL_OVERRIDE;
-    QModelIndex mapToSource(const QModelIndex& sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapToSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
     QModelIndex buddy(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    QItemSelection mapSelectionToSource(const QItemSelection& selection) const Q_DECL_OVERRIDE;
+    QItemSelection mapSelectionToSource(const QItemSelection &selection) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void proxyDataChanged( QModelIndex, QModelIndex ) )
-    Q_PRIVATE_SLOT( d, void sourceLayoutAboutToBeChanged() )
-    Q_PRIVATE_SLOT( d, void sourceLayoutChanged() )
+    Q_PRIVATE_SLOT(d, void proxyDataChanged(QModelIndex, QModelIndex))
+    Q_PRIVATE_SLOT(d, void sourceLayoutAboutToBeChanged())
+    Q_PRIVATE_SLOT(d, void sourceLayoutChanged())
     //@endcond
 };
 

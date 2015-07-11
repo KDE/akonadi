@@ -27,7 +27,8 @@
 #include "ui_collectiongeneralpropertiespage.h"
 #endif
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 //@cond PRIVATE
 

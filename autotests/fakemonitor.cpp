@@ -28,23 +28,22 @@ using namespace Akonadi;
 
 class FakeMonitorPrivate : public ChangeRecorderPrivate
 {
-  Q_DECLARE_PUBLIC(FakeMonitor)
+    Q_DECLARE_PUBLIC(FakeMonitor)
 public:
-  FakeMonitorPrivate( FakeMonitor *monitor )
-    : ChangeRecorderPrivate( 0, monitor )
-  {
-  }
+    FakeMonitorPrivate(FakeMonitor *monitor)
+        : ChangeRecorderPrivate(0, monitor)
+    {
+    }
 
-  bool connectToNotificationManager() Q_DECL_OVERRIDE
-  {
-    // Do nothing. This monitor should not connect to the notification manager.
-    return true;
-  }
+    bool connectToNotificationManager() Q_DECL_OVERRIDE {
+        // Do nothing. This monitor should not connect to the notification manager.
+        return true;
+    }
 
 };
 
-FakeMonitor::FakeMonitor(QObject* parent)
-  : ChangeRecorder( new FakeMonitorPrivate( this ), parent )
+FakeMonitor::FakeMonitor(QObject *parent)
+    : ChangeRecorder(new FakeMonitorPrivate(this), parent)
 {
 
 }

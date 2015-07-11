@@ -24,7 +24,8 @@
 #include "collection.h"
 #include "transactionsequence.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
   @internal

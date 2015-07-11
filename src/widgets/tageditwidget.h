@@ -26,7 +26,8 @@
 #include "tag.h"
 #include "akonadiwidgets_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class TagModel;
 /**

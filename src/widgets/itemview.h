@@ -25,7 +25,8 @@
 
 class KXmlGuiWindow;
 class KXMLGUIClient;
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Item;
 

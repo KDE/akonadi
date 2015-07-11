@@ -26,7 +26,8 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal
@@ -43,18 +44,18 @@ public:
     bool rightsMatches(const QModelIndex &index) const
     {
         if (mAccessRights == Collection::AllRights ||
-            mAccessRights == Collection::ReadOnly) {
+                mAccessRights == Collection::ReadOnly) {
             return true;
         }
 
         const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid()) {
-            return (mAccessRights &collection.rights());
+            return (mAccessRights & collection.rights());
         } else {
             const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
             if (item.isValid()) {
                 const Collection collection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
-                return (mAccessRights &collection.rights());
+                return (mAccessRights & collection.rights());
             } else {
                 return false;
             }
@@ -109,7 +110,7 @@ Qt::ItemFlags EntityRightsFilterModel::flags(const QModelIndex &index) const
     if (d->rightsMatches(index)) {
         return KRecursiveFilterProxyModel::flags(index);
     } else {
-        return KRecursiveFilterProxyModel::flags(index) &~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        return KRecursiveFilterProxyModel::flags(index) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
 }
 
@@ -123,8 +124,9 @@ QModelIndexList EntityRightsFilterModel::match(const QModelIndex &start, int rol
     QModelIndex proxyIndex;
     foreach (const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags)) {
         proxyIndex = mapFromSource(idx);
-        if (proxyIndex.isValid())
+        if (proxyIndex.isValid()) {
             list << proxyIndex;
+        }
     }
 
     return list;

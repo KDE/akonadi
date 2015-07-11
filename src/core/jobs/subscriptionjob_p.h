@@ -24,7 +24,8 @@
 #include "collection.h"
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SubscriptionJobPrivate;
 
@@ -65,7 +66,7 @@ public:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
-    void slotResult(KJob* job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(SubscriptionJob)

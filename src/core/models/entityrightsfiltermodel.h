@@ -26,7 +26,8 @@
 
 #include "akonadicore_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class EntityRightsFilterModelPrivate;
 
@@ -96,7 +97,7 @@ public:
      * @reimp
      */
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
 
 protected:
     bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

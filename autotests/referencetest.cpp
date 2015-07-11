@@ -120,11 +120,11 @@ void ReferenceTest::testReferenceFromMultiSession()
         col.setName("referenced");
         col.setEnabled(false);
         {
-        Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
-        AKVERIFYEXEC(create);
-        CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
-        AKVERIFYEXEC(job);
-        col = job->collections().first();
+            Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
+            AKVERIFYEXEC(create);
+            CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+            AKVERIFYEXEC(job);
+            col = job->collections().first();
         }
 
         Akonadi::Session *session1 = new Akonadi::Session("session1");

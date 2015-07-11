@@ -27,35 +27,35 @@ using namespace Akonadi;
 
 class XmlDocumentTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testDocumentLoad()
     {
-      XmlDocument doc( QLatin1String( KDESRCDIR "/knutdemo.xml" ) );
-      QVERIFY( doc.isValid() );
-      QVERIFY( doc.lastError().isEmpty() );
-      QCOMPARE( doc.collections().count(), 9 );
+        XmlDocument doc(QLatin1String(KDESRCDIR "/knutdemo.xml"));
+        QVERIFY(doc.isValid());
+        QVERIFY(doc.lastError().isEmpty());
+        QCOMPARE(doc.collections().count(), 9);
 
-      Collection col = doc.collectionByRemoteId( QLatin1String( "c11" ) );
-      QCOMPARE( col.name(), QStringLiteral( "Inbox" ) );
-      QCOMPARE( col.attributes().count(), 1 );
-      QCOMPARE( col.parentCollection().remoteId(), QStringLiteral( "c1" ) );
+        Collection col = doc.collectionByRemoteId(QLatin1String("c11"));
+        QCOMPARE(col.name(), QStringLiteral("Inbox"));
+        QCOMPARE(col.attributes().count(), 1);
+        QCOMPARE(col.parentCollection().remoteId(), QStringLiteral("c1"));
 
-      QCOMPARE( doc.childCollections( col ).count(), 2 );
+        QCOMPARE(doc.childCollections(col).count(), 2);
 
-      Item item = doc.itemByRemoteId( QLatin1String( "contact1" ) );
-      QCOMPARE( item.mimeType(), QStringLiteral( "text/directory" ) );
-      QVERIFY( item.hasPayload() );
+        Item item = doc.itemByRemoteId(QLatin1String("contact1"));
+        QCOMPARE(item.mimeType(), QStringLiteral("text/directory"));
+        QVERIFY(item.hasPayload());
 
-      Item::List items = doc.items( col );
-      QCOMPARE( items.count(), 1 );
-      item = items.first();
-      QVERIFY( item.hasPayload() );
-      QCOMPARE( item.flags().count(), 1 );
-      QVERIFY( item.hasFlag( "\\SEEN" ) );
+        Item::List items = doc.items(col);
+        QCOMPARE(items.count(), 1);
+        item = items.first();
+        QVERIFY(item.hasPayload());
+        QCOMPARE(item.flags().count(), 1);
+        QVERIFY(item.hasFlag("\\SEEN"));
     }
 };
 
-QTEST_MAIN( XmlDocumentTest )
+QTEST_MAIN(XmlDocumentTest)
 
 #include "xmldocumenttest.moc"

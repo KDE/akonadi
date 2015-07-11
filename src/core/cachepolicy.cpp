@@ -56,8 +56,8 @@ public:
 
 CachePolicy::CachePolicy()
 {
-  static QSharedDataPointer<Private> sharedPrivate(new Private);
-  d = sharedPrivate;
+    static QSharedDataPointer<Private> sharedPrivate(new Private);
+    d = sharedPrivate;
 }
 
 CachePolicy::CachePolicy(const CachePolicy &other)

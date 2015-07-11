@@ -42,7 +42,8 @@ class QUrl;
 template <typename T>
 class QVector;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ItemPrivate;
 
@@ -377,21 +378,21 @@ public:
 // without compilers yelling at us all the time just because item.h gets included
 // virtually everywhere
 #ifdef __GNUC__
-  #ifdef __clang__
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  #else
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #endif
     template <typename T> void setPayload(std::auto_ptr<T> p);
 #ifdef __GNUC__
-  #ifdef __clang__
-    #pragma clang diagnostic pop
-  #else
-    #pragma GCC diagnostic pop
-  #endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#else
+#pragma GCC diagnostic pop
+#endif
 #endif
     template <typename T> void setPayload(std::unique_ptr<T> p);
     //@endcond
@@ -513,32 +514,32 @@ private:
     typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, void>::type
     setPayloadImpl(const T &p, const int * /*disambiguate*/ = 0);
     template <typename T>
-    typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, void>::type
+    typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, void >::type
     setPayloadImpl(const T &p);
 
     template <typename T>
     typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type
     payloadImpl(const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type
+    typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, T >::type
     payloadImpl() const;
 
     template <typename T>
     typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
     hasPayloadImpl(const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+    typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, bool >::type
     hasPayloadImpl() const;
 
     template <typename T>
     typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
     tryToClone(T *ret, const int * /*disambiguate*/ = 0) const;
     template <typename T>
-    typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type
+    typename std::enable_if < !Internal::is_shared_pointer<T>::value, bool >::type
     tryToClone(T *ret) const;
 
     template <typename T, typename NewT>
-    typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type
+    typename std::enable_if < !std::is_same<T, NewT>::value, bool >::type
     tryToCloneImpl(T *ret, const int * /*disambiguate*/ = 0) const;
     template <typename T, typename NewT>
     typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
@@ -562,7 +563,8 @@ private:
      * Needs to be inline, otherwise catch (Akonadi::PayloadException)
      * won't work (only catch (Akonadi::Exception))
      */
-    inline void throwPayloadException(int spid, int mtid) const {
+    inline void throwPayloadException(int spid, int mtid) const
+    {
         throw PayloadException(payloadExceptionText(spid, mtid));
     }
 #else
@@ -602,7 +604,7 @@ Item::payloadImpl(const int *) const
 }
 
 template <typename T>
-typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type
+typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, T >::type
 Item::payloadImpl() const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
@@ -630,8 +632,8 @@ Item::payloadImpl() const
 }
 
 template<typename T, typename NewT>
-typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type
-Item::tryToCloneImpl(T* ret, const int *) const
+typename std::enable_if < !std::is_same<T, NewT>::value, bool >::type
+Item::tryToCloneImpl(T *ret, const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     typedef Internal::PayloadTrait<NewT> NewPayloadType;
@@ -675,7 +677,7 @@ Item::tryToClone(T *ret, const int *) const
 }
 
 template <typename T>
-typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type
+typename std::enable_if < !Internal::is_shared_pointer<T>::value, bool >::type
 Item::tryToClone(T *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
@@ -716,7 +718,7 @@ Item::hasPayloadImpl(const int *) const
 }
 
 template <typename T>
-typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type
+typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, bool >::type
 Item::hasPayloadImpl() const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
@@ -763,7 +765,7 @@ Item::setPayloadImpl(const T &p, const int *)
 }
 
 template <typename T>
-typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic>::type
+typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic >::type
 Item::setPayloadImpl(const T &p)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
@@ -780,13 +782,13 @@ void Item::setPayload(T *p)
 }
 
 #ifdef __GNUC__
-  #ifdef __clang__
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  #else
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #endif
 template <typename T>
 void Item::setPayload(std::auto_ptr<T> p)
@@ -794,11 +796,11 @@ void Item::setPayload(std::auto_ptr<T> p)
     p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
 }
 #ifdef __GNUC__
-  #ifdef __clang__
-    #pragma clang diagnostic pop
-  #else
-    #pragma GCC diagnostic pop
-  #endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#else
+#pragma GCC diagnostic pop
+#endif
 #endif
 
 template <typename T>
@@ -808,7 +810,8 @@ void Item::setPayload(std::unique_ptr<T> p)
 }
 
 template <typename T>
-void Item::addToLegacyMapping(const QString &mimeType) {
+void Item::addToLegacyMapping(const QString &mimeType)
+{
     typedef Internal::PayloadTrait<T> PayloadType;
     static_assert(!PayloadType::isPolymorphic, "Payload type must not be polymorphic");
     std::unique_ptr<PayloadBase> p(new Payload<T>);

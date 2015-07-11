@@ -34,125 +34,127 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-class XmlWriteJobPrivate {
-  public:
-    XmlWriteJobPrivate( XmlWriteJob* parent ) : q( parent ) {}
+class XmlWriteJobPrivate
+{
+public:
+    XmlWriteJobPrivate(XmlWriteJob *parent) : q(parent) {}
 
-    XmlWriteJob* const q;
+    XmlWriteJob *const q;
     Collection::List roots;
     QStack<Collection::List> pendingSiblings;
     QStack<QDomElement> elementStack;
     QString fileName;
     XmlDocument document;
 
-    void collectionFetchResult( KJob* job );
+    void collectionFetchResult(KJob *job);
     void processCollection();
-    void itemFetchResult( KJob* job );
+    void itemFetchResult(KJob *job);
     void processItems();
 };
 
 }
 
-void XmlWriteJobPrivate::collectionFetchResult(KJob* job)
+void XmlWriteJobPrivate::collectionFetchResult(KJob *job)
 {
-  if ( job->error() )
-    return;
-  CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob*>( job );
-  Q_ASSERT( fetch );
-  if ( fetch->collections().isEmpty() ) {
-    processItems();
-  } else {
-    pendingSiblings.push( fetch->collections() );
-    processCollection();
-  }
+    if (job->error()) {
+        return;
+    }
+    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
+    Q_ASSERT(fetch);
+    if (fetch->collections().isEmpty()) {
+        processItems();
+    } else {
+        pendingSiblings.push(fetch->collections());
+        processCollection();
+    }
 }
 
 void XmlWriteJobPrivate::processCollection()
 {
-  if ( !pendingSiblings.isEmpty() && pendingSiblings.top().isEmpty() ) {
-    pendingSiblings.pop();
-    if ( pendingSiblings.isEmpty() ) {
-      q->done();
-      return;
+    if (!pendingSiblings.isEmpty() && pendingSiblings.top().isEmpty()) {
+        pendingSiblings.pop();
+        if (pendingSiblings.isEmpty()) {
+            q->done();
+            return;
+        }
+        processItems();
+        return;
     }
-    processItems();
-    return;
-  }
 
-  if ( pendingSiblings.isEmpty() ) {
-    q->done();
-    return;
-  }
+    if (pendingSiblings.isEmpty()) {
+        q->done();
+        return;
+    }
 
-  const Collection current = pendingSiblings.top().first();
-  qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute( QStringLiteral("name") );
-  elementStack.push( XmlWriter::writeCollection( current, elementStack.top() ) );
-  CollectionFetchJob *subfetch = new CollectionFetchJob( current, CollectionFetchJob::FirstLevel, q );
-  q->connect( subfetch, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)) );
+    const Collection current = pendingSiblings.top().first();
+    qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute(QStringLiteral("name"));
+    elementStack.push(XmlWriter::writeCollection(current, elementStack.top()));
+    CollectionFetchJob *subfetch = new CollectionFetchJob(current, CollectionFetchJob::FirstLevel, q);
+    q->connect(subfetch, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)));
 }
 
 void XmlWriteJobPrivate::processItems()
 {
-  const Collection collection = pendingSiblings.top().first();
-  ItemFetchJob *fetch = new ItemFetchJob( collection, q );
-  fetch->fetchScope().fetchAllAttributes();
-  fetch->fetchScope().fetchFullPayload();
-  q->connect( fetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)) );
+    const Collection collection = pendingSiblings.top().first();
+    ItemFetchJob *fetch = new ItemFetchJob(collection, q);
+    fetch->fetchScope().fetchAllAttributes();
+    fetch->fetchScope().fetchFullPayload();
+    q->connect(fetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)));
 }
 
-void XmlWriteJobPrivate::itemFetchResult(KJob* job)
+void XmlWriteJobPrivate::itemFetchResult(KJob *job)
 {
-  if ( job->error() )
-    return;
-  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
-  Q_ASSERT( fetch );
-  foreach ( const Item &item, fetch->items() )
-    XmlWriter::writeItem( item, elementStack.top() );
-  pendingSiblings.top().removeFirst();
-  elementStack.pop();
-  processCollection();
+    if (job->error()) {
+        return;
+    }
+    ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
+    Q_ASSERT(fetch);
+    foreach (const Item &item, fetch->items()) {
+        XmlWriter::writeItem(item, elementStack.top());
+    }
+    pendingSiblings.top().removeFirst();
+    elementStack.pop();
+    processCollection();
 }
 
-
-XmlWriteJob::XmlWriteJob(const Collection& root, const QString& fileName, QObject* parent) :
-  Job( parent ),
-  d( new XmlWriteJobPrivate( this ) )
+XmlWriteJob::XmlWriteJob(const Collection &root, const QString &fileName, QObject *parent) :
+    Job(parent),
+    d(new XmlWriteJobPrivate(this))
 {
-  d->roots.append( root );
-  d->fileName = fileName;
+    d->roots.append(root);
+    d->fileName = fileName;
 }
 
-
-XmlWriteJob::XmlWriteJob(const Collection::List& roots, const QString& fileName, QObject* parent) :
-  Job( parent ),
-  d( new XmlWriteJobPrivate( this ) )
+XmlWriteJob::XmlWriteJob(const Collection::List &roots, const QString &fileName, QObject *parent) :
+    Job(parent),
+    d(new XmlWriteJobPrivate(this))
 {
-  d->roots = roots;
-  d->fileName = fileName;
+    d->roots = roots;
+    d->fileName = fileName;
 }
-
 
 XmlWriteJob::~XmlWriteJob()
 {
-  delete d;
+    delete d;
 }
 
 void XmlWriteJob::doStart()
 {
-  d->elementStack.push( d->document.document().documentElement() );
-  CollectionFetchJob *job = new CollectionFetchJob( d->roots, this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
+    d->elementStack.push(d->document.document().documentElement());
+    CollectionFetchJob *job = new CollectionFetchJob(d->roots, this);
+    connect(job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)));
 }
 
 void XmlWriteJob::done() // cannot be in the private class due to emitResult()
 {
-  if ( !d->document.writeToFile( d->fileName ) ) {
-    setError( Unknown );
-    setErrorText( d->document.lastError() );
-  }
-  emitResult();
+    if (!d->document.writeToFile(d->fileName)) {
+        setError(Unknown);
+        setErrorText(d->document.lastError());
+    }
+    emitResult();
 }
 
 #include "moc_xmlwritejob.cpp"

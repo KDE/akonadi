@@ -29,13 +29,12 @@
 Q_DECLARE_METATYPE(QSet<qint64>)
 Q_DECLARE_METATYPE(Akonadi::SearchQuery)
 
-
 using namespace Akonadi;
 class ItemSearchJobTest : public QObject
 {
     Q_OBJECT
 private:
-    Akonadi::SearchQuery createQuery(const QString &key, const QSet< qint64 >& resultSet)
+    Akonadi::SearchQuery createQuery(const QString &key, const QSet< qint64 > &resultSet)
     {
         Akonadi::SearchQuery query;
         foreach (qint64 id, resultSet) {
@@ -95,8 +94,8 @@ private Q_SLOTS:
         itemSearchJob->setRecursive(true);
         AKVERIFYEXEC(itemSearchJob);
         QSet<qint64> actualResultSet;
-        foreach(const Item &item, itemSearchJob->items()) {
-          actualResultSet << item.id();
+        foreach (const Item &item, itemSearchJob->items()) {
+            actualResultSet << item.id();
         }
 //         qDebug() << actualResultSet << resultSet;
         QCOMPARE(actualResultSet, resultSet);
@@ -104,6 +103,6 @@ private Q_SLOTS:
 
 };
 
-QTEST_AKONADIMAIN( ItemSearchJobTest )
+QTEST_AKONADIMAIN(ItemSearchJobTest)
 
 #include "itemsearchjobtest.moc"

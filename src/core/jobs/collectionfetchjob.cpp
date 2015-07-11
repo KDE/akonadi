@@ -68,9 +68,8 @@ public:
     bool mBasePrefetch;
     Collection::List mPrefetchList;
 
-    void aboutToFinish() Q_DECL_OVERRIDE
-    {
-      timeout();
+    void aboutToFinish() Q_DECL_OVERRIDE {
+        timeout();
     }
 
     void timeout()
@@ -110,18 +109,18 @@ public:
     {
         Q_Q(CollectionFetchJob);
         if (mScope.ignoreRetrievalErrors()) {
-           int error = job->error();
-           if (error && !q->error()) {
-               q->setError(error);
-               q->setErrorText(job->errorText());
-           }
+            int error = job->error();
+            if (error && !q->error()) {
+                q->setError(error);
+                q->setErrorText(job->errorText());
+            }
 
-           if (error == Job::ConnectionFailed ||
-               error == Job::ProtocolVersionMismatch ||
-               error == Job::UserCanceled) {
-               return true;
-           }
-           return false;
+            if (error == Job::ConnectionFailed ||
+                    error == Job::ProtocolVersionMismatch ||
+                    error == Job::UserCanceled) {
+                return true;
+            }
+            return false;
         } else {
             return job->error();
         }

@@ -24,9 +24,11 @@
 
 class QString;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Internal {
+namespace Internal
+{
 
 AKONADICORE_EXPORT int serverProtocolVersion();
 AKONADICORE_EXPORT void setServerProtocolVersion(int version);

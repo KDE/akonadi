@@ -33,10 +33,12 @@
 
 using namespace Akonadi;
 
-class ModelSignalSpy : public QObject {
+class ModelSignalSpy : public QObject
+{
     Q_OBJECT
 public:
-    explicit ModelSignalSpy(QAbstractItemModel &model) {
+    explicit ModelSignalSpy(QAbstractItemModel &model)
+    {
         connect(&model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
         connect(&model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(onRowsRemoved(QModelIndex,int,int)));
         connect(&model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
@@ -51,31 +53,37 @@ public:
     int end;
 
 public Q_SLOTS:
-    void onRowsInserted(QModelIndex p, int s, int e) {
+    void onRowsInserted(QModelIndex p, int s, int e)
+    {
         qDebug() << "rowsInserted( parent =" << p << ", start = " << s << ", end = " << e << ", data = " << p.data().toString() << ")";
         mSignals << QStringLiteral("rowsInserted");
         parent = p;
         start = s;
         end = e;
     }
-    void onRowsRemoved(QModelIndex p, int s, int e) {
+    void onRowsRemoved(QModelIndex p, int s, int e)
+    {
         qDebug() << "rowsRemoved( parent = " << p << ", start = " << s << ", end = " << e << ")";
         mSignals << QStringLiteral("rowsRemoved");
         parent = p;
         start = s;
         end = e;
     }
-    void onRowsMoved(QModelIndex,int,int,QModelIndex,int) {
+    void onRowsMoved(QModelIndex, int, int, QModelIndex, int)
+    {
         mSignals << QStringLiteral("rowsMoved");
     }
-    void onDataChanged(QModelIndex tl, QModelIndex br) {
+    void onDataChanged(QModelIndex tl, QModelIndex br)
+    {
         qDebug() << "dataChanged( topLeft =" << tl << "(" << tl.data().toString() << "), bottomRight =" << br << "(" << br.data().toString() << ") )";
         mSignals << QStringLiteral("dataChanged");
     }
-    void onLayoutChanged() {
+    void onLayoutChanged()
+    {
         mSignals << QStringLiteral("layoutChanged");
     }
-    void onModelReset() {
+    void onModelReset()
+    {
         mSignals << QStringLiteral("modelReset");
     }
 };
@@ -83,15 +91,18 @@ public Q_SLOTS:
 class InspectableETM: public EntityTreeModel
 {
 public:
-  explicit InspectableETM(ChangeRecorder* monitor, QObject* parent = 0)
-  :EntityTreeModel(monitor, parent) {}
-  EntityTreeModelPrivate *etmPrivate() { return d_ptr; }
+    explicit InspectableETM(ChangeRecorder *monitor, QObject *parent = 0)
+        : EntityTreeModel(monitor, parent) {}
+    EntityTreeModelPrivate *etmPrivate()
+    {
+        return d_ptr;
+    }
 };
 
 QModelIndex getIndex(const QString &string, EntityTreeModel *model)
 {
-    QModelIndexList list = model->match( model->index( 0, 0 ), Qt::DisplayRole, string, 1, Qt::MatchRecursive );
-    if ( list.isEmpty() ) {
+    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, string, 1, Qt::MatchRecursive);
+    if (list.isEmpty()) {
         return QModelIndex();
     }
     return list.first();
@@ -118,7 +129,7 @@ Akonadi::Collection createCollection(const QString &name, const Akonadi::Collect
  */
 class EtmPopulationTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
@@ -148,7 +159,7 @@ void EtmPopulationTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
 
-    res = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    res = Collection(collectionIdFromPath(QStringLiteral("res3")));
 
     mainCollectionName = QStringLiteral("main");
     monitorCol = createCollection(mainCollectionName, res);
@@ -184,7 +195,6 @@ void EtmPopulationTest::testMonitoringCollectionsPreset()
     QTRY_VERIFY(!getIndex(mainCollectionName, model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
     QTRY_VERIFY(getIndex(QStringLiteral("col4"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
 }
-
 
 void EtmPopulationTest::testMonitoringCollections()
 {

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "tagselectwidgettest.h"
 #include "../src/widgets/tagselectwidget.h"
 #include "../src/widgets/tageditwidget.h"

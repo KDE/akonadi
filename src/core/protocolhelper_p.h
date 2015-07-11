@@ -41,10 +41,10 @@
 #include <type_traits>
 #include <functional>
 
-namespace Akonadi {
-
-struct ProtocolHelperValuePool
+namespace Akonadi
 {
+
+struct ProtocolHelperValuePool {
     typedef Internal::SharedValuePool<QByteArray, QVector> FlagPool;
     typedef Internal::SharedValuePool<QString, QVector> MimeTypePool;
 
@@ -162,7 +162,6 @@ public:
             throw Exception("No remote identifier specified");
         }
 
-
         // check if we have RIDs or HRIDs
         if (entitySetHasHRID(_objects)) {
             return hierarchicalRidToScope(objects.first());
@@ -172,7 +171,7 @@ public:
     }
 
     static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
-                                                           const Item::List &requestedItems);
+            const Item::List &requestedItems);
 
     /**
       Converts the given object identifier into a protocol representation.
@@ -229,7 +228,7 @@ public:
 private:
     template<typename T, template<typename> class Container>
     inline static
-    typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, bool>::type
+    typename std::enable_if < !std::is_same<T, Akonadi::Collection>::value, bool >::type
     entitySetHasGID(const Container<T> &objects)
     {
         return entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::gid));
@@ -245,7 +244,7 @@ private:
 
     template<typename T, template<typename> class Container>
     inline static
-    typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, Scope>::type
+    typename std::enable_if < !std::is_same<T, Akonadi::Collection>::value, Scope >::type
     entitySetToGID(const Container<T> &objects)
     {
         return entitySetToRemoteIdentifier(Scope::Gid, objects, std::mem_fn(&T::gid));
@@ -267,7 +266,7 @@ private:
         typedef typename RIDFunc::result_type RetType;
         return std::find_if(objects.constBegin(), objects.constEnd(),
                             boost::bind(&RetType::isEmpty, boost::bind(ridFunc, _1)))
-                == objects.constEnd();
+               == objects.constEnd();
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
@@ -296,13 +295,13 @@ private:
 
     template<typename T, template<typename> class Container>
     inline static
-    typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type
+    typename std::enable_if < !std::is_same<T, Tag>::value, bool >::type
     entitySetHasHRID(const Container<T> &objects)
     {
         return objects.size() == 1 &&
-                std::find_if(objects.constBegin(), objects.constEnd(),
-                             !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
-                    == objects.constEnd();  // ### HRID sets are not yet specified
+               std::find_if(objects.constBegin(), objects.constEnd(),
+                            !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
+               == objects.constEnd();  // ### HRID sets are not yet specified
     }
 
     template<typename T, template<typename> class Container>

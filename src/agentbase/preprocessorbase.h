@@ -27,7 +27,8 @@
 #include "collection.h"
 #include "item.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ItemFetchScope;
 
@@ -179,10 +180,10 @@ private:
  * Convenience Macro for the most common main() function for Akonadi preprocessors.
  */
 #define AKONADI_PREPROCESSOR_MAIN( preProcessorClass )                       \
-  int main( int argc, char **argv )                                          \
-  {                                                                          \
-    return Akonadi::PreprocessorBase::init<preProcessorClass>( argc, argv ); \
-  }
+    int main( int argc, char **argv )                                          \
+    {                                                                          \
+        return Akonadi::PreprocessorBase::init<preProcessorClass>( argc, argv ); \
+    }
 #endif //!AKONADI_RESOURCE_MAIN
 
 #endif //!_PREPROCESSORBASE_H_

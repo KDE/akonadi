@@ -26,12 +26,14 @@
 #include "collectionstatistics.h"
 #include "item.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal
  */
-namespace CollectionUtils {
+namespace CollectionUtils
+{
 inline bool isVirtualParent(const Collection &collection)
 {
     return (collection.parentCollection() == Collection::root() && collection.isVirtual());
@@ -86,10 +88,10 @@ inline QString defaultIconName(const Collection &col)
 
     const QStringList content = col.contentMimeTypes();
     if ((content.size() == 1) ||
-        (content.size() == 2 && content.contains(Collection::mimeType()))) {
+            (content.size() == 2 && content.contains(Collection::mimeType()))) {
         if (content.contains(QStringLiteral("text/x-vcard")) ||
-            content.contains(QStringLiteral("text/directory")) ||
-            content.contains(QStringLiteral("text/vcard"))) {
+                content.contains(QStringLiteral("text/directory")) ||
+                content.contains(QStringLiteral("text/vcard"))) {
             return QStringLiteral("x-office-address-book");
         }
         // TODO: add all other content types and/or fix their mimetypes
@@ -108,7 +110,7 @@ inline QString displayIconName(const Collection &col)
 {
     QString iconName = defaultIconName(col);
     if (col.hasAttribute<EntityDisplayAttribute>() &&
-        !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
+            !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
         if (!col.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && col.statistics().unreadCount() > 0) {
             iconName = col.attribute<EntityDisplayAttribute>()->activeIconName();
         } else {

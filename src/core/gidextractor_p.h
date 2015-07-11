@@ -22,7 +22,8 @@
 
 #include <QtCore/QString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Item;
 

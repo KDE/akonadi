@@ -38,60 +38,65 @@ using namespace Akonadi;
 // helper class for dealing with libxml resource management
 template <typename T, void FreeFunc(T)> class XmlPtr
 {
-  public:
-    XmlPtr( const T &t ) : p( t ) {}
+public:
+    XmlPtr(const T &t) : p(t) {}
 
     ~XmlPtr()
     {
-      FreeFunc( p );
+        FreeFunc(p);
     }
 
     operator T() const
     {
-      return p;
+        return p;
     }
 
     operator bool() const
     {
-      return p != 0;
+        return p != 0;
     }
 
-  private:
+private:
     T p;
 };
 
-static QDomElement findElementByRidHelper( const QDomElement &elem, const QString &rid, const QString &elemName )
+static QDomElement findElementByRidHelper(const QDomElement &elem, const QString &rid, const QString &elemName)
 {
-  if ( elem.isNull() )
+    if (elem.isNull()) {
+        return QDomElement();
+    }
+    if (elem.tagName() == elemName && elem.attribute(Format::Attr::remoteId()) == rid) {
+        return elem;
+    }
+    const QDomNodeList children = elem.childNodes();
+    for (int i = 0; i < children.count(); ++i) {
+        const QDomElement child = children.at(i).toElement();
+        if (child.isNull()) {
+            continue;
+        }
+        const QDomElement rv = findElementByRidHelper(child, rid, elemName);
+        if (!rv.isNull()) {
+            return rv;
+        }
+    }
     return QDomElement();
-  if ( elem.tagName() == elemName && elem.attribute( Format::Attr::remoteId() ) == rid )
-    return elem;
-  const QDomNodeList children = elem.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement child = children.at( i ).toElement();
-    if ( child.isNull() )
-      continue;
-    const QDomElement rv = findElementByRidHelper( child, rid, elemName );
-    if ( !rv.isNull() )
-      return rv;
-  }
-  return QDomElement();
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class XmlDocumentPrivate
 {
-  public:
+public:
     XmlDocumentPrivate() :
-      valid( false )
+        valid(false)
     {
-      lastError = i18n( "No data loaded." );
+        lastError = i18n("No data loaded.");
     }
 
-    QDomElement findElementByRid( const QString &rid, const QString &elemName ) const
+    QDomElement findElementByRid(const QString &rid, const QString &elemName) const
     {
-      return findElementByRidHelper( document.documentElement(), rid, elemName );
+        return findElementByRidHelper(document.documentElement(), rid, elemName);
     }
 
     QDomDocument document;
@@ -102,213 +107,220 @@ class XmlDocumentPrivate
 }
 
 XmlDocument::XmlDocument() :
-  d( new XmlDocumentPrivate )
+    d(new XmlDocumentPrivate)
 {
-  const QDomElement rootElem = d->document.createElement( Format::Tag::root() );
-  d->document.appendChild( rootElem );
+    const QDomElement rootElem = d->document.createElement(Format::Tag::root());
+    d->document.appendChild(rootElem);
 }
 
-XmlDocument::XmlDocument(const QString& fileName) :
-  d( new XmlDocumentPrivate )
+XmlDocument::XmlDocument(const QString &fileName) :
+    d(new XmlDocumentPrivate)
 {
-  loadFile( fileName );
+    loadFile(fileName);
 }
 
 XmlDocument::~XmlDocument()
 {
-  delete d;
+    delete d;
 }
 
-bool Akonadi::XmlDocument::loadFile(const QString& fileName)
+bool Akonadi::XmlDocument::loadFile(const QString &fileName)
 {
-  d->valid = false;
-  d->document = QDomDocument();
+    d->valid = false;
+    d->document = QDomDocument();
 
-  if ( fileName.isEmpty() ) {
-    d->lastError = i18n( "No filename specified" );
-    return false;
-  }
-
-  QFile file( fileName );
-  QByteArray data;
-  if ( file.exists() ) {
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-      d->lastError = i18n( "Unable to open data file '%1'.", fileName );
-      return false;
+    if (fileName.isEmpty()) {
+        d->lastError = i18n("No filename specified");
+        return false;
     }
-    data = file.readAll();
-  } else {
-    d->lastError = i18n( "File %1 does not exist.", fileName );
-    return false;
-  }
+
+    QFile file(fileName);
+    QByteArray data;
+    if (file.exists()) {
+        if (!file.open(QIODevice::ReadOnly)) {
+            d->lastError = i18n("Unable to open data file '%1'.", fileName);
+            return false;
+        }
+        data = file.readAll();
+    } else {
+        d->lastError = i18n("File %1 does not exist.", fileName);
+        return false;
+    }
 
 #ifdef HAVE_LIBXML2
-  // schema validation
-  XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
-  if ( !sourceDoc ) {
-    d->lastError = i18n( "Unable to parse data file '%1'.", fileName );
-    return false;
-  }
+    // schema validation
+    XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc(xmlParseMemory(data.constData(), data.length()));
+    if (!sourceDoc) {
+        d->lastError = i18n("Unable to parse data file '%1'.", fileName);
+        return false;
+    }
 
-  const QString &schemaFileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf5/akonadi/akonadi-xml.xsd") );
-  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit().constData(), 0, XML_PARSE_NONET ) );
-  if ( !schemaDoc ) {
-    d->lastError = i18n( "Schema definition could not be loaded and parsed." );
-    return false;
-  }
-  XmlPtr<xmlSchemaParserCtxtPtr, xmlSchemaFreeParserCtxt> parserContext( xmlSchemaNewDocParserCtxt( schemaDoc ) );
-  if ( !parserContext ) {
-    d->lastError = i18n( "Unable to create schema parser context." );
-    return false;
-  }
-  XmlPtr<xmlSchemaPtr, xmlSchemaFree> schema( xmlSchemaParse( parserContext ) );
-  if ( !schema ) {
-    d->lastError = i18n( "Unable to create schema." );
-    return false;
-  }
-  XmlPtr<xmlSchemaValidCtxtPtr, xmlSchemaFreeValidCtxt> validationContext( xmlSchemaNewValidCtxt( schema ) );
-  if ( !validationContext ) {
-    d->lastError = i18n( "Unable to create schema validation context." );
-    return false;
-  }
+    const QString &schemaFileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf5/akonadi/akonadi-xml.xsd"));
+    XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc(xmlReadFile(schemaFileName.toLocal8Bit().constData(), 0, XML_PARSE_NONET));
+    if (!schemaDoc) {
+        d->lastError = i18n("Schema definition could not be loaded and parsed.");
+        return false;
+    }
+    XmlPtr<xmlSchemaParserCtxtPtr, xmlSchemaFreeParserCtxt> parserContext(xmlSchemaNewDocParserCtxt(schemaDoc));
+    if (!parserContext) {
+        d->lastError = i18n("Unable to create schema parser context.");
+        return false;
+    }
+    XmlPtr<xmlSchemaPtr, xmlSchemaFree> schema(xmlSchemaParse(parserContext));
+    if (!schema) {
+        d->lastError = i18n("Unable to create schema.");
+        return false;
+    }
+    XmlPtr<xmlSchemaValidCtxtPtr, xmlSchemaFreeValidCtxt> validationContext(xmlSchemaNewValidCtxt(schema));
+    if (!validationContext) {
+        d->lastError = i18n("Unable to create schema validation context.");
+        return false;
+    }
 
-  if ( xmlSchemaValidateDoc( validationContext, sourceDoc ) != 0 ) {
-    d->lastError = i18n( "Invalid file format." );
-    return false;
-  }
+    if (xmlSchemaValidateDoc(validationContext, sourceDoc) != 0) {
+        d->lastError = i18n("Invalid file format.");
+        return false;
+    }
 #endif
 
-  // DOM loading
-  QString errMsg;
-  if ( !d->document.setContent( data, true, &errMsg ) ) {
-    d->lastError = i18n( "Unable to parse data file: %1", errMsg );
-    return false;
-  }
+    // DOM loading
+    QString errMsg;
+    if (!d->document.setContent(data, true, &errMsg)) {
+        d->lastError = i18n("Unable to parse data file: %1", errMsg);
+        return false;
+    }
 
-  d->valid = true;
-  d->lastError.clear();
-  return true;
+    d->valid = true;
+    d->lastError.clear();
+    return true;
 }
 
-bool XmlDocument::writeToFile(const QString& fileName) const
+bool XmlDocument::writeToFile(const QString &fileName) const
 {
-  QFile f( fileName );
-  if ( !f.open( QFile::WriteOnly ) ) {
-    d->lastError = f.errorString();
-    return false;
-  }
+    QFile f(fileName);
+    if (!f.open(QFile::WriteOnly)) {
+        d->lastError = f.errorString();
+        return false;
+    }
 
-  f.write( d->document.toByteArray( 2 ) );
+    f.write(d->document.toByteArray(2));
 
-  d->lastError.clear();
-  return true;
+    d->lastError.clear();
+    return true;
 }
 
 bool XmlDocument::isValid() const
 {
-  return d->valid;
+    return d->valid;
 }
 
 QString XmlDocument::lastError() const
 {
-  return d->lastError;
+    return d->lastError;
 }
 
-QDomDocument& XmlDocument::document() const
+QDomDocument &XmlDocument::document() const
 {
-  return d->document;
+    return d->document;
 }
 
-QDomElement XmlDocument::collectionElement( const Collection &collection ) const
+QDomElement XmlDocument::collectionElement(const Collection &collection) const
 {
-  if ( collection == Collection::root() )
-    return d->document.documentElement();
-  if ( collection.remoteId().isEmpty() )
+    if (collection == Collection::root()) {
+        return d->document.documentElement();
+    }
+    if (collection.remoteId().isEmpty()) {
+        return QDomElement();
+    }
+    if (collection.parentCollection().remoteId().isEmpty() && collection.parentCollection() != Collection::root()) {
+        return d->findElementByRid(collection.remoteId(), Format::Tag::collection());
+    }
+    QDomElement parent = collectionElement(collection.parentCollection());
+    if (parent.isNull()) {
+        return QDomElement();
+    }
+    const QDomNodeList children = parent.childNodes();
+    for (int i = 0; i < children.count(); ++i) {
+        const QDomElement child = children.at(i).toElement();
+        if (child.isNull()) {
+            continue;
+        }
+        if (child.tagName() == Format::Tag::collection() && child.attribute(Format::Attr::remoteId()) == collection.remoteId()) {
+            return child;
+        }
+    }
     return QDomElement();
-  if ( collection.parentCollection().remoteId().isEmpty() && collection.parentCollection() != Collection::root() )
-    return d->findElementByRid( collection.remoteId(), Format::Tag::collection() );
-  QDomElement parent = collectionElement( collection.parentCollection() );
-  if ( parent.isNull() )
-    return QDomElement();
-  const QDomNodeList children = parent.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement child = children.at( i ).toElement();
-    if ( child.isNull() )
-      continue;
-   if ( child.tagName() == Format::Tag::collection() && child.attribute( Format::Attr::remoteId() ) == collection.remoteId() )
-    return child;
-  }
-  return QDomElement();
 }
 
-QDomElement XmlDocument::itemElementByRemoteId(const QString& rid) const
+QDomElement XmlDocument::itemElementByRemoteId(const QString &rid) const
 {
-  return d->findElementByRid( rid, Format::Tag::item() );
+    return d->findElementByRid(rid, Format::Tag::item());
 }
 
-Collection XmlDocument::collectionByRemoteId(const QString& rid) const
+Collection XmlDocument::collectionByRemoteId(const QString &rid) const
 {
-  const QDomElement elem = d->findElementByRid( rid, Format::Tag::collection() );
-  return XmlReader::elementToCollection( elem );
+    const QDomElement elem = d->findElementByRid(rid, Format::Tag::collection());
+    return XmlReader::elementToCollection(elem);
 }
 
-Item XmlDocument::itemByRemoteId(const QString& rid, bool includePayload) const
+Item XmlDocument::itemByRemoteId(const QString &rid, bool includePayload) const
 {
-  return XmlReader::elementToItem( itemElementByRemoteId( rid ), includePayload );
+    return XmlReader::elementToItem(itemElementByRemoteId(rid), includePayload);
 }
 
 Collection::List XmlDocument::collections() const
 {
-  return XmlReader::readCollections( d->document.documentElement() );
+    return XmlReader::readCollections(d->document.documentElement());
 }
 
 Tag::List XmlDocument::tags() const
 {
-  return XmlReader::readTags( d->document.documentElement() );
+    return XmlReader::readTags(d->document.documentElement());
 }
 
-Collection::List XmlDocument::childCollections( const Collection &parentCollection ) const
+Collection::List XmlDocument::childCollections(const Collection &parentCollection) const
 {
-  QDomElement parentElem = collectionElement( parentCollection );
+    QDomElement parentElem = collectionElement(parentCollection);
 
-  if ( parentElem.isNull() ) {
-    d->lastError = QStringLiteral( "Parent node not found." );
-    return Collection::List();
-  }
+    if (parentElem.isNull()) {
+        d->lastError = QStringLiteral("Parent node not found.");
+        return Collection::List();
+    }
 
-  Collection::List rv;
-  const QDomNodeList children = parentElem.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement childElem = children.at( i ).toElement();
-    if ( childElem.isNull() || childElem.tagName() != Format::Tag::collection() )
-      continue;
-    Collection c = XmlReader::elementToCollection( childElem );
-    c.setParentCollection( parentCollection );
-    rv.append( c );
-  }
+    Collection::List rv;
+    const QDomNodeList children = parentElem.childNodes();
+    for (int i = 0; i < children.count(); ++i) {
+        const QDomElement childElem = children.at(i).toElement();
+        if (childElem.isNull() || childElem.tagName() != Format::Tag::collection()) {
+            continue;
+        }
+        Collection c = XmlReader::elementToCollection(childElem);
+        c.setParentCollection(parentCollection);
+        rv.append(c);
+    }
 
-  return rv;
+    return rv;
 }
 
-
-Item::List XmlDocument::items(const Akonadi::Collection& collection, bool includePayload) const
+Item::List XmlDocument::items(const Akonadi::Collection &collection, bool includePayload) const
 {
-  const QDomElement colElem = collectionElement( collection );
-  if ( colElem.isNull() ) {
-    d->lastError = i18n( "Unable to find collection %1", collection.name() );
-    return Item::List();
-  } else {
-    d->lastError.clear();
-  }
+    const QDomElement colElem = collectionElement(collection);
+    if (colElem.isNull()) {
+        d->lastError = i18n("Unable to find collection %1", collection.name());
+        return Item::List();
+    } else {
+        d->lastError.clear();
+    }
 
-  Item::List items;
-  const QDomNodeList children = colElem.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement itemElem = children.at( i ).toElement();
-    if ( itemElem.isNull() || itemElem.tagName() != Format::Tag::item() )
-      continue;
-    items += XmlReader::elementToItem( itemElem, includePayload );
-  }
+    Item::List items;
+    const QDomNodeList children = colElem.childNodes();
+    for (int i = 0; i < children.count(); ++i) {
+        const QDomElement itemElem = children.at(i).toElement();
+        if (itemElem.isNull() || itemElem.tagName() != Format::Tag::item()) {
+            continue;
+        }
+        items += XmlReader::elementToItem(itemElem, includePayload);
+    }
 
-  return items;
+    return items;
 }

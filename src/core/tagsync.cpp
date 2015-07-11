@@ -16,8 +16,9 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-namespace Akonadi {
-    class Item;
+namespace Akonadi
+{
+class Item;
 }
 
 #include "tagsync.h"
@@ -47,9 +48,9 @@ bool operator==(const Item &left, const Item &right)
 
 TagSync::TagSync(QObject *parent)
     : Job(parent),
-    mDeliveryDone(false),
-    mTagMembersDeliveryDone(false),
-    mLocalTagsFetched(false)
+      mDeliveryDone(false),
+      mTagMembersDeliveryDone(false),
+      mLocalTagsFetched(false)
 {
 
 }
@@ -84,7 +85,7 @@ void TagSync::doStart()
 void TagSync::onLocalTagFetchDone(KJob *job)
 {
     // qDebug();
-    TagFetchJob *fetch = static_cast<TagFetchJob*>(job);
+    TagFetchJob *fetch = static_cast<TagFetchJob *>(job);
     mLocalTags = fetch->tags();
     mLocalTagsFetched = true;
     diffTags();
@@ -155,7 +156,7 @@ void TagSync::onCreateTagDone(KJob *job)
         return;
     }
 
-    Akonadi::Tag tag = static_cast<Akonadi::TagCreateJob*>(job)->tag();
+    Akonadi::Tag tag = static_cast<Akonadi::TagCreateJob *>(job)->tag();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
     Q_FOREACH (Item item, remoteMembers) {
         item.setTag(tag);
@@ -167,7 +168,7 @@ void TagSync::onCreateTagDone(KJob *job)
 
 static bool containsByGidOrRid(const Item::List &items, const Item &key)
 {
-    Q_FOREACH(const Item &item, items) {
+    Q_FOREACH (const Item &item, items) {
         if ((!item.gid().isEmpty() && !key.gid().isEmpty()) && (item.gid() == key.gid())) {
             return true;
         } else if (item.remoteId() == key.remoteId()) {
@@ -184,14 +185,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
         return;
     }
 
-    const Akonadi::Item::List items = static_cast<Akonadi::ItemFetchJob*>(job)->items();
+    const Akonadi::Item::List items = static_cast<Akonadi::ItemFetchJob *>(job)->items();
     const Akonadi::Tag tag = job->property("tag").value<Akonadi::Tag>();
     const bool merge = job->property("merge").toBool();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
 
     //add = remote - local
     Item::List toAdd;
-    Q_FOREACH(const Item &remote, remoteMembers) {
+    Q_FOREACH (const Item &remote, remoteMembers) {
         if (!containsByGidOrRid(items, remote)) {
             toAdd << remote;
         }
@@ -199,7 +200,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
 
     //remove = local - remote
     Item::List toRemove;
-    Q_FOREACH(const Item &local, items) {
+    Q_FOREACH (const Item &local, items) {
         //Skip items that have no remote id yet
         //Trying to them will only result in a conflict
         if (local.remoteId().isEmpty()) {

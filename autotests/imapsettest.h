@@ -24,8 +24,8 @@
 
 class ImapSetTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testAddList_data();
     void testAddList();
 };

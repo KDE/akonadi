@@ -26,7 +26,8 @@
 #include <QWidget>
 
 class QAbstractItemView;
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentInstance;
 class AgentFilterProxyModel;

@@ -24,7 +24,8 @@
 #include "item.h"
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class ItemFetchJobPrivate;
@@ -135,7 +136,6 @@ public:
      * @since 4.8
      */
     explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = Q_NULLPTR);
-
 
     /**
      * Creates a new item fetch job that retrieves all items tagged with specified @p tag.

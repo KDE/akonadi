@@ -29,7 +29,8 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class PartFetcherPrivate
 {

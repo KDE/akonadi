@@ -65,7 +65,7 @@ void AgentFactoryBase::createComponentData(const QString &identifier) const
 
     if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
         s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1(),
-                                                              KComponentData::SkipMainComponentRegistration));
+                                           KComponentData::SkipMainComponentRegistration));
     } else {
         s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1()));
     }

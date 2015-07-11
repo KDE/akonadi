@@ -20,7 +20,8 @@
 #include <QByteArray>
 #include <QIODevice>
 #include <QDataStream>
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Pop3ResourceAttributePrivate
 {

@@ -103,7 +103,7 @@ void CollectionModelPrivate::updateDone(KJob *job)
 }
 
 void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collection,
-                                                         const Akonadi::CollectionStatistics &statistics)
+        const Akonadi::CollectionStatistics &statistics)
 {
     Q_Q(CollectionModel);
 
@@ -340,7 +340,6 @@ QIcon CollectionModelPrivate::iconForCollection(const Collection &col) const
     }
     return icon;
 }
-
 
 void CollectionModelPrivate::startFirstListJob()
 {

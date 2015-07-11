@@ -24,7 +24,8 @@
 #include "changerecorder.h"
 #include "monitor_p.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ChangeRecorder;
 class ChangeNotificationDependenciesFactory;
@@ -43,7 +44,7 @@ public:
     void notificationsErased() Q_DECL_OVERRIDE;
 
     void slotNotify(const Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE;
-    bool emitNotification(const Akonadi::Protocol::ChangeNotification& msg) Q_DECL_OVERRIDE;
+    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE;
 
     QString notificationsFileName() const;
 

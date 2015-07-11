@@ -25,58 +25,59 @@
 
 class FakeSessionPrivate : public SessionPrivate
 {
-  public:
-    FakeSessionPrivate(FakeSession* parent, FakeSession::Mode mode)
-      : SessionPrivate( parent ), q_ptr( parent ), m_mode(mode)
+public:
+    FakeSessionPrivate(FakeSession *parent, FakeSession::Mode mode)
+        : SessionPrivate(parent), q_ptr(parent), m_mode(mode)
     {
-      protocolVersion = clientProtocolVersion();
+        protocolVersion = clientProtocolVersion();
     }
 
     /* reimp */
-    void init( const QByteArray &id ) Q_DECL_OVERRIDE
-    {
-      // trimmed down version of the real SessionPrivate::init(), without any server access
-      if ( !id.isEmpty() ) {
-        sessionId = id;
-      } else {
-        sessionId = QCoreApplication::instance()->applicationName().toUtf8()
-        + '-' + QByteArray::number( qrand() );
-      }
+    void init(const QByteArray &id) Q_DECL_OVERRIDE {
+        // trimmed down version of the real SessionPrivate::init(), without any server access
+        if (!id.isEmpty())
+        {
+            sessionId = id;
+        } else {
+            sessionId = QCoreApplication::instance()->applicationName().toUtf8()
+            + '-' + QByteArray::number(qrand());
+        }
 
-      connected = false;
-      theNextTag = 1;
-      jobRunning = false;
+        connected = false;
+        theNextTag = 1;
+        jobRunning = false;
 
-      reconnect();
+        reconnect();
     }
 
     /* reimp */
-    void reconnect() Q_DECL_OVERRIDE
-    {
-      if ( m_mode == FakeSession::EndJobsImmediately )
-        return;
+    void reconnect() Q_DECL_OVERRIDE {
+        if (m_mode == FakeSession::EndJobsImmediately)
+        {
+            return;
+        }
 
-      emit q_ptr->reconnected();
-      connected = true;
-      startNext();
+        emit q_ptr->reconnected();
+        connected = true;
+        startNext();
     }
 
     /* reimp */
-    void addJob( Job *job ) Q_DECL_OVERRIDE
-    {
-      emit q_ptr->jobAdded( job );
-      // Return immediately so that no actual communication happens with the server and
-      // the started jobs are completed.
-      if ( m_mode == FakeSession::EndJobsImmediately )
-        endJob( job );
-      else
-        SessionPrivate::addJob( job );
+    void addJob(Job *job) Q_DECL_OVERRIDE {
+        emit q_ptr->jobAdded(job);
+        // Return immediately so that no actual communication happens with the server and
+        // the started jobs are completed.
+        if (m_mode == FakeSession::EndJobsImmediately)
+        {
+            endJob(job);
+        } else
+        { SessionPrivate::addJob(job); }
     }
     FakeSession *q_ptr;
     FakeSession::Mode m_mode;
 };
 
-FakeSession::FakeSession(const QByteArray& sessionId, FakeSession::Mode mode, QObject* parent)
+FakeSession::FakeSession(const QByteArray &sessionId, FakeSession::Mode mode, QObject *parent)
     : Session(new FakeSessionPrivate(this, mode), sessionId, parent)
 {
 
@@ -84,5 +85,5 @@ FakeSession::FakeSession(const QByteArray& sessionId, FakeSession::Mode mode, QO
 
 void FakeSession::setAsDefaultSession()
 {
-  d->setDefaultSession(this);
+    d->setDefaultSession(this);
 }

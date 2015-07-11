@@ -24,7 +24,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal

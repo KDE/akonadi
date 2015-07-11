@@ -125,7 +125,7 @@ void PluginLoader::scan()
     const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1Literal("akonadi/plugins/serializer/"), QStandardPaths::LocateDirectory);
     Q_FOREACH (const QString &dir, dirs) {
         const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
-        Q_FOREACH (const QString& file, fileNames) {
+        Q_FOREACH (const QString &file, fileNames) {
             const QString entry = dir + QLatin1Char('/') + file;
             KConfig config(entry, KConfig::SimpleConfig);
             if (config.hasGroup("Misc") && config.hasGroup("Plugin")) {

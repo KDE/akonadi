@@ -110,9 +110,9 @@ QVariant TagModel::data(const QModelIndex &index, int role) const
         if (attr) {
             return QIcon::fromTheme(attr->iconName());
         } else {
-                return QVariant();
-            }
+            return QVariant();
         }
+    }
     }
 
     return QVariant();

@@ -24,7 +24,8 @@
 
 #include "akonadicore_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * Search term represents the actual condition within query.
@@ -287,7 +288,7 @@ public:
         Organizer,
         Summary,
         Location
-      };
+    };
 
     IncidenceSearchTerm(IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
 

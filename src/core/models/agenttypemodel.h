@@ -24,7 +24,8 @@
 
 #include <QtCore/QAbstractItemModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Provides a data model for agent types.

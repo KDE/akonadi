@@ -25,93 +25,99 @@
 #include "collection.h"
 #include "item.h"
 
-
 using namespace Akonadi;
 
-QDomElement XmlWriter::attributeToElement(Attribute* attr, QDomDocument& document)
+QDomElement XmlWriter::attributeToElement(Attribute *attr, QDomDocument &document)
 {
-  if ( document.isNull() )
-    return QDomElement();
+    if (document.isNull()) {
+        return QDomElement();
+    }
 
-  QDomElement top = document.createElement( Format::Tag::attribute() );
-  top.setAttribute( Format::Attr::attributeType(), QString::fromUtf8( attr->type() ) );
-  QDomText attrText = document.createTextNode( QString::fromUtf8( attr->serialized() ) );
-  top.appendChild( attrText );
+    QDomElement top = document.createElement(Format::Tag::attribute());
+    top.setAttribute(Format::Attr::attributeType(), QString::fromUtf8(attr->type()));
+    QDomText attrText = document.createTextNode(QString::fromUtf8(attr->serialized()));
+    top.appendChild(attrText);
 
-  return top;
+    return top;
 }
 
-void XmlWriter::writeAttributes(const Entity& entity, QDomElement& parentElem)
+void XmlWriter::writeAttributes(const Entity &entity, QDomElement &parentElem)
 {
-  if ( parentElem.isNull() )
-    return;
+    if (parentElem.isNull()) {
+        return;
+    }
 
-  QDomDocument doc = parentElem.ownerDocument();
-  foreach ( Attribute *attr, entity.attributes() )
-    parentElem.appendChild( attributeToElement( attr, doc ) );
+    QDomDocument doc = parentElem.ownerDocument();
+    foreach (Attribute *attr, entity.attributes()) {
+        parentElem.appendChild(attributeToElement(attr, doc));
+    }
 }
 
-QDomElement XmlWriter::collectionToElement(const Akonadi::Collection& collection, QDomDocument& document)
+QDomElement XmlWriter::collectionToElement(const Akonadi::Collection &collection, QDomDocument &document)
 {
-  if ( document.isNull() )
-    return QDomElement();
+    if (document.isNull()) {
+        return QDomElement();
+    }
 
-  QDomElement top = document.createElement( Format::Tag::collection() );
-  top.setAttribute( Format::Attr::remoteId(), collection.remoteId() );
-  top.setAttribute( Format::Attr::collectionName(), collection.name() );
-  top.setAttribute( Format::Attr::collectionContentTypes(), collection.contentMimeTypes().join( QStringLiteral(",") ) );
-  writeAttributes( collection, top );
+    QDomElement top = document.createElement(Format::Tag::collection());
+    top.setAttribute(Format::Attr::remoteId(), collection.remoteId());
+    top.setAttribute(Format::Attr::collectionName(), collection.name());
+    top.setAttribute(Format::Attr::collectionContentTypes(), collection.contentMimeTypes().join(QStringLiteral(",")));
+    writeAttributes(collection, top);
 
-  return top;
+    return top;
 }
 
-QDomElement XmlWriter::writeCollection(const Akonadi::Collection& collection, QDomElement& parentElem)
+QDomElement XmlWriter::writeCollection(const Akonadi::Collection &collection, QDomElement &parentElem)
 {
-  if ( parentElem.isNull() )
-    return QDomElement();
+    if (parentElem.isNull()) {
+        return QDomElement();
+    }
 
-  QDomDocument doc = parentElem.ownerDocument();
-  const QDomElement elem = collectionToElement( collection, doc );
-  parentElem.insertBefore( elem, QDomNode() ); // collection need to be before items to pass schema validation
-  return elem;
+    QDomDocument doc = parentElem.ownerDocument();
+    const QDomElement elem = collectionToElement(collection, doc);
+    parentElem.insertBefore(elem, QDomNode());   // collection need to be before items to pass schema validation
+    return elem;
 }
 
-QDomElement XmlWriter::itemToElement(const Akonadi::Item& item, QDomDocument& document)
+QDomElement XmlWriter::itemToElement(const Akonadi::Item &item, QDomDocument &document)
 {
-  if ( document.isNull() )
-    return QDomElement();
+    if (document.isNull()) {
+        return QDomElement();
+    }
 
-  QDomElement top = document.createElement( Format::Tag::item() );
-  top.setAttribute( Format::Attr::remoteId(), item.remoteId() );
-  top.setAttribute( Format::Attr::itemMimeType(), item.mimeType() );
+    QDomElement top = document.createElement(Format::Tag::item());
+    top.setAttribute(Format::Attr::remoteId(), item.remoteId());
+    top.setAttribute(Format::Attr::itemMimeType(), item.mimeType());
 
-  if ( item.hasPayload() ) {
-    QDomElement payloadElem = document.createElement( Format::Tag::payload() );
-    QDomText payloadText = document.createTextNode( QString::fromUtf8( item.payloadData() ) );
-    payloadElem.appendChild( payloadText );
-    top.appendChild( payloadElem );
-  }
+    if (item.hasPayload()) {
+        QDomElement payloadElem = document.createElement(Format::Tag::payload());
+        QDomText payloadText = document.createTextNode(QString::fromUtf8(item.payloadData()));
+        payloadElem.appendChild(payloadText);
+        top.appendChild(payloadElem);
+    }
 
-  writeAttributes( item, top );
+    writeAttributes(item, top);
 
-  foreach ( const Item::Flag &flag, item.flags() ) {
-    QDomElement flagElem = document.createElement( Format::Tag::flag() );
-    QDomText flagText = document.createTextNode( QString::fromUtf8( flag ) );
-    flagElem.appendChild( flagText );
-    top.appendChild( flagElem );
-  }
+    foreach (const Item::Flag &flag, item.flags()) {
+        QDomElement flagElem = document.createElement(Format::Tag::flag());
+        QDomText flagText = document.createTextNode(QString::fromUtf8(flag));
+        flagElem.appendChild(flagText);
+        top.appendChild(flagElem);
+    }
 
-  return top;
+    return top;
 }
 
-QDomElement XmlWriter::writeItem(const Item& item, QDomElement& parentElem)
+QDomElement XmlWriter::writeItem(const Item &item, QDomElement &parentElem)
 {
-  if ( parentElem.isNull() )
-    return QDomElement();
+    if (parentElem.isNull()) {
+        return QDomElement();
+    }
 
-  QDomDocument doc = parentElem.ownerDocument();
-  const QDomElement elem = itemToElement( item, doc );
-  parentElem.appendChild( elem );
-  return elem;
+    QDomDocument doc = parentElem.ownerDocument();
+    const QDomElement elem = itemToElement(item, doc);
+    parentElem.appendChild(elem);
+    return elem;
 }
 

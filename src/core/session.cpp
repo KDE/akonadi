@@ -54,7 +54,6 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-
 void SessionPrivate::startNext()
 {
     QTimer::singleShot(0, mParent, SLOT(doStartNext()));
@@ -243,7 +242,6 @@ void SessionPrivate::dataReceived()
             return;
         }
 
-
         if (logFile) {
             logFile->write("S: " + cmd.debugString().toUtf8());
             logFile->write("\n\n");
@@ -314,16 +312,16 @@ void SessionPrivate::startJob(Job *job)
         job->setError(Job::ProtocolVersionMismatch);
         if (protocolVersion < SessionPrivate::clientProtocolVersion()) {
             job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
-                                    "If you updated your system recently please restart the Akonadi server.",
-                                    protocolVersion, clientProtocolVersion()));
+                                   "If you updated your system recently please restart the Akonadi server.",
+                                   protocolVersion, clientProtocolVersion()));
             qWarning() << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << clientProtocolVersion() << "). "
-                            "If you updated your system recently please restart the Akonadi server.";
+                       "If you updated your system recently please restart the Akonadi server.";
         } else {
             job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
-                                    "If you updated your system recently please restart all KDE PIM applications.",
-                                    protocolVersion, clientProtocolVersion()));
+                                   "If you updated your system recently please restart all KDE PIM applications.",
+                                   protocolVersion, clientProtocolVersion()));
             qWarning() << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << clientProtocolVersion() << "). "
-                            "If you updated your system recently please restart all KDE PIM applications.";
+                       "If you updated your system recently please restart all KDE PIM applications.";
         }
         job->emitResult();
     } else {

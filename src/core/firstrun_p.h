@@ -29,7 +29,8 @@ class KJob;
 class KProcess;
 struct QMetaObject;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  Takes care of setting up default resource agents when running Akonadi for the first time.

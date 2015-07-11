@@ -211,23 +211,23 @@ void TagTest::testDelete()
 
     Tag tag1;
     {
-      tag1.setGid("tag1");
-      TagCreateJob *createjob = new TagCreateJob(tag1, this);
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      tag1 = createjob->tag();
+        tag1.setGid("tag1");
+        TagCreateJob *createjob = new TagCreateJob(tag1, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        tag1 = createjob->tag();
     }
     Tag tag2;
     {
-      tag2.setGid("tag2");
-      TagCreateJob *createjob = new TagCreateJob(tag2, this);
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      tag2 = createjob->tag();
+        tag2.setGid("tag2");
+        TagCreateJob *createjob = new TagCreateJob(tag2, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        tag2 = createjob->tag();
     }
     {
-      TagDeleteJob *deleteJob = new TagDeleteJob(tag1, this);
-      AKVERIFYEXEC(deleteJob);
+        TagDeleteJob *deleteJob = new TagDeleteJob(tag1, this);
+        AKVERIFYEXEC(deleteJob);
     }
 
     {
@@ -237,8 +237,8 @@ void TagTest::testDelete()
         QCOMPARE(fetchJob->tags().first().gid(), tag2.gid());
     }
     {
-      TagDeleteJob *deleteJob = new TagDeleteJob(tag2, this);
-      AKVERIFYEXEC(deleteJob);
+        TagDeleteJob *deleteJob = new TagDeleteJob(tag2, this);
+        AKVERIFYEXEC(deleteJob);
     }
 
     // Collect Remove notification, so that they don't interfere with testDeleteRIDIsolation
@@ -301,16 +301,15 @@ void TagTest::testDeleteRIDIsolation()
     }
 }
 
-
 void TagTest::testModify()
 {
     Tag tag;
     {
-      tag.setGid("gid");
-      TagCreateJob *createjob = new TagCreateJob(tag, this);
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      tag = createjob->tag();
+        tag.setGid("gid");
+        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        tag = createjob->tag();
     }
 
     //We can add an attribute
@@ -392,20 +391,20 @@ void TagTest::testCreateMerge()
 {
     Tag tag;
     {
-      tag.setGid("gid");
-      TagCreateJob *createjob = new TagCreateJob(tag, this);
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      tag = createjob->tag();
+        tag.setGid("gid");
+        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        tag = createjob->tag();
     }
     {
-      Tag tag2;
-      tag2.setGid("gid");
-      TagCreateJob *createjob = new TagCreateJob(tag2, this);
-      createjob->setMergeIfExisting( true );
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      QCOMPARE(createjob->tag().id(), tag.id());
+        Tag tag2;
+        tag2.setGid("gid");
+        TagCreateJob *createjob = new TagCreateJob(tag2, this);
+        createjob->setMergeIfExisting(true);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        QCOMPARE(createjob->tag().id(), tag.id());
     }
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
@@ -416,51 +415,51 @@ void TagTest::testAttributes()
 {
     Tag tag;
     {
-      tag.setGid("gid2");
-      TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-      attr->setDisplayName(QStringLiteral("name"));
-      attr->setInToolbar(true);
-      tag.addAttribute(attr);
-      TagCreateJob *createjob = new TagCreateJob(tag, this);
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      tag = createjob->tag();
+        tag.setGid("gid2");
+        TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+        attr->setDisplayName(QStringLiteral("name"));
+        attr->setInToolbar(true);
+        tag.addAttribute(attr);
+        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        tag = createjob->tag();
 
-      {
-          TagFetchJob *fetchJob = new TagFetchJob(createjob->tag(), this);
-          fetchJob->fetchScope().fetchAttribute<TagAttribute>();
-          AKVERIFYEXEC(fetchJob);
-          QCOMPARE(fetchJob->tags().size(), 1);
-          QVERIFY(fetchJob->tags().first().hasAttribute<TagAttribute>());
-          //we need to clone because the returned attribute is just a reference and destroyed on the next line
-          //FIXME we should find a better solution for this (like returning a smart pointer or value object)
-          QScopedPointer<TagAttribute> tagAttr(fetchJob->tags().first().attribute<TagAttribute>()->clone());
-          QVERIFY(tagAttr);
-          QCOMPARE(tagAttr->displayName(), QStringLiteral("name"));
-          QCOMPARE(tagAttr->inToolbar(), true);
-      }
+        {
+            TagFetchJob *fetchJob = new TagFetchJob(createjob->tag(), this);
+            fetchJob->fetchScope().fetchAttribute<TagAttribute>();
+            AKVERIFYEXEC(fetchJob);
+            QCOMPARE(fetchJob->tags().size(), 1);
+            QVERIFY(fetchJob->tags().first().hasAttribute<TagAttribute>());
+            //we need to clone because the returned attribute is just a reference and destroyed on the next line
+            //FIXME we should find a better solution for this (like returning a smart pointer or value object)
+            QScopedPointer<TagAttribute> tagAttr(fetchJob->tags().first().attribute<TagAttribute>()->clone());
+            QVERIFY(tagAttr);
+            QCOMPARE(tagAttr->displayName(), QStringLiteral("name"));
+            QCOMPARE(tagAttr->inToolbar(), true);
+        }
     }
     //Try fetching multiple items
     Tag tag2;
     {
-      tag2.setGid("gid22");
-      TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-      attr->setDisplayName(QStringLiteral("name2"));
-      attr->setInToolbar(true);
-      tag2.addAttribute(attr);
-      TagCreateJob *createjob = new TagCreateJob(tag2, this);
-      AKVERIFYEXEC(createjob);
-      QVERIFY(createjob->tag().isValid());
-      tag2 = createjob->tag();
+        tag2.setGid("gid22");
+        TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+        attr->setDisplayName(QStringLiteral("name2"));
+        attr->setInToolbar(true);
+        tag2.addAttribute(attr);
+        TagCreateJob *createjob = new TagCreateJob(tag2, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        tag2 = createjob->tag();
 
-      {
-          TagFetchJob *fetchJob = new TagFetchJob(Tag::List() << tag << tag2, this);
-          fetchJob->fetchScope().fetchAttribute<TagAttribute>();
-          AKVERIFYEXEC(fetchJob);
-          QCOMPARE(fetchJob->tags().size(), 2);
-          QVERIFY(fetchJob->tags().at(0).hasAttribute<TagAttribute>());
-          QVERIFY(fetchJob->tags().at(1).hasAttribute<TagAttribute>());
-      }
+        {
+            TagFetchJob *fetchJob = new TagFetchJob(Tag::List() << tag << tag2, this);
+            fetchJob->fetchScope().fetchAttribute<TagAttribute>();
+            AKVERIFYEXEC(fetchJob);
+            QCOMPARE(fetchJob->tags().size(), 2);
+            QVERIFY(fetchJob->tags().at(0).hasAttribute<TagAttribute>());
+            QVERIFY(fetchJob->tags().at(1).hasAttribute<TagAttribute>());
+        }
     }
 
     TagDeleteJob *deleteJob = new TagDeleteJob(Tag::List() << tag << tag2, this);
@@ -472,7 +471,7 @@ void TagTest::testTagItem()
     Akonadi::Monitor monitor;
     monitor.itemFetchScope().setFetchTags(true);
     monitor.setAllMonitored(true);
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -482,7 +481,7 @@ void TagTest::testTagItem()
 
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -514,7 +513,7 @@ void TagTest::testCreateItem()
     // Akonadi::Monitor monitor;
     // monitor.itemFetchScope().setFetchTags(true);
     // monitor.setAllMonitored(true);
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -534,7 +533,6 @@ void TagTest::testCreateItem()
         item1 = append->item();
     }
 
-
     // QTRY_VERIFY(tagsSpy.count() >= 1);
     // QTest::qWait(10);
     // kDebug() << tagsSpy.count();
@@ -552,7 +550,7 @@ void TagTest::testCreateItem()
 
 void TagTest::testFetchTagIdWithItem()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -562,7 +560,7 @@ void TagTest::testFetchTagIdWithItem()
 
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         item1.setTag(tag);
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
@@ -584,7 +582,7 @@ void TagTest::testFetchTagIdWithItem()
 
 void TagTest::testFetchFullTagWithItem()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -594,7 +592,7 @@ void TagTest::testFetchFullTagWithItem()
 
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -620,7 +618,7 @@ void TagTest::testFetchFullTagWithItem()
 
 void TagTest::testModifyItemWithTagByGID()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     {
         Tag tag;
         tag.setGid("gid2");
@@ -630,7 +628,7 @@ void TagTest::testModifyItemWithTagByGID()
 
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -648,7 +646,6 @@ void TagTest::testModifyItemWithTagByGID()
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
 
-
     TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), this);
     AKVERIFYEXEC(deleteJob);
 }
@@ -660,7 +657,7 @@ void TagTest::testModifyItemWithTagByRID()
         AKVERIFYEXEC(select);
     }
 
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag3;
     {
         tag3.setGid("gid3");
@@ -672,7 +669,7 @@ void TagTest::testModifyItemWithTagByRID()
 
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -708,53 +705,53 @@ void TagTest::testModifyItemWithTagByRID()
 
 void TagTest::testMonitor()
 {
-  Akonadi::Monitor monitor;
-  monitor.setTypeMonitored(Akonadi::Monitor::Tags);
-  monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    Akonadi::Monitor monitor;
+    monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+    monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
 
-  Akonadi::Tag createdTag;
-  {
-    QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
-    QVERIFY(addedSpy.isValid());
-    Tag tag;
-    tag.setGid("gid2");
-    tag.setName(QStringLiteral("name2"));
-    tag.setType("type2");
-    TagCreateJob *createjob = new TagCreateJob(tag, this);
-    AKVERIFYEXEC(createjob);
-    createdTag = createjob->tag();
-    //We usually pick up signals from the previous tests as well (due to server-side notification caching)
-    QTRY_VERIFY(addedSpy.count() >= 1);
-    QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
-    QVERIFY(addedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
-  }
+    Akonadi::Tag createdTag;
+    {
+        QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
+        QVERIFY(addedSpy.isValid());
+        Tag tag;
+        tag.setGid("gid2");
+        tag.setName(QStringLiteral("name2"));
+        tag.setType("type2");
+        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+        createdTag = createjob->tag();
+        //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+        QTRY_VERIFY(addedSpy.count() >= 1);
+        QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+        QVERIFY(addedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
+    }
 
-  {
-    QSignalSpy modifedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
-    QVERIFY(modifedSpy.isValid());
-    createdTag.setName(QStringLiteral("name3"));
+    {
+        QSignalSpy modifedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
+        QVERIFY(modifedSpy.isValid());
+        createdTag.setName(QStringLiteral("name3"));
 
-    TagModifyJob *modJob = new TagModifyJob(createdTag, this);
-    AKVERIFYEXEC(modJob);
-    //We usually pick up signals from the previous tests as well (due to server-side notification caching)
-    QTRY_VERIFY(modifedSpy.count() >= 1);
-    QTRY_COMPARE(modifedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
-    QVERIFY(modifedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
-  }
+        TagModifyJob *modJob = new TagModifyJob(createdTag, this);
+        AKVERIFYEXEC(modJob);
+        //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+        QTRY_VERIFY(modifedSpy.count() >= 1);
+        QTRY_COMPARE(modifedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+        QVERIFY(modifedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
+    }
 
-  {
-    QSignalSpy removedSpy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
-    QVERIFY(removedSpy.isValid());
-    TagDeleteJob *deletejob = new TagDeleteJob(createdTag, this);
-    AKVERIFYEXEC(deletejob);
-    QTRY_VERIFY(removedSpy.count() >= 1);
-    QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
-  }
+    {
+        QSignalSpy removedSpy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+        QVERIFY(removedSpy.isValid());
+        TagDeleteJob *deletejob = new TagDeleteJob(createdTag, this);
+        AKVERIFYEXEC(deletejob);
+        QTRY_VERIFY(removedSpy.count() >= 1);
+        QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+    }
 }
 
 void TagTest::testFetchItemsByTag()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -764,7 +761,7 @@ void TagTest::testFetchItemsByTag()
 
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();

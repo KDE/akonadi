@@ -22,7 +22,8 @@
 
 #include <QMainWindow>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class EntityTreeModel;
 }
 

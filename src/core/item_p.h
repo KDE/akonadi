@@ -33,12 +33,15 @@
 #include <cassert>
 #include <vector>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace _detail {
+namespace _detail
+{
 
 template <typename T>
-class clone_ptr {
+class clone_ptr
+{
     T *t;
 public:
     clone_ptr()
@@ -96,8 +99,7 @@ public:
     }
 
 private:
-    struct _save_bool
-    {
+    struct _save_bool {
         void f()
         {
         };
@@ -117,7 +119,8 @@ inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs)
 }
 
 template <typename T, size_t N>
-class VarLengthArray {
+class VarLengthArray
+{
     QVarLengthArray<T, N> impl; // ###should be replaced by self-written container that doesn't waste so much space
 public:
     typedef T value_type;
@@ -220,15 +223,13 @@ public:
     }
 };
 
-struct TypedPayload
-{
+struct TypedPayload {
     clone_ptr<PayloadBase> payload;
     int sharedPointerId;
     int metaTypeId;
 };
 
-struct BySharedPointerAndMetaTypeID : std::unary_function<TypedPayload, bool>
-{
+struct BySharedPointerAndMetaTypeID : std::unary_function<TypedPayload, bool> {
     const int spid;
     const int mtid;
     BySharedPointerAndMetaTypeID(int spid, int mtid)
@@ -247,7 +248,8 @@ struct BySharedPointerAndMetaTypeID : std::unary_function<TypedPayload, bool>
 
 } // namespace Akonadi
 
-namespace std {
+namespace std
+{
 template <>
 inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs, Akonadi::_detail::TypedPayload &rhs)
 {
@@ -257,7 +259,8 @@ inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload 
 }
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 //typedef _detail::VarLengthArray<_detail::TypedPayload,2> PayloadContainer;
 typedef std::vector<_detail::TypedPayload> PayloadContainer;
 }
@@ -268,7 +271,8 @@ class QForeachContainer<Akonadi::PayloadContainer>
 {
 };
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal
@@ -317,8 +321,7 @@ public:
     {
     }
 
-    void resetChangeLog() Q_DECL_OVERRIDE
-    {
+    void resetChangeLog() Q_DECL_OVERRIDE {
         mFlagsOverwritten = false;
         mAddedFlags.clear();
         mDeletedFlags.clear();
@@ -358,8 +361,8 @@ public:
         mPayloads.resize(oldSize + numMatching);
         using namespace std; // for swap()
         for (PayloadContainer::iterator
-             dst = mPayloads.begin() + oldSize,
-             src = oPayloads.begin(), end = oPayloads.end() ; src != end ; ++src) {
+                dst = mPayloads.begin() + oldSize,
+                src = oPayloads.begin(), end = oPayloads.end() ; src != end ; ++src) {
             if (matcher(*src)) {
                 swap(*dst, *src);
                 ++dst;

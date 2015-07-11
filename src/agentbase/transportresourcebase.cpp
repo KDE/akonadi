@@ -36,7 +36,7 @@ TransportResourceBasePrivate::TransportResourceBasePrivate(TransportResourceBase
 {
     new Akonadi__TransportAdaptor(this);
     KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Transport"),
-                                                          this, QDBusConnection::ExportAdaptors);
+            this, QDBusConnection::ExportAdaptors);
 }
 
 void TransportResourceBasePrivate::send(Item::Id id)

@@ -68,8 +68,9 @@ Firstrun::Firstrun(QObject *parent)
 
 Firstrun::~Firstrun()
 {
-    if (qApp)
-       KDBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
+    if (qApp) {
+        KDBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
+    }
     delete mConfig;
     qDebug() << "done";
 }
@@ -155,8 +156,8 @@ void Firstrun::instanceCreated(KJob *job)
     const KConfigGroup settings = KConfigGroup(mCurrentDefault, "Settings");
 
     QDBusInterface *iface = new QDBusInterface(QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
-                                               QLatin1String("/Settings"), QString(),
-                                               KDBusConnectionPool::threadConnection(), this);
+            QLatin1String("/Settings"), QString(),
+            KDBusConnectionPool::threadConnection(), this);
     if (!iface->isValid()) {
         qCritical() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
         setupNext();

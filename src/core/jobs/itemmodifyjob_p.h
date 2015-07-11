@@ -23,9 +23,11 @@
 #include "akonadicore_export.h"
 #include "job_p.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Protocol {
+namespace Protocol
+{
 class PartMetaData;
 class Command;
 }

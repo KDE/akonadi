@@ -25,7 +25,8 @@
 
 #include <QtCore/QAbstractItemModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionModelPrivate;
 
@@ -126,7 +127,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void collectionChanged(const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void updateDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void collectionStatisticsChanged(Akonadi::Collection::Id,
-                                                              const Akonadi::CollectionStatistics &))
+                   const Akonadi::CollectionStatistics &))
     Q_PRIVATE_SLOT(d_func(), void listDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void editDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void dropResult(KJob *))

@@ -26,7 +26,8 @@
 
 #include <QSortFilterProxyModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class EntityMimeTypeFilterModelPrivate;
 

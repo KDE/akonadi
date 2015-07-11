@@ -37,7 +37,7 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
 {
     new Akonadi__SearchAdaptor(this);
     KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Search"),
-                                                          this, QDBusConnection::ExportAdaptors);
+            this, QDBusConnection::ExportAdaptors);
 
     QTimer::singleShot(0, this, SLOT(delayedInit()));
 }
@@ -62,8 +62,8 @@ void AgentSearchInterfacePrivate::removeSearch(quint64 resultCollectionId)
 }
 
 void AgentSearchInterfacePrivate::search(const QByteArray &searchId,
-                                         const QString &query,
-                                         quint64 collectionId)
+        const QString &query,
+        quint64 collectionId)
 {
     mSearchId = searchId;
     mCollectionId = collectionId;

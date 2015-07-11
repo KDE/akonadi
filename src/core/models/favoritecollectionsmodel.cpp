@@ -337,8 +337,8 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel(const Collection &colle
 QVariant Akonadi::FavoriteCollectionsModel::data(const QModelIndex &index, int role) const
 {
     if (index.column() == 0 &&
-        (role == Qt::DisplayRole ||
-         role == Qt::EditRole)) {
+            (role == Qt::DisplayRole ||
+             role == Qt::EditRole)) {
         const QModelIndex sourceIndex = mapToSource(index);
         const Collection::Id collectionId = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionIdRole).toLongLong();
 
@@ -351,7 +351,7 @@ QVariant Akonadi::FavoriteCollectionsModel::data(const QModelIndex &index, int r
 bool FavoriteCollectionsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && index.column() == 0 &&
-        role == Qt::EditRole) {
+            role == Qt::EditRole) {
         const QString newLabel = value.toString();
         if (newLabel.isEmpty()) {
             return false;
@@ -375,8 +375,8 @@ QString Akonadi::FavoriteCollectionsModel::favoriteLabel(const Akonadi::Collecti
 QVariant FavoriteCollectionsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (section == 0 &&
-        orientation == Qt::Horizontal &&
-        role == Qt::DisplayRole) {
+            orientation == Qt::Horizontal &&
+            role == Qt::DisplayRole) {
         return i18n("Favorite Folders");
     } else {
         return KSelectionProxyModel::headerData(section, orientation, role);
@@ -405,7 +405,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
                 const Item item = Item::fromUrl(url);
                 if (item.isValid()) {
                     if (item.parentCollection().id() == destCollection.id() &&
-                        action != Qt::CopyAction) {
+                            action != Qt::CopyAction) {
                         qDebug() << "Error: source and destination of move are the same.";
                         return false;
                     }

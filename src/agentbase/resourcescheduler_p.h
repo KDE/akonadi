@@ -29,7 +29,8 @@
 #include <QtCore/QStringList>
 #include <QtDBus/QDBusMessage>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class RecursiveMover;
 
@@ -66,7 +67,8 @@ public:
         Custom
     };
 
-    class Task {
+    class Task
+    {
         static qint64 latestSerial;
 
     public:

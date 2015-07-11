@@ -30,9 +30,10 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
-namespace Internal {
-
+namespace Akonadi
+{
+namespace Internal
+{
 
 class StaticControl : public Control
 {
@@ -108,7 +109,7 @@ void Control::Private::serverStateChanged(ServerManager::State state)
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
         if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
-            (mStopping && state == ServerManager::Stopping)) {
+                (mStopping && state == ServerManager::Stopping)) {
             return;
         }
         mEventLoop->quit();

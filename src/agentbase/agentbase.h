@@ -35,7 +35,8 @@
 class Akonadi__ControlAdaptor;
 class Akonadi__StatusAdaptor;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentBasePrivate;
 class ChangeRecorder;
@@ -805,10 +806,10 @@ private:
  * Convenience Macro for the most common main() function for Akonadi agents.
  */
 #define AKONADI_AGENT_MAIN( agentClass )                       \
-  int main( int argc, char **argv )                            \
-  {                                                            \
-    return Akonadi::AgentBase::init<agentClass>( argc, argv ); \
-  }
+    int main( int argc, char **argv )                            \
+    {                                                            \
+        return Akonadi::AgentBase::init<agentClass>( argc, argv ); \
+    }
 #endif
 
 #endif

@@ -57,17 +57,16 @@ using namespace Akonadi;
 
 static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStrategy strategy)
 {
-    switch(strategy) {
-        case EntityTreeModel::FetchFirstLevelChildCollections:
-            return CollectionFetchJob::FirstLevel;
-        case EntityTreeModel::InvisibleCollectionFetch:
-        case EntityTreeModel::FetchCollectionsRecursive:
-        default:
-            break;
+    switch (strategy) {
+    case EntityTreeModel::FetchFirstLevelChildCollections:
+        return CollectionFetchJob::FirstLevel;
+    case EntityTreeModel::InvisibleCollectionFetch:
+    case EntityTreeModel::FetchCollectionsRecursive:
+    default:
+        break;
     }
     return CollectionFetchJob::Recursive;
 }
-
 
 EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     : q_ptr(parent)
@@ -225,7 +224,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
 
         // If collections are not in the model, there will be no valid index for them.
         if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
+                (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
             // We need to invoke this delayed because we would otherwise be emitting a sequence like
             // - beginInsertRows
             // - dataChanged
@@ -248,7 +247,7 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
 
     job->fetchScope().setListFilter(m_listFilter);
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
-    m_pendingCollectionFetchJobs.insert(static_cast<KJob*>(job));
+    m_pendingCollectionFetchJobs.insert(static_cast<KJob *>(job));
 
     if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
@@ -257,10 +256,10 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                    q, SLOT(collectionsFetched(Akonadi::Collection::List)));
+                   q, SLOT(collectionsFetched(Akonadi::Collection::List)));
     }
     q->connect(job, SIGNAL(result(KJob*)),
-                q, SLOT(collectionFetchJobDone(KJob*)));
+               q, SLOT(collectionFetchJobDone(KJob*)));
 
     qCDebug(DebugETM) << "collection:" << job->collections(); jobTimeTracker[job].start();
 }
@@ -278,7 +277,8 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
 }
 
 // Specialization needs to be in the same namespace as the definition
-namespace Akonadi {
+namespace Akonadi
+{
 
 template<>
 bool EntityTreeModelPrivate::isHidden<Akonadi::Collection>(const Akonadi::Collection &entity) const
@@ -301,7 +301,7 @@ bool EntityTreeModelPrivate::isHidden(const Entity &entity, Node::Type type) con
     }
 
     if (type == Node::Collection &&
-        entity.id() == m_rootCollection.id()) {
+            entity.id() == m_rootCollection.id()) {
         return false;
     }
 
@@ -514,7 +514,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
         }
 
         if ((m_mimeChecker.wantedMimeTypes().isEmpty() ||
-             m_mimeChecker.isWantedItem(item))) {
+                m_mimeChecker.isWantedItem(item))) {
             // When listing virtual collections we might get results for items which are already in
             // the model if their concrete collection has already been listed.
             // In that case the collectionId should be different though.
@@ -544,8 +544,8 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 
     if (itemsToInsert.size() > 0) {
         const Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id()
-                                   : m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ? m_rootCollection.id()
-                                   : collectionId;
+                                     : m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ? m_rootCollection.id()
+                                     : collectionId;
         const int startRow = m_childEntities.value(colId).size();
 
         Q_ASSERT(m_collections.contains(colId));
@@ -663,7 +663,6 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     // about the top-level one. The rest will be found auotmatically by the view.
     q->beginInsertRows(parent, row, row);
 
-
     Collection::List::const_iterator it = ancestors.constBegin();
     const Collection::List::const_iterator end = ancestors.constEnd();
 
@@ -777,7 +776,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
     // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
     // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
     if (!m_mimeChecker.wantedMimeTypes().isEmpty() &&
-        !m_mimeChecker.isWantedCollection(collection)) {
+            !m_mimeChecker.isWantedCollection(collection)) {
         return false;
     }
 
@@ -819,7 +818,7 @@ void EntityTreeModelPrivate::monitoredCollectionAdded(const Akonadi::Collection 
 
     //If the resource is explicitly monitored all other checks are skipped. topLevelCollectionsFetched still checks the hidden attribute.
     if (m_monitor->resourcesMonitored().contains(collection.resource().toUtf8()) &&
-        collection.parentCollection() == Collection::root()) {
+            collection.parentCollection() == Collection::root()) {
         return topLevelCollectionsFetched(Collection::List() << collection);
     }
 
@@ -849,7 +848,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved(const Akonadi::Collectio
 {
     //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case)
     if ((collection == m_rootCollection) ||
-        m_monitor->collectionsMonitored().contains(collection)) {
+            m_monitor->collectionsMonitored().contains(collection)) {
         beginResetModel();
         endResetModel();
         return;
@@ -938,8 +937,8 @@ QStringList EntityTreeModelPrivate::childCollectionNames(const Collection &colle
 }
 
 void EntityTreeModelPrivate::monitoredCollectionMoved(const Akonadi::Collection &collection,
-                                                      const Akonadi::Collection &sourceCollection,
-                                                      const Akonadi::Collection &destCollection)
+        const Akonadi::Collection &sourceCollection,
+        const Akonadi::Collection &destCollection)
 {
     if (isHidden(collection)) {
         return;
@@ -1015,7 +1014,7 @@ void EntityTreeModelPrivate::monitoredCollectionChanged(const Akonadi::Collectio
     m_collections[collection.id()] = collection;
 
     if (!m_showRootCollection &&
-        collection == m_rootCollection) {
+            collection == m_rootCollection) {
         // If the root of the model is not Collection::root it might be modified.
         // But it doesn't exist in the accessible model structure, so we need to early return
         return;
@@ -1027,7 +1026,7 @@ void EntityTreeModelPrivate::monitoredCollectionChanged(const Akonadi::Collectio
 }
 
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged(Akonadi::Collection::Id id,
-                                                                  const Akonadi::CollectionStatistics &statistics)
+        const Akonadi::CollectionStatistics &statistics)
 {
     if (!m_collections.contains(id)) {
         return;
@@ -1044,7 +1043,7 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged(Akonadi::Colle
     }
 
     if (!m_showRootCollection &&
-        id == m_rootCollection.id()) {
+            id == m_rootCollection.id()) {
         // If the root of the model is not Collection::root it might be modified.
         // But it doesn't exist in the accessible model structure, so we need to early return
         return;
@@ -1063,7 +1062,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
     }
 
     if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch &&
-        !m_collections.contains(collection.id())) {
+            !m_collections.contains(collection.id())) {
         qWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
         return;
     }
@@ -1075,7 +1074,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
     Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collection.id()) : true);
 
     if (!m_mimeChecker.wantedMimeTypes().isEmpty() &&
-        !m_mimeChecker.isWantedItem(item)) {
+            !m_mimeChecker.isWantedItem(item)) {
         return;
     }
 
@@ -1176,8 +1175,8 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
 }
 
 void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
-                                                const Akonadi::Collection &sourceCollection,
-                                                const Akonadi::Collection &destCollection)
+        const Akonadi::Collection &sourceCollection,
+        const Akonadi::Collection &destCollection)
 {
 
     if (isHidden(item)) {
@@ -1256,7 +1255,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
     Q_ASSERT(m_collections.contains(collectionId));
 
     if (!m_mimeChecker.wantedMimeTypes().isEmpty() &&
-        !m_mimeChecker.isWantedItem(item)) {
+            !m_mimeChecker.isWantedItem(item)) {
         return;
     }
 
@@ -1300,11 +1299,11 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
     Q_ASSERT(m_collections.contains(collection.id()));
 
-    const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
-    if ( row < 0 || row >= m_childEntities[ collection.id() ].size() ) {
-       qWarning() << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
-       Q_ASSERT(false);
-       return;
+    const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
+    if (row < 0 || row >= m_childEntities[ collection.id() ].size()) {
+        qWarning() << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
+        Q_ASSERT(false);
+        return;
     }
 
     const QModelIndex parentIndex = indexForCollection(m_collections.value(collection.id()));
@@ -1367,8 +1366,8 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
 
     // If collections are not in the model, there will be no valid index for them.
     if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-        (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) &&
-        !(!m_showRootCollection && collectionId == m_rootCollection.id())) {
+            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) &&
+            !(!m_showRootCollection && collectionId == m_rootCollection.id())) {
         const QModelIndex index = indexForCollection(Collection(collectionId));
         Q_ASSERT(index.isValid());
         //To notify about the changed fetch and population state
@@ -1493,8 +1492,8 @@ void EntityTreeModelPrivate::startFirstListJob()
     // Only fetch items NOT if there is NoItemPopulation, or if there is Lazypopulation and the root is visible
     // (if the root is not visible the lazy population can not be triggered)
     if ((m_itemPopulation != EntityTreeModel::NoItemPopulation) &&
-        !((m_itemPopulation == EntityTreeModel::LazyPopulation) &&
-          m_showRootCollection)) {
+            !((m_itemPopulation == EntityTreeModel::LazyPopulation) &&
+              m_showRootCollection)) {
         if (m_rootCollection != Collection::root()) {
             fetchItems(m_rootCollection);
         }
@@ -1530,7 +1529,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
         }
 
         if (m_monitor->resourcesMonitored().contains(collection.resource().toUtf8()) &&
-            !m_collections.contains(collection.id())) {
+                !m_collections.contains(collection.id())) {
             const QModelIndex parentIndex = indexForCollection(collection.parentCollection());
             // Prepending new collections.
             const int row  = 0;
@@ -1564,7 +1563,7 @@ Akonadi::Collection::List EntityTreeModelPrivate::getParentCollections(const Ite
         iter.next();
         int nodeIndex = indexOf<Node::Item>(iter.value(), item.id());
         if (nodeIndex != -1 &&
-            iter.value().at(nodeIndex)->type == Node::Item) {
+                iter.value().at(nodeIndex)->type == Node::Item) {
             list << m_collections.value(iter.key());
         }
     }
@@ -1865,9 +1864,9 @@ void EntityTreeModelPrivate::fillModel()
     const QList<Collection> collections = m_monitor->collectionsMonitored();
 
     if (collections.isEmpty() &&
-        m_monitor->numMimeTypesMonitored() == 0 &&
-        m_monitor->numResourcesMonitored() == 0 &&
-        m_monitor->numItemsMonitored() != 0) {
+            m_monitor->numMimeTypesMonitored() == 0 &&
+            m_monitor->numResourcesMonitored() == 0 &&
+            m_monitor->numItemsMonitored() != 0) {
         m_rootCollection = Collection(-1);
         m_collectionTreeFetched = true;
         emit q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch

@@ -28,7 +28,8 @@
 #include <QWidget>
 #include "tag.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * A widget that shows a tag selection and provides means to edit that selection.

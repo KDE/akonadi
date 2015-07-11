@@ -77,7 +77,7 @@ void CollectionGeneralPropertiesPage::load(const Collection &collection)
 void CollectionGeneralPropertiesPage::save(Collection &collection)
 {
     if (collection.hasAttribute<EntityDisplayAttribute>() &&
-        !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
+            !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
         collection.attribute<EntityDisplayAttribute>()->setDisplayName(ui.nameEdit->text());
     } else {
         collection.setName(ui.nameEdit->text());

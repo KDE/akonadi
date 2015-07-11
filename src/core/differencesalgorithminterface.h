@@ -23,7 +23,8 @@
 
 #include <QtCore/QObject>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AbstractDifferencesReporter;
 class Item;

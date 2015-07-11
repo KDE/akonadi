@@ -27,7 +27,8 @@
 
 #include <QtCore/QUrl>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ItemFetchScope;
 class ItemSearchJobPrivate;

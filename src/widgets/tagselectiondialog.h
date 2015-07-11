@@ -29,7 +29,8 @@
 #include "tag.h"
 
 class QDialogButtonBox;
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * A widget that shows a tag selection and provides means to edit that selection.

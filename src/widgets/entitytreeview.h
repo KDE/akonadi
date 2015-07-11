@@ -29,7 +29,8 @@
 class KXMLGUIClient;
 class QDragMoveEvent;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class Item;

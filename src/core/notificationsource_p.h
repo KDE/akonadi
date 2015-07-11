@@ -29,7 +29,8 @@
 
 #include <akonadi/private/protocol_p.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADI_TESTS_EXPORT NotificationSource : public QObject
 {

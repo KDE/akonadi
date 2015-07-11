@@ -102,7 +102,7 @@ void PersistentSearchAttribute::setRemoteSearchEnabled(bool enabled)
 
 QByteArray PersistentSearchAttribute::type() const
 {
-    static const QByteArray sType( "PERSISTENTSEARCH" );
+    static const QByteArray sType("PERSISTENTSEARCH");
     return sType;
 }
 

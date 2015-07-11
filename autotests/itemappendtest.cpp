@@ -36,327 +36,327 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( ItemAppendTest )
+QTEST_AKONADIMAIN(ItemAppendTest)
 
 void ItemAppendTest::initTestCase()
 {
-  AkonadiTest::checkTestIsIsolated();
-  Control::start();
-  AkonadiTest::setAllResourcesOffline();
-  AttributeFactory::registerAttribute<TestAttribute>();
+    AkonadiTest::checkTestIsIsolated();
+    Control::start();
+    AkonadiTest::setAllResourcesOffline();
+    AttributeFactory::registerAttribute<TestAttribute>();
 }
 
 void ItemAppendTest::testItemAppend_data()
 {
-  QTest::addColumn<QString>( "remoteId" );
+    QTest::addColumn<QString>("remoteId");
 
-  QTest::newRow( "empty" ) << QString();
-  QTest::newRow( "non empty" ) << QStringLiteral( "remote-id" );
-  QTest::newRow( "whitespace" ) << QStringLiteral( "remote id" );
-  QTest::newRow( "quotes" ) << QStringLiteral ( "\"remote\" id" );
-  QTest::newRow( "brackets" ) << QStringLiteral( "[remote id]" );
+    QTest::newRow("empty") << QString();
+    QTest::newRow("non empty") << QStringLiteral("remote-id");
+    QTest::newRow("whitespace") << QStringLiteral("remote id");
+    QTest::newRow("quotes") << QStringLiteral("\"remote\" id");
+    QTest::newRow("brackets") << QStringLiteral("[remote id]");
 }
 
 void ItemAppendTest::testItemAppend()
 {
-  const Collection testFolder1( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( testFolder1.isValid() );
+    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(testFolder1.isValid());
 
-  QFETCH( QString, remoteId );
-  Item ref; // for cleanup
+    QFETCH(QString, remoteId);
+    Item ref; // for cleanup
 
-  Item item( -1 );
-  item.setRemoteId( remoteId );
-  item.setMimeType( QStringLiteral("application/octet-stream") );
-  item.setFlag( "TestFlag" );
-  item.setSize( 3456 );
-  ItemCreateJob *job = new ItemCreateJob( item, testFolder1, this );
-  AKVERIFYEXEC( job );
-  ref = job->item();
-  QCOMPARE( ref.parentCollection(), testFolder1 );
+    Item item(-1);
+    item.setRemoteId(remoteId);
+    item.setMimeType(QStringLiteral("application/octet-stream"));
+    item.setFlag("TestFlag");
+    item.setSize(3456);
+    ItemCreateJob *job = new ItemCreateJob(item, testFolder1, this);
+    AKVERIFYEXEC(job);
+    ref = job->item();
+    QCOMPARE(ref.parentCollection(), testFolder1);
 
-  ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  fjob->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
-  AKVERIFYEXEC( fjob );
-  QCOMPARE( fjob->items().count(), 1 );
-  QCOMPARE( fjob->items()[0], ref );
-  QCOMPARE( fjob->items()[0].remoteId(), remoteId );
-  QVERIFY( fjob->items()[0].flags().contains( "TestFlag" ) );
-  QCOMPARE( fjob->items()[0].parentCollection(), ref.parentCollection() );
+    ItemFetchJob *fjob = new ItemFetchJob(testFolder1, this);
+    fjob->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
+    AKVERIFYEXEC(fjob);
+    QCOMPARE(fjob->items().count(), 1);
+    QCOMPARE(fjob->items()[0], ref);
+    QCOMPARE(fjob->items()[0].remoteId(), remoteId);
+    QVERIFY(fjob->items()[0].flags().contains("TestFlag"));
+    QCOMPARE(fjob->items()[0].parentCollection(), ref.parentCollection());
 
-  qint64 size = 3456;
-  QCOMPARE( fjob->items()[0].size(), size );
+    qint64 size = 3456;
+    QCOMPARE(fjob->items()[0].size(), size);
 
-  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  AKVERIFYEXEC( djob );
+    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    AKVERIFYEXEC(djob);
 
-  fjob = new ItemFetchJob( testFolder1, this );
-  AKVERIFYEXEC( fjob );
-  QVERIFY( fjob->items().isEmpty() );
+    fjob = new ItemFetchJob(testFolder1, this);
+    AKVERIFYEXEC(fjob);
+    QVERIFY(fjob->items().isEmpty());
 }
 
 void ItemAppendTest::testContent_data()
 {
-  QTest::addColumn<QByteArray>( "data" );
+    QTest::addColumn<QByteArray>("data");
 
-  QTest::newRow( "null" ) << QByteArray();
-  QTest::newRow( "empty" ) << QByteArray( "" );
-  QTest::newRow( "nullbyte" ) << QByteArray( "\0", 1 );
-  QTest::newRow( "nullbyte2" ) << QByteArray( "\0X", 2 );
-  QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
-  QTest::newRow( "utf8" ) << utf8string.toUtf8();
-  QTest::newRow( "newlines" ) << QByteArray("\nsome\n\nbreaked\ncontent\n\n");
-  QByteArray b;
-  QTest::newRow( "big" ) << b.fill( 'a', 1 << 20 );
-  QTest::newRow( "bignull" ) << b.fill( '\0', 1 << 20 );
-  QTest::newRow( "bigcr" ) << b.fill( '\r', 1 << 20 );
-  QTest::newRow( "biglf" ) << b.fill( '\n', 1 << 20 );
+    QTest::newRow("null") << QByteArray();
+    QTest::newRow("empty") << QByteArray("");
+    QTest::newRow("nullbyte") << QByteArray("\0", 1);
+    QTest::newRow("nullbyte2") << QByteArray("\0X", 2);
+    QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
+    QTest::newRow("utf8") << utf8string.toUtf8();
+    QTest::newRow("newlines") << QByteArray("\nsome\n\nbreaked\ncontent\n\n");
+    QByteArray b;
+    QTest::newRow("big") << b.fill('a', 1 << 20);
+    QTest::newRow("bignull") << b.fill('\0', 1 << 20);
+    QTest::newRow("bigcr") << b.fill('\r', 1 << 20);
+    QTest::newRow("biglf") << b.fill('\n', 1 << 20);
 }
 
 void ItemAppendTest::testContent()
 {
-  const Collection testFolder1( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( testFolder1.isValid() );
+    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(testFolder1.isValid());
 
-  QFETCH( QByteArray, data );
+    QFETCH(QByteArray, data);
 
-  Item item;
-  item.setMimeType( QStringLiteral("application/octet-stream") );
-  if ( !data.isNull() ) {
-    item.setPayload( data );
-  }
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
+    if (!data.isNull()) {
+        item.setPayload(data);
+    }
 
-  ItemCreateJob* job = new ItemCreateJob( item, testFolder1, this );
-  AKVERIFYEXEC( job );
-  Item ref = job->item();
+    ItemCreateJob *job = new ItemCreateJob(item, testFolder1, this);
+    AKVERIFYEXEC(job);
+    Item ref = job->item();
 
-  ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  fjob->fetchScope().setCacheOnly( true );
-  fjob->fetchScope().fetchFullPayload();
-  AKVERIFYEXEC( fjob );
-  QCOMPARE( fjob->items().count(), 1 );
-  Item item2 = fjob->items().first();
-  QCOMPARE( item2.hasPayload(), !data.isNull() );
-  if( item2.hasPayload() ) {
-    QCOMPARE( item2.payload<QByteArray>(), data );
-  }
+    ItemFetchJob *fjob = new ItemFetchJob(testFolder1, this);
+    fjob->fetchScope().setCacheOnly(true);
+    fjob->fetchScope().fetchFullPayload();
+    AKVERIFYEXEC(fjob);
+    QCOMPARE(fjob->items().count(), 1);
+    Item item2 = fjob->items().first();
+    QCOMPARE(item2.hasPayload(), !data.isNull());
+    if (item2.hasPayload()) {
+        QCOMPARE(item2.payload<QByteArray>(), data);
+    }
 
-  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  AKVERIFYEXEC( djob );
+    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    AKVERIFYEXEC(djob);
 }
 
 void ItemAppendTest::testNewMimetype()
 {
-  const Collection col( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( col.isValid() );
+    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(col.isValid());
 
-  Item item;
-  item.setMimeType( QStringLiteral("application/new-type") );
-  ItemCreateJob *job = new ItemCreateJob( item, col, this );
-  AKVERIFYEXEC( job );
+    Item item;
+    item.setMimeType(QStringLiteral("application/new-type"));
+    ItemCreateJob *job = new ItemCreateJob(item, col, this);
+    AKVERIFYEXEC(job);
 
-  item = job->item();
-  QVERIFY( item.isValid() );
+    item = job->item();
+    QVERIFY(item.isValid());
 
-  ItemFetchJob *fetch = new ItemFetchJob( item, this );
-  AKVERIFYEXEC( fetch );
-  QCOMPARE( fetch->items().count(), 1 );
-  QCOMPARE( fetch->items().first().mimeType(), item.mimeType() );
+    ItemFetchJob *fetch = new ItemFetchJob(item, this);
+    AKVERIFYEXEC(fetch);
+    QCOMPARE(fetch->items().count(), 1);
+    QCOMPARE(fetch->items().first().mimeType(), item.mimeType());
 }
 
 void ItemAppendTest::testIllegalAppend()
 {
-  const Collection testFolder1( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( testFolder1.isValid() );
+    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(testFolder1.isValid());
 
-  Item item;
-  item.setMimeType( QStringLiteral("application/octet-stream") );
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
 
-  // adding item to non-existing collection
-  ItemCreateJob *job = new ItemCreateJob( item, Collection( INT_MAX ), this );
-  QVERIFY( !job->exec() );
+    // adding item to non-existing collection
+    ItemCreateJob *job = new ItemCreateJob(item, Collection(INT_MAX), this);
+    QVERIFY(!job->exec());
 
-  // adding item into a collection which can't handle items of this type
-  const Collection col( collectionIdFromPath( QStringLiteral("res1/foo/bla") ) );
-  QVERIFY( col.isValid() );
-  job = new ItemCreateJob( item, col, this );
-  QEXPECT_FAIL( "", "Test not yet implemented in the server.", Continue );
-  QVERIFY( !job->exec() );
+    // adding item into a collection which can't handle items of this type
+    const Collection col(collectionIdFromPath(QStringLiteral("res1/foo/bla")));
+    QVERIFY(col.isValid());
+    job = new ItemCreateJob(item, col, this);
+    QEXPECT_FAIL("", "Test not yet implemented in the server.", Continue);
+    QVERIFY(!job->exec());
 }
 
 void ItemAppendTest::testMultipartAppend()
 {
-  const Collection testFolder1( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( testFolder1.isValid() );
+    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(testFolder1.isValid());
 
-  Item item;
-  item.setMimeType( QStringLiteral("application/octet-stream") );
-  item.setPayload<QByteArray>( "body data" );
-  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
-  item.setFlag( "TestFlag" );
-  ItemCreateJob *job = new ItemCreateJob( item, testFolder1, this );
-  AKVERIFYEXEC( job );
-  Item ref = job->item();
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
+    item.setPayload<QByteArray>("body data");
+    item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
+    item.setFlag("TestFlag");
+    ItemCreateJob *job = new ItemCreateJob(item, testFolder1, this);
+    AKVERIFYEXEC(job);
+    Item ref = job->item();
 
-  ItemFetchJob *fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().fetchFullPayload();
-  fjob->fetchScope().fetchAttribute<TestAttribute>();
-  AKVERIFYEXEC( fjob );
-  QCOMPARE( fjob->items().count(), 1 );
-  item = fjob->items().first();
-  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
-  QVERIFY( item.hasAttribute<TestAttribute>() );
-  QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
-  QVERIFY( item.flags().contains( "TestFlag" ) );
+    ItemFetchJob *fjob = new ItemFetchJob(ref, this);
+    fjob->fetchScope().fetchFullPayload();
+    fjob->fetchScope().fetchAttribute<TestAttribute>();
+    AKVERIFYEXEC(fjob);
+    QCOMPARE(fjob->items().count(), 1);
+    item = fjob->items().first();
+    QCOMPARE(item.payload<QByteArray>(), QByteArray("body data"));
+    QVERIFY(item.hasAttribute<TestAttribute>());
+    QCOMPARE(item.attribute<TestAttribute>()->data, QByteArray("extra data"));
+    QVERIFY(item.flags().contains("TestFlag"));
 
-  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  AKVERIFYEXEC( djob );
+    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    AKVERIFYEXEC(djob);
 }
 
 void ItemAppendTest::testInvalidMultipartAppend()
 {
-  Item item;
-  item.setMimeType( QStringLiteral("application/octet-stream") );
-  item.setPayload<QByteArray>( "body data" );
-  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
-  item.setFlag( "TestFlag" );
-  ItemCreateJob *job = new ItemCreateJob( item, Collection( -1 ), this );
-  QVERIFY( !job->exec() );
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
+    item.setPayload<QByteArray>("body data");
+    item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
+    item.setFlag("TestFlag");
+    ItemCreateJob *job = new ItemCreateJob(item, Collection(-1), this);
+    QVERIFY(!job->exec());
 
-  Item item2;
-  item2.setMimeType( QStringLiteral("application/octet-stream") );
-  item2.setPayload<QByteArray>( "more body data" );
-  item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "even more extra data";
-  item2.setFlag( "TestFlag" );
-  ItemCreateJob *job2 = new ItemCreateJob( item2, Collection( -1 ), this );
-  QVERIFY( !job2->exec() );
+    Item item2;
+    item2.setMimeType(QStringLiteral("application/octet-stream"));
+    item2.setPayload<QByteArray>("more body data");
+    item2.attribute<TestAttribute>(Item::AddIfMissing)->data = "even more extra data";
+    item2.setFlag("TestFlag");
+    ItemCreateJob *job2 = new ItemCreateJob(item2, Collection(-1), this);
+    QVERIFY(!job2->exec());
 }
 
 void ItemAppendTest::testItemSize_data()
 {
-  QTest::addColumn<Akonadi::Item>( "item" );
-  QTest::addColumn<qint64>( "size" );
+    QTest::addColumn<Akonadi::Item>("item");
+    QTest::addColumn<qint64>("size");
 
-  Item i( QStringLiteral("application/octet-stream") );
-  i.setPayload( QByteArray( "ABCD" ) );
+    Item i(QStringLiteral("application/octet-stream"));
+    i.setPayload(QByteArray("ABCD"));
 
-  QTest::newRow( "auto size" ) << i << 4ll;
-  i.setSize( 3 );
-  QTest::newRow( "too small" ) << i << 4ll;
-  i.setSize( 10 );
-  QTest::newRow( "too large" ) << i << 10ll;
+    QTest::newRow("auto size") << i << 4ll;
+    i.setSize(3);
+    QTest::newRow("too small") << i << 4ll;
+    i.setSize(10);
+    QTest::newRow("too large") << i << 10ll;
 }
 
 void ItemAppendTest::testItemSize()
 {
-  QFETCH( Akonadi::Item, item );
-  QFETCH( qint64, size );
+    QFETCH(Akonadi::Item, item);
+    QFETCH(qint64, size);
 
-  const Collection col( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( col.isValid() );
+    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(col.isValid());
 
-  ItemCreateJob *create = new ItemCreateJob( item, col, this );
-  AKVERIFYEXEC( create );
-  Item newItem = create->item();
+    ItemCreateJob *create = new ItemCreateJob(item, col, this);
+    AKVERIFYEXEC(create);
+    Item newItem = create->item();
 
-  ItemFetchJob *fetch = new ItemFetchJob( newItem, this );
-  AKVERIFYEXEC( fetch );
-  QCOMPARE( fetch->items().count(), 1 );
+    ItemFetchJob *fetch = new ItemFetchJob(newItem, this);
+    AKVERIFYEXEC(fetch);
+    QCOMPARE(fetch->items().count(), 1);
 
-  QCOMPARE( fetch->items().first().size(), size );
+    QCOMPARE(fetch->items().first().size(), size);
 }
 
 void ItemAppendTest::testItemMerge_data()
 {
-  QTest::addColumn<Akonadi::Item>( "item1" );
-  QTest::addColumn<Akonadi::Item>( "item2" );
-  QTest::addColumn<Akonadi::Item>( "mergedItem" );
-  QTest::addColumn<bool>( "silent" );
+    QTest::addColumn<Akonadi::Item>("item1");
+    QTest::addColumn<Akonadi::Item>("item2");
+    QTest::addColumn<Akonadi::Item>("mergedItem");
+    QTest::addColumn<bool>("silent");
 
-  {
-    Item i1( QStringLiteral("application/octet-stream") );
-    i1.setPayload( QByteArray( "ABCD" ) );
-    i1.setSize( 4 );
-    i1.setRemoteId( QStringLiteral("XYZ") );
-    i1.setGid( QStringLiteral("XYZ") );
-    i1.setFlag( "TestFlag1" );
-    i1.setRemoteRevision( QStringLiteral("5") );
+    {
+        Item i1(QStringLiteral("application/octet-stream"));
+        i1.setPayload(QByteArray("ABCD"));
+        i1.setSize(4);
+        i1.setRemoteId(QStringLiteral("XYZ"));
+        i1.setGid(QStringLiteral("XYZ"));
+        i1.setFlag("TestFlag1");
+        i1.setRemoteRevision(QStringLiteral("5"));
 
-    Item i2( QStringLiteral("application/octet-stream") );
-    i2.setPayload( QByteArray( "DEFGH" ) );
-    i2.setSize( 5 );
-    i2.setRemoteId(QStringLiteral( "XYZ" ) );
-    i2.setGid( QStringLiteral("XYZ") );
-    i2.setFlag( "TestFlag2" );
-    i2.setRemoteRevision( QStringLiteral("6") );
+        Item i2(QStringLiteral("application/octet-stream"));
+        i2.setPayload(QByteArray("DEFGH"));
+        i2.setSize(5);
+        i2.setRemoteId(QStringLiteral("XYZ"));
+        i2.setGid(QStringLiteral("XYZ"));
+        i2.setFlag("TestFlag2");
+        i2.setRemoteRevision(QStringLiteral("6"));
 
-    Item mergedItem( i2 );
-    mergedItem.setFlag( "TestFlag1" );
+        Item mergedItem(i2);
+        mergedItem.setFlag("TestFlag1");
 
-    QTest::newRow( "merge" ) << i1 << i2 << mergedItem << false;
-    QTest::newRow( "merge (silent)" ) << i1 << i2 << mergedItem << true;
-  }
-  {
-    Item i1( QStringLiteral("application/octet-stream") );
-    i1.setPayload( QByteArray( "ABCD" ) );
-    i1.setSize( 4 );
-    i1.setRemoteId( QStringLiteral("RID2") );
-    i1.setGid( QStringLiteral("GID2") );
-    i1.setFlag( "TestFlag1" );
-    i1.setRemoteRevision( QStringLiteral("5") );
+        QTest::newRow("merge") << i1 << i2 << mergedItem << false;
+        QTest::newRow("merge (silent)") << i1 << i2 << mergedItem << true;
+    }
+    {
+        Item i1(QStringLiteral("application/octet-stream"));
+        i1.setPayload(QByteArray("ABCD"));
+        i1.setSize(4);
+        i1.setRemoteId(QStringLiteral("RID2"));
+        i1.setGid(QStringLiteral("GID2"));
+        i1.setFlag("TestFlag1");
+        i1.setRemoteRevision(QStringLiteral("5"));
 
-    Item i2( QStringLiteral("application/octet-stream") );
-    i2.setRemoteId(QStringLiteral( "RID2" ) );
-    i2.setGid( QStringLiteral("GID2") );
-    i2.setFlags( Item::Flags() << "TestFlag2" );
-    i2.setRemoteRevision( QStringLiteral("6") );
+        Item i2(QStringLiteral("application/octet-stream"));
+        i2.setRemoteId(QStringLiteral("RID2"));
+        i2.setGid(QStringLiteral("GID2"));
+        i2.setFlags(Item::Flags() << "TestFlag2");
+        i2.setRemoteRevision(QStringLiteral("6"));
 
-    Item mergedItem( i1 );
-    mergedItem.setFlags( i2.flags() );
-    mergedItem.setRemoteRevision( i2.remoteRevision() );
+        Item mergedItem(i1);
+        mergedItem.setFlags(i2.flags());
+        mergedItem.setRemoteRevision(i2.remoteRevision());
 
-    QTest::newRow( "overwrite flags, and don't remove existing payload" ) << i1 << i2 << mergedItem << false;
-    QTest::newRow( "overwrite flags, and don't remove existing payload (silent)" ) << i1 << i2 << mergedItem << true;
-  }
+        QTest::newRow("overwrite flags, and don't remove existing payload") << i1 << i2 << mergedItem << false;
+        QTest::newRow("overwrite flags, and don't remove existing payload (silent)") << i1 << i2 << mergedItem << true;
+    }
 }
 
 void ItemAppendTest::testItemMerge()
 {
-  QFETCH( Akonadi::Item, item1 );
-  QFETCH( Akonadi::Item, item2 );
-  QFETCH( Akonadi::Item, mergedItem );
-  QFETCH( bool, silent );
+    QFETCH(Akonadi::Item, item1);
+    QFETCH(Akonadi::Item, item2);
+    QFETCH(Akonadi::Item, mergedItem);
+    QFETCH(bool, silent);
 
-  const Collection col( collectionIdFromPath( QStringLiteral("res2/space folder") ) );
-  QVERIFY( col.isValid() );
+    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(col.isValid());
 
-  ItemCreateJob *create = new ItemCreateJob( item1, col, this );
-  AKVERIFYEXEC( create );
-  const Item createdItem = create->item();
+    ItemCreateJob *create = new ItemCreateJob(item1, col, this);
+    AKVERIFYEXEC(create);
+    const Item createdItem = create->item();
 
-  ItemCreateJob *merge = new ItemCreateJob( item2, col, this );
-  ItemCreateJob::MergeOptions options = ItemCreateJob::GID | ItemCreateJob::RID;
-  if ( silent ) {
-    options |= ItemCreateJob::Silent;
-  }
-  merge->setMerge( options );
-  AKVERIFYEXEC( merge );
+    ItemCreateJob *merge = new ItemCreateJob(item2, col, this);
+    ItemCreateJob::MergeOptions options = ItemCreateJob::GID | ItemCreateJob::RID;
+    if (silent) {
+        options |= ItemCreateJob::Silent;
+    }
+    merge->setMerge(options);
+    AKVERIFYEXEC(merge);
 
-  QCOMPARE( merge->item().id(), createdItem.id() );
-  if ( !silent ) {
-    QCOMPARE( merge->item().gid(), mergedItem.gid() );
-    QCOMPARE( merge->item().remoteId(), mergedItem.remoteId() );
-    QCOMPARE( merge->item().remoteRevision(), mergedItem.remoteRevision() );
-    QCOMPARE( merge->item().payloadData(), mergedItem.payloadData() );
-    QCOMPARE( merge->item().size(), mergedItem.size() );
-    QCOMPARE( merge->item().flags(), mergedItem.flags() );
-  }
+    QCOMPARE(merge->item().id(), createdItem.id());
+    if (!silent) {
+        QCOMPARE(merge->item().gid(), mergedItem.gid());
+        QCOMPARE(merge->item().remoteId(), mergedItem.remoteId());
+        QCOMPARE(merge->item().remoteRevision(), mergedItem.remoteRevision());
+        QCOMPARE(merge->item().payloadData(), mergedItem.payloadData());
+        QCOMPARE(merge->item().size(), mergedItem.size());
+        QCOMPARE(merge->item().flags(), mergedItem.flags());
+    }
 
-  if ( merge->item().id() != createdItem.id() ) {
-    ItemDeleteJob *del = new ItemDeleteJob( merge->item(), this );
-    AKVERIFYEXEC( del );
-  }
-  ItemDeleteJob *del = new ItemDeleteJob( createdItem, this );
-  AKVERIFYEXEC( del );
+    if (merge->item().id() != createdItem.id()) {
+        ItemDeleteJob *del = new ItemDeleteJob(merge->item(), this);
+        AKVERIFYEXEC(del);
+    }
+    ItemDeleteJob *del = new ItemDeleteJob(createdItem, this);
+    AKVERIFYEXEC(del);
 }
 

@@ -152,7 +152,7 @@ void CachePolicyPage::save(Collection &collection)
     // view.
     if (d->mUi->stackedWidget->currentWidget() != d->mUi->rawPage) {
         if (d->mUi->retrieveFullMessages->isChecked() &&
-            !localParts.contains(QStringLiteral("RFC822"))) {
+                !localParts.contains(QStringLiteral("RFC822"))) {
             localParts.append(QStringLiteral("RFC822"));
         } else if (!d->mUi->retrieveFullMessages->isChecked() &&
                    localParts.contains(QStringLiteral("RFC822"))) {

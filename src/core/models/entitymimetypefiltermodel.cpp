@@ -30,7 +30,8 @@
 
 using namespace Akonadi;
 
-namespace Akonadi {
+namespace Akonadi
+{
 /**
  * @internal
  */

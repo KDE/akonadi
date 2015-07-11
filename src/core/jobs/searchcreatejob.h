@@ -24,7 +24,8 @@
 #include "job.h"
 #include "collection.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class SearchQuery;

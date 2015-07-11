@@ -34,10 +34,10 @@
 
 using namespace Akonadi;
 
-namespace {
-
-struct ByTypeId
+namespace
 {
+
+struct ByTypeId {
     typedef bool result_type;
     bool operator()(const std::shared_ptr<PayloadBase> &lhs, const std::shared_ptr<PayloadBase> &rhs) const
     {
@@ -63,7 +63,8 @@ void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, s
     item.second = mtid;
 }
 
-namespace {
+namespace
+{
 class MyReadLocker
 {
 public:
@@ -92,7 +93,9 @@ public:
             // construction line below, or anything else after it,
             // throws, we're unlocked. Mark us as such:
             locked = false;
-            const std::shared_ptr<T> result(t, [&] (const void*) { rwl->unlock(); });
+            const std::shared_ptr<T> result(t, [&](const void *) {
+                rwl->unlock();
+            });
             // from now on, the shared_ptr is responsible for unlocking
             return result;
         } else {
@@ -112,7 +115,9 @@ static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QSt
     if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
         return std::shared_ptr<const std::pair<int, int> >();
     }
-    const std::shared_ptr<PayloadBase> sp(p, [=](PayloadBase *) {/*noop*/});
+    const std::shared_ptr<PayloadBase> sp(p, [ = ](PayloadBase *) {
+        /*noop*/
+    });
     const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
     if (it == hit->end()) {
         return std::shared_ptr<const std::pair<int, int> >();
@@ -386,7 +391,8 @@ Item Item::fromUrl(const QUrl &url)
     return Item(itemId);
 }
 
-namespace {
+namespace
+{
 class Dummy
 {
 };
@@ -421,7 +427,8 @@ PayloadBase *Item::payloadBaseV2(int spid, int mtid) const
     return d_func()->payloadBaseImpl(spid, mtid);
 }
 
-namespace {
+namespace
+{
 class ConversionGuard
 {
     const bool old;

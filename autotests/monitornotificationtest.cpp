@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "monitor.h"
 
 #include "fakeserverdata.h"
@@ -28,287 +27,282 @@
 #include <QTest>
 #include <QSignalSpy>
 
-
-
 using namespace Akonadi;
 
 class AKONADITESTFAKE_EXPORT MonitorNotificationTest : public QObject
 {
-  Q_OBJECT
-public: 
-  MonitorNotificationTest(QObject *parent = Q_NULLPTR)
-    : QObject(parent)
-  {
-    m_sessionName = "MonitorNotificationTest fake session";
-    m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately);
-    m_fakeSession->setAsDefaultSession();
-  }
+    Q_OBJECT
+public:
+    MonitorNotificationTest(QObject *parent = Q_NULLPTR)
+        : QObject(parent)
+    {
+        m_sessionName = "MonitorNotificationTest fake session";
+        m_fakeSession = new FakeSession(m_sessionName, FakeSession::EndJobsImmediately);
+        m_fakeSession->setAsDefaultSession();
+    }
 
 private Q_SLOTS:
-  void testSingleMessage();
-  void testFillPipeline();
-  void testMonitor();
+    void testSingleMessage();
+    void testFillPipeline();
+    void testMonitor();
 
-  void testSingleMessage_data();
-  void testFillPipeline_data();
-  void testMonitor_data();
-
-private:
-  template<typename MonitorImpl>
-  void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
-  template<typename MonitorImpl>
-  void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
-  template<typename MonitorImpl>
-  void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    void testSingleMessage_data();
+    void testFillPipeline_data();
+    void testMonitor_data();
 
 private:
-  FakeSession *m_fakeSession;
-  QByteArray m_sessionName;
+    template<typename MonitorImpl>
+    void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl>
+    void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl>
+    void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+
+private:
+    FakeSession *m_fakeSession;
+    QByteArray m_sessionName;
 };
 
 void MonitorNotificationTest::testSingleMessage_data()
 {
-  QTest::addColumn<bool>("useChangeRecorder");
+    QTest::addColumn<bool>("useChangeRecorder");
 
-  QTest::newRow("useChangeRecorder") << true;
-  QTest::newRow("useMonitor") << false;
+    QTest::newRow("useChangeRecorder") << true;
+    QTest::newRow("useMonitor") << false;
 }
 
 void MonitorNotificationTest::testSingleMessage()
 {
-  QFETCH(bool, useChangeRecorder);
+    QFETCH(bool, useChangeRecorder);
 
-  FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
-  FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
-  FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
+    FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
+    FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
+    FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
 
-  if (!useChangeRecorder)
-  {
-    testSingleMessage_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
-  } else {
-    InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
-    changeRecorder->setChangeRecordingEnabled(false);
-    testSingleMessage_impl(changeRecorder, collectionCache, itemCache);
-  }
+    if (!useChangeRecorder) {
+        testSingleMessage_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
+    } else {
+        InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+        changeRecorder->setChangeRecordingEnabled(false);
+        testSingleMessage_impl(changeRecorder, collectionCache, itemCache);
+    }
 }
 
 template <typename MonitorImpl>
 void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
 {
-  Q_UNUSED(itemCache)
+    Q_UNUSED(itemCache)
 
-  monitor->setSession(m_fakeSession);
-  monitor->fetchCollection(true);
+    monitor->setSession(m_fakeSession);
+    monitor->fetchCollection(true);
 
+    Protocol::ChangeNotification::List list;
 
-  Protocol::ChangeNotification::List list;
-
-  Collection parent(1);
-  Collection added(2);
-
-  Protocol::ChangeNotification msg;
-  msg.setParentCollection(parent.id());
-  msg.setOperation(Protocol::ChangeNotification::Add);
-  msg.setType(Protocol::ChangeNotification::Collections);
-  msg.addEntity( added.id() );
-
-  QHash<Collection::Id, Collection> data;
-  data.insert(parent.id(), parent);
-  data.insert(added.id(), added);
-
-  // Pending notifications remains empty because we don't fill the pipeline with one message.
-
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
-
-  monitor->notificationBus()->emitNotify(msg);
-
-  QCOMPARE(monitor->pipeline().size(), 1);
-  QVERIFY(monitor->pendingNotifications().isEmpty());
-
-  collectionCache->setData(data);
-  collectionCache->emitDataAvailable();
-
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
-}
-
-void MonitorNotificationTest::testFillPipeline_data()
-{
-  QTest::addColumn<bool>("useChangeRecorder");
-
-  QTest::newRow("useChangeRecorder") << true;
-  QTest::newRow("useMonitor") << false;
-}
-
-void MonitorNotificationTest::testFillPipeline()
-{
-  QFETCH(bool, useChangeRecorder);
-
-  FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
-  FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
-  FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
-
-  if (!useChangeRecorder)
-  {
-    testFillPipeline_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
-  } else {
-    InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
-    changeRecorder->setChangeRecordingEnabled(false);
-    testFillPipeline_impl(changeRecorder, collectionCache, itemCache);
-  }
-}
-
-template <typename MonitorImpl>
-void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
-{
-  Q_UNUSED(itemCache)
-
-  monitor->setSession(m_fakeSession);
-  monitor->fetchCollection(true);
-
-  Protocol::ChangeNotification::List list;
-  QHash<Collection::Id, Collection> data;
-
-  int i = 1;
-  while (i < 40) {
-    Collection parent(i++);
-    Collection added(i++);
+    Collection parent(1);
+    Collection added(2);
 
     Protocol::ChangeNotification msg;
     msg.setParentCollection(parent.id());
     msg.setOperation(Protocol::ChangeNotification::Add);
     msg.setType(Protocol::ChangeNotification::Collections);
-    msg.addEntity( added.id() );
+    msg.addEntity(added.id());
 
+    QHash<Collection::Id, Collection> data;
     data.insert(parent.id(), parent);
     data.insert(added.id(), added);
 
-    list << msg;
-  }
+    // Pending notifications remains empty because we don't fill the pipeline with one message.
 
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
+    QVERIFY(monitor->pipeline().isEmpty());
+    QVERIFY(monitor->pendingNotifications().isEmpty());
 
-  Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
-    monitor->notificationBus()->emitNotify(ntf);
-  }
+    monitor->notificationBus()->emitNotify(msg);
 
-  QCOMPARE(monitor->pipeline().size(), 5);
-  QCOMPARE(monitor->pendingNotifications().size(), 15);
+    QCOMPARE(monitor->pipeline().size(), 1);
+    QVERIFY(monitor->pendingNotifications().isEmpty());
 
-  collectionCache->setData(data);
-  collectionCache->emitDataAvailable();
+    collectionCache->setData(data);
+    collectionCache->emitDataAvailable();
 
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
+    QVERIFY(monitor->pipeline().isEmpty());
+    QVERIFY(monitor->pendingNotifications().isEmpty());
+}
+
+void MonitorNotificationTest::testFillPipeline_data()
+{
+    QTest::addColumn<bool>("useChangeRecorder");
+
+    QTest::newRow("useChangeRecorder") << true;
+    QTest::newRow("useMonitor") << false;
+}
+
+void MonitorNotificationTest::testFillPipeline()
+{
+    QFETCH(bool, useChangeRecorder);
+
+    FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
+    FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
+    FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
+
+    if (!useChangeRecorder) {
+        testFillPipeline_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
+    } else {
+        InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+        changeRecorder->setChangeRecordingEnabled(false);
+        testFillPipeline_impl(changeRecorder, collectionCache, itemCache);
+    }
+}
+
+template <typename MonitorImpl>
+void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
+{
+    Q_UNUSED(itemCache)
+
+    monitor->setSession(m_fakeSession);
+    monitor->fetchCollection(true);
+
+    Protocol::ChangeNotification::List list;
+    QHash<Collection::Id, Collection> data;
+
+    int i = 1;
+    while (i < 40) {
+        Collection parent(i++);
+        Collection added(i++);
+
+        Protocol::ChangeNotification msg;
+        msg.setParentCollection(parent.id());
+        msg.setOperation(Protocol::ChangeNotification::Add);
+        msg.setType(Protocol::ChangeNotification::Collections);
+        msg.addEntity(added.id());
+
+        data.insert(parent.id(), parent);
+        data.insert(added.id(), added);
+
+        list << msg;
+    }
+
+    QVERIFY(monitor->pipeline().isEmpty());
+    QVERIFY(monitor->pendingNotifications().isEmpty());
+
+    Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
+        monitor->notificationBus()->emitNotify(ntf);
+    }
+
+    QCOMPARE(monitor->pipeline().size(), 5);
+    QCOMPARE(monitor->pendingNotifications().size(), 15);
+
+    collectionCache->setData(data);
+    collectionCache->emitDataAvailable();
+
+    QVERIFY(monitor->pipeline().isEmpty());
+    QVERIFY(monitor->pendingNotifications().isEmpty());
 }
 
 void MonitorNotificationTest::testMonitor_data()
 {
-  QTest::addColumn<bool>("useChangeRecorder");
+    QTest::addColumn<bool>("useChangeRecorder");
 
-  QTest::newRow("useChangeRecorder") << true;
-  QTest::newRow("useMonitor") << false;
+    QTest::newRow("useChangeRecorder") << true;
+    QTest::newRow("useMonitor") << false;
 }
 
 void MonitorNotificationTest::testMonitor()
 {
-  QFETCH(bool, useChangeRecorder);
+    QFETCH(bool, useChangeRecorder);
 
-  FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
-  FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
-  FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
+    FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
+    FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
+    FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
 
-  if (!useChangeRecorder) {
-    testMonitor_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
-  } else {
-    InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
-    changeRecorder->setChangeRecordingEnabled(false);
-    testMonitor_impl(changeRecorder, collectionCache, itemCache);
-  }
+    if (!useChangeRecorder) {
+        testMonitor_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
+    } else {
+        InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+        changeRecorder->setChangeRecordingEnabled(false);
+        testMonitor_impl(changeRecorder, collectionCache, itemCache);
+    }
 }
 
 template <typename MonitorImpl>
 void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
 {
-  Q_UNUSED(itemCache)
+    Q_UNUSED(itemCache)
 
-  monitor->setSession(m_fakeSession);
-  monitor->fetchCollection(true);
+    monitor->setSession(m_fakeSession);
+    monitor->fetchCollection(true);
 
-  Protocol::ChangeNotification::List list;
+    Protocol::ChangeNotification::List list;
 
-  Collection col2(2);
-  col2.setParentCollection(Collection::root());
+    Collection col2(2);
+    col2.setParentCollection(Collection::root());
 
-  collectionCache->insert(col2);
+    collectionCache->insert(col2);
 
-  int i = 4;
+    int i = 4;
 
-  while (i < 8) {
-    Collection added(i++);
+    while (i < 8) {
+        Collection added(i++);
 
-    Protocol::ChangeNotification msg;
-    msg.setParentCollection( i % 2 ? 2 : added.id() - 1);
-    msg.setOperation(Protocol::ChangeNotification::Add);
-    msg.setType(Protocol::ChangeNotification::Collections);
-    msg.addEntity( added.id() );
+        Protocol::ChangeNotification msg;
+        msg.setParentCollection(i % 2 ? 2 : added.id() - 1);
+        msg.setOperation(Protocol::ChangeNotification::Add);
+        msg.setType(Protocol::ChangeNotification::Collections);
+        msg.addEntity(added.id());
 
-    list << msg;
-  }
+        list << msg;
+    }
 
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
+    QVERIFY(monitor->pipeline().isEmpty());
+    QVERIFY(monitor->pendingNotifications().isEmpty());
 
-  Collection col4(4);
-  col4.setParentCollection(col2);
-  Collection col6(6);
-  col6.setParentCollection(col2);
+    Collection col4(4);
+    col4.setParentCollection(col2);
+    Collection col6(6);
+    col6.setParentCollection(col2);
 
-  collectionCache->insert(col4);
-  collectionCache->insert(col6);
+    collectionCache->insert(col4);
+    collectionCache->insert(col6);
 
-  qRegisterMetaType<Akonadi::Collection>();
-  QSignalSpy collectionAddedSpy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    qRegisterMetaType<Akonadi::Collection>();
+    QSignalSpy collectionAddedSpy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
 
-  collectionCache->emitDataAvailable();
+    collectionCache->emitDataAvailable();
 
-  QVERIFY(monitor->pipeline().isEmpty());
-  QVERIFY(monitor->pendingNotifications().isEmpty());
+    QVERIFY(monitor->pipeline().isEmpty());
+    QVERIFY(monitor->pendingNotifications().isEmpty());
 
-  Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
-    monitor->notificationBus()->emitNotify(ntf);
-  }
+    Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
+        monitor->notificationBus()->emitNotify(ntf);
+    }
 
-  // Collection 6 is not notified, because Collection 5 has held up the pipeline
-  QCOMPARE(collectionAddedSpy.size(), 1);
-  QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 4);
-  QCOMPARE(monitor->pipeline().size(), 3);
-  QCOMPARE(monitor->pendingNotifications().size(), 0);
+    // Collection 6 is not notified, because Collection 5 has held up the pipeline
+    QCOMPARE(collectionAddedSpy.size(), 1);
+    QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 4);
+    QCOMPARE(monitor->pipeline().size(), 3);
+    QCOMPARE(monitor->pendingNotifications().size(), 0);
 
-  Collection col7(7);
-  col7.setParentCollection(col6);
+    Collection col7(7);
+    col7.setParentCollection(col6);
 
-  collectionCache->insert(col7);
-  collectionCache->emitDataAvailable();
+    collectionCache->insert(col7);
+    collectionCache->emitDataAvailable();
 
-  // Collection 5 is still holding the pipeline
-  QCOMPARE(collectionAddedSpy.size(), 0);
-  QCOMPARE(monitor->pipeline().size(), 3);
-  QCOMPARE(monitor->pendingNotifications().size(), 0);
+    // Collection 5 is still holding the pipeline
+    QCOMPARE(collectionAddedSpy.size(), 0);
+    QCOMPARE(monitor->pipeline().size(), 3);
+    QCOMPARE(monitor->pendingNotifications().size(), 0);
 
-  Collection col5(5);
-  col5.setParentCollection(col4);
+    Collection col5(5);
+    col5.setParentCollection(col4);
 
-  collectionCache->insert(col5);
-  collectionCache->emitDataAvailable();
+    collectionCache->insert(col5);
+    collectionCache->emitDataAvailable();
 
-  // Collection 5 is in cache, pipeline is flushed
-  QCOMPARE(collectionAddedSpy.size(), 3);
-  QCOMPARE(monitor->pipeline().size(), 0);
-  QCOMPARE(monitor->pendingNotifications().size(), 0);
+    // Collection 5 is in cache, pipeline is flushed
+    QCOMPARE(collectionAddedSpy.size(), 3);
+    QCOMPARE(monitor->pipeline().size(), 0);
+    QCOMPARE(monitor->pendingNotifications().size(), 0);
 }
 
-QTEST_MAIN( MonitorNotificationTest )
+QTEST_MAIN(MonitorNotificationTest)
 #include "monitornotificationtest.moc"

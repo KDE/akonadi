@@ -89,15 +89,13 @@ RemoteId RemoteId::rootRid = RemoteId(QStringList() << QString::fromAscii(ROOTPA
 
 Q_DECLARE_METATYPE(RemoteId)
 
-
 uint qHash(const RemoteId &rid)
 {
     uint hash = 0;
     for (QStringList::ConstIterator iter = rid.ridChain.constBegin(),
-                                    end = rid.ridChain.constEnd();
-         iter != end;
-         ++iter)
-    {
+            end = rid.ridChain.constEnd();
+            iter != end;
+            ++iter) {
         hash += qHash(*iter);
     }
     return hash;
@@ -123,7 +121,8 @@ inline bool operator<(const RemoteId &r1, const RemoteId &r2)
     return false;
 }
 
-QDebug operator<<(QDebug s, const RemoteId &rid) {
+QDebug operator<<(QDebug s, const RemoteId &rid)
+{
     s.nospace() << "RemoteId(" << rid.ridChain << ")";
     return s;
 }
@@ -162,7 +161,6 @@ public:
         if (!hierarchicalRIDs) {
             return RemoteId(collection.remoteId());
         }
-
 
         RemoteId rid;
         Collection parent = collection;
@@ -226,18 +224,16 @@ public:
 
         // Iterate over the list of local children of localParent
         QList<Collection>::Iterator localIter, localEnd,
-                                    removedIter, removedEnd,
-                                    remoteIter, remoteEnd;
+              removedIter, removedEnd,
+              remoteIter, remoteEnd;
 
-        for (localIter = localChildren.begin(), localEnd = localChildren.end(); localIter != localEnd;)
-        {
+        for (localIter = localChildren.begin(), localEnd = localChildren.end(); localIter != localEnd;) {
             const Collection localCollection = *localIter;
             bool matched = false;
             uidRidMap.insert(localIter->id(), localIter->remoteId());
 
             // Try to map removed remote collections (from incremental sync) to local collections
-            for (removedIter = removedChildren.begin(), removedEnd = removedChildren.end(); removedIter != removedEnd;)
-            {
+            for (removedIter = removedChildren.begin(), removedEnd = removedChildren.end(); removedIter != removedEnd;) {
                 Collection removedCollection = *removedIter;
 
                 if (matchLocalAndRemoteCollection(localCollection, removedCollection)) {
@@ -263,8 +259,7 @@ public:
             }
 
             // Try to find a matching collection in the list of remote children
-            for (remoteIter = remoteChildren.begin(), remoteEnd = remoteChildren.end(); !matched && remoteIter != remoteEnd;)
-            {
+            for (remoteIter = remoteChildren.begin(), remoteEnd = remoteChildren.end(); !matched && remoteIter != remoteEnd;) {
                 Collection remoteCollection = *remoteIter;
 
                 // Yay, we found a match!
@@ -416,7 +411,6 @@ public:
 
         return false;
     }
-
 
     void createLocalCollections()
     {
@@ -599,12 +593,12 @@ public:
 
     void deleteLocalCollections()
     {
-       if (localCollectionsToRemove.isEmpty()) {
-          done();
-          return;
-       }
+        if (localCollectionsToRemove.isEmpty()) {
+            done();
+            return;
+        }
 
-       Q_FOREACH (const Collection &col, localCollectionsToRemove) {
+        Q_FOREACH (const Collection &col, localCollectionsToRemove) {
             Q_ASSERT(!col.remoteId().isEmpty());   // empty RID -> stuff we haven't even written to the remote side yet
 
             ++pendingJobs;
@@ -718,7 +712,6 @@ public:
         createLocalCollections();
     }
 
-
     CollectionSync *q;
 
     QString resourceId;
@@ -753,7 +746,6 @@ public:
     Collection akonadiRootCollection;
 
     bool resultEmitted;
-
 
 };
 

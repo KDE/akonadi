@@ -39,8 +39,7 @@ public:
     {
         return data;
     }
-    void deserialize(const QByteArray &ba) Q_DECL_OVERRIDE
-    {
+    void deserialize(const QByteArray &ba) Q_DECL_OVERRIDE {
         data = ba;
     }
     TestAttribute *clone() const Q_DECL_OVERRIDE

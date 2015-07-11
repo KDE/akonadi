@@ -38,7 +38,6 @@ public:
     {
     }
 
-
     Item::List items;
     Collection destination;
     Collection source;
@@ -63,14 +62,13 @@ ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &destination,
 }
 
 ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &source, const Collection &destination, QObject *parent)
-  : Job(new ItemMoveJobPrivate(this), parent)
+    : Job(new ItemMoveJobPrivate(this), parent)
 {
     Q_D(ItemMoveJob);
     d->source = source;
     d->destination = destination;
     d->items = items;
 }
-
 
 ItemMoveJob::~ItemMoveJob()
 {
@@ -95,9 +93,9 @@ void ItemMoveJob::doStart()
     }
 
     d->sendCommand(Protocol::MoveItemsCommand(
-        ProtocolHelper::entitySetToScope(d->items),
-        ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
-        ProtocolHelper::entityToScope(d->destination)));
+                       ProtocolHelper::entitySetToScope(d->items),
+                       ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
+                       ProtocolHelper::entityToScope(d->destination)));
 }
 
 bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

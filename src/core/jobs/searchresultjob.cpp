@@ -23,7 +23,8 @@
 
 #include <akonadi/private/protocol_p.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SearchResultJobPrivate : public Akonadi::JobPrivate
 {

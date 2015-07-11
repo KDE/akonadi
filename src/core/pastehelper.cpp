@@ -90,7 +90,7 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         const Collection parent = items.first().parentCollection();
         if (std::find_if(items.constBegin(), items.constEnd(),
                          boost::bind(&Entity::operator!=, boost::bind(static_cast<Collection(Item::*)() const>(&Item::parentCollection), _1), parent))
-            == items.constEnd()) {
+                == items.constEnd()) {
             dragSourceCollection = parent;
         }
 
@@ -103,8 +103,8 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         setAutomaticCommittingEnabled(false);
 
         CollectionFetchJob *fetch = new CollectionFetchJob(dragSourceCollection,
-                                                           CollectionFetchJob::Base,
-                                                           this);
+                CollectionFetchJob::Base,
+                this);
         QObject::connect(fetch, SIGNAL(finished(KJob*)),
                          this, SLOT(onDragSourceCollectionFetched(KJob*)));
     } else {
@@ -328,8 +328,8 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
     }
 
     PasteHelperJob *job = new PasteHelperJob(action, items,
-                                             collections, destination,
-                                             session);
+            collections, destination,
+            session);
 
     return job;
 }

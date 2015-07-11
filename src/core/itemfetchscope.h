@@ -29,7 +29,8 @@
 
 template <typename T> class QSet;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ItemFetchScopePrivate;
 class TagFetchScope;

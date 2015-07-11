@@ -32,7 +32,8 @@
 
 class QIODevice;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Item;
 

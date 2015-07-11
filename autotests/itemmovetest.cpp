@@ -35,84 +35,84 @@ using namespace Akonadi;
 
 class ItemMoveTest: public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
-      Control::start();
+        AkonadiTest::checkTestIsIsolated();
+        Control::start();
     }
 
     // TODO: test inter and intra resource moves
     void testMove_data()
     {
-      QTest::addColumn<Item::List>( "items" );
-      QTest::addColumn<Collection>( "destination" );
-      QTest::addColumn<Collection>( "source" );
+        QTest::addColumn<Item::List>("items");
+        QTest::addColumn<Collection>("destination");
+        QTest::addColumn<Collection>("source");
 
-      const Collection destination( collectionIdFromPath( QStringLiteral("res3") ) );
-      QVERIFY( destination.isValid() );
+        const Collection destination(collectionIdFromPath(QStringLiteral("res3")));
+        QVERIFY(destination.isValid());
 
-      QTest::newRow( "single uid" ) << (Item::List() << Item( 1 )) << destination << Collection();
-      QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 )) << destination << Collection();
-      Item r1; r1.setRemoteId( QStringLiteral("D") );
-      Collection ridDest;
-      ridDest.setRemoteId( QStringLiteral("3") );
-      Collection ridSource;
-      ridSource.setRemoteId( QStringLiteral("10") );
-      QTest::newRow( "single rid" ) << (Item::List() << r1) << ridDest << ridSource;
+        QTest::newRow("single uid") << (Item::List() << Item(1)) << destination << Collection();
+        QTest::newRow("two uid") << (Item::List() << Item(2) << Item(3)) << destination << Collection();
+        Item r1; r1.setRemoteId(QStringLiteral("D"));
+        Collection ridDest;
+        ridDest.setRemoteId(QStringLiteral("3"));
+        Collection ridSource;
+        ridSource.setRemoteId(QStringLiteral("10"));
+        QTest::newRow("single rid") << (Item::List() << r1) << ridDest << ridSource;
     }
 
     void testMove()
     {
-      QFETCH( Item::List, items );
-      QFETCH( Collection, destination );
-      QFETCH( Collection, source );
+        QFETCH(Item::List, items);
+        QFETCH(Collection, destination);
+        QFETCH(Collection, source);
 
-      //Collection source( collectionIdFromPath( "res1/foo" ) );
-      //QVERIFY( source.isValid() );
+        //Collection source( collectionIdFromPath( "res1/foo" ) );
+        //QVERIFY( source.isValid() );
 
-      ResourceSelectJob *select = new ResourceSelectJob( QStringLiteral("akonadi_knut_resource_0") );
-      AKVERIFYEXEC( select ); // for rid based moves
+        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        AKVERIFYEXEC(select);   // for rid based moves
 
-      ItemFetchJob *prefetchjob = new ItemFetchJob( destination, this );
-      AKVERIFYEXEC( prefetchjob );
-      int baseline = prefetchjob->items().size();
+        ItemFetchJob *prefetchjob = new ItemFetchJob(destination, this);
+        AKVERIFYEXEC(prefetchjob);
+        int baseline = prefetchjob->items().size();
 
-      ItemMoveJob *move = new ItemMoveJob( items, source, destination, this );
-      AKVERIFYEXEC( move );
+        ItemMoveJob *move = new ItemMoveJob(items, source, destination, this);
+        AKVERIFYEXEC(move);
 
-      ItemFetchJob *fetch = new ItemFetchJob( destination, this );
-      fetch->fetchScope().fetchFullPayload();
-      AKVERIFYEXEC( fetch );
-      QCOMPARE( fetch->items().count(), items.count() + baseline );
-      foreach ( const Item& movedItem, fetch->items() ) {
-        QVERIFY( movedItem.hasPayload() );
-        QVERIFY( !movedItem.payload<QByteArray>().isEmpty() );
-      }
+        ItemFetchJob *fetch = new ItemFetchJob(destination, this);
+        fetch->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC(fetch);
+        QCOMPARE(fetch->items().count(), items.count() + baseline);
+        foreach (const Item &movedItem, fetch->items()) {
+            QVERIFY(movedItem.hasPayload());
+            QVERIFY(!movedItem.payload<QByteArray>().isEmpty());
+        }
     }
 
     void testIllegalMove()
     {
-      Collection col( collectionIdFromPath( QStringLiteral("res2") ) );
-      QVERIFY( col.isValid() );
+        Collection col(collectionIdFromPath(QStringLiteral("res2")));
+        QVERIFY(col.isValid());
 
-      ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-      AKVERIFYEXEC( prefetchjob );
-      QCOMPARE( prefetchjob->items().count(), 1 );
-      Item item = prefetchjob->items()[0];
+        ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
+        AKVERIFYEXEC(prefetchjob);
+        QCOMPARE(prefetchjob->items().count(), 1);
+        Item item = prefetchjob->items()[0];
 
-      // move into invalid collection
-      ItemMoveJob *store = new ItemMoveJob( item, Collection( INT_MAX ), this );
-      QVERIFY( !store->exec() );
+        // move into invalid collection
+        ItemMoveJob *store = new ItemMoveJob(item, Collection(INT_MAX), this);
+        QVERIFY(!store->exec());
 
-      // move item into folder that doesn't support its mimetype
-      store = new ItemMoveJob( item, col, this );
-      QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
-      QVERIFY( !store->exec() );
+        // move item into folder that doesn't support its mimetype
+        store = new ItemMoveJob(item, col, this);
+        QEXPECT_FAIL("", "Check not yet implemented by the server.", Continue);
+        QVERIFY(!store->exec());
     }
 };
 
-QTEST_AKONADIMAIN( ItemMoveTest )
+QTEST_AKONADIMAIN(ItemMoveTest)
 
 #include "itemmovetest.moc"

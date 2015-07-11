@@ -23,7 +23,8 @@
 #include "session.h"
 #include "entitycache_p.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class NotificationSource;
 

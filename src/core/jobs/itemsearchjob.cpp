@@ -65,22 +65,22 @@ public:
             mPendingItems.clear();
         }
     }
-    QString jobDebuggingString() const Q_DECL_OVERRIDE {
+    QString jobDebuggingString() const Q_DECL_OVERRIDE
+    {
         QStringList flags;
-        if ( mRecursive ) {
-            flags.append( QStringLiteral( "recursive" ) );
+        if (mRecursive) {
+            flags.append(QStringLiteral("recursive"));
         }
-        if ( mRemote ) {
-            flags.append( QStringLiteral( "remote" ) );
+        if (mRemote) {
+            flags.append(QStringLiteral("remote"));
         }
-        if ( mCollections.isEmpty() ) {
-            flags.append( QStringLiteral( "all collections" ) );
+        if (mCollections.isEmpty()) {
+            flags.append(QStringLiteral("all collections"));
         } else {
-            flags.append( QString::fromLatin1( "%1 collections" ).arg( mCollections.count() ) );
+            flags.append(QString::fromLatin1("%1 collections").arg(mCollections.count()));
         }
-        return QString::fromLatin1( "%1,json=%2" ).arg( flags.join(QStringLiteral(","))).arg(QString::fromUtf8(mQuery.toJSON()));
+        return QString::fromLatin1("%1,json=%2").arg(flags.join(QStringLiteral(","))).arg(QString::fromUtf8(mQuery.toJSON()));
     }
-
 
     Q_DECLARE_PUBLIC(ItemSearchJob)
 

@@ -26,7 +26,8 @@
 
 #include <kcompositejob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * Helper class for expanding inter-resource collection moves inside ResourceBase.

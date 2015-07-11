@@ -32,13 +32,14 @@
 #include <QListView>
 #include <QPainter>
 
-namespace Akonadi {
-namespace Internal {
+namespace Akonadi
+{
+namespace Internal
+{
 
 static void iconsEarlyCleanup();
 
-struct Icons
-{
+struct Icons {
     Icons()
         : readyPixmap(QIcon::fromTheme(QStringLiteral("user-online")).pixmap(QSize(16, 16)))
         , syncPixmap(QIcon::fromTheme(QStringLiteral("network-connect")).pixmap(QSize(16, 16)))
@@ -53,7 +54,8 @@ struct Icons
 Q_GLOBAL_STATIC(Icons, s_icons)
 
 // called as a Qt post routine, to prevent pixmap leaking
-void iconsEarlyCleanup() {
+void iconsEarlyCleanup()
+{
     Icons *const ic = s_icons;
     ic->readyPixmap = ic->syncPixmap = ic->errorPixmap = ic->offlinePixmap = QPixmap();
 }

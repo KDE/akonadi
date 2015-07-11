@@ -67,7 +67,7 @@ void ItemCopyJob::doStart()
 
     try {
         d->sendCommand(Protocol::CopyItemsCommand(ProtocolHelper::entitySetToScope(d->mItems),
-                                                  ProtocolHelper::entityToScope(d->mTarget)));
+                       ProtocolHelper::entityToScope(d->mTarget)));
     } catch (std::exception &e) {
         setError(Unknown);
         setErrorText(QString::fromUtf8(e.what()));

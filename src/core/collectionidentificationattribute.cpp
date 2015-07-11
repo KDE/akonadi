@@ -38,7 +38,7 @@ public:
 };
 
 CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier, const QByteArray &folderNamespace,
-                                                                     const QByteArray &name, const QByteArray &organizationUnit, const QByteArray &mail)
+        const QByteArray &name, const QByteArray &organizationUnit, const QByteArray &mail)
     : d(new Private)
 {
     d->mIdentifier = identifier;
@@ -92,7 +92,6 @@ QByteArray CollectionIdentificationAttribute::name() const
 {
     return d->mName;
 }
-
 
 void CollectionIdentificationAttribute::setCollectionNamespace(const QByteArray &ns)
 {

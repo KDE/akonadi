@@ -23,7 +23,8 @@
 #include <QAbstractItemView>
 #include "collection.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class DragDropManager
 {

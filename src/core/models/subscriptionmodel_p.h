@@ -24,7 +24,8 @@
 #include "collection.h"
 #include "collectionmodel.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @internal

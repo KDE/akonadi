@@ -25,8 +25,7 @@
 
 using namespace Akonadi;
 
-struct Akonadi::TagCreateJobPrivate : public JobPrivate
-{
+struct Akonadi::TagCreateJobPrivate : public JobPrivate {
     TagCreateJobPrivate(TagCreateJob *parent)
         : JobPrivate(parent)
         , mMerge(false)

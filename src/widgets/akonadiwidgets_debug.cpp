@@ -20,4 +20,3 @@
 #include "akonadiwidgets_debug.h"
 Q_LOGGING_CATEGORY(AKONADIWIDGETS_LOG, "akonadiwidgets_log")
 
-

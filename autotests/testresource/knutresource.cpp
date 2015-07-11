@@ -56,7 +56,7 @@ KnutResource::KnutResource(const QString &id)
 
     new SettingsAdaptor(mSettings);
     KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Settings"),
-                                                          mSettings, QDBusConnection::ExportAdaptors);
+            mSettings, QDBusConnection::ExportAdaptors);
     connect(this, &KnutResource::reloadConfiguration, this, &KnutResource::load);
     connect(mWatcher, &QFileSystemWatcher::fileChanged, this, &KnutResource::load);
     load();
@@ -137,13 +137,13 @@ void KnutResource::configure(WId windowId)
 
 void KnutResource::retrieveCollections()
 {
-  const Collection::List collections = mDocument.collections();
-  collectionsRetrieved( collections );
-  const Tag::List tags = mDocument.tags();
-  Q_FOREACH ( const Tag &tag, tags ) {
-      TagCreateJob *createjob = new TagCreateJob(tag);
-      createjob->setMergeIfExisting(true);
-  }
+    const Collection::List collections = mDocument.collections();
+    collectionsRetrieved(collections);
+    const Tag::List tags = mDocument.tags();
+    Q_FOREACH (const Tag &tag, tags) {
+        TagCreateJob *createjob = new TagCreateJob(tag);
+        createjob->setMergeIfExisting(true);
+    }
 }
 
 void KnutResource::retrieveItems(const Akonadi::Collection &collection)
@@ -300,44 +300,42 @@ void KnutResource::itemRemoved(const Akonadi::Item &item)
 
 void KnutResource::itemMoved(const Item &item, const Collection &collectionSource, const Collection &collectionDestination)
 {
-  const QDomElement oldElem = mDocument.itemElementByRemoteId(item.remoteId());
-  if (oldElem.isNull()) {
-    qWarning() << "Moved item not found in DOM tree";
-    changeProcessed();
-    return;
-  }
+    const QDomElement oldElem = mDocument.itemElementByRemoteId(item.remoteId());
+    if (oldElem.isNull()) {
+        qWarning() << "Moved item not found in DOM tree";
+        changeProcessed();
+        return;
+    }
 #if 0 //PORT QT5
-  QDomElement sourceParentElem = mDocument.collectionElementByRemoteId(collectionSource.remoteId());
-  if (sourceParentElem.isNull()) {
-    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
+    QDomElement sourceParentElem = mDocument.collectionElementByRemoteId(collectionSource.remoteId());
+    if (sourceParentElem.isNull()) {
+        emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
+        changeProcessed();
+        return;
+    }
+
+    QDomElement destParentElem = mDocument.collectionElementByRemoteId(collectionDestination.remoteId());
+    if (destParentElem.isNull()) {
+        emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionDestination.remoteId()));
+        changeProcessed();
+        return;
+    }
+    QDomElement itemElem = mDocument.itemElementByRemoteId(item.remoteId());
+    if (itemElem.isNull()) {
+        emit error(i18n("No item found for remoteid %1", item.remoteId()));
+    }
+
+    sourceParentElem.removeChild(itemElem);
+    destParentElem.appendChild(itemElem);
+
+    if (XmlWriter::writeItem(item, destParentElem).isNull()) {
+        emit error(i18n("Unable to write item."));
+    } else {
+        save();
+    }
     changeProcessed();
-    return;
-  }
-
-  QDomElement destParentElem = mDocument.collectionElementByRemoteId(collectionDestination.remoteId());
-  if (destParentElem.isNull()) {
-    emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionDestination.remoteId()));
-    changeProcessed();
-    return;
-  }
-  QDomElement itemElem = mDocument.itemElementByRemoteId(item.remoteId());
-  if (itemElem.isNull()) {
-    emit error(i18n("No item found for remoteid %1", item.remoteId()));
-  }
-
-  sourceParentElem.removeChild(itemElem);
-  destParentElem.appendChild(itemElem);
-
-  if (XmlWriter::writeItem(item, destParentElem).isNull()) {
-    emit error(i18n("Unable to write item."));
-  } else {
-    save();
-  }
-  changeProcessed();
 #endif
 }
-
-
 
 QSet<qint64> KnutResource::parseQuery(const QString &queryString)
 {

@@ -34,68 +34,69 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN( TransactionTest )
+QTEST_AKONADIMAIN(TransactionTest)
 
 void TransactionTest::initTestCase()
 {
-  AkonadiTest::checkTestIsIsolated();
-  Control::start();
+    AkonadiTest::checkTestIsIsolated();
+    Control::start();
 }
 
 void TransactionTest::testTransaction()
 {
-  Collection basisCollection;
+    Collection basisCollection;
 
-  CollectionFetchJob *listJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  AKVERIFYEXEC( listJob );
-  Collection::List list = listJob->collections();
-  foreach ( const Collection &col, list )
-    if ( col.name() == QLatin1String("res3") )
-      basisCollection = col;
+    CollectionFetchJob *listJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    AKVERIFYEXEC(listJob);
+    Collection::List list = listJob->collections();
+    foreach (const Collection &col, list)
+        if (col.name() == QLatin1String("res3")) {
+            basisCollection = col;
+        }
 
-  Collection testCollection;
-  testCollection.setParentCollection( basisCollection );
-  testCollection.setName( QLatin1String("transactionTest") );
-  testCollection.setRemoteId( QLatin1String("transactionTestRemoteId") );
-  CollectionCreateJob *job = new CollectionCreateJob( testCollection, Session::defaultSession() );
+    Collection testCollection;
+    testCollection.setParentCollection(basisCollection);
+    testCollection.setName(QLatin1String("transactionTest"));
+    testCollection.setRemoteId(QLatin1String("transactionTestRemoteId"));
+    CollectionCreateJob *job = new CollectionCreateJob(testCollection, Session::defaultSession());
 
-  AKVERIFYEXEC( job );
+    AKVERIFYEXEC(job);
 
-  testCollection = job->collection();
+    testCollection = job->collection();
 
-  TransactionBeginJob *beginTransaction1 = new TransactionBeginJob( Session::defaultSession() );
-  AKVERIFYEXEC( beginTransaction1 );
+    TransactionBeginJob *beginTransaction1 = new TransactionBeginJob(Session::defaultSession());
+    AKVERIFYEXEC(beginTransaction1);
 
-  TransactionBeginJob *beginTransaction2 = new TransactionBeginJob( Session::defaultSession() );
-  AKVERIFYEXEC( beginTransaction2 );
+    TransactionBeginJob *beginTransaction2 = new TransactionBeginJob(Session::defaultSession());
+    AKVERIFYEXEC(beginTransaction2);
 
-  TransactionCommitJob *commitTransaction2 = new TransactionCommitJob( Session::defaultSession() );
-  AKVERIFYEXEC( commitTransaction2 );
+    TransactionCommitJob *commitTransaction2 = new TransactionCommitJob(Session::defaultSession());
+    AKVERIFYEXEC(commitTransaction2);
 
-  TransactionCommitJob *commitTransaction1 = new TransactionCommitJob( Session::defaultSession() );
-  AKVERIFYEXEC( commitTransaction1 );
+    TransactionCommitJob *commitTransaction1 = new TransactionCommitJob(Session::defaultSession());
+    AKVERIFYEXEC(commitTransaction1);
 
-  TransactionCommitJob *commitTransactionX = new TransactionCommitJob( Session::defaultSession() );
-  QVERIFY( commitTransactionX->exec() == false );
+    TransactionCommitJob *commitTransactionX = new TransactionCommitJob(Session::defaultSession());
+    QVERIFY(commitTransactionX->exec() == false);
 
-  TransactionBeginJob *beginTransaction3 = new TransactionBeginJob( Session::defaultSession() );
-  AKVERIFYEXEC( beginTransaction3 );
+    TransactionBeginJob *beginTransaction3 = new TransactionBeginJob(Session::defaultSession());
+    AKVERIFYEXEC(beginTransaction3);
 
-  Item item;
-  item.setMimeType( QLatin1String("application/octet-stream") );
-  item.setPayload<QByteArray>( "body data" );
-  ItemCreateJob *appendJob = new ItemCreateJob( item, testCollection, Session::defaultSession() );
-  AKVERIFYEXEC( appendJob );
+    Item item;
+    item.setMimeType(QLatin1String("application/octet-stream"));
+    item.setPayload<QByteArray>("body data");
+    ItemCreateJob *appendJob = new ItemCreateJob(item, testCollection, Session::defaultSession());
+    AKVERIFYEXEC(appendJob);
 
-  TransactionRollbackJob *rollbackTransaction3 = new TransactionRollbackJob( Session::defaultSession() );
-  AKVERIFYEXEC( rollbackTransaction3 );
+    TransactionRollbackJob *rollbackTransaction3 = new TransactionRollbackJob(Session::defaultSession());
+    AKVERIFYEXEC(rollbackTransaction3);
 
-  ItemFetchJob *fetchJob = new ItemFetchJob( testCollection, Session::defaultSession() );
-  AKVERIFYEXEC( fetchJob );
+    ItemFetchJob *fetchJob = new ItemFetchJob(testCollection, Session::defaultSession());
+    AKVERIFYEXEC(fetchJob);
 
-  QVERIFY( fetchJob->items().isEmpty() );
+    QVERIFY(fetchJob->items().isEmpty());
 
-  CollectionDeleteJob *deleteJob = new CollectionDeleteJob( testCollection, Session::defaultSession() );
-  AKVERIFYEXEC( deleteJob );
+    CollectionDeleteJob *deleteJob = new CollectionDeleteJob(testCollection, Session::defaultSession());
+    AKVERIFYEXEC(deleteJob);
 }
 

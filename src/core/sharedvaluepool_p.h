@@ -23,8 +23,10 @@
 #include <boost/utility/enable_if.hpp>
 #include <algorithm>
 
-namespace Akonadi {
-namespace Internal {
+namespace Akonadi
+{
+namespace Internal
+{
 
 /*template <typename T> class container_traits
 {

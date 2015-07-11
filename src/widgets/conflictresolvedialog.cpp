@@ -55,45 +55,42 @@ public:
         return header() + mContent + footer();
     }
 
-    void setPropertyNameTitle(const QString &title) Q_DECL_OVERRIDE
-    {
+    void setPropertyNameTitle(const QString &title) Q_DECL_OVERRIDE {
         mNameTitle = title;
     }
 
-    void setLeftPropertyValueTitle(const QString &title) Q_DECL_OVERRIDE
-    {
+    void setLeftPropertyValueTitle(const QString &title) Q_DECL_OVERRIDE {
         mLeftTitle = title;
     }
 
-    void setRightPropertyValueTitle(const QString &title) Q_DECL_OVERRIDE
-    {
+    void setRightPropertyValueTitle(const QString &title) Q_DECL_OVERRIDE {
         mRightTitle = title;
     }
 
-    void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) Q_DECL_OVERRIDE
-    {
-        switch (mode) {
+    void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) Q_DECL_OVERRIDE {
+        switch (mode)
+        {
         case NormalMode:
             mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td>%2</td><td></td><td>%3</td></tr>")
-                            .arg(name,
-                                 textToHTML(leftValue),
-                                 textToHTML(rightValue)));
+            .arg(name,
+            textToHTML(leftValue),
+            textToHTML(rightValue)));
             break;
         case ConflictMode:
             mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>")
-                            .arg(name,
-                                 textToHTML(leftValue),
-                                 textToHTML(rightValue)));
+            .arg(name,
+            textToHTML(leftValue),
+            textToHTML(rightValue)));
             break;
         case AdditionalLeftMode:
             mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>")
-                            .arg(name,
-                                 textToHTML(leftValue)));
+            .arg(name,
+            textToHTML(leftValue)));
             break;
         case AdditionalRightMode:
             mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>")
-                            .arg(name,
-                                 textToHTML(rightValue)));
+            .arg(name,
+            textToHTML(rightValue)));
             break;
         }
     }

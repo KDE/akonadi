@@ -42,7 +42,8 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Monitor;
 
@@ -53,7 +54,8 @@ class AKONADICORE_EXPORT MonitorPrivate
 {
 public:
     MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);
-    virtual ~MonitorPrivate() {
+    virtual ~MonitorPrivate()
+    {
         delete dependenciesFactory;
         delete collectionCache;
         delete itemCache;
@@ -305,7 +307,7 @@ private:
     void fetchStatistics(Collection::Id colId)
     {
         CollectionStatisticsJob *job = new CollectionStatisticsJob(Collection(colId), session);
-        QObject::connect(job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob*)));
+        QObject::connect(job, SIGNAL(result(KJob *)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob *)));
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);

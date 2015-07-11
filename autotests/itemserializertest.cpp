@@ -27,42 +27,42 @@
 
 using namespace Akonadi;
 
-QTEST_MAIN( ItemSerializerTest )
+QTEST_MAIN(ItemSerializerTest)
 
 void ItemSerializerTest::testEmptyPayload()
 {
-  // should not crash
-  QByteArray data;
-  Item item;
-  ItemSerializer::deserialize( item, Item::FullPayload, data, 0, false );
-  QVERIFY( data.isEmpty() );
+    // should not crash
+    QByteArray data;
+    Item item;
+    ItemSerializer::deserialize(item, Item::FullPayload, data, 0, false);
+    QVERIFY(data.isEmpty());
 }
 
 void ItemSerializerTest::testDefaultSerializer_data()
 {
-  QTest::addColumn<QByteArray>( "serialized" );
+    QTest::addColumn<QByteArray>("serialized");
 
-  QTest::newRow( "null" ) << QByteArray();
-  QTest::newRow( "empty" ) << QByteArray( "" );
-  QTest::newRow( "nullbytei" ) << QByteArray( "\0", 1 );
-  QTest::newRow( "mixed" ) << QByteArray( "\0\r\n\0bla", 7 );
+    QTest::newRow("null") << QByteArray();
+    QTest::newRow("empty") << QByteArray("");
+    QTest::newRow("nullbytei") << QByteArray("\0", 1);
+    QTest::newRow("mixed") << QByteArray("\0\r\n\0bla", 7);
 }
 
 void ItemSerializerTest::testDefaultSerializer()
 {
-  QFETCH( QByteArray, serialized );
-  Item item;
-  item.setMimeType( QLatin1String("application/octet-stream") );
-  ItemSerializer::deserialize( item, Item::FullPayload, serialized, 0, false );
+    QFETCH(QByteArray, serialized);
+    Item item;
+    item.setMimeType(QLatin1String("application/octet-stream"));
+    ItemSerializer::deserialize(item, Item::FullPayload, serialized, 0, false);
 
-  QVERIFY( item.hasPayload<QByteArray>() );
-  QCOMPARE( item.payload<QByteArray>(), serialized );
+    QVERIFY(item.hasPayload<QByteArray>());
+    QCOMPARE(item.payload<QByteArray>(), serialized);
 
-  QByteArray data;
-  int version = 0;
-  ItemSerializer::serialize( item, Item::FullPayload, data, version );
-  QCOMPARE( data, serialized );
-  QEXPECT_FAIL( "null", "Serializer cannot distinguish null vs. empty", Continue );
-  QCOMPARE( data.isNull(), serialized.isNull() );
+    QByteArray data;
+    int version = 0;
+    ItemSerializer::serialize(item, Item::FullPayload, data, version);
+    QCOMPARE(data, serialized);
+    QEXPECT_FAIL("null", "Serializer cannot distinguish null vs. empty", Continue);
+    QCOMPARE(data.isNull(), serialized.isNull());
 }
 

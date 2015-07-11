@@ -61,7 +61,7 @@ bool EntityAnnotationsAttribute::contains(const QByteArray &key) const
 
 QByteArray EntityAnnotationsAttribute::type() const
 {
-    static const QByteArray sType( "entityannotations" );
+    static const QByteArray sType("entityannotations");
     return sType;
 }
 

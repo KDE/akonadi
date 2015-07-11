@@ -122,7 +122,7 @@ public:
             SearchTerm term(static_cast<SearchTerm::Relation>(map[QStringLiteral("rel")].toInt()));
             term.setIsNegated(map[QStringLiteral("negated")].toBool());
             const QList<QVariant> list = map[QStringLiteral("subTerms")].toList();
-            Q_FOREACH (const QVariant& var, list) {
+            Q_FOREACH (const QVariant &var, list) {
                 term.addSubTerm(JSONToTerm(var.toMap()));
             }
             return term;
@@ -381,29 +381,29 @@ ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &
 
 QMap<IncidenceSearchTerm::IncidenceSearchField, QString> initializeIncidenceMapping()
 {
-  QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
-  mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
-  mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
-  mapping.insert(IncidenceSearchTerm::Organizer, QStringLiteral("organizer"));
-  mapping.insert(IncidenceSearchTerm::Summary, QStringLiteral("summary"));
-  mapping.insert(IncidenceSearchTerm::Location, QStringLiteral("location"));
-  return mapping;
+    QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
+    mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
+    mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
+    mapping.insert(IncidenceSearchTerm::Organizer, QStringLiteral("organizer"));
+    mapping.insert(IncidenceSearchTerm::Summary, QStringLiteral("summary"));
+    mapping.insert(IncidenceSearchTerm::Location, QStringLiteral("location"));
+    return mapping;
 }
 
 static QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMapping = initializeIncidenceMapping();
 
 IncidenceSearchTerm::IncidenceSearchTerm(IncidenceSearchTerm::IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition)
-: SearchTerm(toKey(field), value, condition)
+    : SearchTerm(toKey(field), value, condition)
 {
 
 }
 
 QString IncidenceSearchTerm::toKey(IncidenceSearchTerm::IncidenceSearchField field)
 {
-  return incidenceSearchFieldMapping.value(field);
+    return incidenceSearchFieldMapping.value(field);
 }
 
 IncidenceSearchTerm::IncidenceSearchField IncidenceSearchTerm::fromKey(const QString &key)
 {
-  return incidenceSearchFieldMapping.key(key);
+    return incidenceSearchFieldMapping.key(key);
 }

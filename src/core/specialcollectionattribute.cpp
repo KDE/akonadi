@@ -74,7 +74,8 @@ QByteArray SpecialCollectionAttribute::collectionType() const
 }
 
 // Register the attribute when the library is loaded.
-namespace {
+namespace
+{
 
 bool dummySpecialCollectionAttribute()
 {

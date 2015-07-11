@@ -28,7 +28,8 @@
 
 #include <QtXml/QDomElement>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Attribute;
 
@@ -38,41 +39,41 @@ class Attribute;
 */
 namespace XmlReader
 {
-  /**
-    Converts an attribute element.
-  */
-  AKONADI_XML_EXPORT Attribute* elementToAttribute( const QDomElement &elem );
+/**
+  Converts an attribute element.
+*/
+AKONADI_XML_EXPORT Attribute *elementToAttribute(const QDomElement &elem);
 
-  /**
-    Reads all attributes that are immediate children of @p elem and adds them
-    to @p entity.
-  */
-  AKONADI_XML_EXPORT void readAttributes( const QDomElement &elem, Entity &entity );
+/**
+  Reads all attributes that are immediate children of @p elem and adds them
+  to @p entity.
+*/
+AKONADI_XML_EXPORT void readAttributes(const QDomElement &elem, Entity &entity);
 
-  /**
-    Converts a collection element.
-  */
-  AKONADI_XML_EXPORT Collection elementToCollection( const QDomElement &elem );
+/**
+  Converts a collection element.
+*/
+AKONADI_XML_EXPORT Collection elementToCollection(const QDomElement &elem);
 
-  /**
-    Reads recursively all collections starting from the given DOM element.
-  */
-  AKONADI_XML_EXPORT Collection::List readCollections( const QDomElement &elem );
+/**
+  Reads recursively all collections starting from the given DOM element.
+*/
+AKONADI_XML_EXPORT Collection::List readCollections(const QDomElement &elem);
 
-  /**
-    Converts a tag element.
-  */
-  AKONADI_XML_EXPORT Tag elementToTag( const QDomElement &elem );
+/**
+  Converts a tag element.
+*/
+AKONADI_XML_EXPORT Tag elementToTag(const QDomElement &elem);
 
-  /**
-    Reads recursively all tags starting from the given DOM element.
-  */
-  AKONADI_XML_EXPORT Tag::List readTags( const QDomElement &elem );
+/**
+  Reads recursively all tags starting from the given DOM element.
+*/
+AKONADI_XML_EXPORT Tag::List readTags(const QDomElement &elem);
 
-  /**
-    Converts an item element.
-  */
-  AKONADI_XML_EXPORT Item elementToItem( const QDomElement &elem, bool includePayload = true );
+/**
+  Converts an item element.
+*/
+AKONADI_XML_EXPORT Item elementToItem(const QDomElement &elem, bool includePayload = true);
 }
 
 }

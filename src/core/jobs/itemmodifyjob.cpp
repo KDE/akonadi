@@ -84,9 +84,9 @@ void ItemModifyJobPrivate::conflictResolveError(const QString &message)
 void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
     auto it = std::find_if(mItems.begin(), mItems.end(),
-                           [&itemId](const Item &item) -> bool {
-                               return item.id() == itemId;
-                           });
+    [&itemId](const Item & item) -> bool {
+        return item.id() == itemId;
+    });
     if (it != mItems.end() && (*it).revision() == oldRevision) {
         (*it).setRevision(newRevision);
     }
@@ -101,9 +101,9 @@ QString ItemModifyJobPrivate::jobDebuggingString() const
     }
 }
 
-void ItemModifyJobPrivate::setSilent( bool silent )
+void ItemModifyJobPrivate::setSilent(bool silent)
 {
-  mSilent = silent;
+    mSilent = silent;
 }
 
 ItemModifyJob::ItemModifyJob(const Item &item, QObject *parent)
@@ -218,7 +218,6 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         cmd.setRemovedParts(removedParts);
     }
 
-
     // nothing to do
     if (cmd.modifiedParts() == Protocol::ModifyItemsCommand::None && mParts.isEmpty() && item.attributes().isEmpty()) {
         return cmd;
@@ -309,9 +308,9 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             item.d_ptr->resetChangeLog();
         } else if (resp.id() > -1) {
             auto it = std::find_if(d->mItems.begin(), d->mItems.end(),
-                                   [&resp](const Item &item) -> bool {
-                                       return item.id() == resp.id();
-                                   });
+            [&resp](const Item & item) -> bool {
+                return item.id() == resp.id();
+            });
             if (it == d->mItems.end()) {
                 qDebug() << "Received STORE response for an item we did not modify: " << tag << response.debugString();
                 return true;

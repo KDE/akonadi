@@ -26,7 +26,6 @@
 #include "qtest_akonadi.h"
 #include "test_utils.h"
 
-
 using namespace Akonadi;
 
 class CollectionCreator : public QObject
@@ -64,18 +63,20 @@ private Q_SLOTS:
 
         static int index = 0;
         Job *lastJob = 0;
-        QBENCHMARK
-        {
-            if (useTransaction) {
+        QBENCHMARK {
+            if (useTransaction)
+            {
                 lastJob = new TransactionBeginJob(this);
             }
-            for (int i = 0; i < count; ++i) {
+            for (int i = 0; i < count; ++i)
+            {
                 Collection col;
                 col.setParentCollection(parent);
                 col.setName(QLatin1String("col") + QString::number(++index));
                 lastJob = new CollectionCreateJob(col, this);
             }
-            if (useTransaction) {
+            if (useTransaction)
+            {
                 lastJob = new TransactionCommitJob(this);
             }
             AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob*)), 15000);

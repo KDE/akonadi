@@ -27,7 +27,8 @@
 class KConfigGroup;
 class KJob;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class EntityTreeModel;
 

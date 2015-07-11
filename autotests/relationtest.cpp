@@ -60,17 +60,17 @@ void RelationTest::initTestCase()
 
 void RelationTest::testCreateFetch()
 {
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
     Item item2;
     {
-        item2.setMimeType( QStringLiteral("application/octet-stream") );
+        item2.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item2, res3, this);
         AKVERIFYEXEC(append);
         item2 = append->item();
@@ -119,17 +119,17 @@ void RelationTest::testMonitor()
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Akonadi::Monitor::Relations);
 
-    const Collection res3 = Collection( collectionIdFromPath( QStringLiteral("res3") ) );
+    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Item item1;
     {
-        item1.setMimeType( QStringLiteral("application/octet-stream") );
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
     Item item2;
     {
-        item2.setMimeType( QStringLiteral("application/octet-stream") );
+        item2.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item2, res3, this);
         AKVERIFYEXEC(append);
         item2 = append->item();

@@ -119,9 +119,8 @@ void ItemCreateJob::doStart()
         mergeModes |= Protocol::CreateItemCommand::Silent;
     }
     const bool merge = (mergeModes & Protocol::CreateItemCommand::GID)
-                        || (mergeModes & Protocol::CreateItemCommand::RemoteID);
+                       || (mergeModes & Protocol::CreateItemCommand::RemoteID);
     cmd.setMergeModes(mergeModes);
-
 
     if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
         cmd.setFlags(d->mItem.flags());

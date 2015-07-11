@@ -27,8 +27,7 @@
 
 using namespace Akonadi;
 
-struct Akonadi::RelationDeleteJobPrivate : public JobPrivate
-{
+struct Akonadi::RelationDeleteJobPrivate : public JobPrivate {
     RelationDeleteJobPrivate(RelationDeleteJob *parent)
         : JobPrivate(parent)
     {
@@ -57,8 +56,8 @@ void RelationDeleteJob::doStart()
     }
 
     d->sendCommand(Protocol::RemoveRelationsCommand(d->mRelation.left().id(),
-                                                    d->mRelation.right().id(),
-                                                    d->mRelation.type()));
+                   d->mRelation.right().id(),
+                   d->mRelation.type()));
 }
 
 bool RelationDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

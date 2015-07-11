@@ -24,7 +24,8 @@
 #include "collection.h"
 #include "job.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class CollectionSelectJobPrivate;
 

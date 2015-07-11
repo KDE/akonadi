@@ -180,4 +180,3 @@ bool MimeTypeChecker::containsWantedMimeType(const QStringList &mimeTypes) const
     return false;
 }
 
-// kate: space-indent on; indent-width 2; replace-tabs on;

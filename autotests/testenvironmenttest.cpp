@@ -35,34 +35,34 @@ using namespace Akonadi;
 */
 class TestEnvironmentTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase()
     {
-      AkonadiTest::checkTestIsIsolated();
+        AkonadiTest::checkTestIsIsolated();
     }
 
     void testDBus()
     {
-      QVERIFY( KDBusConnectionPool::threadConnection().isConnected() );
+        QVERIFY(KDBusConnectionPool::threadConnection().isConnected());
     }
 
     void testAkonadiServer()
     {
-      QVERIFY( ServerManager::isRunning() );
+        QVERIFY(ServerManager::isRunning());
     }
 
     void testResources()
     {
-      QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, QStringLiteral("akonadi_knut_resource_0") ) ) );
-      QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, QStringLiteral("akonadi_knut_resource_1") ) ) );
-      QVERIFY( KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        ServerManager::agentServiceName( ServerManager::Resource, QStringLiteral("akonadi_knut_resource_2") ) ) );
+        QVERIFY(KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+                    ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_0"))));
+        QVERIFY(KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+                    ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_1"))));
+        QVERIFY(KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+                    ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_2"))));
     }
 };
 
-QTEST_AKONADIMAIN( TestEnvironmentTest )
+QTEST_AKONADIMAIN(TestEnvironmentTest)
 
 #include "testenvironmenttest.moc"

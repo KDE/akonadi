@@ -23,7 +23,6 @@
 #include "job_p.h"
 #include <akonadi/private/protocol_p.h>
 
-
 using namespace Akonadi;
 
 class Akonadi::ResourceSelectJobPrivate : public JobPrivate

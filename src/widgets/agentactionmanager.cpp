@@ -48,13 +48,16 @@ static const struct {
     int shortcut;
     const char *slot;
 } agentActionData[] = {
-    {   "akonadi_agentinstance_create", I18N_NOOP("&New Agent Instance..."),
+    {
+        "akonadi_agentinstance_create", I18N_NOOP("&New Agent Instance..."),
         "folder-new", 0, SLOT(slotCreateAgentInstance())
     },
-    {   "akonadi_agentinstance_delete", I18N_NOOP("&Delete Agent Instance"),
+    {
+        "akonadi_agentinstance_delete", I18N_NOOP("&Delete Agent Instance"),
         "edit-delete", 0, SLOT(slotDeleteAgentInstance())
     },
-    {   "akonadi_agentinstance_configure", I18N_NOOP("&Configure Agent Instance"),
+    {
+        "akonadi_agentinstance_configure", I18N_NOOP("&Configure Agent Instance"),
         "configure", 0, SLOT(slotConfigureAgentInstance())
     }
 };
@@ -181,15 +184,15 @@ public:
         const AgentInstance::List instances = selectedAgentInstances();
         if (!instances.isEmpty()) {
             if (KMessageBox::questionYesNo(
-                    mParentWidget,
-                    contextText(AgentActionManager::DeleteAgentInstance,
-                                AgentActionManager::MessageBoxText),
-                    contextText(AgentActionManager::DeleteAgentInstance,
-                                AgentActionManager::MessageBoxTitle),
-                    KStandardGuiItem::del(),
-                    KStandardGuiItem::cancel(),
-                    QString(),
-                    KMessageBox::Dangerous) == KMessageBox::Yes) {
+                        mParentWidget,
+                        contextText(AgentActionManager::DeleteAgentInstance,
+                                    AgentActionManager::MessageBoxText),
+                        contextText(AgentActionManager::DeleteAgentInstance,
+                                    AgentActionManager::MessageBoxTitle),
+                        KStandardGuiItem::del(),
+                        KStandardGuiItem::cancel(),
+                        QString(),
+                        KMessageBox::Dangerous) == KMessageBox::Yes) {
 
                 foreach (const AgentInstance &instance, instances) {
                     AgentManager::self()->removeInstance(instance);

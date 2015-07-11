@@ -35,14 +35,14 @@
 
 Q_DECLARE_LOGGING_CATEGORY(DebugETM)
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ItemFetchJob;
 class ChangeRecorder;
 class AgentInstance;
 }
 
-struct Node
-{
+struct Node {
     Akonadi::Entity::Id id;
     Akonadi::Entity::Id parent;
 
@@ -54,7 +54,8 @@ struct Node
     int type;
 };
 
-namespace Akonadi {
+namespace Akonadi
+{
 /**
  * @internal
  */
@@ -141,7 +142,7 @@ public:
     QVector<Entity::Id> m_pendingCutItems;
     QVector<Entity::Id> m_pendingCutCollections;
     mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
-    mutable QSet<KJob*> m_pendingCollectionFetchJobs;
+    mutable QSet<KJob *> m_pendingCollectionFetchJobs;
 
     // Icon cache to workaround QIcon::fromTheme being very slow (bug #346644)
     mutable QHash<QString, QIcon> m_iconCache;
@@ -202,7 +203,8 @@ public:
      * The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
      * in itemsReceivedFromJob to correctly insert items into the model.
      */
-    static QByteArray FetchCollectionId() {
+    static QByteArray FetchCollectionId()
+    {
         return "FetchCollectionId";
     }
 
