@@ -184,7 +184,7 @@ public:
 
     void addRemoteColection(const Collection &collection, bool removed = false)
     {
-        QHash<RemoteId, QList<Collection> > &map = (removed ? removedRemoteCollections : remoteCollections);
+        QHash<RemoteId, Collection::List > &map = (removed ? removedRemoteCollections : remoteCollections);
         const Collection parentCollection = collection.parentCollection();
         if (parentCollection.remoteId() == akonadiRootCollection.remoteId() || parentCollection.id() == akonadiRootCollection.id()) {
             Collection c2(collection);
@@ -218,12 +218,12 @@ public:
 
     void processCollections(const RemoteId &parentRid)
     {
-        QList<Collection> remoteChildren = remoteCollections.value(parentRid);
-        QList<Collection> removedChildren = removedRemoteCollections.value(parentRid);
-        QList<Collection> localChildren = localCollections.value(parentRid);
+        Collection::List remoteChildren = remoteCollections.value(parentRid);
+        Collection::List removedChildren = removedRemoteCollections.value(parentRid);
+        Collection::List localChildren = localCollections.value(parentRid);
 
         // Iterate over the list of local children of localParent
-        QList<Collection>::Iterator localIter, localEnd,
+        Collection::List::Iterator localIter, localEnd,
               removedIter, removedEnd,
               remoteIter, remoteEnd;
 
@@ -320,11 +320,11 @@ public:
 
     void processLocalCollections(const RemoteId &parentRid, const Collection &parentCollection)
     {
-        const QList<Collection> originalChildren = localCollections.value(parentRid);
+        const Collection::List originalChildren = localCollections.value(parentRid);
         processCollections(parentRid);
 
-        const QList<Collection> remoteChildren = remoteCollections.take(parentRid);
-        const QList<Collection> localChildren = localCollections.take(parentRid);
+        const Collection::List remoteChildren = remoteCollections.take(parentRid);
+        const Collection::List localChildren = localCollections.take(parentRid);
 
         // At this point remoteChildren contains collections that don't exist locally yet
         if (!remoteChildren.isEmpty()) {
@@ -481,7 +481,7 @@ public:
 
         // Enqueue all pending remote collections that are children of the just-created
         // collection
-        QList<Collection> collectionsToCreate = remoteCollections.take(newLocalRID);
+        Collection::List collectionsToCreate = remoteCollections.take(newLocalRID);
         if (collectionsToCreate.isEmpty() && !hierarchicalRIDs) {
             collectionsToCreate = remoteCollections.take(RemoteId(newLocal.remoteId()));
         }
@@ -731,9 +731,9 @@ public:
     // List of parts where local changes should not be overwritten
     QSet<QByteArray> keepLocalChanges;
 
-    QHash<RemoteId /* parent */, QList<Collection> /* children */ > removedRemoteCollections;
-    QHash<RemoteId /* parent */, QList<Collection> /* children */ > remoteCollections;
-    QHash<RemoteId /* parent */, QList<Collection> /* children */ > localCollections;
+    QHash<RemoteId /* parent */, Collection::List /* children */ > removedRemoteCollections;
+    QHash<RemoteId /* parent */, Collection::List /* children */ > remoteCollections;
+    QHash<RemoteId /* parent */, Collection::List /* children */ > localCollections;
 
     Collection::List localCollectionsToRemove;
     Collection::List remoteCollectionsToCreate;

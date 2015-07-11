@@ -78,7 +78,7 @@ public:
     /**
      * Describes a list of collections.
      */
-    typedef QList<Collection> List;
+    typedef QVector<Collection> List;
 
     /**
      * Describes rights of a collection.

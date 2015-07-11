@@ -22,7 +22,7 @@
 
 #include "akonadi-xml_export.h"
 #include "job.h"
-
+#include "collection.h"
 namespace Akonadi
 {
 
@@ -37,7 +37,7 @@ class AKONADI_XML_EXPORT XmlWriteJob : public Job
     Q_OBJECT
 public:
     XmlWriteJob(const Collection &root, const QString &fileName, QObject *parent = Q_NULLPTR);
-    XmlWriteJob(const QList<Collection> &roots, const QString &fileName, QObject *parent = Q_NULLPTR);
+    XmlWriteJob(const Collection::List &roots, const QString &fileName, QObject *parent = Q_NULLPTR);
     ~XmlWriteJob();
 
 protected:

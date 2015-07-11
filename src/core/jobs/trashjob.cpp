@@ -102,7 +102,7 @@ void TrashJob::TrashJobPrivate::selectResult(KJob *job)
 void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Collection::List &list)
 {
     Q_Q(TrashJob);
-    QListIterator<Collection> i(list);
+    QVectorIterator<Collection> i(list);
     while (i.hasNext()) {
         const Collection &col = i.next();
         EntityDeletedAttribute *eda = new EntityDeletedAttribute();

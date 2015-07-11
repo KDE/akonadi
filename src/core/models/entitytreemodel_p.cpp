@@ -319,7 +319,7 @@ bool EntityTreeModelPrivate::isHidden(const Entity &entity, Node::Type type) con
 
 void EntityTreeModelPrivate::collectionListFetched(const Akonadi::Collection::List &collections)
 {
-    QListIterator<Akonadi::Collection> it(collections);
+    QVectorIterator<Akonadi::Collection> it(collections);
 
     while (it.hasNext()) {
         const Collection collection = it.next();
@@ -358,7 +358,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
     QTime t;
     t.start();
 
-    QListIterator<Akonadi::Collection> it(collections);
+    QVectorIterator<Akonadi::Collection> it(collections);
 
     QHash<Collection::Id, Collection> collectionsToInsert;
 
@@ -1324,7 +1324,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 
     if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
         m_collectionTreeFetched = true;
-        emit q_ptr->collectionTreeFetched(m_collections.values());
+        emit q_ptr->collectionTreeFetched(m_collections.values().toVector());
     }
 
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
@@ -1861,7 +1861,7 @@ void EntityTreeModelPrivate::fillModel()
 
     m_mimeChecker.setWantedMimeTypes(m_monitor->mimeTypesMonitored());
 
-    const QList<Collection> collections = m_monitor->collectionsMonitored();
+    const Collection::List collections = m_monitor->collectionsMonitored();
 
     if (collections.isEmpty() &&
             m_monitor->numMimeTypesMonitored() == 0 &&

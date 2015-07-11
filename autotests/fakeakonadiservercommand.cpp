@@ -65,7 +65,7 @@ Item FakeAkonadiServerCommand::getItemByDisplayName(const QString &displayName) 
 void FakeJobResponse::doCommand()
 {
     if (m_type == RespondToCollectionFetch) {
-        emit_collectionsFetched(m_collections.values());
+        emit_collectionsFetched(m_collections.values().toVector());
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
         emit_itemsFetched(m_items.values().toVector());

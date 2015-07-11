@@ -387,7 +387,6 @@ AgentManager *AgentManager::self()
 
 AgentType::List AgentManager::types() const
 {
-    qDebug() << " AgentManager::types()***********************************************************************************************************************************:" << d->mTypes.values().count();
     return d->mTypes.values().toVector();
 }
 

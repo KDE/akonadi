@@ -107,7 +107,7 @@ void AutoIncrementTest::testItemAutoIncrement()
 
 void AutoIncrementTest::testCollectionAutoIncrement()
 {
-    QList<Collection> collectionsToDelete;
+    Collection::List collectionsToDelete;
     Collection::Id lastId = -1;
 
     // Create 20 test collections
