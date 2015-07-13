@@ -119,6 +119,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     TagFetchScope
     TrashSettings
     CollectionPathResolver
+    VectorHelper
     REQUIRED_HEADERS AkonadiCore_base_HEADERS
 )
 
