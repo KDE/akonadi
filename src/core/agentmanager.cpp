@@ -19,6 +19,7 @@
 
 #include "agentmanager.h"
 #include "agentmanager_p.h"
+#include "vectorhelper.h"
 
 #include "agenttype_p.h"
 #include "agentinstance_p.h"
@@ -387,7 +388,7 @@ AgentManager *AgentManager::self()
 
 AgentType::List AgentManager::types() const
 {
-    return d->mTypes.values().toVector();
+    return Akonadi::valuesToVector(d->mTypes);
 }
 
 AgentType AgentManager::type(const QString &identifier) const
@@ -397,7 +398,7 @@ AgentType AgentManager::type(const QString &identifier) const
 
 AgentInstance::List AgentManager::instances() const
 {
-    return d->mInstances.values().toVector();
+    return Akonadi::valuesToVector(d->mInstances);
 }
 
 AgentInstance AgentManager::instance(const QString &identifier) const

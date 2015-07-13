@@ -24,6 +24,7 @@
 #include "KDBusConnectionPool"
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
+#include "vectorhelper.h"
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -1324,7 +1325,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 
     if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
         m_collectionTreeFetched = true;
-        emit q_ptr->collectionTreeFetched(m_collections.values().toVector());
+        emit q_ptr->collectionTreeFetched(Akonadi::valuesToVector(m_collections));
     }
 
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";

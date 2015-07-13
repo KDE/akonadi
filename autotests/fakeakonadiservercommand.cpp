@@ -23,6 +23,7 @@
 
 #include "fakeserverdata.h"
 #include "entitydisplayattribute.h"
+#include "vectorhelper.h"
 
 using namespace Akonadi;
 
@@ -65,10 +66,10 @@ Item FakeAkonadiServerCommand::getItemByDisplayName(const QString &displayName) 
 void FakeJobResponse::doCommand()
 {
     if (m_type == RespondToCollectionFetch) {
-        emit_collectionsFetched(m_collections.values().toVector());
+        emit_collectionsFetched(Akonadi::valuesToVector(m_collections));
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
-        emit_itemsFetched(m_items.values().toVector());
+        emit_itemsFetched(Akonadi::valuesToVector(m_items));
     }
 }
 
