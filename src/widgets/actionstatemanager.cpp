@@ -283,7 +283,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     enableAction(StandardActionManager::MoveToTrashRestoreCollection, atLeastOneCollectionSelected && canMoveCollections);
 
     // item specific actions
-    bool canDeleteItems = (items.count() > 0);   //TODO: fixme
+    bool canDeleteItems = (!items.isEmpty());   //TODO: fixme
     foreach (const Item &item, items) {
         const Collection parentCollection = item.parentCollection();
         if (!parentCollection.isValid()) {

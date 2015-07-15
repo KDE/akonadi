@@ -106,7 +106,7 @@ int main(int argc, char **argv)
         sh.makeShellScript(setup->basePath() + QLatin1String("testenvironment.sh"));
     }
 
-    if (parser.positionalArguments().count() > 0) {
+    if (!parser.positionalArguments().isEmpty()) {
         QStringList testArgs;
         for (int i = 0; i < parser.positionalArguments().count(); ++i) {
             testArgs << parser.positionalArguments().at(i);

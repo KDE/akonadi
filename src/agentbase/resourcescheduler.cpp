@@ -274,7 +274,7 @@ void ResourceScheduler::taskDone()
         QList<QVariant> argumentList;
         argumentList << QString::number(mCurrentTask.serial)
                      << QString();
-        s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+        s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
     }
 
     mCurrentTask = Task();
@@ -292,7 +292,7 @@ void ResourceScheduler::deferTask()
         QList<QVariant> argumentList;
         argumentList << QString::number(mCurrentTask.serial)
                      << QString();
-        s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+        s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
     }
 
     Task t = mCurrentTask;
@@ -342,7 +342,7 @@ void ResourceScheduler::executeNext()
     if (s_resourcetracker) {
         QList<QVariant> argumentList;
         argumentList << QString::number(mCurrentTask.serial);
-        s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
+        s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobStarted"), argumentList);
     }
 
     switch (mCurrentTask.type) {
@@ -440,7 +440,7 @@ void ResourceScheduler::setOnline(bool state)
                     QList<QVariant> argumentList;
                     argumentList << QString::number(mCurrentTask.serial)
                                  << i18nc("@info", "Job canceled.");
-                    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+                    s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
                 }
             } else {
                 ++it;
@@ -467,7 +467,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
                      << QString::fromLatin1(taskType)                      // "job type"
                      << debugString                                        // "job debugging string"
                      ;
-        s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
+        s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
     }
 }
 
@@ -569,7 +569,7 @@ void Akonadi::ResourceScheduler::cancelQueues()
             foreach (const Task &t, queue) {
                 QList<QVariant> argumentList;
                 argumentList << QString::number(t.serial) << QString();
-                s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+                s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
             }
         }
         queue.clear();

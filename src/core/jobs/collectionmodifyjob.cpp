@@ -99,7 +99,7 @@ void CollectionModifyJob::doStart()
     if (d->mCollection.d_func()->referencedChanged) {
         cmd.setReferenced(d->mCollection.referenced());
     }
-    if (d->mCollection.attributes().count() > 0) {
+    if (!d->mCollection.attributes().isEmpty()) {
         cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
     }
     if (!d->mCollection.d_func()->mDeletedAttributes.isEmpty()) {

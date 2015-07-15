@@ -192,7 +192,7 @@ void CollectionDialog::Private::slotDoubleClicked()
 
 bool CollectionDialog::Private::canSelectCollection() const
 {
-    bool result = (mView->selectionModel()->selectedIndexes().count() > 0);
+    bool result = (!mView->selectionModel()->selectedIndexes().isEmpty());
     if (mAllowToCreateNewChildCollection) {
         const Akonadi::Collection parentCollection = mParent->selectedCollection();
 
@@ -205,7 +205,7 @@ bool CollectionDialog::Private::canSelectCollection() const
 
 void CollectionDialog::Private::slotSelectionChanged()
 {
-    mParent->enableButton(KDialog::Ok, mView->selectionModel()->selectedIndexes().count() > 0);
+    mParent->enableButton(KDialog::Ok, !mView->selectionModel()->selectedIndexes().isEmpty());
     if (mAllowToCreateNewChildCollection) {
         const Akonadi::Collection parentCollection = mParent->selectedCollection();
         const bool canCreateChildCollections = canCreateCollection(parentCollection);
