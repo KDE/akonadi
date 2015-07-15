@@ -53,7 +53,7 @@ class Item;
 class AKONADICORE_EXPORT Relation
 {
 public:
-    typedef QList<Relation> List;
+    typedef QVector<Relation> List;
 
     /**
      * The GENERIC type represents a generic relation between two items.
