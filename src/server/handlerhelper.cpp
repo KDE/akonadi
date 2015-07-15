@@ -135,7 +135,9 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
     if (!col.queryString().isEmpty()) {
         response.setSearchQuery(col.queryString());
         QVector<qint64> searchCols;
-        Q_FOREACH (const QString &searchColId, col.queryCollections().split(QLatin1Char(' '))) {
+        const QStringList searchColIds = col.queryCollections().split(QLatin1Char(' '));
+        searchCols.reserve(searchColIds.size());
+        Q_FOREACH (const QString &searchColId, searchColIds) {
             searchCols << searchColId.toLongLong();
         }
         response.setSearchCollections(searchCols);
