@@ -138,6 +138,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         Q_FOREACH (const QString &searchColId, col.queryCollections().split(QLatin1Char(' '))) {
             searchCols << searchColId.toLongLong();
         }
+        response.setSearchCollections(searchCols);
     }
 
     Protocol::CachePolicy cachePolicy = cachePolicyResponse(col);
