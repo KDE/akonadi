@@ -300,6 +300,9 @@ bool <xsl:value-of select="$className"/>::exists( const <xsl:value-of select="co
 QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::extractResult( QSqlQuery &amp; query )
 {
   QVector&lt;<xsl:value-of select="$className"/>&gt; rv;
+  if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
+    rv.reserve(query.size());
+  }
   while ( query.next() ) {
     rv.append( <xsl:value-of select="$className"/>(
       <xsl:for-each select="column">

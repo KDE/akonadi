@@ -100,6 +100,7 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 #include &lt;QLatin1String&gt;
 #include &lt;qsqlquery.h&gt;
 #include &lt;qsqlerror.h&gt;
+#include &lt;qsqldriver.h&gt;
 #include &lt;qvariant.h&gt;
 #include &lt;QtCore/QHash&gt;
 #include &lt;QtCore/QMutex&gt;
