@@ -297,7 +297,7 @@ void CollectionScheduler::initScheduler()
     }
 
     const Collection::List collections = qb.result();
-    Q_FOREACH (/*sic!*/ Collection collection, collections) {
+    Q_FOREACH (const Collection &collection, collections) {
         scheduleCollection(collection);
     }
 
