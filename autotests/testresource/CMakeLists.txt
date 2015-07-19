@@ -7,6 +7,8 @@ include_directories(
 
 kde_enable_exceptions()
 
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_knut_resource\")
+
 find_package(LibXslt)
 set_package_properties(LibXslt PROPERTIES DESCRIPTION "xsltproc" URL "http://xmlsoft.org/XSLT/" TYPE REQUIRED PURPOSE "Needed to generate D-Bus interface specifications")
 
