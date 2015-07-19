@@ -296,7 +296,7 @@ TrashRestoreJob::~TrashRestoreJob()
 {
 }
 
-void TrashRestoreJob::setTargetCollection(const Akonadi::Collection collection)
+void TrashRestoreJob::setTargetCollection(const Akonadi::Collection &collection)
 {
     Q_D(TrashRestoreJob);
     d->mTargetCollection = collection;

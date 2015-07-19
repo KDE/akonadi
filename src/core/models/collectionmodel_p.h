@@ -98,7 +98,7 @@ private:
     mutable QHash<QString, QIcon> mIconCache;
     mutable QString mIconThemeName;
 
-    void updateSupportedMimeTypes(Collection col)
+    void updateSupportedMimeTypes(const Collection &col)
     {
         const QStringList l = col.contentMimeTypes();
         QStringList::ConstIterator constEnd(l.constEnd());

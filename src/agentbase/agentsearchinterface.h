@@ -83,7 +83,7 @@ public:
      */
     virtual void search(const QString &query, const Collection &collection) = 0;
 
-    void searchFinished(const QVector<qint64> result, ResultScope scope);
+    void searchFinished(const QVector<qint64> &result, ResultScope scope);
     void searchFinished(const ImapSet &result, ResultScope scope);
     void searchFinished(const QVector<QByteArray> &result);
 private:

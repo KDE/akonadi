@@ -1393,7 +1393,7 @@ public:
     }
 
     void fillFoldersMenu(const Akonadi::Collection::List &selectedCollectionsList, const QSet<QString> &mimeTypes,  StandardActionManager::Type type, QMenu *menu,
-                         const QAbstractItemModel *model, QModelIndex parentIndex)
+                         const QAbstractItemModel *model, const QModelIndex &parentIndex)
     {
         const int rowCount = model->rowCount(parentIndex);
 

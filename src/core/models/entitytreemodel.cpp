@@ -1225,7 +1225,7 @@ static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxie
     return qMakePair(proxyChain, etm);
 }
 
-static QModelIndex proxiedIndex(const QModelIndex &idx, QList<const QAbstractProxyModel *> proxyChain)
+static QModelIndex proxiedIndex(const QModelIndex &idx, const QList<const QAbstractProxyModel *> &proxyChain)
 {
     QListIterator<const QAbstractProxyModel *> it(proxyChain);
     QModelIndex _idx = idx;

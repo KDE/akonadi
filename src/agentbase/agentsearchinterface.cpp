@@ -105,7 +105,7 @@ AgentSearchInterface::~AgentSearchInterface()
     delete d;
 }
 
-void AgentSearchInterface::searchFinished(const QVector<qint64> result, ResultScope scope)
+void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultScope scope)
 {
     if (scope == Akonadi::AgentSearchInterface::Rid) {
         QVector<QByteArray> rids;

@@ -72,7 +72,7 @@ public:
      * If not set the item will be restored in the collection saved in the EntityDeletedAttribute.
      * @param collection the collection to set as target
      */
-    void setTargetCollection(const Collection collection);
+    void setTargetCollection(const Collection &collection);
 
     Item::List items() const;
 protected:
