@@ -243,7 +243,7 @@ public:
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
                        i18nc("@title:window", "New Folder"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText,
-                       i18nc("@label:textbox name of a thing", "Name"));
+                       i18nc("@label:textbox name of Akonadi folder", "Name"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
                        ki18n("Could not create folder: %1"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
