@@ -993,7 +993,6 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
 
     QSqlQuery query = qb.query();
     QMap<Entity::Id, QList<PimItem> > map;
-    QList<PimItem> pimItems;
     query.next();
     while (query.isValid()) {
         const qlonglong collectionId = query.value(0).toLongLong();
