@@ -31,6 +31,8 @@
 #include "storage/parthelper.h"
 #include "storage/selectquerybuilder.h"
 
+#include <numeric> //std::accumulate
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
