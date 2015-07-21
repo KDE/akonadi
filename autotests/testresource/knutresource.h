@@ -40,6 +40,7 @@ class KnutResource : public Akonadi::ResourceBase,
     Q_OBJECT
 
 public:
+    using Akonadi::AgentBase::ObserverV2::collectionChanged; // So we don't trigger -Woverloaded-virtual
     KnutResource(const QString &id);
     ~KnutResource();
 
