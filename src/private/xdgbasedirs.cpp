@@ -561,7 +561,7 @@ QString XdgBaseDirs::akonadiConnectionConfigFile(FileAccessMode openMode)
 
 QString XdgBaseDirs::akonadiConfigFile(const QString &file, FileAccessMode openMode)
 {
-    const QString akonadiDir = QLatin1String("akonadi");
+    const QString akonadiDir = QStringLiteral("akonadi");
 
     const QString savePath = saveDir("config", akonadiDir) + QLatin1Char('/') + file;
 

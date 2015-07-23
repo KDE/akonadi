@@ -57,22 +57,22 @@ QString AkStandardDirs::configFile(const QString &configFile, Akonadi::XdgBaseDi
 
 QString AkStandardDirs::serverConfigFile(XdgBaseDirs::FileAccessMode openMode)
 {
-    return configFile(QLatin1String("akonadiserverrc"), openMode);
+    return configFile(QStringLiteral("akonadiserverrc"), openMode);
 }
 
 QString AkStandardDirs::connectionConfigFile(XdgBaseDirs::FileAccessMode openMode)
 {
-    return configFile(QLatin1String("akonadiconnectionrc"), openMode);
+    return configFile(QStringLiteral("akonadiconnectionrc"), openMode);
 }
 
 QString AkStandardDirs::agentConfigFile(XdgBaseDirs::FileAccessMode openMode)
 {
-    return configFile(QLatin1String("agentsrc"), openMode);
+    return configFile(QStringLiteral("agentsrc"), openMode);
 }
 
 QString AkStandardDirs::saveDir(const char *resource, const QString &relPath)
 {
-    QString fullRelPath = QLatin1String("akonadi");
+    QString fullRelPath = QStringLiteral("akonadi");
     if (AkApplication::hasInstanceIdentifier()) {
         fullRelPath += QLatin1String("/instance/") + AkApplication::instanceIdentifier();
     }

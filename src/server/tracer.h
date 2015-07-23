@@ -25,6 +25,8 @@
 
 #include "tracerinterface.h"
 
+class QSettings;
+
 namespace Akonadi {
 namespace Server {
 
@@ -134,6 +136,7 @@ private:
 
     TracerInterface *mTracerBackend;
     mutable QMutex mMutex;
+    QScopedPointer<QSettings> mSettings;
 };
 
 } // namespace Server

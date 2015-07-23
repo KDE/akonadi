@@ -31,7 +31,7 @@
 #include <shared/akstandarddirs.h>
 
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
-#define DEFAULT_TRACER QLatin1String( "null" )
+#define DEFAULT_TRACER QStringLiteral( "null" )
 
 using namespace Akonadi::Server;
 
@@ -39,12 +39,13 @@ Tracer *Tracer::mSelf = 0;
 
 Tracer::Tracer()
     : mTracerBackend(0)
+    , mSettings(new QSettings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat))
 {
     activateTracer(currentTracer());
 
     new TracerAdaptor(this);
 
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/tracing"), this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/tracing"), this, QDBusConnection::ExportAdaptors);
 }
 
 Tracer::~Tracer()
@@ -124,8 +125,7 @@ void Tracer::error(const char *componentName, const QString &msg)
 QString Tracer::currentTracer() const
 {
     QMutexLocker locker(&mMutex);
-    const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
-    return settings.value(QLatin1String("Debug/Tracer"), DEFAULT_TRACER).toString();
+    return mSettings->value(QStringLiteral("Debug/Tracer"), DEFAULT_TRACER).toString();
 }
 
 void Tracer::activateTracer(const QString &type)
@@ -134,13 +134,11 @@ void Tracer::activateTracer(const QString &type)
     delete mTracerBackend;
     mTracerBackend = 0;
 
-    QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
-    settings.setValue(QLatin1String("Debug/Tracer"), type);
-    settings.sync();
+    mSettings->setValue(QStringLiteral("Debug/Tracer"), type);
+    mSettings->sync();
 
     if (type == QLatin1String("file")) {
-        const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
-        const QString file = settings.value(QLatin1String("Debug/File"), QLatin1String("/dev/null")).toString();
+        const QString file = mSettings->value(QStringLiteral("Debug/File"), QStringLiteral("/dev/null")).toString();
         mTracerBackend = new FileTracer(file);
     } else if (type == QLatin1String("null")) {
         mTracerBackend = new NullTracer();
