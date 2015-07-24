@@ -64,7 +64,7 @@ AttributeEntity::~AttributeEntity()
 Akonadi::AttributeEntity &Akonadi::AttributeEntity::operator=(const Akonadi::AttributeEntity &other)
 {
     QHash<QByteArray, Attribute *>::const_iterator it = other.d_ptr->mAttributes.constBegin();
-    for (; it != other.d_ptr->mAttributes.constEnd(); it++) {
+    for (; it != other.d_ptr->mAttributes.constEnd(); ++it) {
         d_ptr->mAttributes.insert(it.key(), it.value()->clone());
     }
     d_ptr->mDeletedAttributes = other.d_ptr->mDeletedAttributes;
