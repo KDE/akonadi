@@ -790,9 +790,7 @@ private:
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
 
-    bool requestItemDelivery(qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts);
-
-    QString requestItemDeliveryV2(qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts);
+    QString requestItemDelivery(qint64 uid, const QString &remoteId, const QString &mimeType, const QByteArrayList &parts);
 
 private:
     Q_DECLARE_PRIVATE(ResourceBase)

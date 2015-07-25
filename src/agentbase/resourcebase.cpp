@@ -477,6 +477,8 @@ ResourceBase::ResourceBase(const QString &id)
 {
     Q_D(ResourceBase);
 
+    qDBusRegisterMetaType<QByteArrayList>();
+
     new Akonadi__ResourceAdaptor(this);
 
     d->scheduler = new ResourceScheduler(this);
@@ -769,13 +771,7 @@ void ResourceBase::changeCommitted(const Tag &tag)
     connect(job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)));
 }
 
-bool ResourceBase::requestItemDelivery(qint64 uid, const QString &remoteId,
-                                       const QString &mimeType, const QStringList &parts)
-{
-    return requestItemDeliveryV2(uid, remoteId, mimeType, parts).isEmpty();
-}
-
-QString ResourceBase::requestItemDeliveryV2(qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &_parts)
+QString ResourceBase::requestItemDelivery(qint64 uid, const QString &remoteId, const QString &mimeType, const QByteArrayList &parts)
 {
     Q_D(ResourceBase);
     if (!isOnline()) {
@@ -790,12 +786,7 @@ QString ResourceBase::requestItemDeliveryV2(qint64 uid, const QString &remoteId,
     item.setMimeType(mimeType);
     item.setRemoteId(remoteId);
 
-    QSet<QByteArray> parts;
-    Q_FOREACH (const QString &str, _parts) {
-        parts.insert(str.toLatin1());
-    }
-
-    d->scheduler->scheduleItemFetch(item, parts, message());
+    d->scheduler->scheduleItemFetch(item, QSet<QByteArray>::fromList(parts), message());
 
     return QString();
 
