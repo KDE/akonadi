@@ -1178,17 +1178,17 @@ class CachePolicyPrivate : public QSharedData
 {
 public:
     CachePolicyPrivate()
-        : interval(-1)
-        , cacheTimeout(-1)
-        , syncOnDemand(false)
+        : syncOnDemand(false)
         , inherit(true)
+        , interval(-1)
+        , cacheTimeout(-1)
     {}
 
+    bool syncOnDemand;
+    bool inherit;
     QStringList localParts;
     int interval;
     int cacheTimeout;
-    bool syncOnDemand;
-    bool inherit;
 };
 
 
