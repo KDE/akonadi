@@ -205,7 +205,7 @@ bool ItemRetriever::exec()
     ItemRetrievalRequest *lastRequest = 0;
     QList<ItemRetrievalRequest *> requests;
 
-    QVector<QByteArray> parts;
+    QByteArrayList parts;
     Q_FOREACH (const QByteArray &part, mParts) {
         if (part.startsWith(AKONADI_PARAM_PLD)) {
             parts << part.mid(4);
@@ -217,8 +217,8 @@ bool ItemRetriever::exec()
         if (!lastRequest || lastRequest->id != pimItemId) {
             lastRequest = new ItemRetrievalRequest();
             lastRequest->id = pimItemId;
-            lastRequest->remoteId = Utils::variantToByteArray(query.value(PimItemRidColumn));
-            lastRequest->mimeType = Utils::variantToByteArray(query.value(MimeTypeColumn));
+            lastRequest->remoteId = Utils::variantToString(query.value(PimItemRidColumn));
+            lastRequest->mimeType = Utils::variantToString(query.value(MimeTypeColumn));
             lastRequest->resourceId = Utils::variantToString(query.value(ResourceColumn));
             lastRequest->parts = parts;
             requests << lastRequest;

@@ -22,8 +22,9 @@
 
 #include <QObject>
 
-class QDBusAbstractInterface;
 class QDBusError;
+class QDBusPendingCallWatcher;
+class OrgFreedesktopAkonadiResourceInterface;
 
 namespace Akonadi {
 namespace Server {
@@ -40,26 +41,23 @@ public:
         , m_request(req)
         , m_active(false)
         , m_interface(0)
-        , m_oldMethodCalled(false)
     {
     }
     ~ItemRetrievalJob();
-    void start(QDBusAbstractInterface *interface);
+    void start(OrgFreedesktopAkonadiResourceInterface *interface);
     void kill();
 
 Q_SIGNALS:
     void requestCompleted(ItemRetrievalRequest *req, const QString &errorMsg);
 
 private Q_SLOTS:
-    void callFinished(bool returnValue);
-    void callFinished(const QString &errorMsg);
-    void callFailed(const QDBusError &error);
+    void callFinished(QDBusPendingCallWatcher *watcher);
 
 private:
     ItemRetrievalRequest *m_request;
     bool m_active;
-    QDBusAbstractInterface *m_interface;
-    bool m_oldMethodCalled;
+    OrgFreedesktopAkonadiResourceInterface *m_interface;
+
 };
 
 } // namespace Server

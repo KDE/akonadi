@@ -42,6 +42,8 @@ ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
     : QObject(parent)
     , mDBusConnection(DBusConnectionPool::threadConnection())
 {
+    qDBusRegisterMetaType<QByteArrayList>();
+
     // make sure we are created from the retrieval thread and only once
     Q_ASSERT(QThread::currentThread() != QCoreApplication::instance()->thread());
     Q_ASSERT(sInstance == 0);
@@ -84,20 +86,20 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
 }
 
 // called within the retrieval thread
-OrgFreedesktopAkonadiResourceInterface *ItemRetrievalManager::resourceInterface(const QString &id)
+org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(const QString &id)
 {
     if (id.isEmpty()) {
         return 0;
     }
 
-    OrgFreedesktopAkonadiResourceInterface *iface = mResourceInterfaces.value(id);
+    org::freedesktop::Akonadi::Resource *iface = mResourceInterfaces.value(id);
     if (iface && iface->isValid()) {
         return iface;
     }
 
     delete iface;
-    iface = new OrgFreedesktopAkonadiResourceInterface(AkDBus::agentServiceName(id, AkDBus::Resource),
-                                                       QLatin1String("/"), mDBusConnection, this);
+    iface = new org::freedesktop::Akonadi::Resource(AkDBus::agentServiceName(id, AkDBus::Resource),
+                                                    QLatin1String("/"), mDBusConnection, this);
     if (!iface || !iface->isValid()) {
         akError() << QString::fromLatin1("Cannot connect to agent instance with identifier '%1', error message: '%2'")
                   .arg(id, iface ? iface->lastError().message() : QString());
@@ -118,10 +120,10 @@ void ItemRetrievalManager::requestItemDelivery(qint64 uid, const QByteArray &rem
 {
     ItemRetrievalRequest *req = new ItemRetrievalRequest();
     req->id = uid;
-    req->remoteId = remoteId;
-    req->mimeType = mimeType;
+    req->remoteId = QString::fromUtf8(remoteId);
+    req->mimeType = QString::fromUtf8(mimeType);
     req->resourceId = resource;
-    req->parts = parts;
+    req->parts = parts.toList();
 
     requestItemDelivery(req);
 }
@@ -225,7 +227,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
 
 void ItemRetrievalManager::triggerCollectionSync(const QString &resource, qint64 colId)
 {
-    OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface(resource);
+    org::freedesktop::Akonadi::Resource *interface = resourceInterface(resource);
     if (interface) {
         interface->synchronizeCollection(colId);
     }
@@ -233,7 +235,7 @@ void ItemRetrievalManager::triggerCollectionSync(const QString &resource, qint64
 
 void ItemRetrievalManager::triggerCollectionTreeSync(const QString &resource)
 {
-    OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface(resource);
+    org::freedesktop::Akonadi::Resource *interface = resourceInterface(resource);
     if (interface) {
         interface->synchronizeCollectionTree();
     }

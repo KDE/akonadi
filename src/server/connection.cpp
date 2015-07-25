@@ -41,7 +41,7 @@
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
 
-#define AKONADI_PROTOCOL_VERSION 51
+#define AKONADI_PROTOCOL_VERSION 52
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
