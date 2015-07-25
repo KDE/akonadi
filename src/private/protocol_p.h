@@ -86,6 +86,8 @@ friend class Class##Private;
 typedef QMap<QByteArray, QByteArray> Attributes;
 class Factory;
 
+AKONADIPRIVATE_EXPORT int version();
+
 class DataStream;
 class DebugBlock;
 class CommandPrivate;

@@ -50,8 +50,6 @@ public:
     Connection(quintptr socketDescriptor, QObject *parent = 0);
     virtual ~Connection();
 
-    static int protocolVersion();
-
     virtual DataStore *storageBackend();
 
     CollectionReferenceManager *collectionReferenceManager();

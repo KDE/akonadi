@@ -140,7 +140,7 @@ TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
         TestScenario::create(0, TestScenario::ServerCmd,
                              Protocol::HelloResponse(QStringLiteral("Akonadi"),
                                                      QStringLiteral("Not Really IMAP server"),
-                                                     Connection::protocolVersion())),
+                                                     Protocol::version())),
         TestScenario::create(1,TestScenario::ClientCmd,
                              Protocol::LoginCommand(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
         TestScenario::create(1, TestScenario::ServerCmd,

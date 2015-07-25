@@ -41,8 +41,6 @@
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
 
-#define AKONADI_PROTOCOL_VERSION 52
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -105,12 +103,7 @@ void Connection::slotSendHello()
 {
     sendResponse(0, Protocol::HelloResponse(QStringLiteral("Akonadi"),
                                             QStringLiteral("Not Really IMAP server"),
-                                            protocolVersion()));
-}
-
-int Connection::protocolVersion()
-{
-    return AKONADI_PROTOCOL_VERSION;
+                                            Protocol::version()));
 }
 
 DataStore *Connection::storageBackend()

@@ -45,6 +45,16 @@ inline const Class##Private* Class::d_func() const {\
 #define COMPARE(prop) \
     (prop == ((decltype(this)) other)->prop)
 
+namespace Akonadi {
+namespace Protocol {
+
+int version() {
+    return 52;
+}
+
+}
+}
+
 QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
 {
     QDebug dbg(_dbg.noquote());
