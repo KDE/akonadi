@@ -21,6 +21,8 @@
 #include "session_p.h"
 #include "job.h"
 
+#include <akonadi/private/protocol_p.h>
+
 #include <QCoreApplication>
 
 class FakeSessionPrivate : public SessionPrivate
@@ -29,7 +31,7 @@ public:
     FakeSessionPrivate(FakeSession *parent, FakeSession::Mode mode)
         : SessionPrivate(parent), q_ptr(parent), m_mode(mode)
     {
-        protocolVersion = clientProtocolVersion();
+        protocolVersion = Protocol::version();
     }
 
     /* reimp */

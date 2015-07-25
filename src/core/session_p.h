@@ -117,11 +117,6 @@ public:
      */
     void itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision);
 
-    static int clientProtocolVersion()
-    {
-        return 51;
-    }
-
     /**
      * Default location for akonadiconnectionrc
      */

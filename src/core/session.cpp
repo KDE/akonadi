@@ -195,6 +195,7 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         // Version mismatch is handled in SessionPrivate::startJob() so that
         // we can report the error out via KJob API
         protocolVersion = hello.protocolVersion();
+        Internal::setServerProtocolVersion(protocolVersion);
 
         Protocol::LoginCommand login(sessionId);
         sendCommand(nextTag(), login);
@@ -308,19 +309,19 @@ void SessionPrivate::doStartNext()
 
 void SessionPrivate::startJob(Job *job)
 {
-    if (protocolVersion != clientProtocolVersion()) {
+    if (protocolVersion != Protocol::version()) {
         job->setError(Job::ProtocolVersionMismatch);
-        if (protocolVersion < SessionPrivate::clientProtocolVersion()) {
+        if (protocolVersion < Protocol::version()) {
             job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
                                    "If you updated your system recently please restart the Akonadi server.",
-                                   protocolVersion, clientProtocolVersion()));
-            qWarning() << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << clientProtocolVersion() << "). "
+                                   protocolVersion, Protocol::version()));
+            qWarning() << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
                        "If you updated your system recently please restart the Akonadi server.";
         } else {
             job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
                                    "If you updated your system recently please restart all KDE PIM applications.",
-                                   protocolVersion, clientProtocolVersion()));
-            qWarning() << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << clientProtocolVersion() << "). "
+                                   protocolVersion, Protocol::version()));
+            qWarning() << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
                        "If you updated your system recently please restart all KDE PIM applications.";
         }
         job->emitResult();
