@@ -25,6 +25,7 @@ function(findStdlibInclude includeName filePath)
             STRING(SUBSTRING ${rawline} 1 -1 path)
             # The path is often relative, make it absolute without ".."
             get_filename_component(path "${path}" ABSOLUTE)
+            set(std_file "std_file-NOTFOUND") # ensure it will be looked-up every time
             find_file(std_file ${includeName} PATHS ${path})
             if (NOT "${std_file}" STREQUAL "std_file-NOTFOUND")
                 message(STATUS "Found C++ stdlib ${includeName} include file: ${std_file}")
