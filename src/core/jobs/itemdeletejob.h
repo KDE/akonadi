@@ -71,7 +71,7 @@ public:
      * @internal
      * For internal use only, the item may have a remote identifier set instead
      * of a unique identifier. In this case, a collection or resource context
-     * needs to be selected using CollectionSelectJob or ResourceSelectJob.
+     * needs to be selected using ResourceSelectJob.
      * @endinternal
      *
      * @param item The item to delete.
@@ -87,7 +87,7 @@ public:
      * @internal
      * For internal use only, the items may have remote identifiers set instead
      * of unique identifiers. In this case, a collection or resource context
-     * needs to be selected using CollectionSelectJob or ResourceSelectJob.
+     * needs to be selected using ResourceSelectJob.
      * @endinternal
      *
      * @param items The items to delete.

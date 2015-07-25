@@ -48,7 +48,6 @@ private Q_SLOTS:
     void testMultiListInvalid();
     void testRecursiveMultiList();
     void testNonOverlappingRootList();
-    void testSelect();
     void testRidFetch();
     void testRidCreateDelete_data();
     void testRidCreateDelete();

@@ -59,7 +59,6 @@ A collection is represented by the Akonadi::Collection class.
 Classes to retrieve information about collections:
 
 - Akonadi::CollectionFetchJob
-- Akonadi::CollectionSelectJob
 - Akonadi::CollectionStatisticsJob
 
 Classes to manipulate collections:

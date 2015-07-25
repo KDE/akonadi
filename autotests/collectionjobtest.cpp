@@ -688,25 +688,6 @@ void CollectionJobTest::testNonOverlappingRootList()
     QVERIFY(findCol(list, "res2").isValid());
 }
 
-void CollectionJobTest::testSelect()
-{
-    CollectionPathResolver *resolver = new CollectionPathResolver("res1/foo", this);;
-    AKVERIFYEXEC(resolver);
-    Collection col(resolver->collection());
-
-    CollectionSelectJob *job = new CollectionSelectJob(col, this);
-    AKVERIFYEXEC(job);
-
-    job = new CollectionSelectJob(col, this);
-    AKVERIFYEXEC(job);
-
-    job = new CollectionSelectJob(Collection::root(), this);
-    AKVERIFYEXEC(job);
-
-    job = new CollectionSelectJob(Collection(INT_MAX), this);
-    QVERIFY(!job->exec());
-}
-
 void CollectionJobTest::testRidFetch()
 {
     Collection col;
