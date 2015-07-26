@@ -21,7 +21,6 @@
 
 #include "attributefactory.h"
 #include "collection.h"
-#include "collectionselectjob_p.h"
 #include "itemfetchscope.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"

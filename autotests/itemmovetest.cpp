@@ -20,7 +20,6 @@
 #include "test_utils.h"
 
 #include "collection.h"
-#include "collectionselectjob_p.h"
 #include "control.h"
 #include "itemfetchjob.h"
 #include "itemmovejob.h"

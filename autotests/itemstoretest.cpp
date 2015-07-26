@@ -26,7 +26,6 @@
 #include <agentinstance.h>
 #include <attributefactory.h>
 #include <collectionfetchjob.h>
-#include <collectionselectjob_p.h>
 #include <itemcreatejob.h>
 #include <itemdeletejob.h>
 #include <itemfetchjob.h>

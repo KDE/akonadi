@@ -20,7 +20,6 @@
 #include "itemdeletejob.h"
 
 #include "collection.h"
-#include "collectionselectjob_p.h"
 #include "item.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
