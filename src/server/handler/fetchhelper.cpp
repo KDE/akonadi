@@ -255,7 +255,7 @@ QSqlQuery FetchHelper::buildVRefQuery()
 bool FetchHelper::isScopeLocal(const Scope &scope)
 {
     // The only agent allowed to override local scope is the Baloo Indexer
-    if (!mConnection->sessionId().startsWith("akonadi_baloo_indexer")) {
+    if (!mConnection->sessionId().startsWith("akonadi_indexing_agent")) {
         return false;
     }
 
