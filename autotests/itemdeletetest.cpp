@@ -106,9 +106,6 @@ private Q_SLOTS:
         const Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
 
-        CollectionSelectJob *sel = new CollectionSelectJob(col);
-        AKVERIFYEXEC(sel);
-
         Item i;
         i.setRemoteId(QStringLiteral("C"));
 

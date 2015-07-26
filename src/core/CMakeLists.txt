@@ -179,7 +179,6 @@ set(akonadicore_jobs_SRCS
     jobs/collectionfetchjob.cpp
     jobs/collectionmodifyjob.cpp
     jobs/collectionmovejob.cpp
-    jobs/collectionselectjob.cpp
     jobs/collectionstatisticsjob.cpp
     jobs/invalidatecachejob.cpp
     jobs/itemcopyjob.cpp

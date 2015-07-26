@@ -277,12 +277,6 @@ void ItemStoreTest::testPartRemove()
 
 void ItemStoreTest::testRevisionCheck()
 {
-    // make sure we don't have any other collection selected
-    // otherwise EXPUNGE doesn't work and will be triggered by
-    // the following tests and mess up the monitor testing
-    CollectionSelectJob *sel = new CollectionSelectJob(Collection::root(), this);
-    AKVERIFYEXEC(sel);
-
     // fetch same item twice
     Item ref(2);
     ItemFetchJob *prefetchjob = new ItemFetchJob(ref);
