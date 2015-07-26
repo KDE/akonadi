@@ -41,7 +41,6 @@
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/searchresult.h"
-#include "handler/select.h"
 #include "handler/status.h"
 #include "handler/store.h"
 #include "handler/transaction.h"
@@ -171,8 +170,6 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
         return new Modify();
     case Protocol::Command::MoveCollection:
         return new ColMove();
-    case Protocol::Command::SelectCollection:
-        return new Select();
 
     case Protocol::Command::Search:
         return new Search();

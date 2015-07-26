@@ -44,7 +44,6 @@ private:
     {
         MAKE_CMD_ROW(Protocol::Command::CreateCollection, Create)
         MAKE_CMD_ROW(Protocol::Command::FetchCollections, List)
-        MAKE_CMD_ROW(Protocol::Command::SelectCollection, Select)
         MAKE_CMD_ROW(Protocol::Command::StoreSearch, SearchPersistent)
         MAKE_CMD_ROW(Protocol::Command::Search, Search)
         MAKE_CMD_ROW(Protocol::Command::FetchItems, Fetch)

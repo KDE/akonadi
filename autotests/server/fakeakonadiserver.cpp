@@ -148,17 +148,6 @@ TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
     };
 }
 
-TestScenario::List FakeAkonadiServer::selectCollectionScenario(const QString &name)
-{
-    const Collection collection = Collection::retrieveByName(name);
-    return {
-        TestScenario::create(2, TestScenario::ClientCmd,
-                             Protocol::SelectCollectionCommand(collection.id())),
-        TestScenario::create(2, TestScenario::ServerCmd,
-                             Protocol::SelectCollectionResponse())
-    };
-}
-
 TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name)
 {
     const Resource resource = Resource::retrieveByName(name);

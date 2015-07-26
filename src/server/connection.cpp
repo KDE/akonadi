@@ -168,7 +168,6 @@ void Connection::slotNewData()
         }
 
         // Tag context and collection context is not persistent.
-        //        with SELECT job
         context()->setTag(-1);
         context()->setCollection(Collection());
         if (Tracer::self()->currentTracer() != QLatin1String("null")) {

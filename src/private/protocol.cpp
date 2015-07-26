@@ -103,8 +103,6 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
         return dbg << "ModifyCollection";
     case Akonadi::Protocol::Command::MoveCollection:
         return dbg << "MoveCollection";
-    case Akonadi::Protocol::Command::SelectCollection:
-        return dbg << "SelectCollection";
 
     case Akonadi::Protocol::Command::Search:
         return dbg << "Search";
@@ -525,7 +523,6 @@ public:
         registerType<Command::FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse>();
         registerType<Command::ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse>();
         registerType<Command::MoveCollection, MoveCollectionCommand, MoveCollectionResponse>();
-        registerType<Command::SelectCollection, SelectCollectionCommand, SelectCollectionResponse>();
 
         // Search
         registerType<Command::Search, SearchCommand, SearchResponse>();
@@ -6359,110 +6356,6 @@ MoveCollectionResponse::MoveCollectionResponse(const Command &other)
     : Response(other)
 {
     checkCopyInvariant(Command::MoveCollection);
-}
-
-
-
-/****************************************************************************/
-
-
-
-
-class SelectCollectionCommandPrivate : public CommandPrivate
-{
-public:
-    SelectCollectionCommandPrivate(const Scope &collection = Scope())
-        : CommandPrivate(Command::SelectCollection)
-        , collection(collection)
-    {}
-    SelectCollectionCommandPrivate(const SelectCollectionCommandPrivate &other)
-        : CommandPrivate(other)
-        , collection(other.collection)
-    {}
-
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
-    {
-        return CommandPrivate::compare(other)
-            && COMPARE(collection);
-    }
-
-    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
-    {
-        return CommandPrivate::serialize(stream)
-               << collection;
-    }
-
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
-        return CommandPrivate::deserialize(stream)
-               >> collection;
-    }
-
-    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
-    {
-        CommandPrivate::debugString(blck);
-        blck.write("Collection", collection);
-    }
-
-    CommandPrivate *clone() const Q_DECL_OVERRIDE
-    {
-        return new SelectCollectionCommandPrivate(*this);
-    }
-
-    Scope collection;
-};
-
-
-
-
-AKONADI_DECLARE_PRIVATE(SelectCollectionCommand)
-
-SelectCollectionCommand::SelectCollectionCommand()
-    : Command(new SelectCollectionCommandPrivate)
-{
-}
-
-SelectCollectionCommand::SelectCollectionCommand(const Scope &collection)
-    : Command(new SelectCollectionCommandPrivate(collection))
-{
-}
-
-SelectCollectionCommand::SelectCollectionCommand(const Command &other)
-    : Command(other)
-{
-    checkCopyInvariant(Command::SelectCollection);
-}
-
-Scope SelectCollectionCommand::collection() const
-{
-    return d_func()->collection;
-}
-
-DataStream &operator<<(DataStream &stream, const SelectCollectionCommand &command)
-{
-    return command.d_func()->serialize(stream);
-}
-
-DataStream &operator>>(DataStream &stream, SelectCollectionCommand &command)
-{
-    return command.d_func()->deserialize(stream);
-}
-
-
-
-/****************************************************************************/
-
-
-
-SelectCollectionResponse::SelectCollectionResponse()
-    : Response(new ResponsePrivate(Command::SelectCollection))
-{
-}
-
-SelectCollectionResponse::SelectCollectionResponse(const Command &other)
-    : Response(other)
-{
-    checkCopyInvariant(Command::SelectCollection);
 }
 
 

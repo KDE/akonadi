@@ -122,7 +122,6 @@ public:
         FetchCollectionStats,
         ModifyCollection,
         MoveCollection,
-        SelectCollection,
 
         // Search
         Search = 60,
@@ -1574,37 +1573,6 @@ class AKONADIPRIVATE_EXPORT MoveCollectionResponse : public Response
 public:
     explicit MoveCollectionResponse();
     MoveCollectionResponse(const Command &command);
-};
-
-
-
-
-class SelectCollectionCommandPrivate;
-class AKONADIPRIVATE_EXPORT SelectCollectionCommand : public Command
-{
-public:
-    explicit SelectCollectionCommand();
-    explicit SelectCollectionCommand(const Scope &col);
-    SelectCollectionCommand(const Command &command);
-
-    Scope collection() const;
-
-private:
-    AKONADI_DECLARE_PRIVATE(SelectCollectionCommand)
-
-    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SelectCollectionCommand &command);
-    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SelectCollectionCommand &command);
-};
-
-
-
-
-
-class AKONADIPRIVATE_EXPORT SelectCollectionResponse : public Response
-{
-public:
-    explicit SelectCollectionResponse();
-    SelectCollectionResponse(const Command &command);
 };
 
 
