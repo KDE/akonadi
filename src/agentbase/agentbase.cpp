@@ -35,13 +35,11 @@
 #include "session_p.h"
 #include "statusadaptor.h"
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
 #include "akonadiagentbase_debug.h"
-#include <kglobal.h>
-#include <KLocalizedString>
 
-#include <k4aboutdata.h>
+#include <KLocalizedString>
+#include <KSharedConfig>
+
 #include <Kdelibs4ConfigMigrator>
 
 #include <QtCore/QDir>
@@ -49,6 +47,9 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
 #include <QApplication>
+#include <QtCore/QCommandLineParser>
+#include <QtNetwork/QNetworkConfiguration>
+#include <QNetworkConfigurationManager>
 
 #include <signal.h>
 #include <stdlib.h>
@@ -332,7 +333,6 @@ void AgentBase::ObserverV4::itemsRelationsChanged(const Akonadi::Item::List &ite
 
 AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     : q_ptr(parent)
-    , mDBusConnection(QString())
     , mStatusCode(AgentBase::Idle)
     , mProgress(0)
     , mNeedsNetwork(false)
@@ -344,6 +344,7 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mObserver(0)
     , mPowerInterface(0)
     , mTemporaryOfflineTimer(0)
+    , mEventLoopLocker(0)
 {
     Internal::setClientType(Internal::Agent);
 }
@@ -366,11 +367,6 @@ void AgentBasePrivate::init()
      * Create a default session for this process.
      */
     SessionPrivate::createDefaultSession(mId.toLatin1());
-
-    if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
-        mDBusConnection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, q->identifier());
-        Q_ASSERT(mDBusConnection.isConnected());
-    }
 
     mTracer = new org::freedesktop::Akonadi::Tracer(ServerManager::serviceName(ServerManager::Server),
             QStringLiteral("/tracing"),
@@ -442,15 +438,7 @@ void AgentBasePrivate::init()
 
     // Use reference counting to allow agents to finish internal jobs when the
     // agent is stopped.
-    KGlobal::ref();
-    if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
-        KGlobal::setAllowQuit(true);
-    }
-
-    // disable session management
-    if (KApplication::kApplication()) {
-        KApplication::kApplication()->disableSessionManagement();
-    }
+    mEventLoopLocker = new QEventLoopLocker();
 
     mResourceTypeName = AgentManager::self()->instance(mId).type().name();
     setProgramName();
@@ -478,7 +466,8 @@ void AgentBasePrivate::setProgramName()
     if (!mName.isEmpty()) {
         programName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName) ;
     }
-    const_cast<K4AboutData *>(KGlobal::mainComponent().aboutData())->setProgramName(ki18n(programName.toUtf8().constData()));
+
+    QGuiApplication::setApplicationDisplayName(programName);
 }
 
 void AgentBasePrivate::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
@@ -837,9 +826,9 @@ void AgentBasePrivate::slotError(const QString &message)
     mTracer->error(QString::fromLatin1("AgentBase(%1)").arg(mId), message);
 }
 
-void AgentBasePrivate::slotNetworkStatusChange(Solid::Networking::Status stat)
+void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
 {
-    Q_UNUSED(stat);
+    Q_UNUSED(isOnline);
     Q_Q(AgentBase);
     q->setOnlineInternal(mDesiredOnlineState);
 }
@@ -847,7 +836,7 @@ void AgentBasePrivate::slotNetworkStatusChange(Solid::Networking::Status stat)
 void AgentBasePrivate::slotResumedFromSuspend()
 {
     if (mNeedsNetwork) {
-        slotNetworkStatusChange(Solid::Networking::status());
+        slotNetworkStatusChange(mNetworkManager->isOnline());
     }
 }
 
@@ -919,33 +908,38 @@ AgentBase::~AgentBase()
 
 QString AgentBase::parseArguments(int argc, char **argv)
 {
-    QString identifier;
-    if (argc < 3) {
-        qCDebug(AKONADIAGENTBASE_LOG) << "Not enough arguments passed...";
-        exit(1);
-    }
+    Q_UNUSED(argc);
 
-    for (int i = 1; i < argc - 1; ++i) {
-        if (QLatin1String(argv[i]) == QLatin1String("--identifier")) {
-            identifier = QLatin1String(argv[i + 1]);
-        }
-    }
+    QCommandLineOption identifierOption(QStringLiteral("identifier"), i18n("Agent identifier"),
+                                        QStringLiteral("argument"));
+    QCommandLineParser parser;
+    parser.addOption(identifierOption);
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(*qApp);
+    parser.setApplicationDescription(i18n("Akonadi Agent"));
 
-    if (identifier.isEmpty()) {
+    if (!parser.isSet(identifierOption)) {
         qCDebug(AKONADIAGENTBASE_LOG) << "Identifier argument missing";
         exit(1);
     }
 
+    const QString identifier = parser.value(identifierOption);
+    if (identifier.isEmpty()) {
+        qCDebug(AKONADIAGENTBASE_LOG) << "Identifier argument is empty";
+        exit(1);
+    }
+
+    QCoreApplication::setApplicationName(ServerManager::addNamespace(identifier));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADILIBRARIES_VERSION_STRING));
+
     const QFileInfo fi(QString::fromLocal8Bit(argv[0]));
     // strip off full path and possible .exe suffix
-    const QByteArray catalog = fi.baseName().toLatin1();
+    const QString catalog = fi.baseName();
 
-    KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog, ki18n("Akonadi Agent"), AKONADILIBRARIES_VERSION_STRING,
-                       ki18n("Akonadi Agent"));
-
-    KCmdLineOptions options;
-    options.add("identifier <argument>", ki18n("Agent identifier"));
-    KCmdLineArgs::addCmdLineOptions(options);
+    QTranslator *translator = new QTranslator();
+    translator->load(catalog);
+    QCoreApplication::installTranslator(translator);
 
     return identifier;
 }
@@ -956,7 +950,7 @@ int AgentBase::init(AgentBase *r)
 {
     QApplication::setQuitOnLastWindowClosed(false);
     KLocalizedString::setApplicationDomain("libakonadi5");
-    int rv = kapp->exec();
+    int rv = qApp->exec();
     delete r;
     return rv;
 }
@@ -1002,13 +996,13 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
     d->mNeedsNetwork = needsNetwork;
 
     if (d->mNeedsNetwork) {
-        connect(Solid::Networking::notifier()
-                , SIGNAL(statusChanged(Solid::Networking::Status))
-                , this, SLOT(slotNetworkStatusChange(Solid::Networking::Status))
-                , Qt::UniqueConnection);
+        d->mNetworkManager = new QNetworkConfigurationManager(this);
+        connect(d->mNetworkManager, SIGNAL(onlineStateChanged(bool)),
+                this, SLOT(slotNetworkStatusChange(bool)),
+                Qt::UniqueConnection);
 
     } else {
-        disconnect(Solid::Networking::notifier(), 0, 0, 0);
+        delete d->mNetworkManager;
         setOnlineInternal(d->mDesiredOnlineState);
     }
 }
@@ -1045,8 +1039,7 @@ void AgentBase::setOnlineInternal(bool state)
 {
     Q_D(AgentBase);
     if (state && d->mNeedsNetwork) {
-        const Solid::Networking::Status stat = Solid::Networking::status();
-        if (stat != Solid::Networking::Unknown && stat != Solid::Networking::Connected) {
+        if (!d->mNetworkManager->isOnline()) {
             //Don't go online if the resource needs network but there is none
             state = false;
         }
@@ -1114,7 +1107,7 @@ void AgentBase::quit()
         d->mSettings->sync();
     }
 
-    KGlobal::deref();
+    delete d->mEventLoopLocker;
 }
 
 void AgentBase::aboutToQuit()
@@ -1155,7 +1148,7 @@ void AgentBase::cleanup()
     QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + config()->name();
     QFile::remove(configFile);
 
-    KGlobal::deref();
+    delete d->mEventLoopLocker;
 }
 
 void AgentBase::registerObserver(Observer *observer)
@@ -1280,11 +1273,7 @@ ChangeRecorder *AgentBase::changeRecorder() const
 
 KSharedConfigPtr AgentBase::config()
 {
-    if (QCoreApplication::instance()->thread() == QThread::currentThread()) {
-        return KSharedConfig::openConfig();
-    } else {
-        return componentData().config();
-    }
+    return KSharedConfig::openConfig();
 }
 
 void AgentBase::abort()
@@ -1295,22 +1284,6 @@ void AgentBase::abort()
 void AgentBase::reconfigure()
 {
     emit reloadConfiguration();
-}
-
-extern QThreadStorage<KComponentData *> s_agentComponentDatas;
-
-KComponentData AgentBase::componentData()
-{
-    if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
-        if (s_agentComponentDatas.hasLocalData()) {
-            return *(s_agentComponentDatas.localData());
-        } else {
-            return KGlobal::mainComponent();
-        }
-    }
-
-    Q_ASSERT(s_agentComponentDatas.hasLocalData());
-    return *(s_agentComponentDatas.localData());
 }
 
 #include "moc_agentbase.cpp"

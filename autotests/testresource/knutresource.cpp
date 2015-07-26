@@ -34,7 +34,7 @@
 #include <itemfetchscope.h>
 #include <tagcreatejob.h>
 
-#include <kfiledialog.h>
+#include <QFileDialog>
 #include <KLocalizedString>
 
 #include <QtCore/QFile>
@@ -43,13 +43,14 @@
 #include <QtCore/QUuid>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QtWidgets/QFileDialog>
 
 using namespace Akonadi;
 
 KnutResource::KnutResource(const QString &id)
     : ResourceBase(id)
     , mWatcher(new QFileSystemWatcher(this))
-    , mSettings(new KnutSettings(componentData().config()))
+    , mSettings(new KnutSettings())
 {
     changeRecorder()->itemFetchScope().fetchFullPayload();
     changeRecorder()->fetchCollection(true);
@@ -111,18 +112,15 @@ void KnutResource::save()
 
 void KnutResource::configure(WId windowId)
 {
-    const QString oldFile = mSettings->dataFile();
-    QUrl url;
-    if (!oldFile.isEmpty()) {
-        url = QUrl::fromLocalFile(oldFile);
-    } else {
-        url = QUrl::fromLocalFile(QDir::homePath());
+    QString oldFile = mSettings->dataFile();
+    if (oldFile.isEmpty()) {
+        oldFile = QDir::homePath();
     }
 
-    const QString newFile =
-        KFileDialog::getSaveFileNameWId(url,
-                                        QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"),
-                                        windowId, i18n("Select Data File"));
+    // TODO: Use winId
+    const QString newFile = QFileDialog::getSaveFileName(
+        0, i18n("Select Data File"), QString(),
+        QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"));
 
     if (newFile.isEmpty() || oldFile == newFile) {
         return;

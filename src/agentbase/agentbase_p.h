@@ -26,10 +26,9 @@
 
 #include <klocalizedstring.h>
 
-#include <solid/networking.h>
-
 class QSettings;
 class QTimer;
+class QNetworkConfigurationManager;
 
 namespace Akonadi
 {
@@ -52,7 +51,7 @@ public:
     void slotPercent(int progress);
     void slotWarning(const QString &message);
     void slotError(const QString &message);
-    void slotNetworkStatusChange(Solid::Networking::Status);
+    void slotNetworkStatusChange(bool isOnline);
     void slotResumedFromSuspend();
     void slotTemporaryOfflineTimeout();
 
@@ -90,9 +89,6 @@ public:
     QString mName;
     QString mResourceTypeName;
 
-    /// Use sessionBus() to access the connection.
-    QDBusConnection mDBusConnection;
-
     int mStatusCode;
     QString mStatusMessage;
 
@@ -113,6 +109,9 @@ public:
     QDBusInterface *mPowerInterface;
 
     QTimer *mTemporaryOfflineTimer;
+
+    QEventLoopLocker *mEventLoopLocker;
+    QNetworkConfigurationManager *mNetworkManager;
 
 public Q_SLOTS:
     // Dump the contents of the current ChangeReplay

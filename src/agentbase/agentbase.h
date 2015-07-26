@@ -27,7 +27,9 @@
 #include "akonadiagentbase_export.h"
 #include "item.h"
 
-#include <KApplication>
+#include <QApplication>
+
+#include <KSharedConfig>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusContext>
@@ -70,7 +72,7 @@ class Item;
  * extra caution is needed. Because multiple instances of several kinds of agents
  * run in the same process, one cannot blindly use global objects like KGlobal.
  * For this reasons several methods where added to avoid problems in this context,
- * most notably AgentBase::config() and AgentBase::componentData(). Additionally,
+ * most notably AgentBase::config(). Additionally,
  * one cannot use QDBusConnection::sessionBus() with dbus < 1.4, because of a
  * multithreading bug in libdbus. Instead one should use
  * KDBusConnectionPool::threadConnection() which works around this problem.
@@ -462,8 +464,11 @@ public:
     template <typename T>
     static int init(int argc, char **argv)
     {
+        // Disable session management
+        qunsetenv("SESSION_MANAGER");
+
+        QApplication app(argc, argv);
         const QString id = parseArguments(argc, argv);
-        KApplication app;
         T *r = new T(id);
 
         // check if T also inherits AgentBase::Observer and
@@ -567,16 +572,6 @@ public:
      * @since 4.3
      */
     QString agentName() const;
-
-    /**
-     * Returns the component data object for this agent instance.
-     * In case of stand-alone agents this is identical to KGlobal::mainComponent().
-     * In case of in-process agents there is one component data object
-     * per agent instance thread.
-     * This method provides valid results even when called in the agent ctor.
-     * @since 4.6
-     */
-    static KComponentData componentData();
 
 Q_SIGNALS:
     /**
@@ -721,7 +716,7 @@ protected:
      * Sets whether the agent needs network or not.
      *
      * @since 4.2
-     * @todo use this in combination with Solid::Networking::Notifier to change
+     * @todo use this in combination with QNetworkConfiguration to change
      *       the onLine status of the agent.
      * @param needsNetwork @c true if the agents needs network. Defaults to @c false
      */
@@ -792,7 +787,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPercent(int))
     Q_PRIVATE_SLOT(d_func(), void slotWarning(const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotError(const QString &))
-    Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange(Solid::Networking::Status))
+    Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange(bool))
     Q_PRIVATE_SLOT(d_func(), void slotResumedFromSuspend())
     Q_PRIVATE_SLOT(d_func(), void slotTemporaryOfflineTimeout())
 

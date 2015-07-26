@@ -179,8 +179,11 @@ public:
     template <typename T>
     static int init(int argc, char **argv)
     {
+        // Disable session management
+        qunsetenv("SESSION_MANAGER");
+
+        QApplication app(argc, argv);
         const QString id = parseArguments(argc, argv);
-        KApplication app;
         T *r = new T(id);
 
         // check if T also inherits AgentBase::Observer and

@@ -49,8 +49,6 @@
 #include "recursivemover_p.h"
 #include "tagmodifyjob.h"
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
 #include "akonadiagentbase_debug.h"
 #include <KLocalizedString>
 
@@ -560,35 +558,40 @@ QString ResourceBase::name() const
 
 QString ResourceBase::parseArguments(int argc, char **argv)
 {
-    QString identifier;
-    if (argc < 3) {
-        qCDebug(AKONADIAGENTBASE_LOG) << "Not enough arguments passed...";
-        exit(1);
-    }
+    Q_UNUSED(argc);
 
-    for (int i = 1; i < argc - 1; ++i) {
-        if (QLatin1String(argv[i]) == QLatin1String("--identifier")) {
-            identifier = QLatin1String(argv[i + 1]);
-        }
-    }
+    QCommandLineOption identifierOption(QStringLiteral("identifier"),
+                                        i18nc("@label command line option", "Resource identifier"),
+                                        QStringLiteral("argument"));
+    QCommandLineParser parser;
+    parser.addOption(identifierOption);
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(*qApp);
+    parser.setApplicationDescription(i18n("Akonadi Resource"));
 
-    if (identifier.isEmpty()) {
+    if (!parser.isSet(identifierOption)) {
         qCDebug(AKONADIAGENTBASE_LOG) << "Identifier argument missing";
         exit(1);
     }
 
+    const QString identifier = parser.value(identifierOption);
+
+    if (identifier.isEmpty()) {
+        qCDebug(AKONADIAGENTBASE_LOG) << "Identifier is empty";
+        exit(1);
+    }
+
+    QCoreApplication::setApplicationName(ServerManager::addNamespace(identifier));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADILIBRARIES_VERSION_STRING));
+
     const QFileInfo fi(QString::fromLocal8Bit(argv[0]));
     // strip off full path and possible .exe suffix
-    const QByteArray catalog = fi.baseName().toLatin1();
+    const QString catalog = fi.baseName();
 
-    KCmdLineArgs::init(argc, argv, ServerManager::addNamespace(identifier).toLatin1(), catalog,
-                       ki18nc("@title application name", "Akonadi Resource"), AKONADILIBRARIES_VERSION_STRING,
-                       ki18nc("@title application description", "Akonadi Resource"));
-
-    KCmdLineOptions options;
-    options.add("identifier <argument>",
-                ki18nc("@label commandline option", "Resource identifier"));
-    KCmdLineArgs::addCmdLineOptions(options);
+    QTranslator *translator = new QTranslator();
+    translator->load(catalog);
+    QCoreApplication::installTranslator(translator);
 
     return identifier;
 }
@@ -598,7 +601,7 @@ int ResourceBase::init(ResourceBase *r)
     QApplication::setQuitOnLastWindowClosed(false);
 #warning port to the new way of doing this
 //   KLocalizedString::insertCatalog( QLatin1String( "libakonadi" ) );
-    int rv = kapp->exec();
+    int rv = qApp->exec();
     delete r;
     return rv;
 }

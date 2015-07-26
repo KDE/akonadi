@@ -1,7 +1,6 @@
 set(akonadiagentbase_SRCS
     akonadiagentbase_debug.cpp
     agentbase.cpp
-    agentfactory.cpp
     agentsearchinterface.cpp
     preprocessorbase.cpp
     preprocessorbase_p.cpp
@@ -15,7 +14,6 @@ set(akonadiagentbase_SRCS
 ecm_generate_headers(AkonadiAgentBase_HEADERS
     HEADER_NAMES
     AgentBase
-    AgentFactory
     AgentSearchInterface
     ResourceBase
     ResourceSettings
@@ -51,13 +49,15 @@ target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${
 
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
+    Qt5::Widgets # for QApplication
     KF5::AkonadiCore
     KF5::AkonadiPrivate
-    KF5::KDELibs4Support # for KApplication
-PRIVATE
     KF5::ConfigCore
-    KF5::Solid
+    KF5::ConfigGui # for KConfigSkeleton
+PRIVATE
     KF5::DBusAddons
+    KF5::I18n
+    Qt5::Network
 )
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
