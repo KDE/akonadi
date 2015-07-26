@@ -77,9 +77,9 @@ static QString _q_escapeIdentifier(const QString &identifier)
 {
     QString res = identifier;
     if(!identifier.isEmpty() && identifier.left(1) != QString(QLatin1Char('"')) && identifier.right(1) != QString(QLatin1Char('"')) ) {
-        res.replace(QLatin1Char('"'), QLatin1String("\"\""));
+        res.replace(QLatin1Char('"'), QStringLiteral("\"\""));
         res.prepend(QLatin1Char('"')).append(QLatin1Char('"'));
-        res.replace(QLatin1Char('.'), QLatin1String("\".\""));
+        res.replace(QLatin1Char('.'), QStringLiteral("\".\""));
     }
     return res;
 }
@@ -615,7 +615,7 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
 
     const QStringList opts = QString(conOpts).remove(QLatin1Char(' ' )).split(QLatin1Char(';'));
     Q_FOREACH (const QString &option, opts) {
-        if (option.startsWith(QLatin1String("QSQLITE_BUSY_TIMEOUT="))) {
+        if (option.startsWith(QStringLiteral("QSQLITE_BUSY_TIMEOUT="))) {
             bool ok;
             const int nt = option.midRef(21).toInt(&ok);
             if (ok)
@@ -683,7 +683,7 @@ bool QSQLiteDriver::beginTransaction()
         return false;
 
     QSqlQuery q(createResult());
-    if (!q.exec(QLatin1String("BEGIN"))) {
+    if (!q.exec(QStringLiteral("BEGIN"))) {
         setLastError(QSqlError(tr("Unable to begin transaction"),
                                q.lastError().databaseText(), QSqlError::TransactionError));
         return false;
@@ -698,7 +698,7 @@ bool QSQLiteDriver::commitTransaction()
         return false;
 
     QSqlQuery q(createResult());
-    if (!q.exec(QLatin1String("COMMIT"))) {
+    if (!q.exec(QStringLiteral("COMMIT"))) {
         setLastError(QSqlError(tr("Unable to commit transaction"),
                                q.lastError().databaseText(), QSqlError::TransactionError));
         return false;
@@ -713,7 +713,7 @@ bool QSQLiteDriver::rollbackTransaction()
         return false;
 
     QSqlQuery q(createResult());
-    if (!q.exec(QLatin1String("ROLLBACK"))) {
+    if (!q.exec(QStringLiteral("ROLLBACK"))) {
         setLastError(QSqlError(tr("Unable to rollback transaction"),
                                q.lastError().databaseText(), QSqlError::TransactionError));
         return false;
@@ -731,14 +731,14 @@ QStringList QSQLiteDriver::tables(QSql::TableType type) const
     QSqlQuery q(createResult());
     q.setForwardOnly(true);
 
-    QString sql = QLatin1String("SELECT name FROM sqlite_master WHERE %1 "
-                                "UNION ALL SELECT name FROM sqlite_temp_master WHERE %1");
+    QString sql = QStringLiteral("SELECT name FROM sqlite_master WHERE %1 "
+                                 "UNION ALL SELECT name FROM sqlite_temp_master WHERE %1");
     if ((type & QSql::Tables) && (type & QSql::Views))
-        sql = sql.arg(QLatin1String("type='table' OR type='view'"));
+        sql = sql.arg(QStringLiteral("type='table' OR type='view'"));
     else if (type & QSql::Tables)
-        sql = sql.arg(QLatin1String("type='table'"));
+        sql = sql.arg(QStringLiteral("type='table'"));
     else if (type & QSql::Views)
-        sql = sql.arg(QLatin1String("type='view'"));
+        sql = sql.arg(QStringLiteral("type='view'"));
     else
         sql.clear();
 
@@ -749,7 +749,7 @@ QStringList QSQLiteDriver::tables(QSql::TableType type) const
 
     if (type & QSql::SystemTables) {
         // there are no internal tables beside this one:
-        res.append(QLatin1String("sqlite_master"));
+        res.append(QStringLiteral("sqlite_master"));
     }
 
     return res;
@@ -764,7 +764,7 @@ static QSqlIndex qGetTableInfo(QSqlQuery &q, const QString &tableName, bool only
         schema = tableName.left(indexOfSeparator).append(QLatin1Char('.'));
         table = tableName.mid(indexOfSeparator + 1);
     }
-    q.exec(QLatin1String("PRAGMA ") + schema + QLatin1String("table_info (") + _q_escapeIdentifier(table) + QLatin1String(")"));
+    q.exec(QStringLiteral("PRAGMA ") + schema + QStringLiteral("table_info (") + _q_escapeIdentifier(table) + QLatin1Char(')'));
 
     QSqlIndex ind;
     while (q.next()) {
