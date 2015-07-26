@@ -82,9 +82,6 @@ private Q_SLOTS:
         const Item::List items = fjob->items();
         QVERIFY(items.count() > 0);
 
-        CollectionSelectJob *sjob = new CollectionSelectJob(Collection(2), this);
-        AKVERIFYEXEC(sjob);
-
         fjob = new ItemFetchJob(items[ 0 ], this);
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 1);
