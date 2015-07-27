@@ -152,14 +152,13 @@ public:
     explicit Command();
     Command(Command &&other);
     Command(const Command &other);
+    ~Command();
 
     Command &operator=(Command &&other);
     Command &operator=(const Command &other);
 
     bool operator==(const Command &other) const;
     bool operator!=(const Command &other) const;
-
-    virtual ~Command();
 
     Type type() const;
     bool isValid() const;
@@ -232,7 +231,7 @@ class AncestorPrivate;
 class AKONADIPRIVATE_EXPORT Ancestor
 {
 public:
-    enum Depth : quint8 {
+    enum Depth : uchar {
         NoAncestor,
         ParentAncestor,
         AllAncestors
@@ -355,7 +354,7 @@ class ScopeContextPrivate;
 class AKONADIPRIVATE_EXPORT ScopeContext
 {
 public:
-    enum Type {
+    enum Type : uchar {
         Any = 0,
         Collection,
         Tag
@@ -503,8 +502,7 @@ class LoginCommandPrivate;
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
 public:
-    enum SessionMode : uchar
-    {
+    enum SessionMode : bool {
         CommandMode = 0,
         NotificationBus
     };
@@ -562,7 +560,7 @@ class TransactionCommandPrivate;
 class AKONADIPRIVATE_EXPORT TransactionCommand : public Command
 {
 public:
-    enum Mode : qint8 {
+    enum Mode : uchar {
         Invalid = 0,
         Begin,
         Commit,
@@ -600,7 +598,7 @@ class CreateItemCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateItemCommand : public Command
 {
 public:
-    enum MergeMode : qint8 {
+    enum MergeMode : uchar {
         None = 0,
         GID = 1,
         RemoteID = 2,
@@ -1316,7 +1314,7 @@ class FetchCollectionsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsCommand : public Command
 {
 public:
-    enum Depth : quint8 {
+    enum Depth : uchar {
         BaseCollection,
         ParentCollection,
         AllCollections
@@ -1956,7 +1954,7 @@ class StreamPayloadCommandPrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
 {
 public:
-    enum Request {
+    enum Request : bool {
         MetaData,
         Data
     };
@@ -2025,7 +2023,7 @@ public:
     typedef QVector<ChangeNotification> List;
     typedef qint64 Id;
 
-    enum Type {
+    enum Type : uchar {
         InvalidType,
         Collections,
         Items,
@@ -2033,7 +2031,7 @@ public:
         Relations
     };
 
-    enum Operation {
+    enum Operation : uchar {
         InvalidOp,
         Add,
         Modify,

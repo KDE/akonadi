@@ -647,15 +647,15 @@ class FetchScopePrivate : public QSharedData
 {
 public:
     FetchScopePrivate()
-        : ancestorDepth(Ancestor::NoAncestor)
-        , fetchFlags(FetchScope::None)
+        : fetchFlags(FetchScope::None)
+        , ancestorDepth(Ancestor::NoAncestor)
     {}
 
+    FetchScope::FetchFlags fetchFlags;
     QVector<QByteArray> requestedParts;
     QDateTime changedSince;
     QSet<QByteArray> tagFetchScope;
     Ancestor::Depth ancestorDepth;
-    FetchScope::FetchFlags fetchFlags;
 };
 
 
