@@ -26,7 +26,6 @@
 #include "changerecorder.h"
 #include "tagselectiondialog.h"
 
-#include <kicon.h>
 #include <KLocalizedString>
 
 #include <QHBoxLayout>

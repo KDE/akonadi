@@ -157,7 +157,7 @@ void MobileEventHandler::openDialog()
 }
 
 CollectionComboBox::CollectionComboBox(QWidget *parent)
-    : KComboBox(parent)
+    : QComboBox(parent)
     , d(new Private(0, this))
 {
 #ifdef KDEPIM_MOBILE_UI
@@ -167,7 +167,7 @@ CollectionComboBox::CollectionComboBox(QWidget *parent)
 }
 
 CollectionComboBox::CollectionComboBox(QAbstractItemModel *model, QWidget *parent)
-    : KComboBox(parent)
+    : QComboBox(parent)
     , d(new Private(model, this))
 {
 #ifdef KDEPIM_MOBILE_UI

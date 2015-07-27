@@ -31,8 +31,7 @@
 #include <QIcon>
 #include <QFileDialog>
 #include <KLocalizedString>
-#include <KMessageBox>
-#include <KRun>
+#include <QMessageBox>
 #include <QStandardPaths>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -46,6 +45,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QStandardItemModel>
+#include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -633,7 +633,7 @@ void SelfTestDialog::saveReport()
 
     QFile file(fileName);
     if (!file.open(QFile::ReadWrite)) {
-        KMessageBox::error(this, i18n("Could not open file '%1'", fileName));
+        QMessageBox::critical(this, i18n("Error"), i18n("Could not open file '%1'", fileName));
         return;
     }
 
@@ -650,7 +650,7 @@ void SelfTestDialog::copyReport()
 
 void SelfTestDialog::linkActivated(const QString &link)
 {
-    KRun::runUrl(QUrl::fromLocalFile(link), QStringLiteral("text/plain"), this);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(link));
 }
 
 // @endcond

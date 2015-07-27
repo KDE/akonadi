@@ -23,7 +23,7 @@
 #include "akonadiwidgets_export.h"
 #include "collection.h"
 
-#include <KComboBox>
+#include <QComboBox>
 
 class QAbstractItemModel;
 
@@ -60,7 +60,7 @@ namespace Akonadi
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
-class AKONADIWIDGETS_EXPORT CollectionComboBox : public KComboBox
+class AKONADIWIDGETS_EXPORT CollectionComboBox : public QComboBox
 {
     Q_OBJECT
 

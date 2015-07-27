@@ -20,9 +20,9 @@
 */
 #include "tageditwidget.h"
 
-#include <KLineEdit>
 #include <KLocalizedString>
-#include <KMessageBox>
+#include <QLineEdit>
+#include <QMessageBox>
 #include <kcheckableproxymodel.h>
 
 #include "changerecorder.h"
@@ -71,7 +71,7 @@ public:
     KCheckableProxyModel *m_checkableProxy;
     QModelIndex m_deleteCandidate;
     QPushButton *m_newTagButton;
-    KLineEdit *m_newTagEdit;
+    QLineEdit *m_newTagEdit;
 
     QPushButton *m_deleteButton;
     QTimer *m_deleteButtonTimer;
@@ -124,8 +124,8 @@ void TagEditWidget::Private::slotCreateTag()
 void TagEditWidget::Private::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(d, i18n("An error occurred while creating a new tag"),
-                           i18n("Failed to create a new tag"));
+        QMessageBox::critical(d, i18n("Failed to create a new tag"),
+                              i18n("An error occurred while creating a new tag"));
     }
 
     m_newTagEdit->setEnabled(true);
@@ -183,9 +183,7 @@ void TagEditWidget::Private::deleteTag()
                                 "Do you really want to remove the tag <resource>%1</resource>?",
                                 tag.name());
     const QString caption = i18nc("@title", "Delete tag");
-    const KGuiItem deleteItem(i18nc("@action:button", "Delete"), QIcon::fromTheme(QStringLiteral("edit-delete")));
-    const KGuiItem cancelItem(i18nc("@action:button", "Cancel"), QIcon::fromTheme(QStringLiteral("dialog-cancel")));
-    if (KMessageBox::warningYesNo(d, text, caption, deleteItem, cancelItem) == KMessageBox::Yes) {
+    if (QMessageBox::question(d, caption, text, i18nc("@action:button", "Delete"), i18nc("@action:button", "Cancel")) == 0) {
         new Akonadi::TagDeleteJob(tag, this);
     }
 }
@@ -214,8 +212,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     connect(d->m_tagsView, SIGNAL(entered(QModelIndex)),
             d.data(), SLOT(slotItemEntered(QModelIndex)));
 
-    d->m_newTagEdit = new KLineEdit(this);
-    d->m_newTagEdit->setTrapReturnKey(true);
+    d->m_newTagEdit = new QLineEdit(this);
     d->m_newTagEdit->setClearButtonEnabled(true);
     connect(d->m_newTagEdit, SIGNAL(textEdited(QString)),
             d.data(), SLOT(slotTextEdited(QString)));

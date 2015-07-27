@@ -31,9 +31,7 @@
 
 #include <kcolorscheme.h>
 #include <KLocalizedString>
-#include <kglobal.h>
 #include <qtextbrowser.h>
-#include <KLocale>
 #include <QDialogButtonBox>
 
 using namespace Akonadi;
@@ -128,8 +126,8 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
 {
     if (localItem.modificationTime() != otherItem.modificationTime()) {
         reporter->addProperty(AbstractDifferencesReporter::ConflictMode, i18n("Modification Time"),
-                              KLocale::global()->formatDateTime(localItem.modificationTime(), KLocale::ShortDate, true),
-                              KLocale::global()->formatDateTime(otherItem.modificationTime(), KLocale::ShortDate, true));
+                              QLocale().toString(localItem.modificationTime(), QLocale::ShortFormat),
+                              QLocale().toString(otherItem.modificationTime(), QLocale::ShortFormat));
     }
 
     if (localItem.flags() != otherItem.flags()) {

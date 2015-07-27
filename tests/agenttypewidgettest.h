@@ -24,7 +24,7 @@
 
 #include "agenttypewidget.h"
 
-class KComboBox;
+class QComboBox;
 
 class Dialog : public QDialog
 {
@@ -41,7 +41,7 @@ private Q_SLOTS:
 
 private:
     Akonadi::AgentTypeWidget *mWidget;
-    KComboBox *mFilter;
+    QComboBox *mFilter;
 };
 
 #endif

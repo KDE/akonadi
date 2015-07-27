@@ -35,8 +35,7 @@
 #include <KLocalizedString>
 #include <QInputDialog>
 #include <QUrl>
-#include <KMessageBox>
-#include <KStandardDirs>
+#include <QMessageBox>
 
 #include <QQuickView>
 #include <QStandardPaths>
@@ -202,8 +201,8 @@ void CollectionDialog::Private::slotAddChildCollection()
 void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(mParent, i18n("Could not create folder: %1", job->errorString()),
-                           i18n("Folder creation failed"));
+        QMessageBox::critical(mParent,i18n("Folder creation failed"),
+                              i18n("Could not create folder: %1", job->errorString()));
     }
 }
 

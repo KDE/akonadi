@@ -21,8 +21,8 @@
 #include "collectionstatisticsdelegate.h"
 
 #include <kcolorscheme.h>
+#include <KFormat>
 #include "akonadiwidgets_debug.h"
-#include <kio/global.h>
 
 #include <QPainter>
 #include <QStyle>
@@ -343,7 +343,8 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
 
     //total size
     if (index.column() == 3 && !expanded) {
-        painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter, KIO::convertSize((KIO::filesize_t)totalSize));
+        painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter,
+                          KFormat().formatByteSize(totalSize));
         return;
     }
 

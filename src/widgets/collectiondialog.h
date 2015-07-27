@@ -24,8 +24,7 @@
 #include "akonadiwidgets_export.h"
 #include "collection.h"
 
-#include <kdialog.h>
-
+#include <QDialog>
 #include <QAbstractItemView>
 
 namespace Akonadi
@@ -64,7 +63,7 @@ namespace Akonadi
  * @author Ingo Klöcker <kloecker@kde.org>
  * @since 4.3
  */
-class AKONADIWIDGETS_EXPORT CollectionDialog : public KDialog
+class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
 {
     Q_OBJECT
     Q_DISABLE_COPY(CollectionDialog)

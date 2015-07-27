@@ -30,7 +30,11 @@ macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable(${_name} ${_test})
-  target_link_libraries(${_name}  KF5AkonadiCore KF5AkonadiWidgets)
+  target_link_libraries(${_name}
+        KF5AkonadiCore
+        KF5AkonadiWidgets
+        KF5::I18n
+  )
 endmacro()
 
 # demo applications

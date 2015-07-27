@@ -23,7 +23,7 @@
 #include <KConfig>
 
 #include <kfilterproxysearchline.h>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KSharedConfig>
 #include <KConfigGroup>
 

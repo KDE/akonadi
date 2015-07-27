@@ -23,13 +23,13 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QStringList>
-#include <KComponentData>
+#include <QApplication>
 
 using namespace Akonadi;
 
 int main()
 {
-    KComponentData data("pluginloadertest");
+    QApplication::setApplicationName(QStringLiteral("pluginloadertest"));
 
     PluginLoader *loader = PluginLoader::self();
 

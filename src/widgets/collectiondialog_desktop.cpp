@@ -36,12 +36,15 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <QDialogButtonBox>
 
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <QInputDialog>
-#include <KMessageBox>
+#include <QMessageBox>
+#include <QPushButton>
 #include <KConfig>
+#include <KConfigGroup>
 
 using namespace Akonadi;
 
@@ -53,15 +56,14 @@ public:
         , mMonitor(0)
     {
         // setup GUI
-        QWidget *widget = mParent->mainWidget();
-        QVBoxLayout *layout = new QVBoxLayout(widget);
+        QVBoxLayout *layout = new QVBoxLayout(mParent);
         layout->setContentsMargins(0, 0, 0, 0);
 
         mTextLabel = new QLabel;
         layout->addWidget(mTextLabel);
         mTextLabel->hide();
 
-        QLineEdit *filterCollectionLineEdit = new QLineEdit(widget);
+        QLineEdit *filterCollectionLineEdit = new QLineEdit();
         filterCollectionLineEdit->setClearButtonEnabled(true);
         filterCollectionLineEdit->setPlaceholderText(i18nc("@info Displayed grayed-out inside the "
                 "textbox, verb to search", "Search"));
@@ -76,7 +78,13 @@ public:
         mUseByDefault->hide();
         layout->addWidget(mUseByDefault);
 
-        mParent->enableButton(KDialog::Ok, false);
+        mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, mParent);
+        mParent->connect(mButtonBox, &QDialogButtonBox::accepted,
+                         mParent, &QDialog::accept);
+        mParent->connect(mButtonBox, &QDialogButtonBox::rejected,
+                         mParent, &QDialog::reject);
+        layout->addWidget(mButtonBox);
+        mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
         // setup models
         QAbstractItemModel *baseModel;
@@ -173,6 +181,8 @@ public:
     KRecursiveFilterProxyModel *mFilterCollection;
     QCheckBox *mUseByDefault;
     QStringList mContentMimeTypes;
+    QDialogButtonBox *mButtonBox;
+    QPushButton *mNewSubfolderButton;
 
     void slotDoubleClicked();
     void slotSelectionChanged();
@@ -205,15 +215,15 @@ bool CollectionDialog::Private::canSelectCollection() const
 
 void CollectionDialog::Private::slotSelectionChanged()
 {
-    mParent->enableButton(KDialog::Ok, !mView->selectionModel()->selectedIndexes().isEmpty());
+    mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(!mView->selectionModel()->selectedIndexes().isEmpty());
     if (mAllowToCreateNewChildCollection) {
         const Akonadi::Collection parentCollection = mParent->selectedCollection();
         const bool canCreateChildCollections = canCreateCollection(parentCollection);
 
-        mParent->enableButton(KDialog::User1, (canCreateChildCollections && !parentCollection.isVirtual()));
+        mNewSubfolderButton->setEnabled(canCreateChildCollections && !parentCollection.isVirtual());
         if (parentCollection.isValid()) {
             const bool canCreateItems = (parentCollection.rights() & Akonadi::Collection::CanCreateItem);
-            mParent->enableButton(KDialog::Ok, canCreateItems);
+            mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(canCreateItems);
         }
     }
 }
@@ -222,11 +232,13 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
 {
     mAllowToCreateNewChildCollection = (options & AllowToCreateNewChildCollection);
     if (mAllowToCreateNewChildCollection) {
-        mParent->setButtons(Ok | Cancel | User1);
-        mParent->setButtonGuiItem(User1, KGuiItem(i18n("&New Subfolder..."), QStringLiteral("folder-new"),
-                                  i18n("Create a new subfolder under the currently selected folder")));
-        mParent->enableButton(KDialog::User1, false);
-        connect(mParent, SIGNAL(user1Clicked()), mParent, SLOT(slotAddChildCollection()));
+        mButtonBox->addButton(QDialogButtonBox::Ok);
+        mButtonBox->addButton(QDialogButtonBox::Cancel);
+        mNewSubfolderButton = mButtonBox->addButton(i18n("&New Subfolder..."), QDialogButtonBox::NoRole);
+        mNewSubfolderButton->setIcon(QIcon::fromTheme(QStringLiteral("folder-new")));
+        mNewSubfolderButton->setToolTip(i18n("Create a new subfolder under the currently selected folder"));
+        mNewSubfolderButton->setEnabled(false);
+        connect(mNewSubfolderButton, SIGNAL(clicked(bool)), mParent, SLOT(slotAddChildCollection()));
     }
     mKeepTreeExpanded = (options & KeepTreeExpanded);
     if (mKeepTreeExpanded) {
@@ -279,25 +291,25 @@ void CollectionDialog::Private::slotAddChildCollection()
 void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(mParent, i18n("Could not create folder: %1", job->errorString()),
-                           i18n("Folder creation failed"));
+        QMessageBox::critical(mParent, i18n("Folder creation failed"),
+                              i18n("Could not create folder: %1", job->errorString()));
     }
 }
 
 CollectionDialog::CollectionDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(0, this, CollectionDialog::None))
 {
 }
 
 CollectionDialog::CollectionDialog(QAbstractItemModel *model, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(model, this, CollectionDialog::None))
 {
 }
 
 CollectionDialog::CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , d(new Private(model, this, options))
 {
 }
@@ -324,7 +336,7 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
     Collection::List collections;
     const QItemSelectionModel *selectionModel = d->mView->selectionModel();
     const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
-    foreach (const QModelIndex &index, selectedIndexes) {
+    Q_FOREACH (const QModelIndex &index, selectedIndexes) {
         if (index.isValid()) {
             const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
             if (collection.isValid()) {
@@ -346,7 +358,7 @@ void CollectionDialog::setMimeTypeFilter(const QStringList &mimeTypes)
     d->mMimeTypeFilterModel->addMimeTypeFilters(mimeTypes);
 
     if (d->mMonitor) {
-        foreach (const QString &mimetype, mimeTypes) {
+        Q_FOREACH (const QString &mimetype, mimeTypes) {
             d->mMonitor->setMimeTypeMonitored(mimetype);
         }
     }

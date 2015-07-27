@@ -49,6 +49,7 @@
 #include <KActionCollection>
 #include <KActionMenu>
 #include <KLocalizedString>
+#include <KConfigGroup>
 #include <QMenu>
 #include <KMessageBox>
 #include <KToggleAction>

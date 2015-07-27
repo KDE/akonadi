@@ -1,7 +1,5 @@
 [Global]
 PluginName=AkonadiWidgets
-Includes=kcomponentdata.h
-Init=new KComponentData("akonadiwidgets");
 
 [Akonadi::AgentInstanceWidget]
 ToolTip=Akonadi Agent Instance Settings (Akonadi)

@@ -34,7 +34,7 @@
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
 #ifndef KDEPIM_MOBILE_UI
-#include <KLineEdit>
+#include <QLineEdit>
 #include <QPushButton>
 #include <krecursivefilterproxymodel.h>
 #include <QHeaderView>

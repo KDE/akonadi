@@ -23,7 +23,7 @@
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <kstandardshortcut.h>
 
@@ -146,7 +146,7 @@ void CollectionRequester::Private::init()
 
     collectionDialog = new CollectionDialog(q);
     collectionDialog->setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
-    collectionDialog->setCaption(i18n("Select a collection"));
+    collectionDialog->setWindowTitle(i18n("Select a collection"));
     collectionDialog->setSelectionMode(QAbstractItemView::SingleSelection);
     collectionDialog->changeCollectionDialogOptions(CollectionDialog::KeepTreeExpanded);
 }
@@ -252,7 +252,7 @@ void CollectionRequester::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {
         if (d->collectionDialog) {
-            d->collectionDialog->setCaption(windowTitle());
+            d->collectionDialog->setWindowTitle(windowTitle());
         }
     } else if (event->type() == QEvent::EnabledChange) {
         if (d->collectionDialog) {

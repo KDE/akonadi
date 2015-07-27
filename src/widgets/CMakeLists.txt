@@ -105,8 +105,11 @@ target_link_libraries(KF5AkonadiWidgets
 PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
-    KF5::KDELibs4Support # for KDialog
+    Qt5::Widgets
 PRIVATE
+    KF5::I18n
+    KF5::IconThemes
+    KF5::XmlGui
     KF5::ItemViews
     KF5::DBusAddons
     Qt5::Sql

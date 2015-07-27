@@ -22,7 +22,7 @@
 #include "agenttype.h"
 #include "agentfilterproxymodel.h"
 
-#include <KComboBox>
+#include <QComboBox>
 #include <KAboutData>
 
 #include <QCommandLineParser>
@@ -38,7 +38,7 @@ Dialog::Dialog(QWidget *parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    mFilter = new KComboBox(this);
+    mFilter = new QComboBox(this);
     mFilter->addItem(QStringLiteral("None"));
     mFilter->addItem(QStringLiteral("text/calendar"));
     mFilter->addItem(QStringLiteral("text/directory"));
