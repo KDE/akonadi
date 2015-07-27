@@ -24,6 +24,8 @@
 #include "jobs/job.h"
 #include "relation.h"
 
+namespace Akonadi {
+
 class AKONADICORE_EXPORT RelationSync : public Akonadi::Job
 {
     Q_OBJECT
@@ -50,5 +52,7 @@ private:
     bool mRemoteRelationsSet;
     bool mLocalRelationsFetched;
 };
+
+}
 
 #endif

@@ -24,6 +24,8 @@
 #include <QByteArray>
 #include <QList>
 
+using namespace Akonadi;
+
 class CollectionIdentificationAttribute::Private
 {
 public:

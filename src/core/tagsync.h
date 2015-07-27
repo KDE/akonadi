@@ -25,6 +25,8 @@
 #include "tag.h"
 #include "item.h"
 
+namespace Akonadi {
+
 class AKONADICORE_EXPORT TagSync : public Akonadi::Job
 {
     Q_OBJECT
@@ -57,5 +59,7 @@ private:
     bool mLocalTagsFetched;
     QHash<QString, Akonadi::Item::List> mRidMemberMap;
 };
+
+}
 
 #endif

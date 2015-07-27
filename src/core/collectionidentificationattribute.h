@@ -23,6 +23,8 @@
 #include <attribute.h>
 #include <QByteArray>
 
+namespace Akonadi {
+
 /**
  * @short Attribute that stores additional information on a collection that can be used for searching.
  *
@@ -73,5 +75,7 @@ private:
     Private *const d;
     //@endcond
 };
+
+}
 
 #endif
