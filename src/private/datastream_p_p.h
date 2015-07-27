@@ -82,7 +82,7 @@ public:
 private:
 
 
-    Q_DISABLE_COPY(DataStream);
+    Q_DISABLE_COPY(DataStream)
 
     QIODevice *mDev;
     int mWaitTimeout;

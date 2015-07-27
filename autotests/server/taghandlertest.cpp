@@ -35,8 +35,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(Akonadi::Server::Tag::List);
-Q_DECLARE_METATYPE(Akonadi::Server::Tag);
+Q_DECLARE_METATYPE(Akonadi::Server::Tag::List)
+Q_DECLARE_METATYPE(Akonadi::Server::Tag)
 
 static Protocol::ChangeNotification::List extractNotifications(QSignalSpy *notificationSpy)
 {

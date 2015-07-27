@@ -490,7 +490,7 @@ public:
     int protocolVersion() const;
 
 private:
-    AKONADI_DECLARE_PRIVATE(HelloResponse);
+    AKONADI_DECLARE_PRIVATE(HelloResponse)
 
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::HelloResponse &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::HelloResponse &command);
@@ -576,7 +576,7 @@ public:
     Mode mode() const;
 
 private:
-    AKONADI_DECLARE_PRIVATE(TransactionCommand);
+    AKONADI_DECLARE_PRIVATE(TransactionCommand)
 
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::TransactionCommand &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TransactionCommand &command);
@@ -606,7 +606,7 @@ public:
         RemoteID = 2,
         Silent = 4
     };
-    Q_DECLARE_FLAGS(MergeModes, MergeMode);
+    Q_DECLARE_FLAGS(MergeModes, MergeMode)
 
     explicit CreateItemCommand();
     explicit CreateItemCommand(const Command &command);
@@ -718,7 +718,7 @@ public:
     Scope items() const;
 
 private:
-    AKONADI_DECLARE_PRIVATE(DeleteItemsCommand);
+    AKONADI_DECLARE_PRIVATE(DeleteItemsCommand)
 
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::DeleteItemsCommand &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
@@ -1015,7 +1015,7 @@ public:
         RemovedParts    = 1 << 12,
         Attributes      = 1 << 13
     };
-    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart);
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
 
     explicit ModifyItemsCommand();
     explicit ModifyItemsCommand(const Scope &scope);
