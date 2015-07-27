@@ -237,7 +237,7 @@ bool PartHelper::truncate(Part &part)
 
 QString PartHelper::storagePath()
 {
-    const QString dataDir = AkStandardDirs::saveDir("data", QLatin1String("file_db_data")) + QDir::separator();
+    const QString dataDir = AkStandardDirs::saveDir("data", QStringLiteral("file_db_data")) + QDir::separator();
     Q_ASSERT(dataDir != QDir::separator());
     return dataDir;
 }

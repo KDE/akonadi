@@ -78,43 +78,43 @@ bool DbConfigPostgresql::init(QSettings &settings)
             postgresSearchPath << QLatin1String(POSTGRES_PATH);
         }
 #endif
-        postgresSearchPath << QLatin1String("/usr/sbin")
-                           << QLatin1String("/usr/local/sbin")
-                           << QLatin1String("/usr/lib/postgresql/8.4/bin")
-                           << QLatin1String("/usr/lib/postgresql/9.0/bin")
-                           << QLatin1String("/usr/lib/postgresql/9.1/bin")
-                           << QLatin1String("/usr/lib/postgresql/9.2/bin")
-                           << QLatin1String("/usr/lib/postgresql/9.3/bin");
+        postgresSearchPath << QStringLiteral("/usr/sbin")
+                           << QStringLiteral("/usr/local/sbin")
+                           << QStringLiteral("/usr/lib/postgresql/8.4/bin")
+                           << QStringLiteral("/usr/lib/postgresql/9.0/bin")
+                           << QStringLiteral("/usr/lib/postgresql/9.1/bin")
+                           << QStringLiteral("/usr/lib/postgresql/9.2/bin")
+                           << QStringLiteral("/usr/lib/postgresql/9.3/bin");
 
-        defaultServerPath = XdgBaseDirs::findExecutableFile(QLatin1String("pg_ctl"), postgresSearchPath);
-        defaultInitDbPath = XdgBaseDirs::findExecutableFile(QLatin1String("initdb"), postgresSearchPath);
-        defaultHostName = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QLatin1String("db_misc")));
-        defaultPgData = AkStandardDirs::saveDir("data", QLatin1String("db_data"));
+        defaultServerPath = XdgBaseDirs::findExecutableFile(QStringLiteral("pg_ctl"), postgresSearchPath);
+        defaultInitDbPath = XdgBaseDirs::findExecutableFile(QStringLiteral("initdb"), postgresSearchPath);
+        defaultHostName = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QStringLiteral("db_misc")));
+        defaultPgData = AkStandardDirs::saveDir("data", QStringLiteral("db_data"));
     }
 
     // read settings for current driver
     settings.beginGroup(driverName());
-    mDatabaseName = settings.value(QLatin1String("Name"), defaultDatabaseName()).toString();
+    mDatabaseName = settings.value(QStringLiteral("Name"), defaultDatabaseName()).toString();
     if (mDatabaseName.isEmpty()) {
         mDatabaseName = defaultDatabaseName();
     }
-    mHostName = settings.value(QLatin1String("Host"), defaultHostName).toString();
+    mHostName = settings.value(QStringLiteral("Host"), defaultHostName).toString();
     if (mHostName.isEmpty()) {
         mHostName = defaultHostName;
     }
     // User, password and Options can be empty and still valid, so don't override them
-    mUserName = settings.value(QLatin1String("User")).toString();
-    mPassword = settings.value(QLatin1String("Password")).toString();
-    mConnectionOptions = settings.value(QLatin1String("Options"), defaultOptions).toString();
-    mServerPath = settings.value(QLatin1String("ServerPath"), defaultServerPath).toString();
+    mUserName = settings.value(QStringLiteral("User")).toString();
+    mPassword = settings.value(QStringLiteral("Password")).toString();
+    mConnectionOptions = settings.value(QStringLiteral("Options"), defaultOptions).toString();
+    mServerPath = settings.value(QStringLiteral("ServerPath"), defaultServerPath).toString();
     if (mInternalServer && mServerPath.isEmpty()) {
         mServerPath = defaultServerPath;
     }
-    mInitDbPath = settings.value(QLatin1String("InitDbPath"), defaultInitDbPath).toString();
+    mInitDbPath = settings.value(QStringLiteral("InitDbPath"), defaultInitDbPath).toString();
     if (mInternalServer && mInitDbPath.isEmpty()) {
         mInitDbPath = defaultInitDbPath;
     }
-    mPgData = settings.value(QLatin1String("PgData"), defaultPgData).toString();
+    mPgData = settings.value(QStringLiteral("PgData"), defaultPgData).toString();
     if (mPgData.isEmpty()) {
         mPgData = defaultPgData;
     }
@@ -122,12 +122,12 @@ bool DbConfigPostgresql::init(QSettings &settings)
 
     // store back the default values
     settings.beginGroup(driverName());
-    settings.setValue(QLatin1String("Name"), mDatabaseName);
-    settings.setValue(QLatin1String("Host"), mHostName);
-    settings.setValue(QLatin1String("Options"), mConnectionOptions);
-    settings.setValue(QLatin1String("ServerPath"), mServerPath);
-    settings.setValue(QLatin1String("InitDbPath"), mInitDbPath);
-    settings.setValue(QLatin1String("StartServer"), mInternalServer);
+    settings.setValue(QStringLiteral("Name"), mDatabaseName);
+    settings.setValue(QStringLiteral("Host"), mHostName);
+    settings.setValue(QStringLiteral("Options"), mConnectionOptions);
+    settings.setValue(QStringLiteral("ServerPath"), mServerPath);
+    settings.setValue(QStringLiteral("InitDbPath"), mInitDbPath);
+    settings.setValue(QStringLiteral("StartServer"), mInternalServer);
     settings.endGroup();
     settings.sync();
 

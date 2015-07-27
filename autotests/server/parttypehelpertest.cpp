@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QTest>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QStringLiteral(x)
 
 using namespace Akonadi::Server;
 

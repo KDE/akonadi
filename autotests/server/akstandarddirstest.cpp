@@ -24,7 +24,7 @@
 #include <QtTest/QTest>
 #include <QDebug>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QStringLiteral(x)
 
 class AkStandardDirsTest : public QObject
 {

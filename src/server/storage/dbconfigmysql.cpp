@@ -73,18 +73,18 @@ bool DbConfigMysql::init(QSettings &settings)
     }
 #endif
     const QStringList mysqldSearchPath = QStringList()
-                                         << QLatin1String("/usr/sbin")
-                                         << QLatin1String("/usr/local/sbin")
-                                         << QLatin1String("/usr/local/libexec")
-                                         << QLatin1String("/usr/libexec")
-                                         << QLatin1String("/opt/mysql/libexec")
-                                         << QLatin1String("/opt/local/lib/mysql5/bin")
-                                         << QLatin1String("/opt/mysql/sbin");
+                                         << QStringLiteral("/usr/sbin")
+                                         << QStringLiteral("/usr/local/sbin")
+                                         << QStringLiteral("/usr/local/libexec")
+                                         << QStringLiteral("/usr/libexec")
+                                         << QStringLiteral("/opt/mysql/libexec")
+                                         << QStringLiteral("/opt/local/lib/mysql5/bin")
+                                         << QStringLiteral("/opt/mysql/sbin");
     if (defaultServerPath.isEmpty()) {
-        defaultServerPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysqld"), mysqldSearchPath);
+        defaultServerPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqld"), mysqldSearchPath);
     }
 
-    const QString mysqladminPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysqladmin"), mysqldSearchPath);
+    const QString mysqladminPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqladmin"), mysqldSearchPath);
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
         defaultCleanShutdownCommand = QString::fromLatin1("--defaults-file=%1/mysql.conf %2 shutdown --socket=%3/mysql.socket")
@@ -111,13 +111,13 @@ bool DbConfigMysql::init(QSettings &settings)
 
     // read settings for current driver
     settings.beginGroup(driverName());
-    mDatabaseName = settings.value(QLatin1String("Name"), defaultDatabaseName()).toString();
-    mHostName = settings.value(QLatin1String("Host"), defaultHostName).toString();
-    mUserName = settings.value(QLatin1String("User")).toString();
-    mPassword = settings.value(QLatin1String("Password")).toString();
-    mConnectionOptions = settings.value(QLatin1String("Options"), defaultOptions).toString();
-    mServerPath = settings.value(QLatin1String("ServerPath"), defaultServerPath).toString();
-    mCleanServerShutdownCommand = settings.value(QLatin1String("CleanServerShutdownCommand"), defaultCleanShutdownCommand).toString();
+    mDatabaseName = settings.value(QStringLiteral("Name"), defaultDatabaseName()).toString();
+    mHostName = settings.value(QStringLiteral("Host"), defaultHostName).toString();
+    mUserName = settings.value(QStringLiteral("User")).toString();
+    mPassword = settings.value(QStringLiteral("Password")).toString();
+    mConnectionOptions = settings.value(QStringLiteral("Options"), defaultOptions).toString();
+    mServerPath = settings.value(QStringLiteral("ServerPath"), defaultServerPath).toString();
+    mCleanServerShutdownCommand = settings.value(QStringLiteral("CleanServerShutdownCommand"), defaultCleanShutdownCommand).toString();
     settings.endGroup();
 
     // verify settings and apply permanent changes (written out below)
@@ -132,13 +132,13 @@ bool DbConfigMysql::init(QSettings &settings)
 
     // store back the default values
     settings.beginGroup(driverName());
-    settings.setValue(QLatin1String("Name"), mDatabaseName);
-    settings.setValue(QLatin1String("Host"), mHostName);
-    settings.setValue(QLatin1String("Options"), mConnectionOptions);
+    settings.setValue(QStringLiteral("Name"), mDatabaseName);
+    settings.setValue(QStringLiteral("Host"), mHostName);
+    settings.setValue(QStringLiteral("Options"), mConnectionOptions);
     if (!mServerPath.isEmpty()) {
-        settings.setValue(QLatin1String("ServerPath"), mServerPath);
+        settings.setValue(QStringLiteral("ServerPath"), mServerPath);
     }
-    settings.setValue(QLatin1String("StartServer"), mInternalServer);
+    settings.setValue(QStringLiteral("StartServer"), mInternalServer);
     settings.endGroup();
     settings.sync();
 
