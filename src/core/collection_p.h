@@ -42,12 +42,12 @@ public:
         , isVirtual(false)
         , enabled(true)
         , enabledChanged(false)
-        , displayPreference(Collection::ListDefault)
-        , syncPreference(Collection::ListDefault)
-        , indexPreference(Collection::ListDefault)
         , listPreferenceChanged(false)
         , referenced(false)
         , referencedChanged(false)
+        , displayPreference(Collection::ListDefault)
+        , syncPreference(Collection::ListDefault)
+        , indexPreference(Collection::ListDefault)
     {
     }
 
