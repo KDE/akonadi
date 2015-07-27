@@ -134,20 +134,6 @@ public:
     Item::List items() const;
 
     /**
-     * Returns an URI that represents a predicate that is always added to the Nepomuk resource
-     * by the Akonadi Nepomuk feeders.
-     *
-     * The statement containing this predicate has the Akonadi Item ID of the resource as string
-     * as the object, and the Nepomuk resource, e.g. a PersonContact, as the subject.
-     *
-     * Always limit your searches to statements that contain this URI as predicate.
-     *
-     * @since 4.4.3
-     * @deprecated Deprecated as of 4.13, where SPARQL queries were replaced by Baloo
-     */
-    static AKONADICORE_DEPRECATED QUrl akonadiItemIdUri();
-
-    /**
      * Search only for items of given mime types.
      *
      * @since 4.13

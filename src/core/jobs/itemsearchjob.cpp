@@ -260,9 +260,4 @@ Item::List ItemSearchJob::items() const
     return d->mItems;
 }
 
-QUrl ItemSearchJob::akonadiItemIdUri()
-{
-    return QUrl(QStringLiteral("http://akonadi-project.org/ontologies/aneo#akonadiItemId"));
-}
-
 #include "moc_itemsearchjob.cpp"
