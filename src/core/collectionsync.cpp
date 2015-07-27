@@ -688,7 +688,7 @@ public:
             Job *parent = (currentTransaction ? static_cast<Job *>(currentTransaction) : static_cast<Job *>(q));
             CollectionFetchJob *job = new CollectionFetchJob(akonadiRootCollection, CollectionFetchJob::Recursive, parent);
             job->fetchScope().setResource(resourceId);
-            job->fetchScope().setIncludeUnsubscribed(true);
+            job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
             job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
             q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                        q, SLOT(localCollectionsReceived(Akonadi::Collection::List)));

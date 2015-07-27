@@ -71,7 +71,7 @@ void CollectionModelPrivate::collectionChanged(const Akonadi::Collection &collec
             newParent = collections.value(newParentId);
         }
         CollectionFetchJob *job = new CollectionFetchJob(newParent, CollectionFetchJob::Recursive, session);
-        job->fetchScope().setIncludeUnsubscribed(unsubscribed);
+        job->fetchScope().setListFilter(unsubscribed ? CollectionFetchScope::NoFilter : CollectionFetchScope::Enabled);
         job->fetchScope().setIncludeStatistics(fetchStatistics);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    q, SLOT(collectionsChanged(Akonadi::Collection::List)));
@@ -80,7 +80,7 @@ void CollectionModelPrivate::collectionChanged(const Akonadi::Collection &collec
 
     } else { // It's a simple change
         CollectionFetchJob *job = new CollectionFetchJob(collection, CollectionFetchJob::Base, session);
-        job->fetchScope().setIncludeUnsubscribed(unsubscribed);
+        job->fetchScope().setListFilter(unsubscribed ? CollectionFetchScope::NoFilter : CollectionFetchScope::Enabled);
         job->fetchScope().setIncludeStatistics(fetchStatistics);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    q, SLOT(collectionsChanged(Akonadi::Collection::List)));
@@ -347,7 +347,7 @@ void CollectionModelPrivate::startFirstListJob()
 
     // start a list job
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, session);
-    job->fetchScope().setIncludeUnsubscribed(unsubscribed);
+    job->fetchScope().setListFilter(unsubscribed ? CollectionFetchScope::NoFilter : CollectionFetchScope::Enabled);
     job->fetchScope().setIncludeStatistics(fetchStatistics);
     q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                q, SLOT(collectionsChanged(Akonadi::Collection::List)));

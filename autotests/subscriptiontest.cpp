@@ -57,7 +57,7 @@ private Q_SLOTS:
         QCOMPARE(ljob->collections().count(), 1);
 
         ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
-        ljob->fetchScope().setIncludeUnsubscribed(true);
+        ljob->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
         AKVERIFYEXEC(ljob);
         QCOMPARE(ljob->collections().count(), 2);
 
