@@ -39,11 +39,7 @@
 
 using namespace Akonadi;
 
-#if defined(Q_OS_MAEMO_5)
-static const int safetyTimeout = 60000; // ms
-#else
 static const int safetyTimeout = 10000; // ms
-#endif
 
 namespace Akonadi
 {
