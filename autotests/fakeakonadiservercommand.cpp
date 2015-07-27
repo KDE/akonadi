@@ -203,7 +203,6 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         entityString.remove(0, 2);
         entityString = entityString.trimmed();
         QString type;
-        int order = 0;
         int iFirstSpace = entityString.indexOf(QLatin1Char(' '));
         type = entityString.left(iFirstSpace);
         entityString = entityString.remove(0, iFirstSpace + 1).trimmed();
