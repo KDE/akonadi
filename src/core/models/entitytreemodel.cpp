@@ -82,20 +82,6 @@ EntityTreeModel::~EntityTreeModel()
     delete d_ptr;
 }
 
-bool EntityTreeModel::includeUnsubscribed() const
-{
-    return (listFilter() == CollectionFetchScope::NoFilter);
-}
-
-void EntityTreeModel::setIncludeUnsubscribed(bool show)
-{
-    if (show) {
-        setListFilter(CollectionFetchScope::NoFilter);
-    } else {
-        setListFilter(CollectionFetchScope::Enabled);
-    }
-}
-
 CollectionFetchScope::ListFilter EntityTreeModel::listFilter() const
 {
     Q_D(const EntityTreeModel);

@@ -101,20 +101,6 @@ bool CollectionFetchScope::isEmpty() const
     return d->resource.isEmpty() && d->contentMimeTypes.isEmpty() && !d->statistics && d->ancestorDepth == None && d->listFilter == Enabled;
 }
 
-bool CollectionFetchScope::includeUnsubscribed() const
-{
-    return (d->listFilter == NoFilter);
-}
-
-void CollectionFetchScope::setIncludeUnsubscribed(bool include)
-{
-    if (include) {
-        d->listFilter = NoFilter;
-    } else {
-        d->listFilter = Enabled;
-    }
-}
-
 bool CollectionFetchScope::includeStatistics() const
 {
     return d->statistics;

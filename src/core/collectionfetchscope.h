@@ -103,23 +103,6 @@ public:
     CollectionFetchScope &operator=(const CollectionFetchScope &other);
 
     /**
-     * Returns whether unsubscribed collection should be included.
-     *
-     * @see setIncludeUnsubscribed()
-     * @since 4.5
-     * @deprecated use listFilter() instead
-     */
-    AKONADICORE_DEPRECATED bool includeUnsubscribed() const;
-
-    /**
-     * Sets whether unsubscribed collections should be included in the collection listing.
-     *
-     * @param include @c true to include unsubscribed collections, @c false otherwise (the default).
-     * @deprecated use setListFilter() instead
-     */
-    AKONADICORE_DEPRECATED void setIncludeUnsubscribed(bool include);
-
-    /**
      * Describes the list filter
      *
      * @since 4.14
@@ -129,7 +112,7 @@ public:
         Display,  ///< Only retrieve collections for display, taking the local preference and enabled into account.
         Sync,     ///< Only retrieve collections for synchronization, taking the local preference and enabled into account.
         Index,    ///< Only retrieve collections for indxing, taking the local preference and enabled into account.
-        Enabled   ///< Only retrieve enabled collections, ignoring the local preference. This is the same as setIncludeUnsubscribed(false).
+        Enabled   ///< Only retrieve enabled collections, ignoring the local preference.
     };
 
     /**

@@ -425,27 +425,6 @@ public:
     bool systemEntitiesShown() const;
 
     /**
-     * Returns whether unsubscribed entities will be included in the listing.
-     *
-     * @since 4.5
-     * @deprecated use listFilter instead
-     */
-    AKONADICORE_DEPRECATED bool includeUnsubscribed() const;
-
-    /**
-     * Sets whether unsubscribed entities will be included in the listing.
-     * By default it's true
-     * @param show enables displaying of unsubscribed entities if set as @c true
-     * Note that it is possible to change the monitor's fetchscope directly,
-     *  bypassing this method, which will lead to inconsistencies. Use
-     *  this method for turning on/off listing of subscribed folders.
-     *
-     * @since 4.5
-     * @deprecated use setListFilter instead
-     */
-    AKONADICORE_DEPRECATED void setIncludeUnsubscribed(bool show);
-
-    /**
      * Returns the currently used listfilter.
      *
      * @since 4.14
