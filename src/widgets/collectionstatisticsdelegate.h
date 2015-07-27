@@ -32,7 +32,7 @@ namespace Akonadi
 class CollectionStatisticsDelegatePrivate;
 
 /**
- * @short A delegate that draws unread and total count for CollectionStatisticsModel.
+ * @short A delegate that draws unread and total count for StatisticsProxyModel.
  *
  * The delegate provides the following features:
  *

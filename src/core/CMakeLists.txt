@@ -130,7 +130,6 @@ set(akonadicore_models_SRCS
     models/collectionfilterproxymodel.cpp
     models/collectionmodel.cpp
     models/collectionmodel_p.cpp
-    models/collectionstatisticsmodel.cpp
     models/entitymimetypefiltermodel.cpp
     models/entityorderproxymodel.cpp
     models/entityrightsfiltermodel.cpp
@@ -154,7 +153,6 @@ ecm_generate_headers(AkonadiCore_models_HEADERS
     AgentTypeModel
     CollectionFilterProxyModel
     CollectionModel
-    CollectionStatisticsModel
     EntityMimeTypeFilterModel
     EntityOrderProxyModel
     EntityRightsFilterModel

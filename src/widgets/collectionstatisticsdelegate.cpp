@@ -19,7 +19,6 @@
 */
 
 #include "collectionstatisticsdelegate.h"
-#include "collectionstatisticsmodel.h"
 
 #include <kcolorscheme.h>
 #include "akonadiwidgets_debug.h"
