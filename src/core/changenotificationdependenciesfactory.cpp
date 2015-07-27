@@ -26,8 +26,6 @@
 #include "changemediator_p.h"
 #include "servermanager.h"
 
-#include <KComponentData>
-#include <KGlobal>
 #include <KRandom>
 #include <qdbusextratypes.h>
 
@@ -52,7 +50,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
 
     const QString name =
         QString::fromLatin1("%1_%2_%3").arg(
-            KGlobal::mainComponent().componentName(),
+            QCoreApplication::applicationName(),
             QString::number(QCoreApplication::applicationPid()),
             KRandom::randomString(6));
     QDBusObjectPath p = manager->subscribe(name, false);

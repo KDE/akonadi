@@ -27,7 +27,6 @@
 #include "vectorhelper.h"
 
 #include <KLocalizedString>
-#include <KMessageBox>
 
 #include "agentmanager.h"
 #include "agenttype.h"
@@ -48,6 +47,7 @@
 #include <akonadi/private/protocol_p.h>
 
 #include <qdebug.h>
+#include <QMessageBox>
 #include <QtGui/QIcon>
 
 QMap<KJob *, QTime> jobTimeTracker;
@@ -1394,7 +1394,7 @@ void EntityTreeModelPrivate::pasteJobDone(KJob *job)
 
         errorMsg += QLatin1Char(' ') + job->errorString();
 
-        KMessageBox::error(0, errorMsg);
+        QMessageBox::critical(0, i18n("Error"), errorMsg);
     }
 }
 

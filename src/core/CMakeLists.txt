@@ -303,10 +303,13 @@ PUBLIC
     KF5::ItemModels
     Qt5::Gui # for QColor
 PRIVATE
+    Qt5::Widgets
+    Qt5::Network
     KF5::AkonadiPrivate
     KF5::KIOCore
     KF5::DBusAddons
-    KF5::KDELibs4Support
+    KF5::I18n
+    KF5::IconThemes
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES

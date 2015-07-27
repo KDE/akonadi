@@ -26,9 +26,9 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
 #include <QAbstractProxyModel>
+#include <QMessageBox>
 
 #include <KLocalizedString>
-#include <KMessageBox>
 #include <QUrl>
 
 #include "attributefactory.h"
@@ -557,7 +557,8 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                         const QStringList collectionNames = d->childCollectionNames(destCollection);
 
                         if (collectionNames.contains(collectionName)) {
-                            KMessageBox::error(0, i18n("The target collection '%1' contains already\na collection with name '%2'.",
+                            QMessageBox::critical(0, i18n("Error"),
+                                                  i18n("The target collection '%1' contains already\na collection with name '%2'.",
                                                        destCollection.name(), collection.name()));
                             return false;
                         }

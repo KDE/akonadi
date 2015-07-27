@@ -21,7 +21,6 @@
 #include "servermanager.h"
 
 #include <qdebug.h>
-#include <kglobal.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
@@ -46,7 +45,7 @@ public:
 
 }
 
-K_GLOBAL_STATIC(Internal::StaticControl, s_instance)
+Q_GLOBAL_STATIC(Internal::StaticControl, s_instance)
 
 /**
  * @internal
@@ -69,7 +68,6 @@ public:
 
     void cleanup()
     {
-        s_instance.destroy();
     }
 
     bool exec();

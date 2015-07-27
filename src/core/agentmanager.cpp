@@ -31,7 +31,6 @@
 #include <QtDBus/QDBusServiceWatcher>
 #include <QWidget>
 
-#include <KLocale>
 
 using namespace Akonadi;
 
@@ -217,10 +216,16 @@ void AgentManagerPrivate::readAgentInstances()
 
 AgentType AgentManagerPrivate::fillAgentType(const QString &identifier) const
 {
+    const QStringList name = QLocale().name().split(QLatin1Char('_'));
+    QString lang;
+    if (name.size() == 2) {
+        lang = name[0];
+    }
+
     AgentType type;
     type.d->mIdentifier = identifier;
-    type.d->mName = mManager->agentName(identifier, KLocale::global()->language());
-    type.d->mDescription = mManager->agentComment(identifier, KLocale::global()->language());
+    type.d->mName = mManager->agentName(identifier, lang);
+    type.d->mDescription = mManager->agentComment(identifier, lang);
     type.d->mIconName = mManager->agentIcon(identifier);
     type.d->mMimeTypes = mManager->agentMimeTypes(identifier);
     type.d->mCapabilities = mManager->agentCapabilities(identifier);
