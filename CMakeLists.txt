@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.12.0")
-set(KDEPIMLIBS_VERSION "5.1.40")
+set(KDEPIMLIBS_VERSION "5.0.40")
 set(QT_REQUIRED_VERSION "5.2.0")
 
 # Remove it when we split it
