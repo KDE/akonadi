@@ -78,7 +78,7 @@ void EntityTreeView::Private::init()
     Akonadi::ProgressSpinnerDelegate *customDelegate = new Akonadi::ProgressSpinnerDelegate(animator, mParent);
     mParent->setItemDelegate(customDelegate);
 
-    mParent->header()->setClickable(true);
+    mParent->header()->setSectionsClickable(true);
     mParent->header()->setStretchLastSection(false);
 //   mParent->setRootIsDecorated( false );
 

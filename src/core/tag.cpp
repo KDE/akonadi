@@ -20,6 +20,7 @@
 #include "tag.h"
 #include "tagattribute.h"
 #include <QUuid>
+#include <QUrlQuery>
 
 using namespace Akonadi;
 
@@ -120,9 +121,12 @@ Tag Tag::fromUrl(const QUrl &url)
 
 QUrl Tag::url() const
 {
+    QUrlQuery query;
+    query.addQueryItem(QStringLiteral("tag"), QString::number(id()));
+
     QUrl url;
     url.setScheme(QStringLiteral("akonadi"));
-    url.addQueryItem(QStringLiteral("tag"), QString::number(id()));
+    url.setQuery(query);
     return url;
 }
 

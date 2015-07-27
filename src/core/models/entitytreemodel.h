@@ -540,6 +540,8 @@ public:
      */
     CollectionFetchStrategy collectionFetchStrategy() const;
 
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 

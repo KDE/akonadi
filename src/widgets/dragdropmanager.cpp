@@ -28,6 +28,7 @@
 
 #include <KLocalizedString>
 #include <QUrl>
+#include <QUrlQuery>
 #include <QMimeData>
 
 #include "collection.h"

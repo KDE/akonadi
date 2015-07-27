@@ -350,6 +350,7 @@ void ItemModel::setCollection(const Collection &collection)
         return;
     }
 
+    beginResetModel();
     d->monitor->setCollectionMonitored(d->collection, false);
 
     d->collection = collection;
@@ -359,10 +360,10 @@ void ItemModel::setCollection(const Collection &collection)
     // the query changed, thus everything we have already is invalid
     qDeleteAll(d->items);
     d->items.clear();
-    reset();
 
     // stop all running jobs
     d->session->clear();
+    endResetModel();
 
     // start listing job
     if (d->collectionIsCompatible()) {

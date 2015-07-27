@@ -88,13 +88,6 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
 {
     d->mInstances = AgentManager::self()->instances();
 
-    QHash<int, QByteArray> roles = roleNames();
-    roles.insert(StatusRole, "status");
-    roles.insert(StatusMessageRole, "statusMessage");
-    roles.insert(ProgressRole, "progress");
-    roles.insert(OnlineRole, "online");
-    setRoleNames(roles);
-
     connect(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
             this, SLOT(instanceAdded(Akonadi::AgentInstance)));
     connect(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
@@ -112,6 +105,16 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
 AgentInstanceModel::~AgentInstanceModel()
 {
     delete d;
+}
+
+QHash<int, QByteArray> AgentInstanceModel::roleNames() const
+{
+    QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
+    roles.insert(StatusRole, "status");
+    roles.insert(StatusMessageRole, "statusMessage");
+    roles.insert(ProgressRole, "progress");
+    roles.insert(OnlineRole, "online");
+    return roles;
 }
 
 int AgentInstanceModel::columnCount(const QModelIndex &) const

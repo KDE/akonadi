@@ -48,7 +48,8 @@ public:
     }
     void reset()
     {
-        EntityTreeModel::reset();
+        beginResetModel();
+        endResetModel();
     }
 };
 

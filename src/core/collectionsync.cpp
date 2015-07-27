@@ -67,7 +67,7 @@ public:
 
     inline bool isAbsolute() const
     {
-        return ridChain.last() == QString::fromAscii(ROOTPARENTRID);
+        return ridChain.last() == QString::fromLatin1(ROOTPARENTRID);
     }
 
     inline bool isEmpty() const
@@ -85,7 +85,7 @@ public:
     static RemoteId rootRid;
 };
 
-RemoteId RemoteId::rootRid = RemoteId(QStringList() << QString::fromAscii(ROOTPARENTRID));
+RemoteId RemoteId::rootRid = RemoteId(QStringList() << QString::fromLatin1(ROOTPARENTRID));
 
 Q_DECLARE_METATYPE(RemoteId)
 
@@ -175,7 +175,7 @@ public:
             rid.ridChain.append(prid);
             parent = parent.parentCollection();
             if (parent == akonadiRootCollection) {
-                rid.ridChain.append(QString::fromAscii(ROOTPARENTRID));
+                rid.ridChain.append(QString::fromLatin1(ROOTPARENTRID));
                 break;
             }
         }

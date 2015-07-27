@@ -10,7 +10,6 @@ PRIVATE
     KF5::AkonadiPrivate
     KF5::DBusAddons
     KF5::I18n
-    KF5::KDELibs4Support # for KFileDialog
     Qt5::Sql
     Qt5::Widgets
 )

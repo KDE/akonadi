@@ -33,6 +33,7 @@
 #include <QtCore/QStringList>
 
 #include <QUrl>
+#include <QUrlQuery>
 
 using namespace Akonadi;
 
@@ -127,14 +128,15 @@ void Collection::setContentMimeTypes(const QStringList &types)
 
 QUrl Collection::url(UrlType type) const
 {
-    QUrl url;
-    url.setScheme(QString::fromLatin1("akonadi"));
-    url.addQueryItem(QStringLiteral("collection"), QString::number(id()));
-
+    QUrlQuery query;
+    query.addQueryItem(QStringLiteral("collection"), QString::number(id()));
     if (type == UrlWithName) {
-        url.addQueryItem(QStringLiteral("name"), name());
+        query.addQueryItem(QStringLiteral("name"), name());
     }
 
+    QUrl url;
+    url.setScheme(QString::fromLatin1("akonadi"));
+    url.setQuery(query);
     return url;
 }
 

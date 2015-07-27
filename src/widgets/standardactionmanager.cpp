@@ -344,7 +344,7 @@ public:
         const Akonadi::Collection::List selectedCollectionsList = selectedCollections();
         const StandardActionManager::Type type = static_cast<StandardActionManager::Type>(menu->property("actionType").toInt());
 
-        QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction(type, selectedCollectionsList, collectionSelectionModel->model(), menu);
+        QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction(type, selectedCollectionsList, collectionSelectionModel->model(), menu);
         mRecentCollectionsMenu.insert(type, recentCollection);
         const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
         fillFoldersMenu(selectedCollectionsList,
@@ -1264,7 +1264,7 @@ public:
 
     void addRecentCollection(Akonadi::Collection::Id id)
     {
-        QMapIterator<StandardActionManager::Type, QWeakPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
+        QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
         while (item.hasNext()) {
             item.next();
             if (item.value().data()) {
@@ -1571,7 +1571,7 @@ public:
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
     QStringList mCollectionPropertiesPageNames;
-    QMap<StandardActionManager::Type, QWeakPointer<RecentCollectionAction> > mRecentCollectionsMenu;
+    QMap<StandardActionManager::Type, QPointer<RecentCollectionAction> > mRecentCollectionsMenu;
 };
 
 //@endcond

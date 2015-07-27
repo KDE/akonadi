@@ -40,7 +40,7 @@ macro(add_akonadi_test _source)
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1")
-  target_link_libraries(${_name}  akonaditestfake Qt5::Test     KF5::AkonadiPrivate KF5::DBusAddons KF5::I18n KF5::KDELibs4Support)
+  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiPrivate KF5::DBusAddons KF5::I18n)
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -51,7 +51,7 @@ macro(add_akonadi_test_widgets _source)
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(akonadi-${_name})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1")
-  target_link_libraries(${_name}  akonaditestfake Qt5::Test    KF5::AkonadiWidgets KF5::AkonadiPrivate KF5::DBusAddons )
+  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiWidgets KF5::AkonadiPrivate KF5::DBusAddons)
 endmacro()
 
 

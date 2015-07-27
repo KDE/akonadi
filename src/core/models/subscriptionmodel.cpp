@@ -61,12 +61,14 @@ public:
             qWarning() << job->errorString();
             return;
         }
+        q->beginResetModel();
         Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
-        foreach (const Collection &col, cols)
+        foreach (const Collection &col, cols) {
             if (!CollectionUtils::isStructural(col)) {
                 subscriptions[ col.id() ] = true;
             }
-        q->reset();
+        }
+        q->endResetModel();
         emit q->loaded();
     }
 

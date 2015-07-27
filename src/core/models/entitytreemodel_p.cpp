@@ -152,15 +152,6 @@ void EntityTreeModelPrivate::init(ChangeRecorder *monitor)
     Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
     q->connect(serverManager, SIGNAL(started()), SLOT(serverStarted()));
 
-    QHash<int, QByteArray> names = q->roleNames();
-
-    names.insert(EntityTreeModel::UnreadCountRole, "unreadCount");
-    names.insert(EntityTreeModel::FetchStateRole, "fetchState");
-    names.insert(EntityTreeModel::CollectionSyncProgressRole, "collectionSyncProgress");
-    names.insert(EntityTreeModel::ItemIdRole, "itemId");
-
-    q->setRoleNames(names);
-
     fillModel();
 }
 

@@ -23,9 +23,11 @@
 #include "collection.h"
 #include "item.h"
 
-#include <kmimetype.h>
-
 #include "krandom.h"
+
+#include <QMimeDatabase>
+#include <QMimeType>
+
 
 #include <qtest.h>
 
@@ -42,7 +44,7 @@ MimeTypeCheckerTest::MimeTypeCheckerTest(QObject *parent)
 
 void MimeTypeCheckerTest::initTestCase()
 {
-    QVERIFY(KMimeType::mimeType(QLatin1String("application/x-vnd.akonadi.calendar.event")));
+    QVERIFY(QMimeDatabase().mimeTypeForName(QLatin1String("application/x-vnd.akonadi.calendar.event")).isValid());
 
     MimeTypeChecker emptyChecker;
     MimeTypeChecker calendarChecker;

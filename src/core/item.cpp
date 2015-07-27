@@ -24,6 +24,7 @@
 
 #include <QUrl>
 #include <qdebug.h>
+#include <QUrlQuery>
 
 #include <QtCore/QStringList>
 #include <QtCore/QReadWriteLock>
@@ -364,14 +365,15 @@ bool Item::hasPayload() const
 
 QUrl Item::url(UrlType type) const
 {
-    QUrl url;
-    url.setScheme(QString::fromLatin1("akonadi"));
-    url.addQueryItem(QStringLiteral("item"), QString::number(id()));
-
+    QUrlQuery query;
+    query.addQueryItem(QStringLiteral("item"), QString::number(id()));
     if (type == UrlWithMimeType) {
-        url.addQueryItem(QStringLiteral("type"), mimeType());
+        query.addQueryItem(QStringLiteral("type"), mimeType());
     }
 
+    QUrl url;
+    url.setScheme(QString::fromLatin1("akonadi"));
+    url.setQuery(query);
     return url;
 }
 

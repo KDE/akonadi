@@ -33,6 +33,7 @@
 #include "unlinkjob.h"
 
 #include <QUrl>
+#include <QUrlQuery>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMimeData>
@@ -227,9 +228,10 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
     if (mimeData->hasUrls()) {
         const QList<QUrl> urls = mimeData->urls();
         foreach (const QUrl &url, urls) {
-            if (url.hasQueryItem(QStringLiteral("item"))) {
+            const QUrlQuery query(url);
+            if (query.hasQueryItem(QStringLiteral("item"))) {
                 neededRights |= Collection::CanCreateItem;
-            } else if (url.hasQueryItem(QStringLiteral("collection"))) {
+            } else if (query.hasQueryItem(QStringLiteral("collection"))) {
                 neededRights |= Collection::CanCreateCollection;
             }
         }
@@ -242,12 +244,13 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
         // items/collections that shall be pasted
         bool supportsMimeTypes = true;
         foreach (const QUrl &url, urls) {
+            const QUrlQuery query(url);
             // collections do not provide mimetype information, so ignore this check
-            if (url.hasQueryItem(QStringLiteral("collection"))) {
+            if (query.hasQueryItem(QStringLiteral("collection"))) {
                 continue;
             }
 
-            const QString mimeType = url.queryItemValue(QStringLiteral("type"));
+            const QString mimeType = query.queryItemValue(QStringLiteral("type"));
             if (!collection.contentMimeTypes().contains(mimeType)) {
                 supportsMimeTypes = false;
                 break;
@@ -313,13 +316,14 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
     Collection::List collections;
     Item::List items;
     foreach (const QUrl &url, urls) {
+        const QUrlQuery query(url);
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {
             collections.append(collection);
         }
         Item item = Item::fromUrl(url);
-        if (url.hasQueryItem(QLatin1String("parent"))) {
-            item.setParentCollection(Collection(QUrlQuery(url).queryItemValue(QLatin1String("parent")).toLongLong()));
+        if (query.hasQueryItem(QLatin1String("parent"))) {
+            item.setParentCollection(Collection(query.queryItemValue(QLatin1String("parent")).toLongLong()));
         }
         if (item.isValid()) {
             items.append(item);

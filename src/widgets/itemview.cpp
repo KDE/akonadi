@@ -61,7 +61,7 @@ void ItemView::Private::init()
 {
     mParent->setRootIsDecorated(false);
 
-    mParent->header()->setClickable(true);
+    mParent->header()->setSectionsClickable(true);
     mParent->header()->setStretchLastSection(true);
 
     mParent->connect(mParent, SIGNAL(activated(QModelIndex)), mParent, SLOT(itemActivated(QModelIndex)));

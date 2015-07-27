@@ -33,6 +33,7 @@
 #include <kxmlguiwindow.h>
 
 #include <QtCore/QTimer>
+#include <QUrlQuery>
 #include <QApplication>
 #include <QDragMoveEvent>
 #include <QHeaderView>
@@ -67,7 +68,7 @@ public:
 
 void CollectionView::Private::init()
 {
-    mParent->header()->setClickable(true);
+    mParent->header()->setSectionsClickable(true);
     mParent->header()->setStretchLastSection(false);
 
     mParent->setSortingEnabled(true);

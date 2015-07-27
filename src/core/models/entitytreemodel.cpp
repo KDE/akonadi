@@ -30,6 +30,7 @@
 
 #include <KLocalizedString>
 #include <QUrl>
+#include <QUrlQuery>
 
 #include "attributefactory.h"
 #include "changerecorder.h"
@@ -155,6 +156,16 @@ void EntityTreeModel::clearAndReset()
     Q_D(EntityTreeModel);
     d->beginResetModel();
     d->endResetModel();
+}
+
+QHash<int, QByteArray> EntityTreeModel::roleNames() const
+{
+    QHash<int, QByteArray> names = QAbstractItemModel::roleNames();
+    names.insert(EntityTreeModel::UnreadCountRole, "unreadCount");
+    names.insert(EntityTreeModel::FetchStateRole, "fetchState");
+    names.insert(EntityTreeModel::CollectionSyncProgressRole, "collectionSyncProgress");
+    names.insert(EntityTreeModel::ItemIdRole, "itemId");
+    return names;
 }
 
 int EntityTreeModel::columnCount(const QModelIndex &parent) const
@@ -552,8 +563,9 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                         return false;
                     }
 
-                    if (url.hasQueryItem(QStringLiteral("name"))) {
-                        const QString collectionName = url.queryItemValue(QStringLiteral("name"));
+                    QUrlQuery query(url);
+                    if (query.hasQueryItem(QStringLiteral("name"))) {
+                        const QString collectionName = query.queryItemValue(QStringLiteral("name"));
                         const QStringList collectionNames = d->childCollectionNames(destCollection);
 
                         if (collectionNames.contains(collectionName)) {
@@ -775,8 +787,9 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
             urls << d->m_collections.value(node->id).url(Collection::UrlWithName);
         } else if (Node::Item == node->type) {
             QUrl url = d->m_items.value(node->id).url(Item::Item::UrlWithMimeType);
-            // Encode the "virtual" parent
-            url.addQueryItem(QStringLiteral("parent"), QString::number(node->parent));
+            QUrlQuery query;
+            query.addQueryItem(QStringLiteral("parent"), QString::number(node->parent));
+            url.setQuery(query);
             urls << url;
         } else { // if that happens something went horrible wrong
             Q_ASSERT(false);
