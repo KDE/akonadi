@@ -152,7 +152,6 @@ ecm_generate_headers(AkonadiCore_models_HEADERS
     AgentInstanceModel
     AgentTypeModel
     CollectionFilterProxyModel
-    CollectionModel
     EntityMimeTypeFilterModel
     EntityOrderProxyModel
     EntityRightsFilterModel
