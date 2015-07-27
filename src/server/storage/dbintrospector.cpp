@@ -92,7 +92,7 @@ bool DbIntrospector::hasColumn(const QString &tableName, const QString &columnNa
 bool DbIntrospector::isTableEmpty(const QString &tableName)
 {
     QueryBuilder queryBuilder(tableName, QueryBuilder::Select);
-    queryBuilder.addColumn(QLatin1String("*"));
+    queryBuilder.addColumn(QStringLiteral("*"));
     queryBuilder.setLimit(1);
     if (!queryBuilder.exec()) {
         throw DbException(queryBuilder.query(), "Unable to retrieve data from table.");

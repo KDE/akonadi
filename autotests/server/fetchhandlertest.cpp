@@ -128,10 +128,10 @@ private Q_SLOTS:
 
         Tag tag;
         TagType type;
-        type.setName(QLatin1String("PLAIN"));
+        type.setName(QStringLiteral("PLAIN"));
         type.insert();
         tag.setTagType(type);
-        tag.setGid(QLatin1String("gid"));
+        tag.setGid(QStringLiteral("gid"));
         tag.insert();
 
         item1.addTag(tag);
@@ -151,7 +151,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
@@ -161,7 +161,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
@@ -189,10 +189,10 @@ private Q_SLOTS:
 
         Tag tag;
         TagType type;
-        type.setName(QLatin1String("PLAIN"));
+        type.setName(QStringLiteral("PLAIN"));
         type.insert();
         tag.setTagType(type);
-        tag.setGid(QLatin1String("gid"));
+        tag.setGid(QStringLiteral("gid"));
         tag.insert();
 
         item1.addTag(tag);
@@ -203,7 +203,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse())
                       << TestScenario::create(6, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
@@ -260,7 +260,7 @@ private Q_SLOTS:
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         //StorageDebugger::instance()->enableSQLDebugging(true);
-        //StorageDebugger::instance()->writeToFile(QLatin1String("sqllog.txt"));
+        //StorageDebugger::instance()->writeToFile(QStringLiteral("sqllog.txt"));
         FakeAkonadiServer::instance()->runTest();
     }
 

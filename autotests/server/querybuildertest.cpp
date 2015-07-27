@@ -311,20 +311,20 @@ void QueryBuilderTest::testQueryBuilder()
 
 void QueryBuilderTest::benchQueryBuilder()
 {
-    const QString table1 = QLatin1String("Table1");
-    const QString table2 = QLatin1String("Table2");
-    const QString table3 = QLatin1String("Table3");
-    const QString table1_id = QLatin1String("Table1.id");
-    const QString table2_id = QLatin1String("Table2.id");
-    const QString table3_id = QLatin1String("Table3.id");
-    const QString aggregate = QLatin1String("COUNT");
+    const QString table1 = QStringLiteral("Table1");
+    const QString table2 = QStringLiteral("Table2");
+    const QString table3 = QStringLiteral("Table3");
+    const QString table1_id = QStringLiteral("Table1.id");
+    const QString table2_id = QStringLiteral("Table2.id");
+    const QString table3_id = QStringLiteral("Table3.id");
+    const QString aggregate = QStringLiteral("COUNT");
     const QVariant value = QVariant::fromValue(QString("asdf"));
 
     const QStringList columns = QStringList()
-        << QLatin1String("Table1.id")
-        << QLatin1String("Table1.fooAsdf")
-        << QLatin1String("Table2.barLala")
-        << QLatin1String("Table3.xyzFsd");
+        << QStringLiteral("Table1.id")
+        << QStringLiteral("Table1.fooAsdf")
+        << QStringLiteral("Table2.barLala")
+        << QStringLiteral("Table3.xyzFsd");
 
     bool executed = true;
 

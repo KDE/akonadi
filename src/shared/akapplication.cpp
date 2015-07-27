@@ -38,8 +38,8 @@ AkApplication::AkApplication(int &argc, char **argv)
     Q_ASSERT(!sInstance);
     sInstance = this;
 
-    QCoreApplication::setApplicationName(QLatin1String("Akonadi"));
-    QCoreApplication::setApplicationVersion(QLatin1String(AKONADI_VERSION_STRING));
+    QCoreApplication::setApplicationName(QStringLiteral("Akonadi"));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_VERSION_STRING));
     mCmdLineParser.addHelpOption();
     mCmdLineParser.addVersionOption();
 }
@@ -75,9 +75,9 @@ void AkApplication::setDescription(const QString &desc)
 
 void AkApplication::parseCommandLine()
 {
-    const QCommandLineOption instanceOption(QStringList() << QLatin1String("instance"),
-                                            QLatin1String("Namespace for starting multiple Akonadi instances in the same user session"),
-                                            QLatin1String("name"));
+    const QCommandLineOption instanceOption(QStringList() << QStringLiteral("instance"),
+                                            QStringLiteral("Namespace for starting multiple Akonadi instances in the same user session"),
+                                            QStringLiteral("name"));
     mCmdLineParser.addOption(instanceOption);
 
     mCmdLineParser.process(QCoreApplication::arguments());

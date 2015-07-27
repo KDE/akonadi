@@ -126,7 +126,7 @@ private Q_SLOTS:
             Tag tag;
             tag.setId(1);
             TagType type;
-            type.setName(QLatin1String("PLAIN"));
+            type.setName(QStringLiteral("PLAIN"));
             tag.setTagType(type);
 
             Akonadi::Protocol::ChangeNotification notification;
@@ -173,16 +173,16 @@ private Q_SLOTS:
 
         Tag tag;
         TagType type;
-        type.setName(QLatin1String("PLAIN"));
+        type.setName(QStringLiteral("PLAIN"));
         type.insert();
         tag.setTagType(type);
-        tag.setGid(QLatin1String("gid"));
+        tag.setGid(QStringLiteral("gid"));
         tag.insert();
 
         pimItem.addTag(tag);
 
         TagRemoteIdResourceRelation rel;
-        rel.setRemoteId(QLatin1String("TAG1RES2RID"));
+        rel.setRemoteId(QStringLiteral("TAG1RES2RID"));
         rel.setResource(res2);
         rel.setTag(tag);
         rel.insert();
@@ -215,7 +215,7 @@ private Q_SLOTS:
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QLatin1String("testresource"))
+                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, "remote1",
                             { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
@@ -319,20 +319,20 @@ private Q_SLOTS:
 
         Tag tag;
         TagType type;
-        type.setName(QLatin1String("PLAIN"));
+        type.setName(QStringLiteral("PLAIN"));
         type.insert();
         tag.setTagType(type);
-        tag.setGid(QLatin1String("gid2"));
+        tag.setGid(QStringLiteral("gid2"));
         tag.insert();
 
         TagRemoteIdResourceRelation rel1;
-        rel1.setRemoteId(QLatin1String("TAG2RES1RID"));
+        rel1.setRemoteId(QStringLiteral("TAG2RES1RID"));
         rel1.setResource(res1);
         rel1.setTag(tag);
         rel1.insert();
 
         TagRemoteIdResourceRelation rel2;
-        rel2.setRemoteId(QLatin1String("TAG2RES2RID"));
+        rel2.setRemoteId(QStringLiteral("TAG2RES2RID"));
         rel2.setResource(res2);
         rel2.setTag(tag);
         rel2.insert();

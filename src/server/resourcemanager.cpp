@@ -35,7 +35,7 @@ ResourceManager::ResourceManager(QObject *parent)
     : QObject(parent)
 {
     new ResourceManagerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/ResourceManager"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/ResourceManager"), this);
 }
 
 void ResourceManager::addResourceInstance(const QString &name, const QStringList &capabilities)
@@ -49,7 +49,7 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
 
     // create the resource
     resource.setName(name);
-    resource.setIsVirtual(capabilities.contains(QLatin1String(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
+    resource.setIsVirtual(capabilities.contains(QStringLiteral(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
     if (!resource.insert()) {
         Tracer::self()->error("ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name));
     }

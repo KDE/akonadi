@@ -26,7 +26,7 @@
 
 #include <storage/dbconfig.h>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QStringLiteral(x)
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

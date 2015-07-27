@@ -28,7 +28,7 @@ DebugInterface::DebugInterface(QObject *parent)
     : QObject(parent)
 {
     new DebugInterfaceAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/debug"),
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/debug"),
                                                  this, QDBusConnection::ExportAdaptors);
 }
 

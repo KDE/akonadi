@@ -1637,9 +1637,9 @@ public:
         blck.write("Session mode", [this]() -> QString {
             switch (sessionMode) {
             case LoginCommand::CommandMode:
-                return QLatin1String("CommandMode");
+                return QStringLiteral("CommandMode");
             case LoginCommand::NotificationBus:
-                return QLatin1String("NotificationBus");
+                return QStringLiteral("NotificationBus");
             }
             Q_ASSERT(false);
             return QString();
@@ -1975,16 +1975,16 @@ public:
         blck.write("Merge mode", [this]() {
             QStringList mm;
             if (mergeMode == CreateItemCommand::None) {
-                mm << QLatin1String("None");
+                mm << QStringLiteral("None");
             } else {
                 if (mergeMode & CreateItemCommand::GID) {
-                    mm << QLatin1String("GID");
+                    mm << QStringLiteral("GID");
                 }
                 if (mergeMode & CreateItemCommand::RemoteID) {
-                    mm << QLatin1String("Remote ID");
+                    mm << QStringLiteral("Remote ID");
                 }
                 if (mergeMode & CreateItemCommand::Silent) {
-                    mm << QLatin1String("Silent");
+                    mm << QStringLiteral("Silent");
                 }
             }
             return mm;
@@ -3828,43 +3828,43 @@ public:
     {
         QStringList mps;
         if (modifiedParts & ModifyItemsCommand::Flags) {
-            mps << QLatin1String("Flags");
+            mps << QStringLiteral("Flags");
         }
         if (modifiedParts & ModifyItemsCommand::AddedFlags) {
-            mps << QLatin1String("Added Flags");
+            mps << QStringLiteral("Added Flags");
         }
         if (modifiedParts & ModifyItemsCommand::RemovedFlags) {
-            mps << QLatin1String("Removed Flags");
+            mps << QStringLiteral("Removed Flags");
         }
         if (modifiedParts & ModifyItemsCommand::Tags) {
-            mps << QLatin1String("Tags");
+            mps << QStringLiteral("Tags");
         }
         if (modifiedParts & ModifyItemsCommand::AddedTags) {
-            mps << QLatin1String("Added Tags");
+            mps << QStringLiteral("Added Tags");
         }
         if (modifiedParts & ModifyItemsCommand::RemovedTags) {
-            mps << QLatin1String("Removed Tags");
+            mps << QStringLiteral("Removed Tags");
         }
         if (modifiedParts & ModifyItemsCommand::RemoteID) {
-            mps << QLatin1String("Remote ID");
+            mps << QStringLiteral("Remote ID");
         }
         if (modifiedParts & ModifyItemsCommand::RemoteRevision) {
-            mps << QLatin1String("Remote Revision");
+            mps << QStringLiteral("Remote Revision");
         }
         if (modifiedParts & ModifyItemsCommand::GID) {
-            mps << QLatin1String("GID");
+            mps << QStringLiteral("GID");
         }
         if (modifiedParts & ModifyItemsCommand::Size) {
-            mps << QLatin1String("Size");
+            mps << QStringLiteral("Size");
         }
         if (modifiedParts & ModifyItemsCommand::Parts) {
-            mps << QLatin1String("Parts");
+            mps << QStringLiteral("Parts");
         }
         if (modifiedParts & ModifyItemsCommand::RemovedParts) {
-            mps << QLatin1String("Removed Parts");
+            mps << QStringLiteral("Removed Parts");
         }
         if (modifiedParts & ModifyItemsCommand::Attributes) {
-            mps << QLatin1String("Attributes");
+            mps << QStringLiteral("Attributes");
         }
 
         CommandPrivate::debugString(blck);
@@ -5903,37 +5903,37 @@ public:
         QStringList mps;
 
         if (modifiedParts & ModifyCollectionCommand::Name) {
-            mps << QLatin1String("Name");
+            mps << QStringLiteral("Name");
         }
         if (modifiedParts & ModifyCollectionCommand::RemoteID) {
-            mps << QLatin1String("Remote ID");
+            mps << QStringLiteral("Remote ID");
         }
         if (modifiedParts & ModifyCollectionCommand::RemoteRevision) {
-            mps << QLatin1String("Remote Revision");
+            mps << QStringLiteral("Remote Revision");
         }
         if (modifiedParts & ModifyCollectionCommand::ParentID) {
-            mps << QLatin1String("Parent ID");
+            mps << QStringLiteral("Parent ID");
         }
         if (modifiedParts & ModifyCollectionCommand::MimeTypes) {
-            mps << QLatin1String("Mimetypes");
+            mps << QStringLiteral("Mimetypes");
         }
         if (modifiedParts & ModifyCollectionCommand::CachePolicy) {
-            mps << QLatin1String("Cache Policy");
+            mps << QStringLiteral("Cache Policy");
         }
         if (modifiedParts & ModifyCollectionCommand::PersistentSearch) {
-            mps << QLatin1String("Persistent Search");
+            mps << QStringLiteral("Persistent Search");
         }
         if (modifiedParts & ModifyCollectionCommand::RemovedAttributes) {
-            mps << QLatin1String("Remote Attributes");
+            mps << QStringLiteral("Remote Attributes");
         }
         if (modifiedParts & ModifyCollectionCommand::Attributes) {
-            mps << QLatin1String("Attributes");
+            mps << QStringLiteral("Attributes");
         }
         if (modifiedParts & ModifyCollectionCommand::ListPreferences) {
-            mps << QLatin1String("List Preferences");
+            mps << QStringLiteral("List Preferences");
         }
         if (modifiedParts & ModifyCollectionCommand::Referenced) {
-            mps << QLatin1String("Referenced");
+            mps << QStringLiteral("Referenced");
         }
 
         CommandPrivate::debugString(blck);
@@ -7227,19 +7227,19 @@ public:
     {
         QStringList mps;
         if (modifiedParts & ModifyTagCommand::ParentId) {
-            mps << QLatin1String("Parent ID");
+            mps << QStringLiteral("Parent ID");
         }
         if (modifiedParts & ModifyTagCommand::Type) {
-            mps << QLatin1String("Type");
+            mps << QStringLiteral("Type");
         }
         if (modifiedParts & ModifyTagCommand::RemoteId) {
-            mps << QLatin1String("Remote ID");
+            mps << QStringLiteral("Remote ID");
         }
         if (modifiedParts & ModifyTagCommand::RemovedAttributes) {
-            mps << QLatin1String("Removed Attributes");
+            mps << QStringLiteral("Removed Attributes");
         }
         if (modifiedParts & ModifyTagCommand::Attributes) {
-            mps << QLatin1String("Attributes");
+            mps << QStringLiteral("Attributes");
         }
 
         CommandPrivate::debugString(blck);
@@ -8170,15 +8170,15 @@ public:
         blck.write("Type", [this]() -> QString {
             switch (type) {
             case ChangeNotification::Items:
-                return QLatin1String("Items");
+                return QStringLiteral("Items");
             case ChangeNotification::Collections:
-                return QLatin1String("Collections");
+                return QStringLiteral("Collections");
             case ChangeNotification::Tags:
-                return QLatin1String("Tags");
+                return QStringLiteral("Tags");
             case ChangeNotification::Relations:
-                return QLatin1String("Relations");
+                return QStringLiteral("Relations");
             case ChangeNotification::InvalidType:
-                return QLatin1String("*INVALID TYPE*");
+                return QStringLiteral("*INVALID TYPE*");
             }
             Q_ASSERT(false);
             return QString();
@@ -8186,29 +8186,29 @@ public:
         blck.write("Operation", [this]() -> QString {
             switch (operation) {
             case ChangeNotification::Add:
-                return QLatin1String("Add");
+                return QStringLiteral("Add");
             case ChangeNotification::Modify:
-                return QLatin1String("Modify");
+                return QStringLiteral("Modify");
             case ChangeNotification::ModifyFlags:
-                return QLatin1String("ModifyFlags");
+                return QStringLiteral("ModifyFlags");
             case ChangeNotification::ModifyTags:
-                return QLatin1String("ModifyTags");
+                return QStringLiteral("ModifyTags");
             case ChangeNotification::ModifyRelations:
-                return QLatin1String("ModifyRelations");
+                return QStringLiteral("ModifyRelations");
             case ChangeNotification::Move:
-                return QLatin1String("Move");
+                return QStringLiteral("Move");
             case ChangeNotification::Remove:
-                return QLatin1String("Remove");
+                return QStringLiteral("Remove");
             case ChangeNotification::Link:
-                return QLatin1String("Link");
+                return QStringLiteral("Link");
             case ChangeNotification::Unlink:
-                return QLatin1String("Unlink");
+                return QStringLiteral("Unlink");
             case ChangeNotification::Subscribe:
-                return QLatin1String("Subscribe");
+                return QStringLiteral("Subscribe");
             case ChangeNotification::Unsubscribe:
-                return QLatin1String("Unsubscribe");
+                return QStringLiteral("Unsubscribe");
             case ChangeNotification::InvalidOp:
-                return QLatin1String("*INVALID OPERATION*");
+                return QStringLiteral("*INVALID OPERATION*");
             }
             Q_ASSERT(false);
             return QString();

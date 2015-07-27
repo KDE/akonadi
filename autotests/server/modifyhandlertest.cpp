@@ -66,14 +66,14 @@ private Q_SLOTS:
         Akonadi::Protocol::ChangeNotification notificationTemplate;
         notificationTemplate.setType(Protocol::ChangeNotification::Collections);
         notificationTemplate.setOperation(Protocol::ChangeNotification::Modify);
-        notificationTemplate.addEntity(5, QLatin1String("ColD"), QLatin1String(""));
+        notificationTemplate.addEntity(5, QStringLiteral("ColD"), QStringLiteral(""));
         notificationTemplate.setParentCollection(4);
         notificationTemplate.setResource("akonadi_fake_resource_0");
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
             Protocol::ModifyCollectionCommand cmd(5);
-            cmd.setName(QLatin1String("New Name"));
+            cmd.setName(QStringLiteral("New Name"));
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()

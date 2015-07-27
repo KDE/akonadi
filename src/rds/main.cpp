@@ -28,7 +28,7 @@
 int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
-    app.setDescription(QLatin1String("Akonadi Remote Debugging Server\nUse for debugging only."));
+    app.setDescription(QStringLiteral("Akonadi Remote Debugging Server\nUse for debugging only."));
     app.parseCommandLine();
     try {
         new BridgeServer<AkonadiBridgeConnection>(31415);

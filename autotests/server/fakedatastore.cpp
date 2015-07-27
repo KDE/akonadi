@@ -91,7 +91,7 @@ bool FakeDataStore::setItemsFlags(const PimItem::List &items,
                                   const Collection &col,
                                   bool silent)
 {
-    mChanges.insert(QLatin1String("setItemsFlags"),
+    mChanges.insert(QStringLiteral("setItemsFlags"),
                     QVariantList() << QVariant::fromValue(items)
                     << QVariant::fromValue(flags)
                     << QVariant::fromValue(col)
@@ -106,7 +106,7 @@ bool FakeDataStore::appendItemsFlags(const PimItem::List &items,
                                      const Collection &col,
                                      bool silent)
 {
-    mChanges.insert(QLatin1String("appendItemsFlags"),
+    mChanges.insert(QStringLiteral("appendItemsFlags"),
                     QVariantList() << QVariant::fromValue(items)
                     << QVariant::fromValue(flags)
                     << checkIfExists
@@ -121,7 +121,7 @@ bool FakeDataStore::removeItemsFlags(const PimItem::List &items,
                                      const Collection &col,
                                      bool silent)
 {
-    mChanges.insert(QLatin1String("removeItemsFlags"),
+    mChanges.insert(QStringLiteral("removeItemsFlags"),
                     QVariantList() << QVariant::fromValue(items)
                     << QVariant::fromValue(flags)
                     << QVariant::fromValue(col)
@@ -134,7 +134,7 @@ bool FakeDataStore::setItemsTags(const PimItem::List &items,
                                  bool *tagsChanged,
                                  bool silent)
 {
-    mChanges.insert(QLatin1String("setItemsTags"),
+    mChanges.insert(QStringLiteral("setItemsTags"),
                     QVariantList() << QVariant::fromValue(items)
                     << QVariant::fromValue(tags)
                     << silent);
@@ -148,7 +148,7 @@ bool FakeDataStore::appendItemsTags(const PimItem::List &items,
                                     const Collection &col,
                                     bool silent)
 {
-    mChanges.insert(QLatin1String("appendItemsTags"),
+    mChanges.insert(QStringLiteral("appendItemsTags"),
                     QVariantList() << QVariant::fromValue(items)
                     << QVariant::fromValue(tags)
                     << checkIfExists
@@ -163,7 +163,7 @@ bool FakeDataStore::removeItemsTags(const PimItem::List &items,
                                     bool *tagsChanged,
                                     bool silent)
 {
-    mChanges.insert(QLatin1String("removeItemsTags"),
+    mChanges.insert(QStringLiteral("removeItemsTags"),
                     QVariantList() << QVariant::fromValue(items)
                     << QVariant::fromValue(tags)
                     << silent);
@@ -173,7 +173,7 @@ bool FakeDataStore::removeItemsTags(const PimItem::List &items,
 bool FakeDataStore::removeItemParts(const PimItem &item,
                                     const QSet<QByteArray> &parts)
 {
-    mChanges.insert(QLatin1String("remoteItemParts"),
+    mChanges.insert(QStringLiteral("remoteItemParts"),
                     QVariantList() << QVariant::fromValue(item)
                     << QVariant::fromValue(parts));
     return DataStore::removeItemParts(item, parts);
@@ -181,28 +181,28 @@ bool FakeDataStore::removeItemParts(const PimItem &item,
 
 bool FakeDataStore::invalidateItemCache(const PimItem &item)
 {
-    mChanges.insert(QLatin1String("invalidateItemCache"),
+    mChanges.insert(QStringLiteral("invalidateItemCache"),
                     QVariantList() << QVariant::fromValue(item));
     return DataStore::invalidateItemCache(item);
 }
 
 bool FakeDataStore::appendCollection(Collection &collection)
 {
-    mChanges.insert(QLatin1String("appendCollection"),
+    mChanges.insert(QStringLiteral("appendCollection"),
                     QVariantList() << QVariant::fromValue(collection));
     return DataStore::appendCollection(collection);
 }
 
 bool FakeDataStore::cleanupCollection(Collection &collection)
 {
-    mChanges.insert(QLatin1String("cleanupCollection"),
+    mChanges.insert(QStringLiteral("cleanupCollection"),
                     QVariantList() << QVariant::fromValue(collection));
     return DataStore::cleanupCollection(collection);
 }
 
 bool FakeDataStore::cleanupCollection_slow(Collection &collection)
 {
-    mChanges.insert(QLatin1String("cleanupCollection_slow"),
+    mChanges.insert(QStringLiteral("cleanupCollection_slow"),
                     QVariantList() << QVariant::fromValue(collection));
     return DataStore::cleanupCollection_slow(collection);
 }
@@ -210,7 +210,7 @@ bool FakeDataStore::cleanupCollection_slow(Collection &collection)
 bool FakeDataStore::moveCollection(Collection &collection,
                                    const Collection &newParent)
 {
-    mChanges.insert(QLatin1String("moveCollection"),
+    mChanges.insert(QStringLiteral("moveCollection"),
                     QVariantList() << QVariant::fromValue(collection)
                     << QVariant::fromValue(newParent));
     return DataStore::moveCollection(collection, newParent);
@@ -219,7 +219,7 @@ bool FakeDataStore::moveCollection(Collection &collection,
 bool FakeDataStore::appendMimeTypeForCollection(qint64 collectionId,
                                                 const QStringList &mimeTypes)
 {
-    mChanges.insert(QLatin1String("appendMimeTypeForCollection"),
+    mChanges.insert(QStringLiteral("appendMimeTypeForCollection"),
                     QVariantList() << collectionId
                     << QVariant::fromValue(mimeTypes));
     return DataStore::appendMimeTypeForCollection(collectionId, mimeTypes);
@@ -227,7 +227,7 @@ bool FakeDataStore::appendMimeTypeForCollection(qint64 collectionId,
 
 void FakeDataStore::activeCachePolicy(Collection &col)
 {
-    mChanges.insert(QLatin1String("activeCachePolicy"),
+    mChanges.insert(QStringLiteral("activeCachePolicy"),
                     QVariantList() << QVariant::fromValue(col));
     return DataStore::activeCachePolicy(col);
 }
@@ -235,7 +235,7 @@ void FakeDataStore::activeCachePolicy(Collection &col)
 bool FakeDataStore::appendMimeType(const QString &mimetype,
                                    qint64 *insertId)
 {
-    mChanges.insert(QLatin1String("appendMimeType"),
+    mChanges.insert(QStringLiteral("appendMimeType"),
                     QVariantList() << mimetype);
     return DataStore::appendMimeType(mimetype, insertId);
 }
@@ -249,7 +249,7 @@ bool FakeDataStore::appendPimItem(QVector<Part> &parts,
                                   const QString &gid,
                                   PimItem &pimItem)
 {
-    mChanges.insert(QLatin1String("appendPimItem"),
+    mChanges.insert(QStringLiteral("appendPimItem"),
                     QVariantList() << QVariant::fromValue(mimetype)
                     << QVariant::fromValue(collection)
                     << dateTime
@@ -262,21 +262,21 @@ bool FakeDataStore::appendPimItem(QVector<Part> &parts,
 
 bool FakeDataStore::cleanupPimItems(const PimItem::List &items)
 {
-    mChanges.insert(QLatin1String("cleanupPimItems"),
+    mChanges.insert(QStringLiteral("cleanupPimItems"),
                     QVariantList() << QVariant::fromValue(items));
     return DataStore::cleanupPimItems(items);
 }
 
 bool FakeDataStore::unhidePimItem(PimItem &pimItem)
 {
-    mChanges.insert(QLatin1String("unhidePimItem"),
+    mChanges.insert(QStringLiteral("unhidePimItem"),
                     QVariantList() << QVariant::fromValue(pimItem));
     return DataStore::unhidePimItem(pimItem);
 }
 
 bool FakeDataStore::unhideAllPimItems()
 {
-    mChanges.insert(QLatin1String("unhideAllPimItems"), QVariantList());
+    mChanges.insert(QStringLiteral("unhideAllPimItems"), QVariantList());
     return DataStore::unhideAllPimItems();
 }
 
@@ -284,7 +284,7 @@ bool FakeDataStore::addCollectionAttribute(const Collection &col,
                                            const QByteArray &key,
                                            const QByteArray &value)
 {
-    mChanges.insert(QLatin1String("addCollectionAttribute"),
+    mChanges.insert(QStringLiteral("addCollectionAttribute"),
                     QVariantList() << QVariant::fromValue(col)
                     << key << value);
     return DataStore::addCollectionAttribute(col, key, value);
@@ -293,26 +293,26 @@ bool FakeDataStore::addCollectionAttribute(const Collection &col,
 bool FakeDataStore::removeCollectionAttribute(const Collection &col,
                                               const QByteArray &key)
 {
-    mChanges.insert(QLatin1String("removeCollectionAttribute"),
+    mChanges.insert(QStringLiteral("removeCollectionAttribute"),
                     QVariantList() << QVariant::fromValue(col) << key);
     return DataStore::removeCollectionAttribute(col, key);
 }
 
 bool FakeDataStore::beginTransaction()
 {
-    mChanges.insert(QLatin1String("beginTransaction"), QVariantList());
+    mChanges.insert(QStringLiteral("beginTransaction"), QVariantList());
     return DataStore::beginTransaction();
 }
 
 bool FakeDataStore::commitTransaction()
 {
-    mChanges.insert(QLatin1String("commitTransaction"), QVariantList());
+    mChanges.insert(QStringLiteral("commitTransaction"), QVariantList());
     return DataStore::commitTransaction();
 }
 
 bool FakeDataStore::rollbackTransaction()
 {
-    mChanges.insert(QLatin1String("rollbackTransaction"), QVariantList());
+    mChanges.insert(QStringLiteral("rollbackTransaction"), QVariantList());
     return DataStore::rollbackTransaction();
 }
 

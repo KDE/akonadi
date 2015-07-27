@@ -60,13 +60,13 @@ bool PreprocessorInstance::init()
 
     mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
         AkDBus::agentServiceName(mId, AkDBus::Preprocessor),
-        QLatin1String("/Preprocessor"),
+        QStringLiteral("/Preprocessor"),
         QDBusConnection::sessionBus(),
         this);
 
     if (!mInterface || !mInterface->isValid()) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorInstance"),
+            QStringLiteral("PreprocessorInstance"),
             QString::fromLatin1("Could not connect to pre-processor instance '%1': %2")
             .arg(mId)
             .arg(mInterface ? mInterface->lastError().message() : QString()));
@@ -157,13 +157,13 @@ bool PreprocessorInstance::abortProcessing()
 
     OrgFreedesktopAkonadiAgentControlInterface iface(
         AkDBus::agentServiceName(mId, AkDBus::Agent),
-        QLatin1String("/"),
+        QStringLiteral("/"),
         QDBusConnection::sessionBus(),
         this);
 
     if (!iface.isValid()) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorInstance"),
+            QStringLiteral("PreprocessorInstance"),
             QString::fromLatin1("Could not connect to pre-processor instance '%1': %2")
             .arg(mId)
             .arg(iface.lastError().message()));
@@ -184,13 +184,13 @@ bool PreprocessorInstance::invokeRestart()
 
     OrgFreedesktopAkonadiAgentManagerInterface iface(
         AkDBus::serviceName(AkDBus::Control),
-        QLatin1String("/AgentManager"),
+        QStringLiteral("/AgentManager"),
         QDBusConnection::sessionBus(),
         this);
 
     if (!iface.isValid()) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorInstance"),
+            QStringLiteral("PreprocessorInstance"),
             QString::fromLatin1("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
             .arg(mId)
             .arg(iface.lastError().message()));
@@ -209,7 +209,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
     // We shouldn't be called if there are no items in the queue
     if (mItemQueue.empty()) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorInstance"),
+            QStringLiteral("PreprocessorInstance"),
             QString::fromLatin1("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue")
             .arg(mId)
             .arg(id));
@@ -224,7 +224,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
 
     if (itemId != id) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorInstance"),
+            QStringLiteral("PreprocessorInstance"),
             QString::fromLatin1("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3")
             .arg(mId)
             .arg(id)
