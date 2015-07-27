@@ -305,10 +305,10 @@ PRIVATE
     Qt5::Widgets
     Qt5::Network
     KF5::AkonadiPrivate
-    KF5::KIOCore
     KF5::DBusAddons
     KF5::I18n
     KF5::IconThemes
+    KF5::ConfigCore
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES
@@ -319,7 +319,7 @@ set_target_properties(KF5AkonadiCore PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiCore
     LIB_NAME KF5AkonadiCore
-    DEPS "ItemModels KIOCore KDELibs4Support" FILENAME_VAR PRI_FILENAME
+    DEPS "ItemModels CoreAddons" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

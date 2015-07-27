@@ -30,7 +30,7 @@
 #include <qdebug.h>
 #include <kiconloader.h>
 #include <KLocalizedString>
-#include <kio/global.h>
+#include <KFormat>
 
 #include <QApplication>
 #include <QPalette>
@@ -119,10 +119,11 @@ public:
             }
         }
 
+	KFormat formatter;
         qint64 currentFolderSize(collection.statistics().size());
         tipInfo += QString::fromLatin1(
                        "      <strong>%1</strong>: %2<br>\n"
-                   ).arg(i18n("Storage Size")).arg(KIO::convertSize((KIO::filesize_t)(currentFolderSize)));
+                   ).arg(i18n("Storage Size")).arg(formatter.formatByteSize(currentFolderSize));
 
         qint64 totalSize = 0;
         getCountRecursive(index, totalSize);
@@ -130,7 +131,7 @@ public:
         if (totalSize > 0) {
             tipInfo += QString::fromLatin1(
                            "<strong>%1</strong>: %2<br>"
-                       ).arg(i18n("Subfolder Storage Size")).arg(KIO::convertSize((KIO::filesize_t)(totalSize)));
+                       ).arg(i18n("Subfolder Storage Size")).arg(formatter.formatByteSize(totalSize));
         }
 
         QString iconName = CollectionUtils::defaultIconName(collection);
@@ -385,7 +386,8 @@ QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
 
         if (collection.isValid() && collection.statistics().count() >= 0) {
             if (index.column() == sourceColumnCount + 2) {
-                return KIO::convertSize((KIO::filesize_t)(collection.statistics().size()));
+                KFormat formatter;
+                return formatter.formatByteSize(collection.statistics().size());
             } else if (index.column() == sourceColumnCount + 1) {
                 return collection.statistics().count();
             } else if (index.column() == sourceColumnCount) {
