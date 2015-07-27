@@ -993,6 +993,10 @@ bool AgentBase::isOnline() const
 void AgentBase::setNeedsNetwork(bool needsNetwork)
 {
     Q_D(AgentBase);
+    if (d->mNeedsNetwork == needsNetwork) {
+        return;
+    }
+
     d->mNeedsNetwork = needsNetwork;
 
     if (d->mNeedsNetwork) {
