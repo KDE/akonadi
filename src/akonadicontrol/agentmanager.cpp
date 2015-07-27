@@ -66,7 +66,7 @@ AgentManager::AgentManager(QObject *parent)
 {
     new AgentManagerAdaptor(this);
     new AgentManagerInternalAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/AgentManager"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/AgentManager"), this);
 
     connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
@@ -76,22 +76,22 @@ AgentManager::AgentManager(QObject *parent)
     }
 
     const QSettings settings(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
-    mAgentServerEnabled = settings.value(QLatin1String("AgentServer/Enabled"), enableAgentServerDefault).toBool();
+    mAgentServerEnabled = settings.value(QStringLiteral("AgentServer/Enabled"), enableAgentServerDefault).toBool();
 
     QStringList serviceArgs;
     if (AkApplication::hasInstanceIdentifier()) {
-        serviceArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
+        serviceArgs << QStringLiteral("--instance") << AkApplication::instanceIdentifier();
     }
 
     mStorageController = new Akonadi::ProcessControl;
     mStorageController->setShutdownTimeout(15 * 1000);   // the server needs more time for shutdown if we are using an internal mysqld
     connect(mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()));
-    mStorageController->start(QLatin1String("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
+    mStorageController->start(QStringLiteral("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
 
     if (mAgentServerEnabled) {
         mAgentServer = new Akonadi::ProcessControl;
         connect(mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()));
-        mAgentServer->start(QLatin1String("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
+        mAgentServer->start(QStringLiteral("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
     }
 
 #ifndef QT_NO_DEBUG
@@ -383,7 +383,7 @@ QString AgentManager::agentInstanceProgressMessage(const QString &identifier) co
 
 void AgentManager::agentInstanceConfigure(const QString &identifier, qlonglong windowId)
 {
-    if (!checkAgentInterfaces(identifier, QLatin1String("agentInstanceConfigure"))) {
+    if (!checkAgentInterfaces(identifier, QStringLiteral("agentInstanceConfigure"))) {
         return;
     }
 
@@ -401,7 +401,7 @@ bool AgentManager::agentInstanceOnline(const QString &identifier)
 
 void AgentManager::setAgentInstanceOnline(const QString &identifier, bool state)
 {
-    if (!checkAgentInterfaces(identifier, QLatin1String("setAgentInstanceOnline"))) {
+    if (!checkAgentInterfaces(identifier, QStringLiteral("setAgentInstanceOnline"))) {
         return;
     }
 
@@ -439,7 +439,7 @@ QString AgentManager::agentInstanceName(const QString &identifier, const QString
 
 void AgentManager::agentInstanceSynchronize(const QString &identifier)
 {
-    if (!checkResourceInterface(identifier, QLatin1String("agentInstanceSynchronize"))) {
+    if (!checkResourceInterface(identifier, QStringLiteral("agentInstanceSynchronize"))) {
         return;
     }
 
@@ -448,7 +448,7 @@ void AgentManager::agentInstanceSynchronize(const QString &identifier)
 
 void AgentManager::agentInstanceSynchronizeCollectionTree(const QString &identifier)
 {
-    if (!checkResourceInterface(identifier, QLatin1String("agentInstanceSynchronizeCollectionTree"))) {
+    if (!checkResourceInterface(identifier, QStringLiteral("agentInstanceSynchronizeCollectionTree"))) {
         return;
     }
 
@@ -462,7 +462,7 @@ void AgentManager::agentInstanceSynchronizeCollection(const QString &identifier,
 
 void AgentManager::agentInstanceSynchronizeCollection(const QString &identifier, qint64 collection, bool recursive)
 {
-    if (!checkResourceInterface(identifier, QLatin1String("agentInstanceSynchronizeCollection"))) {
+    if (!checkResourceInterface(identifier, QStringLiteral("agentInstanceSynchronizeCollection"))) {
         return;
     }
 
@@ -509,7 +509,7 @@ void AgentManager::readPluginInfos()
     const QStringList pathList = pluginInfoPathList();
 
     Q_FOREACH (const QString &path, pathList) {
-        const QDir directory(path, QLatin1String("*.desktop"));
+        const QDir directory(path, QStringLiteral("*.desktop"));
         readPluginInfos(directory);
     }
 }
@@ -561,7 +561,7 @@ void AgentManager::readPluginInfos(const QDir &directory)
 
 QStringList AgentManager::pluginInfoPathList()
 {
-    return Akonadi::XdgBaseDirs::findAllResourceDirs("data", QLatin1String("akonadi/agents"));
+    return Akonadi::XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
 }
 
 void AgentManager::load()

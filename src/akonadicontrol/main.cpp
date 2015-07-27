@@ -49,7 +49,7 @@ void crashHandler(int)
 int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
-    app.setDescription(QLatin1String("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
+    app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
     app.parseCommandLine();
 
     // try to acquire the lock first, that means there is no second instance trying to start up at the same time

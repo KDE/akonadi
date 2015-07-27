@@ -69,7 +69,7 @@ PreprocessorManager::PreprocessorManager()
     new PreprocessorManagerAdaptor(this);
 
     QDBusConnection::sessionBus().registerObject(
-        QLatin1String("/PreprocessorManager"),
+        QStringLiteral("/PreprocessorManager"),
         this,
         QDBusConnection::ExportAdaptors);
 
@@ -151,7 +151,7 @@ void PreprocessorManager::registerInstance(const QString &id)
     instance = new PreprocessorInstance(id);
     if (!instance->init()) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorManager"),
+            QStringLiteral("PreprocessorManager"),
             QString::fromLatin1("Could not initialize preprocessor instance '%1'")
             .arg(id));
         delete instance;
@@ -410,7 +410,7 @@ void PreprocessorManager::lockedEndHandleItem(qint64 itemId)
 
     if (!DataStore::self()->unhidePimItem(item)) {
         Tracer::self()->warning(
-            QLatin1String("PreprocessorManager"),
+            QStringLiteral("PreprocessorManager"),
             QString::fromLatin1("Failed to unhide the PIM item '%1': data is not lost but a server restart is required in order to unhide it")
             .arg(itemId));
     }
@@ -450,7 +450,7 @@ void PreprocessorManager::heartbeat()
             // Kindly ask the preprocessor to abort the job.
 
             Tracer::self()->warning(
-                QLatin1String("PreprocessorManager"),
+                QStringLiteral("PreprocessorManager"),
                 QString::fromLatin1("Preprocessor '%1' seems to be stuck... trying to abort its job.")
                 .arg(instance->id()));
 
@@ -464,7 +464,7 @@ void PreprocessorManager::heartbeat()
             // Attempt to restart the preprocessor via AgentManager interface
 
             Tracer::self()->warning(
-                QLatin1String("PreprocessorManager"),
+                QStringLiteral("PreprocessorManager"),
                 QString::fromLatin1("Preprocessor '%1' is stuck... trying to restart it")
                 .arg(instance->id()));
 
@@ -475,7 +475,7 @@ void PreprocessorManager::heartbeat()
         }
 
         Tracer::self()->warning(
-            QLatin1String("PreprocessorManager"),
+            QStringLiteral("PreprocessorManager"),
             QString::fromLatin1("Preprocessor '%1' is broken... ignoring it from now on")
             .arg(instance->id()));
 

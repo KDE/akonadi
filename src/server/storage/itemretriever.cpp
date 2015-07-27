@@ -154,7 +154,7 @@ QSqlQuery ItemRetriever::buildQuery() const
     if (!mFullPayload && !mParts.isEmpty()) {
         partTypeJoinCondition.addCondition(PartTypeHelper::conditionFromFqNames(mParts));
     }
-    partTypeJoinCondition.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("PLD"));
+    partTypeJoinCondition.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("PLD"));
     qb.addJoin(QueryBuilder::LeftJoin, PartType::tableName(), partTypeJoinCondition);
 
     qb.addColumn(PimItem::idFullColumnName());

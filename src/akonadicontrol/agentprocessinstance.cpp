@@ -58,12 +58,12 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
 
     if (agentInfo.launchMethod == AgentType::Process) {
         QStringList arguments;
-        arguments << QLatin1String("--identifier") << identifier();
+        arguments << QStringLiteral("--identifier") << identifier();
         mController->start(executable, arguments);
     } else {
         Q_ASSERT(agentInfo.launchMethod == AgentType::Launcher);
         const QStringList arguments = QStringList() << executable << identifier();
-        const QString agentLauncherExec = XdgBaseDirs::findExecutableFile(QLatin1String("akonadi_agent_launcher"));
+        const QString agentLauncherExec = XdgBaseDirs::findExecutableFile(QStringLiteral("akonadi_agent_launcher"));
         mController->start(agentLauncherExec, arguments);
     }
     return true;
@@ -100,5 +100,5 @@ void Akonadi::AgentProcessInstance::configure(qlonglong windowId)
 
 void AgentProcessInstance::failedToStart()
 {
-    statusChanged(2 /*Broken*/, QLatin1String("Unable to start."));
+    statusChanged(2 /*Broken*/, QStringLiteral("Unable to start."));
 }

@@ -126,7 +126,7 @@ void SearchTaskManager::addTask(SearchTask *task)
 
     mInstancesLock.lock();
 
-    org::freedesktop::Akonadi::AgentManager agentManager(AkDBus::serviceName(AkDBus::Control), QLatin1String("/AgentManager"),
+    org::freedesktop::Akonadi::AgentManager agentManager(AkDBus::serviceName(AkDBus::Control), QStringLiteral("/AgentManager"),
                                                          DBusConnectionPool::threadConnection());
     do {
         const QString resourceId = query.value(1).toString();

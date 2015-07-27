@@ -44,7 +44,7 @@ bool AgentSearchInstance::init()
 
     mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
         AkDBus::agentServiceName(mId, AkDBus::Agent),
-        QLatin1String("/Search"),
+        QStringLiteral("/Search"),
         DBusConnectionPool::threadConnection());
 
     if (!mInterface || !mInterface->isValid()) {

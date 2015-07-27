@@ -105,10 +105,10 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
         }
 
         if (allPayload) {
-            cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("PLD"));
+            cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("PLD"));
         }
         if (allAttrs) {
-            cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("ATR"));
+            cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("ATR"));
         }
 
         if (!cond.isEmpty()) {
@@ -291,11 +291,11 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
     const QString resourceName = query.value(0).toString();
 
     org::freedesktop::Akonadi::AgentManager manager(AkDBus::serviceName(AkDBus::Control),
-                                                    QLatin1String("/AgentManager"),
+                                                    QStringLiteral("/AgentManager"),
                                                     DBusConnectionPool::threadConnection());
     const QString typeIdentifier = manager.agentInstanceType(resourceName);
     const QVariantMap properties = manager.agentCustomProperties(typeIdentifier);
-    return properties.value(QLatin1String("HasLocalStorage"), false).toBool();
+    return properties.value(QStringLiteral("HasLocalStorage"), false).toBool();
 }
 
 bool FetchHelper::fetchItems()

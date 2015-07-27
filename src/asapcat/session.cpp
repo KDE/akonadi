@@ -71,9 +71,9 @@ void Session::connectToHost()
 
     QString serverAddress;
 #ifdef Q_OS_WIN
-    serverAddress = connectionSettings.value(QLatin1String("Data/NamedPipe"), QString()).toString();
+    serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), QString()).toString();
 #else
-    serverAddress = connectionSettings.value(QLatin1String("Data/UnixPath"), QString()).toString();
+    serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString()).toString();
 #endif
     if (serverAddress.isEmpty()) {
         akFatal() << "Unable to determine server address.";

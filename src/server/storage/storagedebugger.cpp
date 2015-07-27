@@ -52,7 +52,7 @@ StorageDebugger::StorageDebugger()
 {
     qDBusRegisterMetaType<QList< QList<QVariant> > >();
     new StorageDebuggerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/storageDebug"),
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/storageDebug"),
                                                  this, QDBusConnection::ExportAdaptors);
 }
 

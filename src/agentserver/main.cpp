@@ -31,7 +31,7 @@
 int main(int argc, char **argv)
 {
     AkGuiApplication app(argc, argv);
-    app.setDescription(QLatin1String("Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
+    app.setDescription(QStringLiteral("Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
     app.parseCommandLine();
     qApp->setQuitOnLastWindowClosed(false);
 

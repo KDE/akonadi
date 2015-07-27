@@ -99,7 +99,7 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 
     delete iface;
     iface = new org::freedesktop::Akonadi::Resource(AkDBus::agentServiceName(id, AkDBus::Resource),
-                                                    QLatin1String("/"), mDBusConnection, this);
+                                                    QStringLiteral("/"), mDBusConnection, this);
     if (!iface || !iface->isValid()) {
         akError() << QString::fromLatin1("Cannot connect to agent instance with identifier '%1', error message: '%2'")
                   .arg(id, iface ? iface->lastError().message() : QString());

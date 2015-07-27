@@ -157,7 +157,7 @@ public:
 
     static QString collectionDelimiter()
     {
-        return QLatin1String("/");
+        return QStringLiteral("/");
     }
 
     /**

@@ -48,16 +48,16 @@ NotificationManager::NotificationManager()
     qDBusRegisterMetaType<Protocol::ChangeNotification::Type>();
 
     new NotificationManagerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications"),
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/notifications"),
                                                  this, QDBusConnection::ExportAdaptors);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/notifications/debug"),
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/notifications/debug"),
                                                  this, QDBusConnection::ExportScriptableSlots |
                                                        QDBusConnection::ExportScriptableSignals);
 
     const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
 
-    mTimer.setInterval(settings.value(QLatin1String("NotificationManager/Interval"), 50).toInt());
+    mTimer.setInterval(settings.value(QStringLiteral("NotificationManager/Interval"), 50).toInt());
     mTimer.setSingleShot(true);
     connect(&mTimer, SIGNAL(timeout()), SLOT(emitPendingNotifications()));
 }
