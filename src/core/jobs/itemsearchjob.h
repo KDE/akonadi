@@ -72,13 +72,13 @@ class AKONADICORE_EXPORT ItemSearchJob : public Job
 
 public:
     /**
-     * Creates an item search job.
+     * Creates an invalid search job.
      *
-     * @param query The search query in raw Akonadi search metalanguage format (JSON)
+     * @param query The search query.
      * @param parent The parent object.
-     * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
+     * @since 5.1
      */
-    explicit AKONADICORE_DEPRECATED ItemSearchJob(const QString &query, QObject *parent = Q_NULLPTR);
+    explicit ItemSearchJob(QObject *parent = Q_NULLPTR);
 
     /**
      * Creates an item search job.
