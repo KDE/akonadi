@@ -117,8 +117,11 @@ static QObject *sessionForJob(QObject *parent)
 }
 
 ItemSearchJob::ItemSearchJob(QObject* parent)
-    : Job(parent)
+    : Job(new ItemSearchJobPrivate(this, SearchQuery()), sessionForJob(parent))
 {
+    Q_D(ItemSearchJob);
+
+    d->init();
 }
 
 
