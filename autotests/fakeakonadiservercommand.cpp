@@ -200,6 +200,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
     }
     if (entityString.startsWith(QLatin1Char('I'))) {
         Item item;
+        int order = 0;
         entityString.remove(0, 2);
         entityString = entityString.trimmed();
         QString type;
@@ -227,6 +228,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         } else {
             type = entityString;
         }
+        Q_UNUSED(order);
 
         item.setMimeType(type);
         item.setId(fakeServerData->nextItemId());
