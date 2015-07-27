@@ -109,14 +109,14 @@ public:
     bool contentTypesChanged: 1;
     bool cachePolicyChanged: 1;
     bool isVirtual: 1;
-    bool enabled;
-    bool enabledChanged;
-    Collection::ListPreference displayPreference;
-    Collection::ListPreference syncPreference;
-    Collection::ListPreference indexPreference;
-    bool listPreferenceChanged;
-    bool referenced;
-    bool referencedChanged;
+    bool enabled: 1;
+    bool enabledChanged: 1;
+    bool listPreferenceChanged: 1;
+    bool referenced: 1;
+    bool referencedChanged: 1;
+    Collection::ListPreference displayPreference: 2;
+    Collection::ListPreference syncPreference: 2;
+    Collection::ListPreference indexPreference: 2;
     QSet<QByteArray> keepLocalChanges;
 };
 
