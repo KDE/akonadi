@@ -121,11 +121,6 @@ private:
     mutable QObject *mPlugin;
 };
 
-static bool operator<(const QString &identifier, const PluginEntry &entry)
-{
-    return identifier < entry.identifier();
-}
-
 class MimeTypeEntry
 {
 public:
@@ -220,34 +215,6 @@ private:
     QHash<QByteArray/* class */, PluginEntry> m_plugins;
     mutable QMap<int, QHash<QByteArray, PluginEntry>::const_iterator> m_pluginsByMetaTypeId;
 };
-
-static bool operator<(const MimeTypeEntry &lhs, const MimeTypeEntry &rhs)
-{
-    return lhs.type() < rhs.type();
-}
-
-static bool operator<(const MimeTypeEntry &lhs, const QString &rhs)
-{
-    return lhs.type() < rhs;
-}
-
-static bool operator<(const QString &lhs, const MimeTypeEntry &rhs)
-{
-    return lhs < rhs.type();
-}
-
-static QString format(const QString &mimeType, const QVector<int> &metaTypeIds)
-{
-    if (metaTypeIds.empty()) {
-        return QStringLiteral("default for ") + mimeType;
-    }
-    QStringList classTypes;
-    classTypes.reserve(metaTypeIds.count());
-    Q_FOREACH (int metaTypeId, metaTypeIds) {
-        classTypes.push_back(QString::fromLatin1(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME));
-    }
-    return mimeType + QStringLiteral("@{") + classTypes.join(QStringLiteral(",")) + QLatin1Char('}');
-}
 
 class PluginRegistry
 {
