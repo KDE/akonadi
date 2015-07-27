@@ -223,11 +223,6 @@ bool ImapSet::operator==(const ImapSet &other) const
     return d->intervals == other.d->intervals;
 }
 
-void ImapSet::add(const QList<Id> &values)
-{
-    add(values.toVector());
-}
-
 void ImapSet::add(const QVector<Id> &values)
 {
     QVector<Id> vals = values;

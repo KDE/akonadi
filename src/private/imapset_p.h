@@ -191,12 +191,6 @@ public:
     void add(const QVector<Id> &values);
 
     /**
-       @overload
-       @deprecated Use the QVector version instead.
-    */
-    void add(const QList<Id> &values);
-
-    /**
      * @overload
      */
     void add(const QSet<Id> &values);
