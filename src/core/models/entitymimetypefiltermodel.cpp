@@ -172,49 +172,20 @@ QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex &start, int r
         return QModelIndexList();
     }
 
-    if (EntityTreeModel::AmazingCompletionRole != role) {
-        if (role < Qt::UserRole) {
-            return QSortFilterProxyModel::match(start, role, value, hits, flags);
-        }
-
-        QModelIndexList list;
-        QModelIndex proxyIndex;
-        foreach (const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags)) {
-            proxyIndex = mapFromSource(idx);
-            if (proxyIndex.isValid()) {
-                list << proxyIndex;
-            }
-        }
-
-        return list;
+    if (role < Qt::UserRole) {
+        return QSortFilterProxyModel::match(start, role, value, hits, flags);
     }
-    // We match everything in the source model because sorting will change what we should show.
-    const int allHits = -1;
 
-    QModelIndexList proxyList;
-    QMap<int, QModelIndex> proxyMap;
-    const QModelIndexList sourceList = sourceModel()->match(mapToSource(start), role, value, allHits, flags);
-    QModelIndexList::const_iterator it;
-    const QModelIndexList::const_iterator begin = sourceList.constBegin();
-    const QModelIndexList::const_iterator end = sourceList.constEnd();
+    QModelIndexList list;
     QModelIndex proxyIndex;
-    for (it = begin; it != end; ++it) {
-        proxyIndex = mapFromSource(*it);
-
-        // Any filtered indexes will be invalid when mapped.
-        if (!proxyIndex.isValid()) {
-            continue;
+    foreach (const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags)) {
+        proxyIndex = mapFromSource(idx);
+        if (proxyIndex.isValid()) {
+            list << proxyIndex;
         }
-
-        // Inserting in a QMap gives us sorting by key for free.
-        proxyMap.insert(proxyIndex.row(), proxyIndex);
     }
 
-    if (hits == -1) {
-        return proxyMap.values();
-    }
-
-    return proxyMap.values().mid(0, hits);
+    return list;
 }
 
 int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const

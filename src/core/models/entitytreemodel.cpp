@@ -149,7 +149,6 @@ QHash<int, QByteArray> EntityTreeModel::roleNames() const
     QHash<int, QByteArray> names = QAbstractItemModel::roleNames();
     names.insert(EntityTreeModel::UnreadCountRole, "unreadCount");
     names.insert(EntityTreeModel::FetchStateRole, "fetchState");
-    names.insert(EntityTreeModel::CollectionSyncProgressRole, "collectionSyncProgress");
     names.insert(EntityTreeModel::ItemIdRole, "itemId");
     return names;
 }
@@ -309,9 +308,6 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         }
         case FetchStateRole: {
             return d->m_pendingCollectionRetrieveJobs.contains(collection.id()) ? FetchingState : IdleState;
-        }
-        case CollectionSyncProgressRole: {
-            return QVariant(); // no longer supported
         }
         case IsPopulatedRole: {
             return d->m_populatedCols.contains(collection.id());
@@ -974,22 +970,6 @@ bool EntityTreeModel::isFullyPopulated() const
     return d->m_collectionTreeFetched && d->m_pendingCollectionRetrieveJobs.isEmpty();
 }
 
-bool EntityTreeModel::entityMatch(const Item &item, const QVariant &value, Qt::MatchFlags flags) const
-{
-    Q_UNUSED(item);
-    Q_UNUSED(value);
-    Q_UNUSED(flags);
-    return false;
-}
-
-bool EntityTreeModel::entityMatch(const Collection &collection, const QVariant &value, Qt::MatchFlags flags) const
-{
-    Q_UNUSED(collection);
-    Q_UNUSED(value);
-    Q_UNUSED(flags);
-    return false;
-}
-
 QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const QVariant &value, int hits, Qt::MatchFlags flags) const
 {
     Q_D(const EntityTreeModel);
@@ -1053,49 +1033,7 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
         return list;
     }
 
-    if (role != AmazingCompletionRole) {
-        return QAbstractItemModel::match(start, role, value, hits, flags);
-    }
-
-    // Try to match names, and email addresses.
-    QModelIndexList list;
-
-    if (role < 0 ||
-            !start.isValid() ||
-            !value.isValid()) {
-        return list;
-    }
-
-    const int column = 0;
-    int row = start.row();
-    const QModelIndex parentIndex = start.parent();
-    const int parentRowCount = rowCount(parentIndex);
-
-    while (row < parentRowCount &&
-            (hits == -1 || list.size() < hits)) {
-        const QModelIndex idx = index(row, column, parentIndex);
-        const Item item = idx.data(ItemRole).value<Item>();
-
-        if (!item.isValid()) {
-            const Collection collection = idx.data(CollectionRole).value<Collection>();
-            if (!collection.isValid()) {
-                continue;
-            }
-
-            if (entityMatch(collection, value, flags)) {
-                list << idx;
-            }
-
-        } else {
-            if (entityMatch(item, value, flags)) {
-                list << idx;
-            }
-        }
-
-        ++row;
-    }
-
-    return list;
+    return QAbstractItemModel::match(start, role, value, hits, flags);
 }
 
 bool EntityTreeModel::insertRows(int, int, const QModelIndex &)

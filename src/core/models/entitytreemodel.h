@@ -336,7 +336,6 @@ public:
 
         RemoteIdRole,                           ///< The remoteId of the entity
         CollectionChildOrderRole,               ///< Ordered list of child items if available
-        AmazingCompletionRole,                  ///< Role used to implement amazing completion
         ParentCollectionRole,                   ///< The parent collection of the entity
         ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
         LoadedPartsRole,                        ///< Parts available in the model for the item
@@ -348,7 +347,6 @@ public:
         EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
         UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
         FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
-        CollectionSyncProgressRole,             ///< Returns the progress of synchronization in percent for a particular collection. @since 4.6. Deprecated since 4.14.3.
         IsPopulatedRole,                        ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
         OriginalCollectionNameRole,             ///< Returns original name for collection @since 4.14
         UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
@@ -669,16 +667,6 @@ protected:
     virtual QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const;
 
     virtual int entityColumnCount(HeaderGroup headerGroup) const;
-
-    /**
-     * Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
-     */
-    virtual bool entityMatch(const Item &item, const QVariant &value, Qt::MatchFlags flags) const;
-
-    /**
-     * Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
-     */
-    virtual bool entityMatch(const Collection &collection, const QVariant &value, Qt::MatchFlags flags) const;
 
 protected:
     //@cond PRIVATE
