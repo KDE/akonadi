@@ -19,7 +19,7 @@
 
 #include "collectionfilterproxymodel.h"
 
-#include "collectionmodel.h"
+#include "entitytreemodel.h"
 #include "mimetypechecker.h"
 
 #include <qdebug.h>
@@ -53,7 +53,7 @@ public:
 bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &index, bool checkResourceVisibility)
 {
     // Retrieve supported mimetypes
-    const Collection collection = mParent->sourceModel()->data(index, CollectionModel::CollectionRole).value<Collection>();
+    const Collection collection = mParent->sourceModel()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
 
     if (!collection.isValid()) {
         return false;
@@ -172,7 +172,7 @@ Qt::ItemFlags CollectionFilterProxyModel::flags(const QModelIndex &index) const
         return 0;
     }
 
-    const Collection collection = sourceModel()->data(mapToSource(index), CollectionModel::CollectionRole).value<Collection>();
+    const Collection collection = sourceModel()->data(mapToSource(index), EntityTreeModel::CollectionRole).value<Collection>();
 
     // If this collection directly contains one valid mimetype, it is accepted
     if (d->mimeChecker.isWantedCollection(collection)) {
