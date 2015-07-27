@@ -7,6 +7,7 @@ set(akonadiwidgets_SRCS
     agenttypewidget.cpp
     cachepolicypage.cpp
     collectioncombobox.cpp
+    collectiondialog.cpp
     collectiongeneralpropertiespage.cpp
     collectionpropertiesdialog.cpp
     collectionpropertiespage.cpp
@@ -71,25 +72,10 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
 )
 
-if (KDEPIM_MOBILE_UI)
-    set(akonadiwidgets_SRCS
-        ${akonadiwidgets_SRCS}
-        collectiondialog_mobile.cpp
-    )
-    set(akonadiwidgets_UI
-        ${akonadiwidgets_UI}
-        collectiongeneralpropertiespage_mobile.ui
-    )
-else()
-    set(akonadiwidgets_SRCS
-        ${akonadiwidgets_SRCS}
-        collectiondialog_desktop.cpp
-    )
-    set(akonadiwidgets_UI
-        ${akonadiwidgets_UI}
-        collectiongeneralpropertiespage.ui
-    )
-endif()
+set(akonadiwidgets_UI
+    ${akonadiwidgets_UI}
+    collectiongeneralpropertiespage.ui
+)
 
 ki18n_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
 
@@ -137,13 +123,6 @@ install(FILES
     ${AkonadiWidgets_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets COMPONENT Devel
 )
-
-if (KDEPIM_MOBILE_UI)
-    install(FILES
-        CollectionDialogMobile.qml
-        DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi/qml
-    )
-endif()
 
 install(FILES
     ${PRI_FILENAME}

@@ -21,11 +21,7 @@
 #define AKOANDI_COLLECTIONGENERALPROPERTIESPAGE_P_H
 
 #include "collectionpropertiespage.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_collectiongeneralpropertiespage_mobile.h"
-#else
 #include "ui_collectiongeneralpropertiespage.h"
-#endif
 
 namespace Akonadi
 {

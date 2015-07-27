@@ -56,14 +56,12 @@ void CollectionGeneralPropertiesPage::load(const Collection &collection)
         ui.nameEdit->setText(displayName);
     }
 
-#ifndef KDEPIM_MOBILE_UI
     if (iconName.isEmpty()) {
         ui.customIcon->setIcon(CollectionUtils::defaultIconName(collection));
     } else {
         ui.customIcon->setIcon(iconName);
     }
     ui.customIconCheckbox->setChecked(!iconName.isEmpty());
-#endif
 
     if (collection.statistics().count() >= 0) {
         ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects",
@@ -83,13 +81,11 @@ void CollectionGeneralPropertiesPage::save(Collection &collection)
         collection.setName(ui.nameEdit->text());
     }
 
-#ifndef KDEPIM_MOBILE_UI
     if (ui.customIconCheckbox->isChecked()) {
         collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing)->setIconName(ui.customIcon->icon());
     } else if (collection.hasAttribute<EntityDisplayAttribute>()) {
         collection.attribute<EntityDisplayAttribute>()->setIconName(QString());
     }
-#endif
 }
 
 //@endcond

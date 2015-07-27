@@ -99,10 +99,8 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     ui->quitButton->setText(KStandardGuiItem::quit().text());
     ui->detailsQuitButton->setText(KStandardGuiItem::quit().text());
 
-#ifndef KDEPIM_MOBILE_UI
     ui->quitButton->hide();
     ui->detailsQuitButton->hide();
-#endif
 
     connect(ui->startButton, SIGNAL(clicked()), SLOT(startClicked()));
     connect(ui->quitButton, SIGNAL(clicked()), SLOT(quitClicked()));

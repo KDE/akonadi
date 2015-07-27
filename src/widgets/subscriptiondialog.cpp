@@ -33,7 +33,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
-#ifndef KDEPIM_MOBILE_UI
 #include <QLineEdit>
 #include <QPushButton>
 #include <krecursivefilterproxymodel.h>
@@ -41,28 +40,6 @@
 #include <QLabel>
 #include <QTreeView>
 #include <QCheckBox>
-#else
-#include <kdescendantsproxymodel.h>
-#include <QListView>
-#include <QSortFilterProxyModel>
-
-class CheckableFilterProxyModel : public QSortFilterProxyModel
-{
-public:
-    CheckableFilterProxyModel(QObject *parent = Q_NULLPTR)
-        : QSortFilterProxyModel(parent)
-    {
-    }
-
-protected:
-    /*reimp*/
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
-    {
-        QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
-        return sourceModel()->flags(sourceIndex) &Qt::ItemIsUserCheckable;
-    }
-};
-#endif
 
 using namespace Akonadi;
 
@@ -97,18 +74,14 @@ public:
     void modelLoaded()
     {
         collectionView->setEnabled(true);
-#ifndef KDEPIM_MOBILE_UI
         collectionView->expandAll();
-#endif
         mOkButton->setEnabled(true);
     }
 
     void slotSetPattern(const QString &text)
     {
         filterRecursiveCollectionFilter->setSearchPattern(text);
-#ifndef KDEPIM_MOBILE_UI
         collectionView->expandAll();
-#endif
     }
 
     void slotSetIncludeCheckedOnly(bool checked)
@@ -135,13 +108,9 @@ public:
     void slotSubscribe();
 
     SubscriptionDialog *q;
-#ifndef KDEPIM_MOBILE_UI
     QTreeView *collectionView;
     QPushButton *subscribe;
     QPushButton *unSubscribe;
-#else
-    QListView *collectionView;
-#endif
     SubscriptionModel *model;
     RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
     QPushButton *mOkButton;
@@ -150,24 +119,20 @@ public:
 
 void SubscriptionDialog::Private::slotSubscribe()
 {
-#ifndef KDEPIM_MOBILE_UI
     QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
     foreach (const QModelIndex &index, list) {
         model->setData(index, Qt::Checked, Qt::CheckStateRole);
     }
     collectionView->setFocus();
-#endif
 }
 
 void SubscriptionDialog::Private::slotUnSubscribe()
 {
-#ifndef KDEPIM_MOBILE_UI
     QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
     foreach (const QModelIndex &index, list) {
         model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
     }
     collectionView->setFocus();
-#endif
 }
 
 SubscriptionDialog::SubscriptionDialog(QWidget *parent)
@@ -199,7 +164,6 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 
     d->model = new SubscriptionModel(this);
 
-#ifndef KDEPIM_MOBILE_UI
     d->filterRecursiveCollectionFilter
         = new Akonadi::RecursiveCollectionFilterProxyModel(this);
     d->filterRecursiveCollectionFilter->setDynamicSortFilter(true);
@@ -250,31 +214,6 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 
     mainLayout->addLayout(filterBarLayout);
     mainLayout->addLayout(hboxLayout);
-
-#else
-
-    d->filterRecursiveCollectionFilter
-        = new Akonadi::RecursiveCollectionFilterProxyModel(this);
-    if (!mimetypes.isEmpty()) {
-        d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters(mimetypes);
-    }
-
-    d->filterRecursiveCollectionFilter->setSourceModel(d->model);
-
-    KDescendantsProxyModel *flatModel = new KDescendantsProxyModel(this);
-    flatModel->setDisplayAncestorData(true);
-    flatModel->setAncestorSeparator(QStringLiteral("/"));
-    flatModel->setSourceModel(d->filterRecursiveCollectionFilter);
-
-    CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel(this);
-    checkableModel->setSourceModel(flatModel);
-
-    d->collectionView = new QListView(mainWidget);
-    mainLayout->addWidget(collectionView);
-
-    d->collectionView->setModel(checkableModel);
-    mainLayout->addWidget(d->collectionView);
-#endif
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
