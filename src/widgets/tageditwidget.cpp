@@ -112,8 +112,7 @@ void TagEditWidget::Private::slotCreateTag()
 {
     if (m_newTagButton->isEnabled()) {
         Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag(m_newTagEdit->text()), this);
-        connect(createJob, SIGNAL(finished(KJob*)),
-                this, SLOT(slotCreateTagFinished(KJob*)));
+        connect(createJob, &Akonadi::TagCreateJob::finished, this, &TagEditWidget::Private::slotCreateTagFinished);
 
         m_newTagEdit->clear();
         m_newTagEdit->setEnabled(false);

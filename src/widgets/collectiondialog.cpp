@@ -79,10 +79,8 @@ public:
         layout->addWidget(mUseByDefault);
 
         mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, mParent);
-        mParent->connect(mButtonBox, &QDialogButtonBox::accepted,
-                         mParent, &QDialog::accept);
-        mParent->connect(mButtonBox, &QDialogButtonBox::rejected,
-                         mParent, &QDialog::reject);
+        mParent->connect(mButtonBox, &QDialogButtonBox::accepted, mParent, &QDialog::accept);
+        mParent->connect(mButtonBox, &QDialogButtonBox::rejected, mParent, &QDialog::reject);
         layout->addWidget(mButtonBox);
         mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
@@ -242,8 +240,7 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
     }
     mKeepTreeExpanded = (options & KeepTreeExpanded);
     if (mKeepTreeExpanded) {
-        mParent->connect(mRightsFilterModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                         mView, SLOT(expandAll()), Qt::UniqueConnection);
+        mParent->connect(mRightsFilterModel, &EntityRightsFilterModel::rowsInserted, mView, &EntityTreeView::expandAll, Qt::UniqueConnection);
         mView->expandAll();
     }
 }
