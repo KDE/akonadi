@@ -1,6 +1,6 @@
+cmake_minimum_required(VERSION 2.8.9)
 project(Akonadi)
 
-cmake_minimum_required(VERSION 2.8.8 FATAL_ERROR)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
