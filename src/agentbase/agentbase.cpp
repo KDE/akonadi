@@ -360,7 +360,7 @@ void AgentBasePrivate::init()
     Q_Q(AgentBase);
 
     Kdelibs4ConfigMigrator migrate(mId);
-    migrate.setConfigFiles(QStringList() << QString::fromLatin1("%1rc").arg(mId));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("%1rc").arg(mId));
     migrate.migrate();
 
     /**
@@ -378,7 +378,7 @@ void AgentBasePrivate::init()
         q->error(i18n("Unable to register object at dbus: %1", KDBusConnectionPool::threadConnection().lastError().message()));
     }
 
-    mSettings = new QSettings(QString::fromLatin1("%1/agent_config_%2").arg(Internal::xdgSaveDir("config"), mId), QSettings::IniFormat);
+    mSettings = new QSettings(QStringLiteral("%1/agent_config_%2").arg(Internal::xdgSaveDir("config"), mId), QSettings::IniFormat);
 
     mChangeRecorder = new ChangeRecorder(q);
     mChangeRecorder->ignoreSession(Session::defaultSession());
@@ -818,12 +818,12 @@ void AgentBasePrivate::slotPercent(int progress)
 
 void AgentBasePrivate::slotWarning(const QString &message)
 {
-    mTracer->warning(QString::fromLatin1("AgentBase(%1)").arg(mId), message);
+    mTracer->warning(QStringLiteral("AgentBase(%1)").arg(mId), message);
 }
 
 void AgentBasePrivate::slotError(const QString &message)
 {
-    mTracer->error(QString::fromLatin1("AgentBase(%1)").arg(mId), message);
+    mTracer->error(QStringLiteral("AgentBase(%1)").arg(mId), message);
 }
 
 void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)

@@ -372,7 +372,7 @@ QUrl Item::url(UrlType type) const
     }
 
     QUrl url;
-    url.setScheme(QString::fromLatin1("akonadi"));
+    url.setScheme(QStringLiteral("akonadi"));
     url.setQuery(query);
     return url;
 }
@@ -484,7 +484,7 @@ bool Item::ensureMetaTypeId(int mtid) const
 
 static QString format_type(int spid, int mtid)
 {
-    return QString::fromLatin1("sp(%1)<%2>")
+    return QStringLiteral("sp(%1)<%2>")
            .arg(spid).arg(QLatin1String(QMetaType::typeName(mtid)));
 }
 
@@ -505,7 +505,7 @@ QString Item::payloadExceptionText(int spid, int mtid) const
     if (d->mPayloads.empty()) {
         return QStringLiteral("No payload set");
     } else {
-        return QString::fromLatin1("Wrong payload type (requested: %1; present: %2")
+        return QStringLiteral("Wrong payload type (requested: %1; present: %2")
                .arg(format_type(spid, mtid), format_types(d->mPayloads));
     }
 }
@@ -516,7 +516,7 @@ void Item::throwPayloadException(int spid, int mtid) const
     if (d->mPayloads.empty()) {
         throw PayloadException("No payload set");
     } else {
-        throw PayloadException(QString::fromLatin1("Wrong payload type (requested: %1; present: %2")
+        throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2")
                                .arg(format_type(spid, mtid), format_types(d->mPayloads)));
     }
 }

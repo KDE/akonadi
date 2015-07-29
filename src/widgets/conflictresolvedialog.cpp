@@ -69,24 +69,24 @@ public:
         switch (mode)
         {
         case NormalMode:
-            mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td>%2</td><td></td><td>%3</td></tr>")
+            mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td>%2</td><td></td><td>%3</td></tr>")
             .arg(name,
             textToHTML(leftValue),
             textToHTML(rightValue)));
             break;
         case ConflictMode:
-            mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>")
+            mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>")
             .arg(name,
             textToHTML(leftValue),
             textToHTML(rightValue)));
             break;
         case AdditionalLeftMode:
-            mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>")
+            mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>")
             .arg(name,
             textToHTML(leftValue)));
             break;
         case AdditionalRightMode:
-            mContent.append(QString::fromLatin1("<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>")
+            mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>")
             .arg(name,
             textToHTML(rightValue)));
             break;

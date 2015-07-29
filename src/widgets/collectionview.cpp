@@ -224,10 +224,10 @@ void CollectionView::dropEvent(QDropEvent *event)
     // open a context menu offering different drop actions (move, copy and cancel)
     // TODO If possible, hide non available actions ...
     QMenu popup(this);
-    QAction *moveDropAction = popup.addAction(QIcon::fromTheme(QString::fromLatin1("edit-rename")), i18n("&Move here"));
-    QAction *copyDropAction = popup.addAction(QIcon::fromTheme(QString::fromLatin1("edit-copy")), i18n("&Copy here"));
+    QAction *moveDropAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-rename")), i18n("&Move here"));
+    QAction *copyDropAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("&Copy here"));
     popup.addSeparator();
-    popup.addAction(QIcon::fromTheme(QString::fromLatin1("process-stop")), i18n("Cancel"));
+    popup.addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18n("Cancel"));
 
     QAction *activatedAction = popup.exec(QCursor::pos());
     if (activatedAction == moveDropAction) {

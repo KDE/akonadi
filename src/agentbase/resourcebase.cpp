@@ -106,7 +106,7 @@ public:
         {
             QString reason = KDBusConnectionPool::threadConnection().lastError().message();
             if (reason.isEmpty()) {
-                reason = QString::fromLatin1("this service is probably running already.");
+                reason = QStringLiteral("this service is probably running already.");
             }
             qCritical() << "Unable to register service" << serviceId << "at D-Bus:" << reason;
 

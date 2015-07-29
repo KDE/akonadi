@@ -77,9 +77,9 @@ public:
         if (mCollections.isEmpty()) {
             flags.append(QStringLiteral("all collections"));
         } else {
-            flags.append(QString::fromLatin1("%1 collections").arg(mCollections.count()));
+            flags.append(QStringLiteral("%1 collections").arg(mCollections.count()));
         }
-        return QString::fromLatin1("%1,json=%2").arg(flags.join(QStringLiteral(","))).arg(QString::fromUtf8(mQuery.toJSON()));
+        return QStringLiteral("%1,json=%2").arg(flags.join(QStringLiteral(","))).arg(QString::fromUtf8(mQuery.toJSON()));
     }
 
     Q_DECLARE_PUBLIC(ItemSearchJob)

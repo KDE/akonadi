@@ -152,10 +152,8 @@ void Firstrun::instanceCreated(KJob *job)
         instance.setName(agentName);
     }
 
-    // agent specific settings, using the D-Bus <-> KConfigXT bridge
-    const KConfigGroup settings = KConfigGroup(mCurrentDefault, "Settings");
 
-    QDBusInterface *iface = new QDBusInterface(QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
+    QDBusInterface *iface = new QDBusInterface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
             QLatin1String("/Settings"), QString(),
             KDBusConnectionPool::threadConnection(), this);
     if (!iface->isValid()) {
@@ -164,6 +162,8 @@ void Firstrun::instanceCreated(KJob *job)
         delete iface;
         return;
     }
+    // agent specific settings, using the D-Bus <-> KConfigXT bridge
+    const KConfigGroup settings = KConfigGroup(mCurrentDefault, "Settings");
 
     foreach (const QString &setting, settings.keyList()) {
         qDebug() << "Setting up " << setting << " for agent " << instance.identifier();

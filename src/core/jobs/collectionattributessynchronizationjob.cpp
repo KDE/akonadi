@@ -99,8 +99,8 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
     }
 
     interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
-                                   QString::fromLatin1("/"),
-                                   QString::fromLatin1("org.freedesktop.Akonadi.Resource"),
+                                   QStringLiteral("/"),
+                                   QStringLiteral("org.freedesktop.Akonadi.Resource"),
                                    KDBusConnectionPool::threadConnection(), this);
     connect(interface, SIGNAL(attributesSynchronized(qlonglong)), q, SLOT(slotSynchronized(qlonglong)));
 

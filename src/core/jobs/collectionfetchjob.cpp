@@ -101,7 +101,7 @@ public:
             //return QLatin1String("(") + ProtocolHelper::hierarchicalRidToScope(mBase).hridChain().join(QLatin1String(", ")) + QLatin1String(")");
             return QLatin1String("HRID chain");
         } else {
-            return QString::fromLatin1("Collection RemoteId %1").arg(mBase.remoteId());
+            return QStringLiteral("Collection RemoteId %1").arg(mBase.remoteId());
         }
     }
 

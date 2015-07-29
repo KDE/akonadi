@@ -82,7 +82,7 @@ public:
     QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/
     {
         if (mRequestedItems.isEmpty()) {
-            QString str = QString::fromLatin1("All items from collection %1").arg(mCollection.id());
+            QString str = QStringLiteral("All items from collection %1").arg(mCollection.id());
             if (mFetchScope.fetchChangedSince().isValid()) {
                 str += QString::fromLatin1(" changed since %1").arg(mFetchScope.fetchChangedSince().toString());
             }

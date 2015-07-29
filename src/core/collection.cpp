@@ -135,7 +135,7 @@ QUrl Collection::url(UrlType type) const
     }
 
     QUrl url;
-    url.setScheme(QString::fromLatin1("akonadi"));
+    url.setScheme(QStringLiteral("akonadi"));
     url.setQuery(query);
     return url;
 }
@@ -167,12 +167,12 @@ Collection Collection::root()
 
 QString Collection::mimeType()
 {
-    return QString::fromLatin1("inode/directory");
+    return QStringLiteral("inode/directory");
 }
 
 QString Akonadi::Collection::virtualMimeType()
 {
-    return QString::fromLatin1("application/x-vnd.akonadi.collection.virtual");
+    return QStringLiteral("application/x-vnd.akonadi.collection.virtual");
 }
 
 QString Collection::resource() const

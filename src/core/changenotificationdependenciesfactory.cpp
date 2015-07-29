@@ -49,7 +49,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
     }
 
     const QString name =
-        QString::fromLatin1("%1_%2_%3").arg(
+        QStringLiteral("%1_%2_%3").arg(
             QCoreApplication::applicationName(),
             QString::number(QCoreApplication::applicationPid()),
             KRandom::randomString(6));
