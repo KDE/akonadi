@@ -502,7 +502,7 @@ class LoginCommandPrivate;
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
 public:
-    enum SessionMode : bool {
+    enum SessionMode : uchar {
         CommandMode = 0,
         NotificationBus
     };
@@ -1954,7 +1954,7 @@ class StreamPayloadCommandPrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
 {
 public:
-    enum Request : bool {
+    enum Request : uchar {
         MetaData,
         Data
     };
