@@ -106,10 +106,8 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
         delete iface;
         return 0;
     }
-#if QT_VERSION >= 0x040800
     // DBus calls can take some time to reply -- e.g. if a huge local mbox has to be parsed first.
     iface->setTimeout(5 * 60 * 1000);   // 5 minutes, rather than 25 seconds
-#endif
     mResourceInterfaces.insert(id, iface);
     return iface;
 }

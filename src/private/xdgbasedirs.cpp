@@ -25,7 +25,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QRegExp>
@@ -243,23 +242,6 @@ QStringList XdgBaseDirs::systemPathList(const char *resource)
                 dataDirs << prefixDataDir;
             }
 
-#if QT_VERSION < 0x050000
-            // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
-            QProcess proc;
-            // ### should probably rather be --path xdg-something
-            const QStringList args = QStringList() << QLatin1String("--prefix");
-            proc.start(QLatin1String("kde4-config"), args);
-            if (proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0) {
-                proc.setReadChannel(QProcess::StandardOutput);
-                Q_FOREACH (const QString &basePath, splitPathList(QString::fromLocal8Bit(proc.readLine().trimmed()))) {
-                    const QString path = basePath + QDir::separator() + QLatin1String("share");
-                    if (!dataDirs.contains(path)) {
-                        dataDirs << path;
-                    }
-                }
-            }
-#endif
-
             instance()->mDataDirs = dataDirs;
         }
 #ifdef Q_OS_WIN
@@ -421,11 +403,7 @@ QString XdgBaseDirs::findExecutableFile(const QString &relPath, const QStringLis
 QStringList XdgBaseDirs::findPluginDirs()
 {
     if (instance()->mPluginDirs.isEmpty()) {
-#if QT_VERSION < 0x050000
-        QStringList pluginDirs = instance()->systemPathList("QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/");
-#else
         QStringList pluginDirs = instance()->systemPathList("QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt5/plugins/:" AKONADILIB "/kf5/:" AKONADILIB "/kf5/plugins/:/usr/lib/qt5/plugins/");
-#endif
         if (QCoreApplication::instance() != 0) {
             Q_FOREACH (const QString &libraryPath, QCoreApplication::instance()->libraryPaths()) {
                 if (!pluginDirs.contains(libraryPath)) {
@@ -433,21 +411,6 @@ QStringList XdgBaseDirs::findPluginDirs()
                 }
             }
         }
-#if QT_VERSION < 0x050000
-        // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
-        QProcess proc;
-        // ### should probably rather be --path xdg-something
-        const QStringList args = QStringList() << QLatin1String("--path") << QLatin1String("module");
-        proc.start(QLatin1String("kde4-config"), args);
-        if (proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0) {
-            proc.setReadChannel(QProcess::StandardOutput);
-            Q_FOREACH (const QString &path, splitPathList(QString::fromLocal8Bit(proc.readLine().trimmed()))) {
-                if (!pluginDirs.contains(path)) {
-                    pluginDirs.append(path);
-                }
-            }
-        }
-#endif
         qWarning() << "search paths: " << pluginDirs;
         instance()->mPluginDirs = pluginDirs;
     }

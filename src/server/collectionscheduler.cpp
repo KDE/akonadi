@@ -269,11 +269,7 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
 
     mSchedule.insert(nextCheck, collection);
     if (shouldStartScheduler && !mScheduler->isActive()) {
-#if QT_VERSION < 0x050000
-        mScheduleLock.unlock();
-#else
         locker.unlock();
-#endif
         startScheduler();
     }
 }
