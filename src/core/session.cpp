@@ -282,7 +282,11 @@ SessionPrivate::SessionPrivate(Session *parent)
 
 SessionPrivate::~SessionPrivate()
 {
+    connThread->quit();
+    connThread->disconnect();
+
     thread->quit();
+    thread->wait();
     delete thread;
     delete connThread;
 }
@@ -301,7 +305,7 @@ void SessionPrivate::init(const QByteArray &id)
     theNextTag = 2;
     jobRunning = false;
 
-    thread = new QThread();
+    thread = new QThread(mParent);
     connThread = new ConnectionThread(sessionId);
     mParent->connect(connThread, SIGNAL(reconnected()), mParent, SIGNAL(reconnected()),
                      Qt::QueuedConnection);

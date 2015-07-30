@@ -68,6 +68,13 @@ ConnectionThread::~ConnectionThread()
     delete mLogFile;
 }
 
+void ConnectionThread::quit()
+{
+    if (mSocket) {
+        mSocket->disconnect(this);
+    }
+}
+
 void ConnectionThread::reconnect()
 {
     QMetaObject::invokeMethod(this, "doReconnect", Qt::QueuedConnection);
@@ -175,6 +182,7 @@ void ConnectionThread::doForceReconnect()
     if (mSocket) {
         mSocket->disconnect(this, SIGNAL(socketDisconnected()));
         delete mSocket;
+        mSocket = Q_NULLPTR;
     }
     mSocket = Q_NULLPTR;
 }
@@ -186,7 +194,9 @@ void ConnectionThread::disconnect()
 
 void ConnectionThread::doDisconnect()
 {
-    mSocket->close();
+    if (mSocket) {
+        mSocket->close();
+    }
 }
 
 void ConnectionThread::dataReceived()

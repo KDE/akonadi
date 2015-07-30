@@ -49,6 +49,8 @@ public:
     void disconnect();
     void sendCommand(qint64 tag, const Protocol::Command &command);
 
+    void quit();
+
 Q_SIGNALS:
     void connected();
     void reconnected();
