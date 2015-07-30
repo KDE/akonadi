@@ -2139,7 +2139,10 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotification &command);
 };
 
-
+inline uint qHash(ChangeNotification::Type type)
+{
+    return ::qHash(static_cast<uchar>(type));
+}
 
 #if 0
 class ChangeNotificationSubscriptionCommandPrivate;
