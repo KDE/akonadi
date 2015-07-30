@@ -26,7 +26,6 @@
 #include <QtCore/QMutex>
 #include <QtCore/QQueue>
 #include <QtNetwork/QLocalSocket>
-#include <QtNetwork/QTcpSocket>
 
 #include <akonadi/private/protocol_p.h>
 
@@ -65,13 +64,11 @@ private Q_SLOTS:
     void doSendCommand(qint64 tag, const Akonadi::Protocol::Command &command);
 
     void dataReceived();
-    void socketError(QLocalSocket::LocalSocketError error);
-    void socketError(QAbstractSocket::SocketError error);
 
 private:
     bool handleCommand(qint64 tag, const Protocol::Command &cmd);
 
-    QIODevice *mSocket;
+    QLocalSocket *mSocket;
     QFile *mLogFile;
     QByteArray mSessionId;
     QMutex mLock;

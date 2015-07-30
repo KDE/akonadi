@@ -82,24 +82,14 @@ void ConnectionThread::reconnect()
 
 void ConnectionThread::doReconnect()
 {
-    QLocalSocket *localSocket = qobject_cast<QLocalSocket *>(mSocket);
-    if (localSocket && (localSocket->state() == QLocalSocket::ConnectedState
-                        || localSocket->state() == QLocalSocket::ConnectingState)) {
+    if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState
+                        || mSocket->state() == QLocalSocket::ConnectingState)) {
         // nothing to do, we are still/already connected
-        return;
-    }
-
-    QTcpSocket *tcpSocket = qobject_cast<QTcpSocket *>(mSocket);
-    if (tcpSocket && (tcpSocket->state() == QTcpSocket::ConnectedState
-                      || tcpSocket->state() == QTcpSocket::ConnectingState)) {
-        // same here, but for TCP
         return;
     }
 
     // try to figure out where to connect to
     QString serverAddress;
-    quint16 port = 0;
-    bool useTcp = false;
 
     // env var has precedence
     const QByteArray serverAddressEnvVar = qgetenv("AKONADI_SERVER_ADDRESS");
@@ -116,11 +106,7 @@ void ConnectionThread::doReconnect()
         }
         qDebug() << protocol << options;
 
-        if (protocol == "tcp") {
-            serverAddress = options.value(QStringLiteral("host"));
-            port = options.value(QStringLiteral("port")).toUInt();
-            useTcp = true;
-        } else if (protocol == "unix") {
+        if (protocol == "unix") {
             serverAddress = options.value(QStringLiteral("path"));
         } else if (protocol == "pipe") {
             serverAddress = options.value(QStringLiteral("name"));
@@ -133,41 +119,32 @@ void ConnectionThread::doReconnect()
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
             qDebug() << "Akonadi Client Session: connection config file '"
-                     "akonadi/akonadiconnectionrc' can not be found in"
+                        "akonadi/akonadiconnectionrc' can not be found in"
                      << XdgBaseDirs::homePath("config") << "nor in any of"
                      << XdgBaseDirs::systemPathList("config");
         }
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
 
-#ifdef Q_OS_WIN  //krazy:exclude=cpp
-        serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), QStringLiteral("Akonadi")).toString();
-#else
         const QString defaultSocketDir = Internal::xdgSaveDir("data");
         serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QStringLiteral("/akonadiserver.socket"))).toString();
-#endif
     }
 
     // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
     // but that's probably not something we need to support anyway
     if (!mSocket) {
-        if (!useTcp) {
-            mSocket = localSocket = new QLocalSocket(this);
-            connect(localSocket, SIGNAL(error(QLocalSocket::LocalSocketError)), this, SLOT(socketError(QLocalSocket::LocalSocketError)));
-        } else {
-            mSocket = tcpSocket = new QTcpSocket(this);
-            connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
-        }
-        connect(mSocket, SIGNAL(disconnected()), SIGNAL(socketDisconnected()));
-        connect(mSocket, SIGNAL(readyRead()), SLOT(dataReceived()));
+        mSocket = new QLocalSocket(this);
+        connect(mSocket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
+                [this](QLocalSocket::LocalSocketError) {
+                    Q_EMIT socketError(mSocket->errorString());
+                    Q_EMIT socketDisconnected();
+                });
+        connect(mSocket, &QLocalSocket::disconnected, this, &ConnectionThread::socketDisconnected);
+        connect(mSocket, &QLocalSocket::readyRead, this, &ConnectionThread::dataReceived);
     }
 
     // actually do connect
     qDebug() << "connectToServer" << serverAddress;
-    if (!useTcp) {
-        localSocket->connectToServer(serverAddress);
-    } else {
-        tcpSocket->connectToHost(serverAddress, port);
-    }
+    mSocket->connectToServer(serverAddress);
 
     Q_EMIT reconnected();
 }
@@ -279,24 +256,3 @@ void ConnectionThread::doSendCommand(qint64 tag, const Protocol::Command &cmd)
         // TODO: Queue the commands and resend on reconnect?
     }
 }
-
-void ConnectionThread::socketError(QLocalSocket::LocalSocketError error)
-{
-    Q_ASSERT(sender() == mSocket);
-    Q_UNUSED(error)
-
-    Q_EMIT socketError(qobject_cast<QLocalSocket*>(mSocket)->errorString());
-    Q_EMIT socketDisconnected();
-}
-
-void ConnectionThread::socketError(QAbstractSocket::SocketError error)
-{
-    Q_ASSERT(sender() == mSocket);
-    Q_UNUSED(error)
-
-    Q_EMIT socketError(qobject_cast<QTcpSocket*>(mSocket)->errorString());
-    Q_EMIT socketDisconnected();
-}
-
-
-#include "connectionthread.moc"
