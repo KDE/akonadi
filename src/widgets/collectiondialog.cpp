@@ -57,7 +57,6 @@ public:
     {
         // setup GUI
         QVBoxLayout *layout = new QVBoxLayout(mParent);
-        layout->setContentsMargins(0, 0, 0, 0);
 
         mTextLabel = new QLabel;
         layout->addWidget(mTextLabel);
