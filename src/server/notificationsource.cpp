@@ -32,8 +32,11 @@ using namespace Akonadi::Server;
 template<typename T>
 QVector<T> setToVector(const QSet<T> &set)
 {
-    QVector<T> v(set.size());
-    std::copy(set.constBegin(), set.constEnd(), v.begin());
+    QVector<T> v;
+    v.reserve(set.size());
+    Q_FOREACH (const T &val, set) {
+        v << val;
+    }
     return v;
 }
 

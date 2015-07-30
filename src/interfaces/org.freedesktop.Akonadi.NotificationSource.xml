@@ -5,7 +5,7 @@
     </method>
 
     <method name="setMonitoredCollection">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="Akonadi::Entity::Id"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="qint64"/>
       <arg name="collection" type="x" direction="in"/>
       <arg name="monitored" type="b" direction="in"/>
     </method>
@@ -16,7 +16,7 @@
     <signal name="monitoredCollectionsChanged" />
 
     <method name="setMonitoredItem">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="Akonadi::Entity::Id"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="qint64"/>
       <arg name="item" type="x" direction="in"/>
       <arg name="monitored" type="b" direction="in"/>
     </method>
@@ -27,7 +27,7 @@
     <signal name="monitoredItemsChanged" />
 
     <method name="setMonitoredTag">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="Akonadi::Entity::Id"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="qint64"/>
       <arg name="tag" type="x" direction="in"/>
       <arg name="monitored" type="b" direction="in"/>
     </method>

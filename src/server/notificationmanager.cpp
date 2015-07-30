@@ -38,6 +38,8 @@ using namespace Akonadi::Server;
 
 NotificationManager *NotificationManager::mSelf = 0;
 
+Q_DECLARE_METATYPE(QVector<qint64>)
+
 NotificationManager::NotificationManager()
     : QObject(0)
     , mDebug(false)
@@ -46,6 +48,8 @@ NotificationManager::NotificationManager()
     qDBusRegisterMetaType<QVector<QByteArray>>();
     qRegisterMetaType<Protocol::ChangeNotification::Type>();
     qDBusRegisterMetaType<Protocol::ChangeNotification::Type>();
+    qRegisterMetaType<QVector<qint64>>();
+    qDBusRegisterMetaType<QVector<qint64>>();
 
     new NotificationManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/notifications"),
