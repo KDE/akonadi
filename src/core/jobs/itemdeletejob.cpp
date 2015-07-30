@@ -90,9 +90,16 @@ void ItemDeleteJob::doStart()
 {
     Q_D(ItemDeleteJob);
 
-    d->sendCommand(Protocol::DeleteItemsCommand(
-                       d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
-                       ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mItems)));
+    try {
+        d->sendCommand(Protocol::DeleteItemsCommand(
+                        d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
+                        ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mItems)));
+    } catch (const Akonadi::Exception &e) {
+        setError(Job::Unknown);
+        setErrorText(QString::fromUtf8(e.what()));
+        emitResult();
+        return;
+    }
 }
 
 bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

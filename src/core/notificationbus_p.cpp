@@ -21,6 +21,7 @@
 
 #include "notificationbus_p.h"
 #include "session_p.h"
+#include "connectionthread_p.h"
 
 #include <akonadi/private/protocol_p.h>
 
@@ -46,7 +47,7 @@ bool NotificationBusPrivate::handleCommand(qint64 tag, const Protocol::Command &
         Protocol::HelloResponse hello(cmd);
         if (hello.isError()) {
             qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
-            socket->close();
+            connThread->disconnect();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
         }
@@ -66,7 +67,7 @@ bool NotificationBusPrivate::handleCommand(qint64 tag, const Protocol::Command &
         Protocol::LoginResponse login(cmd);
         if (login.isError()) {
             qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
-            socket->close();
+            connThread->disconnect();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
         }

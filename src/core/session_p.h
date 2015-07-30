@@ -35,6 +35,7 @@ class QIODevice;
 
 namespace Akonadi
 {
+class ConnectionThread;
 
 namespace Protocol
 {
@@ -60,8 +61,7 @@ public:
     virtual void reconnect();
     void serverStateChanged(ServerManager::State);
     void socketDisconnected();
-    void socketError(QLocalSocket::LocalSocketError error);
-    void socketError(QAbstractSocket::SocketError error);
+    void socketError(const QString &error);
     void dataReceived();
     virtual bool handleCommand(qint64 tag, const Protocol::Command &cmd);
     void doStartNext();
@@ -123,8 +123,9 @@ public:
     static QString connectionFile();
 
     Session *mParent;
+    QThread *thread;
+    ConnectionThread *connThread;
     QByteArray sessionId;
-    QIODevice *socket;
     bool connected;
     qint64 theNextTag;
     int protocolVersion;

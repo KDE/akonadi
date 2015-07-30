@@ -12,6 +12,7 @@ set(akonadicore_base_SRCS
     changenotificationdependenciesfactory.cpp
     changerecorder.cpp
     changerecorder_p.cpp
+    connectionthread.cpp
     collection.cpp
     collectionfetchscope.cpp
     collectionpathresolver.cpp

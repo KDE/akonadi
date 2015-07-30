@@ -25,6 +25,7 @@
 #include "servermanager.h"
 #include "servermanager_p.h"
 #include "protocolhelper_p.h"
+#include "connectionthread_p.h"
 #include <akonadi/private/xdgbasedirs_p.h>
 #include <akonadi/private/protocol_p.h>
 
@@ -61,94 +62,7 @@ void SessionPrivate::startNext()
 
 void SessionPrivate::reconnect()
 {
-    QLocalSocket *localSocket = qobject_cast<QLocalSocket *>(socket);
-    if (localSocket && (localSocket->state() == QLocalSocket::ConnectedState
-                        || localSocket->state() == QLocalSocket::ConnectingState)) {
-        // nothing to do, we are still/already connected
-        return;
-    }
-
-    QTcpSocket *tcpSocket = qobject_cast<QTcpSocket *>(socket);
-    if (tcpSocket && (tcpSocket->state() == QTcpSocket::ConnectedState
-                      || tcpSocket->state() == QTcpSocket::ConnectingState)) {
-        // same here, but for TCP
-        return;
-    }
-
-    // try to figure out where to connect to
-    QString serverAddress;
-    quint16 port = 0;
-    bool useTcp = false;
-
-    // env var has precedence
-    const QByteArray serverAddressEnvVar = qgetenv("AKONADI_SERVER_ADDRESS");
-    if (!serverAddressEnvVar.isEmpty()) {
-        const int pos = serverAddressEnvVar.indexOf(':');
-        const QByteArray protocol = serverAddressEnvVar.left(pos);
-        QMap<QString, QString> options;
-        foreach (const QString &entry, QString::fromLatin1(serverAddressEnvVar.mid(pos + 1)).split(QLatin1Char(','))) {
-            const QStringList pair = entry.split(QLatin1Char('='));
-            if (pair.size() != 2) {
-                continue;
-            }
-            options.insert(pair.first(), pair.last());
-        }
-        qDebug() << protocol << options;
-
-        if (protocol == "tcp") {
-            serverAddress = options.value(QStringLiteral("host"));
-            port = options.value(QStringLiteral("port")).toUInt();
-            useTcp = true;
-        } else if (protocol == "unix") {
-            serverAddress = options.value(QStringLiteral("path"));
-        } else if (protocol == "pipe") {
-            serverAddress = options.value(QStringLiteral("name"));
-        }
-    }
-
-    // try config file next, fall back to defaults if that fails as well
-    if (serverAddress.isEmpty()) {
-        const QString connectionConfigFile = connectionFile();
-        const QFileInfo fileInfo(connectionConfigFile);
-        if (!fileInfo.exists()) {
-            qDebug() << "Akonadi Client Session: connection config file '"
-                     "akonadi/akonadiconnectionrc' can not be found in"
-                     << XdgBaseDirs::homePath("config") << "nor in any of"
-                     << XdgBaseDirs::systemPathList("config");
-        }
-        const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
-
-#ifdef Q_OS_WIN  //krazy:exclude=cpp
-        serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), QStringLiteral("Akonadi")).toString();
-#else
-        const QString defaultSocketDir = Internal::xdgSaveDir("data");
-        serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QStringLiteral("/akonadiserver.socket"))).toString();
-#endif
-    }
-
-    // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
-    // but that's probably not something we need to support anyway
-    if (!socket) {
-        if (!useTcp) {
-            socket = localSocket = new QLocalSocket(mParent);
-            mParent->connect(localSocket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)));
-        } else {
-            socket = tcpSocket = new QTcpSocket(mParent);
-            mParent->connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError(QAbstractSocket::SocketError)));
-        }
-        mParent->connect(socket, SIGNAL(disconnected()), SLOT(socketDisconnected()));
-        mParent->connect(socket, SIGNAL(readyRead()), SLOT(dataReceived()));
-    }
-
-    // actually do connect
-    qDebug() << "connectToServer" << serverAddress;
-    if (!useTcp) {
-        localSocket->connectToServer(serverAddress);
-    } else {
-        tcpSocket->connectToHost(serverAddress, port);
-    }
-
-    emit mParent->reconnected();
+    connThread->reconnect();
 }
 
 QString SessionPrivate::connectionFile()
@@ -156,17 +70,9 @@ QString SessionPrivate::connectionFile()
     return Internal::xdgSaveDir("config") + QStringLiteral("/akonadiconnectionrc");
 }
 
-void SessionPrivate::socketError(QLocalSocket::LocalSocketError)
+void SessionPrivate::socketError(const QString &error)
 {
-    Q_ASSERT(mParent->sender() == socket);
-    qWarning() << "Socket error occurred:" << qobject_cast<QLocalSocket *>(socket)->errorString();
-    socketDisconnected();
-}
-
-void SessionPrivate::socketError(QAbstractSocket::SocketError)
-{
-    Q_ASSERT(mParent->sender() == socket);
-    qWarning() << "Socket error occurred:" << qobject_cast<QTcpSocket *>(socket)->errorString();
+    qWarning() << "Socket error occurred:" << error;
     socketDisconnected();
 }
 
@@ -180,13 +86,13 @@ void SessionPrivate::socketDisconnected()
 
 bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
 {
-    // Handle Hello response -> send Login
+   // Handle Hello response -> send Login
     if (cmd.type() == Protocol::Command::Hello) {
         Protocol::HelloResponse hello(cmd);
         if (hello.isError()) {
             qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
-            socket->close();
-            QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+            connThread->disconnect();
+            QTimer::singleShot(1000, connThread, SLOT(reconnect()));
             return false;
         }
 
@@ -207,7 +113,7 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         Protocol::LoginResponse login(cmd);
         if (login.isError()) {
             qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
-            socket->close();
+            connThread->disconnect();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
         }
@@ -223,52 +129,6 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
     }
 
     return true;
-}
-
-void SessionPrivate::dataReceived()
-{
-    int iterations = 0;
-
-    while (socket->bytesAvailable() > 0) {
-        QDataStream stream(socket);
-        qint64 tag;
-        // TODO: Verify the tag matches the last tag we sent
-        stream >> tag;
-
-        Protocol::Command cmd = Protocol::deserialize(socket);
-        if (cmd.type() == Protocol::Command::Invalid) {
-            qWarning() << "Invalid command, the world is going to end!";
-            socket->close();
-            reconnect();
-            return;
-        }
-
-        if (logFile) {
-            logFile->write("S: " + cmd.debugString().toUtf8());
-            logFile->write("\n\n");
-            logFile->flush();
-        }
-
-        if (!handleCommand(tag, cmd)) {
-            break;
-        }
-
-        // FIXME: It happens often that data are arriving from the server faster
-        // than we Jobs can process them which means, that we often process all
-        // responses in single dataReceived() call and thus not returning to back
-        // to QEventLoop, which breaks batch-delivery of ItemFetchJob (among other
-        // things). To workaround that we force processing of events every
-        // now and then.
-        //
-        // Longterm we want something better, like processing and parsing in
-        // separate thread which would only post the parsed Protocol::Commands
-        // to the jobs through event loop. That will be overall slower but should
-        // result in much more responsive applications.
-        if (++iterations == 1000) {
-            qApp->processEvents(QEventLoop::ExcludeSocketNotifiers);
-            iterations = 0;
-        }
-    }
 }
 
 bool SessionPrivate::canPipelineNext()
@@ -385,19 +245,7 @@ qint64 SessionPrivate::nextTag()
 
 void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 {
-    if (logFile) {
-        logFile->write("C: " + command.debugString().toUtf8());
-        logFile->write("\n\n");
-        logFile->flush();
-    }
-
-    if (socket && socket->isOpen()) {
-        QDataStream stream(socket);
-        stream << tag;
-        Protocol::serialize(socket, command);
-    } else {
-        // TODO: Queue the commands and resend on reconnect?
-    }
+    connThread->sendCommand(tag, command);
 }
 
 void SessionPrivate::serverStateChanged(ServerManager::State state)
@@ -418,7 +266,7 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
 {
     // only deal with the queue, for the guys in the pipeline it's too late already anyway
     // and they shouldn't have gotten there if they depend on a preceding job anyway.
-    foreach (Job *job, queue) {
+    Q_FOREACH (Job *job, queue) {
         job->d_ptr->updateItemRevision(itemId, oldRevision, newRevision);
     }
 }
@@ -427,15 +275,16 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
 
 SessionPrivate::SessionPrivate(Session *parent)
     : mParent(parent)
-    , socket(0)
     , protocolVersion(0)
     , currentJob(0)
-    , logFile(0)
 {
 }
 
 SessionPrivate::~SessionPrivate()
 {
+    thread->quit();
+    delete thread;
+    delete connThread;
 }
 
 void SessionPrivate::init(const QByteArray &id)
@@ -452,24 +301,26 @@ void SessionPrivate::init(const QByteArray &id)
     theNextTag = 2;
     jobRunning = false;
 
+    thread = new QThread();
+    connThread = new ConnectionThread(sessionId);
+    mParent->connect(connThread, SIGNAL(reconnected()), mParent, SIGNAL(reconnected()),
+                     Qt::QueuedConnection);
+    mParent->connect(connThread, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
+                     mParent, SLOT(handleCommand(qint64, Akonadi::Protocol::Command)),
+                     Qt::QueuedConnection);
+    mParent->connect(connThread, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
+                     Qt::QueuedConnection);
+    mParent->connect(connThread, SIGNAL(socketError(QString)), mParent, SLOT(socketError(QString)),
+                     Qt::QueuedConnection);
+    connThread->moveToThread(thread);
+    thread->start();
+
+
     if (ServerManager::state() == ServerManager::NotRunning) {
         ServerManager::start();
     }
     mParent->connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
                      SLOT(serverStateChanged(Akonadi::ServerManager::State)));
-
-    const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
-    if (!sessionLogFile.isEmpty()) {
-        logFile = new QFile(QString::fromLatin1("%1.%2.%3").arg(QString::fromLatin1(sessionLogFile))
-                            .arg(QString::number(QApplication::applicationPid()))
-                            .arg(QString::fromLatin1(sessionId.replace('/', '_'))),
-                            mParent);
-        if (!logFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-            qWarning() << "Failed to open Akonadi Session log file" << logFile->fileName();
-            delete logFile;
-            logFile = 0;
-        }
-    }
 
     reconnect();
 }
@@ -478,12 +329,8 @@ void SessionPrivate::forceReconnect()
 {
     jobRunning = false;
     connected = false;
-    if (socket) {
-        socket->disconnect(mParent);   // prevent signal emitted from close() causing mayhem - we might be called from ~QThreadStorage!
-        delete socket;
-    }
-    socket = 0;
-    QMetaObject::invokeMethod(mParent, "reconnect", Qt::QueuedConnection);   // avoids reconnecting in the dtor
+    connThread->forceReconnect();
+    QMetaObject::invokeMethod(connThread, "reconnect", Qt::QueuedConnection);   // avoids reconnecting in the dtor
 }
 
 Session::Session(const QByteArray &sessionId, QObject *parent)
@@ -539,11 +386,11 @@ Session *Session::defaultSession()
 
 void Session::clear()
 {
-    foreach (Job *job, d->queue) {
+    Q_FOREACH(Job *job, d->queue) {
         job->kill(KJob::EmitResult);   // safe, not started yet
     }
     d->queue.clear();
-    foreach (Job *job, d->pipeline) {
+    Q_FOREACH(Job *job, d->pipeline) {
         job->d_ptr->mStarted = false; // avoid killing/reconnect loops
         job->kill(KJob::EmitResult);
     }

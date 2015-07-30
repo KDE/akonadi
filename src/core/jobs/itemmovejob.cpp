@@ -92,10 +92,17 @@ void ItemMoveJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::MoveItemsCommand(
-                       ProtocolHelper::entitySetToScope(d->items),
-                       ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
-                       ProtocolHelper::entityToScope(d->destination)));
+    try {
+        d->sendCommand(Protocol::MoveItemsCommand(
+                        ProtocolHelper::entitySetToScope(d->items),
+                        ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
+                        ProtocolHelper::entityToScope(d->destination)));
+    } catch (const Akonadi::Exception &e) {
+        setError(Job::Unknown);
+        setErrorText(QString::fromUtf8(e.what()));
+        emitResult();
+        return;
+    }
 }
 
 bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

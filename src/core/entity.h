@@ -37,10 +37,12 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Entity &);
 #include <QtCore/QHash>
 #include <QtCore/QSharedDataPointer>
 
+#ifndef AKONADI_DECLARE_PRIVATE
 #define AKONADI_DECLARE_PRIVATE( Class ) \
     Class##Private *d_func(); \
     const Class##Private *d_func() const; \
     friend class Class##Private;
+#endif
 
 namespace Akonadi
 {

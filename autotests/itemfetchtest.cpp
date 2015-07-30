@@ -199,6 +199,7 @@ void ItemFetchTest::testMultipartFetch()
     Item ref = job->item();
 
     ItemFetchJob *fjob = new ItemFetchJob(ref, this);
+    fjob->setCollection(Collection(colId));
     if (fetchFullPayload) {
         fjob->fetchScope().fetchFullPayload();
     }
