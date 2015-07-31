@@ -238,7 +238,8 @@ public:
 
                 if (matchLocalAndRemoteCollection(localCollection, removedCollection)) {
                     matched = true;
-                    localCollectionsToRemove.append(localCollection);
+                    if (!localCollection.remoteId().isEmpty())
+                        localCollectionsToRemove.append(localCollection);
                     // Remove the matched removed collection from the list so that
                     // we don't have to iterate over it again next time.
                     removedIter = removedChildren.erase(removedIter);
@@ -335,7 +336,10 @@ public:
         }
         // At this point localChildren contains collections that don't exist remotely anymore
         if (!localChildren.isEmpty() && !incremental) {
-            localCollectionsToRemove += localChildren;
+            Q_FOREACH (const auto c, localChildren) {
+                if (!c.remoteId().isEmpty())
+                    localCollectionsToRemove.push_back(c);
+            }
         }
 
         // Recurse into children
