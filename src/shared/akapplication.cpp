@@ -82,6 +82,7 @@ void AkApplication::parseCommandLine()
 
     mCmdLineParser.process(QCoreApplication::arguments());
 
+    mInstanceId = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
     if (mCmdLineParser.isSet(instanceOption)) {
         mInstanceId = mCmdLineParser.value(instanceOption);
     }
