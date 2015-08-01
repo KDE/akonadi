@@ -7849,7 +7849,7 @@ public:
         CommandPrivate::debugString(blck);
         blck.write("Payload Name", payloadName);
         blck.write("Request", request);
-        blck.write("Detination", dest);
+        blck.write("Destination", dest);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
