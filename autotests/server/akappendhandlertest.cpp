@@ -480,17 +480,17 @@ private Q_SLOTS:
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, { "PLD:NEWPARTTYPE1", "PLD:NEWPARTTYPE2" }))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::MetaData))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10)))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::Data))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", "0123456789"))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", Protocol::StreamPayloadCommand::MetaData))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10)))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE2", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", "9876543210"))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10)))
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", "0123456789"))
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
-                        { Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10), "0123456789"),
-                          Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10), "9876543210") }))
+                        { Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10), "9876543210"),
+                          Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10), "0123456789") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponse());
         QTest::newRow("non-existent part types") << scenarios << notification << pimItem
                                                  << parts << flags << tags << uidnext

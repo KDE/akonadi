@@ -58,7 +58,7 @@ macro(add_server_test _source)
         )
     endif()
     set_tests_properties(AkonadiServer-${_name} PROPERTIES
-                         ENVIRONMENT QT_HASH_SEED=0
+                         ENVIRONMENT "QT_HASH_SEED=0;QT_NO_CPU_FEATURE=sse4.2"
     )
     target_link_libraries(${_name}
         akonadi_shared
