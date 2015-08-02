@@ -275,6 +275,8 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
 
 SessionPrivate::SessionPrivate(Session *parent)
     : mParent(parent)
+    , thread(0)
+    , connThread(0)
     , protocolVersion(0)
     , currentJob(0)
 {
@@ -282,11 +284,15 @@ SessionPrivate::SessionPrivate(Session *parent)
 
 SessionPrivate::~SessionPrivate()
 {
-    connThread->quit();
-    connThread->disconnect();
+    if (connThread) {
+        connThread->quit();
+        connThread->disconnect();
+    }
 
-    thread->quit();
-    thread->wait();
+    if (thread) {
+        thread->quit();
+        thread->wait();
+    }
     delete thread;
     delete connThread;
 }
