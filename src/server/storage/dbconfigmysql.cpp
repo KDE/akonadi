@@ -28,6 +28,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
+#include <QtCore/QThread>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
@@ -311,6 +312,15 @@ void DbConfigMysql::startInternalServer()
         akError() << "arguments:" << arguments;
         akFatal() << "process error:" << mDatabaseProcess->errorString();
     }
+
+#ifndef Q_OS_WIN
+    // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
+    QString socketFile = QString::fromLatin1("%1/mysql.socket").arg(socketDirectory);
+    int counter = 50;  // avoid an endless loop in case mysqld terminated
+    while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
+      QThread::msleep(100);
+    }
+#endif
 
     const QLatin1String initCon("initConnection");
     {
