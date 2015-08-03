@@ -26,13 +26,11 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QMetaType>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-
 #include <type_traits>
 #include <typeinfo>
 #include <memory>
+
+#include <boost/shared_ptr.hpp>
 
 #include "exception.h"
 
@@ -43,6 +41,15 @@
  * The below is an implementation detail of the Item class. It is not to be
  * considered public API, and subject to change without notice
  */
+
+// Forward-declare boost::shared_ptr so that we don't have to explicitly include
+// it. Caller that tries to use it will aready have it included anyway
+namespace boost
+{
+template<typename T> class shared_ptr;
+template<typename T, typename U>
+shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const &ptr) noexcept;
+}
 
 namespace Akonadi
 {
@@ -133,6 +140,11 @@ struct is_shared_pointer {
 };
 
 template <typename T>
+struct identity {
+    typedef T type;
+};
+
+template <typename T>
 struct get_hierarchy_root;
 
 template <typename T, typename S>
@@ -142,7 +154,7 @@ struct get_hierarchy_root_recurse
 
 template <typename T>
 struct get_hierarchy_root_recurse<T, T>
-        : boost::mpl::identity<T> {
+        : identity<T> {
 };
 
 template <typename T>

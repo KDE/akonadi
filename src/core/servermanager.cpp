@@ -35,8 +35,7 @@
 
 #include <QtDBus>
 #include <QTimer>
-
-#include <boost/scoped_ptr.hpp>
+#include <QScopedPointer>
 
 using namespace Akonadi;
 
@@ -52,7 +51,7 @@ public:
         mState = instance->state();
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(30000);
-        QObject::connect(mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()));
+        QObject::connect(mSafetyTimer.data(), SIGNAL(timeout()), instance, SLOT(timeout()));
         if (mState == ServerManager::Running && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier()) {
             mFirstRunner = new Firstrun(instance);
         }
@@ -101,9 +100,9 @@ public:
             }
 
             if (state == ServerManager::Starting || state == ServerManager::Stopping) {
-                QMetaObject::invokeMethod(mSafetyTimer.get(), "start", Qt::QueuedConnection);   // in case we are in a different thread
+                QMetaObject::invokeMethod(mSafetyTimer.data(), "start", Qt::QueuedConnection);   // in case we are in a different thread
             } else {
-                QMetaObject::invokeMethod(mSafetyTimer.get(), "stop", Qt::QueuedConnection);   // in case we are in a different thread
+                QMetaObject::invokeMethod(mSafetyTimer.data(), "stop", Qt::QueuedConnection);   // in case we are in a different thread
             }
         }
     }
@@ -118,7 +117,7 @@ public:
     ServerManager *instance;
     static int serverProtocolVersion;
     ServerManager::State mState;
-    boost::scoped_ptr<QTimer> mSafetyTimer;
+    QScopedPointer<QTimer> mSafetyTimer;
     Firstrun *mFirstRunner;
     static Internal::ClientType clientType;
 };

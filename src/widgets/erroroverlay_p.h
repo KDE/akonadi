@@ -25,8 +25,6 @@
 #include <QtCore/QPointer>
 #include <QWidget>
 
-#include <boost/scoped_ptr.hpp>
-
 namespace Ui
 {
 class ErrorOverlay;
@@ -71,7 +69,7 @@ private:
     bool mPreviousState;
     bool mOverlayActive;
     bool mBaseWidgetIsParent;
-    boost::scoped_ptr<Ui::ErrorOverlay> ui;
+    QScopedPointer<Ui::ErrorOverlay> ui;
 };
 
 }

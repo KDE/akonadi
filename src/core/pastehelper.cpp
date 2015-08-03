@@ -40,7 +40,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QMutexLocker>
 
-#include <boost/bind.hpp>
+#include <functional>
 
 using namespace Akonadi;
 
@@ -86,11 +86,12 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
     setProperty("transactionsDisabled", true);
 
     Collection dragSourceCollection;
+    using namespace std::placeholders;
     if (!items.isEmpty() && items.first().parentCollection().isValid()) {
         // Check if all items have the same parent collection ID
         const Collection parent = items.first().parentCollection();
         if (std::find_if(items.constBegin(), items.constEnd(),
-                         boost::bind(&Entity::operator!=, boost::bind(static_cast<Collection(Item::*)() const>(&Item::parentCollection), _1), parent))
+                         std::bind(&Entity::operator!=, std::bind(static_cast<Collection(Item::*)() const>(&Item::parentCollection), _1), parent))
                 == items.constEnd()) {
             dragSourceCollection = parent;
         }

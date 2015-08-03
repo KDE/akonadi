@@ -20,29 +20,12 @@
 #ifndef AKONADI_SHAREDVALUEPOOL_P_H
 #define AKONADI_SHAREDVALUEPOOL_P_H
 
-#include <boost/utility/enable_if.hpp>
 #include <algorithm>
 
 namespace Akonadi
 {
 namespace Internal
 {
-
-/*template <typename T> class container_traits
-{
-  private:
-    typedef char sizeOne;
-    typedef struct
-    {
-        char a[2];
-    } sizeTwo;
-    template <typename C> static sizeOne testForKeyType( typename C::key_type const* );
-    template <typename C> static sizeTwo testForKeyType( ... );
-  public:
-    enum {
-        isAssociative=sizeof(container_traits<T>::testForKeyType<T>(0))==1
-    };
-};*/
 
 /**
  * Pool of implicitly shared values, use for optimizing memory use
@@ -53,18 +36,6 @@ class SharedValuePool
 {
 public:
     /** Returns the shared value equal to @p value .*/
-    /*template <typename C>
-    typename boost::enable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value, const int * = 0 )
-    {
-      typename Container<T>::const_iterator it = m_pool.constFind( value );
-      if ( it != m_pool.constEnd() )
-        return *it;
-      m_pool.insert( value );
-      return value;
-    }
-
-    template <typename C>
-    typename boost::disable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value )*/
     T sharedValue(const T &value)
     {
         // for small pool sizes this is actually faster than using lower_bound and a sorted vector

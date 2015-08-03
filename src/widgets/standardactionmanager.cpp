@@ -61,7 +61,6 @@
 #include <QPointer>
 #include <QWeakPointer>
 #include <QInputDialog>
-#include <boost/static_assert.hpp>
 
 using namespace Akonadi;
 
@@ -126,7 +125,8 @@ static const struct {
 };
 static const int numStandardActionData = sizeof standardActionData / sizeof * standardActionData;
 
-BOOST_STATIC_ASSERT(numStandardActionData == StandardActionManager::LastType);
+static_assert(numStandardActionData == StandardActionManager::LastType,
+              "StandardActionData table does not match StandardActionManager types");
 
 static bool canCreateCollection(const Akonadi::Collection &collection)
 {

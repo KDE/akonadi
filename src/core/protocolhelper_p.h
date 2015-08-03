@@ -36,10 +36,10 @@
 
 #include <QString>
 
-#include <boost/bind.hpp>
 #include <algorithm>
 #include <type_traits>
 #include <functional>
+#include <cassert>
 
 namespace Akonadi
 {
@@ -140,8 +140,11 @@ public:
         }
 
         Container<T> objects(_objects);
-
-        std::sort(objects.begin(), objects.end(), boost::bind(&T::id, _1) < boost::bind(&T::id, _2));
+        using namespace std::placeholders;
+        std::sort(objects.begin(), objects.end(),
+                  std::bind([](Entity::Id a, Entity::Id b) -> bool { return a < b; },
+                            std::bind(&T::id, _1),
+                            std::bind(&T::id, _1)));
         if (objects.at(0).isValid()) {
             QVector<typename T::Id>  uids;
             uids.reserve(objects.size());
@@ -262,10 +265,10 @@ private:
     inline static
     bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
     {
-
-        typedef typename RIDFunc::result_type RetType;
         return std::find_if(objects.constBegin(), objects.constEnd(),
-                            boost::bind(&RetType::isEmpty, boost::bind(ridFunc, _1)))
+                            [=](const T &obj) {
+                                return ridFunc(obj).isEmpty();
+                            })
                == objects.constEnd();
     }
 
@@ -277,7 +280,9 @@ private:
         QStringList rids;
         rids.reserve(objects.size());
         std::transform(objects.cbegin(), objects.cend(),
-                       std::back_inserter(rids), boost::bind(ridFunc, _1));
+                       std::back_inserter(rids), [=](const T &obj) -> QString {
+                            return ridFunc(obj);
+                       });
         return Scope(scope, rids);
     }
 
@@ -289,18 +294,22 @@ private:
         QStringList rids;
         rids.reserve(objects.size());
         std::transform(objects.cbegin(), objects.cend(),
-                       std::back_inserter(rids), boost::bind(&QString::fromLatin1, boost::bind(ridFunc, _1)));
+                       std::back_inserter(rids), [=](const T &obj) -> QString {
+                           return QString::fromLatin1(ridFunc(obj));
+                       });
         return Scope(scope, rids);
     }
 
     template<typename T, template<typename> class Container>
     inline static
-    typename std::enable_if < !std::is_same<T, Tag>::value, bool >::type
+    typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type
     entitySetHasHRID(const Container<T> &objects)
     {
         return objects.size() == 1 &&
                std::find_if(objects.constBegin(), objects.constEnd(),
-                            !boost::bind(static_cast<bool (*)(const T &)>(&CollectionUtils::hasValidHierarchicalRID), _1))
+                            [](const T &obj) -> bool {
+                                return !CollectionUtils::hasValidHierarchicalRID(obj);
+                            })
                == objects.constEnd();  // ### HRID sets are not yet specified
     }
 

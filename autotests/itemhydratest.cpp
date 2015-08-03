@@ -24,8 +24,6 @@
 #include <qtest.h>
 #include <QDebug>
 #include <QSharedPointer>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 using namespace Akonadi;
 
@@ -38,7 +36,7 @@ struct Volker {
     virtual Volker *clone() const = 0;
     QString who;
 };
-typedef boost::shared_ptr<Volker> VolkerPtr;
+typedef std::shared_ptr<Volker> VolkerPtr;
 typedef QSharedPointer<Volker> VolkerQPtr;
 
 struct Rudi: public Volker {
@@ -53,7 +51,7 @@ struct Rudi: public Volker {
     }
 };
 
-typedef boost::shared_ptr<Rudi> RudiPtr;
+typedef std::shared_ptr<Rudi> RudiPtr;
 typedef QSharedPointer<Rudi> RudiQPtr;
 
 struct Gerd: public Volker {
@@ -188,7 +186,7 @@ void ItemHydra::testPointerPayload()
 {
     Rudi *r = new Rudi;
     RudiPtr p(r);
-    boost::weak_ptr<Rudi> w(p);
+    std::weak_ptr<Rudi> w(p);
     QCOMPARE(p.use_count(), (long)1);
 
     {
@@ -229,7 +227,7 @@ void ItemHydra::testPolymorphicPayload()
         QVERIFY(!i1.hasPayload<GerdPtr>());
         QCOMPARE(p.use_count(), (long)2);
         {
-            RudiPtr p2 = boost::dynamic_pointer_cast<Rudi, Volker>(i1.payload< VolkerPtr >());
+            RudiPtr p2 = std::dynamic_pointer_cast<Rudi, Volker>(i1.payload< VolkerPtr >());
             QCOMPARE(p.use_count(), (long)3);
             QCOMPARE(p2->who, QStringLiteral("Rudi"));
         }
@@ -261,7 +259,7 @@ void ItemHydra::testNullPointerPayload()
     QVERIFY(i.hasPayload());
     QVERIFY(i.hasPayload<RudiPtr>());
     QVERIFY(i.hasPayload<VolkerPtr>());
-    // Fails, because GerdPtr is std::shared_ptr, while RudiPtr is boost::shared_ptr
+    // Fails, because GerdPtr is std::shared_ptr, while RudiPtr is std::shared_ptr
     // and we cannot do sharedptr casting for null pointers
     QVERIFY(!i.hasPayload<GerdPtr>());
     QCOMPARE(i.payload<RudiPtr>().get(), (Rudi *)0);

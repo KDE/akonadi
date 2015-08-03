@@ -35,8 +35,6 @@
 #include <QItemSelectionModel>
 #include <QPointer>
 
-#include <boost/static_assert.hpp>
-
 using namespace Akonadi;
 
 //@cond PRIVATE
@@ -63,7 +61,8 @@ static const struct {
 };
 static const int numAgentActionData = sizeof agentActionData / sizeof * agentActionData;
 
-BOOST_STATIC_ASSERT(numAgentActionData == AgentActionManager::LastType);
+static_assert(numAgentActionData == AgentActionManager::LastType,
+              "agentActionData table does not match AgentActionManager types");
 
 /**
  * @internal

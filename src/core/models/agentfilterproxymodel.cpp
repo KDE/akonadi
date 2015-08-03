@@ -28,13 +28,13 @@
 #include <QtCore/QMimeDatabase>
 #include <QtCore/QMimeType>
 
-#include <boost/static_assert.hpp>
-
 using namespace Akonadi;
 
 // ensure the role numbers are equivalent for both source models
-BOOST_STATIC_ASSERT((int)AgentTypeModel::CapabilitiesRole == (int)AgentInstanceModel::CapabilitiesRole);
-BOOST_STATIC_ASSERT((int)AgentTypeModel::MimeTypesRole == (int)AgentInstanceModel::MimeTypesRole);
+static_assert((int)AgentTypeModel::CapabilitiesRole == (int)AgentInstanceModel::CapabilitiesRole,
+              "AgentTypeModel::CapabilitiesRole does not match AgentInstanceModel::CapabilitiesRole");
+static_assert((int)AgentTypeModel::MimeTypesRole == (int)AgentInstanceModel::MimeTypesRole,
+              "AgentTypeModel::MimeTypesRole does not match AgentInstanceModel::MimeTypesRole");
 
 /**
  * @internal
