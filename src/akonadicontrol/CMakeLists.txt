@@ -49,4 +49,4 @@ install(TARGETS akonadi_control
 
 configure_file(org.freedesktop.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)
+        DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR})
