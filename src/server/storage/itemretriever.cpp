@@ -59,6 +59,9 @@ Connection *ItemRetriever::connection() const
 void ItemRetriever::setRetrieveParts(const QVector<QByteArray> &parts)
 {
     mParts = parts;
+    std::sort(mParts.begin(), mParts.end());
+    mParts.erase(std::unique(mParts.begin(), mParts.end()), mParts.end());
+
     // HACK, we need a full payload available flag in PimItem
     if (mFullPayload && !mParts.contains(AKONADI_PARAM_PLD_RFC822)) {
         mParts.append(AKONADI_PARAM_PLD_RFC822);

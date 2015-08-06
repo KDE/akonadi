@@ -820,7 +820,9 @@ void FetchScope::setFetch(FetchFlags attributes, bool fetch)
     if (fetch) {
         d->fetchFlags |= attributes;
         if (attributes & FullPayload) {
-            d->requestedParts << AKONADI_PARAM_PLD_RFC822;
+            if (!d->requestedParts.contains(AKONADI_PARAM_PLD_RFC822)) {
+                d->requestedParts << AKONADI_PARAM_PLD_RFC822;
+            }
         }
     } else {
         d->fetchFlags &= ~attributes;
