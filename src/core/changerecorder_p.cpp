@@ -188,7 +188,7 @@ QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QIODevice *
             msg.setParentDestCollection(parentDestCollection);
             msg.setItemParts(itemParts);
 
-        } else if (version == 2 || version == 3) {
+        } else if (version >= 2) {
 
             Protocol::ChangeNotification msg;
 
@@ -210,7 +210,7 @@ QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QIODevice *
             stream >> itemParts;
             stream >> addedFlags;
             stream >> removedFlags;
-            if (version == 3) {
+            if (version >= 3) {
                 stream >> addedTags;
                 stream >> removedTags;
             }
