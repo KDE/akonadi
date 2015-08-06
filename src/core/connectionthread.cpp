@@ -77,11 +77,15 @@ void ConnectionThread::quit()
 
 void ConnectionThread::reconnect()
 {
-    QMetaObject::invokeMethod(this, "doReconnect", Qt::QueuedConnection);
+    const bool ok = QMetaObject::invokeMethod(this, "doReconnect", Qt::QueuedConnection);
+    Q_ASSERT(ok);
+    Q_UNUSED(ok)
 }
 
 void ConnectionThread::doReconnect()
 {
+    Q_ASSERT(QThread::currentThread() != qApp->thread());
+
     if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState
                         || mSocket->state() == QLocalSocket::ConnectingState)) {
         // nothing to do, we are still/already connected
@@ -151,11 +155,16 @@ void ConnectionThread::doReconnect()
 
 void ConnectionThread::forceReconnect()
 {
-    QMetaObject::invokeMethod(this, "doForceReconnect", Qt::QueuedConnection);
+    const bool ok = QMetaObject::invokeMethod(this, "doForceReconnect",
+                                              Qt::QueuedConnection);
+    Q_ASSERT(ok);
+    Q_UNUSED(ok)
 }
 
 void ConnectionThread::doForceReconnect()
 {
+    Q_ASSERT(QThread::currentThread() != qApp->thread());
+
     if (mSocket) {
         mSocket->disconnect(this, SIGNAL(socketDisconnected()));
         delete mSocket;
@@ -166,11 +175,15 @@ void ConnectionThread::doForceReconnect()
 
 void ConnectionThread::disconnect()
 {
-    QMetaObject::invokeMethod(this, "doDisconnect", Qt::QueuedConnection);
+    const bool ok = QMetaObject::invokeMethod(this, "doDisconnect", Qt::QueuedConnection);
+    Q_ASSERT(ok);
+    Q_UNUSED(ok)
 }
 
 void ConnectionThread::doDisconnect()
 {
+    Q_ASSERT(QThread::currentThread() != qApp->thread());
+
     if (mSocket) {
         mSocket->close();
     }
@@ -178,6 +191,8 @@ void ConnectionThread::doDisconnect()
 
 void ConnectionThread::dataReceived()
 {
+    Q_ASSERT(QThread::currentThread() != qApp->thread());
+
     QElapsedTimer timer;
     timer.start();
 
@@ -228,14 +243,18 @@ void ConnectionThread::dataReceived()
 
 void ConnectionThread::sendCommand(qint64 tag, const Protocol::Command &cmd)
 {
-    QMetaObject::invokeMethod(this, "doSendCommand",
-                              Qt::QueuedConnection,
-                              Q_ARG(qint64, tag),
-                              Q_ARG(Akonadi::Protocol::Command, cmd));
+    const bool ok = QMetaObject::invokeMethod(this, "doSendCommand",
+                                              Qt::QueuedConnection,
+                                              Q_ARG(qint64, tag),
+                                              Q_ARG(Akonadi::Protocol::Command, cmd));
+    Q_ASSERT(ok);
+    Q_UNUSED(ok)
 }
 
 void ConnectionThread::doSendCommand(qint64 tag, const Protocol::Command &cmd)
 {
+    Q_ASSERT(QThread::currentThread() != qApp->thread());
+
     if (mLogFile) {
         mLogFile->write("C: " + cmd.debugString().toUtf8());
         mLogFile->write("\n\n");
