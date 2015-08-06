@@ -44,7 +44,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class CollectionView::Private
+class Q_DECL_HIDDEN CollectionView::Private
 {
 public:
     Private(CollectionView *parent)

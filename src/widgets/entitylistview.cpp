@@ -43,7 +43,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class EntityListView::Private
+class Q_DECL_HIDDEN EntityListView::Private
 {
 public:
     Private(EntityListView *parent)

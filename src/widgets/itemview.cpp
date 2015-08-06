@@ -34,7 +34,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class ItemView::Private
+class Q_DECL_HIDDEN ItemView::Private
 {
 public:
     Private(ItemView *parent)

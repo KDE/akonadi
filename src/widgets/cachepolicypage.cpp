@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-class CachePolicyPage::Private
+class Q_DECL_HIDDEN CachePolicyPage::Private
 {
 public:
     Private()

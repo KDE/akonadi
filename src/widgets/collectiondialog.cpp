@@ -48,7 +48,7 @@
 
 using namespace Akonadi;
 
-class CollectionDialog::Private
+class Q_DECL_HIDDEN CollectionDialog::Private
 {
 public:
     Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options)

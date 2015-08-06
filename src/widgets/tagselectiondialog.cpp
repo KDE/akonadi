@@ -32,7 +32,7 @@
 
 using namespace Akonadi;
 
-struct TagSelectionDialog::Private {
+struct Q_DECL_HIDDEN TagSelectionDialog::Private {
     Private(QDialog *parent)
         : d(parent)
         , mTagWidget(0)

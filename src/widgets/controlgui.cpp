@@ -78,7 +78,7 @@ Q_GLOBAL_STATIC(Internal::StaticControlGui, s_instance)
 /**
  * @internal
  */
-class ControlGui::Private
+class Q_DECL_HIDDEN ControlGui::Private
 {
 public:
     Private(ControlGui *parent)

@@ -45,7 +45,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class EntityTreeView::Private
+class Q_DECL_HIDDEN EntityTreeView::Private
 {
 public:
     Private(EntityTreeView *parent)

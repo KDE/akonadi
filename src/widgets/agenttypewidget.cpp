@@ -55,7 +55,7 @@ using Akonadi::Internal::AgentTypeWidgetDelegate;
 /**
  * @internal
  */
-class AgentTypeWidget::Private
+class Q_DECL_HIDDEN AgentTypeWidget::Private
 {
 public:
     Private(AgentTypeWidget *parent)

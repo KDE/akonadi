@@ -41,7 +41,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class StatisticsProxyModel::Private
+class Q_DECL_HIDDEN StatisticsProxyModel::Private
 {
 public:
     Private(StatisticsProxyModel *parent)

@@ -34,7 +34,7 @@
 
 using namespace Akonadi;
 
-struct TagWidget::Private {
+struct Q_DECL_HIDDEN TagWidget::Private {
     QLabel *mTagLabel;
     Akonadi::Tag::List mTags;
     Akonadi::TagModel *mModel;

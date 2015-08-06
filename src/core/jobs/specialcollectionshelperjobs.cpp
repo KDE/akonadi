@@ -99,7 +99,7 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
 /**
   @internal
 */
-class Akonadi::ResourceScanJob::Private
+class Q_DECL_HIDDEN Akonadi::ResourceScanJob::Private
 {
 public:
     Private(KCoreConfigSkeleton *settings, ResourceScanJob *qq);
@@ -553,7 +553,7 @@ void DefaultResourceJob::slotResult(KJob *job)
 
 // ===================== GetLockJob ============================
 
-class Akonadi::GetLockJob::Private
+class Q_DECL_HIDDEN Akonadi::GetLockJob::Private
 {
 public:
     Private(GetLockJob *qq);

@@ -38,7 +38,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class CollectionPropertiesDialog::Private
+class Q_DECL_HIDDEN CollectionPropertiesDialog::Private
 {
 public:
     Private(CollectionPropertiesDialog *parent, const Akonadi::Collection &collection, const QStringList &pageNames);

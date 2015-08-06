@@ -56,7 +56,7 @@ struct ItemContainer {
 /**
  * @internal
  */
-class ItemModel::Private
+class Q_DECL_HIDDEN ItemModel::Private
 {
 public:
     Private(ItemModel *parent)

@@ -32,7 +32,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class AgentInstanceModel::Private
+class Q_DECL_HIDDEN AgentInstanceModel::Private
 {
 public:
     Private(AgentInstanceModel *parent)

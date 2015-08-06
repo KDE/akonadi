@@ -39,7 +39,7 @@ static_assert((int)AgentTypeModel::MimeTypesRole == (int)AgentInstanceModel::Mim
 /**
  * @internal
  */
-class AgentFilterProxyModel::Private
+class Q_DECL_HIDDEN AgentFilterProxyModel::Private
 {
 public:
     QStringList mimeTypes;

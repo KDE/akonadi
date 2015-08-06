@@ -46,7 +46,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class SubscriptionDialog::Private
+class Q_DECL_HIDDEN SubscriptionDialog::Private
 {
 public:
     Private(SubscriptionDialog *parent)

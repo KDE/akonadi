@@ -43,7 +43,7 @@
 
 using namespace Akonadi;
 
-class TagEditWidget::Private : public QObject
+class Q_DECL_HIDDEN TagEditWidget::Private : public QObject
 {
     Q_OBJECT
 public:

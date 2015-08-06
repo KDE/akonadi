@@ -32,7 +32,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class CollectionFilterProxyModel::Private
+class Q_DECL_HIDDEN CollectionFilterProxyModel::Private
 {
 public:
     Private(CollectionFilterProxyModel *parent)

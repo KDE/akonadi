@@ -32,7 +32,7 @@
 
 using namespace Akonadi;
 
-class AgentTypeDialog::Private
+class Q_DECL_HIDDEN AgentTypeDialog::Private
 {
 public:
     Private(AgentTypeDialog *qq)

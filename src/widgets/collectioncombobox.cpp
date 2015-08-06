@@ -41,7 +41,7 @@
 
 using namespace Akonadi;
 
-class CollectionComboBox::Private
+class Q_DECL_HIDDEN CollectionComboBox::Private
 {
 public:
     Private(QAbstractItemModel *customModel, CollectionComboBox *parent)
