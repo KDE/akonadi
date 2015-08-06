@@ -259,9 +259,9 @@ void ItemHydra::testNullPointerPayload()
     QVERIFY(i.hasPayload());
     QVERIFY(i.hasPayload<RudiPtr>());
     QVERIFY(i.hasPayload<VolkerPtr>());
-    // Fails, because GerdPtr is std::shared_ptr, while RudiPtr is std::shared_ptr
+    // Fails, because GerdQPtr is QSharedPointer, while RudiPtr is std::shared_ptr
     // and we cannot do sharedptr casting for null pointers
-    QVERIFY(!i.hasPayload<GerdPtr>());
+    QVERIFY(!i.hasPayload<GerdQPtr>());
     QCOMPARE(i.payload<RudiPtr>().get(), (Rudi *)0);
     QCOMPARE(i.payload<VolkerPtr>().get(), (Volker *)0);
 }
