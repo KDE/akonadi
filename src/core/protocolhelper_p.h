@@ -142,9 +142,9 @@ public:
         Container<T> objects(_objects);
         using namespace std::placeholders;
         std::sort(objects.begin(), objects.end(),
-                  std::bind([](Entity::Id a, Entity::Id b) -> bool { return a < b; },
-                            std::bind(&T::id, _1),
-                            std::bind(&T::id, _1)));
+                  [](const T &a, const T &b) -> bool {
+                      return a.id() < b.id();
+                  });
         if (objects.at(0).isValid()) {
             QVector<typename T::Id>  uids;
             uids.reserve(objects.size());
