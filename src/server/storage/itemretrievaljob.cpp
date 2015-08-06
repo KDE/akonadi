@@ -65,8 +65,9 @@ void ItemRetrievalJob::callFinished(QDBusPendingCallWatcher *watcher)
     QDBusPendingReply<QString> reply = *watcher;
     if (m_active) {
         m_active = false;
-        if (reply.isError()) {
-            Q_EMIT requestCompleted(m_request, QStringLiteral("Unable to retrieve item from resource: %1").arg(reply.error().message()));
+        const QString errorMsg = reply.isError() ? reply.error().message() : reply;
+        if (!errorMsg.isEmpty()) {
+            Q_EMIT requestCompleted(m_request, QStringLiteral("Unable to retrieve item from resource: %1").arg(errorMsg));
         } else {
             Q_EMIT requestCompleted(m_request, QString());
         }
