@@ -339,8 +339,10 @@ void SessionPrivate::forceReconnect()
 {
     jobRunning = false;
     connected = false;
-    connThread->forceReconnect();
-    QMetaObject::invokeMethod(connThread, "reconnect", Qt::QueuedConnection);   // avoids reconnecting in the dtor
+    if (connThread) {
+        connThread->forceReconnect();
+    }
+    QMetaObject::invokeMethod(mParent, "reconnect", Qt::QueuedConnection);
 }
 
 Session::Session(const QByteArray &sessionId, QObject *parent)
