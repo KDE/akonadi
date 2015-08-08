@@ -41,8 +41,6 @@ static const char CONTENTMIMETYPES[] = "CONTENTMIMETYPES";
 
 static const char ROOTPARENTRID[] = "AKONADI_ROOT_COLLECTION";
 
-static const char PARENTCOLLECTIONRID[] = "ParentCollectionRid";
-static const char PARENTCOLLECTION[] = "ParentCollection";
 
 class RemoteId
 {
