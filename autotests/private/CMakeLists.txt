@@ -13,11 +13,12 @@ macro(add_unit_test _source)
         )
     endif()
     target_link_libraries(${_name}
-        KF5AkonadiPrivate
         Qt5::Widgets
         Qt5::Test
+        akonadiprivate_static
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()
 
 add_unit_test(notificationmessagetest.cpp)
+add_unit_test(protocoltest.cpp)
