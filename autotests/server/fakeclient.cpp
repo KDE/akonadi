@@ -98,6 +98,10 @@ void FakeClient::readServerPart()
             Protocol::Command expectedCommand, actualCommand;
 
             expectedStream >> expectedTag;
+
+            while (mSocket->bytesAvailable() < sizeof(qint64)) {
+                mSocket->waitForReadyRead();
+            }
             mStream >> actualTag;
             CLIENT_COMPARE(actualTag, expectedTag);
 
@@ -114,6 +118,7 @@ void FakeClient::readServerPart()
                 qDebug() << "Actual command:  " << actualCommand.debugString();
                 qDebug() << "Expected Command:" << expectedCommand.debugString();
             }
+
             CLIENT_COMPARE(actualCommand, expectedCommand);
         }
     }

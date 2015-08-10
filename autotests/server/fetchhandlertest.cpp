@@ -232,7 +232,7 @@ private Q_SLOTS:
 
         timer.start();
         QList<PimItem> items;
-        for (int i = 0; i< 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             items.append(initializer->createItem(QString::number(i).toLatin1().constData(),col1));
         }
         qDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
