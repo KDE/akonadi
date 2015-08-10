@@ -168,15 +168,15 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
         restoreCollections[item.attribute<Akonadi::EntityDeletedAttribute>()->restoreCollection()].append(item);
     }
 
-    foreach (const Collection &col, restoreCollections.keys()) {  //krazy:exclude=foreach
-        const Item &first = restoreCollections.value(col).first();
+    for (auto it = restoreCollections.cbegin(), e = restoreCollections.cend(); it != e; ++it) {
+        const Item &first = it.value().first();
         //Move the items to the correct collection if available
-        Collection targetCollection = col;
+        Collection targetCollection = it.key();
         const QString restoreResource = first.attribute<Akonadi::EntityDeletedAttribute>()->restoreResource();
 
         //Restore in place if no restore collection is set
         if (!targetCollection.isValid()) {
-            removeAttribute(restoreCollections.value(col));
+            removeAttribute(it.value());
             return;
         }
 
@@ -190,7 +190,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
         if (!mTargetCollection.isValid()) {   //explicit targets don't have a fallback
             fetchJob->setProperty("Resource", restoreResource);
         }
-        fetchJob->setProperty("Items", col.id());    //to find the items in restore collections again
+        fetchJob->setProperty("Items", it.key().id());    //to find the items in restore collections again
         q->connect(fetchJob, SIGNAL(result(KJob*)), SLOT(targetCollectionFetched(KJob*)));
     }
 }

@@ -139,9 +139,8 @@ void TagSync::diffTags()
             connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
         }
     }
-    Q_FOREACH (const Akonadi::Tag::Id &removedTag, tagById.keys()) {
+    Q_FOREACH (const Tag &tag, tagById) {
         //Removed remotely, unset rid
-        Tag tag = tagById.value(removedTag);
         tag.setRemoteId(QByteArray(""));
         TagModifyJob *modJob = new TagModifyJob(tag, this);
         connect(modJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));

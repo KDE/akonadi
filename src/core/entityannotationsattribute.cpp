@@ -74,10 +74,10 @@ QByteArray EntityAnnotationsAttribute::serialized() const
 {
     QByteArray result = "";
 
-    Q_FOREACH (const QByteArray &key, mAnnotations.keys()) {
-        result += key;
+    for (auto it = mAnnotations.cbegin(), e = mAnnotations.cend(); it != e; ++it) {
+        result += it.key();
         result += ' ';
-        result += mAnnotations[key];
+        result += it.value();
         result += " % "; // We use this separator as '%' is not allowed in keys or values
     }
     result.chop(3);
