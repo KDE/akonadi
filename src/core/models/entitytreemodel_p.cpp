@@ -335,10 +335,10 @@ void EntityTreeModelPrivate::collectionListFetched(const Akonadi::Collection::Li
 static QSet<Collection::Id> getChildren(Collection::Id parent, const QHash<Collection::Id, Collection::Id> &childParentMap)
 {
     QSet<Collection::Id> children;
-    Q_FOREACH (Collection::Id c, childParentMap.keys()) {
-        if (childParentMap.value(c) == parent) {
-            children << c;
-            children += getChildren(c, childParentMap);
+    for (auto it = childParentMap.cbegin(), e = childParentMap.cend(); it != e; ++it) {
+        if (it.value() == parent) {
+            children << it.key();
+            children += getChildren(it.key(), childParentMap);
         }
     }
     return children;
@@ -409,11 +409,11 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         QSet<Collection::Id> parents;
 
         //Find toplevel parents of the subtrees
-        Q_FOREACH (Collection::Id c, childParentMap.keys()) {
+        for (auto it = childParentMap.cbegin(), e = childParentMap.cend(); it != e; ++it) {
             //The child has a parent without parent (it's a toplevel node that is not yet in m_collections)
-            if (!childParentMap.contains(childParentMap.value(c))) {
-                Q_ASSERT(!m_collections.contains(c));
-                parents << c;
+            if (!childParentMap.contains(it.value())) {
+                Q_ASSERT(!m_collections.contains(it.key()));
+                parents << it.key();
             }
         }
 
