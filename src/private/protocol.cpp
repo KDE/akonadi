@@ -334,7 +334,7 @@ Command::Type Command::type() const
 
 bool Command::isValid() const
 {
-    return d_func()->commandType != Invalid;
+    return type() != Invalid;
 }
 
 bool Command::isResponse() const
@@ -499,7 +499,7 @@ public:
     FactoryPrivate()
     {
         // Session management
-        registerType<Command::Hello, HelloResponse, HelloResponse>();
+        registerType<Command::Hello, Command /* invalid */, HelloResponse>();
         registerType<Command::Login, LoginCommand, LoginResponse>();
         registerType<Command::Logout, LogoutCommand, LogoutResponse>();
 
@@ -545,7 +545,7 @@ public:
 
         // Other...?
         registerType<Command::StreamPayload, StreamPayloadCommand, StreamPayloadResponse>();
-        registerType<Command::ChangeNotification, ChangeNotification, Response>();
+        registerType<Command::ChangeNotification, ChangeNotification, Response /* invalid */>();
     }
 
     // clang has problem resolving the right qHash() overload for Command::Type,
@@ -832,7 +832,11 @@ void FetchScope::setFetch(FetchFlags attributes, bool fetch)
 
 bool FetchScope::fetch(FetchFlags flags) const
 {
-    return d->fetchFlags & flags;
+    if (flags == None) {
+        return d->fetchFlags == None;
+    } else {
+        return d->fetchFlags & flags;
+    }
 }
 
 void FetchScope::debugString(DebugBlock &blck) const
@@ -873,7 +877,7 @@ public:
     {
         if (type == ScopeContext::Tag) {
             tagCtx = ctx;
-        } else {
+        } else if (type == ScopeContext::Collection) {
             collectionCtx = ctx;
         }
     }
@@ -884,13 +888,37 @@ public:
         , tagCtx(other.tagCtx)
     {}
 
+    QVariant ctx(ScopeContext::Type type) const
+    {
+        switch (type) {
+        case ScopeContext::Collection:
+            return collectionCtx;
+        case ScopeContext::Tag:
+            return tagCtx;
+        case ScopeContext::Any:
+            return QVariant();
+        }
+        return QVariant();
+    }
+
+    void setCtx(ScopeContext::Type type, const QVariant &val)
+    {
+        switch (type) {
+        case ScopeContext::Collection:
+            collectionCtx = val;
+            break;
+        case ScopeContext::Tag:
+            tagCtx = val;
+            break;
+        case ScopeContext::Any:
+            break;
+        }
+    }
+
     QVariant collectionCtx;
     QVariant tagCtx;
 };
 
-
-#define CTX(type) \
-    ((type == ScopeContext::Collection) ? d->collectionCtx : d->tagCtx)
 
 ScopeContext::ScopeContext()
     : d(new ScopeContextPrivate)
@@ -952,37 +980,37 @@ bool ScopeContext::isEmpty() const
 
 void ScopeContext::setContext(Type type, qint64 id)
 {
-    CTX(type) = id;
+    d->setCtx(type, id);
 }
 
 void ScopeContext::setContext(Type type, const QString &rid)
 {
-    CTX(type) = rid;
+    d->setCtx(type, rid);
 }
 
 void ScopeContext::clearContext(Type type)
 {
-    CTX(type).clear();
+    d->setCtx(type, QVariant());
 }
 
 bool ScopeContext::hasContextId(Type type) const
 {
-    return CTX(type).type() == QVariant::LongLong;
+    return d->ctx(type).type() == QVariant::LongLong;
 }
 
 qint64 ScopeContext::contextId(Type type) const
 {
-    return CTX(type).toLongLong();
+    return hasContextId(type) ? d->ctx(type).toLongLong() : 0;
 }
 
 bool ScopeContext::hasContextRID(Type type) const
 {
-    return CTX(type).type() == QVariant::String;
+    return d->ctx(type).type() == QVariant::String;
 }
 
 QString ScopeContext::contextRID(Type type) const
 {
-    return CTX(type).toString();
+    return hasContextRID(type) ? d->ctx(type).toString() : QString();
 }
 
 void ScopeContext::debugString(DebugBlock &blck) const
