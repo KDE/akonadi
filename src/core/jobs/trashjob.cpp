@@ -234,8 +234,8 @@ void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
         mCollectionItems[item.parentCollection()].append(item);   //Sort by parent col ( = restore collection)
     }
 
-    foreach (const Collection &col, mCollectionItems.keys()) {  //krazy:exclude=foreach
-        CollectionFetchJob *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base, q);
+    for (auto it = mCollectionItems.cbegin(), e = mCollectionItems.cend(); it != e; ++it) {
+        CollectionFetchJob *job = new CollectionFetchJob(it.key(), Akonadi::CollectionFetchJob::Base, q);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    SLOT(parentCollectionReceived(Akonadi::Collection::List)));
     }
