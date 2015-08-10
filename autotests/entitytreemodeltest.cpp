@@ -657,8 +657,8 @@ void EntityTreeModelTest::testItemChanged()
 void EntityTreeModelTest::testRemoveCollectionOnChanged()
 {
     const QString serverContent = QStringLiteral(
-                                      "- C (inode/directory, text/directory)  'Col 1'     1"
-                                      "- - C (text/directory)                 'Col 2'     2"
+                                      "- C (inode/directory, text/directory)  'Col 1'     2"
+                                      "- - C (text/directory)                 'Col 2'     1"
                                       "- - - I text/directory                 'Item 1'");
     const QString collectionName = QStringLiteral("Col 2");
     const QString monitoredMimeType = QString::fromLatin1("text/directory");
