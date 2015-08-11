@@ -99,7 +99,7 @@ void FakeClient::readServerPart()
 
             expectedStream >> expectedTag;
 
-            while (mSocket->bytesAvailable() < sizeof(qint64)) {
+            while ((size_t)mSocket->bytesAvailable() < sizeof(qint64)) {
                 mSocket->waitForReadyRead();
             }
             mStream >> actualTag;
