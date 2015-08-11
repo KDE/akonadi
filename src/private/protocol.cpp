@@ -1589,14 +1589,29 @@ HelloResponse::HelloResponse(const Command &command)
     checkCopyInvariant(Command::Hello);
 }
 
+void HelloResponse::setServerName(const QString &server)
+{
+    d_func()->server = server;
+}
+
 QString HelloResponse::serverName() const
 {
     return d_func()->server;
 }
 
+void HelloResponse::setMessage(const QString &message)
+{
+    d_func()->message = message;
+}
+
 QString HelloResponse::message() const
 {
     return d_func()->message;
+}
+
+void HelloResponse::setProtocolVersion(int protocolVersion)
+{
+    d_func()->protocol = protocolVersion;
 }
 
 int HelloResponse::protocolVersion() const
@@ -1706,9 +1721,19 @@ LoginCommand::LoginCommand(const Command &other)
     checkCopyInvariant(Command::Login);
 }
 
+void LoginCommand::setSessionId(const QByteArray &sessionId)
+{
+    d_func()->sessionId = sessionId;
+}
+
 QByteArray LoginCommand::sessionId() const
 {
     return d_func()->sessionId;
+}
+
+void LoginCommand::setSessionMode(SessionMode mode)
+{
+    d_func()->sessionMode = mode;
 }
 
 LoginCommand::SessionMode LoginCommand::sessionMode() const
@@ -1864,6 +1889,11 @@ TransactionCommand::TransactionCommand(const Command &other)
     : Command(other)
 {
     checkCopyInvariant(Command::Transaction);
+}
+
+void TransactionCommand::setMode(Mode mode)
+{
+    d_func()->mode = mode;
 }
 
 TransactionCommand::Mode TransactionCommand::mode() const
@@ -2330,9 +2360,19 @@ CopyItemsCommand::CopyItemsCommand(const Command &other)
     checkCopyInvariant(Command::CopyItems);
 }
 
+void CopyItemsCommand::setItems(const Scope &items)
+{
+    d_func()->items = items;
+}
+
 Scope CopyItemsCommand::items() const
 {
     return d_func()->items;
+}
+
+void CopyItemsCommand::setDestination(const Scope &dest)
+{
+    d_func()->dest = dest;
 }
 
 Scope CopyItemsCommand::destination() const

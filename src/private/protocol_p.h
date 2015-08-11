@@ -484,8 +484,13 @@ public:
     explicit HelloResponse(const Command &command);
     HelloResponse(const QString &server, const QString &message, int protocol);
 
+    void setServerName(const QString &server);
     QString serverName() const;
+
+    void setMessage(const QString &message);
     QString message() const;
+
+    void setProtocolVersion(int protocolVersion);
     int protocolVersion() const;
 
 private:
@@ -511,7 +516,10 @@ public:
     explicit LoginCommand(const QByteArray &sessionId, SessionMode mode = CommandMode);
     LoginCommand(const Command &command);
 
+    void setSessionId(const QByteArray &sessionId);
     QByteArray sessionId() const;
+
+    void setSessionMode(SessionMode mode);
     SessionMode sessionMode() const;
 
 private:
@@ -571,6 +579,7 @@ public:
     explicit TransactionCommand(Mode mode);
     TransactionCommand(const Command &command);
 
+    void setMode(Mode mode);
     Mode mode() const;
 
 private:
@@ -680,7 +689,9 @@ public:
     explicit CopyItemsCommand(const Scope &items, const Scope &destination);
     CopyItemsCommand(const Command &command);
 
+    void setItems(const Scope &items);
     Scope items() const;
+    void setDestination(const Scope &destination);
     Scope destination() const;
 
 private:

@@ -48,6 +48,21 @@ private Q_SLOTS:
     void testFetchScope();
     void testScopeContext_data();
     void testScopeContext();
+    void testPartMetaData();
+    void testCachePolicy();
+
+    void testHelloResponse();
+    void testLoginCommand();
+    void testLoginResponse();
+    void testLogoutCommand();
+    void testLogoutResponse();
+    void testTransactionCommand();
+    void testTransactionResponse();
+    void testCreateItemCommand();
+    void testCreateItemResponse();
+    void testCopyItemsCommand();
+    void testCopyItemsResponse();
+
 private:
     template<typename T>
     typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value, T>::type
