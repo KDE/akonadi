@@ -129,7 +129,7 @@ bool PartHelper::insert(Part *part, qint64 *insertId)
 
     if (storeInFile && result) {
         QString fileName = fileNameForPart(part);
-        fileName +=  QString::fromUtf8("_r0");
+        fileName += QStringLiteral("_r0");
         const QString filePath = storagePath() + QDir::separator() + fileName;
 
         QFile file(filePath);
