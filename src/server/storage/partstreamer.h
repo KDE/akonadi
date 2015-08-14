@@ -36,7 +36,6 @@ namespace Server {
 class PimItem;
 class Part;
 class Connection;
-class ImapStreamParser;
 class Response;
 
 class PartStreamer : public  QObject
@@ -64,7 +63,6 @@ private:
     bool preparePart(bool checkExists, const QByteArray &partName, Part &part);
 
     Connection *mConnection;
-    ImapStreamParser *mStreamParser;
     PimItem mItem;
     bool mCheckChanged;
     bool mDataChanged;

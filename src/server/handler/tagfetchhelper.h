@@ -31,8 +31,6 @@ class ImapSet;
 
 namespace Server {
 
-class ImapStreamParser;
-
 class Connection;
 class Response;
 
