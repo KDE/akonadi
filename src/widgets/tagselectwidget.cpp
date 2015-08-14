@@ -24,7 +24,7 @@
 
 using namespace Akonadi;
 
-class TagSelectWidget::Private
+class Q_DECL_HIDDEN TagSelectWidget::Private
 {
 public:
     Private(TagSelectWidget *parent)

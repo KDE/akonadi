@@ -50,7 +50,7 @@ Q_GLOBAL_STATIC(Internal::StaticControl, s_instance)
 /**
  * @internal
  */
-class Control::Private
+class Q_DECL_HIDDEN Control::Private
 {
 public:
     Private(Control *parent)
