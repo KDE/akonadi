@@ -47,7 +47,7 @@ DbConfigMysql::DbConfigMysql()
 
 QString DbConfigMysql::driverName() const
 {
-    return QLatin1String("QMYSQL");
+    return QStringLiteral("QMYSQL");
 }
 
 QString DbConfigMysql::databaseName() const
@@ -64,13 +64,13 @@ bool DbConfigMysql::init(QSettings &settings)
     QString defaultCleanShutdownCommand;
 
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QLatin1String("db_misc")));
+    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QStringLiteral("db_misc")));
 #endif
 
     const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
-    if (QFile::exists(QLatin1String(MYSQLD_EXECUTABLE))) {
-        defaultServerPath = QLatin1String(MYSQLD_EXECUTABLE);
+    if (QFile::exists(QStringLiteral(MYSQLD_EXECUTABLE))) {
+        defaultServerPath = QStringLiteral(MYSQLD_EXECUTABLE);
     }
 #endif
     const QStringList mysqldSearchPath = QStringList()
@@ -97,13 +97,13 @@ bool DbConfigMysql::init(QSettings &settings)
 #endif
     }
 
-    mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysql_install_db"), mysqldSearchPath);
+    mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysql_install_db"), mysqldSearchPath);
     akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
-    mMysqlCheckPath = XdgBaseDirs::findExecutableFile(QLatin1String("mysqlcheck"), mysqldSearchPath);
+    mMysqlCheckPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqlcheck"), mysqldSearchPath);
     akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
 
-    mInternalServer = settings.value(QLatin1String("QMYSQL/StartServer"), defaultInternalServer).toBool();
+    mInternalServer = settings.value(QStringLiteral("QMYSQL/StartServer"), defaultInternalServer).toBool();
 #ifndef Q_OS_WIN
     if (mInternalServer) {
         defaultOptions = QString::fromLatin1("UNIX_SOCKET=%1/mysql.socket").arg(socketDirectory);
@@ -125,7 +125,7 @@ bool DbConfigMysql::init(QSettings &settings)
     if (mInternalServer) {
         mConnectionOptions = defaultOptions;
         // intentionally not namespaced as we are the only one in this db instance when using internal mode
-        mDatabaseName = QLatin1String("akonadi");
+        mDatabaseName = QStringLiteral("akonadi");
     }
     if (mInternalServer && (mServerPath.isEmpty() || !QFile::exists(mServerPath))) {
         mServerPath = defaultServerPath;
@@ -184,14 +184,14 @@ void DbConfigMysql::startInternalServer()
     const QString mysqldPath = mServerPath;
 
     const QString akDir   = AkStandardDirs::saveDir("data");
-    const QString dataDir = AkStandardDirs::saveDir("data", QLatin1String("db_data"));
+    const QString dataDir = AkStandardDirs::saveDir("data", QStringLiteral("db_data"));
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QLatin1String("db_misc")));
+    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QStringLiteral("db_misc")));
 #endif
 
     // generate config file
-    const QString globalConfig = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-global.conf"));
-    const QString localConfig  = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-local.conf"));
+    const QString globalConfig = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
+    const QString localConfig  = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-local.conf"));
     const QString actualConfig = AkStandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
     if (globalConfig.isEmpty()) {
         akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
@@ -278,7 +278,7 @@ void DbConfigMysql::startInternalServer()
     }
 
     // first run, some MySQL versions need a mysql_install_db run for that
-    const QString confFile = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/mysql-global.conf"));
+    const QString confFile = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
     if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty() && !mMysqlInstallDbPath.isEmpty()) {
         const QStringList arguments = QStringList() << QString::fromLatin1("--force") << QString::fromLatin1("--defaults-file=%1").arg(confFile) << QString::fromLatin1("--datadir=%1/").arg(dataDir);
         QProcess::execute(mMysqlInstallDbPath, arguments);
@@ -324,7 +324,7 @@ void DbConfigMysql::startInternalServer()
 
     const QLatin1String initCon("initConnection");
     {
-        QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QMYSQL"), initCon);
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"), initCon);
         apply(db);
 
         db.setDatabaseName(QString());   // might not exist yet, then connecting to the actual db will fail
@@ -352,9 +352,9 @@ void DbConfigMysql::startInternalServer()
         if (opened) {
             if (!mMysqlCheckPath.isEmpty()) {
                 const QStringList arguments = QStringList() << QString::fromLatin1("--defaults-file=%1/mysql.conf").arg(akDir)
-                                              << QLatin1String("--check-upgrade")
-                                              << QLatin1String("--all-databases")
-                                              << QLatin1String("--auto-repair")
+                                              << QStringLiteral("--check-upgrade")
+                                              << QStringLiteral("--all-databases")
+                                              << QStringLiteral("--auto-repair")
 #ifndef Q_OS_WIN
                                               << QString::fromLatin1("--socket=%1/mysql.socket").arg(socketDirectory)
 #endif
@@ -396,7 +396,7 @@ void DbConfigMysql::startInternalServer()
                     akDebug() << "Query error:" << query.lastError().text();
                     akDebug() << "Database error:" << db.lastError().text();
                     akDebug() << "Trying to create database now...";
-                    if (!query.exec(QLatin1String("CREATE DATABASE akonadi"))) {
+                    if (!query.exec(QStringLiteral("CREATE DATABASE akonadi"))) {
                         akError() << "Failed to create database";
                         akError() << "Query error:" << query.lastError().text();
                         akFatal() << "Database error:" << db.lastError().text();
@@ -435,5 +435,5 @@ void DbConfigMysql::stopInternalServer()
 void DbConfigMysql::initSession(const QSqlDatabase &database)
 {
     QSqlQuery query(database);
-    query.exec(QLatin1String("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED"));
+    query.exec(QStringLiteral("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED"));
 }

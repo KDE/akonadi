@@ -43,7 +43,7 @@ DbConfig::DbConfig()
     QSettings settings(serverConfigFile, QSettings::IniFormat);
 
     mSizeThreshold = 4096;
-    const QVariant value = settings.value(QLatin1String("General/SizeThreshold"), mSizeThreshold);
+    const QVariant value = settings.value(QStringLiteral("General/SizeThreshold"), mSizeThreshold);
     if (value.canConvert<qint64>()) {
         mSizeThreshold = value.value<qint64>();
     } else {
@@ -66,11 +66,11 @@ DbConfig *DbConfig::configuredDatabase()
         QSettings settings(serverConfigFile, QSettings::IniFormat);
 
         // determine driver to use
-        QString driverName = settings.value(QLatin1String("General/Driver")).toString();
+        QString driverName = settings.value(QStringLiteral("General/Driver")).toString();
         if (driverName.isEmpty()) {
-            driverName = QLatin1String(AKONADI_DATABASE_BACKEND);
+            driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
             // when using the default, write it explicitly, in case the default changes later
-            settings.setValue(QLatin1String("General/Driver"), driverName);
+            settings.setValue(QStringLiteral("General/Driver"), driverName);
             settings.sync();
         }
 
@@ -117,7 +117,7 @@ qint64 DbConfig::sizeThreshold() const
 QString DbConfig::defaultDatabaseName()
 {
     if (!AkApplication::hasInstanceIdentifier()) {
-        return QLatin1String("akonadi");
+        return QStringLiteral("akonadi");
     }
     // dash is not allowed in PSQL
     return QLatin1Literal("akonadi_") % AkApplication::instanceIdentifier().replace(QLatin1Char('-'), QLatin1Char('_'));

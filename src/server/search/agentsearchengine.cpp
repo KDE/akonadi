@@ -33,14 +33,14 @@ using namespace Akonadi::Server;
 void AgentSearchEngine::addSearch(const Collection &collection)
 {
     QDBusInterface agentMgr(AkDBus::serviceName(AkDBus::Control),
-                            QLatin1String(AKONADI_DBUS_AGENTMANAGER_PATH),
-                            QLatin1String("org.freedesktop.Akonadi.AgentManagerInternal"));
+                            QStringLiteral(AKONADI_DBUS_AGENTMANAGER_PATH),
+                            QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {
         QList<QVariant> args;
         args << collection.queryString()
              << QLatin1String("")
              << collection.id();
-        agentMgr.callWithArgumentList(QDBus::NoBlock, QLatin1String("addSearch"), args);
+        agentMgr.callWithArgumentList(QDBus::NoBlock, QStringLiteral("addSearch"), args);
         return;
     }
 
@@ -50,12 +50,12 @@ void AgentSearchEngine::addSearch(const Collection &collection)
 void AgentSearchEngine::removeSearch(qint64 id)
 {
     QDBusInterface agentMgr(AkDBus::serviceName(AkDBus::Control),
-                            QLatin1String(AKONADI_DBUS_AGENTMANAGER_PATH),
-                            QLatin1String("org.freedesktop.Akonadi.AgentManagerInternal"));
+                            QStringLiteral(AKONADI_DBUS_AGENTMANAGER_PATH),
+                            QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {
         QList<QVariant> args;
         args << id;
-        agentMgr.callWithArgumentList(QDBus::NoBlock, QLatin1String("removeSearch"), args);
+        agentMgr.callWithArgumentList(QDBus::NoBlock, QStringLiteral("removeSearch"), args);
         return;
     }
 

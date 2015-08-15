@@ -167,8 +167,8 @@ bool DataStore::init()
     }
     s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
 
-    if (QFile::exists(QLatin1String(":dbupdate.xml"))) {
-        DbUpdater updater(m_database, QLatin1String(":dbupdate.xml"));
+    if (QFile::exists(QStringLiteral(":dbupdate.xml"))) {
+        DbUpdater updater(m_database, QStringLiteral(":dbupdate.xml"));
         if (!updater.run()) {
             return false;
         }
@@ -941,7 +941,7 @@ void DataStore::activeCachePolicy(Collection &col)
     col.setCachePolicyCheckInterval(-1);
     col.setCachePolicyCacheTimeout(-1);
     col.setCachePolicySyncOnDemand(false);
-    col.setCachePolicyLocalParts(QLatin1String("ALL"));
+    col.setCachePolicyLocalParts(QStringLiteral("ALL"));
 }
 
 QVector<Collection> DataStore::virtualCollections(const PimItem &item)
@@ -1099,7 +1099,7 @@ bool DataStore::unhideAllPimItems()
 
     try {
         return PartHelper::remove(Part::partTypeIdFullColumnName(),
-                                  PartTypeHelper::fromFqName(QLatin1String("ATR"), QLatin1String("HIDDEN")).id());
+                                  PartTypeHelper::fromFqName(QStringLiteral("ATR"), QStringLiteral("HIDDEN")).id());
     } catch (...) {
     } // we can live with this failing
 
@@ -1230,13 +1230,13 @@ QString DataStore::dateTimeFromQDateTime(const QDateTime &dateTime)
     if (utcDateTime.timeSpec() != Qt::UTC) {
         utcDateTime.toUTC();
     }
-    return utcDateTime.toString(QLatin1String("yyyy-MM-dd hh:mm:ss"));
+    return utcDateTime.toString(QStringLiteral("yyyy-MM-dd hh:mm:ss"));
 }
 
 // static
 QDateTime DataStore::dateTimeToQDateTime(const QByteArray &dateTime)
 {
-    return QDateTime::fromString(QString::fromLatin1(dateTime), QLatin1String("yyyy-MM-dd hh:mm:ss"));
+    return QDateTime::fromString(QString::fromLatin1(dateTime), QStringLiteral("yyyy-MM-dd hh:mm:ss"));
 }
 
 void DataStore::addQueryToTransaction(const QSqlQuery &query, bool isBatch)
@@ -1335,7 +1335,7 @@ bool DataStore::beginTransaction()
     if (m_transactionLevel == 0) {
         TRANSACTION_MUTEX_LOCK;
         if (DbType::type(m_database) == DbType::Sqlite) {
-            m_database.exec(QLatin1String("BEGIN IMMEDIATE TRANSACTION"));
+            m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction (SQLITE)");
                 TRANSACTION_MUTEX_UNLOCK;
@@ -1420,6 +1420,6 @@ void DataStore::sendKeepAliveQuery()
 {
     if (m_database.isOpen()) {
         QSqlQuery query(m_database);
-        query.exec(QLatin1String("SELECT 1"));
+        query.exec(QStringLiteral("SELECT 1"));
     }
 }

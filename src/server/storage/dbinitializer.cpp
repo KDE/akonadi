@@ -225,7 +225,7 @@ bool DbInitializer::checkRelation(const RelationDescription &relationDescription
     table.name = relationTableName;
 
     ColumnDescription column;
-    column.type = QLatin1String("qint64");
+    column.type = QStringLiteral("qint64");
     column.allowNull = false;
     column.isPrimaryKey = true;
     column.onUpdate = ColumnDescription::Cascade;
@@ -300,25 +300,25 @@ QString DbInitializer::sqlType(const QString &type, int size) const
 {
     Q_UNUSED(size);
     if (type == QLatin1String("int")) {
-        return QLatin1String("INTEGER");
+        return QStringLiteral("INTEGER");
     }
     if (type == QLatin1String("qint64")) {
-        return QLatin1String("BIGINT");
+        return QStringLiteral("BIGINT");
     }
     if (type == QLatin1String("QString")) {
-        return QLatin1String("TEXT");
+        return QStringLiteral("TEXT");
     }
     if (type == QLatin1String("QByteArray")) {
-        return QLatin1String("LONGBLOB");
+        return QStringLiteral("LONGBLOB");
     }
     if (type == QLatin1String("QDateTime")) {
-        return QLatin1String("TIMESTAMP");
+        return QStringLiteral("TIMESTAMP");
     }
     if (type == QLatin1String("bool")) {
-        return QLatin1String("BOOL");
+        return QStringLiteral("BOOL");
     }
     if (type == QLatin1String("Tristate")) {
-        return QLatin1String("TINYINT");
+        return QStringLiteral("TINYINT");
     }
 
     akDebug() << "Invalid type" << type;
@@ -329,7 +329,7 @@ QString DbInitializer::sqlType(const QString &type, int size) const
 QString DbInitializer::sqlValue(const QString &type, const QString &value) const
 {
     if (type == QLatin1String("QDateTime") && value == QLatin1String("QDateTime::currentDateTime()")) {
-        return QLatin1String("CURRENT_TIMESTAMP");
+        return QStringLiteral("CURRENT_TIMESTAMP");
     }
     if (type == QLatin1String("Tristate")) {
         if (value == QLatin1String("False")) {
@@ -353,10 +353,10 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
 {
     const QString indexName = QString::fromLatin1("%1_%2").arg(tableDescription.name).arg(indexDescription.name);
     return QString::fromLatin1("CREATE %1 INDEX %2 ON %3 (%4)")
-           .arg(indexDescription.isUnique ? QLatin1String("UNIQUE") : QString())
+           .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString())
            .arg(indexName)
            .arg(tableDescription.name)
-           .arg(indexDescription.columns.join(QLatin1String(",")));
+           .arg(indexDescription.columns.join(QStringLiteral(",")));
 }
 
 QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
@@ -383,11 +383,11 @@ QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialA
 {
     switch (action) {
     case ColumnDescription::Cascade:
-        return QLatin1String("CASCADE");
+        return QStringLiteral("CASCADE");
     case ColumnDescription::Restrict:
-        return QLatin1String("RESTRICT");
+        return QStringLiteral("RESTRICT");
     case ColumnDescription::SetNull:
-        return QLatin1String("SET NULL");
+        return QStringLiteral("SET NULL");
     }
 
     Q_ASSERT(!"invalid referential action enum!");
@@ -402,7 +402,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
             cols.push_back(column.name);
         }
     }
-    return QLatin1Literal("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
+    return QLatin1Literal("PRIMARY KEY (") + cols.join(QStringLiteral(", ")) + QLatin1Char(')');
 }
 
 void DbInitializer::execQuery(const QString &queryString)

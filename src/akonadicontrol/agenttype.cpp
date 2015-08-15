@@ -61,7 +61,7 @@ QString AgentType::readString(const QSettings &file, const QString &key)
         Q_FOREACH (const QString &part, parts) {
             utf8Parts << QString::fromUtf8(part.toLatin1());
         }
-        return utf8Parts.join(QLatin1String(", "));
+        return utf8Parts.join(QStringLiteral(", "));
     } else {
         akError() << "Agent desktop file" << file.fileName() << "contains invalid value for key" << key;
         return QString();
@@ -73,32 +73,32 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     Q_UNUSED(manager);
 
     QSettings file(fileName, QSettings::IniFormat);
-    file.beginGroup(QLatin1String("Desktop Entry"));
+    file.beginGroup(QStringLiteral("Desktop Entry"));
 
     Q_FOREACH (const QString &key, file.allKeys()) {
         if (key.startsWith(QLatin1String("Name["))) {
             QString lang = key.mid(5, key.length() - 6);
             name.insert(lang, readString(file, key));
         } else if (key == QLatin1String("Name")) {
-            name.insert(QLatin1String("en_US"), readString(file, key));
+            name.insert(QStringLiteral("en_US"), readString(file, key));
         } else if (key.startsWith(QLatin1String("Comment["))) {
             QString lang = key.mid(8, key.length() - 9);
             comment.insert(lang, readString(file, key));
         } else if (key == QLatin1String("Comment")) {
-            comment.insert(QLatin1String("en_US"), readString(file, key));
+            comment.insert(QStringLiteral("en_US"), readString(file, key));
         } else if (key.startsWith(QLatin1String("X-Akonadi-Custom-"))) {
             QString customKey = key.mid(17, key.length());
             custom[customKey] = file.value(key);
         }
     }
-    icon = file.value(QLatin1String("Icon")).toString();
-    mimeTypes = file.value(QLatin1String("X-Akonadi-MimeTypes")).toStringList();
-    capabilities = file.value(QLatin1String("X-Akonadi-Capabilities")).toStringList();
-    exec = file.value(QLatin1String("Exec")).toString();
-    identifier = file.value(QLatin1String("X-Akonadi-Identifier")).toString();
+    icon = file.value(QStringLiteral("Icon")).toString();
+    mimeTypes = file.value(QStringLiteral("X-Akonadi-MimeTypes")).toStringList();
+    capabilities = file.value(QStringLiteral("X-Akonadi-Capabilities")).toStringList();
+    exec = file.value(QStringLiteral("Exec")).toString();
+    identifier = file.value(QStringLiteral("X-Akonadi-Identifier")).toString();
     launchMethod = Process; // Save default
 
-    const QString method = file.value(QLatin1String("X-Akonadi-LaunchMethod")).toString();
+    const QString method = file.value(QStringLiteral("X-Akonadi-LaunchMethod")).toString();
     if (method.compare(QLatin1String("AgentProcess"), Qt::CaseInsensitive) == 0) {
         launchMethod = Process;
     } else if (method.compare(QLatin1String("AgentServer"), Qt::CaseInsensitive) == 0) {

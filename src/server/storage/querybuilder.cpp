@@ -108,7 +108,7 @@ QueryBuilder::QueryBuilder(const QString &table, QueryBuilder::QueryType type)
     , mLimit(-1)
     , mDistinct(false)
 {
-    static const QString defaultIdColumn = QLatin1String("id");
+    static const QString defaultIdColumn = QStringLiteral("id");
     mIdentificationColumn = defaultIdColumn;
 }
 

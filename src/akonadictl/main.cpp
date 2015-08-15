@@ -60,7 +60,7 @@ static bool startServer()
 static bool stopServer()
 {
     org::freedesktop::Akonadi::ControlManager iface(AkDBus::serviceName(AkDBus::Control),
-                                                    QLatin1String("/ControlManager"),
+                                                    QStringLiteral("/ControlManager"),
                                                     QDBusConnection::sessionBus(), 0);
     if (!iface.isValid()) {
         qWarning() << "Akonadi is not running.";
@@ -89,7 +89,7 @@ static bool checkAkonadiServerStatus()
 static bool checkSearchSupportStatus()
 {
     QStringList searchMethods;
-    searchMethods << QLatin1String("Remote Search");
+    searchMethods << QStringLiteral("Remote Search");
 
     const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
     if (!pluginOverride.isEmpty()) {
@@ -98,18 +98,18 @@ static bool checkSearchSupportStatus()
         const QStringList dirs = Akonadi::XdgBaseDirs::findPluginDirs();
         Q_FOREACH (const QString &pluginDir, dirs) {
             QDir dir(pluginDir + QLatin1String("/akonadi"));
-            const QStringList desktopFiles = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files);
+            const QStringList desktopFiles = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
             Q_FOREACH (const QString &desktopFileName, desktopFiles) {
                 QSettings desktop(pluginDir + QLatin1String("/akonadi/") + desktopFileName, QSettings::IniFormat);
-                desktop.beginGroup(QLatin1String("Desktop Entry"));
-                if (desktop.value(QLatin1String("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
+                desktop.beginGroup(QStringLiteral("Desktop Entry"));
+                if (desktop.value(QStringLiteral("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
                     continue;
                 }
-                if (!desktop.value(QLatin1String("X-Akonadi-LoadByDefault"), true).toBool()) {
+                if (!desktop.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool()) {
                     continue;
                 }
 
-                searchMethods << desktop.value(QLatin1String("Name")).toString();
+                searchMethods << desktop.value(QStringLiteral("Name")).toString();
             }
         }
     }
@@ -121,15 +121,15 @@ static bool checkSearchSupportStatus()
 
 static bool checkAvailableAgentTypes()
 {
-    const QStringList dirs = Akonadi::XdgBaseDirs::findAllResourceDirs("data", QLatin1String("akonadi/agents"));
+    const QStringList dirs = Akonadi::XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
     QStringList types;
     Q_FOREACH (const QString &pluginDir, dirs) {
         QDir dir(pluginDir);
-        const QStringList plugins = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files);
+        const QStringList plugins = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
         Q_FOREACH (const QString &plugin, plugins) {
             QSettings pluginInfo(pluginDir + QLatin1String("/") + plugin, QSettings::IniFormat);
-            pluginInfo.beginGroup(QLatin1String("Desktop Entry"));
-            types << pluginInfo.value(QLatin1String("X-Akonadi-Identifier")).toString();
+            pluginInfo.beginGroup(QStringLiteral("Desktop Entry"));
+            types << pluginInfo.value(QStringLiteral("X-Akonadi-Identifier")).toString();
         }
     }
 
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
 
-    app.setDescription(QLatin1String("Akonadi server manipulation tool\n\n"
+    app.setDescription(QStringLiteral("Akonadi server manipulation tool\n\n"
                                      "Commands:\n"
                                      "  start          Starts the Akonadi server with all its processes\n"
                                      "  stop           Stops the Akonadi server and all its processes cleanly\n"
@@ -172,8 +172,8 @@ int main(int argc, char **argv)
                                      "                 (can take some time)"));
 
 
-    app.addPositionalCommandLineOption(QLatin1String("command"), QLatin1String("Command to execute"),
-                                       QLatin1String("start|stop|restart|status|vacuum|fsck"));
+    app.addPositionalCommandLineOption(QStringLiteral("command"), QStringLiteral("Command to execute"),
+                                       QStringLiteral("start|stop|restart|status|vacuum|fsck"));
 
     app.parseCommandLine();
 
@@ -212,11 +212,11 @@ int main(int argc, char **argv)
             }
         }
     } else if (command == QLatin1String("vacuum")) {
-        QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH));
-        iface.call(QDBus::NoBlock, QLatin1String("vacuum"));
+        QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
+        iface.call(QDBus::NoBlock, QStringLiteral("vacuum"));
     } else if (command == QLatin1String("fsck")) {
-        QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH));
-        iface.call(QDBus::NoBlock, QLatin1String("check"));
+        QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
+        iface.call(QDBus::NoBlock, QStringLiteral("check"));
     }
     return 0;
 }

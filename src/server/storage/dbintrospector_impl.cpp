@@ -42,19 +42,19 @@ QString DbIntrospectorMySql::hasIndexQuery(const QString &tableName, const QStri
 
 QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
 {
-    QueryBuilder qb(QLatin1String("information_schema.REFERENTIAL_CONSTRAINTS"), QueryBuilder::Select);
-    qb.addJoin(QueryBuilder::InnerJoin, QLatin1String("information_schema.KEY_COLUMN_USAGE"),
-               QLatin1String("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"),
-               QLatin1String("information_schema.KEY_COLUMN_USAGE.CONSTRAINT_NAME"));
-    qb.addColumn(QLatin1String("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"));
-    qb.addColumn(QLatin1String("information_schema.KEY_COLUMN_USAGE.COLUMN_NAME"));
-    qb.addColumn(QLatin1String("information_schema.KEY_COLUMN_USAGE.REFERENCED_TABLE_NAME"));
-    qb.addColumn(QLatin1String("information_schema.KEY_COLUMN_USAGE.REFERENCED_COLUMN_NAME"));
-    qb.addColumn(QLatin1String("information_schema.REFERENTIAL_CONSTRAINTS.UPDATE_RULE"));
-    qb.addColumn(QLatin1String("information_schema.REFERENTIAL_CONSTRAINTS.DELETE_RULE"));
+    QueryBuilder qb(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS"), QueryBuilder::Select);
+    qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("information_schema.KEY_COLUMN_USAGE"),
+               QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"),
+               QStringLiteral("information_schema.KEY_COLUMN_USAGE.CONSTRAINT_NAME"));
+    qb.addColumn(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"));
+    qb.addColumn(QStringLiteral("information_schema.KEY_COLUMN_USAGE.COLUMN_NAME"));
+    qb.addColumn(QStringLiteral("information_schema.KEY_COLUMN_USAGE.REFERENCED_TABLE_NAME"));
+    qb.addColumn(QStringLiteral("information_schema.KEY_COLUMN_USAGE.REFERENCED_COLUMN_NAME"));
+    qb.addColumn(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.UPDATE_RULE"));
+    qb.addColumn(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.DELETE_RULE"));
 
-    qb.addValueCondition(QLatin1String("information_schema.KEY_COLUMN_USAGE.TABLE_SCHEMA"), Query::Equals, m_database.databaseName());
-    qb.addValueCondition(QLatin1String("information_schema.KEY_COLUMN_USAGE.TABLE_NAME"), Query::Equals, tableName);
+    qb.addValueCondition(QStringLiteral("information_schema.KEY_COLUMN_USAGE.TABLE_SCHEMA"), Query::Equals, m_database.databaseName());
+    qb.addValueCondition(QStringLiteral("information_schema.KEY_COLUMN_USAGE.TABLE_NAME"), Query::Equals, tableName);
 
     if (!qb.exec()) {
         throw DbException(qb.query());
@@ -107,42 +107,42 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
 #define CONSTRAINT_COLUMN_USAGE "information_schema.constraint_column_usage"
 
     Query::Condition keyColumnUsageCondition(Query::And);
-    keyColumnUsageCondition.addColumnCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
-                                               QLatin1String(KEY_COLUMN_USAGE ".constraint_catalog"));
-    keyColumnUsageCondition.addColumnCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
-                                               QLatin1String(KEY_COLUMN_USAGE ".constraint_schema"));
-    keyColumnUsageCondition.addColumnCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
-                                               QLatin1String(KEY_COLUMN_USAGE ".constraint_name"));
+    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
+                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_catalog"));
+    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
+                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_schema"));
+    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
+                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_name"));
 
     Query::Condition referentialConstraintsCondition(Query::And);
-    referentialConstraintsCondition.addColumnCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
-                                                       QLatin1String(REFERENTIAL_CONSTRAINTS ".constraint_catalog"));
-    referentialConstraintsCondition.addColumnCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
-                                                       QLatin1String(REFERENTIAL_CONSTRAINTS ".constraint_schema"));
-    referentialConstraintsCondition.addColumnCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
-                                                       QLatin1String(REFERENTIAL_CONSTRAINTS ".constraint_name"));
+    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
+                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_catalog"));
+    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
+                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_schema"));
+    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
+                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_name"));
 
     Query::Condition constraintColumnUsageCondition(Query::And);
-    constraintColumnUsageCondition.addColumnCondition(QLatin1String(REFERENTIAL_CONSTRAINTS ".unique_constraint_catalog"), Query::Equals,
-                                                      QLatin1String(CONSTRAINT_COLUMN_USAGE ".constraint_catalog"));
-    constraintColumnUsageCondition.addColumnCondition(QLatin1String(REFERENTIAL_CONSTRAINTS ".unique_constraint_schema"), Query::Equals,
-                                                      QLatin1String(CONSTRAINT_COLUMN_USAGE ".constraint_schema"));
-    constraintColumnUsageCondition.addColumnCondition(QLatin1String(REFERENTIAL_CONSTRAINTS ".unique_constraint_name"), Query::Equals,
-                                                      QLatin1String(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
+    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_catalog"), Query::Equals,
+                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_catalog"));
+    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_schema"), Query::Equals,
+                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_schema"));
+    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_name"), Query::Equals,
+                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
 
-    QueryBuilder qb(QLatin1String(TABLE_CONSTRAINTS), QueryBuilder::Select);
-    qb.addColumn(QLatin1String(TABLE_CONSTRAINTS ".constraint_name"));
-    qb.addColumn(QLatin1String(KEY_COLUMN_USAGE ".column_name"));
-    qb.addColumn(QLatin1String(CONSTRAINT_COLUMN_USAGE ".table_name AS referenced_table"));
-    qb.addColumn(QLatin1String(CONSTRAINT_COLUMN_USAGE ".column_name AS referenced_column"));
-    qb.addColumn(QLatin1String(REFERENTIAL_CONSTRAINTS ".update_rule"));
-    qb.addColumn(QLatin1String(REFERENTIAL_CONSTRAINTS ".delete_rule"));
-    qb.addJoin(QueryBuilder::LeftJoin, QLatin1String(KEY_COLUMN_USAGE), keyColumnUsageCondition);
-    qb.addJoin(QueryBuilder::LeftJoin, QLatin1String(REFERENTIAL_CONSTRAINTS), referentialConstraintsCondition);
-    qb.addJoin(QueryBuilder::LeftJoin, QLatin1String(CONSTRAINT_COLUMN_USAGE), constraintColumnUsageCondition);
-    qb.addValueCondition(QLatin1String(TABLE_CONSTRAINTS ".constraint_type"),
+    QueryBuilder qb(QStringLiteral(TABLE_CONSTRAINTS), QueryBuilder::Select);
+    qb.addColumn(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"));
+    qb.addColumn(QStringLiteral(KEY_COLUMN_USAGE ".column_name"));
+    qb.addColumn(QStringLiteral(CONSTRAINT_COLUMN_USAGE ".table_name AS referenced_table"));
+    qb.addColumn(QStringLiteral(CONSTRAINT_COLUMN_USAGE ".column_name AS referenced_column"));
+    qb.addColumn(QStringLiteral(REFERENTIAL_CONSTRAINTS ".update_rule"));
+    qb.addColumn(QStringLiteral(REFERENTIAL_CONSTRAINTS ".delete_rule"));
+    qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(KEY_COLUMN_USAGE), keyColumnUsageCondition);
+    qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(REFERENTIAL_CONSTRAINTS), referentialConstraintsCondition);
+    qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(CONSTRAINT_COLUMN_USAGE), constraintColumnUsageCondition);
+    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_type"),
                          Query::Equals, QLatin1String("FOREIGN KEY"));
-    qb.addValueCondition(QLatin1String(TABLE_CONSTRAINTS ".table_name"),
+    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".table_name"),
                          Query::Equals, tableName.toLower());
 
 #undef TABLE_CONSTRAINTS
@@ -171,7 +171,7 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
 
 QString DbIntrospectorPostgreSql::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
-    QString query = QLatin1String("SELECT indexname FROM pg_catalog.pg_indexes");
+    QString query = QStringLiteral("SELECT indexname FROM pg_catalog.pg_indexes");
     query += QString::fromLatin1(" WHERE tablename ilike '%1'").arg(tableName);
     query += QString::fromLatin1(" AND  indexname ilike '%1'").arg(indexName);
     query += QString::fromLatin1(" UNION SELECT conname FROM pg_catalog.pg_constraint ");

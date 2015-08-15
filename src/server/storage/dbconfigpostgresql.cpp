@@ -45,7 +45,7 @@ DbConfigPostgresql::DbConfigPostgresql()
 
 QString DbConfigPostgresql::driverName() const
 {
-    return QLatin1String("QPSQL");
+    return QStringLiteral("QPSQL");
 }
 
 QString DbConfigPostgresql::databaseName() const
@@ -68,14 +68,14 @@ bool DbConfigPostgresql::init(QSettings &settings)
     const bool defaultInternalServer = false;
 #endif
 
-    mInternalServer = settings.value(QLatin1String("QPSQL/StartServer"), defaultInternalServer).toBool();
+    mInternalServer = settings.value(QStringLiteral("QPSQL/StartServer"), defaultInternalServer).toBool();
     if (mInternalServer) {
         QStringList postgresSearchPath;
 
 #ifdef POSTGRES_PATH
-        const QString dir(QLatin1String(POSTGRES_PATH));
+        const QString dir(QStringLiteral(POSTGRES_PATH));
         if (QDir(dir).exists()) {
-            postgresSearchPath << QLatin1String(POSTGRES_PATH);
+            postgresSearchPath << QStringLiteral(POSTGRES_PATH);
         }
 #endif
         postgresSearchPath << QStringLiteral("/usr/sbin")
@@ -249,11 +249,11 @@ void DbConfigPostgresql::startInternalServer()
 
     const QLatin1String initCon("initConnection");
     {
-        QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QPSQL"), initCon);
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QPSQL"), initCon);
         apply(db);
 
         // use the default database that is always available
-        db.setDatabaseName(QLatin1String("postgres"));
+        db.setDatabaseName(QStringLiteral("postgres"));
 
         if (!db.isValid()) {
             akFatal() << "Invalid database object during database server startup";

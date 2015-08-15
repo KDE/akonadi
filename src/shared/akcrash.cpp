@@ -51,7 +51,7 @@ QString akBacktrace()
 
     char **strings = backtrace_symbols(trace, n);
 
-    s = QLatin1String("[\n");
+    s = QStringLiteral("[\n");
 
     for (int i = 0; i < n; ++i) {
         s += QString::number(i) +

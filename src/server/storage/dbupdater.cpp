@@ -160,7 +160,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     QDomElement updateElement = documentElement.firstChildElement();
     while (!updateElement.isNull()) {
         if (updateElement.tagName() == QLatin1String("update")) {
-            const int version = updateElement.attribute(QLatin1String("version"), QLatin1String("-1")).toInt();
+            const int version = updateElement.attribute(QStringLiteral("version"), QStringLiteral("-1")).toInt();
             if (version <= 0) {
                 akError() << "Invalid version attribute in database update description";
                 return false;
@@ -176,16 +176,16 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
             } else {
                 UpdateSet updateSet;
                 updateSet.version = version;
-                updateSet.abortOnFailure = (updateElement.attribute(QLatin1String("abortOnFailure")) == QLatin1String("true"));
+                updateSet.abortOnFailure = (updateElement.attribute(QStringLiteral("abortOnFailure")) == QLatin1String("true"));
 
                 QDomElement childElement = updateElement.firstChildElement();
                 while (!childElement.isNull()) {
                     if (childElement.tagName() == QLatin1String("raw-sql")) {
-                        if (updateApplicable(childElement.attribute(QLatin1String("backends")))) {
+                        if (updateApplicable(childElement.attribute(QStringLiteral("backends")))) {
                             updateSet.statements << buildRawSqlStatement(childElement);
                         }
                     } else if (childElement.tagName() == QLatin1String("complex-update")) {
-                        if (updateApplicable(childElement.attribute(QLatin1String("backends")))) {
+                        if (updateApplicable(childElement.attribute(QStringLiteral("backends")))) {
                             updateSet.complex = true;
                         }
                     }
@@ -210,13 +210,13 @@ bool DbUpdater::updateApplicable(const QString &backends) const
     QString currentBackend;
     switch (DbType::type(m_database)) {
     case DbType::MySQL:
-        currentBackend = QLatin1String("mysql");
+        currentBackend = QStringLiteral("mysql");
         break;
     case DbType::PostgreSQL:
-        currentBackend = QLatin1String("psql");
+        currentBackend = QStringLiteral("psql");
         break;
     case DbType::Sqlite:
-        currentBackend = QLatin1String("sqlite");
+        currentBackend = QStringLiteral("sqlite");
         break;
     case DbType::Unknown:
         return false;
@@ -243,21 +243,21 @@ bool DbUpdater::complexUpdate_25()
     {
         // We don't care if this fails, it just means that there was no failed update
         QSqlQuery query(DataStore::self()->database());
-        query.exec(QLatin1String("ALTER TABLE PartTable_old RENAME TO PartTable"));
+        query.exec(QStringLiteral("ALTER TABLE PartTable_old RENAME TO PartTable"));
     }
 
     {
         QSqlQuery query(DataStore::self()->database());
-        query.exec(QLatin1String("DROP TABLE IF EXISTS PartTable_new"));
+        query.exec(QStringLiteral("DROP TABLE IF EXISTS PartTable_new"));
     }
 
     {
         // Make sure the table is empty, otherwise we get duplicate key error
         QSqlQuery query(DataStore::self()->database());
         if (dbType == DbType::Sqlite) {
-            query.exec(QLatin1String("DELETE FROM PartTypeTable"));
+            query.exec(QStringLiteral("DELETE FROM PartTypeTable"));
         } else { // MySQL, PostgreSQL
-            query.exec(QLatin1String("TRUNCATE TABLE PartTypeTable"));
+            query.exec(QStringLiteral("TRUNCATE TABLE PartTypeTable"));
         }
     }
 
@@ -265,56 +265,56 @@ bool DbUpdater::complexUpdate_25()
         // It appears that more users than expected have the invalid "GID" part in their
         // PartTable, which breaks the migration below (see BKO#331867), so we apply this
         // wanna-be fix to remove the invalid part before we start the actual migration.
-        QueryBuilder qb(QLatin1String("PartTable"), QueryBuilder::Delete);
-        qb.addValueCondition(QLatin1String("PartTable.name"), Query::Equals, QLatin1String("GID"));
+        QueryBuilder qb(QStringLiteral("PartTable"), QueryBuilder::Delete);
+        qb.addValueCondition(QStringLiteral("PartTable.name"), Query::Equals, QLatin1String("GID"));
         qb.exec();
     }
 
     akDebug() << "Creating a PartTable_new";
     {
         TableDescription description;
-        description.name = QLatin1String("PartTable_new");
+        description.name = QStringLiteral("PartTable_new");
 
         ColumnDescription idColumn;
-        idColumn.name = QLatin1String("id");
-        idColumn.type = QLatin1String("qint64");
+        idColumn.name = QStringLiteral("id");
+        idColumn.type = QStringLiteral("qint64");
         idColumn.isAutoIncrement = true;
         idColumn.isPrimaryKey = true;
         description.columns << idColumn;
 
         ColumnDescription pimItemIdColumn;
-        pimItemIdColumn.name = QLatin1String("pimItemId");
-        pimItemIdColumn.type = QLatin1String("qint64");
+        pimItemIdColumn.name = QStringLiteral("pimItemId");
+        pimItemIdColumn.type = QStringLiteral("qint64");
         pimItemIdColumn.allowNull = false;
         description.columns << pimItemIdColumn;
 
         ColumnDescription partTypeIdColumn;
-        partTypeIdColumn.name = QLatin1String("partTypeId");
-        partTypeIdColumn.type = QLatin1String("qint64");
+        partTypeIdColumn.name = QStringLiteral("partTypeId");
+        partTypeIdColumn.type = QStringLiteral("qint64");
         partTypeIdColumn.allowNull = false;
         description.columns << partTypeIdColumn;
 
         ColumnDescription dataColumn;
-        dataColumn.name = QLatin1String("data");
-        dataColumn.type = QLatin1String("QByteArray");
+        dataColumn.name = QStringLiteral("data");
+        dataColumn.type = QStringLiteral("QByteArray");
         description.columns << dataColumn;
 
         ColumnDescription dataSizeColumn;
-        dataSizeColumn.name = QLatin1String("datasize");
-        dataSizeColumn.type = QLatin1String("qint64");
+        dataSizeColumn.name = QStringLiteral("datasize");
+        dataSizeColumn.type = QStringLiteral("qint64");
         dataSizeColumn.allowNull = false;
         description.columns << dataSizeColumn;
 
         ColumnDescription versionColumn;
-        versionColumn.name = QLatin1String("version");
-        versionColumn.type = QLatin1String("int");
-        versionColumn.defaultValue = QLatin1String("0");
+        versionColumn.name = QStringLiteral("version");
+        versionColumn.type = QStringLiteral("int");
+        versionColumn.defaultValue = QStringLiteral("0");
         description.columns << versionColumn;
 
         ColumnDescription externalColumn;
-        externalColumn.name = QLatin1String("external");
-        externalColumn.type = QLatin1String("bool");
-        externalColumn.defaultValue = QLatin1String("false");
+        externalColumn.name = QStringLiteral("external");
+        externalColumn.type = QStringLiteral("bool");
+        externalColumn.defaultValue = QStringLiteral("false");
         description.columns << externalColumn;
 
         DbInitializer::Ptr initializer = DbInitializer::createInstance(DataStore::self()->database());
@@ -330,9 +330,9 @@ bool DbUpdater::complexUpdate_25()
     akDebug() << "Migrating part types";
     {
         // Get list of all part names
-        QueryBuilder qb(QLatin1String("PartTable"), QueryBuilder::Select);
+        QueryBuilder qb(QStringLiteral("PartTable"), QueryBuilder::Select);
         qb.setDistinct(true);
-        qb.addColumn(QLatin1String("PartTable.name"));
+        qb.addColumn(QStringLiteral("PartTable.name"));
 
         if (!qb.exec()) {
             akError() << qb.query().lastError().text();
@@ -348,9 +348,9 @@ bool DbUpdater::complexUpdate_25()
             const QString name = partName.mid(4);
 
             {
-                QueryBuilder qb(QLatin1String("PartTypeTable"), QueryBuilder::Insert);
-                qb.setColumnValue(QLatin1String("ns"), ns);
-                qb.setColumnValue(QLatin1String("name"), name);
+                QueryBuilder qb(QStringLiteral("PartTypeTable"), QueryBuilder::Insert);
+                qb.setColumnValue(QStringLiteral("ns"), ns);
+                qb.setColumnValue(QStringLiteral("name"), name);
                 if (!qb.exec()) {
                     akError() << qb.query().lastError().text();
                     return false;
@@ -365,20 +365,20 @@ bool DbUpdater::complexUpdate_25()
         QSqlQuery query(DataStore::self()->database());
         QString queryString;
         if (dbType == DbType::PostgreSQL) {
-            queryString = QLatin1String("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+            queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
                                         "       PartTable.datasize, PartTable.version, PartTable.external "
                                         "FROM PartTable "
                                         "LEFT JOIN PartTypeTable ON "
                                         "          PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
         } else if (dbType == DbType::MySQL) {
-            queryString = QLatin1String("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+            queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
                                         "PartTable.datasize, PartTable.version, PartTable.external "
                                         "FROM PartTable "
                                         "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
         } else if (dbType == DbType::Sqlite) {
-            queryString = QLatin1String("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+            queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
                                         "PartTable.datasize, PartTable.version, PartTable.external "
                                         "FROM PartTable "
@@ -402,14 +402,14 @@ bool DbUpdater::complexUpdate_25()
                 DataStore::self()->beginTransaction();
             }
 
-            if (!query.exec(QLatin1String("ALTER TABLE PartTable RENAME TO PartTable_old"))) {
+            if (!query.exec(QStringLiteral("ALTER TABLE PartTable RENAME TO PartTable_old"))) {
                 akError() << query.lastError().text();
                 DataStore::self()->rollbackTransaction();
                 return false;
             }
 
             // If this fails in SQLite (i.e. without transaction), we can still recover on next start)
-            if (!query.exec(QLatin1String("ALTER TABLE PartTable_new RENAME TO PartTable"))) {
+            if (!query.exec(QStringLiteral("ALTER TABLE PartTable_new RENAME TO PartTable"))) {
                 akError() << query.lastError().text();
                 if (DataStore::self()->inTransaction()) {
                     DataStore::self()->rollbackTransaction();
@@ -421,7 +421,7 @@ bool DbUpdater::complexUpdate_25()
                 DataStore::self()->commitTransaction();
             }
         } else { // MySQL cannot do rename in transaction, but supports atomic renames
-            if (!query.exec(QLatin1String("RENAME TABLE PartTable TO PartTable_old,"
+            if (!query.exec(QStringLiteral("RENAME TABLE PartTable TO PartTable_old,"
                                           "             PartTable_new TO PartTable"))) {
                 akError() << query.lastError().text();
                 return false;
@@ -432,7 +432,7 @@ bool DbUpdater::complexUpdate_25()
     akDebug() << "Removing PartTable_old";
     {
         QSqlQuery query(DataStore::self()->database());
-        if (!query.exec(QLatin1String("DROP TABLE PartTable_old;"))) {
+        if (!query.exec(QStringLiteral("DROP TABLE PartTable_old;"))) {
             // It does not matter when this fails, we are successfully migrated
             akDebug() << query.lastError().text();
             akDebug() << "Not a fatal problem, continuing...";
@@ -444,12 +444,12 @@ bool DbUpdater::complexUpdate_25()
     {
         QSqlQuery query(DataStore::self()->database());
         if (dbType == DbType::PostgreSQL) {
-            query.exec(QLatin1String("ALTER TABLE PartTable RENAME CONSTRAINT parttable_new_pkey TO parttable_pkey"));
-            query.exec(QLatin1String("ALTER SEQUENCE parttable_new_id_seq RENAME TO parttable_id_seq"));
-            query.exec(QLatin1String("SELECT setval('parttable_id_seq', MAX(id) + 1) FROM PartTable"));
+            query.exec(QStringLiteral("ALTER TABLE PartTable RENAME CONSTRAINT parttable_new_pkey TO parttable_pkey"));
+            query.exec(QStringLiteral("ALTER SEQUENCE parttable_new_id_seq RENAME TO parttable_id_seq"));
+            query.exec(QStringLiteral("SELECT setval('parttable_id_seq', MAX(id) + 1) FROM PartTable"));
         } else if (dbType == DbType::MySQL) {
             // 0 will automatically reset AUTO_INCREMENT to SELECT MAX(id) + 1 FROM PartTable
-            query.exec(QLatin1String("ALTER TABLE PartTable AUTO_INCREMENT = 0"));
+            query.exec(QStringLiteral("ALTER TABLE PartTable AUTO_INCREMENT = 0"));
         }
     }
 

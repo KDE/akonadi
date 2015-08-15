@@ -236,7 +236,7 @@ QStringList XdgBaseDirs::systemPathList(const char *resource)
 #ifdef Q_OS_WIN
             const QString prefixDataDir = QLatin1String(AKONADIPREFIX "/" AKONADIDATA);
 #else
-            const QString prefixDataDir = QLatin1String(AKONADIDATA);
+            const QString prefixDataDir = QStringLiteral(AKONADIDATA);
 #endif
             if (!dataDirs.contains(prefixDataDir)) {
                 dataDirs << prefixDataDir;
@@ -292,7 +292,7 @@ QStringList XdgBaseDirs::systemPathList(const char *resource)
 #ifdef Q_OS_WIN
             const QString prefixConfigDir = QLatin1String(AKONADIPREFIX "/" AKONADICONFIG);
 #else
-            const QString prefixConfigDir = QLatin1String(AKONADICONFIG);
+            const QString prefixConfigDir = QStringLiteral(AKONADICONFIG);
 #endif
             if (!configDirs.contains(prefixConfigDir)) {
                 configDirs << prefixConfigDir;
@@ -332,7 +332,7 @@ QString XdgBaseDirs::findExecutableFile(const QString &relPath, const QStringLis
     if (instance()->mExecutableDirs.isEmpty()) {
         QStringList executableDirs = instance()->systemPathList("PATH", "/usr/local/bin:/usr/bin");
 
-        const QString prefixExecutableDir = QLatin1String(AKONADIPREFIX "/bin");
+        const QString prefixExecutableDir = QStringLiteral(AKONADIPREFIX "/bin");
         if (!executableDirs.contains(prefixExecutableDir)) {
             executableDirs << prefixExecutableDir;
         }
@@ -514,12 +514,12 @@ QString XdgBaseDirs::saveDir(const char *resource, const QString &relPath)
 
 QString XdgBaseDirs::akonadiServerConfigFile(FileAccessMode openMode)
 {
-    return akonadiConfigFile(QLatin1String("akonadiserverrc"), openMode);
+    return akonadiConfigFile(QStringLiteral("akonadiserverrc"), openMode);
 }
 
 QString XdgBaseDirs::akonadiConnectionConfigFile(FileAccessMode openMode)
 {
-    return akonadiConfigFile(QLatin1String("akonadiconnectionrc"), openMode);
+    return akonadiConfigFile(QStringLiteral("akonadiconnectionrc"), openMode);
 }
 
 QString XdgBaseDirs::akonadiConfigFile(const QString &file, FileAccessMode openMode)

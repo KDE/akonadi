@@ -83,7 +83,7 @@ QString AkDBus::agentServiceName(const QString &agentIdentifier, AkDBus::AgentTy
 {
     Q_ASSERT(!agentIdentifier.isEmpty());
     Q_ASSERT(agentType != Unknown);
-    QString serviceName = QLatin1String("org.freedesktop.Akonadi.");
+    QString serviceName = QStringLiteral("org.freedesktop.Akonadi.");
     switch (agentType) {
     case Agent:
         serviceName += QLatin1String("Agent.");

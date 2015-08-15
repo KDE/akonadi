@@ -50,10 +50,10 @@ bool SearchPersistent::parseStream()
     QStringList queryAttributes;
 
     if (cmd.remote()) {
-        queryAttributes << QLatin1String(AKONADI_PARAM_REMOTE);
+        queryAttributes << QStringLiteral(AKONADI_PARAM_REMOTE);
     }
     if (cmd.recursive()) {
-        queryAttributes << QLatin1String(AKONADI_PARAM_RECURSIVE);
+        queryAttributes << QStringLiteral(AKONADI_PARAM_RECURSIVE);
     }
 
     QStringList queryCollections;

@@ -60,7 +60,7 @@ CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(c
     // COUNT(DISTINCT PimItemTable.id)
     CountQueryBuilder qb(PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct);
     // SUM(PimItemTable.size)
-    qb.addAggregation(PimItem::sizeFullColumnName(), QLatin1String("sum"));
+    qb.addAggregation(PimItem::sizeFullColumnName(), QStringLiteral("sum"));
     // SUM(CASE WHEN FlagTable.name IN ('\SEEN', '$IGNORED') THEN 1 ELSE 0 END)
     // This allows us to get read messages count in a single query with the other
     // statistics. It is much than doing two queries, because the database
@@ -71,12 +71,12 @@ CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(c
     Query::Condition cond(Query::Or);
     cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(),
                            Query::Equals,
-                           Flag::retrieveByName(QLatin1String(AKONADI_FLAG_SEEN)).id());
+                           Flag::retrieveByName(QStringLiteral(AKONADI_FLAG_SEEN)).id());
     cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(),
                            Query::Equals,
-                           Flag::retrieveByName(QLatin1String(AKONADI_FLAG_IGNORED)).id());
-    Query::Case caseStmt(cond, QLatin1String("1"), QLatin1String("0"));
-    qb.addAggregation(caseStmt, QLatin1String("sum"));
+                           Flag::retrieveByName(QStringLiteral(AKONADI_FLAG_IGNORED)).id());
+    Query::Case caseStmt(cond, QStringLiteral("1"), QStringLiteral("0"));
+    qb.addAggregation(caseStmt, QStringLiteral("sum"));
 
     qb.addJoin(QueryBuilder::LeftJoin, PimItemFlagRelation::tableName(),
                PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());

@@ -60,9 +60,9 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
     }
     columns << references;
 
-    const QString tableProperties = QLatin1String(" COLLATE=utf8_general_ci DEFAULT CHARSET=utf8");
+    const QString tableProperties = QStringLiteral(" COLLATE=utf8_general_ci DEFAULT CHARSET=utf8");
 
-    return QString::fromLatin1("CREATE TABLE %1 (%2) %3").arg(tableDescription.name, columns.join(QLatin1String(", ")), tableProperties);
+    return QString::fromLatin1("CREATE TABLE %1 (%2) %3").arg(tableDescription.name, columns.join(QStringLiteral(", ")), tableProperties);
 }
 
 QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
@@ -109,8 +109,8 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
 
     return QString::fromLatin1("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name)
-           .arg(QStringList(data.keys()).join(QLatin1String(",")))
-           .arg(QStringList(data.values()).join(QLatin1String(",")));
+           .arg(QStringList(data.keys()).join(QStringLiteral(",")))
+           .arg(QStringList(data.values()).join(QStringLiteral(",")));
 }
 
 QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
@@ -146,7 +146,7 @@ QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &t
         columns.push_back(buildPrimaryKeyStatement(tableDescription));
     }
 
-    return QString::fromLatin1("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QLatin1String(", ")));
+    return QString::fromLatin1("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
 }
 
 QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
@@ -196,18 +196,18 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
 
     return QString::fromLatin1("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name)
-           .arg(QStringList(data.keys()).join(QLatin1String(",")))
-           .arg(QStringList(data.values()).join(QLatin1String(",")));
+           .arg(QStringList(data.keys()).join(QStringLiteral(",")))
+           .arg(QStringList(data.values()).join(QStringLiteral(",")));
 }
 
 QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value) const
 {
     if (type == QLatin1String("bool")) {
         if (value == QLatin1String("false")) {
-            return QLatin1String("0");
+            return QStringLiteral("0");
         }
         if (value == QLatin1String("true")) {
-            return QLatin1String("1");
+            return QStringLiteral("1");
         }
         return value;
     }
@@ -227,13 +227,13 @@ DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase &database)
 QString DbInitializerPostgreSql::sqlType(const QString &type, int size) const
 {
     if (type == QLatin1String("qint64")) {
-        return QLatin1String("int8");
+        return QStringLiteral("int8");
     }
     if (type == QLatin1String("QByteArray")) {
-        return QLatin1String("BYTEA");
+        return QStringLiteral("BYTEA");
     }
     if (type == QLatin1String("Tristate")) {
-        return QLatin1String("SMALLINT");
+        return QStringLiteral("SMALLINT");
     }
 
     return DbInitializer::sqlType(type, size);
@@ -251,7 +251,7 @@ QString DbInitializerPostgreSql::buildCreateTableStatement(const TableDescriptio
         columns.push_back(buildPrimaryKeyStatement(tableDescription));
     }
 
-    return QString::fromLatin1("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QLatin1String(", ")));
+    return QString::fromLatin1("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
 }
 
 QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
@@ -291,8 +291,8 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
 
     return QString::fromLatin1("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name)
-           .arg(QStringList(data.keys()).join(QLatin1String(",")))
-           .arg(QStringList(data.values()).join(QLatin1String(",")));
+           .arg(QStringList(data.keys()).join(QStringLiteral(",")))
+           .arg(QStringList(data.values()).join(QStringLiteral(",")));
 }
 
 QString DbInitializerPostgreSql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const

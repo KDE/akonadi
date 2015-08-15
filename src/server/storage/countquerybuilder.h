@@ -47,7 +47,7 @@ public:
     explicit inline CountQueryBuilder(const QString &table)
         : QueryBuilder(table, Select)
     {
-        addColumn(QLatin1String("count(*)"));
+        addColumn(QStringLiteral("count(*)"));
     }
 
     /**
@@ -59,7 +59,7 @@ public:
     {
         Q_ASSERT(!table.isEmpty());
         Q_ASSERT(!column.isEmpty());
-        QString s = QLatin1String("count(");
+        QString s = QStringLiteral("count(");
         if (mode == Distinct) {
             s += QLatin1String("DISTINCT ");
         }

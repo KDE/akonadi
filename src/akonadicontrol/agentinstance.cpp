@@ -181,16 +181,16 @@ void AgentInstance::refreshAgentStatus()
     }
 
     // async calls so we are not blocked by misbehaving agents
-    mAgentStatusInterface->callWithCallback(QLatin1String("status"), QList<QVariant>(),
+    mAgentStatusInterface->callWithCallback(QStringLiteral("status"), QList<QVariant>(),
                                             this, SLOT(statusStateChanged(int)),
                                             SLOT(errorHandler(QDBusError)));
-    mAgentStatusInterface->callWithCallback(QLatin1String("statusMessage"), QList<QVariant>(),
+    mAgentStatusInterface->callWithCallback(QStringLiteral("statusMessage"), QList<QVariant>(),
                                             this, SLOT(statusMessageChanged(QString)),
                                             SLOT(errorHandler(QDBusError)));
-    mAgentStatusInterface->callWithCallback(QLatin1String("progress"), QList<QVariant>(),
+    mAgentStatusInterface->callWithCallback(QStringLiteral("progress"), QList<QVariant>(),
                                             this, SLOT(percentChanged(int)),
                                             SLOT(errorHandler(QDBusError)));
-    mAgentStatusInterface->callWithCallback(QLatin1String("isOnline"), QList<QVariant>(),
+    mAgentStatusInterface->callWithCallback(QStringLiteral("isOnline"), QList<QVariant>(),
                                             this, SLOT(onlineChanged(bool)),
                                             SLOT(errorHandler(QDBusError)));
 }
@@ -202,7 +202,7 @@ void AgentInstance::refreshResourceStatus()
     }
 
     // async call so we are not blocked by misbehaving resources
-    mResourceInterface->callWithCallback(QLatin1String("name"), QList<QVariant>(),
+    mResourceInterface->callWithCallback(QStringLiteral("name"), QList<QVariant>(),
                                          this, SLOT(resourceNameChanged(QString)),
                                          SLOT(errorHandler(QDBusError)));
 }

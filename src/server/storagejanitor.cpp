@@ -70,12 +70,12 @@ StorageJanitor::StorageJanitor(QObject *parent)
 {
     DataStore::self();
     m_connection.registerService(AkDBus::serviceName(AkDBus::StorageJanitor));
-    m_connection.registerObject(QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
+    m_connection.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
 }
 
 StorageJanitor::~StorageJanitor()
 {
-    m_connection.unregisterObject(QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
+    m_connection.unregisterObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
     m_connection.unregisterService(AkDBus::serviceName(AkDBus::StorageJanitor));
     m_connection.disconnectFromBus(m_connection.name());
 
@@ -136,9 +136,9 @@ qint64 StorageJanitor::lostAndFoundCollection()
     }
 
     Transaction transaction(DataStore::self());
-    Resource lfRes = Resource::retrieveByName(QLatin1String("akonadi_lost+found_resource"));
+    Resource lfRes = Resource::retrieveByName(QStringLiteral("akonadi_lost+found_resource"));
     if (!lfRes.isValid()) {
-        lfRes.setName(QLatin1String("akonadi_lost+found_resource"));
+        lfRes.setName(QStringLiteral("akonadi_lost+found_resource"));
         if (!lfRes.insert()) {
             akFatal() << "Failed to create lost+found resource!";
         }
@@ -155,9 +155,9 @@ qint64 StorageJanitor::lostAndFoundCollection()
     } else if (cols.size() == 1) {
         lfRoot = cols.first();
     } else {
-        lfRoot.setName(QLatin1String("lost+found"));
+        lfRoot.setName(QStringLiteral("lost+found"));
         lfRoot.setResourceId(lfRes.id());
-        lfRoot.setCachePolicyLocalParts(QLatin1String("ALL"));
+        lfRoot.setCachePolicyLocalParts(QStringLiteral("ALL"));
         lfRoot.setCachePolicyCacheTimeout(-1);
         lfRoot.setCachePolicyInherit(false);
         if (!lfRoot.insert()) {
@@ -167,7 +167,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
     }
 
     Collection lfCol;
-    lfCol.setName(QDateTime::currentDateTime().toString(QLatin1String("yyyy-MM-dd hh:mm:ss")));
+    lfCol.setName(QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh:mm:ss")));
     lfCol.setResourceId(lfRes.id());
     lfCol.setParentId(lfRoot.id());
     if (!lfCol.insert()) {
@@ -190,7 +190,7 @@ void StorageJanitor::findOrphanedResources()
     SelectQueryBuilder<Resource> qbres;
     OrgFreedesktopAkonadiAgentManagerInterface iface(
         AkDBus::serviceName(AkDBus::Control),
-        QLatin1String("/AgentManager"),
+        QStringLiteral("/AgentManager"),
         QDBusConnection::sessionBus(),
         this);
     if (!iface.isValid()) {
@@ -213,7 +213,7 @@ void StorageJanitor::findOrphanedResources()
         Q_FOREACH (const Resource &resource, orphanResources) {
             resourceNames.append(resource.name());
         }
-        inform(QString::fromLatin1("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QLatin1String(","))));
+        inform(QString::fromLatin1("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QStringLiteral(","))));
         Q_FOREACH (const QString &resourceName, resourceNames) {
             inform(QString::fromLatin1("Removing resource %1").arg(resourceName));
             ResourceManager::self()->removeResourceInstance(resourceName);
@@ -361,7 +361,7 @@ void StorageJanitor::verifyExternalParts()
     QSet<QString> usedFiles;
 
     // list all files
-    const QString dataDir = AkStandardDirs::saveDir("data", QLatin1String("file_db_data"));
+    const QString dataDir = AkStandardDirs::saveDir("data", QStringLiteral("file_db_data"));
     QDirIterator it(dataDir);
     while (it.hasNext()) {
         existingFiles.insert(it.next());
@@ -401,7 +401,7 @@ void StorageJanitor::verifyExternalParts()
     // see what's left and move it to lost+found
     const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
     if (!unreferencedFiles.isEmpty()) {
-        const QString lfDir = AkStandardDirs::saveDir("data", QLatin1String("file_lost+found"));
+        const QString lfDir = AkStandardDirs::saveDir("data", QStringLiteral("file_lost+found"));
         Q_FOREACH (const QString &file, unreferencedFiles) {
             inform(QLatin1Literal("Found unreferenced external file: ") + file);
             const QFileInfo f(file);

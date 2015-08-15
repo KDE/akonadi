@@ -54,7 +54,7 @@ ProcessControl::ProcessControl(QObject *parent)
         if (env.isEmpty()) {
             env = QProcessEnvironment::systemEnvironment();
         }
-        env.insert(QLatin1String("AKONADI_INSTANCE"), AkApplication::instanceIdentifier());
+        env.insert(QStringLiteral("AKONADI_INSTANCE"), AkApplication::instanceIdentifier());
         mProcess.setProcessEnvironment(env);
     }
 }

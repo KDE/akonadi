@@ -72,7 +72,7 @@ void AkonadiBridgeConnection::connectLocal()
     (static_cast<QLocalSocket *>(m_localSocket))->connectToServer(namedPipe);
 #else
     const QString defaultSocketDir = AkStandardDirs::saveDir("data");
-    const QString path = connectionSettings.value(QLatin1String("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
+    const QString path = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
     (static_cast<QLocalSocket *>(m_localSocket))->connectToServer(path);
 #endif
 }
@@ -88,7 +88,7 @@ void DBusBridgeConnection::connectLocal()
     // TODO: support for !Linux
 #ifdef Q_OS_UNIX
     const QByteArray sessionBusAddress = qgetenv("DBUS_SESSION_BUS_ADDRESS");
-    QRegExp rx(QLatin1String("=(.*)[,$]"));
+    QRegExp rx(QStringLiteral("=(.*)[,$]"));
     if (rx.indexIn(QString::fromLatin1(sessionBusAddress)) >= 0) {
         const QString dbusPath = rx.cap(1);
         qDebug() << dbusPath;

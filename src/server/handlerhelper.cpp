@@ -78,7 +78,7 @@ QString HandlerHelper::pathForCollection(const Collection &col)
         parts.prepend(current.name());
         current = current.parent();
     }
-    return parts.join(QLatin1String("/"));
+    return parts.join(QStringLiteral("/"));
 }
 
 Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection& col)
@@ -291,9 +291,9 @@ Tag::List HandlerHelper::resolveTagsByGID(const QStringList &tagsGIDs)
             tag.setGid(tagGID);
             tag.setParentId(0);
 
-            TagType type = TagType::retrieveByName(QLatin1String("PLAIN"));
+            TagType type = TagType::retrieveByName(QStringLiteral("PLAIN"));
             if (!type.isValid()) {
-                type.setName(QLatin1String("PLAIN"));
+                type.setName(QStringLiteral("PLAIN"));
                 if (!type.insert()) {
                     throw HandlerException("Unable to create tag type");
                 }

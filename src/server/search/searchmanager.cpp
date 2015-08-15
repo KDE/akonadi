@@ -89,13 +89,13 @@ void SearchManagerThread::loadSearchPlugins()
         Q_FOREACH (const QString &fileName, fileNames) {
             const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
-            const QVariantMap metadata = loader->metaData().value(QLatin1String("MetaData")).toVariant().toMap();
+            const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
 
-            if (metadata.value(QLatin1String("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
+            if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
                 continue;
             }
 
-            const QString libraryName = metadata.value(QLatin1String("X-Akonadi-Library")).toString();
+            const QString libraryName = metadata.value(QStringLiteral("X-Akonadi-Library")).toString();
             if (loadedPlugins.contains(libraryName)) {
                 akDebug() << "Already loaded one version of this plugin, skipping: " << libraryName;
                 continue;
@@ -109,7 +109,7 @@ void SearchManagerThread::loadSearchPlugins()
                 }
 
             // When there's no override, only load plugins enabled by default
-            } else if (metadata.value(QLatin1String("X-Akonadi-LoadByDefault"), true).toBool() == false) {
+            } else if (metadata.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool() == false) {
                 continue;
             }
 
@@ -161,7 +161,7 @@ void SearchManager::init(const QStringList &searchEngines, const QList<QPluginLo
 
     new SearchManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(
-        QLatin1String("/SearchManager"),
+        QStringLiteral("/SearchManager"),
         this,
         QDBusConnection::ExportAdaptors);
 
@@ -295,8 +295,8 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     }
 
     const QStringList queryAttributes = collection.queryAttributes().split(QLatin1Char(' '));
-    const bool remoteSearch =  queryAttributes.contains(QLatin1String(AKONADI_PARAM_REMOTE));
-    bool recursive = queryAttributes.contains(QLatin1String(AKONADI_PARAM_RECURSIVE));
+    const bool remoteSearch =  queryAttributes.contains(QStringLiteral(AKONADI_PARAM_REMOTE));
+    bool recursive = queryAttributes.contains(QStringLiteral(AKONADI_PARAM_RECURSIVE));
 
     QStringList queryMimeTypes;
     const QVector<MimeType> mimeTypes = collection.mimeTypes();

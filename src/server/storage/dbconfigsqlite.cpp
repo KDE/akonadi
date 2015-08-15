@@ -67,9 +67,9 @@ DbConfigSqlite::DbConfigSqlite(Version driverVersion)
 QString DbConfigSqlite::driverName() const
 {
     if (mDriverVersion == Default) {
-        return QLatin1String("QSQLITE");
+        return QStringLiteral("QSQLITE");
     } else {
-        return QLatin1String("QSQLITE3");
+        return QStringLiteral("QSQLITE3");
     }
 }
 
@@ -85,16 +85,16 @@ bool DbConfigSqlite::init(QSettings &settings)
 
     // read settings for current driver
     settings.beginGroup(driverName());
-    mDatabaseName = settings.value(QLatin1String("Name"), defaultDbName).toString();
-    mHostName = settings.value(QLatin1String("Host")).toString();
-    mUserName = settings.value(QLatin1String("User")).toString();
-    mPassword = settings.value(QLatin1String("Password")).toString();
-    mConnectionOptions = settings.value(QLatin1String("Options")).toString();
+    mDatabaseName = settings.value(QStringLiteral("Name"), defaultDbName).toString();
+    mHostName = settings.value(QStringLiteral("Host")).toString();
+    mUserName = settings.value(QStringLiteral("User")).toString();
+    mPassword = settings.value(QStringLiteral("Password")).toString();
+    mConnectionOptions = settings.value(QStringLiteral("Options")).toString();
     settings.endGroup();
 
     // store back the default values
     settings.beginGroup(driverName());
-    settings.setValue(QLatin1String("Name"), mDatabaseName);
+    settings.setValue(QStringLiteral("Name"), mDatabaseName);
     settings.endGroup();
     settings.sync();
 
@@ -176,7 +176,7 @@ void DbConfigSqlite::setup()
     apply(db);
 
     QSqlQuery query(db);
-    if (!query.exec(QLatin1String("SELECT sqlite_version()"))) {
+    if (!query.exec(QStringLiteral("SELECT sqlite_version()"))) {
         akDebug() << "Could not query sqlite version";
         akDebug() << "Database: " << mDatabaseName;
         akDebug() << "Query error: " << query.lastError().text();
@@ -202,7 +202,7 @@ void DbConfigSqlite::setup()
     const int sqliteVersionMinor = list[1].toInt();
 
     // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
-    if (!query.exec(QLatin1String("PRAGMA synchronous = 1"))) {
+    if (!query.exec(QStringLiteral("PRAGMA synchronous = 1"))) {
         akDebug() << "Could not set sqlite synchronous mode to NORMAL";
         akDebug() << "Database: " << mDatabaseName;
         akDebug() << "Query error: " << query.lastError().text();
@@ -218,7 +218,7 @@ void DbConfigSqlite::setup()
     }
 
     // set write-ahead-log mode; see http://www.sqlite.org/wal.html
-    if (!query.exec(QLatin1String("PRAGMA journal_mode=wal"))) {
+    if (!query.exec(QStringLiteral("PRAGMA journal_mode=wal"))) {
         akDebug() << "Could not set sqlite write-ahead-log journal mode";
         akDebug() << "Database: " << mDatabaseName;
         akDebug() << "Query error: " << query.lastError().text();

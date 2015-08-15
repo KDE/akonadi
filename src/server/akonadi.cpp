@@ -159,8 +159,8 @@ bool AkonadiServer::init()
         akFatal() << "Unable to listen on Unix socket" << socketFile;
     }
 
-    connectionSettings.setValue(QLatin1String("Data/Method"), QLatin1String("UnixPath"));
-    connectionSettings.setValue(QLatin1String("Data/UnixPath"), socketFile);
+    connectionSettings.setValue(QStringLiteral("Data/Method"), QLatin1String("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Data/UnixPath"), socketFile);
 #endif
 
     // initialize the database
@@ -183,11 +183,11 @@ bool AkonadiServer::init()
     PreprocessorManager::init();
 
     // Forcibly disable it if configuration says so
-    if (settings.value(QLatin1String("General/DisablePreprocessing"), false).toBool()) {
+    if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
         PreprocessorManager::instance()->setEnabled(false);
     }
 
-    if (settings.value(QLatin1String("Cache/EnableCleaner"), true).toBool()) {
+    if (settings.value(QStringLiteral("Cache/EnableCleaner"), true).toBool()) {
         mCacheCleaner = new CacheCleaner(this);
         mCacheCleaner->start(QThread::IdlePriority);
     }
@@ -205,17 +205,17 @@ bool AkonadiServer::init()
     mAgentSearchManagerThread->start();
 
 
-    const QStringList searchManagers = settings.value(QLatin1String("Search/Manager"),
-                                                      QStringList() << QLatin1String("Agent")).toStringList();
+    const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
+                                                      QStringList() << QStringLiteral("Agent")).toStringList();
     mSearchManager = new SearchManagerThread(searchManagers, this);
     mSearchManager->start();
 
     new ServerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/Server"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Server"), this);
 
     const QByteArray dbusAddress = qgetenv("DBUS_SESSION_BUS_ADDRESS");
     if (!dbusAddress.isEmpty()) {
-        connectionSettings.setValue(QLatin1String("DBUS/Address"), QLatin1String(dbusAddress));
+        connectionSettings.setValue(QStringLiteral("DBUS/Address"), QLatin1String(dbusAddress));
     }
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(AkDBus::serviceName(AkDBus::Control),
@@ -343,7 +343,7 @@ void AkonadiServer::startDatabaseProcess()
 
     // create the database directories if they don't exists
     AkStandardDirs::saveDir("data");
-    AkStandardDirs::saveDir("data", QLatin1String("file_db_data"));
+    AkStandardDirs::saveDir("data", QStringLiteral("file_db_data"));
 
     DbConfig::configuredDatabase()->startInternalServer();
 }

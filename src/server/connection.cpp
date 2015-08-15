@@ -65,7 +65,7 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     m_identifier.sprintf("%p", static_cast<void *>(this));
 
     const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
-    m_verifyCacheOnRetrieval = settings.value(QLatin1String("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
+    m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
 
     QLocalSocket *socket = new QLocalSocket();
 
