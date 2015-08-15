@@ -25,7 +25,7 @@
 
 using namespace Akonadi;
 
-class EntityDisplayAttribute::Private
+class Q_DECL_HIDDEN EntityDisplayAttribute::Private
 {
 public:
     Private()

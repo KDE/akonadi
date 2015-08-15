@@ -26,7 +26,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class CollectionPropertiesPage::Private
+class Q_DECL_HIDDEN CollectionPropertiesPage::Private
 {
 public:
     QString title;

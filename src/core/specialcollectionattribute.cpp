@@ -25,7 +25,7 @@ using namespace Akonadi;
 /**
   @internal
 */
-class SpecialCollectionAttribute::Private
+class Q_DECL_HIDDEN SpecialCollectionAttribute::Private
 {
 public:
     QByteArray mType;

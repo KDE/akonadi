@@ -25,7 +25,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class CachePolicy::Private : public QSharedData
+class Q_DECL_HIDDEN CachePolicy::Private : public QSharedData
 {
 public:
     Private()

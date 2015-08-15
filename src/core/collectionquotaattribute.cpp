@@ -23,7 +23,7 @@
 
 using namespace Akonadi;
 
-class CollectionQuotaAttribute::Private
+class Q_DECL_HIDDEN CollectionQuotaAttribute::Private
 {
 public:
     Private(qint64 currentValue, qint64 maxValue)

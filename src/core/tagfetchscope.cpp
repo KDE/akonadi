@@ -22,7 +22,7 @@
 
 using namespace Akonadi;
 
-struct Akonadi::TagFetchScope::Private {
+struct Q_DECL_HIDDEN Akonadi::TagFetchScope::Private {
     Private()
         : mFetchIdOnly(false)
     {

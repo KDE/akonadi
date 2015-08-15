@@ -25,7 +25,7 @@
 
 using namespace Akonadi;
 
-class IndexPolicyAttribute::Private
+class Q_DECL_HIDDEN IndexPolicyAttribute::Private
 {
 public:
     Private()

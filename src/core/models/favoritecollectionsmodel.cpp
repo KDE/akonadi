@@ -37,7 +37,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class FavoriteCollectionsModel::Private
+class Q_DECL_HIDDEN FavoriteCollectionsModel::Private
 {
 public:
     Private(const KConfigGroup &group, FavoriteCollectionsModel *parent)

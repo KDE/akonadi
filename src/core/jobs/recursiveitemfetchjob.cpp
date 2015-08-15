@@ -28,7 +28,7 @@
 
 using namespace Akonadi;
 
-class RecursiveItemFetchJob::Private
+class Q_DECL_HIDDEN RecursiveItemFetchJob::Private
 {
 public:
     Private(const Collection &collection, const QStringList &mimeTypes, RecursiveItemFetchJob *parent)

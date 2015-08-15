@@ -188,7 +188,7 @@ static QModelIndexList safeSelectedRows(QItemSelectionModel *selectionModel)
 /**
  * @internal
  */
-class StandardActionManager::Private
+class Q_DECL_HIDDEN StandardActionManager::Private
 {
 public:
     Private(StandardActionManager *parent)

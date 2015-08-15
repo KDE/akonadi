@@ -26,7 +26,7 @@
 
 using namespace Akonadi;
 
-class CollectionIdentificationAttribute::Private
+class Q_DECL_HIDDEN CollectionIdentificationAttribute::Private
 {
 public:
     Private()

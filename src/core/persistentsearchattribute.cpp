@@ -27,7 +27,7 @@
 
 using namespace Akonadi;
 
-class PersistentSearchAttribute::Private
+class Q_DECL_HIDDEN PersistentSearchAttribute::Private
 {
 public:
     Private()

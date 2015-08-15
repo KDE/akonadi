@@ -23,7 +23,7 @@
 
 using namespace Akonadi;
 
-class TagAttribute::Private
+class Q_DECL_HIDDEN TagAttribute::Private
 {
 public:
     Private()

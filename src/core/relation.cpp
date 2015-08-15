@@ -25,7 +25,7 @@ using namespace Akonadi;
 
 const char *Akonadi::Relation::GENERIC = "GENERIC";
 
-struct Relation::Private {
+struct Q_DECL_HIDDEN Relation::Private {
     Item left;
     Item right;
     QByteArray type;

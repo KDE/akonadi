@@ -67,7 +67,7 @@ static_assert(numAgentActionData == AgentActionManager::LastType,
 /**
  * @internal
  */
-class AgentActionManager::Private
+class Q_DECL_HIDDEN AgentActionManager::Private
 {
 public:
     Private(AgentActionManager *parent)

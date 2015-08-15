@@ -112,7 +112,7 @@ using Akonadi::Internal::s_attributeInstance;
 /**
  * @internal
  */
-class AttributeFactory::Private
+class Q_DECL_HIDDEN AttributeFactory::Private
 {
 public:
     QHash<QByteArray, Attribute *> attributes;

@@ -31,7 +31,7 @@ namespace Akonadi
 /**
  * @internal
  */
-class AgentInstance::Private : public QSharedData
+class Q_DECL_HIDDEN AgentInstance::Private : public QSharedData
 {
 public:
     Private()
