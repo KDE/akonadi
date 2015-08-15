@@ -323,8 +323,8 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
             collections.append(collection);
         }
         Item item = Item::fromUrl(url);
-        if (query.hasQueryItem(QLatin1String("parent"))) {
-            item.setParentCollection(Collection(query.queryItemValue(QLatin1String("parent")).toLongLong()));
+        if (query.hasQueryItem(QStringLiteral("parent"))) {
+            item.setParentCollection(Collection(query.queryItemValue(QStringLiteral("parent")).toLongLong()));
         }
         if (item.isValid()) {
             items.append(item);

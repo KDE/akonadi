@@ -452,10 +452,10 @@ void ResourceScheduler::setOnline(bool state)
 void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString)
 {
     // if there's a job tracer running, tell it about the new job
-    if (!s_resourcetracker && KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole"))) {
-        s_resourcetracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole"),
-                                               QLatin1String("/resourcesJobtracker"),
-                                               QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+    if (!s_resourcetracker && KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole"))) {
+        s_resourcetracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
+                                               QStringLiteral("/resourcesJobtracker"),
+                                               QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                KDBusConnectionPool::threadConnection(), 0);
     }
 

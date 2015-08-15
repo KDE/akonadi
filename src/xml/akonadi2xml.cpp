@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     Collection root;
     if (parser.isSet(QStringLiteral("collection"))) {
-        const QString path = parser.value(QLatin1String("collection"));
+        const QString path = parser.value(QStringLiteral("collection"));
         CollectionPathResolver resolver(path);
         if (!resolver.exec()) {
             qCritical() << resolver.errorString();

@@ -492,7 +492,7 @@ Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelations
 
 QString ProtocolHelper::akonadiStoragePath()
 {
-    QString fullRelPath = QLatin1String("akonadi");
+    QString fullRelPath = QStringLiteral("akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         fullRelPath += QDir::separator() + QLatin1String("instance") + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
     }

@@ -96,7 +96,7 @@ public:
 private:
     QString header() const
     {
-        QString header = QLatin1String("<html>");
+        QString header = QStringLiteral("<html>");
         header += QString::fromLatin1("<body text=\"%1\" bgcolor=\"%2\">")
                   .arg(KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name())
                   .arg(KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
@@ -111,7 +111,7 @@ private:
 
     QString footer() const
     {
-        return QLatin1String("</table></center>"
+        return QStringLiteral("</table></center>"
                              "</body>"
                              "</html>");
     }
@@ -144,8 +144,8 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
         }
 
         reporter->addProperty(AbstractDifferencesReporter::ConflictMode, i18n("Flags"),
-                              localFlags.join(QLatin1String(", ")),
-                              otherFlags.join(QLatin1String(", ")));
+                              localFlags.join(QStringLiteral(", ")),
+                              otherFlags.join(QStringLiteral(", ")));
     }
 
     QHash<QByteArray, QByteArray> localAttributes;

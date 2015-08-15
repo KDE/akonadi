@@ -122,7 +122,7 @@ PluginMetaData PluginLoader::infoForName(const QString &name) const
 
 void PluginLoader::scan()
 {
-    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1Literal("akonadi/plugins/serializer/"), QStandardPaths::LocateDirectory);
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/plugins/serializer/"), QStandardPaths::LocateDirectory);
     Q_FOREACH (const QString &dir, dirs) {
         const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
         Q_FOREACH (const QString &file, fileNames) {

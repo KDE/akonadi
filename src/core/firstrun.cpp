@@ -45,7 +45,7 @@ using namespace Akonadi;
 
 Firstrun::Firstrun(QObject *parent)
     : QObject(parent)
-    , mConfig(new KConfig(ServerManager::addNamespace(QLatin1String("akonadi-firstrunrc"))))
+    , mConfig(new KConfig(ServerManager::addNamespace(QStringLiteral("akonadi-firstrunrc"))))
     , mCurrentDefault(0)
     , mProcess(0)
 {
@@ -78,7 +78,7 @@ Firstrun::~Firstrun()
 void Firstrun::findPendingDefaults()
 {
     const KConfigGroup cfg(mConfig, "ProcessedDefaults");
-    const QStringList paths = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1String("akonadi/firstrun"), QStandardPaths::LocateDirectory);
+    const QStringList paths = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/firstrun"), QStandardPaths::LocateDirectory);
     foreach (const QString &dirName, paths) {
         const QStringList files = QDir(dirName).entryList(QDir::Files | QDir::Readable);
         foreach (const QString &fileName, files) {
@@ -117,7 +117,7 @@ void Firstrun::setupNext()
         setupNext();
         return;
     }
-    if (type.capabilities().contains(QLatin1String("Unique"))) {
+    if (type.capabilities().contains(QStringLiteral("Unique"))) {
         Q_FOREACH (const AgentInstance &agent, AgentManager::self()->instances()) {
             if (agent.type() == type) {
                 // remember we set this one up already
@@ -154,7 +154,7 @@ void Firstrun::instanceCreated(KJob *job)
 
 
     QDBusInterface *iface = new QDBusInterface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
-            QLatin1String("/Settings"), QString(),
+            QStringLiteral("/Settings"), QString(),
             KDBusConnectionPool::threadConnection(), this);
     if (!iface->isValid()) {
         qCritical() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
@@ -189,7 +189,7 @@ void Firstrun::instanceCreated(KJob *job)
         }
     }
 
-    iface->call(QLatin1String("writeConfig"));
+    iface->call(QStringLiteral("writeConfig"));
 
     instance.reconfigure();
     instance.synchronize();
